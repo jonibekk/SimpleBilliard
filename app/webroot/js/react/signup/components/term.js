@@ -25,7 +25,16 @@ export default class Term extends React.Component {
 
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
-                  <div className="panel-heading signup-itemtitle">Start month</div>
+
+                  <div className="panel-heading signup-itemtitle">Term</div>
+                  <select className="form-control signup_input-design" ref="term" onChange={ () => { this.props.selectTerm(this.getInputDomData('term')) } }>
+                      <option value="">選択してください</option>
+                      <option value="3">四半期</option>
+                      <option value="6">半年</option>
+                      <option value="12">年</option>
+                  </select>
+
+                  <div className="panel-heading signup-itemtitle">Select your present term ?</div>
                   <select className="form-control signup_input-design" ref="start_month" onChange={ () => { this.props.selectStartMonth(this.getInputDomData('start_month')) } }>
                       <option value="">選択してください</option>
                       <option value="1">１月</option>
@@ -41,18 +50,6 @@ export default class Term extends React.Component {
                       <option value="11">１１月</option>
                       <option value="12">１２月</option>
                   </select>
-                  <InvalidMessageBox is_invalid={this.props.term.term_is_invalid}
-                                     message={this.props.term.invalid_messages.start_month} />
-
-                  <div className="panel-heading signup-itemtitle">Term</div>
-                  <select className="form-control signup_input-design" ref="term" onChange={ () => { this.props.selectTerm(this.getInputDomData('term')) } }>
-                      <option value="">選択してください</option>
-                      <option value="3">四半期</option>
-                      <option value="6">半年</option>
-                      <option value="12">年</option>
-                  </select>
-                  <InvalidMessageBox is_invalid={this.props.term.term_is_invalid}
-                                     message={this.props.term.invalid_messages.term} />
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">Timezone</div>
@@ -70,16 +67,12 @@ export default class Term extends React.Component {
                     )
                   } else {
                     return (
-                      <p>
-                          <span className="plr_18px">
-                            <span className="signup-goal-timezone-label">(GMT+9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</span>
-                            <a href="#" onClick={ () => { this.props.changeToTimezoneSelectMode() } }>変更する</a>
-                          </span>
+                      <p className="signup-timezone-label-wrapper">
+                          <span className="signup-goal-timezone-label">(GMT+9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</span>
+                          <a href="#" onClick={ () => { this.props.changeToTimezoneSelectMode() } }>変更する</a>
                       </p>
                     )
                   }})() }
-                  <InvalidMessageBox is_invalid={this.props.term.term_is_invalid}
-                                     message={this.props.term.invalid_messages.timezone} />
 
                   {/* Alert message */}
                   { (() => { if(this.props.term.is_exception) {
