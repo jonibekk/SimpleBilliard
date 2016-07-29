@@ -100,7 +100,8 @@
                         <?php if (isset($from_setting) && !$from_setting): ?>
                             <?=
                             $this->Html->link(__("Skip for Now"), "/",
-                                ['class' => 'btn btn-default', 'div' => false]) ?>
+                                ['class' => 'btn signup-btn-skip', 'div' => false])
+                            ?>
                         <?php endif; ?>
                     </div>
                 </div>
