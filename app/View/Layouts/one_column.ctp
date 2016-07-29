@@ -8,6 +8,9 @@
 if (!isset($without_footer)) {
     $without_footer = false;
 }
+if (!isset($with_header_menu)) {
+    $with_header_menu = true;
+}
 ?>
 <!-- START app/View/Layouts/one_column.ctp -->
 <!DOCTYPE html>
@@ -20,10 +23,9 @@ if (!isset($without_footer)) {
     echo newrelic_get_browser_timing_header();
 } ?>
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
-<?php if ($this->Session->read('Auth.User.id')) {
+<?php if ($this->Session->read('Auth.User.id') && $with_header_menu) {
     echo $this->element('header_logged_in');
 } else {
-    // これも読み込まれる可能性はあるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>
