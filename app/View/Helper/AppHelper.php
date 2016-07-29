@@ -27,6 +27,9 @@ class AppHelper extends UrlCacheAppHelper
         $need_display_footer = true;
 
         switch ($controller_name) {
+            case 'teams':
+                if($action_name === 'invite') $need_display_footer = false;
+                break;
             case 'posts':
                 if($action_name === 'message') $need_display_footer = false;
                 break;

@@ -7,6 +7,9 @@
  * @var                    $action_name
  * @var                    $is_mb_app
  */
+if (!isset($with_header_menu)) {
+    $with_header_menu = true;
+}
 ?>
 <!-- START app/View/Layouts/default.ctp -->
 <!DOCTYPE html>
@@ -19,10 +22,9 @@
     echo newrelic_get_browser_timing_header();
 } ?>
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
-<?php if ($this->Session->read('Auth.User.id')) {
+<?php if ($this->Session->read('Auth.User.id') && $with_header_menu) {
     echo $this->element('header_logged_in');
 } else {
-    // ToDo - これが読み込まれる可能性があるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>
