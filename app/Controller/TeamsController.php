@@ -407,6 +407,9 @@ class TeamsController extends AppController
 
     public function invite()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('with_header_menu',false);
+
         $from_setting = false;
         if (strstr($this->referer(), "/settings")) {
             $from_setting = true;
@@ -419,7 +422,6 @@ class TeamsController extends AppController
         $this->set(compact('team'));
 
         if (!$this->request->is('post')) {
-            $this->layout = LAYOUT_ONE_COLUMN;
             return $this->render();
         }
 
