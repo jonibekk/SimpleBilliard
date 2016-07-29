@@ -22,12 +22,22 @@ class AppHelper extends UrlCacheAppHelper
 {
     function needDisplayFooter()
     {
-        if (viaIsSet($this->request->params['controller']) === 'posts' && viaIsSet($this->request->params['action']) === 'message') {
-            return false;
+        $controller_name = viaIsSet($this->request->params['controller']);
+        $action_name = viaIsSet($this->request->params['action']);
+        $need_display_footer = true;
+
+        switch ($controller_name) {
+            case 'posts':
+                if($action_name === 'message') $need_display_footer = false;
+                break;
+            case 'setup':
+                $need_display_footer = false;
+                break;
+            case 'signup':
+                $need_display_footer = false;
+                break;
         }
-        if (viaIsSet($this->request->params['controller']) === 'setup') {
-            return false;
-        }
-        return true;
+
+        return $need_display_footer;
     }
 }

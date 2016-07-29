@@ -111,9 +111,12 @@ export default class UserName extends React.Component {
 
                     {/* Privacy policy check */}
                     <div className="checkbox signup-checkbox">
-                        <label>
-                            <input type="checkbox" value="1" id="UserAgreeTos" ref="privacy"
-                                   onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } /> Goalousの<Link to="/terms" target="_blank" className="link">利用規約</Link>と<Link to="/privacy_policy" target="_blank" className="link">プライバシーポリシー</Link>に同意します。</label>
+                        <input type="checkbox" value="1" className="signup-checkbox" ref="privacy"
+                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                        <div className="signup-privacy-policy-label">
+                            Goalousの<Link to="/terms" target="_blank" className="signup-privacy-policy-link">利用規約</Link>と<br />
+                            <Link to="/privacy_policy" target="_blank" className="signup-privacy-policy-link">プライバシーポリシー</Link>に同意します。
+                        </div>
                     </div>
 
                     {/* Alert message */}
