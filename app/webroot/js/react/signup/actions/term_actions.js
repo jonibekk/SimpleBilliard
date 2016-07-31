@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import {
   post,
@@ -66,7 +65,7 @@ export function disableSubmitButton() {
   return { type: types.CAN_NOT_SUBMIT_TERM }
 }
 
-export function postTerms(terms) {
+export function postTerms() {
   return (dispatch, getState) => {
     dispatch(disableSubmitButton())
     dispatch({ type: types.CHECKING_TERM })
