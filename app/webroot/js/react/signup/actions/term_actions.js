@@ -1,15 +1,30 @@
 import * as types from '../constants/ActionTypes'
-import {
-  post,
-  mapValidationMsg
-} from './common_actions'
+import { post } from './common_actions'
+import dateFormat from "dateformat"
 
 export function selectTerm(term) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.SELECT_TERM,
       selected_term: term
     })
+    dispatch(updateStartMonthList())
+    dispatch(toggleSubmitButton())
+  }
+}
+
+export function selectStartMonth(start_month) {
+  return (dispatch) => {
+    dispatch({
+      type: types.SELECT_START_MONTH,
+      selected_start_month: start_month
+    })
+    dispatch(toggleSubmitButton())
+  }
+}
+
+function toggleSubmitButton() {
+  return (dispatch, getState) => {
     const state = getState()
 
     if(state.term.selected_term && state.term.selected_start_month) {
@@ -20,18 +35,23 @@ export function selectTerm(term) {
   }
 }
 
-export function selectStartMonth(start_month) {
+function updateStartMonthList() {
   return (dispatch, getState) => {
-    dispatch({
-      type: types.SELECT_START_MONTH,
-      selected_start_month: start_month
-    })
     const state = getState()
+    const selected_term = state.term.selected_term
 
-    if(state.term.selected_term && state.term.selected_start_month) {
-      dispatch(enableSubmitButton())
-    } else {
-      dispatch(disableSubmitButton())
+    if(!selected_term) return false
+    const FORMAT = "yyyy/mm/dd"
+    const Date = new Date()
+    const this_month = Date.getMonth()
+
+    for(let i = parseInt(selected_term); i > 0; i--) {
+      const start_month = new Date(date.getMonth() - i)
+      const formatted_start_month = dateFormat(start_month, FORMAT)
+      const end_month = new Date(start_month + i)
+      const formatted_end_month = dateFormat(end_month, FORMAT)
+
+
     }
   }
 }
@@ -89,29 +109,17 @@ export function postTerms() {
       const is_not_available = response.data.is_not_available
       const term_is_invlalid = Boolean(response.data.error && Object.keys(response.data.validation_msg).length)
 
-      if(is_not_available) {
+      // 例外パターンのためSignupのトップページにリダイレクトさせる
+      if(is_not_available || term_is_invlalid) {
         dispatch({
           type: types.TERM_NETWORK_ERROR,
           exception_message: response.data.message
         })
+        redirectToTop()
+      }
 
-        // もう一回やり直す必要があるというメッセージをユーザに読んでもらうために
-        // 3秒間スリープさせる
-        setTimeout(() => {
-          document.location.href = "/signup/email"
-        }, 3000)
-        return
-      }
-      if (term_is_invlalid) {
-        dispatch({
-          type: types.TERM_IS_INVALID,
-          invalid_messages: mapValidationMsg(response.data.validation_msg)
-        })
-        dispatch(enableSubmitButton())
-      } else {
-        dispatch({ type: types.TERM_IS_VALID })
-        document.location.href = "/teams/invite"
-      }
+      dispatch({ type: types.TERM_IS_VALID })
+      document.location.href = "/teams/invite"
     }, () => {
       dispatch({ type: types.FINISHED_CHECKING_TERM })
       dispatch({
@@ -121,4 +129,12 @@ export function postTerms() {
       dispatch(enableSubmitButton())
     })
   }
+}
+
+function redirectToTop() {
+  // もう一回やり直す必要があるというメッセージをユーザに読んでもらうために
+  // 3秒間スリープさせる
+  setTimeout(() => {
+    document.location.href = "/signup/email"
+  }, 3000)
 }

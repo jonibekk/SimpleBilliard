@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
-import { InvalidMessageBox } from './elements/invalid_message_box'
 
 export default class Term extends React.Component {
 
@@ -26,6 +25,7 @@ export default class Term extends React.Component {
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
 
+                  {/* Term */}
                   <div className="panel-heading signup-itemtitle">Term</div>
                   <select className="form-control signup_input-design" ref="term" onChange={ () => { this.props.selectTerm(this.getInputDomData('term')) } }>
                       <option value="">選択してください</option>
@@ -34,22 +34,29 @@ export default class Term extends React.Component {
                       <option value="12">年</option>
                   </select>
 
+                  {/* Start month */}
                   <div className="panel-heading signup-itemtitle">Select your present term ?</div>
-                  <select className="form-control signup_input-design" ref="start_month" onChange={ () => { this.props.selectStartMonth(this.getInputDomData('start_month')) } }>
+                  { (() => { if(this.props.term.selected_term) {
+                    let start_month_options = []
+
+                    for (const key in this.props.term.start_month_list) {
+                      start_month_options.push(
+                        <option value={key} key={this.props.term.start_month_list[key]}>{this.props.term.start_month_list[key]}</option>
+                      )
+                    }
+                    return (
+                    <select className="form-control signup_input-design" ref="start_month" onChange={ () => { this.props.selectStartMonth(this.getInputDomData('start_month')) } }>
+                        <option value="">選択してください</option>
+                        { start_month_options }
+                    </select>
+                    )
+                  } else {
+                    return (
+                    <select className="form-control signup_input-design">
                       <option value="">選択してください</option>
-                      <option value="1">１月</option>
-                      <option value="2">２月</option>
-                      <option value="3">３月</option>
-                      <option value="4">４月</option>
-                      <option value="5">５月</option>
-                      <option value="6">６月</option>
-                      <option value="7">７月</option>
-                      <option value="8">８月</option>
-                      <option value="9">９月</option>
-                      <option value="10">１０月</option>
-                      <option value="11">１１月</option>
-                      <option value="12">１２月</option>
-                  </select>
+                    </select>
+                    )
+                  }})() }
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">Timezone</div>
@@ -57,7 +64,9 @@ export default class Term extends React.Component {
                     let timezone_options = []
 
                     for(const key in cake.data.timezones) {
-                      timezone_options.push(<option value={key} key={cake.data.timezones[key]}>{cake.data.timezones[key]}</option>);
+                      timezone_options.push(
+                        <option value={key} key={cake.data.timezones[key]}>{cake.data.timezones[key]}</option>
+                      )
                     }
                     return (
                       <select className="form-control signup_input-design" defaultValue="+9.0" ref="timezone"
