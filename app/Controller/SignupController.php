@@ -146,6 +146,8 @@ class SignupController extends AppController
 
     public function auth()
     {
+        $timezones = $this->Timezone->getTimezones();
+        $this->set(compact('timezones'));
         $this->render('index');
     }
 
