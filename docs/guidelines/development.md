@@ -14,8 +14,8 @@ Goalousで素早く開発を始められるよう心がけております。
 - Git `version >= 1.8.5`
 - Chef Client `version >= 11.4`
 
-[インストール手順(windows)](http://bit.ly/1TnOXfz)
-[インストール手順(mac)](http://bit.ly/1TnOUAz)
+[インストール手順(windows)](http://bit.ly/2aIo1KH)
+[インストール手順(mac)](http://bit.ly/2adyLyR)
 
 ## Recommend
 - [hubコマンド](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（mac,linuxのみ）
