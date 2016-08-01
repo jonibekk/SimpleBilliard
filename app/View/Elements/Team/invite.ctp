@@ -40,17 +40,17 @@
         <hr>
         <?=
         $this->Form->input('emails', [
-            'label'                    => __("Email address"),
-            'type'                     => 'text',
-            'rows'                     => 3,
+            'label'                        => __("Email address"),
+            'type'                         => 'text',
+            'rows'                         => 3,
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 2000,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-            "data-bv-notempty-message" => __("Input is required."),
-            'afterInput'               => '<span class="help-block">'
+            "data-bv-notempty-message"     => __("Input is required."),
+            'afterInput'                   => '<span class="help-block">'
                 . '<p class="font_11px">' . __("You can set email addresses by comma(,) separated or by newline separated.") . '</p>'
                 . '<ul class="example-indent font_11px"><li>' . __("eg. %s",
-                                                                    1) . ' aaa@example.com,bbb@example.com</li></ul>'
+                    1) . ' aaa@example.com,bbb@example.com</li></ul>'
                 . '<ul class="example-indent font_11px"><li>'
                 . '' . __("eg. %s", 2) . ' aaa@example.com</br>'
                 . 'aaa@example.com</br>'
@@ -60,14 +60,14 @@
         <hr>
         <?=
         $this->Form->input('comment', [
-            'label'      => __("Comment(optional)"),
-            'type'       => 'text',
-            'rows'       => 3,
+            'label'                        => __("Comment(optional)"),
+            'type'                         => 'text',
+            'rows'                         => 3,
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 2000,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-            'afterInput' => '<span class="help-block font_11px">' . __(
-                                                                        "Comment will be added to the body of the invitation email.") . '</span>'
+            'afterInput'                   => '<span class="help-block font_11px">' . __(
+                    "Comment will be added to the body of the invitation email.") . '</span>'
         ]) ?>
     </div>
     <div class="panel-footer">
@@ -75,11 +75,11 @@
             <div class="col-sm-9 col-sm-offset-3">
                 <?=
                 $this->Form->submit(__("Send an invitation email"),
-                                    ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                    ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                 <?php if (isset($from_setting) && !$from_setting): ?>
                     <?=
                     $this->Html->link(__("Skip"), "/",
-                                      ['class' => 'btn btn-default', 'div' => false]) ?>
+                        ['class' => 'btn btn-default', 'div' => false]) ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -93,12 +93,7 @@
         $('[rel="tooltip"]').tooltip();
 
         $('#InviteTeamForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            }
+            live: 'enabled'
         });
     });
 </script>

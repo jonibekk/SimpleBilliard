@@ -62,15 +62,24 @@ class SetupGuideShellTest extends GoalousTestCase
     public function testIsNotifyDay()
     {
         $created = strtotime(date('Y/m/d', strtotime('-10 day')));
-        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'created' => $created], $exec_delete_all = true);
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'created' => $created],
+            $exec_delete_all = true);
         $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);
-        for($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $this->GlRedis->deleteSetupGuideStatus($user_id);
-            $this->GlRedis->saveSetupGuideStatus($user_id, [1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 0, 6 => 1, GlRedis::FIELD_SETUP_LAST_UPDATE_TIME => strtotime("-{$i} day")]);
+            $this->GlRedis->saveSetupGuideStatus($user_id, [
+                1                                     => 1,
+                2                                     => 1,
+                3                                     => 1,
+                4                                     => 1,
+                5                                     => 0,
+                6                                     => 1,
+                GlRedis::FIELD_SETUP_LAST_UPDATE_TIME => strtotime("-{$i} day")
+            ]);
             // Case of notify days
-            if(in_array($i, $notify_days)){
+            if (in_array($i, $notify_days)) {
                 $this->assertTrue($this->SetupGuideShell->_isNotifyDay($user_id, $created));
-            // Not notify days
+                // Not notify days
             } else {
                 $this->assertFalse($this->SetupGuideShell->_isNotifyDay($user_id, $created));
             }
@@ -98,7 +107,8 @@ class SetupGuideShellTest extends GoalousTestCase
         $this->assertEquals($data['urls']['push'], SETUP_GUIDE_NOTIFY_URL . '/setup/profile/image/?from=pushnotifi');
 
         $data = $this->SetupGuideShell->_getNotifyDataByTargetKey(2);
-        $this->assertTrue(strpos($data['messages']['mail'], 'Please install the Goalous mobile application and login.') !== false);
+        $this->assertTrue(strpos($data['messages']['mail'],
+                'Please install the Goalous mobile application and login.') !== false);
         $this->assertEquals($data['messages']['push'], 'Please install the Goalous mobile application and login.');
         $this->assertEquals($data['urls']['mail'], SETUP_GUIDE_NOTIFY_URL . '/setup/app/image/?from=email');
         $this->assertEquals($data['urls']['push'], SETUP_GUIDE_NOTIFY_URL . '/setup/app/image/?from=pushnotifi');

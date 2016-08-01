@@ -204,8 +204,7 @@ if (REDIS_SESSION_HOST) {
     }
     Configure::write('Session', array_merge($session_config, $session_ini));
 
-}
-else {
+} else {
     Configure::write('Session', array(
         'defaults' => 'database',
         'cookie'   => 'SID',
@@ -321,8 +320,7 @@ date_default_timezone_set('UTC');
  */
 if (REDIS_CACHE_HOST) {
     $engine = 'Redis';
-}
-else {
+} else {
     $engine = 'File';
 }
 

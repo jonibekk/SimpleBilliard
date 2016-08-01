@@ -88,12 +88,12 @@ class SoftDeletableBehavior extends ModelBehavior
             }
 
             foreach (am(array_keys($data[$Model->alias]),
-                        array(
-                            'field',
-                            'field_date',
-                            'find',
-                            'delete'
-                        )) as $field) {
+                array(
+                    'field',
+                    'field_date',
+                    'find',
+                    'delete'
+                )) as $field) {
                 unset($attributes[$field]);
             }
 
@@ -290,12 +290,11 @@ class SoftDeletableBehavior extends ModelBehavior
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 if (empty($queryData['conditions'])
                     || (!in_array($this->__settings[$Model->alias]['field'], array_keys($queryData['conditions']))
                         && !in_array($Model->alias . '.' . $this->__settings[$Model->alias]['field'],
-                                     array_keys($queryData['conditions'])))
+                            array_keys($queryData['conditions'])))
                 ) {
                     $include = true;
                 }
@@ -311,8 +310,7 @@ class SoftDeletableBehavior extends ModelBehavior
                     $queryData['conditions'] = $Db->name($Model->alias) . '.'
                         . $Db->name($this->__settings[$Model->alias]['field']) . '= false AND '
                         . $queryData['conditions'];
-                }
-                else {
+                } else {
                     $queryData['conditions'][$Model->alias . '.' . $this->__settings[$Model->alias]['field']] = false;
                 }
             }
@@ -336,8 +334,7 @@ class SoftDeletableBehavior extends ModelBehavior
                 $this->__backAttributes = array(
                     $Model->alias => array()
                 );
-            }
-            else {
+            } else {
                 if (!isset($this->__backAttributes[$Model->alias])) {
                     $this->__backAttributes[$Model->alias] = array();
                 }

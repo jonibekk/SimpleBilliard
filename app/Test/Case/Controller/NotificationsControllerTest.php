@@ -77,41 +77,45 @@ class NotificationsControllerTest extends GoalousControllerTestCase
         $oldest_score_id = 1;
         $Notifications = $this->_getNotificationsCommonMock();
         $return_value_map = [
-            [NOTIFY_PAGE_ITEMS_NUMBER, (string)$oldest_score_id, [
+            [
+                NOTIFY_PAGE_ITEMS_NUMBER,
+                (string)$oldest_score_id,
                 [
-                    'User'         => [
-                        'id'               => 1,
-                        'display_username' => 'test taro',
-                        'photo_file_name'  => null,
+                    [
+                        'User'         => [
+                            'id'               => 1,
+                            'display_username' => 'test taro',
+                            'photo_file_name'  => null,
+                        ],
+                        'Notification' => [
+                            'title'      => 'test taroさんがあなたの投稿にコメントしました。',
+                            'url'        => 'http://192.168.50.4/post_permanent/1/from_notification:1',
+                            'unread_flg' => false,
+                            'created'    => '1429643033',
+                            'score'      => 1000,
+                            'body'       => 'testA',
+                            'type'       => 1,
+                        ]
                     ],
-                    'Notification' => [
-                        'title'      => 'test taroさんがあなたの投稿にコメントしました。',
-                        'url'        => 'http://192.168.50.4/post_permanent/1/from_notification:1',
-                        'unread_flg' => false,
-                        'created'    => '1429643033',
-                        'score'      => 1000,
-                        'body'       => 'testA',
-                        'type'       => 1,
-                    ]
-                ],
-                [
-                    'User'         => [
-                        'id'               => 2,
-                        'display_username' => 'test jiro',
-                        'photo_file_name'  => null,
+                    [
+                        'User'         => [
+                            'id'               => 2,
+                            'display_username' => 'test jiro',
+                            'photo_file_name'  => null,
+                        ],
+                        'Notification' => [
+                            'title'      => 'test jiroさんがあなたの投稿にコメントしました。',
+                            'url'        => 'http://192.168.50.4/post_permanent/2/from_notification:1',
+                            'unread_flg' => false,
+                            'created'    => '1429643033',
+                            'score'      => 1001,
+                            'body'       => 'testB',
+                            'type'       => 1,
+                        ]
                     ],
-                    'Notification' => [
-                        'title'      => 'test jiroさんがあなたの投稿にコメントしました。',
-                        'url'        => 'http://192.168.50.4/post_permanent/2/from_notification:1',
-                        'unread_flg' => false,
-                        'created'    => '1429643033',
-                        'score'      => 1001,
-                        'body'       => 'testB',
-                        'type'       => 1,
-                    ]
-                ],
 
-            ]]
+                ]
+            ]
         ];
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -167,11 +171,14 @@ class NotificationsControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],

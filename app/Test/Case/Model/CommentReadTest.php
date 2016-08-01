@@ -17,7 +17,8 @@ class CommentReadTest extends GoalousTestCase
     public $fixtures = array(
         'app.comment_read',
         'app.comment',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team',
         'app.post',
         'app.goal',

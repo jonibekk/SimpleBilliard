@@ -19,8 +19,9 @@
     <meta name='description' content='<?= $meta_description ?>'/>
     <?php echo $this->Html->meta('icon');
     echo $this->Html->meta(
-        ['name'    => 'viewport',
-         'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no"
+        [
+            'name'    => 'viewport',
+            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no"
         ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
 

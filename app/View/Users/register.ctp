@@ -49,8 +49,7 @@
                 if ($last_first) {
                     echo $last_name;
                     echo $first_name;
-                }
-                else {
+                } else {
                     echo $first_name;
                     echo $last_name;
                 }
@@ -71,7 +70,7 @@
                     $this->Form->input('Email.0.email', [
                         'label'                        => __("Email"),
                         'placeholder'                  => __("tom@example.com"),
-                        "data-bv-notempty"             => "false",
+                        "data-bv-notempty"             => "true",
                         'data-bv-emailaddress'         => "false",
                         "data-bv-callback"             => "true",
                         "data-bv-callback-message"     => " ",
@@ -85,7 +84,10 @@
                 <?=
                 $this->Form->input('update_email_flg', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
-                    'label'     => ['class' => null, 'text' => __("I receive the news and updates by email from Goalous.")],
+                    'label'     => [
+                        'class' => null,
+                        'text'  => __("I receive the news and updates by email from Goalous.")
+                    ],
                     'class'     => false,
                     'default'   => true,
                 ]) ?>
@@ -107,35 +109,37 @@
                 ]) ?>
                 <hr>
                 <?php $tosLink = $this->Html->link(__('Terms of Use'),
-                                                   [
-                                                       'controller' => 'pages',
-                                                       'action'     => 'display',
-                                                       'pagename'   => 'terms',
-                                                   ],
-                                                   [
-                                                       'target'  => "_blank",
-                                                       'onclick' => "window.open(this.href,'_system');return false;",
-                                                       'class'   => 'link',
-                                                   ]
+                    [
+                        'controller' => 'pages',
+                        'action'     => 'display',
+                        'pagename'   => 'terms',
+                    ],
+                    [
+                        'target'  => "_blank",
+                        'onclick' => "window.open(this.href,'_system');return false;",
+                        'class'   => 'link',
+                    ]
                 );
 
                 $ppLink = $this->Html->link(__('Privacy Policy'),
-                                            [
-                                                'controller' => 'pages',
-                                                'action'     => 'display',
-                                                'pagename'   => 'privacy_policy',
-                                            ],
-                                            [
-                                                'target'  => "_blank",
-                                                'onclick' => "window.open(this.href,'_system');return false;",
-                                                'class'   => 'link',
-                                            ]
+                    [
+                        'controller' => 'pages',
+                        'action'     => 'display',
+                        'pagename'   => 'privacy_policy',
+                    ],
+                    [
+                        'target'  => "_blank",
+                        'onclick' => "window.open(this.href,'_system');return false;",
+                        'class'   => 'link',
+                    ]
                 );
                 echo $this->Form->input('agree_tos', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
-                    'label'     => ['class' => null,
-                                    'text'  => __("I agree to %s and %s of Goalous.", $tosLink, $ppLink)],
+                    'label'     => [
+                        'class' => null,
+                        'text'  => __("I agree to %s and %s of Goalous.", $tosLink, $ppLink)
+                    ],
                     'class'     => 'validate-checkbox'
                 ]);
                 //タイムゾーン設定の為のローカル時刻をセット
@@ -151,7 +155,7 @@
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?= $this->Form->submit(__("New registration"),
-                                                ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

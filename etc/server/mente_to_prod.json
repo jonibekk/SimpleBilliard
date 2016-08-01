@@ -5,7 +5,7 @@
       "ResourceRecordSet": {
         "Name": "www.goalous.com.",
         "AliasTarget": {
-          "DNSName": "gls-maintenance-1186792314.ap-northeast-1.elb.amazonaws.com",
+          "DNSName": "dualstack.gls-web2-1582319908.ap-northeast-1.elb.amazonaws.com.",
           "HostedZoneId": "Z14GRHDCWA56QT",
           "EvaluateTargetHealth": true
         },
@@ -19,7 +19,7 @@
       "ResourceRecordSet": {
         "Name": "www2.goalous.com.",
         "AliasTarget": {
-          "DNSName": "gls-maintenance-1186792314.ap-northeast-1.elb.amazonaws.com",
+          "DNSName": "dualstack.gls-web2-1582319908.ap-northeast-1.elb.amazonaws.com.",
           "HostedZoneId": "Z14GRHDCWA56QT",
           "EvaluateTargetHealth": true
         },

@@ -129,13 +129,17 @@ class PostLikeTest extends GoalousTestCase
         $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->PostLike->create();
         $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 3]);
-        $count = $this->PostLike->getCount(['start' => $now - HOUR,
-                                            'end'   => $now + HOUR]);
+        $count = $this->PostLike->getCount([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         $this->assertEquals(3, $count);
 
-        $count = $this->PostLike->getCount(['start'   => $now - HOUR,
-                                            'end'     => $now + HOUR,
-                                            'user_id' => 1]);
+        $count = $this->PostLike->getCount([
+            'start'   => $now - HOUR,
+            'end'     => $now + HOUR,
+            'user_id' => 1
+        ]);
         $this->assertEquals(2, $count);
     }
 
@@ -152,14 +156,18 @@ class PostLikeTest extends GoalousTestCase
         $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->PostLike->create();
         $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 3]);
-        $list = $this->PostLike->getUniqueUserList(['start' => $now - HOUR,
-                                                    'end'   => $now + HOUR]);
+        $list = $this->PostLike->getUniqueUserList([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         asort($list);
         $this->assertEquals([1 => 1, 2 => 2], $list);
 
-        $list = $this->PostLike->getUniqueUserList(['start'   => $now - HOUR,
-                                                    'end'     => $now + HOUR,
-                                                    'user_id' => 1]);
+        $list = $this->PostLike->getUniqueUserList([
+            'start'   => $now - HOUR,
+            'end'     => $now + HOUR,
+            'user_id' => 1
+        ]);
         asort($list);
         $this->assertEquals([1 => 1], $list);
     }
@@ -177,33 +185,45 @@ class PostLikeTest extends GoalousTestCase
         $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->PostLike->create();
         $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 8]);
-        $ranking = $this->PostLike->getRanking(['start' => $now - HOUR,
-                                                'end'   => $now + HOUR]);
+        $ranking = $this->PostLike->getRanking([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         $this->assertEquals(['1' => 2, '2' => 1, '8' => 1], $ranking);
 
-        $ranking = $this->PostLike->getRanking(['start' => $now - HOUR,
-                                                'end'   => $now + HOUR,
-                                                'limit' => 1]);
+        $ranking = $this->PostLike->getRanking([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR,
+            'limit' => 1
+        ]);
         $this->assertEquals(['1' => 2], $ranking);
 
-        $ranking = $this->PostLike->getRanking(['start'     => $now - HOUR,
-                                                'end'       => $now + HOUR,
-                                                'post_type' => Post::TYPE_ACTION]);
+        $ranking = $this->PostLike->getRanking([
+            'start'     => $now - HOUR,
+            'end'       => $now + HOUR,
+            'post_type' => Post::TYPE_ACTION
+        ]);
         $this->assertEquals(['8' => 1], $ranking);
 
-        $ranking = $this->PostLike->getRanking(['start'        => $now - HOUR,
-                                                'end'          => $now + HOUR,
-                                                'post_user_id' => 2]);
+        $ranking = $this->PostLike->getRanking([
+            'start'        => $now - HOUR,
+            'end'          => $now + HOUR,
+            'post_user_id' => 2
+        ]);
         $this->assertEquals(['1' => 2], $ranking);
-        $ranking = $this->PostLike->getRanking(['start'           => $now - HOUR,
-                                                'end'             => $now + HOUR,
-                                                'share_circle_id' => [1],
-                                                'post_user_id'    => 2]);
+        $ranking = $this->PostLike->getRanking([
+            'start'           => $now - HOUR,
+            'end'             => $now + HOUR,
+            'share_circle_id' => [1],
+            'post_user_id'    => 2
+        ]);
         $this->assertEquals(['1' => 2], $ranking);
-        $ranking = $this->PostLike->getRanking(['start'           => $now - HOUR,
-                                                'end'             => $now + HOUR,
-                                                'share_circle_id' => [99999999],
-                                                'post_user_id'    => 2]);
+        $ranking = $this->PostLike->getRanking([
+            'start'           => $now - HOUR,
+            'end'             => $now + HOUR,
+            'share_circle_id' => [99999999],
+            'post_user_id'    => 2
+        ]);
         $this->assertEquals([], $ranking);
     }
 

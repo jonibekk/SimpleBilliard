@@ -54,6 +54,19 @@ gulp.task('react_setup:clean_dir', ['react_setup:clean_files'], cb => {
     .on('end', function(){ gutil.log('----------------- react_setup task finished --------------------------'); });
 })
 
+gulp.task('react_signup:clean', ['react_signup:clean_files', 'react_signup:clean_dir']);
+
+gulp.task('react_signup:clean_files', () => {
+  return gulp.src([config.dest + '/react_signup/**/*.js'], { read: false })
+    .pipe(duration('react_signup:clean_files'))
+})
+
+gulp.task('react_signup:clean_dir', ['react_signup:clean_files'], cb => {
+  return gulp.src([config.dest + '/react_signup'], { read: false })
+    .pipe(duration('react_signup:clean_dir'))
+    .on('end', function(){ gutil.log('----------------- react_signup task finished --------------------------'); });
+})
+
 gulp.task('css:clean', () => {
   return gulp.src([config.dest + '/css', config.dest + '/css_cat'], { read: false })
     .pipe(rimraf({ force: true }))

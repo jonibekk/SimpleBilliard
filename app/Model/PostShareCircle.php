@@ -118,7 +118,8 @@ class PostShareCircle extends AppModel
                 'PostShareCircle.team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'PostShareCircle.circle_id', 'PostShareCircle.circle_id',
+                'PostShareCircle.circle_id',
+                'PostShareCircle.circle_id',
             ],
         ];
         $res = $this->find('list', $options);
@@ -142,9 +143,10 @@ class PostShareCircle extends AppModel
      */
     public function getPostCountByCircleId($circle_id, $params = [])
     {
-        $params = array_merge(['start' => null,
-                               'end'   => null,
-                              ], $params);
+        $params = array_merge([
+            'start' => null,
+            'end'   => null,
+        ], $params);
 
         $options = [
             'conditions' => [
@@ -171,9 +173,10 @@ class PostShareCircle extends AppModel
      */
     public function getTotalPostReadCountByCircleId($circle_id, $params = [])
     {
-        $params = array_merge(['start' => null,
-                               'end'   => null,
-                              ], $params);
+        $params = array_merge([
+            'start' => null,
+            'end'   => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -205,9 +208,10 @@ class PostShareCircle extends AppModel
      */
     public function getTotalPostLikeCountByCircleId($circle_id, $params = [])
     {
-        $params = array_merge(['start' => null,
-                               'end'   => null,
-                              ], $params);
+        $params = array_merge([
+            'start' => null,
+            'end'   => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -239,10 +243,11 @@ class PostShareCircle extends AppModel
      */
     public function getLikeUserListByCircleId($circle_id, $params = [])
     {
-        $params = array_merge(['start'        => null,
-                               'end'          => null,
-                               'like_user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'start'        => null,
+            'end'          => null,
+            'like_user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -288,10 +293,11 @@ class PostShareCircle extends AppModel
      */
     public function getCommentUserListByCircleId($circle_id, $params = [])
     {
-        $params = array_merge(['start'           => null,
-                               'end'             => null,
-                               'comment_user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'start'           => null,
+            'end'             => null,
+            'comment_user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [

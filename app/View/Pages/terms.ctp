@@ -27,52 +27,52 @@ Page毎に要素が変わるもの
 */
 $meta_terms = [
     [
-        "name" => "description",
+        "name"    => "description",
         "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
     ],
     [
-        "name" => "keywords",
+        "name"    => "keywords",
         "content" => "目標管理,目標達成,社内SNS,評価,MBO",
     ],
     [
         "property" => "og:type",
-        "content" => "website",
+        "content"  => "website",
     ],
     [
         "property" => "og:title",
-        "content" => __('Terms of service | Goalous'),
+        "content"  => __('Terms of service | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
     ],
     [
         "property" => "og:url",
-        "content" => "https://www.goalous.com/terms/",
+        "content"  => "https://www.goalous.com/terms/",
     ],
     [
         "property" => "og:image",
-        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
+        "content"  => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
-        "content" => "966242223397117",
+        "content"  => "966242223397117",
     ],
     [
-        "name" => "twitter_card",
+        "name"    => "twitter_card",
         "content" => "summary",
     ],
     [
-        "name" => "twitter:site",
+        "name"    => "twitter:site",
         "content" => "@goalous",
     ]
 ];
 $num_ogp = count($meta_terms);
-for($i = 0; $i < $num_ogp; $i++){
+for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_terms[$i]);
 }
 ?>
@@ -82,5 +82,5 @@ for($i = 0; $i < $num_ogp; $i++){
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/terms') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/terms.ctp -->
-<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/<?=$short_lang?>_terms.md"></div>
+<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/<?= $short_lang ?>_terms.md"></div>
 <!-- END app/View/Pages/terms.ctp -->

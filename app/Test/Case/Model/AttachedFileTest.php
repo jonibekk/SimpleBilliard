@@ -251,7 +251,7 @@ class AttachedFileTest extends GoalousTestCase
         $prepare_post_file_data['PostFile']['index_num'] = 1;
         $this->AttachedFile->saveAll($prepare_post_file_data);
         $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, array_merge([1], $hashes),
-                                                       [2]);
+            [2]);
         $files = $this->AttachedFile->find('all');
         $post_files = $this->AttachedFile->PostFile->find('all');
         $this->assertTrue($res);
@@ -291,7 +291,7 @@ class AttachedFileTest extends GoalousTestCase
         $prepare_post_file_data['PostFile']['index_num'] = 1;
         $this->AttachedFile->saveAll($prepare_post_file_data);
         $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, array_merge([1], $hashes),
-                                                       [2]);
+            [2]);
         $this->assertFalse($res);
     }
 
@@ -330,13 +330,13 @@ class AttachedFileTest extends GoalousTestCase
         $prepare_post_file_data['AttachedFile']['attached_file_name'] = 'test_zzz.jpg';
         $this->AttachedFile->saveAll($prepare_post_file_data);
         $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                       array_merge($hashes, [2]),
-                                                       [1]);
+            array_merge($hashes, [2]),
+            [1]);
         $files = $this->AttachedFile->find('all');
         $action_res_files = $this->AttachedFile->ActionResultFile->find('all', ['order' => ['index_num asc']]);
         $main_img = $this->AttachedFile->find('all', ['conditions' => ['display_file_list_flg' => false]]);
         $main_img_action_res_file = $this->AttachedFile->ActionResultFile->find('first',
-                                                                                ['conditions' => ['attached_file_id' => $main_img[0]['AttachedFile']['id']]]);
+            ['conditions' => ['attached_file_id' => $main_img[0]['AttachedFile']['id']]]);
         $this->assertTrue($res);
         $this->assertCount(3, $files);
         $this->assertCount(3, $action_res_files);
@@ -380,12 +380,12 @@ class AttachedFileTest extends GoalousTestCase
         $prepare_post_file_data['AttachedFile']['attached_file_name'] = 'test_zzz.jpg';
         $this->AttachedFile->saveAll($prepare_post_file_data);
         $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                       array_merge([1], $hashes), [2]);
+            array_merge([1], $hashes), [2]);
         $files = $this->AttachedFile->find('all');
         $action_res_files = $this->AttachedFile->ActionResultFile->find('all', ['order' => ['index_num asc']]);
         $main_img = $this->AttachedFile->find('all', ['conditions' => ['display_file_list_flg' => false]]);
         $main_img_action_res_file = $this->AttachedFile->ActionResultFile->find('first',
-                                                                                ['conditions' => ['attached_file_id' => $main_img[0]['AttachedFile']['id']]]);
+            ['conditions' => ['attached_file_id' => $main_img[0]['AttachedFile']['id']]]);
         $this->assertTrue($res);
         $this->assertCount(3, $files);
         $this->assertCount(3, $action_res_files);
@@ -476,7 +476,7 @@ class AttachedFileTest extends GoalousTestCase
         $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
         $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
         $res = $this->AttachedFile->getCountOfAttachedFiles(1, AttachedFile::TYPE_MODEL_POST,
-                                                            AttachedFile::TYPE_FILE_IMG);
+            AttachedFile::TYPE_FILE_IMG);
         $this->assertEquals(1, $res);
     }
 
@@ -577,8 +577,7 @@ class AttachedFileTest extends GoalousTestCase
             $this->AttachedFile->query("DELETE FROM {$table}");
             if ($this->AttachedFile->getDataSource()->config['datasource'] == 'Database/Sqlite') {
                 $this->AttachedFile->query("delete from sqlite_sequence where name='{$table}'");
-            }
-            else {
+            } else {
                 $this->AttachedFile->query("ALTER TABLE {$table} AUTO_INCREMENT = 1");
             }
         }

@@ -161,14 +161,18 @@ class CommentLikeTest extends GoalousTestCase
         $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 2]);
         $this->CommentLike->create();
         $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 3]);
-        $list = $this->CommentLike->getUniqueUserList(['start' => $now - HOUR,
-                                                       'end'   => $now + HOUR]);
+        $list = $this->CommentLike->getUniqueUserList([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         asort($list);
         $this->assertEquals([1 => 1, 2 => 2], $list);
 
-        $list = $this->CommentLike->getUniqueUserList(['start'   => $now - HOUR,
-                                                       'end'     => $now + HOUR,
-                                                       'user_id' => 1]);
+        $list = $this->CommentLike->getUniqueUserList([
+            'start'   => $now - HOUR,
+            'end'     => $now + HOUR,
+            'user_id' => 1
+        ]);
         asort($list);
         $this->assertEquals([1 => 1], $list);
     }

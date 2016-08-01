@@ -21,13 +21,19 @@
 </div>
 <div class="form-group">
     <a class="modal-ajax-get pointer"
-       href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_evaluatees', 'evaluate_term_id' => $evaluate_term_id]) ?>">
+       href="<?= $this->Html->url(['controller'       => 'evaluations',
+                                   'action'           => 'ajax_get_incomplete_evaluatees',
+                                   'evaluate_term_id' => $evaluate_term_id
+       ]) ?>">
         <?= __("Display incomplete evaluatees.") ?>
     </a>
 </div>
 <div class="form-group">
     <a class="modal-ajax-get pointer"
-       href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_evaluators', 'evaluate_term_id' => $evaluate_term_id]) ?>">
+       href="<?= $this->Html->url(['controller'       => 'evaluations',
+                                   'action'           => 'ajax_get_incomplete_evaluators',
+                                   'evaluate_term_id' => $evaluate_term_id
+       ]) ?>">
         <?= __("Display incomplete evaluators.") ?>
     </a>
 </div>
@@ -40,7 +46,10 @@
         <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
             <?php if ($type == Evaluation::TYPE_ONESELF): ?>
                 <a class="modal-ajax-get pointer"
-                   href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_oneself', 'evaluate_term_id' => $evaluate_term_id]) ?>">
+                   href="<?= $this->Html->url(['controller'       => 'evaluations',
+                                               'action'           => 'ajax_get_incomplete_oneself',
+                                               'evaluate_term_id' => $evaluate_term_id
+                   ]) ?>">
                     <?= h($status['label']) ?>
                 </a>
             <?php else: ?>

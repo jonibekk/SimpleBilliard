@@ -82,8 +82,7 @@ class DataUpdateShell extends AppShell
         $this->hr(1);
         if (!empty($save_data)) {
             $this->out("Updated Evaluation.");
-        }
-        else {
+        } else {
             $this->out("No Data.");
         }
 

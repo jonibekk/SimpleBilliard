@@ -12,19 +12,89 @@ class GroupVisionFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
-        'name'            => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'グループビジョン名', 'charset' => 'utf8mb4'),
-        'description'     => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'グループビジョンの説明', 'charset' => 'utf8mb4'),
-        'photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '画像', 'charset' => 'utf8mb4'),
-        'create_user_id'  => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '作成者ユーザID(belongsToでUserモデルに関連)'),
-        'modify_user_id'  => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '最終編集者ユーザID(belongsToでUserモデルに関連)'),
-        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
-        'group_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'グループID(belongsToでGroupモデルに関連)'),
-        'active_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'アクティブフラグ(0の場合はアーカイブ)'),
+        'id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => 'ID'
+        ),
+        'name'            => array(
+            'type'    => 'text',
+            'null'    => false,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'グループビジョン名',
+            'charset' => 'utf8mb4'
+        ),
+        'description'     => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'グループビジョンの説明',
+            'charset' => 'utf8mb4'
+        ),
+        'photo_file_name' => array('type'    => 'string',
+                                   'null'    => true,
+                                   'default' => null,
+                                   'collate' => 'utf8mb4_general_ci',
+                                   'comment' => '画像',
+                                   'charset' => 'utf8mb4'
+        ),
+        'create_user_id'  => array('type'     => 'biginteger',
+                                   'null'     => false,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'key'      => 'index',
+                                   'comment'  => '作成者ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'modify_user_id'  => array('type'     => 'biginteger',
+                                   'null'     => false,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'key'      => 'index',
+                                   'comment'  => '最終編集者ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'team_id'         => array('type'     => 'biginteger',
+                                   'null'     => false,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'key'      => 'index',
+                                   'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+        ),
+        'group_id'        => array('type'     => 'biginteger',
+                                   'null'     => false,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'key'      => 'index',
+                                   'comment'  => 'グループID(belongsToでGroupモデルに関連)'
+        ),
+        'active_flg'      => array('type'    => 'boolean',
+                                   'null'    => false,
+                                   'default' => '1',
+                                   'comment' => 'アクティブフラグ(0の場合はアーカイブ)'
+        ),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+        'deleted'         => array('type'     => 'integer',
+                                   'null'     => true,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'comment'  => '削除した日付時刻'
+        ),
+        'created'         => array('type'     => 'integer',
+                                   'null'     => true,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'comment'  => '追加した日付時刻'
+        ),
+        'modified'        => array('type'     => 'integer',
+                                   'null'     => true,
+                                   'default'  => null,
+                                   'unsigned' => true,
+                                   'comment'  => '更新した日付時刻'
+        ),
         'indexes'         => array(
             'PRIMARY'        => array('column' => 'id', 'unique' => 1),
             'create_user_id' => array('column' => 'create_user_id', 'unique' => 0),

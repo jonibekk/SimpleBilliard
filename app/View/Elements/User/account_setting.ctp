@@ -21,11 +21,11 @@
     <?=
     $this->Form->create('User', [
         'inputDefaults' => [
-            'div'       => 'form-group',
-            'label'     => [
+            'div'   => 'form-group',
+            'label' => [
                 'class' => 'col col-sm-3 control-label form-label'
             ],
-            'class'     => 'form-control setting_input-design'
+            'class' => 'form-control setting_input-design'
         ],
         'class'         => 'form-horizontal',
         'novalidate'    => true,
@@ -40,7 +40,8 @@
 
                 <?php if (!empty($not_verified_email)): ?>
                     <p class="form-control-static">
-                        <a href="#" rel="tooltip" title="<?= __("Email address can't be changed because of the authentication.") ?>">
+                        <a href="#" rel="tooltip"
+                           title="<?= __("Email address can't be changed because of the authentication.") ?>">
                             <?= __("Change email address") ?>
                         </a>
                     </p>
@@ -73,26 +74,26 @@
         <hr>
         <?=
         $this->Form->input('language', [
-            'label'   => __("Language"),
-            'type'    => 'select',
-            'options' => $language_list,
+            'label'     => __("Language"),
+            'type'      => 'select',
+            'options'   => $language_list,
             'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
         ]) ?>
         <hr>
         <?=
         $this->Form->input('timezone', [
-            'label'   => __("Timezone"),
-            'type'    => 'select',
-            'options' => $timezones,
+            'label'     => __("Timezone"),
+            'type'      => 'select',
+            'options'   => $timezones,
             'wrapInput' => 'user-setting-timezone-select-wrap col col-sm-6'
         ])
         ?>
         <hr>
         <?php if (!empty($my_teams)) {
             echo $this->Form->input('default_team_id', [
-                'label'   => __("Default Team"),
-                'type'    => 'select',
-                'options' => $my_teams,
+                'label'     => __("Default Team"),
+                'type'      => 'select',
+                'options'   => $my_teams,
                 'wrapInput' => 'user-setting-default-team-select-wrap col col-sm-6'
             ]);
             echo "<hr>";
@@ -104,7 +105,7 @@
             <div class="col col-sm-6">
                 <p class="form-control-static">
                     <a href="#" data-toggle="modal" data-target="#modal_change_password">
-                    <?= __("Change password") ?>
+                        <?= __("Change password") ?>
                     </a>
                 </p>
             </div>
@@ -116,19 +117,27 @@
             <div class="col col-sm-6">
                 <p class="form-control-static">
                     <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_delete']) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'users',
+                            'action'     => 'ajax_get_modal_2fa_delete'
+                        ]) ?>"
                            class="modal-ajax-get"><?= __("Disable") ?></a>
                     <?php else: ?>
-                        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_register']) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'users',
+                            'action'     => 'ajax_get_modal_2fa_register'
+                        ]) ?>"
                            class="modal-ajax-get"><?= __("Enable") ?></a>
                     <?php endif; ?>
                 </p>
                 <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
-                <p class="form-control-static">
-                    <a href="<?= $this->Html->url(['controller' => 'users',
-                                                   'action'     => 'ajax_get_modal_recovery_code']) ?>"
-                       id="ShowRecoveryCodeButton"><?= __("Show Recovery codes") ?></a>
-                </p>
+                    <p class="form-control-static">
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'users',
+                            'action'     => 'ajax_get_modal_recovery_code'
+                        ]) ?>"
+                           id="ShowRecoveryCodeButton"><?= __("Show Recovery codes") ?></a>
+                    </p>
                 <?php endif; ?>
             </div>
         </div>
@@ -144,11 +153,7 @@
     $(document).ready(function () {
         $('#UserAccountForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
+
             fields: {}
         });
     });
@@ -158,8 +163,10 @@
 <?= $this->element('User/modal_change_email') ?>
 <?php if (!empty($not_verified_email)) {
     echo $this->element('User/modal_delete_email',
-                        ['email'    => $not_verified_email['Email']['email'],
-                         'email_id' => $not_verified_email['Email']['id']]);
+        [
+            'email'    => $not_verified_email['Email']['email'],
+            'email_id' => $not_verified_email['Email']['id']
+        ]);
 }
 ?>
 <!-- END app/View/Elements/User/account_setting.ctp -->

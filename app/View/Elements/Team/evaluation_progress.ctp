@@ -30,9 +30,11 @@
             <h4><?= __('Previous Term') ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
                 - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
             <?= $this->element('Team/eval_progress_item',
-                               ['evaluate_term_id' => $previous_term_id,
-                                'progress_percent' => $previous_progress,
-                                'statuses'         => $previous_statuses]) ?>
+                [
+                    'evaluate_term_id' => $previous_term_id,
+                    'progress_percent' => $previous_progress,
+                    'statuses'         => $previous_statuses
+                ]) ?>
         </div>
     <?php endif; ?>
     <?php if ($current_eval_is_started): ?>
@@ -40,9 +42,11 @@
             <h4><?= __('Current Term') ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
                 - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
             <?= $this->element('Team/eval_progress_item',
-                               ['evaluate_term_id' => $current_term_id,
-                                'progress_percent' => $current_progress,
-                                'statuses'         => $current_statuses]) ?>
+                [
+                    'evaluate_term_id' => $current_term_id,
+                    'progress_percent' => $current_progress,
+                    'statuses'         => $current_statuses
+                ]) ?>
         </div>
     <?php endif; ?>
 </div>

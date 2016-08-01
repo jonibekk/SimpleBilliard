@@ -71,7 +71,7 @@ class DataUpdateShellTest extends GoalousTestCase
         $res = $this->Evaluation->find("all");
         // Grouping as evaluatee
         $res_combined = Hash::combine($res, "{n}.Evaluation.id", "{n}.Evaluation.index_num",
-                                      "{n}.Evaluation.evaluatee_user_id");
+            "{n}.Evaluation.evaluatee_user_id");
         foreach ($res_combined as $group) {
             // Initialize array index key
             $group = array_values($group);
@@ -101,8 +101,7 @@ class DataUpdateShellTest extends GoalousTestCase
                 $this->assertEquals($eval['my_turn_flg'], $myTurnFlgExpected);
 
                 // case of first evaluator
-            }
-            elseif ($eval['evaluate_type'] == $this->Evaluation->TYPE_EVALUATOR
+            } elseif ($eval['evaluate_type'] == $this->Evaluation->TYPE_EVALUATOR
                 && $eval['index_num'] == 1
             ) {
                 $evaluatee = $res_combined[$key - 1];

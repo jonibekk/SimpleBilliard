@@ -12,30 +12,179 @@ class PostFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'                   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿ID'),
-        'user_id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿作成ユーザID(belongsToでUserモデルに関連)'),
-        'team_id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
-        'body'                 => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '投稿本文', 'charset' => 'utf8mb4'),
-        'type'                 => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 3, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿タイプ(1:Nomal,2:バッジ,3:ゴール作成,4:etc ... )'),
-        'comment_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'コメント数(commentsテーブルにレコードが追加されたらカウントアップされる)'),
-        'post_like_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'いいね数(post_likesテーブルni'),
-        'post_read_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '読んだ数'),
+        'id'                   => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => '投稿ID'
+        ),
+        'user_id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '投稿作成ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'team_id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+        ),
+        'body'                 => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '投稿本文',
+            'charset' => 'utf8mb4'
+        ),
+        'type'                 => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '1',
+            'length'   => 3,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '投稿タイプ(1:Nomal,2:バッジ,3:ゴール作成,4:etc ... )'
+        ),
+        'comment_count'        => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => false,
+            'comment'  => 'コメント数(commentsテーブルにレコードが追加されたらカウントアップされる)'
+        ),
+        'post_like_count'      => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => false,
+            'comment'  => 'いいね数(post_likesテーブルni'
+        ),
+        'post_read_count'      => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => false,
+            'comment'  => '読んだ数'
+        ),
         'important_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
-        'goal_id'              => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'circle_id'            => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'サークルID'),
-        'action_result_id'     => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'アクションID'),
-        'key_result_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'KR ID'),
-        'photo1_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '投稿画像1', 'charset' => 'utf8mb4'),
-        'photo2_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '投稿画像2', 'charset' => 'utf8mb4'),
-        'photo3_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '投稿画像3', 'charset' => 'utf8mb4'),
-        'photo4_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '投稿画像4', 'charset' => 'utf8mb4'),
-        'photo5_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '投稿画像5', 'charset' => 'utf8mb4'),
-        'site_info'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'サイト情報', 'charset' => 'utf8mb4'),
-        'site_photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'サイト画像', 'charset' => 'utf8mb4'),
-        'del_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
-        'created'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を追加した日付時刻'),
-        'modified'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
+        'goal_id'              => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index'
+        ),
+        'circle_id'            => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'サークルID'
+        ),
+        'action_result_id'     => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'アクションID'
+        ),
+        'key_result_id'        => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'KR ID'
+        ),
+        'photo1_file_name'     => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '投稿画像1',
+            'charset' => 'utf8mb4'
+        ),
+        'photo2_file_name'     => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '投稿画像2',
+            'charset' => 'utf8mb4'
+        ),
+        'photo3_file_name'     => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '投稿画像3',
+            'charset' => 'utf8mb4'
+        ),
+        'photo4_file_name'     => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '投稿画像4',
+            'charset' => 'utf8mb4'
+        ),
+        'photo5_file_name'     => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '投稿画像5',
+            'charset' => 'utf8mb4'
+        ),
+        'site_info'            => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'サイト情報',
+            'charset' => 'utf8mb4'
+        ),
+        'site_photo_file_name' => array('type'    => 'string',
+                                        'null'    => true,
+                                        'default' => null,
+                                        'collate' => 'utf8mb4_general_ci',
+                                        'comment' => 'サイト画像',
+                                        'charset' => 'utf8mb4'
+        ),
+        'del_flg'              => array('type'    => 'boolean',
+                                        'null'    => false,
+                                        'default' => '0',
+                                        'key'     => 'index',
+                                        'comment' => '削除フラグ'
+        ),
+        'deleted'              => array('type'     => 'integer',
+                                        'null'     => true,
+                                        'default'  => null,
+                                        'unsigned' => true,
+                                        'comment'  => '投稿を削除した日付時刻'
+        ),
+        'created'              => array('type'     => 'integer',
+                                        'null'     => true,
+                                        'default'  => null,
+                                        'unsigned' => true,
+                                        'comment'  => '投稿を追加した日付時刻'
+        ),
+        'modified'             => array('type'     => 'integer',
+                                        'null'     => true,
+                                        'default'  => null,
+                                        'unsigned' => true,
+                                        'key'      => 'index',
+                                        'comment'  => '投稿を更新した日付時刻'
+        ),
         'indexes'              => array(
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'user_id'          => array('column' => 'user_id', 'unique' => 0),

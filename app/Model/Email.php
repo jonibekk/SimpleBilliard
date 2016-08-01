@@ -164,4 +164,18 @@ class Email extends AppModel
         }
         return $email_team_members;
     }
+
+    function isVerified($email)
+    {
+        $options = [
+            'conditions' => [
+                'email'          => $email,
+                'email_verified' => true,
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
+    }
 }

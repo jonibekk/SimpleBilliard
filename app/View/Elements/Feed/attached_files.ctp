@@ -17,7 +17,7 @@
         $p_id = $p_id ? $p_id : viaIsSet($file['CommentFile'][0]['Comment']['post_id']);
         ?>
         <?= $this->element('Feed/attached_file_item',
-                           ['data' => $file, 'page_type' => 'file_list', 'post_id' => $p_id]) ?>
+            ['data' => $file, 'page_type' => 'file_list', 'post_id' => $p_id]) ?>
     </div>
 <?php endforeach ?>
 <!-- END app/View/Elements/Feed/attached_files.ctp -->
