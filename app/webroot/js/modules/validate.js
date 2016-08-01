@@ -85,4 +85,3 @@ define(function () {
         bvCallbackAvailableEmailCanInvite: bvCallbackAvailableEmailCanInvite
     };
 });
-
