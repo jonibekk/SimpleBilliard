@@ -43,7 +43,7 @@ function updateStartMonthList() {
     const date = new Date()
     const this_month = date.getMonth()
     const this_year = date.getFullYear()
-    let start_month_select_list = []
+    const start_month_select_list = []
 
     for(let i = parseInt(selected_term); i > 0; i--) {
       const start_month = new Date(this_year, this_month - (i - 1), 1)
