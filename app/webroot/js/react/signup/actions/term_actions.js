@@ -56,6 +56,7 @@ function updateStartMonthList() {
         range: `${formatted_start_date} - ${formatted_end_date}`
       })
     }
+    dispatch({ type: types.SELECT_START_MONTH, selected_start_month: ''})
     dispatch({ type: types.SET_START_MONTH_LIST, start_month_list: start_month_select_list })
   }
 }
