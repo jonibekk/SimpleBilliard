@@ -9,10 +9,10 @@ App::uses('NotifySetting', 'Model');
 /**
  * SendMailShell
  *
- * @property Team                      $Team
- * @property User                      $User
- * @property SendMail                  $SendMail
- * @property LangComponent             $LangComponent
+ * @property Team          $Team
+ * @property User          $User
+ * @property SendMail      $SendMail
+ * @property LangComponent $LangComponent
  */
 class SendMailShell extends AppShell
 {
@@ -43,12 +43,16 @@ class SendMailShell extends AppShell
     {
         parent::startup();
         if ($this->params['session_id']) {
-            if(CakeSession::started()){
+            if (CakeSession::started()) {
                 CakeSession::destroy();
             }
             CakeSession::id($this->params['session_id']);
             CakeSession::start();
         }
+        if (isset($this->params['language']) && $this->params['language']) {
+            Configure::write('Config.language', $this->params['language']);
+        }
+
         $this->components = new ComponentCollection();
         $this->Lang = new LangComponent($this->components);
         $this->AppController = new AppController();
@@ -72,6 +76,7 @@ class SendMailShell extends AppShell
                     'options' => [
                         'id'         => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
                         'session_id' => ['short' => 's', 'help' => 'Session ID', 'required' => true,],
+                        'language'   => ['short' => 'l', 'help' => 'Language code', 'required' => false,],
                     ]
                 ]
             ],
@@ -81,6 +86,7 @@ class SendMailShell extends AppShell
                     'options' => [
                         'id'         => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
                         'session_id' => ['short' => 's', 'help' => 'Session ID', 'required' => true,],
+                        'language'   => ['short' => 'l', 'help' => 'Language code', 'required' => false,],
                     ]
                 ]
             ],
@@ -115,11 +121,15 @@ class SendMailShell extends AppShell
                 Configure::write('Config.language', $data['ToUser']['language']);
                 $this->SendMail->_setTemplateSubject();
                 $options = array_merge(SendMail::$TYPE_TMPL[$tmpl_type],
-                                       ['to' => (isset($data['ToUser']['PrimaryEmail']['email'])) ? $data['ToUser']['PrimaryEmail']['email'] : null]
+                    ['to' => (isset($data['ToUser']['PrimaryEmail']['email'])) ? $data['ToUser']['PrimaryEmail']['email'] : null]
                 );
                 //送信先メールアドレスが指定されていた場合
                 if (isset($this->item['to'])) {
                     $options['to'] = $this->item['to'];
+                }
+                //特別にサブジェクトが指定されている場合
+                if (isset($this->item['subject'])) {
+                    $options['subject'] = $this->item['subject'];
                 }
                 $viewVars = [
                     'to_user_name'   => isset($data['ToUser']['display_username']) ? $data['ToUser']['display_username'] : null,
@@ -132,13 +142,17 @@ class SendMailShell extends AppShell
                 $this->SendMail->id = $data['SendMail']['id'];
                 $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
             }
-        }
-        else {
+        } else {
             $options = SendMail::$TYPE_TMPL[$tmpl_type];
             //送信先メールアドレスが指定されていた場合
             if (isset($this->item['to'])) {
                 $options['to'] = $this->item['to'];
             }
+            //特別にサブジェクトが指定されている場合
+            if (isset($this->item['subject'])) {
+                $options['subject'] = $this->item['subject'];
+            }
+
             $viewVars = [
                 'to_user_name'   => null,
                 'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
@@ -177,23 +191,21 @@ class SendMailShell extends AppShell
                 foreach ($from_user_local_names as $local_name) {
                     if ($data['ToUser']['language'] == $local_name['LocalName']['language']) {
                         $from_user_names[] = $local_name['LocalName']['first_name'];
-                    }
-                    else {
+                    } else {
                         $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'] : null;
                     }
                 }
-            }
-            else {
+            } else {
                 $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'] : null;
             }
             $subject = $this->User->NotifySetting->getTitle($this->item['type'],
-                                                            $from_user_names,
-                                                            $this->item['count_num'],
-                                                            $this->item['item_name'],
-                                                            array_merge($this->item['options'], [
-                                                                'style' => 'plain',
-                                                                'from_user_id' => $data['SendMail']['from_user_id'],
-                                                            ])
+                $from_user_names,
+                $this->item['count_num'],
+                $this->item['item_name'],
+                array_merge($this->item['options'], [
+                    'style'        => 'plain',
+                    'from_user_id' => $data['SendMail']['from_user_id'],
+                ])
             );
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],
@@ -238,15 +250,12 @@ class SendMailShell extends AppShell
         //相手が存在するユーザなら相手の言語を採用
         if (isset($to_user['User']['language'])) {
             $lang = $to_user['User']['language'];
-        }
-        //相手が存在せず送信元のユーザが存在する場合は送信元ユーザの言語を採用
+        } //相手が存在せず送信元のユーザが存在する場合は送信元ユーザの言語を採用
         elseif (isset($data['FromUser']['language'])) {
             $lang = $data['FromUser']['language'];
-        }
-        elseif (isset($this->item['language'])) {
+        } elseif (isset($this->item['language'])) {
             $lang = $this->item['language'];
-        }
-        //それ以外は英語
+        } //それ以外は英語
         else {
             $lang = "eng";
         }
@@ -269,7 +278,7 @@ class SendMailShell extends AppShell
     {
         // TODO: $viewVars['message']以外の場所もメール本文として使われてる可能性があるため、調査が必要。
         //       もし上記の場所を発見したら、そのテキストを_preventGarbledCharacters()に通す必要がある。文字化け回避のために。
-        if(isset($viewVars['message'])) {
+        if (isset($viewVars['message'])) {
             $viewVars['message'] = $this->_preventGarbledCharacters($viewVars['message']);
         }
         $defaults = array(
@@ -279,7 +288,7 @@ class SendMailShell extends AppShell
             'layout'   => 'default'
         );
         $options = array_merge($defaults, $options);
-        $team_name = (!empty($team_name)) ? "[" . $team_name. "] " : '';
+        $team_name = (!empty($team_name)) ? "[" . $team_name . "] " : '';
         $options['subject'] = $team_name . $options['subject'];
         /**
          * @var CakeEmail $Email
@@ -302,8 +311,7 @@ class SendMailShell extends AppShell
         App::uses('CakeEmail', 'Network/Email');
         if (ENV_NAME === "local") {
             return new CakeEmail('default');
-        }
-        else {
+        } else {
             return new CakeEmail('amazon');
         }
     }
@@ -312,11 +320,12 @@ class SendMailShell extends AppShell
      * Prevent multi-byte text garbled over 1000 byte
      *
      * @param string $bigText
-     * @param int $width
+     * @param int    $width
      *
      * @return string $wrappedText
      */
-    private function _preventGarbledCharacters($bigText, $width=249) {
+    private function _preventGarbledCharacters($bigText, $width = 249)
+    {
         $pattern = "/(.{1,{$width}})(?:\\s|$)|(.{{$width}})/uS";
         $replace = '$1$2' . "\n";
         $wrappedText = preg_replace($pattern, $replace, $bigText);

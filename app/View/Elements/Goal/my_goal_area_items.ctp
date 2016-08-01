@@ -28,12 +28,10 @@ $kr_count = 0;
         if ($kr_count > 0) {
             if ($kr_count > MY_GOAL_AREA_FIRST_VIEW_KR_COUNT) {
                 $kr_line_height += 64 * (MY_GOAL_AREA_FIRST_VIEW_KR_COUNT + 1);
-            }
-            else {
+            } else {
                 $kr_line_height += 64 * $kr_count;
             }
-        }
-        else {
+        } else {
             $kr_line_height = 30;
         }
     }
@@ -56,14 +54,23 @@ $kr_count = 0;
 
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'goals',
+                        'action'     => 'add',
+                        'purpose_id' => $goal['Purpose']['id'],
+                        'mode'       => 2
+                    ]) ?>"
                        class="dashboard-goals-card-header-goal-set">
                         <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i>
                         <?= __('Add Reference Values') ?>
                     </a>
                 <?php else: ?>
                     <div class="dashboard-goals-card-header-goal-wrap">
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'goals',
+                            'action'     => 'view_info',
+                            'goal_id'    => $goal['Goal']['id']
+                        ]) ?>"
                            class="">
                             <p class="dashboard-goals-card-header-goal">
                                 <?= h($goal['Goal']['name']) ?>
@@ -81,19 +88,37 @@ $kr_count = 0;
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-goal" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php //目的のみの場合とそうでない場合でurlが違う
-                    $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                    $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
+                    $edit_url = [
+                        'controller' => 'goals',
+                        'action'     => 'add',
+                        'mode'       => 2,
+                        'purpose_id' => $goal['Purpose']['id']
+                    ];
+                    $del_url = [
+                        'controller' => 'goals',
+                        'action'     => 'delete_purpose',
+                        'purpose_id' => $goal['Purpose']['id']
+                    ];
                     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                        $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
+                        $edit_url = [
+                            'controller' => 'goals',
+                            'action'     => 'add',
+                            'goal_id'    => $goal['Goal']['id'],
+                            'mode'       => 3
+                        ];
                         $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
                     }
                     ?>
                     <?php if (!empty($goal['Goal'])): ?>
                         <li role="presentation">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'goals',
+                                'action'     => 'ajax_get_add_key_result_modal',
+                                'goal_id'    => $goal['Goal']['id']
+                            ]) ?>"
                                class="modal-ajax-get-add-key-result">
                                 <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                         <?= __("Add Key Result") ?></span>
@@ -109,9 +134,9 @@ $kr_count = 0;
                         <li role="presentation">
                             <?=
                             $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                                  __("Delete goal") . '</span>',
-                                                  $del_url,
-                                                  ['escape' => false], __("Do you really want to delete this goal?")) ?>
+                                __("Delete goal") . '</span>',
+                                $del_url,
+                                ['escape' => false], __("Do you really want to delete this goal?")) ?>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -124,18 +149,26 @@ $kr_count = 0;
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-collabo" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                         <li role="presentation">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'goals',
+                                'action'     => 'ajax_get_add_key_result_modal',
+                                'goal_id'    => $goal['Goal']['id']
+                            ]) ?>"
                                class="modal-ajax-get-add-key-result"
                             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __("Add Key Result") ?></span></a>
                             <a class="modal-ajax-get-collabo"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                               href="<?= $this->Html->url([
+                                   'controller' => 'goals',
+                                   'action'     => 'ajax_get_collabo_change_modal',
+                                   'goal_id'    => $goal['Goal']['id']
+                               ]) ?>">
                                 <i class="fa fa-pencil"></i>
                                 <span class="ml_2px"><?= __("Edit Collaborate") ?></span>
                             </a>
@@ -154,16 +187,34 @@ $kr_count = 0;
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
                         <?php //目的のみの場合とそうでない場合でurlが違う
-                        $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                        $del_url = ['controll er' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
+                        $edit_url = [
+                            'controller' => 'goals',
+                            'action'     => 'add',
+                            'mode'       => 2,
+                            'purpose_id' => $goal['Purpose']['id']
+                        ];
+                        $del_url = [
+                            'controll er' => 'goals',
+                            'action'      => 'delete_purpose',
+                            'purpose_id'  => $goal['Purpose']['id']
+                        ];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                            $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
+                            $edit_url = [
+                                'controller' => 'goals',
+                                'action'     => 'add',
+                                'goal_id'    => $goal['Goal']['id'],
+                                'mode'       => 3
+                            ];
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
                         }
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'goals',
+                                    'action'     => 'ajax_get_add_key_result_modal',
+                                    'goal_id'    => $goal['Goal']['id']
+                                ]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                             <?= __("Add Key Result") ?></span>
@@ -205,17 +256,25 @@ $kr_count = 0;
 
                         <ul class="dashboard-goals-card-body-krs-wrap">
                             <?= $this->element('Goal/key_result_items',
-                                               ['key_results'         => $goal['KeyResult'],
-                                                'is_init'             => true, 'kr_can_edit' => true,
-                                                'goal_id'             => $goal['Goal']['id'],
-                                                'can_add_action'      => $goal['Goal']['end_date'] >= $current_term['start_date'] && $goal['Goal']['end_date'] <= $current_term['end_date'] ? true : false,
-                                                'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
-                                               ]); ?>
+                                [
+                                    'key_results'         => $goal['KeyResult'],
+                                    'is_init'             => true,
+                                    'kr_can_edit'         => true,
+                                    'goal_id'             => $goal['Goal']['id'],
+                                    'can_add_action'      => $goal['Goal']['end_date'] >= $current_term['start_date'] && $goal['Goal']['end_date'] <= $current_term['end_date'] ? true : false,
+                                    'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
+                                ]); ?>
                             <?php if ($kr_count > MY_GOAL_AREA_FIRST_VIEW_KR_COUNT): ?>
                                 <li class="dashboard-goals-card-body-krs-ellipsis"
                                     id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>">
                                     <a href="#" target-id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>"
-                                       ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], 'extract_count' => MY_GOAL_AREA_FIRST_VIEW_KR_COUNT, true]) ?>"
+                                       ajax-url="<?= $this->Html->url([
+                                           'controller'    => 'goals',
+                                           'action'        => 'ajax_get_key_results',
+                                           'goal_id'       => $goal['Goal']['id'],
+                                           'extract_count' => MY_GOAL_AREA_FIRST_VIEW_KR_COUNT,
+                                           true
+                                       ]) ?>"
                                        id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                                        kr-line-id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"
                                        class="replace-ajax-get-kr-list dashboard-goals-card-body-krs-ellipsis-link">
@@ -228,7 +287,11 @@ $kr_count = 0;
                             <? endif; ?>
                             <li class="dashboard-goals-card-body-add-kr clearfix">
                                 <a class="dashboard-goals-card-body-add-kr-link modal-ajax-get-add-key-result"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                                   href="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_add_key_result_modal',
+                                       'goal_id'    => $goal['Goal']['id']
+                                   ]) ?>">
                                     <hr class="dashboard-goals-card-horizontal-line">
                                     <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
 

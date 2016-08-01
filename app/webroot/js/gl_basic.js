@@ -96,10 +96,35 @@ $(window).load(function () {
     bindCommentBalancedGallery($('.comment_gallery'));
     changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
     setDefaultTab();
+
+    // for setting the team_id_current in local storage
+    clickToSetCurrentTeamId();
+
+    // if team changed from other tab then don't allow user to proceed without reload
+    $('body').click(function () {
+        if (Number(cake.data.team_id) !== Number(localStorage.team_id_current)) {
+            var r = confirm(cake.translation["Team has been changed, press ok to reload!"]);
+            if (r == true) {
+                document.location.reload(true);
+                return false;
+            } else {
+                return false;
+            }
+        }
+    });
+
 });
 
-$(document).ready(function () {
+function clickToSetCurrentTeamId() {
+    if (typeof(Storage) !== "undefined") {
+        localStorage.team_id_current = Number(cake.data.team_id);
+    } else {
+        console.log("Sorry, your browser does not support web storage...");
+    }
+};
 
+
+$(document).ready(function () {
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
         $('#IntercomLink').hide();
@@ -432,7 +457,7 @@ $(document).ready(function () {
             $addActionResultForm.bootstrapValidator({
                 excluded: [':hidden'],
                 live: 'enabled',
-                feedbackIcons: {},
+
                 fields: {
                     "data[ActionResult][photo1]": {
                         validators: {
@@ -537,14 +562,10 @@ $(document).ready(function () {
                 $editCircleForm.bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
-                    feedbackIcons: {
-                        valid: 'fa fa-check',
-                        invalid: 'fa fa-times',
-                        validating: 'fa fa-refresh'
-                    },
+
                     fields: {
                         "data[Circle][photo]": {
-                            feedbackIcons: 'false',
+
                             validators: {
                                 file: {
                                     extension: 'jpeg,jpg,png,gif',
@@ -1683,14 +1704,14 @@ $(function () {
     var current_slide_id = 1;
 
     // インジケータークリック時
-    $(document).on('click', '.setup-tutorial-indicator', function() {
+    $(document).on('click', '.setup-tutorial-indicator', function () {
         resetDisplayStatus();
         changeTutorialContent($(this).attr('data-id'));
     });
 
     // ネクストボタンクリック時
-    $(document).on('click', '.tutorial-next-btn', function() {
-        if(current_slide_id == 3) {
+    $(document).on('click', '.tutorial-next-btn', function () {
+        if (current_slide_id == 3) {
             location.href = "/setup/";
             return;
         }
@@ -1840,11 +1861,6 @@ $(document).ready(function () {
 
     $('.validate').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
         fields: {
             "data[User][password]": {
                 validators: {
@@ -1853,7 +1869,7 @@ $(document).ready(function () {
                         message: cake.message.validate.a
                     },
                     regexp: {
-                        regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
+                        regexp: /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/,
                         message: cake.message.validate.e
                     }
                 }
@@ -1884,17 +1900,17 @@ $(document).ready(function () {
     });
     $('#PostDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {}
     });
     $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {}
     });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {
             photo: {
                 // All the email address field have emailAddress class
@@ -1903,7 +1919,7 @@ $(document).ready(function () {
                     callback: {
                         callback: function (value, validator, $field) {
                             var isEmpty = true,
-                            // Get the list of fields
+                                // Get the list of fields
                                 $fields = validator.getFieldElements('photo');
                             for (var i = 0; i < $fields.length; i++) {
                                 if ($fields.eq(i).val() != '') {
@@ -2763,7 +2779,6 @@ function evFeedMoreView(options) {
             feed_loading_now = false;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
         },
     });
@@ -2860,7 +2875,6 @@ function evMessage() {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -2937,7 +2951,7 @@ function evMessageList(options) {
                 //メッセージフォームのvalidateを有効化
                 $('#MessageDisplayForm').bootstrapValidator({
                     live: 'enabled',
-                    feedbackIcons: {},
+
                     fields: {}
                 });
             }
@@ -2951,7 +2965,6 @@ function evMessageList(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -3032,7 +3045,6 @@ function evNotifications(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -3138,7 +3150,6 @@ function evNotifyPost(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -3309,7 +3320,7 @@ function evCircleFeed(options) {
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
                     .append('<li><a href="/posts/unjoin_circle/circle_id:' + circle_id + '">' + cake.word.leave_circle + '</a></li>');
             }
-            if (data.user_status == "joined" || data.user_status == "admin") {
+            if ((data.user_status == "joined" || data.user_status == "admin") && cake.data.env_name != "isao") {
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
                     .append('<li><a href="/circles/ajax_setting/circle_id:' + circle_id + '" class="modal-circle-setting">' + cake.word.config + '</a></li></ul>');
             }
@@ -3321,7 +3332,6 @@ function evCircleFeed(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
         },
     });
@@ -3475,7 +3485,6 @@ function evBasicReadMore(options) {
             autoload_more = false;
         },
         error: function () {
-            alert(cake.message.notice.c);
         }
     });
     return false;
@@ -3701,7 +3710,7 @@ function getModalFormFromUrl(e) {
             $modal_elm.append(data);
             $modal_elm.find('form').bootstrapValidator({
                 live: 'enabled',
-                feedbackIcons: {},
+
                 fields: {
                     "data[KeyResult][start_date]": {
                         validators: {
@@ -3821,6 +3830,29 @@ $(document).ready(function () {
         cake.unread_msg_post_ids.push(data.post_id);
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
+
+    if($('#jsDashboardCircleListBody')[0] !== undefined){
+        pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
+            var $circle_list = $('#jsDashboardCircleListBody');
+            $.each(data.circle_ids, function (i, circle_id) {
+                var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
+                if ($circle[0] === undefined) {
+                    return true;
+                }
+                var $unread_count = $circle.find('.dashboard-circle-count-box');
+                var unread_count = $unread_count.text().trim();
+                if (unread_count == ""){
+                    $unread_count.text(1);
+                }else if(Number(unread_count) == 9){
+                    $unread_count.text("9+");
+                }else if(unread_count != "9+"){
+                    $unread_count.text(Number(unread_count)+1);
+                }
+                $circle.prependTo('#jsDashboardCircleListBody');
+            });
+
+        });
+    }
 
 });
 
@@ -4400,7 +4432,6 @@ function updateListBox() {
             imageLazyOn();
         },
         error: function () {
-            alert(cake.message.notice.c);
         }
     });
     return false;
@@ -4415,7 +4446,7 @@ function resetBellNum() {
         url: url,
         async: true,
         success: function (data) {
-            // do nothing.
+            updateNotifyCnt();
         },
         error: function () {
             // do nothing.
@@ -4443,7 +4474,6 @@ function updateMessageListBox() {
             imageLazyOn();
         },
         error: function () {
-            alert(cake.message.notice.c);
         }
     });
     return false;
@@ -4532,7 +4562,7 @@ $(document).ready(function () {
      *   $uploadFileForm.registerAttachFileButton('#UploadButton', postParams);
      *
      */
-    // ファイルアップロード用フォーム
+        // ファイルアップロード用フォーム
     var $uploadFileForm = $('#UploadFileForm');
 
     // ファイル削除用フォーム
@@ -5646,4 +5676,8 @@ function sanitize(string) {
             '>': '&gt;',
         }[match]
     });
+}
+
+function isOnline() {
+    return Boolean(network_reachable);
 }

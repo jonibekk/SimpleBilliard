@@ -17,7 +17,8 @@ class PostMentionTest extends GoalousTestCase
     public $fixtures = array(
         'app.post_mention',
         'app.post',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team'
     );
 

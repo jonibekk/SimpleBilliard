@@ -24,7 +24,7 @@
                id="GoalPageMemberMoreLink"
                list-container="#GoalPageMemberContainer"
                goal-id="<?= h($goal['Goal']['id']) ?>"
-                >
+            >
                 <?= __('View more') ?></a>
         </div>
     </div>

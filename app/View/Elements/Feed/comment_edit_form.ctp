@@ -54,7 +54,12 @@ $this->Form->create('Comment', [
             <li>
                 <?=
                 $this->element('Feed/photo_upload',
-                               ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i, 'id_prefix' => $id_prefix, 'submit_id' => $id_prefix . "CommentEditSubmit_{$comment['id']}"]) ?>
+                    ['data'      => ['Comment' => $comment],
+                     'type'      => 'comment',
+                     'index'     => $i,
+                     'id_prefix' => $id_prefix,
+                     'submit_id' => $id_prefix . "CommentEditSubmit_{$comment['id']}"
+                    ]) ?>
             </li>
         <?php endfor ?>
     </ul>
@@ -64,7 +69,10 @@ $this->Form->create('Comment', [
 <div class="none" id="<?= $id_prefix ?>CommentEdit_<?= $comment['id'] ?>">
     <?=
     $this->Form->submit(__("Save changes"),
-                        ['class' => 'btn btn-primary pull-right submit-comment-edit', 'id' => $id_prefix . "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>
+        ['class'    => 'btn btn-primary pull-right submit-comment-edit',
+         'id'       => $id_prefix . "CommentEditSubmit_{$comment['id']}",
+         'disabled' => 'disabled'
+        ]) ?>
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>

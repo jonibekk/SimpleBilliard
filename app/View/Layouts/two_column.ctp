@@ -5,6 +5,9 @@
  * @var                    $title_for_layout string
  * @var CodeCompletionView $this
  */
+if (!isset($with_header_menu)) {
+    $with_header_menu = true;
+}
 ?>
 <!-- START app/View/Layouts/two_column.ctp -->
 <!DOCTYPE html>
@@ -17,7 +20,12 @@
     echo newrelic_get_browser_timing_header();
 } ?>
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
-<?= $this->element('header_logged_in') ?>
+<?php if ($this->Session->read('Auth.User.id') && $with_header_menu) {
+    echo $this->element('header_logged_in');
+} else {
+    echo $this->element('header_not_logged_in');
+}
+?>
 <div id="container" class="container">
     <div class="row">
         <div class="col-xs-3 <?php if (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs): ?>hidden-xxs<?php endif ?>">
@@ -30,7 +38,7 @@
             <?= $this->fetch('content'); ?>
         </div>
     </div>
-    <?php if($this->App->needDisplayFooter()): ?>
+    <?php if ($this->App->needDisplayFooter()): ?>
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>

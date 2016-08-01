@@ -43,9 +43,9 @@ Vagrant.configure('2') do |config|
         doc_root = '/vagrant_data/app/webroot'
         app_root = '/vagrant_data/'
         if ( RUBY_PLATFORM.downcase =~ /darwin/ )
-          default.vm.synced_folder src_dir, '/vagrant_data', :nfs => true
+          default.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
         else
-          default.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
+          default.vm.synced_folder src_dir, '/vagrant_data'
         end
 
 

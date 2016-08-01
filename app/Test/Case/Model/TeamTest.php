@@ -252,11 +252,11 @@ class TeamTest extends GoalousTestCase
         $this->Team->EvaluateTerm->id = $this->Team->EvaluateTerm->getCurrentTermId();
         $this->Team->EvaluateTerm->save(['evaluate_status' => 1]);
         $this->assertFalse($this->Team->saveEditTerm(1,
-                                                     ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
+            ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
         $this->Team->EvaluateTerm->id = $this->Team->EvaluateTerm->getCurrentTermId();
         $this->Team->EvaluateTerm->save(['evaluate_status' => 0]);
         $this->assertTrue($this->Team->saveEditTerm(1,
-                                                    ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
+            ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
 
     }
 

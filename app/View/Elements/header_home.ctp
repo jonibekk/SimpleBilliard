@@ -36,33 +36,44 @@ if (!isset($top_lang)) {
                 </button><!-- //navbar-collapse -->
             </div><!-- //navbar-header -->
             <div id="navbar-collapse" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" >
+                <ul class="nav navbar-nav">
                     <li class="nav-item" id="h-nav-features">
-                        <?= $this->Html->link(__('Features'), ['controller' => 'pages', 'action' => 'display',
-                                                                'pagename'   => 'features', 'lang' => $top_lang,]); ?>
+                        <?= $this->Html->link(__('Features'), [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'features',
+                            'lang'       => $top_lang,
+                        ]); ?>
                     </li>
                     <li class="nav-item" id="h-nav-pricing">
-                        <?= $this->Html->link(__('Pricing'), ['controller' => 'pages', 'action' => 'display',
-                                                                'pagename'   => 'pricing', 'lang' => $top_lang,]); ?>
+                        <?= $this->Html->link(__('Pricing'), [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'pricing',
+                            'lang'       => $top_lang,
+                        ]); ?>
                     </li>
                     <li class="nav-item" id="h-nav-blog">
                         <?= $this->Html->link(__('Blog'), 'http://blog.isao.co.jp/',
-                                              array('target' => '_blank')); ?>
+                            array('target' => '_blank')); ?>
                     </li>
                     <li class="nav-item" id="h-nav-contact">
                         <?= $this->Html->link(__('Contact us'),
-                                              ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
+                            ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
                     </li>
                     <li class="nav-item" id="h-nav-login">
-                            <?= $this->Html->link(__('Login'),array('controller' => 'users', 'action' => 'login'),
-                                              [
-                                                  "class" => "btn btn-link",
-                                              ]); ?>
+                        <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login'),
+                            [
+                                "class" => "btn btn-link",
+                            ]); ?>
                     </li>
                     <li class="nav-item nav-item-cta last" id="h-nav-signup">
                         <?= $this->Html->link(__('Sign Up'),
-                                              array('controller' => 'users', 'action' => 'register', '?' => ['type' => 'header']),
-                                              array('class' => 'header-signup btn btn-cta btn-cta-primary', 'id' => 'RegisterLinkHeader')); ?>
+                            array('controller' => 'signup', 'action' => 'email', '?' => ['type' => 'header']),
+                            array(
+                                'class' => 'header-signup btn btn-cta btn-cta-primary',
+                                'id'    => 'RegisterLinkHeader'
+                            )); ?>
                     </li>
                 </ul> <!-- //nav -->
             </div> <!-- //navbar-collapse -->

@@ -16,7 +16,7 @@
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title font_18px font_bold"><?= __("%s members Like! this post.",
-                                                                count($liked_users)) ?></h4>
+                    count($liked_users)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
             <?php if (!empty($liked_users)): ?>
@@ -24,7 +24,7 @@
                     <?php foreach ($liked_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => $user['PostLike']['created']]) ?>
+                            ['user' => $user['User'], 'created' => $user['PostLike']['created']]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

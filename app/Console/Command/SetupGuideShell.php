@@ -179,7 +179,7 @@ class SetupGuideShell extends AppShell
 
         // define base time for notify
         $setup_rest_count = $this->AppController->calcSetupRestCount($status);
-        if($user_do_nothing_for_setup = $setup_rest_count == count(User::$TYPE_SETUP_GUIDE)) {
+        if ($user_do_nothing_for_setup = $setup_rest_count == count(User::$TYPE_SETUP_GUIDE)) {
             $base_update_time = $user_singup_time;
         } else {
             $base_update_time = $setup_update_time;
@@ -260,7 +260,7 @@ class SetupGuideShell extends AppShell
 
         return [
             'messages' => ['mail' => $mail_message, 'push' => $push_message],
-            'urls' => ['mail' => $mail_url, 'push' => $push_url]
+            'urls'     => ['mail' => $mail_url, 'push' => $push_url]
         ];
     }
 

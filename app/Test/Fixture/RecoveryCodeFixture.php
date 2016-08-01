@@ -12,10 +12,35 @@ class RecoveryCodeFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コード持ち主のuser_id'),
-        'code'            => array('type' => 'string', 'null' => false, 'collate' => 'utf8mb4_general_ci', 'comment' => 'アプリ側で暗号化済のコード', 'charset' => 'utf8mb4'),
-        'used'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コードを利用した日時'),
+        'id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary'
+        ),
+        'user_id'         => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'コード持ち主のuser_id'
+        ),
+        'code'            => array(
+            'type'    => 'string',
+            'null'    => false,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'アプリ側で暗号化済のコード',
+            'charset' => 'utf8mb4'
+        ),
+        'used'            => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'コードを利用した日時'
+        ),
         'available_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'コード利用可能フラグ'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),

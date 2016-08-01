@@ -37,26 +37,29 @@
             <div class="modal-body modal-circle-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __("Circle name"),
-                                    'placeholder'                  => __("eg) the sales division"),
-                                    "data-bv-notempty-message"     => __("Input is required."),
-                                    'data-bv-stringlength'         => 'true',
-                                    'data-bv-stringlength-max'     => 128,
-                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-                                   ]) ?>
+                    [
+                        'label'                        => __("Circle name"),
+                        'placeholder'                  => __("eg) the sales division"),
+                        "data-bv-notempty-message"     => __("Input is required."),
+                        'data-bv-stringlength'         => 'true',
+                        'data-bv-stringlength-max'     => 128,
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
+                    ]) ?>
                 <div class="form-group">
                     <label class="ccc control-label modal-label"><?= __('Members') ?></label>
 
                     <div class="ddd">
                         <?=
-                        $this->Form->hidden('members', ['class'    => 'ajax_add_select2_members',
-                                                        'value'    => null,
-                                                        'style'    => "width: 100%",
-                                                        'data-url' => $this->Html->url(
-                                                            ['controller' => 'users',
-                                                             'action'     => 'ajax_select2_get_users',
-                                                             '?'          => ['with_group' => '1']
-                                                            ])
+                        $this->Form->hidden('members', [
+                            'class'    => 'ajax_add_select2_members',
+                            'value'    => null,
+                            'style'    => "width: 100%",
+                            'data-url' => $this->Html->url(
+                                [
+                                    'controller' => 'users',
+                                    'action'     => 'ajax_select2_get_users',
+                                    '?'          => ['with_group' => '1']
+                                ])
                         ]) ?>
                         <?php $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block font_11px"><?=
@@ -66,14 +69,14 @@
                 </div>
                 <?php $privacy_option = Circle::$TYPE_PUBLIC;
                 $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __(
-                                                                                                       "Anyone can see the circle, its members and their posts.") . '</span>';
+                        "Anyone can see the circle, its members and their posts.") . '</span>';
                 $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __(
-                                                                                                        "Only members can find the circle and see posts.") . '</span>';
+                        "Only members can find the circle and see posts.") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'     => 'radio',
                     'before'   => '<label class="eee control-label modal-label">' . __(
-                                                                                        'Privacy') . '</label>',
+                            'Privacy') . '</label>',
                     'legend'   => false,
                     'class'    => false,
                     'options'  => $privacy_option,
@@ -85,13 +88,14 @@
                 </div>
                 <?=
                 $this->Form->input('description',
-                                   ['label'                        => __("Circle Description"),
-                                    'placeholder'                  => __("eg) Let's share the latest information."),
-                                    'data-bv-notempty-message'     => __("Input is required."),
-                                    'data-bv-stringlength'         => 'true',
-                                    'data-bv-stringlength-max'     => 2000,
-                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-                                   ]) ?>
+                    [
+                        'label'                        => __("Circle Description"),
+                        'placeholder'                  => __("eg) Let's share the latest information."),
+                        'data-bv-notempty-message'     => __("Input is required."),
+                        'data-bv-stringlength'         => 'true',
+                        'data-bv-stringlength-max'     => 2000,
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                    ]) ?>
                 <div class="form-group">
                     <label for="" class="f control-label modal-label"><?= __("Circle Image") ?></label>
 
@@ -108,16 +112,17 @@
                                 <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                                 <?=
                                 $this->Form->input('photo',
-                                                   ['type'         => 'file',
-                                                    'label'        => false,
-                                                    'div'          => false,
-                                                    'css'          => false,
-                                                    'wrapInput'    => false,
-                                                    'errorMessage' => false,
-                                                    'required'     => false
-                                                   ]) ?>
+                                    [
+                                        'type'         => 'file',
+                                        'label'        => false,
+                                        'div'          => false,
+                                        'css'          => false,
+                                        'wrapInput'    => false,
+                                        'errorMessage' => false,
+                                        'required'     => false
+                                    ]) ?>
                             </span>
-                                    <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
+                            <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                         </div>
                     </div>
                     <div>
@@ -125,9 +130,10 @@
                         <div class="has-error">
                             <?=
                             $this->Form->error('photo', null,
-                                               ['class' => 'help-block text-danger',
-                                                'wrap'  => 'span'
-                                               ]) ?>
+                                [
+                                    'class' => 'help-block text-danger',
+                                    'wrap'  => 'span'
+                                ]) ?>
                         </div>
                     </div>
                 </div>
@@ -141,7 +147,7 @@
                         </button>
                         <?=
                         $this->Form->submit(__("Create a circle"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
                     </div>
                 </div>
@@ -156,14 +162,10 @@
         $('#AddCircleForm').bootstrapValidator({
             excluded: [':disabled'],
             live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
+
             fields: {
                 "data[Circle][photo]": {
-                    feedbackIcons: 'false',
+
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',

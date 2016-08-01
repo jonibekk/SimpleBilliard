@@ -16,27 +16,27 @@
                 <div class="tutorial-box1 col-xxs-12">
                     <?=
                     $this->Html->image('tutorial/slide01.png',
-                                       [
-                                           'class'         => 'modal-tutorial-image'
-                                       ]
+                        [
+                            'class' => 'modal-tutorial-image'
+                        ]
                     )
                     ?>
                 </div>
                 <div class="tutorial-box2 col-xxs-12 none">
                     <?=
                     $this->Html->image('tutorial/slide02.png',
-                                       [
-                                           'class'         => 'modal-tutorial-image'
-                                       ]
+                        [
+                            'class' => 'modal-tutorial-image'
+                        ]
                     )
                     ?>
                 </div>
                 <div class="tutorial-box3 col-xxs-12 none">
                     <?=
                     $this->Html->image('tutorial/slide03.png',
-                                       [
-                                           'class'         => 'modal-tutorial-image'
-                                       ]
+                        [
+                            'class' => 'modal-tutorial-image'
+                        ]
                     )
                     ?>
                 </div>
@@ -61,12 +61,14 @@
                         <?= __("Make your team better by Goalous.") ?>
                     </p>
                 </div>
-                <div class="setup-tutorial-navigation" >
+                <div class="setup-tutorial-navigation">
                     <span class="setup-tutorial-navigation-skip" data-dismiss="modal" aria-hidden="true">
                         SKIP
                     </span>
                     <span class="setup-tutorial-navigation-indicator">
-                        <span class="setup-tutorial-indicator setup-tutorial-indicator1 setup-tutorial-navigation-indicator-selected" data-id="1">
+                        <span
+                            class="setup-tutorial-indicator setup-tutorial-indicator1 setup-tutorial-navigation-indicator-selected"
+                            data-id="1">
                         ●
                         </span>
                         <span class="setup-tutorial-indicator setup-tutorial-indicator2" data-id="2">

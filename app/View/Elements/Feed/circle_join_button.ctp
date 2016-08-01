@@ -16,7 +16,11 @@
                 <div class="col col-xxs-12">
 
                     Join this Circle to post or comment.
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>"
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'posts',
+                        'action'     => 'join_circle',
+                        'circle_id'  => $current_circle['Circle']['id']
+                    ]) ?>"
                        class='btn btn-primary pull-right'>
                         <i class="fa fa-user-plus"></i> <?= __('Join circle') ?>
                     </a>

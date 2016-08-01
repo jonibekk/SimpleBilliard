@@ -20,13 +20,17 @@
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __("Final evaluation (%s - %s)",
-                                                $this->TimeEx->date($start),
-                                                $this->TimeEx->date($end)) ?></h4>
+                        $this->TimeEx->date($start),
+                        $this->TimeEx->date($end)) ?></h4>
             </div>
             <div class="modal-body">
                 <?=
                 $this->Form->create('Team', [
-                    'url'           => ['controller' => 'teams', 'action' => 'ajax_upload_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
+                    'url'           => [
+                        'controller'       => 'teams',
+                        'action'           => 'ajax_upload_final_evaluations_csv',
+                        'evaluate_term_id' => $evaluate_term_id
+                    ],
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
@@ -51,8 +55,8 @@
                     <div class="">
                         <?=
                         $this->Html->link(__("Download evaluation data"),
-                                          ['action' => 'download_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
-                                          ['class' => 'btn btn-default', 'div' => false])
+                            ['action' => 'download_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
+                            ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
                 </div>
@@ -69,14 +73,15 @@
                                 <span class="fileinput-exists"><?= __("Change to another file.") ?></span>
                                 <?=
                                 $this->Form->input('csv_file',
-                                                   ['type'         => 'file',
-                                                    'label'        => false,
-                                                    'div'          => false,
-                                                    'css'          => false,
-                                                    'wrapInput'    => false,
-                                                    'errorMessage' => false,
-                                                    'accept'       => ".csv",
-                                                   ]) ?>
+                                    [
+                                        'type'         => 'file',
+                                        'label'        => false,
+                                        'div'          => false,
+                                        'css'          => false,
+                                        'wrapInput'    => false,
+                                        'errorMessage' => false,
+                                        'accept'       => ".csv",
+                                    ]) ?>
                             </span>
                             <span class="fileinput-filename"></span>
                             <a href="#" class="close fileinput-exists" data-dismiss="fileinput"
@@ -102,7 +107,11 @@
                                 data-dismiss="modal"><?= __("Cancel") ?></button>
                         <?=
                         $this->Form->submit(__("Upload"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => "FinalEvaluation_{$evaluate_term_id}_Submit"]) ?>
+                            ['class'    => 'btn btn-primary',
+                             'div'      => false,
+                             'disabled' => 'disabled',
+                             'id'       => "FinalEvaluation_{$evaluate_term_id}_Submit"
+                            ]) ?>
 
                     </div>
                 </div>

@@ -68,7 +68,7 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $result = $this->Post->getMessageList($this->Auth->user('id'),
-                                              PostsController::$message_list_page_count, $page);
+            PostsController::$message_list_page_count, $page);
         $message_list = $this->Post->convertData($result);
         $notify_list = $this->_getMessageNotifyPostIdArray();
 
@@ -141,8 +141,7 @@ class PostsController extends AppController
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
                 $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to change members list.")]);
-            }
-            else {
+            } else {
                 $this->Pnotify->outError(__("Failed to change members list."));
             }
         }
@@ -189,8 +188,7 @@ class PostsController extends AppController
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
                 $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to post.")]);
-            }
-            else {
+            } else {
                 $this->Pnotify->outError(__("Failed to post."));
             }
             return false;
@@ -219,8 +217,7 @@ class PostsController extends AppController
             // チーム全体公開が含まれている場合はチーム全体にのみpush
             if (in_array("public", $share)) {
                 $this->NotifyBiz->push($socketId, "public");
-            }
-            else {
+            } else {
                 // それ以外の場合は共有先の数だけ回す
                 foreach ($share as $val) {
                     if (strpos($val, "circle") !== false) {
@@ -231,20 +228,22 @@ class PostsController extends AppController
             }
         }
 
+        //push for updating circle list
+        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+            $this->NotifyBiz->pushUpdateCircleList($socketId, $share);
+        }
+
         //publish an event to Mixpanel
         $mixpanel_prop_name = null;
         if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
             $this->Mixpanel->trackMessage($this->Post->getLastInsertID());
-        }
-        else {
+        } else {
             if (in_array("public", $share)) {
                 $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
-            }
-            else {
+            } else {
                 if ($share_circle) {
                     $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
-                }
-                else {
+                } else {
                     $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
                 }
             }
@@ -273,7 +272,7 @@ class PostsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
-                                                                   AttachedFile::TYPE_MODEL_POST);
+            AttachedFile::TYPE_MODEL_POST);
         $this->Pnotify->outSuccess(__("Deleted the post."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -306,8 +305,7 @@ class PostsController extends AppController
             if ($url_text = $this->request->data('Post.site_info_url')) {
                 // OGPをインサートデータに追加
                 $this->request->data['Post'] = $this->_addOgpIndexes($this->request->data['Post'], $url_text);
-            }
-            else {
+            } else {
                 // 編集の場合、OGP情報がフォームから渡ってこないとDBに残ってしまうので
                 // 空指定をする必要がある
                 $this->request->data['Post']['site_info'] = null;
@@ -317,17 +315,18 @@ class PostsController extends AppController
             // 投稿を保存
             if ($this->Post->postEdit($this->request->data)) {
                 $this->Pnotify->outSuccess(__("Saved changes."));
-            }
-            else {
+            } else {
                 $error_msg = array_shift($this->Post->validationErrors);
                 $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes.")]);
             }
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect(
-                ['controller' => 'posts',
-                 'action'     => 'feed',
-                 'post_id'    => $this->request->params['named']['post_id']]);
+                [
+                    'controller' => 'posts',
+                    'action'     => 'feed',
+                    'post_id'    => $this->request->params['named']['post_id']
+                ]);
         }
 
         // 編集フォーム表示
@@ -335,7 +334,7 @@ class PostsController extends AppController
         $this->set('common_form_type', 'post');
         $this->set('common_form_mode', 'edit');
         $rows = $this->Post->get(1, 1, null, null,
-                                 ['named' => ['post_id' => $this->request->params['named']['post_id']]]);
+            ['named' => ['post_id' => $this->request->params['named']['post_id']]]);
         $this->request->data = $rows[0];
         $this->layout = LAYOUT_ONE_COLUMN;
     }
@@ -359,7 +358,7 @@ class PostsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->Comment->id,
-                                                                   AttachedFile::TYPE_MODEL_COMMENT);
+            AttachedFile::TYPE_MODEL_COMMENT);
         $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
 
         $this->Pnotify->outSuccess(__("Deleted the comment."));
@@ -391,13 +390,12 @@ class PostsController extends AppController
 
         // ogbをインサートデータに追加
         $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
-                                                                viaIsSet($this->request->data['Comment']['body']));
+            viaIsSet($this->request->data['Comment']['body']));
 
         // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__("Edited the comment."));
-        }
-        else {
+        } else {
             $error_msg = array_shift($this->Post->Comment->validationErrors);
             $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes to the comment.")]);
         }
@@ -411,20 +409,15 @@ class PostsController extends AppController
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
-        if (isset($this->request->params['named']['circle_id'])
-            || isset($this->request->params['named']['notify_id'])
-            || isset($this->request->params['circle_id'])
-        ) {
+        if (isset($this->request->params['named']['notify_id'])) {
             $this->set('long_text', true);
-        }
-        else {
+        } else {
             $this->set('long_text', false);
         }
 
         if (isset($param_named['page']) && !empty($param_named['page'])) {
             $page_num = $param_named['page'];
-        }
-        else {
+        } else {
             $page_num = 1;
         }
         $start = null;
@@ -447,8 +440,7 @@ class PostsController extends AppController
         $is_notify_post_permanent_page = isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id']);
         if ($is_notify_post_permanent_page && !$posts) {
             $response = $this->render('Feed/post_not_found');
-        }
-        else {
+        } else {
             $response = $this->render($view);
         }
 
@@ -492,8 +484,7 @@ class PostsController extends AppController
         $first_share_user = [];
         if ($room_info['Post']['user_id'] != $this->Auth->user('id')) {
             $first_share_user['User'] = $room_info['User'];
-        }
-        else {
+        } else {
             if ($share_users) {
                 $first_share_user = $this->User->findById(current($share_users));
             }
@@ -541,7 +532,7 @@ class PostsController extends AppController
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc', ['start' => $start]);
         foreach ($message_list as $key => $item) {
             $message_list[$key]['AttachedFileHtml'] = $this->fileUploadMessagePageRender($item['CommentFile'],
-                                                                                         $post_id);
+                $post_id);
         }
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
 
@@ -564,12 +555,12 @@ class PostsController extends AppController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
         $detail_comment = $this->Post->Comment->getComment($comment_id);
         $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment['CommentFile'],
-                                                                                 $post_id);
+            $post_id);
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data,
-                         $this->request->data('socket_id'));
+            $this->request->data('socket_id'));
         $this->Mixpanel->trackMessage($post_id);
         return $this->_ajaxGetResponse($detail_comment);
     }
@@ -579,11 +570,10 @@ class PostsController extends AppController
         $attached_files = '';
         foreach ($data as $attached_file) {
             if (in_array(strtolower($attached_file['AttachedFile']['file_ext']),
-                         ['jpg', 'jpeg', 'gif', 'png']) === true
+                    ['jpg', 'jpeg', 'gif', 'png']) === true
             ) {
                 $this->set('message_page_image', true);
-            }
-            else {
+            } else {
                 $this->set('message_page_image', false);
             }
             $this->set('post_id', $post_id);
@@ -615,8 +605,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
             $page_num = $param_named['page'];
-        }
-        else {
+        } else {
             $page_num = 1;
         }
         $start = null;
@@ -729,8 +718,8 @@ class PostsController extends AppController
         $item_num = FILE_LIST_PAGE_NUMBER;
         //ファイル一覧取得
         $files = $this->Post->getFilesOnCircle($param_named['circle_id'],
-                                               $page_num, $item_num, $start, $end,
-                                               viaIsSet($param_named['file_type']));
+            $page_num, $item_num, $start, $end,
+            viaIsSet($param_named['file_type']));
         $this->set('files', $files);
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果
@@ -826,8 +815,7 @@ class PostsController extends AppController
             $response = $this->render('Feed/new_comment_form');
             $html = $response->__toString();
             $result['html'] = $html;
-        }
-        else {
+        } else {
             $result['error'] = true;
             $result['msg'] = __("An error has occurred.");
         }
@@ -850,8 +838,7 @@ class PostsController extends AppController
             $response = $this->render('Feed/comment_edit_form');
             $html = $response->__toString();
             $result['html'] = $html;
-        }
-        else {
+        } else {
             $result['error'] = true;
             $result['msg'] = __("An error has occurred.");
         }
@@ -873,8 +860,7 @@ class PostsController extends AppController
             $response = $this->render('Feed/post_edit_form');
             $html = $response->__toString();
             $result['html'] = $html;
-        }
-        else {
+        } else {
             $result['error'] = true;
             $result['msg'] = __("An error has occurred.");
         }
@@ -972,8 +958,7 @@ class PostsController extends AppController
         if ($comment_id) {
             $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
             $model = 'CommentRead';
-        }
-        elseif ($post_id) {
+        } elseif ($post_id) {
             $red_users = $this->Post->PostRead->getRedUsers($post_id);
             $model = 'PostRead';
         }
@@ -1013,31 +998,30 @@ class PostsController extends AppController
 
             // ogbをインサートデータに追加
             $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
-                                                                    $url_text);
+                $url_text);
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
                 switch ($type) {
                     case Post::TYPE_NORMAL:
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
-                                                         $this->Post->Comment->id);
+                            $this->Post->Comment->id);
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
-                                                         $this->Post->id, $this->Post->Comment->id);
+                            $this->Post->id, $this->Post->Comment->id);
                         break;
                     case Post::TYPE_ACTION:
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
-                                                         $this->Post->id,
-                                                         $this->Post->Comment->id);
+                            $this->Post->id,
+                            $this->Post->Comment->id);
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
-                                                         $this->Post->id, $this->Post->Comment->id);
+                            $this->Post->id, $this->Post->Comment->id);
                         break;
                 }
                 //mixpanel
                 $this->Mixpanel->trackComment($type, $this->Post->Comment->getLastInsertID());
 
                 $result['msg'] = __("Commented.");
-            }
-            else {
+            } else {
                 if (!empty($this->Post->Comment->validationErrors)) {
                     $error_msg = array_shift($this->Post->Comment->validationErrors);
                     throw new RuntimeException($error_msg[0]);
@@ -1060,8 +1044,10 @@ class PostsController extends AppController
         $this->_setViewValOnRightColumn();
 
         try {
-            $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
-                                                    $this->request->params)]);
+            $this->set([
+                'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
+                    $this->request->params)
+            ]);
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
             //サークルページに居て当該サークルから抜けた場合の対応
@@ -1089,11 +1075,13 @@ class PostsController extends AppController
         $circle_id = $this->_getRequiredParam('circle_id');
         $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
         $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
-                                               viaIsSet($this->request->params['named']['file_type']));
+            viaIsSet($this->request->params['named']['file_type']));
 
         $circle_file_list_base_url = Router::url(
             [
-                'controller' => 'posts', 'action' => 'attached_file_list', 'circle_id' => $circle_id
+                'controller' => 'posts',
+                'action'     => 'attached_file_list',
+                'circle_id'  => $circle_id
             ]);
 
         $this->set(compact('files', 'file_type_options', 'circle_file_list_base_url'));
@@ -1129,13 +1117,12 @@ class PostsController extends AppController
         $browser = $this->getBrowser();
         if ($browser['browser'] == 'Safari') {
             $this->response->header('Content-Disposition',
-                                    sprintf('attachment; filename="%s";', $file['AttachedFile']['attached_file_name']));
-        }
-        else {
+                sprintf('attachment; filename="%s";', $file['AttachedFile']['attached_file_name']));
+        } else {
             $this->response->header('Content-Disposition',
-                                    sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
-                                            $file['AttachedFile']['attached_file_name'],
-                                            rawurlencode($file['AttachedFile']['attached_file_name'])));
+                sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                    $file['AttachedFile']['attached_file_name'],
+                    rawurlencode($file['AttachedFile']['attached_file_name'])));
         }
         $this->response->type('application/octet-stream');
         $this->response->length(strlen($res->body));
@@ -1160,12 +1147,9 @@ class PostsController extends AppController
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
 
-        if (isset($params['circle_id']) ||
-            isset($params['post_id'])
-        ) {
+        if (isset($params['post_id'])) {
             $this->set('long_text', true);
-        }
-        else {
+        } else {
             $this->set('long_text', false);
         }
 
@@ -1175,7 +1159,7 @@ class PostsController extends AppController
         if ($circle_id = viaIsSet($params['circle_id'])) {
             $user_status = $this->_userCircleStatus($circle_id);
             $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
-                                                                                  $circle_id);
+                $circle_id);
             //サークル指定の場合はメンバーリスト取得
             $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
             $this->set(compact('user_status', 'circle_status', 'circle_member_count'));
@@ -1183,8 +1167,7 @@ class PostsController extends AppController
         //抽出条件
         if ($circle_id) {
             $feed_filter = 'circle';
-        }
-        elseif (isset($params['filter_goal'])) {
+        } elseif (isset($params['filter_goal'])) {
             $feed_filter = 'goal';
         }
 
@@ -1249,10 +1232,11 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
-        return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
-                                        'msg'   => $file_id ? "" : __('Failed to upload.'),
-                                        'id'    => $file_id ? $file_id : "",
-                                       ]);
+        return $this->_ajaxGetResponse([
+            'error' => $file_id ? false : true,
+            'msg'   => $file_id ? "" : __('Failed to upload.'),
+            'id'    => $file_id ? $file_id : "",
+        ]);
     }
 
     /**
@@ -1270,12 +1254,13 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $success = $this->Post->PostFile->AttachedFile->cancelUploadFile($this->request->data('AttachedFile.file_id'));
-        return $this->_ajaxGetResponse(['error' => !$success,
-                                        'msg'   => $success
-                                            ? __('Deleted the file.')
-                                            : __('Failed to delete the file.'),
-                                        'id'    => "",
-                                       ]);
+        return $this->_ajaxGetResponse([
+            'error' => !$success,
+            'msg'   => $success
+                ? __('Deleted the file.')
+                : __('Failed to delete the file.'),
+            'id'    => "",
+        ]);
     }
 
     /**
@@ -1388,8 +1373,7 @@ class PostsController extends AppController
 
         if ($this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'])) {
             $this->Pnotify->outSuccess(__("Joined the circle"));
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to join the circle."));
         }
         return $this->redirect($this->request->referer());
@@ -1428,8 +1412,7 @@ class PostsController extends AppController
     {
         if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
             return 'admin';
-        }
-        else {
+        } else {
             if ($this->Post->Circle->CircleMember->isBelong($circle_id, $this->Auth->user('id'))) {
                 return 'joined';
             }
@@ -1445,8 +1428,7 @@ class PostsController extends AppController
         if ($this->Post->Circle->CircleMember->validates()) {
             $this->Post->Circle->CircleMember->circleStatusToggle($circle_id, $status);
             return $this->redirect($this->request->referer());
-        }
-        else {
+        } else {
             throw new NotFoundException(__("Invalid Request"));
         }
     }
@@ -1462,8 +1444,7 @@ class PostsController extends AppController
         if (!$res) {
             $msg = __("Failed to post.");
             $error = true;
-        }
-        else {
+        } else {
             $this->Pnotify->outSuccess(__("Posted."));
         }
 
@@ -1471,10 +1452,10 @@ class PostsController extends AppController
         $this->updateSetupStatusIfNotCompleted();
 
         return $this->_ajaxGetResponse([
-                                           'error'             => $error,
-                                           'msg'               => $msg,
-                                           'validation_errors' => array_values($this->Post->validationErrors)
-                                       ]);
+            'error'             => $error,
+            'msg'               => $msg,
+            'validation_errors' => array_values($this->Post->validationErrors)
+        ]);
     }
 
 }

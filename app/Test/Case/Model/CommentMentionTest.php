@@ -17,7 +17,8 @@ class CommentMentionTest extends GoalousTestCase
     public $fixtures = array(
         'app.comment_mention',
         'app.post',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team'
     );
 

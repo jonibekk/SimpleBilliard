@@ -11,8 +11,8 @@
  * @since         CakePHP(tm) v 0.10.8.2117
  */
 Cache::config('default', array(
-                           'engine' => 'Apc',
-                       )
+        'engine' => 'Apc',
+    )
 );
 
 /**
@@ -105,13 +105,13 @@ CakeLog::config('error', array(
 Configure::write('Asset.timestamp', 'force');
 
 App::build(array(
-               'Vendor' => array(
-                   ROOT . '/Vendor/',
-               ),
-               'Plugin' => array(
-                   ROOT . '/Plugin/',
-               ),
-           )
+        'Vendor' => array(
+            ROOT . '/Vendor/',
+        ),
+        'Plugin' => array(
+            ROOT . '/Plugin/',
+        ),
+    )
 );
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
@@ -151,6 +151,8 @@ define('OOV_BASE_URL', 'https://view.officeapps.live.com/op/view.aspx?src=');
 define('SELECT2_QUERY_LIMIT', 200);
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
+// timestamp before 1hr
+define('REQUEST_TIMESTAMP_ONE_HR_AGO', time()-3600);
 //右カラム各要素の表示数
 define('MY_GOALS_DISPLAY_NUMBER', 5);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 5);

@@ -22,7 +22,7 @@ class BenchmarkComponent extends Component
         $this->mark(__FILE__, __LINE__);
         foreach ($this->_marks as $v) {
             $this->log(sprintf('[%01.2fms][%01.2fMB] %s:%d %s', $v['time'], $v['mem'], $v['file'], $v['no'],
-                               $v['msg']));
+                $v['msg']));
         }
 
     }

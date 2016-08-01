@@ -261,6 +261,38 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
+    public function pushUpdateCircleList($socketId, $share)
+    {
+        if (!$socketId) {
+            return;
+        }
+
+        $teamId = $this->Session->read('current_team_id');
+        $channelName = "team_" . $teamId;
+        $circle_ids = [];
+        if (in_array("public", $share)) {
+            /** @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+            $circle_ids[] = $Circle->getTeamAllCircleId();
+        } else {
+            // それ以外の場合は共有先の数だけ回す
+            foreach ($share as $val) {
+                if (strpos($val, "circle_") !== false) {
+                    $circle_ids[] = str_replace("circle_", "", $val);
+                }
+            }
+        }
+
+        // レスポンスデータの定義
+        $data = [
+            'circle_ids' => $circle_ids,
+        ];
+
+        // push
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger($channelName, 'circle_list_update', $data, $socketId);
+    }
+
     /**
      * 通知ベルPushのチャンネルをセット
      *

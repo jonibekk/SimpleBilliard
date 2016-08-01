@@ -1,14 +1,14 @@
 <?php
 
 App::uses('GoalousWebTestCase', 'Test');
-App::uses('PHPUnit_Extensions_Selenium2TestCase_Keys', 'Vendor/phpunit/phpunit-selenium/PHPUnit/Extensions/Selenium2TestCase');
+App::uses('PHPUnit_Extensions_Selenium2TestCase_Keys',
+    'Vendor/phpunit/phpunit-selenium/PHPUnit/Extensions/Selenium2TestCase');
 
 /**
  * サークルのテスト
  *
  * @package GoalousWebTest
  * @version 2016/03/12
- *
  */
 class CircleWebTest extends GoalousWebTestCase
 {
@@ -42,6 +42,7 @@ class CircleWebTest extends GoalousWebTestCase
 
     /**
      * #### サークルのモーダルを表示
+     *
      * @return int
      */
     public function testDispCircleModal()
@@ -129,9 +130,9 @@ class CircleWebTest extends GoalousWebTestCase
         $before_panels = $this->elements($this->using('css selector')->value('div.panel.panel-default'));
         $this->execute([
             'script' => 'window.scrollTo(0,document.body.scrollHeight);',
-            'args' => [],
+            'args'   => [],
         ]);
-        $this->waitUntil(function() use ($before_panels) {
+        $this->waitUntil(function () use ($before_panels) {
             $panels = $this->elements($this->using('css selector')->value('div.panel.panel-default'));
             if (count($before_panels) < count($panels)) {
                 $this->assertTrue(count($before_panels) < count($panels));

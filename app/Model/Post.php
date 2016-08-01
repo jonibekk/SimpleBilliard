@@ -291,8 +291,8 @@ class Post extends AppModel
         // ファイルが添付されている場合
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
             $results[] = $this->PostFile->AttachedFile->saveRelatedFiles($post_id,
-                                                                         AttachedFile::TYPE_MODEL_POST,
-                                                                         $postData['file_id']);
+                AttachedFile::TYPE_MODEL_POST,
+                $postData['file_id']);
         }
         if (!empty($share)) {
             //ユーザとサークルに分割
@@ -302,8 +302,7 @@ class Post extends AppModel
                 //ユーザの場合
                 if (stristr($val, 'user_')) {
                     $users[] = str_replace('user_', '', $val);
-                }
-                //サークルの場合
+                } //サークルの場合
                 elseif (stristr($val, 'circle_')) {
                     $circles[] = str_replace('circle_', '', $val);
                 }
@@ -474,14 +473,12 @@ class Post extends AppModel
     {
         if (!$start) {
             $start = strtotime("-1 month", REQUEST_TIMESTAMP);
-        }
-        elseif (is_string($start)) {
+        } elseif (is_string($start)) {
             $start = strtotime($start);
         }
         if (!$end) {
             $end = REQUEST_TIMESTAMP;
-        }
-        elseif (is_string($end)) {
+        } elseif (is_string($end)) {
             $end = strtotime($end);
         }
         if (isset($params['named']['page']) || !empty($params['named']['page'])) {
@@ -500,8 +497,7 @@ class Post extends AppModel
                 if (array_key_exists($key, $params)) {
                     $org_param_exists = true;
                     $this->orgParams[$key] = $params[$key];
-                }
-                elseif (isset($params['named']) && array_key_exists($key, $params['named'])) {
+                } elseif (isset($params['named']) && array_key_exists($key, $params['named'])) {
                     $org_param_exists = true;
                     $this->orgParams[$key] = $params['named'][$key];
                 }
@@ -532,36 +528,34 @@ class Post extends AppModel
             //関連ゴール
             $post_filter_conditions['OR'][] =
                 $db->expression('Post.id IN (' . $this->getSubQueryFilterRelatedGoalPost($db, $start, $end,
-                                                                                         [self::TYPE_KR_COMPLETE]) . ')');
+                        [self::TYPE_KR_COMPLETE]) . ')');
 
             //すべてのユーザが閲覧可能なゴール投稿
             $post_filter_conditions['OR'][] = $this->getConditionAllGoalPostId([
-                                                                                   self::TYPE_CREATE_GOAL,
-                                                                                   self::TYPE_ACTION,
-                                                                                   self::TYPE_GOAL_COMPLETE,
-                                                                               ]
+                    self::TYPE_CREATE_GOAL,
+                    self::TYPE_ACTION,
+                    self::TYPE_GOAL_COMPLETE,
+                ]
             );
 
-        }
-        //パラメータ指定あり
+        } //パラメータ指定あり
         else {
             //サークル指定
             if ($this->orgParams['circle_id']) {
                 //サークル所属チェック
                 $is_secret = $this->Circle->isSecret($this->orgParams['circle_id']);
                 $is_exists_circle = $this->Circle->isBelongCurrentTeam($this->orgParams['circle_id'],
-                                                                       $this->current_team_id);
+                    $this->current_team_id);
                 $is_belong_circle_member = $this->User->CircleMember->isBelong($this->orgParams['circle_id']);
                 if (!$is_exists_circle || ($is_secret && !$is_belong_circle_member)) {
                     throw new RuntimeException(__("The circle dosen't exist or you don't have permission."));
                 }
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end,
-                                                                                            $this->orgParams['circle_id'],
-                                                                                            PostShareCircle::SHARE_TYPE_SHARED) . ')');
+                            $this->orgParams['circle_id'],
+                            PostShareCircle::SHARE_TYPE_SHARED) . ')');
 
-            }
-            //単独投稿指定
+            } //単独投稿指定
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
                 if (
@@ -578,60 +572,55 @@ class Post extends AppModel
                 ) {
                     $single_post_id = $this->orgParams['post_id'];
                 }
-            }
-            //特定のKR指定
+            } //特定のKR指定
             elseif ($this->orgParams['key_result_id']) {
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterKrPostList($db,
-                                                                                        $this->orgParams['key_result_id'],
-                                                                                        self::TYPE_ACTION,
-                                                                                        $start, $end) . ')');
-            }
-            //特定ゴール指定
+                            $this->orgParams['key_result_id'],
+                            self::TYPE_ACTION,
+                            $start, $end) . ')');
+            } //特定ゴール指定
             elseif ($this->orgParams['goal_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
                     $post_filter_conditions['OR'][] =
                         $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db,
-                                                                                              $this->orgParams['goal_id'],
-                                                                                              self::TYPE_ACTION, $start,
-                                                                                              $end) . ')');
+                                $this->orgParams['goal_id'],
+                                self::TYPE_ACTION, $start,
+                                $end) . ')');
 
                 }
-            }
-            //投稿主指定
+            } //投稿主指定
             elseif ($this->orgParams['author_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
                     $post_filter_conditions['OR'][] =
                         $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db, null,
-                                                                                              self::TYPE_ACTION, $start,
-                                                                                              $end) . ')');
+                                self::TYPE_ACTION, $start,
+                                $end) . ')');
                 }
-            }
-            //ゴールのみの場合
+            } //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
                 $post_filter_conditions['OR'][] = $this->getConditionAllGoalPostId([
-                                                                                       self::TYPE_CREATE_GOAL,
-                                                                                       self::TYPE_KR_COMPLETE,
-                                                                                       self::TYPE_ACTION,
-                                                                                       self::TYPE_GOAL_COMPLETE,
-                                                                                   ]
+                        self::TYPE_CREATE_GOAL,
+                        self::TYPE_KR_COMPLETE,
+                        self::TYPE_ACTION,
+                        self::TYPE_GOAL_COMPLETE,
+                    ]
                 );
-            }
-            // ユーザーID指定
+            } // ユーザーID指定
             elseif ($this->orgParams['user_id']) {
                 // 自分個人に共有された投稿
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end,
-                                                                                               ['user_id' => $this->orgParams['user_id']]) . ')');
+                            ['user_id' => $this->orgParams['user_id']]) . ')');
 
                 // 自分が閲覧可能なサークルへの投稿一覧
                 // （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
                 //getSubQueryFilterAccessibleCirclePostList
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterAccessibleCirclePostList($db, $start, $end,
-                                                                                                      ['user_id' => $this->orgParams['user_id']]) . ')');
+                            ['user_id' => $this->orgParams['user_id']]) . ')');
 
                 // 自分自身の user_id が指定された場合は、自分の投稿を含める
                 if ($this->my_uid == $this->orgParams['user_id']) {
@@ -643,15 +632,14 @@ class Post extends AppModel
         if (!empty($this->orgParams['post_id'])) {
             //単独投稿指定の場合はそのまま
             $post_list = $single_post_id;
-        }
-        else {
+        } else {
             //単独投稿以外は再度、件数、オーダーの条件を入れ取得
             $post_options = [
                 'conditions' => $post_filter_conditions,
                 'limit'      => $limit,
                 'page'       => $page,
                 'order'      => [
-                    'Post.modified' => 'desc'
+                    'Post.created' => 'desc'
                 ],
             ];
             if ($this->orgParams['type'] == self::TYPE_ACTION) {
@@ -826,9 +814,11 @@ class Post extends AppModel
             $options['conditions'][] = ['Post.modified BETWEEN ? AND ?' => [$start, $end]];
         }
 
+        // note: changed sorting from Post.modified to created DESC, so that only latest posts can be shown on top
+        // if someone comment on post will not effect
         if ($this->orgParams['circle_id']) {
             $options['order'] = [
-                'Post.modified' => 'desc'
+                'Post.created' => 'desc'
             ];
         }
 
@@ -932,8 +922,13 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getSubQueryFilterMyCirclePostId(DboSource $db, $start, $end, $my_circle_list = null, $share_type = null)
-    {
+    public function getSubQueryFilterMyCirclePostId(
+        DboSource $db,
+        $start,
+        $end,
+        $my_circle_list = null,
+        $share_type = null
+    ) {
         if (!$my_circle_list) {
             $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
         }
@@ -1057,8 +1052,13 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getSubQueryFilterGoalPostList(DboSource $db, $goal_id = null, $type = self::TYPE_ACTION, $start = null, $end = null)
-    {
+    public function getSubQueryFilterGoalPostList(
+        DboSource $db,
+        $goal_id = null,
+        $type = self::TYPE_ACTION,
+        $start = null,
+        $end = null
+    ) {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -1153,12 +1153,10 @@ class Post extends AppModel
         foreach ($data as $key => $val) {
             if (!empty($val['PostShareCircle'])) {
                 $data[$key]['share_mode'] = self::SHARE_CIRCLE;
-            }
-            else {
+            } else {
                 if (!empty($val['PostShareUser'])) {
                     $data[$key]['share_mode'] = self::SHARE_PEOPLE;
-                }
-                else {
+                } else {
                     $data[$key]['share_mode'] = self::SHARE_ONLY_ME;
                 }
             }
@@ -1174,12 +1172,11 @@ class Post extends AppModel
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
                         $data[$key]['share_text'] = __("Shared %s",
-                                                       $data[$key]['share_user_name']);
-                    }
-                    else {
+                            $data[$key]['share_user_name']);
+                    } else {
                         $data[$key]['share_text'] = __('Shared %1$s and %2$s others',
-                                                       $data[$key]['share_user_name'],
-                                                       count($val['PostShareUser']) - 1);
+                            $data[$key]['share_user_name'],
+                            count($val['PostShareUser']) - 1);
                     }
                     break;
                 case self::SHARE_ONLY_ME:
@@ -1191,43 +1188,38 @@ class Post extends AppModel
                     if (count($val['PostShareUser']) == 0) {
                         if (count($val['PostShareCircle']) == 1) {
                             $data[$key]['share_text'] = __("Shared %s",
-                                                           $data[$key]['share_circle_name']);
-                        }
-                        else {
+                                $data[$key]['share_circle_name']);
+                        } else {
                             $data[$key]['share_text'] = __('Shared %1$s and %2$s circle(s)',
-                                                           $data[$key]['share_circle_name'],
-                                                           count($val['PostShareCircle']) - 1);
+                                $data[$key]['share_circle_name'],
+                                count($val['PostShareCircle']) - 1);
                         }
-                    }
-                    //共有ユーザが１人いる場合
+                    } //共有ユーザが１人いる場合
                     elseif (count($val['PostShareUser']) == 1) {
                         if (count($val['PostShareCircle']) == 1) {
                             $data[$key]['share_text'] = __('Shared %1$s and %2$s',
-                                                           $data[$key]['share_circle_name'],
-                                                           $data[$key]['share_user_name']);
-                        }
-                        else {
+                                $data[$key]['share_circle_name'],
+                                $data[$key]['share_user_name']);
+                        } else {
                             $data[$key]['share_text'] = __('Shared %1$s, %2$s and %3$s others',
-                                                           $data[$key]['share_user_name'],
-                                                           $data[$key]['share_circle_name'],
-                                                           count($val['PostShareCircle']) - 1);
+                                $data[$key]['share_user_name'],
+                                $data[$key]['share_circle_name'],
+                                count($val['PostShareCircle']) - 1);
                         }
 
-                    }
-                    //共有ユーザが２人以上いる場合
+                    } //共有ユーザが２人以上いる場合
                     else {
                         if (count($val['PostShareCircle']) == 1) {
                             $data[$key]['share_text'] = __('Shared %1$s, %2$s and %3$s others',
-                                                           $data[$key]['share_circle_name'],
-                                                           $data[$key]['share_user_name'],
-                                                           count($val['PostShareUser']) - 1);
-                        }
-                        else {
+                                $data[$key]['share_circle_name'],
+                                $data[$key]['share_user_name'],
+                                count($val['PostShareUser']) - 1);
+                        } else {
                             $data[$key]['share_text'] = __('Shared %1$s and %2$s others,%3$s and %4$s circle(s)',
-                                                           $data[$key]['share_user_name'],
-                                                           count($val['PostShareUser']) - 1,
-                                                           $data[$key]['share_circle_name'],
-                                                           count($val['PostShareCircle']) - 1);
+                                $data[$key]['share_user_name'],
+                                count($val['PostShareUser']) - 1,
+                                $data[$key]['share_circle_name'],
+                                count($val['PostShareCircle']) - 1);
                         }
                     }
 
@@ -1271,9 +1263,9 @@ class Post extends AppModel
         $results[] = $this->save($data);
         //post_share_users,post_share_circlesの更新
         $results[] = $this->PostShareUser->updateAll(['PostShareUser.modified' => REQUEST_TIMESTAMP],
-                                                     ['PostShareUser.post_id' => $data['Post']['id']]);
+            ['PostShareUser.post_id' => $data['Post']['id']]);
         $results[] = $this->PostShareCircle->updateAll(['PostShareCircle.modified' => REQUEST_TIMESTAMP],
-                                                       ['PostShareCircle.post_id' => $data['Post']['id']]);
+            ['PostShareCircle.post_id' => $data['Post']['id']]);
 
         // ファイルが添付されている場合
         if ((isset($data['file_id']) && is_array($data['file_id'])) ||
@@ -1352,8 +1344,15 @@ class Post extends AppModel
      * @return mixed
      * @throws Exception
      */
-    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null, $share = null, $share_type = PostShareCircle::SHARE_TYPE_SHARED)
-    {
+    function addGoalPost(
+        $type,
+        $goal_id,
+        $uid = null,
+        $public = true,
+        $model_id = null,
+        $share = null,
+        $share_type = PostShareCircle::SHARE_TYPE_SHARED
+    ) {
         if (!$uid) {
             $uid = $this->my_uid;
         }
@@ -1407,8 +1406,7 @@ class Post extends AppModel
             //ユーザの場合
             if (stristr($val, 'user_')) {
                 $users[] = str_replace('user_', '', $val);
-            }
-            //サークルの場合
+            } //サークルの場合
             elseif (stristr($val, 'circle_')) {
                 $circles[] = str_replace('circle_', '', $val);
             }
@@ -1479,8 +1477,7 @@ class Post extends AppModel
         // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
         if ($user_id == 'me') {
             $options['conditions']['user_id'] = $this->my_uid;
-        }
-        elseif ($user_id) {
+        } elseif ($user_id) {
             $options['conditions']['user_id'] = $user_id;
         }
 
@@ -1504,10 +1501,11 @@ class Post extends AppModel
      */
     function getMessageCount($params = [])
     {
-        $params = array_merge(['user_id' => null,
-                               'start'   => null,
-                               'end'     => null,
-                              ], $params);
+        $params = array_merge([
+            'user_id' => null,
+            'start'   => null,
+            'end'     => null,
+        ], $params);
 
         $options = [
             'conditions' => [
@@ -1561,10 +1559,11 @@ class Post extends AppModel
      */
     function getMessageUserCount($params = [])
     {
-        $params = array_merge(['user_id' => null,
-                               'start'   => null,
-                               'end'     => null,
-                              ], $params);
+        $params = array_merge([
+            'user_id' => null,
+            'start'   => null,
+            'end'     => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -1777,7 +1776,7 @@ class Post extends AppModel
                 $upload->uploadUrl($item['PostUser'], 'User.photo', ['style' => 'medium_large']);
 
             // if share with no one then show postuser pic
-            if(empty($item['PostShareUser'])) {
+            if (empty($item['PostShareUser'])) {
                 $item['PostShareUser'][0]['User']['photo_path'] =
                     $item['PostUser']['photo_path'];
                 $item['PostShareUser'][0]['User']['display_first_name'] =
@@ -1786,7 +1785,7 @@ class Post extends AppModel
                 // メッセージ受信者の画像
                 foreach ($item['PostShareUser'] as $k => $v) {
                     $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo',
-                                                                  ['style' => 'medium_large']);
+                        ['style' => 'medium_large']);
                     $item['PostShareUser'][$k] = $v;
                 }
             }
@@ -1796,9 +1795,14 @@ class Post extends AppModel
         return $new_data;
     }
 
-    function getFilesOnCircle($circle_id, $page = 1, $limit = null,
-                              $start = null, $end = null, $file_type = null)
-    {
+    function getFilesOnCircle(
+        $circle_id,
+        $page = 1,
+        $limit = null,
+        $start = null,
+        $end = null,
+        $file_type = null
+    ) {
         $one_month = 60 * 60 * 24 * 31;
         $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
         $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
@@ -1889,10 +1893,11 @@ class Post extends AppModel
      */
     public function getUniqueUserCount($params = [])
     {
-        $params = array_merge(['start'   => null,
-                               'end'     => null,
-                               'user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'start'   => null,
+            'end'     => null,
+            'user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -1930,11 +1935,12 @@ class Post extends AppModel
      */
     public function getPostCountUserRanking($params = [])
     {
-        $params = array_merge(['limit'   => null,
-                               'start'   => null,
-                               'end'     => null,
-                               'user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'limit'   => null,
+            'start'   => null,
+            'end'     => null,
+            'user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -1976,9 +1982,11 @@ class Post extends AppModel
      */
     public function getPostsById($post_ids, $params = [])
     {
-        $params = array_merge(['include_action' => null,
-                               'include_user'   => null],
-                              $params);
+        $params = array_merge([
+            'include_action' => null,
+            'include_user'   => null
+        ],
+            $params);
 
         $options = [
             'conditions' => [

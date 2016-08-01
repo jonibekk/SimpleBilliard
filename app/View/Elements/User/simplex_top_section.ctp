@@ -19,22 +19,22 @@
             <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'settings', '#' => 'profile']) ?>">
                 <?=
                 $this->Html->image('ajax-loader.gif',
-                                   [
-                                       'class'         => 'lazy profile-user-avatar',
-                                       'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                                   ['style' => 'x_large']),
-                                   ]
+                    [
+                        'class'         => 'lazy profile-user-avatar',
+                        'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
+                            ['style' => 'x_large']),
+                    ]
                 )
                 ?>
             </a>
         <?php else: ?>
             <?=
             $this->Html->image('ajax-loader.gif',
-                               [
-                                   'class'         => 'lazy profile-user-avatar',
-                                   'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                               ['style' => 'x_large']),
-                               ]
+                [
+                    'class'         => 'lazy profile-user-avatar',
+                    'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
+                        ['style' => 'x_large']),
+                ]
             )
             ?>
         <?php endif ?>
@@ -70,14 +70,14 @@
         </div>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
             <?= $this->Html->link(__('Edit Profile'),
-                                  [
-                                      'controller' => 'users',
-                                      'action'     => 'settings',
-                                      '#'          => 'profile'
-                                  ],
-                                  [
-                                      'class' => 'btn-profile-edit'
-                                  ])
+                [
+                    'controller' => 'users',
+                    'action'     => 'settings',
+                    '#'          => 'profile'
+                ],
+                [
+                    'class' => 'btn-profile-edit'
+                ])
             ?>
         <?php endif ?>
     </div>

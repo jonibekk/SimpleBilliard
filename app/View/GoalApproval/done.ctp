@@ -89,10 +89,12 @@
                         <div class="panel-body goal-set-heading clearfix">
 
                             <p class="approval_body_text">
-                                <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
-                                                                           'data-original' => $this->Upload->uploadUrl($goal['User'],
-                                                                                                                       'User.photo',
-                                                                                                                       ['style' => 'small'])]) ?></p>
+                                <?= $this->Html->image('ajax-loader.gif', [
+                                    'class'         => 'lazy comment-img',
+                                    'data-original' => $this->Upload->uploadUrl($goal['User'],
+                                        'User.photo',
+                                        ['style' => 'small'])
+                                ]) ?></p>
 
                             <p class="approval_body_text"><?= __("Name") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
@@ -131,21 +133,25 @@
 
                             <?=
                             $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy',
-                                                   'data-original' => $this->Upload->uploadUrl($goal,
-                                                                                               "Goal.photo",
-                                                                                               ['style' => 'medium']),
-                                                   'width'         => '48px',
-                                                   'error-img'     => "/img/no-image-link.png",
-                                               ]
+                                [
+                                    'class'         => 'lazy',
+                                    'data-original' => $this->Upload->uploadUrl($goal,
+                                        "Goal.photo",
+                                        ['style' => 'medium']),
+                                    'width'         => '48px',
+                                    'error-img'     => "/img/no-image-link.png",
+                                ]
                             )
                             ?>
                         </div>
 
                         <div class="panel-body comment-block">
                             <?= $this->Form->create('GoalApproval',
-                                                    ['id' => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'], 'url' => ['controller' => 'goal_approval', 'action' => 'done'], 'type' => 'post', 'novalidate' => true]); ?>
+                                ['id'         => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'],
+                                 'url'        => ['controller' => 'goal_approval', 'action' => 'done'],
+                                 'type'       => 'post',
+                                 'novalidate' => true
+                                ]); ?>
                             <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
 
                             <?php if ($goal['is_present_term'] === true) { ?>
@@ -154,12 +160,17 @@
                                         <?php if ($goal['my_goal'] === false) { ?>
                                             <?php if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) { ?>
                                                 <?= $this->Form->button(__("Remove from target of evaluation"),
-                                                                        ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
-                                            <?php }
-                                            else {
+                                                    ['name'  => 'wait_btn',
+                                                     'class' => 'btn btn-primary approval_button',
+                                                     'div'   => false
+                                                    ]) ?>
+                                            <?php } else {
                                                 if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) { ?>
                                                     <?= $this->Form->button(__("Set as target of evaluation"),
-                                                                            ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                                        ['name'  => 'approval_btn',
+                                                         'class' => 'btn btn-primary approval_button',
+                                                         'div'   => false
+                                                        ]) ?>
                                                 <?php }
                                             } ?>
                                         <?php } ?>
@@ -168,29 +179,32 @@
 
                                 <div class="form-group">
                                     <?= $this->Form->textarea('comment',
-                                                              [
-                                                                  'label'                        => false,
-                                                                  'class'                        => 'form-control addteam_input-design',
-                                                                  'rows'                         => 3,
-                                                                  'cols'                         => 30,
-                                                                  'style'                        => 'margin-top: 10px; margin-bottom: 10px;',
-                                                                  'placeholder'                  => 'コメントを書く',
-                                                                  'data-bv-stringlength'         => 'true',
-                                                                  'data-bv-stringlength-max'     => 5000,
-                                                                  'data-bv-stringlength-message' => __(
-                                                                                                        "It's over limit characters (%s).",
-                                                                                                        5000),
-                                                                  'data-bv-notempty-message'     => __(
-                                                                                                        "Input is required."),
-                                                                  'required'                     => 'required'
-                                                              ]) ?>
+                                        [
+                                            'label'                        => false,
+                                            'class'                        => 'form-control addteam_input-design',
+                                            'rows'                         => 3,
+                                            'cols'                         => 30,
+                                            'style'                        => 'margin-top: 10px; margin-bottom: 10px;',
+                                            'placeholder'                  => 'コメントを書く',
+                                            'data-bv-stringlength'         => 'true',
+                                            'data-bv-stringlength-max'     => 5000,
+                                            'data-bv-stringlength-message' => __(
+                                                "It's over limit characters (%s).",
+                                                5000),
+                                            'data-bv-notempty-message'     => __(
+                                                "Input is required."),
+                                            'required'                     => 'required'
+                                        ]) ?>
                                 </div>
 
                                 <div class="row">
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === true) { ?>
                                             <?= $this->Form->button(__("Comment"),
-                                                                    ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                                ['name'  => 'comment_btn',
+                                                 'class' => 'btn btn-primary approval_button',
+                                                 'div'   => false
+                                                ]) ?>
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -200,10 +214,12 @@
                                 <?php foreach ($goal['ApprovalHistory'] as $history) { ?>
                                     <div class="font_12px comment-box" comment-id="">
                                         <div class="col col-xxs-12">
-                                            <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
-                                                                                       'data-original' => $this->Upload->uploadUrl($history['User'],
-                                                                                                                                   'User.photo',
-                                                                                                                                   ['style' => 'small'])]) ?>
+                                            <?= $this->Html->image('ajax-loader.gif', [
+                                                'class'         => 'lazy comment-img',
+                                                'data-original' => $this->Upload->uploadUrl($history['User'],
+                                                    'User.photo',
+                                                    ['style' => 'small'])
+                                            ]) ?>
                                             <div class="comment-body">
 
                                                 <div class="col col-xxs-12 comment-text comment-user">
@@ -237,7 +253,7 @@
         <?php if(isset($goal['Collaborator']['id'])):?>
         $('#GoalApprovalIndexForm_<?= $goal['Collaborator']['id']?>').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
+
             fields: {}
         });
         <?php endif;?>

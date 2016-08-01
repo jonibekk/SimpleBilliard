@@ -13,7 +13,7 @@
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
-                               ['class' => 'comment-img'])
+        ['class' => 'comment-img'])
     ?>
     <div class="comment-body modal-comment" style="margin-top:5px;">
         <div class="font_12px font_bold modalFeedTextPadding">

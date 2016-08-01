@@ -12,16 +12,81 @@ class SendMailFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'メール送信ID'),
-        'from_user_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '送信元ユーザID(belongsToでUserモデルに関連)'),
-        'team_id'         => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
-        'template_type'   => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => 'メールテンプレタイプ'),
-        'item'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'アイテム(JSONエンコード)', 'charset' => 'utf8mb4'),
-        'sent_datetime'   => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を実行した日付時刻'),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を更新した日付時刻'),
+        'id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => 'メール送信ID'
+        ),
+        'from_user_id'    => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '送信元ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'team_id'         => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+        ),
+        'template_type'   => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => null,
+            'length'   => 3,
+            'unsigned' => true,
+            'comment'  => 'メールテンプレタイプ'
+        ),
+        'item'            => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'アイテム(JSONエンコード)',
+            'charset' => 'utf8mb4'
+        ),
+        'sent_datetime'   => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メール送信を実行した日付時刻'
+        ),
+        'del_flg'         => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => '削除フラグ'
+        ),
+        'deleted'         => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メール送信を削除した日付時刻'
+        ),
+        'created'         => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メール送信を追加した日付時刻'
+        ),
+        'modified'        => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メール送信を更新した日付時刻'
+        ),
         'indexes'         => array(
             'PRIMARY'      => array('column' => 'id', 'unique' => 1),
             'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
