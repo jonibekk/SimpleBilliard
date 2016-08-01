@@ -117,8 +117,6 @@ class SignupController extends AppController
             $this->Pnotify->outError(__('Invalid screen transition.'));
             $this->redirect('/');
         }
-        $timezones = $this->Timezone->getTimezones();
-        $this->set(compact('timezones'));
     }
 
     public function email()

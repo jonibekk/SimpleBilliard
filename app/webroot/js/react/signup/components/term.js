@@ -37,24 +37,23 @@ export default class Term extends React.Component {
                   {/* Start month */}
                   <div className="panel-heading signup-itemtitle">Select your present term ?</div>
                   { (() => { if(this.props.term.selected_term) {
-                    let start_month_options = []
-
-                    for (const key in this.props.term.start_month_list) {
-                      start_month_options.push(
-                        <option value={key} key={this.props.term.start_month_list[key]}>{this.props.term.start_month_list[key]}</option>
-                      )
-                    }
                     return (
-                    <select className="form-control signup_input-design" ref="start_month" onChange={ () => { this.props.selectStartMonth(this.getInputDomData('start_month')) } }>
-                        <option value="">選択してください</option>
-                        { start_month_options }
-                    </select>
+                      <select className="form-control signup_input-design" ref="start_month" onChange={ () => { this.props.selectStartMonth(this.getInputDomData('start_month')) } }>
+                          <option value="">選択してください</option>
+                          {
+                            this.props.term.start_month_list.map((option) => {
+                              return (
+                                <option value={option.start_month} key={option.range}>{option.range}</option>
+                              )
+                            })
+                          }
+                      </select>
                     )
                   } else {
                     return (
-                    <select className="form-control signup_input-design">
-                      <option value="">選択してください</option>
-                    </select>
+                      <select className="form-control signup_input-design">
+                        <option value="">選択してください</option>
+                      </select>
                     )
                   }})() }
 

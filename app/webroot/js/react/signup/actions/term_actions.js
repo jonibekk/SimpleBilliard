@@ -1,6 +1,5 @@
 import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
-import dateFormat from "dateformat"
 
 export function selectTerm(term) {
   return (dispatch) => {
@@ -41,18 +40,23 @@ function updateStartMonthList() {
     const selected_term = state.term.selected_term
 
     if(!selected_term) return false
-    const FORMAT = "yyyy/mm/dd"
-    const Date = new Date()
-    const this_month = Date.getMonth()
+    const date = new Date()
+    const this_month = date.getMonth()
+    const this_year = date.getFullYear()
+    let start_month_select_list = []
 
     for(let i = parseInt(selected_term); i > 0; i--) {
-      const start_month = new Date(date.getMonth() - i)
-      const formatted_start_month = dateFormat(start_month, FORMAT)
-      const end_month = new Date(start_month + i)
-      const formatted_end_month = dateFormat(end_month, FORMAT)
+      const start_month = new Date(this_year, this_month - (i - 1), 1)
+      const formatted_start_date = dateFormat(start_month.getFullYear(), parseInt(start_month.getMonth()) + 1, 1)
+      const end_month = new Date(this_year, (this_month - (i - 1)) + parseInt(selected_term), 0)
+      const formatted_end_date = dateFormat(end_month.getFullYear(), parseInt(end_month.getMonth()) + 1, end_month.getDate())
 
-
+      start_month_select_list.push({
+        start_month: parseInt(start_month.getMonth()) + 1,
+        range: `${formatted_start_date} - ${formatted_end_date}`
+      })
     }
+    dispatch({ type: types.SET_START_MONTH_LIST, start_month_list: start_month_select_list })
   }
 }
 
@@ -137,4 +141,14 @@ function redirectToTop() {
   setTimeout(() => {
     document.location.href = "/signup/email"
   }, 3000)
+}
+
+function dateFormat(year, month, day) {
+  if(month < 10) {
+    month = "0" + String(parseInt(month))
+  }
+  if(day < 10) {
+    day = "0" + String(parseInt(day))
+  }
+  return `${year}/${month}/${day}`
 }

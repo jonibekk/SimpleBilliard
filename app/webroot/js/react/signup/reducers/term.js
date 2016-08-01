@@ -9,11 +9,7 @@ const initialState = {
   is_exception: false,
   exception_message: '',
   is_timezone_edit_mode: false,
-  start_month_list: {
-    "5": '2016/05/01〜2016/07/31',
-    "6": '2016/06/01〜2016/08/31',
-    "7": '2016/07/01〜2016/09/31'
-  }
+  start_month_list: []
 }
 
 export default function term(state = initialState, action) {
