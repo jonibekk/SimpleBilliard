@@ -21,7 +21,7 @@ export default class TeamName extends React.Component {
       <div className="row">
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("What do you want to call your Goalous team?")}</div>
-              <div className="signup-description">{__("Create a name to a group that the team members work to achieve the great vision.Team is the largest of the range that can be shared the goals and activities . All information is closed in the team .")}</div>
+              <div className="signup-description">{__("Create a name to a group that the team members work to achieve the great vision. Team is the largest of the range that can be shared the goals and activities . All information is closed in the team .")}</div>
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
