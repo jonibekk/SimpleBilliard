@@ -140,6 +140,7 @@ class SignupController extends AppController
             return $this->redirect(['action' => 'auth']);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
         }
         return $this->render();
     }
