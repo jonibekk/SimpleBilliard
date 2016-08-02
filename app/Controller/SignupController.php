@@ -140,6 +140,7 @@ class SignupController extends AppController
             return $this->redirect(['action' => 'auth']);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
         }
         return $this->render();
     }
@@ -214,6 +215,7 @@ class SignupController extends AppController
         if ($this->Email->isVerified($email)) {
             throw new RuntimeException(__('This email address has already been used. Use another email address.'));
         }
+        throw new RuntimeException(__('This email address has already been used. Use another email address.'));
         return true;
     }
 
