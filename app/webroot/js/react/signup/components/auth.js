@@ -1,30 +1,34 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Link } from 'react-router'
 
 export default class Auth extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.props.auth.code_list
   }
 
   inputCode(inputed_code, index) {
-
-    // 数字以外の場合は何もしない
-    if(Number.isNaN(parseInt(inputed_code))) {
-      return
-    }
 
     // 確認中の場合も何もしない
     if(this.props.auth.checking_auth_code) {
       return
     }
 
-    // ペーストされた場合も含めてコードを確認する
-    const code_splitted = inputed_code.split("")
+    // inputフィールドのフォーカス変更
+    const key_name = `code${index + 1}`
+
+    if(index < 6) {
+      ReactDOM.findDOMNode(this.refs[key_name]).select()
+      ReactDOM.findDOMNode(this.refs[key_name]).focus()
+    } else {
+      ReactDOM.findDOMNode(this.refs.code1).select()
+      ReactDOM.findDOMNode(this.refs.code1).focus()
+    }
+  }
+
+  pasteCode(pasted_code, index) {
+    const code_splitted = pasted_code.split("").replace( /-/g , "")
 
     code_splitted.map((code, i) => {
-      const key_name = `code${index + i}`
       const target_index = index + i
 
       if(code === '-') {
@@ -35,16 +39,35 @@ export default class Auth extends React.Component {
         return
       }
 
-      this.setState({[key_name]: code}, () => {
-        this.props.inputCode(target_index, code)
-      })
+      this.props.inputCode(target_index, code)
     })
 
     // inputフィールドのフォーカス変更
+    const key_name = `code${index + 1}`
+
     if(index < 6) {
-      return ReactDOM.findDOMNode(this.refs[`code${index + 1}`]).focus()
+      ReactDOM.findDOMNode(this.refs[key_name]).select()
+      ReactDOM.findDOMNode(this.refs[key_name]).focus()
     } else {
-      return ReactDOM.findDOMNode(this.refs.code1).focus()
+      ReactDOM.findDOMNode(this.refs.code1).select()
+      ReactDOM.findDOMNode(this.refs.code1).focus()
+    }
+  }
+
+  handleKeyDown(key_code, index) {
+    const code_index = `code${index}`
+    const previous_index = parseInt(index) - 1
+    const previous_code_index = `code${previous_index}`
+
+    if(previous_index < 1) {
+      return
+    }
+
+    if(key_code === 8) {
+      if(String(this.props.auth.code_list[code_index]).length === 0) {
+        ReactDOM.findDOMNode(this.refs[previous_code_index]).select()
+        ReactDOM.findDOMNode(this.refs[previous_code_index]).focus()
+      }
     }
   }
 
@@ -94,21 +117,20 @@ export default class Auth extends React.Component {
                   <div className="confirmation_code_group">
                       <div className="signup-auth-split_input_item signup-auth-input_wrapper">
                           <input type="text" className="signup-auth-inline_input" ref="code1" maxLength="1" type="text"
-                                 value={this.state.code1}
-                                 onKeyPress={ (event) => {this.inputCode(event.nativeEvent.key, 1)}}
-                                 onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 1) } />
+                                 onChange={ (event) => {this.inputCode(event.target.value, 1)}}
+                                 onPaste={ (event) => this.pasteCode(event.clipboardData.getData('Text'), 1) } />
                       </div>
                       <div className="signup-auth-split_input_item signup-auth-input_wrapper">
                           <input type="text" className="signup-auth-inline_input" ref="code2" maxLength="1" type="text"
-                                 value={this.state.code2}
-                                 onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 2)}
-                                 onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 2) } />
+                                 onChange={ (event) => this.inputCode(event.target.value, 2)}
+                                 onPaste={ (event) => this.pasteCode(event.clipboardData.getData('Text'), 2) }
+                                 onKeyDown={ (event) => { this.handleKeyDown(event.keyCode, 2) } } />
                       </div>
                       <div className="signup-auth-split_input_item signup-auth-input_wrapper">
                           <input type="text" className="signup-auth-inline_input" ref="code3" maxLength="1" type="text"
-                          value={this.state.code3}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 3)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 3) } />
+                                 onChange={ (event) => this.inputCode(event.target.value, 3)}
+                                 onPaste={ (event) => this.pasteCode(event.clipboardData.getData('Text'), 3) }
+                                 onKeyDown={ (event) => { this.handleKeyDown(event.keyCode, 3) } } />
                       </div>
                   </div>
 
@@ -117,21 +139,21 @@ export default class Auth extends React.Component {
                   <div className="confirmation_code_group">
                       <div className="signup-auth-split_input_item signup-auth-input_wrapper">
                           <input type="text" className="signup-auth-inline_input" ref="code4" maxLength="1" type="text"
-                          value={this.state.code4}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 4)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 4) } />
+                                 onChange={ (event) => this.inputCode(event.target.value, 4)}
+                                 onPaste={ (event) => this.pasteCode(event.clipboardData.getData('Text'), 4) }
+                                 onKeyDown={ (event) => { this.handleKeyDown(event.keyCode, 4) } } />
                       </div>
                       <div className="signup-auth-split_input_item signup-auth-input_wrapper">
                           <input type="text" className="signup-auth-inline_input" ref="code5" maxLength="1" type="text"
-                          value={this.state.code5}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 5)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 5) } />
+                                 onChange={ (event) => this.inputCode(event.target.value, 5)}
+                                 onPaste={ (event) => this.pasteCode(event.clipboardData.getData('Text'), 5) }
+                                 onKeyDown={ (event) => { this.handleKeyDown(event.keyCode, 5) } } />
                       </div>
                       <div className="signup-auth-split_input_item signup-auth-input_wrapper">
                           <input type="text" className="signup-auth-inline_input" ref="code6" maxLength="1" type="text"
-                          value={this.state.code6}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 6)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 6) } />
+                                 onChange={ (event) => this.inputCode(event.target.value, 6)}
+                                 onPaste={ (event) => this.pasteCode(event.clipboardData.getData('Text'), 6) }
+                                 onKeyDown={ (event) => { this.handleKeyDown(event.keyCode, 6) } } />
                       </div>
                   </div>
               </div>
