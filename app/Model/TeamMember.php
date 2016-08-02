@@ -1381,9 +1381,16 @@ class TeamMember extends AppModel
                     'email_verified' => 0
                 ]
             ];
+            // checking first if any previous record in invite table, if not then get user_id from email table
+            // for checking the member id
             $checkInvite = $this->Team->Invite->find('first', $options);
             if (!empty($checkInvite['Invite'])) {
                 $this->csv_datas[$key]['User']['id'] = $checkInvite['Invite']['to_user_id'];
+            } else {
+                $checkInvite = $this->User->Email->findByEmail($row['email']);
+                if (!empty($checkInvite['Email'])) {
+                    $this->csv_datas[$key]['User']['id'] = $checkInvite['Email']['user_id'];
+                }
             }
 
             //exists member id check(after check)
@@ -1407,7 +1414,6 @@ class TeamMember extends AppModel
 
             // for local name
             if (viaIsSet($row['language']) && (viaIsSet($row['local_first_name']) || viaIsSet($row['local_last_name']))) {
-                $this->log('in if');
                 $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
                 $this->csv_datas[$key]['LocalName']['first_name'] = viaIsSet($row['local_first_name']) ? $row['local_first_name'] : '';
                 $this->csv_datas[$key]['LocalName']['last_name'] = viaIsSet($row['local_last_name']) ? $row['local_last_name'] : '';
@@ -1532,8 +1538,10 @@ class TeamMember extends AppModel
             foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
                 if (!empty($this_csv_data['User']['id'])) {
                     $member = $this->findByUserId($this_csv_data['User']['id']);
-                    $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
-                    $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
+                    if (!empty($member)) {
+                        $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
+                        $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
+                    }
                 }
             }
         }
