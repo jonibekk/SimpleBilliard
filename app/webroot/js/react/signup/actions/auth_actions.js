@@ -4,7 +4,6 @@ import { post } from './common_actions'
 
 export function inputCode(index, code) {
   return (dispatch, getState) => {
-    let value = {}
     const code_key = `code${index}`
     const state = getState()
     const new_code_list = Object.assign({}, state.auth.code_list, {[code_key]: code})
@@ -18,6 +17,7 @@ export function inputCode(index, code) {
 
     // 6文字のコードを生成
     let full_code = ''
+
     for(const key in new_code_list) {
       full_code += String(new_code_list[key])
     }
