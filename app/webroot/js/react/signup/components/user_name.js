@@ -30,8 +30,8 @@ export default class UserName extends React.Component {
       <div>
         <div className="row">
             <div className="panel panel-default panel-signup">
-                <div className="panel-heading signup-title">{"What's your name?"}</div>
-                <div className="signup-description">username sample textusername sample text username sample text username sample text username sample text username sample text.</div>
+                <div className="panel-heading signup-title">{__("What's your name?")}</div>
+                <div className="signup-description">{__("Your name will be displayed only in the team of Goalous. ")}</div>
 
                 <form className="form-horizontal" acceptCharset="utf-8"
                       onSubmit={ (e) => this.handleSubmit(e) }>
@@ -114,8 +114,7 @@ export default class UserName extends React.Component {
                         <input type="checkbox" value="1" className="signup-checkbox" ref="privacy"
                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
                         <div className="signup-privacy-policy-label">
-                            Goalousの<Link to="/terms" target="_blank" className="signup-privacy-policy-link">利用規約</Link>と<br />
-                            <Link to="/privacy_policy" target="_blank" className="signup-privacy-policy-link">プライバシーポリシー</Link>に同意します。
+                            {__("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}
                         </div>
                     </div>
 

@@ -115,10 +115,10 @@ export default class Auth extends React.Component {
     return (
       <div className="row">
           <div className="panel panel-default panel-signup">
-              <div className="panel-heading signup-title">Check your email!</div>
-              <div className="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
+              <div className="panel-heading signup-title">{__("Check your email!")}</div>
+              <div className="signup-description">{__("We've sent a six-digit confirmation code to kikuchik.isao@gmail.com. Enter it below to confirm your email address.")}</div>
 
-              <div className="signup-auth-split_input signup-auth-large_margin" data-multi-input-code="true">
+              <div className="signup-auth-split_input signup-auth-large_margin">
                   <div className="confirmation_code_group">
                     {
                       range(1, 4).map(index => {
@@ -160,7 +160,7 @@ export default class Auth extends React.Component {
               {this.props.auth.auth_code_is_invalid ? alert_box() : ''}
               {this.props.auth.auth_code_is_locked || this.props.auth.auth_code_is_expired ? locked_box() : ''}
 
-              <div className="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
+              <div className="signup-description">{__("Keep this window open while you check for your code.")}</div>
           </div>
       </div>
     )

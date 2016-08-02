@@ -292,6 +292,7 @@
             socket_id: ""
         },
         translation: {
+            // Setup guide
             "Failed to add an action.": "<?= __("Failed to add an action.") ?>",
             "Failed to post.": "<?= __("Failed to post.")?>",
             "Do an action": "<?= __("Do an action") ?>",
@@ -378,7 +379,10 @@
             "Embodying the orgainization motto": "<?= __("Embodying the orgainization motto") ?>",
             "Prasing someone": "<?= __("Prasing someone") ?>",
             "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>",
-            "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>"
+            "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>",
+
+            // Signup
+            
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
