@@ -112,7 +112,7 @@ export function postTerms() {
       dispatch({ type: types.FINISHED_CHECKING_TERM })
 
       const is_not_available = response.data.is_not_available
-      const term_is_invlalid = Boolean(response.data.error && Object.keys(response.data.validation_msg).length)
+      const term_is_invlalid = response.data.error
 
       // 例外パターンのためSignupのトップページにリダイレクトさせる
       if(is_not_available || term_is_invlalid) {
@@ -120,18 +120,17 @@ export function postTerms() {
           type: types.TERM_NETWORK_ERROR,
           exception_message: response.data.message
         })
-        redirectToTop()
+        return redirectToTop()
       }
 
-      dispatch({ type: types.TERM_IS_VALID })
       document.location.href = "/teams/invite"
     }, () => {
       dispatch({ type: types.FINISHED_CHECKING_TERM })
       dispatch({
         type: types.TERM_NETWORK_ERROR,
-        exception_message: 'Network error'
+        exception_message: 'Some error occurred'
       })
-      dispatch(enableSubmitButton())
+      redirectToTop()
     })
   }
 }
