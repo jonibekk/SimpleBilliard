@@ -397,7 +397,7 @@
             "There is a need to set the term of your team. Please choose the period for personal  evaluation or the accounting period.": "<?= __("There is a need to set the term of your team. Please choose the period for personal  evaluation or the accounting period.") ?>",
             "Your name": "<?= __("Your name") ?>",
             "Birthday": "<?= __("Birthday") ?>",
-            "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" class="signup-privacy-policy-link">' . __("Terms of Service") . '</a><br />', '<a href="/privacy_policy" target="_blank" class="signup-privacy-policy-link">' . __("Privacy Policy") . '</a>') ?>',
+            "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" class="signup-privacy-policy-link">' . __("Terms of Service") . '</a>', '<a href="/privacy_policy" target="_blank" class="signup-privacy-policy-link">' . __("Privacy Policy") . '</a>') ?>',
             "eg. Harry": "<?= __("eg. Harry") ?>",
             "eg. Armstrong": "<?= __("eg. Armstrong") ?>",
             "eg. Team Goalous": "<?= __("eg. Team Goalous") ?>",
