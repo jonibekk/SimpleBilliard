@@ -109,8 +109,6 @@ export function postTerms() {
     }
 
     return post('/signup/ajax_register_user', data, response => {
-      dispatch({ type: types.FINISHED_CHECKING_TERM })
-
       const is_not_available = response.data.is_not_available
       const term_is_invlalid = response.data.error
 
@@ -120,6 +118,7 @@ export function postTerms() {
           type: types.TERM_NETWORK_ERROR,
           exception_message: response.data.message
         })
+        dispatch({ type: types.FINISHED_CHECKING_TERM })
         return redirectToTop()
       }
 
