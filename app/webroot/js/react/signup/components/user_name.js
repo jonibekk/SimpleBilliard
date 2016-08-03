@@ -75,18 +75,18 @@ export default class UserName extends React.Component {
                         <select className="form-control inline-fix" ref="birth_month" required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
-                           <option value="01">Jan</option>
-                           <option value="02">Feb</option>
-                           <option value="03">Mar</option>
-                           <option value="04">Apr</option>
-                           <option value="05">May</option>
-                           <option value="06">Jun</option>
-                           <option value="07">Jul</option>
-                           <option value="08">Aug</option>
-                           <option value="09">Sep</option>
-                           <option value="10">Oct</option>
-                           <option value="11">Nov</option>
-                           <option value="12">Dec</option>
+                           <option value="01">{__("Jan")}</option>
+                           <option value="02">{__("Feb")}</option>
+                           <option value="03">{__("Mar")}</option>
+                           <option value="04">{__("Apr")}</option>
+                           <option value="05">{__("May")}</option>
+                           <option value="06">{__("Jun")}</option>
+                           <option value="07">{__("Jul")}</option>
+                           <option value="08">{__("Aug")}</option>
+                           <option value="09">{__("Sep")}</option>
+                           <option value="10">{__("Oct")}</option>
+                           <option value="11">{__("Nov")}</option>
+                           <option value="12">{__("Dec")}</option>
                         </select>
                         &nbsp;/&nbsp;
 
