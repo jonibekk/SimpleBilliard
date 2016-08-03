@@ -31,16 +31,16 @@ export default class UserName extends React.Component {
         <div className="row">
             <div className="panel panel-default panel-signup">
                 <div className="panel-heading signup-title">{__("What's your name?")}</div>
-                <div className="signup-description">{__("Your name will be displayed only in the team of Goalous. ")}</div>
+                <div className="signup-description">{__("Your name will be displayed only in the team of Goalous.")}</div>
 
                 <form className="form-horizontal" acceptCharset="utf-8"
                       onSubmit={ (e) => this.handleSubmit(e) }>
 
                     {/* First name */}
-                    <div className="panel-heading signup-itemtitle">your name</div>
+                    <div className="panel-heading signup-itemtitle">{__("Your name")}</div>
                     <div className={(this.props.user_name.invalid_messages.first_name) ? 'has-error' : ''}>
                       <input ref="first_name" className="form-control signup_input-design" type="text"
-                             placeholder="例) Hanako"
+                             placeholder={__("eg. Harry")}
                              required
                              onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
                     </div>
@@ -50,7 +50,7 @@ export default class UserName extends React.Component {
                     {/* Last name */}
                     <div className={(this.props.user_name.invalid_messages.last_name) ? 'has-error' : ''}>
                       <input ref="last_name" className="form-control signup_input-design"
-                             placeholder="例) Suzuki" type="text"
+                             placeholder={__("eg. Armstrong")} type="text"
                              required
                              onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
                     </div>
@@ -58,7 +58,7 @@ export default class UserName extends React.Component {
                                        message={this.props.user_name.invalid_messages.last_name} />
 
                     {/* Birthday*/}
-                    <div className="panel-heading signup-itemtitle">Birthday</div>
+                    <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
                         <select className="form-control inline-fix" ref="birth_year"

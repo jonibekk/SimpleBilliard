@@ -116,7 +116,7 @@ export default class Auth extends React.Component {
       <div className="row">
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("Check your email!")}</div>
-              <div className="signup-description">{__("We've sent a six-digit confirmation code to kikuchik.isao@gmail.com. Enter it below to confirm your email address.")}</div>
+              <div className="signup-description">{__("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.")}</div>
 
               <div className="signup-auth-split_input signup-auth-large_margin">
                   <div className="confirmation_code_group">

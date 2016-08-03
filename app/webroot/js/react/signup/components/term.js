@@ -26,7 +26,7 @@ export default class Term extends React.Component {
                     onSubmit={(e) => this.handleSubmit(e) } >
 
                   {/* Term */}
-                  <div className="panel-heading signup-itemtitle">Term</div>
+                  <div className="panel-heading signup-itemtitle">{__("Term")}</div>
                   <select className="form-control signup_input-design" ref="term" onChange={ () => { this.props.selectTerm(this.getInputDomData('term')) } }>
                       <option value="">{__("Please select")}</option>
                       <option value="3">{__("Quater")}</option>
