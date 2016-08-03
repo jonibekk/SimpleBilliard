@@ -292,6 +292,7 @@
             socket_id: ""
         },
         translation: {
+            // Setup guide
             "Failed to add an action.": "<?= __("Failed to add an action.") ?>",
             "Failed to post.": "<?= __("Failed to post.")?>",
             "Do an action": "<?= __("Do an action") ?>",
@@ -378,7 +379,39 @@
             "Embodying the orgainization motto": "<?= __("Embodying the orgainization motto") ?>",
             "Prasing someone": "<?= __("Prasing someone") ?>",
             "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>",
-            "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>"
+            "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>",
+
+            // Signup
+            "Check your email!": "<?= __("Check your email!") ?>",
+            "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.") ?>",
+            "What's your name?": "<?= __("What's your name?") ?>",
+            "Your name will be displayed only in the team of Goalous.": "<?= __("Your name will be displayed only in the team of Goalous.") ?>",
+            "I receive the news and updates by email from Goalous.": "<?= __("I receive the news and updates by email from Goalous.") ?>",
+            "Set your password": "<?= __("Set your password") ?>",
+            "Create your passoword to logging in to Goalous.": "<?= __("Create your passoword to logging in to Goalous.") ?>",
+            "Keep this window open while you check for your code.": "<?= __("Keep this window open while you check for your code.") ?>",
+            "What do you want to call your Goalous team?": "<?= __("What do you want to call your Goalous team?") ?>",
+            "Create a name to a group that the team members work to achieve the great vision. Team is the largest of the range that can be shared the goals and activities . All information is closed in the team .": "<?= __("Create a name to a group that the team members work to achieve the great vision. Team is the largest of the range that can be shared the goals and activities . All information is closed in the team .") ?>",
+            "Use 8 or more characters including at least one number.": "<?= __("Use 8 or more characters including at least one number.") ?>",
+            "Choose your team's term": "<?=__("Choose your team's term") ?>",
+            "There is a need to set the term of your team. Please choose the period for personal  evaluation or the accounting period.": "<?= __("There is a need to set the term of your team. Please choose the period for personal  evaluation or the accounting period.") ?>",
+            "Your name": "<?= __("Your name") ?>",
+            "Birthday": "<?= __("Birthday") ?>",
+            "I agree to %s and %s of Goalous.": "<?= __("I agree to %s and %s of Goalous.") ?>",
+            "eg. Harry": "<?= __("eg. Harry") ?>",
+            "eg. Armstrong": "<?= __("eg. Armstrong") ?>",
+            "eg. Team Goalous": "<?= __("eg. Team Goalous") ?>",
+            "Team Name": "<?= __("Team Name") ?>",
+            "Term": "<?= __("Term") ?>",
+            "Timezone": "<?= __("Timezone") ?>",
+            "Select your present term ?": "<?= __("Select your present term ?") ?>",
+            "Please select": "<?= __("Please select") ?>",
+            "Change": "<?= __("Change") ?>",
+            "Quater": "<?= __("Quater") ?>",
+            "Half a year": "<?= __("Half a year") ?>",
+            "Year": "<?= __("Year") ?>",
+            "Password": "<?= __("Password") ?>",
+            "Next": "<?= __("Next") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,

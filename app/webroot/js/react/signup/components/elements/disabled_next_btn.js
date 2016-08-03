@@ -10,7 +10,8 @@ export class DisabledNextButton extends React.Component {
     return (
       <div className="submit signup-btn">
           { this.props.loader ? ajax_loader() : '' }
-          <input className="btn btn-lightGray signup-btn-submit" type="submit" value="Next→" disabled="disabled" />
+          <button className="btn btn-lightGray signup-btn-submit" type="submit" disabled="disabled">{__('Next')} <i className="fa fa-angle-right"></i>
+          </button>
       </div>
     )
   }
