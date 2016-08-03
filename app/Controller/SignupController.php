@@ -41,6 +41,10 @@ class SignupController extends AppController
             ],
             'local_date' => [
                 'notEmpty' => ['rule' => 'notEmpty',],
+            ],
+            'birth_day'          => [
+                'rule'       => ['date', 'ymd'],
+                'notEmpty'       => ['rule' => 'notEmpty'],
             ]
         ],
         'Email'     => [
@@ -87,6 +91,7 @@ class SignupController extends AppController
             'last_name',
             'password',
             'local_date',
+            'birth_day'
         ],
         'Email' => [
             'email'
