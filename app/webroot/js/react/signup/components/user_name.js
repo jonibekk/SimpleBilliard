@@ -40,8 +40,7 @@ export default class UserName extends React.Component {
                     <div className="panel-heading signup-itemtitle">{__("Your name")}</div>
                     <div className={(this.props.user_name.invalid_messages.first_name) ? 'has-error' : ''}>
                       <input ref="first_name" className="form-control signup_input-design" type="text"
-                             placeholder={__("eg. Harry")}
-                             required
+                             placeholder={__("eg. Harry")} required
                              onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
                     </div>
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
@@ -61,8 +60,7 @@ export default class UserName extends React.Component {
                     <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
-                        <select className="form-control inline-fix" ref="birth_year"
-                                required
+                        <select className="form-control inline-fix" ref="birth_year" required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
                            {
@@ -74,8 +72,7 @@ export default class UserName extends React.Component {
                         &nbsp;/&nbsp;
 
                         {/* Birthday month */}
-                        <select className="form-control inline-fix" ref="birth_month"
-                                required
+                        <select className="form-control inline-fix" ref="birth_month" required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
                            <option value="01">Jan</option>

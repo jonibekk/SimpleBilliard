@@ -405,7 +405,13 @@
             "Term": "<?= __("Term") ?>",
             "Timezone": "<?= __("Timezone") ?>",
             "Select your present term ?": "<?= __("Select your present term ?") ?>",
-            "Please select": "<?= __("Please select") ?>"
+            "Please select": "<?= __("Please select") ?>",
+            "Change": "<?= __("Change") ?>",
+            "Quater": "<?= __("Quater") ?>",
+            "Half a year": "<?= __("Half a year") ?>",
+            "Year": "<?= __("Year") ?>",
+            "Password": "<?= __("Password") ?>",
+            "Next": "<?= __("Next") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
