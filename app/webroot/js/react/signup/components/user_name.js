@@ -110,8 +110,7 @@ export default class UserName extends React.Component {
                     <div className="checkbox signup-checkbox">
                         <input type="checkbox" value="1" className="signup-checkbox" ref="privacy"
                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
-                        <div className="signup-privacy-policy-label">
-                            {__("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}
+                        <div className="signup-privacy-policy-label" dangerouslySetInnerHTML={{__html: __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}}>
                         </div>
                     </div>
 

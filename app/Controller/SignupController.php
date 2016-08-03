@@ -153,7 +153,8 @@ class SignupController extends AppController
     public function auth()
     {
         $timezones = $this->Timezone->getTimezones();
-        $this->set(compact('timezones'));
+        $signup_inputed_email = $this->Session->read('data.Email.email');
+        $this->set(compact('timezones', 'signup_inputed_email'));
         $this->render('index');
     }
 
