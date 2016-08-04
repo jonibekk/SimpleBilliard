@@ -56,6 +56,15 @@ export default class UserName extends React.Component {
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                        message={this.props.user_name.invalid_messages.last_name} />
 
+                                       {/* Allow Email from goalous check */}
+                                       <div className="checkbox signup-checkbox">
+                                           <input type="checkbox" value="1" className="signup-checkbox" ref="update_email_flg" checked={this.props.user_name.inputed.update_email_flg}
+                                                  onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                                           <div className="signup-privacy-policy-label">
+                                             {__("I want to receive news and updates by email from Goalous.")}
+                                           </div>
+                                       </div>
+
                     {/* Birthday*/}
                     <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
@@ -104,15 +113,6 @@ export default class UserName extends React.Component {
 
                         <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                            message={this.props.user_name.invalid_messages.birth_day} />
-                    </div>
-
-                    {/* Allow Email from goalous check */}
-                    <div className="checkbox signup-checkbox">
-                        <input type="checkbox" value="1" className="signup-checkbox" ref="update_email_flg"
-                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
-                        <div className="signup-privacy-policy-label">
-                          {__("I want to receive news and updates by email from Goalous.")}
-                        </div>
                     </div>
 
                     {/* Privacy policy check */}
