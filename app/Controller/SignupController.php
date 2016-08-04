@@ -14,17 +14,17 @@ class SignupController extends AppController
 
     private $validations = [
         'User'      => [
-            'first_name' => [
+            'first_name'       => [
                 'maxLength'      => ['rule' => ['maxLength', 128]],
                 'notEmpty'       => ['rule' => 'notEmpty'],
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
-            'last_name'  => [
+            'last_name'        => [
                 'maxLength'      => ['rule' => ['maxLength', 128]],
                 'notEmpty'       => ['rule' => 'notEmpty'],
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
-            'password'   => [
+            'password'         => [
                 'maxLength'      => ['rule' => ['maxLength', 50]],
                 'notEmpty'       => [
                     'rule' => 'notEmpty',
@@ -39,16 +39,16 @@ class SignupController extends AppController
                     ]
                 ]
             ],
-            'local_date' => [
+            'local_date'       => [
                 'notEmpty' => ['rule' => 'notEmpty',],
             ],
-            'birth_day'          => [
-                'rule'       => ['date', 'ymd'],
-                'notEmpty'       => ['rule' => 'notEmpty'],
+            'birth_day'        => [
+                'rule'     => ['date', 'ymd'],
+                'notEmpty' => ['rule' => 'notEmpty'],
             ],
-            'update_email_flg'   => [
+            'update_email_flg' => [
                 'boolean' => [
-                    'rule'       => ['boolean',]
+                    'rule' => ['boolean',]
                 ],
             ],
         ],
