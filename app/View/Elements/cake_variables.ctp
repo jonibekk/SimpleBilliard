@@ -424,6 +424,7 @@
             "Oct": "<?= __("Oct") ?>",
             "Nov": "<?= __("Nov") ?>",
             "Dec": "<?= __("Dec") ?>",
+            "I receive the news and updates by email from Goalous.": "<?= __("I receive the news and updates by email from Goalous.") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
