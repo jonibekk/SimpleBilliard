@@ -385,7 +385,7 @@
             "Check your email!": "<?= __("Check your email!") ?>",
             "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.", $signup_inputed_email = isset($signup_inputed_email) ? $signup_inputed_email : '' )?>",
             "What's your name?": "<?= __("What's your name?") ?>",
-            "Your name will only be displayed to your team on Goalous. ": "<?= __("Your name will only be displayed to your team on Goalous. ") ?>",
+            "Your name will only be displayed to your team on Goalous.": "<?= __("Your name will only be displayed to your team on Goalous.") ?>",
             "I want to receive news and updates by email from Goalous.": "<?= __("I want to receive news and updates by email from Goalous.") ?>",
             "Set your password": "<?= __("Set your password") ?>",
             "Create your password to login to Goalous.": "<?= __("Create your password to login to Goalous.") ?>",
@@ -404,7 +404,6 @@
             "Team Name": "<?= __("Team Name") ?>",
             "Term": "<?= __("Term") ?>",
             "Timezone": "<?= __("Timezone") ?>",
-            "Select your present term ?": "<?= __("Select your present term ?") ?>",
             "Please select": "<?= __("Please select") ?>",
             "Change": "<?= __("Change") ?>",
             "Quater": "<?= __("Quater") ?>",
@@ -424,7 +423,9 @@
             "Oct": "<?= __("Oct") ?>",
             "Nov": "<?= __("Nov") ?>",
             "Dec": "<?= __("Dec") ?>",
-            "I receive the news and updates by email from Goalous.": "<?= __("I receive the news and updates by email from Goalous.") ?>"
+            "I receive the news and updates by email from Goalous.": "<?= __("I receive the news and updates by email from Goalous.") ?>",
+            "Choose your Goalous team name.": "<?= __("Choose your Goalous team name.") ?>",
+            "Select your present term": "<?= __("Select your present term") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
