@@ -93,7 +93,7 @@ export default class Auth extends React.Component {
             <div className="signup-load-icon">
                 <img src="/img/ajax-loader.gif" />
             </div>
-            loading...原稿の長さによっては中央合わせ
+            loading...
         </div>
       )
     }
