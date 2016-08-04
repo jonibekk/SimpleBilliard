@@ -418,6 +418,9 @@ class SignupController extends AppController
             //auto login with team
             $this->_autoLogin($user_id);
 
+            // Change mode to open modal on top page
+            $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+
             //after success
             $this->Session->delete('data');
 
