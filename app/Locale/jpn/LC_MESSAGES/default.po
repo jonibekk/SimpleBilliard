@@ -6133,7 +6133,7 @@ msgstr "素晴らしい！あなたの同僚に知らせよう！"
 
 #: View/Teams/invite.ctp:46
 msgid "Add email"
-msgstr "メールアドレスを追加"
+msgstr "メール追加"
 
 #: View/Teams/invite.ctp:102
 msgid "Skip for Now"
