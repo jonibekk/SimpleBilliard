@@ -45,7 +45,12 @@ class SignupController extends AppController
             'birth_day'          => [
                 'rule'       => ['date', 'ymd'],
                 'notEmpty'       => ['rule' => 'notEmpty'],
-            ]
+            ],
+            'update_email_flg'   => [
+                'boolean' => [
+                    'rule'       => ['boolean',]
+                ],
+            ],
         ],
         'Email'     => [
             'email' => [
@@ -91,7 +96,8 @@ class SignupController extends AppController
             'last_name',
             'password',
             'local_date',
-            'birth_day'
+            'birth_day',
+            'update_email_flg'
         ],
         'Email' => [
             'email'

@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Link } from 'react-router'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
@@ -16,7 +15,8 @@ export default class UserName extends React.Component {
       birth_year: ReactDOM.findDOMNode(this.refs.birth_year).value.trim(),
       birth_month: ReactDOM.findDOMNode(this.refs.birth_month).value.trim(),
       birth_day: ReactDOM.findDOMNode(this.refs.birth_day).value.trim(),
-      privacy: ReactDOM.findDOMNode(this.refs.privacy).checked
+      privacy: ReactDOM.findDOMNode(this.refs.privacy).checked,
+      update_email_flg: ReactDOM.findDOMNode(this.refs.update_email_flg).checked
     }
   }
 
@@ -104,6 +104,15 @@ export default class UserName extends React.Component {
 
                         <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                            message={this.props.user_name.invalid_messages.birth_day} />
+                    </div>
+
+                    {/* Allow Email from goalous check */}
+                    <div className="checkbox signup-checkbox">
+                        <input type="checkbox" value="1" className="signup-checkbox" ref="update_email_flg"
+                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                        <div className="signup-privacy-policy-label">
+                          {__("It's ok to send me email about Goalous.")}
+                        </div>
                     </div>
 
                     {/* Privacy policy check */}
