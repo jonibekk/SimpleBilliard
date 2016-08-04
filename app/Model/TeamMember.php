@@ -1019,8 +1019,17 @@ class TeamMember extends AppModel
                     'user_id'   => $user['User']['id'],
                 ];
 
-                $this->Team->Circle->CircleMember->create();
-                $this->Team->Circle->CircleMember->save($row);
+                $circle_member_options = [
+                    'conditions' => [
+                        $row
+                    ]
+                ];
+                // if not already exists then insert into circle members
+                $already_circle_member = $this->Team->Circle->CircleMember->find('first', $circle_member_options);
+                if (empty($already_circle_member)) {
+                    $this->Team->Circle->CircleMember->create();
+                    $this->Team->Circle->CircleMember->save($row);
+                }
             }
         }
 

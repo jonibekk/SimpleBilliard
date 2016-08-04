@@ -914,6 +914,15 @@ class TeamsController extends AppController
         $error_msg = '';
         $invite_data = $this->Team->Invite->findById($invite_id);
 
+        // if already joined throw error, already exists
+        if ($invite_data['Invite']['email_verified'] ) {
+            $error_msg = (__("Error, this user already exists."));
+            $res['title'] = $error_msg;
+            $res['error'] = true;
+            $this->Pnotify->outError($error_msg);
+            return $this->_ajaxGetResponse($res);
+        }
+
         // if already expired throw error, you can't cancel
         if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
             $error_msg = (__("Error, this invitation already expired, you can't cancel."));
