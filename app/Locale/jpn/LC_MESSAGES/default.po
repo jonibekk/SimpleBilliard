@@ -6125,7 +6125,7 @@ msgstr "チームビジョンを更新する"
 
 #: View/Teams/invite.ctp:16
 msgid "Send Invitations"
-msgstr "招待を送信"
+msgstr "招待しましょう"
 
 #: View/Teams/invite.ctp:37
 msgid "good. Know your coworker."
