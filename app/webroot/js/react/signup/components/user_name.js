@@ -56,14 +56,15 @@ export default class UserName extends React.Component {
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                        message={this.props.user_name.invalid_messages.last_name} />
 
-                                       {/* Allow Email from goalous check */}
-                                       <div className="checkbox signup-checkbox">
-                                           <input type="checkbox" value="1" className="signup-checkbox" ref="update_email_flg" checked={this.props.user_name.inputed.update_email_flg}
-                                                  onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
-                                           <div className="signup-privacy-policy-label">
-                                             {__("I want to receive news and updates by email from Goalous.")}
-                                           </div>
-                                       </div>
+                    {/* Allow Email from goalous check */}
+                    <div className="signup-checkbox-email-flg">
+                        <input type="checkbox" className="signup-checkbox-input" value="1" ref="update_email_flg"
+                               checked={ this.props.user_name.inputed.update_email_flg }
+                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                        <div className="signup-privacy-policy-label">
+                          {__("I want to receive news and updates by email from Goalous.")}
+                        </div>
+                    </div>
 
                     {/* Birthday*/}
                     <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
@@ -116,8 +117,8 @@ export default class UserName extends React.Component {
                     </div>
 
                     {/* Privacy policy check */}
-                    <div className="checkbox signup-checkbox">
-                        <input type="checkbox" value="1" className="signup-checkbox" ref="privacy"
+                    <div className="signup-checkbox">
+                        <input type="checkbox" value="1" className="signup-checkbox-input" ref="privacy"
                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
                         <div className="signup-privacy-policy-label" dangerouslySetInnerHTML={{__html: __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}}>
                         </div>
