@@ -9,7 +9,7 @@
  * @var                    $code
  * @var CodeCompletionView $this
  */
-echo __('Thank you for signing up for Goalous.We are happy that we could meet you.');
+echo __('Thank you for signing up for Goalous.We are happy to meet you!');
 echo "\n";
 echo __('Enter the following code in the window where you began creating your new Goalous team:');
 echo "\n";

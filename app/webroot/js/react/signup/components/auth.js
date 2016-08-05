@@ -160,7 +160,7 @@ export default class Auth extends React.Component {
               {this.props.auth.auth_code_is_invalid ? alert_box() : ''}
               {this.props.auth.auth_code_is_locked || this.props.auth.auth_code_is_expired ? locked_box() : ''}
 
-              <div className="signup-description">{__("Keep this window open while you check for your code.")}</div>
+              <div className="signup-description">{__("Please don't close this window.")}</div>
           </div>
       </div>
     )

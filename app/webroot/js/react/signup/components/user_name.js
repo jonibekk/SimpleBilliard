@@ -31,7 +31,7 @@ export default class UserName extends React.Component {
         <div className="row">
             <div className="panel panel-default panel-signup">
                 <div className="panel-heading signup-title">{__("What's your name?")}</div>
-                <div className="signup-description">{__("Your name will be displayed only in the team of Goalous.")}</div>
+                <div className="signup-description">{__("Your name will only be displayed to your team on Goalous.")}</div>
 
                 <form className="form-horizontal" acceptCharset="utf-8"
                       onSubmit={ (e) => this.handleSubmit(e) }>
@@ -111,7 +111,7 @@ export default class UserName extends React.Component {
                         <input type="checkbox" value="1" className="signup-checkbox" ref="update_email_flg"
                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
                         <div className="signup-privacy-policy-label">
-                          {__("I receive the news and updates by email from Goalous.")}
+                          {__("I want to receive news and updates by email from Goalous.")}
                         </div>
                     </div>
 

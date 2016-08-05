@@ -19,8 +19,8 @@ export default class Term extends React.Component {
     return (
       <div className="row">
           <div className="panel panel-default panel-signup">
-              <div className="panel-heading signup-title">{__("Choose your team's term")}</div>
-              <div className="signup-description">{__("There is a need to set the term of your team. Please choose the period for personal  evaluation or the accounting period.")}</div>
+              <div className="panel-heading signup-title">{__("Choose your team's (company's) term")}</div>
+              <div className="signup-description">{__("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.")}</div>
 
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
@@ -35,7 +35,7 @@ export default class Term extends React.Component {
                   </select>
 
                   {/* Start month */}
-                  <div className="panel-heading signup-itemtitle">{__("Select your present term ?")}</div>
+                  <div className="panel-heading signup-itemtitle">{__("Select your present term")}</div>
                   { (() => { if(this.props.term.selected_term) {
                     return (
                       <select className="form-control signup_input-design" ref="start_month" onChange={ () => { this.props.selectStartMonth(this.getInputDomData('start_month')) } }>

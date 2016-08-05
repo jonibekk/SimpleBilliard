@@ -21,7 +21,7 @@ export default class Password extends React.Component {
       <div className="row">
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("Set your password")}</div>
-              <div className="signup-description">{__("Create your passoword to logging in to Goalous.")}</div>
+              <div className="signup-description">{__("Create your password to login to Goalous.")}</div>
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >

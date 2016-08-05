@@ -27,7 +27,7 @@
             'method'        => 'post'
         ]); ?>
 
-        <div class="signup-description"><?= __('good. Know your coworker.') ?></div>
+        <div class="signup-description"><?= __('Invite coworkers to your team. Goalous works best when you work with others.') ?></div>
 
         <?php $default_email_count = 3 ?>
         <div class="signup-invite-form-header">
