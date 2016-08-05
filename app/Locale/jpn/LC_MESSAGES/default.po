@@ -3921,7 +3921,7 @@ msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:46
 msgid "What should we do after the campaign?"
-msgstr "無償期間（2016年8月31日まで）の後はどうなりますか？"
+msgstr "無償期間（2016年12月31日まで）の後はどうなりますか？"
 
 #: View/Elements/Homepage/faq.ctp:47
 msgid "There will appear some limit, but data will not be deleted."
@@ -3951,7 +3951,7 @@ msgid ""
 "After logged in, you can get contact with us by support tool. We can help "
 "you as soon as possible."
 msgstr ""
-"2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
+"2016年12月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
 "利用できるサポートツールでお問い合わせください。できる限り早い対応をいたしま"
 "す。"
 
