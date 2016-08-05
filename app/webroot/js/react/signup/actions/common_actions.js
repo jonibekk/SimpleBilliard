@@ -41,7 +41,7 @@ export function post(uri, data, success_callback, error_callback) {
 }
 
 export function mapValidationMsg(before_mapped_messages) {
-  let result = {}
+  const result = {}
   const map = {
     'data[Team][name]': 'team_name',
     'data[Team][timezone]': 'timezone',
@@ -75,7 +75,7 @@ export function getLocalDate() {
 
 export function range(start, end) {
   const len = end - start
-  let a = new Array(len)
+  const a = new Array(len)
 
   for (let i=0, c=start; i<len; i++, c++) a[i] = c
   return a
