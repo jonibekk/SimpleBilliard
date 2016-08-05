@@ -20,17 +20,16 @@ export default class TeamName extends React.Component {
     return (
       <div className="row">
           <div className="panel panel-default panel-signup">
-              <div className="panel-heading signup-title">What do you want to call your Goalous team?</div>
-              <div className="signup-description">Goalous team name sample text Goalous team name sample text Goalous team name sample text Goalous team  name sample text Goalous team name sample text.
-                  <br/> Goalous team name sample text Goalous team name sample text Goalous team name sample text.</div>
+              <div className="panel-heading signup-title">{__("Choose your Goalous team name.")}</div>
+              <div className="signup-description">{__("Create a name for your team. A team is a group that can share goals, actions and posts  with each other. People outside of the team can't access this information.")}</div>
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
 
                   {/* Team name */}
-                  <div className="panel-heading signup-itemtitle">Goalous team name</div>
+                  <div className="panel-heading signup-itemtitle">{__("Team Name")}</div>
                   <div className={(this.props.team_name.invalid_messages.team_name) ? 'has-error' : ''}>
-                    <input className="form-control signup_input-design" ref="team_name" placeholder="例) チームGoalous" type="text"
+                    <input className="form-control signup_input-design" ref="team_name" placeholder={__("eg. Team Goalous")} type="text"
                            onChange={ () => this.props.inputTeamName(this.getInputDomData()) } />
                     <InvalidMessageBox is_invalid={this.props.team_name.team_name_is_invalid}
                                        message={this.props.team_name.invalid_messages.team_name} />

@@ -25,6 +25,15 @@ app/View/Signup/term.ctp
   border: none;
   padding: 5px 4%;
   font-weight: 400;
+  width: 100%;
+}
+
+.signup-email-input-wrap {
+  width: 100%;
+}
+
+.signup-itemtitle.item−email {
+  margin-top: 20px;
 }
 
 .signup-description {
@@ -74,8 +83,34 @@ app/View/Signup/term.ctp
 
 .signup-btn-skip, .signup-btn-skip:hover {
   color: #373a3c;
+  margin: 10px auto 0;
+  width: 93%;
   background-color: #fff;
   border: 1px solid #ccc;
+  display: block;
+}
+
+.signup-email-submit-button, .signup-invite-submit-button {
+  width: 93%;
+  margin: 20px auto 0;
+  display: block;
+}
+
+.signup-email-submit-button:disabled, .signup-invite-submit-button:disabled {
+  width: 93%;
+  margin: 20px auto 0;
+  display: block;
+  color: #6d6e71;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  background-image: none;
+  color: #777;
+}
+
+.signup-email-input-wrap .help-block {
+  width: 93%;
+  margin: 0 auto;
+  color: @acidRed;
 }
 
 /*
@@ -166,14 +201,14 @@ auth.ctp、Loading、ERRORまわりのclass
 
 .signup-load-description.mod-lock {
   //display: none;
-  text-align: left;
+  text-align: center;
   border: 1px solid @acidRed;
   color: @acidRed;
 }
 
 .signup-load-description.mod-error {
   //display: none;
-  text-align: left;
+  text-align: center;
   border: 1px solid @acidRed;
   color: @acidRed;
 }
@@ -245,4 +280,13 @@ term.ctpで使っているclass
 .signup-img-loader {
   position: absolute;
   margin: 10px 230px;
+}
+
+.signup-invite-form-header {
+  margin: 0 10px;
+  overflow: hidden;
+}
+
+.signup-invite-email-list {
+  margin: 20px 0;
 }

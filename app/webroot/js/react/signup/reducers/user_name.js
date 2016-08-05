@@ -7,7 +7,8 @@ const initialState = {
     birth_year: '',
     birth_month: '',
     birth_day: '',
-    privacy: ''
+    privacy: '',
+    update_email_flg: ''
   },
   invalid_messages: {
     first_name: '',

@@ -14,17 +14,17 @@ class SignupController extends AppController
 
     private $validations = [
         'User'      => [
-            'first_name' => [
+            'first_name'       => [
                 'maxLength'      => ['rule' => ['maxLength', 128]],
                 'notEmpty'       => ['rule' => 'notEmpty'],
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
-            'last_name'  => [
+            'last_name'        => [
                 'maxLength'      => ['rule' => ['maxLength', 128]],
                 'notEmpty'       => ['rule' => 'notEmpty'],
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
-            'password'   => [
+            'password'         => [
                 'maxLength'      => ['rule' => ['maxLength', 50]],
                 'notEmpty'       => [
                     'rule' => 'notEmpty',
@@ -39,9 +39,18 @@ class SignupController extends AppController
                     ]
                 ]
             ],
-            'local_date' => [
+            'local_date'       => [
                 'notEmpty' => ['rule' => 'notEmpty',],
-            ]
+            ],
+            'birth_day'        => [
+                'rule'     => ['date', 'ymd'],
+                'notEmpty' => ['rule' => 'notEmpty'],
+            ],
+            'update_email_flg' => [
+                'boolean' => [
+                    'rule' => ['boolean',]
+                ],
+            ],
         ],
         'Email'     => [
             'email' => [
@@ -87,6 +96,8 @@ class SignupController extends AppController
             'last_name',
             'password',
             'local_date',
+            'birth_day',
+            'update_email_flg'
         ],
         'Email' => [
             'email'
@@ -140,6 +151,7 @@ class SignupController extends AppController
             return $this->redirect(['action' => 'auth']);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
         }
         return $this->render();
     }
@@ -147,7 +159,8 @@ class SignupController extends AppController
     public function auth()
     {
         $timezones = $this->Timezone->getTimezones();
-        $this->set(compact('timezones'));
+        $signup_inputed_email = $this->Session->read('data.Email.email');
+        $this->set(compact('timezones', 'signup_inputed_email'));
         $this->render('index');
     }
 
@@ -404,6 +417,9 @@ class SignupController extends AppController
             //success!!
             //auto login with team
             $this->_autoLogin($user_id);
+
+            // Change mode to open modal on top page
+            $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
 
             //after success
             $this->Session->delete('data');

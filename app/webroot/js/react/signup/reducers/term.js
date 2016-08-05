@@ -6,11 +6,10 @@ const initialState = {
   selected_start_month: '',
   selected_timezone: '',
   checking_term: false,
-  term_is_invalid: false,
-  invalid_messages: {},
   is_exception: false,
   exception_message: '',
-  is_timezone_edit_mode: false
+  is_timezone_edit_mode: false,
+  start_month_list: []
 }
 
 export default function term(state = initialState, action) {
@@ -43,15 +42,6 @@ export default function term(state = initialState, action) {
       return Object.assign({}, state, {
         checking_term: false
       })
-    case types.TERM_IS_VALID:
-      return Object.assign({}, state, {
-        term_is_invalid: false
-      })
-    case types.TERM_IS_INVALID:
-      return Object.assign({}, state, {
-        term_is_invalid: true,
-        invalid_messages: action.invalid_messages
-      })
     case types.TERM_NETWORK_ERROR:
       return Object.assign({}, state, {
         is_exception: true,
@@ -64,6 +54,10 @@ export default function term(state = initialState, action) {
     case types.CHANGE_TO_TIMEZONE_NOT_EDIT_MODE:
       return Object.assign({}, state, {
         is_timezone_edit_mode: false
+      })
+    case types.SET_START_MONTH_LIST:
+      return Object.assign({}, state, {
+        start_month_list: action.start_month_list
       })
     default:
       return state;

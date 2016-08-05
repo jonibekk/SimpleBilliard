@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Link } from 'react-router'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
@@ -16,7 +15,8 @@ export default class UserName extends React.Component {
       birth_year: ReactDOM.findDOMNode(this.refs.birth_year).value.trim(),
       birth_month: ReactDOM.findDOMNode(this.refs.birth_month).value.trim(),
       birth_day: ReactDOM.findDOMNode(this.refs.birth_day).value.trim(),
-      privacy: ReactDOM.findDOMNode(this.refs.privacy).checked
+      privacy: ReactDOM.findDOMNode(this.refs.privacy).checked,
+      update_email_flg: ReactDOM.findDOMNode(this.refs.update_email_flg).checked
     }
   }
 
@@ -30,18 +30,17 @@ export default class UserName extends React.Component {
       <div>
         <div className="row">
             <div className="panel panel-default panel-signup">
-                <div className="panel-heading signup-title">{"What's your name?"}</div>
-                <div className="signup-description">username sample textusername sample text username sample text username sample text username sample text username sample text.</div>
+                <div className="panel-heading signup-title">{__("What's your name?")}</div>
+                <div className="signup-description">{__("Your name will only be displayed to your team on Goalous.")}</div>
 
                 <form className="form-horizontal" acceptCharset="utf-8"
                       onSubmit={ (e) => this.handleSubmit(e) }>
 
                     {/* First name */}
-                    <div className="panel-heading signup-itemtitle">your name</div>
+                    <div className="panel-heading signup-itemtitle">{__("Your name")}</div>
                     <div className={(this.props.user_name.invalid_messages.first_name) ? 'has-error' : ''}>
                       <input ref="first_name" className="form-control signup_input-design" type="text"
-                             placeholder="例) Hanako"
-                             required
+                             placeholder={__("eg. Harry")} required
                              onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
                     </div>
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
@@ -50,7 +49,7 @@ export default class UserName extends React.Component {
                     {/* Last name */}
                     <div className={(this.props.user_name.invalid_messages.last_name) ? 'has-error' : ''}>
                       <input ref="last_name" className="form-control signup_input-design"
-                             placeholder="例) Suzuki" type="text"
+                             placeholder={__("eg. Armstrong")} type="text"
                              required
                              onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
                     </div>
@@ -58,11 +57,10 @@ export default class UserName extends React.Component {
                                        message={this.props.user_name.invalid_messages.last_name} />
 
                     {/* Birthday*/}
-                    <div className="panel-heading signup-itemtitle">Birthday</div>
+                    <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
-                        <select className="form-control inline-fix" ref="birth_year"
-                                required
+                        <select className="form-control inline-fix" ref="birth_year" required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
                            {
@@ -74,22 +72,21 @@ export default class UserName extends React.Component {
                         &nbsp;/&nbsp;
 
                         {/* Birthday month */}
-                        <select className="form-control inline-fix" ref="birth_month"
-                                required
+                        <select className="form-control inline-fix" ref="birth_month" required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
-                           <option value="01">Jan</option>
-                           <option value="02">Feb</option>
-                           <option value="03">Mar</option>
-                           <option value="04">Apr</option>
-                           <option value="05">May</option>
-                           <option value="06">Jun</option>
-                           <option value="07">Jul</option>
-                           <option value="08">Aug</option>
-                           <option value="09">Sep</option>
-                           <option value="10">Oct</option>
-                           <option value="11">Nov</option>
-                           <option value="12">Dec</option>
+                           <option value="01">{__("Jan")}</option>
+                           <option value="02">{__("Feb")}</option>
+                           <option value="03">{__("Mar")}</option>
+                           <option value="04">{__("Apr")}</option>
+                           <option value="05">{__("May")}</option>
+                           <option value="06">{__("Jun")}</option>
+                           <option value="07">{__("Jul")}</option>
+                           <option value="08">{__("Aug")}</option>
+                           <option value="09">{__("Sep")}</option>
+                           <option value="10">{__("Oct")}</option>
+                           <option value="11">{__("Nov")}</option>
+                           <option value="12">{__("Dec")}</option>
                         </select>
                         &nbsp;/&nbsp;
 
@@ -109,13 +106,20 @@ export default class UserName extends React.Component {
                                            message={this.props.user_name.invalid_messages.birth_day} />
                     </div>
 
+                    {/* Allow Email from goalous check */}
+                    <div className="checkbox signup-checkbox">
+                        <input type="checkbox" value="1" className="signup-checkbox" ref="update_email_flg"
+                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                        <div className="signup-privacy-policy-label">
+                          {__("I want to receive news and updates by email from Goalous.")}
+                        </div>
+                    </div>
+
                     {/* Privacy policy check */}
                     <div className="checkbox signup-checkbox">
                         <input type="checkbox" value="1" className="signup-checkbox" ref="privacy"
                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
-                        <div className="signup-privacy-policy-label">
-                            Goalousの<Link to="/terms" target="_blank" className="signup-privacy-policy-link">利用規約</Link>と<br />
-                            <Link to="/privacy_policy" target="_blank" className="signup-privacy-policy-link">プライバシーポリシー</Link>に同意します。
+                        <div className="signup-privacy-policy-label" dangerouslySetInnerHTML={{__html: __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}}>
                         </div>
                     </div>
 
