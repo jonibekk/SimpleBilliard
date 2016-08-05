@@ -143,11 +143,15 @@ function redirectToTop() {
 }
 
 function dateFormat(year, month, day) {
-  if(month < 10) {
-    month = "0" + String(parseInt(month))
-  }
+  const double_digit_month = month < 10 ? "0" + String(parseInt(month)) : month
+  const translated_month_name = getMonthNameList()[double_digit_month]
+  let month_name = ''
 
-  const month_name = getMonthNameList()[month]
+  if(translated_month_name.match(/月/)) {
+    month_name = double_digit_month + '月'
+  } else {
+    month_name = translated_month_name
+  }
 
   return `${month_name} ${day}, ${year}`
 }
