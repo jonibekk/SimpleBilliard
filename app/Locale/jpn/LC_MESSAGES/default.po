@@ -6625,7 +6625,7 @@ msgstr "passwordSameCheck"
 
 #~ msgid "Please mix of numbers, lower case letters and upper case letters."
 #~ msgstr "数字、英小文字、英大文字の混在にしてください。"
-=======
+
 #~ msgid "It's free until 31 Aug 2016! Try it!"
 #~ msgstr "2016年8月31日まで完全無料！今すぐお試しください。"
 
