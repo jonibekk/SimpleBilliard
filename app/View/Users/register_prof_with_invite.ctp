@@ -58,6 +58,19 @@
             echo $last_name;
         }
         ?>
+
+        <?= $this->Form->input('update_email_flg', [
+            'wrapInput' => 'signup-invitation-checkbox-email-flg',
+            'type'      => 'checkbox',
+            'label'     => [
+                'class' => null,
+                'text'  => __("I want to receive news and updates by email from Goalous.")
+            ],
+            'class'     => '',
+            'required'  => false,
+        ]);
+        ?>
+
         <div class="panel-heading signup-itemtitle"><?= __('Your date of birth') ?></div>
         <?=
         $this->Form
@@ -100,7 +113,7 @@
             [
                 'target'  => "_blank",
                 'onclick' => "window.open(this.href,'_system');return false;",
-                'class'   => 'link',
+                'class'   => 'signup-privacy-policy-link',
             ]
         );
 
@@ -113,11 +126,11 @@
             [
                 'target'  => "_blank",
                 'onclick' => "window.open(this.href,'_system');return false;",
-                'class'   => 'link',
+                'class'   => 'signup-privacy-policy-link',
             ]
         );
         echo $this->Form->input('agree_tos', [
-            'wrapInput' => 'signup-checkbox',
+            'wrapInput' => 'signup-invitation-agree-tos',
             'type'      => 'checkbox',
             'label'     => [
                 'class' => null,
@@ -138,7 +151,7 @@
             <?= $this->Form->button(__('Next') . ' <i class="fa fa-angle-right"></i>',
                 [
                     'type'     => 'submit',
-                    'class'    => 'btn btn-primary signup-btn-submit',
+                    'class'    => 'btn btn-primary signup-invite-submit-button',
                     'disabled' => 'disabled'
                 ]) ?>
         </div>
