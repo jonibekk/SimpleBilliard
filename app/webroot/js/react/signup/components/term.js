@@ -20,6 +20,7 @@ export default class Term extends React.Component {
       <div className="row">
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("Choose your team's (company's) term")}</div>
+              <img src="/img/signup/term.png" className="signup-header-image" />
               <div className="signup-description">{__("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.")}</div>
 
               <form className="form-horizontal" acceptCharset="utf-8"

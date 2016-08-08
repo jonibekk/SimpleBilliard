@@ -31,6 +31,7 @@ export default class UserName extends React.Component {
         <div className="row">
             <div className="panel panel-default panel-signup">
                 <div className="panel-heading signup-title">{__("What's your name?")}</div>
+                <img src="/img/signup/user.png" className="signup-header-image" />
                 <div className="signup-description">{__("Your name will only be displayed to your team on Goalous.")}</div>
 
                 <form className="form-horizontal" acceptCharset="utf-8"
