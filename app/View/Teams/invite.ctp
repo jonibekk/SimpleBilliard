@@ -13,7 +13,7 @@
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __('Send Invitations') ?></div>
-
+        <img src="/img/signup/user.png" class="signup-header-image">
         <?=
         $this->Form->create('Team', [
             'inputDefaults' => [
