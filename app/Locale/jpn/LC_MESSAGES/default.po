@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-08-05 00:01+0900\n"
+"POT-Creation-Date: 2016-08-05 16:55+0900\n"
+"PO-Revision-Date: 2016-08-05 16:55+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -4148,7 +4148,7 @@ msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:46
 msgid "What should we do after the campaign?"
-msgstr "無償期間（2016年8月31日まで）の後はどうなりますか？"
+msgstr "無償期間（2016年12月31日まで）の後はどうなりますか？"
 
 #: View/Elements/Homepage/faq.ctp:47
 msgid "There will appear some limit, but data will not be deleted."
@@ -4178,7 +4178,7 @@ msgid ""
 "After logged in, you can get contact with us by support tool. We can help "
 "you as soon as possible."
 msgstr ""
-"2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
+"2016年12月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
 "利用できるサポートツールでお問い合わせください。できる限り早い対応をいたしま"
 "す。"
 
@@ -4208,8 +4208,8 @@ msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
 #: View/Elements/Homepage/signup.ctp:23 View/Pages/home.ctp:103
-msgid "It's free until 31 Aug 2016! Try it!"
-msgstr "2016年8月31日まで完全無料！今すぐお試しください。"
+msgid "It's free until 31 Dec 2016! Try it!"
+msgstr "2016年12月31日まで完全無料！今すぐお試しください。"
 
 #: View/Elements/Team/batch_setup.ctp:14 View/Teams/settings.ctp:22
 msgid "Batch Registration"
@@ -4293,9 +4293,9 @@ msgstr "チーム画像"
 msgid "Plan"
 msgstr "プラン"
 
-#: View/Elements/Team/edit_basic_setting.ctp:101 View/Teams/add.ctp:95
-msgid "You can use Goalous free of charge until 31 Aug 2016."
-msgstr "2016年8月31日まで無料でご利用いただけます。"
+#: View/Elements/Team/edit_basic_setting.ctp:98 View/Teams/add.ctp:92
+msgid "You can use Goalous free of charge until 31 Dec 2016."
+msgstr "2016年12月31日まで無料でご利用いただけます。"
 
 #: View/Elements/Team/edit_basic_setting.ctp:113
 msgid "Change basic settings"
@@ -6027,10 +6027,8 @@ msgid "It's all free"
 msgstr "今だけ、有料プランも完全無料"
 
 #: View/Pages/pricing.ctp:89
-msgid "Released sale, It's all free until Augast 2016!"
-msgstr ""
-"リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待ちし"
-"ております。"
+msgid "Released sale, It's all free until December 2016!"
+msgstr "リリース記念で2016年12月までPlusをご利用いただけます。フィードバックをお待ちしております。"
 
 #: View/Pages/pricing.ctp:92
 msgid "Plus"
@@ -6627,6 +6625,17 @@ msgstr "passwordSameCheck"
 
 #~ msgid "Please mix of numbers, lower case letters and upper case letters."
 #~ msgstr "数字、英小文字、英大文字の混在にしてください。"
+=======
+#~ msgid "It's free until 31 Aug 2016! Try it!"
+#~ msgstr "2016年8月31日まで完全無料！今すぐお試しください。"
+
+#~ msgid "You can use Goalous free of charge until 31 Aug 2016."
+#~ msgstr "2016年8月31日まで無料でご利用いただけます。"
+
+#~ msgid "Released sale, It's all free until Augast 2016!"
+#~ msgstr ""
+#~ "リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待"
+#~ "ちしております。"
 
 #~ msgid "Harry"
 #~ msgstr "Takashi"
