@@ -407,6 +407,9 @@ class TeamsController extends AppController
 
     public function invite()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('with_header_menu',false);
+
         $from_setting = false;
         if (strstr($this->referer(), "/settings")) {
             $from_setting = true;
@@ -419,7 +422,6 @@ class TeamsController extends AppController
         $this->set(compact('team'));
 
         if (!$this->request->is('post')) {
-            $this->layout = LAYOUT_ONE_COLUMN;
             return $this->render();
         }
 
@@ -1082,6 +1084,42 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
         return $this->render();
+    }
+
+    /**
+     * メールアドレスが招待可能なものか判定
+     *
+     * @return CakeResponse
+     */
+    public function ajax_validate_email_can_invite()
+    {
+        $this->_ajaxPreProcess();
+        $email = $this->request->query('email');
+        $valid = false;
+        $message = '';
+        if ($email) {
+            // メールアドレスだけ validate
+            $this->User->Email->create(['email' => $email]);
+            $this->User->Email->validate = [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'email'     => ['rule' => ['email'],],
+                ],
+            ];
+            $this->User->Email->validates(['fieldList' => ['email']]);
+            if ($this->User->Email->validationErrors) {
+                $message = $this->User->Email->validationErrors['email'][0];
+            } elseif ($this->User->Email->getEmailsBelongTeamByEmail($email)) {
+                $message = __('This email address has already been joined.');
+            } else {
+                $valid = true;
+            }
+        }
+        return $this->_ajaxGetResponse([
+            'valid'   => $valid,
+            'message' => $message
+        ]);
     }
 
     /**

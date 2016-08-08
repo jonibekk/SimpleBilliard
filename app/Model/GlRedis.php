@@ -49,6 +49,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_TEAM_RANKING = 'team_ranking';
     const KEY_TYPE_GROUP_RANKING = 'group_ranking';
     const KEY_TYPE_SETUP_GUIDE_STATUS = 'setup_guide_status';
+    const KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE = 'fail_email_verify_digit_code';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
     const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
@@ -71,7 +72,8 @@ class GlRedis extends AppModel
         self::KEY_TYPE_CIRCLE_INSIGHT,
         self::KEY_TYPE_TEAM_RANKING,
         self::KEY_TYPE_GROUP_RANKING,
-        self::KEY_TYPE_SETUP_GUIDE_STATUS
+        self::KEY_TYPE_SETUP_GUIDE_STATUS,
+        self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE,
     ];
 
     /**
@@ -152,6 +154,18 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $login_fail_key = [
+        'email'      => null,
+        'device'     => null,
+        'fail_count' => null,
+    ];
+
+    /**
+     * Key Name: email:[email]:device:[device_hash]:fail_email_verify_digit_code_count:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $fail_email_verify_digit_code = [
         'email'      => null,
         'device'     => null,
         'fail_count' => null,
@@ -834,6 +848,24 @@ class GlRedis extends AppModel
             return true;
         }
         $this->Db->setTimeout($key, ACCOUNT_LOCK_TTL);
+        return false;
+    }
+
+    /**
+     * @param      $email
+     * @param null $ip_address
+     *
+     * @return bool
+     */
+    function isEmailVerifyCodeLocked($email, $ip_address = null)
+    {
+        $device = $this->makeDeviceHash($email, $ip_address);
+        $key = $this->getKeyName(self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE, null, null, null, null, $email, $device);
+        $count = $this->Db->incr($key);
+        if ($count !== false && $count >= EMAIL_VERIFY_CODE_LOCK_COUNT) {
+            return true;
+        }
+        $this->Db->setTimeout($key, EMAIL_VERIFY_CODE_LOCK_TTL);
         return false;
     }
 

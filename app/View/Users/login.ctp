@@ -80,7 +80,7 @@
                     </div>
                     <div class="col-sm-4">
                         <?=
-                        $this->Html->link(__('Create a new account?'), ['action' => 'register'], $options) ?>
+                        $this->Html->link(__('Create a new account?'), ['controller'=>'signup','action' => 'email'], $options) ?>
                     </div>
                 </div>
                 <?= $this->Form->end(); ?>

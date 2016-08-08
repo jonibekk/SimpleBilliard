@@ -7,7 +7,7 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup'], done)
+  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup'], done)
 })
 
 // js app
@@ -63,13 +63,24 @@ gulp.task('angular_vendor', done => {
   )
 })
 
-// react
+// react setup
 gulp.task('react_setup', done => {
   return runSequence(
     'react_setup:eslint',
     'react_setup:browserify',
     'react_setup:uglify',
     'react_setup:clean',
+    done
+  )
+})
+
+// react signup
+gulp.task('react_signup', done => {
+  return runSequence(
+    'react_signup:eslint',
+    'react_signup:browserify',
+    'react_signup:uglify',
+    'react_signup:clean',
     done
   )
 })

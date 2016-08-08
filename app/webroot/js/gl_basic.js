@@ -125,7 +125,6 @@ function clickToSetCurrentTeamId() {
 
 
 $(document).ready(function () {
-
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
         $('#IntercomLink').hide();
@@ -1870,7 +1869,7 @@ $(document).ready(function () {
                         message: cake.message.validate.a
                     },
                     regexp: {
-                        regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
+                        regexp: /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/,
                         message: cake.message.validate.e
                     }
                 }
