@@ -11,6 +11,7 @@
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __('Join the Goalous team for "%s"?', $team_name) ?></div>
+        <img src="/img/signup/user.png" className="signup-header-image" />
         <div class="signup-description">
             <?= __('Your name will displayed along with your goals and posts in Goalous') ?>
         </div>
@@ -68,6 +69,7 @@
             ],
             'class'     => '',
             'required'  => false,
+            'checked'   => 'checked'
         ]);
         ?>
 
