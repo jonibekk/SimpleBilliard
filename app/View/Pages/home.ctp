@@ -100,7 +100,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="signup">
         <div class="container">
             <div class="col-md-7 col-sm-12 col-xs-12">
-                <p class="summary"><?= __('It\'s free until 31 Aug 2016! Try it!') ?></p>
+                <p class="summary"><?= __('It\'s free until 31 Dec 2016! Try it!') ?></p>
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'middle']]) ?>"
