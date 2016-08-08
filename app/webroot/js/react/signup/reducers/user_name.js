@@ -8,7 +8,8 @@ const initialState = {
     birth_month: '',
     birth_day: '',
     privacy: '',
-    update_email_flg: ''
+    // デフォルトでチェックさせる
+    update_email_flg: 1
   },
   invalid_messages: {
     first_name: '',
