@@ -29,7 +29,7 @@ export default class Password extends React.Component {
                   {/* Password */}
                   <div className="panel-heading signup-itemtitle">{__("Password")}</div>
                   <div className={(this.props.password.invalid_messages.password) ? 'has-error' : ''}>
-                    <input className="form-control signup_input-design" placeholder="******" maxLength="50" type="password" ref="password"
+                    <input className="form-control signup_input-design" placeholder="********" maxLength="50" type="password" ref="password"
                            onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
                   </div>
                   <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}

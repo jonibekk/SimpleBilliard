@@ -25,18 +25,19 @@
         ]); ?>
         <?=
         $this->Form->input('password', [
-            'placeholder'              => __('Use at least 8 characters and use a mix of numbers, alphanumeric and special characters.'),
+            'placeholder'              => __('********'),
             "data-bv-notempty-message" => __("Input is required."),
             "data-bv-notempty"         => "true",
             'required'                 => false,
             'type'                     => 'password',
             'maxlength'                => 50,
         ]) ?>
+        <div class="signup-description mod-small"><?= __("Use 8 or more characters including at least one number.") ?></div>
         <div class="submit signup-btn">
             <?= $this->Form->button(__('Join Team') . ' <i class="fa fa-angle-right"></i>',
                 [
                     'type'     => 'submit',
-                    'class'    => 'btn btn-primary signup-btn-submit',
+                    'class'    => 'btn btn-primary signup-invite-submit-button',
                     'disabled' => 'disabled'
                 ]) ?>
         </div>
