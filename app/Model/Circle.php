@@ -67,7 +67,6 @@ class Circle extends AppModel
         'name'         => [
             'isString'  => [
                 'rule'       => ['isString',],
-                'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notEmpty'  => [
@@ -77,7 +76,6 @@ class Circle extends AppModel
         'description'  => [
             'isString' => [
                 'rule'       => ['isString',],
-                'allowEmpty' => true,
             ],
         ],
         'del_flg'      => [
