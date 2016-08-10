@@ -39,6 +39,7 @@
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             'required'                     => false,
+            'value' => viaIsSet($last_name)
         ]);
         $first_name = $this->Form->input('first_name', [
             'placeholder'                  => __("eg. Harry"),
@@ -50,6 +51,7 @@
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             'required'                     => false,
+            'value' => viaIsSet($first_name)
         ]);
         if ($last_first) {
             echo $last_name;
@@ -92,6 +94,7 @@
                         '11' => __('Nov'),
                         '12' => __('Dec'),
                     ],
+                    'default' => viaIsSet($birth_day),
                     'class'                    => 'form-control inline-fix signup_input-design',
                     'label'                    => false,
                     'dateFormat'               => 'YMD',

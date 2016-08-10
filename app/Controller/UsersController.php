@@ -405,6 +405,15 @@ class UsersController extends AppController
         $team = $this->Team->findById($invite['Invite']['team_id']);
         $this->set('team_name', $team['Team']['name']);
 
+        //batch case
+        if($user = $this->User->getUserByEmail($invite['Invite']['email'])) {
+            $user_id = $user['User']['id'];
+            $data['User']['id'] = $user_id;
+            $this->set('first_name', $user['User']['first_name']);
+            $this->set('last_name', $user['User']['last_name']);
+            $this->set('birth_day', $user['User']['birth_day']);
+        }
+
         if (!$this->request->is('post')) {
             if ($step === 2) {
                 return $this->render($password_template);
@@ -915,13 +924,15 @@ class UsersController extends AppController
         try {
             // Check token available
             $this->Invite->confirmToken($token);
+
+            // By email
             if (!$this->Invite->isUser($token)) {
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
-            //By batch setup
+            // By batch setup
             if ($this->Invite->isByBatchSetup($token)) {
-                return $this->redirect(['action' => 'registration_with_set_password', 'invite_token' => $token]);
+                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
             if (!$this->Auth->user()) {
