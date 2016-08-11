@@ -623,7 +623,9 @@ class User extends AppModel
             $data['User']['active_flg'] = true;
         }
         //データを保存
-        $this->create();
+        if(!viaIsSet($data['Email'][0]['Email']['email_verified']) && !viaIsSet($data['User']['id'])) {
+            $this->create();
+        }
         if ($this->saveAll($data, ['validate' => false])) {
             //プライマリメールアドレスを登録
             $this->save(['primary_email_id' => $this->Email->id]);

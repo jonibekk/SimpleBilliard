@@ -407,8 +407,7 @@ class UsersController extends AppController
 
         //batch case
         if($user = $this->User->getUserByEmail($invite['Invite']['email'])) {
-            $user_id = $user['User']['id'];
-            $data['User']['id'] = $user_id;
+            // Set user info to view value
             $this->set('first_name', $user['User']['first_name']);
             $this->set('last_name', $user['User']['last_name']);
             $this->set('birth_day', $user['User']['birth_day']);
@@ -439,6 +438,7 @@ class UsersController extends AppController
                     ]);
             } else {
                 //エラーメッセージ
+                $this->log('test');
                 $this->Pnotify->outError(__('Failed to save data.'));
                 return $this->render($profile_template);
             }
@@ -453,6 +453,22 @@ class UsersController extends AppController
 
         //sessionデータとpostのデータとマージ
         $data = Hash::merge($this->Session->read('data'), $this->request->data);
+        //batch case
+        if($user) {
+            $user_id = $user['User']['id'];
+
+            // Disabled user email validation
+            // Because in batch case, email is already registered
+            $email = $this->User->Email->getNotVerifiedEmail($user_id);
+            $email_from_email_table = viaIsSet($email['Email']['email']);
+            $email_from_invite_table = $invite['Invite']['email'];
+            if($email_from_email_table === $email_from_invite_table) {
+                unset($this->User->Email->validate['email']);
+            }
+            // Set user info to register data
+            $data['User']['id'] = $user_id;
+            $data['Email'][0]['Email']['id'] = $email['Email']['id'];
+        }
         //email
         $data['Email'][0]['Email']['email'] = $invite['Invite']['email'];
         //タイムゾーンをセット
@@ -473,7 +489,11 @@ class UsersController extends AppController
             return $this->render($password_template);
         }
         //ログイン
-        $this->_autoLogin($this->User->getLastInsertID(), true);
+        $user_id = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $user_id;
+        $this->_autoLogin($user_id, true);
+        if(!$this->User->my_uid) {
+            $this->User->my_uid = $this->Auth->user('id');
+        }
         //チーム参加
         $this->_joinTeam($this->request->params['named']['invite_token']);
         //ホーム画面でモーダル表示
