@@ -884,11 +884,11 @@ msgstr "評価の停止を解除しました。"
 
 #: Controller/TeamsController.php:919
 msgid "Error, this user already exists."
-msgstr ""
+msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
 
 #: Controller/TeamsController.php:928
 msgid "Error, this invitation already expired, you can't cancel."
-msgstr ""
+msgstr "エラーが発生しました。すでに招待の期限が切れています。キャンセルはできません。"
 
 #: Controller/TeamsController.php:991
 msgid "Team vision already exists, new one cannot be made."
