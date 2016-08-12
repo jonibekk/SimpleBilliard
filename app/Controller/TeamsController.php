@@ -483,10 +483,17 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess($msg);
 
         if (!$from_setting) {
+            $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_INVITING);
             return $this->redirect('/');
         }
 
         return $this->redirect($this->referer());
+    }
+
+    public function invite_skip()
+    {
+        $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_NOT_INVITING);
+        return $this->redirect('/');
     }
 
     function download_add_members_csv_format()

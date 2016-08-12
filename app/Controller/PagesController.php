@@ -262,7 +262,7 @@ class PagesController extends AppController
 
         if ($this->Auth->user()) {
             $parsed_referer_url = Router::parse($this->referer('/', true));
-            $request_status = viaIsSet($url_params['st']);
+            $request_status = viaIsSet($url_params);
             $status_from_referer = $this->_defineStatusFromReferer();
 
             // When parametes separated from google analitics already exists,
@@ -274,13 +274,12 @@ class PagesController extends AppController
                 }
             }
 
-            if ($request_status !== $status_from_referer) {
-                return $this->redirect("/?st={$status_from_referer}");
+            if ($this->_parseParameter($request_status) !== $status_from_referer) {
+                return $this->redirect("/${status_from_referer}");
             }
             $this->Session->delete('referer_status');
             return true;
         }
-
         if ($url_params) {
             return $this->redirect('/');
         }
@@ -290,19 +289,27 @@ class PagesController extends AppController
     public function _defineStatusFromReferer()
     {
         switch ($this->Session->read('referer_status')) {
-            // New Registration(Not invite)
-            case REFERER_STATUS_SIGNUP:
-                return REFERER_STATUS_SIGNUP;
+            case REFERER_STATUS_SIGNUP_WITH_INVITING:
+                return REFERER_STATUS_SIGNUP_WITH_INVITING;
 
-            // Invitation(exist goalous account)
-            case REFERER_STATUS_INVITATION_EXIST:
-                return REFERER_STATUS_INVITATION_EXIST;
+            case REFERER_STATUS_SIGNUP_WITH_NOT_INVITING:
+                return REFERER_STATUS_SIGNUP_WITH_NOT_INVITING;
 
-            // Invitation(not exist goalous account)
-            case REFERER_STATUS_INVITATION_NOT_EXIST:
-                return REFERER_STATUS_INVITATION_NOT_EXIST;
+            case REFERER_STATUS_INVITED_USER_EXIST:
+                return REFERER_STATUS_INVITED_USER_EXIST;
 
-            // Login
+            case REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL:
+                return REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL;
+
+            case REFERER_STATUS_INVITED_USER_EXIST_BY_CSV:
+                return REFERER_STATUS_INVITED_USER_EXIST_BY_CSV;
+
+            case REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL:
+                return REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL;
+
+            case REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV:
+                return REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV;
+
             case REFERER_STATUS_LOGIN:
                 return REFERER_STATUS_LOGIN;
 
@@ -310,5 +317,22 @@ class PagesController extends AppController
             default:
                 return REFERER_STATUS_DEFAULT;
         }
+    }
+
+    public function _parseParameter($parameters)
+    {
+        $parameters_text = '';
+        $prefix = '';
+        $i = 0;
+        foreach($parameters as $key => $value) {
+            if($i === 0) {
+                $prefix = '?';
+            } else {
+                $prefix = '&';
+            }
+            $parameters_text .= "${prefix}${key}=${value}";
+            $i++;
+        }
+        return $parameters_text;
     }
 }
