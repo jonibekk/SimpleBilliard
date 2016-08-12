@@ -54,7 +54,7 @@ class UsersController extends AppController
             )
         );
         $st_login = REFERER_STATUS_LOGIN;
-        $this->Auth->loginRedirect = "/?st={$st_login}";
+        $this->Auth->loginRedirect = "/{$st_login}";
         $this->Auth->logoutRedirect = array(
             'controller' => 'users',
             'action'     => 'login'
@@ -235,14 +235,18 @@ class UsersController extends AppController
 
     function _afterAuthSessionStore()
     {
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/?st=" . REFERER_STATUS_LOGIN;
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
-            $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
+            if($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+            } else {
+                $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
+            }
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
@@ -797,16 +801,18 @@ class UsersController extends AppController
 
             // By email
             if (!$this->Invite->isUser($token)) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
             // By batch setup
             if ($this->Invite->isByBatchSetup($token)) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV);
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
             if (!$this->Auth->user()) {
-                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
                 return $this->redirect(['action' => 'login']);
             }
 
@@ -817,9 +823,9 @@ class UsersController extends AppController
 
             $team = $this->_joinTeam($token);
 
-            $this->Session->write('referer_status', REFERER_STATUS_INVITATION_EXIST);
+            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
-            return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_EXIST);
+            return $this->redirect("/");
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect("/");

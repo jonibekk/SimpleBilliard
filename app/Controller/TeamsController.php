@@ -483,6 +483,7 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess($msg);
 
         if (!$from_setting) {
+            $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_INVITING);
             return $this->redirect('/');
         }
 
