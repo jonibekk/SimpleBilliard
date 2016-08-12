@@ -341,7 +341,7 @@ class User extends AppModel
     {
         //英名、英性の頭文字を大文字に変更
         if (!empty($this->data[$this->alias]['first_name']) &&
-            !empty($this->data[$this->alias]['first_name'])
+            !empty($this->data[$this->alias]['last_name'])
         ) {
             $this->data[$this->alias]['first_name'] = ucfirst($this->data[$this->alias]['first_name']);
             $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
