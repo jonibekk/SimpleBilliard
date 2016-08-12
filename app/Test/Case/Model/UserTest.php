@@ -193,34 +193,6 @@ class UserTest extends GoalousTestCase
         $this->assertEmpty($this->User->findById($user_id), "コミット後は削除したデータは参照できない。");
     }
 
-    function testUserProvisionalRegistrationPre()
-    {
-        //異常系
-        $data = [
-            'User'  => [
-                'first_name' => '',
-            ],
-            'Email' => []
-        ];
-        $res = $this->User->userRegistration($data);
-        $this->assertFalse($res, "[異常系]ユーザ仮登録");
-        //正常系
-        $data = [
-            'User'  => [
-                'first_name'       => 'taro',
-                'last_name'        => 'sato',
-                'password'         => '12345678',
-                'password_confirm' => '12345678',
-                'agree_tos'        => true,
-            ],
-            'Email' => [
-                ['email' => 'taro@sato.com'],
-            ]
-        ];
-        $res = $this->User->userRegistration($data);
-        $this->assertTrue($res, "[正常系]ユーザ仮登録");
-    }
-
     function testUserProvisionalRegistration()
     {
         //正常系
