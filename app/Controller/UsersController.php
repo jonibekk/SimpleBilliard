@@ -340,7 +340,6 @@ class UsersController extends AppController
                     ]);
             } else {
                 //エラーメッセージ
-                $this->log('test');
                 $this->Pnotify->outError(__('Failed to save data.'));
                 return $this->render($profile_template);
             }
@@ -369,6 +368,7 @@ class UsersController extends AppController
             }
             // Set user info to register data
             $data['User']['id'] = $user_id;
+            $data['User']['no_pass_flg'] = false;
             $data['Email'][0]['Email']['id'] = $email['Email']['id'];
         }
         //email
@@ -393,9 +393,10 @@ class UsersController extends AppController
         //ログイン
         $user_id = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $user_id;
         $this->_autoLogin($user_id, true);
-        if(!$this->User->my_uid) {
-            $this->User->my_uid = $this->Auth->user('id');
-        }
+        // flash削除
+        // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
+        // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
+        $this->Session->delete('Message.pnotify');
         //チーム参加
         $this->_joinTeam($this->request->params['named']['invite_token']);
         //ホーム画面でモーダル表示

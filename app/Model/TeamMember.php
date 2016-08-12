@@ -292,7 +292,7 @@ class TeamMember extends AppModel
             $team_id = $this->current_team_id;
         }
         if (!$uid) {
-            $uid = $this->uid;
+            $uid = $this->my_uid;
         }
         //まず通常のチームアクセス権限があるかチェック
         $this->permissionCheck($team_id, $uid);
