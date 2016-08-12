@@ -86,7 +86,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container text-center">
         <h2 class="title"><?= __('It\'s all free') ?></h2>
         <p class="intro">
-            <?= __('Released sale, It\'s all free until Augast 2016!') ?>
+        <?= __('Released sale, It\'s all free until December 2016!') ?>
         </p>
         <div class="item col-xs-12 col-md-6 col-md-offset-3">
             <h3 class="heading"><?= __('Plus') ?><span class="label label-custom"><?= __(
@@ -117,8 +117,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 </ul>
                 <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
                    href="<?= $this->Html->url([
-                       'controller' => 'users',
-                       'action'     => 'register',
+                       'controller' => 'signup',
+                       'action'     => 'email',
                        '?'          => ['type' => 'pricing_plus']
                    ]) ?>">
                     <?= __('Start now') ?>

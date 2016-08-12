@@ -138,4 +138,14 @@ class EmailTest extends GoalousTestCase
         $this->assertTrue($res, "[正常]メアドからユーザが既にチームに存在しているかのチェック");
     }
 
+    function testIsVerified()
+    {
+        $email = 'aaaaa@aaaaaaa.com';
+        $res = $this->Email->isVerified($email);
+        $this->assertFalse($res);
+        $this->Email->save(['email' => $email, 'email_verified' => true]);
+        $res = $this->Email->isVerified($email);
+        $this->assertTrue($res);
+    }
+
 }

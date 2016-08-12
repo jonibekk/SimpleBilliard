@@ -185,6 +185,24 @@ class GlEmailComponent extends Component
     }
 
     /**
+     * メールにてメアド認証用digit送信
+     *
+     * @param $code
+     *
+     * @return null
+     */
+    public function sendEmailVerifyDigit($code, $to)
+    {
+        $item = [
+            'code'    => $code,
+            'subject' => __('Confirmation Code for Goalous: %s', $code),
+            'to'      => $to,
+        ];
+        $this->SendMail->saveMailData(null, SendMail::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE, $item);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにてセットアップガイドメールを送信
      *
      * @param $to_user_id
@@ -246,6 +264,7 @@ class GlEmailComponent extends Component
         $cmd = " send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd .= " -s " . $this->Session->id();
+        $cmd .= " -l " . Configure::read('Config.language');
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
