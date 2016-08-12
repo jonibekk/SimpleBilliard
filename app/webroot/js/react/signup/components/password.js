@@ -20,21 +20,22 @@ export default class Password extends React.Component {
     return (
       <div className="row">
           <div className="panel panel-default panel-signup">
-              <div className="panel-heading signup-title">Set your password</div>
-              <div className="signup-description">password sample text password sample text password sample text.</div>
+              <div className="panel-heading signup-title">{__("Set your password")}</div>
+              <img src="/img/signup/password.png"  className="signup-header-image" />
+              <div className="signup-description">{__("Create your password to login to Goalous.")}</div>
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
 
                   {/* Password */}
-                  <div className="panel-heading signup-itemtitle">Password</div>
+                  <div className="panel-heading signup-itemtitle">{__("Password")}</div>
                   <div className={(this.props.password.invalid_messages.password) ? 'has-error' : ''}>
-                    <input className="form-control signup_input-design" placeholder="******" maxLength="50" type="password" ref="password"
+                    <input className="form-control signup_input-design" placeholder="********" maxLength="50" type="password" ref="password"
                            onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
                   </div>
                   <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}
                                      message={this.props.password.invalid_messages.password} />
-                  <div className="signup-description mod-small">8文字以上。アルファベット文字、数字が混在している必要があります。</div>
+                  <div className="signup-description mod-small">{__("Use 8 or more characters including at least one number.")}</div>
 
                   {/* Alert message */}
                   { (() => { if(this.props.password.is_exception) {

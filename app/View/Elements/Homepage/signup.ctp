@@ -20,12 +20,8 @@
 <section id="signup" class="signup">
     <div class="container text-center">
         <h2 class="title"><?= __('Let\'s go to Goalous!') ?></h2>
-        <p class="summary"><?= __('It\'s free until 31 Aug 2016! Try it!') ?></p>
-        <a href="<?= $this->Html->url([
-            'controller' => 'signup',
-            'action'     => 'email',
-            '?'          => ['type' => 'bottom']
-        ]) ?>"
+        <p class="summary"><?= __('It\'s free until 31 Dec 2016! Try it!') ?></p>
+        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'bottom']]) ?>"
            class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
             <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Sign Up') ?></button>
         </a>

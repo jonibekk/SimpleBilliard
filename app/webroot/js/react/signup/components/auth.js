@@ -1,62 +1,90 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Link } from 'react-router'
+import { range } from '../actions/common_actions'
 
 export default class Auth extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.props.auth.code_list
   }
 
   inputCode(inputed_code, index) {
-
-    // 数字以外の場合は何もしない
-    if(Number.isNaN(parseInt(inputed_code))) {
-      return
-    }
 
     // 確認中の場合も何もしない
     if(this.props.auth.checking_auth_code) {
       return
     }
 
-    // ペーストされた場合も含めてコードを確認する
-    const code_splitted = inputed_code.split("")
+    if(inputed_code === '') {
+      return
+    }
 
-    code_splitted.map((code, i) => {
-      const key_name = `code${index + i}`
-      const target_index = index + i
-
-      if(code === '-') {
-        return
-      }
-
-      if(target_index > 7) {
-        return
-      }
-
-      this.setState({[key_name]: code}, () => {
-        this.props.inputCode(target_index, code)
-      })
-    })
+    this.props.inputCode(index, inputed_code)
 
     // inputフィールドのフォーカス変更
+    const key_name = `code${index + 1}`
+
     if(index < 6) {
-      return ReactDOM.findDOMNode(this.refs[`code${index + 1}`]).focus()
+      ReactDOM.findDOMNode(this.refs[key_name]).focus()
+      ReactDOM.findDOMNode(this.refs[key_name]).select()
     } else {
-      return ReactDOM.findDOMNode(this.refs.code1).focus()
+      ReactDOM.findDOMNode(this.refs.code1).focus()
+      ReactDOM.findDOMNode(this.refs.code1).select()
+    }
+  }
+
+  pasteCode(pasted_code, index) {
+    const code_splitted = pasted_code.replace( /-/g , "").split("")
+
+    code_splitted.map((code, i) => {
+      const target_index = index + i
+
+      if(target_index > 6) {
+        return
+      }
+
+      this.props.inputCode(target_index, code)
+      ReactDOM.findDOMNode(this.refs[`code${target_index}`]).value = code
+
+      if(index === 6) {
+        ReactDOM.findDOMNode(this.refs.code1).focus()
+        ReactDOM.findDOMNode(this.refs.code1).select()
+      }
+    })
+  }
+
+  handleKeyDown(key_code, index) {
+    const code_index = `code${index}`
+    const previous_index = parseInt(index) - 1
+    const previous_code_index = `code${previous_index}`
+
+    if(previous_index < 1) {
+      return
+    }
+
+    if(key_code === 8) {
+      if(this.props.auth.code_list[code_index] === '') {
+        ReactDOM.findDOMNode(this.refs[previous_code_index]).focus()
+        ReactDOM.findDOMNode(this.refs[previous_code_index]).select()
+        ReactDOM.findDOMNode(this.refs[previous_code_index]).value = ''
+        this.props.inputCode(previous_index, "")
+      } else {
+        this.props.inputCode(index, "")
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(nextProps.auth.code_list)
-  }
+    for(const key in nextProps.auth.code_list) {
+      if(nextProps.auth.code_list[key]) {
+        return
+      }
+    }
 
-  // componentDidUpdate() {
-  //   if(this.props.auth.code_list['code1'] === '' && this.props.auth.code_list['code2'] === '' && this.props.auth.code_list['code3'] === '' && this.props.auth.code_list['code4'] === '' && this.props.auth.code_list['code5'] === '' && this.props.auth.code_list['code6'] === '') {
-  //     return ReactDOM.findDOMNode(this.refs['code1']).focus()
-  //   }
-  // }
+    // フォームをリセット
+    range(1, 7).map(index => {
+      ReactDOM.findDOMNode(this.refs[`code${index}`]).value = ''
+    })
+  }
 
   render() {
     const checking_box = () => {
@@ -65,7 +93,7 @@ export default class Auth extends React.Component {
             <div className="signup-load-icon">
                 <img src="/img/ajax-loader.gif" />
             </div>
-            loading...原稿の長さによっては中央合わせ
+            loading...
         </div>
       )
     }
@@ -87,52 +115,44 @@ export default class Auth extends React.Component {
     return (
       <div className="row">
           <div className="panel panel-default panel-signup">
-              <div className="panel-heading signup-title">Check your email!</div>
-              <div className="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
+              <div className="panel-heading signup-title">{__("Check your email!")}</div>
+              <div className="signup-description">{__("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.")}</div>
 
-              <div className="signup-auth-split_input signup-auth-large_margin" data-multi-input-code="true">
+              <div className="signup-auth-split_input signup-auth-large_margin">
                   <div className="confirmation_code_group">
-                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                          <input type="text" className="signup-auth-inline_input" ref="code1" maxLength="1" type="text"
-                                 value={this.state.code1}
-                                 onKeyPress={ (event) => {this.inputCode(event.nativeEvent.key, 1)}}
-                                 onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 1) } />
-                      </div>
-                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                          <input type="text" className="signup-auth-inline_input" ref="code2" maxLength="1" type="text"
-                                 value={this.state.code2}
-                                 onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 2)}
-                                 onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 2) } />
-                      </div>
-                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                          <input type="text" className="signup-auth-inline_input" ref="code3" maxLength="1" type="text"
-                          value={this.state.code3}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 3)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 3) } />
-                      </div>
+                    {
+                      range(1, 4).map(index => {
+                        return (
+                          <div className="signup-auth-split_input_item signup-auth-input_wrapper" key={`code${index}`}>
+                              <input type="text" className="signup-auth-inline_input" ref={`code${index}`} maxLength="1" type="text" pattern="\d*"
+                                     onChange={ event => {this.inputCode(event.target.value, index)}}
+                                     onKeyDown={ event => { this.handleKeyDown(event.keyCode, index) } }
+                                     onPaste={ event => {
+                                       this.pasteCode(event.clipboardData.getData('Text'), index)
+                                     }} />
+                          </div>
+                        )
+                      })
+                    }
                   </div>
 
                   <div className="signup-auth-confirmation_code_span_cell">—</div>
 
                   <div className="confirmation_code_group">
-                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                          <input type="text" className="signup-auth-inline_input" ref="code4" maxLength="1" type="text"
-                          value={this.state.code4}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 4)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 4) } />
-                      </div>
-                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                          <input type="text" className="signup-auth-inline_input" ref="code5" maxLength="1" type="text"
-                          value={this.state.code5}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 5)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 5) } />
-                      </div>
-                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                          <input type="text" className="signup-auth-inline_input" ref="code6" maxLength="1" type="text"
-                          value={this.state.code6}
-                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 6)}
-                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 6) } />
-                      </div>
+                    {
+                      range(4, 7).map(index => {
+                        return (
+                          <div className="signup-auth-split_input_item signup-auth-input_wrapper" key={`code${index}`}>
+                              <input type="text" className="signup-auth-inline_input" ref={`code${index}`} maxLength="1" type="text" pattern="\d*"
+                                     onChange={ event => {this.inputCode(event.target.value, index)}}
+                                     onKeyDown={ event => { this.handleKeyDown(event.keyCode, index) } }
+                                     onPaste={ event => {
+                                       this.pasteCode(event.clipboardData.getData('Text'), index)
+                                     }} />
+                          </div>
+                        )
+                      })
+                    }
                   </div>
               </div>
 
@@ -140,7 +160,7 @@ export default class Auth extends React.Component {
               {this.props.auth.auth_code_is_invalid ? alert_box() : ''}
               {this.props.auth.auth_code_is_locked || this.props.auth.auth_code_is_expired ? locked_box() : ''}
 
-              <div className="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
+              <div className="signup-description">{__("Please don't close this window.")}</div>
           </div>
       </div>
     )

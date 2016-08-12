@@ -23,7 +23,7 @@ export function post(uri, data, success_callback, error_callback) {
     'data[_Token][key]': csrf_token_key
   }, data)
   const base_url = getBaseUrl()
-  let form_data = new FormData()
+  const form_data = new FormData()
 
   for (const key in post_data) {
     form_data.append(key, post_data[key])
@@ -33,14 +33,15 @@ export function post(uri, data, success_callback, error_callback) {
     headers: {
       'X-Requested-With': 'XMLHttpRequest'
     },
-    dataType: 'json'
+    dataType: 'json',
+    contentType: 'application/json'
   })
   .then(success_callback)
   .catch(error_callback)
 }
 
 export function mapValidationMsg(before_mapped_messages) {
-  let result = {}
+  const result = {}
   const map = {
     'data[Team][name]': 'team_name',
     'data[Team][timezone]': 'timezone',
@@ -74,7 +75,7 @@ export function getLocalDate() {
 
 export function range(start, end) {
   const len = end - start
-  let a = new Array(len)
+  const a = new Array(len)
 
   for (let i=0, c=start; i<len; i++, c++) a[i] = c
   return a

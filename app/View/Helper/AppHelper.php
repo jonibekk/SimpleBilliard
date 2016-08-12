@@ -33,6 +33,9 @@ class AppHelper extends UrlCacheAppHelper
             case 'posts':
                 if($action_name === 'message') $need_display_footer = false;
                 break;
+            case 'users':
+                if($action_name === 'register_with_invite') $need_display_footer = false;
+                break;
             case 'setup':
                 $need_display_footer = false;
                 break;

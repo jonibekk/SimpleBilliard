@@ -7,7 +7,9 @@ const initialState = {
     birth_year: '',
     birth_month: '',
     birth_day: '',
-    privacy: ''
+    privacy: '',
+    // デフォルトでチェックさせる
+    update_email_flg: 1
   },
   invalid_messages: {
     first_name: '',
