@@ -40,6 +40,46 @@ class MemberGroup extends AppModel
         'Group',
     ];
 
+    /**
+     * get all ids list
+     * @param $team_id
+     * @param $user_id
+     *
+     * @return array|null
+     */
+    public function getAllGroupMemberIds($team_id, $user_id)
+    {
+        $options = [
+            'fields'     => ['id'],
+            'conditions' => [
+                'team_id'  => $team_id,
+                'user_id'  => $user_id
+            ]
+        ];
+        return $this->find('list', $options);
+    }
+
+    /**
+     * get member group id
+     * @param $team_id
+     * @param $user_id
+     * @param $group_id
+     *
+     * @return array|null
+     */
+    public function getGroupMemberId($team_id, $user_id, $group_id)
+    {
+        $options = [
+            'fields'     => ['id'],
+            'conditions' => [
+                'team_id'  => $team_id,
+                'user_id'  => $user_id,
+                'group_id' => $group_id
+            ]
+        ];
+        return $this->find('first', $options);
+    }
+
     public function getGroupMemberUserId($team_id, $group_id)
     {
         $options = [

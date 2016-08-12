@@ -204,11 +204,15 @@ define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
 //Referer value name of URL(for Google analytics)
-define('REFERER_STATUS_DEFAULT', 'def');
-define('REFERER_STATUS_SIGNUP', 'new');
-define('REFERER_STATUS_LOGIN', 'in');
-define('REFERER_STATUS_INVITATION_EXIST', 'inv_ex');
-define('REFERER_STATUS_INVITATION_NOT_EXIST', 'inv_no');
+define('REFERER_STATUS_DEFAULT', '?st=def');
+define('REFERER_STATUS_LOGIN', '?st=in');
+define('REFERER_STATUS_SIGNUP_WITH_INVITING', '?st=new&invite=yes');
+define('REFERER_STATUS_SIGNUP_WITH_NOT_INVITING', '?st=new&invite=no');
+define('REFERER_STATUS_INVITED_USER_EXIST', '?st=inv_ex');
+define('REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL', '?st=inv_ex&from=email');
+define('REFERER_STATUS_INVITED_USER_EXIST_BY_CSV', '?st=inv_ex&from=csv');
+define('REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL', '?st=inv_no&from=email');
+define('REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV', '?st=inv_no&from=csv');
 
 define('SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS', 1209600); //2 weeks
 

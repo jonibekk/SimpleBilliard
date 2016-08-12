@@ -341,7 +341,7 @@ class User extends AppModel
     {
         //英名、英性の頭文字を大文字に変更
         if (!empty($this->data[$this->alias]['first_name']) &&
-            !empty($this->data[$this->alias]['first_name'])
+            !empty($this->data[$this->alias]['last_name'])
         ) {
             $this->data[$this->alias]['first_name'] = ucfirst($this->data[$this->alias]['first_name']);
             $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
@@ -599,7 +599,7 @@ class User extends AppModel
      *
      * @return bool
      */
-    public function userRegistration($data, $provisional = true)
+    public function userRegistration($data)
     {
         //バリデーションでエラーが発生したらreturn
         if (!$this->validateAssociated($data)) {
@@ -610,27 +610,15 @@ class User extends AppModel
             $data['User']['password'] = $this->generateHash($data['User']['password']);
         }
         $email_token = null;
-        //仮登録なら
-        if ($provisional) {
-            //メールアドレスの認証トークンを発行
-            $email_token = $this->generateToken();
-            $data['Email'][0]['Email']['email_token'] = $email_token;
-            //メールアドレスの認証トークンの期限をセット
-            $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire(3600);
-        } //本登録なら
-        else {
-            $data['Email'][0]['Email']['email_verified'] = true;
-            $data['User']['active_flg'] = true;
-        }
+        $data['Email'][0]['Email']['email_verified'] = true;
+        $data['User']['active_flg'] = true;
         //データを保存
-        $this->create();
+        if(!viaIsSet($data['Email'][0]['Email']['email_verified']) && !viaIsSet($data['User']['id'])) {
+            $this->create();
+        }
         if ($this->saveAll($data, ['validate' => false])) {
             //プライマリメールアドレスを登録
             $this->save(['primary_email_id' => $this->Email->id]);
-            //コントローラ側で必要になるデータをセット
-            if ($provisional) {
-                $this->Email->set('email_token', $email_token);
-            }
             $this->Email->set('email', $data['Email'][0]['Email']['email']);
         }
         return true;

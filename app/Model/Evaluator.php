@@ -74,4 +74,16 @@ class Evaluator extends AppModel
             '{n}.Evaluator.evaluatee_user_id');
         return $res;
     }
+
+    function getExistingEvaluatorsIds($team_id, $evaluatee_user_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'evaluatee_user_id' => $evaluatee_user_id,
+            ]
+        ];
+        $res = $this->Team->Evaluator->find('list', $options);
+        return $res;
+    }
 }

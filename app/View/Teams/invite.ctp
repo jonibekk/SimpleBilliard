@@ -92,8 +92,9 @@
               ]) ?>
           <?php if (isset($from_setting) && !$from_setting): ?>
               <?=
-              $this->Html->link(__("Skip for Now"), "/",
-                  ['class' => 'btn signup-btn-skip', 'div' => false])
+              $this->Html->link(__("Skip for Now"),
+              ['controller' => 'teams', 'action' => 'invite_skip'],
+              ['class' => 'btn signup-btn-skip', 'div' => false])
               ?>
           <?php endif; ?>
         </div>

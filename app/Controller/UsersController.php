@@ -54,7 +54,7 @@ class UsersController extends AppController
             )
         );
         $st_login = REFERER_STATUS_LOGIN;
-        $this->Auth->loginRedirect = "/?st={$st_login}";
+        $this->Auth->loginRedirect = "/{$st_login}";
         $this->Auth->logoutRedirect = array(
             'controller' => 'users',
             'action'     => 'login'
@@ -235,14 +235,18 @@ class UsersController extends AppController
 
     function _afterAuthSessionStore()
     {
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/?st=" . REFERER_STATUS_LOGIN;
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
-            $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
+            if($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+            } else {
+                $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
+            }
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
@@ -273,104 +277,6 @@ class UsersController extends AppController
         $this->Pnotify->outInfo(__("See you %s", $user['display_username']),
             ['title' => __("Logged out")]);
         return $this->redirect($this->Auth->logout());
-    }
-
-    /**
-     * User register action
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //現状、ローカルと本番環境以外でbasic認証を有効にする
-        if (!(ENV_NAME == "local" || ENV_NAME == "www") && !isset($this->request->params['named']['invite_token'])) {
-            $this->_setBasicAuth();
-        }
-
-        $this->layout = LAYOUT_ONE_COLUMN;
-        //ログイン済の場合はトップへ
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
-        //トークン付きの場合はメアドデータを取得
-        if (isset($this->request->params['named']['invite_token'])) {
-            try {
-                //トークンが有効かチェック
-                $this->Invite->confirmToken($this->request->params['named']['invite_token']);
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage());
-                return $this->redirect('/');
-            }
-            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
-            if (isset($invite['Invite']['email'])) {
-                $this->set(['email' => $invite['Invite']['email']]);
-            }
-        }
-
-        // リクエストデータが無い場合は登録画面を表示
-        if (!$this->request->is('post')) {
-            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-            $this->set(compact('last_first'));
-            return $this->render();
-        }
-
-        //タイムゾーンをセット
-        if (isset($this->request->data['User']['local_date'])) {
-            //ユーザのローカル環境から取得したタイムゾーンをセット
-            $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
-            $this->request->data['User']['timezone'] = $timezone;
-            //自動タイムゾーン設定フラグをoff
-            $this->request->data['User']['auto_timezone_flg'] = false;
-        }
-
-        //言語を保存
-        $this->request->data['User']['language'] = $this->Lang->getLanguage();
-
-        // トークンが存在しない場合はユーザ仮登録
-        if (!isset($this->request->params['named']['invite_token'])) {
-            // 仮登録実行
-            $isSuccessTmpReg = $this->User->userRegistration($this->request->data);
-
-            // 仮登録失敗
-            if (!$isSuccessTmpReg) {
-                //姓名の並び順をセット
-                $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-                $this->set(compact('last_first'));
-                return $this->render();
-            }
-
-            // 仮登録成功
-            // ユーザにメール送信
-            $this->GlEmail->sendMailUserVerify($this->User->id,
-                $this->User->Email->data['Email']['email_token']);
-            $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
-            return $this->redirect(['action' => 'sent_mail']);
-        }
-
-        // ユーザ本登録
-        $isSuccessMainReg = $this->User->userRegistration($this->request->data, false);
-
-        // 本登録失敗
-        if (!$isSuccessMainReg) {
-            //姓名の並び順をセット
-            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-            $this->set(compact('last_first'));
-            return $this->render();
-        }
-
-        // 本登録成功
-        //ログイン
-        $this->_autoLogin($this->User->getLastInsertID(), true);
-        //チーム参加
-        $this->_joinTeam($this->request->params['named']['invite_token']);
-        //ホーム画面でモーダル表示
-        $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
-        //プロフィール画面に遷移
-        return $this->redirect([
-            'action'       => 'add_profile',
-            'invite_token' => $this->request->params['named']['invite_token']
-        ]);
-
     }
 
     public function register_with_invite()
@@ -404,6 +310,14 @@ class UsersController extends AppController
         $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
         $team = $this->Team->findById($invite['Invite']['team_id']);
         $this->set('team_name', $team['Team']['name']);
+
+        //batch case
+        if($user = $this->User->getUserByEmail($invite['Invite']['email'])) {
+            // Set user info to view value
+            $this->set('first_name', $user['User']['first_name']);
+            $this->set('last_name', $user['User']['last_name']);
+            $this->set('birth_day', $user['User']['birth_day']);
+        }
 
         if (!$this->request->is('post')) {
             if ($step === 2) {
@@ -444,6 +358,23 @@ class UsersController extends AppController
 
         //sessionデータとpostのデータとマージ
         $data = Hash::merge($this->Session->read('data'), $this->request->data);
+        //batch case
+        if($user) {
+            $user_id = $user['User']['id'];
+
+            // Disabled user email validation
+            // Because in batch case, email is already registered
+            $email = $this->User->Email->getNotVerifiedEmail($user_id);
+            $email_from_email_table = viaIsSet($email['Email']['email']);
+            $email_from_invite_table = $invite['Invite']['email'];
+            if($email_from_email_table === $email_from_invite_table) {
+                unset($this->User->Email->validate['email']);
+            }
+            // Set user info to register data
+            $data['User']['id'] = $user_id;
+            $data['User']['no_pass_flg'] = false;
+            $data['Email'][0]['Email']['id'] = $email['Email']['id'];
+        }
         //email
         $data['Email'][0]['Email']['email'] = $invite['Invite']['email'];
         //タイムゾーンをセット
@@ -457,73 +388,25 @@ class UsersController extends AppController
         //言語を保存
         $data['User']['language'] = $this->Lang->getLanguage();
         // ユーザ本登録
-        if (!$this->User->userRegistration($data, false)) {
+        if (!$this->User->userRegistration($data)) {
             //姓名の並び順をセット
             $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
             return $this->render($password_template);
         }
         //ログイン
-        $this->_autoLogin($this->User->getLastInsertID(), true);
+        $user_id = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $user_id;
+        $this->_autoLogin($user_id, true);
+        // flash削除
+        // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
+        // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
+        $this->Session->delete('Message.pnotify');
         //チーム参加
         $this->_joinTeam($this->request->params['named']['invite_token']);
         //ホーム画面でモーダル表示
         $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
         //top画面に遷移
         return $this->redirect('/');
-    }
-
-    /**
-     * User Registration by batch set up.
-     */
-    public function registration_with_set_password()
-    {
-        if ($this->Auth->user()) {
-            throw new NotFoundException();
-        }
-        if (!viaIsSet($this->request->params['named']['invite_token'])) {
-            throw new NotFoundException();
-        }
-
-        try {
-            //トークンが有効かチェック
-            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
-            if (!$this->Invite->isByBatchSetup($this->request->params['named']['invite_token'])) {
-                throw new RuntimeException(__("Code is incorrect."));
-            }
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            return $this->redirect('/');
-        }
-
-        $this->layout = LAYOUT_ONE_COLUMN;
-        if ($this->request->is('post')) {
-            //tokenチェック
-            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
-
-            //Email match check
-            if (!viaIsSet($invite['Invite']['email']) || $this->request->data['Email']['email'] != $invite['Invite']['email']) {
-                $this->Pnotify->outError(__("Email address is incorrect. Please enter the address from the email you received."));
-                return $this->render();
-            }
-            $user = $this->User->getUserByEmail($this->request->data['Email']['email']);
-            $this->Invite->verify($this->request->params['named']['invite_token'], $user['User']['id']);
-            //タイムゾーン設定
-            //ユーザのローカル環境から取得したタイムゾーンをセット
-            $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
-            $user['User']['timezone'] = $timezone;
-
-            //save password & activation
-            $this->User->passwordReset($user, ['User' => $this->request->data['User']]);
-            //team member activate
-            $this->User->TeamMember->activateMembers($user['User']['id'], $invite['Invite']['team_id']);
-
-            $this->_autoLogin($user['User']['id']);
-            //Display modal on home.
-            $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
-            return $this->redirect('/');
-        }
-        return $this->render();
     }
 
     /**
@@ -915,17 +798,22 @@ class UsersController extends AppController
         try {
             // Check token available
             $this->Invite->confirmToken($token);
+
+            // By email
             if (!$this->Invite->isUser($token)) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
-            //By batch setup
+            // By batch setup
             if ($this->Invite->isByBatchSetup($token)) {
-                return $this->redirect(['action' => 'registration_with_set_password', 'invite_token' => $token]);
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV);
+                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
             if (!$this->Auth->user()) {
                 $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
                 return $this->redirect(['action' => 'login']);
             }
 
@@ -936,9 +824,9 @@ class UsersController extends AppController
 
             $team = $this->_joinTeam($token);
 
-            $this->Session->write('referer_status', REFERER_STATUS_INVITATION_EXIST);
+            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
-            return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_EXIST);
+            return $this->redirect("/");
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect("/");
