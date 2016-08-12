@@ -424,7 +424,7 @@
             "Nov": "<?= __("Nov") ?>",
             "Dec": "<?= __("Dec") ?>",
             "I receive the news and updates by email from Goalous.": "<?= __("I receive the news and updates by email from Goalous.") ?>",
-            "Choose your Goalous team name.": "<?= __("Choose your Goalous team name.") ?>",
+            "Choose your team name.": "<?= __("Choose your team name.") ?>",
             "Select your present term": "<?= __("Select your present term") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,

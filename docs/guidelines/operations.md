@@ -310,6 +310,21 @@ Issueを再び開いて作業を続行するとき。
 1. `hotfix`ブランチを削除。
 1. 以上。
 
+<hr id="operation_queries">
+
+# サポート用のクエリ集
+## ファイル検索
+### 投稿、メッセージ
+```sql
+USE isao_goalous;#本番はwww_goalous,ISAOはisao_goalous
+SET @keyword = "hogehoge";
+
+SELECT DISTINCT(p.id) as post_id,
+  p.type
+FROM attached_files af, comment_files cf, comments c, posts p
+WHERE af.attached_file_name LIKE concat("%",@keyword,"%") AND af.id = cf.attached_file_id AND cf.comment_id = c.id AND c.post_id = p.id
+```
+
 ---
 
 次のドキュメントへ進んでください。  

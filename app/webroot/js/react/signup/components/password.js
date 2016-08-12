@@ -21,6 +21,7 @@ export default class Password extends React.Component {
       <div className="row">
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("Set your password")}</div>
+              <img src="/img/signup/password.png"  className="signup-header-image" />
               <div className="signup-description">{__("Create your password to login to Goalous.")}</div>
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
@@ -29,7 +30,7 @@ export default class Password extends React.Component {
                   {/* Password */}
                   <div className="panel-heading signup-itemtitle">{__("Password")}</div>
                   <div className={(this.props.password.invalid_messages.password) ? 'has-error' : ''}>
-                    <input className="form-control signup_input-design" placeholder="******" maxLength="50" type="password" ref="password"
+                    <input className="form-control signup_input-design" placeholder="********" maxLength="50" type="password" ref="password"
                            onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
                   </div>
                   <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}

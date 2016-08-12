@@ -96,7 +96,7 @@ export function postTerms() {
     dispatch({ type: types.CHECKING_TERM })
 
     const state = getState()
-    let data = {
+    const data = {
       'data[Team][border_months]': state.term.selected_term,
       'data[Team][start_term_month]': state.term.selected_start_month
     }
@@ -143,11 +143,32 @@ function redirectToTop() {
 }
 
 function dateFormat(year, month, day) {
-  if(month < 10) {
-    month = "0" + String(parseInt(month))
+  const double_digit_month = month < 10 ? "0" + String(parseInt(month)) : month
+  const translated_month_name = getMonthNameList()[double_digit_month]
+  let month_name = ''
+
+  if(translated_month_name.match(/月/)) {
+    month_name = double_digit_month + '月'
+  } else {
+    month_name = translated_month_name
   }
-  if(day < 10) {
-    day = "0" + String(parseInt(day))
+
+  return `${month_name} ${day}, ${year}`
+}
+
+export function getMonthNameList() {
+  return {
+    "01": __("Jan"),
+    "02": __("Feb"),
+    "03": __("Mar"),
+    "04": __("Apr"),
+    "05": __("May"),
+    "06": __("Jun"),
+    "07": __("Jul"),
+    "08": __("Aug"),
+    "09": __("Sep"),
+    "10": __("Oct"),
+    "11": __("Nov"),
+    "12": __("Dec")
   }
-  return `${year}/${month}/${day}`
 }
