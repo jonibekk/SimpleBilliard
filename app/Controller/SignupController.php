@@ -164,12 +164,6 @@ class SignupController extends AppController
         $this->render('index');
     }
 
-    public function invite_skip()
-    {
-        $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_NOT_INVITING);
-        return $this->redirect('/');
-    }
-
     /**
      * メールアドレスが登録可能なものか確認
      *
