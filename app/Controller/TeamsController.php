@@ -914,6 +914,24 @@ class TeamsController extends AppController
         $error_msg = '';
         $invite_data = $this->Team->Invite->findById($invite_id);
 
+        // if already joined throw error, already exists
+        if ($invite_data['Invite']['email_verified'] ) {
+            $error_msg = (__("Error, this user already exists."));
+            $res['title'] = $error_msg;
+            $res['error'] = true;
+            $this->Pnotify->outError($error_msg);
+            return $this->_ajaxGetResponse($res);
+        }
+
+        // if already expired throw error, you can't cancel
+        if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
+            $error_msg = (__("Error, this invitation already expired, you can't cancel."));
+            $res['title'] = $error_msg;
+            $res['error'] = true;
+            $this->Pnotify->outError($error_msg);
+            return $this->_ajaxGetResponse($res);
+        }
+
         // for cancel the old invite
         $res = $this->Team->Invite->delete($invite_id);
 
@@ -928,11 +946,11 @@ class TeamsController extends AppController
             if (!$invite) {
                 $error = true;
                 $error_msg = (__("Error, failed to invite."));
+                $this->Pnotify->outError($error_msg);
             }
             //send invite mail
             $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
             $this->GlEmail->sendMailInvite($invite, $team_name);
-            $sentEmails[] = $email;
         }
         $res['title'] = $error_msg;
         $res['error'] = $error;

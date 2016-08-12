@@ -66,7 +66,6 @@ class AppModel extends Model
 
     public $support_lang_codes = [
         'jpn',
-        'eng',
     ];
 
     public $model_key_map = [
