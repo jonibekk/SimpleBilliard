@@ -812,6 +812,7 @@ class UsersController extends AppController
             }
 
             if (!$this->Auth->user()) {
+                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
                 return $this->redirect(['action' => 'login']);
             }
