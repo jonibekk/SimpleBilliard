@@ -951,7 +951,6 @@ class TeamsController extends AppController
             //send invite mail
             $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
             $this->GlEmail->sendMailInvite($invite, $team_name);
-            $sentEmails[] = $email;
         }
         $res['title'] = $error_msg;
         $res['error'] = $error;
