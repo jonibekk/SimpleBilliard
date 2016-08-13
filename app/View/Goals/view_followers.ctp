@@ -27,7 +27,7 @@
                id="GoalPageFollowerMoreLink"
                list-container="#GoalPageFollowerContainer"
                goal-id="<?= h($goal['Goal']['id']) ?>"
-                >
+            >
                 <?= __('View more') ?></a>
         </div>
     </div>

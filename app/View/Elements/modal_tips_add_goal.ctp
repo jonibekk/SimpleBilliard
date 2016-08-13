@@ -21,7 +21,7 @@
             <?php if ($help_item['picture_name']): ?>
                 <div class="col col-xxs-12">
                     <?= $this->Html->image($help_item['picture_name'],
-                                           ['width' => '280', 'height' => '', 'class' => 'm_pic']) ?>
+                        ['width' => '280', 'height' => '', 'class' => 'm_pic']) ?>
                 </div>
             <?php endif; ?>
             <?php if ($help_item['body']): ?>

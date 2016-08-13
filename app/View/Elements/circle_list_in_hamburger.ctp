@@ -18,7 +18,11 @@
         <?php foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix circleListMore <?= $is_mb_app ? "mtb_15px" : null ?>">
                 <div class="circle-link"
-                     get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+                     get-url="<?= $this->Html->url([
+                         'controller' => 'posts',
+                         'action'     => 'feed',
+                         'circle_id'  => $circle['Circle']['id']
+                     ]) ?>"
                      image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
                      title="<?= h($circle['Circle']['name']) ?>"
                      circle-id="<?= $circle['Circle']['id'] ?>"
@@ -30,7 +34,7 @@
                         <div class="circle-icon_box">
                             <?=
                             $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                                                       ['width' => '16px', 'height' => '16px']) ?>
+                                ['width' => '16px', 'height' => '16px']) ?>
                         </div>
                         <div class="circle-name_box">
                             <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
@@ -49,7 +53,11 @@
                 </div>
                 <div class="circle-function_box clearfix">
                     <?php if ($circle['CircleMember']['admin_flg']): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', 'circle_id' => $circle['Circle']['id']]) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'circles',
+                            'action'     => 'ajax_get_edit_modal',
+                            'circle_id'  => $circle['Circle']['id']
+                        ]) ?>"
                            class="modal-ajax-get-circle-edit font_lightGray-gray develop-floatleft"><i
                                 class="fa fa-cog circle-function font_14px"></i></a>
                     <?php endif; ?>
@@ -64,8 +72,8 @@
     <div class="clearfix develop--circle-seek <?= $is_mb_app ? "mtb_15px" : null ?>">
         <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
         $this->Html->link(__("View Circles"),
-                          ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
-                          ['class' => 'modal-ajax-get-public-circles']) ?>
+            ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
+            ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
     <div class="clearfix develop--circle-make <?= $is_mb_app ? "mtb_15px" : null ?>">
         <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"

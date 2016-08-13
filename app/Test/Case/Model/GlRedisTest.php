@@ -400,12 +400,12 @@ class GlRedisTest extends GoalousTestCase
         $this->GlRedis->saveSetupGuideStatus(
             $user_id = 1,
             $save_hash_status = [
-                1 => 1,
-                2 => 1,
-                3 => 1,
-                4 => 1,
-                5 => 0,
-                6 => 1,
+                1                                     => 1,
+                2                                     => 1,
+                3                                     => 1,
+                4                                     => 1,
+                5                                     => 0,
+                6                                     => 1,
                 GlRedis::FIELD_SETUP_LAST_UPDATE_TIME => time()
             ]
         );
@@ -418,12 +418,12 @@ class GlRedisTest extends GoalousTestCase
         $this->GlRedis->saveSetupGuideStatus(
             $user_id = 1,
             $save_hash_status = [
-                1 => 1,
-                2 => 1,
-                3 => 1,
-                4 => 1,
-                5 => 0,
-                6 => 1,
+                1                                     => 1,
+                2                                     => 1,
+                3                                     => 1,
+                4                                     => 1,
+                5                                     => 0,
+                6                                     => 1,
                 GlRedis::FIELD_SETUP_LAST_UPDATE_TIME => time()
             ]
         );

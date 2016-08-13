@@ -17,15 +17,14 @@
 <!-- START app/View/Posts/attached_file_list.ctp -->
 <?php if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/feed_share_range_filter',
-                       compact('current_circle', 'user_status', 'circle_member_count', 'circle_status',
-                               'feed_filter')) ?>
+        compact('current_circle', 'user_status', 'circle_member_count', 'circle_status',
+            'feed_filter')) ?>
     <?php
     if (isset($user_status)) {
         if (viaIsSet($params['controller']) == 'posts' && viaIsSet($params['action']) == 'attached_file_list' && ($user_status == 'joined' || $user_status == 'admin')) {
             echo $this->element("Feed/common_form");
         }
-    }
-    else {
+    } else {
         echo $this->element("Feed/common_form");
     }
     ?>
@@ -42,7 +41,7 @@
             'options'      => $file_type_options,
             'default'      => viaisset($this->request->params['named']['file_type']),
             'redirect-url' => $circle_file_list_base_url,
-            'wrapInput' => 'circle-uploaded-files-type-select-wrap'
+            'wrapInput'    => 'circle-uploaded-files-type-select-wrap'
         ])
         ?>
         <?= $this->element('Feed/attached_files', ['files' => $files]) ?>
@@ -73,15 +72,16 @@
                next-page-num="<?= $next_page_num ?>"
                month-index="<?= $month_index ?>"
                get-url="<?=
-               $this->Html->url(['controller' => 'posts',
-                                 'action'     => 'ajax_get_circle_files',
-                                 'circle_id'  => viaIsSet($this->request->params['named']['circle_id']),
-                                 'file_type'  => viaIsSet($this->request->params['named']['file_type']),
-                                ]) ?>"
+               $this->Html->url([
+                   'controller' => 'posts',
+                   'action'     => 'ajax_get_circle_files',
+                   'circle_id'  => viaIsSet($this->request->params['named']['circle_id']),
+                   'file_type'  => viaIsSet($this->request->params['named']['file_type']),
+               ]) ?>"
                id="FeedMoreReadLink"
                append-target-id="CircleFiles"
                oldest-post-time="<?= $oldest_post_time ?>"
-                >
+            >
                 <?= h($more_read_text) ?></a>
         </div>
     </div>

@@ -99,6 +99,14 @@ const config =  {
     },
     watch_files: assets_dir + '/js/react/setup_guide/**/*.js'
   },
+  react_signup: {
+    src: assets_dir + '/js/react/signup/app.js',
+    output: {
+      file_name: 'react_signup_app',
+      path: assets_dir + '/js'
+    },
+    watch_files: assets_dir + '/js/react/signup/**/*.js'
+  },
   css: {
     src: [
       assets_dir + '/css/goalstrap.css',

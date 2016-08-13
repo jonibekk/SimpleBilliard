@@ -112,15 +112,15 @@ class Comment extends AppModel
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ],
         'site_info_url'      => [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString' => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
 
         ],
         'post_id'            => [
-            'numeric'    => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
@@ -206,17 +206,17 @@ class Comment extends AppModel
         // ファイルが添付されている場合
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
             $results[] = $this->CommentFile->AttachedFile->saveRelatedFiles($comment_id,
-                                                                            AttachedFile::TYPE_MODEL_COMMENT,
-                                                                            $postData['file_id']);
+                AttachedFile::TYPE_MODEL_COMMENT,
+                $postData['file_id']);
         }
         // 投稿データのmodifiedを更新
         $this->Post->id = $postData['Comment']['post_id'];
         $results[] = $this->Post->saveField('modified', REQUEST_TIMESTAMP);
         //post_share_users,post_share_circlesの更新
         $results[] = $this->Post->PostShareUser->updateAll(['PostShareUser.modified' => REQUEST_TIMESTAMP],
-                                                           ['PostShareUser.post_id' => $postData['Comment']['post_id']]);
+            ['PostShareUser.post_id' => $postData['Comment']['post_id']]);
         $results[] = $this->Post->PostShareCircle->updateAll(['PostShareCircle.modified' => REQUEST_TIMESTAMP],
-                                                             ['PostShareCircle.post_id' => $postData['Comment']['post_id']]);
+            ['PostShareCircle.post_id' => $postData['Comment']['post_id']]);
 
         // どこかでエラーが発生した場合は rollback
         foreach ($results as $r) {
@@ -322,29 +322,29 @@ class Comment extends AppModel
         if (isset($data['Comment']) === true) {
             $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'medium']);
 
-        }
-        else {
+        } else {
             foreach ($data as $key => $val) {
                 $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo',
-                                                                       ['style' => 'medium']);
+                    ['style' => 'medium']);
             }
         }
 
         //add url of red user modal
         if (isset($data['Comment']) === true) {
             $data['get_red_user_model_url'] = Router::url(
-                ['controller' => 'posts',
-                 'action'     => 'ajax_get_message_red_users',
-                 'comment_id' => $data['Comment']['id']
+                [
+                    'controller' => 'posts',
+                    'action'     => 'ajax_get_message_red_users',
+                    'comment_id' => $data['Comment']['id']
                 ]
             );
-        }
-        else {
+        } else {
             foreach ($data as $key => $val) {
                 $data[$key]['get_red_user_model_url'] = Router::url(
-                    ['controller' => 'posts',
-                     'action'     => 'ajax_get_message_red_users',
-                     'comment_id' => $val['Comment']['id']
+                    [
+                        'controller' => 'posts',
+                        'action'     => 'ajax_get_message_red_users',
+                        'comment_id' => $val['Comment']['id']
                     ]
                 );
             }
@@ -353,8 +353,7 @@ class Comment extends AppModel
         //auto link
         if (isset($data['Comment']) === true) {
             $data['Comment']['body'] = nl2br($text_ex->autoLink($data['Comment']['body']));
-        }
-        else {
+        } else {
             foreach ($data as $key => $val) {
                 $data[$key]['Comment']['body'] = nl2br($text_ex->autoLink($data[$key]['Comment']['body']));
             }
@@ -622,13 +621,14 @@ class Comment extends AppModel
      */
     public function getRanking($params = [])
     {
-        $params = array_merge(['limit'           => null,
-                               'start'           => null,
-                               'end'             => null,
-                               'post_type'       => null,
-                               'post_user_id'    => null,
-                               'share_circle_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'limit'           => null,
+            'start'           => null,
+            'end'             => null,
+            'post_type'       => null,
+            'post_user_id'    => null,
+            'share_circle_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [

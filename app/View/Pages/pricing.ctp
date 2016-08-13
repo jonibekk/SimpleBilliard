@@ -26,52 +26,52 @@ Page毎に要素が変わるもの
 */
 $meta_pricing = [
     [
-        "name" => "description",
+        "name"    => "description",
         "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
     ],
     [
-        "name" => "keywords",
+        "name"    => "keywords",
         "content" => _("目標管理,目標達成,社内SNS,評価,MBO"),
     ],
     [
         "property" => "og:type",
-        "content" => "website",
+        "content"  => "website",
     ],
     [
         "property" => "og:title",
-        "content" => __('Pricing | Goalous'),
+        "content"  => __('Pricing | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
+        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
     ],
     [
         "property" => "og:url",
-        "content" => "https://www.goalous.com/pricing/",
+        "content"  => "https://www.goalous.com/pricing/",
     ],
     [
         "property" => "og:image",
-        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
+        "content"  => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
-        "content" => "966242223397117",
+        "content"  => "966242223397117",
     ],
     [
-        "name" => "twitter_card",
+        "name"    => "twitter_card",
         "content" => "summary",
     ],
     [
-        "name" => "twitter:site",
+        "name"    => "twitter:site",
         "content" => "@goalous",
     ]
 ];
 $num_ogp = count($meta_pricing);
-for($i = 0; $i < $num_ogp; $i++){
+for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_pricing[$i]);
 }
 ?>
@@ -90,7 +90,7 @@ for($i = 0; $i < $num_ogp; $i++){
         </p>
         <div class="item col-xs-12 col-md-6 col-md-offset-3">
             <h3 class="heading"><?= __('Plus') ?><span class="label label-custom"><?= __(
-                                                                                                 'Campaign') ?></span>
+                        'Campaign') ?></span>
             </h3>
             <div class="content">
                 <div class="price-figure">
@@ -116,10 +116,14 @@ for($i = 0; $i < $num_ogp; $i++){
                     <li><?= __('Online user support') ?></li>
                 </ul>
                 <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
-                   href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'pricing_plus']]) ?>">
+                   href="<?= $this->Html->url([
+                       'controller' => 'signup',
+                       'action'     => 'email',
+                       '?'          => ['type' => 'pricing_plus']
+                   ]) ?>">
                     <?= __('Start now') ?>
                     <br/>
-                        <span class="extra">
+                    <span class="extra">
                             <?= __('Feel free to ask us') ?>
                         </span>
                 </a>

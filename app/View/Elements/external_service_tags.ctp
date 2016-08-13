@@ -152,6 +152,9 @@
             created_at: <?= h($this->Session->read('Auth.User.created')) ?>, // Signup date as a Unix timestamp
             user_id: <?= h(intval($this->Session->read('Auth.User.id'))) ?>, // User Id
             setup: <?= h(intval($this->Session->read('Auth.User.setup_complete_flg'))) ?>, // Setup Complete Flag
+            user_del: <?= h(intval($this->Session->read('Auth.User.del_flg'))) ?>, // User del Flag
+            default_team: <?= h(intval($this->Session->read('Auth.User.default_team_id'))) ?>, // User DEFAULT TEAM id
+            user_timezone: <?= h(intval($this->Session->read('Auth.User.timezone'))) ?>, // User timezone
             language: "<?= h($this->Session->read('Auth.User.language')) ?>", // Language
             "2SV": "<?= h($fa_secret) ?>", // 2fa Secret
             <?php endif ?>
@@ -168,7 +171,38 @@
             };
         }
     </script>
-    <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+    <script>(function () {
+            var w = window;
+            var ic = w.Intercom;
+            if (typeof ic === "function") {
+                ic('reattach_activator');
+                ic('update', intercomSettings);
+            } else {
+                var d = document;
+                var i = function () {
+                    i.c(arguments)
+                };
+                i.q = [];
+                i.c = function (args) {
+                    i.q.push(args)
+                };
+                w.Intercom = i;
+                function l() {
+                    var s = d.createElement('script');
+                    s.type = 'text/javascript';
+                    s.async = true;
+                    s.src = 'https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';
+                    var x = d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                }
+
+                if (w.attachEvent) {
+                    w.attachEvent('onload', l);
+                } else {
+                    w.addEventListener('load', l, false);
+                }
+            }
+        })()</script>
     <!-- end Intercom -->
 <?php endif; ?>
 <!-- END app/View/Elements/external_service_tags.ctp -->

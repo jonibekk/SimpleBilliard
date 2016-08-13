@@ -15,8 +15,7 @@
  */
 if ($to_user_name) {
     echo __('Hello %s.', h($to_user_name));
-}
-else {
+} else {
     echo __('Hello.');
 
 };

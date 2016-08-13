@@ -17,6 +17,7 @@ class TeamMemberTest extends GoalousTestCase
     public $fixtures = array(
         'app.evaluation',
         'app.evaluate_score',
+        'app.invite',
         'app.team_member',
         'app.member_group',
         'app.evaluator',

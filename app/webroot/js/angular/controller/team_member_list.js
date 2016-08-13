@@ -115,7 +115,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             });
         };
 
-        // cancel invite
+        // cancel invite or re-invite
         $scope.settingInvite = function (index, invite_id, action_flg) {
             $scope.invite_loader[index] = true;
             var change_active_flag_url = url_list.am + invite_id + '/' + action_flg;
@@ -124,6 +124,8 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                 if (data.error != true) {
                     $scope.invite_msg[index] = action_flg;
                     $scope.invite_list[index].Invite.del_flg = true;
+                } else {
+                    location.reload();
                 }
             });
         };

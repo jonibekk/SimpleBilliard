@@ -99,7 +99,7 @@ class RecoveryCode extends AppModel
     public function invalidateAll($user_id)
     {
         return $this->updateAll(['RecoveryCode.available_flg' => false],
-                                ['RecoveryCode.user_id' => $user_id]);
+            ['RecoveryCode.user_id' => $user_id]);
     }
 
     /**
@@ -116,9 +116,11 @@ class RecoveryCode extends AppModel
         $res[] = $this->invalidateAll($user_id);
         for ($i = 0; $i < 10; $i++) {
             $this->create();
-            $res[] = $this->save(['user_id'       => $user_id,
-                                  'code'          => $this->_generateCode(),
-                                  'available_flg' => true]);
+            $res[] = $this->save([
+                'user_id'       => $user_id,
+                'code'          => $this->_generateCode(),
+                'available_flg' => true
+            ]);
         }
         if (array_search(false, $res) !== false) {
             $this->rollback();

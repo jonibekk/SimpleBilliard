@@ -179,7 +179,7 @@ class CollaboratorTest extends GoalousTestCase
 
         // 今期で絞る
         $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, true,
-                                                                      EvaluateTerm::TYPE_CURRENT);
+            EvaluateTerm::TYPE_CURRENT);
         $ids = [];
         foreach ($goal_description as $v) {
             $ids[$v['Goal']['id']] = true;

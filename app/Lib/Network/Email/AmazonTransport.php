@@ -90,7 +90,17 @@ class AmazonTransport extends AbstractTransport
      */
     protected function _prepareData()
     {
-        $headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'readReceipt', 'returnPath', 'to', 'cc', 'bcc', 'subject'));
+        $headers = $this->_cakeEmail->getHeaders(array(
+            'from',
+            'sender',
+            'replyTo',
+            'readReceipt',
+            'returnPath',
+            'to',
+            'cc',
+            'bcc',
+            'subject'
+        ));
 
         if ($headers['Sender'] == '') {
             $headers['Sender'] = $headers['From'];
@@ -100,8 +110,8 @@ class AmazonTransport extends AbstractTransport
 
         $this->_data = array();
         $destinations = array_merge(array_keys($this->_cakeEmail->to()),
-                                    array_keys($this->_cakeEmail->cc()),
-                                    array_keys($this->_cakeEmail->bcc()));
+            array_keys($this->_cakeEmail->cc()),
+            array_keys($this->_cakeEmail->bcc()));
         $this->_data = [
             'Source'       => key($this->_cakeEmail->from()),
             'Destinations' => $destinations,

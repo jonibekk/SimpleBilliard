@@ -143,12 +143,13 @@ class Email extends AppModel
         $options = [
             'conditions' => [
                 'Email.email' => $emails,
+                'Email.email_verified' => 1,
             ],
             'fields'     => ['user_id', 'email'],
             'contain'    => [
                 'User' => [
                     'TeamMember' => [
-                        'conditions' => ['TeamMember.team_id' => $team_id],
+                        'conditions' => ['TeamMember.team_id' => $team_id, 'TeamMember.active_flg' => 1],
                         'fields'     => ['id']
                     ]
                 ]
@@ -162,5 +163,19 @@ class Email extends AppModel
             }
         }
         return $email_team_members;
+    }
+
+    function isVerified($email)
+    {
+        $options = [
+            'conditions' => [
+                'email'          => $email,
+                'email_verified' => true,
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
     }
 }

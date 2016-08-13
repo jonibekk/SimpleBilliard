@@ -19,6 +19,7 @@
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
+
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
          id="header">
@@ -75,17 +76,19 @@
                     <li>
                         <form class="nav-form-group header-team-select-form" role="search">
                             <?php echo $this->Form->input('current_team',
-                                                          array(
-                                                              'type'      => 'select',
-                                                              'options'   => !empty($my_teams) ? $my_teams : [__(
-                                                                                                                  'There is no team.')],
-                                                              'value'     => $this->Session->read('current_team_id'),
-                                                              'id'        => 'SwitchTeam',
-                                                              'label'     => false,
-                                                              'div'       => false,
-                                                              'class'     => 'form-control nav-team-select font_12px disable-change-warning',
-                                                              'wrapInput' => false,
-                                                          ))
+                                array(
+                                    'type'      => 'select',
+                                    'options'   => !empty($my_teams) ? $my_teams : [
+                                        __(
+                                            'There is no team.')
+                                    ],
+                                    'value'     => $this->Session->read('current_team_id'),
+                                    'id'        => 'SwitchTeam',
+                                    'label'     => false,
+                                    'div'       => false,
+                                    'class'     => 'form-control nav-team-select font_12px disable-change-warning',
+                                    'wrapInput' => false,
+                                ))
                             ?>
                         </form>
                     </li>

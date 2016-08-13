@@ -44,8 +44,7 @@ class TeamsController extends AppController
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
             $this->Pnotify->outSuccess(__("Changed basic team settings."));
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to change basic team settings."));
         }
         return $this->redirect($this->referer());
@@ -58,8 +57,7 @@ class TeamsController extends AppController
         if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
             $this->Pnotify->outSuccess(__("Changed terms setting."));
             $this->Team->commit();
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to change terms setting."));
             $this->Team->rollback();
         }
@@ -108,8 +106,7 @@ class TeamsController extends AppController
         if ($active_team_list) {
             $this->_switchTeam(key($active_team_list), $this->Auth->user('id'));
             $url = '/';
-        }
-        // 他に所属チームがない場合
+        } // 他に所属チームがない場合
         else {
             $this->Session->write('current_team_id', null);
             $url = ['controller' => 'teams', 'action' => 'add'];
@@ -151,7 +148,7 @@ class TeamsController extends AppController
             $eval_start_button_enabled = false;
         }
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
-                           'eval_scores'));
+            'eval_scores'));
         $current_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
         $current_progress = $this->_getEvalProgress($current_statuses);
         $previous_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($previous_term_id);
@@ -179,28 +176,28 @@ class TeamsController extends AppController
         $timezones = $this->Timezone->getTimezones();
 
         $this->set(compact(
-                       'timezones',
-                       'current_statuses',
-                       'current_progress',
-                       'previous_statuses',
-                       'previous_progress',
-                       'eval_is_frozen',
-                       'current_term_id',
-                       'current_eval_is_frozen',
-                       'current_eval_is_started',
-                       'current_term_start_date',
-                       'current_term_end_date',
-                       'current_term_timezone',
-                       'previous_term_id',
-                       'previous_eval_is_frozen',
-                       'previous_eval_is_started',
-                       'previous_term_start_date',
-                       'previous_term_end_date',
-                       'previous_term_timezone',
-                       'next_term_start_date',
-                       'next_term_end_date',
-                       'next_term_timezone'
-                   ));
+            'timezones',
+            'current_statuses',
+            'current_progress',
+            'previous_statuses',
+            'previous_progress',
+            'eval_is_frozen',
+            'current_term_id',
+            'current_eval_is_frozen',
+            'current_eval_is_started',
+            'current_term_start_date',
+            'current_term_end_date',
+            'current_term_timezone',
+            'previous_term_id',
+            'previous_eval_is_frozen',
+            'previous_eval_is_started',
+            'previous_term_start_date',
+            'previous_term_end_date',
+            'previous_term_timezone',
+            'next_term_start_date',
+            'next_term_end_date',
+            'next_term_timezone'
+        ));
 
         return $this->render();
     }
@@ -229,8 +226,7 @@ class TeamsController extends AppController
             $this->Team->commit();
             $this->Pnotify->outSuccess(__("Changed evaluation setting."));
             Cache::delete($this->Team->getCacheKey(CACHE_KEY_TEAM_EVAL_SETTING, false), 'team_info');
-        }
-        else {
+        } else {
             $this->Team->rollback();
             $this->Pnotify->outError(__("Failed to change evaluation setting."));
         }
@@ -242,12 +238,11 @@ class TeamsController extends AppController
         $this->request->allowMethod(['post', 'put']);
         $this->Team->begin();
         if ($this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
-                                                               $this->Session->read('current_team_id'))
+            $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
             $this->Pnotify->outSuccess(__("Changed evaluation score setting."));
-        }
-        else {
+        } else {
             $this->Team->rollback();
             $this->Pnotify->outError(__("Failed to change evaluation score setting."));
         }
@@ -259,12 +254,11 @@ class TeamsController extends AppController
         $this->request->allowMethod(['post', 'put']);
         $this->Team->begin();
         if ($this->Goal->GoalCategory->saveGoalCategories($this->request->data['GoalCategory'],
-                                                          $this->Session->read('current_team_id'))
+            $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
             $this->Pnotify->outSuccess(__("Saved goal category setting."));
-        }
-        else {
+        } else {
             $this->Team->rollback();
             $this->Pnotify->outError(__("Failed to save goal category setting."));
         }
@@ -348,7 +342,7 @@ class TeamsController extends AppController
         }
         $this->_ajaxPreProcess();
         $save_data = $this->Team->EvaluateTerm->getSaveDataBeforeUpdate($option, $start_term_month, $border_months,
-                                                                        $timezone);
+            $timezone);
         $current_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $next_id = $this->Team->EvaluateTerm->getNextTermId();
         $res = [];
@@ -356,9 +350,9 @@ class TeamsController extends AppController
             $res = [
                 'current' => [
                     'start_date' => date('Y/m/d',
-                                         $save_data[$current_id]['start_date'] + $timezone * 3600),
+                        $save_data[$current_id]['start_date'] + $timezone * 3600),
                     'end_date'   => date('Y/m/d',
-                                         $save_data[$current_id]['end_date'] + $timezone * 3600),
+                        $save_data[$current_id]['end_date'] + $timezone * 3600),
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
@@ -406,13 +400,16 @@ class TeamsController extends AppController
         $this->Team->Evaluation->commit();
         $this->Pnotify->outSuccess(__("Evaluation started."));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
-                                         $this->Team->EvaluateTerm->getCurrentTermId());
+            $this->Team->EvaluateTerm->getCurrentTermId());
         Cache::clear(false, 'team_info');
         return $this->redirect($this->referer());
     }
 
     public function invite()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('with_header_menu',false);
+
         $from_setting = false;
         if (strstr($this->referer(), "/settings")) {
             $from_setting = true;
@@ -425,7 +422,6 @@ class TeamsController extends AppController
         $this->set(compact('team'));
 
         if (!$this->request->is('post')) {
-            $this->layout = LAYOUT_ONE_COLUMN;
             return $this->render();
         }
 
@@ -475,7 +471,7 @@ class TeamsController extends AppController
         $already_joined_usr_msg = null;
         if (!empty($alreadyBelongTeamEmails)) {
             $already_joined_usr_msg .= __("Cancelled sending email to %s people who are already in the circle.",
-                                          count($alreadyBelongTeamEmails));
+                count($alreadyBelongTeamEmails));
         }
 
         if (empty($sentEmails)) {
@@ -487,10 +483,17 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess($msg);
 
         if (!$from_setting) {
+            $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_INVITING);
             return $this->redirect('/');
         }
 
         return $this->redirect($this->referer());
+    }
+
+    public function invite_skip()
+    {
+        $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_NOT_INVITING);
+        return $this->redirect('/');
     }
 
     function download_add_members_csv_format()
@@ -527,13 +530,11 @@ class TeamsController extends AppController
             $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
                 $result['title'] = __("Error in extension data.");
-            }
-            else {
+            } else {
                 $result['title'] = __("Error in column %s (Column number included in text)",
-                                      $save_res['error_line_no']);
+                    $save_res['error_line_no']);
             }
-        }
-        else {
+        } else {
             $this->Team->TeamMember->commit();
             $result['msg'] = __("%s members updated.", $save_res['success_count']);
             //Cacheをすべて削除
@@ -562,13 +563,11 @@ class TeamsController extends AppController
             $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
                 $result['title'] = __("Error occurred.");
-            }
-            else {
+            } else {
                 $result['title'] = __("Error in the column %s (Column number included in text).",
-                                      $save_res['error_line_no']);
+                    $save_res['error_line_no']);
             }
-        }
-        else {
+        } else {
             $this->Team->TeamMember->commit();
             $team = $this->Team->findById($this->Session->read('current_team_id'));
             //send invite mail
@@ -625,17 +624,15 @@ class TeamsController extends AppController
             $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
                 $result['title'] = __("Error in extension data.");
-            }
-            else {
+            } else {
                 $result['title'] = __("Error in the column %s (Column number included in text)",
-                                      $save_res['error_line_no']);
+                    $save_res['error_line_no']);
             }
-        }
-        else {
+        } else {
             $this->Team->TeamMember->commit();
             $result['msg'] = __("%s people's last evaluations are completed.", $save_res['success_count']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL,
-                                             $this->Team->EvaluateTerm->getCurrentTermId());
+                $this->Team->EvaluateTerm->getCurrentTermId());
             Cache::clear(false, 'team_info');
         }
         return $this->_ajaxGetResponse($result);
@@ -692,9 +689,8 @@ class TeamsController extends AppController
         if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
             $this->Pnotify->outSuccess(__("Evaluation suspended."));
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
-                                             $this->Team->EvaluateTerm->getCurrentTermId());
-        }
-        else {
+                $this->Team->EvaluateTerm->getCurrentTermId());
+        } else {
             $this->Pnotify->outSuccess(__("Removed evaluation suspension."));
         }
         CAche::clear(false, 'team_info');
@@ -925,6 +921,24 @@ class TeamsController extends AppController
         $error_msg = '';
         $invite_data = $this->Team->Invite->findById($invite_id);
 
+        // if already joined throw error, already exists
+        if ($invite_data['Invite']['email_verified'] ) {
+            $error_msg = (__("Error, this user already exists."));
+            $res['title'] = $error_msg;
+            $res['error'] = true;
+            $this->Pnotify->outError($error_msg);
+            return $this->_ajaxGetResponse($res);
+        }
+
+        // if already expired throw error, you can't cancel
+        if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
+            $error_msg = (__("Error, this invitation already expired, you can't cancel."));
+            $res['title'] = $error_msg;
+            $res['error'] = true;
+            $this->Pnotify->outError($error_msg);
+            return $this->_ajaxGetResponse($res);
+        }
+
         // for cancel the old invite
         $res = $this->Team->Invite->delete($invite_id);
 
@@ -934,16 +948,16 @@ class TeamsController extends AppController
                 $invite_data['Invite']['email'],
                 $invite_data['Invite']['team_id'],
                 $invite_data['Invite']['from_user_id'],
-                !empty($invite_data['Invite']['message']) ?$invite_data['Invite']['message'] : null
+                !empty($invite_data['Invite']['message']) ? $invite_data['Invite']['message'] : null
             );
             if (!$invite) {
                 $error = true;
                 $error_msg = (__("Error, failed to invite."));
+                $this->Pnotify->outError($error_msg);
             }
             //send invite mail
             $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
             $this->GlEmail->sendMailInvite($invite, $team_name);
-            $sentEmails[] = $email;
         }
         $res['title'] = $error_msg;
         $res['error'] = $error;
@@ -996,8 +1010,7 @@ class TeamsController extends AppController
             $this->Pnotify->outSuccess(__("Team vision is added."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to save team vision."));
             return $this->redirect($this->referer());
         }
@@ -1032,8 +1045,7 @@ class TeamsController extends AppController
             $this->Pnotify->outSuccess(__("Updated team vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to save team vision."));
             return $this->redirect($this->referer());
         }
@@ -1060,8 +1072,7 @@ class TeamsController extends AppController
             $this->Pnotify->outSuccess(__("Added group vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to save group vision."));
             return $this->redirect($this->referer());
         }
@@ -1093,12 +1104,47 @@ class TeamsController extends AppController
             $this->Pnotify->outSuccess(__("Updated group vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
-        }
-        else {
+        } else {
             $this->Pnotify->outError(__("Failed to save group vision."));
             return $this->redirect($this->referer());
         }
         return $this->render();
+    }
+
+    /**
+     * メールアドレスが招待可能なものか判定
+     *
+     * @return CakeResponse
+     */
+    public function ajax_validate_email_can_invite()
+    {
+        $this->_ajaxPreProcess();
+        $email = $this->request->query('email');
+        $valid = false;
+        $message = '';
+        if ($email) {
+            // メールアドレスだけ validate
+            $this->User->Email->create(['email' => $email]);
+            $this->User->Email->validate = [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'email'     => ['rule' => ['email'],],
+                ],
+            ];
+            $this->User->Email->validates(['fieldList' => ['email']]);
+            if ($this->User->Email->validationErrors) {
+                $message = $this->User->Email->validationErrors['email'][0];
+            } elseif ($this->User->Email->getEmailsBelongTeamByEmail($email)) {
+                $message = __('This email address has already been joined.');
+            } else {
+                $valid = true;
+            }
+        }
+        return $this->_ajaxGetResponse([
+            'valid'   => $valid,
+            'message' => $message
+        ]);
     }
 
     /**
@@ -1176,15 +1222,14 @@ class TeamsController extends AppController
             for ($i = 0; $i < 2; $i++) {
                 // 指定範囲のデータ
                 $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
-                                                     $cache_expire);
+                    $cache_expire);
 
                 $next_target = null;
                 if ($date_range_type == 'week') {
                     $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
-                }
-                elseif ($date_range_type == 'month') {
+                } elseif ($date_range_type == 'month') {
                     $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date,
-                                                                               ['offset' => -1]);
+                        ['offset' => -1]);
                 }
                 $target_start_date = $next_target['start'];
                 $target_end_date = $next_target['end'];
@@ -1192,15 +1237,13 @@ class TeamsController extends AppController
                 // 古いデータのキャッシュ有効期限は１週間
                 $cache_expire = WEEK;
             }
-        }
-        // 期単位の場合
+        } // 期単位の場合
         elseif ($date_range_type == 'term') {
             $all_terms = $this->Team->EvaluateTerm->getAllTerm();
             $start_term_id = null;
             if ($date_range == 'prev_term') {
                 $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-            }
-            elseif ($date_range == 'current_term') {
+            } elseif ($date_range == 'current_term') {
                 $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
             }
             $skip = true;
@@ -1214,7 +1257,7 @@ class TeamsController extends AppController
                 $insights[] = $this->_getInsightData(
                     date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
                     $this->_insightAdjustEndDate(date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
-                                                 $date_info['today']),
+                        $date_info['today']),
                     $timezone,
                     $group_id,
                     $cache_expire);
@@ -1234,8 +1277,7 @@ class TeamsController extends AppController
                 $cmp_key = $k . "_cmp";
                 if (strpos($k, '_percent') !== false) {
                     $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
-                }
-                else {
+                } else {
                     $insights[0][$cmp_key] = $insights[0][$k] / $insights[1][$k] * 100.0 - 100.0;
                 }
                 $insights[0][$cmp_key] = abs($insights[0][$cmp_key]) >= 1 ?
@@ -1292,13 +1334,11 @@ class TeamsController extends AppController
             if (!in_array($graph_type, ['term', 'month'])) {
                 throw new NotFoundException();
             }
-        }
-        elseif ($date_range_type == 'month') {
+        } elseif ($date_range_type == 'month') {
             if (!in_array($graph_type, ['month', 'week'])) {
                 throw new NotFoundException();
             }
-        }
-        elseif ($date_range_type == 'week') {
+        } elseif ($date_range_type == 'week') {
             if (!in_array($graph_type, ['week', 'day'])) {
                 throw new NotFoundException();
             }
@@ -1322,7 +1362,7 @@ class TeamsController extends AppController
                 $cache_expire = ($target_start_date_time < $date_info['today_time']) ?
                     WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
                 $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
-                                                     $cache_expire);
+                    $cache_expire);
                 $target_start_date_time += DAY;
                 $target_start_date = date('Y-m-d', $target_start_date_time);
                 $target_end_date = $target_start_date;
@@ -1353,8 +1393,8 @@ class TeamsController extends AppController
                     WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
                 // 指定範囲のデータ
                 array_unshift($insights,
-                              $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
-                                                     $cache_expire));
+                    $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                        $cache_expire));
 
                 $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
                 $target_start_date = $next_target['start'];
@@ -1392,8 +1432,8 @@ class TeamsController extends AppController
                     WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
 
                 array_unshift($insights,
-                              $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
-                                                     $cache_expire));
+                    $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                        $cache_expire));
 
                 $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date, ['offset' => -1]);
                 $target_start_date = $next_target['start'];
@@ -1414,8 +1454,7 @@ class TeamsController extends AppController
             $start_term_id = null;
             if ($date_range == 'prev_term') {
                 $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-            }
-            elseif ($date_range == 'current_term') {
+            } elseif ($date_range == 'current_term') {
                 $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
             }
 
@@ -1434,14 +1473,14 @@ class TeamsController extends AppController
                 $skip = false;
 
                 array_unshift($insights,
-                              $this->_getInsightData(
-                                  date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
-                                  $this->_insightAdjustEndDate(date('Y-m-d',
-                                                                    $v['end_date'] + $date_info['time_adjust']),
-                                                               $date_info['today']),
-                                  $timezone,
-                                  $group_id,
-                                  $cache_expire));
+                    $this->_getInsightData(
+                        date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
+                        $this->_insightAdjustEndDate(date('Y-m-d',
+                            $v['end_date'] + $date_info['time_adjust']),
+                            $date_info['today']),
+                        $timezone,
+                        $group_id,
+                        $cache_expire));
 
                 if (count($insights) >= $max_terms) {
                     break;
@@ -1532,19 +1571,16 @@ class TeamsController extends AppController
             $prev_week2 = $this->Team->TeamInsight->getWeekRangeDate($start_date, ['offset' => -1]);
             $target_start_date = $prev_week2['start'];
             $target_end_date = $prev_week2['end'];
-        }
-        elseif ($date_range_type == 'month') {
+        } elseif ($date_range_type == 'month') {
             $prev_month2 = $this->Team->TeamInsight->getMonthRangeDate($start_date, ['offset' => -1]);
             $target_start_date = $prev_month2['start'];
             $target_end_date = $prev_month2['end'];
-        }
-        elseif ($date_range_type == 'term') {
+        } elseif ($date_range_type == 'term') {
             $prev_term2 = null;
             if ($date_range == 'current_term') {
                 // 前期の日付
                 $prev_term2 = $this->Team->EvaluateTerm->getPreviousTermData();
-            }
-            elseif ($date_range == 'prev_term') {
+            } elseif ($date_range == 'prev_term') {
                 // 前々期の日付
                 $prev_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
                 $all_terms = $this->Team->EvaluateTerm->getAllTerm();
@@ -1576,8 +1612,7 @@ class TeamsController extends AppController
                     $cmp_key = $k . "_cmp";
                     if (strpos($k, '_percent') !== false) {
                         $insight[$cmp_key] = $insight[$k] - $circle_insights2[$circle_id][$k];
-                    }
-                    else {
+                    } else {
                         $insight[$cmp_key] = $insight[$k] / $circle_insights2[$circle_id][$k] * 100.0 - 100.0;
                     }
                     $insight[$cmp_key] = abs($insight[$cmp_key]) >= 1 ?
@@ -1590,12 +1625,11 @@ class TeamsController extends AppController
             $circle_insights[$circle_id]['name'] = $circle_list[$circle_id];
         }
 
-
         // sorting by columns
-        if(!empty($this->request->query('sort_by'))) {
+        if (!empty($this->request->query('sort_by'))) {
             $sort_by = $this->request->query('sort_by');
             $sort_type = 'desc';
-            if(!empty($this->request->query('sort_type'))) {
+            if (!empty($this->request->query('sort_type'))) {
                 $sort_type = $this->request->query('sort_type');
             }
 
@@ -1604,7 +1638,7 @@ class TeamsController extends AppController
                     return 0;
                 }
                 $ret = ($a[$sort_by] > $b[$sort_by]) ? -1 : 1;
-                if($sort_type == 'asc') {
+                if ($sort_type == 'asc') {
                     $ret = ($a[$sort_by] < $b[$sort_by]) ? -1 : 1;
                 }
                 return $ret;
@@ -1693,10 +1727,10 @@ class TeamsController extends AppController
         switch ($type) {
             case 'action_goal_ranking':
                 $rankings = $this->_getGoalRankingData($start_date,
-                                                       $this->_insightAdjustEndDate($end_date, $date_info['today']),
-                                                       $timezone,
-                                                       $group_id,
-                                                       $cache_expire);
+                    $this->_insightAdjustEndDate($end_date, $date_info['today']),
+                    $timezone,
+                    $group_id,
+                    $cache_expire);
                 $ranking = $rankings[$type];
                 foreach ($ranking as $k => $v) {
                     $ranking[$k] = ['count' => $v];
@@ -1708,19 +1742,21 @@ class TeamsController extends AppController
                 foreach ($goals as $goal) {
                     $ranking[$goal['Goal']['id']]['text'] = $goal['Goal']['name'];
                     $ranking[$goal['Goal']['id']]['Goal'] = $goal['Goal'];
-                    $ranking[$goal['Goal']['id']]['url'] = Router::url(['controller' => 'goals',
-                                                                        'action'     => 'view_info',
-                                                                        'goal_id'    => $goal['Goal']['id']]);
+                    $ranking[$goal['Goal']['id']]['url'] = Router::url([
+                        'controller' => 'goals',
+                        'action'     => 'view_info',
+                        'goal_id'    => $goal['Goal']['id']
+                    ]);
                 }
                 break;
 
             case 'action_user_ranking':
             case 'post_user_ranking':
                 $rankings = $this->_getUserRankingData($start_date,
-                                                       $this->_insightAdjustEndDate($end_date, $date_info['today']),
-                                                       $timezone,
-                                                       $group_id,
-                                                       $cache_expire);
+                    $this->_insightAdjustEndDate($end_date, $date_info['today']),
+                    $timezone,
+                    $group_id,
+                    $cache_expire);
                 $ranking = $rankings[$type];
                 foreach ($ranking as $k => $v) {
                     $ranking[$k] = ['count' => $v];
@@ -1732,9 +1768,11 @@ class TeamsController extends AppController
                 foreach ($users as $user) {
                     $ranking[$user['User']['id']]['text'] = $user['User']['display_username'];
                     $ranking[$user['User']['id']]['User'] = $user['User'];
-                    $ranking[$user['User']['id']]['url'] = Router::url(['controller' => 'users',
-                                                                        'action'     => 'view_goals',
-                                                                        'user_id'    => $user['User']['id']]);
+                    $ranking[$user['User']['id']]['url'] = Router::url([
+                        'controller' => 'users',
+                        'action'     => 'view_goals',
+                        'user_id'    => $user['User']['id']
+                    ]);
                 }
                 break;
 
@@ -1743,10 +1781,10 @@ class TeamsController extends AppController
             case 'post_comment_ranking':
             case 'action_comment_ranking':
                 $rankings = $this->_getPostRankingData($start_date,
-                                                       $this->_insightAdjustEndDate($end_date, $date_info['today']),
-                                                       $timezone,
-                                                       $group_id,
-                                                       $cache_expire);
+                    $this->_insightAdjustEndDate($end_date, $date_info['today']),
+                    $timezone,
+                    $group_id,
+                    $cache_expire);
                 $ranking = $rankings[$type];
                 foreach ($ranking as $k => $v) {
                     $ranking[$k] = ['count' => $v];
@@ -1759,9 +1797,11 @@ class TeamsController extends AppController
                     $ranking[$post['Post']['id']]['text'] = $post['ActionResult']['id'] ?
                         $post['ActionResult']['name'] : $post['Post']['body'];
                     $ranking[$post['Post']['id']]['User'] = $post['User'];
-                    $ranking[$post['Post']['id']]['url'] = Router::url(['controller' => 'posts',
-                                                                        'action'     => 'feed',
-                                                                        'post_id'    => $post['Post']['id']]);
+                    $ranking[$post['Post']['id']]['url'] = Router::url([
+                        'controller' => 'posts',
+                        'action'     => 'feed',
+                        'post_id'    => $post['Post']['id']
+                    ]);
                 }
                 break;
         }
@@ -1771,9 +1811,9 @@ class TeamsController extends AppController
         $count_rank = $filter_ranking = [];
         $rank = 1;
         $max_ranking_no = 30;
-        foreach($ranking as $rankKey=>$rankArrVal) {
-            if(!isset($count_rank[$rankArrVal['count']])) {
-                if($rank > $max_ranking_no) {
+        foreach ($ranking as $rankKey => $rankArrVal) {
+            if (!isset($count_rank[$rankArrVal['count']])) {
+                if ($rank > $max_ranking_no) {
                     break;
                 }
                 $count_rank[$rankArrVal['count']] = $rank;
@@ -1895,9 +1935,8 @@ class TeamsController extends AppController
         $insight = null;
         if ($group_id) {
             $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $start_date, $end_date,
-                                                       $timezone, $group_id);
-        }
-        else {
+                $timezone, $group_id);
+        } else {
             $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $start_date, $end_date, $timezone);
         }
         if ($insight) {
@@ -1917,74 +1956,93 @@ class TeamsController extends AppController
         // 登録者数
         if ($group_id) {
             $total = $this->Team->GroupInsight->getTotal($group_id, $start_date, $end_date, $timezone);
-        }
-        else {
+        } else {
             $total = $this->Team->TeamInsight->getTotal($start_date, $end_date, $timezone);
         }
         $user_count = intval($total[0]['max_user_count']);
 
         // アクセスユーザー数
         $access_user_count = $this->Team->AccessUser->getUniqueUserCount($start_date, $end_date, $timezone,
-                                                                         ['user_id' => $user_ids]);
+            ['user_id' => $user_ids]);
 
         // アクション数
         $action_count = $this->Post->ActionResult->getCount($user_ids, $start_time, $end_time, 'created');
 
         // アクションユーザー数
-        $action_user_count = $this->Post->ActionResult->getUniqueUserCount(['start'   => $start_time,
-                                                                            'end'     => $end_time,
-                                                                            'user_id' => $user_ids]);
+        $action_user_count = $this->Post->ActionResult->getUniqueUserCount([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
 
         // 投稿数
         $post_count = $this->Post->getCount($user_ids, $start_time, $end_time, 'created');
 
         // 投稿ユーザー数
-        $post_user_count = $this->Post->getUniqueUserCount(['start'   => $start_time,
-                                                            'end'     => $end_time,
-                                                            'user_id' => $user_ids]);
+        $post_user_count = $this->Post->getUniqueUserCount([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
 
         // 投稿いいね数
-        $post_like_count = $this->Post->PostLike->getCount(['start'   => $start_time,
-                                                            'end'     => $end_time,
-                                                            'user_id' => $user_ids]);
+        $post_like_count = $this->Post->PostLike->getCount([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
         // コメントいいね数
-        $comment_like_count = $this->Post->Comment->CommentLike->getCount(['start'   => $start_time,
-                                                                           'end'     => $end_time,
-                                                                           'user_id' => $user_ids]);
+        $comment_like_count = $this->Post->Comment->CommentLike->getCount([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
         // 総イイね数
         $like_count = $post_like_count + $comment_like_count;
 
         // 投稿いいねユーザー数
-        $post_like_user_list = $this->Post->PostLike->getUniqueUserList(['start'   => $start_time,
-                                                                         'end'     => $end_time,
-                                                                         'user_id' => $user_ids]);
+        $post_like_user_list = $this->Post->PostLike->getUniqueUserList([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
         // コメントいいねユーザー数
-        $comment_like_user_list = $this->Post->Comment->CommentLike->getUniqueUserList(['start'   => $start_time,
-                                                                                        'end'     => $end_time,
-                                                                                        'user_id' => $user_ids]);
+        $comment_like_user_list = $this->Post->Comment->CommentLike->getUniqueUserList([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
         $like_user_count = count(array_unique(array_merge($post_like_user_list, $comment_like_user_list)));
 
         // コメント数
-        $comment_count = $this->Post->Comment->getCount(['start'     => $start_time,
-                                                         'end'       => $end_time,
-                                                         'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
-                                                         'user_id'   => $user_ids]);
+        $comment_count = $this->Post->Comment->getCount([
+            'start'     => $start_time,
+            'end'       => $end_time,
+            'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+            'user_id'   => $user_ids
+        ]);
 
         // コメントユーザー数
-        $comment_user_count = $this->Post->Comment->getUniqueUserCount(['start'     => $start_time,
-                                                                        'end'       => $end_time,
-                                                                        'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
-                                                                        'user_id'   => $user_ids]);
+        $comment_user_count = $this->Post->Comment->getUniqueUserCount([
+            'start'     => $start_time,
+            'end'       => $end_time,
+            'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+            'user_id'   => $user_ids
+        ]);
 
         // メッセージ数
-        $message_count = $this->Post->getMessageCount(['start'   => $start_time,
-                                                       'end'     => $end_time,
-                                                       'user_id' => $user_ids]);
+        $message_count = $this->Post->getMessageCount([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
 
         // メッセージユーザー数
-        $message_user_count = $this->Post->getMessageUserCount(['start'   => $start_time,
-                                                                'end'     => $end_time,
-                                                                'user_id' => $user_ids]);
+        $message_user_count = $this->Post->getMessageUserCount([
+            'start'   => $start_time,
+            'end'     => $end_time,
+            'user_id' => $user_ids
+        ]);
 
         // ログイン率
         $access_user_percent = $user_count ? $access_user_count / $user_count * 100 : 0;
@@ -2038,11 +2096,10 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupInsight($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $insight, $cache_expire);
-        }
-        else {
+                $group_id, $insight, $cache_expire);
+        } else {
             $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $insight, $cache_expire);
+                $insight, $cache_expire);
         }
         return $insight;
     }
@@ -2081,7 +2138,6 @@ class TeamsController extends AppController
                 'end'   => $end_time,
             ]);
 
-
             // リーチ数
             // 指定期間内の投稿を読んだメンバーの合計数（現在まで）
             $circle_post_read_count = $this->Post->PostShareCircle->getTotalPostReadCountByCircleId($circle_id, [
@@ -2107,7 +2163,6 @@ class TeamsController extends AppController
             ];
         }
 
-
         // 並び順変更
         // チーム全体サークルは常に先頭、それ以外はリーチの多い順
         $team_all_circle_id = $this->Post->Circle->getTeamAllCircleId();
@@ -2126,7 +2181,7 @@ class TeamsController extends AppController
 
         // キャッシュに保存
         $this->GlRedis->saveCircleInsight($this->current_team_id, $start_date, $end_date, $timezone, $circle_insights,
-                                          $cache_expire);
+            $cache_expire);
         return $circle_insights;
     }
 
@@ -2148,11 +2203,10 @@ class TeamsController extends AppController
         $type = 'post_ranking';
         if ($group_id) {
             $ranking = $this->GlRedis->getGroupRanking($this->current_team_id, $start_date, $end_date,
-                                                       $timezone, $group_id, $type);
-        }
-        else {
+                $timezone, $group_id, $type);
+        } else {
             $ranking = $this->GlRedis->getTeamRanking($this->current_team_id, $start_date, $end_date,
-                                                      $timezone, $type);
+                $timezone, $type);
         }
         if ($ranking) {
             return $ranking;
@@ -2181,8 +2235,6 @@ class TeamsController extends AppController
                 'post_type'       => Post::TYPE_NORMAL,
                 'share_circle_id' => array_keys($public_circle_list),
             ]);
-
-
 
         // 最もいいねされたアクション
         $action_like_ranking = $this->Post->PostLike->getRanking(
@@ -2227,11 +2279,10 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $type, $ranking, $cache_expire);
-        }
-        else {
+                $group_id, $type, $ranking, $cache_expire);
+        } else {
             $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $type, $ranking, $cache_expire);
+                $type, $ranking, $cache_expire);
         }
         return $ranking;
     }
@@ -2254,11 +2305,10 @@ class TeamsController extends AppController
         $type = 'goal_ranking';
         if ($group_id) {
             $ranking = $this->GlRedis->getGroupRanking($this->current_team_id, $start_date, $end_date,
-                                                       $timezone, $group_id, $type);
-        }
-        else {
+                $timezone, $group_id, $type);
+        } else {
             $ranking = $this->GlRedis->getTeamRanking($this->current_team_id, $start_date, $end_date,
-                                                      $timezone, $type);
+                $timezone, $type);
         }
         if ($ranking) {
             return $ranking;
@@ -2292,11 +2342,10 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $type, $ranking, $cache_expire);
-        }
-        else {
+                $group_id, $type, $ranking, $cache_expire);
+        } else {
             $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $type, $ranking, $cache_expire);
+                $type, $ranking, $cache_expire);
         }
         return $ranking;
     }
@@ -2319,11 +2368,10 @@ class TeamsController extends AppController
         $type = 'user_ranking';
         if ($group_id) {
             $ranking = $this->GlRedis->getGroupRanking($this->current_team_id, $start_date, $end_date,
-                                                       $timezone, $group_id, $type);
-        }
-        else {
+                $timezone, $group_id, $type);
+        } else {
             $ranking = $this->GlRedis->getTeamRanking($this->current_team_id, $start_date, $end_date,
-                                                      $timezone, $type);
+                $timezone, $type);
         }
         if ($ranking) {
             return $ranking;
@@ -2367,11 +2415,10 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $type, $ranking, $cache_expire);
-        }
-        else {
+                $group_id, $type, $ranking, $cache_expire);
+        } else {
             $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $type, $ranking, $cache_expire);
+                $type, $ranking, $cache_expire);
         }
         return $ranking;
     }

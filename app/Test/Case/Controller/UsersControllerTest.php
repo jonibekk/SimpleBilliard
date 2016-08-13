@@ -27,7 +27,8 @@ class UsersControllerTest extends GoalousControllerTestCase
         'app.collaborator',
         'app.local_name',
         'app.cake_session',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.badge',
         'app.team',
         'app.comment_like',
@@ -403,19 +404,25 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'display_username' => 'test taro'
-            ]],
+            [
+                null,
+                [
+                    'display_username' => 'test taro'
+                ]
+            ],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
         $session_value_map = [
-            [null, [
-                'test'   => 'test',
-                'Config' => ''
-            ]],
+            [
+                null,
+                [
+                    'test'   => 'test',
+                    'Config' => ''
+                ]
+            ],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
@@ -578,10 +585,13 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['language', 'jpn'],
             ['auto_language_flg', true],
         ];
@@ -615,11 +625,14 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => 'xxx',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['language', 'jpn'],
             ['auto_language_flg', true],
         ];
@@ -660,7 +673,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         ];
         $this->testAction('/users/add_profile', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
         $this->assertRegExp("/" . preg_quote("/teams/add", "/") . "$/", $this->headers["Location"],
-                            "[正常]Post後にチーム作成画面へ遷移");
+            "[正常]Post後にチーム作成画面へ遷移");
     }
 
     function testAddProfilePutInvite()
@@ -678,11 +691,14 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => 'xxx',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['language', 'jpn'],
             ['auto_language_flg', true],
         ];
@@ -722,10 +738,10 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction('/users/add_profile/invite_token:test',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
 
         $this->assertRegExp("/" . preg_quote("/", "/") . "$/", $this->headers["Location"],
-                            "[正常]Post後にホーム画面へ遷移");
+            "[正常]Post後にホーム画面へ遷移");
     }
 
     function testAddProfileEng()
@@ -744,10 +760,13 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'last_first' => true,
-                'language'   => 'eng'
-            ]],
+            [
+                null,
+                [
+                    'last_first' => true,
+                    'language'   => 'eng'
+                ]
+            ],
             ['language', 'eng'],
             ['auto_language_flg', true],
         ];
@@ -782,10 +801,13 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'last_first' => true,
-                'language'   => 'eng'
-            ]],
+            [
+                null,
+                [
+                    'last_first' => true,
+                    'language'   => 'eng'
+                ]
+            ],
             ['language', 'eng'],
             ['auto_language_flg', true],
         ];
@@ -851,9 +873,12 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id' => "xxxxxx",
-            ]],
+            [
+                null,
+                [
+                    'id' => "xxxxxx",
+                ]
+            ],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -985,9 +1010,12 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id' => "xxxxxx",
-            ]],
+            [
+                null,
+                [
+                    'id' => "xxxxxx",
+                ]
+            ],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1056,10 +1084,13 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'       => "12",
-                'language' => 'jpn',
-            ]],
+            [
+                null,
+                [
+                    'id'       => "12",
+                    'language' => 'jpn',
+                ]
+            ],
             ['id', "12"],
             ['language', "jpn"],
         ];
@@ -1101,10 +1132,13 @@ class UsersControllerTest extends GoalousControllerTestCase
             ->will($this->returnValue(true));
 
         $value_map = [
-            [null, [
-                'id'       => "12",
-                'language' => 'jpn',
-            ]],
+            [
+                null,
+                [
+                    'id'       => "12",
+                    'language' => 'jpn',
+                ]
+            ],
             ['id', "12"],
             ['language', "jpn"],
         ];
@@ -1432,7 +1466,7 @@ class UsersControllerTest extends GoalousControllerTestCase
                     ->will($this->returnValueMap($value_map));
         try {
             $this->testAction('users/change_email',
-                              ['method' => 'PUT', 'data' => ['User' => ['email' => 'abcde@1234.com']]]);
+                ['method' => 'PUT', 'data' => ['User' => ['email' => 'abcde@1234.com']]]);
         } catch (NotFoundException $e) {
         }
     }
@@ -1607,7 +1641,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all',
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1627,7 +1661,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all',
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1647,7 +1681,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_circles_users?term=aa%20bb&page_limit=10&circle_type=all',
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1667,7 +1701,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_circles_users?term=%20&page_limit=10&circle_type=all',
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1688,13 +1722,13 @@ class UsersControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $keyword = urlencode('秘密サークル');
         $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10",
-                                 ['method' => 'GET']);
+            ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertNotEmpty($json_data['results']);
 
         $keyword = urlencode('チーム全体サークル');
         $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10",
-                                 ['method' => 'GET']);
+            ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertEmpty($json_data['results']);
 
@@ -1815,7 +1849,7 @@ class UsersControllerTest extends GoalousControllerTestCase
                 ['email' => 'test@aaa.com']
         ];
         $this->testAction('/users/registration_with_set_password/invite_token:test_token_csv',
-                          ['method' => 'POST', 'data' => $post_data]);
+            ['method' => 'POST', 'data' => $post_data]);
     }
 
     function testRegistrationWithSetPasswordPostEmailSuccess()
@@ -1852,7 +1886,7 @@ class UsersControllerTest extends GoalousControllerTestCase
                 ['email' => 'test_invite@aaaaa.com']
         ];
         $this->testAction('/users/registration_with_set_password/invite_token:test_token_csv',
-                          ['method' => 'POST', 'data' => $post_data]);
+            ['method' => 'POST', 'data' => $post_data]);
     }
 
     function testAjaxGetModal2faRegisterNoSession()
@@ -2065,11 +2099,14 @@ class UsersControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],

@@ -24,7 +24,11 @@
                     <?php $selected = $key == $selected_term_name ? 'selected' : ''; ?>
                     <?php $incompleteNum = (int)$incomplete_number_list[$key]['my_eval'] + (int)$incomplete_number_list[$key]['my_evaluatees'];
                     ?>
-                    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>"
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'evaluations',
+                        'action'     => 'index',
+                        'term'       => $key
+                    ]) ?>"
                        class="btn btn-default eval-term-tab-elm <?= $selected ?>" role="button">
                         <?php if ($incompleteNum > 0 && !$isFrozens[$key]):
                             ?>
@@ -46,7 +50,7 @@
             <?php if ((int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
                 <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
                     <?= __("%s evaluations have not completed. Evaluate them from the following.",
-                            (int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></div>
+                        (int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></div>
             <?php endif; ?>
         <?php endif; ?>
         <div class="form-group">
@@ -58,18 +62,26 @@
                     <?php endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
-                                   ['evaluatees' => $my_eval, 'eval_term_id' => $selected_tab_term_id, 'eval_is_frozen' => $isFrozens[$selected_term_name]]) ?>
+                    [
+                        'evaluatees'     => $my_eval,
+                        'eval_term_id'   => $selected_tab_term_id,
+                        'eval_is_frozen' => $isFrozens[$selected_term_name]
+                    ]) ?>
             <?php endif; ?>
             <?php if (!empty($my_evaluatees)): ?>
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                     <p class="font_bold"><?= __("The member who you evaluate") ?></p>
                     <?php if ((int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
                         <p><?= __("Incomplete:%s",
-                                   (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></p>
+                                (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></p>
                     <?php endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
-                                   ['evaluatees' => $my_evaluatees, 'eval_term_id' => $selected_tab_term_id, 'eval_is_frozen' => $isFrozens[$selected_term_name]]) ?>
+                    [
+                        'evaluatees'     => $my_evaluatees,
+                        'eval_term_id'   => $selected_tab_term_id,
+                        'eval_is_frozen' => $isFrozens[$selected_term_name]
+                    ]) ?>
             <?php endif; ?>
         </div>
     </div>

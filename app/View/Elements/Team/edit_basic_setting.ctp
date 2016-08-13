@@ -31,13 +31,14 @@
     <div class="panel-body add-team-panel-body">
         <?=
         $this->Form->input('name',
-                           ['label'                        => __("Team Name"),
-                            'placeholder'                  => __("eg. Team Goalous"),
-                            "data-bv-notempty-message"     => __("Input is required."),
-                            'data-bv-stringlength'         => 'true',
-                            'data-bv-stringlength-max'     => 128,
-                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-                           ]) ?>
+            [
+                'label'                        => __("Team Name"),
+                'placeholder'                  => __("eg. Team Goalous"),
+                "data-bv-notempty-message"     => __("Input is required."),
+                'data-bv-stringlength'         => 'true',
+                'data-bv-stringlength-max'     => 128,
+                'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
+            ]) ?>
         <hr>
         <div class="form-group">
             <label for="" class="col col-sm-3 control-label form-label"><?= __("Team Image") ?></label>
@@ -54,7 +55,7 @@
                         ?>
                         <?=
                         $this->Upload->uploadImage($team_img_data, 'Team.photo',
-                                                   ['style' => 'medium_large']) ?>
+                            ['style' => 'medium_large']) ?>
                     </div>
                     <div>
                         <span class="btn btn-default btn-file">
@@ -64,14 +65,15 @@
                             <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                             <?=
                             $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                'required'     => false
-                                               ]) ?>
+                                [
+                                    'type'         => 'file',
+                                    'label'        => false,
+                                    'div'          => false,
+                                    'css'          => false,
+                                    'wrapInput'    => false,
+                                    'errorMessage' => false,
+                                    'required'     => false
+                                ]) ?>
                         </span>
                         <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                     </div>
@@ -80,9 +82,10 @@
                 <div class="has-error">
                     <?=
                     $this->Form->error('photo', null,
-                                       ['class' => 'help-block text-danger',
-                                        'wrap'  => 'span'
-                                       ]) ?>
+                        [
+                            'class' => 'help-block text-danger',
+                            'wrap'  => 'span'
+                        ]) ?>
                 </div>
             </div>
 
@@ -108,7 +111,7 @@
             <div class="col-xxs-4 col-sm-offset-3">
                 <?=
                 $this->Form->submit(__("Change basic settings"),
-                                    ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
+                    ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
             </div>
             <div class="col-xxs-8 col-sm-5 text-align_r">
                 <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
@@ -134,14 +137,8 @@
 
         $('#AddTeamForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
             fields: {
                 "data[Team][photo]": {
-                    feedbackIcons: 'false',
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',

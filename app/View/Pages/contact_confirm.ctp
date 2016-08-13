@@ -26,52 +26,52 @@ Page毎に要素が変わるもの
 */
 $meta_contact_confirm = [
     [
-        "name" => "description",
+        "name"    => "description",
         "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
     ],
     [
-        "name" => "keywords",
+        "name"    => "keywords",
         "content" => "目標管理,目標達成,社内SNS,評価,MBO",
     ],
     [
         "property" => "og:type",
-        "content" => "website",
+        "content"  => "website",
     ],
     [
         "property" => "og:title",
-        "content" => __('Confirming | Goalous'),
+        "content"  => __('Confirming | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
     ],
     [
         "property" => "og:url",
-        "content" => "https://www.goalous.com/contact_confirm/",
+        "content"  => "https://www.goalous.com/contact_confirm/",
     ],
     [
         "property" => "og:image",
-        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
+        "content"  => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
-        "content" => "966242223397117",
+        "content"  => "966242223397117",
     ],
     [
-        "name" => "twitter_card",
+        "name"    => "twitter_card",
         "content" => "summary",
     ],
     [
-        "name" => "twitter:site",
+        "name"    => "twitter:site",
         "content" => "@goalous",
     ]
 ];
 $num_ogp = count($meta_contact_confirm);
-for($i = 0; $i < $num_ogp; $i++){
+for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_contact_confirm[$i]);
 }
 ?>
@@ -130,11 +130,20 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div>
                 </div>
 
-                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 'from_confirm' => true]) ?>"
+                <a href="<?= $this->Html->url([
+                    'controller'   => 'pages',
+                    'action'       => 'contact',
+                    'lang'         => $top_lang,
+                    'from_confirm' => true
+                ]) ?>"
                    class="btn btn-block btn-cta-secondary"><?= __('Back') ?></a>
-                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact_send', 'lang' => $top_lang]) ?>"
+                <a href="<?= $this->Html->url([
+                    'controller' => 'pages',
+                    'action'     => 'contact_send',
+                    'lang'       => $top_lang
+                ]) ?>"
                    class="btn btn-block btn-cta-primary contact-confirm-send" id="SendContactLink"><?= __(
-                                                                                      'Send') ?></a>
+                        'Send') ?></a>
             </form><!--//form-->
         </div>
     </div><!--//row-->

@@ -170,10 +170,12 @@ class ActionResult extends AppModel
     {
         return $this->find('first', [
             'conditions' => ['ActionResult.id' => $action_result_id],
-            'contain'    => ['ActionResultFile' => [
-                'order' => ['ActionResultFile.index_num asc'],
-                'AttachedFile',
-            ]]
+            'contain'    => [
+                'ActionResultFile' => [
+                    'order' => ['ActionResultFile.index_num asc'],
+                    'AttachedFile',
+                ]
+            ]
         ]);
     }
 
@@ -197,8 +199,7 @@ class ActionResult extends AppModel
         // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
         if ($user_id == 'me') {
             $options['conditions']['user_id'] = $this->my_uid;
-        }
-        elseif ($user_id) {
+        } elseif ($user_id) {
             $options['conditions']['user_id'] = $user_id;
         }
 
@@ -287,8 +288,7 @@ class ActionResult extends AppModel
         $data['ActionResult']['user_id'] = $this->my_uid;
         if (isset($data['ActionResult']['key_result_id'])) {
             $data['ActionResult']['type'] = ActionResult::TYPE_KR;
-        }
-        else {
+        } else {
             $data['ActionResult']['type'] = ActionResult::TYPE_GOAL;
         }
         $data['ActionResult']['completed'] = REQUEST_TIMESTAMP;
@@ -299,14 +299,14 @@ class ActionResult extends AppModel
     public function releaseKr($kr_id)
     {
         $res = $this->updateAll(['ActionResult.key_result_id' => null],
-                                ['ActionResult.key_result_id' => $kr_id, 'ActionResult.team_id' => $this->current_team_id]);
+            ['ActionResult.key_result_id' => $kr_id, 'ActionResult.team_id' => $this->current_team_id]);
         return $res;
     }
 
     public function releaseGoal($goal_id)
     {
         $res = $this->updateAll(['ActionResult.goal_id' => null, 'ActionResult.key_result_id' => null],
-                                ['ActionResult.goal_id' => $goal_id, 'ActionResult.team_id' => $this->current_team_id]);
+            ['ActionResult.goal_id' => $goal_id, 'ActionResult.team_id' => $this->current_team_id]);
         return $res;
     }
 
@@ -331,10 +331,11 @@ class ActionResult extends AppModel
      */
     public function getUniqueUserCount($params = [])
     {
-        $params = array_merge(['start'   => null,
-                               'end'     => null,
-                               'user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'start'   => null,
+            'end'     => null,
+            'user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -371,11 +372,12 @@ class ActionResult extends AppModel
      */
     public function getGoalRanking($params = [])
     {
-        $params = array_merge(['limit'        => null,
-                               'start'        => null,
-                               'end'          => null,
-                               'goal_user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'limit'        => null,
+            'start'        => null,
+            'end'          => null,
+            'goal_user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -417,11 +419,12 @@ class ActionResult extends AppModel
      */
     public function getUserRanking($params = [])
     {
-        $params = array_merge(['limit'   => null,
-                               'start'   => null,
-                               'end'     => null,
-                               'user_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'limit'   => null,
+            'start'   => null,
+            'end'     => null,
+            'user_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -461,10 +464,11 @@ class ActionResult extends AppModel
      */
     public function getCollaboGoalActionCount(array $params = [])
     {
-        $params = array_merge(['user_id' => null,
-                               'start'   => null,
-                               'end'     => null,
-                              ], $params);
+        $params = array_merge([
+            'user_id' => null,
+            'start'   => null,
+            'end'     => null,
+        ], $params);
 
         $options = [
             'conditions' => [
@@ -494,7 +498,8 @@ class ActionResult extends AppModel
                 'user_id' => $user_id,
             ],
             'fields'     => [
-                'key_result_id', 'key_result_id'
+                'key_result_id',
+                'key_result_id'
             ]
         ];
         $res = $this->find('list', $options);

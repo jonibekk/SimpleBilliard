@@ -111,8 +111,7 @@ class PostRead extends AppModel
                 }
                 $unread_posts[$post_id] = $post_id;
             }
-        }
-        elseif (!in_array($post_list, $read_list)) {
+        } elseif (!in_array($post_list, $read_list)) {
             $unread_posts[$post_list] = $post_list;
         }
         return $unread_posts;

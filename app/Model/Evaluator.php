@@ -71,7 +71,19 @@ class Evaluator extends AppModel
         ];
         $res = $this->find('all', $options);
         $res = Hash::combine($res, '{n}.Evaluator.id', '{n}.Evaluator.evaluator_user_id',
-                             '{n}.Evaluator.evaluatee_user_id');
+            '{n}.Evaluator.evaluatee_user_id');
+        return $res;
+    }
+
+    function getExistingEvaluatorsIds($team_id, $evaluatee_user_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'evaluatee_user_id' => $evaluatee_user_id,
+            ]
+        ];
+        $res = $this->Team->Evaluator->find('list', $options);
         return $res;
     }
 }

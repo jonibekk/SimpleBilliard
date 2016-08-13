@@ -306,7 +306,7 @@ class AttachedFile extends AppModel
                     continue;
                 }
                 $this->{$model['intermediateModel']}->updateAll(['index_num' => $i],
-                                                                [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
+                    [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
                 continue;
             }
 
@@ -420,10 +420,12 @@ class AttachedFile extends AppModel
             return count($related_files);
         }
 
-        $options = ['conditions' => [
-            'id'        => $related_files,
-            'file_type' => $file_type,
-        ]];
+        $options = [
+            'conditions' => [
+                'id'        => $related_files,
+                'file_type' => $file_type,
+            ]
+        ];
         $count_attached_files = $this->find('count', $options);
         return $count_attached_files;
     }

@@ -18,7 +18,8 @@
            class="notify-empty-text"><?= __("No new notification") ?></span>
     </li>
      -->
-<a href="#" get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list#']) ?>" onclick="evMessageList()">
+<a href="#" get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list#']) ?>"
+   onclick="evMessageList()">
     <li class="message-all-view-link">
         <?= __("See All") ?>
     </li>

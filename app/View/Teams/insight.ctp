@@ -14,8 +14,10 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <?= $this->Form->create('TeamInsight', [
-                'url'           => ['controller' => 'teams',
-                                    'action'     => 'insight'],
+                'url'           => [
+                    'controller' => 'teams',
+                    'action'     => 'insight'
+                ],
                 'inputDefaults' => [
                     'div'       => 'form-group team-insight-wraps',
                     'label'     => false,
@@ -26,7 +28,7 @@
                 'type'          => 'get',
             ]); ?>
             <?= $this->element('Team/insight_form_input',
-                               ['use' => ['team', 'date_range', 'group', 'timezone', 'graph_type']]) ?>
+                ['use' => ['team', 'date_range', 'group', 'timezone', 'graph_type']]) ?>
             <?= $this->Form->end() ?>
 
             <div id="InsightResult" class="mt_18px"></div>

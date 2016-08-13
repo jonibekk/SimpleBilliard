@@ -17,7 +17,8 @@ class ThreadTest extends GoalousTestCase
     public $fixtures = array(
         'app.thread',
         'app.team',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.badge',
         'app.post',
         //'app.goal',

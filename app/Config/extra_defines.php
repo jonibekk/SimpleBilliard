@@ -46,6 +46,8 @@ define('PRE_FILE_TTL', 60 * 60 * 3);// 3 hours
 define('TWO_FA_TTL', 60 * 60 * 24 * 30);
 define('ACCOUNT_LOCK_TTL', 60 * 5);
 define('ACCOUNT_LOCK_COUNT', 5);
+define('EMAIL_VERIFY_CODE_LOCK_TTL', 60 * 5);
+define('EMAIL_VERIFY_CODE_LOCK_COUNT', 5);
 define('SESSION_RENEW_TTL', 60 * 60 * 24 * 7);//1 week
 define('NCMB_APPLICATION_KEY', "84b78ad6aeec49510a48a07593acf888a845fa3284633e294733a67b9980fc06");
 define('NCMB_CLIENT_KEY', "67fb3910e63499765f60fd91ac5b05882a982221884b482a0b492a93fc62f1f4");
@@ -60,6 +62,6 @@ define('LOG_SLACK_TOKEN', null);
 define('LOG_SLACK_ERROR_CHANNEL', null);
 define('LOG_SLACK_DEBUG_CHANNEL', null);
 define('CACHE_HOMEPAGE', false);
-define('SETUP_GUIDE_NOTIFY_DAYS',"2,5,10");
-define('SETUP_GUIDE_NOTIFY_HOUR',"11");
-define('SETUP_GUIDE_NOTIFY_URL',"http://192.168.50.4");
+define('SETUP_GUIDE_NOTIFY_DAYS', "2,5,10");
+define('SETUP_GUIDE_NOTIFY_HOUR', "11");
+define('SETUP_GUIDE_NOTIFY_URL', "http://192.168.50.4");

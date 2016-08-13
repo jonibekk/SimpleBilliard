@@ -96,8 +96,7 @@ class OgpComponent extends Object
         }
         if (isset($ogp->url)) {
             $res['url'] = $ogp->url;
-        }
-        else {
+        } else {
             $res['url'] = $url;
         }
         $res['type'] = 'external';
@@ -120,12 +119,10 @@ class OgpComponent extends Object
                     $image_url .= $image_url_array['path'];
 
                     $ogp->image = $image_url;
-                }
-                else {
+                } else {
                     $ogp->image = null;
                 }
-            }
-            //urlの文字列が//で始まっていた場合
+            } //urlの文字列が//で始まっていた場合
             elseif (strpos($ogp->image, '//') === 0) {
                 $ogp->image = 'http:' . $ogp->image;
             }
@@ -182,7 +179,7 @@ class OgpComponent extends Object
                             $ogp['title'] = $post['Goal']['name'];
                             $ogp['description'] = Post::$TYPE_MESSAGE[Post::TYPE_CREATE_GOAL];
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
-                                                                           ['style' => 'large']), true);
+                                ['style' => 'large']), true);
                             break;
 
                         // アクション
@@ -199,7 +196,7 @@ class OgpComponent extends Object
                             $ogp['title'] = $post['Goal']['name'];
                             $ogp['description'] = __("Achieved %s!", $post['KeyResult']['name']);
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
-                                                                           ['style' => 'large']), true);
+                                ['style' => 'large']), true);
                             break;
 
                         // ゴール達成
@@ -208,7 +205,7 @@ class OgpComponent extends Object
                             $ogp['title'] = $post['Goal']['name'];
                             $ogp['description'] = __("Achieved a goal.");
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
-                                                                           ['style' => 'large']), true);
+                                ['style' => 'large']), true);
                             break;
 
                         // サークル作成
@@ -217,7 +214,7 @@ class OgpComponent extends Object
                             $ogp['title'] = $post['Circle']['name'];
                             $ogp['description'] = Post::$TYPE_MESSAGE[Post::TYPE_CREATE_CIRCLE];
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Circle.photo",
-                                                                           ['style' => 'large']), true);
+                                ['style' => 'large']), true);
                             break;
                     }
 
@@ -228,15 +225,14 @@ class OgpComponent extends Object
                     foreach ($attached_files as $f) {
                         if (in_array(strtolower($f['AttachedFile']['file_ext']), ['jpg', 'jpeg', 'png', 'gif'])) {
                             $ogp['image'] = Router::url($Upload->uploadUrl($f, "AttachedFile.attached",
-                                                                           ['style' => 'large']), true);
+                                ['style' => 'large']), true);
                             break;
                         }
                     }
                     // ユーザーのローカル名を全て保存
                     $ogp['user_local_names'] = $this->_getUserLocalNames($post['User']['id']);
                 }
-            }
-            // サークルページ
+            } // サークルページ
             elseif (isset($url_info['circle_id'])) {
                 $circle = ClassRegistry::init('Circle')->findById($url_info['circle_id']);
                 if ($circle) {
@@ -245,12 +241,11 @@ class OgpComponent extends Object
                     $ogp['description'] = $circle['Circle']['description'];
                     $ogp['url'] = $url;
                     $ogp['image'] = Router::url($Upload->uploadUrl($circle, 'Circle.photo',
-                                                                   ['style' => 'medium_large']), true);
+                        ['style' => 'medium_large']), true);
                     $ogp['site_name'] = $circle['Circle']['name'];
                 }
             }
-        }
-        elseif ($url_info['controller'] == 'teams' && $url_info['action'] == 'main#') {
+        } elseif ($url_info['controller'] == 'teams' && $url_info['action'] == 'main#') {
             // チームビジョン
             if ($url_info['pass'][0] == 'vision_detail') {
                 $team_vision = ClassRegistry::init('TeamVision')->findById($url_info['pass'][1]);
@@ -260,11 +255,10 @@ class OgpComponent extends Object
                     $ogp['description'] = $team_vision['TeamVision']['description'];
                     $ogp['url'] = $url;
                     $ogp['image'] = Router::url($Upload->uploadUrl($team_vision, 'TeamVision.photo',
-                                                                   ['style' => 'medium_large']), true);
+                        ['style' => 'medium_large']), true);
                     $ogp['site_name'] = $team_vision['TeamVision']['name'];
                 }
-            }
-            // グループビジョン
+            } // グループビジョン
             elseif ($url_info['pass'][0] == 'group_vision_detail') {
                 $group_vision = ClassRegistry::init('GroupVision')->findById($url_info['pass'][1]);
                 if ($group_vision) {
@@ -273,12 +267,11 @@ class OgpComponent extends Object
                     $ogp['description'] = $group_vision['GroupVision']['description'];
                     $ogp['url'] = $url;
                     $ogp['image'] = Router::url($Upload->uploadUrl($group_vision, 'GroupVision.photo',
-                                                                   ['style' => 'medium_large']), true);
+                        ['style' => 'medium_large']), true);
                     $ogp['site_name'] = $group_vision['GroupVision']['name'];
                 }
             }
-        }
-        // ユーザーマイページ
+        } // ユーザーマイページ
         elseif (
             ($url_info['controller'] == 'users' && $url_info['action'] == 'view_goals') ||
             ($url_info['controller'] == 'users' && $url_info['action'] == 'view_actions') ||
@@ -292,13 +285,12 @@ class OgpComponent extends Object
                 $ogp['description'] = $user['TeamMember']['comment'];
                 $ogp['url'] = $url;
                 $ogp['image'] = Router::url($Upload->uploadUrl($user, 'User.photo',
-                                                               ['style' => 'medium_large']), true);
+                    ['style' => 'medium_large']), true);
                 $ogp['site_name'] = $user['User']['roman_username'];
                 // ユーザーのローカル名を全て保存
                 $ogp['user_local_names'] = $this->_getUserLocalNames($user['User']['id']);
             }
-        }
-        // ゴールページ
+        } // ゴールページ
         elseif (
             ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_info') ||
             ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_krs') ||
@@ -313,7 +305,7 @@ class OgpComponent extends Object
                 $ogp['description'] = $goal['Goal']['description'];
                 $ogp['url'] = $url;
                 $ogp['image'] = Router::url($Upload->uploadUrl($goal, 'Goal.photo',
-                                                               ['style' => 'medium_large']), true);
+                    ['style' => 'medium_large']), true);
                 $ogp['site_name'] = $goal['Goal']['name'];
             }
         }
@@ -335,8 +327,8 @@ class OgpComponent extends Object
             // 姓名の並び順を考慮したローカルフルネーム
             $v['LocalName']['local_username'] =
                 ClassRegistry::init('User')->buildLocalUserName($v['LocalName']['language'],
-                                                                $v['LocalName']['first_name'],
-                                                                $v['LocalName']['last_name']);
+                    $v['LocalName']['first_name'],
+                    $v['LocalName']['last_name']);
             $user_local_names[$v['LocalName']['language']] = $v['LocalName'];
         }
         return $user_local_names;
@@ -372,8 +364,7 @@ class OgpComponent extends Object
         if (!empty($response)) {
             /** @noinspection PhpParamsInspection */
             return self::_parse($response);
-        }
-        else {
+        } else {
             // エラーログに出力するとノイズになるためコメントアウト。
             // fetchとしたURLが存在しないケースは結構ある。
             // $this->log("Failed to fetch OGP info. url=$URI");

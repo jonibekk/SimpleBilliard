@@ -66,7 +66,6 @@ class AppModel extends Model
 
     public $support_lang_codes = [
         'jpn',
-        'eng',
     ];
 
     public $model_key_map = [
@@ -250,8 +249,10 @@ class AppModel extends Model
      *
      * @return string
      */
-    public function generateToken($length = 22, $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    {
+    public function generateToken(
+        $length = 22,
+        $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ) {
         $token = "";
         $i = 0;
 
@@ -286,8 +287,7 @@ class AppModel extends Model
     {
         if (!$uid) {
             $this->uid = $this->my_uid;
-        }
-        else {
+        } else {
             $this->uid = $uid;
         }
     }
@@ -301,8 +301,7 @@ class AppModel extends Model
     {
         if (!$team_id) {
             $this->team_id = $this->current_team_id;
-        }
-        else {
+        } else {
             $this->team_id = $team_id;
         }
     }
@@ -402,8 +401,7 @@ class AppModel extends Model
             $value_array = array();
             if (isset($data[0][$this->name])) {
                 $fields = array_keys($data[0][$this->name]);
-            }
-            else {
+            } else {
                 $fields = array_keys($data[0]);
             }
             if ($add_date) {
@@ -414,8 +412,7 @@ class AppModel extends Model
                     if (isset($v[$this->name])) {
                         $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
                         $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
-                    }
-                    else {
+                    } else {
                         $data[$k]['modified'] = REQUEST_TIMESTAMP;
                         $data[$k]['created'] = REQUEST_TIMESTAMP;
                     }
@@ -462,6 +459,25 @@ class AppModel extends Model
             $name .= ":user:" . $user_id;
         }
         return $name;
+    }
+
+    function concatValidationErrorMsg($break_line = true)
+    {
+        $msg_arr = [];
+        foreach ($this->validationErrors as $field) {
+            foreach ($field as $msg) {
+                $msg_arr[] = $msg;
+            }
+        }
+        $delimiter = $break_line ? "\n" : " ";
+        $concat_msg = "";
+        foreach ($msg_arr as $msg) {
+            $concat_msg .= $msg;
+            if ($msg !== end($msg_arr)) {
+                $concat_msg .= $delimiter;
+            }
+        }
+        return $concat_msg;
     }
 
 }

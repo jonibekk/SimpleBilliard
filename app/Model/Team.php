@@ -98,7 +98,7 @@ class Team extends AppModel
     public $validate = [
         'name'               => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notEmpty'  => ['rule' => ['notEmpty'],],
@@ -289,6 +289,26 @@ class Team extends AppModel
         if (!isset($data['Team']['emails'])) {
             return null;
         }
+        if (is_array($data['Team']['emails'])) {
+            $data['Team']['emails'] = array_filter($data['Team']['emails']);
+            $validate_backup = $this->TeamMember->User->Email->validate;
+            $this->TeamMember->User->Email->validate = [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'email'     => ['rule' => ['email'],],
+                ],
+            ];
+            foreach ($data['Team']['emails'] as $email) {
+                $this->TeamMember->User->Email->create(['email' => $email]);
+                if (!$this->TeamMember->User->Email->validates(['fieldList' => ['email']])) {
+                    return null;
+                }
+            }
+            $this->TeamMember->User->Email->validate = $validate_backup;
+
+            return $data['Team']['emails'];
+        }
         $this->set($data);
         if (!$this->validates()) {
             return null;
@@ -395,8 +415,8 @@ class Team extends AppModel
     {
         $out_list = [];
         $teamList = $this->find('list');
-        foreach($teamList as $id=>$name){
-            $out_list[$id] = $id.'_'.$name;
+        foreach ($teamList as $id => $name) {
+            $out_list[$id] = $id . '_' . $name;
         }
         return $out_list;
     }

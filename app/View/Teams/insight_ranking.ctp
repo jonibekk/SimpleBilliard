@@ -14,8 +14,10 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <?= $this->Form->create('TeamInsight', [
-                'url'           => ['controller' => 'teams',
-                                    'action'     => 'insight_ranking'],
+                'url'           => [
+                    'controller' => 'teams',
+                    'action'     => 'insight_ranking'
+                ],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -26,7 +28,7 @@
                 'type'          => 'get',
             ]); ?>
             <?= $this->element('Team/insight_form_input',
-                               ['use' => ['date_range', 'group', 'ranking_type', 'timezone']]) ?>
+                ['use' => ['date_range', 'group', 'ranking_type', 'timezone']]) ?>
             <?= $this->Form->end() ?>
 
             <div id="InsightRankingResult" class="mt_18px"></div>

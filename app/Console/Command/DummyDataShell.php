@@ -60,8 +60,7 @@ class DummyDataShell extends AppShell
     {
         if (isset($this->params['config'])) {
             $this->User->useDbConfig = $this->params['config'];
-        }
-        else {
+        } else {
             $this->User->useDbConfig = "bench";
         }
 
@@ -110,8 +109,7 @@ class DummyDataShell extends AppShell
             $external = true;
             if (isset($this->params['config'])) {
                 $this->User->useDbConfig = $this->params['config'];
-            }
-            else {
+            } else {
                 $this->User->useDbConfig = "bench";
             }
             $table_name = $this->params['table'];
@@ -142,20 +140,15 @@ class DummyDataShell extends AppShell
                 if ($field == "id") {
                     $params[] = $id;
                     $id++;
-                }
-                elseif ($field == "team_id") {
+                } elseif ($field == "team_id") {
                     $params[] = 1;
-                }
-                elseif ($field == "del_flg" || $field == "deleted") {
+                } elseif ($field == "del_flg" || $field == "deleted") {
                     $params[] = $val[$field];
-                }
-                elseif (strpos($field, 'photo', 0) === 0) {
+                } elseif (strpos($field, 'photo', 0) === 0) {
                     $params[] = $val[$field];
-                }
-                elseif (strpos($field, 'site', 0) === 0) {
+                } elseif (strpos($field, 'site', 0) === 0) {
                     $params[] = $val[$field];
-                }
-                else {
+                } else {
                     $params[] = 1;
                 }
             }
@@ -216,20 +209,15 @@ class DummyDataShell extends AppShell
             }
             if ($key === "item") {
                 $select_fields .= ', null';
-            }
-            elseif (strpos($key, 'photo', 0) === 0) {
+            } elseif (strpos($key, 'photo', 0) === 0) {
                 $select_fields .= ', null';
-            }
-            elseif (strpos($key, 'site', 0) === 0) {
+            } elseif (strpos($key, 'site', 0) === 0) {
                 $select_fields .= ', null';
-            }
-            elseif (in_array($key, $datetime_list)) {
+            } elseif (in_array($key, $datetime_list)) {
                 $select_fields .= ", unix_timestamp() - ({$unique_num}) - (60 * 60 * 24 * 30 * 7)";
-            }
-            elseif (in_array($table_schema[$key]['type'], $add_unique_num_type_list)) {
+            } elseif (in_array($table_schema[$key]['type'], $add_unique_num_type_list)) {
                 $select_fields .= ", {$unique_num}";
-            }
-            else {
+            } else {
                 $select_fields .= ", t1.{$key}";
             }
         }
@@ -266,37 +254,27 @@ class DummyDataShell extends AppShell
 
                 if ($field_name == "del_flg") {
                     $records[$table_name][$field_name] = false;
-                }
-                elseif ($field_name == "deleted") {
+                } elseif ($field_name == "deleted") {
                     $records[$table_name][$field_name] = null;
-                }
-                elseif (strpos($field_name, 'photo', 0) === 0) {
+                } elseif (strpos($field_name, 'photo', 0) === 0) {
                     $records[$table_name][$field_name] = null;
-                }
-                elseif (strpos($field_name, 'site', 0) === 0) {
+                } elseif (strpos($field_name, 'site', 0) === 0) {
                     $records[$table_name][$field_name] = null;
-                }
-                else {
+                } else {
                     if ($field['type'] == "string") {
                         $records[$table_name][$field_name] = "test_string";
-                    }
-                    elseif ($field['type'] == "integer") {
+                    } elseif ($field['type'] == "integer") {
                         $records[$table_name][$field_name] = true;
 
-                    }
-                    elseif ($field['type'] == "text") {
+                    } elseif ($field['type'] == "text") {
                         $records[$table_name][$field_name] = "test_text";
-                    }
-                    elseif ($field['type'] == "boolean") {
+                    } elseif ($field['type'] == "boolean") {
                         $records[$table_name][$field_name] = true;
-                    }
-                    elseif ($field['type'] == "datetime") {
+                    } elseif ($field['type'] == "datetime") {
                         $records[$table_name][$field_name] = date('Y-m-d H:i:s');
-                    }
-                    elseif ($field['type'] == "date") {
+                    } elseif ($field['type'] == "date") {
                         $records[$table_name][$field_name] = date('Y-m-d');
-                    }
-                    else {
+                    } else {
                         $records[$table_name][$field_name] = false;
                     }
                 }
