@@ -10,6 +10,7 @@
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __("Set your password") ?></div>
+        <img src="/img/signup/password.png"  class="signup-header-image" />
         <div class="signup-description"><?= __('Choose a password for login to Goalous') ?></div>
         <?=
         $this->Form->create('User', [
