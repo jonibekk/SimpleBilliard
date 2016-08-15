@@ -138,9 +138,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         'disabled' => 'disabled',
                         'id'       => 'RegisterLinkTopMiddle',
                     ]) ?>
-                  -->
                 <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
                 <?= $this->Form->end(); ?>
+                -->
 
                 <?=
                   $this->Html->link(
