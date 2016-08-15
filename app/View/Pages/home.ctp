@@ -103,6 +103,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <p class="summary"><?= __('It\'s free until 31 Dec 2016! Try it!') ?></p>
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
+              <!--
                 <?=
                 $this->Form->create('Email', [
                     'inputDefaults' => array(
@@ -139,6 +140,19 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     ]) ?>
                 <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
                 <?= $this->Form->end(); ?>
+                -->
+
+                <?=
+                  $this->Html->link(
+                      __('Sign Up'),
+                      ['controller' => 'signup', 'action' => 'email'],
+                      [
+                          'class'    => 'btn btn-cta btn-cta-primary',
+                          'id'       => 'RegisterLinkTopMiddle',
+                          'style'    => 'display:block'
+                      ]
+                  );
+                ?>
             </div>
         </div><!--//contianer-->
     </div><!--//signup-->
