@@ -144,7 +144,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
                 <?=
                   $this->Html->link(
-                      'Sign Up',
+                      __('Sign Up'),
                       ['controller' => 'signup', 'action' => 'email'],
                       [
                           'class'    => 'btn btn-cta btn-cta-primary',
