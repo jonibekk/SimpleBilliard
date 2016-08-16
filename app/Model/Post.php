@@ -506,7 +506,7 @@ class Post extends AppModel
 
         $post_filter_conditions = [
             'OR'                            => [],
-            'Post.modified BETWEEN ? AND ?' => [$start, $end],
+            'Post.created BETWEEN ? AND ?' => [$start, $end],
         ];
         /**
          * @var DboSource $db
@@ -664,7 +664,6 @@ class Post extends AppModel
             }
             $post_list = $this->find('list', $post_options);
         }
-
         //投稿を既読に
         $this->PostRead->red($post_list);
 
@@ -811,7 +810,7 @@ class Post extends AppModel
         ];
 
         if (is_array($post_list)) {
-            $options['conditions'][] = ['Post.modified BETWEEN ? AND ?' => [$start, $end]];
+            $options['conditions'][] = ['Post.created BETWEEN ? AND ?' => [$start, $end]];
         }
 
         // note: changed sorting from Post.modified to created DESC, so that only latest posts can be shown on top
@@ -940,7 +939,7 @@ class Post extends AppModel
             'conditions' => [
                 'PostShareCircle.circle_id'                => $my_circle_list,
                 'PostShareCircle.team_id'                  => $this->current_team_id,
-                'PostShareCircle.modified BETWEEN ? AND ?' => [$start, $end],
+                'PostShareCircle.created BETWEEN ? AND ?' => [$start, $end],
             ],
         ];
         if ($share_type !== null) {
@@ -1003,7 +1002,7 @@ class Post extends AppModel
                     'alias'      => 'Post',
                     'conditions' => [
                         '`Goal`.`id`=`Post`.`goal_id`',
-                        'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                        'Post.created BETWEEN ? AND ?' => [$start, $end],
                         'Post.type'                     => $post_types,
                     ],
                 ]
@@ -1036,7 +1035,7 @@ class Post extends AppModel
             'conditions' => [
                 'PostShareUser.user_id'                  => $this->my_uid,
                 'PostShareUser.team_id'                  => $this->current_team_id,
-                'PostShareUser.modified BETWEEN ? AND ?' => [$start, $end],
+                'PostShareUser.created BETWEEN ? AND ?' => [$start, $end],
             ],
         ];
         if ($params['user_id'] !== null) {
@@ -1112,7 +1111,7 @@ class Post extends AppModel
         ];
 
         if ($start !== null && $end !== null) {
-            $query['conditions']['Post.modified BETWEEN ? AND ?'] = [$start, $end];
+            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
         }
         $res = $db->buildStatement($query, $this);
         return $res;
