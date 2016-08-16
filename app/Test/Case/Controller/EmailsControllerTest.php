@@ -35,9 +35,6 @@ class EmailsControllerTest extends GoalousControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
-        'app.thread',
-        'app.message',
         'app.follower',
         'app.collaborator',
         'app.goal',

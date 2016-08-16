@@ -43,8 +43,6 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         'app.job_category',
         'app.team_member',
         'app.member_type',
-        'app.thread',
-        'app.message',
         'app.evaluator',
         'app.evaluation_setting',
         'app.evaluate_term',

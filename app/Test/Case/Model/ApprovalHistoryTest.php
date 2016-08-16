@@ -54,8 +54,6 @@ class ApprovalHistoryTest extends GoalousTestCase
         'app.member_group',
         'app.group',
         'app.invite',
-        'app.thread',
-        'app.message',
         'app.evaluation_setting'
     ];
 
