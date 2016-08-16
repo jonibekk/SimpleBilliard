@@ -1002,7 +1002,7 @@ class Post extends AppModel
                     'alias'      => 'Post',
                     'conditions' => [
                         '`Goal`.`id`=`Post`.`goal_id`',
-                        'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                        'Post.created BETWEEN ? AND ?' => [$start, $end],
                         'Post.type'                     => $post_types,
                     ],
                 ]
@@ -1035,7 +1035,7 @@ class Post extends AppModel
             'conditions' => [
                 'PostShareUser.user_id'                  => $this->my_uid,
                 'PostShareUser.team_id'                  => $this->current_team_id,
-                'PostShareUser.modified BETWEEN ? AND ?' => [$start, $end],
+                'PostShareUser.created BETWEEN ? AND ?' => [$start, $end],
             ],
         ];
         if ($params['user_id'] !== null) {
@@ -1111,7 +1111,7 @@ class Post extends AppModel
         ];
 
         if ($start !== null && $end !== null) {
-            $query['conditions']['Post.modified BETWEEN ? AND ?'] = [$start, $end];
+            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
         }
         $res = $db->buildStatement($query, $this);
         return $res;
