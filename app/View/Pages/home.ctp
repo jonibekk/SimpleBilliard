@@ -130,7 +130,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                     'required'                     => false,
                 ]) ?>
-                <?= $this->Form->button(__('Sign Up'),
+                <?= $this->Form->button(__('Create New Team'),
                     [
                         'type'     => 'submit',
                         'div'      => 'form-group',

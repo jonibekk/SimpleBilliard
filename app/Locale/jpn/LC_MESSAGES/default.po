@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-08-12 12:59+0900\n"
-"PO-Revision-Date: 2016-08-12 12:59+0900\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2016-08-15 16:14+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,10 +13,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.5.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
-#: Model/Team.php:225;226 Model/User.php:1226
+#: Model/Team.php:225;226 Model/User.php:1214
 msgid "All Team"
 msgstr "チーム全体"
 
@@ -72,7 +72,7 @@ msgstr ""
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
 
-#: Controller/AppController.php:563 Controller/UsersController.php:385;441
+#: Controller/AppController.php:563 Controller/UsersController.php:291;355
 msgid "Invalid access"
 msgstr "不正なアクセスです。"
 
@@ -86,9 +86,9 @@ msgstr "ゴールを選択する"
 
 #: Controller/AppController.php:786
 #: Controller/GoalsController.php:1453;1475;1496;1529;1535;1572
-#: Controller/SignupController.php:128;371
-#: Controller/TeamsController.php:1024;1081
-#: Controller/UsersController.php:1211;1310;1332;1352;1382
+#: Controller/SignupController.php:128;351
+#: Controller/TeamsController.php:1031;1088
+#: Controller/UsersController.php:1099;1198;1220;1240;1270
 msgid "Invalid screen transition."
 msgstr "不正な画面遷移です。"
 
@@ -180,7 +180,7 @@ msgstr "サークルから外しました。"
 
 #: Controller/CirclesController.php:418 Controller/GoalsController.php:1290
 #: Controller/PostsController.php:820;843;865
-#: Controller/UsersController.php:228;1001;1004;1079
+#: Controller/UsersController.php:228;889;892;967
 #: View/Elements/cake_variables.ctp:38
 msgid "An error has occurred."
 msgstr "エラーが発生しました。"
@@ -388,7 +388,7 @@ msgstr "フォロー解除しました。"
 msgid "This action can't be edited."
 msgstr "このアクションは編集できません。"
 
-#: Controller/GoalsController.php:1068 Controller/UsersController.php:433
+#: Controller/GoalsController.php:1068 Controller/UsersController.php:347
 msgid "Failed to save data."
 msgstr "データの保存に失敗しました。"
 
@@ -526,7 +526,8 @@ msgstr "アクションを追加しました。"
 msgid "Japanese"
 msgstr "Japanese"
 
-#: Controller/PagesController.php:159 Controller/Component/LangComponent.php:33
+#: Controller/PagesController.php:159
+#: Controller/Component/LangComponent.php:33
 msgid "English"
 msgstr "English"
 
@@ -677,42 +678,42 @@ msgstr "不正なリクエストです。"
 msgid "Saved user profile."
 msgstr "プロフィールが保存されました。"
 
-#: Controller/SignupController.php:140;200
+#: Controller/SignupController.php:140;180
 msgid "Invalid fields"
 msgstr "入力項目が正しくありません。"
 
-#: Controller/SignupController.php:228;394
+#: Controller/SignupController.php:208;374
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:26
 msgid "This email address has already been used. Use another email address."
 msgstr ""
 "このメールアドレスは既に使用されています。他のメールアドレスを指定してくださ"
 "い。"
 
-#: Controller/SignupController.php:271
+#: Controller/SignupController.php:251
 msgid "Invalid screen transition"
 msgstr "不正な画面遷移です。"
 
-#: Controller/SignupController.php:274
+#: Controller/SignupController.php:254
 msgid "Param is incorrect"
 msgstr "パラメータがただしくありません。"
 
-#: Controller/SignupController.php:279
+#: Controller/SignupController.php:259
 msgid "Code Verification has expired"
 msgstr "コードの有効期限が切れています。"
 
-#: Controller/SignupController.php:290
+#: Controller/SignupController.php:270
 msgid "verification code was wrong"
 msgstr "コードが正しくありません。"
 
-#: Controller/SignupController.php:325;377
+#: Controller/SignupController.php:305;357
 msgid "No Data"
 msgstr "データがありません。"
 
-#: Controller/SignupController.php:330;383
+#: Controller/SignupController.php:310;363
 msgid "Invalid Data"
 msgstr "不正なデータです。"
 
-#: Controller/SignupController.php:390;400
+#: Controller/SignupController.php:370;380
 msgid "Some error occurred. Please try again from the start."
 msgstr "エラーが発生しました。もう一度最初から登録してください。"
 
@@ -794,7 +795,8 @@ msgstr "評価を開始しました。"
 
 #: Controller/TeamsController.php:434
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:20
-#: View/Elements/cake_variables.ctp:22 View/Users/password_reset_request.ctp:37
+#: View/Elements/cake_variables.ctp:22
+#: View/Users/password_reset_request.ctp:37
 #: View/Users/registration_with_set_password.ctp:40
 #: View/Users/token_resend.ctp:37
 msgid "Email address is incorrect."
@@ -804,7 +806,7 @@ msgstr "メールアドレスが正しくありません。"
 msgid "%s invitations are the limits in one time."
 msgstr "一度に送信できる招待は%s件までです。"
 
-#: Controller/TeamsController.php:462;948
+#: Controller/TeamsController.php:462;955
 msgid "Error, failed to invite."
 msgstr "問題があるため、招待に失敗しました。"
 
@@ -818,99 +820,101 @@ msgstr ""
 msgid "Invited %s people."
 msgstr "%s人に招待メールを送信しました。"
 
-#: Controller/TeamsController.php:512
+#: Controller/TeamsController.php:519
 msgid "Update completed"
 msgstr "更新が完了しました。"
 
-#: Controller/TeamsController.php:525;619
+#: Controller/TeamsController.php:532;626
 msgid "Error in extension data."
 msgstr "更新データに誤りがあります。"
 
-#: Controller/TeamsController.php:527
+#: Controller/TeamsController.php:534
 msgid "Error in column %s (Column number included in text)"
 msgstr "%s行目でエラーが見つかりました。"
 
-#: Controller/TeamsController.php:532
+#: Controller/TeamsController.php:539
 msgid "%s members updated."
 msgstr "%s人のメンバーを更新しました。"
 
-#: Controller/TeamsController.php:545
+#: Controller/TeamsController.php:552
 msgid "Registration completed."
 msgstr "登録が完了しました。"
 
-#: Controller/TeamsController.php:558
+#: Controller/TeamsController.php:565
 msgid "Error occurred."
 msgstr "エラーがあります。"
 
-#: Controller/TeamsController.php:560
+#: Controller/TeamsController.php:567
 msgid "Error in the column %s (Column number included in text)."
 msgstr "%s行目でエラーが見つかりました。"
 
-#: Controller/TeamsController.php:579
+#: Controller/TeamsController.php:586
 msgid "%s members are added."
 msgstr "%s人のメンバーを追加しました。"
 
-#: Controller/TeamsController.php:606
+#: Controller/TeamsController.php:613
 msgid "Last evaluation is completed."
 msgstr "正常に最終評価が完了しました。"
 
-#: Controller/TeamsController.php:621
+#: Controller/TeamsController.php:628
 msgid "Error in the column %s (Column number included in text)"
 msgstr "%s行目でエラーがあります（行番号は見出し含む）。"
 
-#: Controller/TeamsController.php:626
+#: Controller/TeamsController.php:633
 msgid "%s people's last evaluations are completed."
 msgstr "%s人の最終評価を更新しました。"
 
-#: Controller/TeamsController.php:658
+#: Controller/TeamsController.php:665
 msgid "Invalid access."
 msgstr "不正なアクセスです"
 
-#: Controller/TeamsController.php:664
+#: Controller/TeamsController.php:671
 msgid "You are not a member of this team."
 msgstr "このチームには所属していません"
 
-#: Controller/TeamsController.php:668
+#: Controller/TeamsController.php:675
 msgid "Changed team to %s."
 msgstr "チーム%sに切り替えました。"
 
-#: Controller/TeamsController.php:683
+#: Controller/TeamsController.php:690
 msgid "Evaluation suspended."
 msgstr "評価を停止しました。"
 
-#: Controller/TeamsController.php:687
+#: Controller/TeamsController.php:694
 msgid "Removed evaluation suspension."
 msgstr "評価の停止を解除しました。"
 
-#: Controller/TeamsController.php:919
+#: Controller/TeamsController.php:926
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
 
-#: Controller/TeamsController.php:928
+#: Controller/TeamsController.php:935
 msgid "Error, this invitation already expired, you can't cancel."
-msgstr "エラーが発生しました。すでに招待の期限が切れています。キャンセルはできません。"
+msgstr ""
+"エラーが発生しました。すでに招待の期限が切れています。キャンセルはできませ"
+"ん。"
 
-#: Controller/TeamsController.php:991
+#: Controller/TeamsController.php:998
 msgid "Team vision already exists, new one cannot be made."
 msgstr "既にチームビジョンが存在する為、新規の追加はできません。"
 
-#: Controller/TeamsController.php:1003
+#: Controller/TeamsController.php:1010
 msgid "Team vision is added."
 msgstr "チームビジョンを追加しました。"
 
-#: Controller/TeamsController.php:1007;1042
+#: Controller/TeamsController.php:1014;1049
 msgid "Failed to save team vision."
 msgstr "チームビジョンの保存に失敗しました。"
 
-#: Controller/TeamsController.php:1028;1085
+#: Controller/TeamsController.php:1035;1092
 msgid "Page does not exist."
 msgstr "ページが存在しません。"
 
-#: Controller/TeamsController.php:1038
+#: Controller/TeamsController.php:1045
 msgid "Updated team vision."
 msgstr "チームビジョンを更新しました。"
 
-#: Controller/TeamsController.php:1054
+#: Controller/TeamsController.php:1061
 msgid ""
 "Unable to create group vision as you don't belong to this group or the "
 "vision already exists."
@@ -918,19 +922,19 @@ msgstr ""
 "グループに所属していないか、すでにグループビジョンがあるので、あたらしいグ"
 "ループビジョンはつくれません。"
 
-#: Controller/TeamsController.php:1065
+#: Controller/TeamsController.php:1072
 msgid "Added group vision."
 msgstr "グループビジョンを追加しました。"
 
-#: Controller/TeamsController.php:1069;1101
+#: Controller/TeamsController.php:1076;1108
 msgid "Failed to save group vision."
 msgstr "グループビジョンの保存に失敗しました。"
 
-#: Controller/TeamsController.php:1097
+#: Controller/TeamsController.php:1104
 msgid "Updated group vision."
 msgstr "グループビジョンを更新しました。"
 
-#: Controller/TeamsController.php:1132
+#: Controller/TeamsController.php:1139
 msgid "This email address has already been joined."
 msgstr "このメールアドレスのユーザは既にチームに参加しています。"
 
@@ -942,7 +946,7 @@ msgstr "アカウントがロックされています。%s分後に自動的に�
 msgid "Email address or Password is incorrect."
 msgstr "メールアドレスもしくはパスワードが正しくありません。"
 
-#: Controller/UsersController.php:158;201;252
+#: Controller/UsersController.php:158;201;256
 msgid "Error. Try to login again."
 msgstr "エラーが発生しました。再度ログインをしてください。"
 
@@ -954,7 +958,7 @@ msgstr "2段階認証コードが正しくありません。"
 msgid "Incorrect recovery code."
 msgstr "リカバリーコードが正しくありません。"
 
-#: Controller/UsersController.php:248
+#: Controller/UsersController.php:252
 #: View/Emails/text/account_verification.ctp:14
 #: View/Emails/text/change_email.ctp:14 View/Emails/text/invite.ctp:17
 #: View/Emails/text/password_reset.ctp:14
@@ -963,58 +967,47 @@ msgstr "リカバリーコードが正しくありません。"
 msgid "Hello %s."
 msgstr "%sさん、こんにちは。"
 
-#: Controller/UsersController.php:249
+#: Controller/UsersController.php:253
 msgid "Succeeded to login"
 msgstr "ログイン成功"
 
-#: Controller/UsersController.php:273
+#: Controller/UsersController.php:277
 msgid "See you %s"
 msgstr "%sさん、またお会いしましょう"
 
-#: Controller/UsersController.php:274
+#: Controller/UsersController.php:278
 msgid "Logged out"
 msgstr "ログアウトしました"
 
-#: Controller/UsersController.php:396 Model/Invite.php:93
+#: Controller/UsersController.php:302 Model/Invite.php:93
 msgid "The invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
-#: Controller/UsersController.php:492
-msgid "Code is incorrect."
-msgstr "トークンが正しくありません。"
-
-#: Controller/UsersController.php:506
-msgid ""
-"Email address is incorrect. Please enter the address from the email you "
-"received."
-msgstr ""
-"メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"
-
-#: Controller/UsersController.php:625
+#: Controller/UsersController.php:508
 msgid "Succeeded to register!"
 msgstr "本登録が完了しました！"
 
-#: Controller/UsersController.php:634
+#: Controller/UsersController.php:517
 msgid "Authenticated your email address."
 msgstr "メールアドレスの認証が完了しました。"
 
-#: Controller/UsersController.php:661
+#: Controller/UsersController.php:544
 msgid "Please cancel changing email address and try again."
 msgstr "メールアドレス変更を一度キャンセルし、再度変更してください。"
 
-#: Controller/UsersController.php:668
+#: Controller/UsersController.php:551
 msgid "Email address is changed."
 msgstr "メールアドレスの変更が正常に完了しました。"
 
-#: Controller/UsersController.php:698
+#: Controller/UsersController.php:581
 msgid "Password reset email has been sent. Please check your email."
 msgstr "パスワード再設定のメールを送信しました。ご確認ください。"
 
-#: Controller/UsersController.php:699
+#: Controller/UsersController.php:582
 msgid "Email sent."
 msgstr "メールを送信しました"
 
-#: Controller/UsersController.php:708
+#: Controller/UsersController.php:591
 msgid ""
 "Password code incorrect. The validity period may have expired. Please resend "
 "email again."
@@ -1022,67 +1015,67 @@ msgstr ""
 "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設"
 "定用のメールを送信してください。"
 
-#: Controller/UsersController.php:709
+#: Controller/UsersController.php:592
 msgid "Failed to confirm code."
 msgstr "コードの認証に失敗しました。"
 
-#: Controller/UsersController.php:721
+#: Controller/UsersController.php:604
 msgid "Please login with your new password."
 msgstr "新しいパスワードでログインしてください。"
 
-#: Controller/UsersController.php:722
+#: Controller/UsersController.php:605
 msgid "Password is set."
 msgstr "パスワードを設定しました"
 
-#: Controller/UsersController.php:741;898
+#: Controller/UsersController.php:624;781
 msgid "Confirmation has been sent to your email address."
 msgstr "メールアドレス認証用のメールを送信しました。ご確認ください。"
 
-#: Controller/UsersController.php:742
+#: Controller/UsersController.php:625
 msgid "Send you an email."
 msgstr "メールを送信しました"
 
-#: Controller/UsersController.php:798
+#: Controller/UsersController.php:681
 msgid "Saved user setting."
 msgstr "ユーザ設定を保存しました。"
 
-#: Controller/UsersController.php:800
+#: Controller/UsersController.php:683
 msgid "Failed to save user setting."
 msgstr "ユーザ設定の保存に失敗しました。"
 
-#: Controller/UsersController.php:871
+#: Controller/UsersController.php:754
 msgid "Failed to save password change."
 msgstr "パスワードの変更に失敗しました"
 
-#: Controller/UsersController.php:875
+#: Controller/UsersController.php:758
 msgid "Changed password."
 msgstr "パスワードを変更しました。"
 
-#: Controller/UsersController.php:934
+#: Controller/UsersController.php:822
 msgid "This invitation isn't not for you."
 msgstr "別のユーザ宛のチーム招待です。"
 
-#: Controller/UsersController.php:940
+#: Controller/UsersController.php:828
 msgid "Joined %s."
 msgstr "チーム「%s」に参加しました。"
 
-#: Controller/UsersController.php:1007
+#: Controller/UsersController.php:895
 msgid "The code is incorrect."
 msgstr "コードが正しくありません。"
 
-#: Controller/UsersController.php:1018
+#: Controller/UsersController.php:906
 msgid "Succeeded to save 2-Step Verification."
 msgstr "2段階認証の登録が完了しました。"
 
-#: Controller/UsersController.php:1041
+#: Controller/UsersController.php:929
 msgid "Succeeded to cancel 2-Step Verification."
 msgstr "2段階認証を解除しました。"
 
-#: Controller/UsersController.php:1088
+#: Controller/UsersController.php:976
 msgid "Generated new recovery codes."
 msgstr "新しいリカバリコードを生成しました。"
 
-#: Controller/UsersController.php:1240 Model/EvaluateTerm.php:514
+#: Controller/UsersController.php:1128 Model/EvaluateTerm.php:514
 #: Model/Goal.php:69 View/Elements/Team/evaluation_freeze.ctp:31
 #: View/Elements/Team/evaluation_progress.ctp:42
 #: View/Elements/Team/insight_form_input.ctp:55 View/Evaluations/index.ctp:23
@@ -1090,19 +1083,19 @@ msgstr "新しいリカバリコードを生成しました。"
 msgid "Current Term"
 msgstr "今期"
 
-#: Controller/UsersController.php:1241 Model/EvaluateTerm.php:518
+#: Controller/UsersController.php:1129 Model/EvaluateTerm.php:518
 #: Model/Goal.php:70 View/Goals/add.ctp:346
 msgid "Next Term"
 msgstr "来期"
 
-#: Controller/UsersController.php:1242 Model/EvaluateTerm.php:516
+#: Controller/UsersController.php:1130 Model/EvaluateTerm.php:516
 #: Model/Goal.php:71 View/Elements/Team/evaluation_freeze.ctp:54
 #: View/Elements/Team/evaluation_progress.ctp:30
 #: View/Elements/Team/insight_form_input.ctp:58 View/Evaluations/index.ctp:23
 msgid "Previous Term"
 msgstr "前期"
 
-#: Controller/UsersController.php:1401
+#: Controller/UsersController.php:1289
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
 
@@ -1233,7 +1226,8 @@ msgid "Failed to save."
 msgstr "保存処理に失敗しました。"
 
 #: Model/Evaluation.php:644 View/Elements/cake_variables.ctp:316
-#: View/Elements/header_logged_in.ctp:115 View/Elements/modal_add_circle.ctp:49
+#: View/Elements/header_logged_in.ctp:115
+#: View/Elements/modal_add_circle.ctp:49
 #: View/Elements/modal_edit_circle.ctp:293
 #: View/Elements/Feed/site_info_block.ctp:115
 #: View/Elements/Goal/simplex_top_section.ctp:44;160
@@ -1677,73 +1671,73 @@ msgstr "年"
 
 #: Model/Team.php:266 View/Elements/cake_variables.ctp:414
 #: View/Elements/User/profile_setting.ctp:113 View/Users/add_profile.ctp:95
-#: View/Users/register_prof_with_invite.ctp:82
+#: View/Users/register_prof_with_invite.ctp:84
 msgid "Jan"
 msgstr "１月"
 
 #: Model/Team.php:267 View/Elements/cake_variables.ctp:415
 #: View/Elements/User/profile_setting.ctp:114 View/Users/add_profile.ctp:96
-#: View/Users/register_prof_with_invite.ctp:83
+#: View/Users/register_prof_with_invite.ctp:85
 msgid "Feb"
 msgstr "２月"
 
 #: Model/Team.php:268 View/Elements/cake_variables.ctp:416
 #: View/Elements/User/profile_setting.ctp:115 View/Users/add_profile.ctp:97
-#: View/Users/register_prof_with_invite.ctp:84
+#: View/Users/register_prof_with_invite.ctp:86
 msgid "Mar"
 msgstr "３月"
 
 #: Model/Team.php:269 View/Elements/cake_variables.ctp:417
 #: View/Elements/User/profile_setting.ctp:116 View/Users/add_profile.ctp:98
-#: View/Users/register_prof_with_invite.ctp:85
+#: View/Users/register_prof_with_invite.ctp:87
 msgid "Apr"
 msgstr "４月"
 
 #: Model/Team.php:270 View/Elements/cake_variables.ctp:418
 #: View/Elements/User/profile_setting.ctp:117 View/Users/add_profile.ctp:99
-#: View/Users/register_prof_with_invite.ctp:86
+#: View/Users/register_prof_with_invite.ctp:88
 msgid "May"
 msgstr "５月"
 
 #: Model/Team.php:271 View/Elements/cake_variables.ctp:419
 #: View/Elements/User/profile_setting.ctp:118 View/Users/add_profile.ctp:100
-#: View/Users/register_prof_with_invite.ctp:87
+#: View/Users/register_prof_with_invite.ctp:89
 msgid "Jun"
 msgstr "６月"
 
 #: Model/Team.php:272 View/Elements/cake_variables.ctp:420
 #: View/Elements/User/profile_setting.ctp:119 View/Users/add_profile.ctp:101
-#: View/Users/register_prof_with_invite.ctp:88
+#: View/Users/register_prof_with_invite.ctp:90
 msgid "Jul"
 msgstr "７月"
 
 #: Model/Team.php:273 View/Elements/cake_variables.ctp:421
 #: View/Elements/User/profile_setting.ctp:120 View/Users/add_profile.ctp:102
-#: View/Users/register_prof_with_invite.ctp:89
+#: View/Users/register_prof_with_invite.ctp:91
 msgid "Aug"
 msgstr "８月"
 
 #: Model/Team.php:274 View/Elements/cake_variables.ctp:422
 #: View/Elements/User/profile_setting.ctp:121 View/Users/add_profile.ctp:103
-#: View/Users/register_prof_with_invite.ctp:90
+#: View/Users/register_prof_with_invite.ctp:92
 msgid "Sep"
 msgstr "９月"
 
 #: Model/Team.php:275 View/Elements/cake_variables.ctp:423
 #: View/Elements/User/profile_setting.ctp:122 View/Users/add_profile.ctp:104
-#: View/Users/register_prof_with_invite.ctp:91
+#: View/Users/register_prof_with_invite.ctp:93
 msgid "Oct"
 msgstr "１０月"
 
 #: Model/Team.php:276 View/Elements/cake_variables.ctp:424
 #: View/Elements/User/profile_setting.ctp:123 View/Users/add_profile.ctp:105
-#: View/Users/register_prof_with_invite.ctp:92
+#: View/Users/register_prof_with_invite.ctp:94
 msgid "Nov"
 msgstr "１１月"
 
 #: Model/Team.php:277 View/Elements/cake_variables.ctp:425
 #: View/Elements/User/profile_setting.ctp:124 View/Users/add_profile.ctp:106
-#: View/Users/register_prof_with_invite.ctp:93
+#: View/Users/register_prof_with_invite.ctp:95
 msgid "Dec"
 msgstr "１２月"
 
@@ -2133,65 +2127,66 @@ msgstr "女性"
 msgid "Neither"
 msgstr "どちらでもない"
 
-#: Model/User.php:655;696
+#: Model/User.php:643;684
 msgid "Saving Email failed"
 msgstr "メールアドレスの保存に失敗しました。"
 
-#: Model/User.php:664;689
+#: Model/User.php:652;677
 msgid "Saving User failed"
 msgstr "ユーザ情報の保存に失敗しました。"
 
-#: Model/User.php:674;681;708
+#: Model/User.php:662;669;696
 msgid "Saving LocalName failed"
 msgstr "ローカル名の保存に失敗しました。"
 
-#: Model/User.php:734
+#: Model/User.php:722
 msgid "Current Password is incorrect."
 msgstr "現在のパスワードが間違っています。"
 
-#: Model/User.php:788
+#: Model/User.php:776
 msgid "Invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
-#: Model/User.php:791
+#: Model/User.php:779
 msgid "Invitation token is expired."
 msgstr "トークンの期限が切れています。"
 
-#: Model/User.php:817 View/Users/password_reset_request.ctp:31
+#: Model/User.php:805 View/Users/password_reset_request.ctp:31
 #: View/Users/token_resend.ctp:31
 msgid "Enter your email address."
 msgstr "メールアドレスを入力してください。"
 
-#: Model/User.php:829
+#: Model/User.php:817
 msgid "This email address isn't registered at Goalous."
 msgstr "このメールアドレスはGoalousに登録されていません。"
 
-#: Model/User.php:834
+#: Model/User.php:822
 msgid "This email should be authenticated. Check your email box."
 msgstr ""
 "このメールアドレスは認証されていません。以前に送られたメールをご確認くださ"
 "い。"
 
-#: Model/User.php:839
+#: Model/User.php:827
 msgid "The user account is invalid."
 msgstr "ユーザアカウントが有効ではありません。"
 
-#: Model/User.php:913
+#: Model/User.php:901
 msgid "Email address is empty."
 msgstr "メールアドレスが入力されていません"
 
-#: Model/User.php:931
+#: Model/User.php:919
 msgid ""
 "Current email address is not authenticated. So, you can't change email "
 "address."
 msgstr "現在のメールアドレスが認証待ちのため、変更できません。"
 
-#: Model/User.php:1272
+#: Model/User.php:1260
 msgid "%1$s member"
 msgstr "%1$s人のメンバー"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:16
-#: View/Elements/cake_variables.ctp:21 View/Elements/modal_add_circle.ctp:43;94
+#: View/Elements/cake_variables.ctp:21
+#: View/Elements/modal_add_circle.ctp:43;94
 #: View/Elements/modal_collabo.ctp:48;62;75
 #: View/Elements/modal_edit_circle.ctp:57;90
 #: View/Elements/Feed/common_form.ctp:145;162;315;483
@@ -2211,10 +2206,11 @@ msgstr "%1$s人のメンバー"
 #: View/Teams/add.ctp:39 View/Teams/add_group_vision.ctp:46
 #: View/Teams/add_team_vision.ctp:38 View/Teams/edit_group_vision.ctp:47
 #: View/Teams/edit_team_vision.ctp:39 View/Users/add_profile.ctp:60;67
-#: View/Users/password_reset.ctp:35;41 View/Users/password_reset_request.ctp:38
+#: View/Users/password_reset.ctp:35;41
+#: View/Users/password_reset_request.ctp:38
 #: View/Users/register.ctp:34;44;99;106
 #: View/Users/register_password_with_invite.ctp:29
-#: View/Users/register_prof_with_invite.ctp:37;48;104
+#: View/Users/register_prof_with_invite.ctp:37;49;107
 #: View/Users/registration_with_set_password.ctp:41;49;55
 #: View/Users/token_resend.ctp:38 View/Users/view_actions.ctp:29
 msgid "Input is required."
@@ -2227,7 +2223,7 @@ msgstr "許可されているのは数字のみです。"
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
 #: View/Elements/User/profile_setting.ctp:71;81
 #: View/Users/add_profile.ctp:59;66 View/Users/register.ctp:33;43
-#: View/Users/register_prof_with_invite.ctp:35;46
+#: View/Users/register_prof_with_invite.ctp:35;47
 msgid "Only alphabet characters are allowed."
 msgstr "アルファベットのみで入力してください。"
 
@@ -2595,9 +2591,9 @@ msgid "Set up Goalous"
 msgstr "セットアップ"
 
 #: View/Elements/cake_variables.ctp:307;413
-#: View/Elements/User/modal_2fa_register.ctp:97 View/Setup/profile_image.ctp:18
-#: View/Signup/email.ctp:43 View/Teams/invite.ctp:86
-#: View/Users/register_prof_with_invite.ctp:153
+#: View/Elements/User/modal_2fa_register.ctp:97
+#: View/Setup/profile_image.ctp:18 View/Signup/email.ctp:43
+#: View/Teams/invite.ctp:86 View/Users/register_prof_with_invite.ctp:156
 msgid "Next"
 msgstr "次へ"
 
@@ -2899,7 +2895,7 @@ msgid "Your name will only be displayed to your team on Goalous."
 msgstr "あなたの名前はGoalousのチーム内でのみ表示されます。"
 
 #: View/Elements/cake_variables.ctp:389
-#: View/Users/register_prof_with_invite.ctp:68
+#: View/Users/register_prof_with_invite.ctp:70
 msgid "I want to receive news and updates by email from Goalous."
 msgstr "Goalousからのメールによるニュースや更新情報などを受け取る。"
 
@@ -2954,7 +2950,7 @@ msgid "Your name"
 msgstr "お名前"
 
 #: View/Elements/cake_variables.ctp:400 View/Users/register.ctp:141
-#: View/Users/register_prof_with_invite.ctp:139
+#: View/Users/register_prof_with_invite.ctp:142
 msgid "I agree to %s and %s of Goalous."
 msgstr "Goalousの%sと%sに同意します。"
 
@@ -2964,13 +2960,13 @@ msgstr "利用規約"
 
 #: View/Elements/cake_variables.ctp:400 View/Elements/footer.ctp:23
 #: View/Elements/footer_not_logged_in.ctp:54 View/Users/register.ctp:124
-#: View/Users/register_prof_with_invite.ctp:122
+#: View/Users/register_prof_with_invite.ctp:125
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
 #: View/Elements/cake_variables.ctp:401
 #: View/Elements/User/profile_setting.ctp:79 View/Users/add_profile.ctp:64
-#: View/Users/register.ctp:41 View/Users/register_prof_with_invite.ctp:44
+#: View/Users/register.ctp:41 View/Users/register_prof_with_invite.ctp:45
 msgid "eg. Harry"
 msgstr "例) Hiroshi"
 
@@ -3124,8 +3120,9 @@ msgstr "ログイン"
 
 #: View/Elements/header_home.ctp:71 View/Elements/Homepage/signup.ctp:26
 #: View/Pages/home.ctp:132
-msgid "Sign Up"
-msgstr "新規登録"
+#, fuzzy
+msgid "Create New Team"
+msgstr "新しいチームを作成"
 
 #: View/Elements/header_logged_in.ctp:43;45
 #: View/Elements/header_logged_in_right.ctp:23
@@ -3227,7 +3224,8 @@ msgstr "これ以上のデータがありません。"
 msgid "More..."
 msgstr "もっと読む ▼"
 
-#: View/Elements/modal_add_circle.ctp:42 View/Elements/modal_edit_circle.ctp:56
+#: View/Elements/modal_add_circle.ctp:42
+#: View/Elements/modal_edit_circle.ctp:56
 msgid "eg) the sales division"
 msgstr "例) 営業部"
 
@@ -3248,12 +3246,13 @@ msgstr "例) 営業部"
 #: View/Evaluations/view.ctp:101;427 View/GoalApproval/done.ctp:191
 #: View/GoalApproval/index.ctp:204
 #: View/Goals/add.ctp:83;165;203;219;254;299;431 View/Pages/home.ctp:129
-#: View/Setup/profile_add.ctp:90 View/Signup/email.ctp:37 View/Teams/add.ctp:42
-#: View/Teams/add_group_vision.ctp:50;104 View/Teams/add_team_vision.ctp:42;96
+#: View/Setup/profile_add.ctp:90 View/Signup/email.ctp:37
+#: View/Teams/add.ctp:42 View/Teams/add_group_vision.ctp:50;104
+#: View/Teams/add_team_vision.ctp:42;96
 #: View/Teams/edit_group_vision.ctp:51;107
 #: View/Teams/edit_team_vision.ctp:43;99 View/Teams/invite.ctp:55;76
 #: View/Users/register.ctp:37;47;80
-#: View/Users/register_prof_with_invite.ctp:40;51
+#: View/Users/register_prof_with_invite.ctp:40;52
 msgid "It's over limit characters (%s)."
 msgstr "最大文字数(%s)を超えています。"
 
@@ -3261,7 +3260,8 @@ msgstr "最大文字数(%s)を超えています。"
 msgid "You can't change this setting lator."
 msgstr "この設定は後から変更できません。"
 
-#: View/Elements/modal_add_circle.ctp:93 View/Elements/modal_edit_circle.ctp:88
+#: View/Elements/modal_add_circle.ctp:93
+#: View/Elements/modal_edit_circle.ctp:88
 msgid "eg) Let's share the latest information."
 msgstr "例) 最新情報を共有しましょう。"
 
@@ -3835,7 +3835,8 @@ msgstr "今日やったアクションを共有しよう！"
 
 #: View/Elements/Goal/add_new_action_form.ctp:84
 #: View/Elements/Goal/modal_edit_action_result.ctp:74
-#: View/Elements/Goal/simplex_top_section.ctp:133 View/Evaluations/view.ctp:311
+#: View/Elements/Goal/simplex_top_section.ctp:133
+#: View/Evaluations/view.ctp:311
 msgid "Results"
 msgstr "成果"
 
@@ -6253,7 +6254,7 @@ msgstr "パスワード再設定用のURLを送信いたします。"
 msgid "Create a new account"
 msgstr "新しいアカウントを作成"
 
-#: View/Users/register.ctp:111 View/Users/register_prof_with_invite.ctp:109
+#: View/Users/register.ctp:111 View/Users/register_prof_with_invite.ctp:112
 msgid "Terms of Use"
 msgstr "利用規約"
 
@@ -6281,7 +6282,7 @@ msgstr "チーム「%s」に参加しますか?"
 msgid "Your name will displayed along with your goals and posts in Goalous"
 msgstr "あなたの名前はGoalous内のあなたのゴール、あなたの投稿に表示されます。"
 
-#: View/Users/register_prof_with_invite.ctp:76
+#: View/Users/register_prof_with_invite.ctp:78
 msgid "Your date of birth"
 msgstr "あなたの誕生日"
 
@@ -6443,8 +6444,8 @@ msgstr "boolean"
 
 #: Model/ActionResult.php:validation for field photo1;validation
 #: photo2;validation photo3;validation photo4;validation photo5
-#: Model/AttachedFile.php:validation attached Model/Circle.php:validation photo
-#: Model/Comment.php:validation photo5;validation site_photo
+#: Model/AttachedFile.php:validation attached Model/Circle.php:validation
+#: photo Model/Comment.php:validation photo5;validation site_photo
 #: Model/Goal.php:validation Model/Post.php:validation
 #: Model/Team.php:validation Model/User.php:validation
 msgid "image_max_size"
@@ -6459,28 +6460,29 @@ msgstr "image_max_size"
 msgid "image_type"
 msgstr "image_type"
 
-#: Model/ActionResult.php:validation for field goal_id;validation key_result_id
-#: Model/ApprovalHistory.php:validation action_status
+#: Model/ActionResult.php:validation for field goal_id;validation
+#: key_result_id Model/ApprovalHistory.php:validation action_status
 #: Model/AttachedFile.php:validation file_type;validation file_size;validation
 #: model_type Model/CircleInsight.php:validation user_count
 #: Model/Collaborator.php:validation type;validation priority
 #: Model/Comment.php:validation comment_like_count;validation
 #: comment_read_count;validation post_id Model/CommentLike.php:validation
 #: comment_id Model/Device.php:validation os_type
-#: Model/EvaluateScore.php:validation index_num Model/Evaluation.php:validation
-#: index_num;validation evaluate_score_id;validation evaluate_type
-#: Model/Evaluator.php:validation Model/Goal.php:validation
-#: value_unit;validation target_value;validation start_value;validation
-#: status;validation priority;validation goal_category_id;validation
-#: start_date;validation end_date Model/GroupInsight.php:validation
-#: Model/GroupVision.php:validation group_id Model/KeyResult.php:validation
-#: target_value Model/MemberGroup.php:validation
-#: Model/OauthToken.php:validation type Model/Post.php:validation
-#: comment_count;validation post_like_count;validation post_read_count
-#: Model/PostLike.php:validation Model/SendMail.php:validation template_type
-#: Model/Team.php:validation timezone;validation start_term_month;validation
-#: border_months Model/TeamInsight.php:validation Model/Thread.php:validation
-#: status Model/User.php:validation team_id;validation default_team_id
+#: Model/EvaluateScore.php:validation index_num
+#: Model/Evaluation.php:validation index_num;validation
+#: evaluate_score_id;validation evaluate_type Model/Evaluator.php:validation
+#: Model/Goal.php:validation value_unit;validation target_value;validation
+#: start_value;validation status;validation priority;validation
+#: goal_category_id;validation start_date;validation end_date
+#: Model/GroupInsight.php:validation Model/GroupVision.php:validation group_id
+#: Model/KeyResult.php:validation target_value
+#: Model/MemberGroup.php:validation Model/OauthToken.php:validation type
+#: Model/Post.php:validation comment_count;validation
+#: post_like_count;validation post_read_count Model/PostLike.php:validation
+#: Model/SendMail.php:validation template_type Model/Team.php:validation
+#: timezone;validation start_term_month;validation border_months
+#: Model/TeamInsight.php:validation Model/Thread.php:validation status
+#: Model/User.php:validation team_id;validation default_team_id
 msgid "numeric"
 msgstr "numeric"
 
@@ -6508,10 +6510,10 @@ msgstr "notEmplty"
 #: Model/ActionResult.php:validation for field name
 #: Model/ApprovalHistory.php:validation comment Model/Circle.php:validation
 #: name;validation description Model/Collaborator.php:validation
-#: role;validation Model/Comment.php:validation body Model/Email.php:validation
-#: email Model/EvaluateScore.php:validation description;validation index_num
-#: Model/Evaluation.php:validation Model/Goal.php:validation
-#: target_value;validation start_value;validation
+#: role;validation Model/Comment.php:validation body
+#: Model/Email.php:validation email Model/EvaluateScore.php:validation
+#: description;validation index_num Model/Evaluation.php:validation
+#: Model/Goal.php:validation target_value;validation start_value;validation
 #: Model/GoalCategory.php:validation Model/GroupVision.php:validation
 #: Model/Invite.php:validation message Model/KeyResult.php:validation
 #: target_value Model/LocalName.php:validation first_name;validation last_name
@@ -6524,8 +6526,9 @@ msgstr "notEmplty"
 msgid "maxLength"
 msgstr "maxLength"
 
-#: Model/ActionResult.php:validation for field name Model/Circle.php:validation
-#: description Model/Comment.php:validation body Model/Post.php:validation
+#: Model/ActionResult.php:validation for field name
+#: Model/Circle.php:validation description Model/Comment.php:validation body
+#: Model/Post.php:validation
 msgid "Invalid Submission"
 msgstr "Invalid Submission"
 
@@ -6593,6 +6596,19 @@ msgstr "passwordCheck"
 #: Model/User.php:validation for field password_confirm
 msgid "passwordSameCheck"
 msgstr "passwordSameCheck"
+
+#~ msgid "Code is incorrect."
+#~ msgstr "トークンが正しくありません。"
+
+#~ msgid ""
+#~ "Email address is incorrect. Please enter the address from the email you "
+#~ "received."
+#~ msgstr ""
+#~ "メールアドレスが一致しません。招待が届いたメールアドレスを入力してくださ"
+#~ "い。"
+
+#~ msgid "Sign Up"
+#~ msgstr "新規登録"
 
 #~ msgid ""
 #~ "Use at least 8 characters and use a mix of numbers, alphanumeric and "

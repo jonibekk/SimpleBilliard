@@ -68,7 +68,7 @@ if (!isset($top_lang)) {
                             ]); ?>
                     </li>
                     <li class="nav-item nav-item-cta last" id="h-nav-signup">
-                        <?= $this->Html->link(__('Sign Up'),
+                        <?= $this->Html->link(__('Create New Team'),
                             array('controller' => 'signup', 'action' => 'email', '?' => ['type' => 'header']),
                             array(
                                 'class' => 'header-signup btn btn-cta btn-cta-primary',
