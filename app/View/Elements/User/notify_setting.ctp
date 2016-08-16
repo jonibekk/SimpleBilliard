@@ -98,9 +98,9 @@
 <script>
     $(function () {
         var notify_help_message = {
-            'all': "<?= __("You'll get all notification.") ?>",
-            'primary': "<?= __("You'll get important notification.") ?>",
-            'none': "<?= __("Nothing will be deliverd.") ?>"
+            'all': '<?= __("You'll get all notification.") ?>',
+            'primary': '<?= __("You'll get important notification.") ?>',
+            'none': '<?= __("Nothing will be deliverd.") ?>'
         };
 
         var onSelectChange = function () {
