@@ -95,15 +95,14 @@ for ($i = 0; $i < $num_ogp; $i++) {
     </div><!--//bg-slider-wrapper-->
 
     <div class="lp-signup ">
-        <div class="lp-signup-form-opacity-box">
-            <div class="lp-signup-form-opacity-box-inner">
-            </div>
-        </div>
-
         <span class="lp-signup-key-concept"><?= __("Enjoy your work. Achieve your goals.") ?></span>
         <span class="lp-signup-pay-free"><?= __('You can use Goalous free of charge until 31 Dec 2016.') ?></span>
 
         <div class="lp-signup-form">
+            <div class="lp-signup-form-opacity-box">
+                <div class="lp-signup-form-opacity-box-inner">
+                </div>
+            </div>
             <div class="lp-signup-form-inner">
                 <?=
                 $this->Form->create('Email', [
