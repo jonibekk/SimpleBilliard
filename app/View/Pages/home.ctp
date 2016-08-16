@@ -120,7 +120,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
                 <?=
                 $this->Form->input('email', [
-                    'placeholder'                  => 'you@yourdomain.com',
+                    'placeholder'                  => __('Email address'),
                     "data-bv-notempty"             => "true",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
@@ -131,13 +131,17 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                     'required'                     => false
                 ]) ?>
-                <?= $this->Form->button(__('Create New Team'),
-                    [
-                        'type'     => 'submit',
-                        'class'    => 'btn btn-cta btn-cta-primary lp-signup-submit-button',
-                    ]) ?>
-                <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
+                <div class="submit">
+                    <?= $this->Form->button(__('Create New Team') . ' <i class="fa fa-angle-right"></i>',
+                        [
+                            'type'     => 'submit',
+                            'class'    => 'btn btn-cta btn-cta-primary lp-signup-submit-button',
+                            'escape'   => false
+                        ]) ?>
+                </div>
+                <div id="HomeEmailErrorContainer" style="font-size:15px;color: #fff"></div>
                 <?= $this->Form->end(); ?>
+                <span class="lp-signup-form-footer-notice">すでにお使いであれば、ログイン。ご質問があれば、お問い合わせ。</span>
             </div>
         </div>
     </div>

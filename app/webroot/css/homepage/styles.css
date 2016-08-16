@@ -427,7 +427,7 @@ select {
     font-weight: normal;
     text-transform: uppercase;
     font-size: 14px;
-    margin-right: 10px;
+    margin-right: 4px;
     min-width: 100px;
 }
 .header .main-nav .nav .nav-item .btn-link {
@@ -614,32 +614,29 @@ select {
 /* ======= Signup Section ======= */
 
 @media screen and (max-width: 768px) {
-    .lp-signup {
+    .lp-signup-key-concept {
+        font-weight: bold;
+        color: #fff;
+        font-size: 23px;
+    }
+    .lp-signup-pay-free {
+        color: #fff;
+        font-size: 14px;
+        display: block;
+        margin-top: 20px;
+        font-weight: 200;
+        -webkit-font-smoothing: none;
+        -webkit-font-smoothing: subpixel-antialiased; \* Standard *\
+        -webkit-font-smoothing: antialiased;
     }
 }
 
 @media screen and (min-width: 768px) {
-    .lp-signup {
-        width: 570px;
-        position: absolute;
-        z-index: 100;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: 180px auto 0;
-        text-align: center;;
-    }
-    .lp-signup-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
     .lp-signup-form-opacity-box {
-        height: 200px;
+        height: 201px;
         width: 100%;
         position: absolute;
-        margin-top: 115px;
+        margin-top: 110px;
     }
     .lp-signup-form-opacity-box-inner {
         position: relative;
@@ -649,15 +646,6 @@ select {
         opacity: 0.3;
         z-index: 200;
     }
-    .lp-signup-form {
-        position: relative;
-        z-index: 300;
-        width: 100%;
-        height: 100%;
-    }
-    .lp-signup-form-inner {
-        padding: 8px 12px;
-    }
     .lp-signup-key-concept {
         font-weight: bold;
         color: #fff;
@@ -665,25 +653,65 @@ select {
     }
     .lp-signup-pay-free {
         color: #fff;
-        font-size: 24px;
+        font-size: 18px;
         display: block;
         margin-top: 20px;
         font-weight: 200;
+        -webkit-font-smoothing: none;
+        -webkit-font-smoothing: subpixel-antialiased; \* Standard *\
+        -webkit-font-smoothing: antialiased;
+    }
+}
+    .lp-signup {
+        width: 100%;
+        max-width: 570px;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 90px auto 0;
+        text-align: center;;
+    }
+    .lp-signup-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .lp-signup-form {
+        position: relative;
+        z-index: 300;
+    }
+    .lp-signup-form-inner {
+        padding: 15px 34px;
     }
     .lp-signup-input-email {
         width: 100%;
+        height: 55px;
+        font-size: 18px;
     }
     .lp-signup-submit-button {
-        margin-top: 12px;
-        width: 100%:
+        margin-top: 15px;
+        width: 100%;
+        display: block;
+        font-size: 18px;
+        height: 55px;
     }
-}
+    .lp-signup-form-footer-notice {
+        color: #fff;
+        display: block;
+        margin-top: 15px;
+        font-size: 14px;
+        line-height: 2em;
+        -webkit-font-smoothing: none;
+        -webkit-font-smoothing: subpixel-antialiased; \* Standard *\
+        -webkit-font-smoothing: antialiased;
+    }
 
 
 
-.signup {
-    padding: 80px 0;
-}
+
 .fixed-container .signup.has-bg-color {
     background: #f5f5f5;
 }

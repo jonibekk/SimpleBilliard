@@ -22,7 +22,6 @@ if (!isset($top_lang)) {
         <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
             <h1 class="logo pull-left">
                 <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
-                <span class="logo-description"><?= __('Enterprise SNS the most ever open for Goal') ?></span>
             </h1>
         </a>
         <nav id="main-nav" class="main-nav navbar-right" role="navigation">
