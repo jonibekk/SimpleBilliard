@@ -164,26 +164,6 @@ class SignupController extends AppController
         $this->render('index');
     }
 
-    public function user()
-    {
-        $this->render('index');
-    }
-
-    public function password()
-    {
-        $this->render('index');
-    }
-
-    public function team()
-    {
-        $this->render('index');
-    }
-
-    public function term()
-    {
-        $this->render('index');
-    }
-
     /**
      * メールアドレスが登録可能なものか確認
      *

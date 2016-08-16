@@ -149,7 +149,7 @@ class Email extends AppModel
             'contain'    => [
                 'User' => [
                     'TeamMember' => [
-                        'conditions' => ['TeamMember.team_id' => $team_id],
+                        'conditions' => ['TeamMember.team_id' => $team_id, 'TeamMember.active_flg' => 1],
                         'fields'     => ['id']
                     ]
                 ]
