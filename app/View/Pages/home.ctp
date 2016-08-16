@@ -100,7 +100,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
         </div>
 
-        <span class="lp-signup-key-concept">チーム力を"たのしく"あげる</span>
+        <span class="lp-signup-key-concept"><?= __("Enjoy your work. Achieve your goals.") ?></span>
         <span class="lp-signup-pay-free"><?= __('You can use Goalous free of charge until 31 Dec 2016.') ?></span>
 
         <div class="lp-signup-form">
@@ -139,9 +139,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
                             'escape'   => false
                         ]) ?>
                 </div>
-                <div id="HomeEmailErrorContainer" style="font-size:15px;color: #fff"></div>
+                <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
                 <?= $this->Form->end(); ?>
-                <span class="lp-signup-form-footer-notice">すでにお使いであれば、ログイン。ご質問があれば、お問い合わせ。</span>
+                <span class="lp-signup-form-footer-notice">
+                  <?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login" class="lp-signup-login-link">Log in</a>', '<a href="/contact" class="lp-signup-contact-link">Contact us</a>') ?></span>
             </div>
         </div>
     </div>

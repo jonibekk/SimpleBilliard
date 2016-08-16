@@ -613,6 +613,12 @@ select {
 
 /* ======= Signup Section ======= */
 
+.lp-signup-login-link:link, .lp-signup-login-link:hover, .lp-signup-login-link:active, .lp-signup-login-link:visited,
+.lp-signup-contact-link:link, .lp-signup-contact-link:hover, .lp-signup-contact-link:active, .lp-signup-contact-link:visited {
+    text-decoration: underline;
+    color: #fff;
+}
+
 @media screen and (max-width: 768px) {
     .lp-signup-key-concept {
         font-weight: bold;

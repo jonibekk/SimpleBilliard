@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-08-15 16:14+0900\n"
+"PO-Revision-Date: 2016-08-16 17:14+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2209,7 +2209,7 @@ msgstr "%1$s人のメンバー"
 #: View/Users/password_reset.ctp:35;41
 #: View/Users/password_reset_request.ctp:38
 #: View/Users/register.ctp:34;44;99;106
-#: View/Users/register_password_with_invite.ctp:29
+#: View/Users/register_password_with_invite.ctp:30
 #: View/Users/register_prof_with_invite.ctp:37;49;107
 #: View/Users/registration_with_set_password.ctp:41;49;55
 #: View/Users/token_resend.ctp:38 View/Users/view_actions.ctp:29
@@ -2926,7 +2926,7 @@ msgstr ""
 "これらの情報にアクセスできません。"
 
 #: View/Elements/cake_variables.ctp:395
-#: View/Users/register_password_with_invite.ctp:35
+#: View/Users/register_password_with_invite.ctp:36
 msgid "Use 8 or more characters including at least one number."
 msgstr "8文字以上。1つ以上の英字と数字を含む。"
 
@@ -3037,7 +3037,7 @@ msgstr "サークルを見る"
 msgid "View All"
 msgstr "すべて表示"
 
-#: View/Elements/footer.ctp:20 View/Elements/header_home.ctp:57
+#: View/Elements/footer.ctp:20 View/Elements/header_home.ctp:56
 msgid "Blog"
 msgstr "ブログ"
 
@@ -3085,7 +3085,7 @@ msgstr "特定商取引法に基づく表記"
 msgid "Get in touch"
 msgstr "Get in touch"
 
-#: View/Elements/footer_not_logged_in.ctp:74 View/Elements/header_home.ctp:61
+#: View/Elements/footer_not_logged_in.ctp:74 View/Elements/header_home.ctp:60
 #: View/Elements/Homepage/faq.ctp:99
 msgid "Contact us"
 msgstr "お問い合わせ"
@@ -3098,29 +3098,24 @@ msgstr "プレス関連のお問い合わせ"
 msgid "Contact for cooporation"
 msgstr "協業のお問い合わせ"
 
-#: View/Elements/header_home.ctp:25
-msgid "Enterprise SNS the most ever open for Goal"
-msgstr "最強にオープンな社内SNS"
-
-#: View/Elements/header_home.ctp:32
+#: View/Elements/header_home.ctp:31
 msgid "Toggle navigation"
 msgstr "ナビゲーションの開閉"
 
-#: View/Elements/header_home.ctp:41
+#: View/Elements/header_home.ctp:40
 msgid "Features"
 msgstr "機能"
 
-#: View/Elements/header_home.ctp:49
+#: View/Elements/header_home.ctp:48
 msgid "Pricing"
 msgstr "料金"
 
-#: View/Elements/header_home.ctp:65 View/Users/login.ctp:63
+#: View/Elements/header_home.ctp:64 View/Users/login.ctp:63
 msgid "Login"
 msgstr "ログイン"
 
-#: View/Elements/header_home.ctp:71 View/Elements/Homepage/signup.ctp:26
-#: View/Pages/home.ctp:132
-#, fuzzy
+#: View/Elements/header_home.ctp:70 View/Elements/Homepage/signup.ctp:26
+#: View/Pages/home.ctp:135
 msgid "Create New Team"
 msgstr "新しいチームをつくる"
 
@@ -3245,7 +3240,7 @@ msgstr "例) 営業部"
 #: View/Elements/User/profile_setting.ctp:44;52;75;85;152;223
 #: View/Evaluations/view.ctp:101;427 View/GoalApproval/done.ctp:191
 #: View/GoalApproval/index.ctp:204
-#: View/Goals/add.ctp:83;165;203;219;254;299;431 View/Pages/home.ctp:129
+#: View/Goals/add.ctp:83;165;203;219;254;299;431 View/Pages/home.ctp:131
 #: View/Setup/profile_add.ctp:90 View/Signup/email.ctp:37
 #: View/Teams/add.ctp:42 View/Teams/add_group_vision.ctp:50;104
 #: View/Teams/add_team_vision.ctp:42;96
@@ -4204,7 +4199,7 @@ msgstr "その他のご質問はありますか？"
 msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
-#: View/Elements/Homepage/signup.ctp:23 View/Pages/home.ctp:103
+#: View/Elements/Homepage/signup.ctp:23
 msgid "It's free until 31 Dec 2016! Try it!"
 msgstr "2016年12月31日まで完全無料！今すぐお試しください。"
 
@@ -4290,7 +4285,8 @@ msgstr "チーム画像"
 msgid "Plan"
 msgstr "プラン"
 
-#: View/Elements/Team/edit_basic_setting.ctp:101 View/Teams/add.ctp:95
+#: View/Elements/Team/edit_basic_setting.ctp:101 View/Pages/home.ctp:104
+#: View/Teams/add.ctp:95
 msgid "You can use Goalous free of charge until 31 Dec 2016."
 msgstr "2016年12月31日まで無料でご利用できます。"
 
@@ -4724,7 +4720,7 @@ msgstr "メンバーを招待する"
 
 #: View/Elements/Team/invite.ctp:43 View/Emails/text/contact.ctp:30
 #: View/Pages/contact.ctp:133 View/Pages/contact_confirm.ctp:115
-#: View/Teams/invite.ctp:34
+#: View/Pages/home.ctp:123 View/Teams/invite.ctp:34
 msgid "Email address"
 msgstr "メールアドレス"
 
@@ -5872,41 +5868,45 @@ msgstr ""
 msgid "Goalous (ゴーラス) │最強にオープンな社内SNS"
 msgstr ""
 
-#: View/Pages/home.ctp:87
-msgid "Be open, achieve Goal."
-msgstr "オープンがゴールを切り拓く"
+#: View/Pages/home.ctp:103
+msgid "Enjoy your work. Achieve your goals."
+msgstr "チーム力を\"たのしく\"あげる"
 
-#: View/Pages/home.ctp:153
+#: View/Pages/home.ctp:145
+msgid "Are you on Goalous? %s. Any question ? %s."
+msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
+
+#: View/Pages/home.ctp:157
 msgid "5 Feb 2016"
 msgstr "2016年2月5日"
 
-#: View/Pages/home.ctp:158
+#: View/Pages/home.ctp:162
 msgid "We appeared on a magazine. - Gekkan Jinji Management Feb. -"
 msgstr "月刊人事マネジメント2016年2月号に掲載されました"
 
-#: View/Pages/home.ctp:167
+#: View/Pages/home.ctp:171
 msgid "4 Feb 2016"
 msgstr "2016年2月4日"
 
-#: View/Pages/home.ctp:172
+#: View/Pages/home.ctp:176
 msgid "We appeared on a web media. - Hito to shigoto no kenkyujo by Idem -"
 msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
 
-#: View/Pages/home.ctp:185
+#: View/Pages/home.ctp:189
 msgid "You can definitely change your organization by Goalous."
 msgstr "Goalousで、組織は激変する"
 
-#: View/Pages/home.ctp:186
+#: View/Pages/home.ctp:190
 msgid "Achieve Goals, make your team open, let your job become joyful!"
 msgstr ""
 "「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしく"
 "したい。それだけのこと。"
 
-#: View/Pages/home.ctp:190
+#: View/Pages/home.ctp:194
 msgid "Get progress to Vision."
 msgstr "経営ビジョンにずんずん近づく"
 
-#: View/Pages/home.ctp:192
+#: View/Pages/home.ctp:196
 msgid ""
 "Every one knows Vision and make their Goals. Goalous let them improve "
 "themselves."
@@ -5915,15 +5915,15 @@ msgstr ""
 "す。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進"
 "みます。"
 
-#: View/Pages/home.ctp:199
+#: View/Pages/home.ctp:203
 msgid "You get to know your team grow by your achievement of goals."
 msgstr "自分のゴールの活動によって組織が成長している事を実感できます！"
 
-#: View/Pages/home.ctp:210
+#: View/Pages/home.ctp:214
 msgid "You can reduce the words, What is that?"
 msgstr "「それ知らない」が激減する"
 
-#: View/Pages/home.ctp:212
+#: View/Pages/home.ctp:216
 msgid ""
 "What did your colleages did today? Share on Goalous and get to know more and "
 "more."
@@ -5932,17 +5932,17 @@ msgstr ""
 "日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足が"
 "なければ、より的確な判断ができます。"
 
-#: View/Pages/home.ctp:219
+#: View/Pages/home.ctp:223
 msgid ""
 "仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこ"
 "から始まります。"
 msgstr ""
 
-#: View/Pages/home.ctp:231
+#: View/Pages/home.ctp:235
 msgid "Make results by coorporation."
 msgstr "協力による成果が出る"
 
-#: View/Pages/home.ctp:233
+#: View/Pages/home.ctp:237
 msgid ""
 "What most important for teams is to know each other. Get to know by Goalous, "
 "you can get succeeded efficiently."
@@ -5951,43 +5951,43 @@ msgstr ""
 "と。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出る"
 "ようになります。"
 
-#: View/Pages/home.ctp:240
+#: View/Pages/home.ctp:244
 msgid "Help each other, enjoy with them. How wonderful?"
 msgstr "共に助けあい、共に喜び合う。素敵ですよね？"
 
-#: View/Pages/home.ctp:255
+#: View/Pages/home.ctp:259
 msgid "Watch Video"
 msgstr "Watch Video"
 
-#: View/Pages/home.ctp:264
+#: View/Pages/home.ctp:268
 msgid "About Goalous"
 msgstr "Goalousについて"
 
-#: View/Pages/home.ctp:285
+#: View/Pages/home.ctp:289
 msgid "Wherever, Whenever, from your smartphone."
 msgstr "スマホアプリで、いつでもどこからでも"
 
-#: View/Pages/home.ctp:286
+#: View/Pages/home.ctp:290
 msgid "You can get iOS and Android apps."
 msgstr "iOS・Androidアプリでもご利用いただけます"
 
-#: View/Pages/home.ctp:328
+#: View/Pages/home.ctp:332
 msgid "What is Goalous? (jp, pdf)"
 msgstr "Goalous紹介資料（PDFファイル）"
 
-#: View/Pages/home.ctp:331
+#: View/Pages/home.ctp:335
 msgid "This file is written in Japanese."
 msgstr "社内稟議用のサンプル資料です。ぜひご活用ください。"
 
-#: View/Pages/home.ctp:336;356
+#: View/Pages/home.ctp:340;360
 msgid "Download the file"
 msgstr "資料ダウンロード"
 
-#: View/Pages/home.ctp:348
+#: View/Pages/home.ctp:352
 msgid "Fryer (pdf)"
 msgstr "フライヤー（PDFファイル）"
 
-#: View/Pages/home.ctp:351
+#: View/Pages/home.ctp:355
 msgid "This is Goalous flyer."
 msgstr "フライヤー資料です。ぜひご活用ください。"
 
@@ -6262,15 +6262,15 @@ msgstr "利用規約"
 msgid "New registration"
 msgstr "新規登録"
 
-#: View/Users/register_password_with_invite.ctp:13
+#: View/Users/register_password_with_invite.ctp:14
 msgid "Choose a password for login to Goalous"
 msgstr "Goalousのログインパスワードを作成してください。"
 
-#: View/Users/register_password_with_invite.ctp:28
+#: View/Users/register_password_with_invite.ctp:29
 msgid "********"
 msgstr ""
 
-#: View/Users/register_password_with_invite.ctp:37
+#: View/Users/register_password_with_invite.ctp:38
 msgid "Join Team"
 msgstr "チームに参加"
 
@@ -6596,6 +6596,12 @@ msgstr "passwordCheck"
 #: Model/User.php:validation for field password_confirm
 msgid "passwordSameCheck"
 msgstr "passwordSameCheck"
+
+#~ msgid "Enterprise SNS the most ever open for Goal"
+#~ msgstr "最強にオープンな社内SNS"
+
+#~ msgid "Be open, achieve Goal."
+#~ msgstr "オープンがゴールを切り拓く"
 
 #~ msgid "Code is incorrect."
 #~ msgstr "トークンが正しくありません。"
