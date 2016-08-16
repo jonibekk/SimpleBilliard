@@ -27,7 +27,7 @@
                 <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Create New Team') ?></button>
             </a>
         </p>
-        <p><?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login">Log in</a>', '<a href="/contact">Contact us</a>') ?></p>
+        <p><?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
     </div>
 </section><!--//signup-->
 <!-- END app/View/Elements/Homepage/signup.ctp -->

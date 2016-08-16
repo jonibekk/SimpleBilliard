@@ -142,7 +142,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
                 <?= $this->Form->end(); ?>
                 <span class="lp-signup-form-footer-notice">
-                  <?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login" class="lp-signup-login-link">Log in</a>', '<a href="/contact" class="lp-signup-contact-link">Contact us</a>') ?></span>
+                  <?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact us') . '</a>') ?></span>
             </div>
         </div>
     </div>
