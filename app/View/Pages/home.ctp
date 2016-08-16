@@ -83,40 +83,41 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
-    <div class="container intro">
-        <h2 class="title"><span class="text"><?= __('Be open, achieve Goal.') ?></span></h2>
-    </div><!--//intro-->
 
     <div class="bg-slider-wrapper">
         <div id="bg-slider" class="flexslider bg-slider">
             <ul class="slides">
-                <li class="slide slide-1"></li>
+                <li class="slide slide-1">
+                    <div class="slide-black-cover"></div>
+                </li>
             </ul>
         </div>
     </div><!--//bg-slider-wrapper-->
-</section><!--//promo-->
 
-<div class="fixed-container">
-    <div class="signup">
-        <div class="container">
-            <div class="col-md-7 col-sm-12 col-xs-12">
-                <p class="summary"><?= __('It\'s free until 31 Dec 2016! Try it!') ?></p>
+    <div class="lp-signup ">
+        <div class="lp-signup-form-opacity-box">
+            <div class="lp-signup-form-opacity-box-inner">
             </div>
-            <div class="col-md-5 col-sm-12 col-xs-12">
-              <!--
+        </div>
+
+        <span class="lp-signup-key-concept">チーム力を"たのしく"あげる</span>
+        <span class="lp-signup-pay-free"><?= __('You can use Goalous free of charge until 31 Dec 2016.') ?></span>
+
+        <div class="lp-signup-form">
+            <div class="lp-signup-form-inner">
                 <?=
                 $this->Form->create('Email', [
                     'inputDefaults' => array(
-                        'div'       => 'form-group',
                         'label'     => false,
                         'wrapInput' => false,
-                        'class'     => 'form-control'
+                        'class'     => 'form-control lp-signup-input-email'
                     ),
                     'url'           => ['controller' => 'signup', 'action' => 'email'],
-                    'class'         => 'form-inline',
+                    'class'         => 'form-horizontal',
                     'novalidate'    => true,
                     'id'            => 'HomeSignupEmail'
                 ]); ?>
+
                 <?=
                 $this->Form->input('email', [
                     'placeholder'                  => 'you@yourdomain.com',
@@ -128,35 +129,19 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                    'required'                     => false,
+                    'required'                     => false
                 ]) ?>
                 <?= $this->Form->button(__('Create New Team'),
                     [
                         'type'     => 'submit',
-                        'div'      => 'form-group',
-                        'class'    => 'btn btn-cta btn-cta-primary',
-                        'disabled' => 'disabled',
-                        'id'       => 'RegisterLinkTopMiddle',
+                        'class'    => 'btn btn-cta btn-cta-primary lp-signup-submit-button',
                     ]) ?>
                 <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
                 <?= $this->Form->end(); ?>
-                -->
-
-                <?=
-                  $this->Html->link(
-                      __('Sign Up'),
-                      ['controller' => 'signup', 'action' => 'email'],
-                      [
-                          'class'    => 'btn btn-cta btn-cta-primary',
-                          'id'       => 'RegisterLinkTopMiddle',
-                          'style'    => 'display:block'
-                      ]
-                  );
-                ?>
             </div>
-        </div><!--//contianer-->
-    </div><!--//signup-->
-</div>
+        </div>
+    </div>
+</section><!--//promo-->
 
 <!-- ここからつづき -->
 <!-- ******PRESS****** -->

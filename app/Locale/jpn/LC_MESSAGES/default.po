@@ -3122,7 +3122,7 @@ msgstr "ログイン"
 #: View/Pages/home.ctp:132
 #, fuzzy
 msgid "Create New Team"
-msgstr "新しいチームを作成"
+msgstr "新しいチームをつくる"
 
 #: View/Elements/header_logged_in.ctp:43;45
 #: View/Elements/header_logged_in_right.ctp:23
@@ -4292,7 +4292,7 @@ msgstr "プラン"
 
 #: View/Elements/Team/edit_basic_setting.ctp:101 View/Teams/add.ctp:95
 msgid "You can use Goalous free of charge until 31 Dec 2016."
-msgstr "2016年12月31日まで無料でご利用いただけます。"
+msgstr "2016年12月31日まで無料でご利用できます。"
 
 #: View/Elements/Team/edit_basic_setting.ctp:113
 msgid "Change basic settings"

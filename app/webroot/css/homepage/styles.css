@@ -345,6 +345,12 @@ select {
 .bg-slider-wrapper .flexslider .flex-control-nav li a.flex-active {
     background: rgba(255, 255, 255, 0.8);
 }
+.slide-black-cover {
+  background-color: #000;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+}
 
 /* ======= Header ======= */
 
@@ -606,6 +612,74 @@ select {
 }
 
 /* ======= Signup Section ======= */
+
+@media screen and (max-width: 768px) {
+    .lp-signup {
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .lp-signup {
+        width: 570px;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 180px auto 0;
+        text-align: center;;
+    }
+    .lp-signup-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .lp-signup-form-opacity-box {
+        height: 200px;
+        width: 100%;
+        position: absolute;
+        margin-top: 115px;
+    }
+    .lp-signup-form-opacity-box-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        opacity: 0.3;
+        z-index: 200;
+    }
+    .lp-signup-form {
+        position: relative;
+        z-index: 300;
+        width: 100%;
+        height: 100%;
+    }
+    .lp-signup-form-inner {
+        padding: 8px 12px;
+    }
+    .lp-signup-key-concept {
+        font-weight: bold;
+        color: #fff;
+        font-size: 43px;
+    }
+    .lp-signup-pay-free {
+        color: #fff;
+        font-size: 24px;
+        display: block;
+        margin-top: 20px;
+        font-weight: 200;
+    }
+    .lp-signup-input-email {
+        width: 100%;
+    }
+    .lp-signup-submit-button {
+        margin-top: 12px;
+        width: 100%:
+    }
+}
+
+
 
 .signup {
     padding: 80px 0;
