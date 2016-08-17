@@ -1,11 +1,13 @@
 <?php
 App::uses('MessageRead', 'Model');
+App::uses('GoalousTestCase', 'Test');
 
 /**
  * MessageRead Test Case
-
+ *
+ * @property MessageRead $MessageRead
  */
-class MessageReadTest extends CakeTestCase
+class MessageReadTest extends GoalousTestCase
 {
 
     /**
@@ -13,7 +15,7 @@ class MessageReadTest extends CakeTestCase
      *
      * @var array
      */
-    public $fixtures = array(
+    public $fixtures = [
         'app.message_read',
         'app.message',
         'app.user',
@@ -68,7 +70,7 @@ class MessageReadTest extends CakeTestCase
         'app.local_name',
         'app.recovery_code',
         'app.device'
-    );
+    ];
 
     /**
      * setUp method

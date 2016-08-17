@@ -1,11 +1,13 @@
 <?php
 App::uses('TopicMember', 'Model');
+App::uses('GoalousTestCase', 'Test');
 
 /**
  * TopicMember Test Case
-
+ *
+ * @property TopicMember $TopicMember
  */
-class TopicMemberTest extends CakeTestCase
+class TopicMemberTest extends GoalousTestCase
 {
 
     /**
@@ -13,7 +15,7 @@ class TopicMemberTest extends CakeTestCase
      *
      * @var array
      */
-    public $fixtures = array(
+    public $fixtures = [
         'app.topic_member',
         'app.topic',
         'app.user',
@@ -68,7 +70,7 @@ class TopicMemberTest extends CakeTestCase
         'app.local_name',
         'app.recovery_code',
         'app.device'
-    );
+    ];
 
     /**
      * setUp method

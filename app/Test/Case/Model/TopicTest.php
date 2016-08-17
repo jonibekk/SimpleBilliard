@@ -1,11 +1,13 @@
 <?php
 App::uses('Topic', 'Model');
+App::uses('GoalousTestCase', 'Test');
 
 /**
  * Topic Test Case
-
+ *
+ * @property Topic $Topic
  */
-class TopicTest extends CakeTestCase
+class TopicTest extends GoalousTestCase
 {
 
     /**
@@ -13,7 +15,7 @@ class TopicTest extends CakeTestCase
      *
      * @var array
      */
-    public $fixtures = array(
+    public $fixtures = [
         'app.topic',
         'app.user',
         'app.team',
@@ -71,7 +73,7 @@ class TopicTest extends CakeTestCase
         'app.message',
         'app.message_read',
         'app.topic_member'
-    );
+    ];
 
     /**
      * setUp method
