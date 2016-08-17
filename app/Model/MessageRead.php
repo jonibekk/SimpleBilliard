@@ -6,7 +6,6 @@ App::uses('AppModel', 'Model');
  *
  * @property Message $Message
  * @property User    $User
- * @property Team    $Team
  */
 class MessageRead extends AppModel
 {
@@ -16,47 +15,19 @@ class MessageRead extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'del_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'del_flg' => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+    ];
 
     /**
      * belongsTo associations
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Message' => array(
-            'className'  => 'Message',
-            'foreignKey' => 'message_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'User'    => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'    => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Message',
+        'User',
+    ];
 }
