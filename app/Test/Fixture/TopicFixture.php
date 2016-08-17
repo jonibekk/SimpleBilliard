@@ -1,10 +1,10 @@
 <?php
+App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * TopicFixture
-
  */
-class TopicFixture extends CakeTestFixture
+class TopicFixture extends CakeTestFixtureEx
 {
 
     /**
