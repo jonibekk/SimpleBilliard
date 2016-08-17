@@ -57,7 +57,6 @@ class MessageTest extends GoalousTestCase
         'app.job_category',
         'app.team_member',
         'app.member_type',
-        'app.thread',
         'app.evaluation_setting',
         'app.team_vision',
         'app.team_insight',
@@ -95,6 +94,11 @@ class MessageTest extends GoalousTestCase
         unset($this->Message);
 
         parent::tearDown();
+    }
+
+    function testDummy()
+    {
+
     }
 
 }
