@@ -33,6 +33,7 @@ class PagesController extends AppController
      */
     public function display()
     {
+        $this->Session->delete('_Token');
         $path = func_get_args();
         $page = $subpage = null;
 
@@ -53,17 +54,7 @@ class PagesController extends AppController
         }
 
         $this->layout = LAYOUT_HOMEPAGE;
-        //html出力結果をキャッシュ
-        $url = "/" . $this->request->url . "_lang:" . Configure::read('Config.language');
-        if (CACHE_HOMEPAGE) {
-            if (!$out = Cache::read($url, 'homepage')) {
-                $out = $this->render(implode('/', $path));
-                Cache::write($url, $out, 'homepage');
-            }
-        } else {
-            $out = $this->render(implode('/', $path));
-        }
-        return $out;
+        return $this->render(implode('/', $path));
     }
 
     function _setTopAllContentIfLoggedIn()
