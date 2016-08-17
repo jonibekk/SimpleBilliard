@@ -33,7 +33,6 @@ class PagesController extends AppController
      */
     public function display()
     {
-        $this->Session->delete('_Token');
         $path = func_get_args();
         $page = $subpage = null;
 
