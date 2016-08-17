@@ -21,10 +21,13 @@
     <div class="container text-center">
         <h2 class="title"><?= __('Let\'s go to Goalous!') ?></h2>
         <p class="summary"><?= __('It\'s free until 31 Dec 2016! Try it!') ?></p>
-        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'bottom']]) ?>"
-           class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
-            <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Sign Up') ?></button>
-        </a>
+        <p class="row">
+            <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'bottom']]) ?>"
+               class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
+                <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Create New Team') ?></button>
+            </a>
+        </p>
+        <p><?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
     </div>
 </section><!--//signup-->
 <!-- END app/View/Elements/Homepage/signup.ctp -->
