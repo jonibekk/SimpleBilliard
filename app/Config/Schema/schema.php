@@ -1,4 +1,4 @@
-<?php
+<?php 
 class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
@@ -810,13 +810,13 @@ class AppSchema extends CakeSchema {
 		'target_user_ids_if_member_changed' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'comma spalated list for target users(e.g. 1,2,3) if add or remove members.', 'charset' => 'utf8mb4'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-		'created' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary'),
+		'created' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'indexes' => array(
 			'PRIMARY' => array('column' => array('id', 'created'), 'unique' => 1),
-			'user_id' => array('column' => 'sender_user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
-			'created' => array('column' => 'created', 'unique' => 0)
+			'created' => array('column' => 'created', 'unique' => 0),
+			'user_id' => array('column' => 'sender_user_id', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
@@ -1334,9 +1334,9 @@ class AppSchema extends CakeSchema {
 		'modified' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'index'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'user_id' => array('column' => 'creator_user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
-			'modified' => array('column' => 'modified', 'unique' => 0)
+			'modified' => array('column' => 'modified', 'unique' => 0),
+			'user_id' => array('column' => 'creator_user_id', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
