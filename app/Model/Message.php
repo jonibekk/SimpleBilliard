@@ -7,7 +7,6 @@ App::uses('AppModel', 'Model');
  * @property Topic       $Topic
  * @property User        $User
  * @property MessageFile $MessageFile
- * @property MessageRead $MessageRead
  */
 class Message extends AppModel
 {
@@ -46,7 +45,6 @@ class Message extends AppModel
      */
     public $hasMany = [
         'MessageFile',
-        'MessageRead',
     ];
 
 }

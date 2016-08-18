@@ -70,7 +70,6 @@ class TopicTest extends GoalousTestCase
         'app.device',
         'app.message_file',
         'app.message',
-        'app.message_read',
         'app.topic_member'
     ];
 

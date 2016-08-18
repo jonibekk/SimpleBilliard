@@ -70,7 +70,6 @@ class MessageTest extends GoalousTestCase
         'app.recovery_code',
         'app.device',
         'app.message_file',
-        'app.message_read'
     ];
 
     /**
