@@ -2,24 +2,21 @@
 App::uses('AppModel', 'Model');
 
 /**
- * Message Model
+ * Topic Model
  *
- * @property Topic       $Topic
- * @property User        $SenderUser
+ * @property User        $CreatorUser
  * @property MessageFile $MessageFile
+ * @property Message     $Message
+ * @property TopicMember $TopicMember
  */
-class Message extends AppModel
+class Topic extends AppModel
 {
-
     /**
      * Validation rules
      *
      * @var array
      */
     public $validate = [
-        'type'    => [
-            'numeric' => ['rule' => ['numeric'],],
-        ],
         'del_flg' => [
             'boolean' => ['rule' => ['boolean'],],
         ],
@@ -31,10 +28,9 @@ class Message extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Topic',
-        'SenderUser' => [
+        'CreatorUser' => [
             'className'  => 'User',
-            'foreignKey' => 'sender_user_id',
+            'foreignKey' => 'creator_user_id',
         ],
     ];
 
@@ -45,6 +41,8 @@ class Message extends AppModel
      */
     public $hasMany = [
         'MessageFile',
+        'Message',
+        'TopicMember',
     ];
 
 }

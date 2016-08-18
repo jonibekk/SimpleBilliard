@@ -1,13 +1,13 @@
 <?php
-App::uses('Message', 'Model');
+App::uses('MessageFile', 'Model');
 App::uses('GoalousTestCase', 'Test');
 
 /**
- * Message Test Case
+ * MessageFile Test Case
  *
- * @property Message $Message
+ * @property MessageFile $MessageFile
  */
-class MessageTest extends GoalousTestCase
+class MessageFileTest extends GoalousTestCase
 {
 
     /**
@@ -16,8 +16,10 @@ class MessageTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.message',
+        'app.message_file',
         'app.topic',
+        'app.message',
+        'app.attached_file',
         'app.user',
         'app.team',
         'app.badge',
@@ -31,12 +33,6 @@ class MessageTest extends GoalousTestCase
         'app.key_result',
         'app.action_result',
         'app.action_result_file',
-        'app.attached_file',
-        'app.comment_file',
-        'app.comment',
-        'app.comment_like',
-        'app.comment_read',
-        'app.post_file',
         'app.collaborator',
         'app.approval_history',
         'app.follower',
@@ -44,12 +40,17 @@ class MessageTest extends GoalousTestCase
         'app.evaluate_term',
         'app.evaluator',
         'app.evaluate_score',
+        'app.comment',
+        'app.comment_like',
+        'app.comment_read',
+        'app.comment_file',
         'app.post_share_user',
         'app.post_like',
         'app.post_read',
         'app.comment_mention',
         'app.given_badge',
         'app.post_mention',
+        'app.post_file',
         'app.group',
         'app.member_group',
         'app.group_vision',
@@ -68,8 +69,7 @@ class MessageTest extends GoalousTestCase
         'app.oauth_token',
         'app.local_name',
         'app.recovery_code',
-        'app.device',
-        'app.message_file',
+        'app.device'
     ];
 
     /**
@@ -80,7 +80,7 @@ class MessageTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Message = ClassRegistry::init('Message');
+        $this->MessageFile = ClassRegistry::init('MessageFile');
     }
 
     /**
@@ -90,12 +90,12 @@ class MessageTest extends GoalousTestCase
      */
     public function tearDown()
     {
-        unset($this->Message);
+        unset($this->MessageFile);
 
         parent::tearDown();
     }
 
-    function testDummy()
+    public function testDummy()
     {
 
     }

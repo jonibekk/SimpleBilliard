@@ -51,8 +51,6 @@ class EvaluationSettingTest extends GoalousTestCase
         'app.group',
         'app.evaluator',
         'app.invite',
-        'app.thread',
-        'app.message'
     );
 
     /**

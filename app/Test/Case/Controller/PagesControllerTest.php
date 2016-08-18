@@ -43,9 +43,6 @@ class PagesControllerTest extends GoalousControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
-        'app.thread',
-        'app.message',
         'app.email',
         'app.oauth_token',
         'app.post_share_user',

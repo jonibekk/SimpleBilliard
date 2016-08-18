@@ -38,8 +38,6 @@ class CommentFileTest extends GoalousTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.thread',
-        'app.message',
         'app.evaluator',
         'app.evaluation',
         'app.evaluate_term',

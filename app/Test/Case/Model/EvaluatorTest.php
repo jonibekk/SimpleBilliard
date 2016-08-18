@@ -50,8 +50,6 @@ class EvaluatorTest extends GoalousTestCase
         'app.member_type',
         'app.local_name',
         'app.invite',
-        'app.thread',
-        'app.message'
     );
 
     /**

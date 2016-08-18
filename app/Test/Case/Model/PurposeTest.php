@@ -41,9 +41,6 @@ class PurposeTest extends GoalousTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
-        'app.thread',
-        'app.message',
         'app.email',
         'app.notify_setting',
         'app.oauth_token',
