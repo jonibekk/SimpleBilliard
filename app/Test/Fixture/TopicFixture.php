@@ -21,7 +21,7 @@ class TopicFixture extends CakeTestFixtureEx
             'key'      => 'primary',
             'comment'  => 'ID'
         ],
-        'user_id'         => [
+        'create_user_id'  => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -71,7 +71,7 @@ class TopicFixture extends CakeTestFixtureEx
         ],
         'indexes'         => [
             'PRIMARY'  => ['column' => 'id', 'unique' => 1],
-            'user_id'  => ['column' => 'user_id', 'unique' => 0],
+            'user_id'  => ['column' => 'create_user_id', 'unique' => 0],
             'team_id'  => ['column' => 'team_id', 'unique' => 0],
             'modified' => ['column' => 'modified', 'unique' => 0]
         ],
