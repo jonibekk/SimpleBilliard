@@ -149,7 +149,7 @@ deploy:
     app-id: 35e69705-18d9-4c45-81eb-7e02e0c61fdc
     wait-until-deployed: true
     on:
-      branch: prep-lp-page
+      branch: dev-ind
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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
