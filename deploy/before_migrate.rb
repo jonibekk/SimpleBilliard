@@ -5,20 +5,22 @@ bash "composer install" do
   cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
-bash "npm install" do
-  code <<-EOS
-  source /usr/local/nvm/nvm.sh
-  npm set progress=false
-  cd #{release_path}; pnpm i --no-bin-links
-  EOS
-end
 
-bash "run gulp build" do
-  code <<-EOS
-  source /usr/local/nvm/nvm.sh
-  cd #{release_path}; gulp build
-  EOS
-end
+# デプロイが失敗しているため緊急対応。デプロイが成功したら即座にコメントアウトを外す。
+# bash "npm install" do
+#   code <<-EOS
+#   source /usr/local/nvm/nvm.sh
+#   npm set progress=false
+#   cd #{release_path}; pnpm i --no-bin-links
+#   EOS
+# end
+#
+# bash "run gulp build" do
+#   code <<-EOS
+#   source /usr/local/nvm/nvm.sh
+#   cd #{release_path}; gulp build
+#   EOS
+# end
 
 bash "ntpdate" do
   user "root"
