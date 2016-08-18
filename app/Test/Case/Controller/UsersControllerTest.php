@@ -46,8 +46,6 @@ class UsersControllerTest extends GoalousControllerTestCase
         'app.invite',
         'app.evaluate_term',
         'app.evaluation',
-        'app.thread',
-        'app.message',
         'app.email',
         'app.send_mail',
         'app.send_mail_to_user',

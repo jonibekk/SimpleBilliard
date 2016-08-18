@@ -48,8 +48,6 @@ class MemberTypeTest extends GoalousTestCase
         'app.job_category',
         'app.local_name',
         'app.invite',
-        'app.thread',
-        'app.message'
     );
 
     /**

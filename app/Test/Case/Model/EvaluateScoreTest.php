@@ -50,8 +50,6 @@ class EvaluateScoreTest extends GoalousTestCase
         'app.group',
         'app.evaluator',
         'app.invite',
-        'app.thread',
-        'app.message',
         'app.evaluation',
         'app.evaluate_score'
     );

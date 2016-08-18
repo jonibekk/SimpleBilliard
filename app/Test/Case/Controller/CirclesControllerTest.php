@@ -43,8 +43,6 @@ class CirclesControllerTest extends GoalousControllerTestCase
         'app.job_category',
         'app.local_name',
         'app.invite',
-        'app.thread',
-        'app.message',
         'app.circle_member',
         'app.post_share_user',
         'app.post_share_circle',

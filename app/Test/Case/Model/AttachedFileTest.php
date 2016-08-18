@@ -51,8 +51,6 @@ class AttachedFileTest extends GoalousTestCase
         'app.job_category',
         'app.team_member',
         'app.member_type',
-        'app.thread',
-        'app.message',
         'app.evaluation_setting',
         'app.team_vision',
         'app.email',
