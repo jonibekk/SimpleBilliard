@@ -54,8 +54,6 @@ class PostSharedLogTest extends GoalousTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.thread',
-        'app.message',
         'app.evaluation_setting',
         'app.team_vision',
         'app.team_insight',

@@ -36,8 +36,6 @@ class NotifySettingTest extends GoalousTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.thread',
-        'app.message',
         'app.email',
         'app.oauth_token',
         'app.local_name',
@@ -91,10 +89,11 @@ class NotifySettingTest extends GoalousTestCase
             ]
         ];
         $this->assertEquals($expected, $res, "通知設定なし 2");
-        $data = ['feed_post_app_flg'    => false,
-                 'feed_post_email_flg'  => false,
-                 'feed_post_mobile_flg' => true,
-                 'user_id'              => $uid
+        $data = [
+            'feed_post_app_flg'    => false,
+            'feed_post_email_flg'  => false,
+            'feed_post_mobile_flg' => true,
+            'user_id'              => $uid
         ];
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
@@ -109,10 +108,11 @@ class NotifySettingTest extends GoalousTestCase
         $uid = 1000000;
         $uid2 = 9999999;
 
-        $data = ['user_id'              => $uid,
-                 'feed_post_app_flg'    => true,
-                 'feed_post_email_flg'  => true,
-                 'feed_post_mobile_flg' => false
+        $data = [
+            'user_id'              => $uid,
+            'feed_post_app_flg'    => true,
+            'feed_post_email_flg'  => true,
+            'feed_post_mobile_flg' => false
         ];
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);

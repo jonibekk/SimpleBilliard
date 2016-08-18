@@ -1,4 +1,5 @@
-<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+<?php
+App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * MessageFixture
@@ -11,92 +12,110 @@ class MessageFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $fields = array(
-        'id'              => array(
+    public $fields = [
+        'id'                                => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'primary',
-            'comment'  => 'メッセージID'
-        ),
-        'from_user_id'    => array(
+            'comment'  => 'ID'
+        ],
+        'topic_id'                          => [
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'topic ID(belongsToでTopicモデルに関連)'
+        ],
+        'sender_user_id'                    => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index',
-            'comment'  => '送信元ユーザID(belongsToでUserモデルに関連)'
-        ),
-        'to_user_id'      => array(
+            'comment'  => 'メッセしたユーザID(belongsToでUserモデルに関連)'
+        ],
+        'team_id'                           => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index',
-            'comment'  => '送信先ユーザID(belongsToでUserモデルに関連)'
-        ),
-        'thread_id'       => array(
-            'type'     => 'biginteger',
-            'null'     => false,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => 'スレッドID(belongsToでThreadモデルに関連)'
-        ),
-        'body'            => array(
+            'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+        ],
+        'body'                              => [
             'type'    => 'text',
             'null'    => true,
             'default' => null,
             'collate' => 'utf8mb4_general_ci',
-            'comment' => 'メッセージ本文',
+            'comment' => 'メッセ本文',
             'charset' => 'utf8mb4'
-        ),
-        'del_flg'         => array(
+        ],
+        'type'                              => [
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '1',
+            'length'   => 3,
+            'unsigned' => true,
+            'comment'  => 'メッセタイプ(1:Nomal,2:メンバー追加,3:メンバー削除,4:トピック名変更)'
+        ],
+        'target_user_ids_if_member_changed' => [
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '変更したユーザのuser_idをカンマ区切りで指定',
+            'charset' => 'utf8mb4'
+        ],
+        'del_flg'                           => [
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
-            'key'     => 'index',
             'comment' => '削除フラグ'
-        ),
-        'deleted'         => array(
+        ],
+        'deleted'                           => [
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
-            'comment'  => 'メッセージを削除した日付時刻'
-        ),
-        'created'         => array(
+            'comment'  => '削除した日付時刻'
+        ],
+        'created'                           => [
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => '追加した日付時刻'
+        ],
+        'modified'                          => [
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => 'メッセージを追加した日付時刻'
-        ),
-        'modified'        => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'comment'  => 'メッセージを更新した日付時刻'
-        ),
-        'indexes'         => array(
-            'PRIMARY'      => array('column' => 'id', 'unique' => 1),
-            'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
-            'to_user_id'   => array('column' => 'to_user_id', 'unique' => 0),
-            'thread_id'    => array('column' => 'thread_id', 'unique' => 0),
-            'del_flg'      => array('column' => 'del_flg', 'unique' => 0),
-            'created'      => array('column' => 'created', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
-    );
+            'comment'  => '更新した日付時刻'
+        ],
+        'indexes'                           => [
+            'PRIMARY' => ['column' => ['id', 'created'], 'unique' => 1],
+            'user_id' => ['column' => 'sender_user_id', 'unique' => 0],
+            'team_id' => ['column' => 'team_id', 'unique' => 0],
+            'created' => ['column' => 'created', 'unique' => 0]
+        ],
+        'tableParameters'                   => [
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_general_ci',
+            'engine'  => 'InnoDB'
+        ]
+
+    ];
 
     /**
      * Records
      *
      * @var array
      */
-    public $records = array();
+    public $records = [
+    ];
 
 }

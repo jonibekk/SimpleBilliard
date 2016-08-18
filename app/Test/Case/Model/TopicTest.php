@@ -1,13 +1,13 @@
 <?php
-App::uses('Message', 'Model');
+App::uses('Topic', 'Model');
 App::uses('GoalousTestCase', 'Test');
 
 /**
- * Message Test Case
+ * Topic Test Case
  *
- * @property Message $Message
+ * @property Topic $Topic
  */
-class MessageTest extends GoalousTestCase
+class TopicTest extends GoalousTestCase
 {
 
     /**
@@ -16,7 +16,6 @@ class MessageTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.message',
         'app.topic',
         'app.user',
         'app.team',
@@ -70,6 +69,8 @@ class MessageTest extends GoalousTestCase
         'app.recovery_code',
         'app.device',
         'app.message_file',
+        'app.message',
+        'app.topic_member'
     ];
 
     /**
@@ -80,7 +81,7 @@ class MessageTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Message = ClassRegistry::init('Message');
+        $this->Topic = ClassRegistry::init('Topic');
     }
 
     /**
@@ -90,12 +91,12 @@ class MessageTest extends GoalousTestCase
      */
     public function tearDown()
     {
-        unset($this->Message);
+        unset($this->Topic);
 
         parent::tearDown();
     }
 
-    function testDummy()
+    public function testDummy()
     {
 
     }
