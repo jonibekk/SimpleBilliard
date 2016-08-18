@@ -107,6 +107,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <?=
                 $this->Form->create('Email', [
                     'inputDefaults' => array(
+                        'div'       => 'form-group',
                         'label'     => false,
                         'wrapInput' => false,
                         'class'     => 'form-control lp-signup-input-email'
@@ -121,6 +122,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 $this->Form->input('email', [
                     'placeholder'                  => __('Email address'),
                     "data-bv-notempty"             => "true",
+                    "data-bv-notempty-message"     => __("Email address is empty."),
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
                     "data-bv-callback-message"     => " ",
@@ -130,6 +132,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                     'required'                     => false
                 ]) ?>
+                <div id="HomeEmailErrorContainer"></div>
                 <div class="submit">
                     <?= $this->Form->button(__('Create New Team') . ' <i class="fa fa-angle-right"></i>',
                         [
@@ -138,7 +141,6 @@ for ($i = 0; $i < $num_ogp; $i++) {
                             'escape'   => false
                         ]) ?>
                 </div>
-                <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
                 <?= $this->Form->end(); ?>
                 <span class="lp-signup-form-footer-notice">
                   <?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact us') . '</a>') ?></span>
