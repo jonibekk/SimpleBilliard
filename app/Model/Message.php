@@ -20,9 +20,6 @@ class Message extends AppModel
         'type'               => [
             'numeric' => ['rule' => ['numeric'],],
         ],
-        'message_read_count' => [
-            'numeric' => ['rule' => ['numeric'],],
-        ],
         'del_flg'            => [
             'boolean' => ['rule' => ['boolean'],],
         ],

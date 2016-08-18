@@ -60,13 +60,6 @@ class MessageFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'メッセタイプ(1:Nomal,2:メンバー追加,3:メンバー削除,4:メンバー離脱)'
         ],
-        'message_read_count' => [
-            'type'     => 'integer',
-            'null'     => false,
-            'default'  => '0',
-            'unsigned' => false,
-            'comment'  => 'メッセージ読んだ数(message_readsテーブルにレコードが追加されたらカウントアップされる)'
-        ],
         'del_flg'            => ['type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'],
         'deleted'            => [
             'type'     => 'integer',
