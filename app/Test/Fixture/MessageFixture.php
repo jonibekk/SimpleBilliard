@@ -28,7 +28,7 @@ class MessageFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'topic ID(belongsToでTopicモデルに関連)'
         ],
-        'user_id'                           => [
+        'sender_user_id'                    => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -58,7 +58,7 @@ class MessageFixture extends CakeTestFixtureEx
             'default'  => '1',
             'length'   => 3,
             'unsigned' => true,
-            'comment'  => 'メッセタイプ(1:Nomal,2:メンバー追加,3:メンバー削除,4:メンバー離脱)'
+            'comment'  => 'メッセタイプ(1:Nomal,2:メンバー追加,3:メンバー削除,4:トピック名変更)'
         ],
         'target_user_ids_if_member_changed' => [
             'type'    => 'string',
@@ -97,8 +97,8 @@ class MessageFixture extends CakeTestFixtureEx
             'comment'  => '更新した日付時刻'
         ],
         'indexes'                           => [
-            'PRIMARY' => ['column' => ['id'], 'unique' => 1],
-            'user_id' => ['column' => 'user_id', 'unique' => 0],
+            'PRIMARY' => ['column' => ['id', 'created'], 'unique' => 1],
+            'user_id' => ['column' => 'sender_user_id', 'unique' => 0],
             'team_id' => ['column' => 'team_id', 'unique' => 0],
             'created' => ['column' => 'created', 'unique' => 0]
         ],
@@ -107,6 +107,7 @@ class MessageFixture extends CakeTestFixtureEx
             'collate' => 'utf8mb4_general_ci',
             'engine'  => 'InnoDB'
         ]
+
     ];
 
     /**

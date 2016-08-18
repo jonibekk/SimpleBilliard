@@ -5,7 +5,7 @@ App::uses('AppModel', 'Model');
  * Message Model
  *
  * @property Topic       $Topic
- * @property User        $User
+ * @property User        $SenderUser
  * @property MessageFile $MessageFile
  */
 class Message extends AppModel
@@ -17,10 +17,10 @@ class Message extends AppModel
      * @var array
      */
     public $validate = [
-        'type'               => [
+        'type'    => [
             'numeric' => ['rule' => ['numeric'],],
         ],
-        'del_flg'            => [
+        'del_flg' => [
             'boolean' => ['rule' => ['boolean'],],
         ],
     ];
@@ -32,7 +32,10 @@ class Message extends AppModel
      */
     public $belongsTo = [
         'Topic',
-        'User',
+        'SenderUser' => [
+            'className'  => 'User',
+            'foreignKey' => 'sender_user_id',
+        ],
     ];
 
     /**
