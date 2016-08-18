@@ -4,7 +4,7 @@ App::uses('AppModel', 'Model');
 /**
  * Topic Model
  *
- * @property User        $CreateUser
+ * @property User        $CreatorUser
  * @property MessageFile $MessageFile
  * @property Message     $Message
  * @property TopicMember $TopicMember
@@ -28,9 +28,9 @@ class Topic extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'CreateUser' => [
+        'CreatorUser' => [
             'className'  => 'User',
-            'foreignKey' => 'create_user_id',
+            'foreignKey' => 'creator_user_id',
         ],
     ];
 
