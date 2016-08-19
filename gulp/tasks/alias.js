@@ -88,7 +88,6 @@ gulp.task('react_signup', done => {
 // css
 gulp.task('css', done => {
   return runSequence(
-    'css:lesshint',
     'css:less',
     'css:concat',
     'css:minify',
