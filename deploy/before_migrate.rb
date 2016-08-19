@@ -6,7 +6,7 @@ bash "composer install" do
   EOS
 end
 bash "pnpm install" do
-  owner 'deploy'
+  user 'deploy'
   group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
@@ -16,7 +16,7 @@ bash "pnpm install" do
 end
 
 bash "run gulp build" do
-  owner 'deploy'
+  user 'deploy'
   group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
