@@ -10,6 +10,7 @@ bash "npm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   npm set progress=false
+  cd #{release_path}; pnpm cache clean
   cd #{release_path}; pnpm i --no-bin-links
   EOS
 end
