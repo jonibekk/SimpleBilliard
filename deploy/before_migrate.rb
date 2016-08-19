@@ -1,12 +1,14 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 
 bash "composer install" do
+  user 'ubuntu'
+  group 'www-data'
   code <<-EOS
   cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
 bash "pnpm install" do
-  user 'deploy'
+  user 'ubuntu'
   group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
@@ -16,7 +18,7 @@ bash "pnpm install" do
 end
 
 bash "run gulp build" do
-  user 'deploy'
+  user 'ubuntu'
   group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
