@@ -21,6 +21,23 @@ export function disableSubmitButton() {
   return { type: types.CAN_NOT_SUBMIT_PASSWORD }
 }
 
+export function invalid(messages) {
+  return dispatch => {
+    dispatch(disableSubmitButton())
+    dispatch({
+      type: types.PASSWORD_IS_INVALID,
+      invalid_messages: messages
+    })
+  }
+}
+
+export function valid() {
+  return dispatch => {
+    dispatch(enableSubmitButton())
+    dispatch({ type: types.PASSWORD_IS_VALID })
+  }
+}
+
 export function postPassword(password) {
   return dispatch => {
     dispatch(disableSubmitButton())
@@ -31,13 +48,9 @@ export function postPassword(password) {
 
       dispatch({ type: types.FINISHED_CHECKING_PASSWORD})
       if (password_is_invlalid) {
-        dispatch({
-          type: types.PASSWORD_IS_INVALID,
-          invalid_messages: mapValidationMsg(response.data.validation_msg)
-        })
-        dispatch(enableSubmitButton())
+        dispatch(invalid(mapValidationMsg(response.data.validation_msg)))
       } else {
-        dispatch({ type: types.PASSWORD_IS_VALID })
+        dispatch(valid())
         browserHistory.push('/signup/team')
       }
     }, () => {

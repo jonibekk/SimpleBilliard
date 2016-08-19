@@ -4,6 +4,7 @@ import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
+import { getValidateError } from '../actions/common_actions'
 
 export default class Password extends React.Component {
 
@@ -14,6 +15,19 @@ export default class Password extends React.Component {
   handleSubmit(e) {
     e.preventDefault()
     this.props.postPassword(this.getInputDomData())
+  }
+
+  _checkValue(event) {
+    const errors = getValidateError(event.target)
+
+    if(errors === null) return
+    if(errors !== {}) {
+      this.props.invalid({password: errors.password})
+    } else {
+      this.props.valid()
+    }
+
+    // () => { this.props.inputPassword(this.getInputDomData()) }
   }
 
   render() {
@@ -30,8 +44,14 @@ export default class Password extends React.Component {
                   {/* Password */}
                   <div className="panel-heading signup-itemtitle">{__("Password")}</div>
                   <div className={(this.props.password.invalid_messages.password) ? 'has-error' : ''}>
-                    <input className="form-control signup_input-design" placeholder="********" maxLength="50" type="password" ref="password"
-                           onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
+                    <input className="form-control signup_input-design"
+                           placeholder="********"
+                           maxLength="50"
+                           type="password"
+                           ref="password"
+                           name="password"
+                           required
+                           onChange={this._checkValue.bind(this)} />
                   </div>
                   <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}
                                      message={this.props.password.invalid_messages.password} />
