@@ -44,6 +44,7 @@ Vagrant.configure('2') do |config|
         default.vm.provider :virtualbox do |vb|
             vb.memory = 1024
             vb.cpus = 1
+            vb.customize ["modifyvm", :id, "--ioapic", "on"]
         end
         src_dir = './'
         doc_root = '/vagrant_data/app/webroot'
