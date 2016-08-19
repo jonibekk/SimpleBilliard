@@ -5,7 +5,9 @@ bash "composer install" do
   cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
-bash "npm install" do
+bash "pnpm install" do
+  owner 'deploy'
+  group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   npm set progress=false
@@ -14,6 +16,8 @@ bash "npm install" do
 end
 
 bash "run gulp build" do
+  owner 'deploy'
+  group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   cd #{release_path}; gulp build
