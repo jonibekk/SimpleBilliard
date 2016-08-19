@@ -7,11 +7,11 @@ class TeamData
     public $records = [
         [
             'id'   => '1',
-            'name' => 'チームA',
+            'name' => 'TeamA',
         ],
         [
             'id'   => '2',
-            'name' => 'チームB',
+            'name' => 'TeamB',
         ],
     ];
 }
