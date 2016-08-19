@@ -13,7 +13,8 @@ bash "pnpm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   npm set progress=false
-  cd #{release_path}; pnpm i --no-bin-links
+  # なぜか初回は必ずエラーになるので強制的に再度実行する
+  cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
   EOS
 end
 
