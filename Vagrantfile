@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers )
+required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers vagrant-berkshelf )
 required_plugins.each do |plugin|
     unless Vagrant.has_plugin? plugin
         required_plugins.each do |plugin|
@@ -22,6 +22,12 @@ Vagrant.configure('2') do |config|
     if Vagrant.has_plugin?('vagrant-omnibus')
         config.omnibus.chef_version = '11.4.4'
     end
+
+    if Vagrant.has_plugin?('vagrant-berkshelf')
+        config.berkshelf.enabled = true
+        config.berkshelf.berksfile_path = 'cookbooks/Berksfile'
+    end
+
 
     #ec2の場合のみproxy設定
     if Vagrant.has_plugin?("vagrant-proxyconf") && ARGV[1] == "ec2"
