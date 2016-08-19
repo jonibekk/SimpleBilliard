@@ -18,7 +18,7 @@ class UserData
             'default_team_id'  => 1,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => '管理者テストユーザ',
+            'comment'          => 'admin',
         ],
         [
             'id'               => '2',
@@ -33,7 +33,7 @@ class UserData
             'default_team_id'  => 1,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '3',
@@ -48,7 +48,7 @@ class UserData
             'default_team_id'  => 1,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '4',
@@ -63,7 +63,7 @@ class UserData
             'default_team_id'  => 1,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '5',
@@ -78,7 +78,7 @@ class UserData
             'default_team_id'  => 1,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '6',
@@ -93,7 +93,7 @@ class UserData
             'default_team_id'  => 2,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '7',
@@ -108,7 +108,7 @@ class UserData
             'default_team_id'  => 2,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '8',
@@ -123,7 +123,7 @@ class UserData
             'default_team_id'  => 2,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '9',
@@ -138,7 +138,7 @@ class UserData
             'default_team_id'  => null,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
         [
             'id'               => '10',
@@ -153,7 +153,7 @@ class UserData
             'default_team_id'  => null,
             'timezone'         => 9,
             'language'         => 'jpn',
-            'comment'          => 'テストユーザ',
+            'comment'          => 'test user',
         ],
     ];
 }
