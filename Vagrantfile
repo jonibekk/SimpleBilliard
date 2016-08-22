@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers )
+required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers vagrant-berkshelf )
 required_plugins.each do |plugin|
     unless Vagrant.has_plugin? plugin
         required_plugins.each do |plugin|
@@ -23,6 +23,12 @@ Vagrant.configure('2') do |config|
         config.omnibus.chef_version = '11.4.4'
     end
 
+    if Vagrant.has_plugin?('vagrant-berkshelf')
+        config.berkshelf.enabled = true
+        config.berkshelf.berksfile_path = 'cookbooks/Berksfile'
+    end
+
+
     #ec2の場合のみproxy設定
     if Vagrant.has_plugin?("vagrant-proxyconf") && ARGV[1] == "ec2"
       config.proxy.http     = "http://10.0.0.84:3128/"
@@ -38,6 +44,7 @@ Vagrant.configure('2') do |config|
         default.vm.provider :virtualbox do |vb|
             vb.memory = 1024
             vb.cpus = 1
+            vb.customize ["modifyvm", :id, "--ioapic", "on"]
         end
         src_dir = './'
         doc_root = '/vagrant_data/app/webroot'
