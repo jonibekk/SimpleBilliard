@@ -14,13 +14,12 @@ end
 Vagrant.configure('2') do |config|
 
     if Vagrant.has_plugin?('vagrant-cachier')
-        config.cache.auto_detect = true
-        config.cache.scope = :box
-
+        config.cache.auto_detect = false
+        # config.cache.scope = :box
     end
 
     if Vagrant.has_plugin?('vagrant-omnibus')
-        config.omnibus.chef_version = '11.4.4'
+        config.omnibus.chef_version = '11.10.4'
     end
 
     if Vagrant.has_plugin?('vagrant-berkshelf')
