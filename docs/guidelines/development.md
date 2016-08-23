@@ -12,7 +12,7 @@ Goalousで素早く開発を始められるよう心がけております。
 - Virtual Box `version = 5.0`
 - Vagrant `version = 1.7.4`
 - Git `version >= 1.8.5`
-- Chef Development Kit `version = 0.6.2`
+- Chef Development Kit `version = 0.8.0`
 
 [インストール手順(windows)](http://bit.ly/2aIo1KH)
 [インストール手順(mac)](http://bit.ly/2adyLyR)
