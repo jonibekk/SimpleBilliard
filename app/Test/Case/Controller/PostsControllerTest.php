@@ -47,8 +47,6 @@ class PostsControllerTest extends GoalousControllerTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.thread',
-        'app.message',
         'app.email',
         'app.oauth_token',
         'app.local_name',

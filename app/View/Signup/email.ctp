@@ -28,6 +28,7 @@
             'label'                        => __("Your email address"),
             'placeholder'                  => 'you@yourdomain.com',
             "data-bv-notempty"             => "true",
+            "data-bv-notempty-message"     => __("Email address is empty."),
             'data-bv-emailaddress'         => "false",
             "data-bv-callback"             => "true",
             "data-bv-callback-message"     => " ",

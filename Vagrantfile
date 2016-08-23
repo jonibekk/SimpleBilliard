@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers )
+required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers vagrant-berkshelf )
 required_plugins.each do |plugin|
     unless Vagrant.has_plugin? plugin
         required_plugins.each do |plugin|
@@ -14,14 +14,19 @@ end
 Vagrant.configure('2') do |config|
 
     if Vagrant.has_plugin?('vagrant-cachier')
-        config.cache.auto_detect = true
-        config.cache.scope = :box
-
+        config.cache.auto_detect = false
+        # config.cache.scope = :box
     end
 
     if Vagrant.has_plugin?('vagrant-omnibus')
-        config.omnibus.chef_version = '11.4.4'
+        config.omnibus.chef_version = '11.10.4'
     end
+
+    if Vagrant.has_plugin?('vagrant-berkshelf')
+        config.berkshelf.enabled = true
+        config.berkshelf.berksfile_path = 'cookbooks/Berksfile'
+    end
+
 
     #ec2の場合のみproxy設定
     if Vagrant.has_plugin?("vagrant-proxyconf") && ARGV[1] == "ec2"
@@ -38,6 +43,7 @@ Vagrant.configure('2') do |config|
         default.vm.provider :virtualbox do |vb|
             vb.memory = 1024
             vb.cpus = 1
+            vb.customize ["modifyvm", :id, "--ioapic", "on"]
         end
         src_dir = './'
         doc_root = '/vagrant_data/app/webroot'
@@ -45,7 +51,7 @@ Vagrant.configure('2') do |config|
         if ( RUBY_PLATFORM.downcase =~ /darwin/ )
           default.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
         else
-          default.vm.synced_folder src_dir, '/vagrant_data'
+          default.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
         end
 
 

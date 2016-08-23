@@ -14,7 +14,7 @@ class MemberGroupTest extends GoalousTestCase
      *
      * @var array
      */
-    public $fixtures = array(
+    public $fixtures = [
         'app.group_vision',
         'app.member_group',
         'app.team_member',
@@ -22,7 +22,7 @@ class MemberGroupTest extends GoalousTestCase
         'app.user',
         'app.local_name',
         'app.group',
-    );
+    ];
 
     /**
      * setUp method

@@ -39,8 +39,6 @@ class SendMailTest extends GoalousTestCase
         'app.group',
         'app.job_category',
         'app.invite',
-        'app.thread',
-        'app.message'
     );
 
     /**

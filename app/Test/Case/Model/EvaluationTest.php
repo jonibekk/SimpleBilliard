@@ -51,8 +51,6 @@ class EvaluationTest extends GoalousTestCase
         'app.group',
         'app.evaluator',
         'app.invite',
-        'app.thread',
-        'app.message',
         'app.evaluate_term',
         'app.evaluate_score',
         'app.evaluation_setting'
@@ -967,9 +965,10 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $previous = $this->Evaluation->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Evaluation->Team->EvaluateTerm->save(['id'         => $previousTermId,
-                                                     'start_date' => $previous['start_date'],
-                                                     'end_date'   => $previous['end_date']
+        $this->Evaluation->Team->EvaluateTerm->save([
+            'id'         => $previousTermId,
+            'start_date' => $previous['start_date'],
+            'end_date'   => $previous['end_date']
         ]);
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);

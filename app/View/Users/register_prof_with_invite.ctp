@@ -138,7 +138,7 @@
             'wrapInput' => 'signup-invitation-agree-tos',
             'type'      => 'checkbox',
             'label'     => [
-                'class' => null,
+                'class' => 'invitation-signup-privacy-policy-label',
                 'text'  => __("I agree to %s and %s of Goalous.", $tosLink, $ppLink)
             ],
             'class'     => 'validate-checkbox',
