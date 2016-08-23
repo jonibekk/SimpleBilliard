@@ -1,19 +1,26 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 
 bash "composer install" do
+  user 'deploy'
+  group 'www-data'
   code <<-EOS
   cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
-bash "npm install" do
+bash "pnpm install" do
+  user 'deploy'
+  group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   npm set progress=false
-  cd #{release_path}; pnpm i --no-bin-links
+  # なぜか初回は必ずエラーになるので強制的に再度実行する
+  cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
   EOS
 end
 
 bash "run gulp build" do
+  user 'deploy'
+  group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   cd #{release_path}; gulp build
