@@ -28,7 +28,8 @@ export default function password(state = initialState, action) {
       })
     case types.PASSWORD_IS_VALID:
       return Object.assign({}, state, {
-        password_is_invalid: false
+        password_is_invalid: false,
+        invalid_messages: { password: '' }
       })
     case types.PASSWORD_IS_INVALID:
       return Object.assign({}, state, {

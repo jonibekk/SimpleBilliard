@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { validation_settings } from '../config/validation'
 
 export function getBaseUrl() {
   if (typeof cake === "undefined") {
@@ -80,20 +79,4 @@ export function range(start, end) {
 
   for (let i=0, c=start; i<len; i++, c++) a[i] = c
   return a
-}
-
-export function getValidateError(target) {
-  const name = target.name
-  const val = target.value
-  const messages = {}
-
-  if (validation_settings[name] === "undefined") {
-    return null
-  }
-
-  if(validation_settings[name].pattern.test(val)) {
-    return {}
-  }
-  messages[name] = validation_settings[name].message
-  return messages
 }
