@@ -156,10 +156,16 @@ sh etc/server/prod_switch_mente_env.sh
 ```
 sh etc/server/prod_switch_back_from_mente_env.sh
 ```
+
+### Remove all instances on Layer of OpsWorks
+```
+sh etc/server/rm_all_instance_on_layer.sh -l [layer-id]
+```
  
 
 <hr id="db-migration">
 ## DB migration
+
 ```php
 vagrant@precise64:/vagrant/app$ ./Console/cake migrations.migration generate -f
 /vagrant/app/Vendor/cakephp/cakephp/libCake Migration Shell
@@ -283,10 +289,10 @@ Would you like to do? (o/s/q)
 [s] > o
 Schema file: schema.php generated
 vagrant@precise64:/vagrant/app$
-
 ```
 
 <hr id="github-waffle">
+
 ## 開発(チームメンバー)
 ### 通常時
 1. 作業を開始する前に`ToDo`から`In Progress`にカードを移動する。

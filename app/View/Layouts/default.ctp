@@ -28,7 +28,7 @@ if (!isset($with_header_menu)) {
     echo $this->element('header_not_logged_in');
 }
 ?>
-<?php if ($this->request->params['action'] === 'display') {
+<?php if ($this->request->params['action'] === 'display' && !$is_mb_app) {
     echo $this->element('header_sp_feeds_alt');
 } ?>
 

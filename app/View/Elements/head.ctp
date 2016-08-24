@@ -38,10 +38,6 @@
     <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
         <style>
             @media screen and (max-width: 991px) {
-                .container {
-                    margin-top: 50px;
-                }
-
                 #jsLeftSideContainer {
                     top: 100px;
                 }
