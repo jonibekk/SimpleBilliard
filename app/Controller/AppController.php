@@ -159,8 +159,8 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
-        //ローカルと本番環境以外でbasic認証を有効にする
-        if (!(ENV_NAME == "local" || ENV_NAME == "www")) {
+        //ローカルとISAO環境と本番環境以外でbasic認証を有効にする
+        if (!(ENV_NAME == "local" || ENV_NAME == "isao" || ENV_NAME == "www")) {
             $this->_setBasicAuth();
         }
 
