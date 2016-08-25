@@ -159,7 +159,7 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
-        //現状、ローカルと本番環境以外でbasic認証を有効にする
+        //ローカルと本番環境以外でbasic認証を有効にする
         if (!(ENV_NAME == "local" || ENV_NAME == "www")) {
             $this->_setBasicAuth();
         }
