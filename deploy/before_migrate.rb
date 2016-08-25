@@ -7,6 +7,13 @@ bash "composer install" do
   cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
+
+file '/home/deploy/.npmrc' do
+ owner 'deploy'
+ group 'aws'
+ mode '0755'
+end
+
 bash "npm install" do
   user 'deploy'
   group 'www-data'
