@@ -27,6 +27,13 @@ Vagrant.configure('2') do |config|
         config.berkshelf.berksfile_path = 'cookbooks/Berksfile'
     end
 
+    if Vagrant.has_plugin?('vagrant-triggers')
+        config.trigger.after [:reload, :halt], stdout: true do
+            `rm .vagrant/machines/default/virtualbox/synced_folders`
+            `pkill vagrant-notify-server`
+        end
+    end
+
     config.vm.box = 'hashicorp/precise32'
     # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
     config.vm.network 'private_network', ip: '192.168.50.4'
@@ -40,11 +47,12 @@ Vagrant.configure('2') do |config|
     doc_root = '/vagrant_data/app/webroot'
     app_root = '/vagrant_data/'
     if ( RUBY_PLATFORM.downcase =~ /darwin/ )
+      npm_recipe = 'local_pnpm'
       config.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
     else
+      npm_recipe = 'local_npm'
       config.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
     end
-
 
     config.vm.provision :chef_solo do |chef|
         chef.cookbooks_path = 'cookbooks'
@@ -54,13 +62,8 @@ Vagrant.configure('2') do |config|
         chef.add_recipe 'redisio::enable'
         chef.add_recipe 'local_db'
         chef.add_recipe 'local_etc'
+        chef.add_recipe npm_recipe
         chef.add_recipe 'deploy_cake_local'
         chef.json = { doc_root: doc_root, app_root: app_root, php5: { session_secure: 'Off' } }
-    end
-    if Vagrant.has_plugin?('vagrant-triggers')
-        config.trigger.after [:reload, :halt], stdout: true do
-            `rm .vagrant/machines/default/virtualbox/synced_folders`
-            `pkill vagrant-notify-server`
-        end
     end
 end
