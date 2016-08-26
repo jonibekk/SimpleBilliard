@@ -20,6 +20,8 @@ bash "npm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   npm set progress=false
+  npm cache clean
+  npm dedupe
   # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
   cd #{release_path}; npm i --no-bin-links || true && npm i --no-bin-links
   EOS
@@ -65,15 +67,9 @@ template "/home/ubuntu/.bash_profile" do
   mode 0644
   source ".bash_profile"
 end
-template "/home/ubuntu/.bash_profile" do
-  owner "root"
-  group "root"
-  mode 0644
-  source ".bash_profile"
-end
-template "/home/ubuntu/.bash_profile" do
+template "/home/deploy/.bash_profile" do
   owner "deploy"
-  group "deploy"
+  group "www-data"
   mode 0644
   source ".bash_profile"
 end
