@@ -65,3 +65,15 @@ template "/home/ubuntu/.bash_profile" do
   mode 0644
   source ".bash_profile"
 end
+template "/home/ubuntu/.bash_profile" do
+  owner "root"
+  group "root"
+  mode 0644
+  source ".bash_profile"
+end
+template "/home/ubuntu/.bash_profile" do
+  owner "deploy"
+  group "deploy"
+  mode 0644
+  source ".bash_profile"
+end
