@@ -20,7 +20,7 @@ bash "npm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   npm set progress=false
-  # なぜか初回は必ずエラーになるので強制的に再度実行する
+  # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
   cd #{release_path}; npm i --no-bin-links || true && npm i --no-bin-links
   EOS
 end
