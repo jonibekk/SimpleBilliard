@@ -119,7 +119,7 @@ class SignupController extends AppController
     {
         parent::beforeFilter();
         //ISAO環境では新規登録画面でBasic認証を有効にする
-        if (ENV_NAME == "isao" && $this->request->params['action'] == 'email') {
+        if (!$this->is_mb_app && ENV_NAME == "isao" && $this->request->params['action'] == 'email') {
             $this->_setBasicAuth();
         }
 
