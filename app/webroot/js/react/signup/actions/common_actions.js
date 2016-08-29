@@ -103,6 +103,34 @@ export function _checkValue(target) {
         return { error: true, messages }
       }
       return { error: false, messages: {} }
+    case 'first_name':
+      if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
+        messages.first_name = cake.message.validate.signup_user_name_length
+        return { error: true, messages }
+      }
+      if(!validator.isAlpha(val)) {
+        messages.first_name = cake.message.validate.signup_user_name_alpha
+        return { error: true, messages }
+      }
+      return { error: false, messages: {} }
+    case 'last_name':
+      if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
+        messages.last_name = cake.message.validate.signup_user_name_length
+        return { error: true, messages }
+      }
+      if(!validator.isAlpha(val)) {
+        messages.last_name = cake.message.validate.signup_user_name_alpha
+        return { error: true, messages }
+      }
+      return { error: false, messages: {} }
+    case 'birth_day':
+      if(!validator.isDate(val)) {
+        messages.birth_day = cake.message.validate.signup_user_name_alpha
+        return { error: true, messages }
+      }
+      return { error: false, messages: {} }
+    case 'privacy':
+      return { error: false, messages: {} }
     default:
       return {
         error: false,

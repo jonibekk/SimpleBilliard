@@ -1,24 +1,23 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  inputed: {
-    first_name: '',
-    last_name: '',
-    birth_year: '',
-    birth_month: '',
-    birth_day: '',
-    privacy: '',
-    // デフォルトでチェックさせる
-    update_email_flg: 1
+  validate: {
+    first_name: false,
+    last_name: false,
+    birth_year: false,
+    birth_month: false,
+    birth_day: false,
+    privacy: false
   },
   invalid_messages: {
     first_name: '',
     last_name: '',
-    birth_day: ''
+    birth_day: '',
+    privacy: ''
   },
   checking_user_name: false,
   submit_button_is_enabled: false,
-  user_name_is_invalid: false,
+  user_name_is_invalid: true,
   is_exception: false,
   exception_message: ''
 }
@@ -37,20 +36,10 @@ export default function user_name(state = initialState, action) {
       return Object.assign({}, state, {
         checking_user_name: false
       })
-    case types.INIT_USER_STATUS:
-      return Object.assign({}, state, {
-        user_name_is_invalid: false,
-        is_exception: false,
-        invalid_messages: {
-          first_name: '',
-          last_name: '',
-          birth_day: ''
-        }
-      })
     case types.USER_NAME_IS_INVALID:
       return Object.assign({}, state, {
-        user_name_is_invalid: true,
-        invalid_messages: action.invalid_messages
+        validate: Object.assign({}, state.validate, action.validate),
+        invalid_messages: Object.assign({}, state.invalid_messages, action.invalid_messages)
       })
     case types.USER_NAME_IS_VALID:
       return Object.assign({}, state, {

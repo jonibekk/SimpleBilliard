@@ -11,7 +11,7 @@ function mapDispatchToProps(dispatch) {
     postTeamName: (team_name) => dispatch(actions.postTeamName(team_name)),
     inputTeamName: (team_name) => dispatch(actions.inputTeamName(team_name)),
     invalid: (messages) => dispatch(actions.invalid(messages)),
-    valid: () => dispatch(actions.valid())  }
+    valid: () => dispatch(actions.valid()) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamNameComponent)

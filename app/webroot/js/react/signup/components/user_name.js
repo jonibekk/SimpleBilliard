@@ -27,12 +27,35 @@ export default class UserName extends React.Component {
 
   handleOnChange(e) {
     const validate_result = _checkValue(e.target)
+    const element = { validate: {}, messages: {} }
 
-    if(validate_result.error && validate_result.message) {
-      this.props.invalid(validate_result.messages)
+    if(validate_result.error && validate_result.messages) {
+      element['validate'][e.target.name] = false
+      element['messages'] = validate_result.messages
+      this.props.invalid(element)
     } else {
-      this.props.valid()
+      element['validate'][e.target.name] = true
+      element['messages'][e.target.name] = ''
+      this.props.valid(element)
     }
+  }
+
+  handleBirthdayOnChange() {
+    const birth_year = ReactDOM.findDOMNode(this.refs.birth_year).value.trim()
+    const birth_month = ReactDOM.findDOMNode(this.refs.birth_month).value.trim()
+    const birth_day = ReactDOM.findDOMNode(this.refs.birth_day).value.trim()
+    const validate_result = _checkValue({name: 'birth_day', value: `${birth_year}-${birth_month}-${birth_day}`})
+
+    if(validate_result.error && validate_result.messages) {
+      element.validate.birth_day = false
+      element.messages = validate_result.messages
+      this.props.invalid(element)
+    } else {
+      element.validate.birth_day = true
+      element.messages.birth_day = ''
+      this.props.valid(element)
+    }
+
   }
 
   render() {
@@ -50,19 +73,18 @@ export default class UserName extends React.Component {
                     {/* First name */}
                     <div className="panel-heading signup-itemtitle">{__("Your name")}</div>
                     <div className={(this.props.user_name.invalid_messages.first_name) ? 'has-error' : ''}>
-                      <input ref="first_name" className="form-control signup_input-design" type="text"
-                             placeholder={__("eg. Harry")} required
-                             onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                      <input ref="first_name" name="first_name" className="form-control signup_input-design" type="text"
+                             placeholder={__("eg. Harry")}
+                             onChange={this.handleOnChange.bind(this)} />
                     </div>
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                        message={this.props.user_name.invalid_messages.first_name} />
 
                     {/* Last name */}
                     <div className={(this.props.user_name.invalid_messages.last_name) ? 'has-error' : ''}>
-                      <input ref="last_name" className="form-control signup_input-design"
+                      <input ref="last_name" name="last_name" className="form-control signup_input-design"
                              placeholder={__("eg. Armstrong")} type="text"
-                             required
-                             onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                             onChange={this.handleOnChange.bind(this)} />
                     </div>
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                        message={this.props.user_name.invalid_messages.last_name} />
@@ -70,8 +92,7 @@ export default class UserName extends React.Component {
                     {/* Allow Email from goalous check */}
                     <div className="signup-checkbox-email-flg">
                         <input type="checkbox" className="signup-checkbox-input" value="1" ref="update_email_flg"
-                               checked={ this.props.user_name.inputed.update_email_flg }
-                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                               checked="checked" />
                         <div className="signup-privacy-policy-label">
                           {__("I want to receive news and updates by email from Goalous.")}
                         </div>
@@ -81,8 +102,8 @@ export default class UserName extends React.Component {
                     <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
-                        <select className="form-control inline-fix" ref="birth_year" required
-                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
+                        <select className="form-control inline-fix" ref="birth_year" ref="birth_year" required
+                                onChange={this.handleBirthdayOnChange}>
                            <option value=""></option>
                            {
                              range(1910, new Date().getFullYear()).sort((a,b) => b-a).map( year => {
@@ -93,8 +114,8 @@ export default class UserName extends React.Component {
                         &nbsp;/&nbsp;
 
                         {/* Birthday month */}
-                        <select className="form-control inline-fix" ref="birth_month" required
-                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
+                        <select className="form-control inline-fix" ref="birth_month" name="birth_month" required
+                                onChange={this.handleBirthdayOnChange}>
                            <option value=""></option>
                            <option value="01">{__("Jan")}</option>
                            <option value="02">{__("Feb")}</option>
@@ -112,9 +133,8 @@ export default class UserName extends React.Component {
                         &nbsp;/&nbsp;
 
                         {/* Birthday day */}
-                        <select className="form-control inline-fix" ref="birth_day"
-                                required
-                                onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
+                        <select className="form-control inline-fix" ref="birth_day" name="birth_day" required
+                                onChange={this.handleBirthdayOnChange}>
                            <option value=""></option>
                            {
                              range(1, 31).map( day => {
@@ -129,8 +149,8 @@ export default class UserName extends React.Component {
 
                     {/* Privacy policy check */}
                     <div className="signup-checkbox">
-                        <input type="checkbox" value="1" className="signup-checkbox-input" ref="privacy"
-                               onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } />
+                        <input type="checkbox" value="1" className="signup-checkbox-input" ref="privacy" name="privacy"
+                               onChange={this.handleOnChange.bind(this)} />
                         <div className="signup-privacy-policy-label" dangerouslySetInnerHTML={{__html: __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}}>
                         </div>
                     </div>
