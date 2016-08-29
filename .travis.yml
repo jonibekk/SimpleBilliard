@@ -130,6 +130,7 @@ script:
   - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist; fi
   - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - cd ../
+  - npm i --no-bin-links
   - gulp build
 
 after_script:
