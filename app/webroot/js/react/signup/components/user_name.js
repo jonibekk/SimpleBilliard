@@ -4,7 +4,7 @@ import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
-import { range } from '../actions/common_actions'
+import { range, _checkValue } from '../actions/common_actions'
 
 export default class UserName extends React.Component {
 
@@ -23,6 +23,16 @@ export default class UserName extends React.Component {
   handleSubmit(e) {
     e.preventDefault()
     this.props.postUserName(this.getInputDomData())
+  }
+
+  handleOnChange(e) {
+    const validate_result = _checkValue(e.target)
+
+    if(validate_result.error && validate_result.message) {
+      this.props.invalid(validate_result.messages)
+    } else {
+      this.props.valid()
+    }
   }
 
   render() {

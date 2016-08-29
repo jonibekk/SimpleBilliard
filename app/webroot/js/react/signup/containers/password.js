@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { postPassword, inputPassword, enableSubmitButton, disableSubmitButton, invalid, valid } from '../actions/password_actions'
+import * as actions from '../actions/password_actions'
 import PasswordComponent from '../components/password'
 
 function mapStateToProps(state) {
@@ -8,12 +8,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    inputPassword: (password) => dispatch(inputPassword(password)),
-    postPassword: (password) => dispatch(postPassword(password)),
-    enableSubmitButton: () => dispatch(enableSubmitButton()),
-    disableSubmitButton: () => dispatch(disableSubmitButton()),
-    invalid: (messages) => dispatch(invalid(messages)),
-    valid: () => dispatch(valid())
+    inputPassword: (password) => dispatch(actions.inputPassword(password)),
+    postPassword: (password) => dispatch(actions.postPassword(password)),
+    invalid: (messages) => dispatch(actions.invalid(messages)),
+    valid: () => dispatch(actions.valid())
   }
 }
 

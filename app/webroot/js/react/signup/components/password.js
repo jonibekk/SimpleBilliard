@@ -4,20 +4,9 @@ import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
-import validator from 'validator'
+import { _checkValue } from '../actions/common_actions'
 
 export default class Password extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      validate: {
-        password: {
-          pattern: /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{8,50}$/,
-          message: __("Password is incorrect.")
-        }
-      }
-    }
-  }
 
   getInputDomData() {
     return ReactDOM.findDOMNode(this.refs.password).value.trim()
@@ -28,13 +17,13 @@ export default class Password extends React.Component {
     this.props.postPassword(this.getInputDomData())
   }
 
-  _checkValue(event) {
-    const val = event.target.value
+  handleOnChange(e) {
+    const validate_result = _checkValue(e.target)
 
-    if(validator.matches(val, this.state.validate.password.pattern)) {
-      this.props.valid()
+    if(validate_result.error) {
+      this.props.invalid(validate_result.messages)
     } else {
-      this.props.invalid({password: this.state.validate.password.message})
+      this.props.valid()
     }
   }
 
@@ -59,7 +48,7 @@ export default class Password extends React.Component {
                            ref="password"
                            name="password"
                            required
-                           onChange={this._checkValue.bind(this)} />
+                           onChange={this.handleOnChange.bind(this)} />
                   </div>
                   <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}
                                      message={this.props.password.invalid_messages.password} />
