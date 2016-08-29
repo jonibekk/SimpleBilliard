@@ -222,6 +222,18 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+
+    $('.fileinput_cover').fileinput().on('change.bs.fileinput', function () {
+        var width = $(this).width();
+        $(this).children('.nailthumb-container').nailthumb({
+            width: width,
+            height: width,
+            method: 'resize',
+            fitDirection: 'center center'
+        });
+    });
+
+
     //tab open
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var $target = $(e.target);
@@ -2193,6 +2205,17 @@ function initMessageSelect2() {
 function initMemberSelect2() {
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
+        initSelection: function (element, callback) {
+            var id = $(element).val().replace(/user_/g,"");
+            if(id !== "") {
+                $.ajax("/users/ajax_select2_get_user_detail/" + id,
+                {
+                    type:'GET'
+                }).done(function(data) {
+                    callback(data);
+                });
+            }
+        },
         multiple: true,
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
@@ -3833,7 +3856,7 @@ $(document).ready(function () {
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
 
-    if($('#jsDashboardCircleListBody')[0] !== undefined){
+    if ($('#jsDashboardCircleListBody')[0] !== undefined) {
         pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
             var $circle_list = $('#jsDashboardCircleListBody');
             $.each(data.circle_ids, function (i, circle_id) {
@@ -3843,12 +3866,12 @@ $(document).ready(function () {
                 }
                 var $unread_count = $circle.find('.dashboard-circle-count-box');
                 var unread_count = $unread_count.text().trim();
-                if (unread_count == ""){
+                if (unread_count == "") {
                     $unread_count.text(1);
-                }else if(Number(unread_count) == 9){
+                } else if (Number(unread_count) == 9) {
                     $unread_count.text("9+");
-                }else if(unread_count != "9+"){
-                    $unread_count.text(Number(unread_count)+1);
+                } else if (unread_count != "9+") {
+                    $unread_count.text(Number(unread_count) + 1);
                 }
                 $circle.prependTo('#jsDashboardCircleListBody');
             });

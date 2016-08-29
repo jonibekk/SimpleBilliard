@@ -88,7 +88,17 @@ class User extends AppModel
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-user.jpg',
                 'quality'     => 100,
-            ]
+            ],
+            'cover_photo' => [
+                'styles'      => [
+                    'medium'        => '250x140',
+                    'large'      => '640x360',
+                    'x_large'      => '672x378',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image-cover.jpg',
+                'quality'     => 100,
+            ],
         ]
     ];
     /**
@@ -254,6 +264,10 @@ class User extends AppModel
                 'allowEmpty' => true,
             ],
         ],
+        'cover_photo'              => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
         'comment'            => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
@@ -268,6 +282,7 @@ class User extends AppModel
         'first_name',
         'last_name',
         'photo_file_name',
+        'cover_photo_file_name',
         'language',
         'auto_language_flg',
         'romanize_flg',
@@ -1475,6 +1490,25 @@ class User extends AppModel
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $res[] = $data;
         }
+        return $res;
+    }
+
+    /**
+     * select2 用のユーザー配列を返す
+     *
+     * @param array $user
+     *
+     * @return array
+     */
+    public function makeSelect2User(array $user)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $res = [];
+        $res['id'] = 'user_' . $user['User']['id'];
+        $res['text'] = $user['User']['display_username'] . " (" . $user['User']['roman_username'] . ")";
+        $res['image'] = $Upload->uploadUrl($user, 'User.photo', ['style' => 'small']);
         return $res;
     }
 

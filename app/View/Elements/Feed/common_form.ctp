@@ -455,7 +455,8 @@ if (!isset($goal_list_for_action_option)) {
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2Member',
-                        'style' => "width: 85%"
+                        'style' => "width: 85%",
+                        'value' => !empty($targetUserId) ? 'user_'.$targetUserId : ''
                     ]) ?>
                     <?php $this->Form->unlockField('Message.share_public') ?>
                 </div>

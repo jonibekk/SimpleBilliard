@@ -60,6 +60,11 @@ class PostsController extends AppController
 
     public function message_list()
     {
+        // 宛先のユーザー情報取得
+        $targetUserId = $this->request->query('userId');
+        $targetUserId = is_numeric($targetUserId) ? $targetUserId : '';
+        $this->set(compact('targetUserId'));
+
         $this->_setViewValOnRightColumn();
         return $this->render();
     }
