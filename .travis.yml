@@ -2,6 +2,8 @@ language: php
 
 php:
   - 5.5
+node_js:
+  - '5.8.0'
 
 env:
   - DB=mysql
@@ -15,6 +17,8 @@ cache:
   - $HOME/.composer/cache
   - $HOME/apcu-4.0.2
   - $HOME/redis-2.2.7
+  - node_modules
+
 services:
   - redis-server
 git:
@@ -119,12 +123,14 @@ before_script:
   - mkdir -p build/logs
   - cd ./app
   - echo -ne '\n\n' | ./Console/cake schema create
+  - npm install -g gulp
 
 script:
   # if PR, reporting covarage
   - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist; fi
   - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - cd ../
+  - gulp build
 
 after_script:
   - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then php Vendor/bin/coveralls -v; fi
