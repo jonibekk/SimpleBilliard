@@ -85,58 +85,63 @@ export function range(start, end) {
 export function _checkValue(target) {
   const name = target.name
   const val = target.value
-  const messages = {}
+  const status = { name, error: false, messages: {} }
 
   switch (name) {
     case 'password':
       const pattern = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{8,50}$/
 
-      messages.password = __("Password is incorrect.")
       if(validator.matches(val, pattern)) {
-        return { error: false, messages: {} }
-      } else {
-        return { error: true, messages }
+        status.messages.password = __("Password is incorrect.")
       }
+      return status
     case 'team_name':
       if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
-        messages.team_name = cake.message.validate.signup_team_name_length
-        return { error: true, messages }
+        status.error = true
+        status.messages.team_name = cake.message.validate.signup_team_name_length
       }
-      return { error: false, messages: {} }
+      return status
     case 'first_name':
       if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
-        messages.first_name = cake.message.validate.signup_user_name_length
-        return { error: true, messages }
+        status.error = true
+        status.messages.first_name = cake.message.validate.signup_user_name_length
+      }else if(!validator.isAlpha(val)) {
+        status.error = true
+        status.messages.first_name = cake.message.validate.signup_user_name_alpha
       }
-      if(!validator.isAlpha(val)) {
-        messages.first_name = cake.message.validate.signup_user_name_alpha
-        return { error: true, messages }
-      }
-      return { error: false, messages: {} }
+      return status
     case 'last_name':
       if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
-        messages.last_name = cake.message.validate.signup_user_name_length
-        return { error: true, messages }
+        status.error = true
+        status.messages.last_name = cake.message.validate.signup_user_name_length
+      }else if(!validator.isAlpha(val)) {
+        status.error = true
+        status.messages.last_name = cake.message.validate.signup_user_name_alpha
       }
-      if(!validator.isAlpha(val)) {
-        messages.last_name = cake.message.validate.signup_user_name_alpha
-        return { error: true, messages }
+      return status
+    case 'birth_year':
+      if(!val) {
+        status.error = true
       }
-      return { error: false, messages: {} }
+      return status
+    case 'birth_month':
+      if(!val) {
+        status.error = true
+      }
+      return status
     case 'birth_day':
-      if(!validator.isDate(val)) {
-        messages.birth_day = cake.message.validate.signup_user_name_alpha
-        return { error: true, messages }
+      if(!val) {
+        status.error = true
       }
-      return { error: false, messages: {} }
-    case 'privacy':
-      return { error: false, messages: {} }
+      return status
+    case 'privacy_policy':
+      if(!target.checked) {
+        status.error = true
+      }
+      return status
     default:
-      return {
-        error: false,
-        message: ''
-      }
+      return status
   }
 
-  return ret
+  return status
 }

@@ -19,7 +19,7 @@ export function invalid(element) {
     dispatch(disableSubmitButton())
     dispatch({
       type: types.USER_NAME_IS_INVALID,
-      validate: element.validate,
+      invalid: element.invalid,
       invalid_messages: element.messages
     })
   }
@@ -28,18 +28,18 @@ export function invalid(element) {
 export function valid(element) {
   return (dispatch, getState) => {
     dispatch({
-      type: types.USER_NAME_IS_INVALID,
-      validate: element.validate,
+      type: types.USER_NAME_IS_VALID,
+      invalid: element.invalid,
       invalid_messages: element.messages
     })
 
-    const validate = getState().user_name.validate
+    const invalid = getState().user_name.invalid
 
-    for (const key in validate) {
-      if(!validate[key]) return
+    for (const key in invalid) {
+      if(invalid[key] !== false) return
     }
     dispatch({
-      type: types.USER_NAME_IS_VALID
+      type: types.CAN_SUBMIT_USER_NAME
     })
   }
 }
