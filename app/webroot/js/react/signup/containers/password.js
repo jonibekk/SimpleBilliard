@@ -8,10 +8,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    inputPassword: (password) => dispatch(actions.inputPassword(password)),
-    postPassword: (password) => dispatch(actions.postPassword(password)),
-    invalid: (messages) => dispatch(actions.invalid(messages)),
-    valid: () => dispatch(actions.valid())
+    postPassword: password => dispatch(actions.postPassword(password)),
+    invalid: element => dispatch(actions.invalid(element)),
+    valid: element => dispatch(actions.valid(element))
   }
 }
 

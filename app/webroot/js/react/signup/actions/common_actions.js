@@ -91,8 +91,9 @@ export function _checkValue(target) {
     case 'password':
       const pattern = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{8,50}$/
 
-      if(validator.matches(val, pattern)) {
-        status.messages.password = __("Password is incorrect.")
+      if(!validator.matches(val, pattern)) {
+        status.error = true
+        status.messages.password = ''
       }
       return status
     case 'team_name':

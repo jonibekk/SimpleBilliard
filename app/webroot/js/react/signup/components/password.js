@@ -18,12 +18,17 @@ export default class Password extends React.Component {
   }
 
   handleOnChange(e) {
-    const validate_result = _checkValue(e.target)
+    const status = _checkValue(e.target)
+    const element = { invalid: {}, messages: {} }
 
-    if(validate_result.error) {
-      this.props.invalid(validate_result.messages)
+    if(status.error) {
+      element.invalid[status.name] = true
+      element.messages = status.messages
+      this.props.invalid(element)
     } else {
-      this.props.valid()
+      element.invalid[status.name] = false
+      element.messages[status.name] = ''
+      this.props.valid(element)
     }
   }
 
@@ -40,7 +45,7 @@ export default class Password extends React.Component {
 
                   {/* Password */}
                   <div className="panel-heading signup-itemtitle">{__("Password")}</div>
-                  <div className={(this.props.password.invalid_messages.password) ? 'has-error' : ''}>
+                  <div className={(this.props.password.invalid.password) ? 'has-error' : ''}>
                     <input className="form-control signup_input-design"
                            placeholder="********"
                            maxLength="50"
@@ -50,7 +55,7 @@ export default class Password extends React.Component {
                            required
                            onChange={this.handleOnChange.bind(this)} />
                   </div>
-                  <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}
+                  <InvalidMessageBox is_invalid={this.props.password.invalid.password}
                                      message={this.props.password.invalid_messages.password} />
                   <div className="signup-description mod-small">{__("Use 8 or more characters including at least one number.")}</div>
 

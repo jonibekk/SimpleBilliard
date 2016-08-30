@@ -35,7 +35,7 @@ export default class UserName extends React.Component {
   _sendValidateState(status) {
     const element = { invalid: {}, messages: {} }
 
-    if(status.error && status.messages) {
+    if(status.error) {
       element.invalid[status.name] = true
       element.messages = status.messages
       this.props.invalid(element)

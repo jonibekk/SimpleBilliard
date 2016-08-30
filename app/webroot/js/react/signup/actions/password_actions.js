@@ -2,17 +2,6 @@ import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import { post, mapValidationMsg } from './common_actions'
 
-export function inputPassword(password) {
-  return dispatch => {
-    dispatch({ type: types.INPUT_PASSWORD, inputed_password: password })
-    if(String(password).length >= 8) {
-      dispatch(enableSubmitButton())
-    } else {
-      dispatch(disableSubmitButton())
-    }
-  }
-}
-
 export function enableSubmitButton() {
   return { type: types.CAN_SUBMIT_PASSWORD }
 }
@@ -21,20 +10,25 @@ export function disableSubmitButton() {
   return { type: types.CAN_NOT_SUBMIT_PASSWORD }
 }
 
-export function invalid(messages) {
+export function valid(element) {
   return dispatch => {
-    dispatch(disableSubmitButton())
+    dispatch(enableSubmitButton())
     dispatch({
-      type: types.PASSWORD_IS_INVALID,
-      invalid_messages: messages
+      type: types.PASSWORD_IS_VALID,
+      invalid: element.invalid,
+      invalid_messages: element.messages
     })
   }
 }
 
-export function valid() {
+export function invalid(element) {
   return dispatch => {
-    dispatch(enableSubmitButton())
-    dispatch({ type: types.PASSWORD_IS_VALID })
+    dispatch(disableSubmitButton())
+    dispatch({
+      type: types.PASSWORD_IS_INVALID,
+      invalid: element.invalid,
+      invalid_messages: element.messages
+    })
   }
 }
 
@@ -50,7 +44,6 @@ export function postPassword(password) {
       if (password_is_invlalid) {
         dispatch(invalid(mapValidationMsg(response.data.validation_msg)))
       } else {
-        dispatch(valid())
         browserHistory.push('/signup/team')
       }
     }, () => {
