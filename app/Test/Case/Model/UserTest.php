@@ -997,6 +997,23 @@ class UserTest extends GoalousTestCase
         }
     }
 
+    function testMakeSelect2User()
+    {
+        $user = [
+            'User' => [
+                'id'               => 1,
+                'display_username' => '表示名 1',
+                'roman_username'   => 'display name 1',
+                'photo_file_name'  => 'test1.jpg',
+            ]
+        ];
+        $user_res = $this->User->makeSelect2User($user);
+        $this->assertEquals("user_1", $user_res['id']);
+        $this->assertEquals("表示名 1 (display name 1)", $user_res['text']);
+        $this->assertNotEquals("test1.jpg", $user_res['image']);
+        $this->assertTrue(strpos($user_res['image'], '.jpg') !== false);
+    }
+
     function testGetMyProf()
     {
         $this->User->my_uid = 1;
