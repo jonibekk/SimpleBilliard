@@ -118,6 +118,11 @@ class SignupController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        //ISAO環境では新規登録画面でBasic認証を有効にする
+        if (!$this->is_mb_app && ENV_NAME == "isao" && $this->request->params['action'] == 'email') {
+            $this->_setBasicAuth();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         //ajaxのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
         $this->Security->validatePost = false;
