@@ -16,6 +16,7 @@ cache:
   - $HOME/apcu-4.0.2
   - $HOME/redis-2.2.7
   - node_modules
+  - $HOME/.nvm
 
 services:
   - redis-server
