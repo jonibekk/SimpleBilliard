@@ -3603,34 +3603,36 @@ function evLike() {
  */
 function showMore(obj) {
     obj = obj || null;
+    var showText = '<i class="fa fa-angle-double-down mr_5px"></i>' + cake.message.info.e;
+    var hideText = '<i class="fa fa-angle-double-up mr_5px"></i>' + cake.message.info.h;
     if (obj) {
         $(obj).find('.showmore').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '128px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $(obj).find('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $(obj).find('.showmore-circle').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '900px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $(obj).find('.showmore-comment-circle').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '920px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
     }
     else {
@@ -3638,44 +3640,44 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '128px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $('.showmore-circle').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '900px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
 
         $('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $('.showmore-comment-circle').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '920px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $('.showmore-mini').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '60px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
         $('.showmore-xtra-mini').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '40px',
-            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
-            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+            showText: showText,
+            hideText: hideText
         });
     }
 }

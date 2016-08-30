@@ -17,7 +17,7 @@ cd /vagrant/
 composer install || error_exit
 /vagrant/app/Console/cake migrations.migration run all || error_exit
 /vagrant/app/Console/cake remove_cache || error_exit
-pnpm install --no-bin-links || error_exit
+npm install --no-bin-links || error_exit
 grunt chef || error_exit
 tmp_dir='/vagrant/app/tmp'
 if [ ! -e $tmp_dir ]; then
