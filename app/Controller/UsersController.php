@@ -859,15 +859,19 @@ class UsersController extends AppController
      * select2用に加工したユーザ情報を取得
      *
      * @param $userId
-     *
      * @return CakeResponse|null
      */
     function ajax_select2_get_user_detail($userId)
     {
-        if (empty($userId)) {
+        if (empty($userId) || !is_numeric($userId)) {
             return $this->_ajaxGetResponse([]);
         }
+        // ユーザ詳細情報取得
         $user = $this->User->getDetail($userId);
+        if (empty($user)) {
+            return $this->_ajaxGetResponse([]);
+        }
+        // レスポンス用にユーザ詳細情報を加工
         $res = $this->User->makeSelect2User($user);
         return $this->_ajaxGetResponse($res);
     }

@@ -1495,7 +1495,7 @@ class User extends AppModel
 
     /**
      * select2 用のユーザー配列を返す
-     *
+     * TODO:makeSelect2UserList/makeSelect2Userの処理をControllerもしくはComponentに移行
      * @param array $user
      *
      * @return array

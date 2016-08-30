@@ -44,11 +44,6 @@
                         </a>
                     </li>
                 <?php endif;?>
-                <!--                <li class="profile-user-dropdown-menu-item">-->
-                <!--                    <a class="" href="/user/settings">-->
-                <!--                        --><?//= __('Cancel')?>
-                <!--                    </a>-->
-                <!--                </li>-->
             </ul>
         </div>
 
@@ -97,11 +92,6 @@
                         </a>
                     </li>
                 <?php endif;?>
-                <!--                <li class="profile-user-dropdown-menu-item">-->
-                <!--                    <a class="" href="/user/settings">-->
-                <!--                        --><?//= __('Cancel')?>
-                <!--                    </a>-->
-                <!--                </li>-->
             </ul>
         </div>
 

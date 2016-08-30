@@ -206,7 +206,8 @@
 
                 <div class="col col-sm-6">
                     <div class="fileinput_cover fileinput-new profile-setting-cover" data-provides="fileinput">
-                        <div class="fileinput-preview profile-setting-cover-upload mb_8px" data-trigger="fileinput">
+                        <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : "";?>
+                        <div class="fileinput-preview profile-setting-cover-upload <?= $noCoverClass ?> mb_8px" data-trigger="fileinput">
                             <?php if (empty($me['User']['cover_photo_file_name'])): ?>
                                 <a href="#" class="profile-setting-cover-upload-frame">
                                     <span class="">+</span>
@@ -214,7 +215,7 @@
                             <?php else: ?>
                                 <?=
                                 $this->Upload->uploadImage($this->request->data, 'User.cover_photo',
-                                    ['style' => 'x_large']) ?>
+                                    ['style' => 'x_large', 'class' => 'profile-setting-cover-image']) ?>
                             <?php endif;?>
                         </div>
                         <div>
