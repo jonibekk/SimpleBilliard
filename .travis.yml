@@ -139,10 +139,24 @@ deploy:
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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
+    app-id: 77c4fc53-40c3-4a73-b532-18d5ef1beff7
+    wait-until-deployed: true
+    on:
+      branch: master
+  - provider: opsworks
+    access-key-id: AKIAJHXVNZZEOX3TD5BA
+    secret-access-key: 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
     app-id: 786fd3c0-1b5f-49d9-b707-27dba2909c84
     wait-until-deployed: false
     on:
-      branch: release
+      branch: master-isao
+  - provider: opsworks
+    access-key-id: AKIAJHXVNZZEOX3TD5BA
+    secret-access-key: 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
+    app-id: 8652d11c-db59-4482-afe9-44f1a7a0df0c
+    wait-until-deployed: false
+    on:
+      branch: stage
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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
@@ -157,10 +171,3 @@ deploy:
     wait-until-deployed: true
     on:
       branch: hotfix
-  - provider: opsworks
-    access-key-id: AKIAJHXVNZZEOX3TD5BA
-    secret-access-key: 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
-    app-id: 77c4fc53-40c3-4a73-b532-18d5ef1beff7
-    wait-until-deployed: true
-    on:
-      branch: master
