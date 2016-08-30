@@ -855,6 +855,7 @@ class UsersController extends AppController
      * select2用に加工したユーザ情報を取得
      *
      * @param $userId
+     *
      * @return CakeResponse|null
      */
     function ajax_select2_get_user_detail($userId)

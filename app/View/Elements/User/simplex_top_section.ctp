@@ -16,11 +16,12 @@
 <div id="MyPage" class="panel-body profile-user-upper-panel">
     <div class="profile-user-header">
         <div class="dropdown">
-            <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : "";?>
+            <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
             <a href="#" class="profile-user-cover <?= $noCoverClass ?>"
                data-toggle="dropdown" id="coverMenu">
                 <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
-                    <?php $coverImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo', ['style' => 'x_large']);?>
+                    <?php $coverImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo',
+                        ['style' => 'x_large']); ?>
                     <?= $this->Html->image($coverImageUrl,
                         ['class' => 'profile-user-cover-image'])
                     ?>
@@ -33,17 +34,17 @@
                 aria-labelledby="coverMenu">
                 <li class="profile-user-dropdown-menu-item">
                     <a class="" href="/users/settings#profile">
-                        <?= __('Upload Cover Image')?>
+                        <?= __('Upload Cover Image') ?>
                     </a>
                 </li>
                 <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
                     <li class="profile-user-dropdown-menu-item">
                         <a class="" href="<?= $coverImageUrl ?>"
                            rel='lightbox'>
-                            <?= __('View Cover Image')?>
+                            <?= __('View Cover Image') ?>
                         </a>
                     </li>
-                <?php endif;?>
+                <?php endif; ?>
             </ul>
         </div>
 
@@ -52,14 +53,14 @@
                 <a href="/users/settings#profile" class="btn-pink-radius">
                     <i class="fa fa-pencil mr_5px"></i><span><?= __('Edit Profile') ?></span>
                 </a>
-            <?php else:?>
-                <a href="/posts/message_list?userId=<?=$user['User']['id']?>" class="btn-pink-radius">
+            <?php else: ?>
+                <a href="/posts/message_list?userId=<?= $user['User']['id'] ?>" class="btn-pink-radius">
                     <i class="fa fa-paper-plane-o mr_5px"></i><span><?= __('Message') ?></span>
                 </a>
             <?php endif; ?>
         </div>
         <div class="profile-user-avatar-wrap dropdown">
-            <?php $profileImageUrl = $this->Upload->uploadUrl($user['User'], 'User.photo', ['style' => 'x_large']);?>
+            <?php $profileImageUrl = $this->Upload->uploadUrl($user['User'], 'User.photo', ['style' => 'x_large']); ?>
             <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
                 <a href="#" data-toggle="dropdown" id="profileMenu">
                     <?=
@@ -81,17 +82,17 @@
                 aria-labelledby="profileMenu">
                 <li class="profile-user-dropdown-menu-item">
                     <a class="" href="/users/settings#profile">
-                        <?= __('Upload Profile Image')?>
+                        <?= __('Upload Profile Image') ?>
                     </a>
                 </li>
                 <?php if (!empty($user['User']['photo_file_name'])): ?>
                     <li class="profile-user-dropdown-menu-item">
                         <a class="" href="<?= $profileImageUrl ?>"
                            rel='lightbox'>
-                            <?= __('View Profile Image')?>
+                            <?= __('View Profile Image') ?>
                         </a>
                     </li>
-                <?php endif;?>
+                <?php endif; ?>
             </ul>
         </div>
 

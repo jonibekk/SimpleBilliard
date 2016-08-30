@@ -231,10 +231,10 @@ $(document).ready(function () {
         var file = $input.prop('files')[0];
         var $preview = $(this).find('.fileinput-preview');
         resizeImgBase64(file.result, 672, 378,
-            function(img_b64) {
+            function (img_b64) {
                 $preview.removeClass('mod-no-image');
                 $preview.css('line-height', '');
-                $preview.html('<img class="profile-setting-cover-image" src="'+img_b64+'">')
+                $preview.html('<img class="profile-setting-cover-image" src="' + img_b64 + '">')
             }
         );
     });
@@ -934,7 +934,7 @@ function resizeImgBase64(imgBase64, width, height, callback) {
     var img_type = imgBase64.substring(5, imgBase64.indexOf(";"));
     // Source Image
     var img = new Image();
-    img.onload = function() {
+    img.onload = function () {
         // New Canvas
         var canvas = document.createElement('canvas');
         canvas.width = width;
@@ -2235,13 +2235,13 @@ function initMemberSelect2() {
     $('#select2Member').select2({
         initSelection: function (element, callback) {
             // user_**の文字列からユーザーIDを抽出
-            if($(element).val().match(/^user_(\d+)$/)) {
+            if ($(element).val().match(/^user_(\d+)$/)) {
                 var userId = RegExp.$1;
                 // ユーザー情報を取得して初期表示
                 $.ajax("/users/ajax_select2_get_user_detail/" + userId,
-                {
-                    type:'GET'
-                }).done(function(data) {
+                    {
+                        type: 'GET'
+                    }).done(function (data) {
                     callback(data);
                 });
             }

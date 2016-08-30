@@ -77,7 +77,7 @@ class User extends AppModel
 
     public $actsAs = [
         'Upload' => [
-            'photo' => [
+            'photo'       => [
                 'styles'      => [
                     'small'        => '32x32',
                     'medium'       => '48x48',
@@ -91,9 +91,8 @@ class User extends AppModel
             ],
             'cover_photo' => [
                 'styles'      => [
-                    'medium'        => '250x140',
-                    'large'      => '640x360',
-                    'x_large'      => '672x378',
+                    'large'   => '640x360',
+                    'x_large' => '672x378',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',
@@ -264,7 +263,7 @@ class User extends AppModel
                 'allowEmpty' => true,
             ],
         ],
-        'cover_photo'              => [
+        'cover_photo'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
@@ -628,7 +627,7 @@ class User extends AppModel
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
         //データを保存
-        if(!viaIsSet($data['Email'][0]['Email']['email_verified']) && !viaIsSet($data['User']['id'])) {
+        if (!viaIsSet($data['Email'][0]['Email']['email_verified']) && !viaIsSet($data['User']['id'])) {
             $this->create();
         }
         if ($this->saveAll($data, ['validate' => false])) {
@@ -1496,6 +1495,7 @@ class User extends AppModel
     /**
      * select2 用のユーザー配列を返す
      * TODO:makeSelect2UserList/makeSelect2Userの処理をControllerもしくはComponentに移行
+     *
      * @param array $user
      *
      * @return array
