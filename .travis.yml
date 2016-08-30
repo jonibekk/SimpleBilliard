@@ -133,6 +133,17 @@ script:
   - npm set progress=false
   - travis_retry npm i --no-bin-links
   - gulp build
+  - mkdir s3_upload
+  - mkdir s3_upload/css
+  - mkdir s3_upload/js
+  - cp app/webroot/css/goalous.min.css s3_upload/css/
+  - cp app/webroot/js/goalous.min.js s3_upload/js/
+  - cp app/webroot/js/goalous.prerender.min.js s3_upload/js/
+  - cp app/webroot/js/ng_app.min.js s3_upload/js/
+  - cp app/webroot/js/ng_vendors.min.js s3_upload/js/
+  - cp app/webroot/js/vendors.min.js s3_upload/js/
+  - pwd
+  - ls
 
 after_script:
   - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then php Vendor/bin/coveralls -v; fi
@@ -179,3 +190,12 @@ deploy:
     wait-until-deployed: true
     on:
       branch: hotfix
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: "goalous-compiled-assets"
+    skip_cleanup: true
+    upload-dir: upload_test
+    local_dir: s3_upload
+    on:
+      branch: topic4816-travis-npm
