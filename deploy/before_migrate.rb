@@ -20,6 +20,7 @@ if node[:deploy][:cake].has_key?(:assets_s3_bucket)
       bucket "goalous-compiled-assets"
       aws_access_key_id ENV["AWSAccessKeyId"]
       aws_secret_access_key ENV["AWSSecretKey"]
+      s3_url "https://s3-ap-northeast-1.amazonaws.com/goalous-compiled-assets"
       owner  "deploy"
       group  "www-data"
       mode   "0644"
