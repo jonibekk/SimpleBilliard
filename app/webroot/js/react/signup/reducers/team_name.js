@@ -26,7 +26,8 @@ export default function team_name(state = initialState, action) {
       })
     case types.TEAM_NAME_IS_VALID:
       return Object.assign({}, state, {
-        team_name_is_invalid: false
+        team_name_is_invalid: false,
+        invalid_messages: action.invalid_messages
       })
     case types.TEAM_NAME_IS_INVALID:
       return Object.assign({}, state, {

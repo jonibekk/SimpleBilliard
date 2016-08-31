@@ -2255,7 +2255,7 @@ msgstr "パスワードは数字と英字を組み合わせて下さい。"
 
 #: View/Elements/cake_variables.ctp:15
 msgid "%1$d or more and %2$d or less characters."
-msgstr "%1$d文字以上で%2$d文字以下で入力してください。"
+msgstr "%1$d文字以上%2$d文字以下で入力してください。"
 
 #: View/Elements/cake_variables.ctp:17 View/Elements/modal_add_circle.ctp:174
 #: View/Elements/Feed/photo_upload.ctp:111
