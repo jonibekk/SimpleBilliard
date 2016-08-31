@@ -20,8 +20,17 @@ if node[:deploy][:cake].has_key?(:assets_s3_bucket)
       bucket "goalous-compiled-assets"
       owner  "deploy"
       group  "www-data"
-      mode   0644
+      mode   "0644"
       action :create
+    end
+    bash "extract asset files" do
+      user 'deploy'
+      group 'www-data'
+      code <<-EOS
+      cd #{release_path};
+
+      EOS
+
     end
 else
     file '/home/deploy/.npmrc' do
