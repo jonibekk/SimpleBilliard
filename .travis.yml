@@ -143,6 +143,8 @@ script:
   - cp app/webroot/js/ng_app.min.js s3_upload/js/
   - cp app/webroot/js/ng_vendors.min.js s3_upload/js/
   - cp app/webroot/js/vendors.min.js s3_upload/js/
+  - mkdir s3_upload_dist
+  - tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload
 
 after_script:
   - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then php Vendor/bin/coveralls -v; fi
@@ -195,7 +197,7 @@ deploy:
     bucket: "goalous-compiled-assets"
     skip_cleanup: true
     upload-dir: master
-    local_dir: s3_upload
+    local_dir: s3_upload_dist
     on:
       branch: master
   - provider: s3
@@ -204,7 +206,7 @@ deploy:
     bucket: "goalous-compiled-assets"
     skip_cleanup: true
     upload-dir: master-isao
-    local_dir: s3_upload
+    local_dir: s3_upload_dist
     on:
       branch: master-isao
   - provider: s3
@@ -213,7 +215,7 @@ deploy:
     bucket: "goalous-compiled-assets"
     skip_cleanup: true
     upload-dir: stage
-    local_dir: s3_upload
+    local_dir: s3_upload_dist
     on:
       branch: stage
   - provider: s3
@@ -222,6 +224,15 @@ deploy:
     bucket: "goalous-compiled-assets"
     skip_cleanup: true
     upload-dir: hotfix
-    local_dir: s3_upload
+    local_dir: s3_upload_dist
     on:
       branch: hotfix
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: "goalous-compiled-assets"
+    skip_cleanup: true
+    upload-dir: topic4816-travis-npm
+    local_dir: s3_upload_dist
+    on:
+      branch: topic4816-travis-npm
