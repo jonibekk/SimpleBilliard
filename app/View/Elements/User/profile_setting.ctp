@@ -206,7 +206,7 @@
 
                 <div class="col col-sm-6">
                     <div class="fileinput_cover fileinput-new profile-setting-cover" data-provides="fileinput">
-                        <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
+                        <?php $noCoverClass = empty($me['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
                         <div class="fileinput-preview profile-setting-cover-upload <?= $noCoverClass ?> mb_8px"
                              data-trigger="fileinput">
                             <?php if (empty($me['User']['cover_photo_file_name'])): ?>
