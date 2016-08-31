@@ -16,13 +16,13 @@ end
 
 if node[:deploy][:cake].has_key?(:assets_s3_bucket)
     s3_file "#{release_path}/s3_upload.tar.gz" do
-      source "s3://goalous-compiled-assets/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
+      remote_path "/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
+      bucket "goalous-compiled-assets"
       owner  "deploy"
       group  "www-data"
       mode   0644
       action :create
     end
-
 else
     file '/home/deploy/.npmrc' do
       owner 'deploy'
