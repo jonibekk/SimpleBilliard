@@ -39,4 +39,4 @@ $this->set('hidden_sidebar_xxs', true);
     });
 </script>
 <?php $this->end(); ?>
-
+<!-- END -->
