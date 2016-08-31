@@ -1,5 +1,9 @@
-import { combineReducers } from 'redux'
-import { routerReducer } from 'react-router-redux'
+import {
+  combineReducers
+} from 'redux'
+import {
+  routerReducer
+} from 'react-router-redux'
 import auth from './auth'
 import password from './password'
 import team_name from './team_name'

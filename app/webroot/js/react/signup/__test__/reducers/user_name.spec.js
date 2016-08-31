@@ -3,20 +3,6 @@ import * as types from '../../constants/actionTypes'
 import expect from 'expect'
 
 describe('reducer::user_name', () => {
-  it('INPUT_USER_NAME', () => {
-    const expect_value = {
-      inputed: {
-        key_name: 'name'
-      }
-    }
-    const newState = userNameReducer({}, {
-      type: types.INPUT_USER_NAME,
-      key: 'key_name',
-      name: 'name'
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
   it('CHECKING_USER_NAME', () => {
     const expect_value = {
       checking_user_name: true
@@ -39,15 +25,20 @@ describe('reducer::user_name', () => {
   })
   it('USER_NAME_IS_INVALID', () => {
     const expect_value = {
-      user_name_is_invalid: true,
+      invalid: {
+        user_name: true
+      },
       invalid_messages: {
-        test: 'invalid message'
+        user_name: 'invalid message'
       }
     }
     const newState = userNameReducer({}, {
       type: types.USER_NAME_IS_INVALID,
+      invalid: {
+        user_name: true
+      },
       invalid_messages: {
-        test: 'invalid message'
+        user_name: 'invalid message'
       }
     })
 
@@ -55,10 +46,21 @@ describe('reducer::user_name', () => {
   })
   it('USER_NAME_IS_VALID', () => {
     const expect_value = {
-      user_name_is_invalid: false
+      invalid: {
+        user_name: false
+      },
+      invalid_messages: {
+        user_name: ''
+      }
     }
     const newState = userNameReducer({}, {
-      type: types.USER_NAME_IS_VALID
+      type: types.USER_NAME_IS_VALID,
+      invalid: {
+        user_name: false
+      },
+      invalid_messages: {
+        user_name: ''
+      }
     })
 
     expect(newState).toInclude(expect_value)

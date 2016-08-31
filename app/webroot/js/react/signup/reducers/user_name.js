@@ -18,10 +18,6 @@ const initialState = {
 
 export default function user_name(state = initialState, action) {
   switch (action.type) {
-    case types.INPUT_USER_NAME:
-      return Object.assign({}, state, {
-        inputed: action.inputed
-      })
     case types.CHECKING_USER_NAME:
       return Object.assign({}, state, {
         checking_user_name: true
