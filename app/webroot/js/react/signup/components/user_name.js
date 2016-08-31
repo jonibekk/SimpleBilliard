@@ -47,6 +47,15 @@ export default class UserName extends React.Component {
   }
 
   render() {
+    let birthday_error_message = ''
+
+    if(this.props.user_name.invalid_messages.birth_year) {
+      birthday_error_message = this.props.user_name.invalid_messages.birth_year
+    } else if(this.props.user_name.invalid_messages.birth_month) {
+      birthday_error_message = this.props.user_name.invalid_messages.birth_month
+    } else if(this.props.user_name.invalid_messages.birth_day) {
+      birthday_error_message = this.props.user_name.invalid_messages.birth_day
+    }
     return (
       <div>
         <div className="row">
@@ -138,7 +147,7 @@ export default class UserName extends React.Component {
                     </div>
 
                     <InvalidMessageBox is_invalid={this.props.user_name.invalid.birth_year || this.props.user_name.invalid.birth_month || this.props.user_name.invalid.birth_day}
-                                       message={this.props.user_name.invalid_messages.birth_day} />
+                                       message={birthday_error_message} />
 
                     {/* Privacy policy check */}
                     <div className="signup-checkbox">

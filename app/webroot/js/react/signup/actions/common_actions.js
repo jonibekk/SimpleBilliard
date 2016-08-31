@@ -129,13 +129,13 @@ export function _checkValue(target) {
     case 'birth_year':
       if(!val) {
         status.error = true
-        status.messages.birth_day = cake.message.validate.signup_birth_day_required
+        status.messages.birth_year = cake.message.validate.signup_birth_day_required
       }
       return status
     case 'birth_month':
       if(!val) {
         status.error = true
-        status.messages.birth_day = cake.message.validate.signup_birth_day_required
+        status.messages.birth_month = cake.message.validate.signup_birth_day_required
       }
       return status
     case 'birth_day':
