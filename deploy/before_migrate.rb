@@ -1,5 +1,6 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 require 'json'
+include_recipe 's3_file'
 
 file "/tmp/node.json" do
   content JSON.pretty_generate(node)
@@ -15,7 +16,13 @@ end
 
 
 if node[:deploy][:cake].has_key?(:assets_s3_bucket)
-    puts node[:deploy][:cake][:assets_s3_bucket]
+    s3_file "#{release_path}/s3_upload.tar.gz" do
+      source "s3://goalous-compiled-assets/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
+      owner  "deploy"
+      group  "www-data"
+      mode   0644
+      action :create
+    end
 
 else
     file '/home/deploy/.npmrc' do
