@@ -222,6 +222,24 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+    // アップロードしたカバー画像選択時にリサイズして表示
+    $('.fileinput_cover').fileinput().on('change.bs.fileinput', function () {
+        var $input = $(this).find('input[type=file]');
+        if (!$input.prop('files') || $input.prop('files').length == 0) {
+            return;
+        }
+        var file = $input.prop('files')[0];
+        var $preview = $(this).find('.fileinput-preview');
+        resizeImgBase64(file.result, 672, 378,
+            function (img_b64) {
+                $preview.removeClass('mod-no-image');
+                $preview.css('line-height', '');
+                $preview.html('<img class="profile-setting-cover-image" src="' + img_b64 + '">')
+            }
+        );
+    });
+
+
     //tab open
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var $target = $(e.target);
@@ -908,6 +926,28 @@ function evToggleAjaxGet() {
     return false;
 }
 
+/**
+ * base64の画像をリサイズ
+ */
+function resizeImgBase64(imgBase64, width, height, callback) {
+    // Image Type
+    var img_type = imgBase64.substring(5, imgBase64.indexOf(";"));
+    // Source Image
+    var img = new Image();
+    img.onload = function () {
+        // New Canvas
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        // Draw (Resize)
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        // Destination Image
+        var imgB64_dst = canvas.toDataURL(img_type);
+        callback(imgB64_dst);
+    };
+    img.src = imgBase64;
+}
 
 /**
  *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
@@ -2193,6 +2233,19 @@ function initMessageSelect2() {
 function initMemberSelect2() {
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
+        initSelection: function (element, callback) {
+            // user_**の文字列からユーザーIDを抽出
+            if ($(element).val().match(/^user_(\d+)$/)) {
+                var userId = RegExp.$1;
+                // ユーザー情報を取得して初期表示
+                $.ajax("/users/ajax_select2_get_user_detail/" + userId,
+                    {
+                        type: 'GET'
+                    }).done(function (data) {
+                    callback(data);
+                });
+            }
+        },
         multiple: true,
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
@@ -3833,7 +3886,7 @@ $(document).ready(function () {
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
 
-    if($('#jsDashboardCircleListBody')[0] !== undefined){
+    if ($('#jsDashboardCircleListBody')[0] !== undefined) {
         pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
             var $circle_list = $('#jsDashboardCircleListBody');
             $.each(data.circle_ids, function (i, circle_id) {
@@ -3843,12 +3896,12 @@ $(document).ready(function () {
                 }
                 var $unread_count = $circle.find('.dashboard-circle-count-box');
                 var unread_count = $unread_count.text().trim();
-                if (unread_count == ""){
+                if (unread_count == "") {
                     $unread_count.text(1);
-                }else if(Number(unread_count) == 9){
+                } else if (Number(unread_count) == 9) {
                     $unread_count.text("9+");
-                }else if(unread_count != "9+"){
-                    $unread_count.text(Number(unread_count)+1);
+                } else if (unread_count != "9+") {
+                    $unread_count.text(Number(unread_count) + 1);
                 }
                 $circle.prependTo('#jsDashboardCircleListBody');
             });

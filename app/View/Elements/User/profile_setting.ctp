@@ -12,7 +12,7 @@
  * @var boolean            $is_not_use_local_name
  */
 ?>
-<!-- START app/View/Elements/User/profile_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div id="profile">
     <div class="panel panel-default">
         <div class="panel-heading"><?= __("Profile") ?></div>
@@ -201,6 +201,60 @@
             </div>
             <hr>
             <div class="form-group">
+                <label for="" class="col col-sm-3 control-label form-label">
+                    <?= __("Cover Image") ?>
+                </label>
+
+                <div class="col col-sm-6">
+                    <div class="fileinput_cover fileinput-new profile-setting-cover" data-provides="fileinput">
+                        <?php $noCoverClass = empty($me['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
+                        <div class="fileinput-preview profile-setting-cover-upload <?= $noCoverClass ?> mb_8px"
+                             data-trigger="fileinput">
+                            <?php if (empty($me['User']['cover_photo_file_name'])): ?>
+                                <a href="#" class="profile-setting-cover-upload-frame">
+                                    <span class="">+</span>
+                                </a>
+                            <?php else: ?>
+                                <?=
+                                $this->Upload->uploadImage($this->request->data, 'User.cover_photo',
+                                    ['style' => 'x_large', 'class' => 'profile-setting-cover-image']) ?>
+                            <?php endif; ?>
+                        </div>
+                        <div>
+                        <span class="btn btn-default btn-file">
+                            <span class="fileinput-new">
+                                <?= __("Select an image") ?>
+                            </span>
+                            <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
+                            <?=
+                            $this->Form->input('cover_photo',
+                                [
+                                    'type'         => 'file',
+                                    'label'        => false,
+                                    'div'          => false,
+                                    'css'          => false,
+                                    'wrapInput'    => false,
+                                    'errorMessage' => false,
+                                    'required'     => false
+                                ]) ?>
+                        </span>
+                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
+                        </div>
+                    </div>
+
+                    <div class="has-error">
+                        <?=
+                        $this->Form->error('cover_photo', null,
+                            [
+                                'class' => 'help-block text-danger',
+                                'wrap'  => 'span'
+                            ]) ?>
+                    </div>
+                </div>
+
+            </div>
+            <hr>
+            <div class="form-group">
                 <div class="col col-sm-3 control-label form-label">
                     <label for="UserComment" class=""><?= __("About me") ?></label>
 
@@ -291,4 +345,4 @@ Need New Customers?<br>\n
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Elements/User/profile_setting.ctp -->
+<?= $this->App->viewEndComment()?>
