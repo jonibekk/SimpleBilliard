@@ -12,6 +12,7 @@
  * @var boolean            $is_not_use_local_name
  */
 ?>
+<?= $this->App->viewStartComment()?>
 <div id="profile">
     <div class="panel panel-default">
         <div class="panel-heading"><?= __("Profile") ?></div>
@@ -344,4 +345,4 @@ Need New Customers?<br>\n
     });
 </script>
 <?php $this->end() ?>
-<!-- END -->
+<?= $this->App->viewEndComment()?>

@@ -11,6 +11,7 @@
 // two_column レイアウトで、xxs サイズの時にサイドバーを隠す
 $this->set('hidden_sidebar_xxs', true);
 ?>
+<?= $this->App->viewStartComment()?>
 <?php $this->start('sidebar') ?>
 <div class="sidebar-setting" role="complementary" id="SidebarSetting">
     <ul class="nav">
@@ -39,4 +40,4 @@ $this->set('hidden_sidebar_xxs', true);
     });
 </script>
 <?php $this->end(); ?>
-<!-- END -->
+<?= $this->App->viewEndComment()?>
