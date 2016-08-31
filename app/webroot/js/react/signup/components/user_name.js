@@ -135,7 +135,7 @@ export default class UserName extends React.Component {
                            }
                         </select>
                         </span>
-                        <InvalidMessageBox is_invalid={this.props.user_name.invalid.birth_day}
+                        <InvalidMessageBox is_invalid={this.props.user_name.invalid.birth_year || this.props.user_name.invalid.birth_month || this.props.user_name.invalid.birth_day}
                                            message={this.props.user_name.invalid_messages.birth_day} />
                     </div>
 

@@ -33,7 +33,8 @@
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_alpha: "<?= __("Only alphabet characters are allowed.") ?>",
-                signup_privacy_policy: "<?= __("Need to agree to terms and policy.") ?>",
+                signup_privacy_policy_required: "<?= __("Selection required.") ?>",
+                signup_birth_day_required: "<?= __("Selection required.") ?>"
             },
             notice: {
                 a: "<?=__("You haven't finished your input data yet. Do you want to leave without finishing?")?>",

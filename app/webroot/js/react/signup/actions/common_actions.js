@@ -123,21 +123,25 @@ export function _checkValue(target) {
     case 'birth_year':
       if(!val) {
         status.error = true
+        status.messages.birth_day = cake.message.validate.signup_birth_day_required
       }
       return status
     case 'birth_month':
       if(!val) {
         status.error = true
+        status.messages.birth_day = cake.message.validate.signup_birth_day_required
       }
       return status
     case 'birth_day':
       if(!val) {
         status.error = true
+        status.messages.birth_day = cake.message.validate.signup_birth_day_required
       }
       return status
     case 'privacy_policy':
       if(!target.checked) {
         status.error = true
+        status.messages.privacy_policy = cake.message.validate.signup_privacy_policy_required
       }
       return status
     default:
