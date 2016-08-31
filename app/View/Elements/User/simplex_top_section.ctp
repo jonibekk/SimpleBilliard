@@ -12,44 +12,65 @@
  * @var                    $like_count
  */
 ?>
-<?= $this->Html->script('view/mypage') ?>
+<?php $isMypage = $this->Session->read('Auth.User.id') == $user['User']['id'];?>
 <div id="MyPage" class="panel-body profile-user-upper-panel">
     <div class="profile-user-header">
-        <div class="dropdown">
+        <div class="<?php if ($isMypage): ?>dropdown<?php endif;?>">
             <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
-            <a href="#" class="profile-user-cover <?= $noCoverClass ?>"
-               data-toggle="dropdown" id="coverMenu">
+            <?php $coverImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo',
+                ['style' => 'x_large']); ?>
+            <?php if ($isMypage): ?>
+                <a href="#" class="profile-user-cover <?= $noCoverClass ?>"
+                   data-toggle="dropdown" id="coverMenu">
+                    <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
+                        <?= $this->Html->image($coverImageUrl,
+                            ['class' => 'profile-user-cover-image'])
+                        ?>
+                    <?php else: ?>
+                        <div class="profile-user-cover-default"></div>
+                    <?php endif; ?>
+                </a>
+            <?php else: ?>
                 <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
-                    <?php $coverImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo',
-                        ['style' => 'x_large']); ?>
-                    <?= $this->Html->image($coverImageUrl,
-                        ['class' => 'profile-user-cover-image'])
-                    ?>
-                <?php else: ?>
-                    <div class="profile-user-cover-default"></div>
-                <?php endif; ?>
-            </a>
-
-            <ul class="profile-user-dropdown-menu mod-cover dropdown-menu "
-                aria-labelledby="coverMenu">
-                <li class="profile-user-dropdown-menu-item">
-                    <a class="" href="/users/settings#profile">
-                        <?= __('Upload Cover Image') ?>
+                    <a href="<?= $coverImageUrl?>" class="profile-user-cover <?= $noCoverClass ?>" rel='lightbox'>
+                        <?= $this->Html->image($coverImageUrl,
+                            ['class' => 'profile-user-cover-image'])
+                        ?>
                     </a>
-                </li>
-                <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
+                <?php else: ?>
+                    <div class="profile-user-cover <?= $noCoverClass ?>">
+                        <div class="profile-user-cover-default"></div>
+                    </div>
+                <?php endif; ?>
+            <?php endif;?>
+
+            <?php if ($isMypage): ?>
+                <ul class="profile-user-dropdown-menu mod-cover dropdown-menu "
+                    aria-labelledby="coverMenu">
+                        <li class="profile-user-dropdown-menu-item">
+                            <a class="" href="/users/settings#profile">
+                                <?= __('Upload Cover Image') ?>
+                            </a>
+                        </li>
+                    <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
+                        <li class="profile-user-dropdown-menu-item">
+                            <a class="" href="<?= $coverImageUrl ?>"
+                               rel='lightbox'>
+                                <?= __('View Cover Image') ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                     <li class="profile-user-dropdown-menu-item">
-                        <a class="" href="<?= $coverImageUrl ?>"
-                           rel='lightbox'>
-                            <?= __('View Cover Image') ?>
+                        <a class="js-close-dropdown" href="#">
+                            <?= __('Cancel') ?>
                         </a>
                     </li>
-                <?php endif; ?>
-            </ul>
+                </ul>
+            <?php endif;?>
         </div>
 
         <div class="profile-user-cover-inner-btn">
-            <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
+            <?php if ($isMypage): ?>
                 <a href="/users/settings#profile" class="btn-pink-radius">
                     <i class="fa fa-pencil mr_5px"></i><span><?= __('Edit Profile') ?></span>
                 </a>
@@ -59,44 +80,41 @@
                 </a>
             <?php endif; ?>
         </div>
-        <div class="profile-user-avatar-wrap dropdown">
+        <div class="profile-user-avatar-wrap <?php if ($isMypage): ?>dropdown<?php endif;?>">
             <?php $profileImageUrl = $this->Upload->uploadUrl($user['User'], 'User.photo', ['style' => 'x_large']); ?>
-            <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
+            <?php if ($isMypage): ?>
                 <a href="#" data-toggle="dropdown" id="profileMenu">
-                    <?=
-                    $this->Html->image(
-                        $profileImageUrl,
-                        ['class' => 'lazy profile-user-avatar',]
-                    )
-                    ?>
+                    <?= $this->Html->image($profileImageUrl, ['class' => 'lazy profile-user-avatar',]) ?>
                 </a>
             <?php else: ?>
-                <?=
-                $this->Html->image(
-                    $profileImageUrl,
-                    ['class' => 'lazy profile-user-avatar',]
-                )
-                ?>
+                <a href="<?= $profileImageUrl ?>" rel='lightbox'>
+                    <?= $this->Html->image($profileImageUrl, ['class' => 'lazy profile-user-avatar',]) ?>
+                </a>
             <?php endif ?>
-            <ul class="profile-user-dropdown-menu mod-profile dropdown-menu "
-                aria-labelledby="profileMenu">
-                <li class="profile-user-dropdown-menu-item">
-                    <a class="" href="/users/settings#profile">
-                        <?= __('Upload Profile Image') ?>
-                    </a>
-                </li>
-                <?php if (!empty($user['User']['photo_file_name'])): ?>
+            <?php if ($isMypage): ?>
+                <ul class="profile-user-dropdown-menu mod-profile dropdown-menu "
+                    aria-labelledby="profileMenu">
                     <li class="profile-user-dropdown-menu-item">
-                        <a class="" href="<?= $profileImageUrl ?>"
-                           rel='lightbox'>
-                            <?= __('View Profile Image') ?>
+                        <a class="" href="/users/settings#profile">
+                            <?= __('Upload Profile Image') ?>
                         </a>
                     </li>
-                <?php endif; ?>
-            </ul>
+                    <?php if (!empty($user['User']['photo_file_name'])): ?>
+                        <li class="profile-user-dropdown-menu-item">
+                            <a class="" href="<?= $profileImageUrl ?>"
+                               rel='lightbox'>
+                                <?= __('View Profile Image') ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <li class="profile-user-dropdown-menu-item">
+                        <a class="js-close-dropdown" href="#">
+                            <?= __('Cancel') ?>
+                        </a>
+                    </li>
+                </ul>
+            <?php endif;?>
         </div>
-
-
     </div>
     <div class="profile-user-info-wrap">
         <p class="profile-user-name">
@@ -128,7 +146,7 @@
                 </span>
             </div>
         </div>
-        <div class="profile-user-comments showmore">
+        <div class="profile-user-comments showmore-profile-content">
             <?= nl2br($this->TextEx->autoLink($user['TeamMember']['comment'])) ?>
         </div>
     </div>

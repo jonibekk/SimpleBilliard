@@ -418,6 +418,11 @@ class UploadBehavior extends ModelBehavior
                 // resize with banding
                 list($destW, $destH) = explode('x', substr($geometry, 1, strlen($geometry) - 2));
                 $resizeMode = 'band';
+            } elseif (preg_match("/^f\[(\d+)x(\d+)\]$/", $geometry, $match)) {
+                // resize with force
+                $destW = $match[1];
+                $destH = $match[2];
+                $resizeMode = 'force';
             } elseif (preg_match('/^[\\d]+x[\\d]+$/', $geometry)) {
                 // cropped resize (best fit)
                 list($destW, $destH) = explode('x', $geometry);
@@ -616,6 +621,16 @@ class UploadBehavior extends ModelBehavior
             }
         }
         return false;
+    }
+
+    public function minWidthHeight(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $minWidth,
+        $minHeight
+    ) {
+        return $this->_validateDimension($value, 'min', 'x', $minWidth) && $this->_validateDimension($value, 'min', 'y', $minHeight);
     }
 
     public function minWidth(

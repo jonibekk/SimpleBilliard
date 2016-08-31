@@ -91,8 +91,8 @@ class User extends AppModel
             ],
             'cover_photo' => [
                 'styles'      => [
-                    'large'   => '640x360',
-                    'x_large' => '672x378',
+                    'large'   => 'f[640x360]',
+                    'x_large' => 'f[672x378]',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',
@@ -265,7 +265,8 @@ class User extends AppModel
         ],
         'cover_photo'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],],
+            'imageMinWidthHeight' => ['rule' => ['minWidthHeight', 672, 378]],
         ],
         'comment'            => [
             'maxLength' => ['rule' => ['maxLength', 2000]],

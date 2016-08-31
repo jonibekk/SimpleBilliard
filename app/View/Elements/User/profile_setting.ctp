@@ -238,7 +238,7 @@
                                     'required'     => false
                                 ]) ?>
                         </span>
-                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
+                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?>&nbsp;<?= __('More than %d×%d pixel', 672, 378) ?></span>
                         </div>
                     </div>
 

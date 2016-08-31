@@ -239,6 +239,10 @@ $(document).ready(function () {
         );
     });
 
+    $('.js-close-dropdown').on('click', function (e) {
+        e.preventDefault();
+        $(this).closest('dropdown').removeClass('open');
+    });
 
     //tab open
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -3729,6 +3733,13 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '40px',
+            showText: showText,
+            hideText: hideText
+        });
+        $('.showmore-profile-content').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '80px',
             showText: showText,
             hideText: hideText
         });
