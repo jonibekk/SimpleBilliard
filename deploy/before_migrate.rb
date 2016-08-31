@@ -18,6 +18,8 @@ if node[:deploy][:cake].has_key?(:assets_s3_bucket)
     s3_file "#{release_path}/s3_upload.tar.gz" do
       remote_path "/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
       bucket "goalous-compiled-assets"
+      aws_access_key_id ENV["AWSAccessKeyId"]
+      aws_secret_access_key ENV["AWSSecretKey"]
       owner  "deploy"
       group  "www-data"
       mode   "0644"
