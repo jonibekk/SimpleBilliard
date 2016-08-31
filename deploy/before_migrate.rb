@@ -1,6 +1,5 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 require 'json'
-include_recipe 's3_file'
 
 file "/tmp/node.json" do
   content JSON.pretty_generate(node)
