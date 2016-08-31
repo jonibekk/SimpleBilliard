@@ -13,29 +13,35 @@ bash "composer install" do
   EOS
 end
 
-file '/home/deploy/.npmrc' do
- owner 'deploy'
- group 'aws'
- mode '0755'
-end
 
-bash "pnpm install" do
-  user 'deploy'
-  group 'www-data'
-  code <<-EOS
-  source /usr/local/nvm/nvm.sh
-  # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
-  cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
-  EOS
-end
+if node[:deploy][:cake].has_key?(:assets_s3_bucket)
+    puts node[:deploy][:cake][:assets_s3_bucket]
 
-bash "run gulp build" do
-  user 'deploy'
-  group 'www-data'
-  code <<-EOS
-  source /usr/local/nvm/nvm.sh
-  cd #{release_path}; gulp build
-  EOS
+else
+    file '/home/deploy/.npmrc' do
+      owner 'deploy'
+      group 'aws'
+      mode '0755'
+    end
+
+    bash "pnpm install" do
+      user 'deploy'
+      group 'www-data'
+      code <<-EOS
+      source /usr/local/nvm/nvm.sh
+      # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
+      cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
+      EOS
+    end
+
+    bash "run gulp build" do
+      user 'deploy'
+      group 'www-data'
+      code <<-EOS
+      source /usr/local/nvm/nvm.sh
+      cd #{release_path}; gulp build
+      EOS
+    end
 end
 
 bash "ntpdate" do
