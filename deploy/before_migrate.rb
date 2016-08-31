@@ -1,4 +1,9 @@
 # デプロイフックでcake関連のデプロイ処理を行う
+require 'json'
+
+file "/tmp/node.json" do
+  content JSON.pretty_generate(node)
+end
 
 bash "composer install" do
   user 'deploy'
