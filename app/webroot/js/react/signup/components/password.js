@@ -48,7 +48,6 @@ export default class Password extends React.Component {
                   <div className={(this.props.password.invalid.password) ? 'has-error' : ''}>
                     <input className="form-control signup_input-design"
                            placeholder="********"
-                           maxLength="50"
                            type="password"
                            ref="password"
                            name="password"

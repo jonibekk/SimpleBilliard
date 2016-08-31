@@ -36,7 +36,10 @@
                 signup_privacy_policy_required: "<?= __("Selection required.") ?>",
                 signup_birth_day_required: "<?= __("Selection required.") ?>",
                 signup_term_required: "<?= __("Selection required.") ?>",
-                signup_start_month_required: "<?= __("Selection required.") ?>"
+                signup_start_month_required: "<?= __("Selection required.") ?>",
+                signup_password_min_length: "<?= __('At least %2$d characters is required.', 8, 8)?>",
+                signup_password_max_length: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
+                signup_password_alpha_num_required: "<?= __("Please mix of numbers and alphanumeric.") ?>"
             },
             notice: {
                 a: "<?=__("You haven't finished your input data yet. Do you want to leave without finishing?")?>",

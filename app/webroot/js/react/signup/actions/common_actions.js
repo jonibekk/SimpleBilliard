@@ -91,9 +91,15 @@ export function _checkValue(target) {
     case 'password':
       const pattern = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{8,50}$/
 
-      if(!validator.matches(val, pattern)) {
+      if(val === '' || !validator.isLength(val, { min: 8 })) {
         status.error = true
-        status.messages.password = ''
+        status.messages.password = cake.message.validate.signup_password_min_length
+      } else if(val === '' || !validator.isLength(val, { min: 8, max: 50 })) {
+        status.error = true
+        status.messages.password = cake.message.validate.signup_password_max_length
+      } else if(!validator.matches(val, pattern)) {
+        status.error = true
+        status.messages.password = cake.message.validate.signup_password_alpha_num_required
       }
       return status
     case 'team_name':
