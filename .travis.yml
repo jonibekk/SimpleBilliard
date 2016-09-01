@@ -133,7 +133,7 @@ script:
   - nvm use 5.8.0
   - npm install -g gulp
   - npm set progress=false
-  - travis_retry npm i --no-bin-links
+  - travis_retry pnpm i --no-bin-links
   - gulp build
   - mkdir s3_upload
   - mkdir s3_upload/css
