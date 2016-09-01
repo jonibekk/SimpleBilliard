@@ -131,7 +131,8 @@ script:
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
   - cd ../
-  - if [ $TRAVIS_EVENT_TYPE = "pull_request" ] && ( [ $TRAVIS_BRANCH = "master" ] || [ $TRAVIS_BRANCH = "master-isao" ] || [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "develop" ] ) ; then sh $TRAVIS_BUILD_DIR/etc/travis/build_assets.sh; fi
+#  - if [ $TRAVIS_EVENT_TYPE = "pull_request" ] && ( [ $TRAVIS_BRANCH = "master" ] || [ $TRAVIS_BRANCH = "master-isao" ] || [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "develop" ] ) ; then sh $TRAVIS_BUILD_DIR/etc/travis/build_assets.sh; fi
+  - sh $TRAVIS_BUILD_DIR/etc/travis/build_assets.sh
   - pwd
   - ls -li s3_upload_dist
 
