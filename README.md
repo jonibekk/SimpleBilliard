@@ -15,10 +15,16 @@ Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://githu
 ## What's Goalous ?
 GoalousはIsao発の「最強にオープンな社内SNS」です。
 
-- [本番環境](https://www.goalous.com)
-- [リリース環境](https://isao.goalous.com)
-- [ステージング環境](https://stg2.goalous.com)
-- [ホットフィックス](https://hotfix2.goalous.com)
+| name | url | branch | branch protected | build assets by CI | auto deploy | test by CI | Basic auth |
+|:---|:---|:---|:---|:---|:---|:---|:---|
+| 本番環境 | [www.goalous.com](https://www.goalous.com) | master | ◯ | ◯ | × | ◯ | - |
+| ISAO環境 | [isao.goalous.com](https://isao.goalous.com) | master-isao | ◯ | ◯| × | ◯ | id: isao, pass: Vh6RncG8 (only user registration)|
+| ステージング環境 | [stg.goalous.com](https://stg.goalous.com) | stage | ◯ | ◯ | ◯ | ◯ | id: stg, pass: c2WgdYaL |
+| ISAOステージング環境 | [stg-isao.goalous.com](https://stg-isao.goalous.com) | stage-isao | ◯ | ◯ | ◯ | ◯ | id: stg-isao, pass: X2hkcfqD |
+| ホットフィックス環境 | [hotfix.goalous.com](https://hotfix.goalous.com) | hotfix | × | ◯ | ◯ | ◯ | id: hotfix, pass: yD69KAEt |
+| 開発環境 | [dev.goalous.com](https://dev.goalous.com) | develop | × | × | ◯ | ◯ | id: dev, pass: a5PxhqtL |
+| インド開発環境 | [dev-ind.goalous.com](https://dev-ind.goalous.com) | dev-ind | × | × | ◯ | ◯ | id: dev-ind, pass: W4hViXcb |
+| その他 | - | other | × | × | - | ◯ | - |
 
 ## ドキュメンテーション
 - すべてのドキュメントはページからアクセスできるようにしてあります。
