@@ -15,10 +15,14 @@
 <?php $isMypage = $this->Session->read('Auth.User.id') == $user['User']['id'];?>
 <div id="MyPage" class="panel-body profile-user-upper-panel">
     <div class="profile-user-header">
+        <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
+        <?php $coverImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo',
+            ['style' => 'medium']); ?>
+        <?php $coverPreviewImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo'); ?>
+        <?php $profileImageUrl = $this->Upload->uploadUrl($user['User'], 'User.photo', ['style' => 'large']); ?>
+        <?php $profilePreviewImageUrl = $this->Upload->uploadUrl($user['User'], 'User.photo'); ?>
         <div class="<?php if ($isMypage): ?>dropdown<?php endif;?>">
-            <?php $noCoverClass = empty($user['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
-            <?php $coverImageUrl = $this->Upload->uploadUrl($user['User'], 'User.cover_photo',
-                ['style' => 'x_large']); ?>
+
             <?php if ($isMypage): ?>
                 <a href="#" class="profile-user-cover <?= $noCoverClass ?>"
                    data-toggle="dropdown" id="coverMenu">
@@ -32,7 +36,7 @@
                 </a>
             <?php else: ?>
                 <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
-                    <a href="<?= $coverImageUrl?>" class="profile-user-cover <?= $noCoverClass ?>" rel='lightbox'>
+                    <a href="<?= $coverPreviewImageUrl?>" class="profile-user-cover <?= $noCoverClass ?>" rel='lightbox'>
                         <?= $this->Html->image($coverImageUrl,
                             ['class' => 'profile-user-cover-image'])
                         ?>
@@ -54,7 +58,7 @@
                         </li>
                     <?php if (!empty($user['User']['cover_photo_file_name'])): ?>
                         <li class="profile-user-dropdown-menu-item">
-                            <a class="" href="<?= $coverImageUrl ?>"
+                            <a class="" href="<?= $coverPreviewImageUrl ?>"
                                rel='lightbox'>
                                 <?= __('View Cover Image') ?>
                             </a>
@@ -81,13 +85,12 @@
             <?php endif; ?>
         </div>
         <div class="profile-user-avatar-wrap <?php if ($isMypage): ?>dropdown<?php endif;?>">
-            <?php $profileImageUrl = $this->Upload->uploadUrl($user['User'], 'User.photo', ['style' => 'x_large']); ?>
             <?php if ($isMypage): ?>
                 <a href="#" data-toggle="dropdown" id="profileMenu">
                     <?= $this->Html->image($profileImageUrl, ['class' => 'lazy profile-user-avatar',]) ?>
                 </a>
             <?php else: ?>
-                <a href="<?= $profileImageUrl ?>" rel='lightbox'>
+                <a href="<?= $profilePreviewImageUrl ?>" rel='lightbox'>
                     <?= $this->Html->image($profileImageUrl, ['class' => 'lazy profile-user-avatar',]) ?>
                 </a>
             <?php endif ?>
@@ -101,7 +104,7 @@
                     </li>
                     <?php if (!empty($user['User']['photo_file_name'])): ?>
                         <li class="profile-user-dropdown-menu-item">
-                            <a class="" href="<?= $profileImageUrl ?>"
+                            <a class="" href="<?= $profilePreviewImageUrl ?>"
                                rel='lightbox'>
                                 <?= __('View Profile Image') ?>
                             </a>
