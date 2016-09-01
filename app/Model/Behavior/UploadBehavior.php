@@ -418,6 +418,11 @@ class UploadBehavior extends ModelBehavior
                 // resize with banding
                 list($destW, $destH) = explode('x', substr($geometry, 1, strlen($geometry) - 2));
                 $resizeMode = 'band';
+            } elseif (preg_match("/^f\[(\d+)x(\d+)\]$/", $geometry, $match)) {
+                // resize with force
+                $destW = $match[1];
+                $destH = $match[2];
+                $resizeMode = 'force';
             } elseif (preg_match('/^[\\d]+x[\\d]+$/', $geometry)) {
                 // cropped resize (best fit)
                 list($destW, $destH) = explode('x', $geometry);
@@ -614,6 +619,46 @@ class UploadBehavior extends ModelBehavior
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    /**
+     * バリデーション
+     * 画像が最低の幅・高さを満たしているか
+     *
+     * @param Model $model
+     * @param       $value
+     * @param       $minWidth
+     * @param       $minHeight
+     *
+     * @return bool
+     */
+    public function minWidthHeight(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $minWidth,
+        $minHeight
+    ) {
+        // check upload
+        if (!$this->isUpload($value)) {
+            return true;
+        }
+        return $this->_validateDimension($value, 'min', 'x', $minWidth) && $this->_validateDimension($value, 'min', 'y', $minHeight);
+    }
+
+    /**
+     * アップロードされているか判定
+     * @param $upload
+     *
+     * @return bool
+     */
+    private function isUpload($upload)
+    {
+        $upload = array_shift($upload);
+        if (!empty($upload['tmp_name'])) {
+            return true;
         }
         return false;
     }

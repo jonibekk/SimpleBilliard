@@ -1,24 +1,17 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  inputed: {
-    first_name: '',
-    last_name: '',
-    birth_year: '',
-    birth_month: '',
-    birth_day: '',
-    privacy: '',
-    // デフォルトでチェックさせる
-    update_email_flg: 1
+  invalid: {
+    first_name: null,
+    last_name: null,
+    birth_year: null,
+    birth_month: null,
+    birth_day: null,
+    privacy_policy: null
   },
-  invalid_messages: {
-    first_name: '',
-    last_name: '',
-    birth_day: ''
-  },
+  invalid_messages: {},
   checking_user_name: false,
   submit_button_is_enabled: false,
-  user_name_is_invalid: false,
   is_exception: false,
   exception_message: ''
 }
@@ -37,32 +30,19 @@ export default function user_name(state = initialState, action) {
       return Object.assign({}, state, {
         checking_user_name: false
       })
-    case types.INIT_USER_STATUS:
-      return Object.assign({}, state, {
-        user_name_is_invalid: false,
-        is_exception: false,
-        invalid_messages: {
-          first_name: '',
-          last_name: '',
-          birth_day: ''
-        }
-      })
     case types.USER_NAME_IS_INVALID:
       return Object.assign({}, state, {
-        user_name_is_invalid: true,
-        invalid_messages: action.invalid_messages
+        invalid: Object.assign({}, state.invalid, action.invalid),
+        invalid_messages: Object.assign({}, state.invalid_messages, action.invalid_messages)
       })
     case types.USER_NAME_IS_VALID:
       return Object.assign({}, state, {
-        user_name_is_invalid: false
+        invalid: Object.assign({}, state.invalid, action.invalid),
+        invalid_messages: Object.assign({}, state.invalid_messages, action.invalid_messages)
       })
     case types.CAN_SUBMIT_USER_NAME:
       return Object.assign({}, state, {
         submit_button_is_enabled: true
-      })
-    case types.CAN_NOT_SUBMIT_USER_NAME:
-      return Object.assign({}, state, {
-        submit_button_is_enabled: false
       })
     case types.CAN_NOT_SUBMIT_USER_NAME:
       return Object.assign({}, state, {
