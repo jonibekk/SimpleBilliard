@@ -32,6 +32,10 @@ echo $this->Html->script('ng_app.min');
     <p class="ribbon ribbon-staging">Staging</p>
 <?php elseif (ENV_NAME == "hotfix"): ?>
     <p class="ribbon ribbon-hotfix">Hotfix</p>
+<?php elseif (ENV_NAME == "dev"): ?>
+    <p class="ribbon ribbon-develop">Develop</p>
+<?php elseif (ENV_NAME == "dev-ind"): ?>
+    <p class="ribbon ribbon-dev-india">Dev India</p>
 <?php elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">Local</p>
 <?php endif; ?>

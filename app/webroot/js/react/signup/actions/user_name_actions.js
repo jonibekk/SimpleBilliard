@@ -6,28 +6,42 @@ import {
   getLocalDate
 } from './common_actions'
 
-export function inputUserName(user) {
-  return (dispatch, getState) => {
-    dispatch({
-      type: types.INPUT_USER_NAME,
-      inputed: user
-    })
-    const state = getState()
-
-    if(state.user_name.inputed.first_name && state.user_name.inputed.last_name && state.user_name.inputed.privacy && state.user_name.inputed.birth_day && state.user_name.inputed.birth_month && state.user_name.inputed.birth_year) {
-      dispatch(enableSubmitButton())
-    } else {
-      dispatch(disableSubmitButton())
-    }
-  }
-}
-
 export function enableSubmitButton() {
   return { type: types.CAN_SUBMIT_USER_NAME }
 }
 
 export function disableSubmitButton() {
   return { type: types.CAN_NOT_SUBMIT_USER_NAME }
+}
+
+export function invalid(element) {
+  return dispatch => {
+    dispatch(disableSubmitButton())
+    dispatch({
+      type: types.USER_NAME_IS_INVALID,
+      invalid: element.invalid,
+      invalid_messages: element.messages
+    })
+  }
+}
+
+export function valid(element) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: types.USER_NAME_IS_VALID,
+      invalid: element.invalid,
+      invalid_messages: element.messages
+    })
+
+    const invalid = getState().user_name.invalid
+
+    for (const key in invalid) {
+      if(invalid[key] !== false) return
+    }
+    dispatch({
+      type: types.CAN_SUBMIT_USER_NAME
+    })
+  }
 }
 
 export function postUserName(user) {
@@ -45,7 +59,6 @@ export function postUserName(user) {
     return post('/signup/ajax_validation_fields', data, response => {
       const user_name_is_invlalid = Boolean(response.data.error && Object.keys(response.data.validation_msg).length)
 
-      dispatch({ type: types.INIT_USER_STATUS })
       dispatch({ type: types.FINISHED_CHECKING_USER_NAME })
       if (user_name_is_invlalid) {
         dispatch(enableSubmitButton())

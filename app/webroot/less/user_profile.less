@@ -1,7 +1,31 @@
+.profile-user-upper-panel {
+  padding: 0;
+  margin: 0;
+}
+
+.profile-user-header {
+  position: relative;
+}
+
+.profile-user-info-wrap {
+  position: relative;
+  padding: 24px 11px 0;
+}
+
 .profile-user-avatar-wrap {
+  position: absolute;
+  bottom: -20px;
+  left: 11px;
   display: inline-block;
   width: 22%;
   margin-right: 1%;
+  border: 4px solid #fff;
+}
+
+.profile-user-cover-inner-btn {
+  position: absolute;
+  bottom: 11px;
+  right: 11px;
 }
 
 .profile-user-avatar {
@@ -9,15 +33,15 @@
 }
 
 .profile-user-numbers-wrap {
-  width: 75%;
-  display: inline-block;
+  margin: 16px auto;
+  display: block;
   vertical-align: top;
   text-align: center;
 }
 
 .profile-user-numbers {
   display: inline-block;
-  width: 25%;
+  padding: 0 6%;
   text-align: center;
 }
 
@@ -28,22 +52,11 @@
 }
 
 .profile-user-numbers-category {
-  font-size: @fontSmallest;
-}
-
-.profile-user-numbers-action {
-  .profile-user-numbers;
-}
-
-.profile-user-numbers-post {
-  .profile-user-numbers;
-}
-
-.profile-user-numbers-like {
-  .profile-user-numbers;
+  font-size: @fontSmall;
 }
 
 .profile-user-name {
+  padding: 0 4px;
   font-weight: bold;
 }
 
@@ -111,18 +124,73 @@
 .profile-user-goal-tab {
   .profile-user-tabs;
 }
+
 .profile-user-action-tab {
   .profile-user-tabs;
 }
+
 .profile-user-post-tab {
   .profile-user-tabs;
 }
+
 .profile-user-status-tab {
   .profile-user-tabs;
 }
 
-.profile-user-upper-panel {
-  padding: 10px 11px 0;
+.profile-user-cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.profile-user-cover-image {
+  width: 100%;
+  height: auto;
+}
+
+.profile-user-cover.mod-no-image:before {
+  content: "";
+  display: block;
+  padding-top: @coverImageAspectRatio;
+}
+
+.profile-user-cover-default {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: -moz-linear-gradient(top, #ffffff, #676768);
+  background-image: -ms-linear-gradient(top, #ffffff, #676768);
+  background-image: -webkit-linear-gradient(top, #ffffff, #676768);
+  background-image: linear-gradient(top, #ffffff, #676768);
+}
+
+.profile-user-dropdown-menu {
+  border: 2px solid @baseGray;
+  padding: 0 4px;
+}
+
+.profile-user-dropdown-menu.mod-cover {
+  .frame-arrow-icon(47%);
+  top: 50%;
+  left: 50%;
+  right: auto;
+  transform: translate(-50%, 0);
+}
+
+.profile-user-dropdown-menu.mod-profile {
+  .frame-arrow-icon(80%);
+  top: 50%;
+}
+
+.profile-user-dropdown-menu-item {
+  margin: 4px 0;
+  border-bottom: 1px solid @baseGray;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .profile-user-panels {
@@ -151,6 +219,7 @@
   color: @basicPink;
   border-color: #f6f5f1;
   box-shadow: none;
+
 }
 
 .profile-user-icons {
@@ -166,6 +235,7 @@
   padding: 0 12px;
   text-align: right;
 }
+
 .profile-user-action-view-switch-img {
   display: inline-block;
   font-size: @fontLarge;
@@ -184,11 +254,61 @@
 .profile-goals-card-title-wrapper {
   .line-number-wrap;
 }
+
 .profile-goals-card-title {
   line-height: 16px;
 }
+
 .profile-goals-card-title-text {
   .line-number-limit-2(#f6f5f1);
   height: 40px;
   font-weight: bold;
+}
+
+/* profile setting:cover image upload */
+.profile-setting-cover {
+  width: 100%;
+}
+
+.profile-setting-cover-upload {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.profile-setting-cover-upload.mod-no-image:before {
+  content: "";
+  display: block;
+  padding-top: @coverImageAspectRatio;
+}
+
+.profile-setting-cover-image {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+.profile-setting-cover-upload-frame {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color: @modGray;
+  border: 3px dashed @modGray;
+  background-color: @backgroundColor1;
+  text-align: center;
+  text-decoration: none;
+  font-size: 40px;
+  box-sizing: border-box;
+  &:hover,
+  &:active,
+  &:target,
+  &:focus {
+    color: @goalous;
+    text-decoration: none;
+    border-color: @goalous;
+  }
 }

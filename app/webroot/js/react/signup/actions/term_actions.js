@@ -7,6 +7,17 @@ export function selectTerm(term) {
       type: types.SELECT_TERM,
       selected_term: term
     })
+    if(!term) {
+      dispatch(invalid({
+        invalid: { term: true },
+        invalid_messages: { term: cake.message.validate.signup_term_required }
+      }))
+    } else {
+      dispatch(valid({
+        invalid: { term: false },
+        invalid_messages: { term: '' }
+      }))
+    }
     dispatch(updateStartMonthList())
     dispatch(toggleSubmitButton())
   }
@@ -18,6 +29,17 @@ export function selectStartMonth(start_month) {
       type: types.SELECT_START_MONTH,
       selected_start_month: start_month
     })
+    if(!start_month) {
+      dispatch(invalid({
+        invalid: { start_month: true },
+        invalid_messages: { start_month: cake.message.validate.signup_start_month_required }
+      }))
+    } else {
+      dispatch(valid({
+        invalid: { start_month: false },
+        invalid_messages: { start_month: '' }
+      }))
+    }
     dispatch(toggleSubmitButton())
   }
 }
@@ -31,6 +53,27 @@ function toggleSubmitButton() {
     } else {
       dispatch(disableSubmitButton())
     }
+  }
+}
+
+export function invalid(valid_obj) {
+  return dispatch => {
+    dispatch(disableSubmitButton())
+    dispatch({
+      type: types.TERM_IS_INVALID,
+      invalid: valid_obj.invalid,
+      invalid_messages: valid_obj.invalid_messages
+    })
+  }
+}
+
+export function valid(valid_obj) {
+  return dispatch => {
+    dispatch({
+      type: types.TERM_IS_VALID,
+      invalid: valid_obj.invalid,
+      invalid_messages: valid_obj.invalid_messages
+    })
   }
 }
 

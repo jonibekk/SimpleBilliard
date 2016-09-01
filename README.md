@@ -6,11 +6,11 @@ Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://githu
 
 |  | TravisCI | Coveralls | Code Climate |  
 |:---|:---|:---|:---|
-| master | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=master) | - |
-| develop | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=develop) | [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed) |
+| master | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous/badge.svg?branch=master&service=github&t=p8yPfl)](https://coveralls.io/github/IsaoCorp/goalous?branch=master) | - |
+| develop | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous/badge.svg?branch=develop&service=github&t=p8yPfl)](https://coveralls.io/github/IsaoCorp/goalous?branch=develop) | [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed) |
 
 ## Progress
-- [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
+- [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous) ... Goalousの開発状況はこのかんばんボードで管理しています。
 
 ## What's Goalous ?
 GoalousはIsao発の「最強にオープンな社内SNS」です。

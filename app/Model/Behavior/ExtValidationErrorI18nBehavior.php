@@ -25,6 +25,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'maxLength'         => __('%2$d or less than %2$d characters are allowed.'),
             'emailIsUnique'     => __("This email address has already been used. Use another email address."),
             'image_max_size'    => __("The file is over limit size."),
+            'imageMinWidthHeight'    => __("The Image does not have enough vertical or horizontal size."),
             'image_type'        => __("Failed to upload. jpg, png and gif are allowed."),
             'emailsCheck'       => __("Some email addresses are incorrect."),
             'passwordPolicy'    => __('Please mix of numbers and alphanumeric.'),
