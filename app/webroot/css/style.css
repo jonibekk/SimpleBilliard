@@ -1334,6 +1334,7 @@ ul.example-indent {
 }
 
 .feed_img_only_one a img {
+    position: absolute;
     top: -100%;
     bottom: -100%;
     margin: auto;
