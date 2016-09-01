@@ -22,7 +22,7 @@ export default function auth(state = initialState, action) {
   switch (action.type) {
     case types.INPUT_CODE:
       return Object.assign({}, state, {
-        code_list: action.code_list
+        code_list: Object.assign({}, state.code_list, action.code_list)
       })
     case types.CHECKING_AUTH_CODE:
       return Object.assign({}, state, {

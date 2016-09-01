@@ -2,6 +2,7 @@ import axios from 'axios'
 import validator from 'validator'
 
 export function getBaseUrl() {
+  // テストにおけるモックのURLを定義
   if (typeof cake === "undefined") {
     return 'http://localhost'
   } else {
