@@ -15,13 +15,9 @@ end
 
 
 if node[:deploy][:cake].has_key?(:assets_s3_bucket)
-puts "AWSAccessKeyId"
-puts ENV["AWSAccessKeyId"]
-    s3_file "tmp/s3_upload.tar.gz" do
+    s3_file "/tmp/s3_upload.tar.gz" do
       remote_path "/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
       bucket "goalous-compiled-assets"
-      aws_access_key_id ENV["AWSAccessKeyId"]
-      aws_secret_access_key ENV["AWSSecretKey"]
       s3_url "https://s3-ap-northeast-1.amazonaws.com/goalous-compiled-assets"
       owner  "deploy"
       group  "www-data"
@@ -32,10 +28,15 @@ puts ENV["AWSAccessKeyId"]
       user 'deploy'
       group 'www-data'
       code <<-EOS
-      cd #{release_path};
-
+      cd /tmp
+      tar zxvf s3_upload.tar.gz
+      cp s3_upload/css/goalous.min.css #{release_path}/app/webroot/css/
+      cp s3_upload/js/goalous.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/goalous.prerender.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/ng_app.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/ng_vendors.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/vendors.min.js #{release_path}/app/webroot/js/
       EOS
-
     end
 else
     file '/home/deploy/.npmrc' do
