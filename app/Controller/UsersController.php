@@ -665,6 +665,7 @@ class UsersController extends AppController
                             $this->request->data['NotifySetting']['mobile']));
             }
             $this->User->id = $this->Auth->user('id');
+            //ユーザー情報更新
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
                 //ログインし直し。
@@ -675,6 +676,7 @@ class UsersController extends AppController
                 $this->updateSetupStatusIfNotCompleted();
 
                 $this->Pnotify->outSuccess(__("Saved user setting."));
+                $this->redirect('/users/settings');
             } else {
                 $this->Pnotify->outError(__("Failed to save user setting."));
             }
@@ -846,6 +848,28 @@ class UsersController extends AppController
             $with_group = (isset($query['with_group']) && $query['with_group']);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group);
         }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * select2用に加工したユーザ情報を取得
+     *
+     * @param $userId
+     *
+     * @return CakeResponse|null
+     */
+    function ajax_select2_get_user_detail($userId)
+    {
+        if (empty($userId) || !is_numeric($userId)) {
+            return $this->_ajaxGetResponse([]);
+        }
+        // ユーザ詳細情報取得
+        $user = $this->User->getDetail($userId);
+        if (empty($user)) {
+            return $this->_ajaxGetResponse([]);
+        }
+        // レスポンス用にユーザ詳細情報を加工
+        $res = $this->User->makeSelect2User($user);
         return $this->_ajaxGetResponse($res);
     }
 

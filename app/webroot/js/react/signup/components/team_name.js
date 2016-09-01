@@ -4,6 +4,7 @@ import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
+import { _checkValue } from '../actions/common_actions'
 
 export default class TeamName extends React.Component {
 
@@ -14,6 +15,16 @@ export default class TeamName extends React.Component {
   handleSubmit(e) {
     e.preventDefault()
     this.props.postTeamName(this.getInputDomData())
+  }
+
+  handleOnChange(e) {
+    const validate_result = _checkValue(e.target)
+
+    if(validate_result.error) {
+      this.props.invalid(validate_result.messages)
+    } else {
+      this.props.valid()
+    }
   }
 
   render() {
@@ -30,8 +41,12 @@ export default class TeamName extends React.Component {
                   {/* Team name */}
                   <div className="panel-heading signup-itemtitle">{__("Team Name")}</div>
                   <div className={(this.props.team_name.invalid_messages.team_name) ? 'has-error' : ''}>
-                    <input className="form-control signup_input-design" ref="team_name" placeholder={__("eg. Team Goalous")} type="text"
-                           onChange={ () => this.props.inputTeamName(this.getInputDomData()) } />
+                    <input className="form-control signup_input-design"
+                           type="text"
+                           ref="team_name"
+                           name="team_name"
+                           placeholder={__("eg. Team Goalous")}
+                           onChange={this.handleOnChange.bind(this)} />
                     <InvalidMessageBox is_invalid={this.props.team_name.team_name_is_invalid}
                                        message={this.props.team_name.invalid_messages.team_name} />
                   </div>
