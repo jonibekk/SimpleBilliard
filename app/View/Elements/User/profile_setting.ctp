@@ -217,7 +217,7 @@
                             <?php else: ?>
                                 <?=
                                 $this->Upload->uploadImage($this->request->data, 'User.cover_photo',
-                                    ['style' => 'x_large', 'class' => 'profile-setting-cover-image']) ?>
+                                    ['style' => 'medium', 'class' => 'profile-setting-cover-image']) ?>
                             <?php endif; ?>
                         </div>
                         <div>
@@ -238,7 +238,7 @@
                                     'required'     => false
                                 ]) ?>
                         </span>
-                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
+                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?>&nbsp;<?= __('More than %d×%d pixel', 672, 378) ?></span>
                         </div>
                     </div>
 
