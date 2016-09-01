@@ -1,5 +1,6 @@
 import axios from 'axios'
 import validator from 'validator'
+import FormData from 'form-data'
 
 export function getBaseUrl() {
   // テストにおけるモックのURLを定義
