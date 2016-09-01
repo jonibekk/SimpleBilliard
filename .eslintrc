@@ -22,7 +22,6 @@
     no-console: ["error", { allow: ["warn", "error"] }],
     "no-alert": 1,
     "no-unused-vars": 1,
-    "no-var": 1,
     "prefer-const": 1,
     "object-shorthand": 1,
     "indent": [2, 2, {"SwitchCase": 1}],

@@ -1,6 +1,11 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
+  invalid: {
+    term: null,
+    start_month: null
+  },
+  invalid_messages: {},
   submit_button_is_enabled: false,
   selected_term: '',
   selected_start_month: '',
@@ -58,6 +63,16 @@ export default function term(state = initialState, action) {
     case types.SET_START_MONTH_LIST:
       return Object.assign({}, state, {
         start_month_list: action.start_month_list
+      })
+    case types.TERM_IS_INVALID:
+      return Object.assign({}, state, {
+        invalid: Object.assign({}, state.invalid, action.invalid),
+        invalid_messages: Object.assign({}, state.invalid_messages, action.invalid_messages)
+      })
+    case types.TERM_IS_VALID:
+      return Object.assign({}, state, {
+        invalid: Object.assign({}, state.invalid, action.invalid),
+        invalid_messages: Object.assign({}, state.invalid_messages, action.invalid_messages)
       })
     default:
       return state;

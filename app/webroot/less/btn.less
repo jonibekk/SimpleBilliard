@@ -304,3 +304,22 @@
     color: @crimsonPink;
   }
 }
+
+.btn-pink-radius {
+  .btn;
+  border-color: @basicPink;
+  color: @basicPink;
+  display: inline-block;
+  padding: 8px 32px;
+  border-radius: 8px;
+  text-align: center;
+  background: @backgroundColor1;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    color: @whiteColor;
+    background: @basicPink;
+    text-decoration: none;
+  }
+}
