@@ -63,6 +63,7 @@ function changeSizeFeedImageOnlyOne($obj) {
     // 縦長の画像は、4:3 の比率にする
     else {
       var expect_parent_height = $img.width() * 0.75;
+
       $elm.css('height', expect_parent_height);
       $img.parent().css('height', expect_parent_height);
     }
