@@ -42,7 +42,7 @@ export function postVerifyCode(code) {
   }
 }
 
-function getFullCode(code_list) {
+export function getFullCode(code_list) {
   let full_code = ''
 
   for(const key in code_list) {
@@ -51,38 +51,38 @@ function getFullCode(code_list) {
   return full_code
 }
 
-function initAllStatus() {
+export function initAllStatus() {
   return { type: types.INIT_ALL_STATUS }
 }
 
-function initAllCode() {
+export function initAllCode() {
   return { type: types.INIT_AUTH_CODE }
 }
 
-function inputNewCode(index, code) {
+export function inputNewCode(index, code) {
   return { type: types.INPUT_CODE, code_list: { [`code${index}`]: code } }
 }
 
-function checkingAuthCode() {
+export function checkingAuthCode() {
   return { type: types.CHECKING_AUTH_CODE }
 }
 
-function finishedCheckingAuthCode() {
+export function finishedCheckingAuthCode() {
   return { type: types.FINISHED_CHECKING_AUTH_CODE }
 }
 
-function authCodeIsLocked(message) {
+export function authCodeIsLocked(message) {
   return { type: types.AUTH_CODE_IS_LOCKED, locked_message: message }
 }
 
-function authCodeIsExpired(message) {
+export function authCodeIsExpired(message) {
   return { type: types.AUTH_CODE_IS_EXPIRED, expired_message: message }
 }
 
-function authCodeIsInvalid(message) {
+export function authCodeIsInvalid(message) {
   return { type: types.AUTH_CODE_IS_INVALID, invalid_message: message }
 }
 
-function authCodeIsValid() {
+export function authCodeIsValid() {
   return { type: types.AUTH_CODE_IS_VALID }
 }
