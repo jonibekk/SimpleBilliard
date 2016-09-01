@@ -33,7 +33,7 @@
 }
 
 .profile-user-numbers-wrap {
-  margin: 0 auto;
+  margin: 16px auto;
   display: block;
   vertical-align: top;
   text-align: center;
@@ -41,7 +41,7 @@
 
 .profile-user-numbers {
   display: inline-block;
-  padding: 0 16px;
+  padding: 0 6%;
   text-align: center;
 }
 
@@ -52,12 +52,12 @@
 }
 
 .profile-user-numbers-category {
-  font-size: @fontSmallest;
+  font-size: @fontSmall;
 }
 
 .profile-user-name {
+  padding: 0 4px;
   font-weight: bold;
-  text-align: center;
 }
 
 .profile-user-numbers-action-counts {
@@ -177,22 +177,23 @@
   top: 50%;
   left: 50%;
   right: auto;
-  text-align: center;
   transform: translate(-50%, 0);
 }
 
 .profile-user-dropdown-menu.mod-profile {
-  .frame-arrow-icon(75%);
+  .frame-arrow-icon(80%);
   top: 50%;
-  left: 5%;
-  right: auto;
 }
 
 .profile-user-dropdown-menu-item {
-  margin: 4px 0;
+  padding: 8px 0;
   border-bottom: 1px solid @baseGray;
   &:last-child {
     border-bottom: none;
+  }
+  &:hover {
+    color: #fff;
+    background-color: #d9230f;
   }
 }
 
