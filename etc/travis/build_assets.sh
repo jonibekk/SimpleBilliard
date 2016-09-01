@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ev
+#set -ev
 $NVM_PATH install 5.8.0
 $NVM_PATH use 5.8.0
 $NVM_PATH install -g gulp-cli
