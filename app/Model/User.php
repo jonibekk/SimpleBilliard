@@ -91,8 +91,9 @@ class User extends AppModel
             ],
             'cover_photo' => [
                 'styles'      => [
-                    'large'   => 'f[640x360]',
-                    'x_large' => 'f[672x378]',
+                    'small' => 'f[254x142]',
+                    'medium' => 'f[672x378]',
+                    'large' => 'f[2048x1152]',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',

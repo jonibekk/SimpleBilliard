@@ -217,7 +217,7 @@
                             <?php else: ?>
                                 <?=
                                 $this->Upload->uploadImage($this->request->data, 'User.cover_photo',
-                                    ['style' => 'x_large', 'class' => 'profile-setting-cover-image']) ?>
+                                    ['style' => 'medium', 'class' => 'profile-setting-cover-image']) ?>
                             <?php endif; ?>
                         </div>
                         <div>
