@@ -132,6 +132,8 @@ script:
   - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
   - cd ../
   - if [ $TRAVIS_EVENT_TYPE = "pull_request" ] && ( [ $TRAVIS_BRANCH = "master" ] || [ $TRAVIS_BRANCH = "master-isao" ] || [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "develop" ] ) ; then sh $TRAVIS_BUILD_DIR/etc/travis/build_assets.sh; fi
+  - pwd
+  - ls -li s3_upload_dist
 
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
