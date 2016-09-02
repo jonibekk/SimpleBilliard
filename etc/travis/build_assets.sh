@@ -1,10 +1,11 @@
 #!/bin/bash
 #set -ev
-$NVM_PATH install 5.8.0
-$NVM_PATH use 5.8.0
-$NVM_PATH install -g gulp-cli
-$NVM_PATH install -g pnpm
-$NVM_PATH set progress=false
+source $NVM_DIR/nvm.sh
+nvm install 5.8.0
+nvm use 5.8.0
+npm install -g gulp-cli
+npm install -g pnpm
+npm set progress=false
 cd $TRAVIS_BUILD_DIR
 travis_retry pnpm i --no-bin-links
 gulp build
