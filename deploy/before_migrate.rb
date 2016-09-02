@@ -1,4 +1,9 @@
 # デプロイフックでcake関連のデプロイ処理を行う
+require 'json'
+
+file "/tmp/node.json" do
+  content JSON.pretty_generate(node)
+end
 
 bash "composer install" do
   user 'deploy'
@@ -8,29 +13,56 @@ bash "composer install" do
   EOS
 end
 
-file '/home/deploy/.npmrc' do
- owner 'deploy'
- group 'aws'
- mode '0755'
-end
 
-bash "pnpm install" do
-  user 'deploy'
-  group 'www-data'
-  code <<-EOS
-  source /usr/local/nvm/nvm.sh
-  # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
-  cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
-  EOS
-end
+if node[:deploy][:cake].has_key?(:assets_s3_bucket)
+    s3_file "/tmp/s3_upload.tar.gz" do
+      remote_path "/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
+      bucket "goalous-compiled-assets"
+      s3_url "https://s3-ap-northeast-1.amazonaws.com/goalous-compiled-assets"
+      owner  "deploy"
+      group  "www-data"
+      mode   "0644"
+      action :create
+    end
+    bash "extract asset files" do
+      user 'deploy'
+      group 'www-data'
+      code <<-EOS
+      cd /tmp
+      tar zxvf s3_upload.tar.gz
+      cp s3_upload/css/goalous.min.css #{release_path}/app/webroot/css/
+      cp s3_upload/js/goalous.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/goalous.prerender.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/ng_app.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/ng_vendors.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/vendors.min.js #{release_path}/app/webroot/js/
+      EOS
+    end
+else
+    file '/home/deploy/.npmrc' do
+      owner 'deploy'
+      group 'aws'
+      mode '0755'
+    end
 
-bash "run gulp build" do
-  user 'deploy'
-  group 'www-data'
-  code <<-EOS
-  source /usr/local/nvm/nvm.sh
-  cd #{release_path}; gulp build
-  EOS
+    bash "pnpm install" do
+      user 'deploy'
+      group 'www-data'
+      code <<-EOS
+      source /usr/local/nvm/nvm.sh
+      # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
+      cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
+      EOS
+    end
+
+    bash "run gulp build" do
+      user 'deploy'
+      group 'www-data'
+      code <<-EOS
+      source /usr/local/nvm/nvm.sh
+      cd #{release_path}; gulp build
+      EOS
+    end
 end
 
 bash "ntpdate" do
