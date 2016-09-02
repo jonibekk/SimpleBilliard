@@ -249,7 +249,7 @@ deploy:
     secret_access_key: $AWS_SECRET_KEY
     bucket: "goalous-compiled-assets"
     skip_cleanup: true
-    upload-dir: topic-4816-travis-npm
+    upload-dir: topic4816-travis-npm
     local_dir: s3_upload_dist
     on:
-      branch: topic-4816-travis-npm
+      branch: topic4816-travis-npm
