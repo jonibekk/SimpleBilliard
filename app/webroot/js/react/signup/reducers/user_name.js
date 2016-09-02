@@ -1,15 +1,6 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  invalid: {
-    first_name: null,
-    last_name: null,
-    birth_year: null,
-    birth_month: null,
-    birth_day: null,
-    privacy_policy: null
-  },
-  invalid_messages: {},
   checking_user_name: false,
   submit_button_is_enabled: false,
   is_exception: false,

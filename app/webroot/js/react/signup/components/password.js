@@ -4,7 +4,7 @@ import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
-import { _checkValue } from '../actions/common_actions'
+import { _checkValue } from '../actions/validate_actions'
 
 export default class Password extends React.Component {
 
@@ -15,21 +15,6 @@ export default class Password extends React.Component {
   handleSubmit(e) {
     e.preventDefault()
     this.props.postPassword(this.getInputDomData())
-  }
-
-  handleOnChange(e) {
-    const status = _checkValue(e.target)
-    const element = { invalid: {}, messages: {} }
-
-    if(status.error) {
-      element.invalid[status.name] = true
-      element.messages = status.messages
-      this.props.invalid(element)
-    } else {
-      element.invalid[status.name] = false
-      element.messages[status.name] = ''
-      this.props.valid(element)
-    }
   }
 
   render() {
@@ -45,17 +30,17 @@ export default class Password extends React.Component {
 
                   {/* Password */}
                   <div className="panel-heading signup-itemtitle">{__("Password")}</div>
-                  <div className={(this.props.password.invalid.password) ? 'has-error' : ''}>
+                  <div className={(this.props.validate.password.invalid) ? 'has-error' : ''}>
                     <input className="form-control signup_input-design"
                            placeholder="********"
                            type="password"
                            ref="password"
                            name="password"
                            required
-                           onChange={this.handleOnChange.bind(this)} />
+                           onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
                   </div>
-                  <InvalidMessageBox is_invalid={this.props.password.invalid.password}
-                                     message={this.props.password.invalid_messages.password} />
+                  <InvalidMessageBox is_invalid={this.props.validate.password.invalid}
+                                     message={this.props.validate.password.message} />
                   <div className="signup-description mod-small">{__("Use 8 or more characters including at least one number.")}</div>
 
                   {/* Alert message */}
@@ -64,7 +49,7 @@ export default class Password extends React.Component {
                   }})() }
 
                   {/* Submit button */}
-                  { (() => { if(this.props.password.submit_button_is_enabled) {
+                  { (() => { if(this.props.validate.password.invalid === false) {
                     return <EnabledNextButton />;
                   } else {
                     return <DisabledNextButton loader={ this.props.password.checking_password } />;

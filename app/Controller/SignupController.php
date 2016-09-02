@@ -169,6 +169,14 @@ class SignupController extends AppController
         $this->render('index');
     }
 
+    public function password()
+    {
+        $timezones = $this->Timezone->getTimezones();
+        $signup_inputed_email = $this->Session->read('data.Email.email');
+        $this->set(compact('timezones', 'signup_inputed_email'));
+        $this->render('index');
+    }
+
     /**
      * メールアドレスが登録可能なものか確認
      *

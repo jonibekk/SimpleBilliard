@@ -4,6 +4,7 @@ import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
+import { _checkValue } from '../actions/validate_actions'
 
 export default class Term extends React.Component {
 
