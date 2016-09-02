@@ -50,8 +50,11 @@ else
       group 'www-data'
       code <<-EOS
       source /usr/local/nvm/nvm.sh
-      # 初回はMaximum call stack size exceededのエラーになるので強制的に再度実行する
-      cd #{release_path}; pnpm i --no-bin-links || true && pnpm i --no-bin-links
+      cd #{release_path}
+      if ! pnpm i --no-bin-links; then
+        rm -rf node_modules
+        pnpm i --no-bin-links
+      fi
       EOS
     end
 
