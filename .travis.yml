@@ -151,8 +151,6 @@ script:
     mkdir s3_upload_dist;
     tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
     fi
-  - pwd
-  - ls -li s3_upload_dist
 
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
