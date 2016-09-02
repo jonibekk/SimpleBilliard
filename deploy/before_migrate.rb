@@ -63,7 +63,10 @@ else
       group 'www-data'
       code <<-EOS
       source /usr/local/nvm/nvm.sh
-      cd #{release_path}; gulp build
+      cd #{release_path}
+      if ! gulp build; then
+        gulp build
+      fi
       EOS
     end
 end
