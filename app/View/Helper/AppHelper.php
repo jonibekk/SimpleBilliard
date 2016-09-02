@@ -46,4 +46,40 @@ class AppHelper extends UrlCacheAppHelper
 
         return $need_display_footer;
     }
+
+    /**
+     * View開始のHTMLコメント
+     *
+     * @return string
+     */
+    function viewStartComment()
+    {
+        return $this->viewComment();
+    }
+
+    /**
+     * View終了のHTMLコメント
+     *
+     * @return string
+     */
+    function viewEndComment()
+    {
+        return $this->viewComment(true);
+    }
+
+    /**
+     * ViewのHTMLコメント出力共通処理
+     *
+     * @return string
+     */
+    private function viewComment($viewEnd = false)
+    {
+        if (!in_array(ENV_NAME, ["dev", "local"])) {
+             return "";
+        }
+        $debugBackTrace = debug_backtrace();
+        $viewPath = $debugBackTrace[1]["file"];
+        $status = $viewEnd ? "END" : "START";
+        return "<!-- {$status} {$viewPath} -->";
+    }
 }

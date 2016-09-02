@@ -270,9 +270,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <span class="plr_18px">
                                         <span class="goal-edit-limit-date-label">
                                             <?= $goal_start_date_format ?>
-                                            (
                                             <?= !isset($this->request->data['Goal']['start_date']) ? __("(Today)") : null ?>
-                                            )
                                         </span>
                                         <a href="#" class="target-show-target-del"
                                            show-target-id="KeyResult0StartDateInputWrap"
@@ -323,11 +321,14 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                             <?php endif; ?>
                                             </span>
                                             <?php if (!isset($this->request->data['Goal'])): ?>
-                                                <a href="#" class="target-show-target-del"
-                                                   show-target-id="KeyResult0EvaluateTermInputWrap"
-                                                   delete-target-id="KeyResult0EvaluateTermDefault">
+                                                <?php if (false)://TODO newゴール作成フロー開発のために来期のゴール作成を無効化?>
+                                                    <a href="#" class="target-show-target-del"
+                                                       show-target-id="KeyResult0EvaluateTermInputWrap"
+                                                       delete-target-id="KeyResult0EvaluateTermDefault">
                                                     <?= __("Change") ?>
                                                 </a>
+                                                <? endif; ?>
+
                                             <?php endif; ?>
                                         </span>
                                     </p>
@@ -343,7 +344,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                 'required'  => true,
                                                 'options'   => [
                                                     'current' => __('Current Term'),
-                                                    'next'    => __('Next Term'),
+                                                    //TODO newゴール作成フロー開発のために来期のゴール作成を無効化
+                                                    //'next'    => __('Next Term'),
                                                 ],
                                                 'id'        => 'KeyResult0EvaluateTermSelect',
                                             ];
