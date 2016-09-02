@@ -87,3 +87,15 @@ export function _checkValue(target) {
 
   return status
 }
+
+export function valid(name, message) {
+  return {
+
+  }
+}
+
+export function invalid(name) {
+  return {
+    
+  }
+}

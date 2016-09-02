@@ -10,28 +10,6 @@ export function disableSubmitButton() {
   return { type: types.CAN_NOT_SUBMIT_PASSWORD }
 }
 
-export function valid(element) {
-  return dispatch => {
-    dispatch(enableSubmitButton())
-    dispatch({
-      type: types.PASSWORD_IS_VALID,
-      invalid: element.invalid,
-      invalid_messages: element.messages
-    })
-  }
-}
-
-export function invalid(element) {
-  return dispatch => {
-    dispatch(disableSubmitButton())
-    dispatch({
-      type: types.PASSWORD_IS_INVALID,
-      invalid: element.invalid,
-      invalid_messages: element.messages
-    })
-  }
-}
-
 export function postPassword(password) {
   return dispatch => {
     dispatch(disableSubmitButton())
