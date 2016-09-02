@@ -131,7 +131,7 @@ script:
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
   - cd ../
-  - if [ $TRAVIS_EVENT_TYPE = "pull_request" ] && ( [ $TRAVIS_BRANCH = "master" ] || [ $TRAVIS_BRANCH = "master-isao" ] || [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "develop" ] ) ; then
+  - if [ $TRAVIS_EVENT_TYPE = "push" ] && ( [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "topic-4816-travis-npm" ] ) ; then
     nvm install 5.8.0;
     nvm use 5.8.0;
     npm install -g gulp-cli;
@@ -189,6 +189,7 @@ deploy:
     wait-until-deployed: false
     on:
       branch: stage
+
   - provider: opsworks
     access-key-id: $AWS_ACCESS_KEY
     secret-access-key: $AWS_SECRET_KEY
@@ -196,6 +197,7 @@ deploy:
     wait-until-deployed: false
     on:
       branch: stage-isao
+
   - provider: opsworks
     access-key-id: $AWS_ACCESS_KEY
     secret-access-key: $AWS_SECRET_KEY
@@ -203,6 +205,7 @@ deploy:
     wait-until-deployed: false
     on:
       branch: dev-ind
+
   - provider: opsworks
     access-key-id: $AWS_ACCESS_KEY
     secret-access-key: $AWS_SECRET_KEY
@@ -210,24 +213,7 @@ deploy:
     wait-until-deployed: false
     on:
       branch: hotfix
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: "goalous-compiled-assets"
-    skip_cleanup: true
-    upload-dir: master
-    local_dir: s3_upload_dist
-    on:
-      branch: master
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: "goalous-compiled-assets"
-    skip_cleanup: true
-    upload-dir: master-isao
-    local_dir: s3_upload_dist
-    on:
-      branch: master-isao
+
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
@@ -237,6 +223,7 @@ deploy:
     local_dir: s3_upload_dist
     on:
       branch: stage
+
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
@@ -246,12 +233,23 @@ deploy:
     local_dir: s3_upload_dist
     on:
       branch: stage-isao
+
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
     bucket: "goalous-compiled-assets"
     skip_cleanup: true
-    upload-dir: hotfix
+    upload-dir: stage
     local_dir: s3_upload_dist
     on:
       branch: hotfix
+
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: "goalous-compiled-assets"
+    skip_cleanup: true
+    upload-dir: topic-4816-travis-npm
+    local_dir: s3_upload_dist
+    on:
+      branch: topic-4816-travis-npm

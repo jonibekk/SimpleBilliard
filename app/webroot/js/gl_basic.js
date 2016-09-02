@@ -125,6 +125,7 @@ function clickToSetCurrentTeamId() {
 
 
 $(document).ready(function () {
+    console.log('###### topic4816 #######');
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
         $('#IntercomLink').hide();
