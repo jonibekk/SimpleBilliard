@@ -18,16 +18,6 @@ export default class TeamName extends React.Component {
     this.props.postTeamName(this.getInputDomData())
   }
 
-  handleOnChange(e) {
-    const validate_result = _checkValue(e.target)
-
-    if(validate_result.error) {
-      this.props.invalid(validate_result.messages)
-    } else {
-      this.props.valid()
-    }
-  }
-
   render() {
     return (
       <div className="row">
@@ -41,15 +31,15 @@ export default class TeamName extends React.Component {
 
                   {/* Team name */}
                   <div className="panel-heading signup-itemtitle">{__("Team Name")}</div>
-                  <div className={(this.props.team_name.invalid_messages.team_name) ? 'has-error' : ''}>
+                  <div className={(this.props.validate.team_name.invalid) ? 'has-error' : ''}>
                     <input className="form-control signup_input-design"
                            type="text"
                            ref="team_name"
                            name="team_name"
                            placeholder={__("eg. Team Goalous")}
-                           onChange={this.handleOnChange.bind(this)} />
-                    <InvalidMessageBox is_invalid={this.props.team_name.team_name_is_invalid}
-                                       message={this.props.team_name.invalid_messages.team_name} />
+                           onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
+                    <InvalidMessageBox is_invalid={this.props.validate.team_name.invalid}
+                                       message={this.props.validate.team_name.message} />
                   </div>
 
                   {/* Alert message */}
@@ -58,7 +48,7 @@ export default class TeamName extends React.Component {
                   }})() }
 
                   {/* Submit button */}
-                  { (() => { if(this.props.team_name.submit_button_is_enabled) {
+                  { (() => { if(this.props.validate.team_name.invalid === false) {
                     return <EnabledNextButton />;
                   } else {
                     return <DisabledNextButton loader={ this.props.team_name.checking_team_name } />;

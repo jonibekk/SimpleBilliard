@@ -19,31 +19,6 @@ export function inputTeamName(team_name) {
   }
 }
 
-export function enableSubmitButton() {
-  return { type: types.CAN_SUBMIT_TEAM_NAME }
-}
-
-export function disableSubmitButton() {
-  return { type: types.CAN_NOT_SUBMIT_TEAM_NAME }
-}
-
-export function invalid(messages) {
-  return dispatch => {
-    dispatch(disableSubmitButton())
-    dispatch({
-      type: types.TEAM_NAME_IS_INVALID,
-      invalid_messages: messages
-    })
-  }
-}
-
-export function valid() {
-  return dispatch => {
-    dispatch(enableSubmitButton())
-    dispatch({ type: types.TEAM_NAME_IS_VALID, invalid_messages: {} })
-  }
-}
-
 export function postTeamName(team_name) {
   return dispatch => {
     dispatch(disableSubmitButton())
