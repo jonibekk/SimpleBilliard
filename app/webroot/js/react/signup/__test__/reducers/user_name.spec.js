@@ -23,76 +23,14 @@ describe('reducer::user_name', () => {
 
     expect(newState).toInclude(expect_value)
   })
-  it('USER_NAME_IS_INVALID', () => {
-    const expect_value = {
-      invalid: {
-        user_name: true
-      },
-      invalid_messages: {
-        user_name: 'invalid message'
-      }
-    }
-    const newState = userNameReducer({}, {
-      type: types.USER_NAME_IS_INVALID,
-      invalid: {
-        user_name: true
-      },
-      invalid_messages: {
-        user_name: 'invalid message'
-      }
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
-  it('USER_NAME_IS_VALID', () => {
-    const expect_value = {
-      invalid: {
-        user_name: false
-      },
-      invalid_messages: {
-        user_name: ''
-      }
-    }
-    const newState = userNameReducer({}, {
-      type: types.USER_NAME_IS_VALID,
-      invalid: {
-        user_name: false
-      },
-      invalid_messages: {
-        user_name: ''
-      }
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
-  it('CAN_SUBMIT_USER_NAME', () => {
-    const expect_value = {
-      submit_button_is_enabled: true
-    }
-    const newState = userNameReducer({}, {
-      type: types.CAN_SUBMIT_USER_NAME
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
-  it('CAN_NOT_SUBMIT_USER_NAME', () => {
-    const expect_value = {
-      submit_button_is_enabled: false
-    }
-    const newState = userNameReducer({}, {
-      type: types.CAN_NOT_SUBMIT_USER_NAME
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
   it('NETWORK_ERROR', () => {
     const expect_value = {
       is_exception: true,
-      exception_message: 'exception message'
+      exception_message: 'network error'
     }
     const newState = userNameReducer({}, {
       type: types.USER_NETWORK_ERROR,
-      exception_message: 'exception message'
+      exception_message: 'network error'
     })
 
     expect(newState).toInclude(expect_value)
