@@ -5,20 +5,6 @@ import {
   mapValidationMsg
 } from './common_actions'
 
-export function inputTeamName(team_name) {
-  return dispatch => {
-    dispatch({
-      type: types.INPUT_TEAM_NAME,
-      inputed_team_name: team_name
-    })
-    if(String(team_name).length > 0) {
-      dispatch(enableSubmitButton())
-    } else {
-      dispatch(disableSubmitButton())
-    }
-  }
-}
-
 export function postTeamName(team_name) {
   return dispatch => {
     dispatch(disableSubmitButton())
