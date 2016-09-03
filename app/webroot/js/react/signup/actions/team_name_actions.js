@@ -4,36 +4,37 @@ import {
   post,
   mapValidationMsg
 } from './common_actions'
+import {
+  invalid
+} from './validate_actions'
 
 export function postTeamName(team_name) {
   return dispatch => {
-    dispatch(disableSubmitButton())
-    dispatch({ type: types.CHECKING_TEAM_NAME })
-    const data = {
-      'data[Team][name]': team_name
-    }
-
-    return post('/signup/ajax_validation_fields', data, response => {
+    dispatch(checkingTeamName())
+    return post('/signup/ajax_validation_fields', { 'data[Team][name]': team_name }, response => {
       const team_name_is_invlalid = response.data.error && Object.keys(response.data.validation_msg).length
 
-      dispatch({ type: types.FINISHED_CHECKING_TEAM_NAME })
+      dispatch(finishedCheckingTeamName())
       if (team_name_is_invlalid) {
-        dispatch({
-          type: types.TEAM_NAME_IS_INVALID,
-          invalid_messages: mapValidationMsg(response.data.validation_msg)
-        })
-        dispatch(enableSubmitButton())
+        dispatch(invalid(mapValidationMsg(response.data.validation_msg)))
       } else {
         browserHistory.push('/signup/term')
-        dispatch({ type: types.TEAM_NAME_IS_VALID })
       }
     }, () => {
-      dispatch({ type: types.FINISHED_CHECKING_TEAM_NAME })
-      dispatch({
-        type: types.TEAM_NAME_NETWORK_ERROR,
-        exception_message: 'Network error'
-      })
-      dispatch(enableSubmitButton())
+      dispatch(finishedCheckingTeamName())
+      dispatch(networkError())
     })
   }
+}
+
+export function checkingTeamName() {
+  return { type: types.CHECKING_TEAM_NAME }
+}
+
+export function finishedCheckingTeamName() {
+  return { type: types.FINISHED_CHECKING_TEAM_NAME }
+}
+
+export function networkError() {
+  return { type: types.TEAM_NAME_NETWORK_ERROR, exception_message: 'Network error' }
 }

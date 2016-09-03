@@ -48,11 +48,15 @@ export default class TeamName extends React.Component {
                   }})() }
 
                   {/* Submit button */}
-                  { (() => { if(this.props.validate.team_name.invalid === false) {
-                    return <EnabledNextButton />;
-                  } else {
-                    return <DisabledNextButton loader={ this.props.team_name.checking_team_name } />;
-                  }})() }
+                  { (() => {
+                    const can_submit = this.props.validate.team_name.invalid === false && !this.props.team_name.checking_team_name
+
+                    if(can_submit) {
+                      return <EnabledNextButton />;
+                    } else {
+                      return <DisabledNextButton loader={ this.props.team_name.checking_team_name } />;
+                    }
+                  })() }
               </form>
           </div>
       </div>
