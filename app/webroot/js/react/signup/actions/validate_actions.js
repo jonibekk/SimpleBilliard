@@ -56,6 +56,16 @@ export function _checkValue(target) {
         return invalid(name, cake.message.validate.signup_privacy_policy_required)
       }
       return valid(name)
+    case 'term':
+      if(!val) {
+        return invalid(name, cake.message.validate.signup_term_required)
+      }
+      return valid(name)
+    case 'start_month':
+      if(!val) {
+        return invalid(name, cake.message.validate.signup_start_month_required)
+      }
+      return valid(name)
   }
 }
 

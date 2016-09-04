@@ -49,11 +49,15 @@ export default class Password extends React.Component {
                   }})() }
 
                   {/* Submit button */}
-                  { (() => { if(this.props.validate.password.invalid === false) {
-                    return <EnabledNextButton />;
-                  } else {
-                    return <DisabledNextButton loader={ this.props.password.checking_password } />;
-                  }})() }
+                  { (() => {
+                    const can_submit = this.props.validate.password.invalid === false && !this.props.password.checking_password
+
+                    if(can_submit) {
+                      return <EnabledNextButton />;
+                    } else {
+                      return <DisabledNextButton loader={ this.props.password.checking_password } />;
+                    }}
+                  )() }
 
               </form>
           </div>

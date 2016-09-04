@@ -9,8 +9,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     postPassword: password => dispatch(actions.postPassword(password)),
-    invalid: element => dispatch(actions.invalid(element)),
-    valid: element => dispatch(actions.valid(element)),
     dispatch: (action) => dispatch(action)
   }
 }

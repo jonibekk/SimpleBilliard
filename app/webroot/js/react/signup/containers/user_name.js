@@ -9,7 +9,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     postUserName: user => dispatch(actions.postUserName(user)),
-    inputUserName: user => dispatch(actions.inputUserName(user)),
     dispatch: action => dispatch(action)
   }
 }
