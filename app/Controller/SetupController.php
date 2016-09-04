@@ -105,10 +105,6 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        // Purpose保存
-        $this->Goal->Purpose->add($this->request->data);
-        $purpose_id = $this->Goal->Purpose->id;
-        $this->request->data['Goal']['purpose_id'] = $purpose_id;
         // $_FILESとGoalオブジェクトマージ
         $this->request->data['Goal']['photo'] = $_FILES['photo'];
         // Goal保存

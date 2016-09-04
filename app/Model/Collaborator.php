@@ -347,7 +347,6 @@ class Collaborator extends AppModel
                         'start_value',
                         'description'
                     ],
-                    'Purpose'      => ['fields' => 'name'],
                     'GoalCategory' => ['fields' => 'name'],
                 ],
                 'User'            => [
@@ -402,7 +401,6 @@ class Collaborator extends AppModel
             'contain'    => [
                 'Goal' => [
                     'fields'       => ['id'],
-                    'Purpose'      => ['fields' => 'id'],
                     'GoalCategory' => ['fields' => 'id'],
                 ],
                 'User' => [

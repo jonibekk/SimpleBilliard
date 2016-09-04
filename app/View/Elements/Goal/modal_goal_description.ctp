@@ -93,9 +93,6 @@
                     </p>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <?= h($goal['Purpose']['name']) ?>
-                </div>
-                <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __('Measurement') ?></span>
 
                     <div><?= __('Unit: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>

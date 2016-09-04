@@ -14,7 +14,6 @@ App::uses('KeyResult', 'Model');
  * @property Collaborator $Collaborator
  * @property Follower     $Follower
  * @property Evaluation   $Evaluation
- * @property Purpose      $Purpose
  * @property ActionResult $ActionResult
  */
 class Goal extends AppModel
@@ -232,10 +231,6 @@ class Goal extends AppModel
         'User',
         'Team',
         'GoalCategory',
-        'Purpose' => [
-            "counterCache" => true,
-            'counterScope' => ['Purpose.del_flg' => false]
-        ],
     ];
 
     /**
@@ -417,7 +412,6 @@ class Goal extends AppModel
                         'KeyResult.team_id'     => $this->current_team_id,
                     ]
                 ],
-                'Purpose',
                 'Collaborator' => [
                     'conditions' => [
                         'Collaborator.user_id' => $this->my_uid
@@ -542,7 +536,6 @@ class Goal extends AppModel
                         'CompleteKeyResult.id'
                     ]
                 ],
-                'Purpose',
                 'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $user_id,
@@ -580,14 +573,6 @@ class Goal extends AppModel
         //　重要度が高→低
         $res = $this->sortPriority($res);
 
-        //目的一覧を取得
-        if ($page == 1 && !empty($purposes = $this->Purpose->getPurposesNoGoal())) {
-            foreach ($purposes as $key => $val) {
-                $purposes[$key]['Goal'] = [];
-            }
-            /** @noinspection PhpParamsInspection */
-            $res = array_merge($purposes, $res);
-        }
         return $res;
     }
 
@@ -716,7 +701,6 @@ class Goal extends AppModel
                         'CompleteKeyResult.id'
                     ]
                 ],
-                'Purpose',
                 'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $this->my_uid,
@@ -895,9 +879,6 @@ class Goal extends AppModel
             ],
             'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.end_date'],
             'contain'    => [
-                'Purpose'           => [
-                    'fields' => ['Purpose.name']
-                ],
                 'ActionResult'      => [
                     'fields'           => [
                         'ActionResult.id',
@@ -1067,7 +1048,6 @@ class Goal extends AppModel
             'page'       => $page,
             'limit'      => $limit,
             'contain'    => [
-                'Purpose',
                 'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -1162,7 +1142,6 @@ class Goal extends AppModel
                 'Goal.id'          => $goal_ids,
             ],
             'contain'    => [
-                'Purpose',
                 'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -1255,7 +1234,6 @@ class Goal extends AppModel
                 'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
-                'Purpose',
                 'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
@@ -1386,7 +1364,6 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
-                'Purpose',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'User'       => [
@@ -1723,7 +1700,6 @@ class Goal extends AppModel
                             'Goal.end_date >=' => $start_date,
                             'Goal.end_date <=' => $end_date
                         ],
-                        'Purpose',
                         'GoalCategory',
                     ]
                 ],

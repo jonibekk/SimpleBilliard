@@ -125,9 +125,6 @@
                             <p class="approval_body_text"><?= __("Weight") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
-                            <p class="approval_body_text"><?= __("Purpose") ?>
-                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
-
                             <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
 

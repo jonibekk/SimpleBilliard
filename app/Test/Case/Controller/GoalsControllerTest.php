@@ -190,21 +190,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $this->testAction('/goals/add/goal_id:' . $this->goal_id, ['method' => 'GET']);
     }
 
-    function testAddWithPurposeIdSuccess()
-    {
-        $Goals = $this->_getGoalsCommonMock();
-        $this->_setDefault($Goals);
-
-        $this->testAction('/goals/add/purpose_id:' . $this->purpose_id, ['method' => 'GET']);
-    }
-
-    function testAddWithPurposeIdFail()
-    {
-        $Goals = $this->_getGoalsCommonMock();
-        $this->_setDefault($Goals);
-
-        $this->testAction('/goals/add/purpose_id:' . 999999, ['method' => 'GET']);
-    }
 
     function testAddWithIdNotOwn()
     {
@@ -223,28 +208,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $this->testAction('/goals/add/goal_id:' . 9999999999, ['method' => 'GET']);
     }
 
-    function testAddPostPurpose()
-    {
-        $Goal = $this->_getGoalsCommonMock();
-        $this->_setDefault($Goal);
-        $data = [
-            'Purpose' => [
-                'name' => 'test',
-            ],
-        ];
-        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
-    }
 
-    function testAddPostPurposeFail()
-    {
-        $Goal = $this->_getGoalsCommonMock();
-        $this->_setDefault($Goal);
-        $data = [
-            'Purpose' => [
-            ],
-        ];
-        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
-    }
 
     function testAddPostMode2()
     {
@@ -392,16 +356,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $this->testAction('goals/delete/goal_id:' . $this->goal_id, ['method' => 'POST']);
     }
 
-    /**
-     * testDeletePurpose method
-     *
-     * @return void
-     */
-    public function testDeletePurposeFail()
-    {
-        $this->_getGoalsCommonMock();
-        $this->testAction('goals/delete_purpose/purpose_id:0', ['method' => 'POST']);
-    }
 
     public function testDeletePurposeNotOwn()
     {

@@ -71,10 +71,7 @@ class GoalsController extends AppController
      */
     public function add()
     {
-        $purpose_count = $this->Goal->Purpose->getMyPurposeCount();
-        $this->set(compact('purpose_count'));
         $id = viaIsSet($this->request->params['named']['goal_id']);
-        $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
@@ -95,14 +92,6 @@ class GoalsController extends AppController
             // ゴールの編集
             if ($id) {
                 $this->request->data = $this->Goal->getAddData($id);
-            } // 基準の登録
-            elseif ($purpose_id) {
-                $isNotOwner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
-                if ($isNotOwner) {
-                    $this->Pnotify->outError(__("You have no permission."));
-                    $this->redirect($this->referer());
-                }
-                $this->request->data = $this->Goal->Purpose->findById($purpose_id);
             }
             $this->_setGoalAddViewVals();
             return $this->render();
@@ -110,19 +99,11 @@ class GoalsController extends AppController
 
         // 新規作成時、モードの指定が無い場合(目的の保存のみ)
         if (!isset($this->request->params['named']['mode'])) {
-            // 目的の保存実行
-            $isSavedSuccess = $this->Goal->Purpose->add($this->request->data);
-            // 成功
-            if ($isSavedSuccess) {
-                $this->Pnotify->outSuccess(__("Set a purpose."));
-                //「ゴールを定める」に進む
-                $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
-                $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
-                $this->redirect($url);
-            }
-            // 失敗
-            $this->Pnotify->outError(__("Failed to set a purpose."));
-            $this->redirect($this->referer());
+            $this->Pnotify->outSuccess(__("Set a purpose."));
+            //「ゴールを定める」に進む
+            $url = ['mode' => 2, '#' => 'AddGoalFormKeyResultWrap'];
+            $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
+            $this->redirect($url);
         }
 
         // 新規作成時 or モードの指定がある場合
@@ -251,31 +232,6 @@ class GoalsController extends AppController
         }
     }
 
-    /**
-     * delete method
-     *
-     * @return void
-     */
-    public function delete_purpose()
-    {
-        $purpose_id = $this->request->params['named']['purpose_id'];
-        try {
-            if (!$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
-                throw new RuntimeException(__("You have no permission."));
-            }
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
-        }
-        $this->request->allowMethod('post', 'delete');
-        $this->Goal->Purpose->id = $purpose_id;
-        $this->Goal->Purpose->delete();
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        $this->Pnotify->outSuccess(__("Deleted a goal."));
-        /** @noinspection PhpInconsistentReturnPointsInspection */
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
-    }
 
     public function ajax_get_more_index_items()
     {
@@ -1195,12 +1151,11 @@ class GoalsController extends AppController
                             break;
                     }
                     $record = $common_record;
-                    if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
+                    if (!empty($c_v['Goal'])) {
                         // ゴールが属している評価期間データ
                         $goal_term = $this->Goal->getGoalTermData($c_v['Goal']['id']);
 
                         $record['valued'] = $approval_status;
-                        $record['purpose'] = $c_v['Goal']['Purpose']['name'];
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
                         $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
                             __("L") : __("C");

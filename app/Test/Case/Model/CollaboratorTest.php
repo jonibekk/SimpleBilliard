@@ -37,8 +37,6 @@ class CollaboratorTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Collaborator = ClassRegistry::init('Collaborator');
-        //$this->Collaborator->User = ClassRegistry::init('User');
-        //$this->Collaborator->Goal->Purpose = ClassRegistry::init('Purpose');
     }
 
     /**

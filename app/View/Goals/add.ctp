@@ -61,10 +61,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormPurpose',
                 ]); ?>
-                <?php if (isset($this->request->data['Purpose']['id'])) {
-                    echo $this->Form->hidden('Purpose.id', ['value' => $this->request->data['Purpose']['id']]);
-                }
-                ?>
                 <div class="panel-body add-team-panel-body goal-set-body">
                     <?=
                     $this->Form->input('Purpose.name',

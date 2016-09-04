@@ -327,7 +327,6 @@ class Evaluation extends AppModel
                             ]
                         ],
                     ],
-                    'Purpose',
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
