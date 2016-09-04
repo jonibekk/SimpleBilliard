@@ -38,11 +38,9 @@ export function _checkValue(target) {
       return valid(name)
     case 'birth_year':
       if(!val) {
-        status.type = types.INVALID
-        status.data[name].invalid = true
-        status.data[name].message = cake.message.validate.signup_birth_day_required
+        return invalid(name, cake.message.validate.signup_birth_day_required)
       }
-      return status
+      return valid(name)
     case 'birth_month':
       if(!val) {
         return invalid(name, cake.message.validate.signup_birth_day_required)
