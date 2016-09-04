@@ -18,11 +18,11 @@ class GoalTest extends GoalousTestCase
         'app.action_result',
         'app.evaluation',
         'app.evaluate_term',
-        'app.purpose',
+
         'app.post_share_circle',
         'app.circle',
         'app.post',
-        'app.purpose',
+
         'app.goal',
         'app.key_result',
         'app.collaborator',

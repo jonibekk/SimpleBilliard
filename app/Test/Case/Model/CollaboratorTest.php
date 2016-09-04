@@ -24,7 +24,7 @@ class CollaboratorTest extends GoalousTestCase
         'app.goal',
         'app.goal_category',
         'app.approval_history',
-        'app.purpose',
+
         'app.team_member',
     );
 

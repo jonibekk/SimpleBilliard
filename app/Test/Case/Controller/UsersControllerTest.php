@@ -54,7 +54,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         'app.post_share_circle',
         'app.circle',
         'app.circle_member',
-        'app.purpose',
+
         'app.goal_category',
     );
 

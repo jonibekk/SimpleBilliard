@@ -14,7 +14,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
      * @var array
      */
     public $fixtures = [
-        'app.purpose',
+
         'app.circle_member',
         'app.member_type',
         'app.evaluation_setting',

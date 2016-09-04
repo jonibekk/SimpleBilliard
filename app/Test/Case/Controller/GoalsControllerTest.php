@@ -21,7 +21,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         'app.action_result',
         'app.evaluation_setting',
         'app.evaluation',
-        'app.purpose',
+
         'app.goal',
         'app.follower',
         'app.user',
