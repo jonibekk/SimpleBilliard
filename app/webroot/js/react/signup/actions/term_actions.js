@@ -23,49 +23,50 @@ export function setStartMonthList(selected_term) {
 }
 
 export function changeToTimezoneSelectMode() {
-  return dispatch => {
-    dispatch({ type: types.CHANGE_TO_TIMEZONE_EDIT_MODE })
-  }
+  return { type: types.CHANGE_TO_TIMEZONE_EDIT_MODE }
 }
 
 export function changeToTimezoneNotSelectMode() {
-  return dispatch => {
-    dispatch({ type: types.CHANGE_TO_TIMEZONE_NOT_EDIT_MODE })
-  }
+  return { type: types.CHANGE_TO_TIMEZONE_NOT_EDIT_MODE }
+}
+
+export function checkingTerm() {
+  return { type: types.CHECKING_TERM }
+}
+
+export function finishedCheckingTerm() {
+  return { type: types.FINISHED_CHECKING_TERM }
+}
+
+export function exception(exception_message) {
+  return { type: types.TERM_NETWORK_ERROR, exception_message }
 }
 
 export function postTerms(post_data) {
   return dispatch => {
-    dispatch({ type: types.CHECKING_TERM })
-
     const data = {
       'data[Team][border_months]': post_data.term,
       'data[Team][start_term_month]': post_data.start_month,
       'data[Team][timezone]': post_data.timezone
     }
 
+    dispatch(checkingTerm())
     return post('/signup/ajax_register_user', data, response => {
       const is_not_available = response.data.is_not_available
       const term_is_invlalid = response.data.error
 
       // 例外パターンのためSignupのトップページにリダイレクトさせる
       if(is_not_available || term_is_invlalid) {
-        dispatch({
-          type: types.TERM_NETWORK_ERROR,
-          exception_message: response.data.message
-        })
-        dispatch({ type: types.FINISHED_CHECKING_TERM })
+        dispatch(exception(response.data.message))
+        dispatch(finishedCheckingTerm())
         return redirectToTop()
+      } else {
+        document.location.href = "/teams/invite"
       }
-
-      document.location.href = "/teams/invite"
     }, () => {
-      dispatch({ type: types.FINISHED_CHECKING_TERM })
-      dispatch({
-        type: types.TERM_NETWORK_ERROR,
-        exception_message: 'Some error occurred'
-      })
-      redirectToTop()
+      dispatch(finishedCheckingTerm())
+      dispatch(exception('Some error occurred'))
+      return redirectToTop()
     })
   }
 }
