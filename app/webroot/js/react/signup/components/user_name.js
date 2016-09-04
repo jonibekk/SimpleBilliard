@@ -153,7 +153,7 @@ export default class UserName extends React.Component {
 
                     {/* Submit button */}
                     { (() => {
-                      const can_submit = this.props.validate.first_name.invalid === false && this.props.validate.last_name.invalid === false && this.props.validate.birth_year.invalid === false && this.props.validate.birth_month.invalid === false && this.props.validate.birth_day.invalid === false && this.props.validate.privacy_policy.invalid === false
+                      const can_submit = this.props.validate.first_name.invalid === false && this.props.validate.last_name.invalid === false && this.props.validate.birth_year.invalid === false && this.props.validate.birth_month.invalid === false && this.props.validate.birth_day.invalid === false && this.props.validate.privacy_policy.invalid === false && !this.props.user_name.checking_user_name
 
                       if(can_submit) {
                         return <EnabledNextButton />;
