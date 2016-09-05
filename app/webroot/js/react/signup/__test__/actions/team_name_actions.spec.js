@@ -29,6 +29,28 @@ describe('actions::team_name', () => {
     expect(actions.toNextPage('path/to/next')).toEqual({ type: types.TEAM_TO_NEXT_PAGE, to_next_page: 'path/to/next' })
   })
 
+  it('postTeamName success', () => {
+    nock('http://localhost')
+      .post('/signup/ajax_validation_fields')
+      .reply(200, { error: false, message: "", is_locked: false, is_expired: false })
+
+    const expectedActions = [{
+      type: types.CHECKING_TEAM_NAME
+    }, {
+      type: types.FINISHED_CHECKING_TEAM_NAME
+    }, {
+      type: types.TEAM_TO_NEXT_PAGE, to_next_page: '/signup/term'
+    }]
+    const store = mockStore({
+      auth: []
+    })
+
+    return store.dispatch(actions.postTeamName('Abcdefg123'))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+  })
+
   it('postTeamName network error', () => {
     nock('http://network-error')
       .post('/signup/ajax_validation_fields')

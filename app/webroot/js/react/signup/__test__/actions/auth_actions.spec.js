@@ -88,6 +88,23 @@ describe('actions::auth', () => {
     expect(store.getActions()).toEqual(expectedActions)
   })
 
+  it('post auth code success', () => {
+    nock('http://localhost')
+      .post('/signup/ajax_verify_code')
+      .reply(200, { error: false, message: "auth code locked message", is_locked: false, is_expired: false })
+
+    const expectedActions = [
+      { type: types.CHECKING_AUTH_CODE },
+      { type: types.FINISHED_CHECKING_AUTH_CODE },
+      { type: types.AUTH_TO_NEXT_PAGE, to_next_page: '/signup/user' }
+    ]
+    const store = mockStore({ auth: [] })
+
+    return store.dispatch(actions.postVerifyCode(123456))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+  })
 
   it('post auth code locked test', () => {
     nock('http://localhost')

@@ -29,6 +29,28 @@ describe('actions::password', () => {
     expect(actions.toNextPage('path/to/next')).toEqual({ type: types.PASSWORD_TO_NEXT_PAGE, to_next_page: 'path/to/next' })
   })
 
+  it('postPassword success', () => {
+    nock('http://localhost')
+      .post('/signup/ajax_validation_fields')
+      .reply(200, { error: false, message: "", is_locked: false, is_expired: false })
+
+    const expectedActions = [{
+      type: types.CHECKING_PASSWORD
+    }, {
+      type: types.FINISHED_CHECKING_PASSWORD
+    }, {
+      type: types.PASSWORD_TO_NEXT_PAGE, to_next_page: '/signup/team'
+    }]
+    const store = mockStore({
+      auth: []
+    })
+
+    return store.dispatch(actions.postPassword('Abcdefg123'))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+  })
+
   it('postPassword network error', () => {
     nock('http://network-error')
       .post('/signup/ajax_validation_fields')
