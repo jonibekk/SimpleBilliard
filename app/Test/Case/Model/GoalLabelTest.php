@@ -4,6 +4,7 @@ App::uses('GoalousTestCase', 'Test');
 
 /**
  * GoalLabel Test Case
+ *
  * @property GoalLabel $GoalLabel
  */
 class GoalLabelTest extends GoalousTestCase
@@ -60,7 +61,6 @@ class GoalLabelTest extends GoalousTestCase
         'app.recovery_code',
         'app.device',
         'app.invite',
-        'app.thread',
         'app.evaluation_setting',
         'app.team_vision',
         'app.team_insight',
@@ -92,6 +92,7 @@ class GoalLabelTest extends GoalousTestCase
 
         parent::tearDown();
     }
+
     function testDummy()
     {
 

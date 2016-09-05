@@ -98,12 +98,6 @@ class GoalTest extends GoalousTestCase
             'end_date'   => $this->end_date,
         ];
         $this->Goal->KeyResult->save($key_results);
-        $purpose = [
-            'name'    => 'test',
-            'user_id' => 1,
-            'team_id' => 1,
-        ];
-        $this->Goal->Purpose->save($purpose);
         $this->Goal->getMyGoals();
     }
 
@@ -317,9 +311,6 @@ class GoalTest extends GoalousTestCase
                 'purpose_id'       => 1,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'value_unit'       => 0,
-                'target_value'     => 100,
-                'start_value'      => 0,
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
             ]
@@ -336,9 +327,6 @@ class GoalTest extends GoalousTestCase
                 'purpose_id'       => 1,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'value_unit'       => 0,
-                'target_value'     => 100,
-                'start_value'      => 0,
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
                 'img_url'          => 'https://placeholdit.imgix.net/~text?txtsize=14&txt=test&w=1&h=1',
@@ -356,9 +344,6 @@ class GoalTest extends GoalousTestCase
                 'purpose_id'       => 1,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'value_unit'       => 2,
-                'target_value'     => 100,
-                'start_value'      => 0,
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
             ]
@@ -581,8 +566,6 @@ class GoalTest extends GoalousTestCase
 
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
-        $this->Goal->Purpose->my_uid = 1;
-        $this->Goal->Purpose->current_team_id = 1;
         $this->Goal->Team->my_uid = 1;
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
@@ -721,12 +704,6 @@ class GoalTest extends GoalousTestCase
             'end_date'   => $this->end_date - 1,
         ];
         $this->Goal->KeyResult->save($key_results);
-        $purpose = [
-            'name'    => 'test',
-            'user_id' => 1,
-            'team_id' => 1,
-        ];
-        $this->Goal->Purpose->save($purpose);
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($collabo);

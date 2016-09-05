@@ -4,6 +4,7 @@ App::uses('GoalousTestCase', 'Test');
 
 /**
  * TkrChangeLog Test Case
+ *
  * @property TkrChangeLog $TkrChangeLog
  */
 class TkrChangeLogTest extends GoalousTestCase
@@ -60,7 +61,6 @@ class TkrChangeLogTest extends GoalousTestCase
         'app.recovery_code',
         'app.device',
         'app.invite',
-        'app.thread',
         'app.evaluation_setting',
         'app.team_vision',
         'app.team_insight',

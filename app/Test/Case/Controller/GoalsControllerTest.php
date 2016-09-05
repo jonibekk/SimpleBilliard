@@ -190,7 +190,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $this->testAction('/goals/add/goal_id:' . $this->goal_id, ['method' => 'GET']);
     }
 
-
     function testAddWithIdNotOwn()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -208,8 +207,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $this->testAction('/goals/add/goal_id:' . 9999999999, ['method' => 'GET']);
     }
 
-
-
     function testAddPostMode2()
     {
         $Goal = $this->_getGoalsCommonMock();
@@ -219,9 +216,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
                 'purpose_id'       => $this->purpose_id,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'value_unit'       => 0,
-                'target_value'     => 100,
-                'start_value'      => 0,
                 'start_date'       => date('yyyy/mm/dd', $this->start_date),
                 'end_date'         => date('yyyy/mm/dd', $this->end_date),
             ]
@@ -237,9 +231,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
             'Goal' => [
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'value_unit'       => 0,
-                'target_value'     => 100,
-                'start_value'      => 0,
                 'start_date'       => date('yyyy/mm/dd', $this->start_date),
                 'end_date'         => date('yyyy/mm/dd', $this->end_date),
             ]
@@ -354,30 +345,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $this->_setDefault($Goals);
 
         $this->testAction('goals/delete/goal_id:' . $this->goal_id, ['method' => 'POST']);
-    }
-
-
-    public function testDeletePurposeNotOwn()
-    {
-        /**
-         * @var UsersController $Goals
-         */
-        $Goals = $this->_getGoalsCommonMock();
-        $this->_setDefault($Goals);
-        $Goals->Goal->Purpose->id = $this->purpose_id;
-        $Goals->Goal->Purpose->saveField('user_id', 99999);
-        $this->testAction('goals/delete_purpose/purpose_id:' . $this->purpose_id, ['method' => 'POST']);
-    }
-
-    public function testDeletePurposeSuccess()
-    {
-        /**
-         * @var UsersController $Goals
-         */
-        $Goals = $this->_getGoalsCommonMock();
-
-        $this->_setDefault($Goals);
-        $this->testAction('goals/delete_purpose/purpose_id:' . $this->purpose_id, ['method' => 'POST']);
     }
 
     function testEditCollaboSuccess()
@@ -1345,18 +1312,9 @@ class GoalsControllerTest extends GoalousControllerTestCase
      */
     function _setDefault($Goals)
     {
-        $purpose = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'name'    => 'test',
-        ];
-        $Goals->Goal->Purpose->create();
-        $Goals->Goal->Purpose->save($purpose);
-        $this->purpose_id = $Goals->Goal->Purpose->getLastInsertID();
         $goal = [
             'user_id'    => 1,
             'team_id'    => 1,
-            'purpose_id' => $this->purpose_id,
             'name'       => 'test',
             'start_date' => $this->start_date,
             'end_date'   => $this->end_date,

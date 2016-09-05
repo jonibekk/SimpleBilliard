@@ -4,6 +4,7 @@ App::uses('GoalousTestCase', 'Test');
 
 /**
  * GoalClearEvaluate Test Case
+ *
  * @property GoalClearEvaluate $GoalClearEvaluate
  */
 class GoalClearEvaluateTest extends GoalousTestCase
@@ -60,7 +61,6 @@ class GoalClearEvaluateTest extends GoalousTestCase
         'app.recovery_code',
         'app.device',
         'app.invite',
-        'app.thread',
         'app.evaluation_setting',
         'app.team_vision',
         'app.team_insight',
@@ -91,6 +91,7 @@ class GoalClearEvaluateTest extends GoalousTestCase
 
         parent::tearDown();
     }
+
     function testDummy()
     {
 

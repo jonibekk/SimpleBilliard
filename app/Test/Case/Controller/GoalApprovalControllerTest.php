@@ -67,17 +67,8 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         $user_id = $GoalApproval->Collaborator->User->getLastInsertID();
 
         $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'name'    => 'test'
-        ];
-        $GoalApproval->Collaborator->Goal->Purpose->save($params);
-        $purpose_id = $GoalApproval->Collaborator->Goal->Purpose->getLastInsertID();
-
-        $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
             'end_date'         => '1427813999',
@@ -147,17 +138,8 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         $user_id = 1;
 
         $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'name'    => 'test'
-        ];
-        $GoalApproval->Collaborator->Goal->Purpose->save($params);
-        $purpose_id = $GoalApproval->Collaborator->Goal->Purpose->getLastInsertID();
-
-        $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
             'end_date'         => '1427813999',

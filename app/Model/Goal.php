@@ -125,24 +125,6 @@ class Goal extends AppModel
                 'rule' => 'notEmpty',
             ],
         ],
-        'value_unit'       => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
-        'target_value'     => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
-        'start_value'      => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
         'description'      => [
             'isString'  => [
                 'rule'       => ['isString',],
@@ -293,14 +275,6 @@ class Goal extends AppModel
         }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        //on/offの場合は現在値0,目標値1をセット
-        if (isset($data['Goal']['value_unit']) && isset($data['Goal']['start_value'])) {
-            if ($data['Goal']['value_unit'] == KeyResult::UNIT_BINARY) {
-                $data['Goal']['start_value'] = 0;
-                $data['Goal']['target_value'] = 1;
-            }
-            $data['Goal']['current_value'] = $data['Goal']['start_value'];
-        }
 
         $this->set($data['Goal']);
         $validate_backup = $this->validate;
@@ -420,10 +394,6 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        //基準の数値を変換
-        $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
-        $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
-        $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
 
         //KRの数値を変換
         if (!empty($res['KeyResult'])) {
@@ -489,7 +459,8 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
         // get goal ids for right column
-        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date);
+        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date,
+            $end_date);
 
         $options = [
             'conditions' => [
@@ -1043,7 +1014,7 @@ class Goal extends AppModel
                 'Goal.team_id'     => $this->current_team_id,
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
-                'Goal.completed' => null,
+                'Goal.completed'   => null,
             ],
             'page'       => $page,
             'limit'      => $limit,
@@ -1139,7 +1110,7 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
         $options = [
             'conditions' => [
-                'Goal.id'          => $goal_ids,
+                'Goal.id' => $goal_ids,
             ],
             'contain'    => [
                 'KeyResult'           => [
@@ -1306,10 +1277,6 @@ class Goal extends AppModel
         $res = $this->find('first', $options);
         if (!empty($res)) {
             $res['Goal']['progress'] = $this->getProgress($res);
-            //不要な少数を除去
-            $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
-            $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
-            $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
         }
 
         return $res;
@@ -1627,7 +1594,6 @@ class Goal extends AppModel
             throw new RuntimeException(__("The goal doesn't exist."));
         }
         $this->id = $goal_id;
-        $this->saveField('current_value', $goal['Goal']['target_value']);
         $this->saveField('progress', 100);
         $this->saveField('completed', REQUEST_TIMESTAMP);
         return true;

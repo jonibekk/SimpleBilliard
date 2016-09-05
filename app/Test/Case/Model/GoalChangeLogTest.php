@@ -61,7 +61,6 @@ class GoalChangeLogTest extends GoalousTestCase
         'app.recovery_code',
         'app.device',
         'app.invite',
-        'app.thread',
         'app.evaluation_setting',
         'app.team_vision',
         'app.team_insight',

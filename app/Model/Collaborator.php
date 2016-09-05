@@ -180,8 +180,15 @@ class Collaborator extends AppModel
     }
 
     // for getting incomplete goal ids for collaborator right column
-    function getIncompleteCollaboGoalIds($user_id, $start_date, $end_date, $limit = null, $page = 1, $with_owner = false, $approval_status = null)
-    {
+    function getIncompleteCollaboGoalIds(
+        $user_id,
+        $start_date,
+        $end_date,
+        $limit = null,
+        $page = 1,
+        $with_owner = false,
+        $approval_status = null
+    ) {
         $is_default = false;
         if ($user_id == $this->my_uid && $with_owner === true && $limit === null && $page === 1 && $approval_status === null) {
             $is_default = true;
@@ -191,16 +198,16 @@ class Collaborator extends AppModel
             }
         }
         $options = [
-            'joins' => [
+            'joins'      => [
                 [
-                    'table' => 'goals',
-                    'alias' => 'Goal',
-                    'type' => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
                     'conditions' => [
                         'Goal.id = Collaborator.goal_id',
                         'Goal.end_date >=' => $start_date,
                         'Goal.end_date <=' => $end_date,
-                        'Goal.completed' => null,
+                        'Goal.completed'   => null,
                     ]
                 ]
             ],
@@ -215,7 +222,7 @@ class Collaborator extends AppModel
                 'goal_id',
                 'goal_id'
             ],
-            'order' => [
+            'order'      => [
                 'Collaborator.priority DESC'
             ],
             'page'       => $page,
@@ -235,28 +242,27 @@ class Collaborator extends AppModel
         return $res;
     }
 
-
     // getting incomplete goal ids for owner, for right side leader goal column
     function getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date)
     {
         $options = [
-            'joins' => [
+            'joins'      => [
                 [
-                    'table' => 'goals',
-                    'alias' => 'Goal',
-                    'type' => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
                     'conditions' => [
                         'Goal.id = Collaborator.goal_id',
                         'Goal.end_date >=' => $start_date,
                         'Goal.end_date <=' => $end_date,
-                        'Goal.completed' => null,
+                        'Goal.completed'   => null,
                     ]
                 ]
             ],
             'conditions' => [
                 'Collaborator.user_id' => $user_id,
                 'Collaborator.team_id' => $this->current_team_id,
-                'type'    => [
+                'type'                 => [
                     Collaborator::TYPE_OWNER,
                 ],
             ],
@@ -264,7 +270,7 @@ class Collaborator extends AppModel
                 'goal_id',
                 'goal_id'
             ],
-            'order' => [
+            'order'      => [
                 'Collaborator.priority DESC'
             ],
             'page'       => $page,
@@ -342,9 +348,6 @@ class Collaborator extends AppModel
                         'goal_category_id',
                         'end_date',
                         'photo_file_name',
-                        'value_unit',
-                        'target_value',
-                        'start_value',
                         'description'
                     ],
                     'GoalCategory' => ['fields' => 'name'],
