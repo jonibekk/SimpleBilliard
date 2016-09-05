@@ -130,7 +130,7 @@ script:
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
   - cd ../
-  - if [ $TRAVIS_EVENT_TYPE = "push" ] && ( [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "develop" ] ) ; then
+  - if [ $TRAVIS_EVENT_TYPE = "push" ] && ( [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] ) ; then
     nvm install 5.8.0;
     nvm use 5.8.0;
     npm install -g gulp-cli;
@@ -159,6 +159,7 @@ script:
     npm set progress=false;
     cd $TRAVIS_BUILD_DIR;
     travis_retry pnpm i --no-bin-links;
+    gulp build;
     npm test;
     fi
 
