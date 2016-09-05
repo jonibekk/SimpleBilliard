@@ -152,7 +152,7 @@ script:
     tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
     fi
 
-  - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "develop" ]; then
+  - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "topic-signup-front-end-test" ]; then
     nvm install 5.8.0;
     nvm use 5.8.0;
     npm install -g pnpm;
