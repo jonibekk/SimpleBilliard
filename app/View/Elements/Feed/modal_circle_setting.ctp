@@ -32,26 +32,6 @@
                 <div class="col col-xxs-12 mpTB0">
                     <div class="comment-body modal-comment">
                         <div class="pull-right">
-                            <?= $this->Form->input("show_for_all_feed_flg",
-                                [
-                                    'label'   => false,
-                                    'div'     => false,
-                                    'type'    => 'checkbox',
-                                    'class'   => 'bt-switch',
-                                    'checked' => $circle_member['CircleMember']['show_for_all_feed_flg'],
-                                ]) ?>
-                        </div>
-
-                        <div class="ptb_10px font_bold">
-                            <?= __("Display on Home feed") ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row borderBottom">
-                <div class="col col-xxs-12 mpTB0">
-                    <div class="comment-body modal-comment">
-                        <div class="pull-right">
                             <?= $this->Form->input("get_notification_flg",
                                 [
                                     'label'   => false,
