@@ -152,6 +152,8 @@ script:
     tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
     fi
 
+  - if [[ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "develop" ]]; then npm test; fi
+
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then php Vendor/bin/coveralls -v; fi
