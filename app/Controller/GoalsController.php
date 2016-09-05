@@ -38,24 +38,26 @@ class GoalsController extends AppController
             'search_url', 'goal_count', 'my_coaching_users'));
     }
 
-    public function create($step = null) {
+    public function create($step = null)
+    {
         $this->layout = LAYOUT_ONE_COLUMN;
 
         // フロントモック作成中の場合のみアクセス許可
         // 後で消す
         $steps = ['step1', 'step2', 'step3', 'step4'];
-        if(in_array($step, $steps)) {
+        if (in_array($step, $steps)) {
             return $this->render("create_${step}");
         }
 
         throw new NotFoundException("");
     }
 
-    public function approval($type = null) {
+    public function approval($type = null)
+    {
         $this->layout = LAYOUT_ONE_COLUMN;
 
         $types = ['list', 'detail'];
-        if(in_array($type, $types)) {
+        if (in_array($type, $types)) {
             return $this->render("approval_{$type}");
         }
 
@@ -231,7 +233,6 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
     }
-
 
     public function ajax_get_more_index_items()
     {
@@ -890,9 +891,6 @@ class GoalsController extends AppController
             }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
             $goal = $this->Goal->getGoalMinimum($key_result['KeyResult']['goal_id']);
-            $goal['Goal']['start_value'] = (double)$goal['Goal']['start_value'];
-            $goal['Goal']['current_value'] = (double)$goal['Goal']['current_value'];
-            $goal['Goal']['target_value'] = (double)$goal['Goal']['target_value'];
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
@@ -1160,9 +1158,6 @@ class GoalsController extends AppController
                         $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
                             __("L") : __("C");
                         $record['goal'] = $c_v['Goal']['name'];
-                        $record['value_unit'] = KeyResult::$UNIT[$c_v['Goal']['value_unit']];
-                        $record['target_value'] = (double)$c_v['Goal']['target_value'];
-                        $record['start_value'] = (double)$c_v['Goal']['start_value'];
                         $record['end_date'] = date("Y/m/d", $c_v['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
                         $record['start_date'] = date("Y/m/d",
                             $c_v['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
