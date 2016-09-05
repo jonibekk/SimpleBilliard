@@ -126,10 +126,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormKeyResult',
                 ]); ?>
-                <?php if (isset($this->request->params['named']['purpose_id'])) {
-                    echo $this->Form->hidden('purpose_id', ['value' => $this->request->params['named']['purpose_id']]);
-                }
-                ?>
                 <div class="panel-body add-team-panel-body">
                     <?=
                     $this->Form->input('goal_category_id', [
@@ -160,66 +156,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             'data-bv-stringlength-max'     => 200,
                             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                         ]) ?>
-                    <div class="row">
-                        <div class="col col-sm-3 goal-edit-labels">
-                            <label class="control-label width100_per text-right"><?= __("Measurement") ?></label>
-
-                            <div class="label-addiction pull-right"><?= __("How much?") ?></div>
-                        </div>
-                        <div class="col col-sm-7  goal-set-input">
-
-                            <?=
-                            $this->Form->input('value_unit',
-                                [
-                                    'label'               => __("Unit"),
-                                    'wrapInput'           => 'col col-sm-9 pl_5px',
-                                    'type'                => 'select',
-                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                    'target-id'           => 'KeyResult0ValueInputWrap',
-                                    'required'            => true,
-                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                    'options'             => $kr_value_unit_list
-                                ]) ?>
-                            <div id="KeyResult0ValueInputWrap"
-                                 style="<?=
-                                 isset($this->request->data['Goal']['value_unit'])
-                                 && $this->request->data['Goal']['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
-
-                                <?=
-                                $this->Form->input('target_value',
-                                    [
-                                        'label'                        => __("Achieve point"),
-                                        'wrapInput'                    => 'col col-sm-9 pl_5px',
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 100,
-                                        'required'                     => true,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 15,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", 15),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
-                                    ]) ?>
-                                <?=
-                                $this->Form->input('start_value',
-                                    [
-                                        'label'                        => __("Initial point"),
-                                        'wrapInput'                    => 'col col-sm-9 pl_5px',
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 0,
-                                        'required'                     => true,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 15,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", 15),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
-                                    ]) ?>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row goal-edit-labels">
                         <div class="col col-sm-3 goal-edit-labels">
                             <label class="control-label  width100_per text-right"><?= __("Term") ?></label>

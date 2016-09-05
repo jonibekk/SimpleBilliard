@@ -25,16 +25,6 @@
                         ： <?= h($goal['GoalCategory']['name']) ?></p>
                 </div>
             </div>
-            <div class="goal-detail-info-progress-wrap">
-                <div class="goal-detail-info-left-icons">
-                    <i class="fa-bullseye fa"></i>
-                </div>
-                <div class="goal-detail-info-progress">
-                    <?= h(round($goal['Goal']['start_value'], 1)) ?> →
-                    <?= h(round($goal['Goal']['target_value'], 1)) ?>
-                    [<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]
-                </div>
-            </div>
             <div class="goal-detail-info-due-wrap">
                 <div class="goal-detail-info-left-icons">
                     <i class="fa-calendar fa"></i>
