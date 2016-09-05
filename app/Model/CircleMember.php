@@ -402,9 +402,11 @@ class CircleMember extends AppModel
             $data = [];
             foreach ($join_circles as $circle) {
                 $data[] = [
-                    'circle_id' => $circle,
-                    'user_id'   => $this->my_uid,
-                    'team_id'   => $this->current_team_id,
+                    'circle_id'             => $circle,
+                    'user_id'               => $this->my_uid,
+                    'team_id'               => $this->current_team_id,
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ];
             }
             $this->saveAll($data);
@@ -441,9 +443,11 @@ class CircleMember extends AppModel
         }
         $options = [
             'CircleMember' => [
-                'circle_id' => $circle_id,
-                'team_id'   => $this->current_team_id,
-                'user_id'   => $this->my_uid,
+                'circle_id'             => $circle_id,
+                'team_id'               => $this->current_team_id,
+                'user_id'               => $this->my_uid,
+                'show_for_all_feed_flg' => false,
+                'get_notification_flg'  => false,
             ]
         ];
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
