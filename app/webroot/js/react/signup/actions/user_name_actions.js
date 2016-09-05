@@ -11,28 +11,35 @@ import {
 
 export function postUserName(user) {
   return dispatch => {
-    dispatch(checkingUserName())
-    const data = {
-      'data[User][first_name]': user.first_name,
-      'data[User][last_name]': user.last_name,
-      'data[User][birth_day]': `${user.birth_year}-${user.birth_month}-${user.birth_day}`,
-      'data[User][update_email_flg]': user.update_email_flg ? 1 : 0,
-      'data[User][local_date]': getLocalDate()
-    }
 
-    return post('/signup/ajax_validation_fields', data, response => {
+    dispatch(checkingUserName())
+    return post('/signup/ajax_validation_fields', generatePostData(user), response => {
+      dispatch(finishedCheckingUserName())
       const user_name_is_invlalid = Boolean(response.data.error && Object.keys(response.data.validation_msg).length)
 
-      dispatch(finishedCheckingUserName())
       if (user_name_is_invlalid) {
-        invalid(mapValidationMsg(response.data.validation_msg))
+        const error_messages = mapValidationMsg(response.data.validation_msg)
+
+        for (const name in error_messages) {
+          dispatch(invalid(name, error_messages[name]))
+        }
       } else {
-        browserHistory.push('/signup/password')
+        return browserHistory.push('/signup/password')
       }
     }, () => {
       dispatch(finishedCheckingUserName())
       dispatch(networkError())
     })
+  }
+}
+
+export function generatePostData(user) {
+  return {
+    'data[User][first_name]': user.first_name,
+    'data[User][last_name]': user.last_name,
+    'data[User][birth_day]': `${user.birth_year}-${user.birth_month}-${user.birth_day}`,
+    'data[User][update_email_flg]': user.update_email_flg ? 1 : 0,
+    'data[User][local_date]': getLocalDate()
   }
 }
 

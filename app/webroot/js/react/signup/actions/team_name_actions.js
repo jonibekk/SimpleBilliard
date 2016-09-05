@@ -16,7 +16,11 @@ export function postTeamName(team_name) {
 
       dispatch(finishedCheckingTeamName())
       if (team_name_is_invlalid) {
-        dispatch(invalid(mapValidationMsg(response.data.validation_msg)))
+        const error_messages = mapValidationMsg(response.data.validation_msg)
+
+        for (const name in error_messages) {
+          dispatch(invalid(name, error_messages[name]))
+        }
       } else {
         browserHistory.push('/signup/term')
       }

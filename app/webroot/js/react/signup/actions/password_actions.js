@@ -1,6 +1,9 @@
 import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import { post, mapValidationMsg } from './common_actions'
+import {
+  invalid
+} from './validate_actions'
 
 export function postPassword(password) {
   return dispatch => {
@@ -11,7 +14,11 @@ export function postPassword(password) {
 
       dispatch(finishedCheckingPassword())
       if (password_is_invlalid) {
-        dispatch(mapValidationMsg(response.data.validation_msg))
+        const error_messages = mapValidationMsg(response.data.validation_msg)
+
+        for (const name in error_messages) {
+          dispatch(invalid(name, error_messages[name]))
+        }
       } else {
         browserHistory.push('/signup/team')
       }
