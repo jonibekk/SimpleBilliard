@@ -25,6 +25,10 @@ describe('actions::team_name', () => {
     expect(actions.networkError()).toEqual({ type: types.TEAM_NAME_NETWORK_ERROR, exception_message: 'Network error' })
   })
 
+  it('to team next page', () => {
+    expect(actions.toNextPage('path/to/next')).toEqual({ type: types.TEAM_TO_NEXT_PAGE, to_next_page: 'path/to/next' })
+  })
+
   it('postTeamName network error', () => {
     nock('http://network-error')
       .post('/signup/ajax_validation_fields')

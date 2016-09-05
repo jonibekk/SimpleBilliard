@@ -21,6 +21,14 @@ describe('actions::password', () => {
     expect(actions.finishedCheckingPassword()).toEqual({ type: types.FINISHED_CHECKING_PASSWORD })
   })
 
+  it('finished checking password', () => {
+    expect(actions.finishedCheckingPassword()).toEqual({ type: types.FINISHED_CHECKING_PASSWORD })
+  })
+
+  it('to password next page', () => {
+    expect(actions.toNextPage('path/to/next')).toEqual({ type: types.PASSWORD_TO_NEXT_PAGE, to_next_page: 'path/to/next' })
+  })
+
   it('postPassword network error', () => {
     nock('http://network-error')
       .post('/signup/ajax_validation_fields')

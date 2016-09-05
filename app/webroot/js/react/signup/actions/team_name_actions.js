@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import {
   post,
@@ -22,12 +21,19 @@ export function postTeamName(team_name) {
           dispatch(invalid(name, error_messages[name]))
         }
       } else {
-        browserHistory.push('/signup/term')
+        dispatch(toNextPage('/signup/term'))
       }
     }, () => {
       dispatch(finishedCheckingTeamName())
       dispatch(networkError())
     })
+  }
+}
+
+export function toNextPage(to_next_page) {
+  return {
+    type: types.TEAM_TO_NEXT_PAGE,
+    to_next_page
   }
 }
 

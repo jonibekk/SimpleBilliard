@@ -5,9 +5,15 @@ import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
 import { _checkValue } from '../actions/validate_actions'
-
+import { browserHistory } from 'react-router'
 
 export default class TeamName extends React.Component {
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.team_name.to_next_page) {
+      browserHistory.push(nextProps.team_name.to_next_page)
+    }
+  }
 
   getInputDomData() {
     return ReactDOM.findDOMNode(this.refs.team_name).value.trim()

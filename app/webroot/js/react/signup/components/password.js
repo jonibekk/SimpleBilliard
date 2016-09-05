@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { browserHistory } from 'react-router'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
@@ -7,6 +8,12 @@ import { InvalidMessageBox } from './elements/invalid_message_box'
 import { _checkValue } from '../actions/validate_actions'
 
 export default class Password extends React.Component {
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.password.to_next_page) {
+      browserHistory.push(nextProps.password.to_next_page)
+    }
+  }
 
   getInputDomData() {
     return ReactDOM.findDOMNode(this.refs.password).value.trim()

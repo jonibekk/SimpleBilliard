@@ -3,6 +3,17 @@ import * as types from '../../constants/actionTypes'
 import expect from 'expect'
 
 describe('reducer::user_name', () => {
+  it('USER_TO_NEXT_PAGE', () => {
+    const expect_value = {
+      to_next_page: 'next/page'
+    }
+    const newState = userNameReducer({}, {
+      type: types.USER_TO_NEXT_PAGE,
+      to_next_page: 'next/page'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
   it('CHECKING_USER_NAME', () => {
     const expect_value = {
       checking_user_name: true

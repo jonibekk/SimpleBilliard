@@ -15,7 +15,8 @@ const initialState = {
   auth_code_is_expired: false,
   invalid_message: '',
   locked_message: '',
-  expired_message: ''
+  expired_message: '',
+  to_next_page: ''
 }
 
 export default function auth(state = initialState, action) {
@@ -75,6 +76,10 @@ export default function auth(state = initialState, action) {
     case types.AUTH_CODE_IS_ENABLED:
       return Object.assign({}, state, {
         auth_code_is_expired: false
+      })
+    case types.AUTH_TO_NEXT_PAGE:
+      return Object.assign({}, state, {
+        to_next_page: action.to_next_page
       })
     default:
       return state;

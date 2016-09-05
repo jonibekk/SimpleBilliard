@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
 
@@ -30,8 +29,8 @@ export function postVerifyCode(code) {
       } else if(response.data.error) {
         dispatch(authCodeIsInvalid(response.data.message))
       } else {
-        browserHistory.push('/signup/user')
-        dispatch(authCodeIsValid())
+        dispatch(toNextPage('/signup/user'))
+        return
       }
       dispatch(initAllCode())
     }, () => {
@@ -85,4 +84,11 @@ export function authCodeIsInvalid(message) {
 
 export function authCodeIsValid() {
   return { type: types.AUTH_CODE_IS_VALID }
+}
+
+export function toNextPage(to_next_page) {
+  return {
+    type: types.AUTH_TO_NEXT_PAGE,
+    to_next_page
+  }
 }

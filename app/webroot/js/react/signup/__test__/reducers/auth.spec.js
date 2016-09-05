@@ -133,4 +133,17 @@ describe('reducer::auth', () => {
 
     expect(newState).toInclude(expect_value)
   })
+
+  it('AUTH_TO_NEXT_PAGE', () => {
+    const expect_value = {
+      to_next_page: 'path/to/next'
+    }
+    const newState = authReducer({}, {
+      type: types.AUTH_TO_NEXT_PAGE,
+      to_next_page: 'path/to/next'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
+
 })

@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import {
   post,
@@ -11,7 +10,6 @@ import {
 
 export function postUserName(user) {
   return dispatch => {
-
     dispatch(checkingUserName())
     return post('/signup/ajax_validation_fields', generatePostData(user), response => {
       dispatch(finishedCheckingUserName())
@@ -24,7 +22,7 @@ export function postUserName(user) {
           dispatch(invalid(name, error_messages[name]))
         }
       } else {
-        return browserHistory.push('/signup/password')
+        dispatch(toNextPage('/signup/password'))
       }
     }, () => {
       dispatch(finishedCheckingUserName())
@@ -40,6 +38,13 @@ export function generatePostData(user) {
     'data[User][birth_day]': `${user.birth_year}-${user.birth_month}-${user.birth_day}`,
     'data[User][update_email_flg]': user.update_email_flg ? 1 : 0,
     'data[User][local_date]': getLocalDate()
+  }
+}
+
+export function toNextPage(to_next_page) {
+  return {
+    type: types.USER_TO_NEXT_PAGE,
+    to_next_page
   }
 }
 

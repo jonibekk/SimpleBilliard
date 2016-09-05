@@ -55,6 +55,7 @@ export default class Routes extends Component {
               <Route path="term" component={TermContainer} />
             </Route>
           </Router>
+          {/* <DevTools / > */}
         </div>
       </Provider>
     );

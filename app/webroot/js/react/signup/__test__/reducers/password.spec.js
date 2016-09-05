@@ -35,4 +35,15 @@ describe('reducer::password', () => {
 
     expect(newState).toInclude(expect_value)
   })
+  it('PASSWORD_TO_NEXT_PAGE', () => {
+    const expect_value = {
+      to_next_page: 'path/to/next'
+    }
+    const newState = passwordReducer({}, {
+      type: types.PASSWORD_TO_NEXT_PAGE,
+      to_next_page: 'path/to/next'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
 })

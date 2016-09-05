@@ -35,4 +35,15 @@ describe('reducer::team_name', () => {
 
     expect(newState).toInclude(expect_value)
   })
+  it('TEAM_TO_NEXT_PAGE', () => {
+    const expect_value = {
+      to_next_page: 'path/to/next'
+    }
+    const newState = teamNameReducer({}, {
+      type: types.TEAM_TO_NEXT_PAGE,
+      to_next_page: 'path/to/next'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
 })

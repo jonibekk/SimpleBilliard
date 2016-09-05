@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import { post, mapValidationMsg } from './common_actions'
 import {
@@ -20,12 +19,19 @@ export function postPassword(password) {
           dispatch(invalid(name, error_messages[name]))
         }
       } else {
-        browserHistory.push('/signup/team')
+        dispatch(toNextPage('/signup/team'))
       }
     }, () => {
       dispatch(finishedCheckingPassword())
       dispatch(networkError())
     })
+  }
+}
+
+export function toNextPage(to_next_page) {
+  return {
+    type: types.PASSWORD_TO_NEXT_PAGE,
+    to_next_page
   }
 }
 

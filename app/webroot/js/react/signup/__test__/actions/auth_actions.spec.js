@@ -73,6 +73,9 @@ describe('actions::auth', () => {
     expect(actions.getFullCode({ code1: 3, code2: 5, code3: 1, code4: 0, code5: 9, code6: 2 })).toEqual(351092)
   })
 
+  it('to auth next page', () => {
+    expect(actions.toNextPage('path/to/next')).toEqual({ type: types.AUTH_TO_NEXT_PAGE, to_next_page: 'path/to/next' })
+  })
 
   it('inputCode', () => {
     const expectedActions = [

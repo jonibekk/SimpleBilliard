@@ -21,18 +21,23 @@ describe('actions::user_name', () => {
     expect(actions.finishedCheckingUserName()).toEqual({ type: types.FINISHED_CHECKING_USER_NAME })
   })
 
+  it('to user next page', () => {
+    expect(actions.toNextPage('path/to/next')).toEqual({ type: types.USER_TO_NEXT_PAGE, to_next_page: 'path/to/next' })
+  })
+
   it('postUserName success', () => {
     nock('http://localhost')
       .post('/signup/ajax_validation_fields')
-      .reply(200, { error: false, message: "" })
+      .reply(200, { error: false, message: "", validation_msg: {} })
 
     const expectedActions = [
       { type: types.CHECKING_USER_NAME },
-      { type: types.FINISHED_CHECKING_USER_NAME }
+      { type: types.FINISHED_CHECKING_USER_NAME },
+      { type: types.USER_TO_NEXT_PAGE, to_next_page: '/signup/password' }
     ]
     const store = mockStore({ auth: [] })
 
-    return store.dispatch(actions.postUserName({first_name: 'a', last_name: 'b'}))
+    return store.dispatch(actions.postUserName({ first_name: 'a', last_name: 'b', birth_day: '', update_email_flg: true }))
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions)
       })
@@ -44,21 +49,19 @@ describe('actions::user_name', () => {
       .reply(200, { error: true, message: "validation error", validation_msg: {
         'data[User][first_name]': 'first name invalid',
         'data[User][last_name]': 'last name invalid',
-        'data[User][birth_day]': 'birth_day invalid'
+        'data[User][birth_day]': 'birth day invalid'
       }})
 
     const expectedActions = [
       { type: types.CHECKING_USER_NAME },
       { type: types.FINISHED_CHECKING_USER_NAME },
-      { type: types.INVALID, data: {
-        first_name: { invalid: true, message: 'first name invalid'},
-        last_name: { invalid: true, message: 'last name invalid'},
-        birth_day: { invalid: true, message: 'birth_day invalid'}
-      }}
+      { type: types.INVALID, data: { first_name: { invalid: true, message: 'first name invalid'} }},
+      { type: types.INVALID, data: { last_name: { invalid: true, message: 'last name invalid'} }},
+      { type: types.INVALID, data: { birth_day: { invalid: true, message: 'birth day invalid'} }}
     ]
     const store = mockStore({ user_name: [] })
 
-    return store.dispatch(actions.postUserName({ first_name: 'a', last_name: 'b' }))
+    return store.dispatch(actions.postUserName({ first_name: 'a', last_name: 'b', birth_day: '', update_email_flg: true }))
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions)
       })
@@ -76,7 +79,7 @@ describe('actions::user_name', () => {
     ]
     const store = mockStore({ auth: [] })
 
-    return store.dispatch(actions.postUserName({first_name: 'a', last_name: 'b', local_first_name: 'c', local_last_name: 'd'}))
+    return store.dispatch(actions.postUserName({ first_name: 'a', last_name: 'b', birth_day: '', update_email_flg: true }))
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions)
       })
