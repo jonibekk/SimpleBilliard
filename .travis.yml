@@ -153,8 +153,8 @@ script:
     fi
 
 script:
-  - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "develop" ] ; then
   #TODO フロントテスト実行
+  - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "develop" ] ; then
     nvm install 5.8.0;
     nvm use 5.8.0;
     npm install -g gulp-cli;
