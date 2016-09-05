@@ -152,7 +152,15 @@ script:
     tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
     fi
 
-  - if [[ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "develop" ]]; then npm test; fi
+  - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "develop" ]; then
+    nvm install 5.8.0;
+    nvm use 5.8.0;
+    npm install -g pnpm;
+    npm set progress=false;
+    cd $TRAVIS_BUILD_DIR;
+    travis_retry pnpm i --no-bin-links;
+    npm test;
+    fi
 
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
