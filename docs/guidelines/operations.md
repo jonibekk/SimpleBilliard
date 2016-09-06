@@ -229,6 +229,7 @@ Issueを再び開いて作業を続行するとき。
 
 
 ## 開発(チームメンバー)
+**全面的に書き換えます！！**
 ### 通常時
 1. 作業を開始する前に`ToDo`から`In Progress`にカードを移動する。
 1. `develop`ブランチからブランチを作成し、チェックアウト。
@@ -241,6 +242,7 @@ Issueを再び開いて作業を続行するとき。
 1. メンバーにレビュー依頼(Issueのコメントでmentionを付ける)。
 1. カードを`Review`に移動。
 
+**全面的に書き換えます！！**
 ### release(リリース前準備)
 1. 作業を開始する前に`ToDo`から`In Progress`にカードを移動する。
 1. `master`ブランチを更新。
@@ -255,6 +257,7 @@ Issueを再び開いて作業を続行するとき。
 1. メンバーにレビュー依頼(Issueのコメントでmentionを付ける)。
 1. カードを`Review`に移動。
 
+**全面的に書き換えます！！**
 ### hotfix(緊急時)
 1. 作業を開始する前に`ToDo`から`In Progress`にカードを移動する。
 1. `master`ブランチを更新。
@@ -272,6 +275,7 @@ Issueを再び開いて作業を続行するとき。
 ## Deploy(プロダクトオーナー)
 実行前に、`travis`, `coveralls`のエラーが無い事を確認する。
 
+**全面的に書き換えます！！**
 ### ステージング
 1. `Ready`にあるカードのPRを確認の上、PRマージ(`develop` <- `xxx`)。(約6分〜10分でdeploy完了)
   もし、複数PRが存在するIssueの場合は、マージ後に`In Progress`に戻す。
@@ -279,12 +283,14 @@ Issueを再び開いて作業を続行するとき。
 1. IssueをCloseする。
 1. 以上。
 
+**全面的に書き換えます！！**
 ### 本番
 1. 本番deploy用のPR発行(`master` <- `release`)
 1. deployされる内容を確認の上、PRマージ。
 1. 本番環境で動作確認。
 1. 以上。
 
+**全面的に書き換えます！！**
 ### リリース
 1. `Ready`にあるカードのPRを確認の上、PRマージ(`release` <- `release-xxx`)。(約6分〜10分でdeploy完了)
   もし、複数PRが存在する、もしくは継続のIssueの場合は、マージ後に`In Progress`に戻す。
@@ -298,6 +304,7 @@ Issueを再び開いて作業を続行するとき。
 1. 以上。
 
 
+**全面的に書き換えます！！**
 ### hotfix
 1. `Ready`にあるカードのPRを確認の上、PRマージ(`hotfix` <- `hotfix-xxx`)。(約6分〜10分でdeploy完了)
   もし、複数PRが存在する、もしくは継続のIssueの場合は、マージ後に`In Progress`に戻す。
@@ -309,6 +316,38 @@ Issueを再び開いて作業を続行するとき。
 1. `develop`に`hotfix`をマージ。
 1. `hotfix`ブランチを削除。
 1. 以上。
+
+<hr id="operation_branches">
+
+# ブランチ運用について
+- hotfixの場合(本番環境の緊急バグフィックス)
+    - hotfix -> hotfix0000-something ブランチ生成し、hotfixにマージ
+    - hotfix.goalous.comで動作確認
+    - master <- hotfix をマージし、本番環境にdeploy
+    - www.goalous.comで動作確認
+    - stage <- hotfix をマージ
+    - stage-isao <- stage をマージ
+    - master-isao <- satge-isao をマージし、ISAO環境にdeploy
+    - isao.goalous.comで動作確認
+    - develop <- stage をマージ
+    - 以上
+- stage fixの場合(ステージング環境でのバグフィックス)
+    - stage -> stage-fix0000-something ブランチを生成し、stageにマージ
+    - stg.goalous.comで動作確認
+    - stage-isao <- stage をマージ
+    - develop <- stage をマージ
+    - 以上
+- stage-isao fixの場合(ISAOステージング環境でのバグフィックス、developへのマージはしない)
+    - stage-isao -> stage-isao-fix0000-something ブランチを生成し、stage-isaoにマージ
+    - stg-isao.goalous.comで動作確認
+    - 以上
+- master-isao fixの場合(ISAO環境でのバグフィックス、developへのマージはしない)
+    - master-isao -> hotfix-isao -> hotfix-isao0000-something ブランチを生成
+    - hotfix-isao <- hotfix-isao0000-something をマージ
+    - stg-isao.goalous.comのむき先を一時的にhotfix-isaoに変更しdeploy&動作確認
+    - master-isao <- hotfix-isaoをマージ
+    - stage-isao <- master-isaoをマージ
+    - 以上
 
 <hr id="operation_queries">
 
