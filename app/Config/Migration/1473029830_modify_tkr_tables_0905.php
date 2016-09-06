@@ -480,6 +480,7 @@ class ModifyTkrTables0905 extends CakeMigration
             /**
              * ゴールをtKRとして保存する。
              * 既存のプライオリティ5のKRは4に変更。
+             * 完了済みのゴールはtKRも完了済みとする。
              *
              * @var Goal $Goal
              */
