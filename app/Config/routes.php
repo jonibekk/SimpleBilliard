@@ -31,6 +31,14 @@ Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'ac
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
 
 /**
+ * Api
+ */
+//Router::connect('/api/v1/:controller/:action', []);
+Router::connect('/api/v1/:controller/:action/*', []);
+//Router::connect('/api/v2/:controller/:action', []);
+//Router::connect('/api/v2/:controller/:action', []);
+
+/**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している
  * 言語指定あり
  */
