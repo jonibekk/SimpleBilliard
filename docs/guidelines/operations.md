@@ -340,9 +340,10 @@ Issueを再び開いて作業を続行するとき。
     - stg-isao.goalous.comで動作確認
     - 以上
 - master-isao fixの場合(ISAO環境でのバグフィックス、developへのマージはしない)
-    - master-isao -> master-isao-fix0000-something ブランチを生成
-    - dev.goalous.comのむき先を一時的にmaster-isao-fix0000-somethingに変更し動作確認
-    - master-isao <- master-isao-fix0000-somethingをマージ
+    - master-isao -> hotfix-isao -> hotfix-isao0000-something ブランチを生成
+    - hotfix-isao <- hotfix-isao0000-something をマージ
+    - stg-isao.goalous.comのむき先を一時的にhotfix-isaoに変更しdeploy&動作確認
+    - master-isao <- hotfix-isaoをマージ
     - stage-isao <- master-isaoをマージ
     - 以上
 
