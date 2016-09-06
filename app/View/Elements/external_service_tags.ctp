@@ -169,9 +169,8 @@
             <?php endif ?>
         };
         if (!enabled_intercom_icon) {
-            window.intercomSettings["widget"] = {
-                "activator": "#Intercom"
-            };
+            window.intercomSettings.hide_default_launcher = true;
+            window.intercomSettings.custom_launcher_selector = "#Intercom";
         }
     </script>
     <script>(function () {
