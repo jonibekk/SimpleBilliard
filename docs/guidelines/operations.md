@@ -323,10 +323,12 @@ Issueを再び開いて作業を続行するとき。
 - hotfixの場合(本番環境の緊急バグフィックス)
     - hotfix -> hotfix0000-something ブランチ生成し、hotfixにマージ
     - hotfix.goalous.comで動作確認
-    - master <- hotfix をマージ
+    - master <- hotfix をマージし、本番環境にdeploy
+    - www.goalous.comで動作確認
     - stage <- hotfix をマージ
     - stage-isao <- stage をマージ
-    - master-isao <- satge-isao をマージ
+    - master-isao <- satge-isao をマージし、ISAO環境にdeploy
+    - isao.goalous.comで動作確認
     - develop <- stage をマージ
     - 以上
 - stage fixの場合(ステージング環境でのバグフィックス)
