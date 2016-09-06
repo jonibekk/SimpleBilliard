@@ -14,7 +14,7 @@ if (false) {
     /*
     $ajax = new AjaxHelper();
     $javascript = new JavascriptHelper();
-    
+
     // -- Core Helpers
     $cache = new CacheHelper();
     $form = new FormHelper();
@@ -112,5 +112,10 @@ if (false) {
          * @var GoalHelper
          */
         var $Goal;
+
+        /**
+         * @var AppHelper
+         */
+        var $App;
     }
 }
