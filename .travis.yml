@@ -159,7 +159,6 @@ script:
     npm set progress=false;
     cd $TRAVIS_BUILD_DIR;
     travis_retry pnpm i --no-bin-links;
-    gulp build;
     npm test;
     fi
 
