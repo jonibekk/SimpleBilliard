@@ -21,6 +21,9 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
 
 /**
  * Api
+ * versionを追加する場合は、
+ * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
+ * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
  */
 Router::connect('/api/:apiVersion/:controller/:action/*', [],
     [
