@@ -3173,3 +3173,9 @@ Temporary Properties - YOU MUST FIX
 .add-vision-button.disabled i {
     color: #aaa;
 }
+
+/* メッセージの送信ボタンとintercomのボタンが重なってしまうため、
+   緊急対応としてintercomをdisabledにする(あとで戻す) */
+#intercom-container {
+  display: none;
+}
