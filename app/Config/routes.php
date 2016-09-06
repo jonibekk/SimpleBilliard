@@ -19,6 +19,20 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
     Router::fullbaseUrl('https://' . env('HTTP_HOST'));
 }
 
+/**
+ * Api
+ */
+Router::connect('/api/:apiVersion/:controller/:action/*', [],
+    [
+        'apiVersion' => 'v1|v2|'
+    ]
+);
+Router::connect('/api/:apiVersion/:controller/', ['action' => 'index'],
+    [
+        'apiVersion' => 'v1|v2|'
+    ]
+);
+
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/after_click::after_click/*', ['controller' => 'pages', 'action' => 'display', 'home']);
@@ -29,14 +43,6 @@ Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' 
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
-
-/**
- * Api
- */
-//Router::connect('/api/v1/:controller/:action', []);
-Router::connect('/api/v1/:controller/:action/*', []);
-//Router::connect('/api/v2/:controller/:action', []);
-//Router::connect('/api/v2/:controller/:action', []);
 
 /**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している
