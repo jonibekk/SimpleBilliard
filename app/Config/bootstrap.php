@@ -10,11 +10,6 @@
  * @package       app.Config
  * @since         CakePHP(tm) v 0.10.8.2117
  */
-Cache::config('default', array(
-        'engine' => 'Apc',
-    )
-);
-
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
  * App::build(array(
@@ -38,7 +33,6 @@ Cache::config('default', array(
  *     'Plugin'                    => array('/path/to/plugins/', '/next/path/to/plugins/'),
  * ));
  */
-
 /**
  * Custom Inflector rules can be set to correctly pluralize or singularize table, model, controller names or whatever other
  * string is passed to the inflection functions
@@ -104,15 +98,25 @@ CakeLog::config('error', array(
 
 Configure::write('Asset.timestamp', 'force');
 
-App::build(array(
-        'Vendor' => array(
+App::build([
+        'Vendor' => [
             ROOT . '/Vendor/',
-        ),
-        'Plugin' => array(
+        ],
+        'Plugin' => [
             ROOT . '/Plugin/',
-        ),
-    )
+        ],
+    ]
 );
+//重複するコントローラを共存させる
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+    App::build([
+        'Controller' => [
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS . 'Api' . DS . strtoupper($matches[1]) . DS,
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS,
+        ],
+    ]);
+}
+
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
 CakePlugin::load('UrlCache');
@@ -152,7 +156,7 @@ define('SELECT2_QUERY_LIMIT', 200);
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
 // timestamp before 1hr
-define('REQUEST_TIMESTAMP_ONE_HR_AGO', time()-3600);
+define('REQUEST_TIMESTAMP_ONE_HR_AGO', time() - 3600);
 //右カラム各要素の表示数
 define('MY_GOALS_DISPLAY_NUMBER', 5);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 5);

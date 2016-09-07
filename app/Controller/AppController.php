@@ -8,8 +8,7 @@
  * @package       app.Controller
  * @since         CakePHP(tm) v 0.2.9
  */
-
-App::uses('Controller', 'Controller');
+App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 
@@ -39,7 +38,7 @@ App::uses('NotifySetting', 'Model');
  * @property GlRedis            $GlRedis
  * @property BenchmarkComponent $Benchmark
  */
-class AppController extends Controller
+class AppController extends BaseController
 {
     public $components = [
         'DebugKit.Toolbar' => ['panels' => ['UrlCache.UrlCache']],
