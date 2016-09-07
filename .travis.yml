@@ -153,7 +153,7 @@ script:
     fi
 
   - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "topic-signup-front-end-test" ]; then
-    source $HOME/nvm/nvm.sh
+    source $HOME/.nvm/nvm.sh
     nvm install 5.8.0;
     nvm use 5.8.0;
     npm install -g pnpm browserify-middleware readline-browserify;
