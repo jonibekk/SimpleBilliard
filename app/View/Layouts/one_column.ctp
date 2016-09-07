@@ -48,9 +48,16 @@ if (!isset($with_header_menu)) {
     <?= $this->Html->script('react_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for setup -->
+
 <!-- START import react code for signup -->
 <?php if(viaIsSet($this->request->params['controller']) === 'signup' && viaIsSet($this->request->params['action']) !== 'email'): ?>
 <?= $this->Html->script('react_signup_app.min')?>
+<?php endif; ?>
+<!-- END import react code for signup -->
+
+<!-- START import react code for goal create -->
+<?php if(viaIsSet($this->request->params['controller']) === 'goals'): ?>
+<?= $this->Html->script('react_goal_create_app.min')?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 

@@ -110,7 +110,7 @@ const config =  {
   react_goal_create: {
     src: assets_dir + '/js/react/goal_create/app.js',
     output: {
-      file_name: 'react_goal_create',
+      file_name: 'react_goal_create_app',
       path: assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/goal_create/**/*.js'
