@@ -103,7 +103,14 @@ class TeamVision extends AppModel
         return $res;
     }
 
-    function getTeamVision($team_id, $active_flg)
+    /**
+     * @param      $team_id
+     * @param      $active_flg
+     * @param bool $with_img
+     *
+     * @return array|mixed|null
+     */
+    function getTeamVision($team_id, $active_flg, $with_img = false)
     {
         $is_default = false;
         if ($team_id === $this->current_team_id && $active_flg) {
@@ -113,7 +120,6 @@ class TeamVision extends AppModel
                 return $res;
             }
         }
-
         $options = [
             'conditions' => [
                 'team_id'    => $team_id,
@@ -121,6 +127,14 @@ class TeamVision extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+        if ($with_img) {
+            $upload = new UploadHelper(new View());
+            foreach ($res as $k => $v) {
+                $res[$k]['TeamVision']['img_url'] = $upload->uploadUrl($v['TeamVision'], 'TeamVision.photo',
+                    ['style' => 'medium']);
+            }
+        }
+
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
         }

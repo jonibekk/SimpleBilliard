@@ -131,6 +131,26 @@ class GroupVision extends AppModel
     }
 
     /**
+     * @param bool $with_img
+     *
+     * @return array|null
+     */
+    function getMyGroupVision($with_img = false)
+    {
+        $group_ids = $this->Group->MemberGroup->getMyGroupList();
+        $res = $this->getGroupVisionsByGroupIds(array_keys($group_ids));
+
+        if ($with_img) {
+            $upload = new UploadHelper(new View());
+            foreach ($res as $k => $v) {
+                $res[$k]['GroupVision']['img_url'] = $upload->uploadUrl($v['GroupVision'], 'GroupVision.photo',
+                    ['style' => 'medium']);
+            }
+        }
+        return $res;
+    }
+
+    /**
      * グループIDからアクティブなグループビジョンを取得
      *
      * @param      $group_ids
