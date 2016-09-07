@@ -15,7 +15,7 @@ class CircleTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.purpose',
+
         'app.circle',
         'app.team',
         'app.user',

@@ -93,9 +93,6 @@
                             <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
                         <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?= __("Purpose: %s", $goal['Purpose']['name']) ?>
-                        </div>
-                        <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type === 'following'): ?>
                                 <?= __("Approval Status: %s",
                                     Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>

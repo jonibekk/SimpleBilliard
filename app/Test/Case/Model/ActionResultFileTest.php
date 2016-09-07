@@ -18,7 +18,7 @@ class ActionResultFileTest extends GoalousTestCase
         'app.action_result_file',
         'app.action_result',
         'app.goal',
-        'app.purpose',
+
         'app.user',
         'app.team',
         'app.badge',

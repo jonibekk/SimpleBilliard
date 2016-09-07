@@ -14,7 +14,6 @@ App::uses('KeyResult', 'Model');
  * @property Collaborator $Collaborator
  * @property Follower     $Follower
  * @property Evaluation   $Evaluation
- * @property Purpose      $Purpose
  * @property ActionResult $ActionResult
  */
 class Goal extends AppModel
@@ -126,24 +125,6 @@ class Goal extends AppModel
                 'rule' => 'notEmpty',
             ],
         ],
-        'value_unit'       => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
-        'target_value'     => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
-        'start_value'      => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
         'description'      => [
             'isString'  => [
                 'rule'       => ['isString',],
@@ -232,10 +213,6 @@ class Goal extends AppModel
         'User',
         'Team',
         'GoalCategory',
-        'Purpose' => [
-            "counterCache" => true,
-            'counterScope' => ['Purpose.del_flg' => false]
-        ],
     ];
 
     /**
@@ -298,14 +275,6 @@ class Goal extends AppModel
         }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        //on/offの場合は現在値0,目標値1をセット
-        if (isset($data['Goal']['value_unit']) && isset($data['Goal']['start_value'])) {
-            if ($data['Goal']['value_unit'] == KeyResult::UNIT_BINARY) {
-                $data['Goal']['start_value'] = 0;
-                $data['Goal']['target_value'] = 1;
-            }
-            $data['Goal']['current_value'] = $data['Goal']['start_value'];
-        }
 
         $this->set($data['Goal']);
         $validate_backup = $this->validate;
@@ -417,7 +386,6 @@ class Goal extends AppModel
                         'KeyResult.team_id'     => $this->current_team_id,
                     ]
                 ],
-                'Purpose',
                 'Collaborator' => [
                     'conditions' => [
                         'Collaborator.user_id' => $this->my_uid
@@ -426,10 +394,6 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        //基準の数値を変換
-        $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
-        $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
-        $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
 
         //KRの数値を変換
         if (!empty($res['KeyResult'])) {
@@ -495,7 +459,8 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
         // get goal ids for right column
-        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date);
+        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date,
+            $end_date);
 
         $options = [
             'conditions' => [
@@ -542,7 +507,6 @@ class Goal extends AppModel
                         'CompleteKeyResult.id'
                     ]
                 ],
-                'Purpose',
                 'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $user_id,
@@ -580,14 +544,6 @@ class Goal extends AppModel
         //　重要度が高→低
         $res = $this->sortPriority($res);
 
-        //目的一覧を取得
-        if ($page == 1 && !empty($purposes = $this->Purpose->getPurposesNoGoal())) {
-            foreach ($purposes as $key => $val) {
-                $purposes[$key]['Goal'] = [];
-            }
-            /** @noinspection PhpParamsInspection */
-            $res = array_merge($purposes, $res);
-        }
         return $res;
     }
 
@@ -716,7 +672,6 @@ class Goal extends AppModel
                         'CompleteKeyResult.id'
                     ]
                 ],
-                'Purpose',
                 'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $this->my_uid,
@@ -895,9 +850,6 @@ class Goal extends AppModel
             ],
             'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.end_date'],
             'contain'    => [
-                'Purpose'           => [
-                    'fields' => ['Purpose.name']
-                ],
                 'ActionResult'      => [
                     'fields'           => [
                         'ActionResult.id',
@@ -1062,12 +1014,11 @@ class Goal extends AppModel
                 'Goal.team_id'     => $this->current_team_id,
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
-                'Goal.completed' => null,
+                'Goal.completed'   => null,
             ],
             'page'       => $page,
             'limit'      => $limit,
             'contain'    => [
-                'Purpose',
                 'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -1159,10 +1110,9 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
         $options = [
             'conditions' => [
-                'Goal.id'          => $goal_ids,
+                'Goal.id' => $goal_ids,
             ],
             'contain'    => [
-                'Purpose',
                 'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -1255,7 +1205,6 @@ class Goal extends AppModel
                 'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
-                'Purpose',
                 'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
@@ -1328,10 +1277,6 @@ class Goal extends AppModel
         $res = $this->find('first', $options);
         if (!empty($res)) {
             $res['Goal']['progress'] = $this->getProgress($res);
-            //不要な少数を除去
-            $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
-            $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
-            $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
         }
 
         return $res;
@@ -1386,7 +1331,6 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
-                'Purpose',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'User'       => [
@@ -1650,7 +1594,6 @@ class Goal extends AppModel
             throw new RuntimeException(__("The goal doesn't exist."));
         }
         $this->id = $goal_id;
-        $this->saveField('current_value', $goal['Goal']['target_value']);
         $this->saveField('progress', 100);
         $this->saveField('completed', REQUEST_TIMESTAMP);
         return true;
@@ -1723,7 +1666,6 @@ class Goal extends AppModel
                             'Goal.end_date >=' => $start_date,
                             'Goal.end_date <=' => $end_date
                         ],
-                        'Purpose',
                         'GoalCategory',
                     ]
                 ],

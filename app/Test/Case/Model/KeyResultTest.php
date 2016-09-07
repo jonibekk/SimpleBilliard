@@ -19,7 +19,7 @@ class KeyResultTest extends GoalousTestCase
         'app.evaluate_term',
         'app.key_result',
         'app.goal',
-        'app.purpose',
+
         'app.goal_category',
         'app.collaborator',
         'app.user',

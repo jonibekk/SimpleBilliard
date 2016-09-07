@@ -101,9 +101,6 @@
         <?= h($goal['Goal']['name']) ?>
     </p>
 
-    <p class="goal-detail-goal-purpose">
-        <?= h($goal['Purpose']['name']) ?>
-    </p>
 
 </div>
 <div class="goal-detail-tab-group">
