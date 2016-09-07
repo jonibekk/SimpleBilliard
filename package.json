@@ -80,7 +80,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "test": "mocha --compilers js:babel-register ./app/webroot/js/react/**/__test__/**/*.spec.js --recursive",
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register ./app/webroot/js/react/**/__test__/**/*.spec.js --recursive",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
