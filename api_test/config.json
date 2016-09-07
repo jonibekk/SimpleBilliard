@@ -1,0 +1,10 @@
+{
+    "local": {
+        "baseUrl": "http://local.goalous.com"
+    },
+    "dev": {
+        "baseUrl": "https://dev.goalous.com",
+        "basicAuthId": "dev",
+        "basicAuthPath": "a5PxhqtL"
+    }
+}
