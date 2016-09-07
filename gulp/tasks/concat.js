@@ -4,7 +4,6 @@ import concat from 'gulp-concat'
 import autoprefixer from 'gulp-autoprefixer'
 import duration from 'gulp-duration'
 import ngAnnotate from 'gulp-ng-annotate'
-import tap from 'gulp-tap'
 import config from '../config.js'
 
 gulp.task('js:concat', () => {

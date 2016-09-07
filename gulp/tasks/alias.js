@@ -1,6 +1,5 @@
 import gulp from 'gulp'
 import runSequence from 'run-sequence'
-import config from '../config.js'
 
 gulp.task('build', done => {
   return runSequence(['js', 'css'], done)
@@ -81,6 +80,17 @@ gulp.task('react_signup', done => {
     'react_signup:browserify',
     'react_signup:uglify',
     'react_signup:clean',
+    done
+  )
+})
+
+// react goal create
+gulp.task('react_goal_create', done => {
+  return runSequence(
+    'react_goal_create:eslint',
+    'react_goal_create:browserify',
+    'react_goal_create:uglify',
+    'react_goal_create:clean',
     done
   )
 })

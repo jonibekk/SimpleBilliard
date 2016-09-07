@@ -38,6 +38,32 @@ class GoalsController extends AppController
             'search_url', 'goal_count', 'my_coaching_users'));
     }
 
+    public function create($step = null)
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        // フロントモック作成中の場合のみアクセス許可
+        // 後で消す
+        $steps = ['step1', 'step2', 'step3', 'step4'];
+        if (in_array($step, $steps)) {
+            return $this->render("create");
+        }
+
+        throw new NotFoundException("");
+    }
+
+    public function approval($type = null)
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        $types = ['list', 'detail'];
+        if (in_array($type, $types)) {
+            return $this->render("approval_{$type}");
+        }
+
+        throw new NotFoundException("");
+    }
+
     /**
      * ゴール作成
      * URLパラメータでmodeを付ける

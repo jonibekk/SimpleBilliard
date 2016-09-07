@@ -5,7 +5,7 @@ const config =  {
     src: [assets_dir + '/js/gl_basic.js'],
     output: {
       file_name: 'goalous',
-      path: assets_dir + '/js',
+      path: assets_dir + '/js'
     },
     watch_files: [assets_dir + '/js/gl_basic.js']
   },
@@ -81,7 +81,7 @@ const config =  {
       assets_dir + '/js/vendor/angular/angular-pnotify.js',
       assets_dir + '/js/vendor/angular/angular-sanitize.js',
       assets_dir + '/js/vendor/angular/pusher-angular.min.js',
-      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js',
+      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js'
     ],
     output: {
       file_name: 'ng_vendors',
@@ -106,6 +106,14 @@ const config =  {
       path: assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/signup/**/*.js'
+  },
+  react_goal_create: {
+    src: assets_dir + '/js/react/goal_create/app.js',
+    output: {
+      file_name: 'react_goal_create',
+      path: assets_dir + '/js'
+    },
+    watch_files: assets_dir + '/js/react/goal_create/**/*.js'
   },
   css: {
     src: [

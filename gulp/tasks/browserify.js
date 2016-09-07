@@ -22,3 +22,12 @@ gulp.task('react_signup:browserify', () => {
     .pipe(gulp.dest(config.dest + '/react_signup'))
     .pipe(duration('react_signup:browserify'))
 })
+
+gulp.task('react_goal_create:browserify', () => {
+  return browserify({entries: [config.react_goal_create.src]})
+    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .bundle()
+    .pipe(source(config.react_goal_create.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/react_goal_create'))
+    .pipe(duration('react_goal_create:browserify'))
+})

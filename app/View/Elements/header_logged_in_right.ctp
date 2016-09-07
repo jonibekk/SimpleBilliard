@@ -45,7 +45,7 @@
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
                     <a class="header-nav-add-contents-anchor"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'create', 'step1']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
 
                         <p class="header-nav-add-contents-goal"><?= __('Create a goal') ?></p>
