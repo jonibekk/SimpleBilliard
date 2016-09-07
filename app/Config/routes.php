@@ -30,7 +30,7 @@ Router::connect('/api/:apiVersion/:controller/:action/*', [],
         'apiVersion' => 'v1|v2|'
     ]
 );
-Router::connect('/api/:apiVersion/:controller/', ['action' => 'index'],
+Router::connect('/api/:apiVersion/:controller', ['action' => 'index'],
     [
         'apiVersion' => 'v1|v2|'
     ]
