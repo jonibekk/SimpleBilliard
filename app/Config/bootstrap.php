@@ -108,7 +108,7 @@ App::build([
     ]
 );
 //重複するコントローラを共存させる
-if (isset($_SERVER['REQUEST_URI']) && preg_match('/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
     App::build([
         'Controller' => [
             ROOT . DS . APP_DIR . DS . 'Controller' . DS . 'Api' . DS . strtoupper($matches[1]) . DS,
