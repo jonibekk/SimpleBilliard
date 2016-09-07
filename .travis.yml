@@ -152,16 +152,6 @@ script:
     tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
     fi
 
-  - if [ $TRAVIS_EVENT_TYPE = "push" ] && [ $TRAVIS_BRANCH = "topic-signup-front-end-test" ]; then
-    nvm install 5.8.0;
-    nvm use 5.8.0;
-    npm install -g pnpm browserify-middleware readline-browserify;
-    npm set progress=false;
-    cd $TRAVIS_BUILD_DIR;
-    travis_retry pnpm i --no-bin-links;
-    npm test;
-    fi
-
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then php Vendor/bin/coveralls -v; fi
