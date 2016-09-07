@@ -11,7 +11,7 @@ class AppExceptionRenderer extends ExceptionRenderer
     {
         parent::__construct($exception);
 
-        if ($exception instanceof ApiException) {
+        if (Router::getParam('apiVersion') || $exception instanceof ApiException) {
             $this->method = 'errorApi';
         }
     }
