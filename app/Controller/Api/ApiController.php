@@ -86,20 +86,6 @@ class ApiController extends BaseController
      */
     protected function _setupAuth()
     {
-        $this->Auth->authenticate = [
-            'Form2' => [
-                'fields'    => [
-                    'username' => 'email',
-                    'password' => 'password'
-                ],
-                'userModel' => 'User',
-                'scope'     => [
-                    'User.active_flg'             => 1,
-                    'PrimaryEmail.email_verified' => 1
-                ],
-                'recursive' => 0,
-            ]
-        ];
         $this->Auth->loginRedirect = null;
         $this->Auth->logoutRedirect = null;
         $this->Auth->loginAction = null;
