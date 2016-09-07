@@ -35,7 +35,7 @@ class VisionsController extends ApiController
                 '{n}.GroupVision'), '{n}.type', 'group_vision');
 
         $visions = am($team_visions, $group_visions);
-        return json_encode($visions);
+        return $this->_getResponse(200, $visions);
     }
 
 }

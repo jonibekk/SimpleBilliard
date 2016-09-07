@@ -36,9 +36,38 @@ class ApiController extends BaseController
     {
         parent::beforeFilter();
         $this->autoRender = false;
-//        if(!$this->request->is('ajax')) {
-//            throw new BadRequestException();
-//        }
+        if (!$this->request->is('ajax')) {
+//            throw new ApiException('ajax only!');
+        }
     }
 
+    /**
+     * @param      $status_code
+     * @param null $data
+     * @param null $html
+     * @param null $message
+     * @param null $validation_errors
+     *
+     * @return CakeResponse|null
+     */
+    public function _getResponse($status_code, $data = null, $html = null, $message = null, $validation_errors = null)
+    {
+        $ret = [];
+        if ($data) {
+            $ret['data'] = $data;
+        }
+        if ($html) {
+            $ret['html'] = $html;
+        }
+        if ($message) {
+            $ret['message'] = $message;
+        }
+        if ($validation_errors) {
+            $ret['validation_errors'] = $validation_errors;
+        }
+        $this->response->type('json');
+        $this->response->body(json_encode($ret));
+        $this->response->statusCode($status_code);
+        return $this->response;
+    }
 }

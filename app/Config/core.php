@@ -23,6 +23,8 @@ require_once "extra_defines.php";
 
 Configure::write('debug', DEBUG_MODE);
 
+App::uses('ApiException', 'Lib/Error');
+
 /**
  * Configure the Error handler used to handle errors for your application. By default
  * ErrorHandler::handleError() is used. It will display errors using Debugger, when debug > 0
