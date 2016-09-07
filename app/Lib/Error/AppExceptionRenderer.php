@@ -7,24 +7,6 @@ App::uses('ExceptionRenderer', 'Error');
  */
 class AppExceptionRenderer extends ExceptionRenderer
 {
-    public function __construct(Exception $exception)
-    {
-        parent::__construct($exception);
-
-        if (Router::getParam('apiVersion') || $exception instanceof ApiException) {
-            $this->method = 'errorApi';
-        }
-    }
-
-    public function errorApi($error)
-    {
-        $message = $error->getMessage();
-        $this->controller->response->statusCode($error->getCode());
-        $this->controller->set('data', json_encode(['message' => $message]));
-        $this->controller->response->type('json');
-        $this->_outputMessage('api_error', false);
-    }
-
     protected function _outputMessage($template, $layout = true)
     {
         if ($layout) {
