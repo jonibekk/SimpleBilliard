@@ -20,8 +20,6 @@ App::uses('NotifySetting', 'Model');
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent      $Lang
- * @property SessionComponent   $Session
- * @property SecurityComponent  $Security
  * @property TimezoneComponent  $Timezone
  * @property CookieComponent    $Cookie
  * @property CsvComponent       $Csv
@@ -30,45 +28,32 @@ App::uses('NotifySetting', 'Model');
  * @property MixpanelComponent  $Mixpanel
  * @property UservoiceComponent $Uservoice
  * @property OgpComponent       $Ogp
- * @property User               $User
- * @property Post               $Post
- * @property Goal               $Goal
- * @property Team               $Team
  * @property NotifyBizComponent $NotifyBiz
  * @property GlRedis            $GlRedis
  * @property BenchmarkComponent $Benchmark
  */
 class AppController extends BaseController
 {
-    public $components = [
+    /**
+     * AppControllerを分割した場合、子クラスでComponent,Helper,Modelがマージされないため、
+     * 中間Controllerは以下を利用。末端Controllerは通常のCakeの規定通り
+     */
+    private $merge_components = [
         'DebugKit.Toolbar' => ['panels' => ['UrlCache.UrlCache']],
-        'Session',
-        //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
-        'Security'         => [
-            'csrfUseOnce' => false,
-            'csrfExpires' => '+24 hour'
-        ],
         'Paginator',
-        'Auth'             => [
-            'flash' => [
-                'element' => 'alert',
-                'key'     => 'auth',
-                'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
-            ]
-        ],
         'Lang',
         'Cookie',
         'Timezone',
-        'GlEmail',
         'Pnotify',
         'Mixpanel',
         'Ogp',
         'NotifyBiz',
         'Uservoice',
         'Csv',
+        'GlEmail',
         //        'Benchmark',
     ];
-    public $helpers = [
+    private $merge_helpers = [
         'Session',
         'Html'      => ['className' => 'BoostCake.BoostCakeHtml'],
         'Form'      => ['className' => 'BoostCake.BoostCakeForm'],
@@ -79,13 +64,7 @@ class AppController extends BaseController
         'Csv',
     ];
 
-    public $uses = [
-        'User',
-        'Post',
-        'Goal',
-        'Team',
-        'GlRedis',
-    ];
+    private $merge_uses = [];
 
     //基本タイトル
     public $title_for_layout;
@@ -155,6 +134,14 @@ class AppController extends BaseController
      */
     private $_browser = [];
 
+    public function __construct($request = null, $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->uses = am($this->uses, $this->merge_uses);
+        $this->components = am($this->components, $this->merge_components);
+        $this->helpers = am($this->helpers, $this->merge_helpers);
+    }
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -171,7 +158,6 @@ class AppController extends BaseController
             'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.');
         $this->set('meta_description', $this->meta_description);
 
-        $this->_setSecurity();
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
         //ローカルとISAO環境と本番環境以外でbasic認証を有効にする
@@ -358,17 +344,6 @@ class AppController extends BaseController
         $this->set('evaluable_cnt', $this->evaluable_cnt);
     }
 
-    public function _setSecurity()
-    {
-        // sslの判定をHTTP_X_FORWARDED_PROTOに変更
-        $this->request->addDetector('ssl', ['env' => 'HTTP_X_FORWARDED_PROTO', 'value' => 'https']);
-        //サーバー環境のみSSLを強制
-        if (ENV_NAME != "local") {
-            $this->Security->blackHoleCallback = 'forceSSL';
-            $this->Security->requireSecure();
-        }
-    }
-
     /**
      * isaoのユーザか判定
      * チームISAOもしくは、ISAOメールアドレスをプライマリに指定しているユーザを判別
@@ -487,22 +462,6 @@ class AppController extends BaseController
             $this->is_mb_app_ios = true;
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
-    }
-
-    /**
-     * アプリケーション全体の言語設定
-     */
-    public function _setAppLanguage()
-    {
-        //言語設定済かつ自動言語フラグが設定されていない場合は、言語設定を適用。それ以外はブラウザ判定
-        if ($this->Auth->user() && $this->Auth->user('language') && !$this->Auth->user('auto_language_flg')) {
-            Configure::write('Config.language', $this->Auth->user('language'));
-            $this
-                ->set('is_not_use_local_name', $this->User->isNotUseLocalName($this->Auth->user('language')));
-        } else {
-            $lang = $this->Lang->getLanguage();
-            $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
-        }
     }
 
     /**

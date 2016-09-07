@@ -16,6 +16,22 @@ App::uses('BaseController', 'Controller');
 
 class ApiController extends BaseController
 {
+    /**
+     * AppControllerを分割した場合、子クラスでComponent,Helper,Modelがマージされないため、
+     * 中間Controllerでは以下を利用。末端Controllerは通常のCakeの規定通り
+     */
+    private $merge_components = [];
+    private $merge_helpers = [];
+    private $merge_uses = [];
+
+    public function __construct($request = null, $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->uses = am($this->uses, $this->merge_uses);
+        $this->components = am($this->components, $this->merge_components);
+        $this->helpers = am($this->helpers, $this->merge_helpers);
+    }
+
     function beforeFilter()
     {
         parent::beforeFilter();
