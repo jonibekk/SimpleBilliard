@@ -73,6 +73,7 @@ Configure::write('Dispatcher.filters', array(
     'AssetDispatcher',
     'CacheDispatcher'
 ));
+
 //slack setting
 Configure::write('Slack', [
     'token'      => LOG_SLACK_TOKEN,

@@ -30,6 +30,10 @@ class ApiController extends BaseController
         $this->uses = am($this->uses, $this->merge_uses);
         $this->components = am($this->components, $this->merge_components);
         $this->helpers = am($this->helpers, $this->merge_helpers);
+
+        Configure::write('Exception.renderer', 'ApiExceptionRenderer');
+        Configure::write('Exception.log', false);
+
     }
 
     function beforeFilter()
@@ -38,10 +42,10 @@ class ApiController extends BaseController
         $this->_setupAuth();
         $this->autoRender = false;
         if (!$this->request->is('ajax')) {
-//            throw new ApiException('ajax only!');
+//            throw new ForbiddenException('Ajax Only!',401);
         }
         if (!$this->Auth->user()) {
-            return $this->_getResponse(401, null, null, 'not authorized');
+            throw new ForbiddenException('Not Authorized!', 401);
         }
     }
 
