@@ -30,7 +30,15 @@ Router::connect('/api/:apiVersion/:controller/:action/*', [],
         'apiVersion' => 'v1|v2|'
     ]
 );
-Router::connect('/api/:apiVersion/:controller', ['action' => 'index'],
+Router::connect('/api/:apiVersion/:controller',
+    [
+        ['action' => 'index', 'method' => 'GET', 'id' => false],
+        ['action' => 'view', 'method' => 'GET', 'id' => true],
+        ['action' => 'add', 'method' => 'POST', 'id' => false],
+        ['action' => 'edit', 'method' => 'PUT', 'id' => true],
+        ['action' => 'delete', 'method' => 'DELETE', 'id' => true],
+        ['action' => 'update', 'method' => 'POST', 'id' => true]
+    ],
     [
         'apiVersion' => 'v1|v2|'
     ]
