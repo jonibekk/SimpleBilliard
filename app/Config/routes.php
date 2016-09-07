@@ -19,6 +19,23 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
     Router::fullbaseUrl('https://' . env('HTTP_HOST'));
 }
 
+/**
+ * Api
+ * versionを追加する場合は、
+ * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
+ * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
+ */
+Router::connect('/api/:apiVersion/:controller/:action/*', [],
+    [
+        'apiVersion' => 'v1|v2|'
+    ]
+);
+Router::connect('/api/:apiVersion/:controller', ['action' => 'index'],
+    [
+        'apiVersion' => 'v1|v2|'
+    ]
+);
+
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/after_click::after_click/*', ['controller' => 'pages', 'action' => 'display', 'home']);

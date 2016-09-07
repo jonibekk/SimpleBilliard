@@ -32,7 +32,7 @@ class PostSharedLogTest extends GoalousTestCase
         'app.action_result_file',
         'app.action_result',
         'app.goal',
-        'app.purpose',
+
         'app.goal_category',
         'app.key_result',
         'app.collaborator',

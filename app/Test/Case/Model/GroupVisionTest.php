@@ -21,7 +21,7 @@ class GroupVisionTest extends GoalousTestCase
         'app.user',
         'app.email',
         'app.notify_setting',
-        'app.purpose',
+
         'app.goal',
         'app.goal_category',
         'app.post',

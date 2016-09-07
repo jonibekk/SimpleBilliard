@@ -38,7 +38,7 @@ class FollowerTest extends GoalousTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.purpose',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
