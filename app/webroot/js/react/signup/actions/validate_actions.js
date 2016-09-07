@@ -11,7 +11,7 @@ export function _checkValue(target) {
 
       if(val === '' || !validator.isLength(val, { min: 8 })) {
         return invalid(name, cake.message.validate.signup_password_min_length)
-      } else if(val === '' || !validator.isLength(val, { min: 8, max: 50 })) {
+      } else if(!validator.isLength(val, { min: 8, max: 50 })) {
         return invalid(name, cake.message.validate.signup_password_max_length)
       } else if(!validator.matches(val, pattern)) {
         return invalid(name, cake.message.validate.signup_password_alpha_num_required)
