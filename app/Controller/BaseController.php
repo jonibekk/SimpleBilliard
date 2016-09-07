@@ -46,6 +46,11 @@ class BaseController extends Controller
         'GlRedis',
     ];
 
+    public $my_uid = null;
+    public $current_team_id = null;
+    public $current_term_id = null;
+    public $next_term_id = null;
+
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
@@ -57,6 +62,10 @@ class BaseController extends Controller
         parent::beforeFilter();
         $this->_setSecurity();
 
+        if ($this->Auth->user()) {
+            $this->current_team_id = $this->Session->read('current_team_id');
+            $this->my_uid = $this->Auth->user('id');
+        }
     }
 
     public function _setSecurity()

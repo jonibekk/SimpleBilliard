@@ -89,10 +89,6 @@ class AppController extends BaseController
      */
     public $evaluable_cnt = 0;
 
-    public $my_uid = null;
-    public $current_team_id = null;
-    public $current_term_id = null;
-    public $next_term_id = null;
 
     /**
      * 通知設定
@@ -167,8 +163,6 @@ class AppController extends BaseController
         $this->set('my_prof', $this->User->getMyProf());
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
-            $this->current_team_id = $this->Session->read('current_team_id');
-            $this->my_uid = $this->Auth->user('id');
 
             $login_uid = $this->Auth->user('id');
 
