@@ -1,46 +1,20 @@
 import * as types from '../constants/ActionTypes'
 
+const defParams = {
+  invalid: null,
+  message: ''
+}
 const initialState = {
-  first_name: {
-    invalid: null,
-    message: ''
-  },
-  last_name: {
-    invalid: null,
-    message: ''
-  },
-  birth_year: {
-    invalid: null,
-    message: ''
-  },
-  birth_month: {
-    invalid: null,
-    message: ''
-  },
-  birth_day: {
-    invalid: null,
-    message: ''
-  },
-  privacy_policy: {
-    invalid: null,
-    message: ''
-  },
-  password: {
-    invalid: null,
-    message: ''
-  },
-  team_name: {
-    invalid: null,
-    message: ''
-  },
-  term: {
-    invalid: null,
-    message: ''
-  },
-  start_month: {
-    invalid: null,
-    message: ''
-  }
+  first_name: defParams,
+  last_name: defParams,
+  birth_year: defParams,
+  birth_month: defParams,
+  birth_day: defParams,
+  privacy_policy: defParams,
+  password: defParams,
+  team_name: defParams,
+  term: defParams,
+  start_month: defParams
 }
 
 export default function validate(state = initialState, action) {
