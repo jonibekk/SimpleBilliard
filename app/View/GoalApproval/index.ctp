@@ -113,23 +113,11 @@
                             <p class="approval_body_text"><?= __("Role") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
-                            <p class="approval_body_text"><?= __("Unit") ?>
-                                : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
-
-                            <p class="approval_body_text"><?= __("Achieve point") ?>
-                                : <?= (double)$goal['Goal']['target_value']; ?></p>
-
-                            <p class="approval_body_text"><?= __("Initial point") ?>
-                                : <?= (double)$goal['Goal']['start_value']; ?></p>
-
                             <p class="approval_body_text"><?= __("Due") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
                             <p class="approval_body_text"><?= __("Weight") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
-
-                            <p class="approval_body_text"><?= __("Purpose") ?>
-                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
                             <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>

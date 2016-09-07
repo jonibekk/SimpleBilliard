@@ -92,18 +92,6 @@
                         </a>
                     </p>
                 </div>
-                <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <?= h($goal['Purpose']['name']) ?>
-                </div>
-                <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __('Measurement') ?></span>
-
-                    <div><?= __('Unit: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
-                    <?php if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
-                        <div><?= __('Achieve point: %s', (double)$goal['Goal']['target_value']) ?></div>
-                        <div><?= __('Initial point: %s', (double)$goal['Goal']['start_value']) ?></div>
-                    <?php endif; ?>
-                </div>
                 <div class="col col-xxs-12">
                     <!-- アクション、フォロワー -->
                 </div>

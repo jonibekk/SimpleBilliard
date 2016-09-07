@@ -57,7 +57,6 @@ $kr_count = 0;
                     <a href="<?= $this->Html->url([
                         'controller' => 'goals',
                         'action'     => 'add',
-                        'purpose_id' => $goal['Purpose']['id'],
                         'mode'       => 2
                     ]) ?>"
                        class="dashboard-goals-card-header-goal-set">
@@ -78,9 +77,6 @@ $kr_count = 0;
                         </a>
                     </div>
                 <?php endif; ?>
-                <div class="dashboard-goals-card-header-purpose">
-                    <?= h($goal['Purpose']['name']) ?>
-                </div>
             </div>
             <?php if ($type == 'leader'): ?>
                 <a class="dashboard-goals-card-header-function dropdown"
@@ -95,12 +91,10 @@ $kr_count = 0;
                         'controller' => 'goals',
                         'action'     => 'add',
                         'mode'       => 2,
-                        'purpose_id' => $goal['Purpose']['id']
                     ];
                     $del_url = [
                         'controller' => 'goals',
                         'action'     => 'delete_purpose',
-                        'purpose_id' => $goal['Purpose']['id']
                     ];
                     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
                         $edit_url = [
@@ -191,12 +185,10 @@ $kr_count = 0;
                             'controller' => 'goals',
                             'action'     => 'add',
                             'mode'       => 2,
-                            'purpose_id' => $goal['Purpose']['id']
                         ];
                         $del_url = [
                             'controll er' => 'goals',
                             'action'      => 'delete_purpose',
-                            'purpose_id'  => $goal['Purpose']['id']
                         ];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
                             $edit_url = [

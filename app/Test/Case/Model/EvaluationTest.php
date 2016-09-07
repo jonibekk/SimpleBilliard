@@ -15,7 +15,7 @@ class EvaluationTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.purpose',
+
         'app.evaluation',
         'app.team',
         'app.badge',
@@ -26,7 +26,7 @@ class EvaluationTest extends GoalousTestCase
         'app.comment',
         'app.post',
         'app.goal',
-        'app.purpose',
+
         'app.goal_category',
         'app.key_result',
         'app.action_result',

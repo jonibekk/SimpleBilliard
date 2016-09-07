@@ -36,11 +36,6 @@
                     <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Goal']['name']),
                             0, 50,
                             "...") ?></h4>
-                    <?php if (isset($post['Goal']['Purpose']['name'])): ?>
-                        <div class="font_12px site-info-txt">
-                            <?= mb_strimwidth(h($post['Goal']['Purpose']['name']), 0, 110, "...") ?>
-                        </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

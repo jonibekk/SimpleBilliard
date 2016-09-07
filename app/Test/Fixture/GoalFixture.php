@@ -43,14 +43,6 @@ class GoalFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'ゴールカテゴリ'
         ),
-        'purpose_id'          => array(
-            'type'     => 'biginteger',
-            'null'     => false,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '目的ID(belongsToでTeamモデルに関連)'
-        ),
         'name'                => array(
             'type'    => 'text',
             'null'    => true,
@@ -88,6 +80,7 @@ class GoalFixture extends CakeTestFixtureEx
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
+            'key'      => 'index',
             'comment'  => '開始日(unixtime)'
         ),
         'end_date'            => array(
@@ -95,38 +88,8 @@ class GoalFixture extends CakeTestFixtureEx
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
+            'key'      => 'index',
             'comment'  => '終了日(unixtime)'
-        ),
-        'current_value'       => array(
-            'type'     => 'decimal',
-            'null'     => false,
-            'default'  => '0.000',
-            'length'   => '18,3',
-            'unsigned' => false,
-            'comment'  => '現在値'
-        ),
-        'start_value'         => array(
-            'type'     => 'decimal',
-            'null'     => false,
-            'default'  => '0.000',
-            'length'   => '18,3',
-            'unsigned' => false,
-            'comment'  => '開始値'
-        ),
-        'target_value'        => array(
-            'type'     => 'decimal',
-            'null'     => false,
-            'default'  => '0.000',
-            'length'   => '18,3',
-            'unsigned' => false,
-            'comment'  => '目標値'
-        ),
-        'value_unit'          => array(
-            'type'     => 'integer',
-            'null'     => false,
-            'default'  => '0',
-            'unsigned' => true,
-            'comment'  => '目標値の単位'
         ),
         'progress'            => array(
             'type'     => 'integer',
@@ -142,44 +105,43 @@ class GoalFixture extends CakeTestFixtureEx
             'length'   => 10,
             'unsigned' => true
         ),
-        'action_result_count' => array('type'     => 'integer',
-                                       'null'     => false,
-                                       'default'  => '0',
-                                       'unsigned' => true,
-                                       'comment'  => 'アクショントカウント'
+        'action_result_count' => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => true,
+            'comment'  => 'アクショントカウント'
         ),
-        'del_flg'             => array('type'    => 'boolean',
-                                       'null'    => false,
-                                       'default' => '0',
-                                       'key'     => 'index',
-                                       'comment' => '削除フラグ'
+        'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'deleted'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'ゴールを削除した日付時刻'
         ),
-        'deleted'             => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => 'ゴールを削除した日付時刻'
+        'created'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'ゴールを追加した日付時刻'
         ),
-        'created'             => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => 'ゴールを追加した日付時刻'
-        ),
-        'modified'            => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'key'      => 'index',
-                                       'comment'  => 'ゴールを更新した日付時刻'
+        'modified'            => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'ゴールを更新した日付時刻'
         ),
         'indexes'             => array(
             'PRIMARY'    => array('column' => 'id', 'unique' => 1),
             'modified'   => array('column' => 'modified', 'unique' => 0),
             'user_id'    => array('column' => 'user_id', 'unique' => 0),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
-            'del_flg'    => array('column' => 'del_flg', 'unique' => 0),
-            'purpose_id' => array('column' => 'purpose_id', 'unique' => 0)
+            'end_date'   => array('column' => 'end_date', 'unique' => 0),
+            'start_date' => array('column' => 'start_date', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
@@ -191,73 +153,73 @@ class GoalFixture extends CakeTestFixtureEx
      */
     public $records = [
         [
-            'id'         => '1',
-            'user_id'    => '1',
-            'team_id'    => '1',
-            'purpose_id' => '',
-            'name'       => 'ゴール1',
+            'id'      => '1',
+            'user_id' => '1',
+            'team_id' => '1',
+
+            'name' => 'ゴール1',
         ],
         [
-            'id'         => '2',
-            'user_id'    => '1',
-            'team_id'    => '1',
-            'purpose_id' => '',
-            'name'       => 'ゴール2',
+            'id'      => '2',
+            'user_id' => '1',
+            'team_id' => '1',
+
+            'name' => 'ゴール2',
         ],
         [
-            'id'         => '3',
-            'user_id'    => '1',
-            'team_id'    => '1',
-            'purpose_id' => '',
-            'name'       => 'ゴール3',
+            'id'      => '3',
+            'user_id' => '1',
+            'team_id' => '1',
+
+            'name' => 'ゴール3',
         ],
         [
-            'id'         => '4',
-            'user_id'    => '1',
-            'team_id'    => '1',
-            'purpose_id' => '',
-            'name'       => 'ゴール4',
+            'id'      => '4',
+            'user_id' => '1',
+            'team_id' => '1',
+
+            'name' => 'ゴール4',
         ],
         [
-            'id'         => '5',
-            'user_id'    => '14',
-            'purpose_id' => '',
-            'team_id'    => '1',
+            'id'      => '5',
+            'user_id' => '14',
+
+            'team_id' => '1',
         ],
         [
-            'id'         => '6',
-            'user_id'    => '1',
-            'purpose_id' => '',
-            'team_id'    => '1',
+            'id'      => '6',
+            'user_id' => '1',
+
+            'team_id' => '1',
         ],
         [
-            'id'         => '7',
-            'user_id'    => '2',
-            'team_id'    => '1',
-            'purpose_id' => '',
-            'name'       => 'その他ゴール1',
+            'id'      => '7',
+            'user_id' => '2',
+            'team_id' => '1',
+
+            'name' => 'その他ゴール1',
         ],
         [
-            'id'         => '8',
-            'user_id'    => '1',
-            'team_id'    => '1',
-            'purpose_id' => '',
+            'id'      => '8',
+            'user_id' => '1',
+            'team_id' => '1',
+
             'start_date' => '25000',
             'end_date'   => '28000',
         ],
         [
-            'id'         => '9',
-            'user_id'    => '2',
-            'team_id'    => '1',
-            'purpose_id' => '',
+            'id'      => '9',
+            'user_id' => '2',
+            'team_id' => '1',
+
             'start_date' => '15000',
             'end_date'   => '18000',
         ],
         [
-            'id'         => '100',
-            'user_id'    => '100',
-            'team_id'    => '1',
-            'purpose_id' => '',
+            'id'      => '100',
+            'user_id' => '100',
+            'team_id' => '1',
+
         ],
     ];
 

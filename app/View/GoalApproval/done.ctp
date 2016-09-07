@@ -110,23 +110,11 @@
                             <p class="approval_body_text"><?= __("Role") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
-                            <p class="approval_body_text"><?= __("Unit") ?>
-                                : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
-
-                            <p class="approval_body_text"><?= __("Achieve point") ?>
-                                : <?= (double)$goal['Goal']['target_value']; ?></p>
-
-                            <p class="approval_body_text"><?= __("Initial point") ?>
-                                : <?= (double)$goal['Goal']['start_value']; ?></p>
-
                             <p class="approval_body_text"><?= __("Due") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
                             <p class="approval_body_text"><?= __("Weight") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
-
-                            <p class="approval_body_text"><?= __("Purpose") ?>
-                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
                             <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
@@ -147,10 +135,11 @@
 
                         <div class="panel-body comment-block">
                             <?= $this->Form->create('GoalApproval',
-                                ['id'         => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'],
-                                 'url'        => ['controller' => 'goal_approval', 'action' => 'done'],
-                                 'type'       => 'post',
-                                 'novalidate' => true
+                                [
+                                    'id'         => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'],
+                                    'url'        => ['controller' => 'goal_approval', 'action' => 'done'],
+                                    'type'       => 'post',
+                                    'novalidate' => true
                                 ]); ?>
                             <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
 
@@ -160,16 +149,18 @@
                                         <?php if ($goal['my_goal'] === false) { ?>
                                             <?php if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) { ?>
                                                 <?= $this->Form->button(__("Remove from target of evaluation"),
-                                                    ['name'  => 'wait_btn',
-                                                     'class' => 'btn btn-primary approval_button',
-                                                     'div'   => false
+                                                    [
+                                                        'name'  => 'wait_btn',
+                                                        'class' => 'btn btn-primary approval_button',
+                                                        'div'   => false
                                                     ]) ?>
                                             <?php } else {
                                                 if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) { ?>
                                                     <?= $this->Form->button(__("Set as target of evaluation"),
-                                                        ['name'  => 'approval_btn',
-                                                         'class' => 'btn btn-primary approval_button',
-                                                         'div'   => false
+                                                        [
+                                                            'name'  => 'approval_btn',
+                                                            'class' => 'btn btn-primary approval_button',
+                                                            'div'   => false
                                                         ]) ?>
                                                 <?php }
                                             } ?>
@@ -201,9 +192,10 @@
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === true) { ?>
                                             <?= $this->Form->button(__("Comment"),
-                                                ['name'  => 'comment_btn',
-                                                 'class' => 'btn btn-primary approval_button',
-                                                 'div'   => false
+                                                [
+                                                    'name'  => 'comment_btn',
+                                                    'class' => 'btn btn-primary approval_button',
+                                                    'div'   => false
                                                 ]) ?>
                                         <?php } ?>
                                     </div>

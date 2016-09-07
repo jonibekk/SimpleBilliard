@@ -24,7 +24,7 @@ class CollaboratorTest extends GoalousTestCase
         'app.goal',
         'app.goal_category',
         'app.approval_history',
-        'app.purpose',
+
         'app.team_member',
     );
 
@@ -37,8 +37,6 @@ class CollaboratorTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Collaborator = ClassRegistry::init('Collaborator');
-        //$this->Collaborator->User = ClassRegistry::init('User');
-        //$this->Collaborator->Goal->Purpose = ClassRegistry::init('Purpose');
     }
 
     /**
@@ -101,18 +99,9 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->User->save($params);
         $user_id = $this->Collaborator->User->getLastInsertID();
 
-        // 今期のゴール
-        $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'name'    => 'test'
-        ];
-        $this->Collaborator->Goal->Purpose->save($params);
-        $current_purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $current_purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
@@ -122,19 +111,9 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->Goal->save($params);
         $current_goal_id = $this->Collaborator->Goal->getLastInsertID();
 
-        // 来期のゴール
-        $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'name'    => 'test'
-        ];
-        $this->Collaborator->Goal->Purpose->create();
-        $this->Collaborator->Goal->Purpose->save($params);
-        $next_purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $next_purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
@@ -202,18 +181,10 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->User->save($params);
         $user_id = $this->Collaborator->User->getLastInsertID();
 
-        $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'name'    => 'test'
-        ];
-        $this->Collaborator->Goal->Purpose->save($params);
-        $purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
 
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
             'end_date'         => '1427813999',
@@ -272,18 +243,10 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->User->save($params);
         $user_id = $this->Collaborator->User->getLastInsertID();
 
-        $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'name'    => 'test'
-        ];
-        $this->Collaborator->Goal->Purpose->save($params);
-        $purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
 
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
             'end_date'         => '1427813999',

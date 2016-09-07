@@ -43,7 +43,7 @@ class CommentFileTest extends GoalousTestCase
         'app.evaluate_term',
         'app.evaluate_score',
         'app.goal',
-        'app.purpose',
+
         'app.goal_category',
         'app.key_result',
         'app.action_result',

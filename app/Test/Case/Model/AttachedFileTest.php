@@ -24,7 +24,7 @@ class AttachedFileTest extends GoalousTestCase
         'app.post_share_circle',
         'app.post',
         'app.goal',
-        'app.purpose',
+
         'app.goal_category',
         'app.key_result',
         'app.action_result',
