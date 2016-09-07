@@ -40,6 +40,15 @@ gulp.task('react_signup:eslint', () => {
     .pipe(duration('react_signup:eslint'))
 })
 
+gulp.task('react_goal_create:eslint', () => {
+  return gulp.src(config.react_goal_create.src)
+    .pipe(plumber())
+    .pipe(eslint({ useEslintrc: true }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+    .pipe(duration('react_goal_create:eslint'))
+})
+
 gulp.task('css:lesshint', function() {
   return gulp.src(config.less.src)
     .pipe(lesshint())

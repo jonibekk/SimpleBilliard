@@ -42,11 +42,11 @@ class GoalsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        // フロントモック作成中の場合のみアクセス許可
-        // 後で消す
+        // TODO: 将来的にstep1以外は許可しない
+        //       今はフロントモック実装のためにすべて許可にしている
         $steps = ['step1', 'step2', 'step3', 'step4'];
         if (in_array($step, $steps)) {
-            return $this->render("create_${step}");
+            return $this->render("create");
         }
 
         throw new NotFoundException("");

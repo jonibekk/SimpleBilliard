@@ -1,7 +1,5 @@
 import gulp from 'gulp'
 import rimraf from 'gulp-rimraf'
-import del from 'del'
-import runSequence from 'run-sequence'
 import duration from 'gulp-duration'
 import config from '../config.js'
 import gutil from 'gulp-util'
@@ -48,7 +46,7 @@ gulp.task('react_setup:clean_files', () => {
     .pipe(duration('react_setup:clean_files'))
 })
 
-gulp.task('react_setup:clean_dir', ['react_setup:clean_files'], cb => {
+gulp.task('react_setup:clean_dir', ['react_setup:clean_files'], () => {
   return gulp.src([config.dest + '/react_setup'], { read: false })
     .pipe(duration('react_setup:clean_dir'))
     .on('end', function(){ gutil.log('----------------- react_setup task finished --------------------------'); });
@@ -61,9 +59,22 @@ gulp.task('react_signup:clean_files', () => {
     .pipe(duration('react_signup:clean_files'))
 })
 
-gulp.task('react_signup:clean_dir', ['react_signup:clean_files'], cb => {
+gulp.task('react_signup:clean_dir', ['react_signup:clean_files'], () => {
   return gulp.src([config.dest + '/react_signup'], { read: false })
     .pipe(duration('react_signup:clean_dir'))
+    .on('end', function(){ gutil.log('----------------- react_signup task finished --------------------------'); });
+})
+
+gulp.task('react_goal_create:clean', ['react_goal_create:clean_files', 'react_goal_create:clean_dir']);
+
+gulp.task('react_goal_create:clean_files', () => {
+  return gulp.src([config.dest + '/react_goal_create/**/*.js'], { read: false })
+    .pipe(duration('react_goal_create:clean_files'))
+})
+
+gulp.task('react_goal_create:clean_dir', ['react_goal_create:clean_files'], () => {
+  return gulp.src([config.dest + '/react_signup'], { read: false })
+    .pipe(duration('react_goal_create:clean_dir'))
     .on('end', function(){ gutil.log('----------------- react_signup task finished --------------------------'); });
 })
 
