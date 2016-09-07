@@ -18,7 +18,6 @@ class AppExceptionRenderer extends ExceptionRenderer
 
     public function errorApi($error)
     {
-        CakeLog::error('### errorApi');
         $message = $error->getMessage();
         $this->controller->response->statusCode($error->getCode());
         $this->controller->set('data', json_encode(['message' => $message]));
