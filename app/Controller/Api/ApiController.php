@@ -42,7 +42,7 @@ class ApiController extends BaseController
         $this->_setupAuth();
         $this->autoRender = false;
         if (!$this->request->is('ajax')) {
-//            throw new ForbiddenException('Ajax Only!',401);
+//            throw new ForbiddenException('Ajax Only!',400);
         }
         if (!$this->Auth->user()) {
             throw new ForbiddenException('Not Authorized!', 401);
