@@ -35,9 +35,13 @@ class ApiController extends BaseController
     function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_setupAuth();
         $this->autoRender = false;
         if (!$this->request->is('ajax')) {
 //            throw new ApiException('ajax only!');
+        }
+        if (!$this->Auth->user()) {
+            return $this->_getResponse(401, null, null, 'not authorized');
         }
     }
 
@@ -70,4 +74,31 @@ class ApiController extends BaseController
         $this->response->statusCode($status_code);
         return $this->response;
     }
+
+    /**
+     * Setup Authentication Component
+     *
+     * @return void
+     */
+    protected function _setupAuth()
+    {
+        $this->Auth->authenticate = [
+            'Form2' => [
+                'fields'    => [
+                    'username' => 'email',
+                    'password' => 'password'
+                ],
+                'userModel' => 'User',
+                'scope'     => [
+                    'User.active_flg'             => 1,
+                    'PrimaryEmail.email_verified' => 1
+                ],
+                'recursive' => 0,
+            ]
+        ];
+        $this->Auth->loginRedirect = null;
+        $this->Auth->logoutRedirect = null;
+        $this->Auth->loginAction = null;
+    }
+
 }

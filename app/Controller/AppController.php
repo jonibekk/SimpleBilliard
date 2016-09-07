@@ -89,7 +89,6 @@ class AppController extends BaseController
      */
     public $evaluable_cnt = 0;
 
-
     /**
      * 通知設定
      *
@@ -142,6 +141,7 @@ class AppController extends BaseController
     {
         parent::beforeFilter();
 
+        $this->_setupAuth();
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {
             $this->title_for_layout = __('Goalous');
@@ -986,6 +986,40 @@ class AppController extends BaseController
             $this->redirect($redirect_url);
         }
 
+    }
+
+    /**
+     * Setup Authentication Component
+     *
+     * @return void
+     */
+    protected function _setupAuth()
+    {
+        $this->Auth->authenticate = [
+            'Form2' => [
+                'fields'    => [
+                    'username' => 'email',
+                    'password' => 'password'
+                ],
+                'userModel' => 'User',
+                'scope'     => [
+                    'User.active_flg'             => 1,
+                    'PrimaryEmail.email_verified' => 1
+                ],
+                'recursive' => 0,
+            ]
+        ];
+        $st_login = REFERER_STATUS_LOGIN;
+        $this->Auth->loginRedirect = "/{$st_login}";
+        $this->Auth->logoutRedirect = array(
+            'controller' => 'users',
+            'action'     => 'login'
+        );
+        $this->Auth->loginAction = array(
+            'admin'      => false,
+            'controller' => 'users',
+            'action'     => 'login'
+        );
     }
 
 }
