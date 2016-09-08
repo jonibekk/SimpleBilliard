@@ -1,37 +1,45 @@
-<section class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+<section class="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
 
-    <h1 class="goals-approval-detial-heading">New goal created !</h1>
+    <h1 class="goals-approval-heading">Approve this goal</h1>
 
-    <div class="goals-approval-detial-display-user">
-        <img src="" alt="">
-        <p>name</p>
-        <p>time</p>
+    <div class="goals-approval-detail-user">
+        <div class="goals-approval-detail-table">
+            <img class="goals-approval-detail-image" src="" alt="" width="32" height="32">
+            <div class="goals-approval-detail-info">
+                <p>name</p>
+                <p>position</p>
+            </div>
+        </div>
+        <a class="goals-approval-detail-view-more" href="">View all 3 members</a>
     </div>
 
-    <div class="goals-approval-detial-display-tkr">
-        <img src="" alt="">
-        <p>goal name</p>
+    <div class="goals-approval-detail-goal">
+        <div class="goals-approval-detail-table">
+            <img class="goals-approval-detail-image" src="" alt="" width="32" height="32">
+            <div class="goals-approval-detail-info">
+                <p>goal name</p>
+            </div>
+        </div>
+    </div>
 
-        <h4>Top KR :</h4>
-        <ul>
+    <div class="goals-approval-detail-tkr">
+        <ul class="">
             <li>tKR name</li>
             <li>tKR value</li>
             <li>tKR Desc</li>
         </ul>
+        <a href="">View previous</a>
     </div>
 
-    <a class="btn" href="">Follow</a>
-    <a class="btn" href="">View Deatil</a>
+    <div class="goals-approval-detail-comments">
+        <p>coach name</p>
+        <p>title</p>
+        <p>message</p>
+        <a href="">View all 3 comments</a>
+    </div>
 
-    <form class="goals-approval-detial-input" action="">
-        <p>Is this top KR clear ?</p>
-        <a class="btn btn-primary" href="">Yes, clear!</a>
-        <a class="btn btn-primary" href="">Not clear...</a>
+    <textarea class="form-control goals-approval-detail-input-comment-form" name="" id="" cols="30" rows="10" placeholder="Add your comment (optional)"></textarea>
 
-        <div>Clear</div>
-        <div>Not Clear</div>
 
-        <textarea class="form-control goals-approval-detial-input-advice-form" name="" id="" cols="30" rows="10" placeholder="Your advice..."></textarea>
-    </form>
 
 </section>
