@@ -87,12 +87,17 @@ class ApiController extends BaseController
      * リクエストパラメータにidを含める事を強制する
      * 例 /visions/123/test この場合の123がid
      *
+     * @param null $id
+     *
      * @return bool
      */
-    public function _requiredId()
+    public function _requiredId($id = null)
     {
-        if (!$this->request->param('id')) {
-            throw new BadRequestException();
+        if (!$id) {
+            $id = $this->request->param('id');
+        }
+        if (!$id) {
+            throw new NotFoundException();
         }
         return true;
     }
