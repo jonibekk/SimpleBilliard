@@ -38,26 +38,38 @@ class GoalsController extends AppController
             'search_url', 'goal_count', 'my_coaching_users'));
     }
 
-    public function create($step = null)
+    public function create($step = null, $gucchi = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
         // TODO: 将来的にstep1以外は許可しない
         //       今はフロントモック実装のためにすべて許可にしている
         $steps = ['step1', 'step2', 'step3', 'step4'];
+
+        // TODO: 将来的には `return $this->render("create");`で統一する
+        //       マークアップとSPAをパラで開発するための仮URL
         if (in_array($step, $steps)) {
+            if($gucchi) {
+              return $this->render("create_{$step}");
+            }
             return $this->render("create");
         }
 
         throw new NotFoundException("");
     }
 
-    public function approval($type = null)
+    public function approval($type = null, $gucchi = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
         $types = ['list', 'detail'];
+
+        // TODO: 将来的には `return $this->render("approval");`で統一する
+        //       マークアップとSPAをパラで開発するための仮URL
         if (in_array($type, $types)) {
+            if($gucchi) {
+              return $this->render("approval_{$type}");
+            }
             return $this->render("approval");
         }
 
