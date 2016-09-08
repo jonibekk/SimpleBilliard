@@ -935,7 +935,7 @@ class EvaluationTest extends GoalousTestCase
 
         $collabo = $this->Evaluation->Goal->Collaborator->find('all');
         foreach ($collabo as $k => $v) {
-            $collabo[$k]['Collaborator']['valued_flg'] = Collaborator::STATUS_APPROVAL;
+            $collabo[$k]['Collaborator']['approval_status'] = Collaborator::STATUS_APPROVAL;
         }
         $this->Evaluation->Goal->Collaborator->saveAll($collabo);
         $this->Evaluation->Goal->id = 1;

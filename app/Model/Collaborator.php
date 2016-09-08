@@ -169,7 +169,7 @@ class Collaborator extends AppModel
             unset($options['conditions']['type']);
         }
         if ($approval_status) {
-            $options['conditions']['valued_flg'] = $approval_status;
+            $options['conditions']['approval_status'] = $approval_status;
         }
         $res = $this->find('list', $options);
 
@@ -232,7 +232,7 @@ class Collaborator extends AppModel
             unset($options['conditions']['type']);
         }
         if ($approval_status) {
-            $options['conditions']['valued_flg'] = $approval_status;
+            $options['conditions']['approval_status'] = $approval_status;
         }
         $res = $this->find('list', $options);
 
@@ -329,9 +329,9 @@ class Collaborator extends AppModel
         $term_type = null
     ) {
         $conditions = [
-            'Collaborator.team_id'    => $team_id,
-            'Collaborator.user_id'    => $goal_user_id,
-            'Collaborator.valued_flg' => $approval_flg,
+            'Collaborator.team_id'         => $team_id,
+            'Collaborator.user_id'         => $goal_user_id,
+            'Collaborator.approval_status' => $approval_flg,
         ];
         if ($term_type !== null) {
             $conditions['Goal.end_date >='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['start_date'];
@@ -339,7 +339,7 @@ class Collaborator extends AppModel
         }
 
         $options = [
-            'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
+            'fields'     => ['id', 'type', 'role', 'priority', 'approval_status'],
             'conditions' => $conditions,
             'contain'    => [
                 'Goal'            => [
@@ -371,9 +371,9 @@ class Collaborator extends AppModel
             $options['conditions']['NOT'] = array('Collaborator.priority' => "0");
         }
         if (is_array($approval_flg)) {
-            unset($options['conditions']['Collaborator.valued_flg']);
+            unset($options['conditions']['Collaborator.approval_status']);
             foreach ($approval_flg as $val) {
-                $options['conditions']['OR'][]['Collaborator.valued_flg'] = $val;
+                $options['conditions']['OR'][]['Collaborator.approval_status'] = $val;
             }
         }
         $res = $this->find('all', $options);
@@ -383,7 +383,7 @@ class Collaborator extends AppModel
     function changeApprovalStatus($id, $status)
     {
         $this->id = $id;
-        $this->save(['valued_flg' => $status]);
+        $this->save(['approval_status' => $status]);
         $collabo = $this->findById($this->id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $collabo['Collaborator']['user_id']),
@@ -395,11 +395,11 @@ class Collaborator extends AppModel
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
     {
         $options = [
-            'fields'     => ['id', 'type', 'valued_flg', 'priority'],
+            'fields'     => ['id', 'type', 'approval_status', 'priority'],
             'conditions' => [
-                'Collaborator.team_id'    => $team_id,
-                'Collaborator.user_id'    => $goal_user_id,
-                'Collaborator.valued_flg' => $approval_flg,
+                'Collaborator.team_id'         => $team_id,
+                'Collaborator.user_id'         => $goal_user_id,
+                'Collaborator.approval_status' => $approval_flg,
             ],
             'contain'    => [
                 'Goal' => [
@@ -419,11 +419,11 @@ class Collaborator extends AppModel
                 continue;
             }
             // 自分のゴール + 修正待ち以外
-            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['valued_flg'] !== '3') {
+            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['approval_status'] !== '3') {
                 continue;
             }
             // 自分のゴール + 修正待ち + コラボレーター
-            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['valued_flg'] === '3'
+            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['approval_status'] === '3'
                 && $val['Collaborator']['type'] === '0'
             ) {
                 continue;
@@ -543,7 +543,7 @@ class Collaborator extends AppModel
             'fields'     => [
                 'goal_id',
                 'user_id',
-                'valued_flg',
+                'approval_status',
             ]
         ];
         $res = $this->find('all', $options);

@@ -244,7 +244,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goal = $this->_getGoalsCommonMock();
         $this->_setDefault($Goal);
         $Goal->Goal->Collaborator->id = $this->collabo_id;
-        $Goal->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
+        $Goal->Goal->Collaborator->saveField('approval_status', Collaborator::STATUS_MODIFY);
         $data = [
             'Goal'         => [
                 'description' => 'test',
@@ -957,7 +957,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_UNAPPROVED);
+        $Goals->Goal->Collaborator->saveField('approval_status', Collaborator::STATUS_UNAPPROVED);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
@@ -966,7 +966,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_APPROVAL);
+        $Goals->Goal->Collaborator->saveField('approval_status', Collaborator::STATUS_APPROVAL);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
@@ -975,7 +975,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_HOLD);
+        $Goals->Goal->Collaborator->saveField('approval_status', Collaborator::STATUS_HOLD);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
@@ -984,7 +984,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
+        $Goals->Goal->Collaborator->saveField('approval_status', Collaborator::STATUS_MODIFY);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 

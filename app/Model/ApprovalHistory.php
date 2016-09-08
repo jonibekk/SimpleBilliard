@@ -15,6 +15,12 @@ class ApprovalHistory extends AppModel
     const ACTION_STATUS_EVALUABLE = 2;
     const ACTION_STATUS_NOT_EVALUABLE = 3;
     const ACTION_STATUS_REQUEST_MODIFY = 4;
+    const STATUS_IS_CLEAR_NO_SELECT = 0;
+    const STATUS_IS_CLEAR = 1;
+    const STATUS_IS_NOT_CLEAR = 2;
+    const STATUS_IS_IMPORTANT_NO_SELECT = 0;
+    const STATUS_IS_IMPORTANT = 1;
+    const STATUS_IS_NOT_IMPORTANT = 2;
 
     /**
      * Validation rules
