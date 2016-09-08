@@ -15,14 +15,21 @@ class ApiExceptionRenderer extends ExceptionRenderer
     public function errorApi($error)
     {
         $message = $error->getMessage();
+        $code = $error->getCode();
         switch (get_class($error)) {
             case 'MissingActionException':
             case 'MissingControllerException':
                 $message = 'Api Endpoint not found.';
                 break;
+            case 'BadRequestException':
+                if($message == 'The request has been black-holed'){
+                    $message = 'CSRF Error!';
+                    $code = 403;
+                }
+                break;
         }
 
-        $this->controller->response->statusCode($error->getCode());
+        $this->controller->response->statusCode($code);
         $this->controller->set('data', json_encode(['message' => $message]));
         $this->controller->response->type('json');
         $this->_outputMessage('api_error');
