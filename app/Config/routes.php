@@ -25,11 +25,7 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
  * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
  * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
  */
-Router::connect('/api/:apiVersion/:controller/:action/*', [],
-    [
-        'apiVersion' => 'v1|v2|'
-    ]
-);
+$apiVersions = 'v1|v2|';
 Router::connect('/api/:apiVersion/:controller',
     [
         ['action' => 'index', 'method' => 'GET', 'id' => false],
@@ -40,9 +36,18 @@ Router::connect('/api/:apiVersion/:controller',
         ['action' => 'update', 'method' => 'POST', 'id' => true]
     ],
     [
-        'apiVersion' => 'v1|v2|'
+        'apiVersion' => $apiVersions
     ]
 );
+Router::connect('/api/:apiVersion/:controller/:id/:action',
+    [],
+    [
+        'apiVersion' => $apiVersions,
+        'id'         => '[0-9]+',
+        'persist'    => ['id'],
+    ]
+);
+Router::connect('/api/:apiVersion/:controller/:action', [], ['apiVersion' => $apiVersions]);
 
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
