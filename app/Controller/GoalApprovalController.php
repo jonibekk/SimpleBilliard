@@ -191,7 +191,7 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_MODIFY) {
+            if ($val['Collaborator']['approval_status'] === (string)Collaborator::STATUS_MODIFY) {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
             }
 
@@ -232,11 +232,11 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) {
+            if ($val['Collaborator']['approval_status'] === (string)Collaborator::STATUS_APPROVAL) {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
             } else {
-                if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) {
+                if ($val['Collaborator']['approval_status'] === (string)Collaborator::STATUS_HOLD) {
                     $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
                 }
             }

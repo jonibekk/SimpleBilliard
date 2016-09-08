@@ -50,8 +50,8 @@ class GoalsController extends AppController
         // TODO: 将来的には `return $this->render("create");`で統一する
         //       マークアップとSPAをパラで開発するための仮URL
         if (in_array($step, $steps)) {
-            if($gucchi) {
-              return $this->render("create_{$step}");
+            if ($gucchi) {
+                return $this->render("create_{$step}");
             }
             return $this->render("create");
         }
@@ -68,8 +68,8 @@ class GoalsController extends AppController
         // TODO: 将来的には `return $this->render("approval");`で統一する
         //       マークアップとSPAをパラで開発するための仮URL
         if (in_array($type, $types)) {
-            if($gucchi) {
-              return $this->render("approval_{$type}");
+            if ($gucchi) {
+                return $this->render("approval_{$type}");
             }
             return $this->render("approval");
         }
@@ -129,7 +129,7 @@ class GoalsController extends AppController
                 //send notify to coach
                 $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
                     $this->my_uid, $id);
-                if ($my_collabo_status['Collaborator']['valued_flg'] == Collaborator::STATUS_MODIFY) {
+                if ($my_collabo_status['Collaborator']['approval_status'] == Collaborator::STATUS_MODIFY) {
                     $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
                 }
             }
@@ -170,11 +170,11 @@ class GoalsController extends AppController
                     // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
                     // ただし重要度0のゴールであれば認定フラグは対象外にセットする
                     foreach ($this->request->data['Collaborator'] as $val) {
-                        $valued_flg = 0;
+                        $approval_status = 0;
                         if ($val['priority'] === "0") {
-                            $valued_flg = 2;
+                            $approval_status = 2;
                         }
-                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $valued_flg);
+                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $approval_status);
                     }
 
                     // 来期ゴールを編集した場合は、マイページの来期ゴール絞り込みページへ遷移
@@ -412,14 +412,14 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $collaborator = $this->request->data['Collaborator'];
-        // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
-        // そうでなければ再認定が必要なのでvalued_flg=0にする
-        $valued_flg = 0;
+        // もしpriority=0のデータであれば認定対象外なのでapproval_status=2を設定する
+        // そうでなければ再認定が必要なのでapproval_status=0にする
+        $approval_status = 0;
 
         if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
-            $valued_flg = 2;
+            $approval_status = 2;
         }
-        $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
+        $this->request->data['Collaborator']['approval_status'] = $approval_status;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
 
@@ -1147,7 +1147,7 @@ class GoalsController extends AppController
             if (!empty($ug_v['Collaborator'])) {
                 foreach ($ug_v['Collaborator'] as $c_v) {
                     $approval_status = null;
-                    switch ($c_v['valued_flg']) {
+                    switch ($c_v['approval_status']) {
                         case Collaborator::STATUS_UNAPPROVED:
                             $approval_status = __("Pending approval");
                             break;

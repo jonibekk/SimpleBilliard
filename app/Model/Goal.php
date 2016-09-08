@@ -530,7 +530,7 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             foreach ($goal['MyCollabo'] as $cb_info) {
                 if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
                 }
             }
         }
@@ -893,11 +893,11 @@ class Goal extends AppModel
                     'conditions' => ['MyFollow.user_id' => $this->my_uid]
                 ],
                 'Leader'            => [
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                 ],
                 'Collaborator'      => [
-                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
+                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.approval_status'],
                     'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
                 ],
             ]
@@ -948,8 +948,8 @@ class Goal extends AppModel
     function setFollowGoalApprovalFlag($goals)
     {
         foreach ($goals as $key => $goal) {
-            if (isset($goal['Collaborator']['valued_flg'])) {
-                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['valued_flg'];
+            if (isset($goal['Collaborator']['approval_status'])) {
+                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['approval_status'];
             }
         }
         return $goals;
@@ -1070,7 +1070,7 @@ class Goal extends AppModel
                 ],
                 'Leader'              => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
             ]
         ];
@@ -1089,7 +1089,7 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             foreach ($goal['MyCollabo'] as $cb_info) {
                 if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
                 }
             }
         }
@@ -1164,7 +1164,7 @@ class Goal extends AppModel
                 ],
                 'Leader'              => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
             ]
         ];
@@ -1183,7 +1183,7 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             foreach ($goal['MyCollabo'] as $cb_info) {
                 if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
                 }
             }
         }

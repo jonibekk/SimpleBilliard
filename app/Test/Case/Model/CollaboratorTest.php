@@ -124,31 +124,31 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->Goal->save($params);
         $next_goal_id = $this->Collaborator->Goal->getLastInsertID();
 
-        $valued_flg = 0;
+        $approval_status = 0;
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $current_goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
-            'priority'   => 1,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $current_goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 1,
         ];
         $this->Collaborator->create();
         $this->Collaborator->save($params);
 
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $next_goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
-            'priority'   => 1,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $next_goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 1,
         ];
         $this->Collaborator->create();
         $this->Collaborator->save($params);
 
         // 評価期間の絞り込み無し
-        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg);
+        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $approval_status);
         $ids = [];
         foreach ($goal_description as $v) {
             $ids[$v['Goal']['id']] = true;
@@ -157,7 +157,7 @@ class CollaboratorTest extends GoalousTestCase
         $this->assertTrue(isset($ids[$next_goal_id]));
 
         // 今期で絞る
-        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, true,
+        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $approval_status, true,
             EvaluateTerm::TYPE_CURRENT);
         $ids = [];
         foreach ($goal_description as $v) {
@@ -181,7 +181,6 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->User->save($params);
         $user_id = $this->Collaborator->User->getLastInsertID();
 
-
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
@@ -193,18 +192,18 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->Goal->save($params);
         $goal_id = $this->Collaborator->Goal->getLastInsertID();
 
-        $valued_flg = 0;
+        $approval_status = 0;
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
-            'priority'   => 0,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 0,
         ];
         $this->Collaborator->save($params);
 
-        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, false);
+        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $approval_status, false);
         $this->assertEmpty($goal_description);
     }
 
@@ -215,20 +214,20 @@ class CollaboratorTest extends GoalousTestCase
         $user_id = 1;
         $team_id = 1;
         $goal_id = 999;
-        $valued_flg = 0;
+        $approval_status = 0;
 
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
-            'valued_flg' => $valued_flg,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
         ];
         $this->Collaborator->save($params);
         $id = $this->Collaborator->getLastInsertID();
         $this->Collaborator->changeApprovalStatus($id, 1);
 
         $res = $this->Collaborator->findById($id);
-        $this->assertEquals(1, $res['Collaborator']['valued_flg']);
+        $this->assertEquals(1, $res['Collaborator']['approval_status']);
     }
 
     function testCountCollaboGoal()
@@ -243,7 +242,6 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->User->save($params);
         $user_id = $this->Collaborator->User->getLastInsertID();
 
-
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
@@ -255,17 +253,17 @@ class CollaboratorTest extends GoalousTestCase
         $this->Collaborator->Goal->save($params);
         $goal_id = $this->Collaborator->Goal->getLastInsertID();
 
-        $valued_flg = 0;
+        $approval_status = 0;
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
-            'priority'   => 1,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 1,
         ];
         $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
+        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -276,17 +274,17 @@ class CollaboratorTest extends GoalousTestCase
         $team_id = 1;
         $user_id = 1;
         $goal_id = 777;
-        $valued_flg = 3;
+        $approval_status = 3;
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
-            'priority'   => 1,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 1,
         ];
         $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
+        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -297,17 +295,17 @@ class CollaboratorTest extends GoalousTestCase
         $team_id = 1;
         $user_id = 1;
         $goal_id = 1;
-        $valued_flg = 3;
+        $approval_status = 3;
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
         ];
 //        $this->Collaborator->deleteAll(['Collaborator.team_id' => $team_id], false);
         $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
+        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -318,17 +316,17 @@ class CollaboratorTest extends GoalousTestCase
         $team_id = 1;
         $user_id = 1;
         $goal_id = 1;
-        $valued_flg = 0;
+        $approval_status = 0;
         $params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
-            'valued_flg' => $valued_flg,
-            'type'       => 0,
-            'priority'   => 0,
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 0,
         ];
         $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
+        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 

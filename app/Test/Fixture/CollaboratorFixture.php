@@ -74,7 +74,7 @@ class CollaboratorFixture extends CakeTestFixtureEx
             'unsigned' => false,
             'comment'  => '重要度(1〜5)'
         ),
-        'valued_flg'      => array(
+        'approval_status' => array(
             'type'     => 'integer',
             'null'     => false,
             'default'  => '0',

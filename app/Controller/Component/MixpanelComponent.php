@@ -199,8 +199,8 @@ class MixpanelComponent extends Object
                 Collaborator::STATUS_HOLD       => "Not evaluable",
                 Collaborator::STATUS_MODIFY     => "Pending modification",
             ];
-            if (isset($collabo['Collaborator']['valued_flg'])) {
-                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
+            if (isset($collabo['Collaborator']['approval_status'])) {
+                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['approval_status']];
             }
         }
         if ($kr_id) {

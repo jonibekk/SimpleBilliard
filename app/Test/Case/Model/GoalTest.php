@@ -794,7 +794,7 @@ class GoalTest extends GoalousTestCase
         $goal_id = 300;
         $goal_list[] = [
             'Goal'         => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id],
-            'Collaborator' => ['user_id' => $user_id, 'goal_id' => $goal_id, 'valued_flg' => 2],
+            'Collaborator' => ['user_id' => $user_id, 'goal_id' => $goal_id, 'approval_status' => 2],
         ];
         $res = $this->Goal->setFollowGoalApprovalFlag($goal_list);
         $this->assertArrayHasKey('owner_approval_flag', $res[0]['Goal']);

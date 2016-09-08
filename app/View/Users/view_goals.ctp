@@ -95,17 +95,17 @@
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type === 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                    Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
+                                    Collaborator::$STATUS[$goal['Leader'][0]['approval_status']]) ?>
                             <?php else: ?>
                                 <?php if ($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
-                                    <?php $valued_flg = $goal['Leader'][0]['valued_flg']; ?>
+                                    <?php $approval_status = $goal['Leader'][0]['approval_status']; ?>
                                 <?php else: ?>
                                     <?php $my_collabo = Hash::extract($goal['Collaborator'],
                                         "{n}[user_id={$user['User']['id']}]"); ?>
-                                    <?php $valued_flg = $my_collabo[0]['valued_flg']; ?>
+                                    <?php $approval_status = $my_collabo[0]['approval_status']; ?>
                                 <?php endif; ?>
                                 <?= __("Approval Status: %s",
-                                    Collaborator::$STATUS[$valued_flg]) ?>
+                                    Collaborator::$STATUS[$approval_status]) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">
