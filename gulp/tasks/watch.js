@@ -1,7 +1,7 @@
 import gulp from 'gulp'
 import config from '../config.js'
 
-gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch', 'react_goal_create:watch'])
+gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch', 'react_goal_create:watch', 'react_goal_approval:watch'])
 
 gulp.task('js:watch', () => {
   const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
@@ -53,6 +53,12 @@ gulp.task('react_goal_create:watch', () => {
   })
 })
 
+gulp.task('react_goal_approval:watch', () => {
+  const watcher = gulp.watch(config.react_goal_approval.watch_files, ['react_goal_approval'])
+
+  registerChangeWather(watcher)
+})
+
 gulp.task('css:watch', () => {
   const watcher = gulp.watch([...config.css.watch_files, ...config.less.watch_files], ['css'])
 
@@ -62,3 +68,11 @@ gulp.task('css:watch', () => {
     /* eslint-enable no-console */
   })
 })
+
+function registerChangeWather(watcher) {
+  watcher.on('change', event => {
+    /* eslint-disable no-console */
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+    /* eslint-enable no-console */
+  })
+}

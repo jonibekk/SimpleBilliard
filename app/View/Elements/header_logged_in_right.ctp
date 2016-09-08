@@ -175,7 +175,7 @@
         <?php endif; ?>
         <li class="header-nav-function-contents-list">
             <?= $this->Html->link(__('Goal Approval'),
-                ['controller' => 'goal_approval', 'action' => 'index'],
+                ['controller' => 'goals', 'action' => 'approval', 'list'],
                 ['class' => 'header-nav-function-contents-approvement'])
             ?>
             <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
