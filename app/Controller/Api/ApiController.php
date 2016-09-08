@@ -65,16 +65,16 @@ class ApiController extends BaseController
     public function _getResponse($status_code, $data = null, $html = null, $message = null, $validation_errors = null)
     {
         $ret = [];
-        if ($data) {
+        if ($data !== null) {
             $ret['data'] = $data;
         }
-        if ($html) {
+        if ($html !== null) {
             $ret['html'] = $html;
         }
-        if ($message) {
+        if ($message !== null) {
             $ret['message'] = $message;
         }
-        if ($validation_errors) {
+        if ($validation_errors !== null) {
             $ret['validation_errors'] = $validation_errors;
         }
         $this->response->type('json');
