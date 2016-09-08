@@ -32,6 +32,10 @@ class GoalLabel extends AppModel
     public $belongsTo = array(
         'Team',
         'Goal',
-        'Label',
+        'Label' => [
+            "counterCache" => true,
+            'counterScope' => ['GoalLabel.del_flg' => false]
+        ],
+
     );
 }
