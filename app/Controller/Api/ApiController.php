@@ -49,8 +49,18 @@ class ApiController extends BaseController
 //            throw new BadRequestException('Ajax Only!',400);
         }
         if (!$this->Auth->user()) {
-            throw new BadRequestException('You should be logged in.',401);
+            throw new BadRequestException('You should be logged in.', 401);
         }
+    }
+
+    protected function _getResponseSuccess($data, $html = null)
+    {
+        $this->_getResponse(200, $data, $html);
+    }
+
+    protected function _getResponseBadFail($message, $validationErrors = null)
+    {
+        $this->_getResponse(400, null, null, $message, $validationErrors);
     }
 
     /**
@@ -62,8 +72,13 @@ class ApiController extends BaseController
      *
      * @return CakeResponse|null
      */
-    public function _getResponse($status_code, $data = null, $html = null, $message = null, $validation_errors = null)
-    {
+    protected function _getResponse(
+        $status_code,
+        $data = null,
+        $html = null,
+        $message = null,
+        $validation_errors = null
+    ) {
         $ret = [];
         if ($data !== null) {
             $ret['data'] = $data;

@@ -33,7 +33,7 @@ class VisionsController extends ApiController
         $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
 
         $visions = am($team_visions, $group_visions);
-        return $this->_getResponse(200, $visions);
+        return $this->_getResponseSuccess($visions);
     }
 
     /**
