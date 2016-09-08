@@ -197,19 +197,7 @@ class TeamVision extends AppModel
         $team_visions = Hash::extract($this->getTeamVision($this->current_team_id, true), '{n}.TeamVision');
         $team_visions = Hash::insert($team_visions, '{n}.target_name', $team_name);
         $team_visions = Hash::insert($team_visions, '{n}.model', 'TeamVision');
-        ClassRegistry::init('GroupVision');
-        $model = $this;
-        $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
-            function () use ($model) {
-                $my_group_list = $model->Team->Group->MemberGroup->getMyGroupList();
-                $group_visions = Hash::extract($model->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
-                    '{n}.GroupVision');
-                foreach ($group_visions as $k => $v) {
-                    $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
-                }
-                return $group_visions;
-            }, 'team_info');
-        $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
+        $group_visions = $this->Team->GroupVision->getMyGroupVision();
         $visions = array_merge($team_visions, $group_visions);
         if (empty($visions)) {
             return null;

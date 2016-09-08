@@ -137,17 +137,26 @@ class GroupVision extends AppModel
      */
     function getMyGroupVision($with_img = false)
     {
-        $group_ids = $this->Group->MemberGroup->getMyGroupList();
-        $res = $this->getGroupVisionsByGroupIds(array_keys($group_ids));
+        $model = $this;
+        $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
+            function () use ($model) {
+                $my_group_list = $model->Group->MemberGroup->getMyGroupList();
+                $group_visions = Hash::extract($model->getGroupVisionsByGroupIds(array_keys($my_group_list)),
+                    '{n}.GroupVision');
+                foreach ($group_visions as $k => $v) {
+                    $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
+                }
+                return $group_visions;
+            }, 'user_data');
+        $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
 
         if ($with_img) {
             $upload = new UploadHelper(new View());
-            foreach ($res as $k => $v) {
-                $res[$k]['GroupVision']['img_url'] = $upload->uploadUrl($v['GroupVision'], 'GroupVision.photo',
-                    ['style' => 'medium']);
+            foreach ($group_visions as $k => $v) {
+                $group_visions[$k]['img_url'] = $upload->uploadUrl($v, 'GroupVision.photo', ['style' => 'medium']);
             }
         }
-        return $res;
+        return $group_visions;
     }
 
     /**
