@@ -58,7 +58,7 @@ class GoalsController extends AppController
 
         $types = ['list', 'detail'];
         if (in_array($type, $types)) {
-            return $this->render("approval_{$type}");
+            return $this->render("approval");
         }
 
         throw new NotFoundException("");

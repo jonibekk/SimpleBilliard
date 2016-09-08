@@ -10,11 +10,8 @@ import DockMonitor from 'redux-devtools-dock-monitor'
 import createReducer from '../reducers/index'
 
 // Container読み込み
-import Step1Container from '../containers/step1'
-import Step2Container from '../containers/step2'
-import Step3Container from '../containers/step3'
-import Step4Container from '../containers/step4'
-
+import ListContainer from '../containers/list'
+import DetailContainer from '../containers/detail'
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
     <LogMonitor theme="tomorrow" preserveScrollTop={false} />
@@ -44,11 +41,9 @@ export default class Routes extends Component {
       <Provider store={store}>
         <div>
           <Router history={history}>
-            <Route path="/goals/create">
-              <Route path="step1" component={Step1Container} />
-              <Route path="step2" component={Step2Container} />
-              <Route path="step3" component={Step3Container} />
-              <Route path="step4" component={Step4Container} />
+            <Route path="/goals/approval">
+              <Route path="list" component={ListContainer} />
+              <Route path="detail" component={DetailContainer} />
             </Route>
           </Router>
           {/* <DevTools / > */}
