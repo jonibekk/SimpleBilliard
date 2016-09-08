@@ -1,8 +1,6 @@
 <?php
 /**
- * Application level Controller
- * This file is application-wide controller file. You can put all
- * application-wide controller-related methods here.
+ * Api level Controller
  * Created by PhpStorm.
  * User: daikihirakata
  * Date: 9/6/16
