@@ -42,10 +42,10 @@ class ApiController extends BaseController
         $this->_setupAuth();
         $this->autoRender = false;
         if (!$this->request->is('ajax')) {
-//            throw new ForbiddenException('Ajax Only!',400);
+//            throw new BadRequestException('Ajax Only!',400);
         }
         if (!$this->Auth->user()) {
-            throw new ForbiddenException('Not Authorized!', 401);
+            throw new ForbiddenException('You should be logged in.');
         }
     }
 
@@ -77,6 +77,20 @@ class ApiController extends BaseController
         $this->response->body(json_encode($ret));
         $this->response->statusCode($status_code);
         return $this->response;
+    }
+
+    /**
+     * リクエストパラメータにidを含める事を強制する
+     * 例 /visions/123/test この場合の123がid
+     *
+     * @return bool
+     */
+    public function _requiredId()
+    {
+        if (!$this->request->param('id')) {
+            throw new BadRequestException();
+        }
+        return true;
     }
 
     /**

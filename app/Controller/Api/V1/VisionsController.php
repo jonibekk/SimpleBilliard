@@ -36,4 +36,29 @@ class VisionsController extends ApiController
         return $this->_getResponse(200, $visions);
     }
 
+    /**
+     * TODO 以下はあくまで仕様の説明の為に用意しているもの(最後削除する)
+     */
+    function test_get_only()
+    {
+        $this->request->allowMethod('get');
+    }
+
+    function test_put_only()
+    {
+        $this->_requiredId();
+        $this->request->allowMethod('put');
+    }
+
+    function test_post_only()
+    {
+        $this->request->allowMethod('post');
+    }
+
+    function test_post_with_id_only()
+    {
+        $this->_requiredId();
+        $this->request->allowMethod('post');
+    }
+
 }
