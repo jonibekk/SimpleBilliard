@@ -18,7 +18,13 @@ class ApiController extends BaseController
      * AppControllerを分割した場合、子クラスでComponent,Helper,Modelがマージされないため、
      * 中間Controllerでは以下を利用。末端Controllerは通常のCakeの規定通り
      */
-    private $merge_components = [];
+    private $merge_components = [
+        'Security' => [
+            'csrfUseOnce'  => false,
+            'csrfExpires'  => '+24 hour',
+            'validatePost' => false,
+        ],
+    ];
     private $merge_helpers = [];
     private $merge_uses = [];
 
