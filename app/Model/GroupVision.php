@@ -147,7 +147,7 @@ class GroupVision extends AppModel
                     $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
                 }
                 return $group_visions;
-            }, 'user_data');
+            }, 'team_info');
         $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
 
         if ($with_img) {
