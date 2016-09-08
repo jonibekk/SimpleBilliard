@@ -49,7 +49,7 @@ class ApiController extends BaseController
 //            throw new BadRequestException('Ajax Only!',400);
         }
         if (!$this->Auth->user()) {
-            throw new ForbiddenException('You should be logged in.');
+            throw new BadRequestException('You should be logged in.',401);
         }
     }
 
