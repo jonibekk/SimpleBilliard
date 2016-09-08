@@ -117,6 +117,9 @@ class TeamVision extends AppModel
             $is_default = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
             if ($res !== false) {
+                if ($with_img) {
+                    $res = $this->attachImgUrl($res);
+                }
                 return $res;
             }
         }
@@ -127,18 +130,25 @@ class TeamVision extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
-        if ($with_img) {
-            $upload = new UploadHelper(new View());
-            foreach ($res as $k => $v) {
-                $res[$k]['TeamVision']['img_url'] = $upload->uploadUrl($v['TeamVision'], 'TeamVision.photo',
-                    ['style' => 'medium']);
-            }
-        }
 
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
         }
+        if ($with_img) {
+            $res = $this->attachImgUrl($res);
+        }
         return $res;
+    }
+
+    function attachImgUrl($data)
+    {
+        $upload = new UploadHelper(new View());
+        foreach ($data as $k => $v) {
+            $data[$k]['TeamVision']['img_url'] = $upload->uploadUrl($v['TeamVision'], 'TeamVision.photo',
+                ['style' => 'medium']);
+        }
+
+        return $data;
     }
 
     function setTeamVisionActiveFlag($team_vision_id, $active_flg)
