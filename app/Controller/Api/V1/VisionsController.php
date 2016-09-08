@@ -42,23 +42,27 @@ class VisionsController extends ApiController
     function test_get_only()
     {
         $this->request->allowMethod('get');
+        return $this->_getResponse(200,'success');
     }
 
     function test_put_only()
     {
         $this->_requiredId();
         $this->request->allowMethod('put');
+        return $this->_getResponse(200,'success');
     }
 
     function test_post_only()
     {
         $this->request->allowMethod('post');
+        return $this->_getResponse(200,'success');
     }
 
     function test_post_with_id_only()
     {
         $this->_requiredId();
         $this->request->allowMethod('post');
+        return $this->_getResponse(200,'success');
     }
 
 }
