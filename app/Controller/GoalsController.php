@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * Goals Controller
