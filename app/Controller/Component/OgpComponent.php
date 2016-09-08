@@ -135,6 +135,13 @@ class OgpComponent extends Object
             $res['site_url'] = $ogp->site_url;
         }
 
+        // in case of no data, just add the title same as the domain name
+        $url_detail = parse_url($url);
+        if (!isset($ogp->title)) {
+            $res['title'] = $url_detail['host'];
+
+        }
+
         return $res;
     }
 
