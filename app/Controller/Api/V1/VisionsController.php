@@ -39,30 +39,62 @@ class VisionsController extends ApiController
     /**
      * TODO 以下はあくまで仕様の説明の為に用意しているもの(最後削除する)
      */
+
+    /**
+     * REST
+     */
+    function view($id)
+    {
+        return $this->_getResponse(200, 'Success! This action is view($id). ID:' . $id);
+    }
+
+    function add()
+    {
+        return $this->_getResponse(200, 'Success! This action is add()');
+    }
+
+    function edit($id)
+    {
+        return $this->_getResponse(200, 'Success! This action is edit($id). ID:' . $id);
+    }
+
+    function delete($id)
+    {
+        return $this->_getResponse(200, 'Success! This action is delete($id). ID:' . $id);
+    }
+
+    function update($id)
+    {
+        return $this->_getResponse(200, 'Success! This action is update($id). ID:' . $id);
+    }
+
+    /**
+     * RESTじゃないもの
+     */
     function test_get_only()
     {
         $this->request->allowMethod('get');
-        return $this->_getResponse(200,'success');
+        return $this->_getResponse(200, 'success');
     }
 
     function test_put_only()
     {
         $this->_requiredId();
         $this->request->allowMethod('put');
-        return $this->_getResponse(200,'success');
+        return $this->_getResponse(200, 'success');
     }
 
     function test_post_only()
     {
         $this->request->allowMethod('post');
-        return $this->_getResponse(200,'success');
+        return $this->_getResponse(200, 'success');
     }
 
     function test_post_with_id_only()
     {
         $this->_requiredId();
         $this->request->allowMethod('post');
-        return $this->_getResponse(200,'success');
+        return $this->_getResponse(200, 'success');
     }
 
 }
