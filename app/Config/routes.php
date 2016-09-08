@@ -38,7 +38,7 @@ Router::connect('/api/:apiVersion/:controller',
 );
 Router::connect('/api/:apiVersion/:controller/:id',
     ['action' => 'view', '[method]' => 'GET'],
-    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
 );
 Router::connect('/api/:apiVersion/:controller',
     ['action' => 'add', '[method]' => 'POST'],
@@ -46,15 +46,15 @@ Router::connect('/api/:apiVersion/:controller',
 );
 Router::connect('/api/:apiVersion/:controller/:id',
     ['action' => 'edit', '[method]' => 'PUT'],
-    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
 );
 Router::connect('/api/:apiVersion/:controller/:id',
     ['action' => 'delete', '[method]' => 'DELETE'],
-    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
 );
 Router::connect('/api/:apiVersion/:controller/:id',
     ['action' => 'update', '[method]' => 'POST'],
-    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
 );
 /**
  * With Id
@@ -65,6 +65,7 @@ Router::connect('/api/:apiVersion/:controller/:id/:action',
     [
         'apiVersion' => $apiVersions,
         'id'         => '[0-9]+',
+        'pass'       => ['id']
     ]
 );
 /**
