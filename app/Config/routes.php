@@ -33,17 +33,28 @@ $apiVersions = 'v1|v2|';
  * REST
  */
 Router::connect('/api/:apiVersion/:controller',
-    [
-        ['action' => 'index', 'method' => 'GET', 'id' => false],
-        ['action' => 'view', 'method' => 'GET', 'id' => true],
-        ['action' => 'add', 'method' => 'POST', 'id' => false],
-        ['action' => 'edit', 'method' => 'PUT', 'id' => true],
-        ['action' => 'delete', 'method' => 'DELETE', 'id' => true],
-        ['action' => 'update', 'method' => 'POST', 'id' => true]
-    ],
-    [
-        'apiVersion' => $apiVersions
-    ]
+    ['action' => 'index', '[method]' => 'GET'],
+    ['apiVersion' => $apiVersions]
+);
+Router::connect('/api/:apiVersion/:controller/:id',
+    ['action' => 'view', '[method]' => 'GET'],
+    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+);
+Router::connect('/api/:apiVersion/:controller',
+    ['action' => 'add', '[method]' => 'POST'],
+    ['apiVersion' => $apiVersions]
+);
+Router::connect('/api/:apiVersion/:controller/:id',
+    ['action' => 'edit', '[method]' => 'PUT'],
+    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+);
+Router::connect('/api/:apiVersion/:controller/:id',
+    ['action' => 'delete', '[method]' => 'DELETE'],
+    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
+);
+Router::connect('/api/:apiVersion/:controller/:id',
+    ['action' => 'update', '[method]' => 'POST'],
+    ['apiVersion' => $apiVersions,'id' => '[0-9]+','pass'=>['id']]
 );
 /**
  * With Id
