@@ -45,6 +45,8 @@ class ApiController extends BaseController
         parent::beforeFilter();
         $this->_setupAuth();
         $this->autoRender = false;
+        //htmlを出力してしまうためdebugを無効化
+        Configure::write('debug',0);
         if (!$this->request->is('ajax')) {
 //            throw new BadRequestException('Ajax Only!',400);
         }

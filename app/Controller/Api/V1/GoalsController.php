@@ -10,9 +10,4 @@ App::uses('ApiController', 'Controller/Api');
 /** @noinspection PhpUndefinedClassInspection */
 class GoalsController extends ApiController
 {
-    function index()
-    {
-        return json_encode(['version' => '1']);
-    }
-
 }
