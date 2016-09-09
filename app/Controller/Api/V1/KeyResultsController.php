@@ -1,6 +1,5 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * Created by PhpStorm.
@@ -8,16 +7,17 @@ App::uses('ApiController', 'Controller/Api');
  * Date: 9/6/16
  * Time: 16:38
  *
- * @property Goal $Goal
+ * @property KeyResult $KeyResult
  */
-class GoalsController extends ApiController
+class KeyResultsController extends ApiController
 {
     public $uses = [
-        'Goal'
+        'KeyResult'
     ];
 
     function validation()
     {
-        return $this->_getResponseDefaultValidation($this->Goal);
+        return $this->_getResponseDefaultValidation($this->KeyResult);
     }
+
 }
