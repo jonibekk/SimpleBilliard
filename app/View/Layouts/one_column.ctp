@@ -57,13 +57,13 @@ if (!isset($with_header_menu)) {
 
 <!-- START import react code for goal create -->
 <?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'create'): ?>
-<?= $this->Html->script('react_goal_create_app.min')?>
+<?= $this->Html->script('/compiled_assets/js/react_goal_create_app.min')?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
 <!-- START import react code for goal approval -->
 <?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'approval'): ?>
-<?= $this->Html->script('react_goal_approval_app.min')?>
+<?= $this->Html->script('/compiled_assets/js/react_goal_approval_app.min')?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
