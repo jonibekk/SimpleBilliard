@@ -13,8 +13,8 @@ export default class Step1Component extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.goal.toNextPage) {
-      browserHistory.push(nextProps.goal.toNextPage)
+    if (nextProps.goal.page != Page.STEP1) {
+      browserHistory.push(nextProps.goal.page)
     }
   }
 
@@ -24,7 +24,7 @@ export default class Step1Component extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    this.props.validateGoal(this.getInputDomData())
+    this.props.validateGoal(this.getInputDomData(), Page.STEP1)
   }
 
   render() {
