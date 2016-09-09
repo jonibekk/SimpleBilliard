@@ -8,9 +8,6 @@ const initialState = {
 }
 
 export default function goal(state = initialState, action) {
-  console.log("reducer goal start")
-  console.log(state);
-  console.log(action);
   switch (action.type) {
     case types.VALIDATE_GOAL:
       return Object.assign({}, state)
