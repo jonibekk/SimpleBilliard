@@ -131,7 +131,7 @@ const config =  {
     watch_files: [assets_dir + '/css/**/*.css', '!' + assets_dir + '/css/goalous.min.css'],
     output: {
       file_name: 'goalous',
-      path: compiled_assets_dir + '/css'
+      path: assets_dir + '/css'
     }
   },
   less: {

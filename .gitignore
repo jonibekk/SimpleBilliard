@@ -43,6 +43,7 @@ npm-debug.log
 /app/webroot/css/goalous.css.map
 /app/webroot/js/*.js.map
 # for public compiled assets
+/app/webroot/css/goalous.min.css
 /app/webroot/compiled_assets/*
 
 # for Translation | 翻訳関連
