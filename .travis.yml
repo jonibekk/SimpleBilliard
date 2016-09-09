@@ -130,7 +130,7 @@ script:
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
   - cd ../
-  - if [ $TRAVIS_EVENT_TYPE = "push" ] && ( [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "hotfix-isao" ] || [ $TRAVIS_BRANCH = "topic4965-improve-assets-file-structure-for-deploy" ] ) ; then
+  - if [ $TRAVIS_EVENT_TYPE = "push" ] && ( [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "hotfix-isao" ] ) ; then
     nvm install 5.8.0;
     nvm use 5.8.0;
     npm install -g gulp-cli;
@@ -236,13 +236,3 @@ deploy:
     local_dir: s3_upload_dist
     on:
       branch: hotfix
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: "goalous-compiled-assets"
-    skip_cleanup: true
-    upload-dir: develop
-    local_dir: s3_upload_dist
-    on:
-      branch: topic4965-improve-assets-file-structure-for-deploy
