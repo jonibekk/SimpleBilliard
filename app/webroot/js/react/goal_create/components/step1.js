@@ -24,8 +24,6 @@ export default class Step1Component extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    console.log("handleSubmit data")
-    console.log(this.getInputDomData())
     this.props.validateGoal(this.getInputDomData())
   }
 
