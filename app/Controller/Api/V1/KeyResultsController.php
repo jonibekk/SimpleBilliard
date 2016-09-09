@@ -15,7 +15,7 @@ class KeyResultsController extends ApiController
         'KeyResult'
     ];
 
-    function validation()
+    function post_validate()
     {
         return $this->_getResponseDefaultValidation($this->KeyResult);
     }

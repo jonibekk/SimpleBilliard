@@ -16,7 +16,7 @@ class GoalsController extends ApiController
         'Goal'
     ];
 
-    function validation()
+    function post_validate()
     {
         return $this->_getResponseDefaultValidation($this->Goal);
     }
