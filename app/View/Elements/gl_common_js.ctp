@@ -15,10 +15,10 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php
-echo $this->Html->script('ng_vendors.min');
-echo $this->Html->script('vendors.min');
-echo $this->Html->script('goalous.min');
-echo $this->Html->script('ng_app.min');
+echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
+echo $this->Html->script('/compiled_assets/js/vendors.min');
+echo $this->Html->script('/compiled_assets/js/goalous.min');
+echo $this->Html->script('/compiled_assets/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
