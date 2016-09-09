@@ -3,7 +3,7 @@ import {post} from "./common_actions";
 
 export function validateGoal(data) {
   return dispatch => {
-    post('/api/v1/goals/validates', data, null,
+    post('/api/v1/goals/validate', data, null,
       response => {
         dispatch(toNextPage())
       },
