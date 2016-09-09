@@ -31,7 +31,7 @@
         </div>
 
 
-        <a href="">Add description</a>
+        <a href=""><i class="fa fa-plus-circle" aria-hidden="true"></i> <span class="goals-create-interactive-link">Add description</span></a>
         <textarea class="form-control goals-create-input-form tkr-description" name="" id="" cols="30" rows="10"></textarea>
 
         <a class="goals-create-btn-next btn" href="/goals/approval/list/gucchi">Save and share</a>

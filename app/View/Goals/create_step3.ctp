@@ -23,16 +23,16 @@
             <option value="">Next Term(Oct 1, 2016 - Mar 31, 2016)</option>
         </select>
 
-        <a class="goals-create-view-more" href=""><i class="fa fa-eye" aria-hidden="true"></i> View more options</a>
+        <a class="goals-create-view-more" href=""><i class="fa fa-eye" aria-hidden="true"></i> <span class="goals-create-interactive-link">View more options</span></a>
 
         <label class="goals-create-input-label">Description</label>
-        <textarea class="form-control goals-create-input-form" name="" id="" cols="30" rows="10"></textarea>
+        <textarea class="goals-create-input-form mod-textarea" name="" id=""></textarea>
 
         <label class="goals-create-input-label">End date</label>
-        <input class="form-control goals-create-input-form" type="date">
+        <input class="goals-create-input-form" type="date">
 
         <label class="goals-create-input-label">Weight</label>
-        <select class="form-control goals-create-input-form" name="" id="">
+        <select class="goals-create-input-form" name="" id="">
             <option value="0">0 (認定対象外)</option>
             <option value="1">1 (とても低い)</option>
             <option value="2">2</option>

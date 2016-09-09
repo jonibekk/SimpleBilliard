@@ -18,7 +18,7 @@
                 <a class="goals-create-dispaly-vision-text-more">more</a>
             </div>
         </div>
-        <a class="goals-create-dispaly-vision-see-other"><i class="fa fa-refresh" aria-hidden="true"></i> See Other 7</a>
+        <a class="goals-create-dispaly-vision-see-other"><i class="fa fa-refresh" aria-hidden="true"></i> <span  class="goals-create-interactive-link">See Other 7</span></a>
 
     </div>
 
@@ -27,7 +27,7 @@
         <input class="form-control goals-create-input-form" type="text" placeholder="e.g. Get goalous users">
     </form>
 
-    <a class="goals-create-show-sample"><i class="fa fa-eye" aria-hidden="true"></i> <span class="goals-create-show-sample-text">Show sample</span></a>
+    <a class="goals-create-show-sample"><i class="fa fa-eye" aria-hidden="true"></i> <span class="goals-create-interactive-link">Show sample</span></a>
 
     <div class="row">
         <a class="goals-create-btn-next btn" href="/goals/create/step2/gucchi">Next →</a>

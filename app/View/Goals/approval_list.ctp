@@ -15,7 +15,8 @@
                     <p class="goals-approval-list-item-info-goal-attr">Leader・Evaluated</p>
                 </div>
 
-                <p class="goals-approval-list-item-detail">&gt;</p>
+                <p class="goals-approval-list-item-detail"><i class="fa fa-angle-right" aria-hidden="true"></i>
+                </p>
             </a>
         </li>
         <? } ?>
