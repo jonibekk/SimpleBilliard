@@ -25,7 +25,7 @@ class VisionsController extends ApiController
      *
      * @return string
      */
-    function index()
+    function get_list()
     {
         $team_visions = Hash::insert(
             Hash::extract($this->TeamVision->getTeamVision($this->current_team_id, true, true),
@@ -43,17 +43,17 @@ class VisionsController extends ApiController
     /**
      * REST
      */
-    function view($id)
+    function get_detail($id)
     {
         return $this->_getResponse(200, 'Success! This action is view($id). ID:' . $id);
     }
 
-    function add()
+    function post()
     {
         return $this->_getResponse(200, 'Success! This action is add()');
     }
 
-    function edit($id)
+    function put($id)
     {
         return $this->_getResponse(200, 'Success! This action is edit($id). ID:' . $id);
     }
@@ -63,23 +63,18 @@ class VisionsController extends ApiController
         return $this->_getResponse(200, 'Success! This action is delete($id). ID:' . $id);
     }
 
-    function update($id)
-    {
-        return $this->_getResponse(200, 'Success! This action is update($id). ID:' . $id);
-    }
-
     /**
      * RESTじゃないもの
      */
-    function test_get_only()
+    function get_test_get_only()
     {
         $this->request->allowMethod('get');
         return $this->_getResponse(200, 'success');
     }
 
-    function test_post_with_id_only($id)
+    function put_test_post_with_id_only($id)
     {
-        $this->request->allowMethod('post');
+        $this->request->allowMethod('put');
         $this->_requiredId($id);
         return $this->_getResponse(200, 'success');
     }
