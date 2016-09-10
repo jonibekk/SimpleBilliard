@@ -118,7 +118,6 @@ class Goal extends AppModel
         'name'             => [
             'isString'  => [
                 'rule'       => ['isString',],
-                'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
