@@ -62,6 +62,10 @@ Router::connect('/api/:apiVersion/:controller/:id/:action',
     ['prefix' => 'get', '[method]' => 'GET'],
     ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
 );
+Router::connect('/api/:apiVersion/:controller/:action',
+    ['prefix' => 'post', '[method]' => 'POST'],
+    ['apiVersion' => $apiVersions]
+);
 Router::connect('/api/:apiVersion/:controller/:id/:action',
     ['prefix' => 'post', '[method]' => 'POST'],
     ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
