@@ -1,10 +1,6 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  submit_button_is_enabled: false,
-  selected_term: '',
-  selected_start_month: '',
-  selected_timezone: '',
   checking_term: false,
   is_exception: false,
   exception_message: '',
@@ -14,26 +10,6 @@ const initialState = {
 
 export default function term(state = initialState, action) {
   switch (action.type) {
-    case types.SELECT_TERM:
-      return Object.assign({}, state, {
-        selected_term: action.selected_term
-      })
-    case types.SELECT_START_MONTH:
-      return Object.assign({}, state, {
-        selected_start_month: action.selected_start_month
-      })
-    case types.SELECT_TIMEZONE:
-      return Object.assign({}, state, {
-        selected_timezone: action.selected_timezone
-      })
-    case types.CAN_SUBMIT_TERM:
-      return Object.assign({}, state, {
-        submit_button_is_enabled: true
-      })
-    case types.CAN_NOT_SUBMIT_TERM:
-      return Object.assign({}, state, {
-        submit_button_is_enabled: false
-      })
     case types.CHECKING_TERM:
       return Object.assign({}, state, {
         checking_term: true

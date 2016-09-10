@@ -1,6 +1,8 @@
 import axios from 'axios'
+import FormData from 'form-data'
 
 export function getBaseUrl() {
+  // テストにおけるモックのURLを定義
   if (typeof cake === "undefined") {
     return 'http://localhost'
   } else {
@@ -51,11 +53,14 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
     'data[User][local_date]': 'local_date',
-    'data[User][birth_day]': 'birth_day'
+    'data[User][birth_day]': 'birth_day',
+    'data[User][privacy_policy]': 'privacy_policy'
   }
 
   for (const key in map) {
-    result[map[key]] = before_mapped_messages[key]
+    if(typeof before_mapped_messages[key] !== "undefined") {
+      result[map[key]] = before_mapped_messages[key]
+    }
   }
   return result
 }

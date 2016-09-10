@@ -13,7 +13,7 @@ class UserFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'                 => array(
+        'id'                    => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -21,7 +21,7 @@ class UserFixture extends CakeTestFixtureEx
             'key'      => 'primary',
             'comment'  => 'ユーザID'
         ),
-        'password'           => array(
+        'password'              => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -30,7 +30,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => 'パスワード(暗号化)',
             'charset' => 'utf8mb4'
         ),
-        'password_token'     => array(
+        'password_token'        => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -40,7 +40,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => 'パスワードトークン(パスワード失念時の認証用)',
             'charset' => 'utf8mb4'
         ),
-        '2fa_secret'         => array(
+        '2fa_secret'            => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -49,20 +49,20 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '２要素認証シークレットキー',
             'charset' => 'utf8mb4'
         ),
-        'password_modified'  => array(
+        'password_modified'     => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => false,
             'comment'  => 'パスワード最終更新日'
         ),
-        'no_pass_flg'        => array(
+        'no_pass_flg'           => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => 'パスワード未使用フラグ(ソーシャルログインのみ利用時)'
         ),
-        'photo_file_name'    => array(
+        'photo_file_name'       => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -70,6 +70,14 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => 'プロフィール画像',
             'charset' => 'utf8mb4'
         ),
+        'cover_photo_file_name' => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'charset' => 'utf8mb4'
+        ),
+
         'primary_email_id'   => array(
             'type'     => 'biginteger',
             'null'     => false,
@@ -228,22 +236,25 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '英ミドルネーム',
             'charset' => 'utf8mb4'
         ),
-        'setup_complete_flg' => array('type'    => 'boolean',
-                                      'null'    => false,
-                                      'default' => '0',
-                                      'comment' => 'セットアップが完了したかどうか'
+        'setup_complete_flg' => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => 'セットアップが完了したかどうか'
         ),
-        'created'            => array('type'     => 'integer',
-                                      'null'     => true,
-                                      'default'  => null,
-                                      'unsigned' => true,
-                                      'comment'  => 'ユーザーデータを登録した日付時刻'
+        'created'            => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'ユーザーデータを登録した日付時刻'
         ),
-        'modified'           => array('type'     => 'integer',
-                                      'null'     => true,
-                                      'default'  => null,
-                                      'unsigned' => true,
-                                      'comment'  => 'ユーザーデータを最後に更新した日付時刻'
+        'modified'           => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'ユーザーデータを最後に更新した日付時刻'
         ),
         'indexes'            => array(
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),

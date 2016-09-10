@@ -242,7 +242,7 @@ class UsersController extends AppController
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
-            if($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
+            if ($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
@@ -281,10 +281,6 @@ class UsersController extends AppController
 
     public function register_with_invite()
     {
-        //現状、ローカルと本番環境以外でbasic認証を有効にする
-        if (!(ENV_NAME == "local" || ENV_NAME == "www") && !isset($this->request->params['named']['invite_token'])) {
-            $this->_setBasicAuth();
-        }
 
         $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
         if (!($step === 1 or $step === 2)) {
@@ -312,7 +308,7 @@ class UsersController extends AppController
         $this->set('team_name', $team['Team']['name']);
 
         //batch case
-        if($user = $this->User->getUserByEmail($invite['Invite']['email'])) {
+        if ($user = $this->User->getUserByEmail($invite['Invite']['email'])) {
             // Set user info to view value
             $this->set('first_name', $user['User']['first_name']);
             $this->set('last_name', $user['User']['last_name']);
@@ -359,7 +355,7 @@ class UsersController extends AppController
         //sessionデータとpostのデータとマージ
         $data = Hash::merge($this->Session->read('data'), $this->request->data);
         //batch case
-        if($user) {
+        if ($user) {
             $user_id = $user['User']['id'];
 
             // Disabled user email validation
@@ -367,7 +363,7 @@ class UsersController extends AppController
             $email = $this->User->Email->getNotVerifiedEmail($user_id);
             $email_from_email_table = viaIsSet($email['Email']['email']);
             $email_from_invite_table = $invite['Invite']['email'];
-            if($email_from_email_table === $email_from_invite_table) {
+            if ($email_from_email_table === $email_from_invite_table) {
                 unset($this->User->Email->validate['email']);
             }
             // Set user info to register data
@@ -669,6 +665,7 @@ class UsersController extends AppController
                             $this->request->data['NotifySetting']['mobile']));
             }
             $this->User->id = $this->Auth->user('id');
+            //ユーザー情報更新
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
                 //ログインし直し。
@@ -679,6 +676,7 @@ class UsersController extends AppController
                 $this->updateSetupStatusIfNotCompleted();
 
                 $this->Pnotify->outSuccess(__("Saved user setting."));
+                $this->redirect('/users/settings');
             } else {
                 $this->Pnotify->outError(__("Failed to save user setting."));
             }
@@ -804,6 +802,11 @@ class UsersController extends AppController
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
+            //PreRegistered User
+            if ($this->Invite->isUserPreRegistered($token)) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL);
+                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
+            }
 
             // By batch setup
             if ($this->Invite->isByBatchSetup($token)) {
@@ -845,6 +848,28 @@ class UsersController extends AppController
             $with_group = (isset($query['with_group']) && $query['with_group']);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group);
         }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * select2用に加工したユーザ情報を取得
+     *
+     * @param $userId
+     *
+     * @return CakeResponse|null
+     */
+    function ajax_select2_get_user_detail($userId)
+    {
+        if (empty($userId) || !is_numeric($userId)) {
+            return $this->_ajaxGetResponse([]);
+        }
+        // ユーザ詳細情報取得
+        $user = $this->User->getDetail($userId);
+        if (empty($user)) {
+            return $this->_ajaxGetResponse([]);
+        }
+        // レスポンス用にユーザ詳細情報を加工
+        $res = $this->User->makeSelect2User($user);
         return $this->_ajaxGetResponse($res);
     }
 

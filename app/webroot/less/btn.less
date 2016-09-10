@@ -81,7 +81,7 @@
 }
 
 .post-contents .btn-link {
-  color: #ddd;
+  color: @subColor10;
 }
 
 .comment-text .btn-link {
@@ -264,7 +264,7 @@
   display: inline-block;
   height: 48px;
   padding: 0 4px;
-  color: @lightGray;
+  color: @subColor10;
   font-size: @fontSmall;
   text-decoration: none;
   &:hover,
@@ -272,7 +272,7 @@
   &:active,
   &:focus {
     text-decoration: none;
-    color: @lightGray;
+    color: @subColor10;
   }
 }
 
@@ -302,5 +302,24 @@
   &:focus {
     text-decoration: none;
     color: @crimsonPink;
+  }
+}
+
+.btn-pink-radius {
+  .btn;
+  border-color: @basicPink;
+  color: @basicPink;
+  display: inline-block;
+  padding: 8px 32px;
+  border-radius: 8px;
+  text-align: center;
+  background: @backgroundColor1;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    color: @whiteColor;
+    background: @basicPink;
+    text-decoration: none;
   }
 }

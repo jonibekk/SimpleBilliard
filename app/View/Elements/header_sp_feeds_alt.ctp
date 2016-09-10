@@ -8,9 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-
-<!-- START app/View/Elements/header_sp_feeds_alt.ctp -->
-<div class="col sp-feed-alt height_40px col-xxs-12 hidden-md hidden-lg"
+<div class="col sp-feed-alt height_40px col-xxs-12 hidden-md hidden-lg mb_12px"
      id="SubHeaderMenu">
     <div class="col col-xxs-6 text-align_r">
         <a <?php if (isset($this->request->params['after_click'])): ?>href="after_click:SubHeaderMenuFeed"<?php endif ?>
@@ -26,4 +24,3 @@
         </a>
     </div>
 </div>
-<!-- END app/View/Elements/header_sp_feeds_alt.ctp -->

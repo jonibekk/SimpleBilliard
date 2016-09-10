@@ -1,15 +1,15 @@
 import { connect } from 'react-redux'
-import { postPassword, inputPassword } from '../actions/password_actions'
+import * as actions from '../actions/password_actions'
 import PasswordComponent from '../components/password'
 
 function mapStateToProps(state) {
-  return { password: state.password }
+  return { password: state.password, validate: state.validate }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    inputPassword: (password) => dispatch(inputPassword(password)),
-    postPassword: (password) => dispatch(postPassword(password))
+    postPassword: password => dispatch(actions.postPassword(password)),
+    dispatch: (action) => dispatch(action)
   }
 }
 

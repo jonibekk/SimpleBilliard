@@ -3,15 +3,15 @@
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "www.goalous.com.",
+        "Name": "dev.goalous.com.",
         "AliasTarget": {
-          "DNSName": "dualstack.gls-web2-1582319908.ap-northeast-1.elb.amazonaws.com.",
+          "DNSName": "dualstack.gls-maintenance-1186792314.ap-northeast-1.elb.amazonaws.com.",
           "HostedZoneId": "Z14GRHDCWA56QT",
           "EvaluateTargetHealth": true
         },
         "Type": "A",
         "Failover": "PRIMARY",
-        "SetIdentifier": "www2-Primary"
+        "SetIdentifier": "dev-Primary"
       }
     }
   ]

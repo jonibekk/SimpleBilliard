@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.9.1",
+    "form-data": "^1.0.1",
     "react": "^0.14.7",
     "react-bootstrap": "^0.28.5",
     "react-dom": "^0.14.7",
@@ -12,7 +13,8 @@
     "react-router": "^2.0.1",
     "react-router-redux": "^4.0.0",
     "redux": "^3.3.1",
-    "redux-thunk": "^2.0.1"
+    "redux-thunk": "^2.0.1",
+    "validator": "^5.5.0"
   },
   "devDependencies": {
     "accord": "^0.24.1",
@@ -60,7 +62,6 @@
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
     "redux-mock-store": "^1.1.2",
-    "redux-thunk": "^2.1.0",
     "require-dir": "^0.3.0",
     "rmdir": "^1.2.0",
     "run-sequence": "^1.2.1",
@@ -79,7 +80,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "test": "mocha --compilers js:babel-register ./app/webroot/js/react/**/__test__/**/*.spec.js --recursive",
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register ./app/webroot/js/react/**/__test__/**/*.spec.js --recursive",
     "test:watch": "npm test -- --watch"
   },
   "repository": {

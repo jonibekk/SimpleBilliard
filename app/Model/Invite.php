@@ -194,6 +194,32 @@ class Invite extends AppModel
         return false;
     }
 
+    function isUserPreRegistered($token)
+    {
+        $invite = $this->getByToken($token);
+        if (!isset($invite['Invite']['email'])) {
+            return false;
+        }
+        if (empty($email = $this->ToUser->Email->find('first', [
+            'conditions' => [
+                'email'          => $invite['Invite']['email'],
+                'email_verified' => false
+            ]
+        ]))) {
+            return false;
+        }
+
+        if(empty($this->ToUser->find('first',[
+            'conditions' => [
+                'id'          => $email['Email']['user_id'],
+                'active_flg' => false
+            ]
+        ]))){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param $invite_id
      *

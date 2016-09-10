@@ -1,15 +1,15 @@
 import { connect } from 'react-redux'
-import { postUserName, inputUserName } from '../actions/user_name_actions'
+import * as actions from '../actions/user_name_actions'
 import UserNameComponent from '../components/user_name'
 
 function mapStateToProps(state) {
-  return { user_name: state.user_name }
+  return { user_name: state.user_name, validate: state.validate }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    postUserName: (user) => { dispatch(postUserName(user)) },
-    inputUserName: (user) => { dispatch(inputUserName(user)) }
+    postUserName: user => dispatch(actions.postUserName(user)),
+    dispatch: action => dispatch(action)
   }
 }
 

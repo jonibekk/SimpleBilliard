@@ -1334,6 +1334,7 @@ ul.example-indent {
 }
 
 .feed_img_only_one a img {
+    position: absolute;
     top: -100%;
     bottom: -100%;
     margin: auto;
@@ -3171,4 +3172,10 @@ Temporary Properties - YOU MUST FIX
 
 .add-vision-button.disabled i {
     color: #aaa;
+}
+
+/* メッセージの送信ボタンとintercomのボタンが重なってしまうため、
+   緊急対応としてintercomをdisabledにする(あとで戻す) */
+#intercom-container {
+  display: none;
 }

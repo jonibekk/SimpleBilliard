@@ -32,16 +32,12 @@
     echo $this->fetch('css');
 
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
-    echo $this->Html->script('goalous.prerender.min');
+    echo $this->Html->script('/compiled_assets/js/goalous.prerender.min');
 
     ?>
     <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
         <style>
             @media screen and (max-width: 991px) {
-                .container {
-                    margin-top: 50px;
-                }
-
                 #jsLeftSideContainer {
                     top: 100px;
                 }

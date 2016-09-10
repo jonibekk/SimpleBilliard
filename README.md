@@ -6,19 +6,25 @@ Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://githu
 
 |  | TravisCI | Coveralls | Code Climate |  
 |:---|:---|:---|:---|
-| master | [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=master) | - |
-| develop | [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=develop) | [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed) |
+| master | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous/badge.svg?branch=master&service=github&t=p8yPfl)](https://coveralls.io/github/IsaoCorp/goalous?branch=master) | - |
+| develop | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous/badge.svg?branch=develop&service=github&t=p8yPfl)](https://coveralls.io/github/IsaoCorp/goalous?branch=develop) | [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed) |
 
 ## Progress
-- [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
+- [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous) ... Goalousの開発状況はこのかんばんボードで管理しています。
 
 ## What's Goalous ?
 GoalousはIsao発の「最強にオープンな社内SNS」です。
 
-- [本番環境](https://www.goalous.com)
-- [リリース環境](https://isao.goalous.com)
-- [ステージング環境](https://stg2.goalous.com)
-- [ホットフィックス](https://hotfix2.goalous.com)
+| name | url | branch | branch protected | build assets by CI | auto deploy | test by CI | assets dir name | Basic auth |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| 本番環境 | [www.goalous.com](https://www.goalous.com) | master | ◯ | × | × | ◯ | stage | - |
+| ISAO環境 | [isao.goalous.com](https://isao.goalous.com) | master-isao | ◯ | × | × | ◯ | stage-isao | id: isao, pass: Vh6RncG8 (only user registration)|
+| ステージング環境 | [stg.goalous.com](https://stg.goalous.com) | stage | ◯ | ◯ | ◯ | ◯ | stage | id: stg, pass: c2WgdYaL |
+| ISAOステージング環境 | [stg-isao.goalous.com](https://stg-isao.goalous.com) | stage-isao | ◯ | ◯ | ◯ | ◯ | stage-isao | id: stg-isao, pass: X2hkcfqD |
+| ホットフィックス環境 | [hotfix.goalous.com](https://hotfix.goalous.com) | hotfix | × | ◯ | ◯ | ◯ | stage | id: hotfix, pass: yD69KAEt |
+| 開発環境 | [dev.goalous.com](https://dev.goalous.com) | develop | × | × | ◯ | ◯ | - | id: dev, pass: a5PxhqtL |
+| インド開発環境 | [dev-ind.goalous.com](https://dev-ind.goalous.com) | dev-ind | × | × | ◯ | ◯ | - | id: dev-ind, pass: W4hViXcb |
+| その他 | - | other | × | × | - | ◯ | - |
 
 ## ドキュメンテーション
 - すべてのドキュメントはページからアクセスできるようにしてあります。
@@ -46,6 +52,7 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
   - [GitHub運用について](docs/guidelines/operations.md#github)
   - [Waffle.ioの運用について](docs/guidelines/operations.md#waffleio)
   - [コードレビューについて](docs/guidelines/operations.md#review)
+  - [ブランチ運用について](docs/guidelines/operations.md#operation_branches)
   - [サポート用クエリ集](docs/guidelines/operations.md#operation_queries)
 
 - [コーディングガイドライン](docs/guidelines/coding.md)
@@ -82,6 +89,7 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 - [システム概要](docs/design_specifications/SystemOverview.md)
 - [ER図](docs/design_specifications/ERD.md)
 - [要件定義](http://bit.ly/1TnQZfX) **Last Edit - 2015年7月**
+- [API仕様](docs/design_specifications/API.md)
 
 #### 機能一覧
 - ゴール
@@ -123,3 +131,4 @@ sh ./etc/local/update_app.sh
 ```
 browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
 ```
+

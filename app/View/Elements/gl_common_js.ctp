@@ -15,10 +15,10 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php
-echo $this->Html->script('ng_vendors.min');
-echo $this->Html->script('vendors.min');
-echo $this->Html->script('goalous.min');
-echo $this->Html->script('ng_app.min');
+echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
+echo $this->Html->script('/compiled_assets/js/vendors.min');
+echo $this->Html->script('/compiled_assets/js/goalous.min');
+echo $this->Html->script('/compiled_assets/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
@@ -32,6 +32,10 @@ echo $this->Html->script('ng_app.min');
     <p class="ribbon ribbon-staging">Staging</p>
 <?php elseif (ENV_NAME == "hotfix"): ?>
     <p class="ribbon ribbon-hotfix">Hotfix</p>
+<?php elseif (ENV_NAME == "dev"): ?>
+    <p class="ribbon ribbon-develop">Develop</p>
+<?php elseif (ENV_NAME == "dev-ind"): ?>
+    <p class="ribbon ribbon-dev-india">Dev India</p>
 <?php elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">Local</p>
 <?php endif; ?>

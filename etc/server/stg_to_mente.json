@@ -3,7 +3,7 @@
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "stg2.goalous.com.",
+        "Name": "stg.goalous.com.",
         "AliasTarget": {
           "DNSName": "dualstack.gls-maintenance-1186792314.ap-northeast-1.elb.amazonaws.com.",
           "HostedZoneId": "Z14GRHDCWA56QT",
@@ -11,7 +11,7 @@
         },
         "Type": "A",
         "Failover": "PRIMARY",
-        "SetIdentifier": "stg2-Primary"
+        "SetIdentifier": "stg-Primary"
       }
     }
   ]
