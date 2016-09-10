@@ -1,11 +1,12 @@
 const assets_dir = './app/webroot'
+const compiled_assets_dir = './app/webroot/compiled_assets'
 const config =  {
   dest: assets_dir + '/dest',
   js: {
     src: [assets_dir + '/js/gl_basic.js'],
     output: {
       file_name: 'goalous',
-      path: assets_dir + '/js',
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [assets_dir + '/js/gl_basic.js']
   },
@@ -15,7 +16,7 @@ const config =  {
     ],
     output: {
       file_name: 'goalous.prerender',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     }
   },
   js_vendor: {
@@ -49,7 +50,7 @@ const config =  {
     ],
     output: {
       file_name: 'vendors',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [assets_dir + '/js/vendor/*.js']
   },
@@ -64,7 +65,7 @@ const config =  {
     ],
     output: {
       file_name: 'ng_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [
       assets_dir + '/js/vendor/angular/**/*.js'
@@ -81,11 +82,11 @@ const config =  {
       assets_dir + '/js/vendor/angular/angular-pnotify.js',
       assets_dir + '/js/vendor/angular/angular-sanitize.js',
       assets_dir + '/js/vendor/angular/pusher-angular.min.js',
-      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js',
+      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js'
     ],
     output: {
       file_name: 'ng_vendors',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [
       assets_dir + '/js/vendor/angular/**/*.js'
@@ -95,7 +96,7 @@ const config =  {
     src: assets_dir + '/js/react/setup_guide/app.js',
     output: {
       file_name: 'react_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/setup_guide/**/*.js'
   },
@@ -103,7 +104,7 @@ const config =  {
     src: assets_dir + '/js/react/signup/app.js',
     output: {
       file_name: 'react_signup_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/signup/**/*.js'
   },
