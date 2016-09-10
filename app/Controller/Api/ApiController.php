@@ -45,6 +45,8 @@ class ApiController extends BaseController
         parent::beforeFilter();
         $this->_setupAuth();
         $this->autoRender = false;
+        //htmlを出力してしまうためdebugを無効化
+        Configure::write('debug',0);
         if (!$this->request->is('ajax')) {
 //            throw new BadRequestException('Ajax Only!',400);
         }
@@ -53,7 +55,7 @@ class ApiController extends BaseController
         }
     }
 
-    protected function _getResponseSuccess($data, $html = null)
+    protected function _getResponseSuccess($data = null, $html = null)
     {
         $this->_getResponse(200, $data, $html);
     }
@@ -61,6 +63,28 @@ class ApiController extends BaseController
     protected function _getResponseBadFail($message, $validationErrors = null)
     {
         $this->_getResponse(400, null, null, $message, $validationErrors);
+    }
+
+    protected function _getResponseDefaultValidation(Model $Model)
+    {
+        $this->request->allowMethod('post');
+        $this->_requireRequestData();
+        $Model->set($this->request->data);
+        if ($Model->validates()) {
+            return $this->_getResponseSuccess();
+        }
+        return $this->_getResponseBadFail(__('Validation failed'),
+            $this->_validationExtract($Model->validationErrors));
+    }
+
+    function _requireRequestData()
+    {
+        //csrfトークンは邪魔なので削除
+        unset($this->request->data['_Token']['key']);
+        if (empty($this->request->data)) {
+            throw new BadRequestException(__('No Data'));
+        }
+        return true;
     }
 
     /**
@@ -127,6 +151,26 @@ class ApiController extends BaseController
         $this->Auth->loginRedirect = null;
         $this->Auth->logoutRedirect = null;
         $this->Auth->loginAction = null;
+    }
+
+    /**
+     * バリデーションメッセージの展開
+     * key:valueの形にして1フィールド1メッセージにする
+     *
+     * @param $validationErrors
+     *
+     * @return array
+     */
+    function _validationExtract($validationErrors)
+    {
+        $res = [];
+        if (empty($validationErrors)) {
+            return $res;
+        }
+        foreach ($validationErrors as $k => $v) {
+            $res[$k] = $v[0];
+        }
+        return $res;
     }
 
 }
