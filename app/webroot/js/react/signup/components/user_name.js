@@ -1,14 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { browserHistory } from 'react-router'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
-import { range, _checkValue } from '../actions/common_actions'
+import { range } from '../actions/common_actions'
+import { _checkValue } from '../actions/validate_actions'
 
 export default class UserName extends React.Component {
+
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.update_email_flg).checked = "checked"
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.user_name.to_next_page) {
+      browserHistory.push(nextProps.user_name.to_next_page)
+    }
   }
 
   getInputDomData() {
@@ -28,33 +37,15 @@ export default class UserName extends React.Component {
     this.props.postUserName(this.getInputDomData())
   }
 
-  handleOnChange(e) {
-    this._sendValidateState(_checkValue(e.target))
-  }
-
-  _sendValidateState(status) {
-    const element = { invalid: {}, messages: {} }
-
-    if(status.error) {
-      element.invalid[status.name] = true
-      element.messages = status.messages
-      this.props.invalid(element)
-    } else {
-      element.invalid[status.name] = false
-      element.messages[status.name] = ''
-      this.props.valid(element)
-    }
-  }
-
   render() {
     let birthday_error_message = ''
 
-    if(this.props.user_name.invalid_messages.birth_year) {
-      birthday_error_message = this.props.user_name.invalid_messages.birth_year
-    } else if(this.props.user_name.invalid_messages.birth_month) {
-      birthday_error_message = this.props.user_name.invalid_messages.birth_month
-    } else if(this.props.user_name.invalid_messages.birth_day) {
-      birthday_error_message = this.props.user_name.invalid_messages.birth_day
+    if(this.props.validate.birth_year.invalid) {
+      birthday_error_message = this.props.validate.birth_year.message
+    } else if(this.props.validate.birth_month.invalid) {
+      birthday_error_message = this.props.validate.birth_month.message
+    } else if(this.props.validate.birth_day.invalid) {
+      birthday_error_message = this.props.validate.birth_day.message
     }
     return (
       <div>
@@ -69,22 +60,22 @@ export default class UserName extends React.Component {
 
                     {/* First name */}
                     <div className="panel-heading signup-itemtitle">{__("Your name")}</div>
-                    <div className={(this.props.user_name.invalid.first_name) ? 'has-error' : ''}>
+                    <div className={(this.props.validate.first_name.invalid) ? 'has-error' : ''}>
                         <input ref="first_name" name="first_name" className="form-control signup_input-design" type="text"
                                placeholder={__("eg. Harry")}
-                               onChange={this.handleOnChange.bind(this)} />
+                               onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
                     </div>
-                    <InvalidMessageBox is_invalid={this.props.user_name.invalid.first_name}
-                                       message={this.props.user_name.invalid_messages.first_name} />
+                    <InvalidMessageBox is_invalid={this.props.validate.first_name.invalid}
+                                       message={this.props.validate.first_name.message} />
 
                     {/* Last name */}
-                    <div className={(this.props.user_name.invalid.last_name) ? 'has-error' : ''}>
+                    <div className={(this.props.validate.last_name.invalid) ? 'has-error' : ''}>
                         <input ref="last_name" name="last_name" className="form-control signup_input-design"
                                placeholder={__("eg. Armstrong")} type="text"
-                               onChange={this.handleOnChange.bind(this)} />
+                               onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
                     </div>
-                    <InvalidMessageBox is_invalid={this.props.user_name.invalid.last_name}
-                                       message={this.props.user_name.invalid_messages.last_name} />
+                    <InvalidMessageBox is_invalid={this.props.validate.last_name.invalid}
+                                       message={this.props.validate.last_name.message} />
 
                     {/* Allow Email from goalous check */}
                     <div className="signup-checkbox-email-flg">
@@ -98,9 +89,9 @@ export default class UserName extends React.Component {
                     <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
-                        <span className={(this.props.user_name.invalid.birth_year) ? 'has-error' : ''}>
+                        <span className={(this.props.validate.birth_year.invalid) ? 'has-error' : ''}>
                             <select className="form-control inline-fix" ref="birth_year" name="birth_year" required
-                                    onChange={this.handleOnChange.bind(this)}>
+                                    onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                                <option value=""></option>
                                {
                                  range(1910, new Date().getFullYear()).sort((a,b) => b-a).map( year => {
@@ -112,9 +103,9 @@ export default class UserName extends React.Component {
                         &nbsp;/&nbsp;
 
                         {/* Birthday month */}
-                        <span className={(this.props.user_name.invalid.birth_month) ? 'has-error' : ''}>
+                        <span className={(this.props.validate.birth_month.invalid) ? 'has-error' : ''}>
                             <select className="form-control inline-fix" ref="birth_month" name="birth_month" required
-                                    onChange={this.handleOnChange.bind(this)}>
+                                    onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                                <option value=""></option>
                                <option value="01">{__("Jan")}</option>
                                <option value="02">{__("Feb")}</option>
@@ -133,9 +124,9 @@ export default class UserName extends React.Component {
                         &nbsp;/&nbsp;
 
                         {/* Birthday day */}
-                        <span className={(this.props.user_name.invalid.birth_day) ? 'has-error' : ''}>
+                        <span className={(this.props.validate.birth_day.invalid) ? 'has-error' : ''}>
                         <select className="form-control inline-fix" ref="birth_day" name="birth_day" required
-                                onChange={this.handleOnChange.bind(this)}>
+                                onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                            <option value=""></option>
                            {
                              range(1, 31).map( day => {
@@ -146,22 +137,22 @@ export default class UserName extends React.Component {
                         </span>
                     </div>
 
-                    <InvalidMessageBox is_invalid={this.props.user_name.invalid.birth_year || this.props.user_name.invalid.birth_month || this.props.user_name.invalid.birth_day}
+                    <InvalidMessageBox is_invalid={this.props.validate.birth_year.invalid || this.props.validate.birth_month.invalid || this.props.validate.birth_day.invalid}
                                        message={birthday_error_message} />
 
                     {/* Privacy policy check */}
                     <div className="signup-checkbox">
-                        <div className={(this.props.user_name.invalid.privacy_policy) ? 'has-error' : ''}>
+                        <div className={(this.props.validate.privacy_policy.invalid) ? 'has-error' : ''}>
                             <input type="checkbox" value="1" className="signup-checkbox-input" ref="privacy_policy" name="privacy_policy"
-                                   onChange={this.handleOnChange.bind(this)} />
+                                   onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
                             <div className="signup-privacy-policy-label"
                                  dangerouslySetInnerHTML={{__html: __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" className="signup-privacy-policy-link">term</a><br />', '<a href="/privacy_policy" target="_blank" className="signup-privacy-policy-link">Privacy Policy</a>')}}>
                             </div>
                         </div>
                     </div>
 
-                    <InvalidMessageBox is_invalid={this.props.user_name.invalid.privacy_policy}
-                                       message={this.props.user_name.invalid_messages.privacy_policy} />
+                    <InvalidMessageBox is_invalid={this.props.validate.privacy_policy.invalid}
+                                       message={this.props.validate.privacy_policy.message} />
 
                     {/* Alert message */}
                     { (() => { if(this.props.user_name.is_exception) {
@@ -169,12 +160,15 @@ export default class UserName extends React.Component {
                     }})() }
 
                     {/* Submit button */}
-                    { (() => { if(this.props.user_name.submit_button_is_enabled) {
-                      return <EnabledNextButton />;
-                    } else {
-                      return <DisabledNextButton loader={ this.props.user_name.checking_user_name } />;
-                    }})() }
+                    { (() => {
+                      const can_submit = this.props.validate.first_name.invalid === false && this.props.validate.last_name.invalid === false && this.props.validate.birth_year.invalid === false && this.props.validate.birth_month.invalid === false && this.props.validate.birth_day.invalid === false && this.props.validate.privacy_policy.invalid === false && !this.props.user_name.checking_user_name
 
+                      if(can_submit) {
+                        return <EnabledNextButton />;
+                      } else {
+                        return <DisabledNextButton loader={ this.props.user_name.checking_user_name } />;
+                      }}
+                    )() }
                 </form>
             </div>
         </div>

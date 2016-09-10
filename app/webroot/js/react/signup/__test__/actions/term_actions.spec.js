@@ -13,119 +13,24 @@ describe('actions::term', () => {
     nock.cleanAll()
   })
 
-  it('selectTerm', () => {
-    const expectedActions = [
-      { type: types.SELECT_TERM, selected_term: 1 }
-    ]
-    const store = mockStore({ auth: [] })
-
-    store.dispatch(actions.selectTerm(1))
-    expect(store.getActions()).toEqual(expectedActions)
+  it('changeToTimezoneSelectMode', () => {
+    expect(actions.changeToTimezoneSelectMode()).toEqual({ type: types.CHANGE_TO_TIMEZONE_EDIT_MODE })
   })
 
-  it('selectStartMonth', () => {
-    const expectedActions = [
-      { type: types.SELECT_START_MONTH, selected_start_month: 1 }
-    ]
-    const store = mockStore({ auth: [] })
-
-    store.dispatch(actions.selectStartMonth(1))
-    expect(store.getActions()).toEqual(expectedActions)
+  it('changeToTimezoneNotSelectMode', () => {
+    expect(actions.changeToTimezoneNotSelectMode()).toEqual({ type: types.CHANGE_TO_TIMEZONE_NOT_EDIT_MODE })
   })
 
-  it('selectTimeZone', () => {
-    const expectedActions = [
-      { type: types.SELECT_TIMEZONE, selected_timezone: 1 }
-    ]
-    const store = mockStore({ auth: [] })
-
-    store.dispatch(actions.selectTimezone(1))
-    expect(store.getActions()).toEqual(expectedActions)
+  it('checkingTerm', () => {
+    expect(actions.checkingTerm()).toEqual({ type: types.CHECKING_TERM })
   })
 
-  it('enableSubmitButton', () => {
-    const expectedActions = [{ type: types.CAN_SUBMIT_TERM }]
-    const store = mockStore({
-      auth: []
-    })
-
-    store.dispatch(actions.enableSubmitButton())
-    expect(store.getActions()).toEqual(expectedActions)
+  it('finishedCheckingTerm', () => {
+    expect(actions.finishedCheckingTerm()).toEqual({ type: types.FINISHED_CHECKING_TERM })
   })
 
-  it('disableSubmitButton', () => {
-    const expectedActions = [{ type: types.CAN_NOT_SUBMIT_TERM}]
-    const store = mockStore({
-      auth: []
-    })
-
-    store.dispatch(actions.disableSubmitButton())
-    expect(store.getActions()).toEqual(expectedActions)
+  it('exception', () => {
+    expect(actions.exception('message')).toEqual({ type: types.TERM_NETWORK_ERROR, exception_message: 'message' })
   })
 
-  it('postTerms invalid', () => {
-    nock('http://localhost')
-      .post('/signup/ajax_validation_fields')
-      .reply(200, {
-        "error": true,
-        "message": "Invalid Data",
-        "validation_msg": {
-          "data[Team][timezone]": "timezone message",
-          "data[Team][start_term_month]": "start_term_month message",
-          "data[Team][border_months]": "border_months message"
-        }
-      })
-
-    const expectedActions = [
-      { type: types.CHECKING_TERM },
-      { type: types.FINISHED_CHECKING_TERM },
-      { type: types.TERM_IS_INVALID, invalid_messages: { timezone: 'timezone message', start_month: 'start_term_month message', term: 'border_months message' }}
-    ]
-    const store = mockStore({ auth: [] })
-
-    return store.dispatch(actions.postTerms({ timezone: 1, start_month: 1, term: 1 }))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
-  })
-
-  it('postTerms valid', () => {
-    nock('http://localhost')
-      .post('/signup/ajax_validation_fields')
-      .reply(200, {
-        "error": false,
-        "message": "",
-        "validation_msg": {}
-      })
-
-    const expectedActions = [
-      { type: types.CHECKING_TERM },
-      { type: types.FINISHED_CHECKING_TERM },
-      { type: types.TERM_IS_VALID }
-    ]
-    const store = mockStore({ auth: [] })
-
-    return store.dispatch(actions.postTerms({ timezone: 1, start_month: 1, term: 1 }))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
-  })
-
-  it('postTerms network error', () => {
-    nock('http://network-error')
-      .post('/signup/ajax_validation_fields')
-      .reply(200, {})
-
-    const expectedActions = [
-      { type: types.CHECKING_TERM },
-      { type: types.FINISHED_CHECKING_TERM },
-      { type: types.TERM_NETWORK_ERROR, exception_message: 'Network error' }
-    ]
-    const store = mockStore({ auth: [] })
-
-    return store.dispatch(actions.postTerms({ timezone: 1, start_month: 1, term: 1 }))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
-  })
 })

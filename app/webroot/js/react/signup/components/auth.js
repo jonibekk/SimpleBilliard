@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { range } from '../actions/common_actions'
+import { browserHistory } from 'react-router'
 
 export default class Auth extends React.Component {
   constructor(props) {
@@ -74,6 +75,10 @@ export default class Auth extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(nextProps.auth.to_next_page) {
+      browserHistory.push(nextProps.auth.to_next_page)
+    }
+
     for(const key in nextProps.auth.code_list) {
       if(nextProps.auth.code_list[key]) {
         return
