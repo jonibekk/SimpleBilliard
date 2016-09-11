@@ -26,20 +26,23 @@ class GoalsController extends ApiController
      * formで利用する値を取得する
      *
      * @query_params bool categories
-     * @query_params bool tags
+     * @query_params bool labels
      */
     function get_init_form()
     {
+        /**
+         * @var Label $Label
+         */
+        $Label = ClassRegistry::init('Label');
         $res = [];
 
         if ($this->request->query('categories') == true) {
-            $categories = $this->Goal->GoalCategory->getCategoryList();
-            $res['categories'] = $categories;
+            $res['categories'] = $this->Goal->GoalCategory->getCategoryList();
         }
 
-//        if ($this->request->query('tags') == true) {
-//            $res['tags'] = true;
-//        }
+        if ($this->request->query('labels') == true) {
+            $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
+        }
 
         return $this->_getResponseSuccess($res);
     }

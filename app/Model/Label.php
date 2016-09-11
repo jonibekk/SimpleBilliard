@@ -42,4 +42,16 @@ class Label extends AppModel
     public $belongsTo = [
         'Team',
     ];
+
+    public function getListWithGoalCount()
+    {
+        $res = $this->find('all', [
+            'fields' => [
+                'id',
+                'name',
+                'goal_label_count',
+            ]
+        ]);
+        return $res;
+    }
 }
