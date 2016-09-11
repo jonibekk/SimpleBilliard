@@ -112,7 +112,7 @@ const config =  {
     src: assets_dir + '/js/react/goal_create/app.js',
     output: {
       file_name: 'react_goal_create_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/goal_create/**/*.js'
   },
@@ -120,7 +120,7 @@ const config =  {
     src: assets_dir + '/js/react/goal_approval/app.js',
     output: {
       file_name: 'react_goal_approval_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/goal_approval/**/*.js'
   },
