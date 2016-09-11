@@ -117,7 +117,7 @@ class Goal extends AppModel
     public $validate = [
         'name'             => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
@@ -174,6 +174,16 @@ class Goal extends AppModel
             'maxLength' => ['rule' => ['maxLength', 15]],
             'numeric'   => ['rule' => ['numeric']]
         ],
+        'term_type'        => [
+            'rule' => [
+                'multiple',
+                [
+                    'in'  => ['current', 'next'],
+                    'min' => 1,
+                    'max' => 1
+                ]
+            ],
+        ]
     ];
 
     public $post_validate = [
