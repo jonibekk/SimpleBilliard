@@ -46,7 +46,7 @@ class GoalsController extends ApiController
          * 通知
          */
 
-        return $this->_getResponseSuccess(['goal_id' => 999]);
+        return $this->_getResponseSuccess(['goal_id' => $this->Goal->getLastInsertID()]);
     }
 
 }
