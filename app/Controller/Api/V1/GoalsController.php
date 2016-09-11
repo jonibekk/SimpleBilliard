@@ -27,6 +27,7 @@ class GoalsController extends ApiController
      *
      * @query_params bool categories
      * @query_params bool labels
+     * @query_params bool term_types
      */
     function get_init_form()
     {
@@ -42,6 +43,14 @@ class GoalsController extends ApiController
 
         if ($this->request->query('labels') == true) {
             $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
+        }
+
+        if ($this->request->query('term_types') == true) {
+            $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+            $current['type'] = 'current';
+            $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
+            $next['type'] = 'next';
+            $res['terms'] = [$current, $next];
         }
 
         return $this->_getResponseSuccess($res);
