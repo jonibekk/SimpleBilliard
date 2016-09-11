@@ -45,6 +45,10 @@ class Label extends AppModel
 
     public function getListWithGoalCount()
     {
+        $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
+        if ($res !== false) {
+            return $res;
+        }
         $res = $this->find('all', [
             'fields' => [
                 'id',
@@ -52,6 +56,7 @@ class Label extends AppModel
                 'goal_label_count',
             ]
         ]);
+        Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
         return $res;
     }
 }
