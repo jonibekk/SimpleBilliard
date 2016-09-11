@@ -37,7 +37,7 @@ class GoalsController extends ApiController
         $res = [];
 
         if ($this->request->query('categories') == true) {
-            $res['categories'] = $this->Goal->GoalCategory->getCategoryList();
+            $res['categories'] = $this->Goal->GoalCategory->getCategories(['id', 'name']);
         }
 
         if ($this->request->query('labels') == true) {
