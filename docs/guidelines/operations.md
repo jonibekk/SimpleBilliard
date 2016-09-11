@@ -321,6 +321,7 @@ Issueを再び開いて作業を続行するとき。
 
 # ブランチ運用について
 - hotfixの場合(本番環境の緊急バグフィックス)
+    - master -> hofix ブランチ作成
     - hotfix -> hotfix0000-something ブランチ生成し、hotfixにマージ
     - hotfix.goalous.comで動作確認
     - master <- hotfix をマージし、本番環境にdeploy
