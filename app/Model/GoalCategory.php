@@ -86,7 +86,6 @@ class GoalCategory extends AppModel
             $options['fields'] = $fields;
         }
         $res = $this->find('all', $options);
-        $res = ['GoalCategory' => Hash::extract($res, '{n}.GoalCategory')];
         return $res;
     }
 

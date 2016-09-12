@@ -45,7 +45,10 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('categories', $dataTypes)) {
-            $res['categories'] = $this->Goal->GoalCategory->getCategories(['id', 'name']);
+            $res['categories'] = Hash::extract(
+                $this->Goal->GoalCategory->getCategories(['id', 'name']),
+                '{n}.GoalCategory'
+            );
         }
 
         if ($dataTypes == 'all' || in_array('labels', $dataTypes)) {
