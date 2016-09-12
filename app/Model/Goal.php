@@ -1886,4 +1886,20 @@ class Goal extends AppModel
         ];
         return $this->find('all', $options);
     }
+
+    function validateGoalCreate($data)
+    {
+        $goal_required_fields = [
+            'name'             => null,
+            'goal_category_id' => null,
+            'term_type'        => null
+        ];
+        $data = am($goal_required_fields, $data);
+        $this->set($data);
+        //goal validation
+        if ($this->validates()) {
+            return true;
+        }
+        return $this->validationErrors;
+    }
 }

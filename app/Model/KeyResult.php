@@ -457,4 +457,21 @@ class KeyResult extends AppModel
         return $kr['KeyResult']['completed'] ? true : false;
     }
 
+    function validateKrCreate($data)
+    {
+        $kr_required_fields = [
+            'name'         => null,
+            'start_value'  => null,
+            'target_value' => null,
+            'value_unit'   => null,
+        ];
+        $kr_data = am($kr_required_fields, $data);
+        $this->set($kr_data);
+        //tkr validation
+        if ($this->validates()) {
+            return true;
+        }
+        return $this->validationErrors;
+    }
+
 }

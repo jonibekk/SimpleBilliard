@@ -23,19 +23,16 @@ class GoalsController extends ApiController
 
     function post()
     {
-        /**
-         * validation
-         */
-        $goal_required_fields = [
-            'name'             => null,
-            'goal_category_id' => null,
-            'term_type'        => null
-        ];
-        $data = am($goal_required_fields, $this->request->data);
-        $this->Goal->set($data);
-        if (!$this->Goal->validates()) {
-            return $this->_getResponseBadFail(__('Saving Data Failed!'),
-                $this->_validationExtract($this->Goal->validationErrors));
+        if (!viaIsSet($this->request->data['key_result'])) {
+            return $this->_getResponseBadFail(__('top Key Result is required!'));
+        }
+        $validation = $this->_validationExtract($this->Goal->validateGoalCreate($this->request->data));
+        $kr_validation = $this->_validationExtract($this->Goal->KeyResult->validateKrCreate($this->request->data['key_result']));
+        if (!empty($kr_validation)) {
+            $validation['key_result'] = $kr_validation;
+        }
+        if (!empty($validation)) {
+            return $this->_getResponseBadFail(__('Saving Data Failed!'), $validation);
         }
 
         /**

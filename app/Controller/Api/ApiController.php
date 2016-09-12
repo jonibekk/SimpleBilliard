@@ -167,6 +167,9 @@ class ApiController extends BaseController
         if (empty($validationErrors)) {
             return $res;
         }
+        if($validationErrors === true){
+            return $res;
+        }
         foreach ($validationErrors as $k => $v) {
             $res[$k] = $v[0];
         }
