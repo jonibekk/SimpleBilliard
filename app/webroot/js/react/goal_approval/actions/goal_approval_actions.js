@@ -30,7 +30,7 @@ const mock_response_data = {
         id: 2,
         user_id: 2,
         type: 0,
-        approval_status: 1
+        approval_status: 0
       }
     }
   ]
@@ -48,8 +48,8 @@ export function fetchGaolApprovals() {
   }
 }
 
-export function setGoalApprovals(goals) {
-  return { type: types.SET_GOAL_APPROVALS, goals }
+export function setGoalApprovals(goal_approvals) {
+  return { type: types.SET_GOAL_APPROVALS, goal_approvals }
 }
 
 export function fetchingGoalApprovals() {

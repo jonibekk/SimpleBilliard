@@ -3,7 +3,7 @@ import ListComponent from '../components/list'
 import * as actions from '../actions/goal_approval_actions'
 
 function mapStateToProps(state) {
-  return { goal: state.goal }
+  return { goal_approval: state.goal_approval }
 }
 
 function mapDispatchToProps(dispatch) {

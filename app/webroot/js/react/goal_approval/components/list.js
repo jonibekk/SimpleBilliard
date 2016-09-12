@@ -19,7 +19,7 @@ export default class ListComponent extends React.Component {
                           <div className="goals-approval-list-item-info">
                               <p className="goals-approval-list-item-info-user-name">{ goal.user.name }</p>
                               <p className="goals-approval-list-item-info-goal-name">{ goal.name }</p>
-                              <p className="goals-approval-list-item-info-goal-attr">{ goal.collaborator.type == 1 ? __('Leader') : __('Collaborator') }・Evaluated</p>
+                              <p className="goals-approval-list-item-info-goal-attr">{ goal.collaborator.type == 1 ? __('Leader') : __('Collaborator') }・{ goal.collaborator.approval_status == 1 ? __('Evaluated') : __('Not Evaluated') }</p>
                           </div>
                           <p className="goals-approval-list-item-detail"><i className="fa fa-angle-right" ariaHidden="true"></i>
                           </p>
