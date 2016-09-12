@@ -309,8 +309,8 @@ class Goal extends AppModel
             //指定なしの場合は現在時刻
             $data['Goal']['start_date'] = time();
         }
-        //期限を+1day-1secする
         if (!empty($data['Goal']['end_date'])) {
+            //期限を+1day-1secする
             $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
                     strtotime($data['Goal']['end_date'])) - $goal_term['timezone'] * HOUR;
         } else {
@@ -335,9 +335,16 @@ class Goal extends AppModel
                 $data['KeyResult'][0]['team_id'] = $this->current_team_id;
                 if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
                     $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
+                } else {
+                    //時間をunixtimeに変換
+                    $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
                 }
                 if (!viaIsSet($data['KeyResult'][0]['end_date'])) {
                     $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
+                } else {
+                    //期限を+1day-1secする
+                    $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
+                            strtotime($data['KeyResult'][0]['end_date'])) - $goal_term['timezone'] * HOUR;
                 }
             }
 
@@ -1916,8 +1923,12 @@ class Goal extends AppModel
         ];
         $data = am($goal_required_fields, $data);
         $this->set($data);
+        //validation ruleを切り替え
+        $validationBackup = $this->validate;
+        $this->validate = am($this->validate, $this->post_validate);
         //goal validation
         if ($this->validates()) {
+            $this->validate = $validationBackup;
             return true;
         }
         return $this->validationErrors;
