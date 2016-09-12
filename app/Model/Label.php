@@ -43,6 +43,12 @@ class Label extends AppModel
         'Team',
     ];
 
+    /**
+     * タグのリストをゴール件数とともに返す
+     * このデータはキャッシュされている
+     *
+     * @return array
+     */
     public function getListWithGoalCount()
     {
         $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
