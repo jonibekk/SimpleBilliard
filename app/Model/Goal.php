@@ -302,14 +302,20 @@ class Goal extends AppModel
             $goal_term = $this->Team->EvaluateTerm->getCurrentTermData();
         }
 
-        //時間をunixtimeに変換
         if (!empty($data['Goal']['start_date'])) {
+            //時間をunixtimeに変換
             $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - $goal_term['timezone'] * HOUR;
+        } else {
+            //指定なしの場合は現在時刻
+            $data['Goal']['start_date'] = time();
         }
         //期限を+1day-1secする
         if (!empty($data['Goal']['end_date'])) {
             $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
                     strtotime($data['Goal']['end_date'])) - $goal_term['timezone'] * HOUR;
+        } else {
+            //指定なしの場合は期の終了日
+            $data['Goal']['end_date'] = $goal_term['end_date'] - $goal_term['timezone'] * HOUR;
         }
 
         // 評価期間をまたいでいないかチェック
@@ -321,6 +327,20 @@ class Goal extends AppModel
 
         //新規の場合はデフォルトKRを追加
         if ($add_new) {
+            //tKRを保存
+            if (isset($data['KeyResult'][0])) {
+                $data['KeyResult'][0]['priority'] = 5;
+                $data['KeyResult'][0]['tkr_flg'] = true;
+                $data['KeyResult'][0]['user_id'] = $this->my_uid;
+                $data['KeyResult'][0]['team_id'] = $this->current_team_id;
+                if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
+                    $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
+                }
+                if (!viaIsSet($data['KeyResult'][0]['end_date'])) {
+                    $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
+                }
+            }
+
             //コラボレータをタイプ　リーダーで保存
             $data['Collaborator'][0]['user_id'] = $this->my_uid;
             $data['Collaborator'][0]['team_id'] = $this->current_team_id;
