@@ -75,16 +75,17 @@ class GoalCategory extends AppModel
         return $res;
     }
 
-    function getCategories($teamId)
+    function getCategories($fields = [])
     {
         $options = [
             'conditions' => [
-                'team_id'    => $teamId,
                 'active_flg' => true,
             ],
         ];
+        if (!empty($fields)) {
+            $options['fields'] = $fields;
+        }
         $res = $this->find('all', $options);
-        $res = ['GoalCategory' => Hash::extract($res, '{n}.GoalCategory')];
         return $res;
     }
 

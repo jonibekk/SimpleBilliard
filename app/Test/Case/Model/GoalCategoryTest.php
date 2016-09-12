@@ -87,14 +87,14 @@ class GoalCategoryTest extends GoalousTestCase
     function testGetCategories()
     {
         $this->_setDefault();
-        $actual = $this->GoalCategory->getCategories(1);
-        $this->assertCount(2, $actual['GoalCategory']);
+        $actual = $this->GoalCategory->getCategories();
+        $this->assertCount(2, $actual);
         $this->GoalCategory->save(['team_id' => 1, 'name' => 'test']);
-        $actual = $this->GoalCategory->getCategories(1);
-        $this->assertCount(3, $actual['GoalCategory']);
+        $actual = $this->GoalCategory->getCategories();
+        $this->assertCount(3, $actual);
         $this->GoalCategory->save(['id' => $this->GoalCategory->getLastInsertID(), 'active_flg' => false]);
-        $actual = $this->GoalCategory->getCategories(1);
-        $this->assertCount(2, $actual['GoalCategory']);
+        $actual = $this->GoalCategory->getCategories();
+        $this->assertCount(2, $actual);
     }
 
     function testSaveDefaultCategory()
