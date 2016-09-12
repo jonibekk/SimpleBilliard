@@ -457,6 +457,15 @@ class KeyResult extends AppModel
         return $kr['KeyResult']['completed'] ? true : false;
     }
 
+    /**
+     * KR作成時のバリデーション
+     * - 必須フィールドを精査対象データにマージ
+     * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     *
+     * @param $data
+     *
+     * @return array|true
+     */
     function validateKrCreate($data)
     {
         $kr_required_fields = [
@@ -467,7 +476,6 @@ class KeyResult extends AppModel
         ];
         $kr_data = am($kr_required_fields, $data);
         $this->set($kr_data);
-        //tkr validation
         if ($this->validates()) {
             return true;
         }

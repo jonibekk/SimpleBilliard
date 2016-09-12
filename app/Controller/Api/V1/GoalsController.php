@@ -66,71 +66,85 @@ class GoalsController extends ApiController
         return $this->_getResponseSuccess($res);
     }
 
+    /**
+     * ゴール新規登録
+     * - バリデーション(失敗したらレスポンス返す)
+     * - ゴール新規登録(失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
+     * - フィードへ新しい投稿がある旨を知らせる
+     * - コーチへ通知
+     * - セットアップガイドのステータスを更新
+     * - コーチと自分の認定件数を更新(キャッシュを削除)
+     * - Mixpanelでトラッキング
+     * - TODO: 遷移先の情報は渡さなくて大丈夫か？api以外の場合はリダイレクトを分岐している。
+     * - ゴールIDをレスポンスに含めて返却
+     *
+     * @return CakeResponse
+     */
     function post()
     {
-        /**
-         * Validation
-         */
-        if ($validateResult = $this->_validateCreateGoal($this->request->data) !== true) {
+        $validateResult = $this->_validateCreateGoal($this->request->data);
+        if ($validateResult !== true) {
             return $validateResult;
         }
-        /**
-         * 登録処理
-         * TODO: タグの保存処理まだやってない
-         */
-        $this->Goal->add(
+        //TODO タグの保存処理まだ
+        $saveResult = $this->Goal->add(
             [
                 'Goal'      => $this->request->data,
                 'KeyResult' => [$this->request->data['key_result']],
             ]
         );
-        /**
-         * 通知
-         */
-        $socketId = viaIsSet($this->request->data['socket_id']);
-        $this->NotifyBiz->push($socketId, "all");
-        $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
-            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-        /**
-         * セットアップガイドステータスの更新
-         */
+        if ($saveResult === false) {
+            return $this->_getResponseBadFail(__('Save Data Failed!'));
+        }
+
+        $newGoalId = $this->Goal->getLastInsertID();
+
+        //通知
+        $this->NotifyBiz->push(Hash::get($this->request->data, 'socket_id'), "all");
+        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+
         $this->updateSetupStatusIfNotCompleted();
-        /**
-         * コーチと自分の認定件数を更新(キャッシュを削除)
-         */
-        if ($coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
-            $this->Auth->user('id'))
-        ) {
+        //コーチと自分の認定件数を更新(キャッシュを削除)
+        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+        if ($coach_id) {
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
         }
 
-        /**
-         * Mixpanel
-         */
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
-            $this->Goal->getLastInsertID());
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL, $newGoalId);
 
-        //TODO 遷移先の情報は渡さなくて大丈夫か？api以外の場合はリダイレクトを分岐している。
-
-        return $this->_getResponseSuccess(['goal_id' => $this->Goal->getLastInsertID()]);
+        return $this->_getResponseSuccess(['goal_id' => $newGoalId]);
     }
 
     /**
+     * ゴール作成のバリデーション
+     * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
+     * - key resultがなければバリデーションを通さずレスポンスを返す
+     * - ゴールとKRのバリデーションは後ほど組み立てやすいようにそれぞれ別々に実行し、結果をマージしている。
+     * TODO: 厳密にバリデーションルール、メッセージを再定義する
+     *
      * @param array $data
      *
-     * @return bool|void
+     * @return true|CakeResponse
      */
     function _validateCreateGoal($data)
     {
-        if (!viaIsSet($data['key_result'])) {
+        if (!Hash::get($data, 'key_result')) {
             return $this->_getResponseBadFail(__('top Key Result is required!'));
         }
-        $validation = $this->_validationExtract($this->Goal->validateGoalCreate($data));
-        $kr_validation = $this->_validationExtract($this->Goal->KeyResult->validateKrCreate($data['key_result']));
-        if (!empty($kr_validation)) {
-            $validation['key_result'] = $kr_validation;
+
+        $validation = [];
+
+        $goal_validation = $this->Goal->validateGoalCreate($data);
+        if ($goal_validation !== true) {
+            $validation = $this->_validationExtract($goal_validation);
         }
+
+        $kr_validation = $this->Goal->KeyResult->validateKrCreate($data['key_result']);
+        if ($kr_validation !== true) {
+            $validation['key_result'] = $this->_validationExtract($kr_validation);
+        }
+
         if (!empty($validation)) {
             return $this->_getResponseBadFail(__('Saving Data Failed!'), $validation);
         }
