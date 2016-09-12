@@ -121,7 +121,8 @@ class Goal extends AppModel
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
-                'rule' => 'notEmpty',
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'description'      => [
@@ -156,9 +157,13 @@ class Goal extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'goal_category_id' => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
-            ]
+            ],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
         'start_date'       => [
             'numeric' => ['rule' => ['numeric']]
@@ -175,23 +180,20 @@ class Goal extends AppModel
             'numeric'   => ['rule' => ['numeric']]
         ],
         'term_type'        => [
-            'rule' => [
-                'multiple',
-                [
-                    'in'  => ['current', 'next'],
-                    'min' => 1,
-                    'max' => 1
-                ]
+            'inList'   => ['rule' => ['inList', ['current', 'next']],],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ]
     ];
 
     public $post_validate = [
         'start_date' => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission'],
         ],
         'end_date'   => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission'],
         ]
 
     ];
@@ -1997,7 +1999,6 @@ class Goal extends AppModel
 
     /**
      * ゴール作成時のゴールのバリデーション
-     * - 必須フィールドを精査対象データにマージ
      * - バリデーションルールを切り替える
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      *
@@ -2007,12 +2008,6 @@ class Goal extends AppModel
      */
     function validateGoalCreate($data)
     {
-        $goal_required_fields = [
-            'name'             => null,
-            'goal_category_id' => null,
-            'term_type'        => null
-        ];
-        $data = am($goal_required_fields, $data);
         $this->set($data);
         $validationBackup = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);

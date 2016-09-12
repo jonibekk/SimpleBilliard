@@ -76,7 +76,8 @@ class KeyResult extends AppModel
         'name'         => [
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
-                'rule' => 'notEmpty',
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'del_flg'      => [
@@ -90,17 +91,29 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
+            ],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'start_value'  => [
             'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'numeric'   => ['rule' => ['numeric']],
+            'notEmpty'  => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
         'target_value' => [
             'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'numeric'   => ['rule' => ['numeric']],
+            'notEmpty'  => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
     ];
 
@@ -459,7 +472,6 @@ class KeyResult extends AppModel
 
     /**
      * KR作成時のバリデーション
-     * - 必須フィールドを精査対象データにマージ
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      *
      * @param $data
@@ -468,14 +480,7 @@ class KeyResult extends AppModel
      */
     function validateKrCreate($data)
     {
-        $kr_required_fields = [
-            'name'         => null,
-            'start_value'  => null,
-            'target_value' => null,
-            'value_unit'   => null,
-        ];
-        $kr_data = am($kr_required_fields, $data);
-        $this->set($kr_data);
+        $this->set($data);
         if ($this->validates()) {
             return true;
         }
