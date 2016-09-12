@@ -6,7 +6,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {}
+  return {
+    fetchInitialData: () => dispatch(actions.fetchInitialData())
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Step2Component)

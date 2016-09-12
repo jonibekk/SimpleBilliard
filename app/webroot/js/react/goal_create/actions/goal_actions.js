@@ -26,3 +26,17 @@ export function invalid(error) {
     error: error
   }
 }
+
+export function fetchInitialData(dispatch) {
+  axios.get('/api/v1/goals/initial_form?data_type=categories,labels', {
+    timeout: 10000,
+  })
+    .then(response => {
+      dispatch({
+        type: types.FETCH_INITIAL_DATA,
+        data: response.data,
+      })
+    })
+    .catch(response => {
+  })
+}
