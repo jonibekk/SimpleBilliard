@@ -2,7 +2,7 @@ import React from "react";
 import {browserHistory} from "react-router";
 import ReactDOM from "react-dom";
 import * as Page from "../constants/Page";
-import {InvalidMessageBox} from "./elements/invalid_message_box";
+import InvalidMessageBox from "./elements/InvalidMessageBox";
 
 export default class Step1Component extends React.Component {
   constructor(props) {
@@ -23,6 +23,7 @@ export default class Step1Component extends React.Component {
   }
 
   handleSubmit(e) {
+    console.log("step1 handleSubmit")
     e.preventDefault()
     this.props.validateGoal(this.getInputDomData(), Page.STEP1)
   }

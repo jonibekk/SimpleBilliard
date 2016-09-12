@@ -1,15 +1,18 @@
 import * as types from "../constants/ActionTypes";
 import {post} from "./common_actions";
+import axios from "axios";
 
 export function validateGoal(data) {
   return dispatch => {
-    post('/api/v1/goals/validate', data, null,
+    return post('/api/v1/goals/validate', data, null,
       response => {
+        console.log("validate success");
         dispatch(toNextPage())
-      },
-      response => {
-        dispatch(invalid(response.data))
       }
+      // response => {
+      //   console.log("validate failed");
+      //   dispatch(invalid(response.data))
+      // }
     );
   }
 }
@@ -28,15 +31,20 @@ export function invalid(error) {
 }
 
 export function fetchInitialData(dispatch) {
-  axios.get('/api/v1/goals/initial_form?data_type=categories,labels', {
-    timeout: 10000,
-  })
-    .then(response => {
-      dispatch({
-        type: types.FETCH_INITIAL_DATA,
-        data: response.data,
+  return dispatch => {
+    return axios.get('/api/v1/goals/init_form?data_type=categories,labels',
+      {
+        timeout: 10000,
       })
-    })
-    .catch(response => {
-  })
+      .then(response => {
+        console.log("fetchInitialData success")
+        console.log(response)
+        dispatch({
+          type: types.FETCH_INITIAL_DATA,
+          data: response.data.data,
+        })
+      })
+      .catch(response => {
+      })
+  }
 }

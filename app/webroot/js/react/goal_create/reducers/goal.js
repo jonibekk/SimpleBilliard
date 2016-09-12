@@ -3,12 +3,19 @@ import * as Page from "../constants/Page";
 
 const initialState = {
   page: Page.STEP1,
+  categories:[],
+  labels:[],
   validationErrors: {
     name: '',
   }
 }
 
 export default function goal(state = initialState, action) {
+  console.log("reducer start")
+  console.log("------state------")
+  console.log(state)
+  console.log("------action------")
+  console.log(action)
   switch (action.type) {
     case types.INVALID:
       return Object.assign({}, state, {
@@ -21,9 +28,11 @@ export default function goal(state = initialState, action) {
         page: Page.PAGE_FLOW[idx + 1]
       })
     case types.FETCH_INITIAL_DATA:
+      console.log("fetch")
+      console.log(action.data.categories)
       return Object.assign({}, state, {
-        categories: action.categories,
-        labels: action.labels
+        categories: action.data.categories,
+        labels: action.data.labels
       })
     default:
       return state;
