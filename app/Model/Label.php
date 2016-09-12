@@ -42,4 +42,27 @@ class Label extends AppModel
     public $belongsTo = [
         'Team',
     ];
+
+    /**
+     * タグのリストをゴール件数とともに返す
+     * このデータはキャッシュされている
+     *
+     * @return array
+     */
+    public function getListWithGoalCount()
+    {
+        $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
+        if ($res !== false) {
+            return $res;
+        }
+        $res = $this->find('all', [
+            'fields' => [
+                'id',
+                'name',
+                'goal_label_count',
+            ]
+        ]);
+        Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
+        return $res;
+    }
 }

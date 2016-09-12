@@ -58,6 +58,10 @@ Router::connect('/api/:apiVersion/:controller/:id',
  * REST
  * actionあり
  */
+Router::connect('/api/:apiVersion/:controller/:action',
+    ['prefix' => 'get', '[method]' => 'GET'],
+    ['apiVersion' => $apiVersions]
+);
 Router::connect('/api/:apiVersion/:controller/:id/:action',
     ['prefix' => 'get', '[method]' => 'GET'],
     ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
