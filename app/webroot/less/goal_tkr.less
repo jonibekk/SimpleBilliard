@@ -261,8 +261,10 @@
 
   // /goals/approval/list
   &-list-item{
-    background-color: @hoverRed;
     border-bottom: 1px solid @subColor4;
+    &.mod-coach-evaluating {
+      background-color: @hoverRed;
+    }
     &-link {
       color: @subColor1;
       display: table;
