@@ -1,0 +1,19 @@
+import * as actions from '../../actions/goal_approval_actions'
+import * as types from '../../constants/ActionTypes'
+import nock from 'nock'
+import expect from 'expect'
+
+describe('actions::goal_approval', () => {
+  afterEach(() => {
+    nock.cleanAll()
+  })
+
+  it('fetching goal approvals', () => {
+    expect(actions.fetchingGoalApprovals()).toEqual({ type: types.FETCHING_GOAL_APPROVALS })
+  })
+
+  it('finished fetching goal approvals', () => {
+    expect(actions.finishedFetchingGoalApprovals()).toEqual({ type: types.FINISHED_FETCHING_GOAL_APPROVALS })
+  })
+
+})

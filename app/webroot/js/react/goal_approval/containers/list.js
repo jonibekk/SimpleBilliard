@@ -1,12 +1,15 @@
 import { connect } from 'react-redux'
 import ListComponent from '../components/list'
+import * as actions from '../actions/goal_approval_actions'
 
 function mapStateToProps(state) {
-  return state
+  return { goal: state.goal }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {}
+  return {
+    fetchGaolApprovals: () => { dispatch(actions.fetchGaolApprovals()) }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListComponent)

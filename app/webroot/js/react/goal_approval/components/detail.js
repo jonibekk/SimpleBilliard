@@ -3,6 +3,10 @@ import { Link } from 'react-router'
 
 export default class DetailComponent extends React.Component {
 
+  componentWillMount() {
+    console.log(this.props.params.goal_id)
+  }
+
   render() {
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix">

@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
-import goal from './goal'
+import goal_approval from './goal_approval'
 
 export default function createReducer() {
   return combineReducers(
     Object.assign({}, {
-      goal
+      goal_approval
     }, {
       routing: routerReducer
     })

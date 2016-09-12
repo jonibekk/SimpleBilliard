@@ -263,10 +263,11 @@
   &-list-item{
     background-color: @hoverRed;
     border-bottom: 1px solid @subColor4;
-    padding: @spacing;
     &-link {
       color: @subColor1;
       display: table;
+      width: 100%;
+      padding: @spacing;
       &:focus, &:hover {
         color: @subColor1;
         text-decoration: none;
@@ -275,10 +276,12 @@
     &-image {
       display: table-cell;
       margin-right: @spacing;
+      float: left;
     }
     &-info {
       display: table-cell;
       vertical-align: top;
+      float: left;
       &-user-name {
         font-weight: normal;
       }
