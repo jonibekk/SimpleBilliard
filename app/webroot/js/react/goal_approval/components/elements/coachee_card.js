@@ -19,10 +19,6 @@ export class CoacheeCard extends React.Component {
   }
 }
 
-//propTypesは外で定義する
 CoacheeCard.propTypes = {
   goal_approval: React.PropTypes.object.isRequired
 }
-
-// props初期値指定
-// CoacheeCard.defaultProps = {name: "hoge"};

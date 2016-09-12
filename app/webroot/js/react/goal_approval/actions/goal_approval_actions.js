@@ -1,24 +1,10 @@
 import * as types from '../constants/ActionTypes'
 import { get } from './common_actions'
 
+const STATUS_TYPE_NEW = 0
+const STATUS_TYPE_REAPPROVE = 1
 const mock_response_data = {
   data:[
-    {
-      id: 1,
-      name: 'sameple goal1',
-      is_coach: true,
-      user: {
-        id: 1,
-        photo_file_name: 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-        display_username: 'Test Taro'
-      },
-      collaborator: {
-        id: 1,
-        user_id: 1,
-        type: 1,
-        approval_status: 0
-      }
-    },
     {
       id: 2,
       name: 'sameple goal2',
@@ -32,7 +18,8 @@ const mock_response_data = {
         id: 2,
         user_id: 2,
         type: 0,
-        approval_status: 1
+        approval_status: 0,
+        status_type: STATUS_TYPE_NEW
       }
     },
     {
@@ -48,7 +35,8 @@ const mock_response_data = {
         id: 3,
         user_id: 3,
         type: 0,
-        approval_status: 1
+        approval_status: 0,
+        status_type: STATUS_TYPE_REAPPROVE
       }
     },
     {
@@ -64,7 +52,8 @@ const mock_response_data = {
         id: 4,
         user_id: 4,
         type: 0,
-        approval_status: 1
+        approval_status: 0,
+        status_type: STATUS_TYPE_NEW
       }
     },
     {
@@ -80,7 +69,8 @@ const mock_response_data = {
         id: 7,
         user_id: 7,
         type: 0,
-        approval_status: 1
+        approval_status: 0,
+        status_type: STATUS_TYPE_REAPPROVE
       }
     },
     {
@@ -96,7 +86,8 @@ const mock_response_data = {
         id: 5,
         user_id: 5,
         type: 0,
-        approval_status: 1
+        approval_status: 0,
+        status_type: STATUS_TYPE_REAPPROVE
       }
     },
     {
@@ -112,7 +103,25 @@ const mock_response_data = {
         id: 6,
         user_id: 6,
         type: 0,
-        approval_status: 1
+        approval_status: 0,
+        status_type: null
+      }
+    },
+    {
+      id: 1,
+      name: 'sameple goal1',
+      is_coach: true,
+      user: {
+        id: 1,
+        photo_file_name: 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+        display_username: 'Test Taro'
+      },
+      collaborator: {
+        id: 1,
+        user_id: 1,
+        type: 1,
+        approval_status: 1,
+        status_type: null
       }
     }
   ]
