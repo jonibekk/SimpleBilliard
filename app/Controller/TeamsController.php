@@ -138,7 +138,10 @@ class TeamsController extends AppController
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
-        $goal_categories = $this->Goal->GoalCategory->getCategories();
+        $goal_categories = [
+            'GoalCategory' => Hash::extract($this->Goal->GoalCategory->getCategories(), '{n}.GoalCategory')
+        ];
+
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();

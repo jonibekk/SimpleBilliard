@@ -25,9 +25,7 @@ class GoalsController extends ApiController
      * Goal作成&編集においての初期化処理
      * formで利用する値を取得する
      *
-     * @query_params bool categories
-     * @query_params bool labels
-     * @query_params bool term_types
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
      */
     function get_init_form()
     {
@@ -37,15 +35,27 @@ class GoalsController extends ApiController
         $Label = ClassRegistry::init('Label');
         $res = [];
 
-        if ($this->request->query('categories') == true) {
-            $res['categories'] = $this->Goal->GoalCategory->getCategories(['id', 'name']);
+        if ($this->request->query('data_types')) {
+            $dataTypes = explode(',', $this->request->query('data_types'));
+            if (in_array('all', $dataTypes)) {
+                $dataTypes = 'all';
+            }
+        } else {
+            $dataTypes = 'all';
         }
 
-        if ($this->request->query('labels') == true) {
+        if ($dataTypes == 'all' || in_array('categories', $dataTypes)) {
+            $res['categories'] = Hash::extract(
+                $this->Goal->GoalCategory->getCategories(['id', 'name']),
+                '{n}.GoalCategory'
+            );
+        }
+
+        if ($dataTypes == 'all' || in_array('labels', $dataTypes)) {
             $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
         }
 
-        if ($this->request->query('term_types') == true) {
+        if ($dataTypes == 'all' || in_array('term_types', $dataTypes)) {
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
             $current['type'] = 'current';
             $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);

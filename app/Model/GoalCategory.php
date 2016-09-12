@@ -72,7 +72,6 @@ class GoalCategory extends AppModel
             $this->saveDefaultCategory();
             $res = $this->find('list', ['conditions' => ['team_id' => $this->current_team_id]]);
         }
-        $this->log($res);
         return $res;
     }
 
@@ -87,7 +86,6 @@ class GoalCategory extends AppModel
             $options['fields'] = $fields;
         }
         $res = $this->find('all', $options);
-        $res = ['GoalCategory' => Hash::extract($res, '{n}.GoalCategory')];
         return $res;
     }
 
