@@ -23,8 +23,12 @@ class GoalsController extends ApiController
 
     function post()
     {
-        $this->_validateCreateGoal($this->request->data);
-
+        /**
+         * Validation
+         */
+        if ($validateResult = $this->_validateCreateGoal($this->request->data) !== true) {
+            return $validateResult;
+        }
         /**
          * 登録処理
          */
