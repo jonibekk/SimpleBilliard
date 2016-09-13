@@ -289,7 +289,7 @@ class Goal extends AppModel
      *
      * @param $data
      *
-     * @return bool|mixed
+     * @return bool
      */
     function add($data)
     {
@@ -328,16 +328,17 @@ class Goal extends AppModel
         }
 
         $this->create();
-        $res = $this->saveAll($data);
+        $isSaveSuccess = (bool)$this->saveAll($data);
 
         if ($add_new) {
-            $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
+            $isFeedSaveSuccess = (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
+            $isSaveSuccess = $isSaveSuccess && $isFeedSaveSuccess;
         }
 
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
-        return $res;
+        return (bool)$isSaveSuccess;
     }
 
     /**

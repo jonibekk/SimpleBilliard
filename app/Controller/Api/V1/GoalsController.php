@@ -69,7 +69,7 @@ class GoalsController extends ApiController
     /**
      * ゴール新規登録
      * - バリデーション(失敗したらレスポンス返す)
-     * - ゴール新規登録(失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
+     * - ゴール新規登録(トランザクションかける。失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
      * - フィードへ新しい投稿がある旨を知らせる
      * - コーチへ通知
      * - セットアップガイドのステータスを更新
@@ -87,15 +87,18 @@ class GoalsController extends ApiController
             return $validateResult;
         }
         //TODO タグの保存処理まだ
-        $saveResult = $this->Goal->add(
+        $this->Goal->begin();
+        $isSaveSuccess = $this->Goal->add(
             [
                 'Goal'      => $this->request->data,
                 'KeyResult' => [$this->request->data['key_result']],
             ]
         );
-        if ($saveResult === false) {
+        if ($isSaveSuccess === false) {
+            $this->Goal->rollback();
             return $this->_getResponseBadFail(__('Save Data Failed!'));
         }
+        $this->Goal->commit();
 
         $newGoalId = $this->Goal->getLastInsertID();
 
