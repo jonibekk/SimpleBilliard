@@ -80,6 +80,9 @@ class GoalsController extends ApiController
 
     /**
      * ゴール新規登録API
+     * *必須フィールド
+     * - socket_id: pusherへのpush用
+     * *処理
      * - バリデーション(失敗したらレスポンス返す)
      * - ゴール新規登録(トランザクションかける。失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
      * - フィードへ新しい投稿がある旨を知らせる
