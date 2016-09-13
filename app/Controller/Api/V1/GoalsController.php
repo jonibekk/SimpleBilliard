@@ -138,12 +138,12 @@ class GoalsController extends ApiController
 
         $validation = [];
 
-        $goal_validation = $this->Goal->validateGoalCreate($data);
+        $goal_validation = $this->Goal->validateGoalPOST($data);
         if ($goal_validation !== true) {
             $validation = $this->_validationExtract($goal_validation);
         }
 
-        $kr_validation = $this->Goal->KeyResult->validateKrCreate($data['key_result']);
+        $kr_validation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
         if ($kr_validation !== true) {
             $validation['key_result'] = $this->_validationExtract($kr_validation);
         }

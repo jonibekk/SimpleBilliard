@@ -183,10 +183,18 @@ class Goal extends AppModel
 
     public $post_validate = [
         'start_date' => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'end_date'   => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'term_type'  => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
@@ -302,7 +310,7 @@ class Goal extends AppModel
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
 
-        if ($this->validateGoalFromPost($data) !== true) {
+        if ($this->validateGoalPOST($data['Goal']) !== true) {
             return false;
         }
 
@@ -434,25 +442,6 @@ class Goal extends AppModel
         $data['Collaborator'][0]['team_id'] = $this->current_team_id;
         $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         return $data;
-    }
-
-    /**
-     * POSTされたゴールのバリデーション
-     *
-     * @param $data
-     *
-     * @return bool
-     */
-    function validateGoalFromPost($data)
-    {
-        $this->set($data['Goal']);
-        $validate_backup = $this->validate;
-        $this->validate = array_merge($this->validate, $this->post_validate);
-        if (!$this->validates()) {
-            return false;
-        }
-        $this->validate = $validate_backup;
-        return true;
     }
 
     /**
@@ -1998,7 +1987,7 @@ class Goal extends AppModel
     }
 
     /**
-     * ゴール作成時のゴールのバリデーション
+     * POSTされたゴールのバリデーション
      * - バリデーションルールを切り替える
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      *
@@ -2006,7 +1995,7 @@ class Goal extends AppModel
      *
      * @return array|true
      */
-    function validateGoalCreate($data)
+    function validateGoalPOST($data)
     {
         $this->set($data);
         $validationBackup = $this->validate;

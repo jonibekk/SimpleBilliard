@@ -119,17 +119,19 @@ class KeyResult extends AppModel
 
     public $post_validate = [
         'start_date' => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'end_date'   => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
-        ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
     ];
 
     /**
@@ -471,17 +473,20 @@ class KeyResult extends AppModel
     }
 
     /**
-     * KR作成時のバリデーション
+     * POSTされたKRのバリデーション
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      *
      * @param $data
      *
      * @return array|true
      */
-    function validateKrCreate($data)
+    function validateKrPOST($data)
     {
+        $validationBackup = $this->validate;
+        $this->validate = am($this->validate, $this->post_validate);
         $this->set($data);
         if ($this->validates()) {
+            $this->validate = $validationBackup;
             return true;
         }
         return $this->validationErrors;
