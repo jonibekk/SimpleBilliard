@@ -19,11 +19,11 @@ class ApiExceptionRenderer extends ExceptionRenderer
         switch (get_class($error)) {
             case 'MissingActionException':
             case 'MissingControllerException':
-                $message = 'Api Endpoint not found.';
+                $message = __('Api Endpoint not found.');
                 break;
             case 'BadRequestException':
-                if($message == 'The request has been black-holed'){
-                    $message = 'CSRF Error!';
+                if ($message == 'The request has been black-holed') {
+                    $message = __('CSRF Error!');
                     $code = 403;
                 }
                 break;
