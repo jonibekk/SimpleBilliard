@@ -66,7 +66,7 @@ class ApiController extends BaseController
      */
     protected function _getResponseSuccess($data = null, $html = null)
     {
-        $this->_getResponse(200, $data, $html);
+        return $this->_getResponse(200, $data, $html);
     }
 
     /**
@@ -79,7 +79,7 @@ class ApiController extends BaseController
      */
     protected function _getResponseBadFail($message, $validationErrors = null)
     {
-        $this->_getResponse(400, null, null, $message, $validationErrors);
+        return $this->_getResponse(400, null, null, $message, $validationErrors);
     }
 
     /**
@@ -112,6 +112,8 @@ class ApiController extends BaseController
     }
 
     /**
+     * レスポンス汎用メソッド
+     *
      * @param integer           $status_code
      * @param array|string|null $data
      * @param string|null       $html
