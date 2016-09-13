@@ -96,7 +96,7 @@ class GoalsController extends ApiController
         );
         if ($isSaveSuccess === false) {
             $this->Goal->rollback();
-            return $this->_getResponseBadFail(__('Save Data Failed!'));
+            return $this->_getResponseBadFail(__('Failed to save a goal.'));
         }
         $this->Goal->commit();
 
