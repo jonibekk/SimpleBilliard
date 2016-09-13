@@ -56,20 +56,43 @@ class ApiController extends BaseController
         $this->_setAppLanguage();
     }
 
+    /**
+     * 成功(Status Code:200)のレスポンスを返す
+     *
+     * @param string|null $data
+     * @param string|null $html
+     *
+     * @return CakeResponse
+     */
     protected function _getResponseSuccess($data = null, $html = null)
     {
         $this->_getResponse(200, $data, $html);
     }
 
+    /**
+     * リクエスト不正(Status Code:400)のレスポンスを返す
+     *
+     * @param string     $message
+     * @param array|null $validationErrors
+     *
+     * @return CakeResponse
+     */
     protected function _getResponseBadFail($message, $validationErrors = null)
     {
         $this->_getResponse(400, null, null, $message, $validationErrors);
     }
 
+    /**
+     * 通常のバリデーション結果をレスポンスとして返す
+     * - バリデーション成功の場合はStatus Code:200
+     * - バリデーション失敗の場合はStatus Code:400
+     *
+     * @param Model $Model
+     *
+     * @return CakeResponse
+     */
     protected function _getResponseDefaultValidation(Model $Model)
     {
-        $this->request->allowMethod('post');
-        $this->_requireRequestData();
         $Model->set($this->request->data);
         if ($Model->validates()) {
             return $this->_getResponseSuccess();
@@ -89,13 +112,13 @@ class ApiController extends BaseController
     }
 
     /**
-     * @param      $status_code
-     * @param null $data
-     * @param null $html
-     * @param null $message
-     * @param null $validation_errors
+     * @param integer           $status_code
+     * @param array|string|null $data
+     * @param string|null       $html
+     * @param string|null       $message
+     * @param array|null        $validation_errors
      *
-     * @return CakeResponse|null
+     * @return CakeResponse
      */
     protected function _getResponse(
         $status_code,

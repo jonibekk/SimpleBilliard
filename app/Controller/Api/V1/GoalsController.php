@@ -16,16 +16,28 @@ class GoalsController extends ApiController
         'Goal'
     ];
 
+    /**
+     * ゴール(KR除く)のバリデーションAPI
+     * 成功(Status Code:200)、失敗(Status Code:400)
+     *
+     * @return CakeResponse
+     */
     function post_validate()
     {
-        return $this->_getResponseDefaultValidation($this->Goal);
+        $validation = $this->Goal->validateGoalPOST($this->request->data);
+        if ($validation === true) {
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = $this->_validationExtract($validation);
+        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
     }
 
     /**
-     * Goal作成&編集においての初期化処理
+     * Goal作成&編集においての初期化処理API
      * formで利用する値を取得する
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     * @return CakeResponse
      */
     function get_init_form()
     {
@@ -67,7 +79,7 @@ class GoalsController extends ApiController
     }
 
     /**
-     * ゴール新規登録
+     * ゴール新規登録API
      * - バリデーション(失敗したらレスポンス返す)
      * - ゴール新規登録(トランザクションかける。失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
      * - フィードへ新しい投稿がある旨を知らせる
