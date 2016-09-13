@@ -123,6 +123,13 @@ $.ajax({
     data: { last_name : "goalous" , first_name:"tarou"}
 });
 ```
+###### dataの必須フィールド
+- CSRFトークン(CakePHP仕様につき、この鬱陶しいkey名で固定)
+ - key: `data[_Token][key]`
+ - value: `cake.data.csrf_token.key`
+- pusherのsocket_id(pusherが通知をpublishする際に自分を除外する為に必要)
+ - key: `socket_id`
+ - value: `cake.pusher.socket_id`
 
 ### レスポンス
 #### APIで扱うHTTPステータスコード
