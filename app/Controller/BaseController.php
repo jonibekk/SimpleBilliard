@@ -13,13 +13,17 @@ App::uses('Controller', 'Controller');
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.Controller
  * @since         CakePHP(tm) v 0.2.9
- * @property SessionComponent  $Session
- * @property SecurityComponent $Security
- * @property AuthComponent     $Auth
- * @property User              $User
- * @property Post              $Post
- * @property Goal              $Goal
- * @property Team              $Team
+ * @property SessionComponent   $Session
+ * @property SecurityComponent  $Security
+ * @property AuthComponent      $Auth
+ * @property NotifyBizComponent $NotifyBiz
+ * @property GlEmailComponent   $GlEmail
+ * @property MixpanelComponent  $Mixpanel
+ * @property User               $User
+ * @property Post               $Post
+ * @property Goal               $Goal
+ * @property Team               $Team
+ * @property GlRedis            $GlRedis
  */
 class BaseController extends Controller
 {
@@ -36,6 +40,9 @@ class BaseController extends Controller
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
             ]
         ],
+        'NotifyBiz',
+        'GlEmail',
+        'Mixpanel',
     ];
 
     public $uses = [
@@ -93,6 +100,106 @@ class BaseController extends Controller
             $lang = $this->Lang->getLanguage();
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
         }
+    }
+
+    function updateSetupStatusIfNotCompleted()
+    {
+        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
+        if ($setup_guide_is_completed) {
+            return true;
+        }
+
+        $user_id = $this->Auth->user('id');
+        $this->GlRedis->deleteSetupGuideStatus($user_id);
+        $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
+        if ($this->calcSetupRestCount($status_from_mysql) === 0) {
+            $this->User->completeSetupGuide($user_id);
+            $this->_refreshAuth($this->Auth->user('id'));
+            return true;
+        }
+        //set update time
+        $status_from_mysql[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
+
+        $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
+        return true;
+    }
+
+    function calcSetupRestCount($status)
+    {
+        return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
+    }
+
+    function calcSetupCompletePercent($status)
+    {
+        $rest_count = $this->calcSetupRestCount($status);
+        if ($rest_count <= 0) {
+            return 100;
+        }
+
+        $complete_count = count(User::$TYPE_SETUP_GUIDE) - $rest_count;
+        if ($complete_count === 0) {
+            return 0;
+        }
+
+        return 100 - floor(($rest_count / count(User::$TYPE_SETUP_GUIDE) * 100));
+    }
+
+    /**
+     * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
+     *
+     * @param $uid
+     *
+     * @return bool
+     */
+    public function _refreshAuth($uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->Auth->user('id');
+        }
+        //言語設定を退避
+        $user_lang = $this->User->findById($uid);
+        $lang = null;
+        if (!empty($user_lang)) {
+            $lang = $user_lang['User']['language'];
+        }
+        $this->Auth->logout();
+        $this->User->resetLocalNames();
+        $this->User->me['language'] = $lang;
+        $this->User->recursive = 0;
+        $user_buff = $this->User->findById($uid);
+        $this->User->recursive = -1;
+        unset($user_buff['User']['password']);
+        $user_buff = array_merge(['User' => []], $user_buff);
+        //配列を整形（Userの中に他の関連データを配置）
+        $user = [];
+        $associations = [];
+        foreach ($user_buff as $key => $val) {
+            if ($key == 'User') {
+                $user[$key] = $val;
+            } else {
+                $associations[$key] = $val;
+            }
+        }
+        if (isset($user['User'])) {
+            $user['User'] = array_merge($user['User'], $associations);
+        }
+        $this->User->me = $user['User'];
+        $res = $this->Auth->login($user['User']);
+        return $res;
+    }
+
+    /**
+     * @param $goal_id
+     * @param $notify_type
+     */
+    function _sendNotifyToCoach($goal_id, $notify_type)
+    {
+        $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
+            $this->Session->read('current_team_id'));
+        if (!$coach_id) {
+            return;
+        }
+        $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
     }
 
 }

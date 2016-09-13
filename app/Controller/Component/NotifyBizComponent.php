@@ -61,24 +61,26 @@ class NotifyBizComponent extends Component
 
     public function initialize(Controller $controller)
     {
-        $this->startup($controller);
         $this->Controller = $controller;
+        $this->NotifySetting = ClassRegistry::init('NotifySetting');
+        $this->Post = ClassRegistry::init('Post');
+        $this->Comment = ClassRegistry::init('Comment');
+        $this->Goal = ClassRegistry::init('Goal');
+        $this->Team = ClassRegistry::init('Team');
+        $this->Device = ClassRegistry::init('Device');
+        $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->initialized = true;
     }
 
     public function startup(Controller $controller)
     {
-        if (!$this->initialized) {
+        if (!CakeSession::started()) {
             CakeSession::start();
-            $this->NotifySetting = ClassRegistry::init('NotifySetting');
-            $this->Post = ClassRegistry::init('Post');
-            $this->Comment = ClassRegistry::init('Comment');
-            $this->Goal = ClassRegistry::init('Goal');
-            $this->Team = ClassRegistry::init('Team');
-            $this->Device = ClassRegistry::init('Device');
-            $this->GlRedis = ClassRegistry::init('GlRedis');
-            $this->GlEmail->startup($controller);
         }
+        if (!$this->initialized) {
+            $this->initialize($controller);
+        }
+        $this->GlEmail->startup($controller);
     }
 
     /**

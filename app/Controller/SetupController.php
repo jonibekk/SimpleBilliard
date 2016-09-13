@@ -105,10 +105,19 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        $goal = $this->request->data['Goal'];
         // $_FILESとGoalオブジェクトマージ
-        $this->request->data['Goal']['photo'] = $_FILES['photo'];
+        $goal['photo'] = $_FILES['photo'];
         // Goal保存
-        $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
+        //FIXME: [START] tKRモデル対応のために一時的にゴールの内容を無理やりtKRとして登録しているが、React側からこれらの値を渡すようにする！
+        $goal['term_type'] = 'current';
+        $goal['goal_category_id'] = key($this->Goal->GoalCategory->getCategoryList());
+        $tkr['name'] = $goal['name'];
+        $tkr['value_unit'] = $goal['value_unit'];
+        $tkr['start_value'] = $goal['start_value'];
+        $tkr['target_value'] = $goal['target_value'];
+        //FIXME: [END]
+        $res = $this->Goal->add(['Goal' => $goal, 'KeyResult' => [$tkr]]);
         if ($res) {
             $this->Pnotify->outSuccess($msg = __("Created a goal."));
             $error = false;

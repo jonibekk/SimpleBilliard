@@ -76,7 +76,8 @@ class KeyResult extends AppModel
         'name'         => [
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
-                'rule' => 'notEmpty',
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'del_flg'      => [
@@ -90,33 +91,47 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
+            ],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'start_value'  => [
             'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'numeric'   => ['rule' => ['numeric']],
+            'notEmpty'  => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
         'target_value' => [
             'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'numeric'   => ['rule' => ['numeric']],
+            'notEmpty'  => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
     ];
 
     public $post_validate = [
         'start_date' => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'end_date'   => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
-        ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
     ];
 
     /**
@@ -455,6 +470,26 @@ class KeyResult extends AppModel
             return false;
         }
         return $kr['KeyResult']['completed'] ? true : false;
+    }
+
+    /**
+     * POSTされたKRのバリデーション
+     * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     *
+     * @param $data
+     *
+     * @return array|true
+     */
+    function validateKrPOST($data)
+    {
+        $validationBackup = $this->validate;
+        $this->validate = am($this->validate, $this->post_validate);
+        $this->set($data);
+        if ($this->validates()) {
+            $this->validate = $validationBackup;
+            return true;
+        }
+        return $this->validationErrors;
     }
 
 }

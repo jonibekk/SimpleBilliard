@@ -107,6 +107,7 @@ class CollaboratorTest extends GoalousTestCase
             'photo_file_name'  => 'aa.png',
             'start_date'       => $current_term['end_date'] - 20,
             'end_date'         => $current_term['end_date'] - 10,
+            'goal_category_id' => 1,
         ];
         $this->Collaborator->Goal->save($params);
         $current_goal_id = $this->Collaborator->Goal->getLastInsertID();
@@ -119,6 +120,7 @@ class CollaboratorTest extends GoalousTestCase
             'photo_file_name'  => 'aa.png',
             'start_date'       => $current_term['end_date'] + 10,
             'end_date'         => $current_term['end_date'] + 20,
+            'goal_category_id' => 1,
         ];
         $this->Collaborator->Goal->create();
         $this->Collaborator->Goal->save($params);

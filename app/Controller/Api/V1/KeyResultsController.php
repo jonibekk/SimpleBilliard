@@ -15,9 +15,20 @@ class KeyResultsController extends ApiController
         'KeyResult'
     ];
 
+    /**
+     * KRのバリデーションAPI
+     * 成功(Status Code:200)、失敗(Status Code:400)
+     *
+     * @return CakeResponse
+     */
     function post_validate()
     {
-        return $this->_getResponseDefaultValidation($this->KeyResult);
+        $validation = $this->KeyResult->validateKrPOST($this->request->data);
+        if ($validation === true) {
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = $this->_validationExtract($validation);
+        return $this->_getResponseValidationFail($validationMsg);
     }
 
 }

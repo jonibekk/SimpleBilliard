@@ -61,19 +61,25 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
         $key_results = [
-            'goal_id'    => $goal_id,
-            'team_id'    => 1,
-            'user_id'    => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'goal_id'      => $goal_id,
+            'team_id'      => 1,
+            'user_id'      => 1,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
+            'name'         => 'test',
         ];
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->getMyGoals();
@@ -83,19 +89,25 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
         $key_results = [
-            'goal_id'    => $goal_id,
-            'team_id'    => 1,
-            'user_id'    => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'goal_id'      => $goal_id,
+            'team_id'      => 1,
+            'user_id'      => 1,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
+            'name'         => 'test',
         ];
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->getMyGoals();
@@ -105,22 +117,28 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'purpose_id' => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'purpose_id'       => 1,
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
         $key_results = [
-            'goal_id'     => $goal_id,
-            'team_id'     => 1,
-            'user_id'     => 1,
-            'special_flg' => true,
-            'start_date'  => $this->start_date,
-            'end_date'    => $this->end_date,
-            'completed'   => 1,
+            'goal_id'      => $goal_id,
+            'team_id'      => 1,
+            'user_id'      => 1,
+            'special_flg'  => true,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+            'completed'    => 1,
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
+            'name'         => 'test',
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
@@ -137,11 +155,13 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'purpose_id' => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'purpose_id'       => 1,
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -313,6 +333,7 @@ class GoalTest extends GoalousTestCase
                 'name'             => 'test',
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
+                'term_type'        => 'current',
             ]
         ];
         $res = $this->Goal->add($data);
@@ -330,6 +351,7 @@ class GoalTest extends GoalousTestCase
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
                 'img_url'          => 'https://placeholdit.imgix.net/~text?txtsize=14&txt=test&w=1&h=1',
+                'term_type'        => 'current',
             ]
         ];
         $res = $this->Goal->add($data);
@@ -346,6 +368,7 @@ class GoalTest extends GoalousTestCase
                 'name'             => 'test',
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
+                'term_type'        => 'current',
             ]
         ];
         $res = $this->Goal->add($data);
@@ -368,9 +391,10 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $this->Goal->save(
             [
-                'user_id' => 999,
-                'team_id' => 1,
-                'name'    => 'test'
+                'user_id'          => 999,
+                'team_id'          => 1,
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
 
@@ -387,9 +411,10 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $this->Goal->save(
             [
-                'user_id' => 1,
-                'team_id' => 1,
-                'name'    => 'test'
+                'user_id'          => 1,
+                'team_id'          => 1,
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
 
@@ -409,19 +434,21 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $this->Goal->save(
             [
-                'user_id'    => 1,
-                'team_id'    => 1,
-                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'name'       => 'test'
+                'user_id'          => 1,
+                'team_id'          => 1,
+                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
         $this->Goal->Collaborator->save(
             [
-                'user_id' => 1,
-                'team_id' => 1,
-                'goal_id' => $this->Goal->getLastInsertID(),
-                'name'    => 'test'
+                'user_id'          => 1,
+                'team_id'          => 1,
+                'goal_id'          => $this->Goal->getLastInsertID(),
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
 
@@ -437,11 +464,12 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $this->Goal->save(
             [
-                'user_id'    => 1,
-                'team_id'    => 1,
-                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'name'       => 'test'
+                'user_id'          => 1,
+                'team_id'          => 1,
+                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
         $this->Goal->Collaborator->save(
@@ -463,22 +491,24 @@ class GoalTest extends GoalousTestCase
         $this->Goal->create();
         $this->Goal->save(
             [
-                'user_id'    => 2,
-                'team_id'    => 1,
-                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'name'       => 'test'
+                'user_id'          => 2,
+                'team_id'          => 1,
+                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
         $goal_1 = $this->Goal->getLastInsertID();
         $this->Goal->create();
         $this->Goal->save(
             [
-                'user_id'    => 2,
-                'team_id'    => 1,
-                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'name'       => 'test1'
+                'user_id'          => 2,
+                'team_id'          => 1,
+                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'             => 'test1',
+                'goal_category_id' => 1,
             ]
         );
         $goal_2 = $this->Goal->getLastInsertID();
@@ -517,22 +547,26 @@ class GoalTest extends GoalousTestCase
     function _getNewGoal()
     {
         $goal = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'name'       => 'test',
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'name'             => 'test',
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal);
         $goal_id = $this->Goal->getLastInsertID();
         $kr = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'goal_id'    => $goal_id,
-            'name'       => 'test',
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'      => 1,
+            'team_id'      => 1,
+            'goal_id'      => $goal_id,
+            'name'         => 'test',
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
@@ -599,11 +633,12 @@ class GoalTest extends GoalousTestCase
         $user_id = 1;
         $team_id = 1;
         $goal_params = [
-            'user_id'    => $user_id,
-            'team_id'    => $team_id,
-            'name'       => 'test',
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => $user_id,
+            'team_id'          => $team_id,
+            'name'             => 'test',
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
         ];
         $this->Goal->save($goal_params);
         $goal_id = $this->Goal->getLastInsertID();
@@ -673,20 +708,24 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $term = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'purpose_id' => 1,
-            'start_date' => $term['start_date'] + 1,
-            'end_date'   => $term['end_date'] - 1,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'purpose_id'       => 1,
+            'start_date'       => $term['start_date'] + 1,
+            'end_date'         => $term['end_date'] - 1,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
         $goal_data = [
-            'user_id'    => 2,
-            'team_id'    => 1,
-            'purpose_id' => 1,
-            'start_date' => $term['start_date'] + 1,
-            'end_date'   => $term['end_date'] - 1,
+            'user_id'          => 2,
+            'team_id'          => 1,
+            'purpose_id'       => 1,
+            'start_date'       => $term['start_date'] + 1,
+            'end_date'         => $term['end_date'] - 1,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -697,11 +736,15 @@ class GoalTest extends GoalousTestCase
             'goal_id' => $goal_id,
         ];
         $key_results = [
-            'goal_id'    => $goal_id,
-            'team_id'    => 1,
-            'user_id'    => 1,
-            'start_date' => $this->start_date + 1,
-            'end_date'   => $this->end_date - 1,
+            'goal_id'      => $goal_id,
+            'team_id'      => 1,
+            'user_id'      => 1,
+            'start_date'   => $this->start_date + 1,
+            'end_date'     => $this->end_date - 1,
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
+            'name'         => 'test',
         ];
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->KeyResult->save($key_results);
@@ -717,11 +760,13 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'purpose_id' => 1,
-            'start_date' => REQUEST_TIMESTAMP,
-            'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'purpose_id'       => 1,
+            'start_date'       => REQUEST_TIMESTAMP,
+            'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -735,11 +780,13 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
 
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'purpose_id' => 1,
-            'start_date' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-            'end_date'   => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date'],
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'purpose_id'       => 1,
+            'start_date'       => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+            'end_date'         => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date'],
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -922,11 +969,12 @@ class GoalTest extends GoalousTestCase
         $this->Goal->create();
         $this->Goal->save(
             [
-                'user_id'    => $this->Goal->my_uid,
-                'team_id'    => $this->Goal->current_team_id,
-                'start_date' => $term['start_date'],
-                'end_date'   => $term['end_date'],
-                'name'       => 'test'
+                'user_id'          => $this->Goal->my_uid,
+                'team_id'          => $this->Goal->current_team_id,
+                'start_date'       => $term['start_date'],
+                'end_date'         => $term['end_date'],
+                'name'             => 'test',
+                'goal_category_id' => 1,
             ]
         );
         $this->Goal->Collaborator->create();
@@ -968,10 +1016,12 @@ class GoalTest extends GoalousTestCase
 
         // In case that goal is created in current term or previous term
         $this->Goal->save([
-            'user_id'    => $this->Goal->my_uid,
-            'team_id'    => $this->Goal->current_team_id,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => $this->Goal->my_uid,
+            'team_id'          => $this->Goal->current_team_id,
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ]);
         $res = $this->Goal->isCreatedForSetupBy($this->Goal->my_uid);
         $this->assertTrue($res);
@@ -1014,10 +1064,12 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'start_date' => $this->start_date,
-            'end_date'   => $this->end_date,
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'start_date'       => $this->start_date,
+            'end_date'         => $this->end_date,
+            'goal_category_id' => 1,
+            'name'             => 'test',
         ];
         $this->Goal->save($goal_data);
         $goals = $this->Goal->getGoalsForSetupBy(1);

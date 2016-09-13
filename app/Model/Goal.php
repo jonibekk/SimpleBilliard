@@ -117,11 +117,12 @@ class Goal extends AppModel
     public $validate = [
         'name'             => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
-                'rule' => 'notEmpty',
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'description'      => [
@@ -156,9 +157,13 @@ class Goal extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'goal_category_id' => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
-            ]
+            ],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
         'start_date'       => [
             'numeric' => ['rule' => ['numeric']]
@@ -178,12 +183,26 @@ class Goal extends AppModel
 
     public $post_validate = [
         'start_date' => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'end_date'   => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
+        'term_type'  => [
+            'inList'   => ['rule' => ['inList', ['current', 'next']],],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ]
-
     ];
 
     public $actsAs = [
@@ -263,9 +282,25 @@ class Goal extends AppModel
         $this->_setPriorityName();
     }
 
+    /**
+     * ゴール登録処理
+     * - ゴールのバリデーション(エラーの場合はfalseを返却)
+     * - ゴールの期間の取得
+     * - ゴールの開始日、終了日をunixtimeに変換
+     * - 評価期間またぎチェック(またいでいる場合はfalseを返却)
+     * - TKRデータの生成(新規ゴールの場合)
+     * - コラボレータの生成(新規ゴールの場合)
+     * - ゴールの保存処理
+     * - ゴール投稿(新規ゴールの場合)
+     * - キャッシュ削除
+     *
+     * @param $data
+     *
+     * @return bool
+     */
     function add($data)
     {
-        if (!isset($data['Goal']) || empty($data['Goal'])) {
+        if (!Hash::get($data, 'Goal')) {
             return false;
         }
         $add_new = false;
@@ -275,15 +310,53 @@ class Goal extends AppModel
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
 
-        $this->set($data['Goal']);
-        $validate_backup = $this->validate;
-        $this->validate = array_merge($this->validate, $this->post_validate);
-        if (!$this->validates()) {
+        if ($this->validateGoalPOST($data['Goal']) !== true) {
             return false;
         }
-        $this->validate = $validate_backup;
 
-        // 登録するゴールが来期のものか
+        $goal_term = $this->getGoalTermFromPost($data);
+
+        $data = $this->convertGoalDateFromPost($data, $goal_term);
+
+        // 評価期間をまたいでいないかチェック
+        if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
+            return false;
+        }
+
+        if ($add_new) {
+            $data = $this->buildTopKeyResult($data, $goal_term);
+            $data = $this->buildCollaboratorDataAsLeader($data);
+        }
+
+        // setting default image if default image is chosen and image is not selected.
+        if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
+            $data['Goal']['photo'] = $data['Goal']['img_url'];
+            unset($data['Goal']['img_url']);
+        }
+
+        $this->create();
+        $isSaveSuccess = (bool)$this->saveAll($data);
+
+        if ($add_new) {
+            $isFeedSaveSuccess = (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
+            $isSaveSuccess = $isSaveSuccess && $isFeedSaveSuccess;
+        }
+
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+
+        return (bool)$isSaveSuccess;
+    }
+
+    /**
+     * Postされたデータからゴールの期間を取得
+     *
+     * @param $data
+     *
+     * @return array|null
+     */
+    function getGoalTermFromPost($data)
+    {
         $isNextTerm = (isset($data['Goal']['term_type']) && $data['Goal']['term_type'] == 'next');
         $goal_term = null;
         if ($isNextTerm) {
@@ -291,48 +364,84 @@ class Goal extends AppModel
         } else {
             $goal_term = $this->Team->EvaluateTerm->getCurrentTermData();
         }
+        return $goal_term;
+    }
 
-        //時間をunixtimeに変換
+    /**
+     * Postされたデータからゴールの開始日、終了日をunixtimeに変換
+     *
+     * @param array $data
+     * @param array $goalTerm
+     *
+     * @return array
+     */
+    function convertGoalDateFromPost($data, $goalTerm)
+    {
         if (!empty($data['Goal']['start_date'])) {
-            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - $goal_term['timezone'] * HOUR;
+            //時間をunixtimeに変換
+            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - $goalTerm['timezone'] * HOUR;
+        } else {
+            //指定なしの場合は現在時刻
+            $data['Goal']['start_date'] = time();
         }
-        //期限を+1day-1secする
         if (!empty($data['Goal']['end_date'])) {
+            //期限を+1day-1secする
             $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['Goal']['end_date'])) - $goal_term['timezone'] * HOUR;
+                    strtotime($data['Goal']['end_date'])) - $goalTerm['timezone'] * HOUR;
+        } else {
+            //指定なしの場合は期の終了日
+            $data['Goal']['end_date'] = $goalTerm['end_date'] - $goalTerm['timezone'] * HOUR;
         }
+        return $data;
+    }
 
-        // 評価期間をまたいでいないかチェック
-        if (isset($data['Goal']['start_date']) && isset($data['Goal']['end_date'])) {
-            if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
-                return false;
-            }
+    /**
+     * 新規保存用のtKRデータを生成
+     *
+     * @param array $data
+     * @param array $goal_term
+     *
+     * @return array
+     */
+    function buildTopKeyResult($data, $goal_term)
+    {
+        //tKRを保存
+        if (!Hash::get($data, 'KeyResult.0')) {
+            return $data;
         }
+        $data['KeyResult'][0]['priority'] = 5;
+        $data['KeyResult'][0]['tkr_flg'] = true;
+        $data['KeyResult'][0]['user_id'] = $this->my_uid;
+        $data['KeyResult'][0]['team_id'] = $this->current_team_id;
+        if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
+            $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
+        } else {
+            //時間をunixtimeに変換
+            $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
+        }
+        if (!viaIsSet($data['KeyResult'][0]['end_date'])) {
+            $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
+        } else {
+            //期限を+1day-1secする
+            $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
+                    strtotime($data['KeyResult'][0]['end_date'])) - $goal_term['timezone'] * HOUR;
+        }
+        return $data;
+    }
 
-        //新規の場合はデフォルトKRを追加
-        if ($add_new) {
-            //コラボレータをタイプ　リーダーで保存
-            $data['Collaborator'][0]['user_id'] = $this->my_uid;
-            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
-        }
-        // setting default image if default image is chosen and image is not selected.
-        if ((viaIsSet($data['Goal']['img_url']) || !empty($data['Goal']['img_url']))
-            && (!viaIsSet($data['Goal']['photo']) || empty($data['Goal']['photo']))
-        ) {
-            $data['Goal']['photo'] = $data['Goal']['img_url'];
-            unset($data['Goal']['img_url']);
-        }
-
-        $this->create();
-        $res = $this->saveAll($data);
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        if ($add_new) {
-            Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-            //ゴール投稿
-            $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
-        }
-        return $res;
+    /**
+     * コラボレータをタイプ　リーダーで生成
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    function buildCollaboratorDataAsLeader($data)
+    {
+        $data['Collaborator'][0]['user_id'] = $this->my_uid;
+        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
+        return $data;
     }
 
     /**
@@ -1875,5 +1984,26 @@ class Goal extends AppModel
             ]
         ];
         return $this->find('all', $options);
+    }
+
+    /**
+     * POSTされたゴールのバリデーション
+     * - バリデーションルールを切り替える
+     * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     *
+     * @param $data
+     *
+     * @return array|true
+     */
+    function validateGoalPOST($data)
+    {
+        $this->set($data);
+        $validationBackup = $this->validate;
+        $this->validate = am($this->validate, $this->post_validate);
+        if ($this->validates()) {
+            $this->validate = $validationBackup;
+            return true;
+        }
+        return $this->validationErrors;
     }
 }

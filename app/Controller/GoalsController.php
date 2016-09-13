@@ -202,20 +202,6 @@ class GoalsController extends AppController
     }
 
     /**
-     * @param $goal_id
-     * @param $notify_type
-     */
-    function _sendNotifyToCoach($goal_id, $notify_type)
-    {
-        $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
-            $this->Session->read('current_team_id'));
-        if (!$coach_id) {
-            return;
-        }
-        $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
-    }
-
-    /**
      * delete method
      *
      * @return void
