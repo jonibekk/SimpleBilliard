@@ -9,6 +9,8 @@ const initialState = {
   suggestions: [],
   validationErrors: {
     name: '',
+    category: '',
+    labels: '',
   },
   inputData:{
     name:"",

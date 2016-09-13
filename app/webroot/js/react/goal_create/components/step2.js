@@ -3,7 +3,7 @@ import {browserHistory} from "react-router";
 import AutoSuggest from 'react-autosuggest';
 import * as Page from "../constants/Page";
 import CategorySelect from "./elements/CategorySelect";
-
+import InvalidMessageBox from "./elements/InvalidMessageBox";
 
 export default class Step2Component extends React.Component {
   constructor(props) {
@@ -38,8 +38,9 @@ export default class Step2Component extends React.Component {
     let inputLabels = null;
     if (inputData && inputData.labels && inputData.labels.length > 0) {
        inputLabels = inputData.labels.map(v => {
-        return <div key={v}>{v}</div>;
-      });
+         return <li key={v} className="goals-create-selected-labels-item"><span>{v}</span><a href="#" className="ml_8px"><i className="fa fa-times-circle" aria-hidden="true"></i></a></li>;
+
+       });
     }
 
     return (
@@ -48,6 +49,7 @@ export default class Step2Component extends React.Component {
         <p className="goals-create-description">{__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velitesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa quiofficia deserunt mollit anim id est laborum.")}</p>
         <form className="goals-create-input" action onSubmit={(e) => this.handleSubmit(e) }>
           <CategorySelect onChange={e => this.props.updateInputData({category: e.target.value})} categories={this.props.goal.categories} />
+          <InvalidMessageBox message={this.props.goal.validationErrors.category}/>
           <label className="goals-create-input-label">{__("Labels ?")}</label>
           <AutoSuggest
             suggestions={suggestions}
@@ -58,27 +60,10 @@ export default class Step2Component extends React.Component {
             inputProps={props}
             onSuggestionSelected={this.props.onSuggestionSelected}
           />
-          <ul>
+          <InvalidMessageBox message={this.props.goal.validationErrors.labels}/>
+          <ul className="goals-create-selected-labels">
             {inputLabels}
           </ul>
-
-          {/*TODO:本来のhtmlは↓だが構造が違うので上手く合わせること*/}
-          {/*<ul className="goals-create-input-labels-form">*/}
-            {/*<li className="input-labels-form-item">*/}
-              {/*<span className="input-labels-form-item-txt">{__("goalous")}</span>*/}
-              {/*<a href="#" className="input-labels-form-item-choice-close" tabIndex={-1}><i*/}
-                {/*className="fa fa-times-circle" aria-hidden="true"/></a>*/}
-            {/*</li>*/}
-            {/*/!*            <li class="input-labels-form-item">*/}
-             {/*<span class="input-labels-form-item-txt">{__("web")}</span>*/}
-             {/*<a href="#" class="input-labels-form-item-close" tabindex="-1"><i class="fa fa-times-circle" aria-hidden="true"></i></a>*/}
-             {/*</li>*/}
-             {/**!/*/}
-            {/*<li className="input-labels-form-input">*/}
-              {/*<input className="input-labels-form-input-text" type="text"/>*/}
-            {/*</li>*/}
-          {/*</ul>*/}
-
           <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
           <a className="goals-create-btn-cancel btn" href="/goals/create/step1/gucchi">{__("Back")}</a>
         </form>

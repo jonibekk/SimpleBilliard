@@ -1,6 +1,36 @@
 // variables
 @spacing: 10px;
 
+// TODO:ラベル入力部分の元のCSS削除
+.react-autosuggest {
+  &__container {
+    border: 1px solid @baseGray;
+    margin-bottom: @spacing;
+    padding: 4px;
+  }
+  &__input {
+    width: 100%;
+    display: inline-block;
+    border: none;
+    outline: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.goals-create-selected-labels {
+  margin-bottom: @spacing;
+  &-item {
+    background-color: @subColor5;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 8px;
+  }
+  &-item + &-item {
+    margin-left: 4px;
+  }
+}
+
 // /goals/create/step*
 .goals-create {
   padding: @spacing;
@@ -71,9 +101,9 @@
       overflow: hidden;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
-      word-wrap : break-word;
+      word-wrap: break-word;
       //word-break: break-all;
-      overflow-wrap : break-word;
+      overflow-wrap: break-word;
       &-more {
         color: @subColor3;
         float: right;
@@ -180,7 +210,7 @@
       border: 1px solid @baseGray;
       margin-bottom: @spacing;
       padding: 4px;
-      .input-labels-form{
+      .input-labels-form {
         &-item {
           background-color: @subColor5;
           border-radius: 5px;
@@ -189,7 +219,7 @@
         }
         &-input {
           display: inline-block;
-          &-text{
+          &-text {
             border: none;
             outline: none;
             &:focus {
@@ -213,7 +243,7 @@
   }
 
   // ボタン
-  &-btn{
+  &-btn {
     &-next {
       background-color: @keyColor;
       border: none;
@@ -260,7 +290,7 @@
   }
 
   // /goals/approval/list
-  &-list-item{
+  &-list-item {
     background-color: @hoverRed;
     border-bottom: 1px solid @subColor4;
     padding: @spacing;
@@ -287,9 +317,9 @@
         overflow: hidden;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
-        word-wrap : break-word;
+        word-wrap: break-word;
         //word-break: break-all;
-        overflow-wrap : break-word;
+        overflow-wrap: break-word;
         margin: 0 @spacing @spacing 0;
       }
     }
