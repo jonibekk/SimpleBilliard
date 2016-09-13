@@ -5,7 +5,7 @@
 
     <form class="goals-create-input" action="">
         <label class="goals-create-input-label">Category ?</label>
-        <select class="form-control goals-create-input-form" name="" id="">
+        <select class="form-control goals-create-input-form mod-select" name="" id="">
             <option value="a">duty</option>
             <option value="b">growth</option>
         </select>
