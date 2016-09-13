@@ -1,5 +1,5 @@
 import React from 'react'
-import { CoacheCard } from './elements/coache_card'
+import { CoachCard } from './elements/coach_card'
 import { CoacheeCard } from './elements/coachee_card'
 
 export default class ListComponent extends React.Component {
@@ -15,7 +15,7 @@ export default class ListComponent extends React.Component {
           <ul>
             { this.props.goal_approval.goal_approvals.map((goal_approval) => {
               if(goal_approval.is_coach) {
-                return <CoacheCard goal_approval={ goal_approval } key={goal_approval.name} />;
+                return <CoachCard goal_approval={ goal_approval } key={goal_approval.name} />;
               } else {
                 return <CoacheeCard goal_approval={ goal_approval } key={goal_approval.name}  />;
               }

@@ -65,4 +65,5 @@ class GoalsController extends ApiController
 
         return $this->_getResponseSuccess($res);
     }
+
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-export class CoacheCard extends React.Component {
+export class CoachCard extends React.Component {
   render() {
     let role = ''
     let status = ''
@@ -28,19 +28,27 @@ export class CoacheCard extends React.Component {
     return (
       <li className={ is_incomplete ? "goals-approval-list-item mod-coach-evaluating" : "goals-approval-list-item" }>
           <Link className="goals-approval-list-item-link" to={ `/goals/approval/detail/${this.props.goal_approval.id}` }>
-              <img src={ this.props.goal_approval.user.photo_file_name } className="goals-approval-list-item-image" alt="" width="32" height="32" />
+              <img src={ this.props.goal_approval.collaborator.user.photo_file_name } className="goals-approval-list-item-image" alt="" width="32" height="32" />
               <div className="goals-approval-list-item-info">
-                  <p className="goals-approval-list-item-info-user-name">{ this.props.goal_approval.user.name }</p>
+                  <p className="goals-approval-list-item-info-user-name">{ this.props.goal_approval.collaborator.user.name }</p>
                   <p className="goals-approval-list-item-info-goal-name">{ this.props.goal_approval.name }</p>
                   <p className="goals-approval-list-item-info-goal-attr">{ role }・<span className={ is_incomplete ? 'goals-approval-list-item-info-goal-attr-incomplete' : '' }>{ status }</span></p>
               </div>
-              <p className="goals-approval-list-item-detail"><i className="fa fa-angle-right" ariaHidden="true"></i></p>
+              <p className="goals-approval-list-item-detail">
+                {(() => {
+                  if(is_incomplete) {
+                    return <span className='goals-approval-list-item-detail-incomplete'><i className="fa fa-angle-right" ariaHidden="true"></i></span>;
+                  } else {
+                    return <i className="fa fa-check font_33px" ariaHidden="true"></i>;
+                  }
+                })()}
+              </p>
           </Link>
       </li>
     )
   }
 }
 
-CoacheCard.propTypes = {
+CoachCard.propTypes = {
   goal_approval: React.PropTypes.object.isRequired
 }
