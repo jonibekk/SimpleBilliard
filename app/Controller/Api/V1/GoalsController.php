@@ -16,9 +16,9 @@ class GoalsController extends ApiController
         'Goal'
     ];
 
-    function get_labels($id)
+    function post_labels($id)
     {
-        $this->Goal->GoalLabel->getLabelList($id);
+        $this->Goal->GoalLabel->saveLabels($id, $this->request->data['labels']);
     }
 
     /**
@@ -111,8 +111,8 @@ class GoalsController extends ApiController
         $isSaveSuccess = $this->Goal->add(
             [
                 'Goal'      => $this->request->data,
-                'KeyResult' => [$this->request->data['key_result']],
-                'Label'     => $this->request->data['labels'],
+                'KeyResult' => [Hash::get($this->request->data, 'key_result')],
+                'Label'     => Hash::get($this->request->data, 'labels'),
             ]
         );
         if ($isSaveSuccess === false) {
