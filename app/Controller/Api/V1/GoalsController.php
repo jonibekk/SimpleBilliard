@@ -149,7 +149,7 @@ class GoalsController extends ApiController
         }
 
         if (!empty($validation)) {
-            return $this->_getResponseBadFail(__('Saving Data Failed!'), $validation);
+            return $this->_getResponseBadFail(__('Validation failed.'), $validation);
         }
         return true;
     }

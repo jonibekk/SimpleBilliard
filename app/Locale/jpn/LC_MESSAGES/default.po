@@ -1095,7 +1095,7 @@ msgid "You should be logged in."
 msgstr "ログインが必要です。"
 
 #: Controller/Api/ApiController.php:76
-msgid "Validation failed"
+msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
 #: Controller/Api/V1/GoalsController.php:136

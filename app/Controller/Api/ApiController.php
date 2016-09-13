@@ -73,7 +73,7 @@ class ApiController extends BaseController
         if ($Model->validates()) {
             return $this->_getResponseSuccess();
         }
-        return $this->_getResponseBadFail(__('Validation failed'),
+        return $this->_getResponseBadFail(__('Validation failed.'),
             $this->_validationExtract($Model->validationErrors));
     }
 
