@@ -8,7 +8,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchGaolApprovals: () => { dispatch(actions.fetchGaolApprovals()) }
+    fetchGaolApprovals: (is_initialize = false) => { dispatch(actions.fetchGaolApprovals(is_initialize)) }
   }
 }
 

@@ -3,9 +3,10 @@ import { CoachCard } from './elements/coach_card'
 import { CoacheeCard } from './elements/coachee_card'
 
 export default class ListComponent extends React.Component {
-
   componentWillMount() {
-    this.props.fetchGaolApprovals()
+    const is_initialize = true
+
+    this.props.fetchGaolApprovals(is_initialize)
   }
 
   render() {

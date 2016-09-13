@@ -3,25 +3,7 @@ import * as types from '../../constants/actionTypes'
 import expect from 'expect'
 
 describe('reducer::goal_approval', () => {
-  it('SET_GOAL_APPROVAL', () => {
-    const expect_value = {
-      goal_field1: 'test',
-      goal_field2: 'test',
-      goal_field3: 'test'
-    }
-    const newState = goalApprovalReducer({goal_approvals: []}, {
-      type: types.SET_GOAL_APPROVAL,
-      goal_approval: {
-        goal_field1: 'test',
-        goal_field2: 'test',
-        goal_field3: 'test'
-      }
-    })
-
-    expect(newState.goal_approvals).toInclude(expect_value)
-  })
-
-  it('SET_GOAL_APPROVALS', () => {
+  it('INIT_GOAL_APPROVALS', () => {
     const expect_value = [
       {
         goal_field1: 'test',
@@ -35,7 +17,57 @@ describe('reducer::goal_approval', () => {
       }
     ]
     const newState = goalApprovalReducer({goal_approvals: []}, {
-      type: types.SET_GOAL_APPROVALS,
+      type: types.INIT_GOAL_APPROVALS,
+      goal_approvals: [
+        {
+          goal_field1: 'test',
+          goal_field2: 'test',
+          goal_field3: 'test'
+        },
+        {
+          goal_field1: 'test2',
+          goal_field2: 'test2',
+          goal_field3: 'test2'
+        }
+      ]
+    })
+
+    expect(newState.goal_approvals).toEqual(expect_value)
+  })
+
+  it('ADD_GOAL_APPROVAL', () => {
+    const expect_value = {
+      goal_field1: 'test',
+      goal_field2: 'test',
+      goal_field3: 'test'
+    }
+    const newState = goalApprovalReducer({goal_approvals: []}, {
+      type: types.ADD_GOAL_APPROVAL,
+      goal_approval: {
+        goal_field1: 'test',
+        goal_field2: 'test',
+        goal_field3: 'test'
+      }
+    })
+
+    expect(newState.goal_approvals).toInclude(expect_value)
+  })
+
+  it('ADD_GOAL_APPROVALS', () => {
+    const expect_value = [
+      {
+        goal_field1: 'test',
+        goal_field2: 'test',
+        goal_field3: 'test'
+      },
+      {
+        goal_field1: 'test2',
+        goal_field2: 'test2',
+        goal_field3: 'test2'
+      }
+    ]
+    const newState = goalApprovalReducer({goal_approvals: []}, {
+      type: types.ADD_GOAL_APPROVALS,
       goal_approvals: [
         {
           goal_field1: 'test',
