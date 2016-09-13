@@ -16,11 +16,6 @@ class GoalsController extends ApiController
         'Goal'
     ];
 
-    function post_labels($id)
-    {
-        $this->Goal->GoalLabel->saveLabels($id, $this->request->data['labels']);
-    }
-
     /**
      * ゴール(KR除く)のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
