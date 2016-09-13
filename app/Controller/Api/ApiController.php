@@ -101,6 +101,18 @@ class ApiController extends BaseController
             $this->_validationExtract($Model->validationErrors));
     }
 
+    /**
+     * バリデーションエラー(Status Code:400)をレスポンスとして返す
+     *
+     * @param array $validationMsg
+     *
+     * @return CakeResponse
+     */
+    protected function _getResponseValidationFail($validationMsg)
+    {
+        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+    }
+
     function _requireRequestData()
     {
         //csrfトークンは邪魔なので削除

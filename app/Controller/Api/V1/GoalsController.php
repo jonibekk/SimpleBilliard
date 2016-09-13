@@ -29,7 +29,7 @@ class GoalsController extends ApiController
             return $this->_getResponseSuccess();
         }
         $validationMsg = $this->_validationExtract($validation);
-        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+        return $this->_getResponseValidationFail($validationMsg);
     }
 
     /**
