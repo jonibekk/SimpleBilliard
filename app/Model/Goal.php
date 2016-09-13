@@ -1989,17 +1989,22 @@ class Goal extends AppModel
     /**
      * POSTされたゴールのバリデーション
      * - バリデーションルールを切り替える
+     * - 必須チェックを外す(オプション)
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      *
-     * @param $data
+     * @param      $data
+     * @param bool $detachRequired
      *
      * @return array|true
      */
-    function validateGoalPOST($data)
+    function validateGoalPOST($data, $detachRequired = false)
     {
         $this->set($data);
         $validationBackup = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
+        if ($detachRequired) {
+            $this->validate = Hash::remove($this->validate, '{s}.{s}.required');
+        }
         if ($this->validates()) {
             $this->validate = $validationBackup;
             return true;

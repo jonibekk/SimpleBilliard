@@ -24,7 +24,7 @@ class GoalsController extends ApiController
      */
     function post_validate()
     {
-        $validation = $this->Goal->validateGoalPOST($this->request->data);
+        $validation = $this->Goal->validateGoalPOST($this->request->data, true);
         if ($validation === true) {
             return $this->_getResponseSuccess();
         }
