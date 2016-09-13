@@ -1,0 +1,130 @@
+// /goals/approval/*
+.goals-approval {
+  padding: @spacing 0;
+
+  &-heading {
+    border-bottom: 1px solid @subColor4;
+    font-size: @fontLarger;
+    font-weight: normal;
+    margin: 0;
+    padding: 0 @spacing @spacing;
+  }
+  &-interactive-link {
+    color: @subColor3;
+  }
+
+  &-input {
+    &-label {
+      display: block;
+      font-size: @fontLarge;
+      font-weight: normal;
+      margin-bottom: @spacing/2;
+      &-discription {
+        color: @subColor10;
+        font-size: @fontSmall;
+        margin-bottom: @spacing/2;
+      }
+    }
+  }
+
+  // /goals/approval/list
+  &-list-item{
+    border-bottom: 1px solid @subColor4;
+    &.is-complete {
+      padding: @spacing;
+      .mod-status, .fa {
+        color: @subColor3;
+      }
+    }
+    &.is-incomplete {
+      background-color: @unreadRed;
+      padding: @spacing;
+      .mod-status, .fa {
+        color: @keyColor;
+      }
+    }
+    &.is-waiting {
+      background-color: @whiteColor;
+      padding: @spacing;
+      .mod-status {
+        color: @keyColor;
+      }
+      .fa {
+        color: @subColor3;
+      }
+    }
+    &:hover {
+      background-color: @hoverRed;
+    }
+    &-link {
+      color: @subColor1;
+      display: table;
+      &:focus, &:hover {
+        color: @subColor1;
+        text-decoration: none;
+      }
+    }
+    &-image {
+      display: table-cell;
+      margin-right: @spacing;
+    }
+    &-info {
+      display: table-cell;
+      vertical-align: top;
+      width: 100%;
+      &-user-name {
+        font-weight: normal;
+      }
+      &-goal-name {
+        overflow: hidden;
+        height: 38px;
+        word-wrap : break-word;
+        overflow-wrap : break-word;
+        margin: 0 @spacing @spacing 0;
+      }
+    }
+    &-detail {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      .fa {
+        font-weight: bold;
+        font-size: 20px;
+        width: 20px;
+      }
+    }
+  }
+
+  // /goals/approval/detail
+  &-detail {
+    &-user {
+      padding: @spacing;
+    }
+    &-goal,
+    &-tkr {
+      background-color: @smokyWhite;
+      margin: 0 @spacing/2;
+      padding: @spacing @spacing/2;
+    }
+    &-comments {
+      margin: 0 @spacing/2;
+      padding: @spacing @spacing/2;
+    }
+    &-table {
+      display: table;
+    }
+    &-image {
+      display: table-cell;
+      margin-right: @spacing;
+    }
+    &-info {
+      display: table-cell;
+      vertical-align: top;
+    }
+    &-view-more {
+      display: inline-block;
+      margin: 0 auto;
+    }
+  }
+
+}
