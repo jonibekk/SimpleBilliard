@@ -54,15 +54,15 @@ class GoalLabel extends AppModel
         $addLabels = array_diff($postedLabels, $goalLabelsExistList);
 
         //関連を解除するラベル
-        $removeLabels = array_diff($goalLabelsExistList, $postedLabels);
+        $detachLabels = array_diff($goalLabelsExistList, $postedLabels);
         //変更なしの場合は何もせずreturn
-        if (empty($addLabels) && empty($removeLabels)) {
+        if (empty($addLabels) && empty($detachLabels)) {
             return true;
         }
 
         //ラベルの関連付けを解除
-        if (!empty($removeLabels)) {
-            $this->deleteAll(['GoalLabel.goal_id' => $goal_id, 'GoalLabel.label_id' => array_keys($removeLabels)]);
+        if (!empty($detachLabels)) {
+            $this->deleteAll(['GoalLabel.goal_id' => $goal_id, 'GoalLabel.label_id' => array_keys($detachLabels)]);
         }
 
         //既存ラベル(key:label_id,value:name)
@@ -71,11 +71,11 @@ class GoalLabel extends AppModel
         //新規ラベルの抽出
         $newLabels = array_diff($addLabels, $labels);
         //新規ラベルの保存(ゴール関連付け)
-        $this->saveNewLabelsWithGoal($goal_id, $newLabels);
+        $this->saveNewLabelsAttachGoal($goal_id, $newLabels);
 
         //まだ持っていない既存ラベルをゴールに関連づける
         $existLabelsNotHave = array_intersect($labels, $addLabels);
-        $this->associateLabelsAndGoal($goal_id, $existLabelsNotHave);
+        $this->attachLabels($goal_id, $existLabelsNotHave);
 
         //ラベルのキャッシュを削除
         Cache::delete($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
@@ -113,7 +113,7 @@ class GoalLabel extends AppModel
      *
      * @return bool|mixed
      */
-    function saveNewLabelsWithGoal($goal_id, $newLabels)
+    function saveNewLabelsAttachGoal($goal_id, $newLabels)
     {
         if (empty($newLabels)) {
             return true;
@@ -139,7 +139,7 @@ class GoalLabel extends AppModel
      *
      * @return mixed
      */
-    function associateLabelsAndGoal($goal_id, $existLabelsNotHave)
+    function attachLabels($goal_id, $existLabelsNotHave)
     {
         if (empty($existLabelsNotHave)) {
             return true;
