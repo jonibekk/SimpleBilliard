@@ -46,13 +46,14 @@ class ApiController extends BaseController
         $this->_setupAuth();
         $this->autoRender = false;
         //htmlを出力してしまうためdebugを無効化
-        Configure::write('debug',0);
+        Configure::write('debug', 0);
         if (!$this->request->is('ajax')) {
-//            throw new BadRequestException('Ajax Only!',400);
+//            throw new BadRequestException(__('Ajax Only!'),400);
         }
         if (!$this->Auth->user()) {
-            throw new BadRequestException('You should be logged in.', 401);
+            throw new BadRequestException(__('You should be logged in.'), 401);
         }
+        $this->_setAppLanguage();
     }
 
     protected function _getResponseSuccess($data = null, $html = null)
@@ -73,7 +74,7 @@ class ApiController extends BaseController
         if ($Model->validates()) {
             return $this->_getResponseSuccess();
         }
-        return $this->_getResponseBadFail(__('Validation failed'),
+        return $this->_getResponseBadFail(__('Validation failed.'),
             $this->_validationExtract($Model->validationErrors));
     }
 
@@ -165,6 +166,9 @@ class ApiController extends BaseController
     {
         $res = [];
         if (empty($validationErrors)) {
+            return $res;
+        }
+        if ($validationErrors === true) {
             return $res;
         }
         foreach ($validationErrors as $k => $v) {
