@@ -46,12 +46,12 @@ class ApiController extends BaseController
         $this->_setupAuth();
         $this->autoRender = false;
         //htmlを出力してしまうためdebugを無効化
-        Configure::write('debug',0);
+        Configure::write('debug', 0);
         if (!$this->request->is('ajax')) {
-//            throw new BadRequestException('Ajax Only!',400);
+//            throw new BadRequestException(__('Ajax Only!'),400);
         }
         if (!$this->Auth->user()) {
-            throw new BadRequestException('You should be logged in.', 401);
+            throw new BadRequestException(__('You should be logged in.'), 401);
         }
     }
 
@@ -167,7 +167,7 @@ class ApiController extends BaseController
         if (empty($validationErrors)) {
             return $res;
         }
-        if($validationErrors === true){
+        if ($validationErrors === true) {
             return $res;
         }
         foreach ($validationErrors as $k => $v) {
