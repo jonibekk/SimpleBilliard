@@ -53,6 +53,7 @@ class ApiController extends BaseController
         if (!$this->Auth->user()) {
             throw new BadRequestException(__('You should be logged in.'), 401);
         }
+        $this->_setAppLanguage();
     }
 
     protected function _getResponseSuccess($data = null, $html = null)
