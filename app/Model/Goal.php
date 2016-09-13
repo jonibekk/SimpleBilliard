@@ -179,13 +179,6 @@ class Goal extends AppModel
             'maxLength' => ['rule' => ['maxLength', 15]],
             'numeric'   => ['rule' => ['numeric']]
         ],
-        'term_type'        => [
-            'inList'   => ['rule' => ['inList', ['current', 'next']],],
-            'notEmpty' => [
-                'required' => 'create',
-                'rule'     => 'notEmpty',
-            ],
-        ]
     ];
 
     public $post_validate = [
@@ -194,8 +187,14 @@ class Goal extends AppModel
         ],
         'end_date'   => [
             'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+        ],
+        'term_type'  => [
+            'inList'   => ['rule' => ['inList', ['current', 'next']],],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ]
-
     ];
 
     public $actsAs = [
