@@ -9,6 +9,7 @@ App::uses('KeyResult', 'Model');
  * @property User         $User
  * @property Team         $Team
  * @property GoalCategory $GoalCategory
+ * @property GoalLabel    $GoalLabel
  * @property Post         $Post
  * @property KeyResult    $KeyResult
  * @property Collaborator $Collaborator
@@ -272,7 +273,10 @@ class Goal extends AppModel
         'MyFollow'            => [
             'className' => 'Follower',
         ],
-        'Evaluation'
+        'Evaluation',
+        'GoalLabel'           => [
+            'dependent' => true,
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -336,9 +340,12 @@ class Goal extends AppModel
 
         $this->create();
         $isSaveSuccess = (bool)$this->saveAll($data);
+        $newGoalId = $this->getLastInsertID();
+        $isLabelSaveSuccess = (bool)$this->GoalLabel->saveLabels($newGoalId, $data['Label']);
+        $isSaveSuccess = $isSaveSuccess && $isLabelSaveSuccess;
 
         if ($add_new) {
-            $isFeedSaveSuccess = (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
+            $isFeedSaveSuccess = (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
             $isSaveSuccess = $isSaveSuccess && $isFeedSaveSuccess;
         }
 

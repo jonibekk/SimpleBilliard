@@ -4,7 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * Label Model
  *
- * @property Team $Team
+ * @property Team      $Team
+ * @property GoalLabel $GoalLabel
  */
 class Label extends AppModel
 {
@@ -45,6 +46,15 @@ class Label extends AppModel
      */
     public $belongsTo = [
         'Team',
+    ];
+
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = [
+        'GoalLabel',
     ];
 
     /**
