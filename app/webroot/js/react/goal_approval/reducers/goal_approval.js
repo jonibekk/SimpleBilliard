@@ -4,7 +4,8 @@ const initialState = {
   goal_approvals: [],
   incomplete_count: null,
   fetching_approvals: false,
-  last_loaded_goal_id: null
+  next_getting_api: null,
+  done_loading_all_data: false
 }
 
 export default function goal_approval(state = initialState, action) {
@@ -33,9 +34,13 @@ export default function goal_approval(state = initialState, action) {
       return Object.assign({}, state, {
         fetching_goal_approvals: false
       })
-    case types.SET_LAST_LOADED_GOAL_ID:
+    case types.SET_NEXT_PAGING_API:
       return Object.assign({}, state, {
-        last_loaded_goal_id: action.goal_id
+        next_getting_api: action.next_getting_api
+      })
+    case types.DONE_LOADING_ALL_DATA:
+      return Object.assign({}, state, {
+        done_loading_all_data: true
       })
     default:
       return state;

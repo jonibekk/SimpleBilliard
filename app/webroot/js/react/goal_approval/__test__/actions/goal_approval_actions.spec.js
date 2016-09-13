@@ -28,4 +28,8 @@ describe('actions::goal_approval', () => {
     expect(actions.finishedFetchingGoalApprovals()).toEqual({ type: types.FINISHED_FETCHING_GOAL_APPROVALS })
   })
 
+  it('set next getting api', () => {
+    expect(actions.setNextPagingApi('/path/to/api')).toEqual({ type: types.SET_NEXT_PAGING_API, next_getting_api: '/path/to/api' })
+  })
+
 })

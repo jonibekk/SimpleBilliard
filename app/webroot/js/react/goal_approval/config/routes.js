@@ -48,7 +48,7 @@ export default class Routes extends Component {
               <Route path="detail/:goal_id" component={DetailContainer} />
             </Route>
           </Router>
-          {/* <DevTools / > */}
+          <DevTools />
         </div>
       </Provider>
     );

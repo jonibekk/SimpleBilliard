@@ -1631,7 +1631,7 @@ class GoalsController extends AppController
     const STATUS_TYPE_NEW = 0;
     const STATUS_TYPE_REAPPROVE = 1;
 
-    public function ajax_get_goal_approvals()
+    public function ajax_get_init_goal_approvals()
     {
       $this->_ajaxPreProcess();
       $res = [
@@ -1753,7 +1753,14 @@ class GoalsController extends AppController
               "display_username" => 'Test Hanako'
             ]
           ]
-        ],
+        ]
+      ];
+      return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_get_next_goal_approvals() {
+      $this->_ajaxPreProcess();
+      $res = [
         [
           "id" =>  8,
           "name"=> 'Coach / Not Evaluated / Reapplication / Collaborator',
@@ -1876,26 +1883,5 @@ class GoalsController extends AppController
       ];
       return $this->_ajaxGetResponse($res);
     }
-    // ☆コーチ
-    // Evaluated / Complete / Leader
-    // Evaluated / Complete / Collaborator
-    //
-    // Not Evaluated / Complete / Leader
-    // Not Evaluated / Complete / Collaborator
-    // Not Evaluated / New / Leader
-    // Not Evaluated / New / Collaborator
-    // Not Evaluated / Reapplication / Leader
-    // Not Evaluated / Reapplication / Collaborator
-    //
-    // ☆コーチー
-    // Evaluated / Complete / Leader
-    // Evaluated / Complete / Collaborator
-    //
-    // Not Evaluated / Complete / Leader
-    // Not Evaluated / Complete / Collaborator
-    // Not Evaluated / Incomplete / Leader
-    // Not Evaluated / Incomplete / Collaborator
-    //
-    // const TYPE_COLLABORATOR = 0;
-    // const TYPE_OWNER = 1;
+
 }

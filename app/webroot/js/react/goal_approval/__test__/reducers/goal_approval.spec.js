@@ -119,4 +119,27 @@ describe('reducer::goal_approval', () => {
     expect(newState).toInclude(expect_value)
   })
 
+  it('SET_NEXT_PAGING_API', () => {
+    const expect_value = {
+      next_getting_api: '/path/to/api'
+    }
+    const newState = goalApprovalReducer({}, {
+      type: types.SET_NEXT_PAGING_API,
+      next_getting_api: '/path/to/api'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
+
+  it('DONE_LOADING_ALL_DATA', () => {
+    const expect_value = {
+      done_loading_all_data: true
+    }
+    const newState = goalApprovalReducer({}, {
+      type: types.DONE_LOADING_ALL_DATA
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
+
 })

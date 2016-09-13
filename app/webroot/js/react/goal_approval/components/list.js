@@ -1,6 +1,7 @@
 import React from 'react'
 import { CoachCard } from './elements/coach_card'
 import { CoacheeCard } from './elements/coachee_card'
+import { ListMoreViewButton } from './elements/list_more_view_button'
 
 export default class ListComponent extends React.Component {
   componentWillMount() {
@@ -22,6 +23,11 @@ export default class ListComponent extends React.Component {
               }
             }) }
           </ul>
+          {(() => {
+            if(!this.props.goal_approval.done_loading_all_data) {
+              return <ListMoreViewButton handleOnClick={ () => this.props.fetchGaolApprovals() } is_loading={ this.props.goal_approval.fetching_goal_approvals} />
+            }
+          })()}
       </section>
     )
   }

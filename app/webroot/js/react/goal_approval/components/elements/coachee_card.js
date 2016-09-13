@@ -13,7 +13,7 @@ export class CoacheeCard extends React.Component {
     } else {
       role = __('Collaborator')
     }
-    // Define status
+     // Define status
     if(this.props.goal_approval.collaborator.approval_status == 1) {
       status = __('Evaluated')
     } else if(this.props.goal_approval.collaborator.status_type !== null ) {
