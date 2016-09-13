@@ -23,8 +23,12 @@ class Label extends AppModel
      */
     public $validate = [
         'name'    => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'maxLength' => [
+                'rule' => ['maxLength', 128]
+            ],
+            'notEmpty'  => [
+                'rule'     => ['notEmpty'],
+                'required' => 'create',
             ],
         ],
         'del_flg' => [
