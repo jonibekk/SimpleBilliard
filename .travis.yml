@@ -143,11 +143,7 @@ script:
     mkdir s3_upload/css;
     mkdir s3_upload/js;
     cp app/webroot/css/goalous.min.css s3_upload/css/;
-    cp app/webroot/js/goalous.min.js s3_upload/js/;
-    cp app/webroot/js/goalous.prerender.min.js s3_upload/js/;
-    cp app/webroot/js/ng_app.min.js s3_upload/js/;
-    cp app/webroot/js/ng_vendors.min.js s3_upload/js/;
-    cp app/webroot/js/vendors.min.js s3_upload/js/;
+    cp app/webroot/compiled_assets/js/* s3_upload/js/;
     mkdir s3_upload_dist;
     tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
     fi

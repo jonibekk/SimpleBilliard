@@ -1,10 +1,15 @@
-import { combineReducers } from 'redux'
-import { routerReducer } from 'react-router-redux'
+import {
+  combineReducers
+} from 'redux'
+import {
+  routerReducer
+} from 'react-router-redux'
 import auth from './auth'
 import password from './password'
 import team_name from './team_name'
 import term from './term'
 import user_name from './user_name'
+import validate from './validate'
 
 export default function createReducer() {
   return combineReducers(
@@ -13,7 +18,8 @@ export default function createReducer() {
       password,
       team_name,
       term,
-      user_name
+      user_name,
+      validate
     }, {
       routing: routerReducer
     })
