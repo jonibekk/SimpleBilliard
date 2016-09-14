@@ -1,0 +1,224 @@
+// /goals/create/step*
+.goals-create {
+  padding: @spacing;
+
+  &-heading {
+    font-size: @fontLarger;
+    font-weight: normal;
+    margin: 0 0 @spacing;
+  }
+  &-description {
+    color: @subColor10;
+    font-size: @fontMedium;
+    margin-bottom: @spacing;
+  }
+  &-view-more {
+    color: @keyColor;
+    font-weight: 300;
+  }
+  &-layout-flex {
+    display: flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    flex-direction: row;
+    -moz-flex-direction: row;
+    -o-flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    box-sizing: border-box;
+  }
+  &-interactive-link {
+    color: @subColor3;
+  }
+
+  // step1 vision表示
+  &-dispaly-vision {
+    background-color: @smokyWhite;
+    margin-bottom: @spacing;
+    padding: @spacing;
+    &-title {
+      font-size: @fontMedium;
+      font-weight: nomal;
+      margin: 0;
+      padding-bottom: @spacing;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &-detail {
+      display: table;
+      &-image {
+        display: table-cell;
+        margin-right: @spacing/2;
+        max-width: none;
+      }
+      &-info {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+    &-text {
+      overflow: hidden;
+      word-wrap : break-word;
+      overflow-wrap : break-word;
+      height: 58px;
+      &-more {
+        color: @subColor3;
+        float: right;
+      }
+    }
+
+    &-see-other {
+      border-color: @baseGray;
+      color: @keyColor;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+      &:hover {
+        color: @keyColor;
+      }
+    }
+  }
+
+  // 共通
+  &-input {
+    &-label {
+      display: block;
+      font-size: @fontLarge;
+      font-weight: normal;
+      margin-bottom: @spacing/2;
+      &-discription {
+        color: @subColor10;
+        font-size: @fontSmall;
+        margin-bottom: @spacing/2;
+      }
+    }
+    &-form {
+      border-radius: 0;
+      margin-bottom: @spacing;
+      width: 100%;
+      height: 38px;
+      padding: 8px 12px;
+      color: grey;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ddd;
+      box-shadow: none;
+      -webkit-transition: none;
+      transition: none;
+      &.mod-textarea {
+        height: 100px;
+      }
+      &.mod-select {
+        background-size: 24px 12px !important;
+      }
+
+      // step4 tkr入力
+      &-tkr {
+        &-name {
+          box-sizing: border-box;
+          display: table-cell;
+        }
+        &-weight {
+          box-sizing: border-box;
+          display: table-cell;
+        }
+        &-range {
+          &-unit {
+          }
+          &-symbol {
+            background-color: @subColor5;
+            display: table-cell;
+            padding: 9px;
+            text-align: center;
+            width: 30px;
+            height: 38px;
+          }
+        }
+      }
+    }
+
+    // step3 画像表示
+    &-image-upload {
+      display: table;
+      margin-bottom: @spacing;
+      &-preview {
+        display: table-cell;
+        margin-right: @spacing/2;
+      }
+      &-info {
+        vertical-align: top;
+        display: table-cell;
+        &-text {
+          margin-bottom: @spacing;
+        }
+        &-link {
+          color: @keyColor;
+          font-weight: normal;
+        }
+        &-form[type=file] {
+          display: none;
+        }
+      }
+    }
+
+    // step2 ラベル入力
+    &-labels-form {
+      border: 1px solid @baseGray;
+      margin-bottom: @spacing;
+      padding: 4px;
+      .input-labels-form{
+        &-item {
+          background-color: @subColor5;
+          border-radius: 5px;
+          display: inline-block;
+          padding: 4px;
+        }
+        &-input {
+          display: inline-block;
+          &-text{
+            border: none;
+            outline: none;
+            &:focus {
+              outline: none;
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  // step1 サンプルを見る
+  &-show-sample {
+    color: @keyColor;
+    display: inline-block;
+    margin-bottom: @spacing;
+    &-text {
+      color: @subColor3;
+    }
+  }
+
+  // ボタン
+  &-btn{
+    &-next {
+      background-color: @keyColor;
+      border: none;
+      color: @whiteColor;
+      width: 100%;
+      margin-bottom: @spacing;
+    }
+    &-cancel {
+      color: @keyColor;
+      border-color: @keyColor;
+      box-shadow: none;
+      width: 100%;
+      &:hover {
+        color: @keyColor;
+      }
+    }
+  }
+
+}
