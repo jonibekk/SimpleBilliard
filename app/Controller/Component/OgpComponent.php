@@ -136,8 +136,8 @@ class OgpComponent extends Object
         }
 
         // in case of no data, just add the title same as the domain name
-        $url_detail = parse_url($url);
         if (!isset($ogp->title)) {
+            $url_detail = parse_url($url);
             $res['title'] = $url_detail['host'];
 
         }
