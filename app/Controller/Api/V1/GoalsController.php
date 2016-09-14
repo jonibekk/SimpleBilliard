@@ -19,12 +19,20 @@ class GoalsController extends ApiController
     /**
      * ゴール(KR除く)のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
+     * - fieldsパラメタにカンマ区切りで検査対象フィールドを指定。allもしくは指定なしの場合はすべてのフィールドのvalidationを行う。
      *
+     * @query_param fields
      * @return CakeResponse
      */
     function post_validate()
     {
-        $validation = $this->Goal->validateGoalPOST($this->request->data, true);
+        $fields = [];
+        if ($this->request->query('fields')) {
+            $fields = explode(',', $this->request->query('fields'));
+            //allが含まれる場合はすべて指定。それ以外はそのまま
+            $fields = in_array('all', $fields) ? [] : $fields;
+        }
+        $validation = $this->Goal->validateGoalPOST($this->request->data, $fields);
         if ($validation === true) {
             return $this->_getResponseSuccess();
         }
