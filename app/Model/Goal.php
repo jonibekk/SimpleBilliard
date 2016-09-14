@@ -1988,18 +1988,28 @@ class Goal extends AppModel
 
     /**
      * POSTされたゴールのバリデーション
-     * - バリデーションルールを切り替える
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     * - $fieldsに配列で対象フィールドを指定。空の場合はすべてのフィールドをvalidateする
      *
-     * @param $data
+     * @param       $data
+     * @param array $fields
      *
      * @return array|true
      */
-    function validateGoalPOST($data)
+    function validateGoalPOST($data, $fields = [])
     {
-        $this->set($data);
         $validationBackup = $this->validate;
-        $this->validate = am($this->validate, $this->post_validate);
+        $originValidationRule = am($this->validate, $this->post_validate);
+        $validationRule = [];
+        if (empty($fields)) {
+            $validationRule = $originValidationRule;
+        } else {
+            foreach ($fields as $field) {
+                $validationRule[$field] = Hash::get($originValidationRule, $field);
+            }
+        }
+        $this->set($data);
+        $this->validate = $validationRule;
         if ($this->validates()) {
             $this->validate = $validationBackup;
             return true;
