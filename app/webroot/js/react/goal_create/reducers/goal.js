@@ -2,7 +2,8 @@ import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
 
 const initialState = {
-  page: Page.STEP1,
+  // page: Page.STEP1,
+  toNextPage: false,
   categories:[],
   labels:[],
   keyword: "",
@@ -28,9 +29,8 @@ export default function goal(state = initialState, action) {
       })
     case types.TO_NEXT_PAGE:
       // 現在のページを基に次のページを返却
-      const idx = Page.PAGE_FLOW.indexOf(state.page);
       return Object.assign({}, state, {
-        page: Page.PAGE_FLOW[idx + 1]
+        toNextPage: true
       })
     case types.FETCH_INITIAL_DATA:
       return Object.assign({}, state, {

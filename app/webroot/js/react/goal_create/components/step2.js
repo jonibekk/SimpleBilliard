@@ -1,5 +1,5 @@
 import React from "react";
-import {browserHistory} from "react-router";
+import {browserHistory, Link} from "react-router";
 import AutoSuggest from 'react-autosuggest';
 import * as Page from "../constants/Page";
 import CategorySelect from "./elements/CategorySelect";
@@ -8,6 +8,9 @@ import InvalidMessageBox from "./elements/InvalidMessageBox";
 export default class Step2Component extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      toNextPage: false
+    }
   }
 
   componentWillMount() {
@@ -15,8 +18,8 @@ export default class Step2Component extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.goal.page != Page.STEP2) {
-      browserHistory.push(nextProps.goal.page)
+    if (nextProps.goal.toNextPage) {
+      browserHistory.push(Page.STEP3)
     }
   }
 
@@ -65,7 +68,7 @@ export default class Step2Component extends React.Component {
             {inputLabels}
           </ul>
           <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
-          <a className="goals-create-btn-cancel btn" href="/goals/create/step1/gucchi">{__("Back")}</a>
+          <Link className="goals-create-btn-cancel btn" to={Page.STEP1}>{__("Back")}</Link>
         </form>
       </section>
     )
