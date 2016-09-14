@@ -33,6 +33,5 @@ export function post(uri, data, options, success_callback, error_callback) {
     form_data.append(key, post_data[key])
   }
   return axios.post(base_url + uri, form_data, options)
-    .then(success_callback)
-    .catch(error_callback)
+    .then(success_callback, error_callback)
 }

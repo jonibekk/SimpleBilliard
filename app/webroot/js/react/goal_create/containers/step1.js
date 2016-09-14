@@ -8,7 +8,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    validateGoal: data => dispatch(actions.validateGoal(data))
+    validateGoal: () => dispatch(actions.validateGoal()),
+    updateInputData: (data) => dispatch(actions.updateInputData(data)),
   }
 }
 

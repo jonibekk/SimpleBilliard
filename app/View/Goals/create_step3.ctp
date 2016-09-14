@@ -18,7 +18,7 @@
         </div>
 
         <label class="goals-create-input-label">Term?</label>
-        <select class="form-control goals-create-input-form" name="" id="">
+        <select class="form-control goals-create-input-form mod-select" name="" id="">
             <option value="">This Term(Apr 1, 2016 - Sep 30, 2016)</option>
             <option value="">Next Term(Oct 1, 2016 - Mar 31, 2016)</option>
         </select>
@@ -32,7 +32,7 @@
         <input class="goals-create-input-form" type="date">
 
         <label class="goals-create-input-label">Weight</label>
-        <select class="goals-create-input-form" name="" id="">
+        <select class="goals-create-input-form mod-select" name="" id="">
             <option value="0">0 (認定対象外)</option>
             <option value="1">1 (とても低い)</option>
             <option value="2">2</option>
