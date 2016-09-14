@@ -1,36 +1,14 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  invalid: {
-    password: null
-  },
-  invalid_messages: {},
+  is_exception: false,
   exception_message: '',
-  submit_button_is_enabled: false,
   checking_password: false,
-  is_exception: false
+  to_next_page: ''
 }
 
 export default function password(state = initialState, action) {
   switch (action.type) {
-    case types.CAN_SUBMIT_PASSWORD:
-      return Object.assign({}, state, {
-        submit_button_is_enabled: true
-      })
-    case types.CAN_NOT_SUBMIT_PASSWORD:
-      return Object.assign({}, state, {
-        submit_button_is_enabled: false
-      })
-    case types.PASSWORD_IS_VALID:
-      return Object.assign({}, state, {
-        invalid: Object.assign({}, state.invalid, action.invalid),
-        invalid_messages: Object.assign({}, action.invalid_messages)
-      })
-    case types.PASSWORD_IS_INVALID:
-      return Object.assign({}, state, {
-        invalid: Object.assign({}, state.invalid, action.invalid),
-        invalid_messages: Object.assign({}, state.invalid_messages, action.invalid_messages)
-      })
     case types.CHECKING_PASSWORD:
       return Object.assign({}, state, {
         checking_password: true
@@ -43,6 +21,10 @@ export default function password(state = initialState, action) {
       return Object.assign({}, state, {
         is_exception: true,
         exception_message: action.exception_message
+      })
+    case types.PASSWORD_TO_NEXT_PAGE:
+      return Object.assign({}, state, {
+        to_next_page: action.to_next_page
       })
     default:
       return state;

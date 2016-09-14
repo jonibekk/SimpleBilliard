@@ -15,6 +15,16 @@ end
 
 
 if node[:deploy][:cake].has_key?(:assets_s3_bucket)
+    # compiled_assetsディレクトリ作成
+    directory "#{release_path}/app/webroot/compiled_assets/js/" do
+      owner 'deploy'
+      group 'www-data'
+      mode 0777
+      action :create
+      recursive true
+      not_if {::File.exists?("#{release_path}/app/webroot/compiled_assets/js/")}
+    end
+
     s3_file "/tmp/s3_upload.tar.gz" do
       remote_path "/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
       bucket "goalous-compiled-assets"
@@ -24,6 +34,7 @@ if node[:deploy][:cake].has_key?(:assets_s3_bucket)
       mode   "0644"
       action :create
     end
+
     bash "extract asset files" do
       user 'deploy'
       group 'www-data'
@@ -31,11 +42,7 @@ if node[:deploy][:cake].has_key?(:assets_s3_bucket)
       cd /tmp
       tar zxvf s3_upload.tar.gz
       cp s3_upload/css/goalous.min.css #{release_path}/app/webroot/css/
-      cp s3_upload/js/goalous.min.js #{release_path}/app/webroot/js/
-      cp s3_upload/js/goalous.prerender.min.js #{release_path}/app/webroot/js/
-      cp s3_upload/js/ng_app.min.js #{release_path}/app/webroot/js/
-      cp s3_upload/js/ng_vendors.min.js #{release_path}/app/webroot/js/
-      cp s3_upload/js/vendors.min.js #{release_path}/app/webroot/js/
+      cp s3_upload/js/* #{release_path}/app/webroot/compiled_assets/js/
       EOS
     end
 else
