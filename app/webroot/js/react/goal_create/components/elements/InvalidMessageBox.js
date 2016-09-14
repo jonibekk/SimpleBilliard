@@ -1,6 +1,9 @@
 import React from 'react'
 
-export class InvalidMessageBox extends React.Component {
+export default class InvalidMessageBox extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <div className="has-error signup-invalid-message-box">
@@ -9,3 +12,5 @@ export class InvalidMessageBox extends React.Component {
     )
   }
 }
+// InvalidMessageBox.propTypes = { message: React.PropTypes.string};
+// InvalidMessageBox.defaultProps = {message: ""};

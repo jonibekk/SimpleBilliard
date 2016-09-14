@@ -1,3 +1,36 @@
+// variables
+@spacing: 10px;
+
+// TODO:ラベル入力部分の元のCSS削除
+.react-autosuggest {
+  &__container {
+    border: 1px solid @baseGray;
+    margin-bottom: @spacing;
+    padding: 4px;
+  }
+  &__input {
+    width: 100%;
+    display: inline-block;
+    border: none;
+    outline: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.goals-create-selected-labels {
+  margin-bottom: @spacing;
+  &-item {
+    background-color: @subColor5;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 8px;
+  }
+  &-item + &-item {
+    margin-left: 4px;
+  }
+}
+
 // /goals/create/step*
 .goals-create {
   padding: @spacing;
@@ -169,7 +202,7 @@
       border: 1px solid @baseGray;
       margin-bottom: @spacing;
       padding: 4px;
-      .input-labels-form{
+      .input-labels-form {
         &-item {
           background-color: @subColor5;
           border-radius: 5px;
@@ -178,7 +211,7 @@
         }
         &-input {
           display: inline-block;
-          &-text{
+          &-text {
             border: none;
             outline: none;
             &:focus {
@@ -202,7 +235,7 @@
   }
 
   // ボタン
-  &-btn{
+  &-btn {
     &-next {
       background-color: @keyColor;
       border: none;
