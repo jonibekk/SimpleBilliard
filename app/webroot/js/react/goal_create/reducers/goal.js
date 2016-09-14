@@ -52,13 +52,13 @@ export default function goal(state = initialState, action) {
     case types.SELECT_SUGGEST:
       inputData.labels.push(action.suggestion.name)
       return Object.assign({}, state, {
-        inputData:inputData,
+        inputData,
         keyword:""
       })
     case types.UPDATE_INPUT_DATA:
       inputData = Object.assign({}, state.inputData, action.data)
       return Object.assign({}, state, {
-        inputData:inputData,
+        inputData
       })
     default:
       return state;
