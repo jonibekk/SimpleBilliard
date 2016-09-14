@@ -45,7 +45,9 @@ class Label extends AppModel
 
     /**
      * タグのリストをゴール件数とともに返す
-     * このデータはキャッシュされている
+     * - 抽出条件はgoal_label_countが0以外のもの
+     * - ソート条件はgoal_label_countの降順
+     * - このデータはキャッシュされている
      *
      * @return array
      */
@@ -55,13 +57,17 @@ class Label extends AppModel
         if ($res !== false) {
             return $res;
         }
-        $res = $this->find('all', [
-            'fields' => [
+        $option = [
+            'conditions' => ['NOT' => ['goal_label_count' => 0]],
+            'fields'     => [
                 'id',
                 'name',
                 'goal_label_count',
-            ]
-        ]);
+            ],
+            'order'      => ['goal_label_count DESC'],
+        ];
+        $res = $this->find('all', $option);
+
         Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
         return $res;
     }
