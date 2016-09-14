@@ -2,7 +2,6 @@ import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
 
 const initialState = {
-  // page: Page.STEP1,
   toNextPage: false,
   categories:[],
   labels:[],

@@ -1,11 +1,15 @@
 import * as types from "../constants/ActionTypes";
+import * as Page from "../constants/Page";
 import {post} from "./common_actions";
 import axios from "axios";
 
-export function validateGoal() {
+export function validateGoal(page) {
   return (dispatch, getState) => {
-    let inputData = getState().goal.inputData
-    return post('/api/v1/goals/validate', inputData, null,
+    let postData = Object.assign(getState().goal.inputData, {
+      fields: Page.VALIDATION_FIELDS[page].join(',')
+    })
+    console.log({postData})
+    return post('/api/v1/goals/validate', postData, null,
       (response) => {
         console.log("validate success");
         dispatch(toNextPage())

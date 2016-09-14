@@ -12,15 +12,19 @@ export default class Step1Component extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentWillMount() {
+    // this.props.fetchInitialData(Page.STEP1)
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      browserHistory.push(Page.STEP2)
+      browserHistory.push(Page.URL_STEP2)
     }
   }
 
   handleSubmit(e) {
     e.preventDefault()
-    this.props.validateGoal()
+    this.props.validateGoal(Page.STEP1)
   }
   handleChange(e) {
     this.props.updateInputData({name: e.target.value})

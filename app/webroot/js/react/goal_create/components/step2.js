@@ -14,12 +14,12 @@ export default class Step2Component extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchInitialData()
+    this.props.fetchInitialData(Page.STEP2)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      browserHistory.push(Page.STEP3)
+      browserHistory.push(Page.URL_STEP3)
     }
   }
 
@@ -68,7 +68,7 @@ export default class Step2Component extends React.Component {
             {inputLabels}
           </ul>
           <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
-          <Link className="goals-create-btn-cancel btn" to={Page.STEP1}>{__("Back")}</Link>
+          <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP1}>{__("Back")}</Link>
         </form>
       </section>
     )
