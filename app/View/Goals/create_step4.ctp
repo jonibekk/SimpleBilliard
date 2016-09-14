@@ -16,7 +16,7 @@
         </select>-->
         <label for="">Unit & Range</label>
 
-        <select class="form-control goals-create-input-form goals-create-input-form-tkr-range-unit" name="" id="">
+        <select class="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select" name="" id="">
             <option value="0">%</option>
             <option value="3">¥</option>
             <option value="4">$</option>
