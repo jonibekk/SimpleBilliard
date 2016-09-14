@@ -6,11 +6,11 @@ export function validateGoal() {
   return (dispatch, getState) => {
     let inputData = getState().goal.inputData
     return post('/api/v1/goals/validate', inputData, null,
-      response => {
+      (response) => {
         console.log("validate success");
         dispatch(toNextPage())
       },
-      response => {
+      (response) => {
         console.log("validate failed");
         dispatch(invalid(response.data))
       }
@@ -70,15 +70,15 @@ export function updateInputData(data) {
 }
 
 export function fetchInitialData(dispatch) {
-  return dispatch => {
+  return (dispatch) => {
     return axios.get('/api/v1/goals/init_form?data_types=categories,labels')
-      .then(response => {
+      .then((response) => {
         dispatch({
           type: types.FETCH_INITIAL_DATA,
           data: response.data.data,
         })
       })
-      .catch(response => {
+      .catch((response) => {
       })
   }
 }
@@ -96,5 +96,5 @@ function getSuggestions(value, suggestions) {
     return [];
   }
   const regex = new RegExp('^' + value, 'i');
-  return suggestions.filter(suggestion => regex.test(suggestion.name));
+  return suggestions.filter((suggestion) => regex.test(suggestion.name));
 }
