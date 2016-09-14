@@ -13,7 +13,7 @@ export default class Step1Component extends React.Component {
   }
 
   componentWillMount() {
-    // this.props.fetchInitialData(Page.STEP1)
+    this.props.fetchInitialData(Page.STEP1)
   }
 
   componentWillReceiveProps(nextProps) {

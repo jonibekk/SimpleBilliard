@@ -21,6 +21,8 @@ const initialState = {
 
 export default function goal(state = initialState, action) {
   let inputData = state.inputData
+  console.log("-------reducer start-------")
+  console.log({action, state})
   switch (action.type) {
     case types.INVALID:
       return Object.assign({}, state, {
@@ -32,11 +34,16 @@ export default function goal(state = initialState, action) {
         toNextPage: true
       })
     case types.FETCH_INITIAL_DATA:
-      return Object.assign({}, state, {
-        categories: action.data.categories,
-        labels: action.data.labels,
-        suggestions: action.data.labels,
-      })
+      console.log("FETCH_INITIAL_DATA")
+      let newState = Object.assign({}, state, {toNextPage: false})
+      if (action.page == Page.STEP2) {
+        return Object.assign({}, newState, {
+          categories: action.data.categories,
+          labels: action.data.labels,
+          suggestions: action.data.labels,
+        })
+      }
+      return newState;
     case types.REQUEST_SUGGEST:
       return Object.assign({}, state, {
         suggestions: action.suggestions,

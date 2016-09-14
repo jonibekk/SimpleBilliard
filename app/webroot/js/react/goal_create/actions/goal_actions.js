@@ -73,13 +73,17 @@ export function updateInputData(data) {
   }
 }
 
-export function fetchInitialData(dispatch) {
+export function fetchInitialData(page) {
+  const dataTypes = Page.INITIAL_DATA_TYPES[page]
   return (dispatch) => {
-    return axios.get('/api/v1/goals/init_form?data_types=categories,labels')
+    return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
       .then((response) => {
+        console.log("/api/v1/goals/init_form")
+        console.log({response})
         dispatch({
           type: types.FETCH_INITIAL_DATA,
           data: response.data.data,
+          page
         })
       })
       .catch((response) => {

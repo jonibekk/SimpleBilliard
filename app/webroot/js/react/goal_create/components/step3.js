@@ -7,9 +7,6 @@ import InvalidMessageBox from "./elements/InvalidMessageBox";
 export default class Step3Component extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      toNextPage: false
-    }
   }
 
   componentWillMount() {
@@ -24,7 +21,7 @@ export default class Step3Component extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    this.props.validateGoal()
+    // this.props.validateGoal()
   }
 
   render() {

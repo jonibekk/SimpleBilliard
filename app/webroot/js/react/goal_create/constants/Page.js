@@ -23,3 +23,15 @@ export const VALIDATION_FIELDS = {
     "labels",
   ],
 }
+export const INITIAL_DATA_TYPES = {
+  STEP1: [
+    "visions"
+  ],
+  STEP2: [
+    "categories",
+    "labels",
+  ],
+  STEP3: [
+    "terms",
+  ],
+}
