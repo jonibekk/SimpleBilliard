@@ -16,58 +16,10 @@ class GoalLabelTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.goal_label',
-        'app.team',
-        'app.badge',
-        'app.circle',
-        'app.circle_member',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
         'app.goal',
-        'app.goal_category',
-        'app.key_result',
-        'app.action_result',
-        'app.action_result_file',
-        'app.attached_file',
-        'app.comment_file',
-        'app.post_file',
-        'app.collaborator',
-        'app.approval_history',
-        'app.follower',
-        'app.evaluation',
-        'app.evaluate_term',
-        'app.evaluator',
-        'app.evaluate_score',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-        'app.oauth_token',
-        'app.team_member',
-        'app.job_category',
-        'app.member_type',
-        'app.local_name',
-        'app.member_group',
-        'app.group',
-        'app.group_vision',
-        'app.recovery_code',
-        'app.device',
-        'app.invite',
-        'app.evaluation_setting',
-        'app.team_vision',
-        'app.team_insight',
-        'app.group_insight',
-        'app.circle_insight',
-        'app.access_user',
-        'app.label'
+        'app.goal_label',
+        'app.label',
+        'app.team',
     );
 
     /**
@@ -93,9 +45,127 @@ class GoalLabelTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetLabelList()
     {
+        $this->_setDefault();
+        $this->_saveDefaultData();
+        $this->_clearCache();
+        $this->assertCount(3, $this->GoalLabel->getLabelList(1));
+        $this->assertCount(1, $this->GoalLabel->getLabelList(2));
 
+    }
+
+    function testSaveNewLabelsAttachGoal()
+    {
+        $this->_setDefault();
+        $this->_saveDefaultData();
+        $this->_clearCache();
+        $before_label_count = $this->GoalLabel->Label->find('count');
+        $before_goal_label_list = $this->GoalLabel->getLabelList(2);
+        $this->GoalLabel->saveNewLabelsAttachGoal(2, ['aaa', 'bbb']);
+        $after_label_count = $this->GoalLabel->Label->find('count');
+        $after_goal_label_list = $this->GoalLabel->getLabelList(2);
+        $this->assertEquals(count($before_goal_label_list) + 2, count($after_goal_label_list));
+        $this->assertEquals($before_label_count + 2, $after_label_count);
+    }
+
+    function testAttachLabels()
+    {
+        $this->_setDefault();
+        $this->_saveDefaultData();
+        $this->_clearCache();
+
+        $before_goal_label_list = $this->GoalLabel->getLabelList(2);
+        $before_label_1_g_count = $this->_getGoalCount(2);
+        $before_label_2_g_count = $this->_getGoalCount(3);
+        $this->GoalLabel->attachLabels(2, ['2' => null, '3' => null]);
+        $after_goal_label_list = $this->GoalLabel->getLabelList(2);
+        $after_label_1_g_count = $this->_getGoalCount(2);
+        $after_label_2_g_count = $this->_getGoalCount(3);
+        $this->assertEquals(count($before_goal_label_list) + 2, count($after_goal_label_list));
+        $this->assertEquals($before_label_1_g_count + 1, $after_label_1_g_count);
+        $this->assertEquals($before_label_2_g_count + 1, $after_label_2_g_count);
+
+    }
+
+    function testDetachLabels()
+    {
+        $this->_setDefault();
+        $this->_saveDefaultData();
+        $this->_clearCache();
+
+        $before_goal_label_list = $this->GoalLabel->getLabelList(1);
+        $before_label_1_g_count = $this->_getGoalCount(1);
+        $before_label_2_g_count = $this->_getGoalCount(2);
+        $this->GoalLabel->detachLabels(1, ['1' => null, '2' => null]);
+        $after_goal_label_list = $this->GoalLabel->getLabelList(1);
+        $after_label_1_g_count = $this->_getGoalCount(1);
+        $after_label_2_g_count = $this->_getGoalCount(2);
+        $this->assertEquals(count($before_goal_label_list) - 2, count($after_goal_label_list));
+        $this->assertEquals($before_label_1_g_count - 1, $after_label_1_g_count);
+        $this->assertEquals($before_label_2_g_count - 1, $after_label_2_g_count);
+    }
+
+    function _setDefault()
+    {
+        $this->GoalLabel->current_team_id = 1;
+        $this->GoalLabel->my_uid = 1;
+        $this->GoalLabel->Label->current_team_id = 1;
+        $this->GoalLabel->Label->my_uid = 1;
+        $this->GoalLabel->Goal->current_team_id = 1;
+        $this->GoalLabel->Goal->my_uid = 1;
+    }
+
+    function _saveDefaultData()
+    {
+        $labels = [
+            [
+                'id'      => 1,
+                'name'    => 'test1',
+                'team_id' => 1,
+            ],
+            [
+                'id'      => 2,
+                'name'    => 'test2',
+                'team_id' => 1,
+            ],
+            [
+                'id'      => 3,
+                'name'    => 'test3',
+                'team_id' => 1,
+            ],
+        ];
+        $this->GoalLabel->Label->saveAll($labels);
+
+        $goal_labels = [
+            [
+                'goal_id'  => 1,
+                'label_id' => 1,
+                'team_id'  => 1,
+            ],
+            [
+                'goal_id'  => 1,
+                'label_id' => 2,
+                'team_id'  => 1,
+            ],
+            [
+                'goal_id'  => 1,
+                'label_id' => 3,
+                'team_id'  => 1,
+            ],
+            [
+                'goal_id'  => 2,
+                'label_id' => 1,
+                'team_id'  => 1,
+            ],
+        ];
+        $this->GoalLabel->saveAll($goal_labels);
+
+    }
+
+    function _getGoalCount($label_id)
+    {
+        return Hash::get($this->GoalLabel->Label->findById($label_id), 'Label.goal_label_count');
     }
 
 }

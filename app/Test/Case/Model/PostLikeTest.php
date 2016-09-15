@@ -19,12 +19,8 @@ class PostLikeTest extends GoalousTestCase
         'app.post',
         'app.user',
         'app.team',
-        'app.goal',
-        'app.circle',
-        'app.action_result',
-        'app.key_result',
         'app.local_name',
-        'app.post_share_circle',
+        'app.post_share_circle'
     );
 
     /**

@@ -16,9 +16,6 @@ class BadgeTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.badge',
-        'app.user',
-        'app.notify_setting',
-        'app.team',
     );
 
     /**

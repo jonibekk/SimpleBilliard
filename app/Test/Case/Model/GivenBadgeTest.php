@@ -16,10 +16,6 @@ class GivenBadgeTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.given_badge',
-        'app.user',
-        'app.notify_setting',
-        'app.team',
-        'app.post'
     );
 
     /**
