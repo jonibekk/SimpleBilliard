@@ -1,5 +1,5 @@
 import axios from "axios";
-import qs from "qs"
+import FormData from 'form-data'
 
 // TODO:いずれreact全体の共通処理として配置(js/react/common/**)
 
@@ -21,17 +21,30 @@ export function getCsrfTokenKey() {
 }
 
 export function post(uri, data, options, success_callback, error_callback) {
-  options = options || {};
-  const csrfToken = getCsrfTokenKey()
-  const postData = Object.assign(data, {
-    data: {
-      _Token: {
-        key:csrfToken
-      }
+  options = options || {}
+  const base_options = {
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    dataType: 'json'
+  }
+  options = Object.assign(base_options, options)
+
+  /* Create request parameter */
+  const csrf_token_key = getCsrfTokenKey()
+  const post_data = Object.assign({
+    'data[_Token][key]': csrf_token_key
+  }, data)
+  let form_data = new FormData()
+  for (const key in post_data) {
+    if (Array.isArray(post_data[key])) {
+      form_data.append(`${key}[]`, post_data[key])
+    } else {
+      form_data.append(key, post_data[key])
     }
-  })
+  }
 
   const url = getBaseUrl() + uri;
-  return axios.post(url, qs.stringify(postData), options)
+  return axios.post(url, form_data, options)
     .then(success_callback, error_callback)
 }

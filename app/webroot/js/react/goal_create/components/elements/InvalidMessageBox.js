@@ -5,12 +5,15 @@ export default class InvalidMessageBox extends React.Component {
     super(props);
   }
   render() {
+    if (!this.props.message) {
+      return null;
+    }
     return (
       <div className="has-error">
-          <small className="help-block">{ (this.props.message) ? this.props.message : '' }</small>
+          <small className="help-block">{this.props.message}</small>
       </div>
     )
   }
 }
-// InvalidMessageBox.propTypes = { message: React.PropTypes.string};
-// InvalidMessageBox.defaultProps = {message: ""};
+InvalidMessageBox.propTypes = { message: React.PropTypes.string};
+InvalidMessageBox.defaultProps = {message: ""};

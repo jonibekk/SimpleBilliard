@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
+import InvalidMessageBox from "./elements/InvalidMessageBox";
 
 export default class Step3Component extends React.Component {
   constructor(props) {
@@ -53,10 +54,11 @@ export default class Step3Component extends React.Component {
     const imgPath = this.props.goal.inputData.image || "/img/no-image-goal.jpg"
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
 
+    const {priorities, validationErrors} = this.props.goal
     let priorityOptions = null;
     if (this.props.goal.priorities.length > 0) {
       priorityOptions = this.props.goal.priorities.map((v, k) => {
-        return <option key={k}>{v}</option>
+        return <option key={k} value={k}>{v}</option>
       });
     }
 
@@ -88,12 +90,15 @@ export default class Step3Component extends React.Component {
               </label>
             </div>
           </div>
+          <InvalidMessageBox message={validationErrors.photo}/>
           <label className="goals-create-input-label">{__("Term?")}</label>
           <select className="form-control goals-create-input-form mod-select" name="term_type" ref="term_type"
                   onChange={this.handleChange}>
             <option value="current">{__("Current Term")}</option>
             <option value="next">{__("Next Term")}</option>
           </select>
+          <InvalidMessageBox message={validationErrors.term_type}/>
+
           <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
             <i className="fa fa-eye" aria-hidden="true"/>
             <span className="goals-create-interactive-link">
@@ -103,13 +108,17 @@ export default class Step3Component extends React.Component {
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}/>
+            <InvalidMessageBox message={validationErrors.description}/>
+
             <label className="goals-create-input-label">{__("End date")}</label>
             <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange}/>
+            <InvalidMessageBox message={validationErrors.end_date}/>
             <label className="goals-create-input-label">{__("Weight")}</label>
             <select className="goals-create-input-form mod-select" name="priority" ref="priority"
                     onChange={this.handleChange}>
               {priorityOptions}
             </select>
+            <InvalidMessageBox message={validationErrors.priority}/>
           </div>
           <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP2}>{__("Back")}</Link>
