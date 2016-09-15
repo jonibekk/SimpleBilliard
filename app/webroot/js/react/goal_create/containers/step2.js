@@ -4,8 +4,6 @@ import * as actions from "../actions/goal_actions";
 import * as common from "./common";
 
 function mapStateToProps(state) {
-  console.log("mapStateToProps")
-  console.log({state})
   return state
 }
 
