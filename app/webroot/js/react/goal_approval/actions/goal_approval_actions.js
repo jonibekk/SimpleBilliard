@@ -37,10 +37,6 @@ export function addGoalApprovals(goal_approvals) {
   return { type: types.ADD_GOAL_APPROVALS, goal_approvals }
 }
 
-export function addGoalApproval(goal_approval) {
-  return { type: types.ADD_GOAL_APPROVAL, goal_approval }
-}
-
 export function fetchingGoalApprovals() {
   return { type: types.FETCHING_GOAL_APPROVALS }
 }

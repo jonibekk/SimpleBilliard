@@ -14,10 +14,6 @@ export default function list(state = initialState, action) {
       return Object.assign({}, state, {
         goal_approvals: action.goal_approvals
       })
-    case types.ADD_GOAL_APPROVAL:
-      return Object.assign({}, state, {
-        goal_approvals: [...state.goal_approvals, action.goal_approval]
-      })
     case types.ADD_GOAL_APPROVALS:
       return Object.assign({}, state, {
         goal_approvals: [...state.goal_approvals, ...action.goal_approvals]

@@ -35,24 +35,6 @@ describe('reducer::list', () => {
     expect(newState.goal_approvals).toEqual(expect_value)
   })
 
-  it('ADD_GOAL_APPROVAL', () => {
-    const expect_value = {
-      goal_field1: 'test',
-      goal_field2: 'test',
-      goal_field3: 'test'
-    }
-    const newState = ListReducer({goal_approvals: []}, {
-      type: types.ADD_GOAL_APPROVAL,
-      goal_approval: {
-        goal_field1: 'test',
-        goal_field2: 'test',
-        goal_field3: 'test'
-      }
-    })
-
-    expect(newState.goal_approvals).toInclude(expect_value)
-  })
-
   it('ADD_GOAL_APPROVALS', () => {
     const expect_value = [
       {
