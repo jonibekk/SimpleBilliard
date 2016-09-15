@@ -11,6 +11,7 @@ App::uses('Sanitize', 'Utility');
  * @method findById($id)
  * @method findByUserId($id)
  * @method findByEmail($email)
+ * @method findByName($name)
  */
 class AppModel extends Model
 {
