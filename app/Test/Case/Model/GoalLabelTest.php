@@ -55,36 +55,26 @@ class GoalLabelTest extends GoalousTestCase
 
     }
 
-    function testSaveNewLabelsAttachGoal()
-    {
-        $this->_setDefault();
-        $this->_saveDefaultData();
-        $this->_clearCache();
-        $before_label_count = $this->GoalLabel->Label->find('count');
-        $before_goal_label_list = $this->GoalLabel->getLabelList(2);
-        $this->GoalLabel->saveNewLabelsAttachGoal(2, ['aaa', 'bbb']);
-        $after_label_count = $this->GoalLabel->Label->find('count');
-        $after_goal_label_list = $this->GoalLabel->getLabelList(2);
-        $this->assertEquals(count($before_goal_label_list) + 2, count($after_goal_label_list));
-        $this->assertEquals($before_label_count + 2, $after_label_count);
-    }
-
     function testAttachLabels()
     {
         $this->_setDefault();
         $this->_saveDefaultData();
         $this->_clearCache();
 
-        $before_goal_label_list = $this->GoalLabel->getLabelList(2);
-        $before_label_1_g_count = $this->_getGoalCount(2);
-        $before_label_2_g_count = $this->_getGoalCount(3);
-        $this->GoalLabel->attachLabels(2, ['2' => null, '3' => null]);
-        $after_goal_label_list = $this->GoalLabel->getLabelList(2);
-        $after_label_1_g_count = $this->_getGoalCount(2);
-        $after_label_2_g_count = $this->_getGoalCount(3);
-        $this->assertEquals(count($before_goal_label_list) + 2, count($after_goal_label_list));
-        $this->assertEquals($before_label_1_g_count + 1, $after_label_1_g_count);
-        $this->assertEquals($before_label_2_g_count + 1, $after_label_2_g_count);
+        $bf_all_label_count = count($this->GoalLabel->Label->find('list'));
+        $bf_goal_label_list = $this->GoalLabel->getLabelList(2);
+        $bf_label_1_g_count = $this->_getGoalCount(2);
+        $bf_label_2_g_count = $this->_getGoalCount(3);
+        $this->GoalLabel->attachLabels(2, ['test2', 'test3', 'test4', 'test5']);
+        $this->_clearCache();
+        $af_all_label_count = count($this->GoalLabel->Label->find('list'));
+        $af_goal_label_list = $this->GoalLabel->getLabelList(2);
+        $af_label_1_g_count = $this->_getGoalCount(2);
+        $af_label_2_g_count = $this->_getGoalCount(3);
+        $this->assertEquals($bf_all_label_count + 2, $af_all_label_count);
+        $this->assertEquals(count($bf_goal_label_list) + 4, count($af_goal_label_list));
+        $this->assertEquals($bf_label_1_g_count + 1, $af_label_1_g_count);
+        $this->assertEquals($bf_label_2_g_count + 1, $af_label_2_g_count);
 
     }
 
