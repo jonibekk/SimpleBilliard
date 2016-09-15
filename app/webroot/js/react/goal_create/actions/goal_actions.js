@@ -8,9 +8,7 @@ export function validateGoal(page, addData) {
     let postData = Object.assign(getState().goal.inputData, addData, {
       fields: Page.VALIDATION_FIELDS[page].join(',')
     })
-    return post('/api/v1/goals/validate', postData, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    },
+    return post('/api/v1/goals/validate', postData, null,
       (response) => {
         console.log("validate success");
         dispatch(toNextPage())
