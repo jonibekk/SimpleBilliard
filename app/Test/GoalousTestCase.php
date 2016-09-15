@@ -43,9 +43,14 @@ abstract class GoalousTestCase extends CakeTestCase
      */
     public function tearDown()
     {
+        $this->_clearCache();
+        parent::tearDown();
+    }
+
+    function _clearCache()
+    {
         Cache::clear(false, 'team_info');
         Cache::clear(false, 'user_data');
-        parent::tearDown();
     }
 
 }
