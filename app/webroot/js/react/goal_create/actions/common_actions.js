@@ -1,5 +1,5 @@
 import axios from "axios";
-import FormData from 'form-data'
+import FormData from "form-data"
 
 // TODO:いずれreact全体の共通処理として配置(js/react/common/**)
 
