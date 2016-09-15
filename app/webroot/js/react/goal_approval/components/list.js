@@ -1,6 +1,6 @@
 import React from 'react'
-import { CoachCard } from './elements/coach_card'
-import { CoacheeCard } from './elements/coachee_card'
+import { CoachCard } from './elements/list_coach_card'
+import { CoacheeCard } from './elements/list_coachee_card'
 import { ListMoreViewButton } from './elements/list_more_view_button'
 
 export default class ListComponent extends React.Component {
