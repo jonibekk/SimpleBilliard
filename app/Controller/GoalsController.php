@@ -1884,4 +1884,60 @@ class GoalsController extends AppController
       return $this->_ajaxGetResponse($res);
     }
 
+    public function ajax_get_goal_approval($goal_id)
+    {
+      $this->_ajaxPreProcess();
+      $res = [
+        'id' =>  1,
+        'name' => 'goal name',
+        'category' => [
+          'name' => 'category name'
+        ],
+        'key_result' => [
+          'id' =>  1,
+          'name' => 'key result name'
+        ],
+        'collaborator' => [
+          'role' => 'leader',
+          'user' => [
+            'id' => 1,
+            'name' => 'user name',
+            'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
+          ],
+        ],
+        'comments' => [
+          [
+            'id' => 1,
+            'user_id' => 1,
+            'comment' => 'comment1',
+            'user' => [
+              'id' => 1,
+              'name' => 'user name',
+              'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
+            ],
+          ],
+          [
+            'id' => 2,
+            'user_id' => 2,
+            'comment' => 'comment',
+            'user' => [
+              'id' => 1,
+              'name' => 'user name',
+              'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
+            ],
+          ],
+          [
+            'id' => 3,
+            'user_id' => 3,
+            'comment' => 'comment',
+            'user' => [
+              'id' => 1,
+              'name' => 'user name',
+              'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
+            ]
+          ]
+        ]
+      ];
+      return $this->_ajaxGetResponse($res);
+    }
 }

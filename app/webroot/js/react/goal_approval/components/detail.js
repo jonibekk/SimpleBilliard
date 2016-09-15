@@ -7,7 +7,7 @@ import { ApproveSubmitArea } from './elements/detail_submit_area'
 export default class DetailComponent extends React.Component {
 
   componentWillMount() {
-    this.props.fetchGoalApproval(this.props)
+    this.props.fetchGaolApproval(this.props.params.goal_id)
   }
 
   render() {
@@ -15,11 +15,8 @@ export default class DetailComponent extends React.Component {
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
           <h1 className="goals-approval-heading">Confirm this goal</h1>
           <UserCard user={ this.props.detail.goal_approval.collaborator } />
-          <GoalCard goal={ this.props.detail } />
-          <div className="goals-approval-detail-comments">
-              <h2>comments</h2>
-              <Comments comments={ this.props.detail.comments } />
-          </div>
+          <GoalCard goal={ this.props.detail.goal_approval } />
+          <Comments comments={ this.props.detail.goal_approval.comments } />
           <ApproveSubmitArea />
       </section>
     )

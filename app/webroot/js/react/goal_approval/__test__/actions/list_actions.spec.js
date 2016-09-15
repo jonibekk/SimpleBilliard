@@ -1,9 +1,9 @@
-import * as actions from '../../actions/goal_approval_actions'
+import * as actions from '../../actions/list_actions'
 import * as types from '../../constants/ActionTypes'
 import nock from 'nock'
 import expect from 'expect'
 
-describe('actions::goal_approval', () => {
+describe('actions::list', () => {
   afterEach(() => {
     nock.cleanAll()
   })
