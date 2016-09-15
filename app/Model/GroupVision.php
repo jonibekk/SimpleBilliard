@@ -141,21 +141,21 @@ class GroupVision extends AppModel
         $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
             function () use ($model) {
                 $my_group_list = $model->Group->MemberGroup->getMyGroupList();
-                $group_visions = Hash::extract($model->getGroupVisionsByGroupIds(array_keys($my_group_list)),
-                    '{n}.GroupVision');
+                $group_visions = $model->getGroupVisionsByGroupIds(array_keys($my_group_list));
                 foreach ($group_visions as $k => $v) {
-                    $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
+                    if (isset($my_group_list[$v['GroupVision']['group_id']])) {
+                        $group_visions[$k]['GroupVision']['target_name'] = $my_group_list[$v['GroupVision']['group_id']];
+                    } else {
+                        $group_visions[$k]['GroupVision']['target_name'] = null;
+                    }
                 }
                 return $group_visions;
             }, 'team_info');
-        $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
-
+        $group_visions = Hash::insert($group_visions, '{n}.GroupVision.model', 'GroupVision');
         if ($with_img) {
-            $upload = new UploadHelper(new View());
-            foreach ($group_visions as $k => $v) {
-                $group_visions[$k]['img_url'] = $upload->uploadUrl($v, 'GroupVision.photo', ['style' => 'medium']);
-            }
+            $group_visions = $this->attachImgUrl($group_visions, 'GroupVision');
         }
+        $group_visions = Hash::extract($group_visions, '{n}.GroupVision');
         return $group_visions;
     }
 
