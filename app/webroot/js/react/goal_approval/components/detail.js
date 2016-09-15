@@ -22,7 +22,6 @@ export default class DetailComponent extends React.Component {
           </div>
           <ApproveSubmitArea />
       </section>
-
     )
   }
 }
