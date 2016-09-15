@@ -6,6 +6,8 @@
   "dependencies": {
     "axios": "^0.9.1",
     "form-data": "^1.0.1",
+    "jquery": "^1.11.1",
+    "jquery-lazy": "^1.7.3",
     "react": "^0.14.7",
     "react-autosuggest": "^6.0.3",
     "react-bootstrap": "^0.28.5",
