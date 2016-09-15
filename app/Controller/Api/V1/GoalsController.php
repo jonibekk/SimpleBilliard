@@ -75,7 +75,7 @@ class GoalsController extends ApiController
             $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
         }
 
-        if ($dataTypes == 'all' || in_array('term_types', $dataTypes)) {
+        if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
             $current['type'] = 'current';
             //TODO 個別にdate formatしているが一括で変更する仕組みを考えたほうがいい
