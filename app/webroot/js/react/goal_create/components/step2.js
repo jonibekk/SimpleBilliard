@@ -50,7 +50,8 @@ export default class Step2Component extends React.Component {
         <h1 className="goals-create-heading">{__("Choose a category and set labels")}</h1>
         <p className="goals-create-description">{__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velitesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa quiofficia deserunt mollit anim id est laborum.")}</p>
         <form className="goals-create-input" action onSubmit={(e) => this.handleSubmit(e) }>
-          <CategorySelect onChange={(e) => this.props.updateInputData({category: e.target.value})} categories={this.props.goal.categories} />
+
+          <CategorySelect onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})} categories={this.props.goal.categories}/>
           <InvalidMessageBox message={this.props.goal.validationErrors.category}/>
           <label className="goals-create-input-label">{__("Labels ?")}</label>
           <AutoSuggest

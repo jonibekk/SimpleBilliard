@@ -3,13 +3,14 @@ import * as Page from "../constants/Page";
 import {post} from "./common_actions";
 import axios from "axios";
 
-export function validateGoal(page) {
+export function validateGoal(page, addData) {
   return (dispatch, getState) => {
-    let postData = Object.assign(getState().goal.inputData, {
+    let postData = Object.assign(getState().goal.inputData, addData, {
       fields: Page.VALIDATION_FIELDS[page].join(',')
     })
-    console.log({postData})
-    return post('/api/v1/goals/validate', postData, null,
+    return post('/api/v1/goals/validate', postData, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    },
       (response) => {
         console.log("validate success");
         dispatch(toNextPage())
@@ -75,14 +76,13 @@ export function updateInputData(data) {
 
 export function fetchInitialData(page) {
   const dataTypes = Page.INITIAL_DATA_TYPES[page]
-  return (dispatch) => {
+  return (dispatch, getState) => {
     return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
       .then((response) => {
-        console.log("/api/v1/goals/init_form")
-        console.log({response})
         dispatch({
           type: types.FETCH_INITIAL_DATA,
           data: response.data.data,
+          initInputData:initInputData(page, response.data.data),
           page
         })
       })
@@ -90,6 +90,36 @@ export function fetchInitialData(page) {
       })
   }
 }
+
+/**
+ * 画面初期化に伴う入力値初期化
+ * @param page
+ * @param data
+ * @returns {{}}
+ */
+function initInputData(page, data) {
+  console.log("initInputData start")
+  let inputData = {}
+  switch(page) {
+    case Page.STEP2:
+      if (data.categories.length > 0) {
+        inputData["goal_category_id"] = data.categories[0].id
+      }
+      break;
+    case Page.STEP3:
+      if (data.terms.length > 0) {
+        inputData["term_type"] = data.terms[0].type
+      }
+      if (data.priorities.length > 0) {
+        inputData.priority = data.priorities[0]
+      }
+      break;
+    default:
+      return inputData;
+  }
+  return inputData;
+}
+
 
 /**
  * 入力値にマッチしたサジェストのリストを取得

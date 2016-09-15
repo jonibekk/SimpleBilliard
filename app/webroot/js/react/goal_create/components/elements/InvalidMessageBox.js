@@ -6,7 +6,7 @@ export default class InvalidMessageBox extends React.Component {
   }
   render() {
     return (
-      <div className="has-error signup-invalid-message-box">
+      <div className="has-error">
           <small className="help-block">{ (this.props.message) ? this.props.message : '' }</small>
       </div>
     )

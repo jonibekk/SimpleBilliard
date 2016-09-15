@@ -6,7 +6,11 @@ import * as Page from "../constants/Page";
 export default class Step3Component extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showMoreOption: false
+    }
     this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentWillMount() {
@@ -15,7 +19,7 @@ export default class Step3Component extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      browserHistory.push(Page.URL_STEP3)
+      browserHistory.push(Page.URL_STEP4)
     }
   }
 
@@ -27,35 +31,50 @@ export default class Step3Component extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    // ゴール保存
-    // this.props.saveGoal("")
-  }
-
-  handleDocumentTitleChange(e) {
-    e.preventDefault()
-    // ゴール保存
-    console.log("handleDocumentTitleChange")
+    this.props.validateGoal(Page.STEP3, this.getInputDomData())
   }
 
   handleChange(e) {
     this.props.updateInputData({[e.target.name]: e.target.value})
   }
 
-  render() {
+  handleClick(e) {
+    e.preventDefault()
+    this.setState({showMoreOption: true})
+  }
 
-    console.log("step3 render")
-    console.log(this.props.goal.inputData)
-    const imgPath = this.props.goal.inputData.image || "/img/no-image-goal.jpg";
+  render() {
+    // TODO:画面遷移を行うとイベントが発火しなくなる為、コード追加(既存バグ)
+    // 将来的に廃止
+    $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+      $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
+    });
+
+    const imgPath = this.props.goal.inputData.image || "/img/no-image-goal.jpg"
+    const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
+
+    let priorityOptions = null;
+    if (this.props.goal.priorities.length > 0) {
+      priorityOptions = this.props.goal.priorities.map((v, k) => {
+        return <option key={k}>{v}</option>
+      });
+    }
+
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
         <h1 className="goals-create-heading">{__("Set your goal image")}</h1>
         <p
           className="goals-create-description">{__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velitesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa quiofficia deserunt mollit anim id est laborum.")}</p>
-        <form className="goals-create-input" action encType="multipart/form-data"
+        <form className="goals-create-input"
+              encType="multipart/form-data"
+              method="post"
+              acceptCharset="utf-8"
               onSubmit={(e) => this.handleSubmit(e)}>
           <label className="goals-create-input-label">{__("Goal image?")}</label>
           <div className="goals-create-input-image-upload fileinput_small fileinput-new" data-provides="fileinput">
-            <div className="fileinput-preview thumbnail nailthumb-container photo-design" data-trigger="fileinput">
+            <div
+              className="fileinput-preview thumbnail nailthumb-container photo-design goals-create-input-image-upload-preview"
+              data-trigger="fileinput">
               <img src={imgPath} width={100} height={100}/>
             </div>
             <div className="goals-create-input-image-upload-info">
@@ -70,27 +89,29 @@ export default class Step3Component extends React.Component {
             </div>
           </div>
           <label className="goals-create-input-label">{__("Term?")}</label>
-          <select className="form-control goals-create-input-form mod-select" name="term_type" onChange={this.handleChange}>
-            <option value>{__("This Term(Apr 1, 2016 - Sep 30, 2016)")}</option>
-            <option value>{__("Next Term(Oct 1, 2016 - Mar 31, 2016)")}</option>
+          <select className="form-control goals-create-input-form mod-select" name="term_type" ref="term_type"
+                  onChange={this.handleChange}>
+            <option value="current">{__("Current Term")}</option>
+            <option value="next">{__("Next Term")}</option>
           </select>
-          <a className="goals-create-view-more" href><i className="fa fa-eye" aria-hidden="true"/> <span
-            className="goals-create-interactive-link">{__("View more options")}</span></a>
-          <label className="goals-create-input-label">{__("Description")}</label>
-          <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}
-                    defaultValue={""}/>
-          <label className="goals-create-input-label">{__("End date")}</label>
-          <input className="goals-create-input-form" type="date"  name="end_date" onChange={this.handleChange}/>
-          <label className="goals-create-input-label">{__("Weight")}</label>
-          <select className="goals-create-input-form mod-select" name="weight" onChange={this.handleChange}>
-            <option value={0}>{__("0(not affect the progress)")}</option>
-            <option value={1}>{__("1(Very low)")}</option>
-            <option value={2}>{__("2")}</option>
-            <option value={3}>{__("3(default)")}</option>
-            <option value={4}>{__("4")}</option>
-            <option value={5}>{__("5(Very high)")}</option>
-          </select>
-          <a className="goals-create-btn-next btn" href="/goals/create/step4/gucchi">{__("Next →")}</a>
+          <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
+            <i className="fa fa-eye" aria-hidden="true"/>
+            <span className="goals-create-interactive-link">
+              {__("View more options")}
+              </span>
+          </a>
+          <div className={this.state.showMoreOption ? "" : "hidden"}>
+            <label className="goals-create-input-label">{__("Description")}</label>
+            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}/>
+            <label className="goals-create-input-label">{__("End date")}</label>
+            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange}/>
+            <label className="goals-create-input-label">{__("Weight")}</label>
+            <select className="goals-create-input-form mod-select" name="priority" ref="priority"
+                    onChange={this.handleChange}>
+              {priorityOptions}
+            </select>
+          </div>
+          <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP2}>{__("Back")}</Link>
         </form>
       </section>
