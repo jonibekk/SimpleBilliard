@@ -480,4 +480,37 @@ class AppModel extends Model
         return $concat_msg;
     }
 
+    /**
+     * 画像のurlを取得
+     * - パラメタ $photoStyles は取得するサムネイルの名前を指定。Uploadビヘイビアで設定済みのものが有効。指定しない場合はすべて取得する.
+     * - パラメタ $photoStylesで存在しないスタイルを指定された場合はスキップ。
+     *
+     * @param array  $data
+     * @param string $modelName
+     * @param array  $photoStyles
+     *
+     * @return array
+     */
+    function attachImgUrl($data, $modelName, $photoStyles = [])
+    {
+        $upload = new UploadHelper(new View());
+        $defaultStyles = array_keys($this->actsAs['Upload']['photo']['styles']);
+        if (empty($photoStyles)) {
+            $photoStyles = $defaultStyles;
+            $photoStyles[] = 'original';
+        }
+        foreach ($data as $data_k => $data_v) {
+            foreach ($photoStyles as $style) {
+                if ($style != 'original' && !in_array($style, $defaultStyles)) {
+                    continue;
+                }
+                $data[$data_k][$modelName]["{$style}_img_url"] = $upload->uploadUrl($data_v[$modelName],
+                    "$modelName.photo",
+                    ['style' => $style]);
+            }
+        }
+
+        return $data;
+    }
+
 }
