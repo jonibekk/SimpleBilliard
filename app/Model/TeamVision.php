@@ -7,9 +7,10 @@ App::uses('View', 'View');
 /**
  * TeamVision Model
  *
- * @property User $CreateUser
- * @property User $ModifyUser
- * @property Team $Team
+ * @property User           $CreateUser
+ * @property User           $ModifyUser
+ * @property Team           $Team
+ * @property UploadBehavior $Upload
  */
 class TeamVision extends AppModel
 {
@@ -118,7 +119,7 @@ class TeamVision extends AppModel
             $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
             if ($res !== false) {
                 if ($with_img) {
-                    $res = $this->attachImgUrl($res);
+                    $res = $this->attachImgUrl($res, 'TeamVision');
                 }
                 return $res;
             }
@@ -135,20 +136,9 @@ class TeamVision extends AppModel
             Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
         }
         if ($with_img) {
-            $res = $this->attachImgUrl($res);
+            $res = $this->attachImgUrl($res, 'TeamVision');
         }
         return $res;
-    }
-
-    function attachImgUrl($data)
-    {
-        $upload = new UploadHelper(new View());
-        foreach ($data as $k => $v) {
-            $data[$k]['TeamVision']['img_url'] = $upload->uploadUrl($v['TeamVision'], 'TeamVision.photo',
-                ['style' => 'medium']);
-        }
-
-        return $data;
     }
 
     function setTeamVisionActiveFlag($team_vision_id, $active_flg)

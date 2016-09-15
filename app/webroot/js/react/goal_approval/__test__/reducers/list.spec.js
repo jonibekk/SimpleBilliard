@@ -1,8 +1,8 @@
-import goalApprovalReducer from '../../reducers/goal_approval'
+import ListReducer from '../../reducers/list'
 import * as types from '../../constants/actionTypes'
 import expect from 'expect'
 
-describe('reducer::goal_approval', () => {
+describe('reducer::list', () => {
   it('INIT_GOAL_APPROVALS', () => {
     const expect_value = [
       {
@@ -16,7 +16,7 @@ describe('reducer::goal_approval', () => {
         goal_field3: 'test2'
       }
     ]
-    const newState = goalApprovalReducer({goal_approvals: []}, {
+    const newState = ListReducer({goal_approvals: []}, {
       type: types.INIT_GOAL_APPROVALS,
       goal_approvals: [
         {
@@ -41,7 +41,7 @@ describe('reducer::goal_approval', () => {
       goal_field2: 'test',
       goal_field3: 'test'
     }
-    const newState = goalApprovalReducer({goal_approvals: []}, {
+    const newState = ListReducer({goal_approvals: []}, {
       type: types.ADD_GOAL_APPROVAL,
       goal_approval: {
         goal_field1: 'test',
@@ -66,7 +66,7 @@ describe('reducer::goal_approval', () => {
         goal_field3: 'test2'
       }
     ]
-    const newState = goalApprovalReducer({goal_approvals: []}, {
+    const newState = ListReducer({goal_approvals: []}, {
       type: types.ADD_GOAL_APPROVALS,
       goal_approvals: [
         {
@@ -89,7 +89,7 @@ describe('reducer::goal_approval', () => {
     const expect_value = {
       incomplete_count: 4
     }
-    const newState = goalApprovalReducer({}, {
+    const newState = ListReducer({}, {
       type: types.SET_INCOMPLETE_COUNT,
       incomplete_count: 4
     })
@@ -101,7 +101,7 @@ describe('reducer::goal_approval', () => {
     const expect_value = {
       fetching_goal_approvals: true
     }
-    const newState = goalApprovalReducer({}, {
+    const newState = ListReducer({}, {
       type: types.FETCHING_GOAL_APPROVALS
     })
 
@@ -112,7 +112,7 @@ describe('reducer::goal_approval', () => {
     const expect_value = {
       fetching_goal_approvals: false
     }
-    const newState = goalApprovalReducer({}, {
+    const newState = ListReducer({}, {
       type: types.FINISHED_FETCHING_GOAL_APPROVALS
     })
 
@@ -123,7 +123,7 @@ describe('reducer::goal_approval', () => {
     const expect_value = {
       next_getting_api: '/path/to/api'
     }
-    const newState = goalApprovalReducer({}, {
+    const newState = ListReducer({}, {
       type: types.SET_NEXT_PAGING_API,
       next_getting_api: '/path/to/api'
     })
@@ -135,7 +135,7 @@ describe('reducer::goal_approval', () => {
     const expect_value = {
       done_loading_all_data: true
     }
-    const newState = goalApprovalReducer({}, {
+    const newState = ListReducer({}, {
       type: types.DONE_LOADING_ALL_DATA
     })
 

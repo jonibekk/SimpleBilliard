@@ -8,7 +8,7 @@ const initialState = {
   done_loading_all_data: false
 }
 
-export default function goal_approval(state = initialState, action) {
+export default function list(state = initialState, action) {
   switch (action.type) {
     case types.INIT_GOAL_APPROVALS:
       return Object.assign({}, state, {
