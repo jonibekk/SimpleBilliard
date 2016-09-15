@@ -15,7 +15,7 @@ export default class ListComponent extends React.Component {
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
           <h1 className="goals-approval-heading">Goal approval list <span>(2)</span></h1>
           <ul>
-            { this.props.goal_approval.goal_approvals.map((goal_approval) => {
+            { this.props.list.goal_approvals.map((goal_approval) => {
               if(goal_approval.is_coach) {
                 return <CoachCard goal_approval={ goal_approval } key={goal_approval.name} />;
               } else {
@@ -24,8 +24,8 @@ export default class ListComponent extends React.Component {
             }) }
           </ul>
           {(() => {
-            if(!this.props.goal_approval.done_loading_all_data) {
-              return <ListMoreViewButton handleOnClick={ () => this.props.fetchGaolApprovals() } is_loading={ this.props.goal_approval.fetching_goal_approvals} />
+            if(!this.props.list.done_loading_all_data) {
+              return <ListMoreViewButton handleOnClick={ () => this.props.fetchGaolApprovals() } is_loading={ this.props.list.fetching_goal_approvals} />
             }
           })()}
       </section>

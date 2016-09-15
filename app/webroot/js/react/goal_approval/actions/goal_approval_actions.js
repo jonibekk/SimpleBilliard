@@ -3,7 +3,7 @@ import { get } from './common_actions'
 
 export function fetchGaolApprovals(is_initialize = false) {
   return (dispatch, getState) => {
-    const next_getting_api = getState().goal_approval.next_getting_api
+    const next_getting_api = getState().list.next_getting_api
     const default_getting_api = '/goals/ajax_get_init_goal_approvals'
     const request_api = next_getting_api ? next_getting_api : default_getting_api
 
@@ -19,7 +19,7 @@ export function fetchGaolApprovals(is_initialize = false) {
         dispatch(addGoalApprovals(response.data))
       }
 
-      if(response.data.length === 0 || getState().goal_approval.goal_approvals.length > 9) {
+      if(response.data.length === 0 || getState().list.goal_approvals.length > 9) {
         dispatch(doneLoadingAllData())
       }
       // dispatch(setLastLoadedGoalId(goal_id = response.data.pop().id))
