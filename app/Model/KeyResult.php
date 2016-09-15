@@ -473,17 +473,22 @@ class KeyResult extends AppModel
     }
 
     /**
-     * POSTされたKRのバリデーション
+     * - バリデーションルールを切り替える
+     * - 必須チェックを外す(オプション)
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      *
-     * @param $data
+     * @param      $data
+     * @param bool $detachRequired
      *
      * @return array|true
      */
-    function validateKrPOST($data)
+    function validateKrPOST($data, $detachRequired = false)
     {
         $validationBackup = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
+        if ($detachRequired) {
+            $this->validate = Hash::remove($this->validate, '{s}.{s}.required');
+        }
         $this->set($data);
         if ($this->validates()) {
             $this->validate = $validationBackup;
