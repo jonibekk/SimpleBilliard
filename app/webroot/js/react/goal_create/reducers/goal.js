@@ -5,6 +5,7 @@ const initialState = {
   toNextPage: false,
   categories:[],
   labels:[],
+  terms:[],
   keyword: "",
   suggestions: [],
   validationErrors: {
@@ -12,11 +13,7 @@ const initialState = {
     category: '',
     labels: '',
   },
-  inputData:{
-    name:"",
-    category:null,
-    labels:[],
-  }
+  inputData:{}
 }
 
 export default function goal(state = initialState, action) {
@@ -36,13 +33,14 @@ export default function goal(state = initialState, action) {
     case types.FETCH_INITIAL_DATA:
       console.log("FETCH_INITIAL_DATA")
       let newState = Object.assign({}, state, {toNextPage: false})
-      if (action.page == Page.STEP2) {
-        return Object.assign({}, newState, {
-          categories: action.data.categories,
-          labels: action.data.labels,
-          suggestions: action.data.labels,
-        })
-      }
+      // if (action.page == Page.STEP2) {
+      //   return Object.assign({}, newState, {
+      //     categories: action.data.categories,
+      //     labels: action.data.labels,
+      //     suggestions: action.data.labels,
+      //   })
+      // }
+        return Object.assign({}, newState, action.data)
       return newState;
     case types.REQUEST_SUGGEST:
       return Object.assign({}, state, {
@@ -56,6 +54,7 @@ export default function goal(state = initialState, action) {
         keyword: action.keyword
       })
     case types.SELECT_SUGGEST:
+      inputData.labels = inputData.labels || [];
       inputData.labels.push(action.suggestion.name)
       return Object.assign({}, state, {
         inputData,
