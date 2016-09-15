@@ -16,6 +16,7 @@ class PostShareCircleTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.post_share_circle',
+        'app.team',
         'app.post',
         'app.user',
         'app.circle_member',

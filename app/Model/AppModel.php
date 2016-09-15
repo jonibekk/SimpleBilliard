@@ -8,9 +8,9 @@ App::uses('Sanitize', 'Utility');
  * will inherit them.
  *
  * @package       app.Model
- * @method findById()
- * @method findByUserId()
- * @method findByEmail()
+ * @method findById($id)
+ * @method findByUserId($id)
+ * @method findByEmail($email)
  */
 class AppModel extends Model
 {

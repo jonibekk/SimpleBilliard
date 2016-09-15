@@ -18,12 +18,8 @@ class CommentReadTest extends GoalousTestCase
         'app.comment_read',
         'app.comment',
         'app.user',
-        'app.notify_setting',
         'app.team',
         'app.post',
-        'app.goal',
-        'app.action_result',
-        'app.key_result',
         'app.circle',
     );
 

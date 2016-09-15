@@ -4,7 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * Label Model
  *
- * @property Team $Team
+ * @property Team      $Team
+ * @property GoalLabel $GoalLabel
  */
 class Label extends AppModel
 {
@@ -23,8 +24,12 @@ class Label extends AppModel
      */
     public $validate = [
         'name'    => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'maxLength' => [
+                'rule' => ['maxLength', 128]
+            ],
+            'notEmpty'  => [
+                'rule'     => ['notEmpty'],
+                'required' => 'create',
             ],
         ],
         'del_flg' => [
@@ -41,6 +46,15 @@ class Label extends AppModel
      */
     public $belongsTo = [
         'Team',
+    ];
+
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = [
+        'GoalLabel',
     ];
 
     /**

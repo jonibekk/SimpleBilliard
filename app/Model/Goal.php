@@ -9,6 +9,7 @@ App::uses('KeyResult', 'Model');
  * @property User         $User
  * @property Team         $Team
  * @property GoalCategory $GoalCategory
+ * @property GoalLabel    $GoalLabel
  * @property Post         $Post
  * @property KeyResult    $KeyResult
  * @property Collaborator $Collaborator
@@ -272,7 +273,10 @@ class Goal extends AppModel
         'MyFollow'            => [
             'className' => 'Follower',
         ],
-        'Evaluation'
+        'Evaluation',
+        'GoalLabel'           => [
+            'dependent' => true,
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -291,6 +295,7 @@ class Goal extends AppModel
      * - TKRデータの生成(新規ゴールの場合)
      * - コラボレータの生成(新規ゴールの場合)
      * - ゴールの保存処理
+     * - ラベルの保存処理
      * - ゴール投稿(新規ゴールの場合)
      * - キャッシュ削除
      *
@@ -335,17 +340,24 @@ class Goal extends AppModel
         }
 
         $this->create();
-        $isSaveSuccess = (bool)$this->saveAll($data);
+        $isSuccess = (bool)$this->saveAll($data);
+        $newGoalId = $this->getLastInsertID();
+
+        if (!$newGoalId) {
+            return false;
+        }
+        if (Hash::get($data, 'Label')) {
+            $isSuccess = $isSuccess && (bool)$this->GoalLabel->saveLabels($newGoalId, $data['Label']);
+        }
 
         if ($add_new) {
-            $isFeedSaveSuccess = (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
-            $isSaveSuccess = $isSaveSuccess && $isFeedSaveSuccess;
+            $isSuccess = $isSuccess && (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
         }
 
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
-        return (bool)$isSaveSuccess;
+        return (bool)$isSuccess;
     }
 
     /**

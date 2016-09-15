@@ -20,12 +20,7 @@ class PostReadTest extends GoalousTestCase
         'app.post_read',
         'app.post',
         'app.user',
-        'app.notify_setting',
         'app.team',
-        'app.goal',
-        'app.action_result',
-        'app.key_result',
-        'app.circle',
     );
 
     /**
