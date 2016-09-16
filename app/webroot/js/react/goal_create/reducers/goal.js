@@ -17,7 +17,7 @@ const initialState = {
 }
 
 export default function goal(state = initialState, action) {
-  let inputData = Object.assign({}, state.inputData)
+  let inputData = state.inputData
   switch (action.type) {
     case types.INVALID:
       return Object.assign({}, state, {
