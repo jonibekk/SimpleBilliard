@@ -47,26 +47,33 @@
 
     <h1 class="goals-approval-heading">Check it</h1>
 
-    <div class="goals-approval-detail-comments">
+    <div class="goals-approval-detail-check">
         <label class="goals-approval-input-label" for="">Do you think this tKR is clear?</label>
-        <label class="btn goals-approval-btn-choice" for="">Clear</label>
-        <label class="btn goals-approval-btn-choice" for="">Not Clear</label>
+        <div class="goals-approval-detail-choice">
+            <label class="btn goals-approval-btn-choice" for="">Clear</label>
+            <label class="btn goals-approval-btn-choice" for="">Not Clear</label>
+        </div>
 
         <label class="goals-approval-input-label" for="">Do you think that tKR is the most important to achieve the goal?</label>
-        <label class="btn goals-approval-btn-choice" for="">Yes</label>
-        <label class="btn goals-approval-btn-choiced" for="">No</label>
+        <div class="goals-approval-detail-choice">
+            <label class="btn goals-approval-btn-choice" for="">Yes</label>
+            <label class="btn goals-approval-btn-choiced" for="">No</label>
+        </div>
 
         <label class="goals-approval-input-label" for="">Judge this goal to set as target of evaluations.</label>
-        <textarea class="form-control goals-approval-detail-input-comment-form" name="" id="" cols="30" rows="2" placeholder="Add your comment (optional)"></textarea>
+        <div class="goals-approval-detail-choice">
+            <textarea class="form-control goals-approval-detail-input-comment-form" name="" id="" cols="30" rows="2" placeholder="Add your comment (optional)"></textarea>
+        </div>
 
-
-        <a class="btn goals-approval-btn-nonactive">Set as target</a>
-        <a class="btn goals-approval-btn-active">Remove from target</a>
-        <a class="btn goals-approval-btn-cancel">Cancel</a>
-        <a class="btn goals-approval-btn-fullsize-active">Save & Reply</a>
-        <a class="btn goals-approval-btn-fullsize-gray-active">Edit Goal</a>
-        <a class="btn goals-approval-btn-gray-active">Set as target</a>
-        <a class="btn goals-approval-btn-gray-active">Set as target</a>
+        <div class="goals-approval-detail-choice">
+            <a class="btn goals-approval-btn-nonactive">Set as target</a>
+            <a class="btn goals-approval-btn-active">Remove from target</a>
+            <a class="btn goals-approval-btn-cancel">Cancel</a>
+            <a class="btn goals-approval-btn-fullsize-active">Save & Reply</a>
+            <a class="btn goals-approval-btn-fullsize-gray-active">Edit Goal</a>
+            <a class="btn goals-approval-btn-gray-active">Set as target</a>
+            <a class="btn goals-approval-btn-gray-active">Set as target</a>
+        </div>
     </div>
 
 </div>
