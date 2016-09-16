@@ -29,8 +29,8 @@ class GoalsController extends ApiController
     function post_validate()
     {
         $fields = [];
-        if ($this->request->data('fields')) {
-            $fields = explode(',', $this->request->data('fields'));
+        if ($this->request->query('fields')) {
+            $fields = explode(',', $this->request->query('fields'));
             //allが含まれる場合はすべて指定。それ以外はそのまま
             $fields = in_array('all', $fields) ? [] : $fields;
         }
