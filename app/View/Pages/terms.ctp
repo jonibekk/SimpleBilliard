@@ -28,11 +28,11 @@ Page毎に要素が変わるもの
 $meta_terms = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Terms and Conditions is here.")),
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -44,7 +44,7 @@ $meta_terms = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Terms and Conditions is here.")),
     ],
     [
         "property" => "og:url",
