@@ -95,14 +95,18 @@
     }
   }
 
+
   // /goals/approval/detail
   &-detail {
+    .mod-bgglay {
+      background-color: @smokyWhite;
+      margin: 0 @spacing/2;
+      padding: @spacing @spacing/2;
+    }
     &-user {
       padding: @spacing;
     }
-    &-goal,
-    &-tkr {
-      background-color: @smokyWhite;
+    &-goal {
       margin: 0 @spacing/2;
       padding: @spacing @spacing/2;
     }
@@ -116,15 +120,65 @@
     &-image {
       display: table-cell;
       margin-right: @spacing;
+      max-width: none;
+    }
+    &-tkr{
+      margin-top: @spacing;
+      &title {
+        font-size: @fontMedium;
+        font-weight: bold;
+        margin: 0;
+      }
+      &list {
+        list-style-type: disc;
+        padding-left: 1em;
+      }
+      &link {
+        display: table;
+        margin: 0 auto;
+      }
     }
     &-info {
       display: table-cell;
       vertical-align: top;
+      &-name {
+        font-weight: bold;
+      }
     }
     &-view-more {
       display: inline-block;
       margin: 0 auto;
     }
   }
-
+  &-btn {
+    &-active {
+      background-color: @keyColor;
+      border: none;
+      color: @whiteColor;
+      width: 49%;
+      margin-bottom: @spacing;
+      &:hover {
+        color: @keyColor;
+      }
+    }
+    &-nonactive {
+      background-color: @baseLightGray;
+      border: none;
+      color: @darkBlack;
+      width: 49%;
+      margin-bottom: @spacing;
+      &:hover {
+        color: @keyColor;
+      }
+    }
+    &-cancel {
+      color: @baseLightGray;
+      border-color: @baseLightGray;
+      box-shadow: none;
+      width: 99%;
+      &:hover {
+        color: @keyColor;
+      }
+    }
+  }
 }
