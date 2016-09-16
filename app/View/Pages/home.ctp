@@ -39,7 +39,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Goalous(ゴーラス) | 最強にオープンな社内SNS'),
+        "content"  => __('Goalous | Enjoy your work. Achieve your goal.'),
     ],
     [
         "property" => "og:description",
