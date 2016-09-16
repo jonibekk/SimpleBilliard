@@ -3,7 +3,7 @@ import DetailComponent from '../components/detail'
 import * as actions from '../actions/detail_actions'
 
 function mapStateToProps(state) {
-  return state
+  return { detail: state.detail }
 }
 
 function mapDispatchToProps(dispatch) {

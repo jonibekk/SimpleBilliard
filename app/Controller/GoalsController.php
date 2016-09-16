@@ -68,9 +68,6 @@ class GoalsController extends AppController
         // TODO: 将来的には `return $this->render("approval");`で統一する
         //       マークアップとSPAをパラで開発するための仮URL
         if (in_array($type, $types)) {
-            if ($gucchi) {
-                return $this->render("approval_{$type}");
-            }
             return $this->render("approval");
         }
 
@@ -1888,61 +1885,62 @@ class GoalsController extends AppController
     {
       $this->_ajaxPreProcess();
       $res = [
-        'id' =>  1,
-        'name' => 'goal name',
-        'photo_file_name' => 'https://goalous-release2-assets.s3.amazonaws.com/goals/1252/86fc3ddc552e62ca4118e2ad31219eb9_large.png?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1474017992&Signature=ZzxuF3EF%2BC0yIkkW5PGdbix7Tfo%3D',
-        'category' => [
-          'name' => 'category name'
-        ],
-        'key_result' => [
-          'id' =>  1,
-          'name' => 'key result name'
-        ],
-        'collaborator' => [
-          'role' => 'leader',
-          'user' => [
-            'id' => 1,
-            'display_username' => 'user name',
-            'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
+          "id" => 10,
+          "user_id" => 10,
+          "is_leader" => (boolean)Collaborator::TYPE_COLLABORATOR,
+          "approval_status" => Collaborator::STATUS_UNAPPROVED,
+          "wish_approval_flg" => 1,
+          "target_evaluation_flg" => 1,
+          "is_mine" => true,
+          "category" => [
+            "name" => "成長(category name)"
           ],
-        ],
-        'leader' => [
-          'id' => 2,
-          'display_username' => 'leader name'
-        ],
-        'comments' => [
-          [
-            'id' => 1,
-            'user_id' => 1,
-            'comment' => 'comment1',
-            'user' => [
-              'id' => 1,
-              'name' => 'user name',
-              'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
-            ],
+          "user" => [
+              "id" => 10,
+              "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
           ],
-          [
-            'id' => 2,
-            'user_id' => 2,
-            'comment' => 'comment',
-            'user' => [
-              'id' => 1,
-              'name' => 'user name',
-              'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
-            ],
+          "goal" => [
+              "id" => 10,
+              "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "name" => 'Goalousを世界一に！',
+              "category" => [
+                "name" => "成長(category name)"
+              ],
+              "leader" => [
+                  "user" => [
+                      "display_username" => "leader name"
+                  ]
+              ],
+              "key_result" => [
+                  "id" => 10,
+                  "name" => "key result name",
+                  "value" => "key result value",
+                  "desc" => "key result desc"
+              ]
           ],
-          [
-            'id' => 3,
-            'user_id' => 3,
-            'comment' => 'comment',
-            'user' => [
-              'id' => 1,
-              'name' => 'user name',
-              'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
-            ]
+          "approval_histories" => [
+              [
+                  "id" => 10,
+                  "user_id" => 10,
+                  "is_clear_or_not" => 1,
+                  "is_important_or_not" => 0,
+                  "comment" => "いいですね！",
+                  "user" => [
+                      "id" => 10,
+                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "display_username" => 'Test Hanako'
+                  ]
+              ]
           ]
-        ]
       ];
+      $this->log($res);
       return $this->_ajaxGetResponse($res);
     }
 }
