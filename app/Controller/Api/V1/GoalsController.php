@@ -86,11 +86,11 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
-            $res['priorities'] = $this->Goal->priority_list;
+            $res['priorities'] = Configure::read("label.priorities"); ;
         }
-        
+
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = $this->Goal->unit_list;
+            $res['units'] = Configure::read("label.units"); ;
         }
 
         return $this->_getResponseSuccess($res);
@@ -115,7 +115,12 @@ class GoalsController extends ApiController
      */
     function post()
     {
-        $validateResult = $this->_validateCreateGoal($this->request->data);
+        $this->log(__METHOD__);
+        $data = $this->request->data;
+        $data['photo'] = $_FILES['photo'];
+        $this->log($data);
+
+        $validateResult = $this->_validateCreateGoal($data);
         if ($validateResult !== true) {
             return $validateResult;
         }
@@ -123,9 +128,9 @@ class GoalsController extends ApiController
         $this->Goal->begin();
         $isSaveSuccess = $this->Goal->add(
             [
-                'Goal'      => $this->request->data,
-                'KeyResult' => [Hash::get($this->request->data, 'key_result')],
-                'Label'     => Hash::get($this->request->data, 'labels'),
+                'Goal'      => $data,
+                'KeyResult' => [Hash::get($data, 'key_result')],
+                'Label'     => Hash::get($data, 'labels'),
             ]
         );
         if ($isSaveSuccess === false) {
@@ -137,7 +142,7 @@ class GoalsController extends ApiController
         $newGoalId = $this->Goal->getLastInsertID();
 
         //通知
-        $this->NotifyBiz->push(Hash::get($this->request->data, 'socket_id'), "all");
+        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
         $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
 
         $this->updateSetupStatusIfNotCompleted();
