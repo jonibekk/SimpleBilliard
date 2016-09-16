@@ -6,7 +6,7 @@
  * @var                    $value_unit_list
  */
 ?>
-<!-- START app/View/GoalApproval/index.ctp -->
+<?= $this->App->viewStartComment()?>
 <style type="text/css">
     .approval_body_text {
         font-size: 14px
@@ -264,7 +264,7 @@
         </div>
     </div>
 </div>
-<!-- END app/View/GoalApproval/index.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

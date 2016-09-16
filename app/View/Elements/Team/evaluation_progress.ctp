@@ -22,7 +22,7 @@
  * @var                    $current_term_end_date
  */
 ?>
-<!-- START app/View/Elements/Team/evaluation_progress.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Evaluation status") ?></div>
     <?php if ($previous_eval_is_started): ?>
@@ -50,4 +50,4 @@
         </div>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/Team/evaluation_progress.ctp -->
+<?= $this->App->viewEndComment()?>

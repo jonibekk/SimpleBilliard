@@ -7,7 +7,7 @@
  * @var                    $total_share_user_count
  */
 ?>
-<!-- START app/View/Elements/modal_message_range.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -31,4 +31,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_message_range.ctp -->
+<?= $this->App->viewEndComment()?>

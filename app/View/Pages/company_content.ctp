@@ -20,6 +20,6 @@
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/company_content') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/company_content') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/company_content.ctp -->
+<?= $this->App->viewStartComment()?>
 company_content!
-<!-- END app/View/Pages/company_content.ctp -->
+<?= $this->App->viewEndComment()?>

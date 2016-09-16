@@ -18,7 +18,7 @@
  * @var                    $is_mb_app
  */
 ?>
-<!-- START app/View/Elements/header_logged_in.ctp -->
+<?= $this->App->viewStartComment()?>
 
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
@@ -146,4 +146,4 @@
         </div>
     </div>
 </header>
-<!-- END app/View/Elements/header_logged_in.ctp -->
+<?= $this->App->viewEndComment()?>

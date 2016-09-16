@@ -23,7 +23,7 @@
  * @var                    $previous_term_id
  */
 ?>
-<!-- START app/View/Elements/Team/evaluation_setup.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Evaluation settings") ?></div>
     <div class="panel-body form-horizontal">
@@ -187,4 +187,4 @@
     <?= $this->Form->end() ?>
 
 </div>
-<!-- END app/View/Elements/Team/evaluation_setup.ctp -->
+<?= $this->App->viewEndComment()?>
