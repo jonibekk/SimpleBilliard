@@ -3,6 +3,7 @@ import * as Page from "../constants/Page";
 
 const initialState = {
   toNextPage: false,
+  visions:[],
   categories:[],
   labels:[],
   terms:[],
