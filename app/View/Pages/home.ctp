@@ -43,9 +43,9 @@ $meta_lp = [
     ],
     [
         "property" => "og:description",
-    [
         "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.'),
     ],
+    [
         "property" => "og:url",
         "content"  => "https://www.goalous.com/",
     ],
