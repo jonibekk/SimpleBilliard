@@ -5,10 +5,10 @@ import axios from "axios";
 
 export function validateGoal(page, addData) {
   return (dispatch, getState) => {
-    let postData = Object.assign(getState().goal.inputData, addData, {
-      fields: Page.VALIDATION_FIELDS[page].join(',')
-    })
-    return post('/api/v1/goals/validate', postData, null,
+
+    const postData = Object.assign(getState().goal.inputData, addData)
+    const fields = Page.VALIDATION_FIELDS[page].join(',')
+    return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
       (response) => {
         console.log("validate success");
         dispatch(toNextPage())
