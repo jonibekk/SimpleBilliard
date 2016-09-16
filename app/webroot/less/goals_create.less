@@ -46,8 +46,10 @@
     margin-bottom: @spacing;
   }
   &-view-more {
+    display: block;
     color: @keyColor;
     font-weight: 300;
+    margin-bottom: @spacing;
   }
   &-layout-flex {
     display: flex;
@@ -175,15 +177,18 @@
 
     // step3 画像表示
     &-image-upload {
-      display: table;
       margin-bottom: @spacing;
+      overflow: hidden;
       &-preview {
-        display: table-cell;
-        margin-right: @spacing/2;
+        display: inline-block;
+        float: left;
+        width: 96px;
+        height: 96px;
       }
       &-info {
         vertical-align: top;
-        display: table-cell;
+        display: inline-block;
+        padding: 0 @spacing/2;
         &-text {
           margin-bottom: @spacing;
         }

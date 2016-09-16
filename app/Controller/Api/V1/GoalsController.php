@@ -13,7 +13,9 @@ App::uses('ApiController', 'Controller/Api');
 class GoalsController extends ApiController
 {
     public $uses = [
-        'Goal'
+        'Goal',
+        'TeamVision',
+        'GroupVision',
     ];
 
     /**
@@ -75,12 +77,16 @@ class GoalsController extends ApiController
             $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
         }
 
-        if ($dataTypes == 'all' || in_array('term_types', $dataTypes)) {
+        if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
             $current['type'] = 'current';
             $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
             $next['type'] = 'next';
             $res['terms'] = [$current, $next];
+        }
+
+        if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
+            $res['priorities'] = $this->Goal->priority_list;
         }
 
         return $this->_getResponseSuccess($res);
