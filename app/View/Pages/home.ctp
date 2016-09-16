@@ -27,7 +27,7 @@
 $meta_lp = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content" => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.'),
     ],
     [
         "name"    => "keywords",
@@ -43,9 +43,9 @@ $meta_lp = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
-    ],
     [
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.'),
+    ],
         "property" => "og:url",
         "content"  => "https://www.goalous.com/",
     ],
