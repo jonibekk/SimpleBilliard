@@ -8,7 +8,7 @@
  * @var                    $id
  */
 ?>
-<!-- START app/View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -33,4 +33,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp -->
+<?= $this->App->viewEndComment()?>

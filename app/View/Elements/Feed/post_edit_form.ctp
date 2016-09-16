@@ -9,7 +9,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/Feed/post_edit_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <?=
 $this->Form->create('Post', [
     'url'           => ['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']],
@@ -74,4 +74,4 @@ $this->Form->create('Post', [
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>
-<!-- END app/View/Elements/Feed/post_edit_form.ctp -->
+<?= $this->App->viewEndComment()?>

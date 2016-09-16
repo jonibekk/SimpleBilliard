@@ -11,7 +11,7 @@
  * @var                    $type
  */
 ?>
-<!-- START app/View/Elements/Feed/read_like_user.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
@@ -32,4 +32,4 @@
         <?php endif; ?>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/read_like_user.ctp -->
+<?= $this->App->viewEndComment()?>

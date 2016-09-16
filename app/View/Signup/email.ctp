@@ -5,7 +5,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Signup/email.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __('Create a new team') ?></div>
@@ -62,4 +62,4 @@
     });
 </script>
 <?php $this->end(); ?>
-<!-- END app/View/Signup/email.ctp -->
+<?= $this->App->viewEndComment()?>

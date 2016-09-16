@@ -3,7 +3,7 @@
  * @var $circle_member
  */
 ?>
-<!-- START app/View/Elements/modal_circle_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -74,4 +74,4 @@
 
     </div>
 </div>
-<!-- END app/View/Elements/modal_circle_setting.ctp -->
+<?= $this->App->viewEndComment()?>

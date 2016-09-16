@@ -9,7 +9,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Users/two_fa_auth.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -52,4 +52,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Users/two_fa_auth.ctp -->
+<?= $this->App->viewEndComment()?>

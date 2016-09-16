@@ -10,7 +10,7 @@
  * @var $item_created
  */
 ?>
-<!-- START app/View/Users/view_posts.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('User/simplex_top_section') ?>
@@ -61,4 +61,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Users/view_posts.ctp -->
+<?= $this->App->viewEndComment()?>

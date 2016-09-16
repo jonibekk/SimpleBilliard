@@ -9,7 +9,7 @@
  * @var                    $goals
  */
 ?>
-<!-- START app/View/Elements/Goal/index_items.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-3 col-xs-2">
@@ -95,4 +95,4 @@
         </div>
     </div>
 <?php endforeach ?>
-<!-- End app/View/Elements/Goal/index_items.ctp -->
+<?= $this->App->viewEndComment()?>

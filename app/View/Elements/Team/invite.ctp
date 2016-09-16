@@ -10,7 +10,7 @@
  * @var                    $from_setting
  */
 ?>
-<!-- START app/View/Elements/Team/invite.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Invite members") ?></div>
     <?=
@@ -98,4 +98,4 @@
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Elements/Team/invite.ctp -->
+<?= $this->App->viewEndComment()?>

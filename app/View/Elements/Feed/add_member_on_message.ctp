@@ -8,7 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/Feed/add_member_on_message.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default global-form">
     <div class="tab-pane active" id="MessageForm">
         <?=
@@ -66,4 +66,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/add_member_on_message.ctp -->
+<?= $this->App->viewEndComment()?>
