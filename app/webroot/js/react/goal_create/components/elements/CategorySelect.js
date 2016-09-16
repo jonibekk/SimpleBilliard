@@ -16,8 +16,7 @@ export default class CategorySelect extends React.Component {
         <label className="goals-create-input-label">Category ?</label>
         <select
           className="form-control goals-create-input-form"
-          name="category"
-          ref="category"
+          name="goal_category_id"
           onChange={this.props.onChange}>
           {options}
         </select>

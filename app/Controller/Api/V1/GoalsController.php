@@ -13,7 +13,9 @@ App::uses('ApiController', 'Controller/Api');
 class GoalsController extends ApiController
 {
     public $uses = [
-        'Goal'
+        'Goal',
+        'TeamVision',
+        'GroupVision',
     ];
 
     /**
@@ -75,12 +77,21 @@ class GoalsController extends ApiController
             $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
         }
 
-        if ($dataTypes == 'all' || in_array('term_types', $dataTypes)) {
+        if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
             $current['type'] = 'current';
+            //TODO 個別にdate formatしているが一括で変更する仕組みを考えたほうがいい
+            $current['start_date'] = date('Y-m-d', $current['start_date'] + $current['timezone'] * HOUR);
+            $current['end_date'] = date('Y-m-d', $current['end_date'] + $current['timezone'] * HOUR);
             $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
             $next['type'] = 'next';
+            $next['start_date'] = date('Y-m-d', $next['start_date'] + $next['timezone'] * HOUR);
+            $next['end_date'] = date('Y-m-d', $next['end_date'] + $next['timezone'] * HOUR);
             $res['terms'] = [$current, $next];
+        }
+
+        if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
+            $res['priorities'] = $this->Goal->priority_list;
         }
 
         return $this->_getResponseSuccess($res);

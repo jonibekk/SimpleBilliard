@@ -2,9 +2,11 @@ import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
 
 const initialState = {
-  page: Page.STEP1,
+  toNextPage: false,
   categories:[],
   labels:[],
+  terms:[],
+  priorities:[],
   keyword: "",
   suggestions: [],
   validationErrors: {
@@ -12,11 +14,7 @@ const initialState = {
     category: '',
     labels: '',
   },
-  inputData:{
-    name:"",
-    category:null,
-    labels:[],
-  }
+  inputData:{}
 }
 
 export default function goal(state = initialState, action) {
@@ -27,17 +25,13 @@ export default function goal(state = initialState, action) {
         validationErrors: action.error.validation_errors
       })
     case types.TO_NEXT_PAGE:
-      // 現在のページを基に次のページを返却
-      const idx = Page.PAGE_FLOW.indexOf(state.page);
       return Object.assign({}, state, {
-        page: Page.PAGE_FLOW[idx + 1]
+        toNextPage: true
       })
     case types.FETCH_INITIAL_DATA:
-      return Object.assign({}, state, {
-        categories: action.data.categories,
-        labels: action.data.labels,
-        suggestions: action.data.labels,
-      })
+      let newState = Object.assign({}, state, {toNextPage: false})
+      inputData = Object.assign({}, inputData, action.initInputData)
+      return Object.assign({}, newState, action.data, {inputData})
     case types.REQUEST_SUGGEST:
       return Object.assign({}, state, {
         suggestions: action.suggestions,
@@ -50,6 +44,7 @@ export default function goal(state = initialState, action) {
         keyword: action.keyword
       })
     case types.SELECT_SUGGEST:
+      inputData.labels = inputData.labels || [];
       inputData.labels.push(action.suggestion.name)
       return Object.assign({}, state, {
         inputData,

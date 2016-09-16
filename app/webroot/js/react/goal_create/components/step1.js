@@ -1,5 +1,5 @@
 import React from "react";
-import {browserHistory} from "react-router";
+import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import InvalidMessageBox from "./elements/InvalidMessageBox";
 
@@ -7,20 +7,24 @@ export default class Step1Component extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: Page.STEP1,
+      toNextPage: false,
     };
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentWillMount() {
+    this.props.fetchInitialData(Page.STEP1)
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.goal.page != Page.STEP1) {
-      browserHistory.push(nextProps.goal.page)
+    if (nextProps.goal.toNextPage) {
+      browserHistory.push(Page.URL_STEP2)
     }
   }
 
   handleSubmit(e) {
     e.preventDefault()
-    this.props.validateGoal()
+    this.props.validateGoal(Page.STEP1)
   }
   handleChange(e) {
     this.props.updateInputData({name: e.target.value})

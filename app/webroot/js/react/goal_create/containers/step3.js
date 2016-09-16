@@ -1,12 +1,14 @@
-import { connect } from 'react-redux'
-import Step3Component from '../components/step3'
+import {connect} from "react-redux";
+import Step3Component from "../components/step3";
+import * as actions from "../actions/goal_actions";
+import * as common from "./common";
 
 function mapStateToProps(state) {
   return state
 }
 
 function mapDispatchToProps(dispatch) {
-  return {}
+  return Object.assign({}, common.getCommonDispatchToProps(dispatch));
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Step3Component)
