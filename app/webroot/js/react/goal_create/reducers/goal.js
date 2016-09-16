@@ -29,7 +29,6 @@ export default function goal(state = initialState, action) {
         toNextPage: true
       })
     case types.FETCH_INITIAL_DATA:
-      console.log("FETCH_INITIAL_DATA")
       let newState = Object.assign({}, state, {toNextPage: false})
       inputData = Object.assign({}, inputData, action.initInputData)
       return Object.assign({}, newState, action.data, {inputData})
