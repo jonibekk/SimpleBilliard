@@ -11,7 +11,6 @@
                     (Leader:Shohei Saeki)</p>
                 <p class="goals-approval-detail-info-name">Role:Sales</p>
                 <p>I can get new customers everyday.</p>
-
             </div>
         </div>
     </div>
@@ -49,12 +48,12 @@
 
     <div class="goals-approval-detail-comments">
         <label class="goals-approval-input-label" for="">Do you think this tKR is clear?</label>
-        <label class="btn" for="">Clear</label>
-        <label class="btn btn-white" for="">Not Clear</label>
+        <label class="btn goals-approval-btn-choice" for="">Clear</label>
+        <label class="btn goals-approval-btn-choice" for="">Not Clear</label>
 
         <label class="goals-approval-input-label" for="">Do you think that tKR is the most important to achieve the goal?</label>
-        <label class="btn btn-white" for="">Yes</label>
-        <label class="btn" for="">No</label>
+        <label class="btn goals-approval-btn-choice" for="">Yes</label>
+        <label class="btn goals-approval-btn-choiced" for="">No</label>
 
         <label class="goals-approval-input-label" for="">Judge this goal to set as target of evaluations.</label>
         <textarea class="form-control goals-approval-detail-input-comment-form" name="" id="" cols="30" rows="2" placeholder="Add your comment (optional)"></textarea>

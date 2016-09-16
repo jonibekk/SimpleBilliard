@@ -68,6 +68,7 @@
       display: table-cell;
       margin-right: @spacing;
     }
+
     &-info {
       display: table-cell;
       vertical-align: top;
@@ -158,26 +159,46 @@
       width: 49%;
       margin-bottom: @spacing;
       &:hover {
-        color: @keyColor;
+        background-color: @serviceColor;
       }
     }
     &-nonactive {
       background-color: @baseLightGray;
       border: none;
-      color: @darkBlack;
+      color: @subColor3;
       width: 49%;
       margin-bottom: @spacing;
       &:hover {
-        color: @keyColor;
+        color: @subColor3;
       }
     }
     &-cancel {
-      color: @baseLightGray;
-      border-color: @baseLightGray;
+      color: @subColor3;
+      border-color: @subColor4;
       box-shadow: none;
       width: 99%;
       &:hover {
         color: @keyColor;
+      }
+    }
+    &-choice {
+      color: @subColor3;
+      border-color: @subColor4;
+      box-shadow: none;
+      width: 49%;
+      &:hover {
+        color: @keyColor;
+        border-color: @keyColor;
+      }
+    }
+    &-choiced {
+      color: @subColor2;
+      border-color: @keyColor;
+      box-shadow: none;
+      width: 49%;
+      &:hover {
+        color: @subColor2;
+        border-color: @keyColor;
       }
     }
   }
