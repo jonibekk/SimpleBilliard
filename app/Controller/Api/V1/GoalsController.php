@@ -88,6 +88,10 @@ class GoalsController extends ApiController
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
             $res['priorities'] = $this->Goal->priority_list;
         }
+        
+        if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
+            $res['units'] = $this->Goal->unit_list;
+        }
 
         return $this->_getResponseSuccess($res);
     }
