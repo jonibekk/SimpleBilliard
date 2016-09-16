@@ -5875,9 +5875,13 @@ msgid ""
 "す。スマホアプリ・ブラウザで利用可能です。"
 msgstr ""
 
+#: View/Pages/home.ctp:34
+msgid "goal management, achieve a goal, sns app, evaluation, mbo"
+msgstr "目標管理,目標達成,社内SNS,評価,MBO"
+
 #: View/Pages/home.ctp:42
 msgid "Goalous | Enjoy your work. Achieve your goal."
-msgstr 'Goalous (ゴーラス) │チーム力を"たのしく"あげる'
+msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
 #: View/Pages/home.ctp:78
 msgid "Goalous (ゴーラス) │最強にオープンな社内SNS"
