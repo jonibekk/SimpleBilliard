@@ -31,7 +31,7 @@ $meta_lp = [
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -75,7 +75,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
-<title><?= __('Goalous (ゴーラス) │最強にオープンな社内SNS') ?></title>
+<title><?= __('Goalous | Enjoy your work. Achieve your goal.') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>

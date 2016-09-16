@@ -31,7 +31,7 @@ $meta_contact_thanks = [
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",

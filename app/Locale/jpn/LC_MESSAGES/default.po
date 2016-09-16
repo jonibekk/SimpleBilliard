@@ -5876,8 +5876,8 @@ msgid ""
 msgstr ""
 
 #: View/Pages/home.ctp:42
-msgid "Goalous(ゴーラス) | 最強にオープンな社内SNS"
-msgstr ""
+msgid "Goalous | Enjoy your work. Achieve your goal."
+msgstr 'Goalous (ゴーラス) │チーム力を"たのしく"あげる'
 
 #: View/Pages/home.ctp:78
 msgid "Goalous (ゴーラス) │最強にオープンな社内SNS"
