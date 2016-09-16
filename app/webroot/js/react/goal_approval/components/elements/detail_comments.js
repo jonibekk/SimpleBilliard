@@ -7,13 +7,11 @@ export class Comments extends React.Component {
 
     return (
       <div className="goals-approval-detail-comments">
-          <h2>comments</h2>
-          <a><i className="fa fa-comments-o" aria-hidden="true"></i> <span className="goals-approval-interactive-link">View all 3 comments</span></a>
-          { comments.map( comment => {
-            return (
-              <Comment comment={ comment } />
-            )
-          })}
+          <a><i className="fa fa-angle-down" aria-hidden="true"></i> <span className="goals-approval-interactive-link">View all 3 comments</span></a>
+
+          <p className="goals-approval-detail-info-name">coach name</p>
+          <p>message message message message message message mge message message mage message message message message message message message message message message mee message message message message message message message message message message</p>
+          <a><span className="goals-approval-interactive-link-more">more</span></a>
       </div>
     )
   }

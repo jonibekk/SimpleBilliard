@@ -1890,6 +1890,7 @@ class GoalsController extends AppController
       $res = [
         'id' =>  1,
         'name' => 'goal name',
+        'photo_file_name' => 'https://goalous-release2-assets.s3.amazonaws.com/goals/1252/86fc3ddc552e62ca4118e2ad31219eb9_large.png?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1474017992&Signature=ZzxuF3EF%2BC0yIkkW5PGdbix7Tfo%3D',
         'category' => [
           'name' => 'category name'
         ],
@@ -1901,9 +1902,13 @@ class GoalsController extends AppController
           'role' => 'leader',
           'user' => [
             'id' => 1,
-            'name' => 'user name',
+            'display_username' => 'user name',
             'photo_file_name' => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg'
           ],
+        ],
+        'leader' => [
+          'id' => 2,
+          'display_username' => 'leader name'
         ],
         'comments' => [
           [
