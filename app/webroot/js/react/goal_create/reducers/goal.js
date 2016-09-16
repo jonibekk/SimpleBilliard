@@ -11,16 +11,7 @@ const initialState = {
   keyword: "",
   suggestions: [],
   validationErrors: {
-    name: '',
-    category: '',
-    labels: '',
-    key_result: {
-      name:"",
-      value_unit:"",
-      start_value:"",
-      target_value:"",
-      description:"",
-    }
+    key_result: {}
   },
   inputData:{}
 }
