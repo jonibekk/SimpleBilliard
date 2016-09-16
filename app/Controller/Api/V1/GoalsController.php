@@ -120,11 +120,8 @@ class GoalsController extends ApiController
      */
     function post()
     {
-        $this->log(__METHOD__);
         $data = $this->request->data;
         $data['photo'] = $_FILES['photo'];
-        $this->log($data);
-
         $validateResult = $this->_validateCreateGoal($data);
         if ($validateResult !== true) {
             return $validateResult;
