@@ -30,7 +30,6 @@ export default class Step4Component extends React.Component {
   }
 
   handleChange(e) {
-    console.log("handleChange")
     this.props.updateInputData({[e.target.name]: e.target.value}, "key_result")
   }
 
@@ -40,13 +39,14 @@ export default class Step4Component extends React.Component {
   }
 
   render() {
-    console.log({input: this.props.goal.inputData})
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
 
     const {units, validationErrors} = this.props.goal
-    let unitOptions = [];
-    for (let k in units) {
-      unitOptions.push(<option key={k} value={k}>{units[k]}</option>)
+    let unitOptions = null;
+    if (units.length > 0) {
+      unitOptions = units.map((v) => {
+        return <option key={v.id} value={v.id}>{v.label}</option>
+      })
     }
 
     return (
@@ -59,15 +59,22 @@ export default class Step4Component extends React.Component {
            */}
           <label className="goals-create-input-label">{__("tKR name")}</label>
           <input name="name" type="text" className="form-control goals-create-input-form goals-create-input-form-tkr-name" placeholder="e.g. Increase monthly active users" onChange={this.handleChange}/>
+          <InvalidMessageBox message={validationErrors.key_result.name}/>
+
           <label className="goals-create-input-label">{__("Unit & Range")}</label>
           <select name="value_unit" className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select" onChange={this.handleChange}>
             {unitOptions}
           </select>
+          <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
+
           <div className="goals-create-layout-flex">
             <input name="start_value" className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text" placeholder={0} onChange={this.handleChange} />
             <span className="goals-create-input-form-tkr-range-symbol">&gt;</span>
             <input name="target_value" className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text" placeholder={100} onChange={this.handleChange} />
           </div>
+          <InvalidMessageBox message={validationErrors.key_result.start_value}/>
+          <InvalidMessageBox message={validationErrors.key_result.target_value}/>
+
           <a href="#" className={showMoreLinkClass} onClick={this.handleClick}>
             <i className="fa fa-plus-circle" aria-hidden="true" />
             <span className="goals-create-interactive-link">{__("Add description")}</span>
@@ -75,6 +82,7 @@ export default class Step4Component extends React.Component {
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" className="form-control goals-create-input-form mod-textarea" onChange={this.handleChange} />
+            <InvalidMessageBox message={validationErrors.key_result.description}/>
           </div>
           <button type="submit" className="goals-create-btn-next btn" >{__("Save and share")}</button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP3}>{__("Back")}</Link>

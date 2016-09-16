@@ -94,11 +94,9 @@ export function saveGoal() {
   return (dispatch, getState) => {
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
-        console.log("validate success");
         dispatch(toNextPage())
       },
       (response) => {
-        console.log("validate failed");
         dispatch(invalid(response.data))
       }
     );
@@ -111,7 +109,6 @@ export function saveGoal() {
  * @returns {{}}
  */
 function initInputData(page, data) {
-  console.log("initInputData start")
   let inputData = {}
   switch(page) {
     case Page.STEP2:
@@ -124,12 +121,13 @@ function initInputData(page, data) {
         inputData["term_type"] = data.terms[0].type
       }
       if (data.priorities.length > 0) {
-        inputData.priority = data.priorities[0]
+        inputData["priority"] = data.priorities[0].id
       }
       break;
     case Page.STEP4:
       if (data.units.length > 0) {
-        inputData["value_unit"] = data.units[0] 
+        inputData["key_result"] = inputData["key_result"] || {};
+        inputData["key_result"]["value_unit"] = data.units[0].id
       }
       break;
     default:

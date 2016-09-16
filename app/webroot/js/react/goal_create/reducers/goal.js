@@ -14,6 +14,13 @@ const initialState = {
     name: '',
     category: '',
     labels: '',
+    key_result: {
+      name:"",
+      value_unit:"",
+      start_value:"",
+      target_value:"",
+      description:"",
+    }
   },
   inputData:{}
 }
