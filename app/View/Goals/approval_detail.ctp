@@ -10,7 +10,7 @@
                 <p>Collaborator</br>
                     (Leader:Shohei Saeki)</p>
                 <p class="goals-approval-detail-info-name">Role:Sales</p>
-                <p>I can get new customers everyday.</p>
+                <p>I can get new customers everyday.message message mge message message mage message message message message message message message message message message mee message message message message message mess</p>
             </div>
         </div>
     </div>
@@ -24,9 +24,9 @@
                 <div class="goals-approval-detail-tkr">
                     <h2 class="goals-approval-detail-tkrtitle"><i class="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                     <ul class="goals-approval-detail-tkrlist">
-                        <li>tKR name</li>
+                        <li class="mod-change">tKR name</li>
                         <li>tKR value</li>
-                        <li>tKR Desc</li>
+                        <li>message message mge message message mage message message message message message message message message message message mee message message message message message mess</li>
                     </ul>
                 </div>
                 <a href="" class="goals-approval-detail-tkrlink"><i class="fa fa-angle-down" aria-hidden="true"></i> <span class="goals-approval-interactive-link">View previous</span></a>
@@ -40,8 +40,9 @@
         <a><i class="fa fa-angle-down" aria-hidden="true"></i> <span class="goals-approval-interactive-link">View all 3 comments</span></a>
 
         <p class="goals-approval-detail-info-name">coach name</p>
+        <p class="goals-approval-detail-info-alert">This tKR is not the most important.</p>
         <p>message message message message message message mge message message mage message message message message message message message message message message mee message message message message message message message message message message</p>
-        <a><span class="goals-approval-interactive-link-more">more</span></a>
+        <a href=""><span class="goals-approval-interactive-link-more">more</span></a>
     </div>
 
     <h1 class="goals-approval-heading">Check it</h1>
@@ -62,6 +63,10 @@
         <a class="btn goals-approval-btn-nonactive">Set as target</a>
         <a class="btn goals-approval-btn-active">Remove from target</a>
         <a class="btn goals-approval-btn-cancel">Cancel</a>
+        <a class="btn goals-approval-btn-fullsize-active">Save & Reply</a>
+        <a class="btn goals-approval-btn-fullsize-gray-active">Edit Goal</a>
+        <a class="btn goals-approval-btn-gray-active">Set as target</a>
+        <a class="btn goals-approval-btn-gray-active">Set as target</a>
     </div>
 
 </div>
