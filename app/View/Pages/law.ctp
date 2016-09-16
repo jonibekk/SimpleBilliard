@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_law = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Inscription based on specific trade law is here.")),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +43,7 @@ $meta_law = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Inscription based on specific trade law is here.")),
     ],
     [
         "property" => "og:url",

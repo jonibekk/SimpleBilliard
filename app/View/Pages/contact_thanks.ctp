@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_contact_thanks = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Thank you for your inquiry.")),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +43,7 @@ $meta_contact_thanks = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Thank you for your inquiry.")),
     ],
     [
         "property" => "og:url",

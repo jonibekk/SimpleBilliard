@@ -61,12 +61,38 @@ msgstr "Goalous(ゴーラス)"
 #: Controller/AppController.php:171
 msgid ""
 "Goalous is one of the best team communication tools. Let your team open. "
-"Your action will be share with your collegues. You can use Goalous on Web "
-"and on Mobile App."
+"Your action will be share with your collegues. %s"
 msgstr ""
 "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
 "バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
 "す。スマホアプリ・ブラウザで利用可能です。"
+
+msgid "You can use Goalous on Web and on Mobile App."
+msgstr "スマホアプリ・ブラウザで利用可能です。"
+
+msgid "We accept consultation of introduction."
+msgstr "導入のご相談を受け付けています。"
+
+msgid "It is a confirmation of your inquiry."
+msgstr "お問い合わせ内容の確認です。"
+
+msgid "Thank you for your inquiry."
+msgstr "お問い合わせありがとうございました。"
+
+msgid "Description of the function is here."
+msgstr "機能の説明はこちら。"
+
+msgid "Inscription based on specific trade law is here."
+msgstr "特定商取引法に基づく表記はこちら。"
+
+msgid "Pricing is here."
+msgstr "料金・価格はこちら。"
+
+msgid "Privacy Policy is here."
+msgstr "プライバシーポリシーはこちら。"
+
+msgid "Terms and Conditions is here."
+msgstr "利用規約はこちら。"
 
 #: Controller/AppController.php:220
 msgid "Logged out because the team you logged in is deleted."
