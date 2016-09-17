@@ -66,6 +66,16 @@ class GoalsController extends ApiController
             $dataTypes = 'all';
         }
 
+        if ($dataTypes == 'all' || in_array('visions', $dataTypes)) {
+            $team_visions = Hash::insert(
+                Hash::extract($this->TeamVision->getTeamVision($this->current_team_id, true, true),
+                    '{n}.TeamVision'), '{n}.type', 'team_vision');
+            $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
+
+            $visions = am($team_visions, $group_visions);
+            $res['visions'] = $visions;
+        }
+
         if ($dataTypes == 'all' || in_array('categories', $dataTypes)) {
             $res['categories'] = Hash::extract(
                 $this->Goal->GoalCategory->getCategories(['id', 'name']),
