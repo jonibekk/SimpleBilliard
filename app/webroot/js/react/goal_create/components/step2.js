@@ -25,12 +25,9 @@ export default class Step2Component extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    console.log("handleSubmit")
     if (e.keyCode == KeyCode.ENTER) {
-    console.log("prevent submit ")
       return false
     }
-    console.log("go submit")
     // this.props.validateGoal(Page.STEP2)
   }
 
@@ -57,8 +54,6 @@ export default class Step2Component extends React.Component {
 
   render() {
     const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
-    console.log("render start")
-    console.log({keyword})
     const props = {
       placeholder: "",
       value: keyword,

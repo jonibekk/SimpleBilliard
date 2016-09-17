@@ -45,8 +45,6 @@ export function setKeyword(keyword) {
 }
 
 export function updateSuggestions(keyword, suggestions) {
-  console.log("action updateSuggestions")
-  console.log({keyword})
   return {
     type: types.REQUEST_SUGGEST,
     suggestions: getSuggestions(keyword, suggestions),
@@ -54,19 +52,16 @@ export function updateSuggestions(keyword, suggestions) {
   }
 }
 export function onSuggestionsFetchRequested(keyword) {
-  console.log("action onSuggestionsFetchRequested")
   return (dispatch, getState) => {
     dispatch(updateSuggestions(keyword, getState().goal.suggestionsExcludeSelected))
   }
 }
 export function onSuggestionsClearRequested() {
-  console.log("action onSuggestionsFetchRequested")
   return {
     type: types.CLEAR_SUGGEST
   }
 }
 export function onSuggestionSelected(suggestion) {
-  console.log("action onSuggestionSelected")
   return {
     type: types.SELECT_SUGGEST,
     suggestion,

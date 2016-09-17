@@ -53,11 +53,6 @@ export default function goal(state = initialState, action) {
 
     case types.DELETE_LABEL:
       // 追加済みラベルから対象のラベルを削除
-      // inputData.labels = inputData.labels || [];
-      // const idx = inputData.labels.indexOf(action.label)
-      // if (idx != -1) {
-      //   inputData.labels.splice(idx, 1)
-      // }
       inputData.labels = updateSelectedLabels(inputData, action.label, true)
 
       return Object.assign({}, state, {
@@ -66,12 +61,7 @@ export default function goal(state = initialState, action) {
       })
 
     case types.ADD_LABEL:
-      // 追加済みラベルから新たにラベルを追加
-      // inputData.labels = inputData.labels || [];
-      // const idx = inputData.labels.indexOf(action.label)
-      // if (idx == -1) {
-      //   inputData.labels.push(action.label)
-      // }
+      // 追加済みラベルに新たにラベルを追加
       inputData.labels = updateSelectedLabels(inputData, action.label)
 
       return Object.assign({}, state, {
@@ -81,6 +71,7 @@ export default function goal(state = initialState, action) {
       })
 
     case types.SELECT_SUGGEST:
+      // 追加済みラベルに新たにラベルを追加
       inputData.labels = updateSelectedLabels(inputData, action.suggestion.name)
 
       return Object.assign({}, state, {
