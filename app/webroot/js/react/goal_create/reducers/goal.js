@@ -11,6 +11,7 @@ const initialState = {
   units:[],
   keyword: "",
   suggestions: [],
+  suggestionsExcludeSelected: [],
   validationErrors: {
     key_result: {}
   },
@@ -33,6 +34,11 @@ export default function goal(state = initialState, action) {
       inputData = Object.assign({}, inputData, action.initInputData)
       return Object.assign({}, newState, action.data, {inputData})
     case types.REQUEST_SUGGEST:
+      // サジェストをラベル名昇順に並び替え
+      action.suggestions.sort((a,b) => {
+        return (a.name > b.name)? 1 :-1
+      });
+
       return Object.assign({}, state, {
         suggestions: action.suggestions,
         keyword: action.keyword
@@ -43,11 +49,23 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         keyword: action.keyword
       })
+    case types.DELETE_LABEL:
+      inputData.labels = inputData.labels || [];
+      const idx = inputData.labels.indexOf(action.label)
+      if (idx != -1) {
+        inputData.labels.splice(idx, 1)
+      }
+
+      return Object.assign({}, state, {
+        inputData,
+        suggestionsExcludeSelected : addSuggestion(state.suggestionsExcludeSelected, action.label, state.labels),
+      })
     case types.SELECT_SUGGEST:
       inputData.labels = inputData.labels || [];
       inputData.labels.push(action.suggestion.name)
       return Object.assign({}, state, {
         inputData,
+        suggestionsExcludeSelected: deleteSuggestion(state.suggestionsExcludeSelected, action.suggestion),
         keyword:""
       })
     case types.UPDATE_INPUT_DATA:
@@ -67,4 +85,24 @@ export default function goal(state = initialState, action) {
     default:
       return state;
   }
+}
+
+export function deleteSuggestion(suggestions, suggestion) {
+  for (const i in suggestions) {
+    if (suggestions[i].id == suggestion.id) {
+      suggestions.splice(i, 1)
+      break;
+    }
+  }
+  return suggestions
+}
+
+export function addSuggestion(suggestions, suggestionName, baseList) {
+  for (const i in baseList) {
+    if (baseList[i].name == suggestionName) {
+      suggestions.push(baseList[i])
+      break;
+    }
+  }
+  return suggestions
 }

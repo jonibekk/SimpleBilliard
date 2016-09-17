@@ -8,6 +8,7 @@ import InvalidMessageBox from "./elements/InvalidMessageBox";
 export default class Step2Component extends React.Component {
   constructor(props) {
     super(props);
+    this.deleteLabel = this.deleteLabel.bind(this)
   }
 
   componentWillMount() {
@@ -25,6 +26,11 @@ export default class Step2Component extends React.Component {
     this.props.validateGoal(Page.STEP2)
   }
 
+  deleteLabel(e) {
+    const label = e.currentTarget.getAttribute("data-label")
+    this.props.deleteLabel(label)
+  }
+
   render() {
     const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
     const props = {
@@ -37,7 +43,12 @@ export default class Step2Component extends React.Component {
     let inputLabels = null;
     if ("labels" in inputData && inputData.labels.length > 0) {
       inputLabels = inputData.labels.map((v) => {
-        return <li key={v} className="goals-create-selected-labels-item"><span>{v}</span><a href="#" className="ml_8px"><i className="fa fa-times-circle" aria-hidden="true"></i></a></li>;
+        return <li key={v} className="goals-create-selected-labels-item">
+          <span>{v}</span>
+          <a href="#" className="ml_8px" onClick={this.deleteLabel} data-label={v}>
+            <i className="fa fa-times-circle" aria-hidden="true"></i>
+          </a>
+        </li>;
 
       });
     }
@@ -61,6 +72,7 @@ export default class Step2Component extends React.Component {
             getSuggestionValue={(s) => this.props.onSuggestionsFetchRequested}
             inputProps={props}
             onSuggestionSelected={this.props.onSuggestionSelected}
+            shouldRenderSuggestions={() => true}
           />
           <InvalidMessageBox message={validationErrors.labels}/>
           <ul className="goals-create-selected-labels">

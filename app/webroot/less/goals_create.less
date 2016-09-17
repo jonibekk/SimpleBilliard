@@ -2,22 +2,51 @@
 @spacing: 10px;
 
 // TODO:ラベル入力部分の元のCSS削除
+// TODO:スタイルがreact-autosuggestに依存しているので解消
 .react-autosuggest {
   &__container {
-    border: 1px solid @baseGray;
+    position: relative;
     margin-bottom: @spacing;
-    padding: 4px;
   }
   &__input {
     width: 100%;
-    display: inline-block;
-    border: none;
+    padding: 8px;
+    border: 1px solid @baseGray;
     outline: none;
     &:focus {
       outline: none;
     }
   }
+  &__suggestions-container {
+    display: none;
+  }
+  &__container--open &__suggestions-container {
+    display: block;
+    position: absolute;
+    width: 100%;
+    border: 1px solid @baseGray;
+    background-color: #fff;
+    z-index: 2;
+  }
+  &__suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  &__suggestion {
+    cursor: pointer;
+    padding: 8px;
+  }
+  &__suggestion + &__suggestion {
+    border-top: 1px solid @baseGray;
+  }
+
+  &__suggestion--focused {
+    background-color: #ddd;
+  }
 }
+
 .goals-create-selected-labels {
   margin-bottom: @spacing;
   &-item {

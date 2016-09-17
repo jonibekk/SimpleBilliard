@@ -16,6 +16,7 @@ function mapDispatchToProps(dispatch) {
     onSuggestionsFetchRequested: ({value}) => dispatch(actions.onSuggestionsFetchRequested(value)),
     onSuggestionsClearRequested: () => dispatch(actions.onSuggestionsClearRequested()),
     onSuggestionSelected: (e, {suggestion}) => dispatch(actions.onSuggestionSelected(suggestion)),
+    deleteLabel: (label) => dispatch(actions.deleteLabel(label)),
   });
 }
 

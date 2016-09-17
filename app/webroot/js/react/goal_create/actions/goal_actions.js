@@ -50,8 +50,7 @@ export function updateSuggestions(keyword, suggestions) {
 }
 export function onSuggestionsFetchRequested(keyword) {
   return (dispatch, getState) => {
-    const labels = getState().goal.labels;
-    dispatch(updateSuggestions(keyword, labels))
+    dispatch(updateSuggestions(keyword, getState().goal.suggestionsExcludeSelected))
   }
 }
 export function onSuggestionsClearRequested() {
@@ -62,9 +61,17 @@ export function onSuggestionsClearRequested() {
 export function onSuggestionSelected(suggestion) {
   return {
     type: types.SELECT_SUGGEST,
-    suggestion: suggestion
+    suggestion,
   }
 }
+
+export function deleteLabel(label) {
+  return {
+    type: types.DELETE_LABEL,
+    label
+  }
+}
+
 export function updateInputData(data, key) {
   return {
     type: types.UPDATE_INPUT_DATA,
@@ -78,10 +85,14 @@ export function fetchInitialData(page) {
   return (dispatch) => {
     return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
       .then((response) => {
+        let data = response.data.data
+        if (page == Page.STEP2) {
+          data["suggestionsExcludeSelected"] = Object.assign([], data.labels)
+        }
         dispatch({
           type: types.FETCH_INITIAL_DATA,
-          data: response.data.data,
-          initInputData:initInputData(page, response.data.data),
+          data,
+          initInputData: initInputData(page, response.data.data),
           page
         })
       })
@@ -100,7 +111,8 @@ export function saveGoal() {
         dispatch(invalid(response.data))
       }
     );
-  }}
+  }
+}
 
 /**
  * 画面初期化に伴う入力値初期化
@@ -110,7 +122,7 @@ export function saveGoal() {
  */
 function initInputData(page, data) {
   let inputData = {}
-  switch(page) {
+  switch (page) {
     case Page.STEP2:
       if (data.categories.length > 0) {
         inputData["goal_category_id"] = data.categories[0].id
@@ -139,6 +151,7 @@ function initInputData(page, data) {
 
 /**
  * 入力値にマッチしたサジェストのリストを取得
+ * 空文字(フォーカス時等でもサジェスト表示許可
  *
  * @param value
  * @param suggestions
@@ -146,9 +159,7 @@ function initInputData(page, data) {
  */
 function getSuggestions(value, suggestions) {
   value = value.trim();
-  if (value === '') {
-    return [];
-  }
   const regex = new RegExp('^' + value, 'i');
   return suggestions.filter((suggestion) => regex.test(suggestion.name));
 }
+
