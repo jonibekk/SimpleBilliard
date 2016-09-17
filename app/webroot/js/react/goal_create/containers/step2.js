@@ -9,7 +9,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return Object.assign({}, common.getCommonDispatchToProps(dispatch), {
-    setKeyword: ({value}) => dispatch(actions.setKeyword(value)),
     onChangeAutoSuggest(event, {newValue}) {
       dispatch(actions.setKeyword(newValue));
     },
@@ -17,6 +16,7 @@ function mapDispatchToProps(dispatch) {
     onSuggestionsClearRequested: () => dispatch(actions.onSuggestionsClearRequested()),
     onSuggestionSelected: (e, {suggestion}) => dispatch(actions.onSuggestionSelected(suggestion)),
     deleteLabel: (label) => dispatch(actions.deleteLabel(label)),
+    addLabel: (label) => dispatch(actions.addLabel(label)),
   });
 }
 

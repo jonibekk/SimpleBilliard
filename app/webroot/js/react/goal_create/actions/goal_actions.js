@@ -35,6 +35,9 @@ export function invalid(error) {
 }
 
 export function setKeyword(keyword) {
+  // 最初にフォーカスしてサジェストのリストを全出しした後に↓キーを押すと
+  // なぜか文字列ではなく関数が渡されてくるので文字列チェック
+  keyword = typeof(keyword) == "string" ? keyword : "";
   return {
     type: types.SET_KEYWORD,
     keyword: keyword
@@ -42,6 +45,8 @@ export function setKeyword(keyword) {
 }
 
 export function updateSuggestions(keyword, suggestions) {
+  console.log("action updateSuggestions")
+  console.log({keyword})
   return {
     type: types.REQUEST_SUGGEST,
     suggestions: getSuggestions(keyword, suggestions),
@@ -49,22 +54,31 @@ export function updateSuggestions(keyword, suggestions) {
   }
 }
 export function onSuggestionsFetchRequested(keyword) {
+  console.log("action onSuggestionsFetchRequested")
   return (dispatch, getState) => {
     dispatch(updateSuggestions(keyword, getState().goal.suggestionsExcludeSelected))
   }
 }
 export function onSuggestionsClearRequested() {
+  console.log("action onSuggestionsFetchRequested")
   return {
     type: types.CLEAR_SUGGEST
   }
 }
 export function onSuggestionSelected(suggestion) {
+  console.log("action onSuggestionSelected")
   return {
     type: types.SELECT_SUGGEST,
     suggestion,
   }
 }
 
+export function addLabel(label) {
+  return {
+    type: types.ADD_LABEL,
+    label
+  }
+}
 export function deleteLabel(label) {
   return {
     type: types.DELETE_LABEL,
@@ -158,6 +172,9 @@ function initInputData(page, data) {
  * @returns {*}
  */
 function getSuggestions(value, suggestions) {
+  if (!value) {
+    return suggestions.filter((suggestion) => suggestion.name);
+  }
   value = value.trim();
   const regex = new RegExp('^' + value, 'i');
   return suggestions.filter((suggestion) => regex.test(suggestion.name));

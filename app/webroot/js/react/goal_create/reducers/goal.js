@@ -45,29 +45,50 @@ export default function goal(state = initialState, action) {
       })
     case types.CLEAR_SUGGEST:
       return Object.assign({}, state)
+
     case types.SET_KEYWORD:
       return Object.assign({}, state, {
         keyword: action.keyword
       })
+
     case types.DELETE_LABEL:
-      inputData.labels = inputData.labels || [];
-      const idx = inputData.labels.indexOf(action.label)
-      if (idx != -1) {
-        inputData.labels.splice(idx, 1)
-      }
+      // 追加済みラベルから対象のラベルを削除
+      // inputData.labels = inputData.labels || [];
+      // const idx = inputData.labels.indexOf(action.label)
+      // if (idx != -1) {
+      //   inputData.labels.splice(idx, 1)
+      // }
+      inputData.labels = updateSelectedLabels(inputData, action.label, true)
 
       return Object.assign({}, state, {
         inputData,
         suggestionsExcludeSelected : addSuggestion(state.suggestionsExcludeSelected, action.label, state.labels),
       })
-    case types.SELECT_SUGGEST:
-      inputData.labels = inputData.labels || [];
-      inputData.labels.push(action.suggestion.name)
+
+    case types.ADD_LABEL:
+      // 追加済みラベルから新たにラベルを追加
+      // inputData.labels = inputData.labels || [];
+      // const idx = inputData.labels.indexOf(action.label)
+      // if (idx == -1) {
+      //   inputData.labels.push(action.label)
+      // }
+      inputData.labels = updateSelectedLabels(inputData, action.label)
+
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected: deleteSuggestion(state.suggestionsExcludeSelected, action.suggestion),
+        suggestionsExcludeSelected: deleteSuggestion(state.suggestionsExcludeSelected, action.label),
         keyword:""
       })
+
+    case types.SELECT_SUGGEST:
+      inputData.labels = updateSelectedLabels(inputData, action.suggestion.name)
+
+      return Object.assign({}, state, {
+        inputData,
+        suggestionsExcludeSelected: deleteSuggestion(state.suggestionsExcludeSelected, action.suggestion.name),
+        keyword:""
+      })
+
     case types.UPDATE_INPUT_DATA:
       if (action.key) {
         // 多次元配列のマージの場合Object.assignでバグが発生するので以下のように処理
@@ -87,9 +108,25 @@ export default function goal(state = initialState, action) {
   }
 }
 
-export function deleteSuggestion(suggestions, suggestion) {
+export function updateSelectedLabels(inputData, label, deleteFlg = false) {
+  let labels = inputData.labels || [];
+  if (!label) {
+    return labels
+  }
+  const idx = labels.indexOf(label)
+  if (deleteFlg && idx != -1) {
+    labels.splice(idx, 1)
+  } else if(!deleteFlg && idx == -1)  {
+    labels.push(label)
+  }
+
+  return labels
+
+}
+
+export function deleteSuggestion(suggestions, suggestionName) {
   for (const i in suggestions) {
-    if (suggestions[i].id == suggestion.id) {
+    if (suggestions[i].name == suggestionName) {
       suggestions.splice(i, 1)
       break;
     }
