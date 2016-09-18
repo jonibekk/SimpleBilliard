@@ -53,9 +53,7 @@ export default class Step2Component extends React.Component {
   }
 
   render() {
-    console.log("■render start")
     const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
-    console.log("goal_category_id:"+inputData.goal_category_id)
     const props = {
       placeholder: "",
       value: keyword,
@@ -87,7 +85,7 @@ export default class Step2Component extends React.Component {
           <CategorySelect
             onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}
             categories={this.props.goal.categories}
-            defaultValue={inputData.goal_category_id} />
+            defaultValue={inputData.goal_category_id}/>
           <InvalidMessageBox message={validationErrors.goal_category_id}/>
 
           <label className="goals-create-input-label">{__("Labels ?")}</label>
