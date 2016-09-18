@@ -34,7 +34,7 @@ export default class Top extends React.Component {
         index: TYPE_GOAL,
         subject: __('Create a goal'),
         explain: __('Create or collaborate with a goal.'),
-        link: '/setup/goal/image'
+        link: '/goals/create/step1'
       },
       {
         index: TYPE_ACTION,
@@ -101,23 +101,39 @@ export default class Top extends React.Component {
         <div className="setup-items">
           {
             this.listData().map((text) => {
-              return (
-                <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
-                  <div className="setup-items-item-pic pull-left mt_3px">
-                    {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
+              const content = () => {
+                return (
+                  <div>
+                    <div className="setup-items-item-pic pull-left mt_3px">
+                      {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
+                    </div>
+                    <div className="setup-items-item-explain pull-left">
+                      <p className="font_bold font_verydark">{text.subject}</p>
+                      <p className="font_11px font_lightgray">{text.explain}</p>
+                    </div>
+                    <div className="setup-items-item-to-right pull-right mt_12px mr_5px"
+                      style={{
+                      display: (text.index == TYPE_ACTION && this.props.action.goals.length == 0) ? 'none' : 'block'
+                      }}>
+                      <i className="fa fa-chevron-right font_18px"></i>
+                    </div>
                   </div>
-                  <div className="setup-items-item-explain pull-left">
-                    <p className="font_bold font_verydark">{text.subject}</p>
-                    <p className="font_11px font_lightgray">{text.explain}</p>
-                  </div>
-                  <div className="setup-items-item-to-right pull-right mt_12px mr_5px"
-                       style={{
-                         display: (text.index == TYPE_ACTION && this.props.action.goals.length == 0) ? 'none' : 'block'
-                       }}>
-                    <i className="fa fa-chevron-right font_18px"></i>
-                  </div>
-                </Link>
-              )
+                )
+              }
+
+              if (text.index == TYPE_GOAL) {
+                return (
+                  <a href={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
+                    {content()}
+                  </a>
+                )
+              } else {
+                return (
+                  <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
+                    {content()}
+                  </Link>
+                )
+              }
             })
           }
         </div>
