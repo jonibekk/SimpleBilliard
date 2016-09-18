@@ -120,7 +120,7 @@ export default class Top extends React.Component {
                   </div>
                 )
               }
-
+              // ゴール作成の場合はリダイレクト
               if (text.index == TYPE_GOAL) {
                 return (
                   <a href={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
