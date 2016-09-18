@@ -101,7 +101,6 @@ export function fetchInitialData(page) {
         dispatch({
           type: types.FETCH_INITIAL_DATA,
           data,
-          initInputData: initInputData(page, response.data.data),
           page
         })
       })
@@ -121,40 +120,6 @@ export function saveGoal() {
       }
     );
   }
-}
-
-/**
- * 画面初期化に伴う入力値初期化
- * @param page
- * @param data
- * @returns {{}}
- */
-function initInputData(page, data) {
-  let inputData = {}
-  switch (page) {
-    case Page.STEP2:
-      if (data.categories.length > 0) {
-        inputData["goal_category_id"] = data.categories[0].id
-      }
-      break;
-    case Page.STEP3:
-      if (data.terms.length > 0) {
-        inputData["term_type"] = data.terms[0].type
-      }
-      if (data.priorities.length > 0) {
-        inputData["priority"] = data.priorities[0].id
-      }
-      break;
-    case Page.STEP4:
-      if (data.units.length > 0) {
-        inputData["key_result"] = inputData["key_result"] || {};
-        inputData["key_result"]["value_unit"] = data.units[0].id
-      }
-      break;
-    default:
-      return inputData;
-  }
-  return inputData;
 }
 
 

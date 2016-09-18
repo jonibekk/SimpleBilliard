@@ -41,7 +41,7 @@ export default class Step1Component extends React.Component {
   }
 
   render() {
-    const {visions, validationErrors} = this.props.goal
+    const {visions, validationErrors, inputData} = this.props.goal
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
@@ -54,7 +54,7 @@ export default class Step1Component extends React.Component {
           <label className="goals-create-input-label">{__("Goal name?")}</label>
           <input name="name" className="form-control goals-create-input-form" type="text"
                  placeholder="e.g. Get goalous users" ref="name"
-                 onChange={this.handleChange}/>
+                 onChange={this.handleChange} value={inputData.name}/>
           <InvalidMessageBox message={validationErrors.name}/>
           <a href="#" className="goals-create-show-sample">
             <i className="fa fa-eye" aria-hidden="true"/>

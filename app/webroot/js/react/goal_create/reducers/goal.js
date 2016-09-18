@@ -15,10 +15,18 @@ const initialState = {
   validationErrors: {
     key_result: {}
   },
-  inputData:{}
+  inputData:{
+    key_result: {}
+  }
 }
 
 export default function goal(state = initialState, action) {
+  /* eslint-disable no-console */
+  console.log("---reducer start---")
+  console.log(action.type)
+  console.log({state})
+  console.log({action})
+  /* eslint-disable no-console */
   let inputData = state.inputData
   switch (action.type) {
     case types.INVALID:
@@ -31,8 +39,9 @@ export default function goal(state = initialState, action) {
       })
     case types.FETCH_INITIAL_DATA:
       let newState = Object.assign({}, state, {toNextPage: false})
-      inputData = Object.assign({}, inputData, action.initInputData)
+      inputData = initInputData(inputData, action.page, action.data)
       return Object.assign({}, newState, action.data, {inputData})
+
     case types.REQUEST_SUGGEST:
       // サジェストをラベル名昇順に並び替え
       action.suggestions.sort((a,b) => {
@@ -57,7 +66,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected : addSuggestion(state.suggestionsExcludeSelected, action.label, state.labels),
+        suggestionsExcludeSelected : addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
       })
 
     case types.ADD_LABEL:
@@ -66,7 +75,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected: deleteSuggestion(state.suggestionsExcludeSelected, action.label),
+        suggestionsExcludeSelected: deleteItemFromSuggestions(state.suggestionsExcludeSelected, action.label),
         keyword:""
       })
 
@@ -76,7 +85,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected: deleteSuggestion(state.suggestionsExcludeSelected, action.suggestion.name),
+        suggestionsExcludeSelected: deleteItemFromSuggestions(state.suggestionsExcludeSelected, action.suggestion.name),
         keyword:""
       })
 
@@ -99,6 +108,13 @@ export default function goal(state = initialState, action) {
   }
 }
 
+/**
+ * 選択済みラベルリストを更新
+ * @param inputData
+ * @param label
+ * @param deleteFlg
+ * @returns {*|Array}
+ */
 export function updateSelectedLabels(inputData, label, deleteFlg = false) {
   let labels = inputData.labels || [];
   if (!label) {
@@ -115,7 +131,13 @@ export function updateSelectedLabels(inputData, label, deleteFlg = false) {
 
 }
 
-export function deleteSuggestion(suggestions, suggestionName) {
+/**
+ * 選択済みラベルを除外したサジェストリストを更新(削除用)
+ * @param suggestions
+ * @param suggestionName
+ * @returns {*}
+ */
+export function deleteItemFromSuggestions(suggestions, suggestionName) {
   for (const i in suggestions) {
     if (suggestions[i].name == suggestionName) {
       suggestions.splice(i, 1)
@@ -125,7 +147,14 @@ export function deleteSuggestion(suggestions, suggestionName) {
   return suggestions
 }
 
-export function addSuggestion(suggestions, suggestionName, baseList) {
+/**
+ * 選択済みラベルを除外したサジェストリストを更新(追加用)
+ * @param suggestions
+ * @param suggestionName
+ * @param baseList
+ * @returns {*}
+ */
+export function addItemToSuggestions(suggestions, suggestionName, baseList) {
   for (const i in baseList) {
     if (baseList[i].name == suggestionName) {
       suggestions.push(baseList[i])
@@ -133,4 +162,40 @@ export function addSuggestion(suggestions, suggestionName, baseList) {
     }
   }
   return suggestions
+}
+
+
+/**
+ * 画面初期化に伴う入力値初期化
+ * 既に行っている場合は不要
+ * @param inputData
+ * @param page
+ * @param data
+ * @returns {{}}
+ */
+export function initInputData(inputData, page, data) {
+  switch (page) {
+    case Page.STEP2:
+      if (!inputData.goal_category_id && data.categories.length > 0) {
+        inputData["goal_category_id"] = data.categories[0].id
+      }
+      break;
+    case Page.STEP3:
+      if (!inputData.term_type && data.terms.length > 0) {
+        inputData["term_type"] = data.terms[0].type
+      }
+      if (data.priorities.length > 0) {
+        inputData["priority"] = data.priorities[0].id
+      }
+      break;
+    case Page.STEP4:
+      if (!inputData.key_result && data.units.length > 0) {
+        inputData["key_result"] = inputData["key_result"] || {};
+        inputData["key_result"]["value_unit"] = data.units[0].id
+      }
+      break;
+    default:
+      return inputData;
+  }
+  return inputData;
 }

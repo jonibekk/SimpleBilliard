@@ -28,7 +28,7 @@ export default class Step2Component extends React.Component {
     if (e.keyCode == KeyCode.ENTER) {
       return false
     }
-    // this.props.validateGoal(Page.STEP2)
+    this.props.validateGoal(Page.STEP2)
   }
 
   deleteLabel(e) {
@@ -53,7 +53,9 @@ export default class Step2Component extends React.Component {
   }
 
   render() {
+    console.log("■render start")
     const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
+    console.log("goal_category_id:"+inputData.goal_category_id)
     const props = {
       placeholder: "",
       value: keyword,
@@ -81,12 +83,13 @@ export default class Step2Component extends React.Component {
         <h1 className="goals-create-heading">{__("Choose a category and set labels")}</h1>
         <p
           className="goals-create-description">{__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velitesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa quiofficia deserunt mollit anim id est laborum.")}</p>
-        <form className="goals-create-input" action onSubmit={(e) => this.handleSubmit(e) }>
-        {/*<form className="goals-create-input" action onSubmit={(e) => this.handleSubmit(e) } onKeyPress={this.onKeyPress}>*/}
-
-          <CategorySelect onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}
-                          categories={this.props.goal.categories}/>
+        <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e) }>
+          <CategorySelect
+            onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}
+            categories={this.props.goal.categories}
+            defaultValue={inputData.goal_category_id} />
           <InvalidMessageBox message={validationErrors.goal_category_id}/>
+
           <label className="goals-create-input-label">{__("Labels ?")}</label>
           <AutoSuggest
             suggestions={suggestions}
