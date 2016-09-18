@@ -64,11 +64,11 @@ export default class Step3Component extends React.Component {
         return <option key={v.id} value={v.id}>{v.label}</option>
       });
     }
-    // TODO:jqueryプラグイン廃止後修正
+    // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
     // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
     // リサイズ後の画像情報が取得できない。
     // 画像アップロード後submitした時にimgタグの画像情報を取得してもアップロード前の画像情報を取得してしまう。
-    // これはReactでDomを管理できていない為。
+    // これはReactの仮想domに反映されていない為。
     const imgPath = inputData.photo ? inputData.photo.result : "/img/no-image-goal.jpg";
 
     return (
