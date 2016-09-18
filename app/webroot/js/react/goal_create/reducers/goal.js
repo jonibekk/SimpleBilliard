@@ -27,6 +27,7 @@ export default function goal(state = initialState, action) {
   console.log({state})
   console.log({action})
   /* eslint-disable no-console */
+
   let inputData = state.inputData
   switch (action.type) {
     case types.INVALID:
@@ -38,9 +39,17 @@ export default function goal(state = initialState, action) {
         toNextPage: true
       })
     case types.FETCH_INITIAL_DATA:
-      let newState = Object.assign({}, state, {toNextPage: false})
+      let suggestionsExcludeSelected = state.suggestionsExcludeSelected
+      if (action.page == Page.STEP2 && state.suggestionsExcludeSelected.length == 0) {
+        suggestionsExcludeSelected = Object.assign([], action.data.labels)
+      }
       inputData = initInputData(inputData, action.page, action.data)
-      return Object.assign({}, newState, action.data, {inputData})
+      return Object.assign({}, state, action.data, {
+        inputData,
+        suggestionsExcludeSelected,
+        toNextPage: false,
+        validationErrors:{}
+      })
 
     case types.REQUEST_SUGGEST:
       // サジェストをラベル名昇順に並び替え

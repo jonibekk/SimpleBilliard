@@ -95,9 +95,6 @@ export function fetchInitialData(page) {
     return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
       .then((response) => {
         let data = response.data.data
-        if (page == Page.STEP2) {
-          data["suggestionsExcludeSelected"] = Object.assign([], data.labels)
-        }
         dispatch({
           type: types.FETCH_INITIAL_DATA,
           data,

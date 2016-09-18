@@ -5,6 +5,7 @@ import * as Page from "../constants/Page";
 import CategorySelect from "./elements/CategorySelect";
 import InvalidMessageBox from "./elements/InvalidMessageBox";
 import * as KeyCode from "../constants/KeyCode";
+import LabelInput from "./elements/LabelInput";
 
 export default class Step2Component extends React.Component {
   constructor(props) {
@@ -53,28 +54,10 @@ export default class Step2Component extends React.Component {
   }
 
   render() {
-    const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
-    const props = {
-      placeholder: "",
-      value: keyword,
-      onChange: this.props.onChangeAutoSuggest,
-      onKeyDown: this.addLabel,
-      onKeyPress: this.onKeyPress
-    };
-
-    // 選択したラベル表示のHTML生成.子コンポーネント化検討
-    let inputLabels = null;
-    if ("labels" in inputData && inputData.labels.length > 0) {
-      inputLabels = inputData.labels.map((v) => {
-        return <li key={v} className="goals-create-selected-labels-item">
-          <span>{v}</span>
-          <a href="#" className="ml_8px" onClick={this.deleteLabel} data-label={v}>
-            <i className="fa fa-times-circle" aria-hidden="true"></i>
-          </a>
-        </li>;
-
-      });
-    }
+    let {suggestions, keyword, inputData, validationErrors} = this.props.goal;
+    console.log("step2 render")
+    console.log("suggestionsExcludeSelected")
+    console.log(this.props.goal.suggestionsExcludeSelected)
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
@@ -88,21 +71,23 @@ export default class Step2Component extends React.Component {
             defaultValue={inputData.goal_category_id}/>
           <InvalidMessageBox message={validationErrors.goal_category_id}/>
 
-          <label className="goals-create-input-label">{__("Labels ?")}</label>
-          <AutoSuggest
+          <LabelInput
             suggestions={suggestions}
+            keyword={keyword}
+            inputLabels={inputData.labels}
             onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
             renderSuggestion={(s) => <span>{s.name}</span>}
             getSuggestionValue={(s) => this.props.onSuggestionsFetchRequested}
-            inputProps={props}
+            onChange={this.props.onChangeAutoSuggest}
             onSuggestionSelected={this.props.onSuggestionSelected}
             shouldRenderSuggestions={() => true}
+            onDeleteLabel={this.deleteLabel}
+            onKeyDown={this.addLabel}
+            onKeyPress={this.onKeyPress}
           />
           <InvalidMessageBox message={validationErrors.labels}/>
-          <ul className="goals-create-selected-labels">
-            {inputLabels}
-          </ul>
+
           <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP1}>{__("Back")}</Link>
         </form>
