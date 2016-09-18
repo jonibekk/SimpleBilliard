@@ -46,7 +46,7 @@ export default class Step2Component extends React.Component {
   onKeyPress(e) {
     // ラベル入力でEnterキーを押した場合submitさせない
     // e.keyCodeはonKeyPressイベントでは取れないのでe.charCodeを使用
-    if (e.charCode == 13) {
+    if (e.charCode == KeyCode.ENTER) {
       e.preventDefault()
       return false
     }
