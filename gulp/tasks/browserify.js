@@ -32,6 +32,15 @@ gulp.task('react_goal_create:browserify', () => {
     .pipe(duration('react_goal_create:browserify'))
 })
 
+gulp.task('react_goal_edit:browserify', () => {
+  return browserify({entries: [config.react_goal_edit.src]})
+    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .bundle()
+    .pipe(source(config.react_goal_edit.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/react_goal_edit'))
+    .pipe(duration('react_goal_edit:browserify'))
+})
+
 gulp.task('react_goal_approval:browserify', () => {
   return browserify({entries: [config.react_goal_approval.src]})
     .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})

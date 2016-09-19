@@ -1,11 +1,10 @@
 import React from "react";
 import {browserHistory, Link} from "react-router";
-import AutoSuggest from "react-autosuggest";
 import * as Page from "../constants/Page";
-import CategorySelect from "./elements/CategorySelect";
-import InvalidMessageBox from "./elements/InvalidMessageBox";
+import CategorySelect from "../../common/components/goal/CategorySelect";
+import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import * as KeyCode from "../constants/KeyCode";
-import LabelInput from "./elements/LabelInput";
+import LabelInput from "../../common/components/goal/LabelInput";
 
 export default class Step2Component extends React.Component {
   constructor(props) {

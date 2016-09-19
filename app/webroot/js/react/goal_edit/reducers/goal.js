@@ -1,5 +1,4 @@
 import * as types from "../constants/ActionTypes";
-import * as Page from "../constants/Page";
 
 const initialState = {
   toNextPage: false,
@@ -16,7 +15,10 @@ const initialState = {
     key_result: {}
   },
   inputData:{
-    key_result: {}
+    key_result: {
+      // name:""
+    },
+    labels:[]
   }
 }
 
@@ -34,16 +36,18 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         validationErrors: action.error.validation_errors
       })
+
     case types.TO_NEXT_PAGE:
       return Object.assign({}, state, {
         toNextPage: true
       })
+
     case types.FETCH_INITIAL_DATA:
       let suggestionsExcludeSelected = state.suggestionsExcludeSelected
-      if (action.page == Page.STEP2 && state.suggestionsExcludeSelected.length == 0) {
+      if (state.suggestionsExcludeSelected.length == 0) {
         suggestionsExcludeSelected = Object.assign([], action.data.labels)
       }
-      inputData = initInputData(inputData, action.page, action.data)
+      inputData = initInputData(inputData, action.data)
       return Object.assign({}, state, action.data, {
         inputData,
         suggestionsExcludeSelected,
@@ -178,33 +182,22 @@ export function addItemToSuggestions(suggestions, suggestionName, baseList) {
  * 画面初期化に伴う入力値初期化
  * 既に行っている場合は不要
  * @param inputData
- * @param page
  * @param data
  * @returns {{}}
  */
-export function initInputData(inputData, page, data) {
-  switch (page) {
-    case Page.STEP2:
-      if (!inputData.goal_category_id && data.categories.length > 0) {
-        inputData["goal_category_id"] = data.categories[0].id
-      }
-      break;
-    case Page.STEP3:
-      if (!inputData.term_type && data.terms.length > 0) {
-        inputData["term_type"] = data.terms[0].type
-      }
-      if (data.priorities.length > 0) {
-        inputData["priority"] = data.priorities[0].id
-      }
-      break;
-    case Page.STEP4:
-      if (!inputData.key_result && data.units.length > 0) {
-        inputData["key_result"] = inputData["key_result"] || {};
-        inputData["key_result"]["value_unit"] = data.units[0].id
-      }
-      break;
-    default:
-      return inputData;
-  }
+export function initInputData(inputData, data) {
+    if (!inputData.goal_category_id && data.categories.length > 0) {
+      inputData["goal_category_id"] = data.categories[0].id
+    }
+    if (!inputData.term_type && data.terms.length > 0) {
+      inputData["term_type"] = data.terms[0].type
+    }
+    if (data.priorities.length > 0) {
+      inputData["priority"] = data.priorities[0].id
+    }
+    if (!inputData.key_result && data.units.length > 0) {
+      inputData["key_result"] = inputData["key_result"] || {};
+      inputData["key_result"]["value_unit"] = data.units[0].id
+    }
   return inputData;
 }
