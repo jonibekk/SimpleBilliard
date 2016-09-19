@@ -2,7 +2,8 @@ import React from 'react'
 import { Comments } from './elements/detail_comments'
 import { GoalCard } from './elements/detail_goal_card'
 import { UserCard } from './elements/detail_user_card'
-import { ApproveSubmitArea } from './elements/detail_submit_area'
+import { CoachFooter } from './elements/detail_coach_footer'
+import { CoacheeFooter } from './elements/detail_coachee_footer'
 
 export default class DetailComponent extends React.Component {
 
@@ -19,7 +20,13 @@ export default class DetailComponent extends React.Component {
                   <GoalCard goal={ this.props.detail.goal_approval.goal } is_leader={ this.props.detail.goal_approval.is_leader } />
                   <Comments approval_histories={ this.props.detail.goal_approval.approval_histories } />
                   <h1 className="goals-approval-heading">Check it</h1>
-                  <ApproveSubmitArea is_mine={ this.props.detail.goal_approval.is_mine } />
+                  {(() => {
+                    if(this.props.detail.goal_approval.is_mine) {
+                      return <CoacheeFooter />;
+                    } else {
+                      return <CoachFooter />;
+                    }
+                  })()}
               </div>
           )})()}
       </section>

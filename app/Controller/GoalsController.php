@@ -1891,7 +1891,7 @@ class GoalsController extends AppController
           "approval_status" => Collaborator::STATUS_UNAPPROVED,
           "wish_approval_flg" => 1,
           "target_evaluation_flg" => 1,
-          "is_mine" => true, // コーチ/コーチー判定フラグ
+          "is_mine" => false, // コーチ/コーチー判定フラグ
           "category" => [
             "name" => "成長"
           ],
