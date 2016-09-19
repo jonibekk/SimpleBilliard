@@ -15,7 +15,7 @@
  * @var                             $my_teams
  */
 ?>
-<!-- START app/View/Elements/User/account_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Account") ?></div>
     <?=
@@ -169,4 +169,4 @@
         ]);
 }
 ?>
-<!-- END app/View/Elements/User/account_setting.ctp -->
+<?= $this->App->viewEndComment()?>

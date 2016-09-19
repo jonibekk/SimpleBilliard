@@ -9,7 +9,7 @@
  * @var                    $action_count
  */
 ?>
-<!-- START app/View/Elements/dashboard_profile_card.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="dashboardProfileCard" xmlns="http://www.w3.org/1999/html">
     <a class="dashboardProfileCard-bg col-xxs-12" tabindex="-1" href="/#"></a>
 
@@ -48,4 +48,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/dashboard_profile_card.ctp -->
+<?= $this->App->viewEndComment()?>

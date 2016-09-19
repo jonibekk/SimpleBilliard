@@ -14,7 +14,7 @@
  * @var                    $files
  */
 ?>
-<!-- START app/View/Posts/attached_file_list.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/feed_share_range_filter',
         compact('current_circle', 'user_status', 'circle_member_count', 'circle_status',
@@ -90,4 +90,4 @@
 <?php else: ?>
     <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
-<!-- END app/View/Posts/attached_file_list.ctp -->
+<?= $this->App->viewEndComment()?>

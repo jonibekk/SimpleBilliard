@@ -6,7 +6,7 @@
  * @var                    $email
  */
 ?>
-<!-- START app/View/Users/register_password_with_invite.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __("Set your password") ?></div>
@@ -68,4 +68,4 @@
 </script>
 <?php $this->end(); ?>
 
-<!-- END app/View/Users/register_password_with_invite.ctp -->
+<?= $this->App->viewEndComment()?>

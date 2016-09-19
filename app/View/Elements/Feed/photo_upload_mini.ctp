@@ -34,7 +34,7 @@ if (!isset($id_prefix)) {
     $id_prefix = null;
 }
 ?>
-<!-- START app/View/Elements/Feed/photo_upload_mini.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="form-group">
     <div class="fileinput_very_small fileinput-new" data-provides="fileinput">
         <div
@@ -110,4 +110,4 @@ if (!isset($id_prefix)) {
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/photo_upload_mini.ctp -->
+<?= $this->App->viewEndComment()?>

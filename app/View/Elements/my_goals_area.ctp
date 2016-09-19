@@ -12,7 +12,7 @@
  * @var                    $vision
  */
 ?>
-<!-- START app/View/Elements/my_goals_area.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="right-side-container" id="jsRightSideContainer">
     <?php if ($vision): ?>
 
@@ -117,4 +117,4 @@
         </a>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/my_goals_area.ctp -->
+<?= $this->App->viewEndComment()?>

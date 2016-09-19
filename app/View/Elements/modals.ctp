@@ -3,7 +3,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-    <!-- START app/View/Elements/modals.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php /**
  * Created by PhpStorm.
  * User: daikihirakata
@@ -17,5 +17,5 @@ echo $this->element('modal_tutorial');
 if ($this->Session->read('current_team_id')) {
     echo $this->element('modal_add_circle');
 }
-echo "<!-- END app/View/Elements/modals.ctp -->";
+echo $this->App->viewEndComment();
 

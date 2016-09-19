@@ -28,7 +28,7 @@
     }
 </style>
 
-<!-- START app/View/Elements/User/modal_2fa_register.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -100,4 +100,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/User/modal_2fa_register.ctp -->
+<?= $this->App->viewEndComment()?>

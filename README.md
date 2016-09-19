@@ -85,7 +85,7 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 - [各種マニュアル](docs/manuals.md)
 
 ### 仕様書
-- [サービス概要](docs/design_specifications/GoalousOverview.md)
+- [要件定義 OneNote](http://bit.ly/glsurls)
 - [システム概要](docs/design_specifications/SystemOverview.md)
 - [ER図](docs/design_specifications/ERD.md)
 - [要件定義](http://bit.ly/1TnQZfX) **Last Edit - 2015年7月**

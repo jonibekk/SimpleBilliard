@@ -20,7 +20,7 @@ $admin = isset($admin) ? $admin : false;
 $joined = isset($joined) ? $joined : false;
 $member_count = isset($member_count) ? $member_count : '';
 ?>
-<!-- START app/View/Elements/public_circle_item.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 mpTB0 circle-item-row">
     <?=
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
@@ -77,4 +77,4 @@ $member_count = isset($member_count) ? $member_count : '';
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/public_circle_item.ctp -->
+<?= $this->App->viewEndComment()?>

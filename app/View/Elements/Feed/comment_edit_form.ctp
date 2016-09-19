@@ -14,7 +14,7 @@
     $id_prefix = null;
 }
 ?>
-<!-- START app/View/Elements/Feed/comment_edit_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <?=
 $this->Form->create('Comment', [
     'url'           => ['controller' => 'posts', 'action' => 'comment_edit', 'comment_id' => $comment['id']],
@@ -76,4 +76,4 @@ $this->Form->create('Comment', [
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>
-<!-- END app/View/Elements/Feed/comment_edit_form.ctp -->
+<?= $this->App->viewEndComment()?>
