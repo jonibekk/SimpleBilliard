@@ -12,7 +12,7 @@
  */
 $kr_count = 0;
 ?>
-<!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php foreach ($goals as $goal): ?>
     <?php
     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
@@ -301,4 +301,4 @@ $kr_count = 0;
         <?php endif; ?>
     </div>
 <?php endforeach ?>
-<!-- End app/View/Elements/Goal/my_goal_area_items.ctp -->
+<?= $this->App->viewEndComment()?>

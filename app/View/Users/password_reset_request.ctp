@@ -9,7 +9,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Users/password_reset_request.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -51,4 +51,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Users/password_reset_request.ctp -->
+<?= $this->App->viewEndComment()?>

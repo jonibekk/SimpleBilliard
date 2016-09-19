@@ -10,7 +10,7 @@
  * @var                    $eval_is_frozen
  */
 ?>
-<!-- START app/View/Elements/Evaluation/index_items.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php foreach ($evaluatees as $user): ?>
     <a href="<?= $this->Html->url(['controller'       => 'evaluations',
                                    'action'           => 'view',
@@ -47,4 +47,4 @@
     </a>
     <hr class="col-xxs-12">
 <?php endforeach; ?>
-<!-- END app/View/Elements/Evaluation/index_items.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/pricing') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/pricing') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/pricing.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******PRICE PLAN****** -->
 <section id="price-plan" class="price-plan section">
     <div class="container text-center">
@@ -134,4 +134,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </section><!--//price-plan-->
 
 <?= $this->element('Homepage/signup') ?>
-<!-- END app/View/Pages/pricing.ctp -->
+<?= $this->App->viewEndComment()?>

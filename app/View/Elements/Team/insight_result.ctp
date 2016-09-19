@@ -4,7 +4,7 @@
  */
 ?>
 <?php if (isset($insights)): ?>
-    <!-- START app/View/Teams/insight_result.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php
     // 先週/先月の集計情報
     $insight = $insights[0];
@@ -136,6 +136,6 @@
             'item_cmp_percent' => isset($insight['message_user_percent_cmp']) ? $insight['message_user_percent_cmp'] : null,
         ]) ?>
     </div>
-    <!-- END app/View/Teams/insight_result.ctp -->
+    <?= $this->App->viewEndComment()?>
 
 <?php endif ?>

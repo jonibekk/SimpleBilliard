@@ -3,7 +3,7 @@
  * @var $is_mb_app
  */
 ?>
-<!-- start app/View/Elements/header_logged_in_right -->
+<?= $this->App->viewStartComment()?>
 <div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
@@ -216,4 +216,4 @@
     </ul>
 </div>
 </div>
-<!-- end app/View/Elements/header_logged_in_right -->
+<?= $this->App->viewEndComment()?>
