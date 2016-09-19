@@ -9,7 +9,7 @@
  * @var                    $files
  */
 ?>
-<!-- START app/View/Elements/Feed/attached_files.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php foreach ($files as $file): ?>
     <div class="panel-body pt_10px plr_11px pb_8px bd-b">
         <?php
@@ -20,4 +20,4 @@
             ['data' => $file, 'page_type' => 'file_list', 'post_id' => $p_id]) ?>
     </div>
 <?php endforeach ?>
-<!-- END app/View/Elements/Feed/attached_files.ctp -->
+<?= $this->App->viewEndComment()?>

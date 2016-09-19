@@ -14,7 +14,7 @@
  * @var                    $item_created
  */
 ?>
-<!-- START app/View/Goals/view_actions.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="goals-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('Goal/simplex_top_section') ?>
     <div class="goals-view-actions-panel">
@@ -116,4 +116,4 @@
         <?php endif; ?>
     </div>
 </div>
-<!-- END app/View/Goals/view_actions.ctp -->
+<?= $this->App->viewEndComment()?>

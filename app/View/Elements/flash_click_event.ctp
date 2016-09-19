@@ -9,10 +9,10 @@
  * @var                    $id
  */
 ?>
-<!-- START app/View/Elements/flash_click_event.ctp -->
+<?= $this->App->viewStartComment()?>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#<?=$id?>").trigger('click');
     });
 </script>
-<!-- END app/View/Elements/flash_click_event.ctp -->
+<?= $this->App->viewEndComment()?>

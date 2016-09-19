@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_thanks') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_thanks') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/contact_thanks.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
@@ -131,4 +131,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </section><!--//contact-->
 
 <?= $this->element('Homepage/signup') ?>
-<!-- END app/View/Pages/contact_thanks.ctp -->
+<?= $this->App->viewEndComment()?>

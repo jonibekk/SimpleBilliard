@@ -15,7 +15,7 @@ if (!isset($incomplete_kr_count)) {
     <?php if (isset($kr['KeyResult'])) {
         $kr = $kr['KeyResult'];
     } ?>
-    <!-- START app/View/Elements/Goal/key_result_edit_menu_dropdown.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php if (!$without_dropdown_link): ?>
         <div class="btn-edit-kr-wrap pull-right dropdown">
         <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
@@ -95,5 +95,5 @@ if (!isset($incomplete_kr_count)) {
         </div>
     <?php endif; ?>
 
-    <!-- END app/View/Elements/Goal/key_result_edit_menu_dropdown.ctp -->
+    <?= $this->App->viewEndComment()?>
 <?php endif ?>

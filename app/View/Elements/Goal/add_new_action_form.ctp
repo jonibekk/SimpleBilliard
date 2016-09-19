@@ -10,7 +10,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/Goal/add_new_action_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <?= $this->Form->create('ActionResult', [
     'inputDefaults' => [
         'div'       => 'form-group mb_5px develop--font_normal',
@@ -107,4 +107,4 @@ $this->Form->input('ActionResult.name', [
     </div>
 </div>
 <?= $this->Form->end() ?>
-<!-- END app/View/Elements/Goal/add_new_action_form.ctp -->
+<?= $this->App->viewEndComment()?>

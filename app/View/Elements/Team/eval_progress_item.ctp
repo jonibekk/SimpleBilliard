@@ -11,7 +11,7 @@
  * @var                    $evaluate_term_id
  */
 ?>
-<!-- START app/View/Elements/Team/eval_progress_item.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="form-group" style="overflow:hidden">
     <div class="progress-bar progress-bar-info" role="progressbar"
          aria-valuenow="<?= $progress_percent ?>" aria-valuemin="0"
@@ -62,4 +62,4 @@
         </div>
     </div>
 <?php endforeach; ?>
-<!-- END app/View/Elements/Team/evaluation_progress.ctp -->
+<?= $this->App->viewEndComment()?>

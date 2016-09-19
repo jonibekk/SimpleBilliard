@@ -15,7 +15,7 @@ if (!isset($top_lang)) {
     $top_lang = null;
 }
 ?>
-<!-- START app/View/Elements/footer_not_logged_in.ctp -->
+<?= $this->App->viewStartComment()?>
 <footer class="footer <?= $is_mb_app ? 'hide' : null ?>">
     <div class="footer-content">
         <div class="container">
@@ -118,4 +118,4 @@ if (!isset($top_lang)) {
     </div><!--//bottom-bar-->
 </footer>
 <div id="layer-black"></div>
-<!-- END app/View/Elements/footer.ctp -->
+<?= $this->App->viewEndComment()?>

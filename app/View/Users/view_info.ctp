@@ -8,7 +8,7 @@
  * @var $user
  */
 ?>
-<!-- START app/View/Users/view_info.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('User/simplex_top_section') ?>
@@ -56,4 +56,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Users/view_info.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -10,7 +10,7 @@
  * @var                    $evaluate_term_id
  */
 ?>
-<!-- START app/View/Elements/Elements/modal_incomplete_evaluators.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -36,4 +36,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Elements/modal_incomplete_evaluators.ctp -->
+<?= $this->App->viewEndComment()?>
