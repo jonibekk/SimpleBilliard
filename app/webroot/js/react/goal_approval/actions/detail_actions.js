@@ -10,6 +10,10 @@ export function fetchGaolApproval(goal_id) {
   }
 }
 
+export function postComment() {
+  
+}
+
 export function setGoalApproval(goal_approval) {
   return { type: types.SET_GOAL_APPROVAL, goal_approval }
 }
