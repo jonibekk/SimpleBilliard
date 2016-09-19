@@ -25,9 +25,11 @@ export default class Step3Component extends React.Component {
   }
 
   getInputDomData() {
-    return {
-      photo: ReactDOM.findDOMNode(this.refs.photo).files[0]
+    const photo =  ReactDOM.findDOMNode(this.refs.photo).files[0]
+    if (!photo) {
+      return {}
     }
+    return {photo}
   }
 
   handleSubmit(e) {
@@ -56,9 +58,9 @@ export default class Step3Component extends React.Component {
 
     const {priorities, validationErrors} = this.props.goal
     let priorityOptions = null;
-    if (this.props.goal.priorities.length > 0) {
-      priorityOptions = this.props.goal.priorities.map((v, k) => {
-        return <option key={k} value={k}>{v}</option>
+    if (priorities.length > 0) {
+      priorityOptions = priorities.map((v) => {
+        return <option key={v.id} value={v.id}>{v.label}</option>
       });
     }
 
@@ -80,8 +82,9 @@ export default class Step3Component extends React.Component {
               <img src={imgPath} width={100} height={100}/>
             </div>
             <div className="goals-create-input-image-upload-info">
-              <p className="goals-create-input-image-upload-info-text">This is sample image if you want to upload your
-                original image</p>
+              <p className="goals-create-input-image-upload-info-text">
+                {__("This is sample image if you want to upload your original image")}
+              </p>
               <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
                 <span className="fileinput-new">{__("Upload a image")}</span>
                 <span className="fileinput-exists">{__("Reselect an image")}</span>
@@ -109,6 +112,10 @@ export default class Step3Component extends React.Component {
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}/>
             <InvalidMessageBox message={validationErrors.description}/>
+
+            <label className="goals-create-input-label">{__("Start date")}</label>
+            <input className="goals-create-input-form" type="date" name="start_date" onChange={this.handleChange}/>
+            <InvalidMessageBox message={validationErrors.start_date}/>
 
             <label className="goals-create-input-label">{__("End date")}</label>
             <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange}/>

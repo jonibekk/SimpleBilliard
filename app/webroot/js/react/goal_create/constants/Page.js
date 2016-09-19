@@ -42,4 +42,7 @@ export const INITIAL_DATA_TYPES = {
     "terms",
     "priorities",
   ],
+  STEP4: [
+    "units",
+  ],
 }

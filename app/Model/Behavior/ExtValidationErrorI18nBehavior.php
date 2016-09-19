@@ -31,6 +31,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'passwordPolicy'      => __('Please mix of numbers and alphanumeric.'),
             'inList'              => __("Invalid value"),
             'dateYmd'             => __('Enter a valid date in YYYY/MM/DD format.'),
+            'checkRangeTermw'             => __("Input in the term."),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

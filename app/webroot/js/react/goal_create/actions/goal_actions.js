@@ -65,16 +65,17 @@ export function onSuggestionSelected(suggestion) {
     suggestion: suggestion
   }
 }
-export function updateInputData(data) {
+export function updateInputData(data, key) {
   return {
     type: types.UPDATE_INPUT_DATA,
-    data: data
+    data,
+    key
   }
 }
 
 export function fetchInitialData(page) {
   const dataTypes = Page.INITIAL_DATA_TYPES[page]
-  return (dispatch, getState) => {
+  return (dispatch) => {
     return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
       .then((response) => {
         dispatch({
@@ -89,6 +90,18 @@ export function fetchInitialData(page) {
   }
 }
 
+export function saveGoal() {
+  return (dispatch, getState) => {
+    return post("/api/v1/goals", getState().goal.inputData, null,
+      (response) => {
+        dispatch(toNextPage())
+      },
+      (response) => {
+        dispatch(invalid(response.data))
+      }
+    );
+  }}
+
 /**
  * 画面初期化に伴う入力値初期化
  * @param page
@@ -96,7 +109,6 @@ export function fetchInitialData(page) {
  * @returns {{}}
  */
 function initInputData(page, data) {
-  console.log("initInputData start")
   let inputData = {}
   switch(page) {
     case Page.STEP2:
@@ -109,7 +121,13 @@ function initInputData(page, data) {
         inputData["term_type"] = data.terms[0].type
       }
       if (data.priorities.length > 0) {
-        inputData.priority = data.priorities[0]
+        inputData["priority"] = data.priorities[0].id
+      }
+      break;
+    case Page.STEP4:
+      if (data.units.length > 0) {
+        inputData["key_result"] = inputData["key_result"] || {};
+        inputData["key_result"]["value_unit"] = data.units[0].id
       }
       break;
     default:

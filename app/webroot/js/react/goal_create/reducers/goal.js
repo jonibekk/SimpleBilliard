@@ -7,12 +7,11 @@ const initialState = {
   labels:[],
   terms:[],
   priorities:[],
+  units:[],
   keyword: "",
   suggestions: [],
   validationErrors: {
-    name: '',
-    category: '',
-    labels: '',
+    key_result: {}
   },
   inputData:{}
 }
@@ -51,10 +50,19 @@ export default function goal(state = initialState, action) {
         keyword:""
       })
     case types.UPDATE_INPUT_DATA:
-      inputData = Object.assign({}, state.inputData, action.data)
-      return Object.assign({}, state, {
-        inputData
-      })
+      if (action.key) {
+        // 多次元配列のマージの場合Object.assignでバグが発生するので以下のように処理
+        // TODO:配列マージ用の共通関数を作成
+        inputData[action.key] = inputData[action.key] || {}
+        inputData[action.key] = Object.assign({}, inputData[action.key], action.data)
+        state.inputData = inputData
+        return Object.assign({}, state)
+      } {
+        inputData = Object.assign({}, inputData, action.data)
+        return Object.assign({}, state, {
+          inputData
+        })
+      }
     default:
       return state;
   }
