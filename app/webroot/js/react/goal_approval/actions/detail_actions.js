@@ -10,8 +10,12 @@ export function fetchGaolApproval(goal_id) {
   }
 }
 
-export function postComment() {
-  
+export function postSetAsTarget(post_data) {
+  console.log(post_data)
+}
+
+export function postRemoveFromTarget(post_data) {
+  console.log(post_data)
 }
 
 export function setGoalApproval(goal_approval) {

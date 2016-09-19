@@ -6,6 +6,9 @@ import { CoachFooter } from './elements/detail_coach_footer'
 import { CoacheeFooter } from './elements/detail_coachee_footer'
 
 export default class DetailComponent extends React.Component {
+  constructor(props) {
+    super(props)
+  }
 
   componentWillMount() {
     this.props.fetchGaolApproval(this.props.params.goal_id)
@@ -24,7 +27,8 @@ export default class DetailComponent extends React.Component {
                     if(this.props.detail.goal_approval.is_mine) {
                       return <CoacheeFooter />;
                     } else {
-                      return <CoachFooter />;
+                      return <CoachFooter handlePostSetAsTarget={ post_data => this.props.postSetAsTarget(post_data) }
+                                          handlePostRemoveFromTarget={ post_data => this.props.postRemoveFromTarget(post_data) } />;
                     }
                   })()}
               </div>
