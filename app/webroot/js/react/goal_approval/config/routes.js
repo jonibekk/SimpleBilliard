@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+/* eslint-enable no-unused-vars */
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import { Router, Route,　browserHistory } from 'react-router'
@@ -43,10 +45,9 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="/goals/approval">
               <Route path="list" component={ListContainer} />
-              <Route path="detail" component={DetailContainer} />
+              <Route path="detail/:goal_id" component={DetailContainer} />
             </Route>
           </Router>
-          {/* <DevTools / > */}
         </div>
       </Provider>
     );
