@@ -202,6 +202,5 @@ export function initInputData(goal) {
     photo: null,
     key_result: null,
   }
-  console.log({inputData})
   return inputData;
 }
