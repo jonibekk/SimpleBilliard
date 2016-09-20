@@ -55,9 +55,6 @@ export default class Step2Component extends React.Component {
 
   render() {
     let {suggestions, keyword, inputData, validationErrors} = this.props.goal;
-    console.log("step2 render")
-    console.log("suggestionsExcludeSelected")
-    console.log(this.props.goal.suggestionsExcludeSelected)
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
