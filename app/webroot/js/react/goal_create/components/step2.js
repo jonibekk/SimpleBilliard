@@ -68,7 +68,7 @@ export default class Step2Component extends React.Component {
           <CategorySelect
             onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}
             categories={this.props.goal.categories}
-            defaultValue={inputData.goal_category_id}/>
+            value={inputData.goal_category_id}/>
           <InvalidMessageBox message={validationErrors.goal_category_id}/>
 
           <LabelInput

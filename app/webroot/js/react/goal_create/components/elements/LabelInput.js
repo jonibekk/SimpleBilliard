@@ -6,7 +6,6 @@ export default class LabelInput extends React.Component {
     super(props);
   }
   render() {
-    console.log("LabelInput render")
     const props = {
       placeholder: "",
       value: this.props.keyword,
