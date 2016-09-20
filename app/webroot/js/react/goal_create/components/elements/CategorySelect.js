@@ -8,7 +8,7 @@ export default class CategorySelect extends React.Component {
     if (this.props.categories.length == 0) {
       return null;
     }
-    let options = this.props.categories.map(v => {
+    let options = this.props.categories.map((v) => {
       return <option value={v.id} key={v.id}>{v.name}</option>;
     });
     return (
@@ -17,7 +17,8 @@ export default class CategorySelect extends React.Component {
         <select
           className="form-control goals-create-input-form"
           name="goal_category_id"
-          onChange={this.props.onChange}>
+          onChange={this.props.onChange}
+          value={this.props.defaultValue}>
           {options}
         </select>
       </div>
@@ -27,6 +28,7 @@ export default class CategorySelect extends React.Component {
 }
 CategorySelect.propTypes = {
   categories: React.PropTypes.array,
+  defaultValue: React.PropTypes.string
 };
-CategorySelect.defaultProps = {categories: []};
+CategorySelect.defaultProps = {categories: [], defaultValue: null};
 
