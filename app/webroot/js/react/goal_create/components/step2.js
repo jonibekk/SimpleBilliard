@@ -54,9 +54,6 @@ export default class Step2Component extends React.Component {
 
   render() {
     let {suggestions, keyword, inputData, validationErrors} = this.props.goal;
-    console.log("step2 render")
-    console.log("suggestionsExcludeSelected")
-    console.log(this.props.goal.suggestionsExcludeSelected)
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
@@ -67,7 +64,7 @@ export default class Step2Component extends React.Component {
           <CategorySelect
             onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}
             categories={this.props.goal.categories}
-            defaultValue={inputData.goal_category_id}/>
+            value={inputData.goal_category_id}/>
           <InvalidMessageBox message={validationErrors.goal_category_id}/>
 
           <LabelInput

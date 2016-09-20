@@ -15,7 +15,7 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
     return $v['CircleMember']['admin_flg'];
 });
 ?>
-<!-- START app/View/Elements/modal_circle_members.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header no-border">
@@ -71,4 +71,4 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_circle_members.ctp -->
+<?= $this->App->viewEndComment()?>

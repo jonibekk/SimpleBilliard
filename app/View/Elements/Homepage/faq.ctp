@@ -15,7 +15,7 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Elements/Homepage/faq.ctp -->
+<?= $this->App->viewStartComment()?>
 
 <?php $faq = [
     [
@@ -101,4 +101,4 @@
         </div>
     </div><!--//container-->
 </section><!--//faq-->
-<!-- END app/View/Elements/Homepage/faq.ctp -->
+<?= $this->App->viewEndComment()?>

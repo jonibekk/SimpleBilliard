@@ -9,7 +9,7 @@
  * @var                    $goal
  */
 ?>
-<!-- START app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="dropdown pull-right">
     <a href="#"
        class="bd-radius_4px font_lightGray-gray"
@@ -51,4 +51,4 @@
         <?php endif; ?>
     </ul>
 </div>
-<!-- End app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
+<?= $this->App->viewEndComment()?>

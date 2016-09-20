@@ -9,7 +9,7 @@
  * @var                    $user
  */
 ?>
-<!-- START app/View/Elements/Evaluation/evaluators_status.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 mpTB0">
     <?php if ($user['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
         <i class="fa fa-user user-icon fa-2x text-align_c comment-img mt_5px"></i>
@@ -37,4 +37,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Evaluation/evaluators_status.ctp -->
+<?= $this->App->viewEndComment()?>

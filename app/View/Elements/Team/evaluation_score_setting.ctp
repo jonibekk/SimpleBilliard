@@ -23,7 +23,7 @@
  * @var                    $previous_term_id
  */
 ?>
-<!-- START app/View/Elements/Team/evaluation_score_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Evaluation score settings") ?></div>
     <div class="panel-body form-horizontal">
@@ -79,7 +79,7 @@
 
     </div>
 </div>
-<!-- END app/View/Elements/Team/evaluation_score_setting.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->start('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

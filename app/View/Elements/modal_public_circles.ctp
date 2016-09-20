@@ -10,7 +10,7 @@
  * @var                    $joined_circle_count_list
  */
 ?>
-<!-- START app/View/Elements/modal_public_circles.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog modal-public-circles-dialog">
     <div class="modal-content modal-public-circles-contents">
         <div class="modal-header none-border">
@@ -90,4 +90,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_public_circles.ctp -->
+<?= $this->App->viewEndComment()?>

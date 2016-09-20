@@ -9,7 +9,7 @@
  * @var                    $start_term_month_options
  */
 ?>
-<!-- START app/View/Teams/edit_team_vision.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -137,4 +137,4 @@
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Teams/edit_team_vision.ctp -->
+<?= $this->App->viewEndComment()?>

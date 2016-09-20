@@ -9,7 +9,7 @@
  * @var $model
  */
 ?>
-<!-- START app/View/Elements/cube_img_blocks.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php if (isset($posts) && !empty($posts)): ?>
     <div class="cube-img-column">
         <?php foreach ($posts as $post): ?>
@@ -55,4 +55,4 @@
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
-<!-- END app/View/Elements/cube_img_blocks.ctp -->
+<?= $this->App->viewEndComment()?>

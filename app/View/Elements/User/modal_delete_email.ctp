@@ -10,7 +10,7 @@
  * @var string             $email_id
  */
 ?>
-<!-- START app/View/Elements/User/modal_delete_email.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal fade" tabindex="-1" id="modal_delete_email">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -39,4 +39,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/User/modal_delete_email.ctp -->
+<?= $this->App->viewEndComment()?>
