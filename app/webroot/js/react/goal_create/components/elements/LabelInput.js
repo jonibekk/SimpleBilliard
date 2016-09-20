@@ -14,19 +14,6 @@ export default class LabelInput extends React.Component {
       onKeyDown: this.props.onKeyDown,
       onKeyPress: this.props.onKeyPress
     };
-console.log("inputLables")
-console.log(this.props.inputLabels)
-    // let inputLabels = null;
-    //   inputLabels = this.props.inputLables.map((v) => {
-    //     return <li key={v} className="goals-create-selected-labels-item">
-    //       <span>{v}</span>
-    //       <a href="#" className="ml_8px" onClick={this.props.onDeleteLabel} data-label={v}>
-    //         <i className="fa fa-times-circle" aria-hidden="true"></i>
-    //       </a>
-    //     </li>;
-    //
-    //   });
-    // }
 
     return (
       <div>
