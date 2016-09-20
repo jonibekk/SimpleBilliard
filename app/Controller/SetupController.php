@@ -101,6 +101,10 @@ class SetupController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * TODO:削除
+     * @deprecated
+     */
     public function ajax_create_goal()
     {
         $this->_ajaxPreProcess();

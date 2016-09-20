@@ -129,7 +129,7 @@ export default class Auth extends React.Component {
                       range(1, 4).map(index => {
                         return (
                           <div className="signup-auth-split_input_item signup-auth-input_wrapper" key={`code${index}`}>
-                              <input type="text" className="signup-auth-inline_input" ref={`code${index}`} maxLength="1" type="text" pattern="\d*"
+                              <input type="text" className="signup-auth-inline_input" ref={`code${index}`} maxLength="1" pattern="\d*"
                                      onChange={ event => {this.inputCode(event.target.value, index)}}
                                      onKeyDown={ event => { this.handleKeyDown(event.keyCode, index) } }
                                      onPaste={ event => {
@@ -148,7 +148,7 @@ export default class Auth extends React.Component {
                       range(4, 7).map(index => {
                         return (
                           <div className="signup-auth-split_input_item signup-auth-input_wrapper" key={`code${index}`}>
-                              <input type="text" className="signup-auth-inline_input" ref={`code${index}`} maxLength="1" type="text" pattern="\d*"
+                              <input type="text" className="signup-auth-inline_input" ref={`code${index}`} maxLength="1" pattern="\d*"
                                      onChange={ event => {this.inputCode(event.target.value, index)}}
                                      onKeyDown={ event => { this.handleKeyDown(event.keyCode, index) } }
                                      onPaste={ event => {

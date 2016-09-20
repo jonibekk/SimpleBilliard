@@ -1,6 +1,5 @@
 import {connect} from "react-redux";
 import Step3Component from "../components/step3";
-import * as actions from "../actions/goal_actions";
 import * as common from "./common";
 
 function mapStateToProps(state) {
