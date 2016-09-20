@@ -48,7 +48,7 @@ export default function goal(state = initialState, action) {
         inputData,
         suggestionsExcludeSelected,
         toNextPage: false,
-        validationErrors:{}
+        validationErrors:{key_result:{}}
       })
 
     case types.REQUEST_SUGGEST:
