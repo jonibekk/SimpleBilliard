@@ -88,9 +88,9 @@ export function updateInputData(data, key) {
   }
 }
 
-export function fetchInitialData() {
+export function fetchInitialData(goalId) {
   return (dispatch) => {
-    return axios.get(`/api/v1/goals/init_form?data_types=all`)
+    return axios.get(`/api/v1/goals/${goalId}/init_form?data_types=all`)
       .then((response) => {
         let data = response.data.data
         dispatch({

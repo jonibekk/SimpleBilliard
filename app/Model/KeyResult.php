@@ -312,6 +312,16 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getTkr($goalId)
+    {
+        $res = $this->find('first', [
+            'conditions' => [
+                'goal_id' => $goalId,
+            ],
+        ]);
+        return $res;
+    }
+
     /**
      * 未完了のキーリザルト数を返す
      *

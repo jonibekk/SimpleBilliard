@@ -17,7 +17,7 @@ export default class EditComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchInitialData()
+    this.props.fetchInitialData(this.props.params.goalId)
   }
 
   componentWillReceiveProps(nextProps) {

@@ -199,4 +199,27 @@ class GoalLabel extends AppModel
         }
         return true;
     }
+
+    function findByGoalId($goalId)
+    {
+        $res = $this->find('all', [
+            'fields' => ['Label.id','Label.name'],
+            'conditions' => [
+                'GoalLabel.team_id' => $this->current_team_id,
+                'GoalLabel.goal_id' => $goalId
+            ],
+            'joins' => [
+                [
+                    'type' => 'INNER',
+                    'table' => 'labels',
+                    'alias' => 'Label',
+                    'conditions' => [
+                        'GoalLabel.label_id = Label.id',
+                    ]
+                ],
+            ]
+        ]);
+        return $res;
+    }
+
 }

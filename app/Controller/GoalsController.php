@@ -61,6 +61,11 @@ class GoalsController extends AppController
 
     public function edit($id)
     {
+        try {
+            $this->Goal->isPermittedAdmin($id);
+        } catch (RuntimeException$e) {
+            throw new NotFoundException();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render("edit");
     }

@@ -1,7 +1,9 @@
 import * as types from "../constants/ActionTypes";
 
 const initialState = {
+  initFlg: false,
   toNextPage: false,
+  goal:{},
   visions:[],
   categories:[],
   labels:[],
@@ -47,11 +49,14 @@ export default function goal(state = initialState, action) {
       if (state.suggestionsExcludeSelected.length == 0) {
         suggestionsExcludeSelected = Object.assign([], action.data.labels)
       }
-      inputData = initInputData(inputData, action.data)
+      if (!state.initFlg) {
+        inputData = initInputData(action.data.goal)
+      }
       return Object.assign({}, state, action.data, {
         inputData,
         suggestionsExcludeSelected,
         toNextPage: false,
+        initFlg: true,
         validationErrors:{key_result: {}}
       })
 
@@ -185,19 +190,18 @@ export function addItemToSuggestions(suggestions, suggestionName, baseList) {
  * @param data
  * @returns {{}}
  */
-export function initInputData(inputData, data) {
-    if (!inputData.goal_category_id && data.categories.length > 0) {
-      inputData["goal_category_id"] = data.categories[0].id
-    }
-    if (!inputData.term_type && data.terms.length > 0) {
-      inputData["term_type"] = data.terms[0].type
-    }
-    if (data.priorities.length > 0) {
-      inputData["priority"] = data.priorities[0].id
-    }
-    if (!inputData.key_result && data.units.length > 0) {
-      inputData["key_result"] = inputData["key_result"] || {};
-      inputData["key_result"]["value_unit"] = data.units[0].id
-    }
+export function initInputData(goal) {
+  const labels = goal.goal_labels.filter((v) => v.name)
+  const inputData = {
+    name: goal.name,
+    goal_category_id: goal.goal_category_id,
+    labels: labels,
+    start_date: goal.start_date,
+    end_date: goal.end_date,
+    description: goal.description,
+    photo: null,
+    key_result: null,
+  }
+  console.log({inputData})
   return inputData;
 }

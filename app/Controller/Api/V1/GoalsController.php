@@ -60,7 +60,10 @@ class GoalsController extends ApiController
             } catch (RuntimeException$e) {
                 return $this->_getResponseForbidden();
             }
-            $res['goal'] = Hash::extract($this->Goal->findById($id), 'Goal');
+            $goal = Hash::extract($this->Goal->findById($id), 'Goal');
+            $goal['key_result'] = Hash::extract($this->KeyResult->getTkr($goal['id']), 'KeyResult');
+            $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['id']), '{n}.Label');
+            $res['goal'] = $goal;
         }
 
         /**
