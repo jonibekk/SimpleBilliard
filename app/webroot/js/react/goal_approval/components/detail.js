@@ -18,22 +18,28 @@ export default class DetailComponent extends React.Component {
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
           <h1 className="goals-approval-heading">Confirm this goal</h1>
-          {(() => { if(Object.keys(this.props.detail.goal_approval).length > 0) return (
-              <div className="goals-approval-detail">
-                  <GoalCard goal={ this.props.detail.goal_approval.goal } is_leader={ this.props.detail.goal_approval.is_leader } />
-                  <Comments approval_histories={ this.props.detail.goal_approval.approval_histories } />
-                  <h1 className="goals-approval-heading">Check it</h1>
-                  {(() => {
-                    if(this.props.detail.goal_approval.is_mine) {
-                      return <CoacheeFooter />;
-                    } else {
-                      return <CoachFooter handlePostSetAsTarget={ post_data => this.props.postSetAsTarget(post_data) }
-                                          handlePostRemoveFromTarget={ post_data => this.props.postRemoveFromTarget(post_data) } />;
-                    }
-                  })()}
-              </div>
-          )})()}
+          <div className="goals-approval-detail">
+              <UserCard collaborator={ this.props.detail.goal_approval } key="user card" />
+              <GoalCard collaborator={ this.props.detail.goal_approval } key="goal card" />
+              <Comments collaborator={ this.props.detail.goal_approval } key="comments" />
+              <h1 className="goals-approval-heading">Check it</h1>
+              {(() => {
+                if(this.props.detail.goal_approval.is_mine) {
+                  return <CoacheeFooter />;
+                } else {
+                  return <CoachFooter handlePostSetAsTarget={ post_data => this.props.postSetAsTarget(post_data) }
+                                      handlePostRemoveFromTarget={ post_data => this.props.postRemoveFromTarget(post_data) } />;
+                }
+              })()}
+          </div>
       </section>
     )
   }
+}
+
+DetailComponent.propTypes = {
+  detail: React.PropTypes.object.isRequired,
+  fetchGaolApproval: React.PropTypes.func.isRequired,
+  postSetAsTarget: React.PropTypes.func.isRequired,
+  postRemoveFromTarget: React.PropTypes.func.isRequired
 }

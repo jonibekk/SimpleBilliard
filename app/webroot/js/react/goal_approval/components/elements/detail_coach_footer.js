@@ -95,3 +95,8 @@ export class CoachFooter extends React.Component {
     )
   }
 }
+
+CoachFooter.propTypes = {
+  handlePostSetAsTarget: React.PropTypes.func.isRequired,
+  handlePostRemoveFromTarget: React.PropTypes.func.isRequired
+}

@@ -55,4 +55,3 @@ LabelInput.defaultProps = {
   keyword: "",
   inputLabels: [],
 };
-

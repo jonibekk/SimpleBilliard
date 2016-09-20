@@ -1887,11 +1887,13 @@ class GoalsController extends AppController
       $res = [
           "id" => 10,
           "user_id" => 10,
-          "is_leader" => (boolean)Collaborator::TYPE_OWNER,
+          "is_leader" => (boolean)Collaborator::TYPE_COLLABORATOR,
           "approval_status" => Collaborator::STATUS_UNAPPROVED,
           "wish_approval_flg" => 1,
           "target_evaluation_flg" => 1,
           "is_mine" => false, // コーチ/コーチー判定フラグ
+          "role" => "貢献する人",
+          "type" => "Collaborator",
           "category" => [
             "name" => "成長"
           ],

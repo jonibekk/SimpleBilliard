@@ -3,7 +3,9 @@ import { Comment } from './detail_comment'
 
 export class Comments extends React.Component {
   render() {
-    const comments = this.props.comments ? this.props.comments : []
+    if(!this.props.collaborator) {
+      return null
+    }
 
     return (
       <div className="goals-approval-detail-comments">
@@ -18,5 +20,5 @@ export class Comments extends React.Component {
 }
 
 Comments.propTypes = {
-  comments: React.PropTypes.array
+  collaborator: React.PropTypes.object.isRequired
 }
