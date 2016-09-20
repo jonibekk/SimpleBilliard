@@ -1,7 +1,7 @@
 import * as types from '../constants/ActionTypes'
 import { get } from './common_actions'
 
-export function fetchGaolApprovals(is_initialize = false) {
+export function fetchGoalApprovals(is_initialize = false) {
   return (dispatch, getState) => {
     const next_getting_api = getState().list.next_getting_api
     const default_getting_api = '/goals/ajax_get_init_goal_approvals'

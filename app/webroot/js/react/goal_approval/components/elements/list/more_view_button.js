@@ -22,5 +22,6 @@ export class ListMoreViewButton extends React.Component {
 }
 
 ListMoreViewButton.propTypes = {
+  is_loading: React.PropTypes.bool.isRequired,
   handleOnClick: React.PropTypes.func.isRequired
 }

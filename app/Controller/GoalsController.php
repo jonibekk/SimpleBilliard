@@ -1625,6 +1625,11 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * 以下、ゴール認定リスト/詳細ページ用のモック
+     * TODO: v1/GoalsController.phpにAPi実装後、以下の行は全て削除する
+     */
+
     const STATUS_TYPE_NEW = 0;
     const STATUS_TYPE_REAPPROVE = 1;
 
