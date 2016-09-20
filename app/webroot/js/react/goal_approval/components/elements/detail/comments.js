@@ -1,5 +1,5 @@
 import React from 'react'
-import { Comment } from './detail_comment'
+import { Comment } from './comment'
 
 export class Comments extends React.Component {
   render() {

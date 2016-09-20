@@ -1,9 +1,9 @@
 import React from 'react'
-import { Comments } from './elements/detail_comments'
-import { GoalCard } from './elements/detail_goal_card'
-import { UserCard } from './elements/detail_user_card'
-import { CoachFooter } from './elements/detail_coach_footer'
-import { CoacheeFooter } from './elements/detail_coachee_footer'
+import { Comments } from './elements/detail/comments'
+import { GoalCard } from './elements/detail/goal_card'
+import { UserCard } from './elements/detail/user_card'
+import { CoachFooter } from './elements/detail/coach_footer'
+import { CoacheeFooter } from './elements/detail/coachee_footer'
 
 export default class DetailComponent extends React.Component {
   constructor(props) {
