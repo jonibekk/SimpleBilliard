@@ -15,7 +15,7 @@
  * @var
  */
 ?>
-<!-- START app/View/Pages/home.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php $this->append('meta') ?>
 <?php
 /*
@@ -383,4 +383,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </script>
 <?php $this->end(); ?>
 
-<!-- END app/View/Pages/home.ctp -->
+<?= $this->App->viewEndComment()?>

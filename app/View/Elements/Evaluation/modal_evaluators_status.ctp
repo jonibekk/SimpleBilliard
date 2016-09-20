@@ -9,7 +9,7 @@
  * @var                    $evaluatee
  */
 ?>
-<!-- START app/View/Elements/Elements/modal_evaluators_status.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -36,4 +36,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Elements/modal_evaluators_status.ctp -->
+<?= $this->App->viewEndComment()?>

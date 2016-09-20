@@ -12,7 +12,7 @@
  * @var                    $type
  */
 ?>
-<!-- START app/View/Elements/flash_pnotify.ctp -->
+<?= $this->App->viewStartComment()?>
 <script type="text/javascript">
     new PNotify({
         title: "<?=$title?>",
@@ -23,4 +23,4 @@
         mouse_reset: false
     });
 </script>
-<!-- END app/View/Elements/flash_pnotify.ctp -->
+<?= $this->App->viewEndComment()?>

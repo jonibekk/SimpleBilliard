@@ -10,7 +10,7 @@
  * @var                    $goal
  */
 ?>
-<!-- START app/View/Elements/Goal/modal_last_kr_confirm.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -70,4 +70,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Goal/modal_last_kr_confirm.ctp -->
+<?= $this->App->viewEndComment()?>

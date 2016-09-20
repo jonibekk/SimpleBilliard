@@ -35,7 +35,7 @@ if (!isset($message_page_image)) {
 }
 
 ?>
-<!-- START app/View/Elements/Feed/attached_file_item.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12">
     <?php if ($page_type != 'feed'): ?>
         <div class="pull-right">
@@ -200,4 +200,4 @@ if (!isset($message_page_image)) {
 
     </div>
 </div>
-<!-- END app/View/Elements/Feed/attached_file_item.ctp -->
+<?= $this->App->viewEndComment()?>

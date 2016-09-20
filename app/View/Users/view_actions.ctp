@@ -13,7 +13,7 @@
  * @var
  */
 ?>
-<!-- START app/View/Users/view_actions.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="users-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('User/simplex_top_section') ?>
     <div class="users-view-actions-panel">
@@ -116,4 +116,4 @@
         <?php endif; ?>
     </div>
 </div>
-<!-- END app/View/Users/view_actions.ctp -->
+<?= $this->App->viewEndComment()?>

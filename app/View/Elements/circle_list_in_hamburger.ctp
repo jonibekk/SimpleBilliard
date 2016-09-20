@@ -11,7 +11,7 @@
  * @var                    $is_mb_app
  */
 ?>
-<!-- START app/View/Elements/circle_list_in_hamburger.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="layout-sub_padding clearfix layout-circle-humbarger">
     <p class="circle_heading">Circles</p>
     <?php if (!empty($my_circles)): ?>
@@ -82,4 +82,4 @@
                 "Create a circle") ?></a>
     </div>
 </div>
-<!-- END app/View/Elements/circle_list_in_hamburger.ctp -->
+<?= $this->App->viewEndComment()?>

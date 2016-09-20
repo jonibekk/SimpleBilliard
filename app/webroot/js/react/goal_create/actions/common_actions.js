@@ -21,17 +21,52 @@ export function getCsrfTokenKey() {
 }
 
 export function post(uri, data, options, success_callback, error_callback) {
-  options = options || {};
+  options = options || {}
+  const base_options = {
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    dataType: 'json'
+  }
+  options = Object.assign(base_options, options)
+
+  /* Create request parameter */
   const csrf_token_key = getCsrfTokenKey()
   const post_data = Object.assign({
     'data[_Token][key]': csrf_token_key
   }, data)
-  const base_url = getBaseUrl()
-  const form_data = new FormData()
+  const form_data = createFormData(post_data, ['photo'])
+  const url = getBaseUrl() + uri;
 
-  for (const key in post_data) {
-    form_data.append(key, post_data[key])
-  }
-  return axios.post(base_url + uri, form_data, options)
+  return axios.post(url, form_data, options)
     .then(success_callback, error_callback)
+}
+
+/**
+ * Create FormData
+ *
+ * @param data
+ * @param directAppendKeys: Even if data is array or hash, direct append data.
+ * @param formData
+ * @param baseKey
+ * @returns {*}
+ */
+export function createFormData(data, directAppendKeys = [], formData = null, baseKey = "") {
+  if (!formData) {
+    formData = new FormData()
+  }
+
+  for (const key in data) {
+    let formKey = baseKey ? `${baseKey}[${key}]` : key;
+    if (directAppendKeys.length > 0 && directAppendKeys.indexOf(formKey) != -1) {
+      formData.append(formKey, data[key])
+    } else if (Array.isArray(data[key])) {
+      formData = createFormData(data[key], directAppendKeys, formData, formKey)
+    } else if (data[key] instanceof Object) {
+      formData = createFormData(data[key], directAppendKeys, formData, formKey)
+    } else {
+      formData.append(formKey, data[key])
+    }
+  }
+  return formData
 }

@@ -7,7 +7,7 @@
  * @var CodeCompletionView $this
  **/
 ?>
-<!-- START app/View/Elements/external_service_tags.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- start VWO and Mixpanel Integration Code-->
 <script type="text/javascript">
     var _vis_opt_queue = window._vis_opt_queue || [], _vis_counter = 0, mixpanel = window.mixpanel || [];
@@ -207,4 +207,4 @@
         })()</script>
     <!-- end Intercom -->
 <?php endif; ?>
-<!-- END app/View/Elements/external_service_tags.ctp -->
+<?= $this->App->viewEndComment()?>

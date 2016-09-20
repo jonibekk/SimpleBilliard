@@ -80,6 +80,6 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/privacy_policy') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/privacy_policy.ctp -->
+<?= $this->App->viewStartComment()?>
 <div id="markdown" class="markdown-wrap" src="../../composition/markdowns/<?= $short_lang ?>_privacy_policy.md"></div>
-<!-- END app/View/Pages/privacy_policy.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -3,7 +3,7 @@
  *
  */
 ?>
-<!-- START app/View/Post/post_edit.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <div class="panel-body post-edit"
@@ -12,4 +12,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Post/post_edit.ctp -->
+<?= $this->App->viewEndComment()?>

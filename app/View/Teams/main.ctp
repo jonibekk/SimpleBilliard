@@ -1,4 +1,4 @@
-<!-- START app/View/Teams/member_list.ctp -->
+<?= $this->App->viewStartComment()?>
 
 <?php echo $this->Html->css('team_page'); ?>
 

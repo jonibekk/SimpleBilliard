@@ -14,7 +14,7 @@
  * @var                    $selected_term_name
  */
 ?>
-<!-- START app/View/Evaluations/index.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __("Evaluation") ?></div>
     <div class="panel-body eval-view-panel-body">
@@ -88,4 +88,4 @@
 </div>
 <?php $this->append('script') ?>
 <?php $this->end() ?>
-<!-- END app/View/Evaluations/index.ctp -->
+<?= $this->App->viewEndComment()?>

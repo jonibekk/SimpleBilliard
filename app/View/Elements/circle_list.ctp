@@ -10,7 +10,7 @@
  * @var array              $my_circles
  */
 ?>
-<!-- START app/View/Elements/circle_list.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="dashboard-circle-list layout-sub_padding clearfix" id="jsDashboardCircleList">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading">Circles</p>
@@ -89,4 +89,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/circle_list.ctp -->
+<?= $this->App->viewEndComment()?>

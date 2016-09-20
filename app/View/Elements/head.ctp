@@ -10,7 +10,7 @@
  * @var                    $meta_description
  */
 ?>
-<!-- START app/View/Elements/head.ctp -->
+<?= $this->App->viewStartComment()?>
 <head>
     <?= $this->Html->charset(); ?>
     <title origin-title="<?= $title_for_layout; ?>">
@@ -74,4 +74,4 @@
     }
     ?>
 </head>
-<!-- END app/View/Elements/head.ctp -->
+<?= $this->App->viewEndComment()?>

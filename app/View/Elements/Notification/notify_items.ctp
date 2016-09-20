@@ -11,7 +11,7 @@
  */
 ?>
 
-<!-- START app/View/Elements/Notification/notify_items.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php foreach ($notify_items as $notify_item): ?>
     <?=
     $this->element('Notification/notify_item',
@@ -20,4 +20,4 @@
          'location_type' => $location_type
         ]) ?>
 <?php endforeach; ?>
-<!-- END app/View/Elements/Notification/notify_items.ctp -->
+<?= $this->App->viewEndComment()?>

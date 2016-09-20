@@ -12,7 +12,7 @@
  * @var                    $feed_more_read_url
  */
 ?>
-<!-- START app/View/Elements/modal_action_list.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -88,4 +88,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_action_list.ctp -->
+<?= $this->App->viewEndComment()?>

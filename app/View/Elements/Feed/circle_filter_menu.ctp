@@ -11,7 +11,7 @@
  * @var $circle_status
  */
 ?>
-<!-- START app/View/Elements/Feed/circle_filter_menu.ctp -->
+<?= $this->App->viewStartComment()?>
 <span id="circle-filter-menu-circle-name"
       class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
         '...') ?></span>
@@ -68,4 +68,4 @@
         <?php endif ?>
     </ul>
 </div>
-<!-- END app/View/Elements/Feed/circle_filter_menu.ctp -->
+<?= $this->App->viewEndComment()?>

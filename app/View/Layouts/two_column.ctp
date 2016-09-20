@@ -9,7 +9,7 @@ if (!isset($with_header_menu)) {
     $with_header_menu = true;
 }
 ?>
-<!-- START app/View/Layouts/two_column.ctp -->
+<?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="ja">
@@ -57,4 +57,4 @@ if (!isset($with_header_menu)) {
 } ?>
 </body>
 </html>
-<!-- END app/View/Layouts/two_column.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -123,6 +123,8 @@ CakePlugin::loadAll();
 CakePlugin::load('UrlCache');
 Configure::write('UrlCache.active', true);
 
+Configure::load("app.php");
+
 /**
  * Goalous独自定数
  */

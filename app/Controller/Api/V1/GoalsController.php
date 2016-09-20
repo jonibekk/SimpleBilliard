@@ -13,7 +13,9 @@ App::uses('ApiController', 'Controller/Api');
 class GoalsController extends ApiController
 {
     public $uses = [
-        'Goal'
+        'Goal',
+        'TeamVision',
+        'GroupVision',
     ];
 
     /**
@@ -64,6 +66,16 @@ class GoalsController extends ApiController
             $dataTypes = 'all';
         }
 
+        if ($dataTypes == 'all' || in_array('visions', $dataTypes)) {
+            $team_visions = Hash::insert(
+                Hash::extract($this->TeamVision->getTeamVision($this->current_team_id, true, true),
+                    '{n}.TeamVision'), '{n}.type', 'team_vision');
+            $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
+
+            $visions = am($team_visions, $group_visions);
+            $res['visions'] = $visions;
+        }
+
         if ($dataTypes == 'all' || in_array('categories', $dataTypes)) {
             $res['categories'] = Hash::extract(
                 $this->Goal->GoalCategory->getCategories(['id', 'name']),
@@ -75,12 +87,25 @@ class GoalsController extends ApiController
             $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
         }
 
-        if ($dataTypes == 'all' || in_array('term_types', $dataTypes)) {
+        if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
             $current['type'] = 'current';
+            //TODO 個別にdate formatしているが一括で変更する仕組みを考えたほうがいい
+            $current['start_date'] = date('Y-m-d', $current['start_date'] + $current['timezone'] * HOUR);
+            $current['end_date'] = date('Y-m-d', $current['end_date'] + $current['timezone'] * HOUR);
             $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
             $next['type'] = 'next';
+            $next['start_date'] = date('Y-m-d', $next['start_date'] + $next['timezone'] * HOUR);
+            $next['end_date'] = date('Y-m-d', $next['end_date'] + $next['timezone'] * HOUR);
             $res['terms'] = [$current, $next];
+        }
+
+        if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
+            $res['priorities'] = Configure::read("label.priorities"); ;
+        }
+
+        if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
+            $res['units'] = Configure::read("label.units"); ;
         }
 
         return $this->_getResponseSuccess($res);
@@ -105,7 +130,9 @@ class GoalsController extends ApiController
      */
     function post()
     {
-        $validateResult = $this->_validateCreateGoal($this->request->data);
+        $data = $this->request->data;
+        $data['photo'] = $_FILES['photo'];
+        $validateResult = $this->_validateCreateGoal($data);
         if ($validateResult !== true) {
             return $validateResult;
         }
@@ -113,9 +140,9 @@ class GoalsController extends ApiController
         $this->Goal->begin();
         $isSaveSuccess = $this->Goal->add(
             [
-                'Goal'      => $this->request->data,
-                'KeyResult' => [Hash::get($this->request->data, 'key_result')],
-                'Label'     => Hash::get($this->request->data, 'labels'),
+                'Goal'      => $data,
+                'KeyResult' => [Hash::get($data, 'key_result')],
+                'Label'     => Hash::get($data, 'labels'),
             ]
         );
         if ($isSaveSuccess === false) {
@@ -127,7 +154,7 @@ class GoalsController extends ApiController
         $newGoalId = $this->Goal->getLastInsertID();
 
         //通知
-        $this->NotifyBiz->push(Hash::get($this->request->data, 'socket_id'), "all");
+        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
         $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
 
         $this->updateSetupStatusIfNotCompleted();

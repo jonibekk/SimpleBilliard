@@ -189,6 +189,7 @@ class Goal extends AppModel
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
+            'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
         ],
         'end_date'   => [
             'isString' => ['rule' => 'isString'],
@@ -196,6 +197,7 @@ class Goal extends AppModel
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
+            'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
         ],
         'term_type'  => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
@@ -279,6 +281,22 @@ class Goal extends AppModel
         ],
     ];
 
+    /**
+     * 評価期間内かチェック
+     *
+     * @param      $date
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function checkRangeTerm($date)
+    {
+        $date = array_shift($date);
+        $goalTerm = $this->getGoalTermFromPost($this->data);
+        return $goalTerm['start_date'] <= strtotime($date)
+            && strtotime($date) <= $goalTerm['end_date'];
+    }
+
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -322,11 +340,6 @@ class Goal extends AppModel
         $goal_term = $this->getGoalTermFromPost($data);
 
         $data = $this->convertGoalDateFromPost($data, $goal_term);
-
-        // 評価期間をまたいでいないかチェック
-        if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
-            return false;
-        }
 
         if ($add_new) {
             $data = $this->buildTopKeyResult($data, $goal_term);

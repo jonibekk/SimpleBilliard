@@ -1,11 +1,14 @@
 import * as types from "../constants/ActionTypes";
+import * as Page from "../constants/Page";
 import {post} from "./common_actions";
 import axios from "axios";
 
-export function validateGoal() {
+export function validateGoal(page, addData) {
   return (dispatch, getState) => {
-    let inputData = getState().goal.inputData
-    return post('/api/v1/goals/validate', inputData, null,
+
+    const postData = Object.assign(getState().goal.inputData, addData)
+    const fields = Page.VALIDATION_FIELDS[page].join(',')
+    return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
       (response) => {
         console.log("validate success");
         dispatch(toNextPage())
@@ -32,6 +35,9 @@ export function invalid(error) {
 }
 
 export function setKeyword(keyword) {
+  // 最初にフォーカスしてサジェストのリストを全出しした後に↓キーを押すと
+  // なぜか文字列ではなく関数が渡されてくるので文字列チェック
+  keyword = typeof(keyword) == "string" ? keyword : "";
   return {
     type: types.SET_KEYWORD,
     keyword: keyword
@@ -47,8 +53,7 @@ export function updateSuggestions(keyword, suggestions) {
 }
 export function onSuggestionsFetchRequested(keyword) {
   return (dispatch, getState) => {
-    const labels = getState().goal.labels;
-    dispatch(updateSuggestions(keyword, labels))
+    dispatch(updateSuggestions(keyword, getState().goal.suggestionsExcludeSelected))
   }
 }
 export function onSuggestionsClearRequested() {
@@ -59,23 +64,41 @@ export function onSuggestionsClearRequested() {
 export function onSuggestionSelected(suggestion) {
   return {
     type: types.SELECT_SUGGEST,
-    suggestion: suggestion
-  }
-}
-export function updateInputData(data) {
-  return {
-    type: types.UPDATE_INPUT_DATA,
-    data: data
+    suggestion,
   }
 }
 
-export function fetchInitialData(dispatch) {
+export function addLabel(label) {
+  return {
+    type: types.ADD_LABEL,
+    label
+  }
+}
+export function deleteLabel(label) {
+  return {
+    type: types.DELETE_LABEL,
+    label
+  }
+}
+
+export function updateInputData(data, key) {
+  return {
+    type: types.UPDATE_INPUT_DATA,
+    data,
+    key
+  }
+}
+
+export function fetchInitialData(page) {
+  const dataTypes = Page.INITIAL_DATA_TYPES[page]
   return (dispatch) => {
-    return axios.get('/api/v1/goals/init_form?data_types=categories,labels')
+    return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
       .then((response) => {
+        let data = response.data.data
         dispatch({
           type: types.FETCH_INITIAL_DATA,
-          data: response.data.data,
+          data,
+          page
         })
       })
       .catch((response) => {
@@ -83,18 +106,34 @@ export function fetchInitialData(dispatch) {
   }
 }
 
+export function saveGoal() {
+  return (dispatch, getState) => {
+    return post("/api/v1/goals", getState().goal.inputData, null,
+      (response) => {
+        dispatch(toNextPage())
+      },
+      (response) => {
+        dispatch(invalid(response.data))
+      }
+    );
+  }
+}
+
+
 /**
  * 入力値にマッチしたサジェストのリストを取得
+ * 空文字(フォーカス時等でもサジェスト表示許可
  *
  * @param value
  * @param suggestions
  * @returns {*}
  */
 function getSuggestions(value, suggestions) {
-  value = value.trim();
-  if (value === '') {
-    return [];
+  if (!value) {
+    return suggestions.filter((suggestion) => suggestion.name);
   }
+  value = value.trim();
   const regex = new RegExp('^' + value, 'i');
   return suggestions.filter((suggestion) => regex.test(suggestion.name));
 }
+
