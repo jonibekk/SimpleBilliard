@@ -7,7 +7,7 @@ export default class ListComponent extends React.Component {
   componentWillMount() {
     const is_initialize = true
 
-    this.props.fetchGaolApprovals(is_initialize)
+    this.props.fetchGoalApprovals(is_initialize)
   }
 
   render() {
@@ -25,7 +25,7 @@ export default class ListComponent extends React.Component {
           </ul>
           {(() => {
             if(!this.props.list.done_loading_all_data) {
-              return <ListMoreViewButton handleOnClick={ () => this.props.fetchGaolApprovals() } is_loading={ this.props.list.fetching_goal_approvals} />
+              return <ListMoreViewButton handleOnClick={ () => this.props.fetchGoalApprovals() } is_loading={ this.props.list.fetching_goal_approvals} />
             }
           })()}
       </section>
