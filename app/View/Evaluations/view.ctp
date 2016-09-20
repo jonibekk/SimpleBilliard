@@ -15,7 +15,7 @@
  * @var                    $evaluateType
  */
 ?>
-<!-- START app/View/Evaluations/view.ctp -->
+<?= $this->App->viewStartComment()?>
 
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
@@ -566,7 +566,7 @@ $this->Form->input("evaluate_type", [
 ])
 ?>
 <?= $this->Form->end() ?>
-<!-- END app/View/Evaluations/view.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

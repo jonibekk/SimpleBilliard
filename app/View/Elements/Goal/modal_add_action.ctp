@@ -13,7 +13,7 @@
  * @var                    $key_result_id
  */
 ?>
-<!-- START app/View/Elements/Goal/modal_add_action.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -146,4 +146,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<!-- END app/View/Elements/Goal/modal_add_action.ctp -->
+<?= $this->App->viewEndComment()?>

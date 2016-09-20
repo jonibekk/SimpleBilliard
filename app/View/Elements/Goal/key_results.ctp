@@ -8,7 +8,7 @@
  */
 ?>
 <?php if ($key_results): ?>
-    <!-- START app/View/Elements/Goal/key_results.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php foreach ($key_results as $kr): ?>
         <div class="goal-detail-kr-card">
             <div class="goal-detail-kr-achieve-wrap">
@@ -167,5 +167,5 @@
             </ul>
         </div>
     <?php endforeach ?>
-    <!-- END app/View/Elements/Goal/key_results.ctp -->
+    <?= $this->App->viewEndComment()?>
 <?php endif ?>

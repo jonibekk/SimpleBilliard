@@ -10,7 +10,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/Feed/new_comment_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <?=
 $this->Form->create('Comment', [
     'default'         => false,
@@ -80,5 +80,5 @@ $this->Form->input('body', [
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>
-<!-- END app/View/Elements/Feed/new_comment_form.ctp -->
+<?= $this->App->viewEndComment()?>
 

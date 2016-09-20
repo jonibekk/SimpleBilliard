@@ -7,7 +7,7 @@
  */
 ?>
 <?php if (isset($ranking)): ?>
-    <!-- START app/View/Teams/insight_ranking_result.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php
     $icon = [
         'action_goal_ranking'    => ['img' => 'fa-flag', 'text' => 'fa-quote-left', 'count' => 'fa-check-circle'],
@@ -62,5 +62,5 @@
             </tr>
         <?php endforeach ?>
     </table>
-    <!-- END app/View/Teams/insight_ranking_result.ctp -->
+    <?= $this->App->viewEndComment()?>
 <?php endif ?>

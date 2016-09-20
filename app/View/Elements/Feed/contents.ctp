@@ -17,7 +17,7 @@
  * @var                       $item_created
  */
 ?>
-<!-- START app/View/Elements/Feed/contents.ctp -->
+<?= $this->App->viewStartComment()?>
 <?= $this->element('Feed/feed_share_range_filter',
     compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
@@ -115,4 +115,4 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php endif ?>
-<!-- END app/View/Elements/Feed/contents.ctp -->
+<?= $this->App->viewEndComment()?>

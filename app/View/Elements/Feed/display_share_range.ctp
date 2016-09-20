@@ -10,7 +10,7 @@
  */
 //echo json_encode($post);
 ?>
-<!-- START app/View/Elements/Feed/display_share_range.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="font_11px font_lightgray">
     <!-- only show if created within 1hr -->
     <?php if ($post['Post']['created'] > REQUEST_TIMESTAMP_ONE_HR_AGO) { ?>
@@ -50,4 +50,4 @@
         <?php endif; ?>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/Feed/display_share_range.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -6,7 +6,7 @@
  * @var                    $is_admin
  */
 ?>
-<!-- START app/View/Goals/index.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php if ($is_admin && $this->Session->read('ua.device_type') == 'Desktop'): ?>
     <div class="panel panel-default feed-share-range">
         <div class="panel-body ptb_10px plr_11px">
@@ -116,4 +116,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Goals/index.ctp -->
+<?= $this->App->viewEndComment()?>

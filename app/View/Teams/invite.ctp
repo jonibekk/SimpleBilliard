@@ -9,7 +9,7 @@
  * @var array              $my_teams
  */
 ?>
-<!-- START app/View/Teams/invite.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __('Send Invitations') ?></div>
@@ -137,4 +137,4 @@
 </script>
 <?php $this->Form->unlockField("Team.emails") ?>
 <?php $this->end() ?>
-<!-- END app/View/Teams/invite.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_confirm') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/contact_confirm.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
@@ -147,7 +147,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </form><!--//form-->
         </div>
     </div><!--//row-->
-</section><!--//contact--><!-- END app/View/Pages/contact_confirm.ctp -->
+</section><!--//contact--><?= $this->App->viewEndComment()?>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
     $(function () {

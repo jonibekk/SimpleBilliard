@@ -155,7 +155,7 @@ Need New Customers?<br>\n
             });
         </script>
         <?php $this->end() ?>
-        <!-- END app/View/Elements/User/profile_setting.ctp -->
+        <?= $this->App->viewEndComment()?>
 
 
     </div>
