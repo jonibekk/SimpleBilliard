@@ -1,6 +1,6 @@
 import React from 'react'
 
-export class ListMoreViewButton extends React.Component {
+export class MoreViewButton extends React.Component {
   render() {
     return (
       <div className="panel panel-default feed-read-more">
@@ -21,7 +21,7 @@ export class ListMoreViewButton extends React.Component {
   }
 }
 
-ListMoreViewButton.propTypes = {
+MoreViewButton.propTypes = {
   is_loading: React.PropTypes.bool.isRequired,
   handleOnClick: React.PropTypes.func.isRequired
 }

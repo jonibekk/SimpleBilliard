@@ -3,7 +3,7 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   goal_approvals: [],
   incomplete_count: null,
-  fetching_approvals: false,
+  fetching_goal_approvals: false,
   next_getting_api: null,
   done_loading_all_data: false
 }
