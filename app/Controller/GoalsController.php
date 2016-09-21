@@ -1936,7 +1936,7 @@ class GoalsController extends AppController
                   "user_id" => 10,
                   "is_clear_or_not" => 1,
                   "is_important_or_not" => 0,
-                  "comment" => "いいですね！" * 10,
+                  "comment" => str_repeat("いいですね！", 10),
                   "user" => [
                       "id" => 10,
                       "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
@@ -1950,7 +1950,7 @@ class GoalsController extends AppController
                   "user_id" => 10,
                   "is_clear_or_not" => 1,
                   "is_important_or_not" => 0,
-                  "comment" => "ありがとう！" * 10,
+                  "comment" => str_repeat("ありがとう！", 10),
                   "user" => [
                       "id" => 10,
                       "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
@@ -1964,7 +1964,7 @@ class GoalsController extends AppController
                   "user_id" => 10,
                   "is_clear_or_not" => 1,
                   "is_important_or_not" => 0,
-                  "comment" => "よろしく！" * 10,
+                  "comment" => str_repeat("よろしく！", 10),
                   "user" => [
                       "id" => 10,
                       "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',

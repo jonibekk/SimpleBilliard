@@ -1,17 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router'
 
 export class Comment extends React.Component {
   render() {
+    const comment = this.props.comment
+
     return (
       <div>
-        <p>coach name</p>
-        <p>title</p>
-        <p>message</p>
+        <p className="goals-approval-detail-info-name">{ comment.user.display_username }</p>
+        <p>{ comment.comment }</p>
       </div>
     )
   }
 }
 
 Comment.propTypes = {
+  comment: React.PropTypes.object.isRequired
 }
