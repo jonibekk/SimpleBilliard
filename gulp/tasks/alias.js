@@ -6,7 +6,7 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_approval'], done)
+  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_edit', 'react_goal_approval'], done)
 })
 
 // js app
@@ -91,6 +91,17 @@ gulp.task('react_goal_create', done => {
     'react_goal_create:browserify',
     'react_goal_create:uglify',
     'react_goal_create:clean',
+    done
+  )
+})
+
+// react goal edit
+gulp.task('react_goal_edit', done => {
+  return runSequence(
+    'react_goal_edit:eslint',
+    'react_goal_edit:browserify',
+    'react_goal_edit:uglify',
+    'react_goal_edit:clean',
     done
   )
 })

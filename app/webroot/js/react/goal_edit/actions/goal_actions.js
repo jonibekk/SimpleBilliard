@@ -1,5 +1,4 @@
 import * as types from "../constants/ActionTypes";
-import * as Page from "../constants/Page";
 import {post} from "../../util/api";
 import axios from "axios";
 
@@ -89,16 +88,14 @@ export function updateInputData(data, key) {
   }
 }
 
-export function fetchInitialData(page) {
-  const dataTypes = Page.INITIAL_DATA_TYPES[page]
+export function fetchInitialData(goalId) {
   return (dispatch) => {
-    return axios.get(`/api/v1/goals/init_form?data_types=${dataTypes}`)
+    return axios.get(`/api/v1/goals/${goalId}/init_form?data_types=all`)
       .then((response) => {
         let data = response.data.data
         dispatch({
           type: types.FETCH_INITIAL_DATA,
-          data,
-          page
+          data
         })
       })
       .catch((response) => {
@@ -136,3 +133,4 @@ function getSuggestions(value, suggestions) {
   const regex = new RegExp('^' + value, 'i');
   return suggestions.filter((suggestion) => regex.test(suggestion.name));
 }
+

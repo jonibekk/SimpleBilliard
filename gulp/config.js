@@ -117,6 +117,14 @@ const config =  {
     },
     watch_files: assets_dir + '/js/react/goal_create/**/*.js'
   },
+  react_goal_edit: {
+    src: assets_dir + '/js/react/goal_edit/app.js',
+    output: {
+      file_name: 'react_goal_edit_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: assets_dir + '/js/react/goal_edit/**/*.js'
+  },
   react_goal_approval: {
     src: assets_dir + '/js/react/goal_approval/app.js',
     output: {

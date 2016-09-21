@@ -49,13 +49,27 @@ class GoalsController extends ApiController
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
      * @return CakeResponse
      */
-    function get_init_form()
+    function get_init_form($id)
     {
+        $res = [];
+
+        // 編集の場合、idからゴール情報を取得・設定
+        if (!empty($id)) {
+            try {
+                $this->Goal->isPermittedAdmin($id);
+            } catch (RuntimeException$e) {
+                return $this->_getResponseForbidden();
+            }
+            $goal = Hash::extract($this->Goal->findById($id), 'Goal');
+            $goal['key_result'] = Hash::extract($this->KeyResult->getTkr($goal['id']), 'KeyResult');
+            $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['id']), '{n}.Label');
+            $res['goal'] = $goal;
+        }
+
         /**
          * @var Label $Label
          */
         $Label = ClassRegistry::init('Label');
-        $res = [];
 
         if ($this->request->query('data_types')) {
             $dataTypes = explode(',', $this->request->query('data_types'));

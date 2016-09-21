@@ -1,7 +1,7 @@
 import React from "react";
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
-import InvalidMessageBox from "./elements/InvalidMessageBox";
+import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 
 export default class Step4Component extends React.Component {
   constructor(props) {
