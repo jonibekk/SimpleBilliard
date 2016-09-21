@@ -2,12 +2,12 @@ import React from 'react'
 
 export class GoalCard extends React.Component {
   render() {
-    if(!this.props.goal) {
-      return null
-    }
     const goal = this.props.goal
     const is_leader = this.props.is_leader
 
+    if(Object.keys(goal).length == 0) {
+      return null
+    }
     return (
       <div className={`goals-approval-detail-goal ${is_leader ? 'mod-bgglay' : '' }`}>
           <div className="goals-approval-detail-table">
@@ -32,6 +32,7 @@ export class GoalCard extends React.Component {
 }
 
 GoalCard.propTypes = {
-  goal: React.PropTypes.object.isRequired,
-  is_leader: React.PropTypes.bool.isRequired
+  goal: React.PropTypes.object,
+  is_leader: React.PropTypes.bool
 }
+GoalCard.defaultProps = {goal: {}, is_leader: null};

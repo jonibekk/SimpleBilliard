@@ -1,12 +1,21 @@
 import * as types from '../constants/ActionTypes'
-import { get, post } from './common_actions'
+import { post } from "../../util/api"
+import axios from "axios"
 
 export function fetchGaolApproval(goal_id) {
   return dispatch => {
-    return get(`/goals/ajax_get_goal_approval/${goal_id}`, response => {
-      dispatch(setGoalApproval(response.data))
-    }, () => {
-    })
+    return axios.get(`/api/v1/goals/${goal_id}/goal_approval`)
+      .then((response) => {
+        /* eslint-disable no-console */
+        console.log('fetch success')
+        /* eslint-enable no-console */
+        dispatch(setGoalApproval(response.data.data))
+      })
+      .catch(() => {
+        /* eslint-disable no-console */
+        console.log('fetch failed')
+        /* eslint-enable no-console */
+      })
   }
 }
 

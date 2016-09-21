@@ -58,3 +58,4 @@ export class Comments extends React.Component {
 Comments.propTypes = {
   collaborator: React.PropTypes.object.isRequired
 }
+Comments.defaultProps = {collaborator: {}}

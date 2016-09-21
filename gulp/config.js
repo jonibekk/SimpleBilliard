@@ -115,7 +115,7 @@ const config =  {
       file_name: 'react_goal_create_app',
       path: compiled_assets_dir + '/js'
     },
-    watch_files: assets_dir + '/js/react/goal_create/**/*.js'
+    watch_files: [assets_dir + '/js/react/goal_create/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
   },
   react_goal_edit: {
     src: assets_dir + '/js/react/goal_edit/app.js',
@@ -123,7 +123,7 @@ const config =  {
       file_name: 'react_goal_edit_app',
       path: compiled_assets_dir + '/js'
     },
-    watch_files: assets_dir + '/js/react/goal_edit/**/*.js'
+    watch_files: [assets_dir + '/js/react/goal_edit/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
   },
   react_goal_approval: {
     src: assets_dir + '/js/react/goal_approval/app.js',
@@ -131,7 +131,7 @@ const config =  {
       file_name: 'react_goal_approval_app',
       path: compiled_assets_dir + '/js'
     },
-    watch_files: assets_dir + '/js/react/goal_approval/**/*.js'
+    watch_files: [assets_dir + '/js/react/goal_approval/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
   },
   css: {
     src: [

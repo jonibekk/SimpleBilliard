@@ -1,9 +1,9 @@
 import React from 'react'
-import { Comments } from './elements/detail/comments'
-import { GoalCard } from './elements/detail/goal_card'
-import { UserCard } from './elements/detail/user_card'
-import { CoachFooter } from './elements/detail/coach_footer'
-import { CoacheeFooter } from './elements/detail/coachee_footer'
+import { Comments } from "../../common/components/approval/Comments";
+import { GoalCard } from "../../common/components/approval/GoalCard";
+import { UserCard } from "../../common/components/approval/UserCard";
+import { CoachFooter } from "../../common/components/approval/CoachFooter";
+import { CoacheeFooter } from "../../common/components/approval/CoacheeFooter";
 
 export default class DetailComponent extends React.Component {
   constructor(props) {
@@ -29,9 +29,9 @@ export default class DetailComponent extends React.Component {
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
           <h1 className="goals-approval-heading">Confirm this goal</h1>
           <div className="goals-approval-detail">
-              <UserCard collaborator={ detail.goal_approval } key="user card" />
+              <UserCard collaborator={ detail.goal_approval } />
               <GoalCard goal={ detail.goal_approval.goal }
-                        is_leader={ detail.is_leader } key="goal card" />
+                        is_leader={ detail.is_leader } />
               <Comments collaborator={ detail.goal_approval } />
               <h1 className="goals-approval-heading">Check it</h1>
               {(() => {
