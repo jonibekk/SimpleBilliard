@@ -226,6 +226,7 @@ class GoalsController extends ApiController
      */
     function post_set_as_target()
     {
+        $this->Pnotify = $this->Components->load('Pnotify');
         $validation = true;
         if ($validation === true) {
             $this->Pnotify->outSuccess(__("Set as approval"));
@@ -242,6 +243,7 @@ class GoalsController extends ApiController
      */
     function post_remove_from_target()
     {
+        $this->Pnotify = $this->Components->load('Pnotify');
         $validation = true;
         if ($validation === true) {
             $this->Pnotify->outSuccess(__("Remove from approval"));
@@ -341,7 +343,6 @@ class GoalsController extends ApiController
               ]
           ]
       ];
-      $this->log($res);
       return $this->_getResponseSuccess($res);
     }
 
