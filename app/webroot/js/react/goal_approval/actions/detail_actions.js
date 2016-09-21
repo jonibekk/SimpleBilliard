@@ -17,20 +17,44 @@ export function postSetAsTarget(input_data) {
 
     return post(`/api/v1/goals/set_as_target`, post_data, null,
       () => {
+        /* eslint-disable no-console */
+        console.log('validation success')
+        /* eslint-enable no-console */
         dispatch(finishedPostingSetAsTarget())
         dispatch(toListPage())
       },
       (response) => {
+        /* eslint-disable no-console */
+        console.log("validate failed");
+        /* eslint-enable no-console */
         dispatch(finishedPostingSetAsTarget())
-        if(response.data) {
-          dispatch(invalid(response.data))
-        }
+        dispatch(invalid(response.data))
       }
     );
   }
 }
 
 export function postRemoveFromTarget(input_data) {
+  return (dispatch) => {
+    dispatch(postingRemovefromTarget())
+
+    return post(`/api/v1/goals/remove_from_target`, input_data, null,
+      () => {
+        /* eslint-disable no-console */
+        console.log('validation success')
+        /* eslint-enable no-console */
+        dispatch(finishedPostingRemoveFromTarget())
+        dispatch(toListPage())
+      },
+      (response) => {
+        /* eslint-disable no-console */
+        console.log("validate failed");
+        /* eslint-enable no-console */
+        dispatch(finishedPostingRemoveFromTarget())
+        dispatch(invalid(response.data))
+      }
+    );
+  }
 }
 
 export function setGoalApproval(goal_approval) {
