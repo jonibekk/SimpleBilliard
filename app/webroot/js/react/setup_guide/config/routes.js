@@ -1,13 +1,14 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+/* eslint-enable no-unused-vars */
 import { Provider } from 'react-redux'
-import { createStore, combineReducers } from 'redux'
+import { createStore } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import createReducer from '../reducers/index'
-import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
 import TopContainer from '../containers/top/top'
@@ -56,6 +57,7 @@ const store = createStore(
 )
 
 const history = syncHistoryWithStore(browserHistory, store)
+
 export const unlisten = history.listen(location => {
   history.listen(location => {
     // Ignore First page loading because in this timing it's sent by server-side

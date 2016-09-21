@@ -1638,4 +1638,266 @@ class GoalsController extends AppController
         }
         return $this->_ajaxGetResponse($res);
     }
+
+    /**
+     * 以下、ゴール認定リスト/詳細ページ用のモック
+     * TODO: v1/GoalsController.phpにAPi実装後、以下の行は全て削除する
+     */
+
+    const STATUS_TYPE_NEW = 0;
+    const STATUS_TYPE_REAPPROVE = 1;
+
+    public function ajax_get_init_goal_approvals()
+    {
+      $this->_ajaxPreProcess();
+      $res = [
+        [
+          "id" =>  1,
+          "name"=> 'Coach / Evaluated / Leader',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 1,
+            "user_id" => 1,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_APPROVAL,
+            "status_type" => null,
+            "user" => [
+              "id" => 1,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ],
+          ]
+        ],
+        [
+          "id" =>  2,
+          "name"=> 'Coach / Evaluated / Collaborator',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 2,
+            "user_id" => 2,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_APPROVAL,
+            "status_type" => null,
+            "user" => [
+              "id" => 2,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ],
+          ]
+        ],
+        [
+          "id" =>  3,
+          "name"=> 'Coach / Not Evaluated / Leader',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 3,
+            "user_id" => 3,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => null,
+            "user" => [
+              "id" => 3,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ],
+          ]
+        ],
+        [
+          "id" =>  4,
+          "name"=> 'Coach / Not Evaluated / Collaborator',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 4,
+            "user_id" => 4,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => null,
+            "user" => [
+              "id" => 4,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ],
+          ]
+        ],
+        [
+          "id" =>  5,
+          "name"=> 'Coach / Not Evaluated / New / Leader',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 5,
+            "user_id" => 5,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => self::STATUS_TYPE_NEW,
+            "user" => [
+              "id" => 5,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ],
+          ]
+        ],
+        [
+          "id" =>  6,
+          "name"=> 'Coach / Not Evaluated / New / Collaborator',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 6,
+            "user_id" => 6,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => self::STATUS_TYPE_NEW,
+            "user" => [
+              "id" => 6,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  7,
+          "name"=> 'Coach / Not Evaluated / Reapplication / Leader',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 7,
+            "user_id" => 7,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => self::STATUS_TYPE_REAPPROVE,
+            "user" => [
+              "id" => 7,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ]
+      ];
+      return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_get_next_goal_approvals() {
+      $this->_ajaxPreProcess();
+      $res = [
+        [
+          "id" =>  8,
+          "name"=> 'Coach / Not Evaluated / Reapplication / Collaborator',
+          "is_coach" => true,
+          "collaborator" => [
+            "id" => 8,
+            "user_id" => 8,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => self::STATUS_TYPE_REAPPROVE,
+            "user" => [
+              "id" => 8,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  9,
+          "name"=> 'Coachee / Evaluated / Leader',
+          "is_coach" => false,
+          "collaborator" => [
+            "id" => 9,
+            "user_id" => 9,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_APPROVAL,
+            "status_type" => null,
+            "user" => [
+              "id" => 9,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  10,
+          "name"=> 'Coachee / Evaluated / Collaborator',
+          "is_coach" => false,
+          "collaborator" => [
+            "id" => 10,
+            "user_id" => 10,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_APPROVAL,
+            "status_type" => null,
+            "user" => [
+              "id" => 10,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  11,
+          "name"=> 'Coachee / Not Evaluated / Complete / Leader',
+          "is_coach" => false,
+          "collaborator" => [
+            "id" => 11,
+            "user_id" => 11,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => null,
+            "user" => [
+              "id" => 11,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  12,
+          "name"=> 'Coachee / Not Evaluated / Complete / Collaborator',
+          "is_coach" => false,
+          "collaborator" => [
+            "id" => 12,
+            "user_id" => 12,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => null,
+            "user" => [
+              "id" => 12,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  13,
+          "name"=> 'Coachee / Not Evaluated / Incomplete / Leader',
+          "is_coach" => false,
+          "collaborator" => [
+            "id" => 13,
+            "user_id" => 13,
+            "type" => Collaborator::TYPE_OWNER,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => self::STATUS_TYPE_NEW,
+            "user" => [
+              "id" => 13,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+        [
+          "id" =>  14,
+          "name"=> 'Coachee / Not Evaluated / Incomplete / Collaborator',
+          "is_coach" => false,
+          "collaborator" => [
+            "id" => 14,
+            "user_id" => 14,
+            "type" => Collaborator::TYPE_COLLABORATOR,
+            "approval_status" => Collaborator::STATUS_UNAPPROVED,
+            "status_type" => self::STATUS_TYPE_NEW,
+            "user" => [
+              "id" => 14,
+              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+            ]
+          ]
+        ],
+      ];
+      return $this->_ajaxGetResponse($res);
+    }
+
 }
