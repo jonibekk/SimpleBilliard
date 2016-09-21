@@ -2407,7 +2407,7 @@ class TeamMember extends AppModel
 
     /**
      * Param1のユーザーは評価対象の人なのか
-     *
+     * TODO:チームIDは$this->current_team_idを使用すること
      * @param $user_id
      * @param $team_id
      *

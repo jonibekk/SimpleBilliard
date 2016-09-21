@@ -26,13 +26,6 @@ class Collaborator extends AppModel
     const APPROVAL_STATUS_DONE = 2;
     const APPROVAL_STATUS_WITHDRAW = 3;
 
-    static public $STATUS = [
-        self::APPROVAL_STATUS_NEW           => "",
-        self::APPROVAL_STATUS_REAPPLICATION => "",
-        self::APPROVAL_STATUS_DONE          => "",
-        self::APPROVAL_STATUS_WITHDRAW      => "",
-    ];
-
     /**
      * タイプの表示名をセット
      */
@@ -40,17 +33,6 @@ class Collaborator extends AppModel
     {
         self::$TYPE[self::TYPE_COLLABORATOR] = __("Collaborator");
         self::$TYPE[self::TYPE_OWNER] = __("Owner");
-    }
-
-    /**
-     * ステータス表示名をセット
-     */
-    private function _setStatusName()
-    {
-        self::$STATUS[self::APPROVAL_STATUS_NEW] = __("Waiting for approval");
-        self::$STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("In Evaluation");
-        self::$STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
-        self::$STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
     }
 
     /**
@@ -105,7 +87,6 @@ class Collaborator extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
-        $this->_setStatusName();
     }
 
     function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)
@@ -385,16 +366,15 @@ class Collaborator extends AppModel
     /**
      * ゴール認定一覧に表示するリスト取得
      *
-     * @param $teamId
      * @param $goalUserId
      *
      * @return array|null
      */
-    function findActive($teamId, $goalUserId)
+    function findActive($goalUserId)
     {
         $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $conditions = [
-            'Collaborator.team_id' => $teamId,
+            'Collaborator.team_id' => $this->current_team_id,
             'Collaborator.user_id' => $goalUserId,
             'Goal.end_date >='     => $currentTerm['start_date'],
             'Goal.end_date <='     => $currentTerm['end_date'],
@@ -489,12 +469,11 @@ class Collaborator extends AppModel
 
     /**
      * コーチとしての未対応のゴール認定件数取得
-     * @param $teamId
      * @param $userId
      *
      * @return int
      */
-    function countUnapprovedGoal($teamId, $userId)
+    function countUnapprovedGoal($userId)
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
@@ -523,7 +502,7 @@ class Collaborator extends AppModel
                 ]
             ],
             'conditions' => [
-                'Collaborator.team_id'         => $teamId,
+                'Collaborator.team_id'         => $this->current_team_id,
                 'Collaborator.approval_status' => [
                     self::APPROVAL_STATUS_NEW,
                     self::APPROVAL_STATUS_REAPPLICATION,
