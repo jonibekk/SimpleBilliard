@@ -1,18 +1,9 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::uses('Collaborator', 'Model');
-App::uses('TeamMember', 'Model');
-
-/** @noinspection PhpUndefinedClassInspection */
 
 /**
- * Created by PhpStorm.
- * User: daikihirakata
- * Date: 9/6/16
- * Time: 16:38
- *
- * @property Goal    $Goal
-*/
+ * Class GoalApprovalsController
+ */
 class GoalApprovalsController extends ApiController
 {
     /*
