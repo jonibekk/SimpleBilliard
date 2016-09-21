@@ -21,16 +21,16 @@ class Collaborator extends AppModel
         self::TYPE_OWNER        => "",
     ];
 
-    const STATUS_UNAPPROVED = 0;
-    const STATUS_APPROVAL = 1;
-    const STATUS_HOLD = 2;
-    const STATUS_MODIFY = 3;
+    const APPROVAL_STATUS_NEW = 0;
+    const APPROVAL_STATUS_REAPPLICATION = 1;
+    const APPROVAL_STATUS_DONE = 2;
+    const APPROVAL_STATUS_WITHDRAW = 3;
 
     static public $STATUS = [
-        self::STATUS_UNAPPROVED => "",
-        self::STATUS_APPROVAL   => "",
-        self::STATUS_HOLD       => "",
-        self::STATUS_MODIFY     => "",
+        self::APPROVAL_STATUS_NEW           => "",
+        self::APPROVAL_STATUS_REAPPLICATION => "",
+        self::APPROVAL_STATUS_DONE          => "",
+        self::APPROVAL_STATUS_WITHDRAW      => "",
     ];
 
     /**
@@ -47,10 +47,10 @@ class Collaborator extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_UNAPPROVED] = __("Waiting for approval");
-        self::$STATUS[self::STATUS_APPROVAL] = __("In Evaluation");
-        self::$STATUS[self::STATUS_HOLD] = __("Out of Evaluation");
-        self::$STATUS[self::STATUS_MODIFY] = __("Waiting for modified");
+        self::$STATUS[self::APPROVAL_STATUS_NEW] = __("Waiting for approval");
+        self::$STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("In Evaluation");
+        self::$STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
+        self::$STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
     }
 
     /**
@@ -324,15 +324,17 @@ class Collaborator extends AppModel
     function getCollaboGoalDetail(
         $team_id,
         $goal_user_id,
-        $approval_flg,
+        $approvalStatus = null,
         $is_include_priority_0 = true,
         $term_type = null
     ) {
         $conditions = [
             'Collaborator.team_id'         => $team_id,
             'Collaborator.user_id'         => $goal_user_id,
-            'Collaborator.approval_status' => $approval_flg,
         ];
+        if (!empty($approvalStatus)) {
+            $conditions['Collaborator.approval_status'] = $approvalStatus;
+        }
         if ($term_type !== null) {
             $conditions['Goal.end_date >='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['start_date'];
             $conditions['Goal.end_date <='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['end_date'];
@@ -370,13 +372,18 @@ class Collaborator extends AppModel
         if (!$is_include_priority_0) {
             $options['conditions']['NOT'] = array('Collaborator.priority' => "0");
         }
-        if (is_array($approval_flg)) {
+        if (is_array($approvalStatus)) {
             unset($options['conditions']['Collaborator.approval_status']);
-            foreach ($approval_flg as $val) {
+            foreach ($approvalStatus as $val) {
                 $options['conditions']['OR'][]['Collaborator.approval_status'] = $val;
             }
         }
         $res = $this->find('all', $options);
+
+        $sql = $this->getDataSource()->getLog();
+
+        $this->log("-----Sql----");
+        $this->log($sql);
         return $res;
     }
 
