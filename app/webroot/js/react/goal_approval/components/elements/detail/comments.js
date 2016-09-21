@@ -29,7 +29,7 @@ export class Comments extends React.Component {
 
             if(display_more_view_comments_button) {
               return (
-                <a className="goals-approval-detail-view-more-comments">
+                <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments }>
                   <i className="fa fa-angle-down" aria-hidden="true"></i>
                   <span className="goals-approval-interactive-link">View all { comments.length - 1 } comments</span>
                 </a>
@@ -37,17 +37,17 @@ export class Comments extends React.Component {
             }
           })()}
 
-          {/* 最後から二番目のコメントまで */}
-          {
-            // commets_execpt_latest_comment.map((comment) => {
-            //   return <Comment comment={ comment } />;
-            // })
-          }
+          {/* 最新のコメント以外すべて */}
+          { commets_execpt_latest_comment.map((comment) => {
+            if(this.state.display_all_comments) {
+              return <Comment comment={ comment } key={ comment.comment } />;
+            }
+          })}
 
-          {/* 最後のコメントのみ */}
+          {/* 最新のコメント */}
           { (() => {
             if(latest_comment) {
-              return <Comment comment={ first_view_comment } />;
+              return <Comment comment={ latest_comment } />;
             }
           })()}
       </div>
