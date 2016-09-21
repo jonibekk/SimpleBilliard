@@ -35,4 +35,4 @@ GoalCard.propTypes = {
   goal: React.PropTypes.object,
   is_leader: React.PropTypes.bool
 }
-GoalCard.defaultProps = {goal: {}, is_leader: null};
+GoalCard.defaultProps = { goal: {} };

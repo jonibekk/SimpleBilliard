@@ -263,13 +263,13 @@ class GoalsController extends ApiController
       $res = [
           "id" => 10,
           "user_id" => 10,
-          "is_leader" => (boolean)Collaborator::TYPE_COLLABORATOR,
+          "is_leader" => (boolean)Collaborator::TYPE_OWNER,
           "approval_status" => Collaborator::STATUS_UNAPPROVED,
           "wish_approval_flg" => 1,
           "target_evaluation_flg" => 1,
           "is_mine" => false, // コーチ/コーチー判定フラグ
           "role" => "貢献する人",
-          "type" => "Collaborator",
+          "type" => "Leader",
           "user" => [
               "id" => 10,
               "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
