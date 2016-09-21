@@ -204,4 +204,28 @@ class GoalsController extends ApiController
         }
         return true;
     }
+
+    function post_set_as_target()
+    {
+        $validation = false; //mock
+        $this->log($this->request->data);
+        if ($validation === true) {
+            $this->Pnotify->outSuccess(__("Set as approval"));
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = ['approval_history' => ['comment' => 'comment validation error']];
+        return $this->_getResponseValidationFail($validationMsg);
+    }
+
+    function post_remove_from_target()
+    {
+        $validation = true; //mock
+        if ($validation === true) {
+            $this->Pnotify->outSuccess(__("Remove from approval"));
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = ['approval_history' => ['comment' => 'comment validation error']];
+        return $this->_getResponseValidationFail($validationMsg);
+    }
+
 }

@@ -1976,4 +1976,5 @@ class GoalsController extends AppController
       ];
       return $this->_ajaxGetResponse($res);
     }
+
 }

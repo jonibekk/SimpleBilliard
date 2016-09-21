@@ -1,5 +1,7 @@
-import axios from 'axios'
-import FormData from 'form-data'
+import axios from "axios";
+import FormData from "form-data";
+
+// TODO:いずれreact全体の共通処理として配置(js/react/common/**)
 
 export function getBaseUrl() {
   // テストにおけるモックのURLを定義
@@ -18,28 +20,57 @@ export function getCsrfTokenKey() {
   }
 }
 
-export function post(uri, data, success_callback, error_callback) {
+export function post(uri, data, options, success_callback, error_callback) {
+  options = options || {}
+  const base_options = {
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    dataType: 'json'
+  }
 
+  options = Object.assign(base_options, options)
+
+  /* Create request parameter */
   const csrf_token_key = getCsrfTokenKey()
   const post_data = Object.assign({
     'data[_Token][key]': csrf_token_key
   }, data)
-  const base_url = getBaseUrl()
-  const form_data = new FormData()
+  const form_data = createFormData(post_data, ['photo'])
+  const url = getBaseUrl() + uri;
 
-  for (const key in post_data) {
-    form_data.append(key, post_data[key])
+  return axios.post(url, form_data, options)
+    .then(success_callback, error_callback)
+}
+
+/**
+ * Create FormData
+ *
+ * @param data
+ * @param directAppendKeys: Even if data is array or hash, direct append data.
+ * @param formData
+ * @param baseKey
+ * @returns {*}
+ */
+export function createFormData(data, directAppendKeys = [], formData = null, baseKey = "") {
+  if (!formData) {
+    formData = new FormData()
   }
-  return axios.post(base_url + uri, form_data, {
-    timeout: 10000,
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    dataType: 'json',
-    contentType: 'application/json'
-  })
-  .then(success_callback)
-  .catch(error_callback)
+
+  for (const key in data) {
+    const formKey = baseKey ? `${baseKey}[${key}]` : key;
+
+    if (directAppendKeys.length > 0 && directAppendKeys.indexOf(formKey) != -1) {
+      formData.append(formKey, data[key])
+    } else if (Array.isArray(data[key])) {
+      formData = createFormData(data[key], directAppendKeys, formData, formKey)
+    } else if (data[key] instanceof Object) {
+      formData = createFormData(data[key], directAppendKeys, formData, formKey)
+    } else {
+      formData.append(formKey, data[key])
+    }
+  }
+  return formData
 }
 
 export function get(uri, success_callback, error_callback) {

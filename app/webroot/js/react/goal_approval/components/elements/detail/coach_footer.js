@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from "react-dom"
 import { Link } from 'react-router'
+import InvalidMessageBox from "../InvalidMessageBox";
 
 export class CoachFooter extends React.Component {
   constructor(props) {
@@ -67,6 +68,8 @@ export class CoachFooter extends React.Component {
   render() {
     const can_submit_set_as_target = this.state.clear_or_not === this.is_clear && this.state.important_or_not === this.is_important
     const can_submit_remove_from_target = this.state.clear_or_not !== null && this.state.important_or_not !== null
+    const validation_errors = this.props.validationErrors
+    const loading_image = () => <img src="/img/ajax-loader.gif" className="signup-img-loader" />;
 
     return (
       <div className="goals-approval-detail-choice">
@@ -81,10 +84,13 @@ export class CoachFooter extends React.Component {
 
               <label className="goals-approval-input-label" htmlFor="">Judge this goal to set as target of evaluations.</label>
               <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment" id="comment" cols="30" rows="2" placeholder="Add your comment (optional)"></textarea>
+              <InvalidMessageBox message={validation_errors.comment}/>
               <div className="goals-approval-detail-choice">
+                  { this.props.posting_set_as_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_set_as_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           type="submit"
                           onClick={ this.handleSubmitSetAsTarget }>Set as target</button>
+                  { this.props.posting_remove_from_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_remove_from_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           type="submit"
                           onClick={ this.handleSubmitRemoveFromTarget }>Remove from target</button>
@@ -97,6 +103,9 @@ export class CoachFooter extends React.Component {
 }
 
 CoachFooter.propTypes = {
+  validationErrors: React.PropTypes.object.isRequired,
+  posting_set_as_target: React.PropTypes.bool.isRequired,
+  posting_remove_from_target: React.PropTypes.bool.isRequired,
   handlePostSetAsTarget: React.PropTypes.func.isRequired,
   handlePostRemoveFromTarget: React.PropTypes.func.isRequired
 }

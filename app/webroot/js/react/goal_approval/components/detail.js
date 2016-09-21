@@ -11,7 +11,15 @@ export default class DetailComponent extends React.Component {
   }
 
   componentWillMount() {
+    this.props.initDetailPage()
     this.props.fetchGaolApproval(this.props.params.goal_id)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.detail.to_list_page) {
+      // browserHistory.push('/goals/approval/list')
+      document.location.href = '/goals/approval/list'
+    }
   }
 
   render() {
@@ -25,10 +33,13 @@ export default class DetailComponent extends React.Component {
               <h1 className="goals-approval-heading">Check it</h1>
               {(() => {
                 if(this.props.detail.goal_approval.is_mine) {
-                  return <CoacheeFooter />;
+                  return <CoacheeFooter validationErrors={ this.props.detail.validationErrors }/>;
                 } else {
-                  return <CoachFooter handlePostSetAsTarget={ post_data => this.props.postSetAsTarget(post_data) }
-                                      handlePostRemoveFromTarget={ post_data => this.props.postRemoveFromTarget(post_data) } />;
+                  return <CoachFooter validationErrors={ this.props.detail.validationErrors }
+                                      posting_set_as_target= { this.props.detail.posting_set_as_target }
+                                      posting_remove_from_target= { this.props.detail.posting_remove_from_target }
+                                      handlePostSetAsTarget={ input_data => this.props.postSetAsTarget(input_data) }
+                                      handlePostRemoveFromTarget={ input_data => this.props.postRemoveFromTarget(input_data) } />;
                 }
               })()}
           </div>
@@ -41,5 +52,6 @@ DetailComponent.propTypes = {
   detail: React.PropTypes.object.isRequired,
   fetchGaolApproval: React.PropTypes.func.isRequired,
   postSetAsTarget: React.PropTypes.func.isRequired,
-  postRemoveFromTarget: React.PropTypes.func.isRequired
+  postRemoveFromTarget: React.PropTypes.func.isRequired,
+  initDetailPage: React.PropTypes.func.isRequired
 }
