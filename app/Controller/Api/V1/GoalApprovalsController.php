@@ -142,16 +142,16 @@ class GoalApprovalsController extends ApiController
                 $teamId, [$userId]);
 
         } elseif ($userType === self::USER_TYPE_COACH_AND_MEMBER) {
-            $member_goal_info = $this->Goal->Collaborator->getCollaboGoalDetail(
+            $member_goal_info = $this->Goal->Collaborator->findActive(
                 $teamId, $memberIds);
 
-            $my_goal_info = $this->Goal->Collaborator->getCollaboGoalDetail(
-                $teamId, [$userId], true, EvaluateTerm::TYPE_CURRENT);
+            $my_goal_info = $this->Goal->Collaborator->findActive(
+                $teamId, [$userId]);
 
             $res = array_merge($member_goal_info, $my_goal_info);
 
         } elseif ($userType === self::USER_TYPE_ONLY_MEMBER) {
-            $res = $this->Goal->Collaborator->getCollaboGoalDetail(
+            $res = $this->Goal->Collaborator->findActive(
                 $teamId, $memberIds);
         }
 
