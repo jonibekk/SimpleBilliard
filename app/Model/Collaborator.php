@@ -329,8 +329,8 @@ class Collaborator extends AppModel
         $term_type = null
     ) {
         $conditions = [
-            'Collaborator.team_id'         => $team_id,
-            'Collaborator.user_id'         => $goal_user_id,
+            'Collaborator.team_id' => $team_id,
+            'Collaborator.user_id' => $goal_user_id,
         ];
         if (!empty($approvalStatus)) {
             $conditions['Collaborator.approval_status'] = $approvalStatus;
@@ -379,11 +379,54 @@ class Collaborator extends AppModel
             }
         }
         $res = $this->find('all', $options);
+        return $res;
+    }
 
-        $sql = $this->getDataSource()->getLog();
+    /**
+     * ゴール認定一覧に表示するリスト取得
+     *
+     * @param $teamId
+     * @param $goalUserId
+     *
+     * @return array|null
+     */
+    function findActive($teamId, $goalUserId)
+    {
+        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $conditions = [
+            'Collaborator.team_id' => $teamId,
+            'Collaborator.user_id' => $goalUserId,
+            'Goal.end_date >='     => $currentTerm['start_date'],
+            'Goal.end_date <='     => $currentTerm['end_date'],
+        ];
 
-        $this->log("-----Sql----");
-        $this->log($sql);
+        $options = [
+            'fields'     => [
+                'id',
+                'type',
+                'role',
+                'priority',
+                'approval_status',
+                'is_wish_approval',
+                'is_target_evaluation'
+            ],
+            'conditions' => $conditions,
+            'contain'    => [
+                'Goal' => [
+                    'fields' => [
+                        'id',
+                        'name',
+                        'photo_file_name',
+                    ],
+                ],
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+            'type'       => 'INNER',
+            'order'      => ['Collaborator.created DESC'],
+        ];
+        $res = $this->find('all', $options);
         return $res;
     }
 
@@ -442,6 +485,54 @@ class Collaborator extends AppModel
             $res[] = $val;
         }
         return count($res);
+    }
+
+    /**
+     * コーチとしての未対応のゴール認定件数取得
+     * @param $teamId
+     * @param $userId
+     *
+     * @return int
+     */
+    function countUnapprovedGoal($teamId, $userId)
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
+        $options = [
+            'fields'     => ['Collaborator.id'],
+            'joins'      => [
+                [
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Goal.id = Collaborator.goal_id',
+                        'Goal.end_date >=' => $currentTerm['start_date'],
+                        'Goal.end_date <=' => $currentTerm['end_date'],
+                        'Goal.completed'   => null,
+                    ]
+                ],
+                [
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'TeamMember.user_id = Collaborator.user_id',
+                        'TeamMember.coach_user_id' => $userId,
+                    ]
+                ]
+            ],
+            'conditions' => [
+                'Collaborator.team_id'         => $teamId,
+                'Collaborator.approval_status' => [
+                    self::APPROVAL_STATUS_NEW,
+                    self::APPROVAL_STATUS_REAPPLICATION,
+                ],
+            ],
+        ];
+
+        $count = $this->find('count', $options);
+        return $count;
     }
 
     function getLeaderUid($goal_id)

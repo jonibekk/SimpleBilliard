@@ -34,13 +34,11 @@ class GoalApprovalsController extends ApiController
         parent::beforeFilter();
     }
 
-
     /**
      * 認定対象のゴールリスト取得
      */
     function get_list()
     {
-        $this->log(__METHOD__.' start');
         // チームの評価設定が無効であれば404
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             throw new NotFoundException();
@@ -49,73 +47,77 @@ class GoalApprovalsController extends ApiController
         $userId = $this->Auth->user('id');
         $teamId = $this->Session->read('current_team_id');
 
-//        /* coachとしてのゴールリスト取得 */
-//        // コーチとして管理している評価対象のメンバーID取得
-//        $memberIds = $this->Team->TeamMember->getMyMembersList($userId);
-//
-//
-//        /* coacheeとしてのゴールリスト取得 */
-//        $coachId = $this->Team->TeamMember->getCoachUserIdByMemberUserId($userId);
-//        $this->done_cnt = $this->Goal->Collaborator->countCollaboGoal(
-//            $teamId, $userId, $this->goal_user_ids,
-//            [$this->goal_status['approval'], $this->goal_status['hold']]
-//        );
-//
-//        $userType = $this->_getUserType($coachId, $memberIds);
-//        /* ゴールリスト結合&並び替え */
-
-
         // コーチとして管理している評価対象のメンバーID取得
         $memberIds = $this->Team->TeamMember->getMyMembersList($userId);
         // 自分のコーチのユーザーIDを取得
         $coachId = $this->Team->TeamMember->getCoachUserIdByMemberUserId($userId);
         $userType = $this->_getUserType($coachId, $memberIds);
-$this->log(compact('memberIds','coachId','userType'));
 
-        $myEvaluationFlg = $this->Team->TeamMember->getEvaluationEnableFlg($userId, $teamId);
-        $goalUserIds = $this->_getCollaboratorUserId($userId, $userType, $memberIds);
+        // コーチとしてのゴール認定未処理件数取得
+        $applicationCount = $this->Goal->Collaborator->countUnapprovedGoal($teamId, $userId);
 
-        $todoCnt = $this->Goal->Collaborator->countCollaboGoal(
-            $teamId, $userId, $goalUserIds,
-            [Collaborator::APPROVAL_STATUS_NEW, Collaborator::APPROVAL_STATUS_REAPPLICATION]
-        );
-$this->log(compact('myEvaluationFlg','goalUserIds','todoCnt'));
-
-
-        $goals = $this->_getGoalInfo(
+        // レスポンスの基となるゴール認定リスト取得
+        $collaborators = $this->_findCollabrators(
             $userId,
             $teamId,
             $userType,
             $memberIds
         );
-$this->log(compact('goals'));
 
-        foreach ($goals as $key => $val) {
-            $goals[$key]['my_goal'] = false;
-            $goals[$key]['is_present_term'] = $this->Goal->isPresentTermGoal($val['Goal']['id']);
+        // レスポンス用に整形
+        $collaborators = $this->_processCollaborators($userId, $teamId, $collaborators);
 
-            if ($userId === $val['User']['id']) {
-                $goals[$key]['my_goal'] = true;
-                if ($myEvaluationFlg === false) {
-                    unset($goals[$key]);
-                }
-            }
-
-            $approvalMsgList = [];
-            if ($val['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_REAPPLICATION) {
-                $goals[$key]['status'] = $approvalMsgList[self::APPROVAL_MEMBER_GOAL_MSG];
-
-            } else {
-                if ($val['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_DONE) {
-                    $goals[$key]['status'] = $approvalMsgList[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
-                }
-            }
-        }
-
-        $res = $goals;
+        $res = [
+            'application_count' => $applicationCount,
+            'collaborators' => $collaborators
+        ];
         return $this->_getResponseSuccess($res);
     }
 
+    /**
+     * ゴール認定リストをレスポンス用に整形
+     * @param $userId
+     * @param $teamId
+     * @param $baseData
+     *
+     * @return array
+     */
+    public function _processCollaborators($userId, $teamId, $baseData)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $this->Upload = new UploadHelper(new View());
+
+        // 自分が評価対象か
+        $myEvaluationFlg = $this->Team->TeamMember->getEvaluationEnableFlg($userId, $teamId);
+
+        $res = [];
+        foreach ($baseData as $k => $v) {
+            $collaborator = $v['Collaborator'];
+            $collaborator['is_mine'] = false;
+            if ($userId === $v['User']['id']) {
+                $collaborator['is_mine'] = true;
+                if ($myEvaluationFlg === false) {
+                    continue;
+                }
+            }
+            /* コーチー情報設定 */
+            $user = $v['User'];
+            $user['original_img_url'] = $this->Upload->uploadUrl($v, 'User.photo');
+            $user['small_img_url'] = $this->Upload->uploadUrl($v, 'User.photo', ['style' => 'small']);
+            $user['large_img_url'] = $this->Upload->uploadUrl($v, 'User.photo', ['style' => 'large']);
+            $collaborator['user'] = $user;
+
+            /* ゴール情報設定 */
+            $goal = $v['Goal'];
+            $goal['original_img_url'] = $this->Upload->uploadUrl($v, 'Goal.photo');
+            $goal['small_img_url'] = $this->Upload->uploadUrl($v, 'Goal.photo', ['style' => 'small']);
+            $goal['large_img_url'] = $this->Upload->uploadUrl($v, 'Goal.photo', ['style' => 'large']);
+
+            $collaborator['goal'] = $goal;
+            $res[] = $collaborator;
+        }
+        return $res;
+    }
     /*
      * リストに表示するゴールのUserIDを取得
      */
@@ -132,31 +134,37 @@ $this->log(compact('goals'));
         return $goalUserIds;
     }
 
-    /*
-     * ゴールリスト取得
+    /**
+     * ゴール認定リスト取得
+     * @param $userId
+     * @param $teamId
+     * @param $userType
+     * @param $memberIds
+     *
+     * @return array|null
      */
-    public function _getGoalInfo($userId, $teamId, $userType, $memberIds)
+    public function _findCollabrators($userId, $teamId, $userType, $memberIds)
     {
-        $goals = [];
+        $res = [];
         if ($userType === self::USER_TYPE_ONLY_COACH) {
-            $goals = $this->Goal->Collaborator->getCollaboGoalDetail(
-                $teamId, [$userId], null, true, EvaluateTerm::TYPE_CURRENT);
+            $res = $this->Goal->Collaborator->findActive(
+                $teamId, [$userId]);
 
         } elseif ($userType === self::USER_TYPE_COACH_AND_MEMBER) {
             $member_goal_info = $this->Goal->Collaborator->getCollaboGoalDetail(
-                $teamId, $memberIds, false, EvaluateTerm::TYPE_CURRENT);
+                $teamId, $memberIds);
 
             $my_goal_info = $this->Goal->Collaborator->getCollaboGoalDetail(
-                $teamId, [$userId], null, true, EvaluateTerm::TYPE_CURRENT);
+                $teamId, [$userId], true, EvaluateTerm::TYPE_CURRENT);
 
-            $goals = array_merge($member_goal_info, $my_goal_info);
+            $res = array_merge($member_goal_info, $my_goal_info);
 
         } elseif ($userType === self::USER_TYPE_ONLY_MEMBER) {
-            $goals = $this->Goal->Collaborator->getCollaboGoalDetail(
-                $teamId, $memberIds, null, false, EvaluateTerm::TYPE_CURRENT);
+            $res = $this->Goal->Collaborator->getCollaboGoalDetail(
+                $teamId, $memberIds);
         }
 
-        return $goals;
+        return $res;
     }
 
     /*
