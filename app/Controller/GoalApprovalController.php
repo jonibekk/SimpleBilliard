@@ -172,42 +172,6 @@ class GoalApprovalController extends AppController
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             throw new NotFoundException();
         }
-
-//
-//        if ($this->request->is('post')) {
-//            $this->ApprovalHistory->begin();
-//            if ($this->_saveApprovalData()) {
-//                $this->ApprovalHistory->commit();
-//            } else {
-//                $this->ApprovalHistory->rollback();
-//            }
-//            return $this->redirect($this->referer());
-//        }
-//
-//        $goal_info = $this->_getGoalInfo([$this->goal_status['unapproved'], $this->goal_status['modify']]);
-//
-//        foreach ($goal_info as $key => $val) {
-//            $goal_info[$key]['my_goal'] = false;
-//
-//            if ($this->user_id === $val['User']['id']) {
-//                $goal_info[$key]['my_goal'] = true;
-//                $goal_info[$key]['status'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
-//                if ($this->my_evaluation_flg === false) {
-//                    unset($goal_info[$key]);
-//                }
-//            }
-//
-//            if ($val['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_WITHDRAW) {
-//                $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
-//            }
-//
-//        }
-//
-//        $done_cnt = $this->done_cnt;
-//        $kr = new KeyResult();
-//        $value_unit_list = $kr::$UNIT;
-//
-//        $this->set(compact('value_unit_list', 'goal_info', 'done_cnt'));
     }
 
     /*
