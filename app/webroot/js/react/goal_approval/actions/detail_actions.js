@@ -18,7 +18,7 @@ export function postSetAsTarget(input_data) {
     return post(`/api/v1/goals/set_as_target`, post_data, null,
       () => {
         /* eslint-disable no-console */
-        console.log('validation success')
+        console.log('validate success')
         /* eslint-enable no-console */
         dispatch(finishedPostingSetAsTarget())
         dispatch(toListPage())
@@ -41,7 +41,7 @@ export function postRemoveFromTarget(input_data) {
     return post(`/api/v1/goals/remove_from_target`, input_data, null,
       () => {
         /* eslint-disable no-console */
-        console.log('validation success')
+        console.log('validate success')
         /* eslint-enable no-console */
         dispatch(finishedPostingRemoveFromTarget())
         dispatch(toListPage())
