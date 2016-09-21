@@ -89,6 +89,16 @@ gulp.task("react_goal_create:uglify", () => {
     .pipe(duration('react_goal_create:uglify'))
 })
 
+gulp.task("react_goal_edit:uglify", () => {
+  return gulp.src(config.dest + "/react_goal_edit/" + config.react_goal_edit.output.file_name + '.js')
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.react_goal_edit.output.path))
+    .pipe(duration('react_goal_edit:uglify'))
+})
+
 gulp.task("react_goal_approval:uglify", () => {
   return gulp.src(config.dest + "/react_goal_approval/" + config.react_goal_approval.output.file_name + '.js')
     .pipe(uglify())

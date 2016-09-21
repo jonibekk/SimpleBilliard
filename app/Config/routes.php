@@ -96,6 +96,10 @@ Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' 
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
+Router::connect('/goals/:id/edit',
+    ['controller' => 'goals', 'action' => 'edit', '[method' => 'GET'],
+    ['id' => '[0-9]+', 'pass' => ['id']]
+);
 
 /**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している

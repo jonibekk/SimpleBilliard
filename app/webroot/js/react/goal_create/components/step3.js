@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
-import InvalidMessageBox from "./elements/InvalidMessageBox";
+import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 
 
 export default class Step3Component extends React.Component {

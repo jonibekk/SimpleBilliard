@@ -49,6 +49,15 @@ gulp.task('react_goal_create:eslint', () => {
     .pipe(duration('react_goal_create:eslint'))
 })
 
+gulp.task('react_goal_edit:eslint', () => {
+  return gulp.src(config.react_goal_edit.src)
+    .pipe(plumber())
+    .pipe(eslint({ useEslintrc: true }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+    .pipe(duration('react_goal_edit:eslint'))
+})
+
 gulp.task('react_goal_approval:eslint', () => {
   return gulp.src(config.react_goal_approval.src)
     .pipe(plumber())

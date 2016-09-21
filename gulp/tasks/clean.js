@@ -78,6 +78,19 @@ gulp.task('react_goal_create:clean_dir', ['react_goal_create:clean_files'], () =
     .on('end', function(){ gutil.log('----------------- react_goal_create task finished --------------------------'); });
 })
 
+gulp.task('react_goal_edit:clean', ['react_goal_edit:clean_files', 'react_goal_edit:clean_dir']);
+
+gulp.task('react_goal_edit:clean_files', () => {
+  return gulp.src([config.dest + '/react_goal_edit/**/*.js'], { read: false })
+    .pipe(duration('react_goal_edit:clean_files'))
+})
+
+gulp.task('react_goal_edit:clean_dir', ['react_goal_edit:clean_files'], () => {
+  return gulp.src([config.dest + '/react_goal_edit'], { read: false })
+    .pipe(duration('react_goal_edit:clean_dir'))
+    .on('end', function(){ gutil.log('----------------- react_goal_edit task finished --------------------------'); });
+})
+
 gulp.task('react_goal_approval:clean', ['react_goal_approval:clean_files', 'react_goal_approval:clean_dir']);
 
 gulp.task('react_goal_approval:clean_files', () => {

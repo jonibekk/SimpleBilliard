@@ -1,7 +1,7 @@
 import React from "react";
 import {browserHistory} from "react-router";
 import * as Page from "../constants/Page";
-import InvalidMessageBox from "./elements/InvalidMessageBox";
+import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import Vision from "./elements/Vision";
 
 export default class Step1Component extends React.Component {

@@ -83,6 +83,21 @@ class ApiController extends BaseController
     }
 
     /**
+     * アクセス権限無しのレスポンスを返す
+     *
+     * @param string     $message
+     *
+     * @return CakeResponse
+     */
+    protected function _getResponseForbidden($message = null)
+    {
+        if (empty($message)) {
+            $message = __("You don't have permission.");
+        }
+        return $this->_getResponse(403, null, null, $message);
+    }
+
+    /**
      * 通常のバリデーション結果をレスポンスとして返す
      * - バリデーション成功の場合はStatus Code:200
      * - バリデーション失敗の場合はStatus Code:400
