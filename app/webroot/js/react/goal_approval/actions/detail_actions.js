@@ -4,7 +4,7 @@ import axios from "axios"
 
 export function fetchGoalApproval(goal_id) {
   return dispatch => {
-    return axios.get(`/api/v1/goals/${goal_id}/goal_approval`)
+    return axios.get(`/api/v1/goals/${goal_id}/approval_init_data`)
       .then((response) => {
         /* eslint-disable no-console */
         console.log('fetch success')
