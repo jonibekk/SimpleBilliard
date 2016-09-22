@@ -3,7 +3,7 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   goal_approvals: [],
   incomplete_count: null,
-  fetching_approvals: false,
+  fetching_goal_approvals: false,
   next_getting_api: null,
   done_loading_all_data: false
 }
@@ -13,10 +13,6 @@ export default function list(state = initialState, action) {
     case types.INIT_GOAL_APPROVALS:
       return Object.assign({}, state, {
         goal_approvals: action.goal_approvals
-      })
-    case types.ADD_GOAL_APPROVAL:
-      return Object.assign({}, state, {
-        goal_approvals: [...state.goal_approvals, action.goal_approval]
       })
     case types.ADD_GOAL_APPROVALS:
       return Object.assign({}, state, {

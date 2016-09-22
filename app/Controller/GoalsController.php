@@ -74,13 +74,10 @@ class GoalsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        $types = ['list', 'detail'];
-
-        // TODO: 将来的には `return $this->render("approval");`で統一する
-        //       マークアップとSPAをパラで開発するための仮URL
-        if (in_array($type, $types)) {
-            if ($gucchi) {
-                return $this->render("approval_{$type}");
+        if (in_array($type, ['list', 'detail'])) {
+            // TODO: マークアップ用の仮View。リリース前にこのブロックを削除する
+            if($gucchi === 'gucchi') {
+                return $this->render("approval_detail");
             }
             return $this->render("approval");
         }

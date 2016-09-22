@@ -218,4 +218,135 @@ class GoalsController extends ApiController
         }
         return true;
     }
+
+    /**
+     * ゴール認定のモック
+     * TODO: ゴール認定API実装の際に書き直す
+     *
+     * @return true|CakeResponse
+     */
+    function post_set_as_target()
+    {
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $validation = true;
+        if ($validation === true) {
+            $this->Pnotify->outSuccess(__("Set as approval"));
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = ['comment' => 'comment validation error'];
+        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+    }
+
+    /**
+     * ゴール非認定のPOSTモック
+     * TODO: ゴール認定API実装の際に書き直す
+     *
+     * @return true|CakeResponse
+     */
+    function post_remove_from_target()
+    {
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $validation = true;
+        if ($validation === true) {
+            $this->Pnotify->outSuccess(__("Remove from approval"));
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = ['comment' => 'comment validation error message'];
+        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+    }
+
+    /**
+     * 認定詳細ページのINITIAL GETモック
+     * TODO: ゴール認定API実装の際に書き直す
+     *
+     * @return true|CakeResponse
+     */
+    public function get_goal_approval($goal_id)
+    {
+      $res = [
+          "id" => 10,
+          "user_id" => 10,
+          "is_leader" => (boolean)Collaborator::TYPE_OWNER,
+          "approval_status" => Collaborator::STATUS_UNAPPROVED,
+          "wish_approval_flg" => 1,
+          "target_evaluation_flg" => 1,
+          "is_mine" => false, // コーチ/コーチー判定フラグ
+          "role" => "貢献する人",
+          "type" => "Leader",
+          "user" => [
+              "id" => 10,
+              "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "display_username" => 'Test Hanako'
+          ],
+          "goal" => [
+              "id" => 10,
+              "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+              "name" => 'Goalousを世界一に！',
+              "category" => [
+                "name" => "成長"
+              ],
+              "leader" => [
+                  "user" => [
+                      "display_username" => "leader name"
+                  ]
+              ],
+              "key_result" => [
+                  "id" => 10,
+                  "name" => "key result name",
+                  "value" => "key result value",
+                  "desc" => "key result desc"
+              ]
+          ],
+          "approval_histories" => [
+              [
+                  "id" => 10,
+                  "user_id" => 10,
+                  "is_clear_or_not" => 1,
+                  "is_important_or_not" => 0,
+                  "comment" => str_repeat("いいですね！", 10),
+                  "user" => [
+                      "id" => 10,
+                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "display_username" => 'Test Hanako'
+                  ]
+              ],
+              [
+                  "id" => 11,
+                  "user_id" => 10,
+                  "is_clear_or_not" => 1,
+                  "is_important_or_not" => 0,
+                  "comment" => str_repeat("ありがとう！", 10),
+                  "user" => [
+                      "id" => 10,
+                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "display_username" => 'Test Hanako'
+                  ]
+              ],
+              [
+                  "id" => 12,
+                  "user_id" => 10,
+                  "is_clear_or_not" => 1,
+                  "is_important_or_not" => 0,
+                  "comment" => str_repeat("よろしく！", 10),
+                  "user" => [
+                      "id" => 10,
+                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
+                      "display_username" => 'Test Hanako'
+                  ]
+              ]
+          ]
+      ];
+      return $this->_getResponseSuccess($res);
+    }
+
 }

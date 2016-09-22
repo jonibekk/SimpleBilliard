@@ -1,19 +1,15 @@
-import * as actions from '../../actions/goal_approval_actions'
+import * as actions from '../../actions/list_actions'
 import * as types from '../../constants/ActionTypes'
 import nock from 'nock'
 import expect from 'expect'
 
-describe('actions::goal_approval', () => {
+describe('actions::list', () => {
   afterEach(() => {
     nock.cleanAll()
   })
 
   it('init goal approvals', () => {
     expect(actions.initGoalApprovals([{id: 1, name: 'test1 goal'}, {id: 2, name: 'test2 goal'}])).toEqual({ type: types.INIT_GOAL_APPROVALS, goal_approvals: [{id: 1, name: 'test1 goal'}, {id: 2, name: 'test2 goal'}] })
-  })
-
-  it('add goal approval', () => {
-    expect(actions.addGoalApproval({id: 1, name: 'test1 goal'})).toEqual({ type: types.ADD_GOAL_APPROVAL, goal_approval: {id: 1, name: 'test1 goal'}})
   })
 
   it('add goal approvals', () => {

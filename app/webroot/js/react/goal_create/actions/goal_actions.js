@@ -136,4 +136,3 @@ function getSuggestions(value, suggestions) {
   const regex = new RegExp('^' + value, 'i');
   return suggestions.filter((suggestion) => regex.test(suggestion.name));
 }
-

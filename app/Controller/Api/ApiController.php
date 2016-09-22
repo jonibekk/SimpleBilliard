@@ -23,7 +23,7 @@ class ApiController extends BaseController
             'csrfUseOnce'  => false,
             'csrfExpires'  => '+24 hour',
             'validatePost' => false,
-        ],
+        ]
     ];
     private $merge_helpers = [];
     private $merge_uses = [];

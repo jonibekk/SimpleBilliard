@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ListComponent from '../components/list'
-import * as actions from '../actions/goal_approval_actions'
+import * as actions from '../actions/list_actions'
 
 function mapStateToProps(state) {
   return { list: state.list }

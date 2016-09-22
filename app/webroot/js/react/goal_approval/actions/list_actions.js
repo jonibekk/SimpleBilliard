@@ -1,5 +1,5 @@
 import * as types from '../constants/ActionTypes'
-import { get } from './common_actions'
+import axios from "axios"
 
 export function fetchGoalApprovals(is_initialize = false) {
   return (dispatch, getState) => {
@@ -8,13 +8,21 @@ export function fetchGoalApprovals(is_initialize = false) {
     const request_api = next_getting_api ? next_getting_api : default_getting_api
 
     dispatch(fetchingGoalApprovals())
-    return get(request_api, response => {
+    return axios.get(request_api, {
+      timeout: 10000,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      dataType: 'json'
+    })
+    .then((response) => {
       dispatch(finishedFetchingGoalApprovals())
       // TODO: 仕様ではレスポンスデータに次のページングAPIに含まれていることになっているため、サーバサイドでAPI実装後コメントアウトを外す
       // dispatch(setNextPagingApi(response.paging.next))
-      dispatch(setNextPagingApi('/goals/ajax_get_next_goal_approvals'))
       if(is_initialize) {
         dispatch(initGoalApprovals(response.data))
+        dispatch(setNextPagingApi('/goals/ajax_get_next_goal_approvals'))
+        console.log('fetch init')
       } else {
         dispatch(addGoalApprovals(response.data))
       }
@@ -22,10 +30,11 @@ export function fetchGoalApprovals(is_initialize = false) {
       if(response.data.length === 0 || getState().list.goal_approvals.length > 9) {
         dispatch(doneLoadingAllData())
       }
-      // dispatch(setLastLoadedGoalId(goal_id = response.data.pop().id))
-    }, () => {
+    })
+    .catch(() => {
       dispatch(finishedFetchingGoalApprovals())
     })
+
   }
 }
 
@@ -35,10 +44,6 @@ export function initGoalApprovals(goal_approvals) {
 
 export function addGoalApprovals(goal_approvals) {
   return { type: types.ADD_GOAL_APPROVALS, goal_approvals }
-}
-
-export function addGoalApproval(goal_approval) {
-  return { type: types.ADD_GOAL_APPROVAL, goal_approval }
 }
 
 export function fetchingGoalApprovals() {
