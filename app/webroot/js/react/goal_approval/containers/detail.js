@@ -8,9 +8,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchGaolApproval: goal_id => dispatch(actions.fetchGaolApproval(goal_id)),
-    postSetAsTarget: input_data => dispatch(actions.postSetAsTarget(input_data)),
-    postRemoveFromTarget: input_data => dispatch(actions.postRemoveFromTarget(input_data)),
+    fetchGoalApproval: (goal_id) => dispatch(actions.fetchGoalApproval(goal_id)),
+    postSetAsTarget: (input_data) => dispatch(actions.postSetAsTarget(input_data)),
+    postRemoveFromTarget: (input_data) => dispatch(actions.postRemoveFromTarget(input_data)),
     initDetailPage: () => dispatch(actions.initDetailPage())
   }
 }

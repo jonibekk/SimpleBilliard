@@ -12,7 +12,7 @@ export default class DetailComponent extends React.Component {
 
   componentWillMount() {
     this.props.initDetailPage()
-    this.props.fetchGaolApproval(this.props.params.goal_id)
+    this.props.fetchGoalApproval(this.props.params.goal_id)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -24,6 +24,17 @@ export default class DetailComponent extends React.Component {
 
   render() {
     const detail = this.props.detail
+    const coachee_footer = (() => {
+      return <CoacheeFooter validationErrors={ detail.validationErrors }
+                            is_leader={ detail.goal_approval.is_leader } />;
+    })()
+    const coach_footer = (() => {
+      return <CoachFooter validationErrors={ detail.validationErrors }
+                          posting_set_as_target= { detail.posting_set_as_target }
+                          posting_remove_from_target= { detail.posting_remove_from_target }
+                          handlePostSetAsTarget={ input_data => this.props.postSetAsTarget(input_data) }
+                          handlePostRemoveFromTarget={ input_data => this.props.postRemoveFromTarget(input_data) } />;
+    })()
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
@@ -33,19 +44,9 @@ export default class DetailComponent extends React.Component {
               <GoalCard goal={ detail.goal_approval.goal }
                         is_leader={ detail.goal_approval.is_leader } />
               <Comments collaborator={ detail.goal_approval } />
+              {/* footer */}
               <h1 className="goals-approval-heading">Check it</h1>
-              {(() => {
-                if(detail.goal_approval.is_mine) {
-                  return <CoacheeFooter validationErrors={ detail.validationErrors }
-                                        is_leader={ detail.goal_approval.is_leader } />;
-                } else {
-                  return <CoachFooter validationErrors={ detail.validationErrors }
-                                      posting_set_as_target= { detail.posting_set_as_target }
-                                      posting_remove_from_target= { detail.posting_remove_from_target }
-                                      handlePostSetAsTarget={ input_data => this.props.postSetAsTarget(input_data) }
-                                      handlePostRemoveFromTarget={ input_data => this.props.postRemoveFromTarget(input_data) } />;
-                }
-              })()}
+              { detail.goal_approval.is_mine ? coachee_footer : coach_footer }
           </div>
       </section>
     )
@@ -54,7 +55,7 @@ export default class DetailComponent extends React.Component {
 
 DetailComponent.propTypes = {
   detail: React.PropTypes.object.isRequired,
-  fetchGaolApproval: React.PropTypes.func.isRequired,
+  fetchGoalApproval: React.PropTypes.func.isRequired,
   postSetAsTarget: React.PropTypes.func.isRequired,
   postRemoveFromTarget: React.PropTypes.func.isRequired,
   initDetailPage: React.PropTypes.func.isRequired

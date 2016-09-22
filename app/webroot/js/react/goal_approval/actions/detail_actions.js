@@ -2,7 +2,7 @@ import * as types from '../constants/ActionTypes'
 import { post } from "../../util/api"
 import axios from "axios"
 
-export function fetchGaolApproval(goal_id) {
+export function fetchGoalApproval(goal_id) {
   return dispatch => {
     return axios.get(`/api/v1/goals/${goal_id}/goal_approval`)
       .then((response) => {

@@ -19,9 +19,10 @@ export function fetchGoalApprovals(is_initialize = false) {
       dispatch(finishedFetchingGoalApprovals())
       // TODO: 仕様ではレスポンスデータに次のページングAPIに含まれていることになっているため、サーバサイドでAPI実装後コメントアウトを外す
       // dispatch(setNextPagingApi(response.paging.next))
-      dispatch(setNextPagingApi('/goals/ajax_get_next_goal_approvals'))
       if(is_initialize) {
         dispatch(initGoalApprovals(response.data))
+        dispatch(setNextPagingApi('/goals/ajax_get_next_goal_approvals'))
+        console.log('fetch init')
       } else {
         dispatch(addGoalApprovals(response.data))
       }
