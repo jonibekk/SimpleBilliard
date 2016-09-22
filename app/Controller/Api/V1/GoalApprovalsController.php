@@ -1,6 +1,6 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-
+App::uses('GoalApprovalService', 'Service');
 /**
  * Class GoalApprovalsController
  */
@@ -13,7 +13,6 @@ class GoalApprovalsController extends ApiController
     {
         parent::beforeFilter();
     }
-
     /**
      * 認定対象のゴールリスト取得
      */
@@ -37,7 +36,8 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチとしてのゴール認定未処理件数取得
-        $applicationCount = $this->Goal->Collaborator->countUnapprovedGoal($userId);
+        $GoalApprovalService = new GoalApprovalService();
+        $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
 
         // レスポンスの基となるゴール認定リスト取得
         $collaborators = $this->_findCollabrators(

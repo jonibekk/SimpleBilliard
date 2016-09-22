@@ -118,6 +118,11 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
     ]);
 }
 
+// サービス層
+App::build([
+    'Service' => ['%s' . 'Service' . DS]
+]);
+
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
 CakePlugin::load('UrlCache');
@@ -211,6 +216,7 @@ define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
 define('CACHE_KEY_LABEL', 'label');
+define('CACHE_UNAPPROVED_GOAL_COUNT', 'unapproved_goal_count');
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');
 define('REFERER_STATUS_LOGIN', '?st=in');
