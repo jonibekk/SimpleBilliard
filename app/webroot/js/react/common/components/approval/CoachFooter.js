@@ -1,29 +1,17 @@
 import React from 'react'
 import ReactDOM from "react-dom"
 import { Link } from 'react-router'
+import * as TopKeyResult from '../../constants/TopKeyResult'
 import InvalidMessageBox from "../InvalidMessageBox";
 
 export class CoachFooter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.is_not_clear = 0
-    this.is_clear = 1
-    this.is_not_important = 0
-    this.is_important = 1
-
     this.state = {
       clear_or_not: null,
       important_or_not: null
     }
-
-    this.handleClickClear = this.handleClickClear.bind(this)
-    this.handleClickImportant = this.handleClickImportant.bind(this)
-    this.handleClickNotClear = this.handleClickNotClear.bind(this)
-    this.handleClickNotImportant = this.handleClickNotImportant.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleSubmitSetAsTarget = this.handleSubmitSetAsTarget.bind(this)
-    this.handleSubmitRemoveFromTarget = this.handleSubmitRemoveFromTarget.bind(this)
   }
 
   getInputDomData() {
@@ -33,19 +21,19 @@ export class CoachFooter extends React.Component {
   }
 
   handleClickClear() {
-    this.setState({clear_or_not: this.is_clear})
+    this.setState({ clear_or_not: TopKeyResult.IS_CLEAR })
   }
 
   handleClickNotClear() {
-    this.setState({clear_or_not: this.is_not_clear})
+    this.setState({ clear_or_not: TopKeyResult.IS_NOT_CLEAR })
   }
 
   handleClickImportant() {
-    this.setState({important_or_not: this.is_important})
+    this.setState({ important_or_not: TopKeyResult.IS_IMPORTANT })
   }
 
   handleClickNotImportant() {
-    this.setState({important_or_not: this.is_not_important})
+    this.setState({ important_or_not: TopKeyResult.IS_NOT_IMPORTANT })
   }
 
   handleSubmit(e) {
@@ -66,21 +54,21 @@ export class CoachFooter extends React.Component {
   }
 
   render() {
-    const can_submit_set_as_target = this.state.clear_or_not === this.is_clear && this.state.important_or_not === this.is_important
+    const can_submit_set_as_target = this.state.clear_or_not === TopKeyResult.IS_CLEAR && this.state.important_or_not === TopKeyResult.IS_IMPORTANT
     const can_submit_remove_from_target = this.state.clear_or_not !== null && this.state.important_or_not !== null
     const validation_errors = this.props.validationErrors
     const loading_image = () => <img src="/img/ajax-loader.gif" className="signup-img-loader" />;
 
     return (
       <div className="goals-approval-detail-choice">
-          <form onSubmit={ this.handleSubmit }>
+          <form onSubmit={ this.handleSubmit.bind(this) }>
               <label className="goals-approval-input-label" htmlFor="">Do you think this tKR is clear?</label>
-              <a className={`btn goals-approval-btn-choice${this.state.clear_or_not === this.is_clear ? 'd' : ''}`} htmlFor="" onClick={ this.handleClickClear }>Clear</a>
-              <a className={`btn goals-approval-btn-choice${this.state.clear_or_not === this.is_not_clear ? 'd' : ''}`} htmlFor="" onClick={ this.handleClickNotClear }>Not Clear</a>
+              <a className={`btn ${this.state.clear_or_not === TopKeyResult.IS_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickClear.bind(this) }>Clear</a>
+              <a className={`btn ${this.state.clear_or_not === TopKeyResult.IS_NOT_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotClear.bind(this) }>Not Clear</a>
 
               <label className="goals-approval-input-label" htmlFor="">Do you think that tKR is the most important to achieve the goal?</label>
-              <a className={`btn goals-approval-btn-choice${this.state.important_or_not === this.is_important ? 'd' : ''}`} htmlFor="" onClick={ this.handleClickImportant }>Yes</a>
-              <a className={`btn goals-approval-btn-choice${this.state.important_or_not === this.is_not_important ? 'd' : ''}`} htmlFor="" onClick={ this.handleClickNotImportant }>No</a>
+              <a className={`btn ${this.state.important_or_not === TopKeyResult.IS_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickImportant.bind(this) }>Yes</a>
+              <a className={`btn ${this.state.important_or_not === TopKeyResult.IS_NOT_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotImportant.bind(this) }>No</a>
 
               <label className="goals-approval-input-label" htmlFor="">Judge this goal to set as target of evaluations.</label>
               <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment" id="comment" cols="30" rows="2" placeholder="Add your comment (optional)"></textarea>
@@ -89,11 +77,11 @@ export class CoachFooter extends React.Component {
                   { this.props.posting_set_as_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_set_as_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           type="submit"
-                          onClick={ this.handleSubmitSetAsTarget }>Set as target</button>
+                          onClick={ this.handleSubmitSetAsTarget.bind(this) }>Set as target</button>
                   { this.props.posting_remove_from_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_remove_from_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           type="submit"
-                          onClick={ this.handleSubmitRemoveFromTarget }>Remove from target</button>
+                          onClick={ this.handleSubmitRemoveFromTarget.bind(this) }>Remove from target</button>
                   <Link to="/goals/approval/list" className="btn goals-approval-btn-cancel">Cancel</Link>
               </div>
           </form>

@@ -75,6 +75,7 @@ class GoalsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if (in_array($type, ['list', 'detail'])) {
+            // TODO: マークアップ用の仮View。リリース前にこのブロックを削除する
             if($gucchi === 'gucchi') {
                 return $this->render("approval_detail");
             }

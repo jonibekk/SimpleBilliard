@@ -246,6 +246,7 @@ class GoalsController extends ApiController
 
     /**
      * ゴール認定のモック
+     * TODO: ゴール認定API実装の際に書き直す
      *
      * @return true|CakeResponse
      */
@@ -263,6 +264,7 @@ class GoalsController extends ApiController
 
     /**
      * ゴール非認定のPOSTモック
+     * TODO: ゴール認定API実装の際に書き直す
      *
      * @return true|CakeResponse
      */
@@ -280,6 +282,7 @@ class GoalsController extends ApiController
 
     /**
      * 認定詳細ページのINITIAL GETモック
+     * TODO: ゴール認定API実装の際に書き直す
      *
      * @return true|CakeResponse
      */

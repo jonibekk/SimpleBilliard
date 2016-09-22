@@ -21,35 +21,28 @@ export class Comments extends React.Component {
     const comments = this.props.collaborator.approval_histories
     const latest_comment = comments.length > 0 ? comments[comments.length - 1] : null
     const commets_execpt_latest_comment = comments.length > 1 ? comments.slice(0, -1) : []
+    const display_view_more_comments_button = commets_execpt_latest_comment.length > 0 && !this.state.display_all_comments
+    const view_more_comments_button = () => {
+      return (
+        <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments }>
+          <i className="fa fa-angle-down" aria-hidden="true"></i>
+          <span className="goals-approval-interactive-link">View all { comments.length - 1 } comments</span>
+        </a>
+      )
+    }
 
     return (
       <div className="goals-approval-detail-comments">
-          {(() => {
-            const display_more_view_comments_button = commets_execpt_latest_comment.length > 0 && !this.state.display_all_comments
-
-            if(display_more_view_comments_button) {
-              return (
-                <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments }>
-                  <i className="fa fa-angle-down" aria-hidden="true"></i>
-                  <span className="goals-approval-interactive-link">View all { comments.length - 1 } comments</span>
-                </a>
-              )
-            }
-          })()}
+          { display_view_more_comments_button ? view_more_comments_button() : null}
 
           {/* 最新のコメント以外すべて */}
-          { commets_execpt_latest_comment.map((comment) => {
-            if(this.state.display_all_comments) {
-              return <Comment comment={ comment } key={ comment.comment } />;
-            }
-          })}
+          { this.state.display_all_comments ? commets_execpt_latest_comment.map((comment) => {
+            return <Comment comment={ comment } key={ comment.comment } />;
+          }) : null}
 
           {/* 最新のコメント */}
-          { (() => {
-            if(latest_comment) {
-              return <Comment comment={ latest_comment } />;
-            }
-          })()}
+          { latest_comment ? <Comment comment={ latest_comment } /> : null }
+
       </div>
     )
   }

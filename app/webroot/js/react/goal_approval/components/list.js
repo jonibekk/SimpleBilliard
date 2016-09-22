@@ -23,12 +23,14 @@ export default class ListComponent extends React.Component {
               }
             }) }
           </ul>
-          {(() => {
-            if(!this.props.list.done_loading_all_data) {
-              return <ViewMoreButton handleOnClick={ () => this.props.fetchGaolApprovals() } is_loading={ this.props.list.fetching_goal_approvals} />
-            }
-          })()}
+          {/* TODO: fetchGoalApprovalsを即時間数で囲わないとなぜかコールした際の引数 がtrueになる。要調査。 */}
+          { !this.props.list.done_loading_all_data ? <ViewMoreButton handleOnClick={ () => this.props.fetchGoalApprovals() }
+                                                                     is_loading={ this.props.list.fetching_goal_approvals } /> : null }
       </section>
     )
   }
+}
+ListComponent.propTypes = {
+  list: React.PropTypes.object.isRequired,
+  fetchGoalApprovals: React.PropTypes.func.isRequired
 }
