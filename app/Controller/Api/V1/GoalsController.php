@@ -1,5 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('UploadHelper', 'View/Helper');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -60,10 +62,7 @@ class GoalsController extends ApiController
             } catch (RuntimeException$e) {
                 return $this->_getResponseForbidden();
             }
-            $goal = Hash::extract($this->Goal->findById($id), 'Goal');
-            $goal['key_result'] = Hash::extract($this->KeyResult->getTkr($goal['id']), 'KeyResult');
-            $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['id']), '{n}.Label');
-            $res['goal'] = $goal;
+            $res['goal'] = $this->_getGoal($id);
         }
 
         /**
@@ -115,7 +114,7 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
-            $res['priorities'] = Configure::read("label.priorities"); ;
+            $res['priorities'] = Configure::read("label.priorities");
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
@@ -123,6 +122,32 @@ class GoalsController extends ApiController
         }
 
         return $this->_getResponseSuccess($res);
+    }
+
+    private function _getGoal($goalId) {
+        $data = $this->Goal->findById($goalId);
+        if (empty($data)) {
+            return [];
+        }
+        $timeExHelper = new TimeExHelper(new View());
+        $uploadHelper = new UploadHelper(new View());
+
+        $currentTerm = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+
+        $goal = Hash::extract($data, 'Goal');
+        $goal['original_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo');
+        $goal['small_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'small']);
+        $goal['medium_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'medium']);
+        $goal['medium_large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'medium_large']);
+        $goal['large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'large']);
+        $goal['x_large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'x_large']);
+        $goal['large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'large']);
+        $goal['start_date'] = $timeExHelper->dateFormat($goal['start_date'], $currentTerm['timezone']);
+        $goal['end_date'] = $timeExHelper->dateFormat($goal['end_date'], $currentTerm['timezone']);
+
+        $goal['key_result'] = Hash::extract($this->Goal->KeyResult->getTkr($goalId), 'KeyResult');
+        $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goalId), '{n}.Label');
+        return $goal;
     }
 
     /**

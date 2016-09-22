@@ -191,16 +191,29 @@ export function addItemToSuggestions(suggestions, suggestionName, baseList) {
  * @returns {{}}
  */
 export function initInputData(goal) {
-  const labels = goal.goal_labels.filter((v) => v.name)
+  let labels = [];
+  for (const i in goal.goal_labels) {
+    console.log({i})
+    labels.push(goal.goal_labels[i].name)
+  }
+
   const inputData = {
     name: goal.name,
     goal_category_id: goal.goal_category_id,
     labels: labels,
+    term_type: goal.term_type,
     start_date: goal.start_date,
     end_date: goal.end_date,
     description: goal.description,
     photo: null,
-    key_result: null,
+    priority: goal.priority,
+    key_result: {
+      name: goal.key_result.name,
+      value_unit: goal.key_result.value_unit,
+      start_value: goal.key_result.start_value,
+      target_value: goal.key_result.target_value,
+      description: goal.key_result.description,
+    },
   }
   return inputData;
 }
