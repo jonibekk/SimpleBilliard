@@ -147,7 +147,7 @@
                                 <div class="row">
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === false) { ?>
-                                            <?php if ($goal['Collaborator']['approval_status'] === (string)Collaborator::STATUS_APPROVAL) { ?>
+                                            <?php if ($goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_REAPPLICATION) { ?>
                                                 <?= $this->Form->button(__("Remove from target of evaluation"),
                                                     [
                                                         'name'  => 'wait_btn',
@@ -155,7 +155,7 @@
                                                         'div'   => false
                                                     ]) ?>
                                             <?php } else {
-                                                if ($goal['Collaborator']['approval_status'] === (string)Collaborator::STATUS_HOLD) { ?>
+                                                if ($goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_DONE) { ?>
                                                     <?= $this->Form->button(__("Set as target of evaluation"),
                                                         [
                                                             'name'  => 'approval_btn',

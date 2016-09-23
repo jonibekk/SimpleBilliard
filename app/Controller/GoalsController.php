@@ -137,7 +137,7 @@ class GoalsController extends AppController
                 //send notify to coach
                 $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
                     $this->my_uid, $id);
-                if ($my_collabo_status['Collaborator']['approval_status'] == Collaborator::STATUS_MODIFY) {
+                if ($my_collabo_status['Collaborator']['approval_status'] == Collaborator::APPROVAL_STATUS_WITHDRAW) {
                     $this->_sendNotifyToCoach($id, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
                 }
             }
@@ -1142,16 +1142,16 @@ class GoalsController extends AppController
                 foreach ($ug_v['Collaborator'] as $c_v) {
                     $approval_status = null;
                     switch ($c_v['approval_status']) {
-                        case Collaborator::STATUS_UNAPPROVED:
+                        case Collaborator::APPROVAL_STATUS_NEW:
                             $approval_status = __("Pending approval");
                             break;
-                        case Collaborator::STATUS_APPROVAL:
+                        case Collaborator::APPROVAL_STATUS_REAPPLICATION:
                             $approval_status = __("Evaluable");
                             break;
-                        case Collaborator::STATUS_HOLD:
+                        case Collaborator::APPROVAL_STATUS_DONE:
                             $approval_status = __("Not Evaluable");
                             break;
-                        case Collaborator::STATUS_MODIFY:
+                        case Collaborator::APPROVAL_STATUS_WITHDRAW:
                             $approval_status = __("Pending modification");
                             break;
                     }

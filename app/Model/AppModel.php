@@ -482,6 +482,7 @@ class AppModel extends Model
     }
 
     /**
+     * TODO:モデルで行う処理では無いので将来的に他の適切な場所に移行すること
      * 画像のurlを取得
      * - パラメタ $photoStyles は取得するサムネイルの名前を指定。Uploadビヘイビアで設定済みのものが有効。指定しない場合はすべて取得する.
      * - パラメタ $photoStylesで存在しないスタイルを指定された場合はスキップ。
@@ -500,17 +501,14 @@ class AppModel extends Model
             $photoStyles = $defaultStyles;
             $photoStyles[] = 'original';
         }
-        foreach ($data as $data_k => $data_v) {
-            foreach ($photoStyles as $style) {
-                if ($style != 'original' && !in_array($style, $defaultStyles)) {
-                    continue;
-                }
-                $data[$data_k][$modelName]["{$style}_img_url"] = $upload->uploadUrl($data_v[$modelName],
-                    "$modelName.photo",
-                    ['style' => $style]);
+        foreach ($photoStyles as $style) {
+            if ($style != 'original' && !in_array($style, $defaultStyles)) {
+                continue;
             }
+            $data["{$style}_img_url"] = $upload->uploadUrl($data,
+                "$modelName.photo",
+                ['style' => $style]);
         }
-
         return $data;
     }
 
