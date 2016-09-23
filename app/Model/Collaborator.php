@@ -26,6 +26,12 @@ class Collaborator extends AppModel
     const APPROVAL_STATUS_DONE = 2;
     const APPROVAL_STATUS_WITHDRAW = 3;
 
+    static public $STATUS = [
+        self::APPROVAL_STATUS_NEW           => "",
+        self::APPROVAL_STATUS_REAPPLICATION => "",
+        self::APPROVAL_STATUS_DONE          => "",
+        self::APPROVAL_STATUS_WITHDRAW      => "",
+    ];
     /**
      * タイプの表示名をセット
      */
@@ -34,6 +40,18 @@ class Collaborator extends AppModel
         self::$TYPE[self::TYPE_COLLABORATOR] = __("Collaborator");
         self::$TYPE[self::TYPE_OWNER] = __("Owner");
     }
+
+    /**
+     * ステータス表示名をセット
+     */
+    private function _setStatusName()
+    {
+        self::$STATUS[self::APPROVAL_STATUS_NEW] = __("Waiting for approval");
+        self::$STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("In Evaluation");
+        self::$STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
+        self::$STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
+    }
+
 
     /**
      * Validation rules
@@ -87,6 +105,7 @@ class Collaborator extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
+        $this->_setStatusName();
     }
 
     function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)
