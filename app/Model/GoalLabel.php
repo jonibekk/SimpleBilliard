@@ -63,15 +63,12 @@ class GoalLabel extends AppModel
      */
     function saveLabels($goalId, $postedLabels)
     {
-        $this->log($postedLabels);
         //すでに持っているラベルを取得
         $goalLabelsExistList = $this->getLabelList($goalId);
         //関連付けるラベルを抽出(すでに持っているラベルは除外)
         $attachLabels = array_diff($postedLabels, $goalLabelsExistList);
-        $this->log($attachLabels);
         //関連を解除するラベルを抽出
         $detachLabels = array_diff($goalLabelsExistList, $postedLabels);
-        $this->log($detachLabels);
         //変更なしの場合は何もせずreturn
         if (empty($attachLabels) && empty($detachLabels)) {
             return true;
@@ -169,23 +166,15 @@ class GoalLabel extends AppModel
         }
         //既存ラベル全件取得(key:label_id,value:name)
         $allLabels = Hash::combine($this->Label->getListWithGoalCount(), '{n}.Label.id', '{n}.Label.name');
-        $this->log('$allLabels');
-        $this->log($allLabels);
         //新規ラベルの抽出
         $newLabels = array_diff($attachLabels, $allLabels);
-        $this->log('$newLabels');
-        $this->log($newLabels);
         //まだ持っていない既存ラベルを抽出
         $existLabelsNotAttached = array_intersect($allLabels, $attachLabels);
-        $this->log('$existLabelsNotAttached');
-        $this->log($existLabelsNotAttached);
         //saveデータをビルド
         $saveData = array_merge_recursive(
             $this->_buildSaveDataLabelExists($goalId, $existLabelsNotAttached),
             $this->_buildSaveDataLabelNotExists($goalId, $newLabels)
         );
-        $this->log('$saveData');
-        $this->log($saveData);
         $this->create();
         $res = $this->saveAll($saveData, ['deep' => true]);
         return (bool)$res;
