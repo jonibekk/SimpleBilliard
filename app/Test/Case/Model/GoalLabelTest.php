@@ -61,13 +61,13 @@ class GoalLabelTest extends GoalousTestCase
         $this->_saveDefaultData();
         $this->_clearCache();
 
-        $bf_all_label_count = count($this->GoalLabel->Label->find('list'));
+        $bf_all_label_count = count(array_unique($this->GoalLabel->Label->find('list')));
         $bf_goal_label_list = $this->GoalLabel->getLabelList(2);
         $bf_label_1_g_count = $this->_getGoalCount('test2');
         $bf_label_2_g_count = $this->_getGoalCount('test3');
         $this->GoalLabel->attachLabels(2, ['test2', 'test3', 'test4', 'test5']);
         $this->_clearCache();
-        $af_all_label_count = count($this->GoalLabel->Label->find('list'));
+        $af_all_label_count = count(array_unique($this->GoalLabel->Label->find('list')));
         $af_goal_label_list = $this->GoalLabel->getLabelList(2);
         $af_label_1_g_count = $this->_getGoalCount('test2');
         $af_label_2_g_count = $this->_getGoalCount('test3');
