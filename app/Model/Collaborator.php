@@ -26,6 +26,14 @@ class Collaborator extends AppModel
     const APPROVAL_STATUS_DONE = 2;
     const APPROVAL_STATUS_WITHDRAW = 3;
 
+    // TODO: 中身をセットする処理は未実装。表示文言が決まり次第実装する。
+    static public $STATUS = [
+        self::APPROVAL_STATUS_NEW => "",
+        self::APPROVAL_STATUS_REAPPLICATION => "",
+        self::APPROVAL_STATUS_DONE => "",
+        self::APPROVAL_STATUS_WITHDRAW => ""
+    ];
+
     /**
      * タイプの表示名をセット
      */
