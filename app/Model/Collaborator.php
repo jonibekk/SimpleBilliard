@@ -48,9 +48,9 @@ class Collaborator extends AppModel
     private function _setStatusName()
     {
         self::$APPROVAL_STATUS[self::APPROVAL_STATUS_NEW] = __("Waiting for approval");
-        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("In Evaluation");
-        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
-        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("Waiting for approval");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_DONE] = __("In Evaluation");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Out of Evaluation");
     }
 
     /**
