@@ -261,7 +261,11 @@ class GoalApprovalsController extends ApiController
         $res['goal']['leader'] = Hash::extract($resByModel, 'Goal.Leader.0');
         $res['goal']['leader']['user'] = Hash::extract($resByModel, 'Goal.Leader.0.User');
         $res['goal']['top_key_result'] = Hash::extract($resByModel, 'Goal.TopKeyResult');
-        $res['approval_histories'] = Hash::extract($resByModel, 'ApprovalHistory');
+        $res['approval_histories'] = Hash::map($resByModel, 'ApprovalHistory', function($value) {
+            $value['user'] = Hash::extract($value, 'User');
+            unset($value['User']);
+            return $value;
+        });
 
         // 画像パス追加
         $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
