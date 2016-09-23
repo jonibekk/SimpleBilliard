@@ -787,11 +787,6 @@ class NotifyBizComponent extends Component
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
-        $done_list = [
-            NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
-            NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
-        ];
-        $action = in_array($notify_type, $done_list) ? "done" : "index";
         $go_to_goal = [
             NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL
         ];
@@ -799,9 +794,9 @@ class NotifyBizComponent extends Component
             $url = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
         } else {
             $url = [
-                'controller' => 'goal_approval',
-                'action'     => $action,
-                'team_id'    => $this->NotifySetting->current_team_id
+                'controller' => 'goals',
+                'action'     => 'approval',
+                $goal_id
             ];
         }
         $this->notify_option['notify_type'] = $notify_type;
