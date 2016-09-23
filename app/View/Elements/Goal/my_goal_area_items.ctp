@@ -290,7 +290,7 @@ $kr_count = 0;
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __("Add Key Result") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['approval_status']] ?></p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$APPROVAL_STATUS[$goal['MyCollabo'][0]['approval_status']] ?></p>
                             </li>
                         </ul>
                     </div>

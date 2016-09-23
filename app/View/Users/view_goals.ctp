@@ -95,7 +95,7 @@
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type === 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                    Collaborator::$STATUS[$goal['Leader'][0]['approval_status']]) ?>
+                                    Collaborator::$APPROVAL_STATUS[$goal['Leader'][0]['approval_status']]) ?>
                             <?php else: ?>
                                 <?php if ($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
                                     <?php $approval_status = $goal['Leader'][0]['approval_status']; ?>
@@ -105,7 +105,7 @@
                                     <?php $approval_status = $my_collabo[0]['approval_status']; ?>
                                 <?php endif; ?>
                                 <?= __("Approval Status: %s",
-                                    Collaborator::$STATUS[$approval_status]) ?>
+                                    Collaborator::$APPROVAL_STATUS[$approval_status]) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">

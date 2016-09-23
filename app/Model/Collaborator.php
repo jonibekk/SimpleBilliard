@@ -26,7 +26,7 @@ class Collaborator extends AppModel
     const APPROVAL_STATUS_DONE = 2;
     const APPROVAL_STATUS_WITHDRAW = 3;
 
-    static public $STATUS = [
+    static public $APPROVAL_STATUS = [
         self::APPROVAL_STATUS_NEW           => "",
         self::APPROVAL_STATUS_REAPPLICATION => "",
         self::APPROVAL_STATUS_DONE          => "",
@@ -46,10 +46,10 @@ class Collaborator extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::APPROVAL_STATUS_NEW] = __("Waiting for approval");
-        self::$STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("In Evaluation");
-        self::$STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
-        self::$STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_NEW] = __("Waiting for approval");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_REAPPLICATION] = __("In Evaluation");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
+        self::$APPROVAL_STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
     }
 
 
