@@ -11,6 +11,7 @@ App::uses('Sanitize', 'Utility');
  * @method findById($id)
  * @method findByUserId($id)
  * @method findByEmail($email)
+ * @method findByName($name)
  */
 class AppModel extends Model
 {
@@ -500,17 +501,14 @@ class AppModel extends Model
             $photoStyles = $defaultStyles;
             $photoStyles[] = 'original';
         }
-        foreach ($data as $data_k => $data_v) {
-            foreach ($photoStyles as $style) {
-                if ($style != 'original' && !in_array($style, $defaultStyles)) {
-                    continue;
-                }
-                $data[$data_k][$modelName]["{$style}_img_url"] = $upload->uploadUrl($data_v[$modelName],
-                    "$modelName.photo",
-                    ['style' => $style]);
+        foreach ($photoStyles as $style) {
+            if ($style != 'original' && !in_array($style, $defaultStyles)) {
+                continue;
             }
+            $data["{$style}_img_url"] = $upload->uploadUrl($data,
+                "$modelName.photo",
+                ['style' => $style]);
         }
-
         return $data;
     }
 
