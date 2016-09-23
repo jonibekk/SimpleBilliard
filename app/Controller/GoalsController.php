@@ -138,7 +138,7 @@ class GoalsController extends AppController
                 $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
                     $this->my_uid, $id);
                 if ($my_collabo_status['Collaborator']['approval_status'] == Collaborator::STATUS_MODIFY) {
-                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
+                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
                 }
             }
             $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
@@ -155,7 +155,7 @@ class GoalsController extends AppController
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
                             $this->Goal->getLastInsertID());
                         $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
-                            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+                            NotifySetting::TYPE_COACHEE_CREATE_GOAL);
                     } else {
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
@@ -429,7 +429,7 @@ class GoalsController extends AppController
         if (!$collabo_id) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
-            $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+            $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
         }
         if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
         ) {

@@ -169,7 +169,7 @@ class GoalsController extends ApiController
 
         //通知
         $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_COACHEE_CREATE_GOAL);
 
         $this->updateSetupStatusIfNotCompleted();
         //コーチと自分の認定件数を更新(キャッシュを削除)

@@ -166,13 +166,13 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL:
+            case NotifySetting::TYPE_COACHEE_CREATE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+            case NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL:
+            case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_EVALUATION_START:
@@ -788,7 +788,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $go_to_goal = [
-            NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL
+            NotifySetting::TYPE_COACHEE_CHANGE_GOAL
         ];
         if (in_array($notify_type, $go_to_goal)) {
             $url = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];

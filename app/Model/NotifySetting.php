@@ -23,9 +23,10 @@ class NotifySetting extends AppModel
     const TYPE_MY_GOAL_TARGET_FOR_EVALUATION = 10;
     const TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE = 11;
     const TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION = 12;
-    const TYPE_MY_MEMBER_CREATE_GOAL = 13;
-    const TYPE_MY_MEMBER_COLLABORATE_GOAL = 14;
-    const TYPE_MY_MEMBER_CHANGE_GOAL = 15;
+    const TYPE_COACHEE_CREATE_GOAL = 13;
+    const TYPE_COACHEE_COLLABORATE_GOAL = 14;
+    const TYPE_COACHEE_CHANGE_GOAL = 15;
+    const TYPE_COACHEE_CHANGE_ROLE = 27;
     const TYPE_EVALUATION_START = 16;
     const TYPE_EVALUATION_FREEZE = 17;
     const TYPE_EVALUATION_START_CAN_ONESELF = 18;
@@ -109,42 +110,42 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE   => [
+        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_as_leader_request_to_change',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION     => [
+        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_not_target_for_evaluation',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_MY_MEMBER_CREATE_GOAL                 => [
+        self::TYPE_COACHEE_CREATE_GOAL      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all'],
         ],
-        self::TYPE_MY_MEMBER_COLLABORATE_GOAL            => [
+        self::TYPE_COACHEE_COLLABORATE_GOAL => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_collaborate_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all'],
         ],
-        self::TYPE_MY_MEMBER_CHANGE_GOAL                 => [
+        self::TYPE_COACHEE_CHANGE_GOAL      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_change_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_EVALUATION_START                      => [
+        self::TYPE_EVALUATION_START         => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_evaluation',
@@ -649,7 +650,7 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-            case self::TYPE_MY_MEMBER_CREATE_GOAL:
+            case self::TYPE_COACHEE_CREATE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 新しく作成したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
@@ -665,7 +666,7 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-            case self::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+            case self::TYPE_COACHEE_COLLABORATE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
@@ -681,7 +682,7 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-            case self::TYPE_MY_MEMBER_CHANGE_GOAL:
+            case self::TYPE_COACHEE_CHANGE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を修正したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
