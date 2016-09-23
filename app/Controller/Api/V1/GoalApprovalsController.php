@@ -36,7 +36,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチとしてのゴール認定未処理件数取得
-        $GoalApprovalService = new GoalApprovalService();
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
 
         // レスポンスの基となるゴール認定リスト取得

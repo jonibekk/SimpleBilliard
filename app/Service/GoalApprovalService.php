@@ -11,7 +11,7 @@ class GoalApprovalService
 {
     function countUnapprovedGoal($userId)
     {
-        $Goal = new Goal();
+        $Goal = ClassRegistry::init("Goal");
         // Redisのキャッシュデータ取得
         $count = Cache::read($Goal->Collaborator->getCacheKey(CACHE_UNAPPROVED_GOAL_COUNT, true), 'user_data');
         // Redisから無ければDBから取得してRedisに保存

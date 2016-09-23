@@ -121,7 +121,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
 // サービス層
 App::build([
     'Service' => ['%s' . 'Service' . DS]
-]);
+], App::REGISTER);
 
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
