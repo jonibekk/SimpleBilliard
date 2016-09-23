@@ -96,10 +96,10 @@ class GoalApprovalController extends AppController
      * 評価ステータス
      */
     public $goal_status = [
-        'unapproved' => Collaborator::STATUS_UNAPPROVED,
-        'approval'   => Collaborator::STATUS_APPROVAL,
-        'hold'       => Collaborator::STATUS_HOLD,
-        'modify'     => Collaborator::STATUS_MODIFY,
+        'unapproved' => Collaborator::APPROVAL_STATUS_NEW,
+        'approval'   => Collaborator::APPROVAL_STATUS_REAPPLICATION,
+        'hold'       => Collaborator::APPROVAL_STATUS_DONE,
+        'modify'     => Collaborator::APPROVAL_STATUS_WITHDRAW,
     ];
 
     /*
@@ -168,40 +168,10 @@ class GoalApprovalController extends AppController
      */
     public function index()
     {
-        if ($this->request->is('post')) {
-            $this->ApprovalHistory->begin();
-            if ($this->_saveApprovalData()) {
-                $this->ApprovalHistory->commit();
-            } else {
-                $this->ApprovalHistory->rollback();
-            }
-            return $this->redirect($this->referer());
+        // チームの評価設定が無効であれば404
+        if (!$this->Team->EvaluationSetting->isEnabled()) {
+            throw new NotFoundException();
         }
-
-        $goal_info = $this->_getGoalInfo([$this->goal_status['unapproved'], $this->goal_status['modify']]);
-
-        foreach ($goal_info as $key => $val) {
-            $goal_info[$key]['my_goal'] = false;
-
-            if ($this->user_id === $val['User']['id']) {
-                $goal_info[$key]['my_goal'] = true;
-                $goal_info[$key]['status'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
-                if ($this->my_evaluation_flg === false) {
-                    unset($goal_info[$key]);
-                }
-            }
-
-            if ($val['Collaborator']['approval_status'] === (string)Collaborator::STATUS_MODIFY) {
-                $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
-            }
-
-        }
-
-        $done_cnt = $this->done_cnt;
-        $kr = new KeyResult();
-        $value_unit_list = $kr::$UNIT;
-
-        $this->set(compact('value_unit_list', 'goal_info', 'done_cnt'));
     }
 
     /*
@@ -232,11 +202,11 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($val['Collaborator']['approval_status'] === (string)Collaborator::STATUS_APPROVAL) {
+            if ($val['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_REAPPLICATION) {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
             } else {
-                if ($val['Collaborator']['approval_status'] === (string)Collaborator::STATUS_HOLD) {
+                if ($val['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_DONE) {
                     $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
                 }
             }

@@ -11,6 +11,7 @@ App::uses('Sanitize', 'Utility');
  * @method findById($id)
  * @method findByUserId($id)
  * @method findByEmail($email)
+ * @method findByName($name)
  */
 class AppModel extends Model
 {
@@ -481,6 +482,7 @@ class AppModel extends Model
     }
 
     /**
+     * TODO:モデルで行う処理では無いので将来的に他の適切な場所に移行すること
      * 画像のurlを取得
      * - パラメタ $photoStyles は取得するサムネイルの名前を指定。Uploadビヘイビアで設定済みのものが有効。指定しない場合はすべて取得する.
      * - パラメタ $photoStylesで存在しないスタイルを指定された場合はスキップ。
