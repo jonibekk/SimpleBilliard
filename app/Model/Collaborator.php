@@ -660,11 +660,6 @@ class Collaborator extends AppModel
             ],
             'order'      => ['Collaborator.created DESC'],
         ];
-        $res = $this->find('first', $options);
-        $collabo = Hash::extract($res, 'Collaborator');
-        $collabo['user'] = Hash::extract($res, 'User');
-        $collabo['goal'] = Hash::extract($res, 'Goal');
-        $collabo['approval_histories'] = Hash::extract($res, 'ApprovalHistory');
-        return $collabo;
+        return $this->find('first', $options);
     }
 }
