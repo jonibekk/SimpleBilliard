@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::uses('GoalApprovalService', 'Service');
+App::import('Service', 'GoalApprovalService');
+
 /**
  * Class GoalApprovalsController
  */
@@ -138,26 +139,77 @@ class GoalApprovalsController extends ApiController
     }
 
     /**
-     * ゴール認定のモック
-     * TODO: ゴール認定API実装の際に書き直す
+     * ゴール認定対象化API
+     * - コメントのバリデーション(失敗したらレスポンス返す)
+     * - 認定ヒストリー新規登録(失敗したらレスポンス返す)
+     * - コーチーへ通知
+     * - Mixpanelでトラッキング
+     * - コラボレーターIDをレスポンスに含めて返却
      *
      * @return true|CakeResponse
      */
     function post_set_as_target()
     {
+        App::uses('ApprovalHistory', 'Model');
         $this->Pnotify = $this->Components->load('Pnotify');
-        $validation = true;
-        if ($validation === true) {
-            $this->Pnotify->outSuccess(__("Set as approval"));
-            return $this->_getResponseSuccess();
+
+        $data = $this->request->data;
+        $myUserId = $this->my_uid;
+
+        // バリデーション
+        $saveData = [
+            'ApprovalHistory' => [
+                'select_clear_status' => ApprovalHistory::STATUS_IS_CLEAR,
+                'select_important_status' => ApprovalHistory::STATUS_IS_IMPORTANT,
+                'collaborator_id' => viaIsSet($data['collaborator_id']),
+                'user_id' => $myUserId,
+                'comment' => viaIsSet($data['comment'])
+            ]
+        ];
+        $validateResult = $this->_validateAddApprovalHistory($saveData);
+        if ($validateResult !== true) {
+            return $validateResult;
         }
-        $validationMsg = ['comment' => 'comment validation error'];
-        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+
+        // 保存処理
+        $this->Goal->Collaborator->ApprovalHistory->begin();
+        $isSaveSuccess = $this->Goal->Collaborator->ApprovalHistory->add($saveData);
+        if ($isSaveSuccess === false) {
+            $this->Goal->Collaborator->ApprovalHistory->rollback();
+            return $this->_getResponseBadFail(__('Failed to save.'));
+        }
+        $this->Goal->Collaborator->ApprovalHistory->commit();
+
+        $this->Pnotify->outSuccess(__("Set as approval"));
+
+        $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
+        return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
+
+
+        //通知
+        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
+        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+
+        $this->updateSetupStatusIfNotCompleted();
+        //コーチと自分の認定件数を更新(キャッシュを削除)
+        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+        if ($coach_id) {
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
+        }
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL, $newGoalId);
+
+        return $this->_getResponseSuccess(['goal_id' => $newGoalId]);
     }
 
     /**
-     * ゴール非認定のPOSTモック
-     * TODO: ゴール認定API実装の際に書き直す
+     * ゴール認定対象外化API
+     * - バリデーション(失敗したらレスポンス返す)
+     * - 認定ヒストリー新規登録(失敗したらレスポンス返す)
+     * - コーチーへ通知
+     * - Mixpanelでトラッキング
+     * - コラボレーターIDをレスポンスに含めて返却
      *
      * @return true|CakeResponse
      */
@@ -228,6 +280,26 @@ class GoalApprovalsController extends ApiController
         unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
 
         return $res;
+    }
+
+    /**
+     * ゴール認定履歴のバリデーション
+     * @param  array $data 検証するデータ
+     * @return true|CakeResponse
+     */
+    function _validateAddApprovalHistory($data)
+    {
+        $validation = [];
+        $this->Goal->Collaborator->ApprovalHistory->set($data['ApprovalHistory']);
+        $approval_history_validation = $this->Goal->Collaborator->ApprovalHistory->validates();
+        if ($approval_history_validation !== true) {
+            $validation['approval_history'] = $this->_validationExtract($this->Goal->Collaborator->ApprovalHistory->validationErrors);
+        }
+
+        if (!empty($validation)) {
+            return $this->_getResponseBadFail(__('Validation failed.'), $validation);
+        }
+        return true;
     }
 
 }
