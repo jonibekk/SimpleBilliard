@@ -4,7 +4,7 @@ import axios from "axios"
 
 export function fetchGoalApproval(goal_id) {
   return dispatch => {
-    return axios.get(`/api/v1/goals/${goal_id}/approval_init_data`)
+    return axios.get(`/api/v1/goal_approvals/${goal_id}/detail`)
       .then((response) => {
         /* eslint-disable no-console */
         console.log('fetch success')
@@ -24,7 +24,7 @@ export function postSetAsTarget(input_data) {
     dispatch(postingSetAsTarget())
     const post_data = Object.assign({}, { comment: input_data.comment })
 
-    return post(`/api/v1/goals/set_as_target`, post_data, null,
+    return post(`/api/v1/goal_approvals/set_as_target`, post_data, null,
       () => {
         /* eslint-disable no-console */
         console.log('validate success')
@@ -47,7 +47,7 @@ export function postRemoveFromTarget(input_data) {
   return (dispatch) => {
     dispatch(postingRemovefromTarget())
 
-    return post(`/api/v1/goals/remove_from_target`, input_data, null,
+    return post(`/api/v1/goal_approvals/remove_from_target`, input_data, null,
       () => {
         /* eslint-disable no-console */
         console.log('validate success')

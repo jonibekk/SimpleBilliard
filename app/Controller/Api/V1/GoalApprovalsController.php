@@ -136,4 +136,98 @@ class GoalApprovalsController extends ApiController
 
         return $res;
     }
+
+    /**
+     * ゴール認定のモック
+     * TODO: ゴール認定API実装の際に書き直す
+     *
+     * @return true|CakeResponse
+     */
+    function post_set_as_target()
+    {
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $validation = true;
+        if ($validation === true) {
+            $this->Pnotify->outSuccess(__("Set as approval"));
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = ['comment' => 'comment validation error'];
+        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+    }
+
+    /**
+     * ゴール非認定のPOSTモック
+     * TODO: ゴール認定API実装の際に書き直す
+     *
+     * @return true|CakeResponse
+     */
+    function post_remove_from_target()
+    {
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $validation = true;
+        if ($validation === true) {
+            $this->Pnotify->outSuccess(__("Remove from approval"));
+            return $this->_getResponseSuccess();
+        }
+        $validationMsg = ['comment' => 'comment validation error message'];
+        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
+    }
+
+    /**
+     * Goal認定詳細ページの初期データ取得API
+     *
+     * @param  integer $collaboratorId
+     * @return true | CakeResponse
+     */
+    public function get_detail($collaboratorId)
+    {
+        if (!$collaboratorId) {
+            throw new NotFoundException();
+        }
+
+        // チームの評価設定が無効であれば404
+        if (!$this->Team->EvaluationSetting->isEnabled()) {
+            throw new NotFoundException();
+        }
+
+        $res = $this->Goal->Collaborator->getCollaboratorForApproval($collaboratorId);
+        $myUserId = $this->Auth->user('id');
+        return $this->_getResponseSuccess($this->_formatGoalApprovalForResponse($res, $myUserId));
+    }
+
+    public function _formatGoalApprovalForResponse($resByModel, $myUserId)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $res = Hash::extract($resByModel, 'Collaborator');
+
+        // モデル名整形(大文字->小文字)
+        $res['user'] = Hash::extract($resByModel, 'User');
+        $res['goal'] = Hash::extract($resByModel, 'Goal');
+        $res['goal']['category'] = Hash::extract($resByModel, 'Goal.GoalCategory');
+        $res['goal']['leader'] = Hash::extract($resByModel, 'Goal.Leader.0');
+        $res['goal']['leader']['user'] = Hash::extract($resByModel, 'Goal.Leader.0.User');
+        $res['goal']['top_key_result'] = Hash::extract($resByModel, 'Goal.TopKeyResult');
+        $res['approval_histories'] = Hash::extract($resByModel, 'ApprovalHistory');
+
+        // 画像パス追加
+        $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
+        $res['user']['small_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo', ['style' => 'small']);
+        $res['user']['large_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo', ['style' => 'large']);
+        $res['goal']['original_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo');
+        $res['goal']['small_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'small']);
+        $res['goal']['large_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'large']);
+
+        // マッピング
+        $res['is_leader'] = (boolean)$res['type'];
+        $res['is_mine'] = $res['user']['id'] == $myUserId;
+        $res['type'] = Collaborator::$TYPE[$res['type']];
+
+        // 不要な要素の削除
+        unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
+
+        return $res;
+    }
+
 }
