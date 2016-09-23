@@ -14,7 +14,7 @@
  * @var                    $follow_goals_count
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('User/simplex_top_section') ?>
@@ -95,17 +95,17 @@
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type === 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                    Collaborator::$APPROVAL_STATUS[$goal['Leader'][0]['approval_status']]) ?>
+                                    $this->Goal->displayApprovalStatus($goal['Leader'][0])) ?>
                             <?php else: ?>
                                 <?php if ($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
-                                    <?php $approval_status = $goal['Leader'][0]['approval_status']; ?>
+                                    <?= __("Approval Status: %s",
+                                        $this->Goal->displayApprovalStatus($goal['Leader'][0])) ?>
                                 <?php else: ?>
                                     <?php $my_collabo = Hash::extract($goal['Collaborator'],
                                         "{n}[user_id={$user['User']['id']}]"); ?>
-                                    <?php $approval_status = $my_collabo[0]['approval_status']; ?>
+                                    <?= __("Approval Status: %s",
+                                        $this->Goal->displayApprovalStatus($my_collabo[0])) ?>
                                 <?php endif; ?>
-                                <?= __("Approval Status: %s",
-                                    Collaborator::$APPROVAL_STATUS[$approval_status]) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">
@@ -247,4 +247,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

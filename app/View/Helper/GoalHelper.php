@@ -1,5 +1,6 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
+App::uses('Collaborator', 'Model');
 
 /**
  * GoalHelper
@@ -118,6 +119,30 @@ class GoalHelper extends AppHelper
         }
 
         return false;
+    }
+
+    /**
+     * @param array $collaborator
+     *
+     * @return string
+     */
+    function displayApprovalStatus($collaborator)
+    {
+        $waiting = __("Waiting for approval");
+        $out_of_evaluation = __("Out of Evaluation");
+        $in_evaluation = __("In Evaluation");
+
+        if ($collaborator['is_target_evaluation']) {
+            return $in_evaluation;
+        }
+        if ($collaborator['is_wish_approval'] &&
+            ($collaborator['approval_status'] == Collaborator::APPROVAL_STATUS_NEW ||
+                $collaborator['approval_status'] == Collaborator::APPROVAL_STATUS_REAPPLICATION
+            )
+        ) {
+            return $waiting;
+        }
+        return $out_of_evaluation;
     }
 
 }
