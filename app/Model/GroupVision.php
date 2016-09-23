@@ -153,7 +153,10 @@ class GroupVision extends AppModel
             }, 'team_info');
         $group_visions = Hash::insert($group_visions, '{n}.GroupVision.model', 'GroupVision');
         if ($with_img) {
-            $group_visions = $this->attachImgUrl($group_visions, 'GroupVision');
+            foreach ($group_visions as &$group_vision) {
+                $group_vision['GroupVision'] = $this->attachImgUrl($group_vision['GroupVision'], 'GroupVision');
+            }
+
         }
         $group_visions = Hash::extract($group_visions, '{n}.GroupVision');
         return $group_visions;

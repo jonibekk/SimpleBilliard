@@ -49,7 +49,7 @@ class GoalsController extends ApiController
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
      * @return CakeResponse
      */
-    function get_init_form($id)
+    function get_init_form($id = null)
     {
         $res = [];
 
