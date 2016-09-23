@@ -130,32 +130,6 @@ class GoalsController extends ApiController
         return $this->_getResponseSuccess($res);
     }
 
-//    private function _getGoal($goalId) {
-//        $data = $this->Goal->findById($goalId);
-//        if (empty($data)) {
-//            return [];
-//        }
-//        $timeExHelper = new TimeExHelper(new View());
-//        $uploadHelper = new UploadHelper(new View());
-//
-//        $currentTerm = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
-//
-//        $goal = Hash::extract($data, 'Goal');
-//        $goal['original_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo');
-//        $goal['small_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'small']);
-//        $goal['medium_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'medium']);
-//        $goal['medium_large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'medium_large']);
-//        $goal['large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'large']);
-//        $goal['x_large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'x_large']);
-//        $goal['large_img_url'] = $uploadHelper->uploadUrl($data, 'Goal.photo', ['style' => 'large']);
-//        $goal['start_date'] = $timeExHelper->dateFormat($goal['start_date'], $currentTerm['timezone']);
-//        $goal['end_date'] = $timeExHelper->dateFormat($goal['end_date'], $currentTerm['timezone']);
-//
-//        $goal['key_result'] = Hash::extract($this->Goal->KeyResult->getTkr($goalId), 'KeyResult');
-//        $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goalId), '{n}.Label');
-//        return $goal;
-//    }
-
     /**
      * ゴール新規登録API
      * *必須フィールド
