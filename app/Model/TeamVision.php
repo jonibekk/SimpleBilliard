@@ -119,7 +119,9 @@ class TeamVision extends AppModel
             $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
             if ($res !== false) {
                 if ($with_img) {
-                    $res = $this->attachImgUrl($res, 'TeamVision');
+                    foreach ($res as &$v) {
+                        $v['TeamVision'] = $this->attachImgUrl($v['TeamVision'], 'TeamVision');
+                    }
                 }
                 return $res;
             }
@@ -136,7 +138,9 @@ class TeamVision extends AppModel
             Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
         }
         if ($with_img) {
-            $res = $this->attachImgUrl($res, 'TeamVision');
+            foreach ($res as &$v) {
+                $v['TeamVision'] = $this->attachImgUrl($v['TeamVision'], 'TeamVision');
+            }
         }
         return $res;
     }
