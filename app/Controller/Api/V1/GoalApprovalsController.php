@@ -155,18 +155,20 @@ class GoalApprovalsController extends ApiController
 
         $data = $this->request->data;
         $myUserId = $this->my_uid;
+        $collaboratorId = viaIsSet($data['collaborator_id']);
+        $coacheeId = viaIsSet($this->Goal->Collaborator->findById($collaboratorId)['Collaborator']['user_id']);
 
         // バリデーション
         $saveData = [
             'ApprovalHistory' => [
                 'select_clear_status' => ApprovalHistory::STATUS_IS_CLEAR,
                 'select_important_status' => ApprovalHistory::STATUS_IS_IMPORTANT,
-                'collaborator_id' => viaIsSet($data['collaborator_id']),
+                'collaborator_id' => $collaboratorId,
                 'user_id' => $myUserId,
                 'comment' => viaIsSet($data['comment'])
             ]
         ];
-        $validateResult = $this->_validateAddApprovalHistory($saveData);
+        $validateResult = $this->_validateApprovalHistory($saveData);
         if ($validateResult !== true) {
             return $validateResult;
         }
@@ -182,25 +184,18 @@ class GoalApprovalsController extends ApiController
 
         $this->Pnotify->outSuccess(__("Set as approval"));
 
+        // TODO: 通知の実装これから
+        // Write somthing
+
+        // TODO: Mixpanelのトラッキングこれから
+        // Write somthing
+
+        //コーチーと自分の認定件数を更新(キャッシュを削除)
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coacheeId), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+
         $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
         return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
-
-
-        //通知
-        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-
-        $this->updateSetupStatusIfNotCompleted();
-        //コーチと自分の認定件数を更新(キャッシュを削除)
-        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
-        if ($coach_id) {
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
-        }
-
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL, $newGoalId);
-
-        return $this->_getResponseSuccess(['goal_id' => $newGoalId]);
     }
 
     /**
@@ -291,7 +286,7 @@ class GoalApprovalsController extends ApiController
      * @param  array $data 検証するデータ
      * @return true|CakeResponse
      */
-    function _validateAddApprovalHistory($data)
+    function _validateApprovalHistory($data)
     {
         $validation = [];
         $this->Goal->Collaborator->ApprovalHistory->set($data['ApprovalHistory']);
@@ -303,6 +298,18 @@ class GoalApprovalsController extends ApiController
         if (!empty($validation)) {
             return $this->_getResponseBadFail(__('Validation failed.'), $validation);
         }
+        return true;
+    }
+
+    function _saveApprovalHistory($data)
+    {
+        $this->Goal->Collaborator->ApprovalHistory->begin();
+        $isSaveSuccess = $this->Goal->Collaborator->ApprovalHistory->add($saveData);
+        if ($isSaveSuccess === false) {
+            $this->Goal->Collaborator->ApprovalHistory->rollback();
+            return false;
+        }
+        $this->Goal->Collaborator->ApprovalHistory->commit();
         return true;
     }
 
