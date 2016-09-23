@@ -32,6 +32,7 @@ class Collaborator extends AppModel
         self::APPROVAL_STATUS_DONE          => "",
         self::APPROVAL_STATUS_WITHDRAW      => "",
     ];
+
     /**
      * タイプの表示名をセット
      */
@@ -51,7 +52,6 @@ class Collaborator extends AppModel
         self::$APPROVAL_STATUS[self::APPROVAL_STATUS_DONE] = __("Out of Evaluation");
         self::$APPROVAL_STATUS[self::APPROVAL_STATUS_WITHDRAW] = __("Waiting for modified");
     }
-
 
     /**
      * Validation rules
@@ -488,6 +488,7 @@ class Collaborator extends AppModel
 
     /**
      * コーチとしての未対応のゴール認定件数取得
+     *
      * @param $userId
      *
      * @return int
