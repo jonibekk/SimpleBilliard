@@ -6,8 +6,7 @@ export function validateGoal(page, addData) {
   return (dispatch, getState) => {
 
     const postData = Object.assign(getState().goal.inputData, addData)
-    const fields = Page.VALIDATION_FIELDS[page].join(',')
-    return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
+    return post(`/api/v1/goals/validate`, postData, null,
       (response) => {
         console.log("validate success");
         dispatch(toNextPage())

@@ -205,7 +205,6 @@ export function initInputData(goal) {
     start_date: goal.start_date,
     end_date: goal.end_date,
     description: goal.description,
-    photo: null,
     priority: goal.priority,
     key_result: {
       name: goal.key_result.name,

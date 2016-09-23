@@ -5,7 +5,7 @@ import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import CategorySelect from "../../common/components/goal/CategorySelect";
 import LabelInput from "../../common/components/goal/LabelInput";
 
-export default class EditComponent extends React.Component {
+export default class Edit extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -21,7 +21,7 @@ export default class EditComponent extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      // browserHistory.push(Page.URL_STEP2)
+      browserHistory.push(`/goals/${this.props.params.goalId}/edit/confirm`)
     }
   }
 
@@ -30,7 +30,7 @@ export default class EditComponent extends React.Component {
     if (e.keyCode == KeyCode.ENTER) {
       return false
     }
-    this.props.validateGoal()
+    this.props.validateGoal(this.getInputDomData())
   }
 
   deleteLabel(e) {

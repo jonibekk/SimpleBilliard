@@ -210,6 +210,77 @@ class GoalsController extends ApiController
     }
 
     /**
+     * ゴール更新API
+     * *必須フィールド
+     * - socket_id: pusherへのpush用
+     * *処理
+     * - バリデーション(失敗したらレスポンス返す)
+     * - ゴール新規登録(トランザクションかける。失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
+     * - フィードへ新しい投稿がある旨を知らせる
+     * - コーチへ通知
+     * - セットアップガイドのステータスを更新
+     * - コーチと自分の認定件数を更新(キャッシュを削除)
+     * - Mixpanelでトラッキング
+     * - TODO: 遷移先の情報は渡さなくて大丈夫か？api以外の場合はリダイレクトを分岐している。
+     * - ゴールIDをレスポンスに含めて返却
+     *
+     * @return CakeResponse
+     */
+    function put($id)
+    {
+        try {
+            $this->Goal->isPermittedAdmin($id);
+        } catch (RuntimeException$e) {
+            return $this->_getResponseForbidden();
+        }
+
+        $data = $this->request->data;
+        $data['photo'] = $_FILES['photo'];
+        $validateResult = $this->_validateCreateGoal($data);
+        if ($validateResult !== true) {
+            return $validateResult;
+        }
+
+        // 保存するTKR情報
+        $keyResultId = Hash::extract($this->Goal->KeyResult->getTkr($id), 'KeyResult')['id'];
+        $keyResult = Hash::get($data, 'key_result');
+        $keyResult['id'] = $keyResultId;
+
+        $this->Goal->begin();
+        $isSaveSuccess = $this->Goal->add(
+            [
+                'Goal'      => $data,
+                'KeyResult' => [$keyResult],
+                'Label'     => Hash::get($data, 'labels'),
+            ]
+        );
+
+        if ($isSaveSuccess === false) {
+            $this->Goal->rollback();
+            return $this->_getResponseBadFail(__('Failed to save a goal.'));
+        }
+        $this->Goal->commit();
+
+        $newGoalId = $this->Goal->getLastInsertID();
+
+        //通知
+        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
+        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+
+        $this->updateSetupStatusIfNotCompleted();
+        //コーチと自分の認定件数を更新(キャッシュを削除)
+        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+        if ($coach_id) {
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
+        }
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL, $newGoalId);
+
+        return $this->_getResponseSuccess(['goal_id' => $newGoalId]);
+    }
+
+    /**
      * ゴール作成のバリデーション
      * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
      * - key resultがなければバリデーションを通さずレスポンスを返す
