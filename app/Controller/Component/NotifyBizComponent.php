@@ -777,9 +777,16 @@ class NotifyBizComponent extends Component
     private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
     {
         $goal = $this->Goal->getGoal($goal_id);
+
         if (empty($goal)) {
             return;
         }
+        if (isset($goal['Leader'][0])) {
+            $collaborator = $goal['Leader'][0];
+        } else {
+            $collaborator = $goal['MyCollabo'][0];
+        }
+
         //inactive user
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
@@ -787,17 +794,14 @@ class NotifyBizComponent extends Component
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
-        $go_to_goal = [
-            NotifySetting::TYPE_COACHEE_CHANGE_GOAL
-        ];
-        if (in_array($notify_type, $go_to_goal)) {
-            $url = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', $goal_id];
+
+        //認定希望していないゴールはゴール詳細へ
+        if (!$collaborator['is_wish_approval']) {
+            $url = $url_goal_detail;
         } else {
-            $url = [
-                'controller' => 'goals',
-                'action'     => 'approval',
-                $goal_id
-            ];
+            $url = $url_goal_approval;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
