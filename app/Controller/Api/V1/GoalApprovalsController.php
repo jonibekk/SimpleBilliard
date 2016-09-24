@@ -288,6 +288,7 @@ class GoalApprovalsController extends ApiController
     public function get_detail($collaboratorId)
     {
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $myUserId = $this->my_uid;
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
