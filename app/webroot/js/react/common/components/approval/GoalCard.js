@@ -18,9 +18,9 @@ export class GoalCard extends React.Component {
                   <div className="goals-approval-detail-tkr">
                       <h2 className="goals-approval-detail-tkrtitle"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                       <ul className="goals-approval-detail-tkrlist">
-                          <li>{ goal.top_key_result.name }</li>
-                          <li>{ goal.top_key_result.start_value } -> { goal.top_key_result.target_value } { goal.top_key_result.value_unit }</li>
-                          <li>{ goal.top_key_result.description }</li>
+                          <li>{ goal.key_result.name }</li>
+                          <li>{ goal.key_result.value }</li>
+                          <li>{ goal.key_result.desc }</li>
                       </ul>
                   </div>
                   <a href="" className="goals-approval-detail-tkrlink"><i className="fa fa-angle-down" aria-hidden="true"></i> <span className="goals-approval-interactive-link">View previous</span></a>
