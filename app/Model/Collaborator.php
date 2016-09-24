@@ -747,4 +747,13 @@ class Collaborator extends AppModel
         ];
         return $this->find('first', $options);
     }
+
+    function getUserIdByCollaboratorId($collaboratorId)
+    {
+        $res = $this->findById($collaboratorId);
+        if(!$res) {
+            return null;
+        }
+        return $res['Collaborator']['user_id'];
+    }
 }
