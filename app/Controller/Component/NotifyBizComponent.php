@@ -784,10 +784,10 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        if (isset($goal['Leader'][0])) {
-            $collaborator = $goal['Leader'][0];
-        } elseif (isset($goal['MyCollabo'][0])) {
+        if (isset($goal['MyCollabo'][0])) {
             $collaborator = $goal['MyCollabo'][0];
+        } elseif (isset($goal['Leader'][0])) {
+            $collaborator = $goal['Leader'][0];
         } else {
             return;
         }
