@@ -783,8 +783,10 @@ class NotifyBizComponent extends Component
         }
         if (isset($goal['Leader'][0])) {
             $collaborator = $goal['Leader'][0];
-        } else {
+        } elseif (isset($goal['MyCollabo'][0])) {
             $collaborator = $goal['MyCollabo'][0];
+        } else {
+            return;
         }
 
         //inactive user
