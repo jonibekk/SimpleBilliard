@@ -203,13 +203,13 @@ class BaseController extends Controller
     }
 
     /**
-     * コラボレーターに通知
+     * コーチーに通知
      *
      * @param $collaboratorId, $notifyType
      */
     function _sendNotifyToCoachee($collaboratorId, $notifyType)
     {
-        $collaborator = $this->Collaborator->findById($collabo_id);
+        $collaborator = $this->Goal->Collaborator->findById($collabo_id);
         if (!viaIsSet($collaborator['Collaborator'])) {
             return;
         }

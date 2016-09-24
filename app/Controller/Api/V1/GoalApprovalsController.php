@@ -188,7 +188,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチーへ通知
-        $this->_sendNotifyToCollaborator($collaboratorId, NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
+        $this->_sendNotifyToCoachee($collaboratorId, NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
 
         // Mixpanelのトラッキング
         $this->_trackApprovalToMixpanel(
@@ -257,7 +257,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチーへ通知
-        $this->_sendNotifyToCollaborator($collaboratorId, NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION);
+        $this->_sendNotifyToCoachee($collaboratorId, NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION);
 
         // Mixpanelのトラッキング
         $this->_trackApprovalToMixpanel(
@@ -389,7 +389,7 @@ class GoalApprovalsController extends ApiController
 
     function _trackApprovalToMixpanel($trackType, $memberType, $collaboratorId)
     {
-        $collaborator = $this->Collaborator->findById($collabo_id);
+        $collaborator = $this->Goal->Collaborator->findById($collabo_id);
         if (!viaIsSet($collaborator['Collaborator'])) {
             return;
         }
