@@ -800,7 +800,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', $goal_id];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', $collaborator['id']];
 
         //認定希望していないゴールはゴール詳細へ
         if (!$collaborator['is_wish_approval']) {
