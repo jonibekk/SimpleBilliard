@@ -376,6 +376,8 @@ class Goal extends AppModel
             $isSuccess = $isSuccess && (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
         }
 
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         return (bool)$isSuccess;
     }
