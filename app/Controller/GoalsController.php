@@ -198,7 +198,8 @@ class GoalsController extends AppController
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
                     if ($coach_id && $val['priority'] != "0"
                     ) {
-                        $this->redirect("/goal_approval");
+                        $collaborator_id = $this->Goal->Collaborator->getLastInsertID();
+                        $this->redirect("/goals/approval/detail/$collaborator_id");
                     }
                     $this->redirect("/");
                     break;
