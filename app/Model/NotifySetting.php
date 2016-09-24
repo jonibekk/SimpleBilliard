@@ -110,42 +110,49 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE => [
+        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_as_leader_request_to_change',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION => [
+        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION     => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_not_target_for_evaluation',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_COACHEE_CREATE_GOAL      => [
+        self::TYPE_COACHEE_CREATE_GOAL                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all'],
         ],
-        self::TYPE_COACHEE_COLLABORATE_GOAL => [
+        self::TYPE_COACHEE_COLLABORATE_GOAL              => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_collaborate_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all'],
         ],
-        self::TYPE_COACHEE_CHANGE_GOAL      => [
+        self::TYPE_COACHEE_CHANGE_ROLE                   => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_collaborate_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all'],
+        ],
+        self::TYPE_COACHEE_CHANGE_GOAL                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_change_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_EVALUATION_START         => [
+        self::TYPE_EVALUATION_START                      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_evaluation',
@@ -678,6 +685,22 @@ class NotifySetting extends AppModel
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
+                }
+                break;
+            case self::TYPE_COACHEE_CHANGE_ROLE:
+                // この通知で必要なオプション値
+                //   - goal_id: コラボしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the role with <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the role with <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
                         h($goal['Goal']['name']));
                 }

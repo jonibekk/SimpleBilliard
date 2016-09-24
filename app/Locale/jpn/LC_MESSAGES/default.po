@@ -1478,6 +1478,13 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコラボりました。"
 
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has changed the role with "
+"<span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>の役割を変更しました。"
+
 #: Model/NotifySetting.php:593;598
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has changed information "

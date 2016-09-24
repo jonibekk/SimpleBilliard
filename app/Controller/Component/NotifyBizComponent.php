@@ -172,6 +172,9 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
+            case NotifySetting::TYPE_COACHEE_CHANGE_ROLE:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
             case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
