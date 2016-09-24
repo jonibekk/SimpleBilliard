@@ -187,11 +187,15 @@ class GoalApprovalsController extends ApiController
             return $response;
         }
 
-        // TODO: 通知の実装これから
-        // Write somthing
+        // コーチーへ通知
+        $this->_sendNotifyToCollaborator($collaboratorId, NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
 
-        // TODO: Mixpanelのトラッキングこれから
-        // Write somthing
+        // Mixpanelのトラッキング
+        $this->_trackApprovalToMixpanel(
+            MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE,
+            MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
+            $collaboratorId
+        );
 
         // リストページに表示する通知カード
         $this->Pnotify = $this->Components->load('Pnotify');
@@ -252,11 +256,15 @@ class GoalApprovalsController extends ApiController
             return $response;
         }
 
-        // TODO: 通知の実装これから
-        // Write somthing
+        // コーチーへ通知
+        $this->_sendNotifyToCollaborator($collaboratorId, NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION);
 
-        // TODO: Mixpanelのトラッキングこれから
-        // Write somthing
+        // Mixpanelのトラッキング
+        $this->_trackApprovalToMixpanel(
+            MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
+            MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
+            $collaboratorId
+        );
 
         // リストページに表示する通知カード
         $this->Pnotify = $this->Components->load('Pnotify');
@@ -333,6 +341,8 @@ class GoalApprovalsController extends ApiController
 
     function _postApproval($saveData)
     {
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
         // バリデーション
         $validateResult = $this->_validateApprovalPost($saveData);
         if ($validateResult !== true) {
@@ -375,6 +385,21 @@ class GoalApprovalsController extends ApiController
             return $validation;
         }
         return true;
+    }
+
+    function _trackApprovalToMixpanel($trackType, $memberType, $collaboratorId)
+    {
+        $collaborator = $this->Collaborator->findById($collabo_id);
+        if (!viaIsSet($collaborator['Collaborator'])) {
+            return;
+        }
+        $goalId = $collaborator['Collaborator']['goal_id'];
+
+        return $this->Mixpanel->trackApproval(
+            $trackType,
+            $memberType,
+            $goalId
+        );
     }
 
 }
