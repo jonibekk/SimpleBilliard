@@ -178,4 +178,14 @@ const config =  {
   }
 }
 
+const react_apps_contain_undefined = Object.keys(config).map((alias_name) => {
+  // react以外のkeyはundefinedとして格納される
+  if(alias_name.indexOf('react_') !== -1) {
+    return alias_name
+  }
+})
+
+config.react_apps = react_apps_contain_undefined.filter((alias_name) => {
+  return typeof alias_name !=='undefined'
+});
 export default config
