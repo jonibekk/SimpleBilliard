@@ -242,8 +242,8 @@ class GoalApprovalsController extends ApiController
                 'approval_status' => Collaborator::APPROVAL_STATUS_DONE
             ],
             'ApprovalHistory' => [
-                'select_clear_status' => $data['approval_history']['clear_or_not'],
-                'select_important_status' => $data['approval_history']['important_or_not'],
+                'select_clear_status' => $data['approval_history']['select_clear_status'],
+                'select_important_status' => $data['approval_history']['select_important_status'],
                 'collaborator_id' => $collaboratorId,
                 'user_id' => $this->my_uid,
                 'comment' => viaIsSet($data['approval_history']['comment'])
