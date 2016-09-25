@@ -12,9 +12,17 @@ App::uses('User', 'Model');
 
 class CollaboratorService
 {
+    /* コラボレーターの拡張種別 */
     const EXTEND_COACH = "GOAL:EXTEND_COACH";
     const EXTEND_COACHEE = "GOAL:EXTEND_COACHEE";
 
+    /**
+     * idによる単体データ取得
+     * @param       $id
+     * @param array $extends
+     *
+     * @return array|mixed
+     */
     function get($id, $extends =[])
     {
         $Collaborator = ClassRegistry::init("Collaborator");
@@ -27,6 +35,13 @@ class CollaboratorService
         return $this->extend($data, $extends);
     }
 
+    /**
+     * データ拡張
+     * @param $data
+     * @param $extends
+     *
+     * @return mixed
+     */
     function extend($data, $extends) {
         if (empty($data) || empty($extends)) {
             return $data;

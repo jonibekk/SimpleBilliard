@@ -13,6 +13,12 @@ App::import('Service', 'CollaboratorService');
 
 class GoalApprovalService extends Object
 {
+    /**
+     * コーチとしての未対応認定件数取得
+     * @param $userId
+     *
+     * @return mixed
+     */
     function countUnapprovedGoal($userId)
     {
         $Goal = ClassRegistry::init("Goal");
@@ -27,6 +33,12 @@ class GoalApprovalService extends Object
         return $count;
     }
 
+    /**
+     * 認定コメントリスト取得
+     * @param $collaboratorId
+     *
+     * @return array
+     */
     function findHistories($collaboratorId)
     {
         if (empty($collaboratorId)) {

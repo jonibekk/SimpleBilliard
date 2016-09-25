@@ -15,12 +15,22 @@ App::import('View', 'Helper/UploadHelper');
 
 class GoalService extends Object
 {
+    /* ゴールの拡張種別 */
     const EXTEND_GOAL_LABELS = "GOAL:EXTEND_GOAL_LABELS";
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
     const EXTEND_COLLABORATOR = "GOAL:EXTEND_COLLABORATOR";
 
+    /* ゴールキャッシュ */
     private static $cacheList = [];
 
+    /**
+     * idによる単体データ取得
+     * @param       $id
+     * @param null  $userId
+     * @param array $extends
+     *
+     * @return array|mixed
+     */
     function get($id, $userId = null, $extends =[])
     {
         if (empty($id)) {
@@ -78,6 +88,14 @@ class GoalService extends Object
         return $this->extend($data, $userId, $extends);
     }
 
+    /**
+     * データ拡張
+     * @param $data
+     * @param $userId
+     * @param $extends
+     *
+     * @return mixed
+     */
     function extend($data, $userId, $extends)
     {
         if (empty($data) || empty($extends)) {
