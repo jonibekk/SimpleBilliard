@@ -31,6 +31,9 @@ class Label extends AppModel
                 'rule'     => ['notEmpty'],
                 'required' => 'create',
             ],
+            'isUnique'  => [
+                'rule' => ['isUnique', ['name', 'team_id'], false],
+            ],
         ],
         'del_flg' => [
             'boolean' => [
