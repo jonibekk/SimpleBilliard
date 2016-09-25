@@ -45,9 +45,24 @@ class GoalChangeLogTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testSaveSnapshot()
     {
+        $this->_setDefault();
+        $this->GoalChangeLog->saveSnapshot(1,1);
+        $snapshot = $this->GoalChangeLog->getLatestSnapshot(1,1);
+        debug($snapshot);
 
     }
 
+    function testGetLatestSnapshot()
+    {
+        $this->_setDefault();
+
+    }
+
+    function _setDefault()
+    {
+        $this->GoalChangeLog->current_team_id = 1;
+        $this->GoalChangeLog->Goal->current_team_id = 1;
+    }
 }

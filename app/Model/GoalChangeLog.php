@@ -39,4 +39,43 @@ class GoalChangeLog extends AppModel
         'Goal',
         'User',
     ];
+
+    function saveSnapshot($goalId, $userId)
+    {
+        $goal = Hash::get($this->Goal->findById($goalId),'Goal');
+        if (empty($goal)) {
+            return false;
+        }
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $goalData = msgpack_pack($goal);
+        debug($goalData);
+        debug(gettype($goalData));
+        $data = [
+            'user_id' => $userId,
+            'team_id' => $this->current_team_id,
+            'goal_id' => $goalId,
+            'data'    => $goalData,
+        ];
+        $this->create();
+        return $this->save($data);
+    }
+
+    function getLatestSnapshot($goalId, $userId)
+    {
+        $data = $this->find('first', [
+            'conditions' => [
+                'user_id' => $userId,
+                'goal_id' => $goalId,
+            ]
+        ]);
+        if (empty($data)) {
+            return null;
+        }
+        debug($data);
+
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data['GoalChangeLog']['data'] = msgpack_unpack($data['GoalChangeLog']['data']);
+        return $data;
+    }
+
 }
