@@ -593,11 +593,39 @@ class Collaborator extends AppModel
         return $res;
     }
 
+    /**
+     * @deprecated
+     */
     function getCollaborator($team_id, $user_id, $goal_id, $owner = true)
     {
         $options = [
             'conditions' => [
                 'team_id' => $team_id,
+                'user_id' => $user_id,
+                'goal_id' => $goal_id,
+                'type'    => self::TYPE_OWNER,
+            ],
+        ];
+        if ($owner === false) {
+            $options['conditions']['type'] = self::TYPE_COLLABORATOR;
+        }
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * ユニークのレコード取得
+     * @param      $user_id
+     * @param      $goal_id
+     * @param bool $owner
+     *
+     * @return mixed
+     */
+    function getUnique($user_id, $goal_id, $owner = true)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
                 'user_id' => $user_id,
                 'goal_id' => $goal_id,
                 'type'    => self::TYPE_OWNER,
