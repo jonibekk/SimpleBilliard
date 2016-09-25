@@ -297,7 +297,6 @@ class GoalApprovalsController extends ApiController
         }
 
         $res = $this->Goal->Collaborator->getCollaboratorForApproval($collaboratorId);
-        $myUserId = $this->Auth->user('id');
         return $this->_getResponseSuccess($this->_formatGoalApprovalForResponse($res, $myUserId));
     }
 
