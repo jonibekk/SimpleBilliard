@@ -10,9 +10,9 @@ export function nl2br(text) {
     return null;
   }
   const regex = /(\n)/g
-  const lines =  text.split(regex).map(function (line) {
+  const lines =  text.split(regex).map(function (line, i) {
     if (line.match(regex)) {
-      return React.createElement('br')
+      return <br key={i} />
     }
     else {
       return line;
