@@ -283,8 +283,6 @@ class GoalsController extends ApiController
     {
         $validation = [];
 
-        $this->log(__METHOD__.' start');
-        $this->log(compact('data'));
         // ゴールバリデーション
         $goalValidation = $this->Goal->validateGoalPOST($data);
         if ($goalValidation !== true) {

@@ -10,7 +10,8 @@ App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('Collaborator', 'Model');
 App::import('Service', 'CollaboratorService');
-class GoalApprovalService
+
+class GoalApprovalService extends Object
 {
     function countUnapprovedGoal($userId)
     {

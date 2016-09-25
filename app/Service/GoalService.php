@@ -120,7 +120,6 @@ class GoalService extends Object
                 self::EXTEND_TOP_KEY_RESULT,
                 self::EXTEND_COLLABORATOR
             ]);
-            $this->log($goal);
             // 本来TKRやコラボレーターが存在しないことは有りえないが一応判定
             if (empty($goal['top_key_result'])) {
                 throw new Exception(sprintf("Not exist tkr. goalId:%d", $goalId));
@@ -169,7 +168,6 @@ class GoalService extends Object
                     'user_id' => $userId,
                     'comment' => $requestData['approval_history']['comment'],
                 ];
-                $this->log(compact('approvalHistory'));
                 if (!$ApprovalHistory->save($approvalHistory)) {
                     throw new Exception(sprintf("Failed save approvalHistory. data:%s" , var_export($approvalHistory, true)));
                 }
