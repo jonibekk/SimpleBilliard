@@ -1,13 +1,14 @@
-import * as types from '../constants/ActionTypes'
+import * as types from '~/goal_approval/constants/ActionTypes'
+import * as List from '~/goal_approval/constants/List'
 import axios from "axios"
 
-export function fetchGoalApprovals(is_initialize = false) {
+export function fetchCollaborators(is_initialize = false) {
   return (dispatch, getState) => {
     const next_getting_api = getState().list.next_getting_api
-    const default_getting_api = '/goals/ajax_get_init_goal_approvals'
+    const default_getting_api = '/api/v1/goal_approvals/list'
     const request_api = next_getting_api ? next_getting_api : default_getting_api
 
-    dispatch(fetchingGoalApprovals())
+    dispatch(fetchingCollaborators())
     return axios.get(request_api, {
       timeout: 10000,
       headers: {
@@ -16,42 +17,47 @@ export function fetchGoalApprovals(is_initialize = false) {
       dataType: 'json'
     })
     .then((response) => {
-      dispatch(finishedFetchingGoalApprovals())
+      dispatch(finishedFetchingCollaborators())
       // TODO: 仕様ではレスポンスデータに次のページングAPIに含まれていることになっているため、サーバサイドでAPI実装後コメントアウトを外す
       // dispatch(setNextPagingApi(response.paging.next))
       if(is_initialize) {
-        dispatch(initGoalApprovals(response.data))
-        dispatch(setNextPagingApi('/goals/ajax_get_next_goal_approvals'))
-        console.log('fetch init')
+        dispatch(initCollaborators(response.data.data.collaborators))
+        dispatch(setApplicationCount(response.data.data.application_count))
+        dispatch(setNextPagingApi('/api/v1/goal_approvals/list'))
+        console.log('fetch init data')
       } else {
-        dispatch(addGoalApprovals(response.data))
+        dispatch(addCollaborators(response.data.data.collaborators))
       }
 
-      if(response.data.length === 0 || getState().list.goal_approvals.length > 9) {
+      if(response.data.data.collaborators.length < List.NUMBER_OF_DISPLAY_LIST_CARD) {
         dispatch(doneLoadingAllData())
       }
     })
     .catch(() => {
-      dispatch(finishedFetchingGoalApprovals())
+      dispatch(finishedFetchingCollaborators())
     })
 
   }
 }
 
-export function initGoalApprovals(goal_approvals) {
-  return { type: types.INIT_GOAL_APPROVALS, goal_approvals }
+export function initCollaborators(collaborators) {
+  return { type: types.INIT_COLLABORATORS, collaborators }
 }
 
-export function addGoalApprovals(goal_approvals) {
-  return { type: types.ADD_GOAL_APPROVALS, goal_approvals }
+export function setApplicationCount(application_count) {
+  return { type: types.SET_APPLICATION_COUNT, application_count }
 }
 
-export function fetchingGoalApprovals() {
-  return { type: types.FETCHING_GOAL_APPROVALS }
+export function addCollaborators(collaborators) {
+  return { type: types.ADD_COLLABORATORS, collaborators }
 }
 
-export function finishedFetchingGoalApprovals() {
-  return { type: types.FINISHED_FETCHING_GOAL_APPROVALS }
+export function fetchingCollaborators() {
+  return { type: types.FETCHING_COLLABORATORS }
+}
+
+export function finishedFetchingCollaborators() {
+  return { type: types.FINISHED_FETCHING_COLLABORATORS }
 }
 
 export function setNextPagingApi(next_getting_api) {

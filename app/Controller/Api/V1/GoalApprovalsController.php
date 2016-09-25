@@ -1,6 +1,6 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::uses('GoalApprovalService', 'Service');
+App::import('Service', 'GoalApprovalService');
 /**
  * Class GoalApprovalsController
  */
