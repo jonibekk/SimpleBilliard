@@ -133,6 +133,19 @@ const config =  {
     },
     watch_files: [assets_dir + '/js/react/goal_approval/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
   },
+  browserify : {
+    transform : {
+      babelify_options : {
+        presets: ["es2015", "react"],
+        plugins: [
+          "babel-plugin-transform-object-assign",
+          ["babel-root-import", {
+            "rootPathSuffix": "app/webroot/js/react"
+          }]
+        ]
+      }
+    }
+  },
   css: {
     src: [
       assets_dir + '/css/goalstrap.css',
