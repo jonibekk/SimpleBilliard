@@ -148,7 +148,7 @@ class GoalApprovalsController extends ApiController
      * - Mixpanelでトラッキング
      * - 認定ヒストリーIDをレスポンスに含めて返却
      *
-     * @return true|CakeResponse
+     * @return CakeResponse
      */
     function post_set_as_target()
     {
@@ -218,7 +218,7 @@ class GoalApprovalsController extends ApiController
      * - Mixpanelでトラッキング
      * - 認定ヒストリーIDをレスポンスに含めて返却
      *
-     * @return true|CakeResponse
+     * @return CakeResponse
      */
     function post_remove_from_target()
     {
@@ -283,7 +283,7 @@ class GoalApprovalsController extends ApiController
      * Goal認定詳細ページの初期データ取得API
      *
      * @param  integer $collaboratorId
-     * @return true | CakeResponse
+     * @return CakeResponse
      */
     public function get_detail($collaboratorId)
     {
@@ -300,6 +300,12 @@ class GoalApprovalsController extends ApiController
         return $this->_getResponseSuccess($this->_formatGoalApprovalForResponse($res, $myUserId));
     }
 
+    /**
+     * Detailページの初期データレスポンスのためにモデルデータをフォーマット
+     * @param  $resByModel
+     * @param  $myUserId
+     * @return $res
+     */
     public function _formatGoalApprovalForResponse($resByModel, $myUserId)
     {
         App::uses('UploadHelper', 'View/Helper');
