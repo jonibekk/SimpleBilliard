@@ -2,14 +2,14 @@ import * as types from "../constants/ActionTypes";
 import {post} from "../../util/api";
 import axios from "axios";
 
-export function validateGoal(page, addData) {
+export function validateGoal(addInputData) {
   return (dispatch, getState) => {
 
-    const postData = Object.assign(getState().goal.inputData, addData)
+    const postData = Object.assign(getState().goal.inputData, addInputData)
     return post(`/api/v1/goals/validate`, postData, null,
       (response) => {
         console.log("validate success");
-        dispatch(toNextPage())
+        dispatch(toNextPage(addInputData))
       },
       (response) => {
         console.log("validate failed");
@@ -19,9 +19,10 @@ export function validateGoal(page, addData) {
   }
 }
 
-export function toNextPage() {
+export function toNextPage(addInputData = {}) {
   return {
-    type: types.TO_NEXT_PAGE
+    type: types.TO_NEXT_PAGE,
+    addInputData
   }
 }
 
@@ -118,10 +119,10 @@ export function fetchComments() {
   }
 }
 
-export function saveGoal(addData) {
+export function saveGoal(addInputData) {
   return (dispatch, getState) => {
     const {inputData, goal} = getState().goal;
-    inputData["approval_history"] = addData
+    inputData["approval_history"] = addInputData
     return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
         dispatch(toNextPage())

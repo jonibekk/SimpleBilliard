@@ -10,7 +10,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchComments: () => dispatch(actions.fetchComments()),
     addLabel: (label) => dispatch(actions.addLabel(label)),
-    saveGoal: (addData) => dispatch(actions.saveGoal(addData)),
+    saveGoal: (addInputData) => dispatch(actions.saveGoal(addInputData)),
   }
 }
 
