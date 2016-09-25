@@ -16,7 +16,7 @@ gulp.task('react_setup:browserify', () => {
 
 gulp.task('react_signup:browserify', () => {
   return browserify({entries: [config.react_signup.src]})
-    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .transform(babelify, config.browserify.transform.babelify_options)
     .bundle()
     .pipe(source(config.react_signup.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/react_signup'))
@@ -25,7 +25,7 @@ gulp.task('react_signup:browserify', () => {
 
 gulp.task('react_goal_create:browserify', () => {
   return browserify({entries: [config.react_goal_create.src]})
-    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .transform(babelify, config.browserify.transform.babelify_options)
     .bundle()
     .pipe(source(config.react_goal_create.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/react_goal_create'))
@@ -34,7 +34,7 @@ gulp.task('react_goal_create:browserify', () => {
 
 gulp.task('react_goal_edit:browserify', () => {
   return browserify({entries: [config.react_goal_edit.src]})
-    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .transform(babelify, config.browserify.transform.babelify_options)
     .bundle()
     .pipe(source(config.react_goal_edit.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/react_goal_edit'))
@@ -43,7 +43,7 @@ gulp.task('react_goal_edit:browserify', () => {
 
 gulp.task('react_goal_approval:browserify', () => {
   return browserify({entries: [config.react_goal_approval.src]})
-    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .transform(babelify, config.browserify.transform.babelify_options)
     .bundle()
     .pipe(source(config.react_goal_approval.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/react_goal_approval'))
