@@ -271,38 +271,38 @@ class GoalsController extends ApiController
 
     /**
      * ゴール更新のバリデーション
-     * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
+     * バリデーションエラーの場合はエラーメッセージの配列を返す(エラーが無ければ空の配列)
      * - key resultがなければバリデーションを通さずレスポンスを返す
      * - approval_hisotryがなければバリデーションを通さずレスポンスを返す
      * - モデル毎にバリデーションを実行し、結果をマージしている。
      * @param array $data
      *
-     * @return true|CakeResponse
+     * @return array
      */
     function _validateUpdateGoal($data)
     {
-        $validation = [];
+        $validationErrors = [];
 
         // ゴールバリデーション
         $goalValidation = $this->Goal->validateGoalPOST($data);
         if ($goalValidation !== true) {
-            $validation = $this->_validationExtract($goalValidation);
+            $validationErrors = $this->_validationExtract($goalValidation);
         }
 
         // TKRバリデーション
         $krValidation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
         if ($krValidation !== true) {
-            $validation['key_result'] = $this->_validationExtract($krValidation);
+            $validationErrors['key_result'] = $this->_validationExtract($krValidation);
         }
 
         // コメントバリデーション
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         $ApprovalHistory->set($data['approval_history']);
         if (!$ApprovalHistory->validates()) {
-            $validation['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
         }
 
-        return $validation;
+        return $validationErrors;
     }
 
     /**
