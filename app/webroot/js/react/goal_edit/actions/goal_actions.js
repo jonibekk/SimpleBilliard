@@ -102,9 +102,27 @@ export function fetchInitialData(goalId) {
   }
 }
 
-export function saveGoal() {
+export function fetchComments() {
   return (dispatch, getState) => {
-    return post("/api/v1/goals", getState().goal.inputData, null,
+    const collaboratorId = getState().goal.goal.collaborator.id
+    return axios.get(`/api/v1/goal_approvals/histories?collaborator_id=${collaboratorId}`)
+      .then((response) => {
+        let approvalHistories = response.data.data
+        dispatch({
+          type: types.FETCH_COMMETNS,
+          approvalHistories
+        })
+      })
+      .catch((response) => {
+      })
+  }
+}
+
+export function saveGoal(addData) {
+  return (dispatch, getState) => {
+    const {inputData, goal} = getState().goal;
+    inputData["approval_history"] = addData
+    return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
         dispatch(toNextPage())
       },

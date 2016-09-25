@@ -7,6 +7,9 @@
  */
 
 App::uses('Goal', 'Model');
+App::uses('ApprovalHistory', 'Model');
+App::uses('Collaborator', 'Model');
+App::import('Service', 'CollaboratorService');
 class GoalApprovalService
 {
     function countUnapprovedGoal($userId)
@@ -23,4 +26,26 @@ class GoalApprovalService
         return $count;
     }
 
+    function findHistories($collaboratorId)
+    {
+        if (empty($collaboratorId)) {
+            return [];
+        }
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        $CollaboratorService = ClassRegistry::init("CollaboratorService");
+
+        // 認定コメントリスト取得
+        $histories = Hash::extract($ApprovalHistory->findByCollaboratorId($collaboratorId), '{n}.ApprovalHistory');
+
+        $collaborator = $CollaboratorService->get($collaboratorId, [
+            CollaboratorService::EXTEND_COACH,
+            CollaboratorService::EXTEND_COACHEE,
+        ]);
+
+        foreach($histories as &$v) {
+            $v['user'] = ($v['user_id'] == $collaborator['user_id']) ?
+                $collaborator['coachee'] : $collaborator['coach'];
+        }
+        return $histories;
+    }
 }

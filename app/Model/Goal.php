@@ -428,16 +428,20 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function buildTopKeyResult($data, $goal_term)
+    function buildTopKeyResult($data, $goal_term, $add_new = true)
     {
         //tKRを保存
         if (!Hash::get($data, 'KeyResult.0')) {
             return $data;
         }
-        $data['KeyResult'][0]['priority'] = 5;
-        $data['KeyResult'][0]['tkr_flg'] = true;
-        $data['KeyResult'][0]['user_id'] = $this->my_uid;
-        $data['KeyResult'][0]['team_id'] = $this->current_team_id;
+
+        if ($add_new) {
+            $data['KeyResult'][0]['priority'] = 5;
+            $data['KeyResult'][0]['tkr_flg'] = true;
+            $data['KeyResult'][0]['user_id'] = $this->my_uid;
+            $data['KeyResult'][0]['team_id'] = $this->current_team_id;
+        }
+
         if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
         } else {

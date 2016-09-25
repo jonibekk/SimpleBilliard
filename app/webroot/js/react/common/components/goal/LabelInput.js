@@ -29,9 +29,9 @@ export default class LabelInput extends React.Component {
         />
         <ul className="goals-create-selected-labels">
           {
-            this.props.inputLabels.map((v) => {
+            this.props.inputLabels.map((v, i) => {
               return (
-                <li key={v} className="goals-create-selected-labels-item">
+                <li key={i} className="goals-create-selected-labels-item">
                   <span>{v}</span>
                   <a href="#" className="ml_8px" onClick={this.props.onDeleteLabel} data-label={v}>
                     <i className="fa fa-times-circle" aria-hidden="true"></i>

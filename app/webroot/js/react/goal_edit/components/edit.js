@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {browserHistory} from "react-router";
 import * as KeyCode from "../../common/constants/KeyCode";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import CategorySelect from "../../common/components/goal/CategorySelect";
@@ -10,7 +11,7 @@ export default class Edit extends React.Component {
     super(props)
     this.state = {}
 
-    this.handleChange = this.handleChange.bind(this)
+    this.onChange = this.onChange.bind(this)
     this.deleteLabel = this.deleteLabel.bind(this)
     this.addLabel = this.addLabel.bind(this)
   }
@@ -25,7 +26,7 @@ export default class Edit extends React.Component {
     }
   }
 
-  handleSubmit(e) {
+  onSubmit(e) {
     e.preventDefault()
     if (e.keyCode == KeyCode.ENTER) {
       return false
@@ -62,9 +63,7 @@ export default class Edit extends React.Component {
     }
   }
 
-  handleChange(e, childKey = "") {
-    console.log("-----handleChange")
-    console.log({value:e.target.value})
+  onChange(e, childKey = "") {
     this.props.updateInputData({[e.target.name]: e.target.value}, childKey)
   }
 
@@ -81,20 +80,15 @@ export default class Edit extends React.Component {
     // リサイズ後の画像情報が取得できない。
     // 画像アップロード後submitした時にimgタグの画像情報を取得してもアップロード前の画像情報を取得してしまう。
     // これはReactの仮想domに反映されていない為。
-    console.log("goal data")
-    console.log(this.props.goal.goal)
     const imgPath = inputData.photo ? inputData.photo.result : goal.medium_large_img_url;
-    console.log({imgPath})
 
-    console.log("render start")
-    console.log({inputData})
     return (
       <div className="panel panel-default col-sm-8 col-sm-offset-2 goals-create">
         <form className="goals-create-input"
               encType="multipart/form-data"
               method="post"
               acceptCharset="utf-8"
-              onSubmit={(e) => this.handleSubmit(e)}>
+              onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
             <h1 className="goals-create-heading">{__("Set your goal name")}</h1>
             <p
@@ -103,7 +97,7 @@ export default class Edit extends React.Component {
             <label className="goals-create-input-label">{__("Goal name?")}</label>
             <input name="name" className="form-control goals-create-input-form" type="text"
                    placeholder="e.g. Get goalous users" ref="name"
-                   onChange={this.handleChange} value={inputData.name}/>
+                   onChange={this.onChange} value={inputData.name}/>
             <InvalidMessageBox message={validationErrors.name}/>
 
             <CategorySelect
@@ -154,29 +148,29 @@ export default class Edit extends React.Component {
 
             <label className="goals-create-input-label">{__("Term?")}</label>
             <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
-                    value={inputData.term_type} onChange={this.handleChange}>
+                    value={inputData.term_type} onChange={this.onChange}>
               <option value="current">{__("Current Term")}</option>
               <option value="next">{__("Next Term")}</option>
             </select>
             <InvalidMessageBox message={validationErrors.term_type}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}
+            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.onChange}
                       value={inputData.description}/>
             <InvalidMessageBox message={validationErrors.description}/>
 
             <label className="goals-create-input-label">{__("Start date")}</label>
-            <input className="goals-create-input-form" type="date" name="start_date" onChange={this.handleChange}
+            <input className="goals-create-input-form" type="date" name="start_date" onChange={this.onChange}
                    value={inputData.start_date}/>
             <InvalidMessageBox message={validationErrors.start_date}/>
 
             <label className="goals-create-input-label">{__("End date")}</label>
-            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange}
+            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.onChange}
                    value={inputData.end_date}/>
             <InvalidMessageBox message={validationErrors.end_date}/>
             <label className="goals-create-input-label">{__("Weight")}</label>
             <select className="goals-create-input-form mod-select" name="priority" ref="priority"
-                    value={inputData.priority} onChange={this.handleChange}>
+                    value={inputData.priority} onChange={this.onChange}>
               {
                 this.props.goal.priorities.map((v) => {
                   return (
@@ -193,13 +187,13 @@ export default class Edit extends React.Component {
             <label className="goals-create-input-label">{__("tKR name")}</label>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
-                   placeholder="e.g. Increase monthly active users" onChange={(e) => this.handleChange(e, "key_result")}/>
+                   placeholder="e.g. Increase monthly active users" onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.name}/>
 
             <label className="goals-create-input-label">{__("Unit & Range")}</label>
             <select name="value_unit" value={inputData.key_result.value_unit}
                     className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select"
-                    onChange={(e) => this.handleChange(e, "key_result")}>
+                    onChange={(e) => this.onChange(e, "key_result")}>
               {
                 this.props.goal.units.map((v) => {
                   return (
@@ -213,18 +207,18 @@ export default class Edit extends React.Component {
             <div className="goals-create-layout-flex">
               <input name="start_value" value={inputData.key_result.start_value}
                      className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
-                     placeholder={0} onChange={(e) => this.handleChange(e, "key_result")}/>
+                     placeholder={0} onChange={(e) => this.onChange(e, "key_result")}/>
               <span className="goals-create-input-form-tkr-range-symbol">&gt;</span>
               <input name="target_value" value={inputData.key_result.target_value}
                      className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
-                     placeholder={100} onChange={(e) => this.handleChange(e, "key_result")}/>
+                     placeholder={100} onChange={(e) => this.onChange(e, "key_result")}/>
             </div>
             <InvalidMessageBox message={validationErrors.key_result.start_value}/>
             <InvalidMessageBox message={validationErrors.key_result.target_value}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}
-                      className="form-control goals-create-input-form mod-textarea" onChange={(e) => this.handleChange(e, "key_result")}/>
+                      className="form-control goals-create-input-form mod-textarea" onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.description}/>
 
           </section>
@@ -236,4 +230,8 @@ export default class Edit extends React.Component {
       </div>
     )
   }
+}
+
+Edit.propTypes = {
+  goal: React.PropTypes.object.isRequired,
 }

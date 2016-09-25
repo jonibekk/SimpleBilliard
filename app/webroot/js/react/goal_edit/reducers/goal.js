@@ -21,7 +21,8 @@ const initialState = {
       // name:""
     },
     labels:[]
-  }
+  },
+  approvalHistories: [],
 }
 
 export default function goal(state = initialState, action) {
@@ -55,6 +56,14 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, action.data, {
         inputData,
         suggestionsExcludeSelected,
+        toNextPage: false,
+        initFlg: true,
+        validationErrors:{key_result: {}}
+      })
+
+    case types.FETCH_COMMETNS:
+      return Object.assign({}, state, {
+        approvalHistories: action.approvalHistories,
         toNextPage: false,
         initFlg: true,
         validationErrors:{key_result: {}}
@@ -192,8 +201,8 @@ export function addItemToSuggestions(suggestions, suggestionName, baseList) {
  */
 export function initInputData(goal) {
   let labels = [];
+
   for (const i in goal.goal_labels) {
-    console.log({i})
     labels.push(goal.goal_labels[i].name)
   }
 
@@ -205,13 +214,13 @@ export function initInputData(goal) {
     start_date: goal.start_date,
     end_date: goal.end_date,
     description: goal.description,
-    priority: goal.priority,
+    priority: goal.collaborator.priority,
     key_result: {
-      name: goal.key_result.name,
-      value_unit: goal.key_result.value_unit,
-      start_value: goal.key_result.start_value,
-      target_value: goal.key_result.target_value,
-      description: goal.key_result.description,
+      name: goal.top_key_result.name,
+      value_unit: goal.top_key_result.value_unit,
+      start_value: goal.top_key_result.start_value,
+      target_value: goal.top_key_result.target_value,
+      description: goal.top_key_result.description,
     },
   }
   return inputData;

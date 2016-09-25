@@ -16,10 +16,12 @@ App::import('Service', 'GoalService');
  */
 class GoalsController extends ApiController
 {
+    // TODO:ここで定義しても$this->***で使用出来ない為要調査
     public $uses = [
         'Goal',
         'TeamVision',
         'GroupVision',
+        'ApprovalHistory',
     ];
 
     /**
@@ -65,9 +67,10 @@ class GoalsController extends ApiController
                 return $this->_getResponseForbidden();
             }
             $GoalService = ClassRegistry::init("GoalService");
-            $res['goal'] = $GoalService->get($id, [
+            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'),[
                 GoalService::EXTEND_TOP_KEY_RESULT,
-                GoalService::EXTEND_GOAL_LABELS
+                GoalService::EXTEND_GOAL_LABELS,
+                GoalService::EXTEND_COLLABORATOR,
             ]);
         }
 
@@ -190,74 +193,45 @@ class GoalsController extends ApiController
     }
 
     /**
-     * ゴール更新API
-     * *必須フィールド
-     * - socket_id: pusherへのpush用
-     * *処理
-     * - バリデーション(失敗したらレスポンス返す)
-     * - ゴール新規登録(トランザクションかける。失敗したらレスポンス返す) TODO: タグの保存処理まだやっていない
-     * - フィードへ新しい投稿がある旨を知らせる
-     * - コーチへ通知
-     * - セットアップガイドのステータスを更新
-     * - コーチと自分の認定件数を更新(キャッシュを削除)
-     * - Mixpanelでトラッキング
-     * - TODO: 遷移先の情報は渡さなくて大丈夫か？api以外の場合はリダイレクトを分岐している。
-     * - ゴールIDをレスポンスに含めて返却
+     * ゴール更新
+     *
+     * @param $goalId
      *
      * @return CakeResponse
      */
-    function put($id)
+    function post_update($goalId)
     {
-        try {
-            $this->Goal->isPermittedAdmin($id);
-        } catch (RuntimeException$e) {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // ゴール取得
+        $goal = $GoalService->get($goalId);
+        // ゴールが存在するか
+        if (empty($goal)) {
+            // TODO:404や500の時は例外を投げて良いのか検討($this->_getResponse**の形に統一？)
+            throw new NotFoundException();
+        }
+        // ゴール作成者か
+        if ($this->Auth->user('id') != $goal['user_id']) {
             return $this->_getResponseForbidden();
         }
 
         $data = $this->request->data;
         $data['photo'] = $_FILES['photo'];
-        $validateResult = $this->_validateCreateGoal($data);
-        if ($validateResult !== true) {
-            return $validateResult;
+        // バリデーション
+        $validateErrors = $this->_validateUpdateGoal($data);
+        if (!empty($validateErrors)) {
+            return $this->_getResponseBadFail(__('Validation failed.'), $validateErrors);
         }
 
-        // 保存するTKR情報
-        $keyResultId = Hash::extract($this->Goal->KeyResult->getTkr($id), 'KeyResult')['id'];
-        $keyResult = Hash::get($data, 'key_result');
-        $keyResult['id'] = $keyResultId;
-
-        $this->Goal->begin();
-        $isSaveSuccess = $this->Goal->add(
-            [
-                'Goal'      => $data,
-                'KeyResult' => [$keyResult],
-                'Label'     => Hash::get($data, 'labels'),
-            ]
-        );
-
-        if ($isSaveSuccess === false) {
-            $this->Goal->rollback();
-            return $this->_getResponseBadFail(__('Failed to save a goal.'));
-        }
-        $this->Goal->commit();
-
-        $newGoalId = $this->Goal->getLastInsertID();
-
-        //通知
-        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-
-        $this->updateSetupStatusIfNotCompleted();
-        //コーチと自分の認定件数を更新(キャッシュを削除)
-        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
-        if ($coach_id) {
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
+        // ゴール更新
+        if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
+            throw new InternalErrorException();
         }
 
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL, $newGoalId);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
 
-        return $this->_getResponseSuccess(['goal_id' => $newGoalId]);
+        return $this->_getResponseSuccess();
     }
 
     /**
@@ -293,6 +267,44 @@ class GoalsController extends ApiController
             return $this->_getResponseBadFail(__('Validation failed.'), $validation);
         }
         return true;
+    }
+
+    /**
+     * ゴール更新のバリデーション
+     * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
+     * - key resultがなければバリデーションを通さずレスポンスを返す
+     * - approval_hisotryがなければバリデーションを通さずレスポンスを返す
+     * - モデル毎にバリデーションを実行し、結果をマージしている。
+     * @param array $data
+     *
+     * @return true|CakeResponse
+     */
+    function _validateUpdateGoal($data)
+    {
+        $validation = [];
+
+        $this->log(__METHOD__.' start');
+        $this->log(compact('data'));
+        // ゴールバリデーション
+        $goalValidation = $this->Goal->validateGoalPOST($data);
+        if ($goalValidation !== true) {
+            $validation = $this->_validationExtract($goalValidation);
+        }
+
+        // TKRバリデーション
+        $krValidation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
+        if ($krValidation !== true) {
+            $validation['key_result'] = $this->_validationExtract($krValidation);
+        }
+
+        // コメントバリデーション
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        $ApprovalHistory->set($data['approval_history']);
+        if (!$ApprovalHistory->validates()) {
+            $validation['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+        }
+
+        return $validation;
     }
 
     /**

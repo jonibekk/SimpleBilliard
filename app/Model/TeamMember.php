@@ -2435,8 +2435,9 @@ class TeamMember extends AppModel
         return $evaluation_flg;
     }
 
-    function getCoachId($user_id, $team_id)
+    function getCoachId($user_id, $team_id = null)
     {
+        $team_id = empty($team_id) ? $this->current_team_id : $team_id;
         $options = [
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
