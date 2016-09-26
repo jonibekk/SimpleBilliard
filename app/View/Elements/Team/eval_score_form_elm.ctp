@@ -11,7 +11,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
 }
 ?>
 
-<!-- START app/View/Elements/Team/eval_score_form_elm.ctp -->
+<?= $this->App->viewStartComment()?>
 <tr class="evaluation_select"
     index="<?php echo $index ?>" id="AddScore_<?= $index ?>">
     <td>
@@ -97,4 +97,4 @@ if (!viaIsSet($index) || !is_numeric($index)) {
         </td>
     <?php endif; ?>
 </tr>
-<!-- END app/View/Elements/Team/eval_score_form_elm.ctp -->
+<?= $this->App->viewEndComment()?>

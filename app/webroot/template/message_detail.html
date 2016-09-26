@@ -87,12 +87,12 @@
                                           class="form-control disable-change-warning"
                                           ng-maxlength="5000"
                                           ng-focus="focusReplyTextarea()"
-                                          rows="1" placeholder="返信する" cols="30" init-height="15"
+                                          rows="1" placeholder="Reply" cols="30" init-height="15"
                                           name="message_body"></textarea>
 
                                     <div class="has-error">
                                     <span class="has-error help-block" ng-show="userForm.message_body.$error.maxlength">
-                                        最大文字数(5000)を超えています。
+                                        We have exceeded the maximum number of characters (5,000).
                                     </span>
                                     </div>
 
@@ -105,11 +105,12 @@
                                 </div>
                                 <div class="message-detail-reply-btn-wrap submit pull-right">
                                     <i class="fa fa-refresh fa-spin" id="SendMessageLoader" style="display: none"></i>
-                                    <input ng-click="clickMessage($event,'comment')"
+                                    <button ng-click="clickMessage($event,'comment')"
                                            ng-if="message"
                                            id="message_submit_button"
                                            class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
-                                           value="返信する">
+                                           type="submit">
+                                        <i class="fa fa-send-o"></i></button>
                                     <button ng-click="clickMessage($event,'like')"
                                             ng-disabled="flag"
                                             ng-if="!message && !userForm.message_body.$error.maxlength"

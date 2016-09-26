@@ -9,7 +9,7 @@
  * @var                    $post
  */
 ?>
-<!-- START app/View/Elements/Feed/goal_sharing_block.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 pt_10px">
     <a href="<?= $this->Html->url([
         'controller' => 'goals',
@@ -46,4 +46,4 @@
         </div>
     </a>
 </div>
-<!-- END app/View/Elements/Feed/goal_sharing_block.ctp -->
+<?= $this->App->viewEndComment()?>

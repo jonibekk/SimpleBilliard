@@ -27,7 +27,7 @@ if (isset($key_results[key($key_results)]['KeyResult'])) {
 }
 ?>
 
-<!-- START app/View/Elements/Goal/key_result_items.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php
 if ($is_init) {
     $limit_count = MY_GOAL_AREA_FIRST_VIEW_KR_COUNT;
@@ -78,4 +78,4 @@ if ($is_init) {
     }
     ?>
 <?php endforeach ?>
-<!-- End app/View/Elements/Goal/key_result_items.ctp -->
+<?= $this->App->viewEndComment()?>

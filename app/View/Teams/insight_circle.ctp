@@ -7,7 +7,7 @@
 <?php $this->start('sidebar'); ?>
 <?= $this->element('Team/side_menu', ['active' => 'insight_circle']); ?>
 <?php $this->end(); ?>
-<!-- START app/View/Teams/insight_circle.ctp -->
+<?= $this->App->viewStartComment()?>
 <div>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -33,4 +33,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Teams/insight_circle.ctp -->
+<?= $this->App->viewEndComment()?>

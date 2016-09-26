@@ -10,7 +10,7 @@
  * @var                    $this             View
  */
 ?>
-<!-- START app/View/Elements/footer.ctp -->
+<?= $this->App->viewStartComment()?>
 <footer class="col-xxs-12 <?= $is_mb_app ? "hide" : null ?>">
     <div class="row">
         <div class="col-lg-12">
@@ -51,4 +51,4 @@
     </div>
 </footer>
 <div id="layer-black"></div>
-<!-- END app/View/Elements/footer.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -20,7 +20,7 @@
  * @var                    $goal_term
  */
 ?>
-<!-- START app/View/Elements/Goal/modal_edit_key_result.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -251,4 +251,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<!-- END app/View/Elements/Goal/modal_edit_key_result.ctp -->
+<?= $this->App->viewEndComment()?>

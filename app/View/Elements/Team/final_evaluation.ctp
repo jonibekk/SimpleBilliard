@@ -21,7 +21,7 @@
  * @var                    $current_eval_is_frozen
  */
 ?>
-<!-- START app/View/Elements/Team/final_evaluation.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Final evaluation") ?></div>
     <div class="panel-body">
@@ -64,7 +64,7 @@
         </div>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/Team/final_evaluation.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->start('modal');
 if ($previous_term_id && $previous_eval_is_frozen) {
     echo $this->element('Team/modal_final_evaluation_by_csv',

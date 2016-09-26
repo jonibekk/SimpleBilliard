@@ -10,7 +10,7 @@
  * @var string             $model
  */
 ?>
-<!-- START app/View/Elements/Feed/modal_comment_red_users.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -36,4 +36,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/modal_comment_red_users.ctp -->
+<?= $this->App->viewEndComment()?>

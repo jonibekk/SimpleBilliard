@@ -9,7 +9,7 @@
  * @var                    $my_member_status
  */
 ?>
-<!-- START app/View/Elements/modal_add_circle.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal fade" tabindex="-1" id="modal_add_circle">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -181,4 +181,4 @@
 </script>
 
 <?php $this->end() ?>
-<!-- END app/View/Elements/modal_add_circle.ctp -->
+<?= $this->App->viewEndComment()?>

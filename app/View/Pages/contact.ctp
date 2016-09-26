@@ -27,11 +27,11 @@ Page毎に要素が変わるもの
 $meta_contact = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("We accept consultation of introduction.")),
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -43,7 +43,7 @@ $meta_contact = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("We accept consultation of introduction.")),
     ],
     [
         "property" => "og:url",
@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/contact.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-promo" class="contact-promo section">
     <div class="bg-mask"></div>
@@ -286,4 +286,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
     </div><!--//row-->
 </section>
 
-<!-- END app/View/Pages/contact.ctp -->
+<?= $this->App->viewEndComment()?>

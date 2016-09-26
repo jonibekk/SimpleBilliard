@@ -41,7 +41,7 @@ if (!isset($goal_list_for_action_option)) {
     $goal_list_for_action_option = [];
 }
 ?>
-<!-- START app/View/Elements/Feed/common_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default global-form" id="GlobalForms">
     <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
@@ -515,4 +515,4 @@ if (!isset($goal_list_for_action_option)) {
     </div>
 </div>
 <?= $this->element('file_upload_form') ?>
-<!-- END app/View/Elements/Feed/common_form.ctp -->
+<?= $this->App->viewEndComment()?>
