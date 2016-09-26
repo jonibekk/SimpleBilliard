@@ -133,9 +133,9 @@ export default class Edit extends React.Component {
                 <img src={imgPath} width={100} height={100} ref="photo_image"/>
               </div>
               <div className="goals-create-input-image-upload-info">
-                <p className="goals-create-input-image-upload-info-text">
-                  {__("This is sample image if you want to upload your original image")}
-                </p>
+                {/*<p className="goals-create-input-image-upload-info-text">*/}
+                  {/*{__("This is sample image if you want to upload your original image")}*/}
+                {/*</p>*/}
                 <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
                   <span className="fileinput-new">{__("Upload a image")}</span>
                   <span className="fileinput-exists">{__("Reselect an image")}</span>
