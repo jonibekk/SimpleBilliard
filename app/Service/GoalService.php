@@ -306,7 +306,7 @@ class GoalService extends AppService
             // 最初のエラーメッセージのみを抽出
             return reset(Hash::flatten($Label->validationErrors));
         }
-        return true;
+        return "";
     }
 
 

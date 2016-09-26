@@ -43,7 +43,10 @@ class GoalsController extends ApiController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
         $validationErrors = $GoalService->validateSave($this->request->data, $fields);
-        return $this->_getResponseValidationFail($validationErrors);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+        return $this->_getResponseSuccess();
     }
 
     /**
