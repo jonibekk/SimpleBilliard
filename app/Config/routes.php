@@ -21,6 +21,9 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
 
 /**
  * Api
+ * # 説明
+ * 一部の非APIのリバースルーティングで不具合がありREQUEST_URIをチェックする対応をしている
+ * (POSTにおいて何故かAPIのルーティングルールが適用されてしまう。)
  * # versionを追加する場合
  * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
  * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
@@ -35,7 +38,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
      * actionなし
      */
     Router::connect('/api/:apiVersion/:controller',
-        ['action' => 'list', 'prefix' => 'get','[method]' => 'GET'],
+        ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET'],
         ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
     );
     Router::connect('/api/:apiVersion/:controller/:id',
@@ -84,7 +87,6 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
         ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
     );
 }
-
 
 /**
  * エイリアス
