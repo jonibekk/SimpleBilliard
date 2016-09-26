@@ -278,6 +278,15 @@ class Goal extends AppModel
         'Evaluation',
         'GoalLabel'           => [
             'dependent' => true,
+        ]
+    ];
+
+    /**
+     * hasOne associations
+     */
+    public $hasOne = [
+        'TopKeyResult' => [
+            'className' => 'KeyResult',
         ],
     ];
 

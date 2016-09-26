@@ -511,4 +511,28 @@ class AppModel extends Model
         return $data;
     }
 
+    /**
+     * バリデーションメッセージの展開
+     * key:valueの形にして1フィールド1メッセージにする
+     * TODO: 将来的にはService基底クラスに移行する
+     *
+     * @param $validationErrors
+     *
+     * @return array
+     */
+    function _validationExtract($validationErrors)
+    {
+        $res = [];
+        if (empty($validationErrors)) {
+            return $res;
+        }
+        if ($validationErrors === true) {
+            return $res;
+        }
+        foreach ($validationErrors as $k => $v) {
+            $res[$k] = $v[0];
+        }
+        return $res;
+    }
+
 }

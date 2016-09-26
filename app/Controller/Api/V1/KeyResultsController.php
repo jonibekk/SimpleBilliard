@@ -27,7 +27,8 @@ class KeyResultsController extends ApiController
         if ($validation === true) {
             return $this->_getResponseSuccess();
         }
-        $validationMsg = $this->_validationExtract($validation);
+        // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
+        $validationMsg = $this->KeyResult->_validationExtract($validation);
         return $this->_getResponseValidationFail($validationMsg);
     }
 
