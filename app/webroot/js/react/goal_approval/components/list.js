@@ -13,7 +13,7 @@ export default class ListComponent extends React.Component {
   render() {
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
-          <h1 className="goals-approval-heading">Goal approval list <span>(2)</span></h1>
+          <h1 className="goals-approval-heading">{__("Goal approval list")} <span>(2)</span></h1>
           <ul>
             { this.props.list.goal_approvals.map( (goal_approval) => {
               if(goal_approval.is_coach) {
