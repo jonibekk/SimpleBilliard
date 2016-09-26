@@ -75,4 +75,15 @@ class ApprovalHistory extends AppModel
         return $this->save($saveData);
     }
 
+
+    function findByCollaboratorId($collaboratorId)
+    {
+        $options = [
+            'conditions' => [
+                'collaborator_id' => $collaboratorId,
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

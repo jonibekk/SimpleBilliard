@@ -1,5 +1,9 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('UploadHelper', 'View/Helper');
+App::import('Service', 'GoalService');
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -12,10 +16,12 @@ App::uses('ApiController', 'Controller/Api');
  */
 class GoalsController extends ApiController
 {
+    // TODO:ここで定義しても$this->***で使用出来ない為要調査
     public $uses = [
         'Goal',
         'TeamVision',
         'GroupVision',
+        'ApprovalHistory',
     ];
 
     /**
@@ -61,10 +67,12 @@ class GoalsController extends ApiController
             } catch (RuntimeException$e) {
                 return $this->_getResponseForbidden();
             }
-            $goal = Hash::extract($this->Goal->findById($id), 'Goal');
-            $goal['key_result'] = Hash::extract($this->KeyResult->getTkr($goal['id']), 'KeyResult');
-            $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['id']), '{n}.Label');
-            $res['goal'] = $goal;
+            $GoalService = ClassRegistry::init("GoalService");
+            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'),[
+                GoalService::EXTEND_TOP_KEY_RESULT,
+                GoalService::EXTEND_GOAL_LABELS,
+                GoalService::EXTEND_COLLABORATOR,
+            ]);
         }
 
         /**
@@ -116,7 +124,7 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
-            $res['priorities'] = Configure::read("label.priorities"); ;
+            $res['priorities'] = Configure::read("label.priorities");
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
@@ -186,6 +194,49 @@ class GoalsController extends ApiController
     }
 
     /**
+     * ゴール更新
+     *
+     * @param $goalId
+     *
+     * @return CakeResponse
+     */
+    function post_update($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // ゴール取得
+        $goal = $GoalService->get($goalId);
+        // ゴールが存在するか
+        if (empty($goal)) {
+            // TODO:404や500の時は例外を投げて良いのか検討($this->_getResponse**の形に統一？)
+            throw new NotFoundException();
+        }
+        // ゴール作成者か
+        if ($this->Auth->user('id') != $goal['user_id']) {
+            return $this->_getResponseForbidden();
+        }
+
+        $data = $this->request->data;
+        $data['photo'] = $_FILES['photo'];
+        // バリデーション
+        $validateErrors = $this->_validateUpdateGoal($data);
+        if (!empty($validateErrors)) {
+            return $this->_getResponseBadFail(__('Validation failed.'), $validateErrors);
+        }
+
+        // ゴール更新
+        if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
+            throw new InternalErrorException();
+        }
+        // TODO:通知関連実装
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
+
+        return $this->_getResponseSuccess();
+    }
+
+    /**
      * ゴール作成のバリデーション
      * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
      * - key resultがなければバリデーションを通さずレスポンスを返す
@@ -222,4 +273,39 @@ class GoalsController extends ApiController
         return true;
     }
 
+    /**
+     * ゴール更新のバリデーション
+     * バリデーションエラーの場合はエラーメッセージの配列を返す(エラーが無ければ空の配列)
+     * - key resultがなければバリデーションを通さずレスポンスを返す
+     * - approval_hisotryがなければバリデーションを通さずレスポンスを返す
+     * - モデル毎にバリデーションを実行し、結果をマージしている。
+     * @param array $data
+     *
+     * @return array
+     */
+    function _validateUpdateGoal($data)
+    {
+        $validationErrors = [];
+
+        // ゴールバリデーション
+        $goalValidation = $this->Goal->validateGoalPOST($data);
+        if ($goalValidation !== true) {
+            $validationErrors = $this->_validationExtract($goalValidation);
+        }
+
+        // TKRバリデーション
+        $krValidation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
+        if ($krValidation !== true) {
+            $validationErrors['key_result'] = $this->_validationExtract($krValidation);
+        }
+
+        // コメントバリデーション
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        $ApprovalHistory->set($data['approval_history']);
+        if (!$ApprovalHistory->validates()) {
+            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+        }
+
+        return $validationErrors;
+    }
 }

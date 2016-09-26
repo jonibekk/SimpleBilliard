@@ -1,14 +1,13 @@
 import {connect} from "react-redux";
-import EditComponent from "../components/edit";
+import Edit from "../components/edit";
 import * as actions from "../actions/goal_actions";
-import * as common from "./common";
 
 function mapStateToProps(state) {
   return state
 }
 
 function mapDispatchToProps(dispatch) {
-  return Object.assign({}, common.getCommonDispatchToProps(dispatch), {
+  return {
     onChangeAutoSuggest(event, {newValue}) {
       dispatch(actions.setKeyword(newValue));
     },
@@ -18,8 +17,11 @@ function mapDispatchToProps(dispatch) {
     deleteLabel: (label) => dispatch(actions.deleteLabel(label)),
     addLabel: (label) => dispatch(actions.addLabel(label)),
     saveGoal: () => dispatch(actions.saveGoal()),
-  })
+    validateGoal: (addInputData) => dispatch(actions.validateGoal(addInputData)),
+    fetchInitialData: (goalId) => dispatch(actions.fetchInitialData(goalId)),
+    updateInputData: (data, key = "") => dispatch(actions.updateInputData(data, key))
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(Edit)
 

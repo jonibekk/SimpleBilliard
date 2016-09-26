@@ -11,6 +11,7 @@ import createReducer from '../reducers/index'
 
 // Container読み込み
 import EditContainer from '../containers/edit'
+import ConfirmContainer from '../containers/confirm'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -42,6 +43,7 @@ export default class Routes extends Component {
         <div>
           <Router history={history}>
             <Route path="goals/(:goalId)/edit" component={EditContainer} />
+            <Route path="goals/(:goalId)/edit/confirm" component={ConfirmContainer} />
           </Router>
           {/* <DevTools / > */}
         </div>
