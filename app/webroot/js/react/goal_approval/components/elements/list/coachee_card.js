@@ -31,7 +31,7 @@ export class CoacheeCard extends React.Component {
               <Link className="goals-approval-list-item-link" to={ `/goals/approval/detail/${collaborator.id}` }>
                   <img className="goals-approval-list-item-image" src={ collaborator.user.small_img_url } alt="" width="32" height="32" />
                   <div className="goals-approval-list-item-info">
-                      <p className="goals-approval-list-item-info-user-name">{ collaborator.user.name }</p>
+                      <p className="goals-approval-list-item-info-user-name">{ collaborator.user.display_username }</p>
                       <p className="goals-approval-list-item-info-goal-name">{ collaborator.goal.name }</p>
                       <p className="goals-approval-list-item-info-goal-attr">{ role }・<span className="mod-status">{ status }</span></p>
                   </div>

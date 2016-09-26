@@ -17,9 +17,9 @@ export default class ListComponent extends React.Component {
           <ul>
             { this.props.list.collaborators.map((collaborator) => {
               if(collaborator.is_mine) {
-                return <CoacheeCard collaborator={ collaborator } key={collaborator.goal.name}  />;
+                return <CoacheeCard collaborator={ collaborator } key={collaborator.id}  />;
               } else {
-                return <CoachCard collaborator={ collaborator } key={collaborator.goal.name} />;
+                return <CoachCard collaborator={ collaborator } key={collaborator.id} />;
               }
             }) }
           </ul>

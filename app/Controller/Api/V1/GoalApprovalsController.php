@@ -19,9 +19,10 @@ class GoalApprovalsController extends ApiController
      */
     function get_list()
     {
-        // チームの評価設定が無効であれば404
+        // チームの評価設定が無効であればForbidden
         if (!$this->Team->EvaluationSetting->isEnabled()) {
-            throw new NotFoundException();
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
         }
 
         $userId = $this->Auth->user('id');
@@ -31,9 +32,10 @@ class GoalApprovalsController extends ApiController
         // 自分のコーチのユーザーIDを取得
         $coachId = $this->Team->TeamMember->getCoachUserIdByMemberUserId($userId);
 
-        // コーチとコーチーがいない場合は404
+        // コーチとコーチーがいない場合はForbidden
         if(empty($coachId) && empty($coacheeIds)) {
-            throw new NotFoundException();
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
         }
 
         // コーチとしてのゴール認定未処理件数取得
