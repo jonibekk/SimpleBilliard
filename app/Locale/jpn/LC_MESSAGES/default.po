@@ -3110,8 +3110,8 @@ msgid "View samples"
 msgstr "サンプルを見る"
 
 #: View/Elements/cake_variables.ctp:450
-msgid "See Other %s"
-msgstr "他を見る(%s)"
+msgid "See Other"
+msgstr "他を見る"
 
 #: View/Elements/cake_variables.ctp:451
 msgid "Next →"

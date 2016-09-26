@@ -447,7 +447,7 @@
             "Goal name": "<?=__("Goal name")?>",
             "eg. Spread Goalous users in the world": "<?=__("eg. Spread Goalous users in the world")?>",
             "View samples": "<?=__("View samples")?>",
-            "See Other %s": "<?=__("See Other %s")?>",
+            "See Other": "<?=__("See Other")?>",
             "Next →": "<?=__("Next →")?>",
             "Cancel": "<?=__("Cancel")?>",
             "Vision": "<?=__("Vision")?>",
