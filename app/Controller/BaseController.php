@@ -202,4 +202,22 @@ class BaseController extends Controller
         $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
     }
 
+    /**
+     * コーチーに通知
+     *
+     * @param $collaboratorId, $notifyType
+     */
+    function _sendNotifyToCoachee($collaboratorId, $notifyType)
+    {
+        $collaborator = $this->Goal->Collaborator->findById($collaboratorId);
+        if (!viaIsSet($collaborator['Collaborator'])) {
+            return;
+        }
+        $this->NotifyBiz->execSendNotify($notifyType,
+            $collaborator['Collaborator']['goal_id'],
+            null,
+            $collaborator['Collaborator']['user_id']
+        );
+    }
+
 }

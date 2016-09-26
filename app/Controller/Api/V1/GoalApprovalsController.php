@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::uses('GoalApprovalService', 'Service');
+App::import('Service', 'GoalApprovalService');
+
 /**
  * Class GoalApprovalsController
  */
@@ -136,4 +137,192 @@ class GoalApprovalsController extends ApiController
 
         return $res;
     }
+
+    /**
+     * ゴール認定対象化API
+     * - アクセス権限チェック
+     * - 保存データ定義
+     * - バリデーション(失敗したらレスポンス返す)
+     * - Collaborator, ApprovalHisotry保存(失敗したらレスポンス返す)
+     * - コーチーへ通知
+     * - Mixpanelでトラッキング
+     * - 認定ヒストリーIDをレスポンスに含めて返却
+     *
+     * @return CakeResponse
+     */
+    function post_set_as_target()
+    {
+        App::uses('ApprovalHistory', 'Model');
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $myUserId = $this->Auth->user('id');
+        $data = $this->request->data;
+        $collaboratorId = Hash::get($data,'collaborator.id');
+
+        // アクセス権限チェック
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
+        if(!$canAccess) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
+        }
+
+        // 保存データ定義
+        $saveData = $GoalApprovalService->generateSaveData(Collaborator::IS_TARGET_EVALUATION, $data, $myUserId);
+
+        // 保存処理
+        $response = $this->_postApproval($saveData);
+        if($response !== true) {
+            return $response;
+        }
+
+        // コーチーへ通知
+        $this->_sendNotifyToCoachee($collaboratorId, NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
+
+        // Mixpanelのトラッキング
+        $this->_trackApprovalToMixpanel(
+            MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE,
+            MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
+            $collaboratorId
+        );
+
+        // リストページに表示する通知カード
+        $this->Pnotify->outSuccess(__("Set as approval"));
+
+        //コーチーと自分の認定未処理件数を更新(キャッシュを削除
+        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
+        $coacheeUserId = Hash::get($coachee,'Collaborator.user_id');
+        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
+
+        // レスポンス
+        $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
+        return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
+    }
+
+    /**
+     * ゴール認定対象外化API
+     * - バリデーション(失敗したらレスポンス返す)
+     * - 認定ヒストリー新規登録(失敗したらレスポンス返す)
+     * - コーチーへ通知
+     * - Mixpanelでトラッキング
+     * - 認定ヒストリーIDをレスポンスに含めて返却
+     *
+     * @return CakeResponse
+     */
+    function post_remove_from_target()
+    {
+        App::uses('ApprovalHistory', 'Model');
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $myUserId = $this->Auth->user('id');
+        $data = $this->request->data;
+        $collaboratorId = Hash::get($data,'collaborator.id');
+
+        // アクセス権限チェック
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
+        if(!$canAccess) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
+        }
+
+        // 保存データ定義
+        $saveData = $GoalApprovalService->generateSaveData(Collaborator::IS_NOT_TARGET_EVALUATION, $data, $myUserId);
+
+        // 保存処理
+        $response = $this->_postApproval($saveData);
+        if($response !== true) {
+            return $response;
+        }
+
+        // コーチーへ通知
+        $this->_sendNotifyToCoachee($collaboratorId, NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION);
+
+        // Mixpanelのトラッキング
+        $this->_trackApprovalToMixpanel(
+            MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
+            MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
+            $collaboratorId
+        );
+
+        // リストページに表示する通知カード
+        $this->Pnotify->outSuccess(__("remove from approval"));
+
+        //コーチーと自分の認定未処理件数を更新(キャッシュを削除
+        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
+        $coacheeUserId = Hash::get($coachee,'Collaborator.user_id');
+        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
+
+        // レスポンス
+        $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
+        return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
+    }
+
+    /**
+     * Goal認定詳細ページの初期データ取得API
+     *
+     * @param  integer collaborator_id クエリパラメータにて送られる
+     * @return CakeResponse
+     */
+    public function get_detail()
+    {
+        $this->Pnotify = $this->Components->load('Pnotify');
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $myUserId = $this->my_uid;
+        $collaboratorId = $this->request->query('collaborator_id');
+
+        // パラメータが存在しない場合はNotFound
+        if(!$collaboratorId) {
+            $this->Pnotify->outError(__("Ooops, Not Found."));
+            return $this->_getResponseNotFound();
+        }
+
+        // アクセス権限チェック
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
+        if(!$canAccess) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
+        }
+
+        $res = $this->Goal->Collaborator->getCollaboratorForApproval($collaboratorId);
+        return $this->_getResponseSuccess($GoalApprovalService->formatGoalApprovalForResponse($res, $myUserId));
+    }
+
+    /**
+     * 認定詳細ページPOSTの共通処理
+     * @param  $saveData
+     * @return true|CakeResponse
+     */
+    function _postApproval($saveData)
+    {
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
+        // バリデーション
+        $validateResult = $GoalApprovalService->validateApprovalPost($saveData);
+        if ($validateResult !== true) {
+            return $this->_getResponseBadFail(__('Validation failed.'), $validateResult);
+        }
+
+        // 保存処理
+        $isSaveSuccess = $GoalApprovalService->saveApproval($saveData);
+        if ($isSaveSuccess === false) {
+            return $this->_getResponseBadFail(__('Failed to save.'));
+        }
+
+        return true;
+    }
+
+    function _trackApprovalToMixpanel($trackType, $memberType, $collaboratorId)
+    {
+        $collaborator = $this->Goal->Collaborator->findById($collaboratorId);
+        $goalId = Hash::get($collaborator,'Collaborator.goal_id');
+        if (!$goalId) {
+            return;
+        }
+
+        return $this->Mixpanel->trackApproval(
+            $trackType,
+            $memberType,
+            $goalId
+        );
+    }
+
 }

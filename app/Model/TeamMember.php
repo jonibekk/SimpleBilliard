@@ -2303,6 +2303,9 @@ class TeamMember extends AppModel
      */
     function getCoachUserIdByMemberUserId($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
@@ -2325,6 +2328,9 @@ class TeamMember extends AppModel
      */
     function getMyMembersList($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: user_id
         // 条件: coach_user_id = パラメータ1 team_id = パラメータ2
