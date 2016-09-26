@@ -41,6 +41,7 @@ export const INITIAL_DATA_TYPES = {
   STEP3: [
     "terms",
     "priorities",
+    "default_end_dates"
   ],
   STEP4: [
     "units",

@@ -54,6 +54,9 @@ class GoalsController extends ApiController
      * formで利用する値を取得する
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     *
+     * @param null $id
+     *
      * @return CakeResponse
      */
     function get_init_form($id = null)
@@ -127,6 +130,16 @@ class GoalsController extends ApiController
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
             $res['units'] = Configure::read("label.units"); ;
+        }
+
+        if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
+            $TimeExHelper = new TimeExHelper(new View());
+            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+            $res['default_end_dates'] = [
+                'current' => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
+                'next' => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
+            ];
         }
 
         return $this->_getResponseSuccess($res);
@@ -207,8 +220,7 @@ class GoalsController extends ApiController
         $goal = $GoalService->get($goalId);
         // ゴールが存在するか
         if (empty($goal)) {
-            // TODO:404や500の時は例外を投げて良いのか検討($this->_getResponse**の形に統一？)
-            throw new NotFoundException();
+            return $this->_getResponseNotFound();
         }
         // ゴール作成者か
         if ($this->Auth->user('id') != $goal['user_id']) {
@@ -225,7 +237,7 @@ class GoalsController extends ApiController
 
         // ゴール更新
         if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
-            throw new InternalErrorException();
+            return $this->_getResponseInternalServerError();
         }
         // TODO:通知関連実装
 

@@ -1,5 +1,6 @@
 import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
+import {KeyResult} from "~/common/constants/Model";
 
 const initialState = {
   toNextPage: false,
@@ -9,6 +10,7 @@ const initialState = {
   terms:[],
   priorities:[],
   units:[],
+  default_end_dates:{},
   keyword: "",
   suggestions: [],
   suggestionsExcludeSelected: [],
@@ -193,8 +195,11 @@ export function initInputData(inputData, page, data) {
       if (!inputData.term_type && data.terms.length > 0) {
         inputData["term_type"] = data.terms[0].type
       }
-      if (data.priorities.length > 0) {
-        inputData["priority"] = data.priorities[0].id
+      if (!inputData.priority &&data.priorities.length > 0) {
+        inputData["priority"] = KeyResult.Priority.DEFAULT;
+      }
+      if (!inputData.end_date && Object.keys(data.default_end_dates).length > 0) {
+        inputData["end_date"] = data.default_end_dates.current
       }
       break;
     case Page.STEP4:

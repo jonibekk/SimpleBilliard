@@ -7,7 +7,9 @@
  */
 
 App::import('Service', 'AppService');
+App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');
+App::uses('KeyResult', 'Model');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
@@ -84,7 +86,7 @@ class GoalService extends AppService
             $data['term_type'] = 'current';
         }
 
-        // 日付フォーマッット
+        // 日付フォーマット
         $data['start_date'] = $TimeExHelper->dateFormat($data['start_date'], $currentTerm['timezone']);
         $data['end_date'] = $TimeExHelper->dateFormat($data['end_date'], $currentTerm['timezone']);
 
@@ -139,6 +141,8 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalLabel $GoalLabel */
         $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var ApprovalHistory $ApprovalHistory */
@@ -147,6 +151,9 @@ class GoalService extends AppService
         $Collaborator = ClassRegistry::init("Collaborator");
 
         try {
+            // トランザクション開始
+            $Goal->begin();
+
             // ゴール・TKR・コラボレーター取得
             $goal = $this->get($goalId, $userId, [
                 self::EXTEND_TOP_KEY_RESULT,
@@ -160,50 +167,39 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Not exist collaborator. goalId:%d userId:%d", $goalId, $userId));
             }
 
-            $requestData['id'] = $goalId;
-            // 保存するTKR情報
-            $keyResult = Hash::get($requestData, 'key_result');
-            $keyResult['id'] = $goal['top_key_result']['id'];
-
-            // トランザクション開始
-            $Goal->begin();
-
-            $data = [
-                'Goal'      => $requestData,
-                'KeyResult' => [$keyResult],
-                'Label'     => Hash::get($requestData, 'labels'),
-            ];
-
-            $goalTerm = $Goal->getGoalTermFromPost($data);
-
-            $data = $Goal->convertGoalDateFromPost($data, $goalTerm);
-            $data = $Goal->buildTopKeyResult($data, $goalTerm, false);
-
-            // setting default image if default image is chosen and image is not selected.
-            if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
-                $data['Goal']['photo'] = $data['Goal']['img_url'];
-                unset($data['Goal']['img_url']);
+            // ゴール更新
+            $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
+            $this->log(compact('updateGoal'));
+            if (!$Goal->saveAll($updateGoal)) {
+                throw new Exception(sprintf("Failed update goal. data:%s"
+                    , var_export($updateGoal, true)));
             }
 
-            // ゴール・TKR更新
-            if (!$Goal->saveAll($data)) {
-                throw new Exception(sprintf("Failed save goal. data:%s", var_export($data, true)));
-            }
-
-            // 認定ステータス更新
-            $updateCollaborator = [
-                'id'              => $goal['collaborator']['id'],
-                'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION
-            ];
-            if (!$Collaborator->save($updateCollaborator)) {
-                throw new Exception(sprintf("Failed update approval status. data:%s",
-                    var_export($updateCollaborator, true)));
+            // TKR更新
+            $updateTkr = $this->buildUpdateTkrData($goal['top_key_result']['id'], $requestData);
+            $this->log(compact('updateTkr'));
+            if (!$KeyResult->save($updateTkr)) {
+                throw new Exception(sprintf("Failed update tkr. data:%s"
+                    , var_export($updateTkr, true)));
             }
 
             // ゴールラベル更新
-            if (!$GoalLabel->saveLabels($data['Goal']['id'], $data['Label'])) {
-                throw new Exception(sprintf("Failed save labels. data:%s", var_export($data, true)));
+            if (!$GoalLabel->saveLabels($goalId, $requestData['labels'])) {
+                throw new Exception(sprintf("Failed save labels. goalId:%s labels:%s"
+                    , $goalId, var_export($requestData['labels'], true)));
             }
+
+            // コラボレーター更新(再申請のステータスに変更)
+            $updateCollaborator = [
+                'id'              => $goal['collaborator']['id'],
+                'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION,
+                'priority' => $goal['priority']
+            ];
+            if (!$Collaborator->save($updateCollaborator)) {
+                throw new Exception(sprintf("Failed update collaborator. data:%s"
+                    , var_export($updateCollaborator, true)));
+            }
+
             // 認定についてのコメント記載があれば登録
             if (!empty($requestData['approval_history']) && !empty($requestData['approval_history']['comment'])) {
                 $approvalHistory = [
@@ -212,21 +208,8 @@ class GoalService extends AppService
                     'comment'         => $requestData['approval_history']['comment'],
                 ];
                 if (!$ApprovalHistory->save($approvalHistory)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s",
-                        var_export($approvalHistory, true)));
-                }
-            }
-
-            // 認定についてのコメント記載があれば登録
-            if (!empty(Hash::get($requestData, 'approval_history.comment'))) {
-                $approvalHistory = [
-                    'collaborator_id' => $goal['collaborator']['id'],
-                    'user_id'         => $userId,
-                    'comment'         => $requestData['approval_history']['comment'],
-                ];
-                if (!$ApprovalHistory->save($approvalHistory)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s",
-                        var_export($approvalHistory, true)));
+                    throw new Exception(sprintf("Failed save approvalHistory. data:%s"
+                        , var_export($approvalHistory, true)));
                 }
             }
 
@@ -244,6 +227,65 @@ class GoalService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * ゴール更新データ作成
+     * @param $goalId
+     * @param $requestData
+     *
+     * @return array
+     */
+    private function buildUpdateGoalData($goalId, $requestData)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+
+        $updateData = [
+            'id' => $goalId,
+            'name' => $requestData['name'],
+            'description' => $requestData['description'],
+        ];
+
+        if (!empty($requestData['goal_category_id'])) {
+            $updateData['goal_category_id'] = $requestData['goal_category_id'];
+        }
+        if (!empty($requestData['end_date'])) {
+            $goalTerm = $EvaluateTerm->getTermDataByDatetime($requestData['end_date']);
+            $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
+        }
+        if (!empty($requestData['photo'])) {
+            $updateData['photo'] = $requestData['photo'];
+        }
+        return $updateData;
+    }
+
+    /**
+     * TKR更新データ作成
+     *
+     * @param $tkrId
+     * @param $requestData
+     *
+     * @return array
+     */
+    private function buildUpdateTkrData($tkrId, $requestData)
+    {
+        $inputTkrData = Hash::get($requestData, 'key_result');
+        if (empty($inputTkrData)) {
+            return [];
+        }
+
+        $updateData = [
+            'id' => $tkrId,
+            'name' => $inputTkrData['name'],
+            'description' => $inputTkrData['description'],
+            'value_unit' => $inputTkrData['value_unit'],
+            'start_value' => $inputTkrData['start_value'],
+            'target_value' => $inputTkrData['target_value'],
+        ];
+        return $updateData;
     }
 
     /**
