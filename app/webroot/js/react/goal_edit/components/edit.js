@@ -182,15 +182,15 @@ export default class Edit extends React.Component {
             <InvalidMessageBox message={validationErrors.priority}/>
           </section>
           <section className="mb_32px">
-            <h1 className="goals-create-heading">{__("Set a top key result (tKR)")}</h1>
-            <p className="goals-create-description">{__("Set measurable target to achieve your goal.")}</p>
-            <label className="goals-create-input-label">{__("tKR name")}</label>
+            <h1 className="goals-create-heading">{__("Set Top Key Result")}</h1>
+            <p className="goals-create-description">{__("Create a clear and most important Key Result for your goal.")}</p>
+            <label className="goals-create-input-label">{__("Top Key Result")}</label>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
-                   placeholder="e.g. Increase monthly active users" onChange={(e) => this.onChange(e, "key_result")}/>
+                   placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.name}/>
 
-            <label className="goals-create-input-label">{__("Unit & Range")}</label>
+            {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
             <select name="value_unit" value={inputData.key_result.value_unit}
                     className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select"
                     onChange={(e) => this.onChange(e, "key_result")}>

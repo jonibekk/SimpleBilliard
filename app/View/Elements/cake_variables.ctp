@@ -467,12 +467,12 @@
             "End date": "<?=__("End date")?>",
             "Weight": "<?=__("Weight")?>",
             "Set Top Key Result": "<?=__("Set Top Key Result")?>",
-            //goal approval
             "Create a clear and most important Key Result for your goal.": "<?=__("Create a clear and most important Key Result for your goal.")?>",
             "Top Key Result": "<?=__("Top Key Result")?>",
             "eg. Increase Goalous weekly active users": "<?=__("eg. Increase Goalous weekly active users")?>",
             "Add description": "<?=__("Add description")?>",
             "Save and share": "<?=__("Save and share")?>",
+            //goal approval
             "Set as a target for evaluation?": "<?=__("Set as a target for evaluation?")?>",
             "Leader": "<?=__("Leader")?>",
             "Do you think this Top Key Result is clear ?": "<?=__("Do you think this Top Key Result is clear ?")?>",
