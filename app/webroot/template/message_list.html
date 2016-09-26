@@ -60,7 +60,7 @@
 <!-- start app/webroot/template/message_list.html -->
 <div class="panel panel-default message-list-panel">
     <div class="panel-heading message-list-panel-head">
-        すべてのメッセージ
+        All Messages
     </div>
     <div class="message-list-panel-body panel-body">
         <div infinite-scroll='loadMore()' infinite-scroll-disabled="disable_scroll">
@@ -83,7 +83,7 @@
                         </div>
                         <div ng-class="(item.Post.is_unread == true) ? 'message-list-panel-card-text-unread' : 'message-list-panel-card-text-read'" class="message-list-panel-card-text col col-xxs-12" id="CommentTextBody_67">
                             <span ng-if="item.User.id != auth_info.user_id">{{item.User.display_first_name}}</span>
-                            <span ng-if="item.User.id == auth_info.user_id">あなた</span>
+                            <span ng-if="item.User.id == auth_info.user_id">You</span>
                             : <span ng-bind-html="item.Post.body"></span>
                         </div>
                         <p class="message-list-panel-card-aside">
