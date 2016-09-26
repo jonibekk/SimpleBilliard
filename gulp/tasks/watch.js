@@ -23,50 +23,16 @@ gulp.task('angular_app:watch', () => {
   })
 })
 
-gulp.task('react_setup:watch', () => {
-  const  watcher = gulp.watch(config.react_setup.watch_files, ['react_setup'])
+config.react_apps.map((app_name) => {
+  gulp.task(`${app_name}:watch`, () => {
+    const  watcher = gulp.watch(config[app_name].watch_files, [app_name])
 
-  watcher.on('change', event => {
-    /* eslint-disable no-console */
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-    /* eslint-enable no-console */
+    watcher.on('change', event => {
+      /* eslint-disable no-console */
+      console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+      /* eslint-enable no-console */
+    })
   })
-})
-
-gulp.task('react_signup:watch', () => {
-  const watcher = gulp.watch(config.react_signup.watch_files, ['react_signup'])
-
-  watcher.on('change', event => {
-    /* eslint-disable no-console */
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-    /* eslint-enable no-console */
-  })
-})
-
-gulp.task('react_goal_create:watch', () => {
-  const watcher = gulp.watch(config.react_goal_create.watch_files, ['react_goal_create'])
-
-  watcher.on('change', event => {
-    /* eslint-disable no-console */
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-    /* eslint-enable no-console */
-  })
-})
-
-gulp.task('react_goal_edit:watch', () => {
-  const watcher = gulp.watch(config.react_goal_edit.watch_files, ['react_goal_edit'])
-
-  watcher.on('change', event => {
-    /* eslint-disable no-console */
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-    /* eslint-enable no-console */
-  })
-})
-
-gulp.task('react_goal_approval:watch', () => {
-  const watcher = gulp.watch(config.react_goal_approval.watch_files, ['react_goal_approval'])
-
-  registerChangeWather(watcher)
 })
 
 gulp.task('css:watch', () => {
@@ -78,11 +44,3 @@ gulp.task('css:watch', () => {
     /* eslint-enable no-console */
   })
 })
-
-function registerChangeWather(watcher) {
-  watcher.on('change', event => {
-    /* eslint-disable no-console */
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-    /* eslint-enable no-console */
-  })
-}
