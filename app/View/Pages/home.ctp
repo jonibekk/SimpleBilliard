@@ -27,11 +27,11 @@
 $meta_lp = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content" => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App.")),
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -39,11 +39,11 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Goalous(ゴーラス) | 最強にオープンな社内SNS'),
+        "content"  => __('Goalous | Enjoy your work. Achieve your goal.'),
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App.")),
     ],
     [
         "property" => "og:url",
@@ -75,7 +75,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
-<title><?= __('Goalous (ゴーラス) │最強にオープンな社内SNS') ?></title>
+<title><?= __('Goalous | Enjoy your work. Achieve your goal.') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
