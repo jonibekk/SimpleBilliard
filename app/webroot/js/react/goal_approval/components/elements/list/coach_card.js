@@ -22,7 +22,7 @@ export class CoachCard extends React.Component {
     if(is_evaluated) {
       status = __('Evaluated')
     } else if(is_Reapplication_approval) {
-      status = __('Reapplication')
+      status = __('Reapply')
       is_incomplete = true
     } else if(is_new_approval) {
       status = __('New')
