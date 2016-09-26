@@ -24,6 +24,7 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
  * # 説明
  * 一部の非APIのリバースルーティングで不具合がありREQUEST_URIをチェックする対応をしている
  * (POSTにおいて何故かAPIのルーティングルールが適用されてしまう。)
+ * FIXME この対応ではAPIでアクセスしてきた際に内部的にページのurlをリバースルーティングで生成する際に問題あり！
  * # versionを追加する場合
  * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
  * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
