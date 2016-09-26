@@ -10,13 +10,13 @@ export function validateGoal(addInputData) {
       (response) => {
         /* eslint-disable no-console */
         console.log("validate success");
-        /* eslint-disable no-console */
+        /* eslint-enable no-console */
         dispatch(toNextPage(addInputData))
       },
       (response) => {
         /* eslint-disable no-console */
         console.log("validate failed");
-        /* eslint-disable no-console */
+        /* eslint-enable no-console */
         dispatch(invalid(response.data))
       }
     );

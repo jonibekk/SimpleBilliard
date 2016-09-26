@@ -12,13 +12,13 @@ export function validateGoal(page, addData) {
       (response) => {
         /* eslint-disable no-console */
         console.log("validate success");
-        /* eslint-disable no-console */
+        /* eslint-enable no-console */
         dispatch(toNextPage())
       },
       (response) => {
         /* eslint-disable no-console */
         console.log("validate failed");
-        /* eslint-disable no-console */
+        /* eslint-enable no-console */
         dispatch(invalid(response.data))
       }
     );
