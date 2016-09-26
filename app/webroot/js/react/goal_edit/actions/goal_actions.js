@@ -8,11 +8,15 @@ export function validateGoal(addInputData) {
     const postData = Object.assign(getState().goal.inputData, addInputData)
     return post(`/api/v1/goals/validate`, postData, null,
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate success");
+        /* eslint-disable no-console */
         dispatch(toNextPage(addInputData))
       },
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate failed");
+        /* eslint-disable no-console */
         dispatch(invalid(response.data))
       }
     );

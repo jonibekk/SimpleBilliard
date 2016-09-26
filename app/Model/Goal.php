@@ -326,10 +326,7 @@ class Goal extends AppModel
         if (!Hash::get($data, 'Goal')) {
             return false;
         }
-        $add_new = false;
-        if (!isset($data['Goal']['id'])) {
-            $add_new = true;
-        }
+
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
 
@@ -341,10 +338,8 @@ class Goal extends AppModel
 
         $data = $this->convertGoalDateFromPost($data, $goal_term);
 
-        if ($add_new) {
-            $data = $this->buildTopKeyResult($data, $goal_term);
-            $data = $this->buildCollaboratorDataAsLeader($data);
-        }
+        $data = $this->buildTopKeyResult($data, $goal_term);
+        $data = $this->buildCollaboratorDataAsLeader($data);
 
         // setting default image if default image is chosen and image is not selected.
         if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
@@ -363,9 +358,7 @@ class Goal extends AppModel
             $isSuccess = $isSuccess && (bool)$this->GoalLabel->saveLabels($newGoalId, $data['Label']);
         }
 
-        if ($add_new) {
-            $isSuccess = $isSuccess && (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
-        }
+        $isSuccess = $isSuccess && (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
 
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');

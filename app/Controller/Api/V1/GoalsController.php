@@ -228,6 +228,7 @@ class GoalsController extends ApiController
         if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
             throw new InternalErrorException();
         }
+        // TODO:通知関連実装
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
 

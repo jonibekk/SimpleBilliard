@@ -10,9 +10,13 @@ App::uses('Goal', 'Model');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
+App::uses('Collaborator', 'Model');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
 
+/**
+ * Class GoalService
+ */
 class GoalService extends Object
 {
     /* ゴールの拡張種別 */
@@ -25,13 +29,14 @@ class GoalService extends Object
 
     /**
      * idによる単体データ取得
+     *
      * @param       $id
      * @param null  $userId
      * @param array $extends
      *
      * @return array|mixed
      */
-    function get($id, $userId = null, $extends =[])
+    function get($id, $userId = null, $extends = [])
     {
         if (empty($id)) {
             return [];
@@ -49,14 +54,15 @@ class GoalService extends Object
             return $this->extend($data, $userId, $extends);
         }
 
+        /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
         $TimeExHelper = new TimeExHelper(new View());
 
-
         $data = self::$cacheList[$id] = Hash::extract($Goal->findById($id), 'Goal');
         if (empty($data)) {
-           return $data;
+            return $data;
         }
 
         // 各サイズの画像URL追加
@@ -69,7 +75,7 @@ class GoalService extends Object
             && $data['start_date'] <= $currentTerm['end_date']
         ) {
             $data['term_type'] = 'current';
-        } elseif($nextTerm['start_date'] <= $data['start_date']
+        } elseif ($nextTerm['start_date'] <= $data['start_date']
             && $data['start_date'] <= $nextTerm['end_date']
         ) {
             $data['term_type'] = 'next';
@@ -90,6 +96,7 @@ class GoalService extends Object
 
     /**
      * データ拡張
+     *
      * @param $data
      * @param $userId
      * @param $extends
@@ -101,7 +108,10 @@ class GoalService extends Object
         if (empty($data) || empty($extends)) {
             return $data;
         }
+
+        /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+
         if (in_array(self::EXTEND_GOAL_LABELS, $extends)) {
             $data['goal_labels'] = Hash::extract($Goal->GoalLabel->findByGoalId($data['id']), '{n}.Label');
         }
@@ -117,6 +127,7 @@ class GoalService extends Object
 
     /**
      * ゴール更新
+     *
      * @param $userId
      * @param $goalId
      * @param $requestData
@@ -131,6 +142,8 @@ class GoalService extends Object
         $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        /** @var Collaborator $Collaborator */
+        $Collaborator = ClassRegistry::init("Collaborator");
 
         try {
             // ゴール・TKR・コラボレーター取得
@@ -175,19 +188,44 @@ class GoalService extends Object
             if (!$Goal->saveAll($data)) {
                 throw new Exception(sprintf("Failed save goal. data:%s", var_export($data, true)));
             }
+
+            // 認定ステータス更新
+            $updateCollaborator = [
+                'id'              => $goal['collaborator']['id'],
+                'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION
+            ];
+            if (!$Collaborator->save($updateCollaborator)) {
+                throw new Exception(sprintf("Failed update approval status. data:%s",
+                    var_export($updateCollaborator, true)));
+            }
+
             // ゴールラベル更新
             if (!$GoalLabel->saveLabels($data['Goal']['id'], $data['Label'])) {
                 throw new Exception(sprintf("Failed save labels. data:%s", var_export($data, true)));
             }
             // 認定についてのコメント記載があれば登録
-            if (!empty($requestData['approval_history'])) {
+            if (!empty($requestData['approval_history']) && !empty($requestData['approval_history']['comment'])) {
                 $approvalHistory = [
                     'collaborator_id' => $goal['collaborator']['id'],
-                    'user_id' => $userId,
-                    'comment' => $requestData['approval_history']['comment'],
+                    'user_id'         => $userId,
+                    'comment'         => $requestData['approval_history']['comment'],
                 ];
                 if (!$ApprovalHistory->save($approvalHistory)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s" , var_export($approvalHistory, true)));
+                    throw new Exception(sprintf("Failed save approvalHistory. data:%s",
+                        var_export($approvalHistory, true)));
+                }
+            }
+
+            // 認定についてのコメント記載があれば登録
+            if (!empty(Hash::get($requestData, 'approval_history.comment'))) {
+                $approvalHistory = [
+                    'collaborator_id' => $goal['collaborator']['id'],
+                    'user_id'         => $userId,
+                    'comment'         => $requestData['approval_history']['comment'],
+                ];
+                if (!$ApprovalHistory->save($approvalHistory)) {
+                    throw new Exception(sprintf("Failed save approvalHistory. data:%s",
+                        var_export($approvalHistory, true)));
                 }
             }
 
@@ -197,19 +235,6 @@ class GoalService extends Object
 
             // トランザクション完了
             $Goal->commit();
-
-            // TODO:通知関連実装
-            //通知
-    //        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-    //        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-    //
-    //        $this->updateSetupStatusIfNotCompleted();
-    //        //コーチと自分の認定件数を更新(キャッシュを削除)
-    //        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
-    //        if ($coach_id) {
-    //            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-    //            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
-    //        }
 
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
