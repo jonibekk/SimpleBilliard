@@ -5,7 +5,8 @@ const initialState = {
   application_count: 0,
   fetching_collaborators: false,
   next_getting_api: null,
-  done_loading_all_data: false
+  // TODO: 第一フェーズではページネーションは行わないので全件表示する
+  done_loading_all_data: true
 }
 
 export default function list(state = initialState, action) {

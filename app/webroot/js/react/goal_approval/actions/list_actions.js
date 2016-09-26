@@ -18,20 +18,23 @@ export function fetchCollaborators(is_initialize = false) {
     })
     .then((response) => {
       dispatch(finishedFetchingCollaborators())
-      // TODO: 仕様ではレスポンスデータに次のページングAPIに含まれていることになっているため、サーバサイドでAPI実装後コメントアウトを外す
+      // TODO: 第一フェーズではページネーションは行わないので全件表示する
       // dispatch(setNextPagingApi(response.paging.next))
       if(is_initialize) {
         dispatch(initCollaborators(response.data.data.collaborators))
         dispatch(setApplicationCount(response.data.data.application_count))
         dispatch(setNextPagingApi('/api/v1/goal_approvals/list'))
+        /* eslint-disable no-console */
         console.log('fetch init data')
+        /* eslint-enable no-console */
       } else {
         dispatch(addCollaborators(response.data.data.collaborators))
       }
 
-      if(response.data.data.collaborators.length < List.NUMBER_OF_DISPLAY_LIST_CARD) {
-        dispatch(doneLoadingAllData())
-      }
+      // TODO: 第一フェーズではページネーションは行わないので全件表示する
+      // if(response.data.data.collaborators.length < List.NUMBER_OF_DISPLAY_LIST_CARD) {
+      //   dispatch(doneLoadingAllData())
+      // }
     })
     .catch(() => {
       dispatch(finishedFetchingCollaborators())

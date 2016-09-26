@@ -14,6 +14,7 @@ class GoalApprovalsController extends ApiController
     {
         parent::beforeFilter();
     }
+
     /**
      * 認定対象のゴールリスト取得
      */
