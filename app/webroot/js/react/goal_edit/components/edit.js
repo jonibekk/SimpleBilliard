@@ -123,7 +123,7 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={validationErrors.labels}/>
 
-            <label className="goals-create-input-label">{__("Goal image?")}</label>
+            <label className="goals-create-input-label">{__("Goal image")}</label>
             <div
               className={`goals-create-input-image-upload fileinput_small ${inputData.photo ? "fileinput-exists" : "fileinput-new"}`}
               data-provides="fileinput">
@@ -137,7 +137,7 @@ export default class Edit extends React.Component {
                   {/*{__("This is sample image if you want to upload your original image")}*/}
                 {/*</p>*/}
                 <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
-                  <span className="fileinput-new">{__("Upload a image")}</span>
+                  <span className="fileinput-new">{__("Upload an image")}</span>
                   <span className="fileinput-exists">{__("Reselect an image")}</span>
                   <input className="goals-create-input-image-upload-info-form" type="file" name="photo" ref="photo"
                          id="file_photo"/>
@@ -146,10 +146,10 @@ export default class Edit extends React.Component {
             </div>
             <InvalidMessageBox message={validationErrors.photo}/>
 
-            <label className="goals-create-input-label">{__("Term?")}</label>
+            <label className="goals-create-input-label">{__("Term")}</label>
             <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
                     value={inputData.term_type} onChange={this.onChange}>
-              <option value="current">{__("Current Term")}</option>
+              <option value="current">{__("This Term")}</option>
               <option value="next">{__("Next Term")}</option>
             </select>
             <InvalidMessageBox message={validationErrors.term_type}/>
