@@ -3155,7 +3155,7 @@ msgid "Upload an image"
 msgstr "画像をアップロードする"
 
 #: View/Elements/cake_variables.ctp:461
-msgid "This term"
+msgid "This Term"
 msgstr "今期"
 
 #: View/Elements/cake_variables.ctp:463
