@@ -205,7 +205,8 @@ class BaseController extends Controller
     /**
      * コーチーに通知
      *
-     * @param $collaboratorId, $notifyType
+     * @param $collaboratorId
+     * @param $notifyType
      */
     function _sendNotifyToCoachee($collaboratorId, $notifyType)
     {
