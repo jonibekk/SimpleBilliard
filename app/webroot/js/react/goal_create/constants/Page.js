@@ -26,7 +26,6 @@ export const VALIDATION_FIELDS = {
     "photo",
     "term_type",
     "description",
-    "start_date",
     "end_date",
     "priority",
   ],

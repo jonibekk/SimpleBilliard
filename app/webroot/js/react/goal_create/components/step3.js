@@ -121,10 +121,6 @@ export default class Step3Component extends React.Component {
             <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange} value={inputData.description}/>
             <InvalidMessageBox message={validationErrors.description}/>
 
-            <label className="goals-create-input-label">{__("Start date")}</label>
-            <input className="goals-create-input-form" type="date" name="start_date" onChange={this.handleChange} value={inputData.start_date}/>
-            <InvalidMessageBox message={validationErrors.start_date}/>
-
             <label className="goals-create-input-label">{__("End date")}</label>
             <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange} value={inputData.end_date}/>
             <InvalidMessageBox message={validationErrors.end_date}/>

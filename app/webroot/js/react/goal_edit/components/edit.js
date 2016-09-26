@@ -159,11 +159,6 @@ export default class Edit extends React.Component {
                       value={inputData.description}/>
             <InvalidMessageBox message={validationErrors.description}/>
 
-            <label className="goals-create-input-label">{__("Start date")}</label>
-            <input className="goals-create-input-form" type="date" name="start_date" onChange={this.onChange}
-                   value={inputData.start_date}/>
-            <InvalidMessageBox message={validationErrors.start_date}/>
-
             <label className="goals-create-input-label">{__("End date")}</label>
             <input className="goals-create-input-form" type="date" name="end_date" onChange={this.onChange}
                    value={inputData.end_date}/>

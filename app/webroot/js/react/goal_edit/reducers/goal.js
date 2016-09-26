@@ -213,7 +213,6 @@ export function initInputData(goal) {
     goal_category_id: goal.goal_category_id,
     labels: labels,
     term_type: goal.term_type,
-    start_date: goal.start_date,
     end_date: goal.end_date,
     description: goal.description,
     priority: goal.collaborator.priority,
