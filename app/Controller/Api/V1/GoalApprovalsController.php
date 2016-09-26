@@ -154,32 +154,20 @@ class GoalApprovalsController extends ApiController
     {
         App::uses('ApprovalHistory', 'Model');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $this->Pnotify = $this->Components->load('Pnotify');
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
-        $collaboratorId = viaIsSet($data['collaborator']['id']);
+        $collaboratorId = Hash::get($data,'collaborator.id');
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
         if(!$canAccess) {
-            throw new NotFoundException();
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
         }
 
         // 保存データ定義
-        $data = $this->request->data;
-        $saveData = [
-            'Collaborator' => [
-                'id' => $collaboratorId,
-                'is_target_evaluation' => true,
-                'approval_status' => Collaborator::APPROVAL_STATUS_DONE
-            ],
-            'ApprovalHistory' => [
-                'select_clear_status' => ApprovalHistory::STATUS_IS_CLEAR,
-                'select_important_status' => ApprovalHistory::STATUS_IS_IMPORTANT,
-                'collaborator_id' => $collaboratorId,
-                'user_id' => $this->my_uid,
-                'comment' => viaIsSet($data['approval_history']['comment'])
-            ]
-        ];
+        $saveData = $GoalApprovalService->generateSaveData(Collaborator::IS_TARGET_EVALUATION, $data, $myUserId);
 
         // 保存処理
         $response = $this->_postApproval($saveData);
@@ -198,12 +186,12 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify = $this->Components->load('Pnotify');
         $this->Pnotify->outSuccess(__("Set as approval"));
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
-        $coacheeId = viaIsSet($this->Goal->Collaborator->findById($data['collaborator_id'])['Collaborator']['user_id']);
-        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeId]);
+        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
+        $coacheeUserId = Hash::get($coachee,'Collaborator.user_id');
+        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
 
         // レスポンス
         $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
@@ -224,31 +212,20 @@ class GoalApprovalsController extends ApiController
     {
         App::uses('ApprovalHistory', 'Model');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $this->Pnotify = $this->Components->load('Pnotify');
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
-        $collaboratorId = viaIsSet($data['collaborator']['id']);
+        $collaboratorId = Hash::get($data,'collaborator.id');
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
         if(!$canAccess) {
-            throw new NotFoundException();
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
         }
 
         // 保存データ定義
-        $saveData = [
-            'Collaborator' => [
-                'id' => $data['collaborator']['id'],
-                'is_target_evaluation' => false,
-                'approval_status' => Collaborator::APPROVAL_STATUS_DONE
-            ],
-            'ApprovalHistory' => [
-                'select_clear_status' => $data['approval_history']['select_clear_status'],
-                'select_important_status' => $data['approval_history']['select_important_status'],
-                'collaborator_id' => $collaboratorId,
-                'user_id' => $this->my_uid,
-                'comment' => viaIsSet($data['approval_history']['comment'])
-            ]
-        ];
+        $saveData = $GoalApprovalService->generateSaveData(Collaborator::IS_NOT_TARGET_EVALUATION, $data, $myUserId);
 
         // 保存処理
         $response = $this->_postApproval($saveData);
@@ -267,12 +244,12 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify = $this->Components->load('Pnotify');
         $this->Pnotify->outSuccess(__("remove from approval"));
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
-        $coacheeId = viaIsSet($this->Goal->Collaborator->findById($data['collaborator_id'])['Collaborator']['user_id']);
-        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeId]);
+        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
+        $coacheeUserId = Hash::get($coachee,'Collaborator.user_id');
+        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
 
         // レスポンス
         $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
@@ -282,75 +259,44 @@ class GoalApprovalsController extends ApiController
     /**
      * Goal認定詳細ページの初期データ取得API
      *
-     * @param  integer $collaboratorId
+     * @param  integer collaborator_id クエリパラメータにて送られる
      * @return CakeResponse
      */
-    public function get_detail($collaboratorId)
+    public function get_detail()
     {
+        $this->Pnotify = $this->Components->load('Pnotify');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->my_uid;
+        $collaboratorId = $this->request->query('collaborator_id');
+
+        // パラメータが存在しない場合はNotFound
+        if(!$collaboratorId) {
+            $this->Pnotify->outError(__("Ooops, Not Found."));
+            return $this->_getResponseNotFound();
+        }
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
         if(!$canAccess) {
-            throw new NotFoundException();
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
         }
 
         $res = $this->Goal->Collaborator->getCollaboratorForApproval($collaboratorId);
-        return $this->_getResponseSuccess($this->_formatGoalApprovalForResponse($res, $myUserId));
+        return $this->_getResponseSuccess($GoalApprovalService->formatGoalApprovalForResponse($res, $myUserId));
     }
 
     /**
-     * Detailページの初期データレスポンスのためにモデルデータをフォーマット
-     * @param  $resByModel
-     * @param  $myUserId
-     * @return $res
+     * 認定詳細ページPOSTの共通処理
+     * @param  $saveData
+     * @return true|CakeResponse
      */
-    public function _formatGoalApprovalForResponse($resByModel, $myUserId)
-    {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
-
-        $res = Hash::extract($resByModel, 'Collaborator');
-
-        // モデル名整形(大文字->小文字)
-        $res['user'] = Hash::extract($resByModel, 'User');
-        $res['goal'] = Hash::extract($resByModel, 'Goal');
-        $res['goal']['category'] = Hash::extract($resByModel, 'Goal.GoalCategory');
-        $res['goal']['leader'] = Hash::extract($resByModel, 'Goal.Leader.0');
-        $res['goal']['leader']['user'] = Hash::extract($resByModel, 'Goal.Leader.0.User');
-        $res['goal']['top_key_result'] = Hash::extract($resByModel, 'Goal.TopKeyResult');
-        $res['approval_histories'] = Hash::map($resByModel, 'ApprovalHistory', function($value) {
-            $value['user'] = Hash::extract($value, 'User');
-            unset($value['User']);
-            return $value;
-        });
-
-        // 画像パス追加
-        $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
-        $res['user']['small_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo', ['style' => 'small']);
-        $res['user']['large_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo', ['style' => 'large']);
-        $res['goal']['original_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo');
-        $res['goal']['small_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'small']);
-        $res['goal']['large_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'large']);
-
-        // マッピング
-        $res['is_leader'] = (boolean)$res['type'];
-        $res['is_mine'] = $res['user']['id'] == $myUserId;
-        $res['type'] = Collaborator::$TYPE[$res['type']];
-
-        // 不要な要素の削除
-        unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
-
-        return $res;
-    }
-
     function _postApproval($saveData)
     {
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
 
         // バリデーション
-        $validateResult = $this->_validateApprovalPost($saveData);
+        $validateResult = $GoalApprovalService->validateApprovalPost($saveData);
         if ($validateResult !== true) {
             return $this->_getResponseBadFail(__('Validation failed.'), $validateResult);
         }
@@ -364,42 +310,13 @@ class GoalApprovalsController extends ApiController
         return true;
     }
 
-    /**
-     * ゴール認定POSTのバリデーション
-     * @param  array $data 検証するデータ
-     * @return true|CakeResponse
-     */
-    function _validateApprovalPost($data)
-    {
-        $validation = [];
-
-        // collaborator validation
-        $this->Goal->Collaborator->set($data['Collaborator']);
-        $collaborator_validation = $this->Goal->Collaborator->validates();
-        if ($collaborator_validation !== true) {
-            $validation['collaborator'] = $this->_validationExtract($this->Goal->Collaborator->validationErrors);
-        }
-
-        // approval_history validation
-        $this->Goal->Collaborator->ApprovalHistory->set($data['ApprovalHistory']);
-        $approval_history_validation = $this->Goal->Collaborator->ApprovalHistory->validates();
-        if ($approval_history_validation !== true) {
-            $validation['approval_history'] = $this->_validationExtract($this->Goal->Collaborator->ApprovalHistory->validationErrors);
-        }
-
-        if (!empty($validation)) {
-            return $validation;
-        }
-        return true;
-    }
-
     function _trackApprovalToMixpanel($trackType, $memberType, $collaboratorId)
     {
-        $collaborator = $this->Goal->Collaborator->findById($collabo_id);
-        if (!viaIsSet($collaborator['Collaborator'])) {
+        $collaborator = $this->Goal->Collaborator->findById($collaboratorId);
+        $goalId = Hash::get($collaborator,'Collaborator.goal_id');
+        if (!$goalId) {
             return;
         }
-        $goalId = $collaborator['Collaborator']['goal_id'];
 
         return $this->Mixpanel->trackApproval(
             $trackType,

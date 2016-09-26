@@ -209,7 +209,7 @@ class BaseController extends Controller
      */
     function _sendNotifyToCoachee($collaboratorId, $notifyType)
     {
-        $collaborator = $this->Goal->Collaborator->findById($collabo_id);
+        $collaborator = $this->Goal->Collaborator->findById($collaboratorId);
         if (!viaIsSet($collaborator['Collaborator'])) {
             return;
         }

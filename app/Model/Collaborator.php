@@ -35,6 +35,12 @@ class Collaborator extends AppModel
     ];
 
     /**
+     * 評価対象判定
+     */
+    const IS_NOT_TARGET_EVALUATION = 0;
+    const IS_TARGET_EVALUATION = 1;
+
+    /**
      * タイプの表示名をセット
      */
     private function _setTypeName()
@@ -751,6 +757,10 @@ class Collaborator extends AppModel
 
     function getUserIdByCollaboratorId($collaboratorId)
     {
+        if(!$collaboratorId) {
+            return null;
+        }
+
         $res = $this->findById($collaboratorId);
         if(!$res) {
             return null;

@@ -38,7 +38,8 @@ class GoalsController extends ApiController
         if ($validation === true) {
             return $this->_getResponseSuccess();
         }
-        $validationMsg = $this->_validationExtract($validation);
+        // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
+        $validationMsg = $this->Goal->_validationExtract($validation);
         return $this->_getResponseValidationFail($validationMsg);
     }
 
@@ -205,12 +206,14 @@ class GoalsController extends ApiController
 
         $goal_validation = $this->Goal->validateGoalPOST($data);
         if ($goal_validation !== true) {
-            $validation = $this->_validationExtract($goal_validation);
+            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
+            $validation = $this->Goal->_validationExtract($goal_validation);
         }
 
         $kr_validation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
         if ($kr_validation !== true) {
-            $validation['key_result'] = $this->_validationExtract($kr_validation);
+            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
+            $validation['key_result'] = $this->Goal->_validationExtract($kr_validation);
         }
 
         if (!empty($validation)) {
