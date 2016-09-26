@@ -169,8 +169,9 @@ class AppController extends BaseController
             }
 
             //通知の既読ステータス
-            if (isset($this->request->params['named']['notify_id'])) {
-                $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
+            $notify_id = $this->request->query('notify_id');
+            if ($notify_id) {
+                $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {

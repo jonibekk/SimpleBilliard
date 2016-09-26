@@ -414,7 +414,8 @@ class PostsController extends AppController
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
-        if (isset($this->request->params['named']['notify_id'])) {
+        $notify_id = $this->request->query('notify_id');
+        if ($notify_id) {
             $this->set('long_text', true);
         } else {
             $this->set('long_text', false);
@@ -442,7 +443,7 @@ class PostsController extends AppController
         //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
         //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
         //ここで分岐をする必要がある。
-        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id']);
+        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && $notify_id;
         if ($is_notify_post_permanent_page && !$posts) {
             $response = $this->render('Feed/post_not_found');
         } else {
