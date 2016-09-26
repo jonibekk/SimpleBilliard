@@ -1,5 +1,4 @@
 import * as types from '~/goal_approval/constants/ActionTypes'
-import * as List from '~/goal_approval/constants/List'
 import axios from "axios"
 
 export function fetchCollaborators(is_initialize = false) {

@@ -3,34 +3,23 @@ import { Link } from 'react-router'
 
 export class CoachCard extends React.Component {
   render() {
+    const ApprovalStatus = Collaborator.ApprovalStatus
+    const Type = Collaborator.Type
     const collaborator = this.props.collaborator
-    const is_leader = collaborator.type == 1
-    const is_done = collaborator.approval_status == 2;
-    const is_target_evaluation = is_done && collaborator.is_target_evaluation == true
-    const is_Reapplication_approval = !is_done && collaborator.approval_status == 1
-    const is_new_approval = !is_done && collaborator.approval_status == 0
-    let role = ''
-    let status = ''
-    let is_incomplete = false
+    const role = collaborator.type == Type.OWNER ? __('Leader') : __('Collaborator')
+    const status = (() => {
+      if(collaborator.is_target_evaluation) {
+        return __('Evaluated')
+      }
+      if(collaborator.approval_status == ApprovalStatus.NEW) {
+        return __('New')
+      }
+      if(collaborator.approval_status == ApprovalStatus.REAPPLICATION) {
+        return __('Reapplication')
+      }
+      return __('Not Evaluated')
+    })()
 
-    // Define role
-    if(is_leader) {
-      role = __('Leader')
-    } else {
-      role = __('Collaborator')
-    }
-    // Define status
-    if(is_target_evaluation) {
-      status = __('Evaluated')
-    } else if(is_Reapplication_approval) {
-      status = __('Reapplication')
-      is_incomplete = true
-    } else if(is_new_approval) {
-      status = __('New')
-      is_incomplete = true
-    } else {
-      status = __('Not Evaluated')
-    }
     return (
       <li className="goals-approval-list-item">
           <div className={`goals-approval-list-item ${ is_incomplete ? "is-incomplete" : "is-complete" }`}>

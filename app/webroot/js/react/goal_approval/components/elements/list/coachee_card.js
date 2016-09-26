@@ -1,35 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { Collaborator } from '~/common/constants/Model'
 
 export class CoacheeCard extends React.Component {
   render() {
+    const ApprovalStatus = Collaborator.ApprovalStatus
+    const Type = Collaborator.Type
     const collaborator = this.props.collaborator
-    const is_leader = collaborator.type == 1
-    const is_done = collaborator.approval_status == 2;
-    const is_target_evaluation = is_done && collaborator.is_target_evaluation == true
-    const is_wating = !is_done && (collaborator.approval_status == 0 || collaborator.approval_status == 1)
-    let role = ''
-    let status = ''
-    let is_incomplete = false
+    const role = collaborator.type == Type.OWNER ? __('Leader') : __('Collaborator')
+    const status = (() => {
+      if(collaborator.approval_status != ApprovalStatus.DONE) {
+        return __('Waiting')
+      }
+      if(collaborator.is_target_evaluation) {
+        return __('Evaluated')
+      }
+      return __('Not Evaluated')
+    })()
 
-    // Define role
-    if(is_leader) {
-      role = __('Leader')
-    } else {
-      role = __('Collaborator')
-    }
-     // Define status
-    if(is_target_evaluation) {
-      status = __('Evaluated')
-    } else if(is_wating) {
-      status = __('Waiting')
-      is_incomplete = true
-    } else {
-      status = __('Not Evaluated')
-    }
     return (
       <li className="goals-approval-list-item">
-          <div className={`goals-approval-list-item ${ is_incomplete ? "is-incomplete is-waiting" : "is-complete" }`}>
+          <div className={`goals-approval-list-item ${ collaborator.approval_status != ApprovalStatus.DONE ? "is-incomplete is-waiting" : "is-complete" }`}>
               <Link className="goals-approval-list-item-link" to={ `/goals/approval/detail/${collaborator.id}` }>
                   <img className="goals-approval-list-item-image" src={ collaborator.user.small_img_url } alt="" width="32" height="32" />
                   <div className="goals-approval-list-item-info">
