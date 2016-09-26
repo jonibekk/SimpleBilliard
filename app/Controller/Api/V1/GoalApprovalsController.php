@@ -66,7 +66,7 @@ class GoalApprovalsController extends ApiController
      *
      * @return array
      */
-    public function _processCollaborators($userId, $teamId, $baseData)
+    private function _processCollaborators($userId, $teamId, $baseData)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
@@ -113,7 +113,7 @@ class GoalApprovalsController extends ApiController
      * @return array|null
      * @internal param $userType
      */
-    public function _findCollabrators($userId, $coachId, $coacheeIds)
+    private function _findCollabrators($userId, $coachId, $coacheeIds)
     {
         $isCoach = !empty($coachId);
         $isMember = !empty($coacheeIds);
@@ -136,6 +136,18 @@ class GoalApprovalsController extends ApiController
         }
 
         return $res;
+    }
+
+    /**
+     * ゴール認定に関するコメント取得
+     * TODO:閲覧権限チェック追加
+     */
+    function get_histories()
+    {
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $collaboratorId = $this->request->query('collaborator_id');
+        $histories = $GoalApprovalService->findHistories($collaboratorId);
+        return $this->_getResponseSuccess($histories);
     }
 
     /**
@@ -324,5 +336,4 @@ class GoalApprovalsController extends ApiController
             $goalId
         );
     }
-
 }

@@ -7,8 +7,18 @@
  */
 
 App::uses('Goal', 'Model');
-class GoalApprovalService
+App::uses('ApprovalHistory', 'Model');
+App::uses('Collaborator', 'Model');
+App::import('Service', 'CollaboratorService');
+
+class GoalApprovalService extends Object
 {
+    /**
+     * コーチとしての未対応認定件数取得
+     * @param $userId
+     *
+     * @return mixed
+     */
     function countUnapprovedGoal($userId)
     {
         $Collaborator = ClassRegistry::init("Collaborator");
@@ -21,6 +31,35 @@ class GoalApprovalService
             Cache::write($Collaborator->getCacheKey(CACHE_UNAPPROVED_GOAL_COUNT, true), $count, 'user_data');
         }
         return $count;
+    }
+
+    /**
+     * 認定コメントリスト取得
+     * @param $collaboratorId
+     *
+     * @return array
+     */
+    function findHistories($collaboratorId)
+    {
+        if (empty($collaboratorId)) {
+            return [];
+        }
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        $CollaboratorService = ClassRegistry::init("CollaboratorService");
+
+        // 認定コメントリスト取得
+        $histories = Hash::extract($ApprovalHistory->findByCollaboratorId($collaboratorId), '{n}.ApprovalHistory');
+
+        $collaborator = $CollaboratorService->get($collaboratorId, [
+            CollaboratorService::EXTEND_COACH,
+            CollaboratorService::EXTEND_COACHEE,
+        ]);
+
+        foreach($histories as &$v) {
+            $v['user'] = ($v['user_id'] == $collaborator['user_id']) ?
+                $collaborator['coachee'] : $collaborator['coach'];
+        }
+        return $histories;
     }
 
     /**
@@ -221,5 +260,4 @@ class GoalApprovalService
 
         return $saveData;
     }
-
 }

@@ -1,8 +1,6 @@
 import axios from "axios";
 import FormData from "form-data";
 
-// TODO:いずれreact全体の共通処理として配置(js/react/common/**)
-
 export function getBaseUrl() {
   // テストにおけるモックのURLを定義
   if (typeof cake === "undefined") {
