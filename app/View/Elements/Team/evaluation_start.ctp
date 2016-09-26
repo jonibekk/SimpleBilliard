@@ -23,7 +23,7 @@
  * @var                    $previous_term_id
  */
 ?>
-<!-- START app/View/Elements/Team/evaluation_start.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Begin evaluation") ?></div>
     <div class="panel-body form-horizontal">
@@ -72,4 +72,4 @@
         </div>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/Team/evaluation_start.ctp -->
+<?= $this->App->viewEndComment()?>

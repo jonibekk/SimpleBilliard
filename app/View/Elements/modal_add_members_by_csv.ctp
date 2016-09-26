@@ -9,7 +9,7 @@
  * @var                    $my_member_status
  */
 ?>
-<!-- START app/View/Elements/modal_add_members_by_csv.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal fade" tabindex="-1" id="ModalAddMembersByCsv">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -114,4 +114,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_add_members_by_csv.ctp -->
+<?= $this->App->viewEndComment()?>

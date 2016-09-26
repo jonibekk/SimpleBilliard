@@ -7,7 +7,7 @@
  * @var                    $team_name
  */
 ?>
-<!-- START app/View/Users/register_prof_with_invite.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __('Join the Goalous team for "%s"?', $team_name) ?></div>
@@ -192,4 +192,4 @@
     });
 </script>
 <?php $this->end(); ?>
-<!-- END app/View/Users/register_prof_with_invite.ctp -->
+<?= $this->App->viewEndComment()?>

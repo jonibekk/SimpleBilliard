@@ -12,7 +12,7 @@
 // two_column レイアウトで、xxs サイズの時にサイドバーを隠す
 $this->set('hidden_sidebar_xxs', true);
 ?>
-<!-- START app/View/Teams/settings.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php $this->start('sidebar') ?>
 <div class="sidebar-setting" role="complementary">
     <ul class="nav">
@@ -70,4 +70,4 @@ $this->set('hidden_sidebar_xxs', true);
     });
 </script>
 <?php $this->end(); ?>
-<!-- END app/View/Teams/settings.ctp -->
+<?= $this->App->viewEndComment()?>

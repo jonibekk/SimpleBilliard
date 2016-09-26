@@ -27,11 +27,11 @@ Page毎に要素が変わるもの
 $meta_law = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Inscription based on specific trade law is here.")),
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -43,7 +43,7 @@ $meta_law = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Inscription based on specific trade law is here.")),
     ],
     [
         "property" => "og:url",
@@ -80,6 +80,6 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/law.ctp -->
+<?= $this->App->viewStartComment()?>
 <div id="markdown" src="../../composition/markdowns/<?= $short_lang ?>_law.md" class="markdown-wrap"></div>
-<!-- END app/View/Pages/law.ctp -->
+<?= $this->App->viewEndComment()?>

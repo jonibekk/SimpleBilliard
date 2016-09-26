@@ -19,7 +19,7 @@
     $id_prefix = null;
 }
 ?>
-<!-- START app/View/Elements/Feed/comment.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_4px">
         <a href="<?= $this->Html->url([
@@ -191,4 +191,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/comment.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -10,10 +10,10 @@ https://github.com/IsaoCorp/goalous/issues/4876
 ## リクエストメソッド
 リクエストメソッドは適切に使う
 
-GET：データ取得
-POST：データ新規登録
-PUT：データ更新
-DEETE：データ削除
+GET：データ取得  
+POST：データ新規登録  
+PUT：データ更新  
+DEETE：データ削除  
 
 データの一部更新を行うPATCHについては議論があるものの正直PATCHとPUTを使い分けるメリットが無いので、データ更新は全てPUTとする
 
@@ -26,6 +26,7 @@ DEETE：データ削除
 
 /api/{APIバージョン}/{リソース名(複数形)}/{リソースID}
 
+```
 例.
 ユーザー新規登録
 POST /api/v1/users
@@ -35,6 +36,7 @@ GET /api/v1/users/1
 PUT /api/v1/users/1
 ユーザー削除
 DELETE /api/v1/users/1
+```
 
 ■リソースが複数の単語からなる場合
 スネークケースで表現する
@@ -71,6 +73,31 @@ ctrl/act/param1:hoge/param2:fuga
 
 **※APIが言語・フレームワークに依存するのをなるべく避ける**
 
+## RESTルーティング
+詳しくは、 https://github.com/IsaoCorp/goalous/blob/topic-tkr/app/Config/routes.php#L22-L84
+### Action指定なし
+
+|Method|IDあり|Actionメソッド|urlの例|左記urlに対応するActionメソッド|
+|:--|:--|:--|:--|:--|
+|GET   |×     |get_list()        | GET /api/v1/goals | GoalsController::get_list()|
+|GET   |○     |get_detail($id)      | GET /api/v1/goals/123 | GoalsController::get_detail($id)|
+|POST  |×     |post()            | POST /api/v1/goals | GoalsController::post()|
+|PUT   |○     |put($id)             | PUT /api/v1/goals/123 | GoalsController::put($id)|
+|DELETE|○     |delete($id)          | DELETE /api/v1/goals/123 | GoalsController::delete($id)|
+
+### Action指定あり
+Actionメソッド名はMethodをプレフィックスにする。  
+※以下の表のurl,actionメソッドには実在しないものが含まれています。  
+
+|Method|IDあり|Actionメソッド名|urlの例|左記のurlに対応するActionメソッド|
+|:--|:--|:--|:--|:--|
+|GET   |×     |get_something         | GET /api/v1/goals/mine | GoalsController::get_mine() |
+|GET   |○     |get_something($id)      | GET /api/v1/goals/123/followers | GoalsController::get_followers($id) |
+|POST  |×     |post_something            | POST /api/v1/goals/validate | GoalsController::post_validate() |
+|POST  |○     |post_something($id)            | POST /api/v1/goals/123/follow | GoalsController::post_follow($id) |
+|PUT   |○     |put_something($id)             | PUT /api/v1/goals/123/collaborator | GoalsController::put_collaborator($id) |
+|DELETE|○     |delete_something($id)          | DELETE /api/v1/goals/123/follow | GoalsController::delete_follow($id) |
+
 ## リクエスト&レスポンス
 
 ### リクエスト
@@ -96,16 +123,23 @@ $.ajax({
     data: { last_name : "goalous" , first_name:"tarou"}
 });
 ```
+###### dataの必須フィールド
+- CSRFトークン(CakePHP仕様につき、この鬱陶しいkey名で固定)
+ - key: `data[_Token][key]`
+ - value: `cake.data.csrf_token.key`
+- pusherのsocket_id(pusherが通知をpublishする際に自分を除外する為に必要)
+ - key: `socket_id`
+ - value: `cake.pusher.socket_id`
 
 ### レスポンス
 #### APIで扱うHTTPステータスコード
-200：正常処理
-400：リクエスト不正。バリデーションエラーが主
-401：認証失敗
-403：アクセス権限、データ操作権限が無い。CSRFエラーもここに含まれる
-404：Not found
-405：Methodが許可されていない
-500：サーバーエラー
+200：正常処理  
+400：リクエスト不正。バリデーションエラーが主  
+401：認証失敗  
+403：アクセス権限、データ操作権限が無い。CSRFエラーもここに含まれる  
+404：Not found  
+405：Methodが許可されていない  
+500：サーバーエラー  
 
 #### レスポンスパラメータ
 - レスポンスBodyにHTTPステータスコードは含めない
@@ -130,8 +164,8 @@ $.ajax({
 ```
 
 ##### POSTメソッド
-新規登録したリソースIDを返す
-例.ユーザー新規登録
+新規登録したリソースIDを返す  
+例.ユーザー新規登録  
 ```
 {
 	user_id:1
@@ -175,27 +209,27 @@ Web APIエラー参考：[http://qiita.com/suin/items/f7ac4de914e9f3f35884](http
 ### リクエスト
 #### offsetを使用する問題について
 1. パフォーマンスが低い
-どこからどこまでの情報を取得するか指定する場合、offset,limitを使うことが多々ある。
-しかし実はmysqlにおいてoffset,limitは単純に遅い。
-なぜなら○件目から○件を取得しているのではなく、全件取得した後いらない部分を切り捨てているからだ。
-したがってデータ件数が多ければ多いほどパフォーマンスは低下する。
+どこからどこまでの情報を取得するか指定する場合、offset,limitを使うことが多々ある。  
+しかし実はmysqlにおいてoffset,limitは単純に遅い。  
+なぜなら○件目から○件を取得しているのではなく、全件取得した後いらない部分を切り捨てているからだ。  
+したがってデータ件数が多ければ多いほどパフォーマンスは低下する。  
 
 2. 更新タイミングによるバグ
-○件目からという指定だと情報を重複表示するバグが発生する。
-例えばポストを作成した降順に取得して表示する場合
-・ユーザーAが1件目〜10件目を表示
-・もっとみるで11件目を表示する前に他のユーザーがポストを作成
-・ユーザーAがもっとみるで11件目〜20件目を表示
+○件目からという指定だと情報を重複表示するバグが発生する。  
+例えばポストを作成した降順に取得して表示する場合  
+- ユーザーAが1件目〜10件目を表示
+- もっとみるで11件目を表示する前に他のユーザーがポストを作成
+- ユーザーAがもっとみるで11件目〜20件目を表示
 
-この時作成されたポストが1件目にくる為、表示された11件目は10件目と同じになってしまう。
-(これはインフィニットロードのあるある問題)
+この時作成されたポストが1件目にくる為、表示された11件目は10件目と同じになってしまう。  
+(これはインフィニットロードのあるある問題)  
 
 #### offsetの代わりとなるcursor
-cursorとは？
-要はどこから取得するのか基準となるユニークID。
+cursorとは？  
+要はどこから取得するのか基準となるユニークID。  
 
-↑のポストを更新順に取得する例で言うと
-1回目に取得した最後の10件目のユニークIDをcursorとして検索する
+↑のポストを更新順に取得する例で言うと  
+1回目に取得した最後の10件目のユニークIDをcursorとして検索する  
 ```
 SELECT * FROM users
 WHERE id > (10件目のユニークID)
@@ -206,11 +240,11 @@ LIMIT 10
 この検索方法によってパフォーマンスが向上し、重複問題も解決する。
 
 ### レスポンス
-ページング用のAPIはpagingのレスポンスパラメータを含む。
-pagingは次回APIコールに使用するURLを設定(limitは除く)
+ページング用のAPIはpagingのレスポンスパラメータを含む。  
+pagingは次回APIコールに使用するURLを設定(limitは除く)  
 
-例.検索条件により検索したデータの取得
-API:/api/v1/users?keyword=test&keyword2=test2&limit=10
+例.検索条件により検索したデータの取得  
+API:/api/v1/users?keyword=test&keyword2=test2&limit=10  
 ```
 {
 	data: {***}, // 実データ
@@ -221,8 +255,8 @@ API:/api/v1/users?keyword=test&keyword2=test2&limit=10
 }
 ```
 
-もし次回データが存在しない場合はpaging[next]は空となる。
-つまり利用側は与えられたURLを基にAPIコールするだけでよくなり、しかも次回データが存在するか判定するために無駄なAPIを投げなくても済む
+もし次回データが存在しない場合はpaging[next]は空となる。  
+つまり利用側は与えられたURLを基にAPIコールするだけでよくなり、しかも次回データが存在するか判定するために無駄なAPIを投げなくても済む  
 
 ## レスポンスするデータの例
 ### 複数データ+複数データ
@@ -307,5 +341,3 @@ API:/api/v1/users?keyword=test&keyword2=test2&limit=10
 
 ### 親コントローラ
 - ApiController
-
-

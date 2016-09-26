@@ -17,7 +17,7 @@ $without_header = isset($without_header) ? $without_header : false;
 $without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
 ?>
 <?php if (!empty($posts)): ?>
-    <!-- START app/View/Elements/Feed/posts.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
             <?php if (!$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
@@ -537,5 +537,5 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
         </div>
     <?php endforeach ?>
     <?= $this->element('file_upload_form') ?>
-    <!-- END app/View/Elements/Feed/posts.ctp -->
+    <?= $this->App->viewEndComment()?>
 <?php endif ?>

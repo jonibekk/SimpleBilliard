@@ -15,7 +15,7 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Elements/Homepage/signup.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******SIGNUP****** -->
 <section id="signup" class="signup">
     <div class="container text-center">
@@ -30,4 +30,4 @@
         <p><?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
     </div>
 </section><!--//signup-->
-<!-- END app/View/Elements/Homepage/signup.ctp -->
+<?= $this->App->viewEndComment()?>

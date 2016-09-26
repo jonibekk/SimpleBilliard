@@ -3,7 +3,7 @@
  * @var $recovery_codes
  */
 ?>
-<!-- START app/View/Elements/User/modal_recovery_code.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog" id="RecoveryCodeModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -51,4 +51,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/User/modal_recovery_code.ctp -->
+<?= $this->App->viewEndComment()?>

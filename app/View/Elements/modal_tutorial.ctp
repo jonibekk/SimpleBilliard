@@ -8,7 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/modal_tutorial.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal fade" tabindex="-1" id="modal_tutorial">
     <div class="modal-dialog modal-tutorial-dialog">
         <div class="modal-content parent-p_0px">
@@ -86,4 +86,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_tutorial.ctp -->
+<?= $this->App->viewEndComment()?>

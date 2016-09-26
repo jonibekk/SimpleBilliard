@@ -5,7 +5,7 @@
  */
 ?>
 <?php if ($members): ?>
-    <!-- START app/View/Elements/Goal/members.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php foreach ($members as $member): ?>
         <div class="goal-detail-member-card">
             <div>
@@ -45,5 +45,5 @@
             </div>
         </div>
     <?php endforeach ?>
-    <!-- END app/View/Elements/Goal/members.ctp -->
+    <?= $this->App->viewEndComment()?>
 <? endif ?>

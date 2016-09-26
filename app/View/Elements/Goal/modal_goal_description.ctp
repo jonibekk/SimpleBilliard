@@ -9,7 +9,7 @@
  * @var                    $goal
  */
 ?>
-<!-- START app/View/Elements/Goal/modal_goal_description.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -183,4 +183,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Goal/modal_goal_description.ctp -->
+<?= $this->App->viewEndComment()?>
