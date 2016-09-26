@@ -62,27 +62,27 @@ export class CoachFooter extends React.Component {
     return (
       <div className="goals-approval-detail-choice">
           <form onSubmit={ this.handleSubmit.bind(this) }>
-              <label className="goals-approval-input-label" htmlFor="">Do you think this tKR is clear?</label>
-              <a className={`btn ${this.state.clear_or_not === TopKeyResult.IS_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickClear.bind(this) }>Clear</a>
-              <a className={`btn ${this.state.clear_or_not === TopKeyResult.IS_NOT_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotClear.bind(this) }>Not Clear</a>
+              <label className="goals-approval-input-label" htmlFor="">{__("Do you think this Top Key Result is clear ?")}</label>
+              <a className={`btn ${this.state.clear_or_not === TopKeyResult.IS_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickClear.bind(this) }>{__("Yes")}</a>
+              <a className={`btn ${this.state.clear_or_not === TopKeyResult.IS_NOT_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotClear.bind(this) }>{__("No")}</a>
 
-              <label className="goals-approval-input-label" htmlFor="">Do you think that tKR is the most important to achieve the goal?</label>
-              <a className={`btn ${this.state.important_or_not === TopKeyResult.IS_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickImportant.bind(this) }>Yes</a>
-              <a className={`btn ${this.state.important_or_not === TopKeyResult.IS_NOT_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotImportant.bind(this) }>No</a>
+              <label className="goals-approval-input-label" htmlFor="">{__("Do you think this Top Key Result is the most important to achieve the goal?")}</label>
+              <a className={`btn ${this.state.important_or_not === TopKeyResult.IS_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickImportant.bind(this) }>{__("Yes")}</a>
+              <a className={`btn ${this.state.important_or_not === TopKeyResult.IS_NOT_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotImportant.bind(this) }>{__("No")}</a>
 
-              <label className="goals-approval-input-label" htmlFor="">Judge this goal to set as target of evaluations.</label>
-              <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment" id="comment" cols="30" rows="2" placeholder="Add your comment (optional)"></textarea>
+              <label className="goals-approval-input-label" htmlFor="">{__("Add as a target for evaluation ?")}</label>
+              <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment" id="comment" cols="30" rows="2" placeholder={__("Add your comment (optional)")}></textarea>
               <InvalidMessageBox message={validation_errors.comment}/>
               <div className="goals-approval-detail-choice">
                   { this.props.posting_set_as_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_set_as_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           type="submit"
-                          onClick={ this.handleSubmitSetAsTarget.bind(this) }>Set as target</button>
+                          onClick={ this.handleSubmitSetAsTarget.bind(this) }>{__("Yes")}</button>
                   { this.props.posting_remove_from_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_remove_from_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           type="submit"
-                          onClick={ this.handleSubmitRemoveFromTarget.bind(this) }>Remove from target</button>
-                  <Link to="/goals/approval/list" className="btn goals-approval-btn-cancel">Cancel</Link>
+                          onClick={ this.handleSubmitRemoveFromTarget.bind(this) }>{__("No")}</button>
+                  <Link to="/goals/approval/list" className="btn goals-approval-btn-cancel">{__("Cancel")}</Link>
               </div>
           </form>
       </div>
