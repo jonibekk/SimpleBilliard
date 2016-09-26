@@ -1,5 +1,6 @@
 import gulp from 'gulp'
 import runSequence from 'run-sequence'
+import config from '../config.js'
 
 gulp.task('build', done => {
   return runSequence(['js', 'css'], done)
@@ -62,59 +63,17 @@ gulp.task('angular_vendor', done => {
   )
 })
 
-// react setup
-gulp.task('react_setup', done => {
-  return runSequence(
-    'react_setup:eslint',
-    'react_setup:browserify',
-    'react_setup:uglify',
-    'react_setup:clean',
-    done
-  )
-})
-
-// react signup
-gulp.task('react_signup', done => {
-  return runSequence(
-    'react_signup:eslint',
-    'react_signup:browserify',
-    'react_signup:uglify',
-    'react_signup:clean',
-    done
-  )
-})
-
-// react goal create
-gulp.task('react_goal_create', done => {
-  return runSequence(
-    'react_goal_create:eslint',
-    'react_goal_create:browserify',
-    'react_goal_create:uglify',
-    'react_goal_create:clean',
-    done
-  )
-})
-
-// react goal edit
-gulp.task('react_goal_edit', done => {
-  return runSequence(
-    'react_goal_edit:eslint',
-    'react_goal_edit:browserify',
-    'react_goal_edit:uglify',
-    'react_goal_edit:clean',
-    done
-  )
-})
-
-// react goal approval
-gulp.task('react_goal_approval', done => {
-  return runSequence(
-    'react_goal_approval:eslint',
-    'react_goal_approval:browserify',
-    'react_goal_approval:uglify',
-    'react_goal_approval:clean',
-    done
-  )
+// react apps
+config.react_apps.map((app_name) => {
+  gulp.task(app_name, done => {
+    return runSequence(
+      `${app_name}:eslint`,
+      `${app_name}:browserify`,
+      `${app_name}:uglify`,
+      `${app_name}:clean`,
+      done
+    )
+  })
 })
 
 // css

@@ -32,6 +32,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'inList'              => __("Invalid value"),
             'dateYmd'             => __('Enter a valid date in YYYY/MM/DD format.'),
             'checkRangeTerm'      => __("Input in the term."),
+            'isUnique'            => __('Data is duplicated.'),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

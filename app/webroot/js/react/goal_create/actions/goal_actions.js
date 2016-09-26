@@ -10,11 +10,15 @@ export function validateGoal(page, addData) {
     const fields = Page.VALIDATION_FIELDS[page].join(',')
     return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate success");
+        /* eslint-enable no-console */
         dispatch(toNextPage())
       },
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate failed");
+        /* eslint-enable no-console */
         dispatch(invalid(response.data))
       }
     );

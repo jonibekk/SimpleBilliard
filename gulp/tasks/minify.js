@@ -59,54 +59,16 @@ gulp.task("angular_app:uglify", () => {
     .pipe(duration('angular_app:uglify'))
 })
 
-gulp.task("react_setup:uglify", () => {
-  return gulp.src(config.dest + "/react_setup/" + config.react_setup.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.react_setup.output.path))
-    .pipe(duration('react_setup:uglify'))
-})
-
-gulp.task("react_signup:uglify", () => {
-  return gulp.src(config.dest + "/react_signup/" + config.react_signup.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.react_signup.output.path))
-    .pipe(duration('react_signup:uglify'))
-})
-
-gulp.task("react_goal_create:uglify", () => {
-  return gulp.src(config.dest + "/react_goal_create/" + config.react_goal_create.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.react_goal_create.output.path))
-    .pipe(duration('react_goal_create:uglify'))
-})
-
-gulp.task("react_goal_edit:uglify", () => {
-  return gulp.src(config.dest + "/react_goal_edit/" + config.react_goal_edit.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.react_goal_edit.output.path))
-    .pipe(duration('react_goal_edit:uglify'))
-})
-
-gulp.task("react_goal_approval:uglify", () => {
-  return gulp.src(config.dest + "/react_goal_approval/" + config.react_goal_approval.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.react_goal_approval.output.path))
-    .pipe(duration('react_goal_approval:uglify'))
+config.react_apps.map((app_name) => {
+  gulp.task(`${app_name}:uglify`, () => {
+    return gulp.src(config.dest + `/${app_name}/` + config[app_name].output.file_name + '.js')
+      .pipe(uglify())
+      .pipe(rename({
+        suffix: '.min'
+      }))
+      .pipe(gulp.dest(config[app_name].output.path))
+      .pipe(duration(`${app_name}:uglify`))
+  })
 })
 
 gulp.task('css:minify', () => {

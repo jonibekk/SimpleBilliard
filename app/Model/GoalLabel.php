@@ -172,8 +172,8 @@ class GoalLabel extends AppModel
         $existLabelsNotAttached = array_intersect($allLabels, $attachLabels);
         //saveデータをビルド
         $saveData = array_merge_recursive(
-            $this->_buildSaveDataLabelExists($goalId, $newLabels),
-            $this->_buildSaveDataLabelNotExists($goalId, $existLabelsNotAttached)
+            $this->_buildSaveDataLabelExists($goalId, $existLabelsNotAttached),
+            $this->_buildSaveDataLabelNotExists($goalId, $newLabels)
         );
         $this->create();
         $res = $this->saveAll($saveData, ['deep' => true]);

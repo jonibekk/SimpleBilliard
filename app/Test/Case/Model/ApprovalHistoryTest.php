@@ -48,9 +48,8 @@ class ApprovalHistoryTest extends GoalousTestCase
     {
         $cb_id = 999;
         $user_id = 888;
-        $action_status = 0;
         $comment = 'test';
-        $this->ApprovalHistory->add($cb_id, $user_id, $action_status, $comment);
+        $this->ApprovalHistory->add(['ApprovalHistory' => ['collaborator_id' => $cb_id, 'user_id' => $user_id, 'comment' => $comment]]);
         $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
         $this->assertEquals($res['ApprovalHistory']['comment'], 'test');
     }
@@ -59,11 +58,10 @@ class ApprovalHistoryTest extends GoalousTestCase
     {
         $cb_id = 999;
         $user_id = 888;
-        $action_status = 0;
         $comment = '';
-        $this->ApprovalHistory->add($cb_id, $user_id, $action_status, $comment);
+        $this->ApprovalHistory->add(['ApprovalHistory' => ['collaborator_id' => $cb_id, 'user_id' => $user_id, 'comment' => $comment]]);
         $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
-        $this->assertEmpty($res);
+        $this->assertEquals($res['ApprovalHistory']['comment'], '');
     }
 
 }

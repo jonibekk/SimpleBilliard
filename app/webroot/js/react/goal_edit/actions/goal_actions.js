@@ -2,27 +2,31 @@ import * as types from "../constants/ActionTypes";
 import {post} from "../../util/api";
 import axios from "axios";
 
-export function validateGoal(page, addData) {
+export function validateGoal(addInputData) {
   return (dispatch, getState) => {
 
-    const postData = Object.assign(getState().goal.inputData, addData)
-    const fields = Page.VALIDATION_FIELDS[page].join(',')
-    return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
+    const postData = Object.assign(getState().goal.inputData, addInputData)
+    return post(`/api/v1/goals/validate`, postData, null,
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate success");
-        dispatch(toNextPage())
+        /* eslint-enable no-console */
+        dispatch(toNextPage(addInputData))
       },
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate failed");
+        /* eslint-enable no-console */
         dispatch(invalid(response.data))
       }
     );
   }
 }
 
-export function toNextPage() {
+export function toNextPage(addInputData = {}) {
   return {
-    type: types.TO_NEXT_PAGE
+    type: types.TO_NEXT_PAGE,
+    addInputData
   }
 }
 
@@ -103,9 +107,27 @@ export function fetchInitialData(goalId) {
   }
 }
 
-export function saveGoal() {
+export function fetchComments() {
   return (dispatch, getState) => {
-    return post("/api/v1/goals", getState().goal.inputData, null,
+    const collaboratorId = getState().goal.goal.collaborator.id
+    return axios.get(`/api/v1/goal_approvals/histories?collaborator_id=${collaboratorId}`)
+      .then((response) => {
+        let approvalHistories = response.data.data
+        dispatch({
+          type: types.FETCH_COMMETNS,
+          approvalHistories
+        })
+      })
+      .catch((response) => {
+      })
+  }
+}
+
+export function saveGoal(addInputData) {
+  return (dispatch, getState) => {
+    const {inputData, goal} = getState().goal;
+    inputData["approval_history"] = addInputData
+    return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
         dispatch(toNextPage())
       },
