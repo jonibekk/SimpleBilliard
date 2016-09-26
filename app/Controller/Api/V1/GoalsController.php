@@ -54,6 +54,9 @@ class GoalsController extends ApiController
      * formで利用する値を取得する
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     *
+     * @param integer|null $id
+     *
      * @return CakeResponse
      */
     function get_init_form($id = null)
@@ -68,7 +71,7 @@ class GoalsController extends ApiController
                 return $this->_getResponseForbidden();
             }
             $GoalService = ClassRegistry::init("GoalService");
-            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'),[
+            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'), [
                 GoalService::EXTEND_TOP_KEY_RESULT,
                 GoalService::EXTEND_GOAL_LABELS,
                 GoalService::EXTEND_COLLABORATOR,
@@ -128,7 +131,7 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units"); ;
+            $res['units'] = Configure::read("label.units");;
         }
 
         return $this->_getResponseSuccess($res);
@@ -159,7 +162,6 @@ class GoalsController extends ApiController
         if ($validateResult !== true) {
             return $validateResult;
         }
-        //TODO タグの保存処理まだ
         $this->Goal->begin();
         $isSaveSuccess = $this->Goal->add(
             [
@@ -229,7 +231,11 @@ class GoalsController extends ApiController
         if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
             throw new InternalErrorException();
         }
-        // TODO:通知関連実装
+
+        //コーチへの通知
+        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        //コラボレータへの通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
 
@@ -279,6 +285,7 @@ class GoalsController extends ApiController
      * - key resultがなければバリデーションを通さずレスポンスを返す
      * - approval_hisotryがなければバリデーションを通さずレスポンスを返す
      * - モデル毎にバリデーションを実行し、結果をマージしている。
+     *
      * @param array $data
      *
      * @return array
