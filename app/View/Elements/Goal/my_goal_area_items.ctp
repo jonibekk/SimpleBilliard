@@ -12,7 +12,7 @@
  */
 $kr_count = 0;
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php foreach ($goals as $goal): ?>
     <?php
     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
@@ -290,7 +290,7 @@ $kr_count = 0;
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __("Add Key Result") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['approval_status']] ?></p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= $this->Goal->displayApprovalStatus($goal['MyCollabo'][0]) ?></p>
                             </li>
                         </ul>
                     </div>
@@ -301,4 +301,4 @@ $kr_count = 0;
         <?php endif; ?>
     </div>
 <?php endforeach ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

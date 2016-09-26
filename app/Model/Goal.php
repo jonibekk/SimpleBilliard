@@ -184,16 +184,16 @@ class Goal extends AppModel
 
     public $post_validate = [
         'start_date' => [
-            'isString' => ['rule' => 'isString'],
-            'dateYmd'  => [
+            'isString'       => ['rule' => 'isString'],
+            'dateYmd'        => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
             'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
         ],
         'end_date'   => [
-            'isString' => ['rule' => 'isString'],
-            'dateYmd'  => [
+            'isString'       => ['rule' => 'isString'],
+            'dateYmd'        => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
@@ -303,7 +303,7 @@ class Goal extends AppModel
         $date = array_shift($date);
         $goalTerm = $this->getGoalTermFromPost($this->data);
         return $goalTerm['start_date'] <= strtotime($date)
-            && strtotime($date) <= $goalTerm['end_date'];
+        && strtotime($date) <= $goalTerm['end_date'];
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -1027,7 +1027,14 @@ class Goal extends AppModel
                     'conditions' => ['ActionResultCount.user_id' => $user_id]
                 ],
                 'MyCollabo'         => [
-                    'fields'     => ['MyCollabo.id', 'MyCollabo.type'],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.user_id',
+                        'MyCollabo.type',
+                        'MyCollabo.approval_status',
+                        'MyCollabo.is_wish_approval',
+                        'MyCollabo.is_target_evaluation'
+                    ],
                     'conditions' => ['MyCollabo.user_id' => $this->my_uid]
                 ],
                 'MyFollow'          => [
@@ -1035,11 +1042,25 @@ class Goal extends AppModel
                     'conditions' => ['MyFollow.user_id' => $this->my_uid]
                 ],
                 'Leader'            => [
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
+                    'fields'     => [
+                        'Leader.id',
+                        'Leader.user_id',
+                        'Leader.type',
+                        'Leader.approval_status',
+                        'Leader.is_wish_approval',
+                        'Leader.is_target_evaluation'
+                    ],
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                 ],
                 'Collaborator'      => [
-                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.approval_status'],
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation'
+                    ],
                     'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
                 ],
             ]

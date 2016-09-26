@@ -477,6 +477,7 @@ class Collaborator extends AppModel
 
     /**
      * コーチとしての未対応のゴール認定件数取得
+     *
      * @param $userId
      *
      * @return int
