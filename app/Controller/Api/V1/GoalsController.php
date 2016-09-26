@@ -40,12 +40,12 @@ class GoalsController extends ApiController
             //allが含まれる場合はすべて指定。それ以外はそのまま
             $fields = in_array('all', $fields) ? [] : $fields;
         }
-        $validation = $this->Goal->validateGoalPOST($this->request->data, $fields);
-        if ($validation === true) {
-            return $this->_getResponseSuccess();
-        }
-        $validationMsg = $this->_validationExtract($validation);
-        return $this->_getResponseValidationFail($validationMsg);
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        $validationErrors = $GoalService->validateSave($this->request->data, $fields);
+
+        return $this->_getResponseValidationFail($validationErrors);
     }
 
     /**
@@ -74,9 +74,7 @@ class GoalsController extends ApiController
             ]);
         }
 
-        /**
-         * @var Label $Label
-         */
+        /* @var Label $Label */
         $Label = ClassRegistry::init('Label');
 
         if ($this->request->query('data_types')) {

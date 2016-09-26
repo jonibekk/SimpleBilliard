@@ -6,6 +6,7 @@
  * Time: 17:57
  */
 
+App::import('Service', 'AppService');
 App::uses('Goal', 'Model');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalLabel', 'Model');
@@ -17,7 +18,7 @@ App::import('View', 'Helper/UploadHelper');
 /**
  * Class GoalService
  */
-class GoalService extends Object
+class GoalService extends AppService
 {
     /* ゴールの拡張種別 */
     const EXTEND_GOAL_LABELS = "GOAL:EXTEND_GOAL_LABELS";
@@ -244,4 +245,69 @@ class GoalService extends Object
         }
         return true;
     }
+
+    /**
+     * ゴール登録・更新のバリデーション
+     */
+    function validateSave($data, $fields)
+    {
+        $this->log(__METHOD__);
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        // ゴール バリデーション
+        $validationErrors = $this->validationExtract(
+            $Goal->validateGoalPOST($data, $fields)
+        );
+        $this->log($validationErrors);
+
+        // ゴールラベル バリデーション
+        if (empty($fields) || in_array('labels', $fields)) {
+            $this->log($data);
+            $validationLabelsError = $this->validationLabels($data);
+            if (!empty($validationLabelsError)) {
+                $validationErrors = array_merge(
+                    $validationErrors,
+                    ['labels' => $validationLabelsError]
+                );
+            }
+        }
+
+        return $validationErrors;
+    }
+
+    /**
+     * ゴール登録・更新時のラベルバリデーション
+     *
+     * @param $data
+     *
+     * @return array
+     * @internal param $validationErrors
+     */
+    private function validationLabels($data)
+    {
+        $labelNames = Hash::get($data, 'labels');
+        $this->log(compact('labelNames'));
+        // 未入力チェック
+        if (empty($labelNames)) {
+            return __("Input is required.");
+        }
+
+        /* @var Label $Label */
+        $Label = ClassRegistry::init('Label');
+
+        $labels = [];
+        foreach ($labelNames as $labelName) {
+            array_push($labels, ['name' => $labelName]);
+        }
+        $this->log(compact('labels'));
+        // 複数レコードのバリデーション
+        if (!$Label->saveAll($labels, ['validate' => 'only'])) {
+            // 最初のエラーメッセージのみを抽出
+            return reset(Hash::flatten($Label->validationErrors));
+        }
+        return true;
+    }
+
+
 }

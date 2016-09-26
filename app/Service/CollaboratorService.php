@@ -6,11 +6,12 @@
  * Time: 17:57
  */
 
+App::import('Service', 'AppService');
 App::uses('Collaborator', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 
-class CollaboratorService
+class CollaboratorService extends AppService
 {
     /* コラボレーターの拡張種別 */
     const EXTEND_COACH = "GOAL:EXTEND_COACH";

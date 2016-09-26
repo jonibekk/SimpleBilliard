@@ -6,12 +6,13 @@
  * Time: 17:57
  */
 
+App::import('Service', 'AppService');
 App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('Collaborator', 'Model');
 App::import('Service', 'CollaboratorService');
 
-class GoalApprovalService extends Object
+class GoalApprovalService extends AppService
 {
     /**
      * コーチとしての未対応認定件数取得
