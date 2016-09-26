@@ -5,7 +5,9 @@ export class CoacheeCard extends React.Component {
   render() {
     const collaborator = this.props.collaborator
     const is_leader = collaborator.type == 1
-    const is_wating = collaborator.status_type !== null
+    const is_done = collaborator.approval_status == 2;
+    const is_target_evaluation = is_done && collaborator.is_target_evaluation == true
+    const is_wating = !is_done && (collaborator.approval_status == 0 || collaborator.approval_status == 1)
     let role = ''
     let status = ''
     let is_incomplete = false
@@ -17,7 +19,7 @@ export class CoacheeCard extends React.Component {
       role = __('Collaborator')
     }
      // Define status
-    if(collaborator.is_target_evaluation) {
+    if(is_target_evaluation) {
       status = __('Evaluated')
     } else if(is_wating) {
       status = __('Waiting')

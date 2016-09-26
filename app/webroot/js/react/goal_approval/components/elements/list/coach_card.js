@@ -5,8 +5,10 @@ export class CoachCard extends React.Component {
   render() {
     const collaborator = this.props.collaborator
     const is_leader = collaborator.type == 1
-    const is_Reapplication_approval = collaborator.approval_status == 1
-    const is_new_approval = collaborator.approval_status == 0
+    const is_done = collaborator.approval_status == 2;
+    const is_target_evaluation = is_done && collaborator.is_target_evaluation == true
+    const is_Reapplication_approval = !is_done && collaborator.approval_status == 1
+    const is_new_approval = !is_done && collaborator.approval_status == 0
     let role = ''
     let status = ''
     let is_incomplete = false
@@ -18,7 +20,7 @@ export class CoachCard extends React.Component {
       role = __('Collaborator')
     }
     // Define status
-    if(collaborator.is_target_evaluation) {
+    if(is_target_evaluation) {
       status = __('Evaluated')
     } else if(is_Reapplication_approval) {
       status = __('Reapplication')
