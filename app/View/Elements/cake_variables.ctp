@@ -448,6 +448,8 @@
             "eg. Spread Goalous users in the world": "<?=__("eg. Spread Goalous users in the world")?>",
             "View samples": "<?=__("View samples")?>",
             "See Other %s": "<?=__("See Other %s")?>",
+            "Next →": "<?=__("Next →")?>",
+            "Cancel": "<?=__("Cancel")?>",
             "Vision": "<?=__("Vision")?>",
             "Set labels": "<?=__("Set labels")?>",
             "To make it easier to find your goal, let's set labels. And if your organization has goal categories, you can select them here.": "<?=__("To make it easier to find your goal, let's set labels. And if your organization has goal categories, you can select them here.")?>",

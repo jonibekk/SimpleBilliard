@@ -90,13 +90,13 @@ export default class Edit extends React.Component {
               acceptCharset="utf-8"
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
-            <h1 className="goals-create-heading">{__("Set your goal name")}</h1>
+            <h1 className="goals-create-heading">{__("What is your goal ?")}</h1>
             <p
-              className="goals-create-description">{__("Your name will displayed along with your goals and posts in Goalous.")}</p>
+              className="goals-create-description">{__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")}</p>
 
-            <label className="goals-create-input-label">{__("Goal name?")}</label>
+            <label className="goals-create-input-label">{__("Goal name")}</label>
             <input name="name" className="form-control goals-create-input-form" type="text"
-                   placeholder="e.g. Get goalous users" ref="name"
+                   placeholder={__("eg. Spread Goalous users in the world")} ref="name"
                    onChange={this.onChange} value={inputData.name}/>
             <InvalidMessageBox message={validationErrors.name}/>
 
