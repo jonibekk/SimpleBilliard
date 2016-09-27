@@ -1368,14 +1368,32 @@ class Goal extends AppModel
                 'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                    'fields'     => ['Leader.id', 'Leader.user_id'],
+                    'fields'     => [
+                        'Leader.id',
+                        'Leader.user_id',
+                        'Leader.type',
+                        'Leader.approval_status',
+                        'Leader.is_wish_approval',
+                        'Leader.is_target_evaluation',
+                        'Leader.role',
+                        'Leader.description',
+                    ],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
                 'Collaborator' => [
                     'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
-                    'fields'     => ['Collaborator.id', 'Collaborator.user_id'],
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation',
+                        'Collaborator.role',
+                        'Collaborator.description',
+                    ],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
@@ -1393,6 +1411,11 @@ class Goal extends AppModel
                     ],
                     'fields'     => [
                         'MyCollabo.id',
+                        'MyCollabo.user_id',
+                        'MyCollabo.type',
+                        'MyCollabo.approval_status',
+                        'MyCollabo.is_wish_approval',
+                        'MyCollabo.is_target_evaluation',
                         'MyCollabo.role',
                         'MyCollabo.description',
                     ],

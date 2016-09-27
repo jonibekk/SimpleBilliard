@@ -245,9 +245,9 @@ class NotifySettingTest extends GoalousTestCase
             NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
             NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE,
             NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
-            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL,
-            NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL,
-            NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL,
+            NotifySetting::TYPE_COACHEE_CREATE_GOAL,
+            NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL,
+            NotifySetting::TYPE_COACHEE_CHANGE_GOAL,
             NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
         ];
         foreach ($types as $type) {
