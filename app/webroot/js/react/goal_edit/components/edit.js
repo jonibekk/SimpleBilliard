@@ -90,13 +90,13 @@ export default class Edit extends React.Component {
               acceptCharset="utf-8"
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
-            <h1 className="goals-create-heading">{__("Set your goal name")}</h1>
+            <h1 className="goals-create-heading">{__("What is your goal ?")}</h1>
             <p
-              className="goals-create-description">{__("Your name will displayed along with your goals and posts in Goalous.")}</p>
+              className="goals-create-description">{__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")}</p>
 
-            <label className="goals-create-input-label">{__("Goal name?")}</label>
+            <label className="goals-create-input-label">{__("Goal name")}</label>
             <input name="name" className="form-control goals-create-input-form" type="text"
-                   placeholder="e.g. Get goalous users" ref="name"
+                   placeholder={__("eg. Spread Goalous users in the world")} ref="name"
                    onChange={this.onChange} value={inputData.name}/>
             <InvalidMessageBox message={validationErrors.name}/>
 
@@ -123,7 +123,7 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={validationErrors.labels}/>
 
-            <label className="goals-create-input-label">{__("Goal image?")}</label>
+            <label className="goals-create-input-label">{__("Goal image")}</label>
             <div
               className={`goals-create-input-image-upload fileinput_small ${inputData.photo ? "fileinput-exists" : "fileinput-new"}`}
               data-provides="fileinput">
@@ -133,11 +133,11 @@ export default class Edit extends React.Component {
                 <img src={imgPath} width={100} height={100} ref="photo_image"/>
               </div>
               <div className="goals-create-input-image-upload-info">
-                <p className="goals-create-input-image-upload-info-text">
-                  {__("This is sample image if you want to upload your original image")}
-                </p>
+                {/*<p className="goals-create-input-image-upload-info-text">*/}
+                  {/*{__("This is sample image if you want to upload your original image")}*/}
+                {/*</p>*/}
                 <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
-                  <span className="fileinput-new">{__("Upload a image")}</span>
+                  <span className="fileinput-new">{__("Upload an image")}</span>
                   <span className="fileinput-exists">{__("Reselect an image")}</span>
                   <input className="goals-create-input-image-upload-info-form" type="file" name="photo" ref="photo"
                          id="file_photo"/>
@@ -146,10 +146,10 @@ export default class Edit extends React.Component {
             </div>
             <InvalidMessageBox message={validationErrors.photo}/>
 
-            <label className="goals-create-input-label">{__("Term?")}</label>
+            <label className="goals-create-input-label">{__("Term")}</label>
             <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
                     value={inputData.term_type} onChange={this.onChange}>
-              <option value="current">{__("Current Term")}</option>
+              <option value="current">{__("This Term")}</option>
               <option value="next">{__("Next Term")}</option>
             </select>
             <InvalidMessageBox message={validationErrors.term_type}/>
@@ -182,15 +182,15 @@ export default class Edit extends React.Component {
             <InvalidMessageBox message={validationErrors.priority}/>
           </section>
           <section className="mb_32px">
-            <h1 className="goals-create-heading">{__("Set a top key result (tKR)")}</h1>
-            <p className="goals-create-description">{__("Set measurable target to achieve your goal.")}</p>
-            <label className="goals-create-input-label">{__("tKR name")}</label>
+            <h1 className="goals-create-heading">{__("Set Top Key Result")}</h1>
+            <p className="goals-create-description">{__("Create a clear and most important Key Result for your goal.")}</p>
+            <label className="goals-create-input-label">{__("Top Key Result")}</label>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
-                   placeholder="e.g. Increase monthly active users" onChange={(e) => this.onChange(e, "key_result")}/>
+                   placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.name}/>
 
-            <label className="goals-create-input-label">{__("Unit & Range")}</label>
+            {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
             <select name="value_unit" value={inputData.key_result.value_unit}
                     className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select"
                     onChange={(e) => this.onChange(e, "key_result")}>

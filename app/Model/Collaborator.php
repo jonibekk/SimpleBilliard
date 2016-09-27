@@ -379,6 +379,7 @@ class Collaborator extends AppModel
 
     /**
      * ゴール認定一覧に表示するリスト取得
+     * - 認定ステータス、コラボレーター作成日の順でソート
      *
      * @param $goalUserId
      *
@@ -418,7 +419,7 @@ class Collaborator extends AppModel
                 ],
             ],
             'type'       => 'INNER',
-            'order'      => ['Collaborator.created DESC'],
+            'order'      => ['Collaborator.approval_status ASC', 'Collaborator.created DESC'],
         ];
         $res = $this->find('all', $options);
         return $res;

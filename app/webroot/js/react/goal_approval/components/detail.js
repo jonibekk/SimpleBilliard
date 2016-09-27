@@ -38,7 +38,7 @@ export default class DetailComponent extends React.Component {
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
-          <h1 className="goals-approval-heading">Confirm this goal</h1>
+          <h1 className="goals-approval-heading">{__("Set as a target for evaluation?")}</h1>
           <div className="goals-approval-detail">
               <UserCard collaborator={ detail.goal_approval } />
               <GoalCard goal={ detail.goal_approval.goal }

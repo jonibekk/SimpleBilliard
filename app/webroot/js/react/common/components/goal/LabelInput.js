@@ -16,7 +16,7 @@ export default class LabelInput extends React.Component {
 
     return (
       <div>
-        <label className="goals-create-input-label">{__("Labels ?")}</label>
+        <label className="goals-create-input-label">{__("Labels")}</label>
         <AutoSuggest
           suggestions={this.props.suggestions}
           onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
