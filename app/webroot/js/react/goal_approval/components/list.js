@@ -23,7 +23,7 @@ export default class ListComponent extends React.Component {
               }
             }) }
           </ul>
-          {/* TODO: fetchGoalApprovalsを即時間数で囲わないとなぜかコールした際の引数 がtrueになる。要調査。 */}
+          {/* TODO: fetchCollaboratorsを即時間数で囲わないとなぜかコールした際の引数 がtrueになる。要調査。 */}
           { !this.props.list.done_loading_all_data ? <ViewMoreButton handleOnClick={ () => this.props.fetchCollaborators() }
                                                                      is_loading={ this.props.list.fetching_collaborators } /> : null }
       </section>

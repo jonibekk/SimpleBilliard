@@ -1,7 +1,7 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  goal_approval: {},
+  collaborator: {},
   to_list_page: false,
   posting_set_as_target: false,
   posting_remove_from_target: false,
@@ -10,9 +10,9 @@ const initialState = {
 
 export default function detail(state = initialState, action) {
   switch (action.type) {
-    case types.SET_GOAL_APPROVAL:
+    case types.SET_COLLABORATOR:
       return Object.assign({}, state, {
-        goal_approval: action.goal_approval
+        collaborator: action.collaborator
       })
     case types.TO_LIST_PAGE:
       return Object.assign({}, state, {
