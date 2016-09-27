@@ -1,5 +1,4 @@
-// バックエンドのモデルの定数をReactでも使える様にする
-
+// バックエンドのモデルの定数をReactでも使う
 export const Collaborator = Object.freeze({
   ApprovalStatus: {
     NEW: 0,
