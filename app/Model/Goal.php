@@ -183,18 +183,18 @@ class Goal extends AppModel
     ];
 
     public $post_validate = [
-        'end_date'   => [
-            'notEmpty' => [
+        'end_date'  => [
+            'notEmpty'       => [
                 'required' => 'create',
                 'rule'     => 'notEmpty',
             ],
             'isString'       => ['rule' => 'isString'],
             'dateYmd'        => [
-                'rule'       => ['date', 'ymd'],
+                'rule' => ['date', 'ymd'],
             ],
             'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
         ],
-        'term_type'  => [
+        'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
             'notEmpty' => [
 //                'required' => 'create',

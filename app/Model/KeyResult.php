@@ -100,18 +100,18 @@ class KeyResult extends AppModel
             ],
         ],
         'start_value'  => [
-            'requiredCaseExistUnit'   => [
+            'requiredCaseExistUnit' => [
                 'rule' => ['requiredCaseExistUnit'],
             ],
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']],
+            'maxLength'             => ['rule' => ['maxLength', 15]],
+            'numeric'               => ['rule' => ['numeric']],
         ],
         'target_value' => [
-            'requiredCaseExistUnit'   => [
+            'requiredCaseExistUnit' => [
                 'rule' => ['requiredCaseExistUnit'],
             ],
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']],
+            'maxLength'             => ['rule' => ['maxLength', 15]],
+            'numeric'               => ['rule' => ['numeric']],
         ],
     ];
 

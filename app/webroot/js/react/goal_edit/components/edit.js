@@ -192,11 +192,13 @@ export default class Edit extends React.Component {
             </select>
             <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
 
-            <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
+            <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result}
+                                onChange={(e) => this.onChange(e, "key_result")}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}
-                      className="form-control goals-create-input-form mod-textarea" onChange={(e) => this.onChange(e, "key_result")}/>
+                      className="form-control goals-create-input-form mod-textarea"
+                      onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.description}/>
 
           </section>

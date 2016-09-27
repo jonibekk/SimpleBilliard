@@ -48,6 +48,7 @@ class GoalsController extends ApiController
         }
         return $this->_getResponseSuccess();
     }
+
     /**
      * ゴール更新のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
@@ -98,7 +99,7 @@ class GoalsController extends ApiController
                 return $this->_getResponseForbidden();
             }
             $GoalService = ClassRegistry::init("GoalService");
-            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'),[
+            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'), [
                 GoalService::EXTEND_TOP_KEY_RESULT,
                 GoalService::EXTEND_GOAL_LABELS,
                 GoalService::EXTEND_COLLABORATOR,
@@ -156,7 +157,7 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units"); ;
+            $res['units'] = Configure::read("label.units");;
         }
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
@@ -165,7 +166,7 @@ class GoalsController extends ApiController
             $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
             $res['default_end_dates'] = [
                 'current' => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
-                'next' => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
+                'next'    => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
             ];
         }
 
@@ -298,6 +299,7 @@ class GoalsController extends ApiController
 
     /**
      * ゴール編集のバリデーション
+     *
      * @param array $data
      *
      * @return true|CakeResponse
