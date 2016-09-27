@@ -9,6 +9,8 @@ App::uses('AppModel', 'Model');
  */
 class Label extends AppModel
 {
+    // ゴールラベル登録の上限数
+    const MAX_SAVE_GOAL_LABEL_COUNT = 5;
 
     /**
      * Display field
@@ -101,15 +103,20 @@ class Label extends AppModel
     {
         $labelNames = Hash::get($data, 'labels');
         // 未入力チェック
-        if (empty($labelNames)) {
+        if (empty($labelNames) || !is_array($labelNames)) {
             return __("Input is required.");
+        }
+
+        // ラベル数上限チェック
+        if (count($labelNames) > self::MAX_SAVE_GOAL_LABEL_COUNT) {
+            return __('Prease select within %d count maximum.', 5);
         }
 
         $labels = [];
         foreach ($labelNames as $labelName) {
             array_push($labels, ['name' => $labelName]);
         }
-        $this->log(compact('labels'));
+
         // 複数レコードのバリデーション
         if (!$this->saveAll($labels, ['validate' => 'only'])) {
             // 最初のエラーメッセージのみを抽出
