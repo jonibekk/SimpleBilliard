@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('Collaborator', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Goal Model
@@ -350,7 +351,6 @@ class Goal extends AppModel
             $data['Goal']['photo'] = $data['Goal']['img_url'];
             unset($data['Goal']['img_url']);
         }
-
         $this->create();
         $isSuccess = (bool)$this->saveAll($data);
         $newGoalId = $this->getLastInsertID();
