@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
+App::import('Service', 'GoalService');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -66,6 +67,13 @@ class GoalsController extends AppController
         } catch (RuntimeException$e) {
             throw new NotFoundException();
         }
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        if (!$GoalService->isGoalAfterCurrentTerm($id)) {
+            throw new NotFoundException();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render("edit");
     }
