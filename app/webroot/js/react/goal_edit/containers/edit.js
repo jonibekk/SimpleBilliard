@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch) {
     deleteLabel: (label) => dispatch(actions.deleteLabel(label)),
     addLabel: (label) => dispatch(actions.addLabel(label)),
     saveGoal: () => dispatch(actions.saveGoal()),
-    validateGoal: (addInputData) => dispatch(actions.validateGoal(addInputData)),
+    validateGoal: (goalId, addInputData) => dispatch(actions.validateGoal(goalId, addInputData)),
     fetchInitialData: (goalId) => dispatch(actions.fetchInitialData(goalId)),
     updateInputData: (data, key = "") => dispatch(actions.updateInputData(data, key))
   }

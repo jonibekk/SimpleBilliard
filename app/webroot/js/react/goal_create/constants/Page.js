@@ -19,7 +19,7 @@ export const VALIDATION_FIELDS = {
     "name"
   ],
   STEP2: [
-    "category",
+    "goal_category_id",
     "labels",
   ],
   STEP3: [

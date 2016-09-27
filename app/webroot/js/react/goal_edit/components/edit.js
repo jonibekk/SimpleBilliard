@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory} from "react-router";
-import * as KeyCode from "../../common/constants/KeyCode";
-import InvalidMessageBox from "../../common/components/InvalidMessageBox";
-import CategorySelect from "../../common/components/goal/CategorySelect";
-import LabelInput from "../../common/components/goal/LabelInput";
+import * as KeyCode from "~/common/constants/KeyCode";
+import InvalidMessageBox from "~/common/components/InvalidMessageBox";
+import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
+import CategorySelect from "~/common/components/goal/CategorySelect";
+import LabelInput from "~/common/components/goal/LabelInput";
 
 export default class Edit extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class Edit extends React.Component {
     if (e.keyCode == KeyCode.ENTER) {
       return false
     }
-    this.props.validateGoal(this.getInputDomData())
+    this.props.validateGoal(this.props.params.goalId, this.getInputDomData())
   }
 
   deleteLabel(e) {
@@ -146,14 +147,6 @@ export default class Edit extends React.Component {
             </div>
             <InvalidMessageBox message={validationErrors.photo}/>
 
-            <label className="goals-create-input-label">{__("Term?")}</label>
-            <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
-                    value={inputData.term_type} onChange={this.onChange}>
-              <option value="current">{__("Current Term")}</option>
-              <option value="next">{__("Next Term")}</option>
-            </select>
-            <InvalidMessageBox message={validationErrors.term_type}/>
-
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.onChange}
                       value={inputData.description}/>
@@ -199,17 +192,7 @@ export default class Edit extends React.Component {
             </select>
             <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
 
-            <div className="goals-create-layout-flex">
-              <input name="start_value" value={inputData.key_result.start_value}
-                     className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
-                     placeholder={0} onChange={(e) => this.onChange(e, "key_result")}/>
-              <span className="goals-create-input-form-tkr-range-symbol">&gt;</span>
-              <input name="target_value" value={inputData.key_result.target_value}
-                     className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
-                     placeholder={100} onChange={(e) => this.onChange(e, "key_result")}/>
-            </div>
-            <InvalidMessageBox message={validationErrors.key_result.start_value}/>
-            <InvalidMessageBox message={validationErrors.key_result.target_value}/>
+            <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}

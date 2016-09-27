@@ -2,11 +2,11 @@ import * as types from "../constants/ActionTypes";
 import {post} from "../../util/api";
 import axios from "axios";
 
-export function validateGoal(addInputData) {
+export function validateGoal(goalId, addInputData) {
   return (dispatch, getState) => {
 
     const postData = Object.assign(getState().goal.inputData, addInputData)
-    return post(`/api/v1/goals/validate`, postData, null,
+    return post(`/api/v1/goals/${goalId}/validate_update`, postData, null,
       (response) => {
         /* eslint-disable no-console */
         console.log("validate success");

@@ -22,6 +22,16 @@ App::import('View', 'Helper/UploadHelper');
  */
 class GoalService extends AppService
 {
+    public $goalValidateFields = [
+        "name",
+        "goal_category_id",
+        "photo",
+        "term_type",
+        "description",
+        "end_date",
+        "priority",
+    ];
+
     /* ゴールの拡張種別 */
     const EXTEND_GOAL_LABELS = "GOAL:EXTEND_GOAL_LABELS";
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
@@ -169,16 +179,14 @@ class GoalService extends AppService
 
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
-            $this->log(compact('updateGoal'));
-            if (!$Goal->saveAll($updateGoal)) {
+            if (!$Goal->save($updateGoal, false)) {
                 throw new Exception(sprintf("Failed update goal. data:%s"
                     , var_export($updateGoal, true)));
             }
 
             // TKR更新
             $updateTkr = $this->buildUpdateTkrData($goal['top_key_result']['id'], $requestData);
-            $this->log(compact('updateTkr'));
-            if (!$KeyResult->save($updateTkr)) {
+            if (!$KeyResult->save($updateTkr, false)) {
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
             }
@@ -193,9 +201,9 @@ class GoalService extends AppService
             $updateCollaborator = [
                 'id'              => $goal['collaborator']['id'],
                 'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION,
-                'priority' => $goal['priority']
+                'priority'        => $goal['priority']
             ];
-            if (!$Collaborator->save($updateCollaborator)) {
+            if (!$Collaborator->save($updateCollaborator, false)) {
                 throw new Exception(sprintf("Failed update collaborator. data:%s"
                     , var_export($updateCollaborator, true)));
             }
@@ -207,7 +215,7 @@ class GoalService extends AppService
                     'user_id'         => $userId,
                     'comment'         => $requestData['approval_history']['comment'],
                 ];
-                if (!$ApprovalHistory->save($approvalHistory)) {
+                if (!$ApprovalHistory->save($approvalHistory, false)) {
                     throw new Exception(sprintf("Failed save approvalHistory. data:%s"
                         , var_export($approvalHistory, true)));
                 }
@@ -231,6 +239,7 @@ class GoalService extends AppService
 
     /**
      * ゴール更新データ作成
+     *
      * @param $goalId
      * @param $requestData
      *
@@ -244,8 +253,8 @@ class GoalService extends AppService
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         $updateData = [
-            'id' => $goalId,
-            'name' => $requestData['name'],
+            'id'          => $goalId,
+            'name'        => $requestData['name'],
             'description' => $requestData['description'],
         ];
 
@@ -278,11 +287,11 @@ class GoalService extends AppService
         }
 
         $updateData = [
-            'id' => $tkrId,
-            'name' => $inputTkrData['name'],
-            'description' => $inputTkrData['description'],
-            'value_unit' => $inputTkrData['value_unit'],
-            'start_value' => $inputTkrData['start_value'],
+            'id'           => $tkrId,
+            'name'         => $inputTkrData['name'],
+            'description'  => $inputTkrData['description'],
+            'value_unit'   => $inputTkrData['value_unit'],
+            'start_value'  => $inputTkrData['start_value'],
             'target_value' => $inputTkrData['target_value'],
         ];
         return $updateData;
@@ -291,22 +300,31 @@ class GoalService extends AppService
     /**
      * ゴール登録・更新のバリデーション
      */
-    function validateSave($data, $fields)
+    function validateSave($data, $fields, $goalId = null)
     {
-        $this->log(__METHOD__);
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var Label $Label */
+        $Label = ClassRegistry::init("Label");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
-        // ゴール バリデーション
+        // 編集の場合評価期間の選択は無い為、既に登録されているゴールの開始日と終了日から評価期間を割り出し、入力した終了日のバリデーションに利用する
+        if (!empty($goalId) && (empty($fields) || in_array('end_date', $fields))) {
+            $goal = $this->get($goalId);
+            $data['term_type'] = $EvaluateTerm->getTermType(strtotime($goal['start_date']), strtotime($goal['end_date']));
+        }
+
+        $goalFields = array_intersect($this->goalValidateFields, $fields);
         $validationErrors = $this->validationExtract(
-            $Goal->validateGoalPOST($data, $fields)
+            $Goal->validateGoalPOST($data, $goalFields)
         );
-        $this->log($validationErrors);
 
         // ゴールラベル バリデーション
         if (empty($fields) || in_array('labels', $fields)) {
-            $this->log($data);
-            $validationLabelsError = $this->validationLabels($data);
+            $validationLabelsError = $Label->validationLabelNames($data);
             if (!empty($validationLabelsError)) {
                 $validationErrors = array_merge(
                     $validationErrors,
@@ -315,41 +333,24 @@ class GoalService extends AppService
             }
         }
 
+        // TKR バリデーション
+        if (empty($fields) || in_array('key_result', $fields)) {
+            $krValidation = $KeyResult->validateKrPOST($data['key_result']);
+
+            if ($krValidation !== true) {
+                $validationErrors['key_result'] = $this->validationExtract($krValidation);
+            }
+        }
+
+
+        // コメントバリデーション
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        $ApprovalHistory->set($data['approval_history']);
+        if (!$ApprovalHistory->validates()) {
+            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+        }
+
+
         return $validationErrors;
     }
-
-    /**
-     * ゴール登録・更新時のラベルバリデーション
-     *
-     * @param $data
-     *
-     * @return array
-     * @internal param $validationErrors
-     */
-    private function validationLabels($data)
-    {
-        $labelNames = Hash::get($data, 'labels');
-        $this->log(compact('labelNames'));
-        // 未入力チェック
-        if (empty($labelNames)) {
-            return __("Input is required.");
-        }
-
-        /* @var Label $Label */
-        $Label = ClassRegistry::init('Label');
-
-        $labels = [];
-        foreach ($labelNames as $labelName) {
-            array_push($labels, ['name' => $labelName]);
-        }
-        $this->log(compact('labels'));
-        // 複数レコードのバリデーション
-        if (!$Label->saveAll($labels, ['validate' => 'only'])) {
-            // 最初のエラーメッセージのみを抽出
-            return reset(Hash::flatten($Label->validationErrors));
-        }
-        return "";
-    }
-
-
 }

@@ -1,5 +1,6 @@
 import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
+import {KeyResult} from "~/common/constants/Model";
 import {post} from "../../util/api";
 import axios from "axios";
 
@@ -112,6 +113,11 @@ export function fetchInitialData(page) {
 
 export function saveGoal() {
   return (dispatch, getState) => {
+    const postData = getState().goal.inputData
+    if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      postData.key_result.start_value = null
+      postData.key_result.target_value = null
+    }
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
         dispatch(toNextPage())
