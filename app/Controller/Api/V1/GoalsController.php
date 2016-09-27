@@ -81,7 +81,7 @@ class GoalsController extends ApiController
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
      *
-     * @param null $id
+     * @param integer|null $id
      *
      * @return CakeResponse
      */
@@ -220,7 +220,7 @@ class GoalsController extends ApiController
 
         //通知
         $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_COACHEE_CREATE_GOAL);
 
         $this->updateSetupStatusIfNotCompleted();
         //コーチと自分の認定件数を更新(キャッシュを削除)
@@ -266,7 +266,11 @@ class GoalsController extends ApiController
         if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
             return $this->_getResponseInternalServerError();
         }
-        // TODO:通知関連実装
+
+        //コーチへの通知
+        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        //コラボレータへの通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
 

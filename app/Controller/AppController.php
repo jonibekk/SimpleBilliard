@@ -145,7 +145,7 @@ class AppController extends BaseController
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __(
-            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.');
+            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App."));
         $this->set('meta_description', $this->meta_description);
 
         $this->_setAppLanguage();
@@ -169,8 +169,9 @@ class AppController extends BaseController
             }
 
             //通知の既読ステータス
-            if (isset($this->request->params['named']['notify_id'])) {
-                $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
+            $notify_id = $this->request->query('notify_id');
+            if ($notify_id) {
+                $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {

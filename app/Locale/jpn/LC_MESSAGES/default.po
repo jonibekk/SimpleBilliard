@@ -89,14 +89,40 @@ msgstr "Goalous(ゴーラス)"
 #: Controller/AppController.php:147
 msgid ""
 "Goalous is one of the best team communication tools. Let your team open. "
-"Your action will be share with your collegues. You can use Goalous on Web "
-"and on Mobile App."
+"Your action will be share with your collegues. %s"
 msgstr ""
 "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
 "バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
 "す。スマホアプリ・ブラウザで利用可能です。"
 
-#: Controller/AppController.php:193
+msgid "You can use Goalous on Web and on Mobile App."
+msgstr "スマホアプリ・ブラウザで利用可能です。"
+
+msgid "We accept consultation of introduction."
+msgstr "導入のご相談を受け付けています。"
+
+msgid "It is a confirmation of your inquiry."
+msgstr "お問い合わせ内容の確認です。"
+
+msgid "Thank you for your inquiry."
+msgstr "お問い合わせありがとうございました。"
+
+msgid "Description of the function is here."
+msgstr "機能の説明はこちら。"
+
+msgid "Inscription based on specific trade law is here."
+msgstr "特定商取引法に基づく表記はこちら。"
+
+msgid "Pricing is here."
+msgstr "料金・価格はこちら。"
+
+msgid "Privacy Policy is here."
+msgstr "プライバシーポリシーはこちら。"
+
+msgid "Terms and Conditions is here."
+msgstr "利用規約はこちら。"
+
+#: Controller/AppController.php:220
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
 
@@ -1512,6 +1538,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコラボりました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has changed the role with "
+"<span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>の役割を変更しました。"
 
 #: Model/NotifySetting.php:593;598
 msgid ""
@@ -6119,9 +6152,13 @@ msgid ""
 "す。スマホアプリ・ブラウザで利用可能です。"
 msgstr ""
 
+#: View/Pages/home.ctp:34
+msgid "goal management, achieve a goal, sns app, evaluation, mbo"
+msgstr "目標管理,目標達成,社内SNS,評価,MBO"
+
 #: View/Pages/home.ctp:42
-msgid "Goalous(ゴーラス) | 最強にオープンな社内SNS"
-msgstr ""
+msgid "Goalous | Enjoy your work. Achieve your goal."
+msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
 #: View/Pages/home.ctp:78
 msgid "Goalous (ゴーラス) │最強にオープンな社内SNS"

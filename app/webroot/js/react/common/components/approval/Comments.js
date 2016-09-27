@@ -1,5 +1,5 @@
 import React from 'react'
-import { Comment } from './comment'
+import { Comment } from '~/common/components/approval/Comment'
 
 export class Comments extends React.Component {
   constructor(props) {
