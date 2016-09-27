@@ -56,10 +56,11 @@ export default class Step1Component extends React.Component {
                  placeholder={__("eg. Spread Goalous users in the world")} ref="name"
                  onChange={this.handleChange} value={inputData.name}/>
           <InvalidMessageBox message={validationErrors.name}/>
-          <a href="#" className="goals-create-show-sample">
-            <i className="fa fa-eye" aria-hidden="true"/>
-            <span className="goals-create-interactive-link">{__("View samples")}</span>
-          </a>
+
+          {/*<a href="#" className="goals-create-show-sample">*/}
+            {/*<i className="fa fa-eye" aria-hidden="true"/>*/}
+            {/*<span className="goals-create-interactive-link">{__("View samples")}</span>*/}
+          {/*</a>*/}
 
           <div className="row">
             <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>

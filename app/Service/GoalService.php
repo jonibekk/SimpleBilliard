@@ -6,7 +6,10 @@
  * Time: 17:57
  */
 
+App::import('Service', 'AppService');
+App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');
+App::uses('KeyResult', 'Model');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
@@ -17,8 +20,18 @@ App::import('View', 'Helper/UploadHelper');
 /**
  * Class GoalService
  */
-class GoalService extends Object
+class GoalService extends AppService
 {
+    public $goalValidateFields = [
+        "name",
+        "goal_category_id",
+        "photo",
+        "term_type",
+        "description",
+        "end_date",
+        "priority",
+    ];
+
     /* ゴールの拡張種別 */
     const EXTEND_GOAL_LABELS = "GOAL:EXTEND_GOAL_LABELS";
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
@@ -83,7 +96,7 @@ class GoalService extends Object
             $data['term_type'] = 'current';
         }
 
-        // 日付フォーマッット
+        // 日付フォーマット
         $data['start_date'] = $TimeExHelper->dateFormat($data['start_date'], $currentTerm['timezone']);
         $data['end_date'] = $TimeExHelper->dateFormat($data['end_date'], $currentTerm['timezone']);
 
@@ -138,6 +151,8 @@ class GoalService extends Object
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalLabel $GoalLabel */
         $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var ApprovalHistory $ApprovalHistory */
@@ -146,6 +161,9 @@ class GoalService extends Object
         $Collaborator = ClassRegistry::init("Collaborator");
 
         try {
+            // トランザクション開始
+            $Goal->begin();
+
             // ゴール・TKR・コラボレーター取得
             $goal = $this->get($goalId, $userId, [
                 self::EXTEND_TOP_KEY_RESULT,
@@ -159,50 +177,37 @@ class GoalService extends Object
                 throw new Exception(sprintf("Not exist collaborator. goalId:%d userId:%d", $goalId, $userId));
             }
 
-            $requestData['id'] = $goalId;
-            // 保存するTKR情報
-            $keyResult = Hash::get($requestData, 'key_result');
-            $keyResult['id'] = $goal['top_key_result']['id'];
-
-            // トランザクション開始
-            $Goal->begin();
-
-            $data = [
-                'Goal'      => $requestData,
-                'KeyResult' => [$keyResult],
-                'Label'     => Hash::get($requestData, 'labels'),
-            ];
-
-            $goalTerm = $Goal->getGoalTermFromPost($data);
-
-            $data = $Goal->convertGoalDateFromPost($data, $goalTerm);
-            $data = $Goal->buildTopKeyResult($data, $goalTerm, false);
-
-            // setting default image if default image is chosen and image is not selected.
-            if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
-                $data['Goal']['photo'] = $data['Goal']['img_url'];
-                unset($data['Goal']['img_url']);
+            // ゴール更新
+            $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
+            if (!$Goal->save($updateGoal, false)) {
+                throw new Exception(sprintf("Failed update goal. data:%s"
+                    , var_export($updateGoal, true)));
             }
 
-            // ゴール・TKR更新
-            if (!$Goal->saveAll($data)) {
-                throw new Exception(sprintf("Failed save goal. data:%s", var_export($data, true)));
-            }
-
-            // 認定ステータス更新
-            $updateCollaborator = [
-                'id'              => $goal['collaborator']['id'],
-                'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION
-            ];
-            if (!$Collaborator->save($updateCollaborator)) {
-                throw new Exception(sprintf("Failed update approval status. data:%s",
-                    var_export($updateCollaborator, true)));
+            // TKR更新
+            $updateTkr = $this->buildUpdateTkrData($goal['top_key_result']['id'], $requestData);
+            if (!$KeyResult->save($updateTkr, false)) {
+                throw new Exception(sprintf("Failed update tkr. data:%s"
+                    , var_export($updateTkr, true)));
             }
 
             // ゴールラベル更新
-            if (!$GoalLabel->saveLabels($data['Goal']['id'], $data['Label'])) {
-                throw new Exception(sprintf("Failed save labels. data:%s", var_export($data, true)));
+            if (!$GoalLabel->saveLabels($goalId, $requestData['labels'])) {
+                throw new Exception(sprintf("Failed save labels. goalId:%s labels:%s"
+                    , $goalId, var_export($requestData['labels'], true)));
             }
+
+            // コラボレーター更新(再申請のステータスに変更)
+            $updateCollaborator = [
+                'id'              => $goal['collaborator']['id'],
+                'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION,
+                'priority'        => $goal['priority']
+            ];
+            if (!$Collaborator->save($updateCollaborator, false)) {
+                throw new Exception(sprintf("Failed update collaborator. data:%s"
+                    , var_export($updateCollaborator, true)));
+            }
+
             // 認定についてのコメント記載があれば登録
             if (!empty($requestData['approval_history']) && !empty($requestData['approval_history']['comment'])) {
                 $approvalHistory = [
@@ -210,22 +215,9 @@ class GoalService extends Object
                     'user_id'         => $userId,
                     'comment'         => $requestData['approval_history']['comment'],
                 ];
-                if (!$ApprovalHistory->save($approvalHistory)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s",
-                        var_export($approvalHistory, true)));
-                }
-            }
-
-            // 認定についてのコメント記載があれば登録
-            if (!empty(Hash::get($requestData, 'approval_history.comment'))) {
-                $approvalHistory = [
-                    'collaborator_id' => $goal['collaborator']['id'],
-                    'user_id'         => $userId,
-                    'comment'         => $requestData['approval_history']['comment'],
-                ];
-                if (!$ApprovalHistory->save($approvalHistory)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s",
-                        var_export($approvalHistory, true)));
+                if (!$ApprovalHistory->save($approvalHistory, false)) {
+                    throw new Exception(sprintf("Failed save approvalHistory. data:%s"
+                        , var_export($approvalHistory, true)));
                 }
             }
 
@@ -243,5 +235,121 @@ class GoalService extends Object
             return false;
         }
         return true;
+    }
+
+    /**
+     * ゴール更新データ作成
+     *
+     * @param $goalId
+     * @param $requestData
+     *
+     * @return array
+     */
+    private function buildUpdateGoalData($goalId, $requestData)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+
+        $updateData = [
+            'id'          => $goalId,
+            'name'        => $requestData['name'],
+            'description' => $requestData['description'],
+        ];
+
+        if (!empty($requestData['goal_category_id'])) {
+            $updateData['goal_category_id'] = $requestData['goal_category_id'];
+        }
+        if (!empty($requestData['end_date'])) {
+            $goalTerm = $EvaluateTerm->getTermDataByDatetime($requestData['end_date']);
+            $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
+        }
+        if (!empty($requestData['photo'])) {
+            $updateData['photo'] = $requestData['photo'];
+        }
+        return $updateData;
+    }
+
+    /**
+     * TKR更新データ作成
+     *
+     * @param $tkrId
+     * @param $requestData
+     *
+     * @return array
+     */
+    private function buildUpdateTkrData($tkrId, $requestData)
+    {
+        $inputTkrData = Hash::get($requestData, 'key_result');
+        if (empty($inputTkrData)) {
+            return [];
+        }
+
+        $updateData = [
+            'id'           => $tkrId,
+            'name'         => $inputTkrData['name'],
+            'description'  => $inputTkrData['description'],
+            'value_unit'   => $inputTkrData['value_unit'],
+            'start_value'  => $inputTkrData['start_value'],
+            'target_value' => $inputTkrData['target_value'],
+        ];
+        return $updateData;
+    }
+
+    /**
+     * ゴール登録・更新のバリデーション
+     */
+    function validateSave($data, $fields, $goalId = null)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var Label $Label */
+        $Label = ClassRegistry::init("Label");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+
+        // 編集の場合評価期間の選択は無い為、既に登録されているゴールの開始日と終了日から評価期間を割り出し、入力した終了日のバリデーションに利用する
+        if (!empty($goalId) && (empty($fields) || in_array('end_date', $fields))) {
+            $goal = $this->get($goalId);
+            $data['term_type'] = $EvaluateTerm->getTermType(strtotime($goal['start_date']),
+                strtotime($goal['end_date']));
+        }
+
+        $goalFields = array_intersect($this->goalValidateFields, $fields);
+        $validationErrors = $this->validationExtract(
+            $Goal->validateGoalPOST($data, $goalFields)
+        );
+
+        // ゴールラベル バリデーション
+        if (empty($fields) || in_array('labels', $fields)) {
+            $validationLabelsError = $Label->validationLabelNames($data);
+            if (!empty($validationLabelsError)) {
+                $validationErrors = array_merge(
+                    $validationErrors,
+                    ['labels' => $validationLabelsError]
+                );
+            }
+        }
+
+        // TKR バリデーション
+        if (empty($fields) || in_array('key_result', $fields)) {
+            $krValidation = $KeyResult->validateKrPOST($data['key_result']);
+
+            if ($krValidation !== true) {
+                $validationErrors['key_result'] = $this->validationExtract($krValidation);
+            }
+        }
+
+        // コメントバリデーション
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        $ApprovalHistory->set($data['approval_history']);
+        if (!$ApprovalHistory->validates()) {
+            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+        }
+
+        return $validationErrors;
     }
 }

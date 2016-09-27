@@ -88,4 +88,33 @@ class Label extends AppModel
         Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
         return $res;
     }
+
+    /**
+     * ラベルバリデーション
+     *
+     * @param $data
+     *
+     * @return array
+     * @internal param $validationErrors
+     */
+    public function validationLabelNames($data)
+    {
+        $labelNames = Hash::get($data, 'labels');
+        // 未入力チェック
+        if (empty($labelNames)) {
+            return __("Input is required.");
+        }
+
+        $labels = [];
+        foreach ($labelNames as $labelName) {
+            array_push($labels, ['name' => $labelName]);
+        }
+        
+        // 複数レコードのバリデーション
+        if (!$this->saveAll($labels, ['validate' => 'only'])) {
+            // 最初のエラーメッセージのみを抽出
+            return reset(Hash::flatten($this->validationErrors));
+        }
+        return "";
+    }
 }

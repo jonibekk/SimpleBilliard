@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('Collaborator', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Goal Model
@@ -183,26 +184,21 @@ class Goal extends AppModel
     ];
 
     public $post_validate = [
-        'start_date' => [
+        'end_date'  => [
+            'notEmpty'       => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
             'isString'       => ['rule' => 'isString'],
             'dateYmd'        => [
-                'rule'       => ['date', 'ymd'],
-                'allowEmpty' => true
+                'rule' => ['date', 'ymd'],
             ],
             'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
         ],
-        'end_date'   => [
-            'isString'       => ['rule' => 'isString'],
-            'dateYmd'        => [
-                'rule'       => ['date', 'ymd'],
-                'allowEmpty' => true
-            ],
-            'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
-        ],
-        'term_type'  => [
+        'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
             'notEmpty' => [
-                'required' => 'create',
+//                'required' => 'create',
                 'rule'     => 'notEmpty',
             ],
         ]
@@ -345,7 +341,7 @@ class Goal extends AppModel
 
         $goal_term = $this->getGoalTermFromPost($data);
 
-        $data = $this->convertGoalDateFromPost($data, $goal_term);
+        $data = $this->convertGoalDateFromPost($data, $goal_term, $data['Goal']['term_type']);
 
         $data = $this->buildTopKeyResult($data, $goal_term);
         $data = $this->buildCollaboratorDataAsLeader($data);
@@ -355,7 +351,6 @@ class Goal extends AppModel
             $data['Goal']['photo'] = $data['Goal']['img_url'];
             unset($data['Goal']['img_url']);
         }
-
         $this->create();
         $isSuccess = (bool)$this->saveAll($data);
         $newGoalId = $this->getLastInsertID();
@@ -399,25 +394,25 @@ class Goal extends AppModel
      *
      * @param array $data
      * @param array $goalTerm
+     * @param       $termType
      *
      * @return array
      */
-    function convertGoalDateFromPost($data, $goalTerm)
+    function convertGoalDateFromPost($data, $goalTerm, $termType)
     {
-        if (!empty($data['Goal']['start_date'])) {
-            //時間をunixtimeに変換
-            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - $goalTerm['timezone'] * HOUR;
+        if ($termType == 'current') {
+            $data['Goal']['start_date'] = time();
         } else {
             //指定なしの場合は現在時刻
-            $data['Goal']['start_date'] = time();
+            $data['Goal']['start_date'] = AppUtil::getDateByTimezone($goalTerm['start_date'], $goalTerm['timezone']);
         }
+
         if (!empty($data['Goal']['end_date'])) {
             //期限を+1day-1secする
-            $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['Goal']['end_date'])) - $goalTerm['timezone'] * HOUR;
+            $data['Goal']['end_date'] = AppUtil::getEndDateByTimezone($data['Goal']['end_date'], $goalTerm['timezone']);
         } else {
             //指定なしの場合は期の終了日
-            $data['Goal']['end_date'] = $goalTerm['end_date'] - $goalTerm['timezone'] * HOUR;
+            $data['Goal']['end_date'] = AppUtil::getDateByTimezone($goalTerm['end_date'], $goalTerm['timezone']);
         }
         return $data;
     }

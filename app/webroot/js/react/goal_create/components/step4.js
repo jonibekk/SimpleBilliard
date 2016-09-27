@@ -1,7 +1,9 @@
 import React from "react";
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
-import InvalidMessageBox from "../../common/components/InvalidMessageBox";
+import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
+import InvalidMessageBox from "~/common/components/InvalidMessageBox";
+import {KeyResult} from "~/common/constants/Model";
 
 export default class Step4Component extends React.Component {
   constructor(props) {
@@ -54,11 +56,10 @@ export default class Step4Component extends React.Component {
         <h1 className="goals-create-heading">{__("Set Top Key Result")}</h1>
         <p className="goals-create-description">{__("Create a clear and most important Key Result for your goal.")}</p>
         <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e)}>
-          {/*        <label class="goals-create-input-label">{__("Key Result name?")}</label>
-           <p class="goals-create-input-label-discription">{__("your top key result is required.")}</p>
-           */}
+
           <label className="goals-create-input-label">{__("Top Key Result")}</label>
           <input name="name" type="text" value={inputData.key_result.name} className="form-control goals-create-input-form goals-create-input-form-tkr-name" placeholder={__("eg. Increase Goalous weekly active users")} onChange={this.handleChange}/>
+
           <InvalidMessageBox message={validationErrors.key_result.name}/>
 
           {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
@@ -67,13 +68,7 @@ export default class Step4Component extends React.Component {
           </select>
           <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
 
-          <div className="goals-create-layout-flex">
-            <input name="start_value" value={inputData.key_result.start_value} className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text" placeholder={0} onChange={this.handleChange} />
-            <span className="goals-create-input-form-tkr-range-symbol">&gt;</span>
-            <input name="target_value" value={inputData.key_result.target_value} className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text" placeholder={100} onChange={this.handleChange} />
-          </div>
-          <InvalidMessageBox message={validationErrors.key_result.start_value}/>
-          <InvalidMessageBox message={validationErrors.key_result.target_value}/>
+          <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result} onChange={(e) => this.handleChange(e)}/>
 
           <a href="#" className={showMoreLinkClass} onClick={this.handleClick}>
             <i className="fa fa-plus-circle" aria-hidden="true" />

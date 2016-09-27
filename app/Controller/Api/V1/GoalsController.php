@@ -40,13 +40,41 @@ class GoalsController extends ApiController
             //allが含まれる場合はすべて指定。それ以外はそのまま
             $fields = in_array('all', $fields) ? [] : $fields;
         }
-        $validation = $this->Goal->validateGoalPOST($this->request->data, $fields);
-        if ($validation === true) {
-            return $this->_getResponseSuccess();
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        $validationErrors = $GoalService->validateSave($this->request->data, $fields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
         }
-        // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-        $validationMsg = $this->Goal->_validationExtract($validation);
-        return $this->_getResponseValidationFail($validationMsg);
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * ゴール更新のバリデーションAPI
+     * 成功(Status Code:200)、失敗(Status Code:400)
+     *
+     * @return CakeResponse
+     */
+    function post_validate_update($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $goal = $GoalService->get($goalId);
+        if (empty($goal)) {
+            $this->_getResponseNotFound();
+        }
+        if ($this->Auth->user('id') != $goal['user_id']) {
+            $this->_getResponseForbidden();
+        }
+
+        $fields = $GoalService->goalValidateFields;
+        $fields[] = 'key_result';
+        $validationErrors = $GoalService->validateSave($this->request->data, $fields, $goalId);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+        return $this->_getResponseSuccess();
     }
 
     /**
@@ -78,9 +106,7 @@ class GoalsController extends ApiController
             ]);
         }
 
-        /**
-         * @var Label $Label
-         */
+        /* @var Label $Label */
         $Label = ClassRegistry::init('Label');
 
         if ($this->request->query('data_types')) {
@@ -131,7 +157,17 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units");;
+            $res['units'] = Configure::read("label.units");
+        }
+
+        if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
+            $TimeExHelper = new TimeExHelper(new View());
+            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+            $res['default_end_dates'] = [
+                'current' => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
+                'next'    => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
+            ];
         }
 
         return $this->_getResponseSuccess($res);
@@ -158,10 +194,13 @@ class GoalsController extends ApiController
     {
         $data = $this->request->data;
         $data['photo'] = $_FILES['photo'];
-        $validateResult = $this->_validateCreateGoal($data);
-        if ($validateResult !== true) {
-            return $validateResult;
+
+        // バリデーション
+        $validateErrors = $this->_validateCreateGoal($data);
+        if (!empty($validateErrors)) {
+            return $this->_getResponseValidationFail($validateErrors);
         }
+
         $this->Goal->begin();
         $isSaveSuccess = $this->Goal->add(
             [
@@ -211,8 +250,7 @@ class GoalsController extends ApiController
         $goal = $GoalService->get($goalId);
         // ゴールが存在するか
         if (empty($goal)) {
-            // TODO:404や500の時は例外を投げて良いのか検討($this->_getResponse**の形に統一？)
-            throw new NotFoundException();
+            return $this->_getResponseNotFound();
         }
         // ゴール作成者か
         if ($this->Auth->user('id') != $goal['user_id']) {
@@ -221,15 +259,16 @@ class GoalsController extends ApiController
 
         $data = $this->request->data;
         $data['photo'] = $_FILES['photo'];
+
         // バリデーション
-        $validateErrors = $this->_validateUpdateGoal($data);
+        $validateErrors = $this->_validateUpdateGoal($data, $goalId);
         if (!empty($validateErrors)) {
-            return $this->_getResponseBadFail(__('Validation failed.'), $validateErrors);
+            return $this->_getResponseValidationFail($validateErrors);
         }
 
         // ゴール更新
         if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
-            throw new InternalErrorException();
+            return $this->_getResponseInternalServerError();
         }
 
         //コーチへの通知
@@ -244,7 +283,6 @@ class GoalsController extends ApiController
 
     /**
      * ゴール作成のバリデーション
-     * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
      * - key resultがなければバリデーションを通さずレスポンスを返す
      * - ゴールとKRのバリデーションは後ほど組み立てやすいようにそれぞれ別々に実行し、結果をマージしている。
      * TODO: 厳密にバリデーションルール、メッセージを再定義する
@@ -253,66 +291,31 @@ class GoalsController extends ApiController
      *
      * @return true|CakeResponse
      */
-    function _validateCreateGoal($data)
+    private function _validateCreateGoal($data)
     {
-        if (!Hash::get($data, 'key_result')) {
-            return $this->_getResponseBadFail(__('top Key Result is required!'));
-        }
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
-        $validation = [];
-
-        $goal_validation = $this->Goal->validateGoalPOST($data);
-        if ($goal_validation !== true) {
-            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-            $validation = $this->Goal->_validationExtract($goal_validation);
-        }
-
-        $kr_validation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
-        if ($kr_validation !== true) {
-            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-            $validation['key_result'] = $this->Goal->_validationExtract($kr_validation);
-        }
-
-        if (!empty($validation)) {
-            return $this->_getResponseBadFail(__('Validation failed.'), $validation);
-        }
-        return true;
+        $fields = $GoalService->goalValidateFields;
+        $fields[] = "key_result";
+        return $GoalService->validateSave($data, $fields);
     }
 
     /**
-     * ゴール更新のバリデーション
-     * バリデーションエラーの場合はエラーメッセージの配列を返す(エラーが無ければ空の配列)
-     * - key resultがなければバリデーションを通さずレスポンスを返す
-     * - approval_hisotryがなければバリデーションを通さずレスポンスを返す
-     * - モデル毎にバリデーションを実行し、結果をマージしている。
+     * ゴール編集のバリデーション
      *
      * @param array $data
      *
-     * @return array
+     * @return true|CakeResponse
      */
-    function _validateUpdateGoal($data)
+    private function _validateUpdateGoal($data, $goalId)
     {
-        $validationErrors = [];
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
-        // ゴールバリデーション
-        $goalValidation = $this->Goal->validateGoalPOST($data);
-        if ($goalValidation !== true) {
-            $validationErrors = $this->_validationExtract($goalValidation);
-        }
-
-        // TKRバリデーション
-        $krValidation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
-        if ($krValidation !== true) {
-            $validationErrors['key_result'] = $this->_validationExtract($krValidation);
-        }
-
-        // コメントバリデーション
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
-        $ApprovalHistory->set($data['approval_history']);
-        if (!$ApprovalHistory->validates()) {
-            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
-        }
-
-        return $validationErrors;
+        $fields = $GoalService->goalValidateFields;
+        $fields[] = "key_result";
+        $fields[] = "approval_history";
+        return $GoalService->validateSave($data, $fields, $goalId);
     }
 }

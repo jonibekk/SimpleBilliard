@@ -39,7 +39,12 @@ export default class Step3Component extends React.Component {
   }
 
   handleChange(e) {
-    this.props.updateInputData({[e.target.name]: e.target.value})
+    let data = {[e.target.name]: e.target.value}
+    // 評価期間の選択によって自動的にゴール終了日を切り替える
+    if (e.target.name == "term_type") {
+      data["end_date"] = this.props.goal.default_end_dates[e.target.value]
+    }
+    this.props.updateInputData(data)
   }
 
   handleClick(e) {
@@ -121,12 +126,8 @@ export default class Step3Component extends React.Component {
             <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange} value={inputData.description}/>
             <InvalidMessageBox message={validationErrors.description}/>
 
-            <label className="goals-create-input-label">{__("Start date")}</label>
-            <input className="goals-create-input-form" type="date" name="start_date" onChange={this.handleChange} value={inputData.start_date}/>
-            <InvalidMessageBox message={validationErrors.start_date}/>
-
             <label className="goals-create-input-label">{__("End date")}</label>
-            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange} value={inputData.end_date}/>
+            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange} value={inputData.end_date} />
             <InvalidMessageBox message={validationErrors.end_date}/>
             <label className="goals-create-input-label">{__("Weight")}</label>
             <select className="goals-create-input-form mod-select" name="priority" ref="priority"

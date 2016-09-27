@@ -1,4 +1,14 @@
 // バックエンドのモデルの定数をReactでも使う
+
+export const KeyResult = Object.freeze({
+  Priority: {
+    DEFAULT: 3
+  },
+  ValueUnit: {
+    NONE: 2
+  }
+})
+
 export const Collaborator = Object.freeze({
   ApprovalStatus: {
     NEW: 0,

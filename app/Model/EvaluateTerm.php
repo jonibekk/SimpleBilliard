@@ -521,4 +521,24 @@ class EvaluateTerm extends AppModel
         return date('Y/m/d', $start_date + $this->me['timezone'] * 3600) . ' - ' .
         date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
     }
+
+    /**
+     * どの評価期間かを判定
+     *
+     * @param $start_date
+     * @param $end_date
+     *
+     * @return null|string
+     */
+    public function getTermType($start_date, $end_date)
+    {
+        $current = $this->getCurrentTermData();
+        $next = $this->getNextTermData();
+        if ($start_date >= $current['start_date'] && $end_date <= $current['end_date']) {
+            return "current";
+        } elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
+            return "next";
+        }
+        return null;
+    }
 }

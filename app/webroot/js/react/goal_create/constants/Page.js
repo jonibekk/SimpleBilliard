@@ -19,14 +19,13 @@ export const VALIDATION_FIELDS = {
     "name"
   ],
   STEP2: [
-    "category",
+    "goal_category_id",
     "labels",
   ],
   STEP3: [
     "photo",
     "term_type",
     "description",
-    "start_date",
     "end_date",
     "priority",
   ],
@@ -42,6 +41,7 @@ export const INITIAL_DATA_TYPES = {
   STEP3: [
     "terms",
     "priorities",
+    "default_end_dates"
   ],
   STEP4: [
     "units",

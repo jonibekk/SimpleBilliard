@@ -100,20 +100,18 @@ class KeyResult extends AppModel
             ],
         ],
         'start_value'  => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']],
-            'notEmpty'  => [
-                'required' => 'create',
-                'rule'     => 'notEmpty',
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
             ],
+            'maxLength'             => ['rule' => ['maxLength', 15]],
+            'numeric'               => ['rule' => ['numeric']],
         ],
         'target_value' => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']],
-            'notEmpty'  => [
-                'required' => 'create',
-                'rule'     => 'notEmpty',
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
             ],
+            'maxLength'             => ['rule' => ['maxLength', 15]],
+            'numeric'               => ['rule' => ['numeric']],
         ],
     ];
 
@@ -154,6 +152,27 @@ class KeyResult extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
         $this->_setPriorityName();
+    }
+
+    /**
+     * 単位値必須チェック
+     * 単位が無い場合は値入力が無いのでチェックしない
+     *
+     * @param      $val
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function requiredCaseExistUnit($val)
+    {
+        $val = array_shift($val);
+        if (empty($this->data['KeyResult']['value_unit'])) {
+            return true;
+        }
+        if ($val === "") {
+            return false;
+        }
+        return true;
     }
 
     /**
