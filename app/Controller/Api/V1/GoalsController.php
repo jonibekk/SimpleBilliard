@@ -157,7 +157,7 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units");;
+            $res['units'] = Configure::read("label.units");
         }
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
