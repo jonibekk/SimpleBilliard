@@ -73,15 +73,15 @@ export default class Step3Component extends React.Component {
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__("Set your goal image")}</h1>
+        <h1 className="goals-create-heading">{__("Set goal details")}</h1>
         <p
-          className="goals-create-description">{__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velitesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa quiofficia deserunt mollit anim id est laborum.")}</p>
+          className="goals-create-description">{__("Customize your goal using the below options.")}</p>
         <form className="goals-create-input"
               encType="multipart/form-data"
               method="post"
               acceptCharset="utf-8"
               onSubmit={(e) => this.handleSubmit(e)}>
-          <label className="goals-create-input-label">{__("Goal image?")}</label>
+          <label className="goals-create-input-label">{__("Goal image")}</label>
           <div className={`goals-create-input-image-upload fileinput_small ${inputData.photo ? "fileinput-exists" : "fileinput-new"}`} data-provides="fileinput">
             <div
               className="fileinput-preview thumbnail nailthumb-container photo-design goals-create-input-image-upload-preview"
@@ -89,11 +89,11 @@ export default class Step3Component extends React.Component {
               <img src={imgPath} width={100} height={100} ref="photo_image"/>
             </div>
             <div className="goals-create-input-image-upload-info">
-              <p className="goals-create-input-image-upload-info-text">
-                {__("This is sample image if you want to upload your original image")}
-              </p>
+              {/*<p className="goals-create-input-image-upload-info-text">*/}
+                {/*{__("This is sample image if you want to upload your original image")}*/}
+              {/*</p>*/}
               <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
-                <span className="fileinput-new">{__("Upload a image")}</span>
+                <span className="fileinput-new">{__("Upload an image")}</span>
                 <span className="fileinput-exists">{__("Reselect an image")}</span>
                 <input className="goals-create-input-image-upload-info-form" type="file" name="photo" ref="photo"
                        id="file_photo"/>
@@ -102,10 +102,10 @@ export default class Step3Component extends React.Component {
           </div>
           <InvalidMessageBox message={validationErrors.photo}/>
 
-          <label className="goals-create-input-label">{__("Term?")}</label>
+          <label className="goals-create-input-label">{__("Term")}</label>
           <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
                   value={inputData.term_type} onChange={this.handleChange}>
-            <option value="current">{__("Current Term")}</option>
+            <option value="current">{__("This Term")}</option>
             <option value="next">{__("Next Term")}</option>
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>

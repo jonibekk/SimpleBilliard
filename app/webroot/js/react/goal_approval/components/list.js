@@ -13,7 +13,7 @@ export default class ListComponent extends React.Component {
   render() {
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
-          <h1 className="goals-approval-heading">Goal approval list <span>({ this.props.list.application_count })</span></h1>
+          <h1 className="goals-approval-heading">{__("Goal approval list")} <span>({ this.props.list.application_count })</span></h1>
           <ul>
             { this.props.list.collaborators.map((collaborator) => {
               if(collaborator.is_mine) {

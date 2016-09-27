@@ -40,7 +40,7 @@ export default class Confirm extends React.Component {
     return (
 
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
-        <h1 className="goals-approval-heading">Confirm this goal</h1>
+        <h1 className="goals-approval-heading">{__("Set as a target for evaluation?")}</h1>
         <div className="goals-approval-detail">
           <GoalCard inputData={data.inputData} goal={data.goal} categories={data.categories} units={data.units}/>
           <Comments approvalHistories={ data.approvalHistories }/>

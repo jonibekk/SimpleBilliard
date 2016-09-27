@@ -17,7 +17,7 @@ export class CoachCard extends React.Component {
         return __('New')
       }
       if(collaborator.approval_status == ApprovalStatus.REAPPLICATION) {
-        return __('Reapplication')
+        return __('Reapply')
       }
       return __('Not Evaluated')
     })()
