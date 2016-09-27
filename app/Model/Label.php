@@ -109,7 +109,7 @@ class Label extends AppModel
         foreach ($labelNames as $labelName) {
             array_push($labels, ['name' => $labelName]);
         }
-        $this->log(compact('labels'));
+        
         // 複数レコードのバリデーション
         if (!$this->saveAll($labels, ['validate' => 'only'])) {
             // 最初のエラーメッセージのみを抽出
