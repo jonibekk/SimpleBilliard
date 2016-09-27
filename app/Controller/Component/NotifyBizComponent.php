@@ -784,10 +784,8 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborator = Hash::get($goal, 'MyCollabo.0');
-        if (empty($collaborator)) {
-            $collaborator = Hash::get($goal, 'Leader.0');
-        }
+        $collaborator = Hash::get($goal, 'MyCollabo.0') ?
+            Hash::get($goal, 'MyCollabo.0') : Hash::get($goal, 'Leader.0');
         if (empty($collaborator)) {
             return;
         }
