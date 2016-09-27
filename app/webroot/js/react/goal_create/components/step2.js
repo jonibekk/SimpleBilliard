@@ -57,9 +57,9 @@ export default class Step2Component extends React.Component {
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__("Choose a category and set labels")}</h1>
+        <h1 className="goals-create-heading">{__("Set labels")}</h1>
         <p
-          className="goals-create-description">{__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velitesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa quiofficia deserunt mollit anim id est laborum.")}</p>
+          className="goals-create-description">{__("To make it easier to find your goal, let's set labels. And if your organization has goal categories, you can select them here.")}</p>
         <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e) }>
           <CategorySelect
             onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}

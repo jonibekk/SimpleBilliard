@@ -53,14 +53,16 @@ export default class Step4Component extends React.Component {
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__("Set a top key result (tKR)")}</h1>
-        <p className="goals-create-description">{__("Set measurable target to achieve your goal.")}</p>
+        <h1 className="goals-create-heading">{__("Set Top Key Result")}</h1>
+        <p className="goals-create-description">{__("Create a clear and most important Key Result for your goal.")}</p>
         <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e)}>
-          <label className="goals-create-input-label">{__("tKR name")}</label>
-          <input name="name" type="text" value={inputData.key_result.name} className="form-control goals-create-input-form goals-create-input-form-tkr-name" placeholder="e.g. Increase monthly active users" onChange={this.handleChange}/>
+
+          <label className="goals-create-input-label">{__("Top Key Result")}</label>
+          <input name="name" type="text" value={inputData.key_result.name} className="form-control goals-create-input-form goals-create-input-form-tkr-name" placeholder={__("eg. Increase Goalous weekly active users")} onChange={this.handleChange}/>
+
           <InvalidMessageBox message={validationErrors.key_result.name}/>
 
-          <label className="goals-create-input-label">{__("Unit & Range")}</label>
+          {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
           <select name="value_unit" value={inputData.key_result.value_unit} className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select" onChange={this.handleChange}>
             {unitOptions}
           </select>

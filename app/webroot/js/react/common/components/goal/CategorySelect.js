@@ -13,7 +13,7 @@ export default class CategorySelect extends React.Component {
     });
     return (
       <div>
-        <label className="goals-create-input-label">Category ?</label>
+        <label className="goals-create-input-label">{__("Category")}</label>
         <select
           className="form-control goals-create-input-form"
           name="goal_category_id"
