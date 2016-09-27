@@ -45,7 +45,7 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="/goals/approval">
               <Route path="list" component={ListContainer} />
-              <Route path="detail/:goal_id" component={DetailContainer} />
+              <Route path="detail/:collaborator_id" component={DetailContainer} />
             </Route>
           </Router>
           {/* <DevTools /> */}
