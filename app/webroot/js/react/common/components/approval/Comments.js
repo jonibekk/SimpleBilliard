@@ -37,7 +37,7 @@ export class Comments extends React.Component {
 
           {/* 最新のコメント以外すべて */}
           { this.state.display_all_comments ? commets_execpt_latest_comment.map((comment) => {
-            return <Comment comment={ comment } key={ comment.comment } />;
+            return <Comment comment={ comment } />;
           }) : null}
 
           {/* 最新のコメント */}
