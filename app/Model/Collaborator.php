@@ -726,6 +726,7 @@ class Collaborator extends AppModel
                 'is_wish_approval',
                 'is_target_evaluation',
                 'role',
+                'description',
                 'type'
             ],
             'conditions' => $conditions,

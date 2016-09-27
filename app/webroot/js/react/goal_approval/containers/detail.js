@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import DetailComponent from '../components/detail'
-import * as actions from '../actions/detail_actions'
+import DetailComponent from '~/goal_approval/components/detail'
+import * as actions from '~/goal_approval/actions/detail_actions'
 
 function mapStateToProps(state) {
   return { detail: state.detail }
@@ -8,7 +8,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchGoalApproval: (goal_id) => dispatch(actions.fetchGoalApproval(goal_id)),
+    fetchCollaborator: (collaborator_id) => dispatch(actions.fetchCollaborator(collaborator_id)),
     postSetAsTarget: (input_data) => dispatch(actions.postSetAsTarget(input_data)),
     postRemoveFromTarget: (input_data) => dispatch(actions.postRemoveFromTarget(input_data)),
     initDetailPage: () => dispatch(actions.initDetailPage())
