@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { Collaborator } from '~/common/constants/Model'
 
 export class CoachCard extends React.Component {
   render() {
@@ -7,6 +8,7 @@ export class CoachCard extends React.Component {
     const Type = Collaborator.Type
     const collaborator = this.props.collaborator
     const role = collaborator.type == Type.OWNER ? __('Leader') : __('Collaborator')
+    const is_incomplete = collaborator.approval_status == ApprovalStatus.NEW || collaborator.approval_status == ApprovalStatus.REAPPLICATION
     const status = (() => {
       if(collaborator.is_target_evaluation) {
         return __('Evaluated')

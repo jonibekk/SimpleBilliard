@@ -9,11 +9,11 @@ export class CoacheeCard extends React.Component {
     const collaborator = this.props.collaborator
     const role = collaborator.type == Type.OWNER ? __('Leader') : __('Collaborator')
     const status = (() => {
-      if(collaborator.approval_status != ApprovalStatus.DONE) {
-        return __('Waiting')
-      }
       if(collaborator.is_target_evaluation) {
         return __('Evaluated')
+      }
+      if(collaborator.approval_status == ApprovalStatus.NEW || collaborator.approval_status == ApprovalStatus.REAPPLICATION) {
+        return __('Waiting')
       }
       return __('Not Evaluated')
     })()
