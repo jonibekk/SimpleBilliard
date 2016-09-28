@@ -89,7 +89,6 @@ class Collaborator extends AppModel
     public $belongsTo = [
         'Team',
         'Goal',
-        'GoalCategory',
         'User',
     ];
 
