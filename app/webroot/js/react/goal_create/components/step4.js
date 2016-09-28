@@ -19,11 +19,13 @@ export default class Step4Component extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log({toNextPage:nextProps.goal.toNextPage})
     // TODO:一時的にコメントアウト。後で外す
-    // if (nextProps.goal.toNextPage) {
+    if (nextProps.goal.toNextPage) {
     //   // 登録完了後はTOPにリダイレクト
     //   location.href = "/"
-    // }
+      console.log("redirect top!!!!!!")
+    }
   }
 
   handleSubmit(e) {
@@ -42,6 +44,9 @@ export default class Step4Component extends React.Component {
   }
 
   render() {
+    console.log("■step4 render")
+    console.log({toNextPage:this.props.goal.toNextPage})
+
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
 
     const {inputData, units, validationErrors} = this.props.goal
