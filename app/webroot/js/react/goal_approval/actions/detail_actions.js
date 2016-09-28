@@ -11,8 +11,9 @@ export function fetchCollaborator(collaborator_id) {
         /* eslint-enable no-console */
         dispatch(setCollaborator(response.data.data))
       })
-      .catch(() => {
+      .catch((error) => {
         /* eslint-disable no-console */
+        console.log(error)
         console.log('fetch failed')
         /* eslint-enable no-console */
         dispatch(toListPage())
