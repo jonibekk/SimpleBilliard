@@ -129,7 +129,7 @@ class GoalsController extends ApiController
                     '{n}.TeamVision'), '{n}.type', 'team_vision');
             $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
 
-            $visions = am($team_visions, $group_visions);
+            $visions = am($group_visions, $team_visions);
             $res['visions'] = $visions;
         }
 
