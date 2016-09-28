@@ -64,7 +64,7 @@ class GoalLabel extends AppModel
     function saveLabels($goalId, $postedLabels)
     {
         if(!is_array($postedLabels)){
-            $postedLabels = (array)$postedLabels;
+            return false;
         }
 
         //すでに持っているラベルを取得
