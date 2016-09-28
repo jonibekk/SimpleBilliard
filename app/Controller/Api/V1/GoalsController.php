@@ -12,7 +12,9 @@ App::import('Service', 'GoalService');
  * Date: 9/6/16
  * Time: 16:38
  *
- * @property Goal $Goal
+ * @property Goal        $Goal
+ * @property TeamVision  $TeamVision
+ * @property GroupVision $GroupVision
  */
 class GoalsController extends ApiController
 {
@@ -53,6 +55,8 @@ class GoalsController extends ApiController
      * ゴール更新のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
      *
+     * @param integer $goalId
+     *
      * @return CakeResponse
      */
     function post_validate_update($goalId)
@@ -87,7 +91,7 @@ class GoalsController extends ApiController
      */
     function get_init_form($id = null)
     {
-        /** @var TYPE_NAME $GoalService */
+        /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
         $res = [];
