@@ -299,6 +299,12 @@ class GoalService extends AppService
 
     /**
      * ゴール登録・更新のバリデーション
+     *
+     * @param array        $data
+     * @param array        $fields
+     * @param integer|null $goalId
+     *
+     * @return array
      */
     function validateSave($data, $fields, $goalId = null)
     {
@@ -347,7 +353,7 @@ class GoalService extends AppService
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         $ApprovalHistory->set($data['approval_history']);
         if (!$ApprovalHistory->validates()) {
-            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+            $validationErrors['approval_history'] = $ApprovalHistory->_validationExtract($ApprovalHistory->validationErrors);
         }
 
         return $validationErrors;
