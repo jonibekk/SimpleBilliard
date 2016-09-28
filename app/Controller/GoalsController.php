@@ -40,24 +40,14 @@ class GoalsController extends AppController
             'search_url', 'goal_count', 'my_coaching_users'));
     }
 
-    public function create($step = null, $gucchi = null)
+    public function create($step = null)
     {
+        if ($step !== 'step1') {
+            throw new NotFoundException();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        // TODO: 将来的にstep1以外は許可しない
-        //       今はフロントモック実装のためにすべて許可にしている
-        $steps = ['step1', 'step2', 'step3', 'step4'];
-
-        // TODO: 将来的には `return $this->render("create");`で統一する
-        //       マークアップとSPAをパラで開発するための仮URL
-        if (in_array($step, $steps)) {
-            if ($gucchi) {
-                return $this->render("create_{$step}");
-            }
-            return $this->render("create");
-        }
-
-        throw new NotFoundException("");
+        return $this->render("create");
     }
 
     public function edit($id)
@@ -78,19 +68,14 @@ class GoalsController extends AppController
         return $this->render("edit");
     }
 
-    public function approval($type = null, $gucchi = null)
+    public function approval($type = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        if (in_array($type, ['list', 'detail'])) {
-            // TODO: マークアップ用の仮View。リリース前にこのブロックを削除する
-            if ($gucchi === 'gucchi') {
-                return $this->render("approval_detail");
-            }
-            return $this->render("approval");
+        if (!in_array($type, ['list', 'detail'])) {
+            throw new NotFoundException("");
         }
-
-        throw new NotFoundException("");
+        return $this->render("approval");
     }
 
     /**
