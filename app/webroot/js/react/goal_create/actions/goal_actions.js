@@ -120,7 +120,8 @@ export function saveGoal() {
     }
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
-        dispatch(toNextPage())
+        // 成功時はリダイレクト
+        document.location.href = "/"
       },
       (response) => {
         dispatch(invalid(response.data))
