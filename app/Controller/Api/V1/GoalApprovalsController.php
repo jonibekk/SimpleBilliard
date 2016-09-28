@@ -20,6 +20,7 @@ class GoalApprovalsController extends ApiController
      */
     function get_list()
     {
+        $this->Pnotify = $this->Components->load('Pnotify');
         // チームの評価設定が無効であればForbidden
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
