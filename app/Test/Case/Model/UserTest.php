@@ -1057,6 +1057,7 @@ class UserTest extends GoalousTestCase
         $this->User->TeamMember->Team->my_uid = 1;
         $this->User->LocalName->my_uid = 1;
         $this->User->LocalName->current_team_id = 1;
+        $this->User->TeamMember->Team->EvaluateTerm->current_team_id = 1;
         $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
