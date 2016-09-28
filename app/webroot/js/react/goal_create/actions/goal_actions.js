@@ -113,6 +113,7 @@ export function fetchInitialData(page) {
 
 export function saveGoal() {
   return (dispatch, getState) => {
+    dispatch(disableSubmit())
     const postData = getState().goal.inputData
     if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
       postData.key_result.start_value = null
@@ -130,6 +131,9 @@ export function saveGoal() {
   }
 }
 
+export function disableSubmit() {
+  return { type: types.DISABLE_SUBMIT }
+}
 
 /**
  * 入力値にマッチしたサジェストのリストを取得

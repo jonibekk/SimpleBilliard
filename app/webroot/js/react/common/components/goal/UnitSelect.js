@@ -31,7 +31,6 @@ export default class UnitSelect extends React.Component {
 }
 }
 UnitSelect.propTypes = {
-  value: React.PropTypes.string,
   units: React.PropTypes.array.isRequired,
 };
 

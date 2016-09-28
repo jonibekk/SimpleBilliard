@@ -19,7 +19,8 @@ const initialState = {
   },
   inputData: {
     key_result: {}
-  }
+  },
+  isDisabledSubmit: false
 }
 
 export default function goal(state = initialState, action) {
@@ -34,11 +35,17 @@ export default function goal(state = initialState, action) {
   switch (action.type) {
     case types.INVALID:
       return Object.assign({}, state, {
-        validationErrors: action.error.validation_errors
+        validationErrors: action.error.validation_errors,
+        isDisabledSubmit: false
+      })
+    case types.DISABLE_SUBMIT:
+      return Object.assign({}, state, {
+        isDisabledSubmit: true
       })
     case types.TO_NEXT_PAGE:
       return Object.assign({}, state, {
-        toNextPage: true
+        toNextPage: true,
+        isDisabledSubmit: false
       })
     case types.FETCH_INITIAL_DATA:
       let suggestionsExcludeSelected = state.suggestionsExcludeSelected
