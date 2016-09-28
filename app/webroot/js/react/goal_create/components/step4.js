@@ -19,10 +19,11 @@ export default class Step4Component extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.goal.toNextPage) {
-      // 登録完了後はTOPにリダイレクト
-      location.href = "/"
-    }
+    // TODO:一時的にコメントアウト。後で外す
+    // if (nextProps.goal.toNextPage) {
+    //   // 登録完了後はTOPにリダイレクト
+    //   location.href = "/"
+    // }
   }
 
   handleSubmit(e) {
