@@ -60,12 +60,10 @@ class GoalsController extends ApiController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $goal = $GoalService->get($goalId);
-        if (empty($goal)) {
-            $this->_getResponseNotFound();
-        }
-        if ($this->Auth->user('id') != $goal['user_id']) {
-            $this->_getResponseForbidden();
+        // 403/404チェック
+        $errResponse = $this->_validateEditForbiddenOrNotFound($goalId);
+        if ($errResponse !== true) {
+            return $errResponse;
         }
 
         $fields = $GoalService->goalValidateFields;
@@ -89,16 +87,19 @@ class GoalsController extends ApiController
      */
     function get_init_form($id = null)
     {
+        /** @var TYPE_NAME $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $res = [];
 
         // 編集の場合、idからゴール情報を取得・設定
         if (!empty($id)) {
-            try {
-                $this->Goal->isPermittedAdmin($id);
-            } catch (RuntimeException$e) {
-                return $this->_getResponseForbidden();
+            // 403/404チェック
+            $errResponse = $this->_validateEditForbiddenOrNotFound($id);
+            if ($errResponse !== true) {
+                return $errResponse;
             }
-            $GoalService = ClassRegistry::init("GoalService");
+
             $res['goal'] = $GoalService->get($id, $this->Auth->user('id'), [
                 GoalService::EXTEND_TOP_KEY_RESULT,
                 GoalService::EXTEND_GOAL_LABELS,
@@ -246,15 +247,10 @@ class GoalsController extends ApiController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        // ゴール取得
-        $goal = $GoalService->get($goalId);
-        // ゴールが存在するか
-        if (empty($goal)) {
-            return $this->_getResponseNotFound();
-        }
-        // ゴール作成者か
-        if ($this->Auth->user('id') != $goal['user_id']) {
-            return $this->_getResponseForbidden();
+        // 403/404チェック
+        $errResponse = $this->_validateEditForbiddenOrNotFound($goalId);
+        if ($errResponse !== true) {
+            return $errResponse;
         }
 
         $data = $this->request->data;
@@ -317,5 +313,35 @@ class GoalsController extends ApiController
         $fields[] = "key_result";
         $fields[] = "approval_history";
         return $GoalService->validateSave($data, $fields, $goalId);
+    }
+
+    /**
+     * ゴール編集の403/404バリデーション
+     *
+     * @param $goalId
+     *
+     * @return CakeResponse|true
+     * @internal param array $data
+     */
+    private function _validateEditForbiddenOrNotFound($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // ゴール取得
+        $goal = $GoalService->get($goalId);
+        // ゴールが存在するか
+        if (empty($goal)) {
+            return $this->_getResponseNotFound();
+        }
+        // ゴール作成者か
+        if ($this->Auth->user('id') != $goal['user_id']) {
+            return $this->_getResponseForbidden();
+        }
+        // 今季以降のゴールか
+        if (!$GoalService->isGoalAfterCurrentTerm($goalId)) {
+            return $this->_getResponseNotFound();
+        }
+        return true;
     }
 }

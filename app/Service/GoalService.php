@@ -352,4 +352,24 @@ class GoalService extends AppService
 
         return $validationErrors;
     }
+
+    /**
+     * 対象のゴールが今季以降のゴールか
+     *
+     * @param $goalId
+     *
+     * @return bool
+     */
+    function isGoalAfterCurrentTerm($goalId) {
+        $goal = $this->get($goalId);
+        if (empty($goal)) {
+            return false;
+        }
+
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        return strtotime($goal['start_date']) >= $currentTerm['start_date'];
+    }
 }
