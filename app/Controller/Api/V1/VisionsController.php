@@ -23,22 +23,16 @@ class VisionsController extends ApiController
     /**
      * GET visions
      *
-     * @query_param string $order 表示順(random=ランダム表示)
      * @return string
      */
     function get_list()
     {
-        $order = $this->request->query('order');
-
         $team_visions = Hash::insert(
             Hash::extract($this->TeamVision->getTeamVision($this->current_team_id, true, true),
                 '{n}.TeamVision'), '{n}.type', 'team_vision');
         $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
 
         $visions = am($team_visions, $group_visions);
-        if ($order == 'random') {
-            $visions = shuffle($visions);
-        }
         return $this->_getResponseSuccess($visions);
     }
 
