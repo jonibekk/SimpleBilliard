@@ -359,7 +359,7 @@ class Goal extends AppModel
         // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
         $term = $this->Team->EvaluateTerm->getTermDataByDatetime($goal['end_date']);
         // UTCでのタイムスタンプ取得
-        $timeStamp = AppUtil::getDateByTimezone($date, $term['timezone']);
+        $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
         // 該当ゴールの評価期間取得
         foreach ($keyResults as $kr) {
             if ($timeStamp < $kr['end_date']) {
