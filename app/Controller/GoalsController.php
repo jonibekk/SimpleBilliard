@@ -418,7 +418,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「New」にする
+        // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「Reapplication」にする
         $this->request->data['Collaborator']['approval_status'] = Collaborator::APPROVAL_STATUS_REAPPLICATION;
         $this->request->data['Collaborator']['is_target_evaluation'] = false;
 
