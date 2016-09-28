@@ -86,6 +86,10 @@ class GoalCategory extends AppModel
             $options['fields'] = $fields;
         }
         $res = $this->find('all', $options);
+        if (empty($res)) {
+            $this->saveDefaultCategory();
+            $res = $this->find('all', $options);
+        }
         return $res;
     }
 
