@@ -353,7 +353,7 @@ class GoalService extends AppService
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         $ApprovalHistory->set($data['approval_history']);
         if (!$ApprovalHistory->validates()) {
-            $validationErrors['approval_history'] = $ApprovalHistory->_validationExtract($ApprovalHistory->validationErrors);
+            $validationErrors['approval_history'] = $this->validationExtract($ApprovalHistory->validationErrors);
         }
 
         return $validationErrors;
