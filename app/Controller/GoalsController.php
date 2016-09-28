@@ -455,8 +455,6 @@ class GoalsController extends AppController
 
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
                 'user_data');
-
-            $this->redirect("/goals/approval/detail/$collaborator_id");
         }
         return $this->redirect($this->referer());
     }
