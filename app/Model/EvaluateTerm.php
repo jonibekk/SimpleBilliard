@@ -496,6 +496,7 @@ class EvaluateTerm extends AppModel
     {
         $options = [
             'conditions' => [
+                'team_id' => $this->current_team_id,
                 'start_date <=' => $datetime,
                 'end_date >='   => $datetime,
             ]

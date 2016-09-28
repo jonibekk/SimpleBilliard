@@ -320,7 +320,7 @@ class GoalService extends AppService
 
         $goalFields = array_intersect($this->goalValidateFields, $fields);
         $validationErrors = $this->validationExtract(
-            $Goal->validateGoalPOST($data, $goalFields)
+            $Goal->validateGoalPOST($data, $goalFields, $goalId)
         );
 
         // ゴールラベル バリデーション
