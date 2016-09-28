@@ -31,41 +31,36 @@ class LabelFixture extends CakeTestFixtureEx
         'name'             => array(
             'type'    => 'string',
             'null'    => false,
-            'default' => null,
             'length'  => 128,
             'key'     => 'index',
-            'collate' => 'utf8mb4_general_ci',
+            'collate' => 'utf8_bin',
             'comment' => 'ラベル',
-            'charset' => 'utf8mb4'
+            'charset' => 'utf8'
         ),
-        'goal_label_count' => array(
-            'type'     => 'integer',
-            'null'     => false,
-            'default'  => '0',
-            'unsigned' => true,
-            'comment'  => 'ゴールラベルのカウンタキャッシュ'
+        'goal_label_count' => array('type'     => 'integer',
+                                    'null'     => false,
+                                    'default'  => '0',
+                                    'unsigned' => true,
+                                    'comment'  => 'ゴールラベルのカウンタキャッシュ'
         ),
         'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
-        'deleted'          => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'comment'  => '部署を削除した日付時刻'
+        'deleted'          => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => true,
+                                    'comment'  => '部署を削除した日付時刻'
         ),
-        'created'          => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'comment'  => '部署を追加した日付時刻'
+        'created'          => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => true,
+                                    'comment'  => '部署を追加した日付時刻'
         ),
-        'modified'         => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'comment'  => '部署を更新した日付時刻'
+        'modified'         => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => true,
+                                    'comment'  => '部署を更新した日付時刻'
         ),
         'indexes'          => array(
             'PRIMARY'             => array('column' => 'id', 'unique' => 1),
