@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory} from "react-router";
 import * as KeyCode from "~/common/constants/KeyCode";
+import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import CategorySelect from "~/common/components/goal/CategorySelect";
@@ -178,22 +179,13 @@ export default class Edit extends React.Component {
                    placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.name}/>
 
-            {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
-            <select name="value_unit" value={inputData.key_result.value_unit}
-                    className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select"
-                    onChange={(e) => this.onChange(e, "key_result")}>
-              {
-                this.props.goal.units.map((v) => {
-                  return (
-                    <option key={v.id} value={v.id}>{v.label}</option>
-                  )
-                })
-              }
-            </select>
+            <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
 
             <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result}
                                 onChange={(e) => this.onChange(e, "key_result")}/>
+            <InvalidMessageBox message={validationErrors.key_result.start_value}/>
+            <InvalidMessageBox message={validationErrors.key_result.target_value}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}

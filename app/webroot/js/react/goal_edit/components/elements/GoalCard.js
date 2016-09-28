@@ -20,7 +20,7 @@ export class GoalCard extends React.Component {
     for (const i in this.props.units) {
       const id = this.props.units[i].id
       if (ValueUnit.NONE != id && inputData.key_result.value_unit == id) {
-        unitLabel = this.props.units[i].label
+        unitLabel = this.props.units[i].unit
       }
     }
 

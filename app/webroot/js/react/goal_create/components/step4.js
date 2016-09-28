@@ -2,6 +2,7 @@ import React from "react";
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
+import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {KeyResult} from "~/common/constants/Model";
 
@@ -37,12 +38,7 @@ export default class Step4Component extends React.Component {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
 
     const {inputData, units, validationErrors} = this.props.goal
-    let unitOptions = null;
-    if (units.length > 0) {
-      unitOptions = units.map((v) => {
-        return <option key={v.id} value={v.id}>{v.label}</option>
-      })
-    }
+
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
@@ -55,13 +51,12 @@ export default class Step4Component extends React.Component {
 
           <InvalidMessageBox message={validationErrors.key_result.name}/>
 
-          {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
-          <select name="value_unit" value={inputData.key_result.value_unit} className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select" onChange={this.handleChange}>
-            {unitOptions}
-          </select>
+          <UnitSelect value={inputData.key_result.value_unit} units={units} onChange={(e) => this.handleChange(e)}/>
           <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
 
-          <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result} onChange={(e) => this.handleChange(e)}/>
+          <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.handleChange(e)}/>
+          <InvalidMessageBox message={validationErrors.key_result.start_value}/>
+          <InvalidMessageBox message={validationErrors.key_result.target_value}/>
 
           <a href="#" className={showMoreLinkClass} onClick={this.handleClick}>
             <i className="fa fa-plus-circle" aria-hidden="true" />
