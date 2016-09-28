@@ -87,22 +87,11 @@ $kr_count = 0;
                 <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-goal" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php //目的のみの場合とそうでない場合でurlが違う
-                    $edit_url = [
-                        'controller' => 'goals',
-                        'action'     => 'add',
-                        'mode'       => 2,
-                    ];
                     $del_url = [
                         'controller' => 'goals',
                         'action'     => 'delete_purpose',
                     ];
                     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                        $edit_url = [
-                            'controller' => 'goals',
-                            'action'     => 'add',
-                            'goal_id'    => $goal['Goal']['id'],
-                            'mode'       => 3
-                        ];
                         $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
                     }
                     ?>
@@ -121,7 +110,7 @@ $kr_count = 0;
                     <?php endif; ?>
                     <?php if (!viaIsSet($goal['Evaluation'])): ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="<?= $this->Html->url($edit_url) ?>">
+                                                   href="/goals/<?= $goal['Goal']['id']?>/edit">
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                             </a>
                         </li>
@@ -181,22 +170,11 @@ $kr_count = 0;
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
                         <?php //目的のみの場合とそうでない場合でurlが違う
-                        $edit_url = [
-                            'controller' => 'goals',
-                            'action'     => 'add',
-                            'mode'       => 2,
-                        ];
                         $del_url = [
                             'controll er' => 'goals',
                             'action'      => 'delete_purpose',
                         ];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                            $edit_url = [
-                                'controller' => 'goals',
-                                'action'     => 'add',
-                                'goal_id'    => $goal['Goal']['id'],
-                                'mode'       => 3
-                            ];
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
                         }
                         ?>
