@@ -44,7 +44,11 @@ class GoalsController extends ApiController
         }
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
-        $validationErrors = $GoalService->validateSave($this->request->data, $fields);
+
+
+        $data = $this->request->data;
+        $data['photo'] = $_FILES['photo'];
+        $validationErrors = $GoalService->validateSave($data, $fields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
         }
@@ -72,7 +76,10 @@ class GoalsController extends ApiController
 
         $fields = $GoalService->goalValidateFields;
         $fields[] = 'key_result';
-        $validationErrors = $GoalService->validateSave($this->request->data, $fields, $goalId);
+
+        $data = $this->request->data;
+        $data['photo'] = $_FILES['photo'];
+        $validationErrors = $GoalService->validateSave($data, $fields, $goalId);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
         }
