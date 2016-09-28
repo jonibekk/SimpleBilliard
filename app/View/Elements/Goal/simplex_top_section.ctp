@@ -13,7 +13,7 @@
  * @var $is_coaching_goal
  */
 ?>
-<!-- START app/View/Elements/simplex_top_section.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel-body goal-detail-upper-panel">
     <div class="goal-detail-avatar-wrap">
         <?=
@@ -174,4 +174,4 @@
         </p>
     </a>
 </div>
-<!-- END app/View/Elements/simplex_top_section.ctp -->
+<?= $this->App->viewEndComment()?>

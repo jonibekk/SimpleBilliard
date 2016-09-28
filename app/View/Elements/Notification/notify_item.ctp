@@ -26,7 +26,7 @@ switch ($location_type) {
         $card_type_class = null;
 }
 ?>
-<!-- START app/View/Elements/Notification/notify_item.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php $status_read = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $status_read ?> <?= h($list_type_class) ?>" data-score="<?= $notification['score'] ?>">
     <a href="#" get-url="<?= h($notification['url']) ?>" post-id="<?= h($notification['id']) ?>"
@@ -82,4 +82,4 @@ switch ($location_type) {
     </a>
 </li>
 
-<!-- END app/View/Elements/Notification/notify_item.ctp -->
+<?= $this->App->viewEndComment()?>

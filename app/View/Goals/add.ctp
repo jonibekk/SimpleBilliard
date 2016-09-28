@@ -24,7 +24,7 @@ $url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request-
 $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;
 ?>
-<!-- START app/View/Goals/add.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <!--GoalSet01-->
     <div class="col-sm-8 col-sm-offset-2">
@@ -727,4 +727,4 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Goals/add.ctp -->
+<?= $this->App->viewEndComment()?>

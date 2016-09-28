@@ -80,6 +80,6 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/law.ctp -->
+<?= $this->App->viewStartComment()?>
 <div id="markdown" src="../../composition/markdowns/<?= $short_lang ?>_law.md" class="markdown-wrap"></div>
-<!-- END app/View/Pages/law.ctp -->
+<?= $this->App->viewEndComment()?>

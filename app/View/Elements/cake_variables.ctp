@@ -6,7 +6,7 @@
  * Time: 00:40
  */
 ?>
-<!--START app/View/Elements/cake_variables.ctp -->
+<?= $this->App->viewStartComment()?>
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
@@ -466,4 +466,4 @@
     <?php endif;?>
     <?php endif;?>
 </script>
-<!--END app/View/Elements/cake_variables.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -9,7 +9,7 @@
  * @var                    $my_member_status
  */
 ?>
-<!-- START app/View/Elements/modal_edit_circle.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog edit-circle">
     <div class="modal-content">
         <div class="modal-header none-border">
@@ -355,4 +355,4 @@
 
     </div>
 </div>
-<!-- END app/View/Elements/modal_edit_circle.ctp -->
+<?= $this->App->viewEndComment()?>

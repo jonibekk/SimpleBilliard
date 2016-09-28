@@ -23,7 +23,7 @@
  * @var                    $previous_term_id
  */
 ?>
-<!-- START app/View/Elements/Team/goal_category_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Goal category settings") ?></div>
     <div class="panel-body form-horizontal">
@@ -76,7 +76,7 @@
 
     </div>
 </div>
-<!-- END app/View/Elements/Team/goal_category_setting.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->start('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

@@ -20,7 +20,7 @@ if (empty($this->request->query['date_range'])) {
     $date_range = (date('w', $today_time) == 1) ? 'prev_week' : 'current_week';
 }
 ?>
-<!-- START app/View/Elements/Team/insight_form_input.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php if (in_array('team', $use)): ?>
     <?php
 // システム管理者の場合
@@ -138,4 +138,4 @@ if (empty($this->request->query['date_range'])) {
         </div>
     </div>
 <?php endif ?>
-<!-- END app/View/Elements/Team/insight_form_input.ctp -->
+<?= $this->App->viewEndComment()?>

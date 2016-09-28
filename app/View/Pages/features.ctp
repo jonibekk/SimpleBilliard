@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/features') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/features') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/features.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******FEATURES PROMO****** -->
 <section id="features-promo" class="features-promo section">
     <div class="bg-mask"></div>
@@ -272,4 +272,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </section>
 
 <?= $this->element('Homepage/signup') ?>
-<!-- END app/View/Pages/features.ctp -->
+<?= $this->App->viewEndComment()?>

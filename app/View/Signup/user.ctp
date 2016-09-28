@@ -1,4 +1,4 @@
-<!-- START app/View/Signup/user.ctp -->
+<?= $this->App->viewStartComment()?>
         <div class="row">
             <div class="panel panel-default panel-signup">
                 <div class="panel-heading signup-title">What's your name?</div>
@@ -25,4 +25,4 @@
             </div>
         </div>
 <a href="/signup/password">ページ遷移用リンク</a>
-<!-- END app/View/Signup/user.ctp -->
+<?= $this->App->viewEndComment()?>

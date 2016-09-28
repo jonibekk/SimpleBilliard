@@ -3,7 +3,7 @@
  *
  */
 ?>
-<!-- START app/View/Goals/edit_action.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -11,4 +11,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Goals/edit_action.ctp -->
+<?= $this->App->viewEndComment()?>

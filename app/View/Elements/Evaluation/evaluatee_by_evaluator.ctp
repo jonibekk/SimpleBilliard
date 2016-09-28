@@ -10,7 +10,7 @@
  * @var                    $evaluate_term_id
  */
 ?>
-<!-- START app/View/Elements/Evaluation/evaluatee_by_evaluator.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($user['User'], 'User.photo', ['style' => 'small'],
@@ -34,4 +34,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Evaluation/evaluatee_by_evaluator.ctp -->
+<?= $this->App->viewEndComment()?>

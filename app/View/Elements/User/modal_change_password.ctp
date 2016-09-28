@@ -8,7 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/User/modal_change_password.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal fade" id="modal_change_password">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -114,4 +114,4 @@
 </script>
 
 <?php $this->end() ?>
-<!-- END app/View/Elements/User/modal_change_password.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/contact.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-promo" class="contact-promo section">
     <div class="bg-mask"></div>
@@ -286,4 +286,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
     </div><!--//row-->
 </section>
 
-<!-- END app/View/Pages/contact.ctp -->
+<?= $this->App->viewEndComment()?>

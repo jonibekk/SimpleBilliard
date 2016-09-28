@@ -12,7 +12,7 @@
  * @var                    $end
  */
 ?>
-<!-- START app/View/Elements/modal_final_evaluation_by_csv.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal fade" tabindex="-1" id="ModalFinalEvaluation_<?= $evaluate_term_id ?>_ByCsv">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -120,4 +120,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_final_evaluation_by_csv.ctp -->
+<?= $this->App->viewEndComment()?>

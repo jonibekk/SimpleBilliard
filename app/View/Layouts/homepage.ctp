@@ -16,7 +16,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Layouts/homepage.ctp -->
+<?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--[if IE 8]>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="ie8"> <![endif]-->
@@ -116,4 +116,4 @@
 <!--/NewRelic Footer-->
 </body>
 </html>
-<!-- END app/View/Layouts/homepage.ctp -->
+<?= $this->App->viewEndComment()?>

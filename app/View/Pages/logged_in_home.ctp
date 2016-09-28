@@ -5,10 +5,10 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Pages/logged_in_home.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/contents') ?>
 <?php else: ?>
     <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
-<!-- END app/View/Pages/logged_in_home.ctp -->
+<?= $this->App->viewEndComment()?>

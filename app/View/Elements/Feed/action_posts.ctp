@@ -11,7 +11,7 @@
  */
 ?>
 <?php if (!empty($posts)): ?>
-    <!-- START app/View/Elements/Feed/action_posts.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
             <div class="panel-body pt_10px plr_11px pb_8px">
@@ -298,5 +298,5 @@
             </div>
         </div>
     <?php endforeach ?>
-    <!-- END app/View/Elements/Feed/action_posts.ctp -->
+    <?= $this->App->viewEndComment()?>
 <?php endif ?>

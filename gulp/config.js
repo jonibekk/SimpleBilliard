@@ -1,5 +1,6 @@
 const assets_dir = './app/webroot'
 const compiled_assets_dir = './app/webroot/compiled_assets'
+const node_modules_dir = './node_modules'
 const config =  {
   dest: assets_dir + '/dest',
   js: {
@@ -12,7 +13,7 @@ const config =  {
   },
   js_prerender: {
     src: [
-      assets_dir + '/js/vendor/jquery-1.11.1.min.js'
+      node_modules_dir + '/jquery/dist/jquery.js'
     ],
     output: {
       file_name: 'goalous.prerender',
@@ -21,6 +22,7 @@ const config =  {
   },
   js_vendor: {
     src: [
+      node_modules_dir + '/jquery-lazy/jquery.lazy.js',
       assets_dir + '/js/vendor/bootstrap.js',
       assets_dir + '/js/vendor/jasny-bootstrap.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
@@ -29,7 +31,6 @@ const config =  {
       assets_dir + '/js/vendor/pnotify.custom.js',
       assets_dir + '/js/vendor/jquery.nailthumb.1.1.js',
       assets_dir + '/js/vendor/jquery.autosize.js',
-      assets_dir + '/js/vendor/jquery.lazy.js',
       assets_dir + '/js/vendor/lightbox-custom.js',
       assets_dir + '/js/vendor/jquery.showmore.src.js',
       assets_dir + '/js/vendor/placeholders.js',
