@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-09-28 19:33+0900\n"
-"PO-Revision-Date: 2016-09-28 19:35+0900\n"
+"POT-Creation-Date: 2016-09-29 01:45+0900\n"
+"PO-Revision-Date: 2016-09-29 01:46+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -416,7 +416,7 @@ msgstr "この操作をする権限がありません。"
 msgid "Quitted a collaborator."
 msgstr "コラボレータから外れました。"
 
-#: Controller/GoalsController.php:753 Model/Goal.php:1772;1784
+#: Controller/GoalsController.php:753 Model/Goal.php:1850;1862
 msgid "The goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
@@ -1114,7 +1114,7 @@ msgstr "2段階認証を解除しました。"
 msgid "Generated new recovery codes."
 msgstr "新しいリカバリコードを生成しました。"
 
-#: Controller/UsersController.php:1117 Model/EvaluateTerm.php:514
+#: Controller/UsersController.php:1117 Model/EvaluateTerm.php:515
 #: Model/Goal.php:70 View/Elements/Team/evaluation_freeze.ctp:31
 #: View/Elements/Team/evaluation_progress.ctp:42
 #: View/Elements/Team/insight_form_input.ctp:55 View/Evaluations/index.ctp:23
@@ -1122,13 +1122,13 @@ msgstr "新しいリカバリコードを生成しました。"
 msgid "Current Term"
 msgstr "今期"
 
-#: Controller/UsersController.php:1118 Model/EvaluateTerm.php:518
+#: Controller/UsersController.php:1118 Model/EvaluateTerm.php:519
 #: Model/Goal.php:71 View/Elements/cake_variables.ctp:463
 #: View/Goals/add.ctp:276
 msgid "Next Term"
 msgstr "来期"
 
-#: Controller/UsersController.php:1119 Model/EvaluateTerm.php:516
+#: Controller/UsersController.php:1119 Model/EvaluateTerm.php:517
 #: Model/Goal.php:72 View/Elements/Team/evaluation_freeze.ctp:54
 #: View/Elements/Team/evaluation_progress.ctp:30
 #: View/Elements/Team/insight_form_input.ctp:58 View/Evaluations/index.ctp:23
@@ -1240,7 +1240,7 @@ msgstr "動画"
 msgid "Document"
 msgstr "ドキュメント"
 
-#: Model/AttachedFile.php:141 Model/Goal.php:76;100;1929;1941
+#: Model/AttachedFile.php:141 Model/Goal.php:76;100;2007;2019
 #: Model/KeyResult.php:465;476 Model/NotifySetting.php:242
 msgid "All"
 msgstr "すべて"
@@ -1386,15 +1386,19 @@ msgstr "コラボが多い順"
 msgid "Progress rate"
 msgstr "進捗率が高い順"
 
-#: Model/Goal.php:485
+#: Model/Goal.php:382
+msgid "Please input goal end date later than key result end date"
+msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
+
+#: Model/Goal.php:563
 msgid "This goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
-#: Model/Goal.php:488
+#: Model/Goal.php:566
 msgid "You don't have permission to edit this goal."
 msgstr "このゴールの編集の権限がありません。"
 
-#: Model/Goal.php:502
+#: Model/Goal.php:580
 msgid "You can't change the goal in the evaluation."
 msgstr "このゴールは評価中のため、変更できません。"
 

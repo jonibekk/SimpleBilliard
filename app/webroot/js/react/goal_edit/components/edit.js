@@ -76,7 +76,9 @@ export default class Edit extends React.Component {
       $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
     });
 
+
     const {suggestions, keyword, validationErrors, inputData, goal} = this.props.goal
+    const tkrValidationErrors = tkrValidationErrors ? tkrValidationErrors : {};
     // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
     // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
     // リサイズ後の画像情報が取得できない。
@@ -177,21 +179,20 @@ export default class Edit extends React.Component {
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
-            <InvalidMessageBox message={validationErrors.key_result.name}/>
+            <InvalidMessageBox message={tkrValidationErrors.name}/>
 
             <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units} onChange={(e) => this.onChange(e, "key_result")}/>
-            <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
+            <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
 
-            <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result}
-                                onChange={(e) => this.onChange(e, "key_result")}/>
-            <InvalidMessageBox message={validationErrors.key_result.start_value}/>
-            <InvalidMessageBox message={validationErrors.key_result.target_value}/>
+            <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
+            <InvalidMessageBox message={tkrValidationErrors.start_value}/>
+            <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}
                       className="form-control goals-create-input-form mod-textarea"
                       onChange={(e) => this.onChange(e, "key_result")}/>
-            <InvalidMessageBox message={validationErrors.key_result.description}/>
+            <InvalidMessageBox message={tkrValidationErrors.description}/>
 
           </section>
 
