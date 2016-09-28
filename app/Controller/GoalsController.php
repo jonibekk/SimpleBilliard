@@ -419,7 +419,7 @@ class GoalsController extends AppController
         }
 
         // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「New」にする
-        $this->request->data['Collaborator']['approval_status'] = Collaborator::APPROVAL_STATUS_NEW;
+        $this->request->data['Collaborator']['approval_status'] = Collaborator::APPROVAL_STATUS_REAPPLICATION;
         $this->request->data['Collaborator']['is_target_evaluation'] = false;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
