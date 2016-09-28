@@ -201,7 +201,7 @@ class GoalService extends AppService
             $updateCollaborator = [
                 'id'              => $goal['collaborator']['id'],
                 'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION,
-                'priority'        => $goal['priority']
+                'priority'        => $requestData['priority']
             ];
             if (!$Collaborator->save($updateCollaborator, false)) {
                 throw new Exception(sprintf("Failed update collaborator. data:%s"
@@ -360,7 +360,8 @@ class GoalService extends AppService
      *
      * @return bool
      */
-    function isGoalAfterCurrentTerm($goalId) {
+    function isGoalAfterCurrentTerm($goalId)
+    {
         $goal = $this->get($goalId);
         if (empty($goal)) {
             return false;
