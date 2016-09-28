@@ -468,7 +468,7 @@ class Goal extends AppModel
         $data['Collaborator'][0]['team_id'] = $this->current_team_id;
         $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         $priority = Hash::get($data, 'Goal.priority');
-        if ($priority) {
+        if ($priority !== null) {
             $data['Collaborator'][0]['priority'] = $priority;
         }
         return $data;
