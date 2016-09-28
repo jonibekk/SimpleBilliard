@@ -198,8 +198,8 @@ class Goal extends AppModel
         'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
             'notEmpty' => [
-//                'required' => 'create',
-'rule' => 'notEmpty',
+                //'required' => 'create',
+                'rule' => 'notEmpty',
             ],
         ]
     ];
