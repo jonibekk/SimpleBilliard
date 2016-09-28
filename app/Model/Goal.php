@@ -199,7 +199,7 @@ class Goal extends AppModel
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
             'notEmpty' => [
 //                'required' => 'create',
-                'rule'     => 'notEmpty',
+'rule' => 'notEmpty',
             ],
         ]
     ];
@@ -467,6 +467,10 @@ class Goal extends AppModel
         $data['Collaborator'][0]['user_id'] = $this->my_uid;
         $data['Collaborator'][0]['team_id'] = $this->current_team_id;
         $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
+        $priority = Hash::get($data, 'Goal.priority');
+        if ($priority) {
+            $data['Collaborator'][0]['priority'] = $priority;
+        }
         return $data;
     }
 
