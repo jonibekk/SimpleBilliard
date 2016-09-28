@@ -125,11 +125,12 @@ export function fetchComments() {
 
 export function saveGoal(addInputData) {
   return (dispatch, getState) => {
+    dispatch(disableSubmit())
     const {inputData, goal} = getState().goal;
     inputData["approval_history"] = addInputData
     return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
-        dispatch(toNextPage())
+        document.location.href = '/'
       },
       (response) => {
         dispatch(invalid(response.data))
@@ -138,6 +139,9 @@ export function saveGoal(addInputData) {
   }
 }
 
+export function disableSubmit() {
+  return { type: types.DISABLE_SUBMIT }
+}
 
 /**
  * 入力値にマッチしたサジェストのリストを取得
