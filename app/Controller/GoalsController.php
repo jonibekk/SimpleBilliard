@@ -78,135 +78,20 @@ class GoalsController extends AppController
         // TODO: モーダルでコラボを編集した際にはdetailページにリダイレクトされるため
         //       一時的にdetailページにアクセスされた場合はlistにリダイレクトさせる
         //       Reactでコラボ編集が実装されたらlist, detailのアクセスを許可する
-        if($type === 'detail') {
+        if ($type === 'detail') {
             $this->redirect("/goals/approval/list");
         }
         return $this->render("approval");
     }
 
     /**
-     * ゴール作成
-     * URLパラメータでmodeを付ける
-     * mode なしは目標を決める,2はゴールを定める,3は情報を追加
-     *
-     * @return \CakeResponse
+     * 旧ゴール作成ぺージ
+     * 新ゴールぺージへリダイレクトさせる。およびどこから来たかログる。
      */
     public function add()
     {
-        $id = viaIsSet($this->request->params['named']['goal_id']);
-        $this->layout = LAYOUT_ONE_COLUMN;
-        //編集権限を確認。もし権限がある場合はデータをセット
-        if ($id) {
-            $this->request->data['Goal']['id'] = $id;
-            try {
-                $this->Goal->isPermittedAdmin($id);
-                $this->Goal->isNotExistsEvaluation($id);
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage());
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
-        }
-
-        //新規作成以外のケース
-        $isNotNewAdd = (!$this->request->is('post') && !$this->request->is('put')) || empty($this->request->data);
-        if ($isNotNewAdd) {
-            // ゴールの編集
-            if ($id) {
-                $this->request->data = $this->Goal->getAddData($id);
-            }
-            $this->_setGoalAddViewVals();
-            return $this->render();
-        }
-
-        // 新規作成時、モードの指定が無い場合(目的の保存のみ)
-        if (!isset($this->request->params['named']['mode'])) {
-            $this->Pnotify->outSuccess(__("Set a purpose."));
-            //「ゴールを定める」に進む
-            $url = ['mode' => 2, '#' => 'AddGoalFormKeyResultWrap'];
-            $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
-            $this->redirect($url);
-        }
-
-        // 新規作成時 or モードの指定がある場合
-        if ($this->Goal->add($this->request->data)) {
-            //edit goal notify
-            if ($id) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
-                //send notify to coach
-                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
-                    $this->my_uid, $id);
-                if ($my_collabo_status['Collaborator']['approval_status'] == Collaborator::APPROVAL_STATUS_WITHDRAW) {
-                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
-                }
-            }
-            $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
-                $this->Auth->user('id'));
-            if ($coach_id) {
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
-            }
-
-            switch ($this->request->params['named']['mode']) {
-                case 2:
-                    //case of create new one.
-                    if (!$id) {
-                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
-                            $this->Goal->getLastInsertID());
-                        $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
-                            NotifySetting::TYPE_COACHEE_CREATE_GOAL);
-                    } else {
-                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
-                    }
-                    $this->Pnotify->outSuccess(__("Saved a goal."));
-                    if ($coach_id) {
-                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
-                            'user_data');
-                    }
-                    //「情報を追加」に進む
-                    $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
-                    break;
-                case 3:
-                    //完了
-                    $this->Pnotify->outSuccess(__("Created a goal."));
-                    // pusherに通知
-                    $socketId = viaIsSet($this->request->data['socket_id']);
-                    $this->NotifyBiz->push($socketId, "all");
-                    //セットアップガイドステータスの更新
-                    $this->updateSetupStatusIfNotCompleted();
-                    // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
-                    // ただし重要度0のゴールであれば認定フラグは対象外にセットする
-                    foreach ($this->request->data['Collaborator'] as $val) {
-                        $approval_status = 0;
-                        if ($val['priority'] === "0") {
-                            $approval_status = 2;
-                        }
-                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $approval_status);
-                    }
-
-                    // 来期ゴールを編集した場合は、マイページの来期ゴール絞り込みページへ遷移
-                    if ($this->Goal->getGoalTermData($id)['id'] == $this->Team->EvaluateTerm->getNextTermId()) {
-                        $this->redirect([
-                            'controller' => 'users',
-                            'action'     => 'view_goals',
-                            'user_id'    => $this->Auth->user('id'),
-                            'term_id'    => $this->Team->EvaluateTerm->getNextTermId(),
-                        ]);
-                    }
-
-                    // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
-                    if ($coach_id && $val['priority'] != "0"
-                    ) {
-                        $collaborator_id = $this->Goal->Collaborator->getLastInsertID();
-                        $this->redirect("/goals/approval/detail/$collaborator_id");
-                    }
-                    $this->redirect("/");
-                    break;
-            }
-        }
-
-        $this->Pnotify->outError(__("Failed to save a goal."));
-        $this->redirect($this->referer());
+        $this->log("■ Old Create Goal Page Access! referer URL: " . $this->referer());
+        return $this->redirect(['action' => 'create', 'step1']);
     }
 
     /**
