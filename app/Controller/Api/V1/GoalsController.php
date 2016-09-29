@@ -77,9 +77,7 @@ class GoalsController extends ApiController
             return $errResponse;
         }
 
-        $fields = $GoalService->goalValidateFields;
-        $fields[] = 'key_result';
-
+        $fields = [];
         $data = $this->request->data;
         if (!empty($_FILES['photo'])) {
             $data['photo'] = $_FILES['photo'];
