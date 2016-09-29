@@ -1418,10 +1418,10 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function getGoal($id, $my_user_id = null)
+    function getGoal($id, $collabo_user_id = null)
     {
-        if(!$my_user_id) {
-            $my_user_id = $this->my_uid;
+        if(!$collabo_user_id) {
+            $collabo_user_id = $this->my_uid;
         }
         $options = [
             'conditions' => [
@@ -1471,7 +1471,7 @@ class Goal extends AppModel
                 'MyCollabo'    => [
                     'conditions' => [
                         'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
-                        'MyCollabo.user_id' => $my_user_id,
+                        'MyCollabo.user_id' => $collabo_user_id,
                     ],
                     'fields'     => [
                         'MyCollabo.id',
@@ -1486,7 +1486,7 @@ class Goal extends AppModel
                 ],
                 'MyFollow'     => [
                     'conditions' => [
-                        'MyFollow.user_id' => $my_user_id,
+                        'MyFollow.user_id' => $collabo_user_id,
                     ],
                     'fields'     => [
                         'MyFollow.id',
