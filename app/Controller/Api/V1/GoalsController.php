@@ -45,7 +45,6 @@ class GoalsController extends ApiController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-
         $data = $this->request->data;
         if (!empty($_FILES['photo'])) {
             $data['photo'] = $_FILES['photo'];
@@ -306,7 +305,7 @@ class GoalsController extends ApiController
      *
      * @param array $data
      *
-     * @return true|CakeResponse
+     * @return array
      */
     private function _validateCreateGoal($data)
     {
@@ -321,9 +320,10 @@ class GoalsController extends ApiController
     /**
      * ゴール編集のバリデーション
      *
-     * @param array $data
+     * @param array   $data
+     * @param integer $goalId
      *
-     * @return true|CakeResponse
+     * @return array
      */
     private function _validateUpdateGoal($data, $goalId)
     {
