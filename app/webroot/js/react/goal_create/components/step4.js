@@ -37,8 +37,8 @@ export default class Step4Component extends React.Component {
   render() {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
 
-    const {inputData, units, validationErrors} = this.props.goal
-
+    const {inputData, units, validationErrors, isDisabledSubmit} = this.props.goal
+    const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
@@ -49,14 +49,14 @@ export default class Step4Component extends React.Component {
           <label className="goals-create-input-label">{__("Top Key Result")}</label>
           <input name="name" type="text" value={inputData.key_result.name} className="form-control goals-create-input-form goals-create-input-form-tkr-name" placeholder={__("eg. Increase Goalous weekly active users")} onChange={this.handleChange}/>
 
-          <InvalidMessageBox message={validationErrors.key_result.name}/>
+          <InvalidMessageBox message={tkrValidationErrors.name}/>
 
           <UnitSelect value={inputData.key_result.value_unit} units={units} onChange={(e) => this.handleChange(e)}/>
-          <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
+          <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
 
           <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.handleChange(e)}/>
-          <InvalidMessageBox message={validationErrors.key_result.start_value}/>
-          <InvalidMessageBox message={validationErrors.key_result.target_value}/>
+          <InvalidMessageBox message={tkrValidationErrors.start_value}/>
+          <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 
           <a href="#" className={showMoreLinkClass} onClick={this.handleClick}>
             <i className="fa fa-plus-circle" aria-hidden="true" />
@@ -65,13 +65,12 @@ export default class Step4Component extends React.Component {
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description} className="form-control goals-create-input-form mod-textarea" onChange={this.handleChange} />
-            <InvalidMessageBox message={validationErrors.key_result.description}/>
+            <InvalidMessageBox message={tkrValidationErrors.description}/>
           </div>
-          <button type="submit" className="goals-create-btn-next btn" >{__("Save and share")}</button>
+          <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{__("Save and share")}</button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP3}>{__("Back")}</Link>
         </form>
       </section>
-
     )
   }
 }

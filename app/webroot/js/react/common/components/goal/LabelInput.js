@@ -7,7 +7,7 @@ export default class LabelInput extends React.Component {
   }
   render() {
     const props = {
-      placeholder: "",
+      placeholder: __("You can save maximum 5 labels"),
       value: this.props.keyword,
       onChange: this.props.onChange,
       onKeyDown: this.props.onKeyDown,

@@ -16,12 +16,6 @@ export default class Confirm extends React.Component {
     this.props.fetchComments()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.goal.toNextPage) {
-      document.location.href = '/'
-    }
-  }
-
   getInputDomData() {
     return {
       comment: ReactDOM.findDOMNode(this.refs.comment).value
@@ -47,7 +41,7 @@ export default class Confirm extends React.Component {
           <form className="p_10px" onSubmit={this.onSubmit.bind(this)}>
             <textarea name="description" ref="comment" placeholder={__("Add your comment (optional)")} className="form-control goals-create-input-form mod-textarea" />
             <div className="row">
-              <button type="submit" className="goals-create-btn-next btn">{__("Save and Share")}</button>
+              <button type="submit" className="goals-create-btn-next btn" disabled={`${data.isDisabledSubmit ? "disabled" : ""}`}>{__("Save and Share")}</button>
               <Link to={`/goals/${this.props.params.goalId}/edit`}
                     className="goals-create-btn-cancel btn">{__("Back")}</Link>
             </div>

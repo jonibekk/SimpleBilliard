@@ -3,6 +3,7 @@ export const TO_NEXT_PAGE = 'TO_NEXT_PAGE'
 export const INVALID = 'INVALID'
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
 export const FETCH_COMMETNS = 'FETCH_COMMETNS'
+export const DISABLE_SUBMIT = 'DISABLE_SUBMIT'
 /* Related suggest */
 export const REQUEST_SUGGEST = 'REQUEST_SUGGEST';
 export const CLEAR_SUGGEST = 'CLEAR_SUGGEST';
