@@ -20,7 +20,7 @@
  * @var                    $goal_term
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -154,29 +154,34 @@
                         <div class="form-group" id="KeyResult0EndDateContainer">
                             <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?=
                                 __("Due Date") ?></label>
-
-                            <div class="input-group date goal-set-date"
-                                 data-date-end-date="<?= $limit_end_date ?>"
-                                 data-date-start-date="<?= $limit_start_date ?>">
-                                <?=
-                                $this->Form->input('KeyResult.end_date',
-                                    [
-                                        'value'                        => $kr_end_date_format,
-                                        'default'                      => $kr_end_date_format,
-                                        'label'                        => false,
-                                        'div'                          => false,
-                                        'class'                        => "form-control",
-                                        'required'                     => true,
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 10,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", 10),
-                                        'type'                         => 'text',
-                                        'wrapInput'                    => null,
-                                    ]) ?>
-                                <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
-                            </div>
+                            <?php if ($tkr_flg)://TKRの場合は終了日を表示のみにする?>
+                                <p class="form-control-static">
+                                    <span><?= $kr_end_date_format ?></span>
+                                </p>
+                            <?php else: ?>
+                                <div class="input-group date goal-set-date"
+                                     data-date-end-date="<?= $limit_end_date ?>"
+                                     data-date-start-date="<?= $limit_start_date ?>">
+                                    <?=
+                                    $this->Form->input('KeyResult.end_date',
+                                        [
+                                            'value'                        => $kr_end_date_format,
+                                            'default'                      => $kr_end_date_format,
+                                            'label'                        => false,
+                                            'div'                          => false,
+                                            'class'                        => "form-control",
+                                            'required'                     => true,
+                                            "data-bv-notempty-message"     => __("Input is required."),
+                                            'data-bv-stringlength'         => 'true',
+                                            'data-bv-stringlength-max'     => 10,
+                                            'data-bv-stringlength-message' => __(
+                                                "It's over limit characters (%s).", 10),
+                                            'type'                         => 'text',
+                                            'wrapInput'                    => null,
+                                        ]) ?>
+                                    <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="form-group" id="KeyResult0StartDateContainer">
                             <label for="KeyResult0StartDate" class="control-label goal-set-mid-label"><?=
@@ -185,36 +190,40 @@
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault_<?= $kr_id ?>">
                                     <span
-                                        class="pull-left"><?= $kr_start_date_format ?>
-                                        &nbsp;&nbsp;<a href="#" class="target-show-target-del"
-                                                       show-target-id="KeyResult0StartDateInputWrap_<?= $kr_id ?>"
-                                                       delete-target-id="KeyResult0StartDateDefault_<?= $kr_id ?>">
+                                        class=""><?= $kr_start_date_format ?>
+                                        <?php if (!$tkr_flg)://TKRの場合は開始日を表示のみにする?>
+                                            &nbsp;&nbsp;<a href="#" class="target-show-target-del"
+                                                           show-target-id="KeyResult0StartDateInputWrap_<?= $kr_id ?>"
+                                                           delete-target-id="KeyResult0StartDateDefault_<?= $kr_id ?>">
                                             <?= __("Change") ?></a>
+                                        <?php endif; ?>
                                     </span>
                             </p>
 
-                            <div class="input-group date plr_5px goal-set-date none"
-                                 data-date-end-date="<?= $limit_end_date ?>"
-                                 data-date-start-date="<?= $limit_start_date ?>"
-                                 id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
-                                <?=
-                                $this->Form->input('KeyResult.start_date',
-                                    [
-                                        'value'                        => $kr_start_date_format,
-                                        'label'                        => false,
-                                        'div'                          => false,
-                                        'class'                        => "form-control",
-                                        'required'                     => true,
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 10,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", 10),
-                                        'type'                         => 'text',
-                                        'wrapInput'                    => null
-                                    ]) ?>
-                                <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
-                            </div>
+                            <?php if (!$tkr_flg)://TKR以外の場合は開始日の変更作業を許可?>
+                                <div class="input-group date plr_5px goal-set-date none"
+                                     data-date-end-date="<?= $limit_end_date ?>"
+                                     data-date-start-date="<?= $limit_start_date ?>"
+                                     id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
+                                    <?=
+                                    $this->Form->input('KeyResult.start_date',
+                                        [
+                                            'value'                        => $kr_start_date_format,
+                                            'label'                        => false,
+                                            'div'                          => false,
+                                            'class'                        => "form-control",
+                                            'required'                     => true,
+                                            "data-bv-notempty-message"     => __("Input is required."),
+                                            'data-bv-stringlength'         => 'true',
+                                            'data-bv-stringlength-max'     => 10,
+                                            'data-bv-stringlength-message' => __(
+                                                "It's over limit characters (%s).", 10),
+                                            'type'                         => 'text',
+                                            'wrapInput'                    => null
+                                        ]) ?>
+                                    <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -246,4 +255,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

@@ -405,9 +405,13 @@ class KeyResult extends AppModel
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($data['KeyResult']['goal_id']);
 
-        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
-        $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
+        if (Hash::get($data, 'KeyResult.start_date')) {
+            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
+        }
+        if (Hash::get($data, 'KeyResult.end_date')) {
+            $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
+                    strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
+        }
 //TODO 現在値を使わないため、この計算は行わない
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],
