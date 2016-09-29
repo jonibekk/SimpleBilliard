@@ -14,6 +14,7 @@ App::uses('EvaluateTerm', 'Model');
 App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('Collaborator', 'Model');
+App::uses('Post', 'Model');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
 
@@ -235,6 +236,80 @@ class GoalService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * ゴール作成
+     *
+     * @param $userId
+     * @param $requestData
+     *
+     * @return bool
+     */
+    function create($userId, $requestData)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        /** @var GoalLabel $GoalLabel */
+        $GoalLabel = ClassRegistry::init("GoalLabel");
+
+        try {
+            // トランザクション開始
+            $Goal->begin();
+            $data = [
+                'Goal'      => $requestData,
+                'KeyResult' => [Hash::get($requestData, 'key_result')],
+                'Label'     => Hash::get($requestData, 'labels'),
+            ];
+
+            $data['Goal']['team_id'] = $Goal->current_team_id;
+            $data['Goal']['user_id'] = $userId;
+
+            $goal_term = $Goal->getGoalTermFromPost($data);
+
+            $data = $Goal->convertGoalDateFromPost($data, $goal_term, $data['Goal']['term_type']);
+
+            $data = $Goal->buildTopKeyResult($data, $goal_term);
+            $data = $Goal->buildCollaboratorDataAsLeader($data);
+
+            // setting default image if default image is chosen and image is not selected.
+            if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
+                $data['Goal']['photo'] = $data['Goal']['img_url'];
+                unset($data['Goal']['img_url']);
+            }
+
+            $Goal->create();
+            $Goal->saveAll($data);
+
+            $newGoalId = $Goal->getLastInsertID();
+            if (!$newGoalId) {
+                throw new Exception(sprintf("Failed create goal. data:%s"
+                    , var_export($data, true)));
+            }
+
+            if (!$GoalLabel->saveLabels($newGoalId, $data['Label'])) {
+                throw new Exception(sprintf("Failed save labels. data:%s"
+                    , var_export($data, true)));
+            }
+
+            if (!$Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId)) {
+                throw new Exception(sprintf("Failed save labels. data:%s"
+                    , var_export($data, true)));
+            }
+
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+
+            $Goal->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $Goal->rollback();
+            return false;
+        }
+        return $newGoalId;
     }
 
     /**

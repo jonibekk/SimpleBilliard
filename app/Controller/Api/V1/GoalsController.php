@@ -76,9 +76,7 @@ class GoalsController extends ApiController
             return $errResponse;
         }
 
-        $fields = $GoalService->goalValidateFields;
-        $fields[] = 'key_result';
-
+        $fields = [];
         $data = $this->request->data;
         if (!empty($_FILES['photo'])) {
             $data['photo'] = $_FILES['photo'];
@@ -220,21 +218,14 @@ class GoalsController extends ApiController
             return $this->_getResponseValidationFail($validateErrors);
         }
 
-        $this->Goal->begin();
-        $isSaveSuccess = $this->Goal->add(
-            [
-                'Goal'      => $data,
-                'KeyResult' => [Hash::get($data, 'key_result')],
-                'Label'     => Hash::get($data, 'labels'),
-            ]
-        );
-        if ($isSaveSuccess === false) {
-            $this->Goal->rollback();
-            return $this->_getResponseBadFail(__('Failed to save a goal.'));
-        }
-        $this->Goal->commit();
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
-        $newGoalId = $this->Goal->getLastInsertID();
+        // ゴール作成
+        $newGoalId = $GoalService->create($this->Auth->user('id'), $data);
+        if (!$newGoalId) {
+            return $this->_getResponseInternalServerError();
+        }
 
         //通知
         $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
