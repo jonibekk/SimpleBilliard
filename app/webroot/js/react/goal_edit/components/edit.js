@@ -78,7 +78,7 @@ export default class Edit extends React.Component {
 
 
     const {suggestions, keyword, validationErrors, inputData, goal} = this.props.goal
-    const tkrValidationErrors = tkrValidationErrors ? tkrValidationErrors : {};
+    const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
     // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
     // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
     // リサイズ後の画像情報が取得できない。

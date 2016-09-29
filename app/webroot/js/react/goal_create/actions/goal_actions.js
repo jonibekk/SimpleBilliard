@@ -116,8 +116,8 @@ export function saveGoal() {
     dispatch(disableSubmit())
     const postData = getState().goal.inputData
     if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
-      postData.key_result.start_value = null
-      postData.key_result.target_value = null
+      postData.key_result.start_value = 0
+      postData.key_result.target_value = 0
     }
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {

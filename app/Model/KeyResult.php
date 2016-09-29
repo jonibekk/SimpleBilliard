@@ -103,15 +103,19 @@ class KeyResult extends AppModel
             'requiredCaseExistUnit' => [
                 'rule' => ['requiredCaseExistUnit'],
             ],
-            'maxLength'             => ['rule' => ['maxLength', 15]],
-            'numeric'               => ['rule' => ['numeric']],
+            'numeric'               => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true
+            ],
         ],
         'target_value' => [
             'requiredCaseExistUnit' => [
                 'rule' => ['requiredCaseExistUnit'],
             ],
-            'maxLength'             => ['rule' => ['maxLength', 15]],
-            'numeric'               => ['rule' => ['numeric']],
+            'numeric'               => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true
+            ],
         ],
     ];
 
@@ -166,7 +170,7 @@ class KeyResult extends AppModel
     function requiredCaseExistUnit($val)
     {
         $val = array_shift($val);
-        if (empty($this->data['KeyResult']['value_unit'])) {
+        if ($this->data['KeyResult']['value_unit'] == self::UNIT_BINARY) {
             return true;
         }
         if ($val === "") {
