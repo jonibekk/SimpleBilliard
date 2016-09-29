@@ -350,12 +350,13 @@ class GoalService extends AppService
         }
 
         // コメントバリデーション
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
-        $ApprovalHistory->set($data['approval_history']);
-        if (!$ApprovalHistory->validates()) {
-            $validationErrors['approval_history'] = $this->validationExtract($ApprovalHistory->validationErrors);
+        if (empty($fields) || in_array('approval_history', $fields)) {
+            $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+            $ApprovalHistory->set(Hash::get($data, 'approval_history'));
+            if (!$ApprovalHistory->validates()) {
+                $validationErrors['approval_history'] = $this->validationExtract($ApprovalHistory->validationErrors);
+            }
         }
-
         return $validationErrors;
     }
 
