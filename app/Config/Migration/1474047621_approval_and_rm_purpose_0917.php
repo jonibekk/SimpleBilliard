@@ -99,8 +99,8 @@ class ApprovalAndRmPurpose0917 extends CakeMigration
              *  - (新) 0: 新規, target_evaluation_flg=0
              * - (旧) 1 = 承認
              *  - (新) 2: コーチが認定処理済み, target_evaluation_flg=1
-             * - (旧) 2 = 保留
-             *  - (新) 1: 再認定依頼中, target_evaluation_flg=0
+             * - (旧) 2 = 保留(否認)
+             *  - (新) 2: [変更なし]コーチが認定処理済み, target_evaluation_flg=0
              * - (旧) 3 = 修正依頼
              *  - (新) 2: コーチが認定処理済み, target_evaluation_flg=0
              * - (旧) 4 = 差し戻し
@@ -122,13 +122,10 @@ class ApprovalAndRmPurpose0917 extends CakeMigration
 
             //認定ステータス変更
             $old1 = $Collaborator->find('list', ['conditions' => ['approval_status' => 1]]);
-            $old2 = $Collaborator->find('list', ['conditions' => ['approval_status' => 2]]);
             $old3 = $Collaborator->find('list', ['conditions' => ['approval_status' => 3]]);
             $old4 = $Collaborator->find('list', ['conditions' => ['approval_status' => 4]]);
             //1 --> 2
             $Collaborator->updateAll(['Collaborator.approval_status' => 2], ['Collaborator.id' => $old1]);
-            //2 --> 1
-            $Collaborator->updateAll(['Collaborator.approval_status' => 1], ['Collaborator.id' => $old2]);
             //3 --> 2
             $Collaborator->updateAll(['Collaborator.approval_status' => 2], ['Collaborator.id' => $old3]);
             //4 --> 3
