@@ -69,24 +69,18 @@ class GoalLabel extends AppModel
 
         //すでに持っているラベルを取得
         $goalLabelsExistList = $this->getLabelList($goalId);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('goalLabelsExistList'), true)));
         //関連付けるラベルを抽出(すでに持っているラベルは除外)
         $attachLabels = array_diff($postedLabels, $goalLabelsExistList);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('attachLabels'), true)));
         //関連を解除するラベルを抽出
         $detachLabels = array_diff($goalLabelsExistList, $postedLabels);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('detachLabels'), true)));
         //変更なしの場合は何もせずreturn
         if (empty($attachLabels) && empty($detachLabels)) {
-        $this->log(sprintf("■[%s] 変更なしの場合は何もせずreturn", __METHOD__));
             return true;
         }
         //追加対象のラベルの関連づけ
         $isSuccess = (bool)$this->attachLabels($goalId, $attachLabels);
-        $this->log(sprintf("■[%s] attachLabels result:  %s", __METHOD__, var_export(compact('isSuccess'), true)));
         //解除対象のラベルの関連付けを解除
         $isSuccess = $isSuccess && (bool)$this->detachLabels($goalId, $detachLabels);
-        $this->log(sprintf("■[%s] detachLabels result:  %s", __METHOD__, var_export(compact('isSuccess'), true)));
         //ラベルのキャッシュを削除
         Cache::delete($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
         return $isSuccess;
@@ -176,22 +170,17 @@ class GoalLabel extends AppModel
         }
         //既存ラベル全件取得(key:label_id,value:name)
         $allLabels = Hash::combine($this->Label->getListWithGoalCount(false, false), '{n}.Label.id', '{n}.Label.name');
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('allLabels'), true)));
         //新規ラベルの抽出
         $newLabels = array_diff($attachLabels, $allLabels);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('newLabels'), true)));
         //まだ持っていない既存ラベルを抽出
         $existLabelsNotAttached = array_intersect($allLabels, $attachLabels);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('existLabelsNotAttached'), true)));
         //saveデータをビルド
         $saveData = array_merge_recursive(
             $this->_buildSaveDataLabelExists($goalId, $existLabelsNotAttached),
             $this->_buildSaveDataLabelNotExists($goalId, $newLabels)
         );
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('saveData'), true)));
         $this->create();
         $res = $this->saveAll($saveData, ['deep' => true]);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('res'), true)));
         return (bool)$res;
     }
 
@@ -206,17 +195,14 @@ class GoalLabel extends AppModel
      */
     function detachLabels($goalId, $detachLabels)
     {
-        $this->log(sprintf("■[%s] start", __METHOD__));
         if (empty($detachLabels)) {
             return true;
         }
         $labelIds = array_keys($detachLabels);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('detachLabels'), true)));
         $this->deleteAll(['GoalLabel.goal_id' => $goalId, 'GoalLabel.label_id' => $labelIds]);
         foreach ($labelIds as $labelId) {
             $this->updateCounterCache(['label_id' => $labelId]);
         }
-        $this->log(sprintf("■[%s] true", __METHOD__));
         return true;
     }
 

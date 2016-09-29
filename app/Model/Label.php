@@ -75,9 +75,7 @@ class Label extends AppModel
      */
     public function getListWithGoalCount($isExistGoalLabel = true, $useCache = true)
     {
-            $this->log(sprintf("■[%s] start",__METHOD__));
         if ($useCache) {
-            $this->log(sprintf("■[%s] use cache",__METHOD__));
             $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
             if ($res !== false) {
                 return $res;
@@ -95,7 +93,6 @@ class Label extends AppModel
             $option['conditions'] = ['NOT' => ['goal_label_count' => 0]];
         }
         $res = $this->find('all', $option);
-        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('res'), true)));
 
         Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
         return $res;
