@@ -104,7 +104,7 @@ class KeyResult extends AppModel
                 'rule' => ['requiredCaseExistUnit'],
             ],
             'numeric'               => [
-                'rule' => ['numeric'],
+                'rule'       => ['numeric'],
                 'allowEmpty' => true
             ],
         ],
@@ -113,7 +113,7 @@ class KeyResult extends AppModel
                 'rule' => ['requiredCaseExistUnit'],
             ],
             'numeric'               => [
-                'rule' => ['numeric'],
+                'rule'       => ['numeric'],
                 'allowEmpty' => true
             ],
         ],
@@ -340,6 +340,7 @@ class KeyResult extends AppModel
         $res = $this->find('first', [
             'conditions' => [
                 'goal_id' => $goalId,
+                'tkr_flg' => true,
             ],
         ]);
         return $res;
