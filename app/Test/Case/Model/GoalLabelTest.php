@@ -55,6 +55,20 @@ class GoalLabelTest extends GoalousTestCase
 
     }
 
+    function testSaveLabels()
+    {
+        $this->_setDefault();
+
+        $bf_all_label_count = count($this->GoalLabel->Label->find('list'));
+        $this->GoalLabel->saveLabels(1, ['test', 'Test', 'TEST']);
+        $label_list = $this->GoalLabel->Label->find('list');
+        $af_all_label_count = count($label_list);
+        $this->assertEquals($bf_all_label_count + 3, $af_all_label_count);
+        $this->assertContains('test', $label_list);
+        $this->assertContains('Test', $label_list);
+        $this->assertContains('TEST', $label_list);
+    }
+
     function testAttachLabels()
     {
         $this->_setDefault();
