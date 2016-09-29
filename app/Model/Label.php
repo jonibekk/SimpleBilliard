@@ -70,14 +70,13 @@ class Label extends AppModel
      *
      * @return array
      */
-    public function getListWithGoalCount()
+    public function getListWithGoalCount($isExistGoalLabel = true)
     {
         $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
         if ($res !== false) {
             return $res;
         }
         $option = [
-            'conditions' => ['NOT' => ['goal_label_count' => 0]],
             'fields'     => [
                 'id',
                 'name',
@@ -85,6 +84,9 @@ class Label extends AppModel
             ],
             'order'      => ['goal_label_count DESC'],
         ];
+        if ($isExistGoalLabel) {
+            $option['conditions'] = ['NOT' => ['goal_label_count' => 0]];
+        }
         $res = $this->find('all', $option);
 
         Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
