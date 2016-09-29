@@ -191,7 +191,6 @@ class GoalApprovalService extends AppService
                 $clearAndImportantWord = __('This Top Key Result is not clear.');
             }
 
-
             $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
             return $approvalHistory;
         });
