@@ -15,7 +15,7 @@ if (!isset($incomplete_kr_count)) {
     <?php if (isset($kr['KeyResult'])) {
         $kr = $kr['KeyResult'];
     } ?>
-    <?= $this->App->viewStartComment()?>
+    <?= $this->App->viewStartComment() ?>
     <?php if (!$without_dropdown_link): ?>
         <div class="btn-edit-kr-wrap pull-right dropdown">
         <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
@@ -28,11 +28,20 @@ if (!isset($incomplete_kr_count)) {
         aria-labelledby="dropdownMenu1">
         <?php if (!$kr['completed']): ?>
             <li role="presentation">
-                <a href="<?= $this->Html->url(['controller'    => 'goals',
-                                               'action'        => 'ajax_get_edit_key_result_modal',
-                                               'key_result_id' => $kr['id']
-                ]) ?>"
-                   class="modal-ajax-get-add-key-result">
+                <?php
+                //TKRの場合はゴール修正ぺージのリンク
+                if ($kr['tkr_flg']) {
+                    $url = "/goals/" . $kr['goal_id'] . "/edit";
+                } else {
+                    $url = [
+                        'controller'    => 'goals',
+                        'action'        => 'ajax_get_edit_key_result_modal',
+                        'key_result_id' => $kr['id']
+                    ];
+                }
+                ?>
+                <a href="<?= $this->Html->url($url) ?>"
+                   class="<?= !$kr['tkr_flg'] ? "modal-ajax-get-add-key-result" : null //このクラスがある場合はKR編集モーダル  ?>">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit Key Result") ?></span></a>
             </li>
         <?php endif ?>
@@ -45,9 +54,10 @@ if (!isset($incomplete_kr_count)) {
             <?php else: ?>
                 <?php //最後のKRの場合
                 if ($incomplete_kr_count === 1):?>
-                    <a href="<?= $this->Html->url(['controller'    => 'goals',
-                                                   'action'        => 'ajax_get_last_kr_confirm',
-                                                   'key_result_id' => $kr['id']
+                    <a href="<?= $this->Html->url([
+                        'controller'    => 'goals',
+                        'action'        => 'ajax_get_last_kr_confirm',
+                        'key_result_id' => $kr['id']
                     ]) ?>"
                        class="modal-ajax-get">
                         <i class="fa fa-check"></i><span class="ml_2px"><?= __(
@@ -56,9 +66,10 @@ if (!isset($incomplete_kr_count)) {
                 <?php else: ?>
                     <?=
                     $this->Form->create('Goal', [
-                        'url'           => ['controller'    => 'goals',
-                                            'action'        => 'complete_kr',
-                                            'key_result_id' => $kr['id']
+                        'url'           => [
+                            'controller'    => 'goals',
+                            'action'        => 'complete_kr',
+                            'key_result_id' => $kr['id']
                         ],
                         'inputDefaults' => [
                             'div'       => 'form-group',
@@ -95,5 +106,5 @@ if (!isset($incomplete_kr_count)) {
         </div>
     <?php endif; ?>
 
-    <?= $this->App->viewEndComment()?>
+    <?= $this->App->viewEndComment() ?>
 <?php endif ?>
