@@ -27,7 +27,7 @@ class Label extends AppModel
     public $validate = [
         'name'    => [
             'maxLength' => [
-                'rule' => ['maxLength', 128]
+                'rule' => ['maxLength', 20]
             ],
             'notEmpty'  => [
                 'rule'     => ['notEmpty'],
