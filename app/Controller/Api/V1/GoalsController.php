@@ -229,7 +229,6 @@ class GoalsController extends ApiController
         if (!$newGoalId) {
             return $this->_getResponseInternalServerError();
         }
-        $this->log(__METHOD__." goal_id:".$newGoalId);
 
         //通知
         $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");

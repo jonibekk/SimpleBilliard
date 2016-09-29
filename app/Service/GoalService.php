@@ -279,11 +279,11 @@ class GoalService extends AppService
                 $data['Goal']['photo'] = $data['Goal']['img_url'];
                 unset($data['Goal']['img_url']);
             }
-$this->log(__METHOD__.' goal saveAll');
+
             $Goal->create();
             $Goal->saveAll($data);
+
             $newGoalId = $Goal->getLastInsertID();
-$this->log(compact('newGoalId'));
             if (!$newGoalId) {
                 throw new Exception(sprintf("Failed create goal. data:%s"
                     , var_export($data, true)));
