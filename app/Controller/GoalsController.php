@@ -78,7 +78,7 @@ class GoalsController extends AppController
         // TODO: モーダルでコラボを編集した際にはdetailページにリダイレクトされるため
         //       一時的にdetailページにアクセスされた場合はlistにリダイレクトさせる
         //       Reactでコラボ編集が実装されたらlist, detailのアクセスを許可する
-        if ($type === 'detail') {
+        if($type === 'detail') {
             $this->redirect("/goals/approval/list");
         }
         return $this->render("approval");
@@ -861,7 +861,6 @@ class GoalsController extends AppController
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
-        $tkr_flg = $key_result['KeyResult']['tkr_flg'];
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
@@ -882,8 +881,7 @@ class GoalsController extends AppController
             'kr_end_date_format',
             'limit_end_date',
             'limit_start_date',
-            'goal_term',
-            'tkr_flg'
+            'goal_term'
         ));
         $this->request->data = $key_result;
         //エレメントの出力を変数に格納する
