@@ -194,13 +194,36 @@ class Goal extends AppModel
                 'rule' => ['date', 'ymd'],
             ],
             'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
+            'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
         ],
         'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
             'notEmpty' => [
-//                'required' => 'create',
+                //'required' => 'create',
+                'rule' => 'notEmpty',
+            ],
+        ]
+    ];
+
+
+    public $update_validate = [
+        'end_date'  => [
+            'notEmpty'       => [
+                'required' => 'create',
                 'rule'     => 'notEmpty',
             ],
+            'isString'       => ['rule' => 'isString'],
+            'dateYmd'        => [
+                'rule' => ['date', 'ymd'],
+            ],
+            'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
+            'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
+        ],
+        'term_type' => [
+            'inList'   => [
+                'rule' => ['inList', ['current', 'next']],
+                'allowEmpty' => true
+            ]
         ]
     ];
 
@@ -286,6 +309,14 @@ class Goal extends AppModel
         ],
     ];
 
+
+    function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+        $this->_setStatusName();
+        $this->_setPriorityName();
+    }
+
     /**
      * 評価期間内かチェック
      *
@@ -302,12 +333,43 @@ class Goal extends AppModel
         && strtotime($date) <= $goalTerm['end_date'];
     }
 
-    function __construct($id = false, $table = null, $ds = null)
+    /**
+     * ゴールに紐づく各KRの終了日より前の日付ではないか
+     *
+     * @param      $date
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function checkAfterKrEndDate($date)
     {
-        parent::__construct($id, $table, $ds);
-        $this->_setStatusName();
-        $this->_setPriorityName();
+        $date = array_shift($date);
+        if (empty($this->data['Goal']['id'])) {
+            return true;
+        }
+        $goalId = $this->data['Goal']['id'];
+        $goal = Hash::extract($this->findById($goalId), 'Goal');
+        if (empty($goal)) {
+            return true;
+        }
+        $keyResults = Hash::extract($this->KeyResult->getKeyResults($goalId), '{n}.KeyResult');
+        if (empty($keyResults)) {
+            return true;
+        }
+        // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
+        $term = $this->Team->EvaluateTerm->getTermDataByDatetime($goal['end_date']);
+        // UTCでのタイムスタンプ取得
+        $timeStamp = AppUtil::getDateByTimezone($date, $term['timezone']);
+        // 該当ゴールの評価期間取得
+        foreach ($keyResults as $kr) {
+            if ($timeStamp < $kr['end_date']) {
+                $this->invalidate('end_date', __("Please input goal end date later than key result end date"));
+                return false;
+            }
+        }
+        return true;
     }
+
 
     /**
      * ゴール登録処理
@@ -467,6 +529,10 @@ class Goal extends AppModel
         $data['Collaborator'][0]['user_id'] = $this->my_uid;
         $data['Collaborator'][0]['team_id'] = $this->current_team_id;
         $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
+        $priority = Hash::get($data, 'Goal.priority');
+        if ($priority !== null) {
+            $data['Collaborator'][0]['priority'] = $priority;
+        }
         return $data;
     }
 
@@ -2066,10 +2132,15 @@ class Goal extends AppModel
      *
      * @return array|true
      */
-    function validateGoalPOST($data, $fields = [])
+    function validateGoalPOST($data, $fields = [], $goalId = null)
     {
         $validationBackup = $this->validate;
-        $originValidationRule = am($this->validate, $this->post_validate);
+        if (empty($goalId)) {
+            $originValidationRule = am($this->validate, $this->post_validate);
+        } else {
+            $data['id'] = $goalId;
+            $originValidationRule = am($this->validate, $this->update_validate);
+        }
         $validationRule = [];
         if (empty($fields)) {
             $validationRule = $originValidationRule;

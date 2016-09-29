@@ -63,6 +63,10 @@ class GoalLabel extends AppModel
      */
     function saveLabels($goalId, $postedLabels)
     {
+        if(!is_array($postedLabels)){
+            return false;
+        }
+
         //すでに持っているラベルを取得
         $goalLabelsExistList = $this->getLabelList($goalId);
         //関連付けるラベルを抽出(すでに持っているラベルは除外)

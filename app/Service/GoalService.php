@@ -201,7 +201,7 @@ class GoalService extends AppService
             $updateCollaborator = [
                 'id'              => $goal['collaborator']['id'],
                 'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION,
-                'priority'        => $goal['priority']
+                'priority'        => $requestData['priority']
             ];
             if (!$Collaborator->save($updateCollaborator, false)) {
                 throw new Exception(sprintf("Failed update collaborator. data:%s"
@@ -299,6 +299,12 @@ class GoalService extends AppService
 
     /**
      * ゴール登録・更新のバリデーション
+     *
+     * @param array        $data
+     * @param array        $fields
+     * @param integer|null $goalId
+     *
+     * @return array
      */
     function validateSave($data, $fields, $goalId = null)
     {
@@ -320,7 +326,7 @@ class GoalService extends AppService
 
         $goalFields = array_intersect($this->goalValidateFields, $fields);
         $validationErrors = $this->validationExtract(
-            $Goal->validateGoalPOST($data, $goalFields)
+            $Goal->validateGoalPOST($data, $goalFields, $goalId)
         );
 
         // ゴールラベル バリデーション
@@ -347,7 +353,7 @@ class GoalService extends AppService
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         $ApprovalHistory->set($data['approval_history']);
         if (!$ApprovalHistory->validates()) {
-            $validationErrors['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+            $validationErrors['approval_history'] = $this->validationExtract($ApprovalHistory->validationErrors);
         }
 
         return $validationErrors;
@@ -360,7 +366,8 @@ class GoalService extends AppService
      *
      * @return bool
      */
-    function isGoalAfterCurrentTerm($goalId) {
+    function isGoalAfterCurrentTerm($goalId)
+    {
         $goal = $this->get($goalId);
         if (empty($goal)) {
             return false;

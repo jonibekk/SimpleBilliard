@@ -296,7 +296,9 @@ class GoalApprovalsController extends ApiController
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
         if(!$canAccess) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            // TODO: モーダルでコラボを抜けた場合のために一時期的にここでエラーを吐かないようにする
+            //       Reactでコラボ編集が実装されたらコメントアウトを外す
+            // $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 

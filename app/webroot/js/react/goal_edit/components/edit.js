@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory} from "react-router";
 import * as KeyCode from "~/common/constants/KeyCode";
+import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import CategorySelect from "~/common/components/goal/CategorySelect";
@@ -75,7 +76,9 @@ export default class Edit extends React.Component {
       $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
     });
 
+
     const {suggestions, keyword, validationErrors, inputData, goal} = this.props.goal
+    const tkrValidationErrors = tkrValidationErrors ? tkrValidationErrors : {};
     // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
     // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
     // リサイズ後の画像情報が取得できない。
@@ -176,30 +179,20 @@ export default class Edit extends React.Component {
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
-            <InvalidMessageBox message={validationErrors.key_result.name}/>
+            <InvalidMessageBox message={tkrValidationErrors.name}/>
 
-            {/*<label className="goals-create-input-label">{__("Unit & Range")}</label>*/}
-            <select name="value_unit" value={inputData.key_result.value_unit}
-                    className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select"
-                    onChange={(e) => this.onChange(e, "key_result")}>
-              {
-                this.props.goal.units.map((v) => {
-                  return (
-                    <option key={v.id} value={v.id}>{v.label}</option>
-                  )
-                })
-              }
-            </select>
-            <InvalidMessageBox message={validationErrors.key_result.value_unit}/>
+            <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units} onChange={(e) => this.onChange(e, "key_result")}/>
+            <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
 
-            <ValueStartEndInput inputData={inputData.key_result} validationErrors={validationErrors.key_result}
-                                onChange={(e) => this.onChange(e, "key_result")}/>
+            <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
+            <InvalidMessageBox message={tkrValidationErrors.start_value}/>
+            <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}
                       className="form-control goals-create-input-form mod-textarea"
                       onChange={(e) => this.onChange(e, "key_result")}/>
-            <InvalidMessageBox message={validationErrors.key_result.description}/>
+            <InvalidMessageBox message={tkrValidationErrors.description}/>
 
           </section>
 

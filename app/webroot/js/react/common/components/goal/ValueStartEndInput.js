@@ -1,6 +1,5 @@
 import React from "react";
 import {KeyResult} from "~/common/constants/Model";
-import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 
 export default class ValueStartEndInput extends React.Component {
   constructor(props) {
@@ -12,7 +11,7 @@ export default class ValueStartEndInput extends React.Component {
   }
 
   render() {
-    const {inputData, validationErrors} = this.props
+    const {inputData} = this.props
     // 単位無しだったらエリア非表示
     if (inputData.value_unit == KeyResult.ValueUnit.NONE) {
       return null
@@ -29,8 +28,6 @@ export default class ValueStartEndInput extends React.Component {
                  className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
                  placeholder={100} onChange={this.onChange.bind(this)}/>
         </div>
-        <InvalidMessageBox message={validationErrors.start_value}/>
-        <InvalidMessageBox message={validationErrors.target_value}/>
       </div>
     )
 
@@ -38,6 +35,5 @@ export default class ValueStartEndInput extends React.Component {
 }
 ValueStartEndInput.propTypes = {
   inputData: React.PropTypes.object.isRequired,
-  validationErrors: React.PropTypes.object.isRequired,
 };
 
