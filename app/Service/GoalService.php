@@ -200,9 +200,10 @@ class GoalService extends AppService
 
             // コラボレーター更新(再申請のステータスに変更)
             $updateCollaborator = [
-                'id'              => $goal['collaborator']['id'],
-                'approval_status' => Collaborator::APPROVAL_STATUS_REAPPLICATION,
-                'priority'        => $requestData['priority']
+                'id'                   => $goal['collaborator']['id'],
+                'approval_status'      => Collaborator::APPROVAL_STATUS_REAPPLICATION,
+                'priority'             => $requestData['priority'],
+                'is_target_evaluation' => Collaborator::IS_NOT_TARGET_EVALUATION
             ];
             if (!$Collaborator->save($updateCollaborator, false)) {
                 throw new Exception(sprintf("Failed update collaborator. data:%s"
