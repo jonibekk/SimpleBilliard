@@ -46,7 +46,10 @@ class GoalsController extends ApiController
         $GoalService = ClassRegistry::init("GoalService");
 
         $data = $this->request->data;
-        $data['photo'] = $_FILES['photo'];
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
+        }
+
         $validationErrors = $GoalService->validateSave($data, $fields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
@@ -77,7 +80,10 @@ class GoalsController extends ApiController
         $fields[] = 'key_result';
 
         $data = $this->request->data;
-        $data['photo'] = $_FILES['photo'];
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
+        }
+
         $validationErrors = $GoalService->validateSave($data, $fields, $goalId);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
@@ -204,7 +210,9 @@ class GoalsController extends ApiController
     function post()
     {
         $data = $this->request->data;
-        $data['photo'] = $_FILES['photo'];
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
+        }
 
         // バリデーション
         $validateErrors = $this->_validateCreateGoal($data);
@@ -264,7 +272,9 @@ class GoalsController extends ApiController
         }
 
         $data = $this->request->data;
-        $data['photo'] = $_FILES['photo'];
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
+        }
 
         // バリデーション
         $validateErrors = $this->_validateUpdateGoal($data, $goalId);
