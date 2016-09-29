@@ -185,7 +185,7 @@ class GoalService extends AppService
             }
 
             // TKR更新
-            $updateTkr = $this->buildUpdateTkrData($goal['top_key_result']['id'], $requestData);
+            $updateTkr = $this->buildUpdateTkrData($goal['top_key_result']['id'], $goalId, $requestData);
             if (!$KeyResult->save($updateTkr, false)) {
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
@@ -249,8 +249,6 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         $updateData = [
             'id'          => $goalId,
@@ -262,7 +260,7 @@ class GoalService extends AppService
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            $goalTerm = $EvaluateTerm->getTermDataByDatetime($requestData['end_date']);
+            $goalTerm = $Goal->getGoalTermData($goalId);
             $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
         }
         if (!empty($requestData['photo'])) {
@@ -273,14 +271,17 @@ class GoalService extends AppService
 
     /**
      * TKR更新データ作成
+     * ゴールの終了日が存在する場合はそれをTKRの終了日にする
      *
      * @param $tkrId
+     * @param $goalId
      * @param $requestData
      *
      * @return array
      */
-    private function buildUpdateTkrData($tkrId, $requestData)
+    private function buildUpdateTkrData($tkrId, $goalId, $requestData)
     {
+        $goalEndDate = Hash::get($requestData, 'end_date');
         $inputTkrData = Hash::get($requestData, 'key_result');
         if (empty($inputTkrData)) {
             return [];
@@ -294,6 +295,12 @@ class GoalService extends AppService
             'start_value'  => $inputTkrData['start_value'],
             'target_value' => $inputTkrData['target_value'],
         ];
+        if ($goalEndDate) {
+            /** @var Goal $Goal */
+            $Goal = ClassRegistry::init("Goal");
+            $goalTerm = $Goal->getGoalTermData($goalId);
+            $updateData['end_date'] = AppUtil::getEndDateByTimezone($goalEndDate, $goalTerm['timezone']);
+        }
         return $updateData;
     }
 

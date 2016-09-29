@@ -185,15 +185,15 @@ class Goal extends AppModel
 
     public $post_validate = [
         'end_date'  => [
-            'notEmpty'       => [
+            'notEmpty'            => [
                 'required' => 'create',
                 'rule'     => 'notEmpty',
             ],
-            'isString'       => ['rule' => 'isString'],
-            'dateYmd'        => [
+            'isString'            => ['rule' => 'isString'],
+            'dateYmd'             => [
                 'rule' => ['date', 'ymd'],
             ],
-            'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
+            'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
             'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
         ],
         'term_type' => [
@@ -205,23 +205,22 @@ class Goal extends AppModel
         ]
     ];
 
-
     public $update_validate = [
         'end_date'  => [
-            'notEmpty'       => [
+            'notEmpty'            => [
                 'required' => 'create',
                 'rule'     => 'notEmpty',
             ],
-            'isString'       => ['rule' => 'isString'],
-            'dateYmd'        => [
+            'isString'            => ['rule' => 'isString'],
+            'dateYmd'             => [
                 'rule' => ['date', 'ymd'],
             ],
-            'checkRangeTerm' => ['rule' => ['checkRangeTerm']],
+            'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
             'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
         ],
         'term_type' => [
-            'inList'   => [
-                'rule' => ['inList', ['current', 'next']],
+            'inList' => [
+                'rule'       => ['inList', ['current', 'next']],
                 'allowEmpty' => true
             ]
         ]
@@ -309,7 +308,6 @@ class Goal extends AppModel
         ],
     ];
 
-
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -320,26 +318,25 @@ class Goal extends AppModel
     /**
      * 評価期間内かチェック
      *
-     * @param      $date
+     * @param  string $date
      *
-     * @return array|null
-     * @internal param $data
+     * @return bool
      */
     function checkRangeTerm($date)
     {
         $date = array_shift($date);
         $goalTerm = $this->getGoalTermFromPost($this->data);
-        return $goalTerm['start_date'] <= strtotime($date)
-        && strtotime($date) <= $goalTerm['end_date'];
+        $date = AppUtil::getEndDateByTimezone($date, $goalTerm['timezone']);
+
+        return $goalTerm['start_date'] <= $date && $date <= $goalTerm['end_date'];
     }
 
     /**
      * ゴールに紐づく各KRの終了日より前の日付ではないか
      *
-     * @param      $date
+     * @param string $date
      *
-     * @return array|null
-     * @internal param $data
+     * @return bool
      */
     function checkAfterKrEndDate($date)
     {
@@ -358,10 +355,16 @@ class Goal extends AppModel
         }
         // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
         $term = $this->Team->EvaluateTerm->getTermDataByDatetime($goal['end_date']);
+
         // UTCでのタイムスタンプ取得
         $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
+
         // 該当ゴールの評価期間取得
         foreach ($keyResults as $kr) {
+            //tkrのend_dateはゴールのend_dateと等しくなるため、チェックの必要はなし
+            if ($kr['tkr_flg']) {
+                continue;
+            }
             if ($timeStamp < $kr['end_date']) {
                 $this->invalidate('end_date', __("Please input goal end date later than key result end date"));
                 return false;
@@ -369,7 +372,6 @@ class Goal extends AppModel
         }
         return true;
     }
-
 
     /**
      * ゴール登録処理
@@ -2127,8 +2129,9 @@ class Goal extends AppModel
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      * - $fieldsに配列で対象フィールドを指定。空の場合はすべてのフィールドをvalidateする
      *
-     * @param       $data
-     * @param array $fields
+     * @param array        $data
+     * @param array        $fields
+     * @param integer|null $goalId
      *
      * @return array|true
      */
