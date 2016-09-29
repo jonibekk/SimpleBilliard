@@ -779,7 +779,7 @@ class NotifyBizComponent extends Component
      */
     private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
     {
-        $goal = $this->Goal->getGoal($goal_id);
+        $goal = $this->Goal->getGoal($goal_id, $to_user_id);
 
         if (empty($goal)) {
             return;

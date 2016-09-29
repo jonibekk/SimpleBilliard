@@ -417,7 +417,6 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-
         $collaborator = $this->request->data['Collaborator'];
         $collaborator_id = $collaborator_id ? $collaborator_id : $this->Goal->Collaborator->getLastInsertID();
 
