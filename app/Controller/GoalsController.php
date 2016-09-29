@@ -73,7 +73,13 @@ class GoalsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if (!in_array($type, ['list', 'detail'])) {
-            throw new NotFoundException("");
+            throw new NotFoundException();
+        }
+        // TODO: モーダルでコラボを編集した際にはdetailページにリダイレクトされるため
+        //       一時的にdetailページにアクセスされた場合はlistにリダイレクトさせる
+        //       Reactでコラボ編集が実装されたらlist, detailのアクセスを許可する
+        if($type === 'detail') {
+            $this->redirect("/goals/approval/list");
         }
         return $this->render("approval");
     }
@@ -400,15 +406,10 @@ class GoalsController extends AppController
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
-        $collaborator = $this->request->data['Collaborator'];
-        // もしpriority=0のデータであれば認定対象外なのでapproval_status=2を設定する
-        // そうでなければ再認定が必要なのでapproval_status=0にする
-        $approval_status = 0;
 
-        if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
-            $approval_status = 2;
-        }
-        $this->request->data['Collaborator']['approval_status'] = $approval_status;
+        // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「Reapplication」にする
+        $this->request->data['Collaborator']['approval_status'] = Collaborator::APPROVAL_STATUS_REAPPLICATION;
+        $this->request->data['Collaborator']['is_target_evaluation'] = false;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
 

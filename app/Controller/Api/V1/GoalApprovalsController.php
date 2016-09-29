@@ -4,9 +4,15 @@ App::import('Service', 'GoalApprovalService');
 
 /**
  * Class GoalApprovalsController
+ * @property PnotifyComponent $Pnotify
  */
 class GoalApprovalsController extends ApiController
 {
+
+    public $components = [
+        'Pnotify',
+    ];
+
     /*
      * オーバーライド
      */
@@ -169,7 +175,6 @@ class GoalApprovalsController extends ApiController
     {
         App::uses('ApprovalHistory', 'Model');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $this->Pnotify = $this->Components->load('Pnotify');
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
         $collaboratorId = Hash::get($data,'collaborator.id');
@@ -227,7 +232,6 @@ class GoalApprovalsController extends ApiController
     {
         App::uses('ApprovalHistory', 'Model');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $this->Pnotify = $this->Components->load('Pnotify');
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
         $collaboratorId = Hash::get($data,'collaborator.id');
@@ -279,7 +283,6 @@ class GoalApprovalsController extends ApiController
      */
     public function get_detail()
     {
-        $this->Pnotify = $this->Components->load('Pnotify');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->my_uid;
         $collaboratorId = $this->request->query('collaborator_id');
@@ -293,7 +296,9 @@ class GoalApprovalsController extends ApiController
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
         if(!$canAccess) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            // TODO: モーダルでコラボを抜けた場合のために一時期的にここでエラーを吐かないようにする
+            //       Reactでコラボ編集が実装されたらコメントアウトを外す
+            // $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 

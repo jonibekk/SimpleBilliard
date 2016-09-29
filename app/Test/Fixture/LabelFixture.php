@@ -31,12 +31,11 @@ class LabelFixture extends CakeTestFixtureEx
         'name'             => array(
             'type'    => 'string',
             'null'    => false,
-            'default' => null,
             'length'  => 128,
             'key'     => 'index',
-            'collate' => 'utf8mb4_general_ci',
+            'collate' => 'utf8_bin',
             'comment' => 'ラベル',
-            'charset' => 'utf8mb4'
+            'charset' => 'utf8'
         ),
         'goal_label_count' => array(
             'type'     => 'integer',
