@@ -11,7 +11,8 @@ export function fetchCollaborators(is_initialize = false) {
     return axios.get(request_api, {
       timeout: 10000,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'Cache-Control': 'no-store, private, no-cache, must-revalidate'
       },
       dataType: 'json'
     })
