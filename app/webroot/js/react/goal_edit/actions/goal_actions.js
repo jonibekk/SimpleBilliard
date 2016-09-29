@@ -1,11 +1,18 @@
 import * as types from "../constants/ActionTypes";
-import {post} from "../../util/api";
+import {post} from "~/util/api";
 import axios from "axios";
+import {KeyResult} from "~/common/constants/Model";
 
 export function validateGoal(goalId, addInputData) {
   return (dispatch, getState) => {
 
     const postData = Object.assign(getState().goal.inputData, addInputData)
+    // 単位無しの場合開始値と終了値を自動的に0にする
+    if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      postData.key_result.start_value = 0
+      postData.key_result.target_value = 0
+    }
+
     return post(`/api/v1/goals/${goalId}/validate_update`, postData, null,
       (response) => {
         /* eslint-disable no-console */
@@ -128,6 +135,12 @@ export function saveGoal(addInputData) {
     dispatch(disableSubmit())
     const {inputData, goal} = getState().goal;
     inputData["approval_history"] = addInputData
+    // 単位無しの場合開始値と終了値を自動的に0にする
+    if (inputData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      inputData.key_result.start_value = 0
+      inputData.key_result.target_value = 0
+    }
+
     return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
         document.location.href = '/'
