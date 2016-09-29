@@ -4,9 +4,15 @@ App::import('Service', 'GoalApprovalService');
 
 /**
  * Class GoalApprovalsController
+ * @property PnotifyComponent $Pnotify
  */
 class GoalApprovalsController extends ApiController
 {
+
+    public $components = [
+        'Pnotify',
+    ];
+
     /*
      * オーバーライド
      */
@@ -20,7 +26,6 @@ class GoalApprovalsController extends ApiController
      */
     function get_list()
     {
-        $this->Pnotify = $this->Components->load('Pnotify');
         // チームの評価設定が無効であればForbidden
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
@@ -170,7 +175,6 @@ class GoalApprovalsController extends ApiController
     {
         App::uses('ApprovalHistory', 'Model');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $this->Pnotify = $this->Components->load('Pnotify');
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
         $collaboratorId = Hash::get($data,'collaborator.id');
@@ -228,7 +232,6 @@ class GoalApprovalsController extends ApiController
     {
         App::uses('ApprovalHistory', 'Model');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $this->Pnotify = $this->Components->load('Pnotify');
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
         $collaboratorId = Hash::get($data,'collaborator.id');
@@ -280,7 +283,6 @@ class GoalApprovalsController extends ApiController
      */
     public function get_detail()
     {
-        $this->Pnotify = $this->Components->load('Pnotify');
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->my_uid;
         $collaboratorId = $this->request->query('collaborator_id');
