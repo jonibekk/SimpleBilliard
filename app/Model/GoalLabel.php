@@ -175,7 +175,7 @@ class GoalLabel extends AppModel
             return true;
         }
         //既存ラベル全件取得(key:label_id,value:name)
-        $allLabels = Hash::combine($this->Label->getListWithGoalCount(false), '{n}.Label.id', '{n}.Label.name');
+        $allLabels = Hash::combine($this->Label->getListWithGoalCount(false, false), '{n}.Label.id', '{n}.Label.name');
         $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('allLabels'), true)));
         //新規ラベルの抽出
         $newLabels = array_diff($attachLabels, $allLabels);

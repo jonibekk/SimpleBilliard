@@ -68,13 +68,20 @@ class Label extends AppModel
      * - ソート条件はgoal_label_countの降順
      * - このデータはキャッシュされている
      *
+     * @param bool $isExistGoalLabel
+     * @param bool $useCache
+     *
      * @return array
      */
-    public function getListWithGoalCount($isExistGoalLabel = true)
+    public function getListWithGoalCount($isExistGoalLabel = true, $useCache = true)
     {
-        $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
-        if ($res !== false) {
-            return $res;
+            $this->log(sprintf("■[%s] start",__METHOD__));
+        if ($useCache) {
+            $this->log(sprintf("■[%s] use cache",__METHOD__));
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_LABEL), 'team_info');
+            if ($res !== false) {
+                return $res;
+            }
         }
         $option = [
             'fields'     => [
@@ -88,6 +95,7 @@ class Label extends AppModel
             $option['conditions'] = ['NOT' => ['goal_label_count' => 0]];
         }
         $res = $this->find('all', $option);
+        $this->log(sprintf("■[%s] %s", __METHOD__, var_export(compact('res'), true)));
 
         Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
         return $res;
