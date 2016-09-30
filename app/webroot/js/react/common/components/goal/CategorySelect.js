@@ -18,7 +18,7 @@ export default class CategorySelect extends React.Component {
           className="form-control goals-create-input-form"
           name="goal_category_id"
           onChange={this.props.onChange}
-          value={this.props.defaultValue}>
+          value={this.props.value}>
           {options}
         </select>
       </div>
@@ -28,7 +28,7 @@ export default class CategorySelect extends React.Component {
 }
 CategorySelect.propTypes = {
   categories: React.PropTypes.array,
-  defaultValue: React.PropTypes.string
+  value: React.PropTypes.string
 };
-CategorySelect.defaultProps = {categories: [], defaultValue: null};
+CategorySelect.defaultProps = {categories: [], value: ""};
 

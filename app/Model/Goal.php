@@ -464,11 +464,11 @@ class Goal extends AppModel
      */
     function convertGoalDateFromPost($data, $goalTerm, $termType)
     {
+        // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
             $data['Goal']['start_date'] = time();
         } else {
-            //指定なしの場合は現在時刻
-            $data['Goal']['start_date'] = AppUtil::getDateByTimezone($goalTerm['start_date'], $goalTerm['timezone']);
+            $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
 
         if (!empty($data['Goal']['end_date'])) {
@@ -476,7 +476,7 @@ class Goal extends AppModel
             $data['Goal']['end_date'] = AppUtil::getEndDateByTimezone($data['Goal']['end_date'], $goalTerm['timezone']);
         } else {
             //指定なしの場合は期の終了日
-            $data['Goal']['end_date'] = AppUtil::getDateByTimezone($goalTerm['end_date'], $goalTerm['timezone']);
+            $data['Goal']['end_date'] = $goalTerm['end_date'];
         }
         return $data;
     }
