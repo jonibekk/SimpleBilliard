@@ -8,7 +8,6 @@ export default class LabelInput extends React.Component {
   render() {
     const props = {
       maxLength: 20,
-      placeholder: __("You can save maximum 5 labels"),
       value: this.props.keyword,
       onChange: this.props.onChange,
       onKeyDown: this.props.onKeyDown,
@@ -18,6 +17,9 @@ export default class LabelInput extends React.Component {
     return (
       <div>
         <label className="goals-create-input-label">{__("Labels")}</label>
+        <p className="goals-create-description">
+          {__("Add by pressing the Enter.(You can save maximum 5 labels)")}
+        </p>
         <AutoSuggest
           suggestions={this.props.suggestions}
           onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
