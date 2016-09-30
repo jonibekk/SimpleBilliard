@@ -119,8 +119,8 @@ class TeamVision extends AppModel
             $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
             if ($res !== false) {
                 if ($with_img) {
-                    foreach ($res as &$v) {
-                        $v['TeamVision'] = $this->attachImgUrl($v['TeamVision'], 'TeamVision');
+                    foreach ($res as &$vision) {
+                        $vision['TeamVision'] = $this->attachImgUrl($vision['TeamVision'], 'TeamVision');
                     }
                 }
                 return $res;
@@ -130,17 +130,23 @@ class TeamVision extends AppModel
             'conditions' => [
                 'team_id'    => $team_id,
                 'active_flg' => $active_flg
-            ]
+            ],
+            'contain'    => ['Team'],
         ];
-        $res = $this->find('all', $options);
+        $visions = $this->find('all', $options);
 
         if ($is_default) {
-            Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
+            Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $visions, 'team_info');
         }
-        if ($with_img) {
-            foreach ($res as &$v) {
-                $v['TeamVision'] = $this->attachImgUrl($v['TeamVision'], 'TeamVision');
+
+        $res = [];
+        foreach ($visions as $vision) {
+            if ($with_img) {
+                $vision['TeamVision'] = $this->attachImgUrl($vision['TeamVision'], 'TeamVision');
             }
+            $v = $vision['TeamVision'];
+            $v['team'] = $vision['Team'];
+            $res[] = $v;
         }
         return $res;
     }
