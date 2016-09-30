@@ -24,12 +24,11 @@ class GoalApprovalService extends AppService
     {
         $Collaborator = ClassRegistry::init("Collaborator");
         // Redisのキャッシュデータ取得
-        $count = Cache::read($Collaborator->getCacheKey(CACHE_UNAPPROVED_GOAL_COUNT, true), 'user_data');
+        $count = Cache::read($Collaborator->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         // Redisから無ければDBから取得してRedisに保存
         if ($count === false) {
             $count = $Collaborator->countUnapprovedGoal($userId);
-            Cache::set('duration', 60 * 1, 'user_data');//1 minute
-            Cache::write($Collaborator->getCacheKey(CACHE_UNAPPROVED_GOAL_COUNT, true), $count, 'user_data');
+            Cache::write($Collaborator->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), $count, 'user_data');
         }
         return $count;
     }
@@ -107,6 +106,7 @@ class GoalApprovalService extends AppService
      * @param  array|integer $userIds integerで渡ってきたら内部で配列に変換
      * @return array $deletedCacheUserIds
      */
+
     function deleteUnapprovedCountCache($userIds)
     {
         $Goal = ClassRegistry::init("Goal");
