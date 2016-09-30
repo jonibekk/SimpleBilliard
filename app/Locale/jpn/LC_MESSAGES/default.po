@@ -6853,15 +6853,6 @@ msgstr "passwordSameCheck"
 msgid "imageMinWidthHeight"
 msgstr ""
 
-#~ msgid "Add by pressing the Enter."
-#~ msgstr "Enterを押すとラベルが追加されます。"
-
-#~ msgid "You can save maximum 5 labels"
-#~ msgstr "ラベルは最大5個まで登録可能です"
-
-#~ msgid "You can save maximum %d labels"
-#~ msgstr "ラベルは最大%d個まで登録可能です"
-
 #~ msgid "Commented"
 #~ msgstr "コメントしました"
 
