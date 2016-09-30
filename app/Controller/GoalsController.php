@@ -75,12 +75,6 @@ class GoalsController extends AppController
         if (!in_array($type, ['list', 'detail'])) {
             throw new NotFoundException();
         }
-        // TODO: モーダルでコラボを編集した際にはdetailページにリダイレクトされるため
-        //       一時的にdetailページにアクセスされた場合はlistにリダイレクトさせる
-        //       Reactでコラボ編集が実装されたらlist, detailのアクセスを許可する
-        if ($type === 'detail') {
-            $this->redirect("/goals/approval/list");
-        }
         return $this->render("approval");
     }
 
