@@ -28,6 +28,7 @@ export default class DetailComponent extends React.Component {
     }
 
     const detail = this.props.detail
+    const page_title = detail.collaborator.is_mine ? __("Goal details") : __("Set as a target for evaluation?")
     const coachee_footer = (() => {
       return <CoacheeFooter validationErrors={ detail.validationErrors }
                             is_leader={ detail.collaborator.is_leader }
@@ -44,7 +45,7 @@ export default class DetailComponent extends React.Component {
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
-          <h1 className="goals-approval-heading">{__("Set as a target for evaluation?")}</h1>
+          <h1 className="goals-approval-heading">{ page_title }</h1>
           <div className="goals-approval-detail">
               <UserCard collaborator={ detail.collaborator } />
               <GoalCard goal={ detail.collaborator.goal }

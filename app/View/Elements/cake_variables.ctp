@@ -499,7 +499,8 @@
             "Reapply": "<?=__("Reapply")?>",
             "Evaluated": "<?=__("Evaluated")?>",
             "Not Evaluated": "<?=__("Not Evaluated")?>",
-            "Waiting": "<?=__("Waiting")?>"
+            "Waiting": "<?=__("Waiting")?>",
+            "Goal details": "<?= __("Goal details") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,

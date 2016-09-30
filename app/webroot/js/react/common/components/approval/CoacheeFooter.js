@@ -28,7 +28,7 @@ export class CoacheeFooter extends React.Component {
                className="btn goals-approval-btn-fullsize-active modal-ajax-get-collabo"
                ref="collabo_link">{ __('Edit Role') }</a>
           }
-          <Link to="/goals/approval/list" className="btn goals-approval-btn-cancel">Back</Link>
+          <Link to="/goals/approval/list" className="btn goals-approval-btn-cancel">{ __("Back") }</Link>
       </div>
     )
   }
