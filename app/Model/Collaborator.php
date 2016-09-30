@@ -772,7 +772,9 @@ class Collaborator extends AppModel
                         'ApprovalHistory.id',
                         'ApprovalHistory.collaborator_id',
                         'ApprovalHistory.user_id',
-                        'ApprovalHistory.comment'
+                        'ApprovalHistory.comment',
+                        'ApprovalHistory.select_clear_status',
+                        'ApprovalHistory.select_important_status'
                     ],
                     'User' => [
                         'fields' => $this->User->profileFields
