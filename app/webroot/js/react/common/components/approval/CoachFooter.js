@@ -85,10 +85,12 @@ export class CoachFooter extends React.Component {
               <div className="goals-approval-detail-choice">
                   { this.props.posting_set_as_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_set_as_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
+                          disabled={`${!can_submit_set_as_target ? "disabled" : ""}`}
                           type="submit"
                           onClick={ this.handleSubmitSetAsTarget.bind(this) }>{__("Yes")}</button>
                   { this.props.posting_remove_from_target ? loading_image() : '' }
                   <button className={`btn ${can_submit_remove_from_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
+                          disabled={`${!can_submit_remove_from_target ? "disabled" : ""}`}
                           type="submit"
                           onClick={ this.handleSubmitRemoveFromTarget.bind(this) }>{__("No")}</button>
                   <Link to="/goals/approval/list" className="btn goals-approval-btn-cancel">{__("Cancel")}</Link>
