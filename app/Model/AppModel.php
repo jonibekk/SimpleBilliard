@@ -1,16 +1,16 @@
 <?php
 App::uses('Model', 'Model');
 App::uses('Sanitize', 'Utility');
-
 /**
  * Application model for Cake.
  * Add your application-wide methods in the class below, your models
  * will inherit them.
  *
  * @package       app.Model
- * @method findById()
- * @method findByUserId()
- * @method findByEmail()
+ * @method findById($id)
+ * @method findByUserId($id)
+ * @method findByEmail($email)
+ * @method findByName($name)
  */
 class AppModel extends Model
 {
@@ -478,6 +478,61 @@ class AppModel extends Model
             }
         }
         return $concat_msg;
+    }
+
+    /**
+     * TODO:モデルで行う処理では無いので将来的に他の適切な場所に移行すること
+     * 画像のurlを取得
+     * - パラメタ $photoStyles は取得するサムネイルの名前を指定。Uploadビヘイビアで設定済みのものが有効。指定しない場合はすべて取得する.
+     * - パラメタ $photoStylesで存在しないスタイルを指定された場合はスキップ。
+     *
+     * @param array  $data
+     * @param string $modelName
+     * @param array  $photoStyles
+     *
+     * @return array
+     */
+    function attachImgUrl($data, $modelName, $photoStyles = [])
+    {
+        $upload = new UploadHelper(new View());
+        $defaultStyles = array_keys($this->actsAs['Upload']['photo']['styles']);
+        if (empty($photoStyles)) {
+            $photoStyles = $defaultStyles;
+            $photoStyles[] = 'original';
+        }
+        foreach ($photoStyles as $style) {
+            if ($style != 'original' && !in_array($style, $defaultStyles)) {
+                continue;
+            }
+            $data["{$style}_img_url"] = $upload->uploadUrl($data,
+                "$modelName.photo",
+                ['style' => $style]);
+        }
+        return $data;
+    }
+
+    /**
+     * バリデーションメッセージの展開
+     * key:valueの形にして1フィールド1メッセージにする
+     * TODO: 将来的にはService基底クラスに移行する
+     *
+     * @param $validationErrors
+     *
+     * @return array
+     */
+    function _validationExtract($validationErrors)
+    {
+        $res = [];
+        if (empty($validationErrors)) {
+            return $res;
+        }
+        if ($validationErrors === true) {
+            return $res;
+        }
+        foreach ($validationErrors as $k => $v) {
+            $res[$k] = $v[0];
+        }
+        return $res;
     }
 
 }

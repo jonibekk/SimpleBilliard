@@ -1,55 +1,46 @@
 import gulp from 'gulp'
 import config from '../config.js'
-import duration from 'gulp-duration'
-import runSequence from 'run-sequence'
 
-gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch'])
+gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch', 'react_goal_create:watch', 'react_goal_edit:watch', 'react_goal_approval:watch'])
 
 gulp.task('js:watch', () => {
-  var watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
+  const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
+
   watcher.on('change', event => {
+    /* eslint-disable no-console */
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+    /* eslint-enable no-console */
   })
 })
-
-// gulp.task('js_vendor:watch', () => {
-//   var watcher = gulp.watch(config.js_vendor.watch_files, ['js_vendor'])
-//   watcher.on('change', event => {
-//     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-//   })
-// })
 
 gulp.task('angular_app:watch', () => {
-  var watcher = gulp.watch(config.angular_app.watch_files, ['angular_app'])
+  const watcher = gulp.watch(config.angular_app.watch_files, ['angular_app'])
+
   watcher.on('change', event => {
+    /* eslint-disable no-console */
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+    /* eslint-enable no-console */
   })
 })
 
-// gulp.task('angular_vendor:watch', () => {
-//   var watcher = gulp.watch(config.angular_vendor.watch_files, ['angular_vendor'])
-//   watcher.on('change', event => {
-//     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-//   })
-// })
+config.react_apps.map((app_name) => {
+  gulp.task(`${app_name}:watch`, () => {
+    const  watcher = gulp.watch(config[app_name].watch_files, [app_name])
 
-gulp.task('react_setup:watch', () => {
-  var watcher = gulp.watch(config.react_setup.watch_files, ['react_setup'])
-  watcher.on('change', event => {
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-  })
-})
-
-gulp.task('react_signup:watch', () => {
-  var watcher = gulp.watch(config.react_signup.watch_files, ['react_signup'])
-  watcher.on('change', event => {
-    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+    watcher.on('change', event => {
+      /* eslint-disable no-console */
+      console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+      /* eslint-enable no-console */
+    })
   })
 })
 
 gulp.task('css:watch', () => {
-  var watcher = gulp.watch([...config.css.watch_files, ...config.less.watch_files], ['css'])
+  const watcher = gulp.watch([...config.css.watch_files, ...config.less.watch_files], ['css'])
+
   watcher.on('change', event => {
+    /* eslint-disable no-console */
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+    /* eslint-enable no-console */
   })
 })

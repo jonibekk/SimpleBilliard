@@ -19,7 +19,7 @@ class KeyResultTest extends GoalousTestCase
         'app.evaluate_term',
         'app.key_result',
         'app.goal',
-        'app.purpose',
+
         'app.goal_category',
         'app.collaborator',
         'app.user',
@@ -115,11 +115,13 @@ class KeyResultTest extends GoalousTestCase
     {
         $this->setDefault();
         $goal = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'user_id'          => 1,
+            'team_id'          => 1,
+            'name'             => 'test',
+            'start_date'       => time(),
+            'end_date'         => time(),
+            'goal_category_id' => 1,
+
         ];
         $this->KeyResult->Goal->create();
         $this->KeyResult->Goal->save($goal);
@@ -132,12 +134,15 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Goal->Collaborator->create();
         $this->KeyResult->Goal->Collaborator->save($collabo);
         $kr = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'name'       => 'test',
-            'goal_id'    => $goal_id,
-            'start_date' => time(),
-            'end_date'   => time(),
+            'user_id'      => 1,
+            'team_id'      => 1,
+            'name'         => 'test',
+            'goal_id'      => $goal_id,
+            'start_date'   => time(),
+            'end_date'     => time(),
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
@@ -149,11 +154,15 @@ class KeyResultTest extends GoalousTestCase
         $this->assertFalse($res, "存在しないKR");
 
         $kr = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'goal_id'    => 9999999,
-            'start_date' => time(),
-            'end_date'   => time(),
+            'user_id'      => 1,
+            'team_id'      => 1,
+            'goal_id'      => 9999999,
+            'name'         => 'test',
+            'start_date'   => time(),
+            'end_date'     => time(),
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
@@ -178,12 +187,15 @@ class KeyResultTest extends GoalousTestCase
 
         $data = [
             'KeyResult' => [
-                'user_id'    => 1,
-                'team_id'    => 1,
-                'goal_id'    => 8,
-                'value_unit' => KeyResult::UNIT_BINARY,
-                'start_date' => '2015/7/7',
-                'end_date'   => '2015/10/7',
+                'user_id'      => 1,
+                'team_id'      => 1,
+                'name'         => 'test',
+                'goal_id'      => 8,
+                'value_unit'   => KeyResult::UNIT_BINARY,
+                'start_date'   => '2015/7/7',
+                'end_date'     => '2015/10/7',
+                'start_value'  => 0,
+                'target_value' => 100,
             ]
         ];
         $res = $this->KeyResult->saveEdit($data);
@@ -246,17 +258,23 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->saveAll(
             [
                 [
-                    'goal_id' => $goal_id,
-                    'team_id' => $team_id,
-                    'user_id' => $user_id,
-                    'name'    => 'test1'
+                    'goal_id'      => $goal_id,
+                    'team_id'      => $team_id,
+                    'user_id'      => $user_id,
+                    'name'         => 'test1',
+                    'value_unit'   => 1,
+                    'start_value'  => 0,
+                    'target_value' => 100,
                 ],
                 [
-                    'goal_id'   => $goal_id,
-                    'team_id'   => $team_id,
-                    'user_id'   => $user_id,
-                    'name'      => 'test2',
-                    'completed' => time(),
+                    'goal_id'      => $goal_id,
+                    'team_id'      => $team_id,
+                    'user_id'      => $user_id,
+                    'name'         => 'test2',
+                    'completed'    => time(),
+                    'value_unit'   => 1,
+                    'start_value'  => 0,
+                    'target_value' => 100,
                 ],
             ]
         );
@@ -281,10 +299,13 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->ActionResult->deleteAll(['ActionResult.user_id' => 1], false);
         $this->KeyResult->deleteAll(['KeyResult.user_id' => 1], false);
         $data_kr = [
-            'name'    => 'test_kr',
-            'goal_id' => 1,
-            'user_id' => 1,
-            'team_id' => 1,
+            'name'         => 'test_kr',
+            'goal_id'      => 1,
+            'user_id'      => 1,
+            'team_id'      => 1,
+            'value_unit'   => 1,
+            'start_value'  => 0,
+            'target_value' => 100,
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($data_kr);

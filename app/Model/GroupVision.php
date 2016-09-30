@@ -131,6 +131,38 @@ class GroupVision extends AppModel
     }
 
     /**
+     * @param bool $with_img
+     *
+     * @return array|null
+     */
+    function getMyGroupVision($with_img = false)
+    {
+        $model = $this;
+        $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
+            function () use ($model) {
+                $my_group_list = $model->Group->MemberGroup->getMyGroupList();
+                $group_visions = $model->getGroupVisionsByGroupIds(array_keys($my_group_list));
+                foreach ($group_visions as $k => $v) {
+                    if (isset($my_group_list[$v['GroupVision']['group_id']])) {
+                        $group_visions[$k]['GroupVision']['target_name'] = $my_group_list[$v['GroupVision']['group_id']];
+                    } else {
+                        $group_visions[$k]['GroupVision']['target_name'] = null;
+                    }
+                }
+                return $group_visions;
+            }, 'team_info');
+        $group_visions = Hash::insert($group_visions, '{n}.GroupVision.model', 'GroupVision');
+        if ($with_img) {
+            foreach ($group_visions as &$group_vision) {
+                $group_vision['GroupVision'] = $this->attachImgUrl($group_vision['GroupVision'], 'GroupVision');
+            }
+
+        }
+        $group_visions = Hash::extract($group_visions, '{n}.GroupVision');
+        return $group_visions;
+    }
+
+    /**
      * グループIDからアクティブなグループビジョンを取得
      *
      * @param      $group_ids

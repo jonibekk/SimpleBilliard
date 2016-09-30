@@ -48,12 +48,30 @@ if (!isset($with_header_menu)) {
     <?= $this->Html->script('/compiled_assets/js/react_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for setup -->
+
 <!-- START import react code for signup -->
 <?php if(viaIsSet($this->request->params['controller']) === 'signup' && viaIsSet($this->request->params['action']) !== 'email'): ?>
 <?= $this->Html->script('/compiled_assets/js/react_signup_app.min')?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
+<!-- START import react code for goal create -->
+<?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'create'): ?>
+<?= $this->Html->script('/compiled_assets/js/react_goal_create_app.min')?>
+<?php endif; ?>
+<!-- END import react code for signup -->
+
+<!-- START import react code for goal edit -->
+<?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'edit'): ?>
+<?= $this->Html->script('/compiled_assets/js/react_goal_edit_app.min')?>
+<?php endif; ?>
+<!-- END import react code for signup -->
+
+<!-- START import react code for goal approval -->
+<?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'approval'): ?>
+<?= $this->Html->script('/compiled_assets/js/react_goal_approval_app.min')?>
+<?php endif; ?>
+<!-- END import react code for signup -->
 
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>

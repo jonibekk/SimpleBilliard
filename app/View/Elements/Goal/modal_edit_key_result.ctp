@@ -32,11 +32,6 @@
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
                 </li>
                 <li>
-                    <i class="fa fa-bullseye"></i>
-                    <?= h($goal['Goal']['target_value']) ?>
-                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
-                </li>
-                <li>
                     <i class="fa fa-calendar"></i>
                     <?= date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
                     (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?> - )

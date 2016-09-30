@@ -18,27 +18,10 @@ class SendMailTest extends GoalousTestCase
         'app.local_name',
         'app.send_mail',
         'app.send_mail_to_user',
-
         'app.team',
         'app.user',
         'app.notify_setting',
         'app.email',
-        'app.badge',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_like',
-        'app.post_mention',
-        'app.post_read',
-        'app.comment_read',
-
-        'app.oauth_token',
-        'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.invite',
     );
 
     /**

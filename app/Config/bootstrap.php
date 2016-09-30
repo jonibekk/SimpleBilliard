@@ -10,11 +10,6 @@
  * @package       app.Config
  * @since         CakePHP(tm) v 0.10.8.2117
  */
-Cache::config('default', array(
-        'engine' => 'Apc',
-    )
-);
-
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
  * App::build(array(
@@ -38,7 +33,6 @@ Cache::config('default', array(
  *     'Plugin'                    => array('/path/to/plugins/', '/next/path/to/plugins/'),
  * ));
  */
-
 /**
  * Custom Inflector rules can be set to correctly pluralize or singularize table, model, controller names or whatever other
  * string is passed to the inflection functions
@@ -79,6 +73,7 @@ Configure::write('Dispatcher.filters', array(
     'AssetDispatcher',
     'CacheDispatcher'
 ));
+
 //slack setting
 Configure::write('Slack', [
     'token'      => LOG_SLACK_TOKEN,
@@ -104,19 +99,36 @@ CakeLog::config('error', array(
 
 Configure::write('Asset.timestamp', 'force');
 
-App::build(array(
-        'Vendor' => array(
+App::build([
+        'Vendor' => [
             ROOT . '/Vendor/',
-        ),
-        'Plugin' => array(
+        ],
+        'Plugin' => [
             ROOT . '/Plugin/',
-        ),
-    )
+        ],
+    ]
 );
+//重複するコントローラを共存させる
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+    App::build([
+        'Controller' => [
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS . 'Api' . DS . strtoupper($matches[1]) . DS,
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS,
+        ],
+    ]);
+}
+
+// サービス層
+App::build([
+    'Service' => ['%s' . 'Service' . DS]
+], App::REGISTER);
+
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
 CakePlugin::load('UrlCache');
 Configure::write('UrlCache.active', true);
+
+Configure::load("app.php");
 
 /**
  * Goalous独自定数
@@ -152,7 +164,7 @@ define('SELECT2_QUERY_LIMIT', 200);
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
 // timestamp before 1hr
-define('REQUEST_TIMESTAMP_ONE_HR_AGO', time()-3600);
+define('REQUEST_TIMESTAMP_ONE_HR_AGO', time() - 3600);
 //右カラム各要素の表示数
 define('MY_GOALS_DISPLAY_NUMBER', 5);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 5);
@@ -203,6 +215,8 @@ define('CACHE_KEY_GROUP_VISION', 'group_vision');
 define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
+define('CACHE_KEY_LABEL', 'label');
+define('CACHE_UNAPPROVED_GOAL_COUNT', 'unapproved_goal_count');
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');
 define('REFERER_STATUS_LOGIN', '?st=in');

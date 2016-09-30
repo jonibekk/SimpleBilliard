@@ -138,7 +138,10 @@ class TeamsController extends AppController
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
-        $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
+        $goal_categories = [
+            'GoalCategory' => Hash::extract($this->Goal->GoalCategory->getCategories(), '{n}.GoalCategory')
+        ];
+
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
@@ -408,7 +411,7 @@ class TeamsController extends AppController
     public function invite()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->set('with_header_menu',false);
+        $this->set('with_header_menu', false);
 
         $from_setting = false;
         if (strstr($this->referer(), "/settings")) {
@@ -922,7 +925,7 @@ class TeamsController extends AppController
         $invite_data = $this->Team->Invite->findById($invite_id);
 
         // if already joined throw error, already exists
-        if ($invite_data['Invite']['email_verified'] ) {
+        if ($invite_data['Invite']['email_verified']) {
             $error_msg = (__("Error, this user already exists."));
             $res['title'] = $error_msg;
             $res['error'] = true;

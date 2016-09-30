@@ -19,7 +19,7 @@ class PagesControllerTest extends GoalousControllerTestCase
         'app.evaluation',
         'app.evaluate_term',
         'app.action_result',
-        'app.purpose',
+
         'app.local_name',
         'app.follower',
         'app.cake_session',

@@ -17,7 +17,6 @@ class UserTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.evaluator',
         'app.local_name',
         'app.user',
         'app.team',
@@ -1031,10 +1030,11 @@ class UserTest extends GoalousTestCase
 
         // In case that profile register is complete
         $this->User->save(['id' => 1, 'photo_file_name' => 'photo_file_name.png']);
-        $this->User->TeamMember->save(['id'      => 1,
-                                       'team_id' => 1,
-                                       'user_id' => 1,
-                                       'comment' => 'This is amazing comment'
+        $this->User->TeamMember->save([
+            'id'      => 1,
+            'team_id' => 1,
+            'user_id' => 1,
+            'comment' => 'This is amazing comment'
         ]);
         $res = $this->User->isCompletedProfileForSetup($this->User->my_uid);
         $this->assertTrue($res);
@@ -1057,6 +1057,7 @@ class UserTest extends GoalousTestCase
         $this->User->TeamMember->Team->my_uid = 1;
         $this->User->LocalName->my_uid = 1;
         $this->User->LocalName->current_team_id = 1;
+        $this->User->TeamMember->Team->EvaluateTerm->current_team_id = 1;
         $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);

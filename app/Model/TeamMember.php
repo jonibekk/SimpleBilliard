@@ -2303,6 +2303,9 @@ class TeamMember extends AppModel
      */
     function getCoachUserIdByMemberUserId($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
@@ -2325,6 +2328,9 @@ class TeamMember extends AppModel
      */
     function getMyMembersList($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: user_id
         // 条件: coach_user_id = パラメータ1 team_id = パラメータ2
@@ -2407,7 +2413,7 @@ class TeamMember extends AppModel
 
     /**
      * Param1のユーザーは評価対象の人なのか
-     *
+     * TODO:チームIDは$this->current_team_idを使用すること
      * @param $user_id
      * @param $team_id
      *
@@ -2435,8 +2441,9 @@ class TeamMember extends AppModel
         return $evaluation_flg;
     }
 
-    function getCoachId($user_id, $team_id)
+    function getCoachId($user_id, $team_id = null)
     {
+        $team_id = empty($team_id) ? $this->current_team_id : $team_id;
         $options = [
             'conditions' => [
                 'TeamMember.user_id' => $user_id,

@@ -61,24 +61,26 @@ class NotifyBizComponent extends Component
 
     public function initialize(Controller $controller)
     {
-        $this->startup($controller);
         $this->Controller = $controller;
+        $this->NotifySetting = ClassRegistry::init('NotifySetting');
+        $this->Post = ClassRegistry::init('Post');
+        $this->Comment = ClassRegistry::init('Comment');
+        $this->Goal = ClassRegistry::init('Goal');
+        $this->Team = ClassRegistry::init('Team');
+        $this->Device = ClassRegistry::init('Device');
+        $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->initialized = true;
     }
 
     public function startup(Controller $controller)
     {
-        if (!$this->initialized) {
+        if (!CakeSession::started()) {
             CakeSession::start();
-            $this->NotifySetting = ClassRegistry::init('NotifySetting');
-            $this->Post = ClassRegistry::init('Post');
-            $this->Comment = ClassRegistry::init('Comment');
-            $this->Goal = ClassRegistry::init('Goal');
-            $this->Team = ClassRegistry::init('Team');
-            $this->Device = ClassRegistry::init('Device');
-            $this->GlRedis = ClassRegistry::init('GlRedis');
-            $this->GlEmail->startup($controller);
         }
+        if (!$this->initialized) {
+            $this->initialize($controller);
+        }
+        $this->GlEmail->startup($controller);
     }
 
     /**
@@ -164,13 +166,16 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL:
+            case NotifySetting::TYPE_COACHEE_CREATE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+            case NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL:
+            case NotifySetting::TYPE_COACHEE_CHANGE_ROLE:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_EVALUATION_START:
@@ -774,10 +779,17 @@ class NotifyBizComponent extends Component
      */
     private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
     {
-        $goal = $this->Goal->getGoal($goal_id);
+        $goal = $this->Goal->getGoal($goal_id, $to_user_id);
+
         if (empty($goal)) {
             return;
         }
+        $collaborator = Hash::get($goal, 'MyCollabo.0') ?
+            Hash::get($goal, 'MyCollabo.0') : Hash::get($goal, 'Leader.0');
+        if (empty($collaborator)) {
+            return;
+        }
+
         //inactive user
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
@@ -785,22 +797,14 @@ class NotifyBizComponent extends Component
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
-        $done_list = [
-            NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
-            NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
-        ];
-        $action = in_array($notify_type, $done_list) ? "done" : "index";
-        $go_to_goal = [
-            NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL
-        ];
-        if (in_array($notify_type, $go_to_goal)) {
-            $url = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $collaborator['id']];
+
+        //認定希望していないゴールはゴール詳細へ
+        if (!$collaborator['is_wish_approval']) {
+            $url = $url_goal_detail;
         } else {
-            $url = [
-                'controller' => 'goal_approval',
-                'action'     => $action,
-                'team_id'    => $this->NotifySetting->current_team_id
-            ];
+            $url = $url_goal_approval;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
