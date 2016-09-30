@@ -194,13 +194,13 @@ class MixpanelComponent extends Object
             }
 
             $approval_status = [
-                Collaborator::STATUS_UNAPPROVED => "Pending approval",
-                Collaborator::STATUS_APPROVAL   => "Evaluable",
-                Collaborator::STATUS_HOLD       => "Not evaluable",
-                Collaborator::STATUS_MODIFY     => "Pending modification",
+                Collaborator::APPROVAL_STATUS_NEW           => "Pending approval",
+                Collaborator::APPROVAL_STATUS_REAPPLICATION => "Evaluable",
+                Collaborator::APPROVAL_STATUS_DONE          => "Not evaluable",
+                Collaborator::APPROVAL_STATUS_WITHDRAW      => "Pending modification",
             ];
-            if (isset($collabo['Collaborator']['valued_flg'])) {
-                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
+            if (isset($collabo['Collaborator']['approval_status'])) {
+                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['approval_status']];
             }
         }
         if ($kr_id) {

@@ -318,6 +318,7 @@ date_default_timezone_set('UTC');
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.
  */
+
 if (REDIS_CACHE_HOST) {
     $engine = 'Redis';
 } else {
@@ -343,12 +344,16 @@ if (REDIS_CACHE_HOST) {
     $server = REDIS_CACHE_HOST;
     $port = 6379;
 }
+
+$core_cache_prefix = $prefix . 'cake_core:';
+//重複するコントローラを共存させる
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+    $core_cache_prefix = $prefix . 'cake_core_api_' . $matches[1] . ':';
+}
 Cache::config('_cake_core_', array(
-    'engine'    => 'Apc',
-    'prefix'    => $prefix . 'cake_core:',
-    'path'      => CACHE . 'persistent' . DS,
-    'serialize' => ($engine === 'File'),
-    'duration'  => $duration
+    'engine'   => 'Apc',
+    'prefix'   => $core_cache_prefix,
+    'duration' => $duration
 ));
 
 /**

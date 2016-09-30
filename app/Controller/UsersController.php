@@ -24,46 +24,10 @@ class UsersController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->_setupAuth();
-    }
-
-    /**
-     * Setup Authentication Component
-     *
-     * @return void
-     */
-    protected function _setupAuth()
-    {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
             'accept_invite', 'register_with_invite', 'registration_with_set_password', 'two_fa_auth',
             'two_fa_auth_recovery',
             'add_subscribe_email', 'ajax_validate_email');
-
-        $this->Auth->authenticate = array(
-            'Form2' => array(
-                'fields'    => array(
-                    'username' => 'email',
-                    'password' => 'password'
-                ),
-                'userModel' => 'User',
-                'scope'     => array(
-                    'User.active_flg'             => 1,
-                    'PrimaryEmail.email_verified' => 1
-                ),
-                'recursive' => 0,
-            )
-        );
-        $st_login = REFERER_STATUS_LOGIN;
-        $this->Auth->loginRedirect = "/{$st_login}";
-        $this->Auth->logoutRedirect = array(
-            'controller' => 'users',
-            'action'     => 'login'
-        );
-        $this->Auth->loginAction = array(
-            'admin'      => false,
-            'controller' => 'users',
-            'action'     => 'login'
-        );
     }
 
     /**
