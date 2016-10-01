@@ -37,7 +37,7 @@ export class GoalCard extends React.Component {
                       <h2 className="goals-approval-detail-tkrtitle"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                       <ul className="goals-approval-detail-tkrlist">
                           <li>{ inputData.key_result.name }</li>
-                          <li>{ Math.round(inputData.key_result.start_value) } -> { Math.round(inputData.key_result.target_value) } {unitLabel}</li>
+                          <li>{ inputData.key_result.start_value } -> { inputData.key_result.target_value } {unitLabel}</li>
                           <li>{ nl2br(inputData.key_result.description) }</li>
                       </ul>
                   </div>
