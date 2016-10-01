@@ -192,14 +192,14 @@ class BaseController extends Controller
      * @param $goal_id
      * @param $notify_type
      */
-    function _sendNotifyToCoach($goal_id, $notify_type)
+    function _sendNotifyToCoach($model_id, $notify_type)
     {
         $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
-            $this->Session->read('current_team_id'));
+        $this->Session->read('current_team_id'));
         if (!$coach_id) {
             return;
         }
-        $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
+        $this->NotifyBiz->execSendNotify($notify_type, $model_id, null, $coach_id);
     }
 
     /**
@@ -211,7 +211,7 @@ class BaseController extends Controller
     function _sendNotifyToCoachee($collaboratorId, $notifyType)
     {
         $collaborator = $this->Goal->Collaborator->findById($collaboratorId);
-        if (!viaIsSet($collaborator['Collaborator'])) {
+        if (!Hash::get($collaborator, 'Collaborator')) {
             return;
         }
         $this->NotifyBiz->execSendNotify($notifyType,
