@@ -755,6 +755,13 @@ class NotifyBizComponent extends Component
         $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
         unset($collaborators[$user_id]);
+        //exclude coach
+        $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
+        $coachEvaluateIsEvabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id, $this->NotifySetting->current_team_id);
+        $coachId = $this->Team->TeamMember->getCoachId($user_id);
+        if($teamEvaluateIsEnabled && $coachEvaluateIsEvabled && $coacheId && !empty($collaborators[$coacheId])) {
+            unset($collaborators[$coacheId]);
+        }
         if (empty($collaborators)) {
             return;
         }
