@@ -500,7 +500,8 @@
             "Evaluated": "<?=__("Evaluated")?>",
             "Not Evaluated": "<?=__("Not Evaluated")?>",
             "Waiting": "<?=__("Waiting")?>",
-            "Goal details": "<?= __("Goal details") ?>"
+            "Goal details": "<?= __("Goal details") ?>",
+            "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
