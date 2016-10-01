@@ -133,20 +133,16 @@ class TeamVision extends AppModel
             ],
             'contain'    => ['Team'],
         ];
-        $visions = $this->find('all', $options);
+        $res = $this->find('all', $options);
 
         if ($is_default) {
-            Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $visions, 'team_info');
+            Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
         }
 
-        $res = [];
-        foreach ($visions as $vision) {
-            if ($with_img) {
-                $vision['TeamVision'] = $this->attachImgUrl($vision['TeamVision'], 'TeamVision');
+        if ($with_img) {
+            foreach ($res as &$v) {
+                $v['TeamVision'] = $this->attachImgUrl($v['TeamVision'], 'TeamVision');
             }
-            $v = $vision['TeamVision'];
-            $v['team'] = $vision['Team'];
-            $res[] = $v;
         }
         return $res;
     }
@@ -160,7 +156,6 @@ class TeamVision extends AppModel
 
     function convertData($data)
     {
-
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
 
