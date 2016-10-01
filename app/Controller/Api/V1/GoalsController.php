@@ -134,11 +134,17 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('visions', $dataTypes)) {
-            $team_visions = Hash::insert(
-                Hash::extract($this->TeamVision->getTeamVision($this->current_team_id, true, true),
-                    '{n}.TeamVision'), '{n}.type', 'team_vision');
-            $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
+            // TODO:サービスに移行
+            $tmp = $this->TeamVision->getTeamVision($this->current_team_id, true, true);
+            $team_visions = [];
+            foreach ($tmp  as $vision) {
+                $v = $vision['TeamVision'];
+                $v['team'] = $vision['Team'];
+                $team_visions[] = $v;
+            }
+            $team_visions = Hash::insert($team_visions, '{n}.type', 'team_vision');
 
+            $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
             $visions = am($group_visions, $team_visions);
             $res['visions'] = $visions;
         }

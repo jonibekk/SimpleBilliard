@@ -52,7 +52,6 @@ export default class DetailComponent extends React.Component {
                         is_leader={ detail.collaborator.is_leader } />
               <Comments approvalHistories={ detail.collaborator.approval_histories } />
               {/* footer */}
-              <h1 className="goals-approval-heading">Check it</h1>
               { detail.collaborator.is_mine ? coachee_footer : coach_footer }
           </div>
       </section>

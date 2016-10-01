@@ -152,14 +152,16 @@ class GroupVision extends AppModel
                 return $group_visions;
             }, 'team_info');
         $group_visions = Hash::insert($group_visions, '{n}.GroupVision.model', 'GroupVision');
-        if ($with_img) {
-            foreach ($group_visions as &$group_vision) {
-                $group_vision['GroupVision'] = $this->attachImgUrl($group_vision['GroupVision'], 'GroupVision');
+        $res = [];
+        foreach ($group_visions as $group_vision) {
+            if ($with_img) {
+                    $group_vision['GroupVision'] = $this->attachImgUrl($group_vision['GroupVision'], 'GroupVision');
             }
-
+            $v = $group_vision['GroupVision'];
+            $v['group'] = $group_vision['Group'];
+            $res[] = $v;
         }
-        $group_visions = Hash::extract($group_visions, '{n}.GroupVision');
-        return $group_visions;
+        return $res;
     }
 
     /**
@@ -174,9 +176,10 @@ class GroupVision extends AppModel
     {
         $options = [
             'conditions' => [
-                'group_id'   => $group_ids,
-                'active_flg' => $active_flg
-            ]
+                'GroupVision.group_id'   => $group_ids,
+                'GroupVision.active_flg' => $active_flg
+            ],
+            'contain' => ['Group']
         ];
         $res = $this->find('all', $options);
         return $res;
