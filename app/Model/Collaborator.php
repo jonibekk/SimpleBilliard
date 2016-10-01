@@ -46,7 +46,7 @@ class Collaborator extends AppModel
     private function _setTypeName()
     {
         self::$TYPE[self::TYPE_COLLABORATOR] = __("Collaborator");
-        self::$TYPE[self::TYPE_OWNER] = __("Owner");
+        self::$TYPE[self::TYPE_OWNER] = __("Leader");
     }
 
     /**
