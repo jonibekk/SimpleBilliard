@@ -477,6 +477,8 @@ class ModifyTkrTables0905 extends CakeMigration
     public function before($direction)
     {
         if ($direction == 'up') {
+            ini_set('memory_limit', '2024M');
+
             /**
              * ゴールをtKRとして保存する。
              * 既存のプライオリティ5のKRは4に変更。
@@ -525,7 +527,7 @@ class ModifyTkrTables0905 extends CakeMigration
                     $save_krs[] = $kr;
                 }
             }
-            $Goal->KeyResult->saveAll($save_krs);
+            $Goal->KeyResult->saveAll($save_krs, ['validate' => false, 'deep' => false]);
         }
         return true;
     }
@@ -559,7 +561,7 @@ class ModifyTkrTables0905 extends CakeMigration
             foreach ($krs as $k => $v) {
                 $krs[$k]['KeyResult']['tkr_flg'] = true;
             }
-            $KeyResult->saveAll($krs);
+            $KeyResult->saveAll($krs, ['validate' => false, 'deep' => false]);
         }
         return true;
     }
