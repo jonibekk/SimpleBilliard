@@ -71,25 +71,31 @@ export class CoachFooter extends React.Component {
     return (
       <div className="goals-approval-detail-choice">
           <form onSubmit={ this.handleSubmit.bind(this) }>
-              <label className="goals-approval-input-label" htmlFor="">{__("Do you think this Top Key Result is clear ?")}</label>
-              <a className={`btn ${this.state.select_clear_status === TopKeyResult.IS_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickClear.bind(this) }>{__("Yes")}</a>
-              <a className={`btn ${this.state.select_clear_status === TopKeyResult.IS_NOT_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotClear.bind(this) }>{__("No")}</a>
+              <div className="goals-approval-detail-choice-block">
+                  <label className="goals-approval-input-label" htmlFor="">{__("Do you think this Top Key Result is clear ?")}</label>
+                  <a className={`btn pull-left ${this.state.select_clear_status === TopKeyResult.IS_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickClear.bind(this) }>{__("Yes")}</a>
+                  <a className={`btn pull-right ${this.state.select_clear_status === TopKeyResult.IS_NOT_CLEAR ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotClear.bind(this) }>{__("No")}</a>
+              </div>
 
-              <label className="goals-approval-input-label" htmlFor="">{__("Do you think this Top Key Result is the most important to achieve the goal?")}</label>
-              <a className={`btn ${this.state.select_important_status === TopKeyResult.IS_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickImportant.bind(this) }>{__("Yes")}</a>
-              <a className={`btn ${this.state.select_important_status === TopKeyResult.IS_NOT_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotImportant.bind(this) }>{__("No")}</a>
+              <div className="goals-approval-detail-choice-block">
+                  <label className="goals-approval-input-label" htmlFor="">{__("Do you think this Top Key Result is the most important to achieve the goal?")}</label>
+                  <a className={`btn pull-left ${this.state.select_important_status === TopKeyResult.IS_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickImportant.bind(this) }>{__("Yes")}</a>
+                  <a className={`btn pull-right ${this.state.select_important_status === TopKeyResult.IS_NOT_IMPORTANT ? 'goals-approval-btn-choiced' : 'goals-approval-btn-choice'}`} htmlFor="" onClick={ this.handleClickNotImportant.bind(this) }>{__("No")}</a>
+              </div>
 
-              <label className="goals-approval-input-label" htmlFor="">{__("Add as a target for evaluation ?")}</label>
-              <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment" id="comment" cols="30" rows="2" placeholder={__("Add your comment (optional)")}></textarea>
-              <InvalidMessageBox message={validation_errors.comment}/>
-              <div className="goals-approval-detail-choice">
+              <div className="goals-approval-detail-choice-block">
+                  <label className="goals-approval-input-label" htmlFor="">{__("Add as a target for evaluation ?")}</label>
+                  <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment" id="comment" cols="30" rows="2" placeholder={__("Add your comment (optional)")}></textarea>
+                  <InvalidMessageBox message={validation_errors.comment}/>
+              </div>
+              <div className="goals-approval-detail-bottom-choice">
                   { this.props.posting_set_as_target ? loading_image() : '' }
-                  <button className={`btn ${can_submit_set_as_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
+                  <button className={`btn pull-left ${can_submit_set_as_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           disabled={`${!can_submit_set_as_target ? "disabled" : ""}`}
                           type="submit"
                           onClick={ this.handleSubmitSetAsTarget.bind(this) }>{__("Yes")}</button>
                   { this.props.posting_remove_from_target ? loading_image() : '' }
-                  <button className={`btn ${can_submit_remove_from_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
+                  <button className={`btn pull-right ${can_submit_remove_from_target ? 'goals-approval-btn-active' : 'goals-approval-btn-nonactive'}`}
                           disabled={`${!can_submit_remove_from_target ? "disabled" : ""}`}
                           type="submit"
                           onClick={ this.handleSubmitRemoveFromTarget.bind(this) }>{__("No")}</button>

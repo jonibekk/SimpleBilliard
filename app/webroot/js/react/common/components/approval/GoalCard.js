@@ -19,7 +19,7 @@ export class GoalCard extends React.Component {
                       <h2 className="goals-approval-detail-tkrtitle"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                       <ul className="goals-approval-detail-tkrlist">
                           <li>{ goal.top_key_result.name }</li>
-                          <li>{ goal.top_key_result.start_value } <i className="fa fa-angle-right" ariaHidden="true"></i> { goal.top_key_result.target_value }</li>
+                          <li>{ Math.round(goal.top_key_result.start_value) } <i className="fa fa-angle-right" ariaHidden="true"></i> { Math.round(goal.top_key_result.target_value) }</li>
                           <li>{ goal.top_key_result.description }</li>
                       </ul>
                   </div>
