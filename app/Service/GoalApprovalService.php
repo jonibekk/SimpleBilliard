@@ -55,6 +55,9 @@ class GoalApprovalService extends AppService
             CollaboratorService::EXTEND_COACHEE,
         ]);
 
+        // 認定履歴に評価者からの評価コメント追加
+        $histories = $this->addClearImportantWordToApprovalHistories($histories, $collaborator['user_id']);
+
         foreach($histories as &$v) {
             $v['user'] = ($v['user_id'] == $collaborator['user_id']) ?
                 $collaborator['coachee'] : $collaborator['coach'];
@@ -158,7 +161,6 @@ class GoalApprovalService extends AppService
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
 
         $res = Hash::extract($resByModel, 'Collaborator');
 
@@ -177,23 +179,7 @@ class GoalApprovalService extends AppService
 
         // 認定履歴の文言を追加
         $collaboratorUserId = $res['user']['id'];
-        $res['approval_histories'] = Hash::map($res, 'approval_histories', function($approvalHistory) use ($collaboratorUserId, $ApprovalHistory) {
-            $clearStatus = $approvalHistory['select_clear_status'];
-            $importantStatus = $approvalHistory['select_important_status'];
-
-            if($approvalHistory['user']['id'] == $collaboratorUserId){
-                $clearAndImportantWord = '';
-            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
-                $clearAndImportantWord = __('This Top Key Result is clear and most important.');
-            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
-                $clearAndImportantWord = __('This Top Key Result is not most important.');
-            } else {
-                $clearAndImportantWord = __('This Top Key Result is not clear.');
-            }
-
-            $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
-            return $approvalHistory;
-        });
+        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'], $collaboratorUserId);
 
         // 画像パス追加
         $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
@@ -281,5 +267,27 @@ class GoalApprovalService extends AppService
         ];
 
         return $saveData;
+    }
+
+    function addClearImportantWordToApprovalHistories($approvalHistories, $collaboratorUserId)
+    {
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        return Hash::map($approvalHistories, '', function($approvalHistory) use ($collaboratorUserId, $ApprovalHistory) {
+            $clearStatus = $approvalHistory['select_clear_status'];
+            $importantStatus = $approvalHistory['select_important_status'];
+
+            if($approvalHistory['user_id'] == $collaboratorUserId){
+                $clearAndImportantWord = '';
+            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
+                $clearAndImportantWord = __('This Top Key Result is clear and most important.');
+            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
+                $clearAndImportantWord = __('This Top Key Result is not most important.');
+            } else {
+                $clearAndImportantWord = __('This Top Key Result is not clear.');
+            }
+
+            $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
+            return $approvalHistory;
+        });
     }
 }
