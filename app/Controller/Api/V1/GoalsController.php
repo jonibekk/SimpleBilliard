@@ -284,10 +284,18 @@ class GoalsController extends ApiController
             return $this->_getResponseInternalServerError();
         }
 
-        //コーチへの通知
-        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
-        //コラボレータへの通知
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
+        // 通知先を決める
+        $coachId = $this->Team->TeamMember->getCoachId($this->Auth->user('id'));
+        $coachIsCollaborator = $this->Goal->Collaborator->isCollaborated($goalId, $coachId);
+
+        if($coachIsCollaborator) {
+            //コーチへ通知
+            $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        } else {
+            //コラボレータへ通知
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
+        }
+
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
 
