@@ -189,7 +189,7 @@ class SendMailShell extends AppShell
             $from_user_names = [];
             if (!empty($from_user_local_names)) {
                 foreach ($from_user_local_names as $local_name) {
-                    if ($data['ToUser']['language'] == $local_name['LocalName']['language']) {
+                    if ($data['ToUser']['language'] == $local_name['LocalName']['language'] && !empty($local_name['LocalName']['first_name'])) {
                         $from_user_names[] = $local_name['LocalName']['first_name'];
                     } else {
                         $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'] : null;
