@@ -186,10 +186,14 @@ class SendMailShell extends AppShell
 
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
+            //送信先ユーザの言語設定と一致した言語のユーザ名を送信元ユーザとしてセット
             $from_user_names = [];
             if (!empty($from_user_local_names)) {
                 foreach ($from_user_local_names as $local_name) {
-                    if ($data['ToUser']['language'] == $local_name['LocalName']['language'] && !empty($local_name['LocalName']['first_name'])) {
+                    //ローカルfirst_nameが空文字の場合(仕様上ありえる)、ローマ字をセット。空文字じゃなければローカルfirst_nameをセット。
+                    if ($data['ToUser']['language'] == $local_name['LocalName']['language']
+                        && Hash::get($local_name, 'LocalName.first_name')
+                    ) {
                         $from_user_names[] = $local_name['LocalName']['first_name'];
                     } else {
                         $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'] : null;
