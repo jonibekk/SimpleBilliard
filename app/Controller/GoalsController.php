@@ -298,6 +298,8 @@ class GoalsController extends AppController
 
         $collaborator = $this->request->data['Collaborator'];
         $collaborator_id = $collaborator_id ? $collaborator_id : $this->Goal->Collaborator->getLastInsertID();
+        $goal = $this->Goal->findById($collaborator['goal_id']);
+        $goal_leader_id = Hash::get($goal, 'Goal.user_id');
 
         //success case.
         $this->Pnotify->outSuccess(__("Start to collaborate."));
@@ -307,16 +309,19 @@ class GoalsController extends AppController
         //mixpanel
         if ($new) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
+            // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
+            if($goal_leader_id != $coach_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
+            }
         }
         if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
         ) {
             if ($new) {
                 //新規の場合
-                $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
+                $this->_sendNotifyToCoach($collaborator_id, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
             } else {
                 //更新の場合
-                $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
+                $this->_sendNotifyToCoach($collaborator_id, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
             }
 
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),

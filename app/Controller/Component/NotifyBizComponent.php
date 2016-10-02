@@ -170,10 +170,10 @@ class NotifyBizComponent extends Component
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_ROLE:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
@@ -755,6 +755,13 @@ class NotifyBizComponent extends Component
         $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
         unset($collaborators[$user_id]);
+        //exclude coach
+        $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
+        $coachEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id, $this->NotifySetting->current_team_id);
+        $coachId = $this->Team->TeamMember->getCoachId($user_id);
+        if($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coacheId && !empty($collaborators[$coacheId])) {
+            unset($collaborators[$coacheId]);
+        }
         if (empty($collaborators)) {
             return;
         }
@@ -809,6 +816,39 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = $goal_id;
+        $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+        $this->notify_option['options']['goal_id'] = $goal_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
+    }
+
+    private function _setCollaboApprovalOption($notify_type, $collaborator_id, $to_user_id)
+    {
+        $collaborator = $this->Goal->Collaborator->findById($collaborator_id);
+        if (empty($collaborator)) {
+            return;
+        }
+
+        $goal_id = $collaborator['Collaborator']['goal_id'];
+
+        //inactive user
+        if (!$this->Team->TeamMember->isActive($to_user_id)) {
+            return;
+        }
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
+
+        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $collaborator_id];
+
+        //認定希望していないゴールはゴール詳細へ
+        if (!$collaborator['Collaborator']['is_wish_approval']) {
+            $url = $url_goal_detail;
+        } else {
+            $url = $url_goal_approval;
+        }
+        $this->notify_option['notify_type'] = $notify_type;
+        $this->notify_option['url_data'] = $url;
+        $this->notify_option['model_id'] = $collaborator_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
