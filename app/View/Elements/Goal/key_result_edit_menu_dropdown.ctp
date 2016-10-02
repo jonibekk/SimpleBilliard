@@ -10,10 +10,12 @@ if (!isset($without_dropdown_link)) {
 if (!isset($incomplete_kr_count)) {
     $incomplete_kr_count = 0;
 }
+$is_tkr = null;
 ?>
 <?php if (isset($kr) && $kr): ?>
     <?php if (isset($kr['KeyResult'])) {
         $kr = $kr['KeyResult'];
+        $is_tkr = Hash::get($kr, 'tkr_flg');
     } ?>
     <?= $this->App->viewStartComment() ?>
     <?php if (!$without_dropdown_link): ?>
@@ -30,7 +32,7 @@ if (!isset($incomplete_kr_count)) {
             <li role="presentation">
                 <?php
                 //TKRの場合はゴール修正ぺージのリンク
-                if ($kr['tkr_flg']) {
+                if ($is_tkr) {
                     $url = "/goals/" . $kr['goal_id'] . "/edit";
                 } else {
                     $url = [
@@ -41,7 +43,7 @@ if (!isset($incomplete_kr_count)) {
                 }
                 ?>
                 <a href="<?= $this->Html->url($url) ?>"
-                   class="<?= !$kr['tkr_flg'] ? "modal-ajax-get-add-key-result" : null //このクラスがある場合はKR編集モーダル  ?>">
+                   class="<?= !$is_tkr ? "modal-ajax-get-add-key-result" : null //このクラスがある場合はKR編集モーダル   ?>">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit Key Result") ?></span></a>
             </li>
         <?php endif ?>
@@ -92,7 +94,7 @@ if (!isset($incomplete_kr_count)) {
             <?php endif; ?>
         </li>
 
-        <?php if (!$kr['completed']): ?>
+        <?php if (!$is_tkr && !$kr['completed']): ?>
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
