@@ -76,7 +76,8 @@ class KeyResult extends AppModel
         'name'         => [
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
-                'rule' => 'notEmpty',
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'del_flg'      => [
@@ -90,33 +91,49 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
+            ],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'start_value'  => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true
+            ],
         ],
         'target_value' => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true
+            ],
         ],
     ];
 
     public $post_validate = [
         'start_date' => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'end_date'   => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
-        ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
     ];
 
     /**
@@ -139,6 +156,27 @@ class KeyResult extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
         $this->_setPriorityName();
+    }
+
+    /**
+     * 単位値必須チェック
+     * 単位が無い場合は値入力が無いのでチェックしない
+     *
+     * @param      $val
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function requiredCaseExistUnit($val)
+    {
+        $val = array_shift($val);
+        if ($this->data['KeyResult']['value_unit'] == self::UNIT_BINARY) {
+            return true;
+        }
+        if ($val === "") {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -294,6 +332,17 @@ class KeyResult extends AppModel
             ],
         ];
         $res = $this->find('count', $options);
+        return $res;
+    }
+
+    function getTkr($goalId)
+    {
+        $res = $this->find('first', [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'tkr_flg' => true,
+            ],
+        ]);
         return $res;
     }
 
@@ -455,6 +504,31 @@ class KeyResult extends AppModel
             return false;
         }
         return $kr['KeyResult']['completed'] ? true : false;
+    }
+
+    /**
+     * - バリデーションルールを切り替える
+     * - 必須チェックを外す(オプション)
+     * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     *
+     * @param      $data
+     * @param bool $detachRequired
+     *
+     * @return array|true
+     */
+    function validateKrPOST($data, $detachRequired = false)
+    {
+        $validationBackup = $this->validate;
+        $this->validate = am($this->validate, $this->post_validate);
+        if ($detachRequired) {
+            $this->validate = Hash::remove($this->validate, '{s}.{s}.required');
+        }
+        $this->set($data);
+        if ($this->validates()) {
+            $this->validate = $validationBackup;
+            return true;
+        }
+        return $this->validationErrors;
     }
 
 }

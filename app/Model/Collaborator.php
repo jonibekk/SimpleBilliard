@@ -21,17 +21,24 @@ class Collaborator extends AppModel
         self::TYPE_OWNER        => "",
     ];
 
-    const STATUS_UNAPPROVED = 0;
-    const STATUS_APPROVAL = 1;
-    const STATUS_HOLD = 2;
-    const STATUS_MODIFY = 3;
+    const APPROVAL_STATUS_NEW = 0;
+    const APPROVAL_STATUS_REAPPLICATION = 1;
+    const APPROVAL_STATUS_DONE = 2;
+    const APPROVAL_STATUS_WITHDRAW = 3;
 
+    // TODO: 中身をセットする処理は未実装。表示文言が決まり次第実装する。
     static public $STATUS = [
-        self::STATUS_UNAPPROVED => "",
-        self::STATUS_APPROVAL   => "",
-        self::STATUS_HOLD       => "",
-        self::STATUS_MODIFY     => "",
+        self::APPROVAL_STATUS_NEW => "",
+        self::APPROVAL_STATUS_REAPPLICATION => "",
+        self::APPROVAL_STATUS_DONE => "",
+        self::APPROVAL_STATUS_WITHDRAW => ""
     ];
+
+    /**
+     * 評価対象判定
+     */
+    const IS_NOT_TARGET_EVALUATION = 0;
+    const IS_TARGET_EVALUATION = 1;
 
     /**
      * タイプの表示名をセット
@@ -39,18 +46,7 @@ class Collaborator extends AppModel
     private function _setTypeName()
     {
         self::$TYPE[self::TYPE_COLLABORATOR] = __("Collaborator");
-        self::$TYPE[self::TYPE_OWNER] = __("Owner");
-    }
-
-    /**
-     * ステータス表示名をセット
-     */
-    private function _setStatusName()
-    {
-        self::$STATUS[self::STATUS_UNAPPROVED] = __("Waiting for approval");
-        self::$STATUS[self::STATUS_APPROVAL] = __("In Evaluation");
-        self::$STATUS[self::STATUS_HOLD] = __("Out of Evaluation");
-        self::$STATUS[self::STATUS_MODIFY] = __("Waiting for modified");
+        self::$TYPE[self::TYPE_OWNER] = __("Leader");
     }
 
     /**
@@ -93,7 +89,6 @@ class Collaborator extends AppModel
     public $belongsTo = [
         'Team',
         'Goal',
-        'GoalCategory',
         'User',
     ];
 
@@ -105,7 +100,6 @@ class Collaborator extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
-        $this->_setStatusName();
     }
 
     function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)
@@ -169,7 +163,7 @@ class Collaborator extends AppModel
             unset($options['conditions']['type']);
         }
         if ($approval_status) {
-            $options['conditions']['valued_flg'] = $approval_status;
+            $options['conditions']['approval_status'] = $approval_status;
         }
         $res = $this->find('list', $options);
 
@@ -180,8 +174,15 @@ class Collaborator extends AppModel
     }
 
     // for getting incomplete goal ids for collaborator right column
-    function getIncompleteCollaboGoalIds($user_id, $start_date, $end_date, $limit = null, $page = 1, $with_owner = false, $approval_status = null)
-    {
+    function getIncompleteCollaboGoalIds(
+        $user_id,
+        $start_date,
+        $end_date,
+        $limit = null,
+        $page = 1,
+        $with_owner = false,
+        $approval_status = null
+    ) {
         $is_default = false;
         if ($user_id == $this->my_uid && $with_owner === true && $limit === null && $page === 1 && $approval_status === null) {
             $is_default = true;
@@ -191,16 +192,16 @@ class Collaborator extends AppModel
             }
         }
         $options = [
-            'joins' => [
+            'joins'      => [
                 [
-                    'table' => 'goals',
-                    'alias' => 'Goal',
-                    'type' => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
                     'conditions' => [
                         'Goal.id = Collaborator.goal_id',
                         'Goal.end_date >=' => $start_date,
                         'Goal.end_date <=' => $end_date,
-                        'Goal.completed' => null,
+                        'Goal.completed'   => null,
                     ]
                 ]
             ],
@@ -215,7 +216,7 @@ class Collaborator extends AppModel
                 'goal_id',
                 'goal_id'
             ],
-            'order' => [
+            'order'      => [
                 'Collaborator.priority DESC'
             ],
             'page'       => $page,
@@ -225,7 +226,7 @@ class Collaborator extends AppModel
             unset($options['conditions']['type']);
         }
         if ($approval_status) {
-            $options['conditions']['valued_flg'] = $approval_status;
+            $options['conditions']['approval_status'] = $approval_status;
         }
         $res = $this->find('list', $options);
 
@@ -235,28 +236,27 @@ class Collaborator extends AppModel
         return $res;
     }
 
-
     // getting incomplete goal ids for owner, for right side leader goal column
     function getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date)
     {
         $options = [
-            'joins' => [
+            'joins'      => [
                 [
-                    'table' => 'goals',
-                    'alias' => 'Goal',
-                    'type' => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
                     'conditions' => [
                         'Goal.id = Collaborator.goal_id',
                         'Goal.end_date >=' => $start_date,
                         'Goal.end_date <=' => $end_date,
-                        'Goal.completed' => null,
+                        'Goal.completed'   => null,
                     ]
                 ]
             ],
             'conditions' => [
                 'Collaborator.user_id' => $user_id,
                 'Collaborator.team_id' => $this->current_team_id,
-                'type'    => [
+                'type'                 => [
                     Collaborator::TYPE_OWNER,
                 ],
             ],
@@ -264,7 +264,7 @@ class Collaborator extends AppModel
                 'goal_id',
                 'goal_id'
             ],
-            'order' => [
+            'order'      => [
                 'Collaborator.priority DESC'
             ],
             'page'       => $page,
@@ -318,22 +318,24 @@ class Collaborator extends AppModel
     function getCollaboGoalDetail(
         $team_id,
         $goal_user_id,
-        $approval_flg,
+        $approvalStatus = null,
         $is_include_priority_0 = true,
         $term_type = null
     ) {
         $conditions = [
-            'Collaborator.team_id'    => $team_id,
-            'Collaborator.user_id'    => $goal_user_id,
-            'Collaborator.valued_flg' => $approval_flg,
+            'Collaborator.team_id' => $team_id,
+            'Collaborator.user_id' => $goal_user_id,
         ];
+        if (!empty($approvalStatus)) {
+            $conditions['Collaborator.approval_status'] = $approvalStatus;
+        }
         if ($term_type !== null) {
             $conditions['Goal.end_date >='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['start_date'];
             $conditions['Goal.end_date <='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['end_date'];
         }
 
         $options = [
-            'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
+            'fields'     => ['id', 'type', 'role', 'priority', 'approval_status'],
             'conditions' => $conditions,
             'contain'    => [
                 'Goal'            => [
@@ -342,12 +344,8 @@ class Collaborator extends AppModel
                         'goal_category_id',
                         'end_date',
                         'photo_file_name',
-                        'value_unit',
-                        'target_value',
-                        'start_value',
                         'description'
                     ],
-                    'Purpose'      => ['fields' => 'name'],
                     'GoalCategory' => ['fields' => 'name'],
                 ],
                 'User'            => [
@@ -368,12 +366,60 @@ class Collaborator extends AppModel
         if (!$is_include_priority_0) {
             $options['conditions']['NOT'] = array('Collaborator.priority' => "0");
         }
-        if (is_array($approval_flg)) {
-            unset($options['conditions']['Collaborator.valued_flg']);
-            foreach ($approval_flg as $val) {
-                $options['conditions']['OR'][]['Collaborator.valued_flg'] = $val;
+        if (is_array($approvalStatus)) {
+            unset($options['conditions']['Collaborator.approval_status']);
+            foreach ($approvalStatus as $val) {
+                $options['conditions']['OR'][]['Collaborator.approval_status'] = $val;
             }
         }
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * ゴール認定一覧に表示するリスト取得
+     * - 認定ステータス、コラボレーター作成日の順でソート
+     *
+     * @param $goalUserId
+     *
+     * @return array|null
+     */
+    function findActive($goalUserId)
+    {
+        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $conditions = [
+            'Collaborator.team_id' => $this->current_team_id,
+            'Collaborator.user_id' => $goalUserId,
+            'Goal.end_date >='     => $currentTerm['start_date'],
+            'Goal.end_date <='     => $currentTerm['end_date'],
+        ];
+
+        $options = [
+            'fields'     => [
+                'id',
+                'type',
+                'role',
+                'priority',
+                'approval_status',
+                'is_wish_approval',
+                'is_target_evaluation'
+            ],
+            'conditions' => $conditions,
+            'contain'    => [
+                'Goal' => [
+                    'fields' => [
+                        'id',
+                        'name',
+                        'photo_file_name',
+                    ],
+                ],
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+            'type'       => 'INNER',
+            'order'      => ['Collaborator.approval_status ASC', 'Collaborator.created DESC'],
+        ];
         $res = $this->find('all', $options);
         return $res;
     }
@@ -381,7 +427,7 @@ class Collaborator extends AppModel
     function changeApprovalStatus($id, $status)
     {
         $this->id = $id;
-        $this->save(['valued_flg' => $status]);
+        $this->save(['approval_status' => $status]);
         $collabo = $this->findById($this->id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $collabo['Collaborator']['user_id']),
@@ -393,16 +439,15 @@ class Collaborator extends AppModel
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
     {
         $options = [
-            'fields'     => ['id', 'type', 'valued_flg', 'priority'],
+            'fields'     => ['id', 'type', 'approval_status', 'priority'],
             'conditions' => [
-                'Collaborator.team_id'    => $team_id,
-                'Collaborator.user_id'    => $goal_user_id,
-                'Collaborator.valued_flg' => $approval_flg,
+                'Collaborator.team_id'         => $team_id,
+                'Collaborator.user_id'         => $goal_user_id,
+                'Collaborator.approval_status' => $approval_flg,
             ],
             'contain'    => [
                 'Goal' => [
                     'fields'       => ['id'],
-                    'Purpose'      => ['fields' => 'id'],
                     'GoalCategory' => ['fields' => 'id'],
                 ],
                 'User' => [
@@ -418,11 +463,11 @@ class Collaborator extends AppModel
                 continue;
             }
             // 自分のゴール + 修正待ち以外
-            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['valued_flg'] !== '3') {
+            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['approval_status'] !== '3') {
                 continue;
             }
             // 自分のゴール + 修正待ち + コラボレーター
-            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['valued_flg'] === '3'
+            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['approval_status'] === '3'
                 && $val['Collaborator']['type'] === '0'
             ) {
                 continue;
@@ -434,6 +479,54 @@ class Collaborator extends AppModel
             $res[] = $val;
         }
         return count($res);
+    }
+
+    /**
+     * コーチとしての未対応のゴール認定件数取得
+     *
+     * @param $userId
+     *
+     * @return int
+     */
+    function countUnapprovedGoal($userId)
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
+        $options = [
+            'fields'     => ['Collaborator.id'],
+            'joins'      => [
+                [
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Goal.id = Collaborator.goal_id',
+                        'Goal.end_date >=' => $currentTerm['start_date'],
+                        'Goal.end_date <=' => $currentTerm['end_date'],
+                        'Goal.completed'   => null,
+                    ]
+                ],
+                [
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'TeamMember.user_id = Collaborator.user_id',
+                        'TeamMember.coach_user_id' => $userId,
+                    ]
+                ]
+            ],
+            'conditions' => [
+                'Collaborator.team_id'         => $this->current_team_id,
+                'Collaborator.approval_status' => [
+                    self::APPROVAL_STATUS_NEW,
+                    self::APPROVAL_STATUS_REAPPLICATION,
+                ],
+            ],
+        ];
+
+        $count = $this->find('count', $options);
+        return $count;
     }
 
     function getLeaderUid($goal_id)
@@ -515,11 +608,39 @@ class Collaborator extends AppModel
         return $res;
     }
 
+    /**
+     * @deprecated
+     */
     function getCollaborator($team_id, $user_id, $goal_id, $owner = true)
     {
         $options = [
             'conditions' => [
                 'team_id' => $team_id,
+                'user_id' => $user_id,
+                'goal_id' => $goal_id,
+                'type'    => self::TYPE_OWNER,
+            ],
+        ];
+        if ($owner === false) {
+            $options['conditions']['type'] = self::TYPE_COLLABORATOR;
+        }
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * ユニークのレコード取得
+     * @param      $user_id
+     * @param      $goal_id
+     * @param bool $owner
+     *
+     * @return mixed
+     */
+    function getUnique($user_id, $goal_id, $owner = true)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
                 'user_id' => $user_id,
                 'goal_id' => $goal_id,
                 'type'    => self::TYPE_OWNER,
@@ -542,7 +663,7 @@ class Collaborator extends AppModel
             'fields'     => [
                 'goal_id',
                 'user_id',
-                'valued_flg',
+                'approval_status',
             ]
         ];
         $res = $this->find('all', $options);
@@ -585,5 +706,96 @@ class Collaborator extends AppModel
         }
 
         return $this->find('count', $options);
+    }
+
+    function getCollaboratorForApproval($collaboratorId)
+    {
+        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $conditions = [
+            'Collaborator.id' => $collaboratorId,
+            'Goal.end_date >='     => $currentTerm['start_date'],
+            'Goal.end_date <='     => $currentTerm['end_date'],
+        ];
+
+        $options = [
+            'fields'     => [
+                'id',
+                'user_id',
+                'approval_status',
+                'is_wish_approval',
+                'is_target_evaluation',
+                'role',
+                'description',
+                'type'
+            ],
+            'conditions' => $conditions,
+            'contain'    => [
+                'Goal' => [
+                    'fields' => [
+                        'Goal.id',
+                        'Goal.name',
+                        'Goal.photo_file_name',
+                    ],
+                    'GoalCategory' => [
+                        'fields' => [
+                            'GoalCategory.name',
+                        ]
+                    ],
+                    'Leader'            => [
+                        'fields'     => [
+                            'Leader.id',
+                            'Leader.user_id'
+                        ],
+                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ],
+                    'TopKeyResult' => [
+                        'conditions' => [
+                            'TopKeyResult.tkr_flg' => '1'
+                        ],
+                        'fields' => [
+                            'TopKeyResult.name',
+                            'TopKeyResult.start_value',
+                            'TopKeyResult.target_value',
+                            'TopKeyResult.value_unit',
+                            'TopKeyResult.description'
+                        ]
+                    ]
+                ],
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+                'ApprovalHistory' => [
+                    'fields' => [
+                        'ApprovalHistory.id',
+                        'ApprovalHistory.collaborator_id',
+                        'ApprovalHistory.user_id',
+                        'ApprovalHistory.comment',
+                        'ApprovalHistory.select_clear_status',
+                        'ApprovalHistory.select_important_status'
+                    ],
+                    'User' => [
+                        'fields' => $this->User->profileFields
+                    ]
+                ]
+            ],
+            'order'      => ['Collaborator.created DESC'],
+        ];
+        return $this->find('first', $options);
+    }
+
+    function getUserIdByCollaboratorId($collaboratorId)
+    {
+        if(!$collaboratorId) {
+            return null;
+        }
+
+        $res = $this->findById($collaboratorId);
+        if(!$res) {
+            return null;
+        }
+        return $res['Collaborator']['user_id'];
     }
 }

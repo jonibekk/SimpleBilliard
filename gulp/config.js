@@ -109,6 +109,43 @@ const config =  {
     },
     watch_files: assets_dir + '/js/react/signup/**/*.js'
   },
+  react_goal_create: {
+    src: assets_dir + '/js/react/goal_create/app.js',
+    output: {
+      file_name: 'react_goal_create_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_create/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
+  react_goal_edit: {
+    src: assets_dir + '/js/react/goal_edit/app.js',
+    output: {
+      file_name: 'react_goal_edit_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_edit/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
+  react_goal_approval: {
+    src: assets_dir + '/js/react/goal_approval/app.js',
+    output: {
+      file_name: 'react_goal_approval_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_approval/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
+  browserify : {
+    transform : {
+      babelify_options : {
+        presets: ["es2015", "react"],
+        plugins: [
+          "babel-plugin-transform-object-assign",
+          ["babel-root-import", {
+            "rootPathSuffix": "app/webroot/js/react"
+          }]
+        ]
+      }
+    }
+  },
   css: {
     src: [
       assets_dir + '/css/goalstrap.css',
@@ -141,4 +178,14 @@ const config =  {
   }
 }
 
+const react_apps_contain_undefined = Object.keys(config).map((alias_name) => {
+  // react以外のkeyはundefinedとして格納される
+  if(alias_name.indexOf('react_') !== -1) {
+    return alias_name
+  }
+})
+
+config.react_apps = react_apps_contain_undefined.filter((alias_name) => {
+  return typeof alias_name !=='undefined'
+});
 export default config

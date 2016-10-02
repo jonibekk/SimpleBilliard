@@ -327,7 +327,6 @@ class Evaluation extends AppModel
                             ]
                         ],
                     ],
-                    'Purpose',
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
@@ -550,7 +549,7 @@ class Evaluation extends AppModel
     function getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index)
     {
         $goal_evaluations = [];
-        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true, null, 1, Collaborator::STATUS_APPROVAL);
+        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true, null, 1, Collaborator::APPROVAL_STATUS_REAPPLICATION);
         $goal_list = $this->Goal->filterThisTermIds($goal_list);
         //order by priority of goal
         $goal_list = $this->Goal->Collaborator->goalIdOrderByPriority($uid, $goal_list);

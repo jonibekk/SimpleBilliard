@@ -6,7 +6,7 @@
  * Time: 00:40
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
@@ -393,7 +393,8 @@
 
             // Signup
             "Check your email!": "<?= __("Check your email!") ?>",
-            "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.", $signup_inputed_email = isset($signup_inputed_email) ? $signup_inputed_email : '' )?>",
+            "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.",
+                $signup_inputed_email = isset($signup_inputed_email) ? $signup_inputed_email : '')?>",
             "What's your name?": "<?= __("What's your name?") ?>",
             "Your name will only be displayed to your team on Goalous.": "<?= __("Your name will only be displayed to your team on Goalous.") ?>",
             "I want to receive news and updates by email from Goalous.": "<?= __("I want to receive news and updates by email from Goalous.") ?>",
@@ -407,7 +408,9 @@
             "Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.": "<?= __("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.") ?>",
             "Your name": "<?= __("Your name") ?>",
             "Birthday": "<?= __("Birthday") ?>",
-            "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" class="signup-privacy-policy-link">' . __("Terms of Service") . '</a>', '<a href="/privacy_policy" target="_blank" class="signup-privacy-policy-link">' . __("Privacy Policy") . '</a>') ?>',
+            "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.",
+                '<a href="/terms" target="_blank" class="signup-privacy-policy-link">' . __("Terms of Service") . '</a>',
+                '<a href="/privacy_policy" target="_blank" class="signup-privacy-policy-link">' . __("Privacy Policy") . '</a>') ?>',
             "eg. Harry": "<?= __("eg. Harry") ?>",
             "eg. Armstrong": "<?= __("eg. Armstrong") ?>",
             "eg. Team Goalous": "<?= __("eg. Team Goalous") ?>",
@@ -436,7 +439,69 @@
             "I receive the news and updates by email from Goalous.": "<?= __("I receive the news and updates by email from Goalous.") ?>",
             "Choose your team name.": "<?= __("Choose your team name.") ?>",
             "Select your present term": "<?= __("Select your present term") ?>",
-            "Password is incorrect.": "<?= __("Password is incorrect.") ?>"
+            "Password is incorrect.": "<?= __("Password is incorrect.") ?>",
+            //Creating a Goal
+            "": "<?=__("")?>",
+            "What is your goal ?": "<?=__("What is your goal ?")?>",
+            "Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.": "<?=__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")?>",
+            "Goal name": "<?=__("Goal name")?>",
+            "eg. Spread Goalous users in the world": "<?=__("eg. Spread Goalous users in the world")?>",
+            "View samples": "<?=__("View samples")?>",
+            "See Other": "<?=__("See Other")?>",
+            "Next →": "<?=__("Next →")?>",
+            "Cancel": "<?=__("Cancel")?>",
+            "Vision": "<?=__("Vision")?>",
+            "Set labels": "<?=__("Set labels")?>",
+            "To make it easier to find your goal, let's set labels. And if your organization has goal categories, you can select them here.": "<?=__("To make it easier to find your goal, let's set labels. And if your organization has goal categories, you can select them here.")?>",
+            "Category": "<?=__("Category")?>",
+            "Labels": "<?=__("Labels")?>",
+            "Set goal details": "<?=__("Set goal details")?>",
+            "Customize your goal using the below options.": "<?=__("Customize your goal using the below options.")?>",
+            "Goal image": "<?=__("Goal image")?>",
+            "Upload an image": "<?=__("Upload an image")?>",
+            "This Term": "<?=__("This Term")?>",
+            "Next Term": "<?=__("Next Term")?>",
+            "Do you want to evaluate this goal ?": "<?=__("Do you want to evaluate this goal ?")?>",
+            "View more options": "<?=__("View more options")?>",
+            "Description": "<?=__("Description")?>",
+            "End date": "<?=__("End date")?>",
+            "Weight": "<?=__("Weight")?>",
+            "Set Top Key Result": "<?=__("Set Top Key Result")?>",
+            "Create a clear and most important Key Result for your goal.": "<?=__("Create a clear and most important Key Result for your goal.")?>",
+            "Top Key Result": "<?=__("Top Key Result")?>",
+            "eg. Increase Goalous weekly active users": "<?=__("eg. Increase Goalous weekly active users")?>",
+            "Add description": "<?=__("Add description")?>",
+            "Save and share": "<?=__("Save and share")?>",
+            //goal approval
+            "Set as a target for evaluation?": "<?=__("Set as a target for evaluation?")?>",
+            "Leader": "<?=__("Leader")?>",
+            "Do you think this Top Key Result is clear ?": "<?=__("Do you think this Top Key Result is clear ?")?>",
+            "Yes": "<?=__("Yes")?>",
+            "No": "<?=__("No")?>",
+            "Do you think this Top Key Result is the most important to achieve the goal?": "<?=__("Do you think this Top Key Result is the most important to achieve the goal?")?>",
+            "Add as a target for evaluation ?": "<?=__("Add as a target for evaluation ?")?>",
+            "Add your comment (optional)": "<?=__("Add your comment (optional)")?>",
+            "View Previous": "<?=__("View Previous")?>",
+            "View all %s comments": "<?=__("View all %s comments")?>",
+            "more": "<?=__("more")?>",
+            "Collaborator": "<?=__("Collaborator")?>",
+            "This Top Key Result is clear and most important.": "<?=__("This Top Key Result is clear and most important.")?>",
+            "This Top Key Result is not most important.": "<?=__("This Top Key Result is not most important.")?>",
+            "This Top Key Result is not clear.": "<?=__("This Top Key Result is not clear.")?>",
+            "Edit Goal": "<?=__("Edit Goal")?>",
+            "Confirm": "<?=__("Confirm")?>",
+            "Skip": "<?=__("Skip")?>",
+            "Save & Reapply": "<?=__("Save & Reapply")?>",
+            "Edit Role": "<?=__("Edit Role")?>",
+            "Withdraw": "<?=__("Withdraw")?>",
+            "Goal approval list": "<?=__("Goal approval list")?>",
+            "New": "<?=__("New")?>",
+            "Reapply": "<?=__("Reapply")?>",
+            "Evaluated": "<?=__("Evaluated")?>",
+            "Not Evaluated": "<?=__("Not Evaluated")?>",
+            "Waiting": "<?=__("Waiting")?>",
+            "Goal details": "<?= __("Goal details") ?>",
+            "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
@@ -466,4 +531,4 @@
     <?php endif;?>
     <?php endif;?>
 </script>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
