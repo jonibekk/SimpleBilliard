@@ -3380,7 +3380,7 @@ function evCircleFeed(options) {
         $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
           .append('<li><a href="/posts/unjoin_circle/circle_id:' + circle_id + '">' + cake.word.leave_circle + '</a></li>');
       }
-      if ((data.user_status == "joined" || data.user_status == "admin") && cake.data.env_name != "isao") {
+      if (data.user_status == "joined" || data.user_status == "admin") {
         $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
           .append('<li><a href="/circles/ajax_setting/circle_id:' + circle_id + '" class="modal-circle-setting">' + cake.word.config + '</a></li></ul>');
       }
@@ -3393,7 +3393,7 @@ function evCircleFeed(options) {
     },
     error: function () {
       feed_loading_now = false;
-    },
+    }
   });
   return false;
 }

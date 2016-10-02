@@ -70,6 +70,8 @@ class AppHelper extends UrlCacheAppHelper
     /**
      * ViewのHTMLコメント出力共通処理
      *
+     * @param bool $viewEnd
+     *
      * @return string
      */
     private function viewComment($viewEnd = false)
