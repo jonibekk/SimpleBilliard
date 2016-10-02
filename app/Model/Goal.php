@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('Collaborator', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Goal Model
@@ -9,12 +10,12 @@ App::uses('KeyResult', 'Model');
  * @property User         $User
  * @property Team         $Team
  * @property GoalCategory $GoalCategory
+ * @property GoalLabel    $GoalLabel
  * @property Post         $Post
  * @property KeyResult    $KeyResult
  * @property Collaborator $Collaborator
  * @property Follower     $Follower
  * @property Evaluation   $Evaluation
- * @property Purpose      $Purpose
  * @property ActionResult $ActionResult
  */
 class Goal extends AppModel
@@ -118,30 +119,12 @@ class Goal extends AppModel
     public $validate = [
         'name'             => [
             'isString'  => [
-                'rule'       => ['isString',],
-                'allowEmpty' => true,
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
-                'rule' => 'notEmpty',
-            ],
-        ],
-        'value_unit'       => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
-        'target_value'     => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
-            ],
-        ],
-        'start_value'      => [
-            'numeric' => [
-                'rule'       => ['numeric',],
-                'allowEmpty' => true,
+                'required' => 'create',
+                'rule'     => 'notEmpty',
             ],
         ],
         'description'      => [
@@ -176,9 +159,13 @@ class Goal extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'goal_category_id' => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
-            ]
+            ],
+            'notEmpty' => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
         ],
         'start_date'       => [
             'numeric' => ['rule' => ['numeric']]
@@ -197,13 +184,46 @@ class Goal extends AppModel
     ];
 
     public $post_validate = [
-        'start_date' => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+        'end_date'  => [
+            'notEmpty'            => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
+            'isString'            => ['rule' => 'isString'],
+            'dateYmd'             => [
+                'rule' => ['date', 'ymd'],
+            ],
+            'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
+            'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
         ],
-        'end_date'   => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+        'term_type' => [
+            'inList'   => ['rule' => ['inList', ['current', 'next']],],
+            'notEmpty' => [
+                //'required' => 'create',
+                'rule' => 'notEmpty',
+            ],
         ]
+    ];
 
+    public $update_validate = [
+        'end_date'  => [
+            'notEmpty'            => [
+                'required' => 'create',
+                'rule'     => 'notEmpty',
+            ],
+            'isString'            => ['rule' => 'isString'],
+            'dateYmd'             => [
+                'rule' => ['date', 'ymd'],
+            ],
+            'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
+            'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
+        ],
+        'term_type' => [
+            'inList' => [
+                'rule'       => ['inList', ['current', 'next']],
+                'allowEmpty' => true
+            ]
+        ]
     ];
 
     public $actsAs = [
@@ -232,10 +252,6 @@ class Goal extends AppModel
         'User',
         'Team',
         'GoalCategory',
-        'Purpose' => [
-            "counterCache" => true,
-            'counterScope' => ['Purpose.del_flg' => false]
-        ],
     ];
 
     /**
@@ -277,7 +293,19 @@ class Goal extends AppModel
         'MyFollow'            => [
             'className' => 'Follower',
         ],
-        'Evaluation'
+        'Evaluation',
+        'GoalLabel'           => [
+            'dependent' => true,
+        ]
+    ];
+
+    /**
+     * hasOne associations
+     */
+    public $hasOne = [
+        'TopKeyResult' => [
+            'className' => 'KeyResult',
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -287,35 +315,134 @@ class Goal extends AppModel
         $this->_setPriorityName();
     }
 
+    /**
+     * 評価期間内かチェック
+     *
+     * @param  string $date
+     *
+     * @return bool
+     */
+    function checkRangeTerm($date)
+    {
+        $date = array_shift($date);
+        $goalTerm = $this->getGoalTermFromPost($this->data);
+        $date = AppUtil::getEndDateByTimezone($date, $goalTerm['timezone']);
+
+        return $goalTerm['start_date'] <= $date && $date <= $goalTerm['end_date'];
+    }
+
+    /**
+     * ゴールに紐づく各KRの終了日より前の日付ではないか
+     *
+     * @param string $date
+     *
+     * @return bool
+     */
+    function checkAfterKrEndDate($date)
+    {
+        $date = array_shift($date);
+        if (empty($this->data['Goal']['id'])) {
+            return true;
+        }
+        $goalId = $this->data['Goal']['id'];
+        $goal = Hash::extract($this->findById($goalId), 'Goal');
+        if (empty($goal)) {
+            return true;
+        }
+        $keyResults = Hash::extract($this->KeyResult->getKeyResults($goalId), '{n}.KeyResult');
+        if (empty($keyResults)) {
+            return true;
+        }
+        // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
+        $term = $this->Team->EvaluateTerm->getTermDataByDatetime($goal['end_date']);
+
+        // UTCでのタイムスタンプ取得
+        $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
+
+        // 該当ゴールの評価期間取得
+        foreach ($keyResults as $kr) {
+            //tkrのend_dateはゴールのend_dateと等しくなるため、チェックの必要はなし
+            if ($kr['tkr_flg']) {
+                continue;
+            }
+            if ($timeStamp < $kr['end_date']) {
+                $this->invalidate('end_date', __("Please input goal end date later than key result end date"));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * ゴール登録処理
+     * - ゴールのバリデーション(エラーの場合はfalseを返却)
+     * - ゴールの期間の取得
+     * - ゴールの開始日、終了日をunixtimeに変換
+     * - 評価期間またぎチェック(またいでいる場合はfalseを返却)
+     * - TKRデータの生成(新規ゴールの場合)
+     * - コラボレータの生成(新規ゴールの場合)
+     * - ゴールの保存処理
+     * - ラベルの保存処理
+     * - ゴール投稿(新規ゴールの場合)
+     * - キャッシュ削除
+     *
+     * @param $data
+     *
+     * @return bool
+     */
     function add($data)
     {
-        if (!isset($data['Goal']) || empty($data['Goal'])) {
+        if (!Hash::get($data, 'Goal')) {
             return false;
         }
-        $add_new = false;
-        if (!isset($data['Goal']['id'])) {
-            $add_new = true;
-        }
+
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        //on/offの場合は現在値0,目標値1をセット
-        if (isset($data['Goal']['value_unit']) && isset($data['Goal']['start_value'])) {
-            if ($data['Goal']['value_unit'] == KeyResult::UNIT_BINARY) {
-                $data['Goal']['start_value'] = 0;
-                $data['Goal']['target_value'] = 1;
-            }
-            $data['Goal']['current_value'] = $data['Goal']['start_value'];
-        }
 
-        $this->set($data['Goal']);
-        $validate_backup = $this->validate;
-        $this->validate = array_merge($this->validate, $this->post_validate);
-        if (!$this->validates()) {
+        if ($this->validateGoalPOST($data['Goal']) !== true) {
             return false;
         }
-        $this->validate = $validate_backup;
 
-        // 登録するゴールが来期のものか
+        $goal_term = $this->getGoalTermFromPost($data);
+
+        $data = $this->convertGoalDateFromPost($data, $goal_term, $data['Goal']['term_type']);
+
+        $data = $this->buildTopKeyResult($data, $goal_term);
+        $data = $this->buildCollaboratorDataAsLeader($data);
+
+        // setting default image if default image is chosen and image is not selected.
+        if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
+            $data['Goal']['photo'] = $data['Goal']['img_url'];
+            unset($data['Goal']['img_url']);
+        }
+        $this->create();
+        $isSuccess = (bool)$this->saveAll($data);
+        $newGoalId = $this->getLastInsertID();
+
+        if (!$newGoalId) {
+            return false;
+        }
+        if (Hash::get($data, 'Label')) {
+            $isSuccess = $isSuccess && (bool)$this->GoalLabel->saveLabels($newGoalId, $data['Label']);
+        }
+
+        $isSuccess = $isSuccess && (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
+
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+
+        return (bool)$isSuccess;
+    }
+
+    /**
+     * Postされたデータからゴールの期間を取得
+     *
+     * @param $data
+     *
+     * @return array|null
+     */
+    function getGoalTermFromPost($data)
+    {
         $isNextTerm = (isset($data['Goal']['term_type']) && $data['Goal']['term_type'] == 'next');
         $goal_term = null;
         if ($isNextTerm) {
@@ -323,48 +450,92 @@ class Goal extends AppModel
         } else {
             $goal_term = $this->Team->EvaluateTerm->getCurrentTermData();
         }
+        return $goal_term;
+    }
 
-        //時間をunixtimeに変換
-        if (!empty($data['Goal']['start_date'])) {
-            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - $goal_term['timezone'] * HOUR;
+    /**
+     * Postされたデータからゴールの開始日、終了日をunixtimeに変換
+     *
+     * @param array $data
+     * @param array $goalTerm
+     * @param       $termType
+     *
+     * @return array
+     */
+    function convertGoalDateFromPost($data, $goalTerm, $termType)
+    {
+        // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
+        if ($termType == 'current') {
+            $data['Goal']['start_date'] = time();
+        } else {
+            $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
-        //期限を+1day-1secする
+
         if (!empty($data['Goal']['end_date'])) {
-            $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['Goal']['end_date'])) - $goal_term['timezone'] * HOUR;
+            //期限を+1day-1secする
+            $data['Goal']['end_date'] = AppUtil::getEndDateByTimezone($data['Goal']['end_date'], $goalTerm['timezone']);
+        } else {
+            //指定なしの場合は期の終了日
+            $data['Goal']['end_date'] = $goalTerm['end_date'];
+        }
+        return $data;
+    }
+
+    /**
+     * 新規保存用のtKRデータを生成
+     *
+     * @param array $data
+     * @param array $goal_term
+     *
+     * @return array
+     */
+    function buildTopKeyResult($data, $goal_term, $add_new = true)
+    {
+        //tKRを保存
+        if (!Hash::get($data, 'KeyResult.0')) {
+            return $data;
         }
 
-        // 評価期間をまたいでいないかチェック
-        if (isset($data['Goal']['start_date']) && isset($data['Goal']['end_date'])) {
-            if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
-                return false;
-            }
-        }
-
-        //新規の場合はデフォルトKRを追加
         if ($add_new) {
-            //コラボレータをタイプ　リーダーで保存
-            $data['Collaborator'][0]['user_id'] = $this->my_uid;
-            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
-        }
-        // setting default image if default image is chosen and image is not selected.
-        if ((viaIsSet($data['Goal']['img_url']) || !empty($data['Goal']['img_url']))
-            && (!viaIsSet($data['Goal']['photo']) || empty($data['Goal']['photo']))
-        ) {
-            $data['Goal']['photo'] = $data['Goal']['img_url'];
-            unset($data['Goal']['img_url']);
+            $data['KeyResult'][0]['priority'] = 5;
+            $data['KeyResult'][0]['tkr_flg'] = true;
+            $data['KeyResult'][0]['user_id'] = $this->my_uid;
+            $data['KeyResult'][0]['team_id'] = $this->current_team_id;
         }
 
-        $this->create();
-        $res = $this->saveAll($data);
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        if ($add_new) {
-            Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-            //ゴール投稿
-            $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
+        if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
+            $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
+        } else {
+            //時間をunixtimeに変換
+            $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
         }
-        return $res;
+        if (!viaIsSet($data['KeyResult'][0]['end_date'])) {
+            $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
+        } else {
+            //期限を+1day-1secする
+            $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
+                    strtotime($data['KeyResult'][0]['end_date'])) - $goal_term['timezone'] * HOUR;
+        }
+        return $data;
+    }
+
+    /**
+     * コラボレータをタイプ　リーダーで生成
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    function buildCollaboratorDataAsLeader($data)
+    {
+        $data['Collaborator'][0]['user_id'] = $this->my_uid;
+        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
+        $priority = Hash::get($data, 'Goal.priority');
+        if ($priority !== null) {
+            $data['Collaborator'][0]['priority'] = $priority;
+        }
+        return $data;
     }
 
     /**
@@ -417,7 +588,6 @@ class Goal extends AppModel
                         'KeyResult.team_id'     => $this->current_team_id,
                     ]
                 ],
-                'Purpose',
                 'Collaborator' => [
                     'conditions' => [
                         'Collaborator.user_id' => $this->my_uid
@@ -426,10 +596,6 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        //基準の数値を変換
-        $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
-        $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
-        $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
 
         //KRの数値を変換
         if (!empty($res['KeyResult'])) {
@@ -495,7 +661,8 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
         // get goal ids for right column
-        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date);
+        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date,
+            $end_date);
 
         $options = [
             'conditions' => [
@@ -542,7 +709,6 @@ class Goal extends AppModel
                         'CompleteKeyResult.id'
                     ]
                 ],
-                'Purpose',
                 'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $user_id,
@@ -566,7 +732,7 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             foreach ($goal['MyCollabo'] as $cb_info) {
                 if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
                 }
             }
         }
@@ -580,14 +746,6 @@ class Goal extends AppModel
         //　重要度が高→低
         $res = $this->sortPriority($res);
 
-        //目的一覧を取得
-        if ($page == 1 && !empty($purposes = $this->Purpose->getPurposesNoGoal())) {
-            foreach ($purposes as $key => $val) {
-                $purposes[$key]['Goal'] = [];
-            }
-            /** @noinspection PhpParamsInspection */
-            $res = array_merge($purposes, $res);
-        }
         return $res;
     }
 
@@ -716,7 +874,6 @@ class Goal extends AppModel
                         'CompleteKeyResult.id'
                     ]
                 ],
-                'Purpose',
                 'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $this->my_uid,
@@ -895,9 +1052,6 @@ class Goal extends AppModel
             ],
             'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.end_date'],
             'contain'    => [
-                'Purpose'           => [
-                    'fields' => ['Purpose.name']
-                ],
                 'ActionResult'      => [
                     'fields'           => [
                         'ActionResult.id',
@@ -933,7 +1087,14 @@ class Goal extends AppModel
                     'conditions' => ['ActionResultCount.user_id' => $user_id]
                 ],
                 'MyCollabo'         => [
-                    'fields'     => ['MyCollabo.id', 'MyCollabo.type'],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.user_id',
+                        'MyCollabo.type',
+                        'MyCollabo.approval_status',
+                        'MyCollabo.is_wish_approval',
+                        'MyCollabo.is_target_evaluation'
+                    ],
                     'conditions' => ['MyCollabo.user_id' => $this->my_uid]
                 ],
                 'MyFollow'          => [
@@ -941,11 +1102,25 @@ class Goal extends AppModel
                     'conditions' => ['MyFollow.user_id' => $this->my_uid]
                 ],
                 'Leader'            => [
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'fields'     => [
+                        'Leader.id',
+                        'Leader.user_id',
+                        'Leader.type',
+                        'Leader.approval_status',
+                        'Leader.is_wish_approval',
+                        'Leader.is_target_evaluation'
+                    ],
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                 ],
                 'Collaborator'      => [
-                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation'
+                    ],
                     'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
                 ],
             ]
@@ -996,8 +1171,8 @@ class Goal extends AppModel
     function setFollowGoalApprovalFlag($goals)
     {
         foreach ($goals as $key => $goal) {
-            if (isset($goal['Collaborator']['valued_flg'])) {
-                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['valued_flg'];
+            if (isset($goal['Collaborator']['approval_status'])) {
+                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['approval_status'];
             }
         }
         return $goals;
@@ -1062,12 +1237,11 @@ class Goal extends AppModel
                 'Goal.team_id'     => $this->current_team_id,
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
-                'Goal.completed' => null,
+                'Goal.completed'   => null,
             ],
             'page'       => $page,
             'limit'      => $limit,
             'contain'    => [
-                'Purpose',
                 'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -1119,7 +1293,7 @@ class Goal extends AppModel
                 ],
                 'Leader'              => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
             ]
         ];
@@ -1138,7 +1312,7 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             foreach ($goal['MyCollabo'] as $cb_info) {
                 if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
                 }
             }
         }
@@ -1159,10 +1333,9 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
         $options = [
             'conditions' => [
-                'Goal.id'          => $goal_ids,
+                'Goal.id' => $goal_ids,
             ],
             'contain'    => [
-                'Purpose',
                 'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -1214,7 +1387,7 @@ class Goal extends AppModel
                 ],
                 'Leader'              => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
             ]
         ];
@@ -1233,7 +1406,7 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             foreach ($goal['MyCollabo'] as $cb_info) {
                 if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
                 }
             }
         }
@@ -1247,26 +1420,46 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function getGoal($id)
+    function getGoal($id, $collabo_user_id = null)
     {
+        if(!$collabo_user_id) {
+            $collabo_user_id = $this->my_uid;
+        }
         $options = [
             'conditions' => [
                 'Goal.id'      => $id,
                 'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
-                'Purpose',
                 'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                    'fields'     => ['Leader.id', 'Leader.user_id'],
+                    'fields'     => [
+                        'Leader.id',
+                        'Leader.user_id',
+                        'Leader.type',
+                        'Leader.approval_status',
+                        'Leader.is_wish_approval',
+                        'Leader.is_target_evaluation',
+                        'Leader.role',
+                        'Leader.description',
+                    ],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
                 'Collaborator' => [
                     'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
-                    'fields'     => ['Collaborator.id', 'Collaborator.user_id'],
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation',
+                        'Collaborator.role',
+                        'Collaborator.description',
+                    ],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
@@ -1280,17 +1473,22 @@ class Goal extends AppModel
                 'MyCollabo'    => [
                     'conditions' => [
                         'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
-                        'MyCollabo.user_id' => $this->my_uid,
+                        'MyCollabo.user_id' => $collabo_user_id,
                     ],
                     'fields'     => [
                         'MyCollabo.id',
+                        'MyCollabo.user_id',
+                        'MyCollabo.type',
+                        'MyCollabo.approval_status',
+                        'MyCollabo.is_wish_approval',
+                        'MyCollabo.is_target_evaluation',
                         'MyCollabo.role',
                         'MyCollabo.description',
                     ],
                 ],
                 'MyFollow'     => [
                     'conditions' => [
-                        'MyFollow.user_id' => $this->my_uid,
+                        'MyFollow.user_id' => $collabo_user_id,
                     ],
                     'fields'     => [
                         'MyFollow.id',
@@ -1328,10 +1526,6 @@ class Goal extends AppModel
         $res = $this->find('first', $options);
         if (!empty($res)) {
             $res['Goal']['progress'] = $this->getProgress($res);
-            //不要な少数を除去
-            $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
-            $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
-            $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
         }
 
         return $res;
@@ -1386,7 +1580,6 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
-                'Purpose',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'User'       => [
@@ -1650,7 +1843,6 @@ class Goal extends AppModel
             throw new RuntimeException(__("The goal doesn't exist."));
         }
         $this->id = $goal_id;
-        $this->saveField('current_value', $goal['Goal']['target_value']);
         $this->saveField('progress', 100);
         $this->saveField('completed', REQUEST_TIMESTAMP);
         return true;
@@ -1723,7 +1915,6 @@ class Goal extends AppModel
                             'Goal.end_date >=' => $start_date,
                             'Goal.end_date <=' => $end_date
                         ],
-                        'Purpose',
                         'GoalCategory',
                     ]
                 ],
@@ -1934,5 +2125,42 @@ class Goal extends AppModel
             ]
         ];
         return $this->find('all', $options);
+    }
+
+    /**
+     * POSTされたゴールのバリデーション
+     * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     * - $fieldsに配列で対象フィールドを指定。空の場合はすべてのフィールドをvalidateする
+     *
+     * @param array        $data
+     * @param array        $fields
+     * @param integer|null $goalId
+     *
+     * @return array|true
+     */
+    function validateGoalPOST($data, $fields = [], $goalId = null)
+    {
+        $validationBackup = $this->validate;
+        if (empty($goalId)) {
+            $originValidationRule = am($this->validate, $this->post_validate);
+        } else {
+            $data['id'] = $goalId;
+            $originValidationRule = am($this->validate, $this->update_validate);
+        }
+        $validationRule = [];
+        if (empty($fields)) {
+            $validationRule = $originValidationRule;
+        } else {
+            foreach ($fields as $field) {
+                $validationRule[$field] = Hash::get($originValidationRule, $field);
+            }
+        }
+        $this->set($data);
+        $this->validate = $validationRule;
+        if ($this->validates()) {
+            $this->validate = $validationBackup;
+            return true;
+        }
+        return $this->validationErrors;
     }
 }

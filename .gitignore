@@ -45,6 +45,5 @@ npm-debug.log
 # for public compiled assets
 /app/webroot/css/goalous.min.css
 /app/webroot/compiled_assets/*
-
 # for Translation | 翻訳関連
 /app/Locale/**/*.pot

@@ -7,9 +7,10 @@ App::uses('View', 'View');
 /**
  * TeamVision Model
  *
- * @property User $CreateUser
- * @property User $ModifyUser
- * @property Team $Team
+ * @property User           $CreateUser
+ * @property User           $ModifyUser
+ * @property Team           $Team
+ * @property UploadBehavior $Upload
  */
 class TeamVision extends AppModel
 {
@@ -103,26 +104,45 @@ class TeamVision extends AppModel
         return $res;
     }
 
-    function getTeamVision($team_id, $active_flg)
+    /**
+     * @param      $team_id
+     * @param      $active_flg
+     * @param bool $with_img
+     *
+     * @return array|mixed|null
+     */
+    function getTeamVision($team_id, $active_flg, $with_img = false)
     {
         $is_default = false;
         if ($team_id === $this->current_team_id && $active_flg) {
             $is_default = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
             if ($res !== false) {
+                if ($with_img) {
+                    foreach ($res as &$vision) {
+                        $vision['TeamVision'] = $this->attachImgUrl($vision['TeamVision'], 'TeamVision');
+                    }
+                }
                 return $res;
             }
         }
-
         $options = [
             'conditions' => [
                 'team_id'    => $team_id,
                 'active_flg' => $active_flg
-            ]
+            ],
+            'contain'    => ['Team'],
         ];
         $res = $this->find('all', $options);
+
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
+        }
+
+        if ($with_img) {
+            foreach ($res as &$v) {
+                $v['TeamVision'] = $this->attachImgUrl($v['TeamVision'], 'TeamVision');
+            }
         }
         return $res;
     }
@@ -136,7 +156,6 @@ class TeamVision extends AppModel
 
     function convertData($data)
     {
-
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
 
@@ -183,19 +202,7 @@ class TeamVision extends AppModel
         $team_visions = Hash::extract($this->getTeamVision($this->current_team_id, true), '{n}.TeamVision');
         $team_visions = Hash::insert($team_visions, '{n}.target_name', $team_name);
         $team_visions = Hash::insert($team_visions, '{n}.model', 'TeamVision');
-        ClassRegistry::init('GroupVision');
-        $model = $this;
-        $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
-            function () use ($model) {
-                $my_group_list = $model->Team->Group->MemberGroup->getMyGroupList();
-                $group_visions = Hash::extract($model->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
-                    '{n}.GroupVision');
-                foreach ($group_visions as $k => $v) {
-                    $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
-                }
-                return $group_visions;
-            }, 'team_info');
-        $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
+        $group_visions = $this->Team->GroupVision->getMyGroupVision();
         $visions = array_merge($team_visions, $group_visions);
         if (empty($visions)) {
             return null;

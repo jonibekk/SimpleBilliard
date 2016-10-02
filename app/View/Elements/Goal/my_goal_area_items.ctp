@@ -12,7 +12,7 @@
  */
 $kr_count = 0;
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php foreach ($goals as $goal): ?>
     <?php
     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
@@ -57,7 +57,6 @@ $kr_count = 0;
                     <a href="<?= $this->Html->url([
                         'controller' => 'goals',
                         'action'     => 'add',
-                        'purpose_id' => $goal['Purpose']['id'],
                         'mode'       => 2
                     ]) ?>"
                        class="dashboard-goals-card-header-goal-set">
@@ -78,9 +77,6 @@ $kr_count = 0;
                         </a>
                     </div>
                 <?php endif; ?>
-                <div class="dashboard-goals-card-header-purpose">
-                    <?= h($goal['Purpose']['name']) ?>
-                </div>
             </div>
             <?php if ($type == 'leader'): ?>
                 <a class="dashboard-goals-card-header-function dropdown"
@@ -91,24 +87,11 @@ $kr_count = 0;
                 <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-goal" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php //目的のみの場合とそうでない場合でurlが違う
-                    $edit_url = [
-                        'controller' => 'goals',
-                        'action'     => 'add',
-                        'mode'       => 2,
-                        'purpose_id' => $goal['Purpose']['id']
-                    ];
                     $del_url = [
                         'controller' => 'goals',
                         'action'     => 'delete_purpose',
-                        'purpose_id' => $goal['Purpose']['id']
                     ];
                     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                        $edit_url = [
-                            'controller' => 'goals',
-                            'action'     => 'add',
-                            'goal_id'    => $goal['Goal']['id'],
-                            'mode'       => 3
-                        ];
                         $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
                     }
                     ?>
@@ -127,7 +110,7 @@ $kr_count = 0;
                     <?php endif; ?>
                     <?php if (!viaIsSet($goal['Evaluation'])): ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="<?= $this->Html->url($edit_url) ?>">
+                                                   href="/goals/<?= $goal['Goal']['id']?>/edit">
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                             </a>
                         </li>
@@ -187,24 +170,11 @@ $kr_count = 0;
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
                         <?php //目的のみの場合とそうでない場合でurlが違う
-                        $edit_url = [
-                            'controller' => 'goals',
-                            'action'     => 'add',
-                            'mode'       => 2,
-                            'purpose_id' => $goal['Purpose']['id']
-                        ];
                         $del_url = [
                             'controll er' => 'goals',
                             'action'      => 'delete_purpose',
-                            'purpose_id'  => $goal['Purpose']['id']
                         ];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                            $edit_url = [
-                                'controller' => 'goals',
-                                'action'     => 'add',
-                                'goal_id'    => $goal['Goal']['id'],
-                                'mode'       => 3
-                            ];
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
                         }
                         ?>
@@ -298,7 +268,7 @@ $kr_count = 0;
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __("Add Key Result") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']] ?></p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= $this->Goal->displayApprovalStatus($goal['MyCollabo'][0]) ?></p>
                             </li>
                         </ul>
                     </div>
@@ -309,4 +279,4 @@ $kr_count = 0;
         <?php endif; ?>
     </div>
 <?php endforeach ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

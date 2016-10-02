@@ -1,7 +1,6 @@
 import gulp from 'gulp'
 import plumber from 'gulp-plumber'
 import accord from 'gulp-accord'
-import cssmin from 'gulp-cssmin'
 import duration from 'gulp-duration'
 import config from '../config.js'
 

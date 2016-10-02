@@ -18,8 +18,6 @@ class PostMentionTest extends GoalousTestCase
         'app.post_mention',
         'app.post',
         'app.user',
-        'app.notify_setting',
-        'app.team'
     );
 
     /**

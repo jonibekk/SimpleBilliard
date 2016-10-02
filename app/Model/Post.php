@@ -739,11 +739,6 @@ class Post extends AppModel
                             ]
                         ],
                     ],
-                    'Purpose'   => [
-                        'fields' => [
-                            'name'
-                        ]
-                    ],
                     'MyCollabo' => [
                         'conditions' => [
                             'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
