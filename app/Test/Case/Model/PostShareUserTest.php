@@ -17,28 +17,6 @@ class PostShareUserTest extends GoalousTestCase
     public $fixtures = array(
         'app.post_share_user',
         'app.post',
-        'app.user',
-        'app.notify_setting',
-        'app.team',
-        'app.badge',
-        'app.comment_like',
-        'app.comment',
-        'app.comment_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.group',
-        'app.team_member',
-        'app.job_category',
-        'app.invite',
-
-        'app.post_like',
-        'app.post_mention',
-        'app.post_read',
-        'app.email',
-        'app.oauth_token',
-        'app.local_name',
-        'app.circle_member',
-        'app.circle'
     );
 
     /**

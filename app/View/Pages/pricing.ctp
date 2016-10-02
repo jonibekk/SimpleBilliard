@@ -27,11 +27,11 @@ Page毎に要素が変わるもの
 $meta_pricing = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Pricing is here.")),
     ],
     [
         "name"    => "keywords",
-        "content" => _("目標管理,目標達成,社内SNS,評価,MBO"),
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -43,7 +43,7 @@ $meta_pricing = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Pricing is here.")),
     ],
     [
         "property" => "og:url",
@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/pricing') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/pricing') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/pricing.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******PRICE PLAN****** -->
 <section id="price-plan" class="price-plan section">
     <div class="container text-center">
@@ -134,4 +134,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </section><!--//price-plan-->
 
 <?= $this->element('Homepage/signup') ?>
-<!-- END app/View/Pages/pricing.ctp -->
+<?= $this->App->viewEndComment()?>

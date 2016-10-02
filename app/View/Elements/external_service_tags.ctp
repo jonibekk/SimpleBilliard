@@ -7,7 +7,7 @@
  * @var CodeCompletionView $this
  **/
 ?>
-<!-- START app/View/Elements/external_service_tags.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- start VWO and Mixpanel Integration Code-->
 <script type="text/javascript">
     var _vis_opt_queue = window._vis_opt_queue || [], _vis_counter = 0, mixpanel = window.mixpanel || [];
@@ -140,10 +140,7 @@
     ?>
     <!-- start Intercom -->
     <script>
-        // メッセージの送信ボタンとintercomのボタンが重なってしまうため、
-        // 緊急対応としてintercomをdisabledにする(あとで戻す)
-        // enabled_intercom_icon = true;
-        enabled_intercom_icon = false;
+        enabled_intercom_icon = true;
         if (window.innerWidth <= 480) {
             enabled_intercom_icon = false;
         }
@@ -169,9 +166,8 @@
             <?php endif ?>
         };
         if (!enabled_intercom_icon) {
-            window.intercomSettings["widget"] = {
-                "activator": "#Intercom"
-            };
+            window.intercomSettings.hide_default_launcher = true;
+            window.intercomSettings.custom_launcher_selector = "#Intercom";
         }
     </script>
     <script>(function () {
@@ -208,4 +204,4 @@
         })()</script>
     <!-- end Intercom -->
 <?php endif; ?>
-<!-- END app/View/Elements/external_service_tags.ctp -->
+<?= $this->App->viewEndComment()?>

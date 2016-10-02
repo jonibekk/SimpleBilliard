@@ -20,7 +20,7 @@
  * @var                    $timezones
  */
 ?>
-<!-- START app/View/Elements/Team/edit_term_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Term settings") ?></div>
     <?=
@@ -189,4 +189,4 @@
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Elements/Team/edit_term_setting.ctp -->
+<?= $this->App->viewEndComment()?>

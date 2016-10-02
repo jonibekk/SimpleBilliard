@@ -3,16 +3,13 @@ import * as types from '../../constants/actionTypes'
 import expect from 'expect'
 
 describe('reducer::user_name', () => {
-  it('INPUT_USER_NAME', () => {
+  it('USER_TO_NEXT_PAGE', () => {
     const expect_value = {
-      inputed: {
-        key_name: 'name'
-      }
+      to_next_page: 'next/page'
     }
     const newState = userNameReducer({}, {
-      type: types.INPUT_USER_NAME,
-      key: 'key_name',
-      name: 'name'
+      type: types.USER_TO_NEXT_PAGE,
+      to_next_page: 'next/page'
     })
 
     expect(newState).toInclude(expect_value)
@@ -37,60 +34,14 @@ describe('reducer::user_name', () => {
 
     expect(newState).toInclude(expect_value)
   })
-  it('USER_NAME_IS_INVALID', () => {
-    const expect_value = {
-      user_name_is_invalid: true,
-      invalid_messages: {
-        test: 'invalid message'
-      }
-    }
-    const newState = userNameReducer({}, {
-      type: types.USER_NAME_IS_INVALID,
-      invalid_messages: {
-        test: 'invalid message'
-      }
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
-  it('USER_NAME_IS_VALID', () => {
-    const expect_value = {
-      user_name_is_invalid: false
-    }
-    const newState = userNameReducer({}, {
-      type: types.USER_NAME_IS_VALID
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
-  it('CAN_SUBMIT_USER_NAME', () => {
-    const expect_value = {
-      submit_button_is_enabled: true
-    }
-    const newState = userNameReducer({}, {
-      type: types.CAN_SUBMIT_USER_NAME
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
-  it('CAN_NOT_SUBMIT_USER_NAME', () => {
-    const expect_value = {
-      submit_button_is_enabled: false
-    }
-    const newState = userNameReducer({}, {
-      type: types.CAN_NOT_SUBMIT_USER_NAME
-    })
-
-    expect(newState).toInclude(expect_value)
-  })
   it('NETWORK_ERROR', () => {
     const expect_value = {
       is_exception: true,
-      exception_message: 'exception message'
+      exception_message: 'network error'
     }
     const newState = userNameReducer({}, {
       type: types.USER_NETWORK_ERROR,
-      exception_message: 'exception message'
+      exception_message: 'network error'
     })
 
     expect(newState).toInclude(expect_value)

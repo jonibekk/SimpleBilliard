@@ -9,7 +9,7 @@
  * @var $goal_term
  */
 ?>
-<!-- START app/View/Goals/view_info.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
@@ -21,20 +21,8 @@
                 <div class="goal-detail-info-data">
                     <span class="font_bold"><?= h($goal['Goal']['name']) ?></span>
 
-                    <p class="goal-detail-info-purpose"><?= __('Purpose') ?>： <?= h($goal['Purpose']['name']) ?></p>
-
                     <p class="goal-detail-info-category"><?= __('Category') ?>
                         ： <?= h($goal['GoalCategory']['name']) ?></p>
-                </div>
-            </div>
-            <div class="goal-detail-info-progress-wrap">
-                <div class="goal-detail-info-left-icons">
-                    <i class="fa-bullseye fa"></i>
-                </div>
-                <div class="goal-detail-info-progress">
-                    <?= h(round($goal['Goal']['start_value'], 1)) ?> →
-                    <?= h(round($goal['Goal']['target_value'], 1)) ?>
-                    [<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]
                 </div>
             </div>
             <div class="goal-detail-info-due-wrap">
@@ -105,4 +93,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Goals/view_info.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -41,7 +41,7 @@ if (!isset($goal_list_for_action_option)) {
     $goal_list_for_action_option = [];
 }
 ?>
-<!-- START app/View/Elements/Feed/common_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default global-form" id="GlobalForms">
     <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
@@ -89,7 +89,7 @@ if (!isset($goal_list_for_action_option)) {
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
                         <?= __('You have no goal.') ?>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+                        <a href="/goals/create/step1"
                            class="alert-link"><?= __('Create a goal') ?></a>
                     </div>
                 </div>
@@ -515,4 +515,4 @@ if (!isset($goal_list_for_action_option)) {
     </div>
 </div>
 <?= $this->element('file_upload_form') ?>
-<!-- END app/View/Elements/Feed/common_form.ctp -->
+<?= $this->App->viewEndComment()?>

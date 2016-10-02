@@ -3,7 +3,7 @@
  * @var $is_mb_app
  */
 ?>
-<!-- start app/View/Elements/header_logged_in_right -->
+<?= $this->App->viewStartComment()?>
 <div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
@@ -45,7 +45,7 @@
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
                     <a class="header-nav-add-contents-anchor"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'create', 'step1']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
 
                         <p class="header-nav-add-contents-goal"><?= __('Create a goal') ?></p>
@@ -175,7 +175,7 @@
         <?php endif; ?>
         <li class="header-nav-function-contents-list">
             <?= $this->Html->link(__('Goal Approval'),
-                ['controller' => 'goal_approval', 'action' => 'index'],
+                ['controller' => 'goals', 'action' => 'approval', 'list'],
                 ['class' => 'header-nav-function-contents-approvement'])
             ?>
             <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
@@ -216,4 +216,4 @@
     </ul>
 </div>
 </div>
-<!-- end app/View/Elements/header_logged_in_right -->
+<?= $this->App->viewEndComment()?>

@@ -5,7 +5,7 @@
  * style に width: 0; height: 0; も入れておく
  */
 ?>
-<!-- START app/View/Elements/file_upload_form.ctp -->
+<?= $this->App->viewStartComment()?>
 <?=
 $this->Form->create('AttachedFile', [
     'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
@@ -27,4 +27,4 @@ $this->Form->create('AttachedFile', [
 <?= $this->Form->hidden('file_id') ?>
 <?php $this->Form->unlockField('AttachedFile.file_id') ?>
 <?= $this->Form->end() ?>
-<!-- END app/View/Elements/file_upload_form.ctp -->
+<?= $this->App->viewEndComment()?>

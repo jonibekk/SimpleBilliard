@@ -7,9 +7,13 @@ App::uses('ExceptionRenderer', 'Error');
  */
 class AppExceptionRenderer extends ExceptionRenderer
 {
-    protected function _outputMessage($template)
+    protected function _outputMessage($template, $layout = true)
     {
-        $this->controller->layout = LAYOUT_ONE_COLUMN;
+        if ($layout) {
+            $this->controller->layout = LAYOUT_ONE_COLUMN;
+        } else {
+            $this->controller->layout = null;
+        }
         parent::_outputMessage($template);
     }
 }

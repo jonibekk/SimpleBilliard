@@ -19,7 +19,6 @@ App::uses('AppModel', 'Model');
  * @property PostRead          $PostRead
  * @property Post              $Post
  * @property TeamMember        $TeamMember
- * @property Thread            $Thread
  * @property Evaluator         $Evaluator
  * @property EvaluationSetting $EvaluationSetting
  * @property Evaluation        $Evaluation
@@ -166,7 +165,6 @@ class Team extends AppModel
         'PostRead',
         'Post',
         'TeamMember',
-        'Thread',
         'Evaluator',
         'Evaluation',
         'EvaluateTerm',

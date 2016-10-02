@@ -12,7 +12,7 @@
  * @var                    $vision
  */
 ?>
-<!-- START app/View/Elements/my_goals_area.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="right-side-container" id="jsRightSideContainer">
     <?php if ($vision): ?>
 
@@ -55,7 +55,7 @@
         <span class="font_18px mt_5px font_gargoyleGray goals-column-title">
             <?= __('Your goals') ?>(<?= $my_goals_count + $collabo_goals_count ?>)
         </span>
-        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'create', 'step1']) ?>"
            class="font_gargoyleGray-brownRed pull-right col-xxs-5 btn-goals-column-plus">
             <i class="fa fa-plus-circle font_brownRed">
             </i>
@@ -69,7 +69,7 @@
 
         <?php if (empty($my_goals)): ?>
             <div class="col col-xxs-12 goals-column-empty-box">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'create', 'step1']) ?>"
                    class="font_lightGray-gray">
                     <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font_33px"></i></div>
                     <div class="goals-column-empty-text font_14px"><?= __('Create a new goal') ?></div>
@@ -117,4 +117,4 @@
         </a>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/my_goals_area.ctp -->
+<?= $this->App->viewEndComment()?>

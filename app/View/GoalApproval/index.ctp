@@ -6,7 +6,7 @@
  * @var                    $value_unit_list
  */
 ?>
-<!-- START app/View/GoalApproval/index.ctp -->
+<?= $this->App->viewStartComment()?>
 <style type="text/css">
     .approval_body_text {
         font-size: 14px
@@ -113,23 +113,11 @@
                             <p class="approval_body_text"><?= __("Role") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
-                            <p class="approval_body_text"><?= __("Unit") ?>
-                                : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
-
-                            <p class="approval_body_text"><?= __("Achieve point") ?>
-                                : <?= (double)$goal['Goal']['target_value']; ?></p>
-
-                            <p class="approval_body_text"><?= __("Initial point") ?>
-                                : <?= (double)$goal['Goal']['start_value']; ?></p>
-
                             <p class="approval_body_text"><?= __("Due") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
                             <p class="approval_body_text"><?= __("Weight") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
-
-                            <p class="approval_body_text"><?= __("Purpose") ?>
-                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
                             <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
@@ -175,7 +163,7 @@
                                                 'div'      => false,
                                                 'disabled' => 'disabled'
                                             ]) ?>
-                                    <?php } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_MODIFY) { ?>
+                                    <?php } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_WITHDRAW) { ?>
                                         <a class="btn btn-primary approval_button"
                                            href="<?= $this->Html->url([
                                                'controller' => 'goals',
@@ -264,7 +252,7 @@
         </div>
     </div>
 </div>
-<!-- END app/View/GoalApproval/index.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

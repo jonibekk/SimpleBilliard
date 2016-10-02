@@ -11,7 +11,7 @@
  * @var                    $nav_disable
  */
 ?>
-<!-- START app/View/Elements/header_home.ctp -->
+<?= $this->App->viewStartComment()?>
 <?
 if (!isset($top_lang)) {
     $top_lang = null;
@@ -79,4 +79,4 @@ if (!isset($top_lang)) {
         </nav> <!-- //main-nav -->
     </div> <!-- //container -->
 </header> <!-- //header -->
-<!-- END app/View/Elements/header_home.ctp -->
+<?= $this->App->viewEndComment()?>

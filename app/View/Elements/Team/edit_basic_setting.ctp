@@ -9,7 +9,7 @@
  * @var                    $start_term_month_options
  */
 ?>
-<!-- START app/View/Elements/Team/edit_basic_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Basic settings") ?></div>
     <?=
@@ -161,4 +161,4 @@
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Elements/Team/edit_basic_setting.ctp -->
+<?= $this->App->viewEndComment()?>

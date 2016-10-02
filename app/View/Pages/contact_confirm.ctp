@@ -27,11 +27,11 @@ Page毎に要素が変わるもの
 $meta_contact_confirm = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("It is a confirmation of your inquiry.")),
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -43,7 +43,7 @@ $meta_contact_confirm = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("It is a confirmation of your inquiry.")),
     ],
     [
         "property" => "og:url",
@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_confirm') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/contact_confirm.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
@@ -147,7 +147,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </form><!--//form-->
         </div>
     </div><!--//row-->
-</section><!--//contact--><!-- END app/View/Pages/contact_confirm.ctp -->
+</section><!--//contact--><?= $this->App->viewEndComment()?>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
     $(function () {

@@ -3,7 +3,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/tos.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php if (!isset($no_title) || !$no_title): ?>
     <h2>「Goalous」サービス利用規約（無償版）</h2>
     <br>
@@ -207,4 +207,4 @@
 <br>
 以上<br>
 制定日：2013年7月1日<br>
-<!-- END app/View/Elements/tos.ctp -->
+<?= $this->App->viewEndComment()?>

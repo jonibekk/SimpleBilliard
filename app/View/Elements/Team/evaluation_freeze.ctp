@@ -23,7 +23,7 @@
  * @var                    $previous_term_id
  */
 ?>
-<!-- START app/View/Elements/Team/evaluation_freeze.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Paused evaluation settings.") ?></div>
     <div class="panel-body form-horizontal">
@@ -75,4 +75,4 @@
         <?php endif; ?>
     </div>
 </div>
-<!-- END app/View/Elements/Team/evaluation_freeze.ctp -->
+<?= $this->App->viewEndComment()?>

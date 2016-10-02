@@ -11,7 +11,7 @@
  */
 ?>
 
-<!-- START app/View/Notifications/index.ctp -->
+<?= $this->App->viewStartComment()?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -38,4 +38,4 @@
     </div>
 </div>
 <?= $this->element('file_upload_form') ?>
-<!-- END app/View/Notifications/index.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -1,4 +1,4 @@
-<!-- START app/View/Signup/user.ctp -->
+<?= $this->App->viewStartComment()?>
         <div class="row">
             <div class="panel panel-default panel-signup">
                 <div class="panel-heading signup-title">Finaly, Teams Term?</div>
@@ -85,4 +85,4 @@
 
             </div>
         </div>
-<!-- END app/View/Signup/user.ctp -->
+<?= $this->App->viewEndComment()?>

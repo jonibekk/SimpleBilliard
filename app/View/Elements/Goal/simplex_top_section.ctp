@@ -13,13 +13,13 @@
  * @var $is_coaching_goal
  */
 ?>
-<!-- START app/View/Elements/simplex_top_section.ctp -->
+<?= $this->App->viewStartComment() ?>
 <div class="panel-body goal-detail-upper-panel">
     <div class="goal-detail-avatar-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
             [
-                'class' => 'goal-detail-avatar lazy',
+                'class'         => 'goal-detail-avatar lazy',
                 'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
                     ['style' => 'x_large']),
             ]
@@ -54,12 +54,7 @@
         </div>
         <?php if ($is_leader): ?>
             <?= $this->Html->link(__('Edit a goal'),
-                [
-                    'controller' => 'goals',
-                    'action'     => 'add',
-                    'goal_id'    => $goal['Goal']['id'],
-                    'mode'       => 3,
-                ],
+                '/goals/' . $goal['Goal']['id'] . '/edit',
                 [
                     'class' => 'btn-profile-edit'
                 ])
@@ -101,9 +96,6 @@
         <?= h($goal['Goal']['name']) ?>
     </p>
 
-    <p class="goal-detail-goal-purpose">
-        <?= h($goal['Purpose']['name']) ?>
-    </p>
 
 </div>
 <div class="goal-detail-tab-group">
@@ -174,4 +166,4 @@
         </p>
     </a>
 </div>
-<!-- END app/View/Elements/simplex_top_section.ctp -->
+<?= $this->App->viewEndComment() ?>

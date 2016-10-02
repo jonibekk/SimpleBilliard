@@ -9,7 +9,7 @@
  * @var array              $my_teams
  */
 ?>
-<!-- START app/View/Elements/Team/batch_setup.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Batch Registration") ?></div>
     <div class="panel-body">
@@ -55,7 +55,7 @@
         </div>
     <?php endif; ?>
 </div>
-<!-- END app/View/Elements/Team/batch_setup.ctp -->
+<?= $this->App->viewEndComment()?>
 <?php $this->start('modal') ?>
 <?= $this->element('modal_add_members_by_csv') ?>
 <?= $this->element('modal_edit_members_by_csv') ?>

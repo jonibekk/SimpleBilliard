@@ -1,25 +1,28 @@
 const assets_dir = './app/webroot'
+const compiled_assets_dir = './app/webroot/compiled_assets'
+const node_modules_dir = './node_modules'
 const config =  {
   dest: assets_dir + '/dest',
   js: {
     src: [assets_dir + '/js/gl_basic.js'],
     output: {
       file_name: 'goalous',
-      path: assets_dir + '/js',
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [assets_dir + '/js/gl_basic.js']
   },
   js_prerender: {
     src: [
-      assets_dir + '/js/vendor/jquery-1.11.1.min.js'
+      node_modules_dir + '/jquery/dist/jquery.js'
     ],
     output: {
       file_name: 'goalous.prerender',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     }
   },
   js_vendor: {
     src: [
+      node_modules_dir + '/jquery-lazy/jquery.lazy.js',
       assets_dir + '/js/vendor/bootstrap.js',
       assets_dir + '/js/vendor/jasny-bootstrap.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
@@ -28,7 +31,6 @@ const config =  {
       assets_dir + '/js/vendor/pnotify.custom.js',
       assets_dir + '/js/vendor/jquery.nailthumb.1.1.js',
       assets_dir + '/js/vendor/jquery.autosize.js',
-      assets_dir + '/js/vendor/jquery.lazy.js',
       assets_dir + '/js/vendor/lightbox-custom.js',
       assets_dir + '/js/vendor/jquery.showmore.src.js',
       assets_dir + '/js/vendor/placeholders.js',
@@ -49,7 +51,7 @@ const config =  {
     ],
     output: {
       file_name: 'vendors',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [assets_dir + '/js/vendor/*.js']
   },
@@ -64,7 +66,7 @@ const config =  {
     ],
     output: {
       file_name: 'ng_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [
       assets_dir + '/js/vendor/angular/**/*.js'
@@ -81,11 +83,11 @@ const config =  {
       assets_dir + '/js/vendor/angular/angular-pnotify.js',
       assets_dir + '/js/vendor/angular/angular-sanitize.js',
       assets_dir + '/js/vendor/angular/pusher-angular.min.js',
-      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js',
+      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js'
     ],
     output: {
       file_name: 'ng_vendors',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: [
       assets_dir + '/js/vendor/angular/**/*.js'
@@ -95,7 +97,7 @@ const config =  {
     src: assets_dir + '/js/react/setup_guide/app.js',
     output: {
       file_name: 'react_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/setup_guide/**/*.js'
   },
@@ -103,9 +105,46 @@ const config =  {
     src: assets_dir + '/js/react/signup/app.js',
     output: {
       file_name: 'react_signup_app',
-      path: assets_dir + '/js'
+      path: compiled_assets_dir + '/js'
     },
     watch_files: assets_dir + '/js/react/signup/**/*.js'
+  },
+  react_goal_create: {
+    src: assets_dir + '/js/react/goal_create/app.js',
+    output: {
+      file_name: 'react_goal_create_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_create/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
+  react_goal_edit: {
+    src: assets_dir + '/js/react/goal_edit/app.js',
+    output: {
+      file_name: 'react_goal_edit_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_edit/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
+  react_goal_approval: {
+    src: assets_dir + '/js/react/goal_approval/app.js',
+    output: {
+      file_name: 'react_goal_approval_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_approval/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
+  browserify : {
+    transform : {
+      babelify_options : {
+        presets: ["es2015", "react"],
+        plugins: [
+          "babel-plugin-transform-object-assign",
+          ["babel-root-import", {
+            "rootPathSuffix": "app/webroot/js/react"
+          }]
+        ]
+      }
+    }
   },
   css: {
     src: [
@@ -139,4 +178,14 @@ const config =  {
   }
 }
 
+const react_apps_contain_undefined = Object.keys(config).map((alias_name) => {
+  // react以外のkeyはundefinedとして格納される
+  if(alias_name.indexOf('react_') !== -1) {
+    return alias_name
+  }
+})
+
+config.react_apps = react_apps_contain_undefined.filter((alias_name) => {
+  return typeof alias_name !=='undefined'
+});
 export default config

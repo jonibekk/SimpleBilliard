@@ -1,4 +1,4 @@
-<!-- START app/View/Signup/team.ctp -->
+<?= $this->App->viewStartComment()?>
         <div class="row">
             <div class="panel panel-default panel-signup">
                 <div class="panel-heading signup-title">What do you want to call your Goalous team?</div>
@@ -21,4 +21,4 @@
             </div>
         </div>
 <a href="/signup/term">ページ遷移用リンク</a>
-<!-- END app/View/Signup/team.ctp -->
+<?= $this->App->viewEndComment()?>

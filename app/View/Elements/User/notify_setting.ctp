@@ -12,7 +12,7 @@
  * @var boolean            $is_not_use_local_name
  */
 ?>
-<!-- START app/View/Elements/User/notify_setting.ctp -->
+<?= $this->App->viewStartComment()?>
 <div id="notify_setting">
     <div class="panel panel-default">
         <div class="panel-heading"><?= __("Notification") ?></div>
@@ -118,4 +118,4 @@
     })
 </script>
 <?php $this->end(); ?>
-<!-- END app/View/Elements/User/notify_setting.ctp -->
+<?= $this->App->viewEndComment()?>

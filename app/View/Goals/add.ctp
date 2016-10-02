@@ -24,7 +24,7 @@ $url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request-
 $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;
 ?>
-<!-- START app/View/Goals/add.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="row">
     <!--GoalSet01-->
     <div class="col-sm-8 col-sm-offset-2">
@@ -61,10 +61,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormPurpose',
                 ]); ?>
-                <?php if (isset($this->request->data['Purpose']['id'])) {
-                    echo $this->Form->hidden('Purpose.id', ['value' => $this->request->data['Purpose']['id']]);
-                }
-                ?>
                 <div class="panel-body add-team-panel-body goal-set-body">
                     <?=
                     $this->Form->input('Purpose.name',
@@ -130,10 +126,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormKeyResult',
                 ]); ?>
-                <?php if (isset($this->request->params['named']['purpose_id'])) {
-                    echo $this->Form->hidden('purpose_id', ['value' => $this->request->params['named']['purpose_id']]);
-                }
-                ?>
                 <div class="panel-body add-team-panel-body">
                     <?=
                     $this->Form->input('goal_category_id', [
@@ -164,66 +156,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             'data-bv-stringlength-max'     => 200,
                             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                         ]) ?>
-                    <div class="row">
-                        <div class="col col-sm-3 goal-edit-labels">
-                            <label class="control-label width100_per text-right"><?= __("Measurement") ?></label>
-
-                            <div class="label-addiction pull-right"><?= __("How much?") ?></div>
-                        </div>
-                        <div class="col col-sm-7  goal-set-input">
-
-                            <?=
-                            $this->Form->input('value_unit',
-                                [
-                                    'label'               => __("Unit"),
-                                    'wrapInput'           => 'col col-sm-9 pl_5px',
-                                    'type'                => 'select',
-                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                    'target-id'           => 'KeyResult0ValueInputWrap',
-                                    'required'            => true,
-                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                    'options'             => $kr_value_unit_list
-                                ]) ?>
-                            <div id="KeyResult0ValueInputWrap"
-                                 style="<?=
-                                 isset($this->request->data['Goal']['value_unit'])
-                                 && $this->request->data['Goal']['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
-
-                                <?=
-                                $this->Form->input('target_value',
-                                    [
-                                        'label'                        => __("Achieve point"),
-                                        'wrapInput'                    => 'col col-sm-9 pl_5px',
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 100,
-                                        'required'                     => true,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 15,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", 15),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
-                                    ]) ?>
-                                <?=
-                                $this->Form->input('start_value',
-                                    [
-                                        'label'                        => __("Initial point"),
-                                        'wrapInput'                    => 'col col-sm-9 pl_5px',
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 0,
-                                        'required'                     => true,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 15,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", 15),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
-                                    ]) ?>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row goal-edit-labels">
                         <div class="col col-sm-3 goal-edit-labels">
                             <label class="control-label  width100_per text-right"><?= __("Term") ?></label>
@@ -321,14 +253,11 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                             <?php endif; ?>
                                             </span>
                                             <?php if (!isset($this->request->data['Goal'])): ?>
-                                                <?php if (false)://TODO newゴール作成フロー開発のために来期のゴール作成を無効化?>
-                                                    <a href="#" class="target-show-target-del"
-                                                       show-target-id="KeyResult0EvaluateTermInputWrap"
-                                                       delete-target-id="KeyResult0EvaluateTermDefault">
+                                                <a href="#" class="target-show-target-del"
+                                                   show-target-id="KeyResult0EvaluateTermInputWrap"
+                                                   delete-target-id="KeyResult0EvaluateTermDefault">
                                                     <?= __("Change") ?>
                                                 </a>
-                                                <? endif; ?>
-
                                             <?php endif; ?>
                                         </span>
                                     </p>
@@ -344,8 +273,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                 'required'  => true,
                                                 'options'   => [
                                                     'current' => __('Current Term'),
-                                                    //TODO newゴール作成フロー開発のために来期のゴール作成を無効化
-                                                    //'next'    => __('Next Term'),
+                                                    'next'    => __('Next Term'),
                                                 ],
                                                 'id'        => 'KeyResult0EvaluateTermSelect',
                                             ];
@@ -731,4 +659,4 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     });
 </script>
 <?php $this->end() ?>
-<!-- END app/View/Goals/add.ctp -->
+<?= $this->App->viewEndComment()?>

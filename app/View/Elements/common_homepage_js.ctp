@@ -3,7 +3,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/common_homepage_js.ctp -->
+<?= $this->App->viewStartComment()?>
 <?= $this->Html->script('vendor/jquery-1.11.1.min') ?>
 <?= $this->Html->script('vendor/bootstrap.min') ?>
 <?= $this->Html->script('vendor/bootstrapValidator.min') ?>
@@ -40,4 +40,4 @@
     });
 </script>
 
-<!-- END app/View/Elements/common_homepage_js.ctp -->
+<?= $this->App->viewEndComment()?>

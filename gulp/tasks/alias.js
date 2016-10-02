@@ -7,7 +7,7 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup'], done)
+  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_edit', 'react_goal_approval'], done)
 })
 
 // js app
@@ -63,26 +63,17 @@ gulp.task('angular_vendor', done => {
   )
 })
 
-// react setup
-gulp.task('react_setup', done => {
-  return runSequence(
-    'react_setup:eslint',
-    'react_setup:browserify',
-    'react_setup:uglify',
-    'react_setup:clean',
-    done
-  )
-})
-
-// react signup
-gulp.task('react_signup', done => {
-  return runSequence(
-    'react_signup:eslint',
-    'react_signup:browserify',
-    'react_signup:uglify',
-    'react_signup:clean',
-    done
-  )
+// react apps
+config.react_apps.map((app_name) => {
+  gulp.task(app_name, done => {
+    return runSequence(
+      `${app_name}:eslint`,
+      `${app_name}:browserify`,
+      `${app_name}:uglify`,
+      `${app_name}:clean`,
+      done
+    )
+  })
 })
 
 // css

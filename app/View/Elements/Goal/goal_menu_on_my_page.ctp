@@ -9,7 +9,7 @@
  * @var                    $goal
  */
 ?>
-<!-- START app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
+<?= $this->App->viewStartComment() ?>
 <div class="dropdown pull-right">
     <a href="#"
        class="bd-radius_4px font_lightGray-gray"
@@ -32,12 +32,7 @@
         <?php if (!viaIsSet($goal['Evaluation'])): ?>
             <li role="presentation">
                 <a role="menuitem" tabindex="-1"
-                   href="<?= $this->Html->url([
-                       'controller' => 'goals',
-                       'action'     => 'add',
-                       'goal_id'    => $goal['Goal']['id'],
-                       'mode'       => 3
-                   ]) ?>">
+                   href="/goals/<?= $goal['Goal']['id'] ?>/edit">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                 </a>
             </li>
@@ -51,4 +46,4 @@
         <?php endif; ?>
     </ul>
 </div>
-<!-- End app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
+<?= $this->App->viewEndComment() ?>

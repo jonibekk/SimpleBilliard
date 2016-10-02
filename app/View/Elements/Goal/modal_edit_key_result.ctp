@@ -20,7 +20,7 @@
  * @var                    $goal_term
  */
 ?>
-<!-- START app/View/Elements/Goal/modal_edit_key_result.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -30,11 +30,6 @@
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
-                </li>
-                <li>
-                    <i class="fa fa-bullseye"></i>
-                    <?= h($goal['Goal']['target_value']) ?>
-                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
@@ -251,4 +246,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<!-- END app/View/Elements/Goal/modal_edit_key_result.ctp -->
+<?= $this->App->viewEndComment()?>

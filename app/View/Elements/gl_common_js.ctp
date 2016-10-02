@@ -13,12 +13,12 @@
  * @var                    $unread_msg_post_ids
  */
 ?>
-<!-- START app/View/Elements/gl_common_js.ctp -->
+<?= $this->App->viewStartComment()?>
 <?php
-echo $this->Html->script('ng_vendors.min');
-echo $this->Html->script('vendors.min');
-echo $this->Html->script('goalous.min');
-echo $this->Html->script('ng_app.min');
+echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
+echo $this->Html->script('/compiled_assets/js/vendors.min');
+echo $this->Html->script('/compiled_assets/js/goalous.min');
+echo $this->Html->script('/compiled_assets/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
@@ -39,4 +39,4 @@ echo $this->Html->script('ng_app.min');
 <?php elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">Local</p>
 <?php endif; ?>
-<!-- END app/View/Elements/gl_common_js.ctp -->
+<?= $this->App->viewEndComment()?>

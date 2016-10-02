@@ -9,7 +9,7 @@
  * @var                    $post
  */
 ?>
-<!-- START app/View/Elements/Feed/goal_sharing_block.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 pt_10px">
     <a href="<?= $this->Html->url([
         'controller' => 'goals',
@@ -36,14 +36,9 @@
                     <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Goal']['name']),
                             0, 50,
                             "...") ?></h4>
-                    <?php if (isset($post['Goal']['Purpose']['name'])): ?>
-                        <div class="font_12px site-info-txt">
-                            <?= mb_strimwidth(h($post['Goal']['Purpose']['name']), 0, 110, "...") ?>
-                        </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </a>
 </div>
-<!-- END app/View/Elements/Feed/goal_sharing_block.ctp -->
+<?= $this->App->viewEndComment()?>

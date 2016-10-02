@@ -19,6 +19,79 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
     Router::fullbaseUrl('https://' . env('HTTP_HOST'));
 }
 
+/**
+ * Api
+ * # 説明
+ * 一部の非APIのリバースルーティングで不具合がありREQUEST_URIをチェックする対応をしている
+ * (POSTにおいて何故かAPIのルーティングルールが適用されてしまう。)
+ * FIXME この対応ではAPIでアクセスしてきた際に内部的にページのurlをリバースルーティングで生成する際に問題あり！
+ * # versionを追加する場合
+ * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
+ * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
+ * # REST以外のもの
+ * アクションメソッドとして適宜追加していく。(Routingの設定を増やさない)
+ * ただし、Methodを限定する事。
+ */
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+    $apiVersions = 'v1|v2|';
+    /**
+     * REST
+     * actionなし
+     */
+    Router::connect('/api/:apiVersion/:controller',
+        ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller',
+        ['action' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'put', '[method]' => 'PUT'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'delete', '[method]' => 'DELETE'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+
+    /**
+     * REST
+     * actionあり
+     */
+    Router::connect('/api/:apiVersion/:controller/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'put', '[method]' => 'PUT'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+}
+
+/**
+ * エイリアス
+ */
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/after_click::after_click/*', ['controller' => 'pages', 'action' => 'display', 'home']);
@@ -29,6 +102,10 @@ Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' 
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
+Router::connect('/goals/:id/edit',
+    ['controller' => 'goals', 'action' => 'edit', '[method' => 'GET'],
+    ['id' => '[0-9]+', 'pass' => ['id']]
+);
 
 /**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している

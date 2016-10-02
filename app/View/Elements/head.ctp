@@ -10,7 +10,7 @@
  * @var                    $meta_description
  */
 ?>
-<!-- START app/View/Elements/head.ctp -->
+<?= $this->App->viewStartComment()?>
 <head>
     <?= $this->Html->charset(); ?>
     <title origin-title="<?= $title_for_layout; ?>">
@@ -32,7 +32,7 @@
     echo $this->fetch('css');
 
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
-    echo $this->Html->script('goalous.prerender.min');
+    echo $this->Html->script('/compiled_assets/js/goalous.prerender.min');
 
     ?>
     <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
@@ -74,4 +74,4 @@
     }
     ?>
 </head>
-<!-- END app/View/Elements/head.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -27,11 +27,11 @@ Page毎に要素が変わるもの
 $meta_features = [
     [
         "name"    => "description",
-        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Description of the function is here.")),
     ],
     [
         "name"    => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => __("goal management, achieve a goal, sns app, evaluation, mbo"),
     ],
     [
         "property" => "og:type",
@@ -43,7 +43,7 @@ $meta_features = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。'),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Description of the function is here.")),
     ],
     [
         "property" => "og:url",
@@ -80,7 +80,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/features') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/features') ?>"/>
 <?php $this->end() ?>
-<!-- START app/View/Pages/features.ctp -->
+<?= $this->App->viewStartComment()?>
 <!-- ******FEATURES PROMO****** -->
 <section id="features-promo" class="features-promo section">
     <div class="bg-mask"></div>
@@ -272,4 +272,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </section>
 
 <?= $this->element('Homepage/signup') ?>
-<!-- END app/View/Pages/features.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -9,7 +9,7 @@
  * @var                    $user
  */
 ?>
-<!-- START app/View/Elements/Evaluation/incomplete_oneself.ctp -->
+<?= $this->App->viewStartComment()?>
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
@@ -21,4 +21,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Evaluation/incomplete_oneself.ctp -->
+<?= $this->App->viewEndComment()?>

@@ -4,7 +4,7 @@
  */
 ?>
 <?php if (isset($circle_insights)): ?>
-    <!-- START app/View/Teams/insight_circle_result.ctp -->
+    <?= $this->App->viewStartComment()?>
     <?php
     // this code is for sort arrow, decide the direction and location of the arrow.
     $cls = 'fa-angle-down';
@@ -87,6 +87,6 @@
             </tr>
         <?php endforeach ?>
     </table>
-    <!-- END app/View/Teams/insight_circle_result.ctp -->
+    <?= $this->App->viewEndComment()?>
 
 <?php endif ?>
