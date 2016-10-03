@@ -535,32 +535,4 @@ class AppModel extends Model
         return $res;
     }
 
-    /**
-     * 再帰的に全てのモデルのmy_uidプロパティにセットする
-     * @param $user_id
-     */
-    function setUserIdPropRecursive($user_id)
-    {
-        foreach (ClassRegistry::keys() as $k) {
-            $obj = ClassRegistry::getObject($k);
-            if ($obj instanceof AppModel) {
-                $obj->my_uid = $user_id;
-            }
-        }
-    }
-
-    /**
-     * 再帰的に全てのモデルのcurrent_team_idプロパティにセットする
-     * @param $team_id
-     */
-    function setCurrentTeamIdPropRecursive($team_id)
-    {
-        foreach (ClassRegistry::keys() as $k) {
-            $obj = ClassRegistry::getObject($k);
-            if ($obj instanceof AppModel) {
-                $obj->current_team_id = $team_id;
-            }
-        }
-    }
-
 }
