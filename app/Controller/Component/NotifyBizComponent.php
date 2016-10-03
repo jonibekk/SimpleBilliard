@@ -390,6 +390,7 @@ class NotifyBizComponent extends Component
             = $this->Team->TeamMember->my_uid
             = $this->Team->Invite->my_uid
             = $this->Team->Invite->FromUser->my_uid
+            = $this->Team->EvaluationSetting->my_uid
             = $user_id;
 
         $this->Post->current_team_id
@@ -411,6 +412,7 @@ class NotifyBizComponent extends Component
             = $this->Team->TeamMember->current_team_id
             = $this->Team->Invite->current_team_id
             = $this->Team->Invite->FromUser->current_team_id
+            = $this->Team->EvaluationSetting->current_team_id
             = $team_id;
     }
 
@@ -757,9 +759,9 @@ class NotifyBizComponent extends Component
         unset($collaborators[$user_id]);
         //exclude coach
         $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
-        $coachEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id, $this->NotifySetting->current_team_id);
+        $coachEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         $coachId = $this->Team->TeamMember->getCoachId($user_id);
-        if($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coachId && !empty($collaborators[$coachId])) {
+        if ($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coachId && !empty($collaborators[$coachId])) {
             unset($collaborators[$coachId]);
         }
         if (empty($collaborators)) {
@@ -801,6 +803,12 @@ class NotifyBizComponent extends Component
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
         }
+
+        //評価設定offなら処理しない
+        if (!$this->Team->EvaluationSetting->isEnabled()) {
+            return;
+        }
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
@@ -834,6 +842,12 @@ class NotifyBizComponent extends Component
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
         }
+
+        //評価設定offなら処理しない
+        if (!$this->Team->EvaluationSetting->isEnabled()) {
+            return;
+        }
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
