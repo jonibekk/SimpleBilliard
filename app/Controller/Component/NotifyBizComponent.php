@@ -759,8 +759,8 @@ class NotifyBizComponent extends Component
         $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
         $coachEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id, $this->NotifySetting->current_team_id);
         $coachId = $this->Team->TeamMember->getCoachId($user_id);
-        if($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coacheId && !empty($collaborators[$coacheId])) {
-            unset($collaborators[$coacheId]);
+        if($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coachId && !empty($collaborators[$coachId])) {
+            unset($collaborators[$coachId]);
         }
         if (empty($collaborators)) {
             return;
