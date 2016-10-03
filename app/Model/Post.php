@@ -473,13 +473,9 @@ class Post extends AppModel
     {
         if (!$start) {
             $start = strtotime("-1 month", REQUEST_TIMESTAMP);
-        } elseif (is_string($start)) {
-            $start = strtotime($start);
         }
         if (!$end) {
             $end = REQUEST_TIMESTAMP;
-        } elseif (is_string($end)) {
-            $end = strtotime($end);
         }
         if (isset($params['named']['page']) || !empty($params['named']['page'])) {
             $page = $params['named']['page'];
