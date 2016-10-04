@@ -715,7 +715,18 @@ class Goal extends AppModel
                     ],
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
-                ]
+                ],
+                'Collaborator'      => [
+                     'fields'     => [
+                         'Collaborator.id',
+                         'Collaborator.user_id',
+                         'Collaborator.type',
+                         'Collaborator.approval_status',
+                         'Collaborator.is_wish_approval',
+                         'Collaborator.is_target_evaluation'
+                     ],
+                     'conditions' => ['Collaborator.user_id' => $user_id],
+                 ],
             ],
         ];
         if ($kr_limit) {
@@ -727,14 +738,11 @@ class Goal extends AppModel
         }
         $res = $this->find('all', $options);
 
-        //進捗を計算
         foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            foreach ($goal['MyCollabo'] as $cb_info) {
-                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
-                }
-            }
+            // 進捗を計算
+            $res[$key]['Goal']['progress'] = $KeyResultService->getProgress($goal['KeyResult']);
+            // 認定有効フラグを追加
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->TeamMember->getEvaluationEnableFlg($user_id);
         }
 
         /**
@@ -880,7 +888,18 @@ class Goal extends AppModel
                     ],
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
-                ]
+                ],
+                'Collaborator'      => [
+                     'fields'     => [
+                         'Collaborator.id',
+                         'Collaborator.user_id',
+                         'Collaborator.type',
+                         'Collaborator.approval_status',
+                         'Collaborator.is_wish_approval',
+                         'Collaborator.is_target_evaluation'
+                     ],
+                     'conditions' => ['Collaborator.user_id' => $this->my_uid],
+                 ],
             ],
             'limit'      => $limit,
             'page'       => $page
@@ -894,9 +913,11 @@ class Goal extends AppModel
         }
 
         $res = $this->find('all', $options);
-        //進捗を計算
         foreach ($res as $key => $goal) {
+            //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            // 認定有効フラグを追加
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
 
         return $res;
@@ -1121,16 +1142,18 @@ class Goal extends AppModel
                         'Collaborator.is_wish_approval',
                         'Collaborator.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                    'conditions' => ['Collaborator.user_id' => $user_id],
                 ],
             ]
         ];
         $goals = $this->find('all', $options);
         $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
 
-        //進捗を計算
         foreach ($goals as $key => $goal) {
+            //進捗を計算
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
+            // 認定有効フラグを追加
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
 
         return $goals;
@@ -1195,16 +1218,24 @@ class Goal extends AppModel
                     ],
                 ],
                 'Collaborator' => [
-                    'conditions' => [
-                        'Collaborator.user_id' => $user_id
-                    ]
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation'
+                    ],
+                    'conditions' => ['Collaborator.user_id' => $user_id],
                 ],
             ]
         ];
         $res = $this->find('all', $options);
-        //calc progress
         foreach ($res as $key => $goal) {
+            //calc progress
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            // 認定有効フラグを追加
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
         return $res;
     }
@@ -1295,6 +1326,17 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
+                'Collaborator'      => [
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation'
+                    ],
+                    'conditions' => ['Collaborator.user_id' => $this->my_uid],
+                ]
             ]
         ];
 
@@ -1307,14 +1349,11 @@ class Goal extends AppModel
         }
 
         $res = $this->find('all', $options);
-        //進捗を計算
         foreach ($res as $key => $goal) {
+            //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            foreach ($goal['MyCollabo'] as $cb_info) {
-                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
-                }
-            }
+            // 認定有効フラグを追加
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
         return $res;
     }
@@ -1389,6 +1428,17 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
+                'Collaborator'      => [
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation'
+                    ],
+                    'conditions' => ['Collaborator.user_id' => $this->my_uid],
+                ]
             ]
         ];
 
@@ -1401,14 +1451,11 @@ class Goal extends AppModel
         }
 
         $res = $this->find('all', $options);
-        //進捗を計算
         foreach ($res as $key => $goal) {
+            //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            foreach ($goal['MyCollabo'] as $cb_info) {
-                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
-                }
-            }
+            // 認定有効フラグを追加
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
         return $res;
     }
@@ -1647,8 +1694,8 @@ class Goal extends AppModel
         }
         $options = $this->setFilter($options, $search_option);
         $res = $this->find('all', $options);
-        //進捗を計算
         foreach ($res as $key => $goal) {
+            //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
         return $res;
