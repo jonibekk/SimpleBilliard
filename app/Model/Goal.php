@@ -740,9 +740,9 @@ class Goal extends AppModel
 
         foreach ($res as $key => $goal) {
             // 進捗を計算
-            $res[$key]['Goal']['progress'] = $KeyResultService->getProgress($goal['KeyResult']);
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->TeamMember->getEvaluationEnableFlg($user_id);
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
 
         /**
@@ -1455,7 +1455,7 @@ class Goal extends AppModel
             //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->TeamMember->getEvaluationEnableFlg($this->my_uid);
+            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
         return $res;
     }
