@@ -155,28 +155,28 @@ class NotifyBizComponent extends Component
                 $this->_setMyGoalCollaborateOption($model_id, $user_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER:
-                $this->_setMyGoalChangedOption($model_id, $user_id);
+                $this->_setMyGoalChangedOption($model_id, $user_id, $team_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_CREATE_GOAL:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL:
-                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_ROLE:
-                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_START:
                 $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
@@ -745,8 +745,9 @@ class NotifyBizComponent extends Component
      *
      * @param $goal_id
      * @param $user_id
+     * @param $team_id
      */
-    private function _setMyGoalChangedOption($goal_id, $user_id)
+    private function _setMyGoalChangedOption($goal_id, $user_id, $team_id)
     {
         $goal = $this->Goal->getGoal($goal_id);
         if (empty($goal)) {
@@ -757,13 +758,16 @@ class NotifyBizComponent extends Component
         $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
         unset($collaborators[$user_id]);
+
         //exclude coach
-        $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
-        $coacheeEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($user_id, $team_id);
         $coachId = $this->Team->TeamMember->getCoachId($user_id);
         //チームの評価設定on かつ ユーザが評価対象 かつ コーチが存在している場合はコーチを通知対象から除外
         //コーチには別途、認定関連の通知が届くため。
-        if ($teamEvaluateIsEnabled && $coacheeEvaluateIsEnabled && $coachId && !empty($collaborators[$coachId])) {
+        if ($isApprovable && !empty($collaborators[$coachId])) {
             unset($collaborators[$coachId]);
         }
         if (empty($collaborators)) {
@@ -787,8 +791,9 @@ class NotifyBizComponent extends Component
      * @param $notify_type
      * @param $goal_id
      * @param $to_user_id
+     * @param $team_id
      */
-    private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
+    private function _setApprovalOption($notify_type, $goal_id, $to_user_id, $team_id)
     {
         $goal = $this->Goal->getGoal($goal_id, $to_user_id);
 
@@ -806,8 +811,12 @@ class NotifyBizComponent extends Component
             return;
         }
 
-        //評価設定offなら処理しない
-        if (!$this->Team->EvaluationSetting->isEnabled()) {
+        //認定できないユーザの場合は処理しない
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($collaborator['user_id'], $team_id);
+        if (!$isApprovable) {
             return;
         }
 
@@ -831,7 +840,7 @@ class NotifyBizComponent extends Component
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
     }
 
-    private function _setCollaboApprovalOption($notify_type, $collaborator_id, $to_user_id)
+    private function _setCollaboApprovalOption($notify_type, $collaborator_id, $to_user_id, $team_id)
     {
         $collaborator = $this->Goal->Collaborator->findById($collaborator_id);
         if (empty($collaborator)) {
@@ -847,8 +856,12 @@ class NotifyBizComponent extends Component
             return;
         }
 
-        //評価設定offなら処理しない
-        if (!$this->Team->EvaluationSetting->isEnabled()) {
+        //認定できないユーザの場合は処理しない
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($collaborator['user_id'], $team_id);
+        if (!$isApprovable) {
             return;
         }
 

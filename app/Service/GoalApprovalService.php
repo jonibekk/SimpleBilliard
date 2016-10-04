@@ -317,16 +317,21 @@ class GoalApprovalService extends AppService
      * - ユーザが評価対象
      * - コーチが存在する
      *
-     * @param $target_user_id
+     * @param      $target_user_id
+     * @param null $team_id 通常は不要。shellからアクセスがあった場合に必要。
      *
      * @return bool
      */
-    function isApprovable($target_user_id)
+    function isApprovable($target_user_id, $team_id = null)
     {
         /** @var EvaluationSetting $EvaluationSetting */
         $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        if ($team_id) {
+            $EvaluationSetting->current_team_id = $team_id;
+            $TeamMember->current_team_id = $team_id;
+        }
 
         $teamEvaluateIsEnabled = $EvaluationSetting->isEnabled();
         $coacheeEvaluateIsEnabled = $TeamMember->getEvaluationEnableFlg($target_user_id);
