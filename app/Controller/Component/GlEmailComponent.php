@@ -228,7 +228,7 @@ class GlEmailComponent extends Component
         if (empty($data)) {
             return;
         }
-        $url_data = ['?' => ['from' => 'email']];
+        $url_data = ['?' => ['from' => 'email', 'team_id' => $this->SendMail->current_team_id]];
         if (viaIsSet($data['url_data'])) {
             $url_data = array_merge($url_data, $data['url_data']);
         }

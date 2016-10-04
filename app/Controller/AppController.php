@@ -145,7 +145,8 @@ class AppController extends BaseController
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __(
-            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App."));
+            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
+            __("You can use Goalous on Web and on Mobile App."));
         $this->set('meta_description', $this->meta_description);
 
         $this->_setAppLanguage();
@@ -544,7 +545,7 @@ class AppController extends BaseController
             return false;
         }
         $current_team_id = $this->Session->read('current_team_id');
-        $request_team_id = $this->_getTeamIdFromRequest($this->request->params);
+        $request_team_id = $this->_getTeamIdFromRequest();
         //チームidが判別できない場合は何もせずreturn
         if (!$request_team_id) {
             return false;
@@ -566,8 +567,9 @@ class AppController extends BaseController
         return false;
     }
 
-    public function _getTeamIdFromRequest($request_params)
+    public function _getTeamIdFromRequest()
     {
+        $request_params = $this->request->params;
         if (empty($request_params) ||
             !isset($request_params['controller']) ||
             empty($request_params['controller'])
@@ -580,6 +582,9 @@ class AppController extends BaseController
         //チームID指定されてた場合はチームIDを返す
         if (isset($request_params['named']['team_id']) && !empty($request_params['named']['team_id'])) {
             return $request_params['named']['team_id'];
+        }
+        if ($this->request->query('team_id')) {
+            return $this->request->query('team_id');
         }
         //モデル名抽出
         $model_name = null;
