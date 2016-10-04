@@ -2518,7 +2518,8 @@ class TeamMemberTest extends GoalousTestCase
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
-        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $this->TeamMember->current_team_id = $team_id;
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id);
         $this->assertTrue($flg);
     }
 
@@ -2533,8 +2534,9 @@ class TeamMemberTest extends GoalousTestCase
             'active_flg'            => 0,
             'evaluation_enable_flg' => 1
         ];
+        $this->TeamMember->current_team_id = $team_id;
         $this->TeamMember->save($params);
-        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id);
         $this->assertFalse($flg);
     }
 
@@ -2549,8 +2551,9 @@ class TeamMemberTest extends GoalousTestCase
             'active_flg'            => 1,
             'evaluation_enable_flg' => 0
         ];
+        $this->TeamMember->current_team_id = $team_id;
         $this->TeamMember->save($params);
-        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id);
         $this->assertFalse($flg);
     }
 

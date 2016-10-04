@@ -4,6 +4,7 @@ App::import('Service', 'GoalApprovalService');
 
 /**
  * Class GoalApprovalsController
+ *
  * @property PnotifyComponent $Pnotify
  */
 class GoalApprovalsController extends ApiController
@@ -40,7 +41,7 @@ class GoalApprovalsController extends ApiController
         $coachId = $this->Team->TeamMember->getCoachUserIdByMemberUserId($userId);
 
         // コーチとコーチーがいない場合はForbidden
-        if(empty($coachId) && empty($coacheeIds)) {
+        if (empty($coachId) && empty($coacheeIds)) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
@@ -62,13 +63,14 @@ class GoalApprovalsController extends ApiController
 
         $res = [
             'application_count' => $applicationCount,
-            'collaborators' => $collaborators
+            'collaborators'     => $collaborators
         ];
         return $this->_getResponseSuccess($res);
     }
 
     /**
      * ゴール認定リストをレスポンス用に整形
+     *
      * @param $userId
      * @param $teamId
      * @param $baseData
@@ -81,7 +83,7 @@ class GoalApprovalsController extends ApiController
         $Upload = new UploadHelper(new View());
 
         // 自分が評価対象か
-        $myEvaluationFlg = $this->Team->TeamMember->getEvaluationEnableFlg($userId, $teamId);
+        $myEvaluationFlg = $this->Team->TeamMember->getEvaluationEnableFlg($userId);
 
         $res = [];
         foreach ($baseData as $k => $v) {
@@ -131,15 +133,13 @@ class GoalApprovalsController extends ApiController
         // コーチはいるがコーチーがいない
         if ($isCoach === true && $isMember === false) {
             $res = $this->Goal->Collaborator->findActive([$userId]);
-        }
-        // コーチとコーチーどちらもいる
+        } // コーチとコーチーどちらもいる
         elseif ($isCoach === true && $isMember === true) {
             $coacheeCollabos = $this->Goal->Collaborator->findActive($coacheeIds);
             $coachCollabos = $this->Goal->Collaborator->findActive([$userId]);
             // コーチとコーチーのゴール認定リストを結合
             $res = array_merge($coacheeCollabos, $coachCollabos);
-        }
-        // コーチはいないがコーチーがいる
+        } // コーチはいないがコーチーがいる
         elseif ($isCoach === false && $isMember === true) {
             $res = $this->Goal->Collaborator->findActive($coacheeIds);
         }
@@ -177,11 +177,11 @@ class GoalApprovalsController extends ApiController
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
-        $collaboratorId = Hash::get($data,'collaborator.id');
+        $collaboratorId = Hash::get($data, 'collaborator.id');
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
-        if(!$canAccess) {
+        if (!$canAccess) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
@@ -191,7 +191,7 @@ class GoalApprovalsController extends ApiController
 
         // 保存処理
         $response = $this->_postApproval($saveData);
-        if($response !== true) {
+        if ($response !== true) {
             return $response;
         }
 
@@ -210,7 +210,7 @@ class GoalApprovalsController extends ApiController
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
         $coachee = $this->Goal->Collaborator->findById($collaboratorId);
-        $coacheeUserId = Hash::get($coachee,'Collaborator.user_id');
+        $coacheeUserId = Hash::get($coachee, 'Collaborator.user_id');
         $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
 
         // レスポンス
@@ -234,11 +234,11 @@ class GoalApprovalsController extends ApiController
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
-        $collaboratorId = Hash::get($data,'collaborator.id');
+        $collaboratorId = Hash::get($data, 'collaborator.id');
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
-        if(!$canAccess) {
+        if (!$canAccess) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
@@ -248,7 +248,7 @@ class GoalApprovalsController extends ApiController
 
         // 保存処理
         $response = $this->_postApproval($saveData);
-        if($response !== true) {
+        if ($response !== true) {
             return $response;
         }
 
@@ -267,7 +267,7 @@ class GoalApprovalsController extends ApiController
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
         $coachee = $this->Goal->Collaborator->findById($collaboratorId);
-        $coacheeUserId = Hash::get($coachee,'Collaborator.user_id');
+        $coacheeUserId = Hash::get($coachee, 'Collaborator.user_id');
         $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
 
         // レスポンス
@@ -279,6 +279,7 @@ class GoalApprovalsController extends ApiController
      * Goal認定詳細ページの初期データ取得API
      *
      * @param  integer collaborator_id クエリパラメータにて送られる
+     *
      * @return CakeResponse
      */
     public function get_detail()
@@ -288,14 +289,14 @@ class GoalApprovalsController extends ApiController
         $collaboratorId = $this->request->query('collaborator_id');
 
         // パラメータが存在しない場合はNotFound
-        if(!$collaboratorId) {
+        if (!$collaboratorId) {
             $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
-        if(!$canAccess) {
+        if (!$canAccess) {
             // TODO: モーダルでコラボを抜けた場合のために一時期的にここでエラーを吐かないようにする
             //       Reactでコラボ編集が実装されたらコメントアウトを外す
             // $this->Pnotify->outError(__("You don't have access right to this page."));
@@ -308,7 +309,9 @@ class GoalApprovalsController extends ApiController
 
     /**
      * 認定詳細ページPOSTの共通処理
+     *
      * @param  $saveData
+     *
      * @return true|CakeResponse
      */
     function _postApproval($saveData)
@@ -333,7 +336,7 @@ class GoalApprovalsController extends ApiController
     function _trackApprovalToMixpanel($trackType, $memberType, $collaboratorId)
     {
         $collaborator = $this->Goal->Collaborator->findById($collaboratorId);
-        $goalId = Hash::get($collaborator,'Collaborator.goal_id');
+        $goalId = Hash::get($collaborator, 'Collaborator.goal_id');
         if (!$goalId) {
             return;
         }
