@@ -759,9 +759,11 @@ class NotifyBizComponent extends Component
         unset($collaborators[$user_id]);
         //exclude coach
         $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
-        $coachEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
+        $coacheeEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         $coachId = $this->Team->TeamMember->getCoachId($user_id);
-        if ($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coachId && !empty($collaborators[$coachId])) {
+        //チームの評価設定on かつ ユーザが評価対象 かつ コーチが存在している場合はコーチを通知対象から除外
+        //コーチには別途、認定関連の通知が届くため。
+        if ($teamEvaluateIsEnabled && $coacheeEvaluateIsEnabled && $coachId && !empty($collaborators[$coachId])) {
             unset($collaborators[$coachId]);
         }
         if (empty($collaborators)) {
