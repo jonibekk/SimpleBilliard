@@ -24,12 +24,11 @@ class GoalApprovalService extends AppService
     {
         $Collaborator = ClassRegistry::init("Collaborator");
         // Redisのキャッシュデータ取得
-        $count = Cache::read($Collaborator->getCacheKey(CACHE_UNAPPROVED_GOAL_COUNT, true), 'user_data');
+        $count = Cache::read($Collaborator->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         // Redisから無ければDBから取得してRedisに保存
         if ($count === false) {
             $count = $Collaborator->countUnapprovedGoal($userId);
-            Cache::set('duration', 60 * 1, 'user_data');//1 minute
-            Cache::write($Collaborator->getCacheKey(CACHE_UNAPPROVED_GOAL_COUNT, true), $count, 'user_data');
+            Cache::write($Collaborator->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), $count, 'user_data');
         }
         return $count;
     }
@@ -55,6 +54,9 @@ class GoalApprovalService extends AppService
             CollaboratorService::EXTEND_COACH,
             CollaboratorService::EXTEND_COACHEE,
         ]);
+
+        // 認定履歴に評価者からの評価コメント追加
+        $histories = $this->addClearImportantWordToApprovalHistories($histories, $collaborator['user_id']);
 
         foreach($histories as &$v) {
             $v['user'] = ($v['user_id'] == $collaborator['user_id']) ?
@@ -107,6 +109,7 @@ class GoalApprovalService extends AppService
      * @param  array|integer $userIds integerで渡ってきたら内部で配列に変換
      * @return array $deletedCacheUserIds
      */
+
     function deleteUnapprovedCountCache($userIds)
     {
         $Goal = ClassRegistry::init("Goal");
@@ -158,7 +161,6 @@ class GoalApprovalService extends AppService
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
 
         $res = Hash::extract($resByModel, 'Collaborator');
 
@@ -177,23 +179,7 @@ class GoalApprovalService extends AppService
 
         // 認定履歴の文言を追加
         $collaboratorUserId = $res['user']['id'];
-        $res['approval_histories'] = Hash::map($res, 'approval_histories', function($approvalHistory) use ($collaboratorUserId, $ApprovalHistory) {
-            $clearStatus = $approvalHistory['select_clear_status'];
-            $importantStatus = $approvalHistory['select_important_status'];
-
-            if($approvalHistory['user']['id'] == $collaboratorUserId){
-                $clearAndImportantWord = '';
-            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
-                $clearAndImportantWord = __('This Top Key Result is clear and most important.');
-            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
-                $clearAndImportantWord = __('This Top Key Result is not most important.');
-            } else {
-                $clearAndImportantWord = __('This Top Key Result is not clear.');
-            }
-
-            $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
-            return $approvalHistory;
-        });
+        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'], $collaboratorUserId);
 
         // 画像パス追加
         $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
@@ -281,5 +267,27 @@ class GoalApprovalService extends AppService
         ];
 
         return $saveData;
+    }
+
+    function addClearImportantWordToApprovalHistories($approvalHistories, $collaboratorUserId)
+    {
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        return Hash::map($approvalHistories, '', function($approvalHistory) use ($collaboratorUserId, $ApprovalHistory) {
+            $clearStatus = $approvalHistory['select_clear_status'];
+            $importantStatus = $approvalHistory['select_important_status'];
+
+            if($approvalHistory['user_id'] == $collaboratorUserId){
+                $clearAndImportantWord = '';
+            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
+                $clearAndImportantWord = __('This Top Key Result is clear and most important.');
+            } else if($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
+                $clearAndImportantWord = __('This Top Key Result is not most important.');
+            } else {
+                $clearAndImportantWord = __('This Top Key Result is not clear.');
+            }
+
+            $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
+            return $approvalHistory;
+        });
     }
 }
