@@ -913,6 +913,7 @@ class Goal extends AppModel
         }
 
         $res = $this->find('all', $options);
+        $this->log($res);
         foreach ($res as $key => $goal) {
             //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
@@ -1153,7 +1154,7 @@ class Goal extends AppModel
             //進捗を計算
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
+            $goals[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
 
         return $goals;
