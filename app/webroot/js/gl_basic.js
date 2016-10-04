@@ -69,6 +69,36 @@ function changeSizeFeedImageOnlyOne($obj) {
     }
   });
 }
+/**
+ * 画像の高さを親の要素に割り当てる
+ *
+ * @param $obj
+ */
+function changeSizeActionImage($obj) {
+  $obj.each(function (i, v) {
+    var $elm = $(v);
+    var $img = $elm.find('img');
+    var imgWidth = $img[0].width;
+    var imgHeight = $img[0].height;
+
+    var is_oblong = imgWidth > imgHeight;
+    var is_near_square = Math.abs(imgWidth - imgHeight) <= 5;
+
+    // 横長の画像か、ほぼ正方形に近い画像の場合はそのまま表示
+    if (is_oblong || is_near_square) {
+      $elm.css('height', imgHeight);
+      $img.parent().css('height', imgHeight);
+    }
+    // 縦長の画像は、4:3 の比率にする
+    else {
+      var expect_parent_height = imgWidth * 0.75;
+
+      $elm.css('height', expect_parent_height);
+      $img.parent().css('height', expect_parent_height);
+    }
+  });
+}
+
 
 /**
  * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
@@ -2688,6 +2718,11 @@ function getModalPostList(e) {
         }
         prevScrollTopAction = currentScrollTopAction;
       });
+      // 画像読み込み完了後に画像サイズから要素の高さを割り当てる
+      $modal_elm.imagesLoaded(function () {
+        changeSizeActionImage($modal_elm.find('.feed_img_only_one'));
+      });
+
     }).success(function () {
       $('body').addClass('modal-open');
     });
