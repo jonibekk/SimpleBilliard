@@ -840,6 +840,8 @@ class NotifyBizComponent extends Component
 
         $goal_id = $collaborator['Collaborator']['goal_id'];
 
+        $goal = $this->Goal->getGoal($goal_id);
+
         //inactive user
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
