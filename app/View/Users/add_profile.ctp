@@ -6,7 +6,7 @@
  * @var string             $language_name
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="row add-profile">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -55,15 +55,15 @@
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __("Last Name"),
                     'placeholder'              => __("eg. Armstrong"),
-                    "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __("Only alphabet characters are allowed."),
+                    "pattern"                  => '^[a-zA-Z \']+$',
+                    "data-bv-regexp-message"   => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message" => __("Input is required."),
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                    => __("First Name"),
                     'placeholder'              => __("eg. Harry"),
-                    "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __("Only alphabet characters are allowed."),
+                    "pattern"                  => '^[a-zA-Z \']+$',
+                    "data-bv-regexp-message"   => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message" => __("Input is required."),
                 ]);
                 if ($me['last_first']) {
@@ -222,4 +222,4 @@
     });
 </script>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

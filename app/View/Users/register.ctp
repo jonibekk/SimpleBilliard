@@ -6,7 +6,7 @@
  * @var                    $email
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -29,8 +29,8 @@
                 $last_name = $this->Form->input('last_name', [
                     'label'                        => __("Last Name"),
                     'placeholder'                  => __("eg. Armstrong"),
-                    "pattern"                      => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
+                    "pattern"                      => '^[a-zA-Z \']+$',
+                    "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
@@ -39,8 +39,8 @@
                 $first_name = $this->Form->input('first_name', [
                     'label'                        => __("First Name"),
                     'placeholder'                  => __("eg. Harry"),
-                    "pattern"                      => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
+                    "pattern"                      => '^[a-zA-Z \']+$',
+                    "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
@@ -178,4 +178,4 @@
 
 </script>
 <?php $this->end(); ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

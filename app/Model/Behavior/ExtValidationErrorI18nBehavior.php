@@ -15,7 +15,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
         $error_messages = array(
             'notEmpty'            => __("Input is required."),
             'numeric'             => __("Only Numeric characters are allowed."),
-            'isAlphabetOnly'      => __("Only alphabet characters are allowed."),
+            'isAlphabetOnly'      => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             'isString'            => __("Invalid value"),
             'email'               => __("Email address is incorrect."),
             'notBlankCheckbox'    => __("Need to agree our terms."),
