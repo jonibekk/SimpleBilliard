@@ -1159,7 +1159,7 @@ function getAjaxFormReplaceElm() {
               // ogp 情報 取得開始時
               loadingStart: function () {
                 // loading アイコン表示
-                $('<i class="fa fa  -refresh fa-spin"></i>')
+                $('<i class="fa fa-refresh fa-spin"></i>')
                   .attr('id', 'CommentSiteInfoLoadingIcon_' + post_id)
                   .addClass('mr_8px lh_20px')
                   .insertBefore('#CommentSubmit_' + post_id);
