@@ -69,6 +69,11 @@ function changeSizeFeedImageOnlyOne($obj) {
     }
   });
 }
+/**
+ * 画像の高さを親の要素に割り当てる
+ *
+ * @param $obj
+ */
 function changeSizeActionImage($obj) {
   $obj.each(function (i, v) {
     var $elm = $(v);
@@ -1154,7 +1159,7 @@ function getAjaxFormReplaceElm() {
               // ogp 情報 取得開始時
               loadingStart: function () {
                 // loading アイコン表示
-                $('<i class="fa fa-refresh fa-spin"></i>')
+                $('<i class="fa fa  -refresh fa-spin"></i>')
                   .attr('id', 'CommentSiteInfoLoadingIcon_' + post_id)
                   .addClass('mr_8px lh_20px')
                   .insertBefore('#CommentSubmit_' + post_id);
@@ -2713,6 +2718,7 @@ function getModalPostList(e) {
         }
         prevScrollTopAction = currentScrollTopAction;
       });
+      // 画像読み込み完了後に画像サイズから要素の高さを割り当てる
       $modal_elm.imagesLoaded(function () {
         changeSizeActionImage($modal_elm.find('.feed_img_only_one'));
       });
