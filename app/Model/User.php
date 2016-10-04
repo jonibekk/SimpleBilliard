@@ -91,9 +91,9 @@ class User extends AppModel
             ],
             'cover_photo' => [
                 'styles'      => [
-                    'small' => 'f[254x142]',
+                    'small'  => 'f[254x142]',
                     'medium' => 'f[672x378]',
-                    'large' => 'f[2048x1152]',
+                    'large'  => 'f[2048x1152]',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',
@@ -142,14 +142,14 @@ class User extends AppModel
             ],
         ],
         'first_name'         => [
-            'maxLength'      => ['rule' => ['maxLength', 128]],
-            'notEmpty'       => ['rule' => 'notEmpty'],
-            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+            'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
         ],
         'last_name'          => [
-            'maxLength'      => ['rule' => ['maxLength', 128]],
-            'notEmpty'       => ['rule' => 'notEmpty'],
-            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+            'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
         ],
         'gender_type'        => [
             'isString' => [
@@ -265,8 +265,8 @@ class User extends AppModel
             ],
         ],
         'cover_photo'        => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],],
+            'image_max_size'      => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'          => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],],
             'imageMinWidthHeight' => ['rule' => ['minWidthHeight', 672, 378]],
         ],
         'comment'            => [
