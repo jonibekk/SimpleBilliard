@@ -913,7 +913,6 @@ class Goal extends AppModel
         }
 
         $res = $this->find('all', $options);
-        $this->log($res);
         foreach ($res as $key => $goal) {
             //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
