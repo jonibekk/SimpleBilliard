@@ -275,6 +275,25 @@ class GoalApprovalsController extends ApiController
         return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
     }
 
+    public function post_withdraw()
+    {
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $myUserId = $this->Auth->user('id');
+        $collaboratorId = Hash::get($this->request->data, 'collaborator.id');
+
+        // アクセス権限チェック
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
+        if (!$canAccess) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
+        }
+
+        // リストページに表示する通知カード
+        $this->Pnotify->outSuccess(__("Withdraw approval"));
+
+        return $this->_getResponseSuccess(['collaborator_id' => $collaboratorId]);
+    }
+
     /**
      * Goal認定詳細ページの初期データ取得API
      *

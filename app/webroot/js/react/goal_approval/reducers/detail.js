@@ -5,6 +5,7 @@ const initialState = {
   to_list_page: false,
   posting_set_as_target: false,
   posting_remove_from_target: false,
+  posting_withdraw: false,
   validationErrors: { comment: '' }
 }
 
@@ -30,9 +31,17 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         posting_remove_from_target: true
       })
+    case types.POSTING_WITHDRAW:
+      return Object.assign({}, state, {
+        posting_withdraw: true
+      })
     case types.FINISHED_POSTING_REMOVE_FROM_TARGET:
       return Object.assign({}, state, {
         posting_remove_from_target: false
+      })
+    case types.FINISHED_POSTING_WITHDRAW:
+      return Object.assign({}, state, {
+        posting_withdraw: false
       })
     case types.INVALID:
       return Object.assign({}, state, {
