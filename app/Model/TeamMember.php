@@ -2094,32 +2094,26 @@ class TeamMember extends AppModel
                 ],
             ],
             'first_name'            => [
-                'maxLength'      => [
+                'maxLength' => [
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("First Name"))
                 ],
-                'notEmpty'       => [
+                'notEmpty'  => [
                     'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("First Name"))
                 ],
-                'isAlphabetOnly' => [
-                    'rule'    => 'isAlphabetOnly',
-                    'message' => __("%s should be entered in alphabet characters.", __("First Name"))
-                ],
+                'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
             ],
             'last_name'             => [
-                'maxLength'      => [
+                'maxLength' => [
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Last Name"))
                 ],
-                'notEmpty'       => [
+                'notEmpty'  => [
                     'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Last Name"))
                 ],
-                'isAlphabetOnly' => [
-                    'rule'    => 'isAlphabetOnly',
-                    'message' => __("%s should be entered in alphabet characters.", __("Last Name"))
-                ],
+                'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
             ],
             'admin_flg'             => [
                 'notEmpty'  => [
