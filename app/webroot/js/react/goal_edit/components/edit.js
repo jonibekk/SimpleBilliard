@@ -105,7 +105,6 @@ export default class Edit extends React.Component {
               inputLabels={inputData.labels}
               onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
               onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
-              renderSuggestion={(s) => <span>{s.name}</span>}
               getSuggestionValue={(s) => this.props.onSuggestionsFetchRequested}
               onChange={this.props.onChangeAutoSuggest}
               onSuggestionSelected={this.props.onSuggestionSelected}
