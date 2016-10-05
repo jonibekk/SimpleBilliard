@@ -12,6 +12,7 @@ class GoalHelper extends AppHelper
 
     function getFollowOption($goal)
     {
+        $this->log($goal);
         $option = [
             'class'    => 'follow-off',
             'style'    => null,

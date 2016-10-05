@@ -1136,6 +1136,17 @@ class Goal extends AppModel
                     ],
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                 ],
+                'Collaborator'      => [
+                    'fields'     => [
+                        'Collaborator.id',
+                        'Collaborator.user_id',
+                        'Collaborator.type',
+                        'Collaborator.approval_status',
+                        'Collaborator.is_wish_approval',
+                        'Collaborator.is_target_evaluation'
+                    ],
+                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR]
+                ],
                 'TargetCollabo'      => [
                     'fields'     => [
                         'TargetCollabo.id',
@@ -1219,6 +1230,11 @@ class Goal extends AppModel
                         'KeyResult.priority',
                         'KeyResult.completed',
                     ],
+                ],
+                'Collaborator' => [
+                    'conditions' => [
+                        'Collaborator.user_id' => $user_id
+                    ]
                 ],
                 'TargetCollabo' => [
                     'fields'     => [

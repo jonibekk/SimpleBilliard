@@ -95,7 +95,7 @@
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type !== 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                    $this->Goal->displayApprovalStatus($goal['Collaborator'][0])) ?>
+                                    $this->Goal->displayApprovalStatus($goal['TargetCollabo'])) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">

@@ -244,7 +244,7 @@ $kr_count = 0;
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __("Add Key Result") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status"><?= $this->Goal->displayApprovalStatus($goal['Collaborator'][0]) ?></p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= $this->Goal->displayApprovalStatus($goal['TargetCollabo']) ?></p>
                             </li>
                         </ul>
                     </div>
