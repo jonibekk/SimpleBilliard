@@ -303,8 +303,11 @@ class Goal extends AppModel
      * hasOne associations
      */
     public $hasOne = [
-        'TopKeyResult' => [
+        'TopKeyResult'  => [
             'className' => 'KeyResult',
+        ],
+        'TargetCollabo' => [
+            'className' => 'Collaborator',
         ],
     ];
 
@@ -716,16 +719,16 @@ class Goal extends AppModel
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
                 ],
-                'Collaborator'      => [
+                'TargetCollabo'      => [
                      'fields'     => [
-                         'Collaborator.id',
-                         'Collaborator.user_id',
-                         'Collaborator.type',
-                         'Collaborator.approval_status',
-                         'Collaborator.is_wish_approval',
-                         'Collaborator.is_target_evaluation'
+                         'TargetCollabo.id',
+                         'TargetCollabo.user_id',
+                         'TargetCollabo.type',
+                         'TargetCollabo.approval_status',
+                         'TargetCollabo.is_wish_approval',
+                         'TargetCollabo.is_target_evaluation'
                      ],
-                     'conditions' => ['Collaborator.user_id' => $user_id],
+                     'conditions' => ['TargetCollabo.user_id' => $user_id],
                  ],
             ],
         ];
@@ -742,7 +745,7 @@ class Goal extends AppModel
             // 進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
+            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
 
         /**
@@ -889,16 +892,16 @@ class Goal extends AppModel
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
                 ],
-                'Collaborator'      => [
+                'TargetCollabo'      => [
                      'fields'     => [
-                         'Collaborator.id',
-                         'Collaborator.user_id',
-                         'Collaborator.type',
-                         'Collaborator.approval_status',
-                         'Collaborator.is_wish_approval',
-                         'Collaborator.is_target_evaluation'
+                         'TargetCollabo.id',
+                         'TargetCollabo.user_id',
+                         'TargetCollabo.type',
+                         'TargetCollabo.approval_status',
+                         'TargetCollabo.is_wish_approval',
+                         'TargetCollabo.is_target_evaluation'
                      ],
-                     'conditions' => ['Collaborator.user_id' => $this->my_uid],
+                     'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
                  ],
             ],
             'limit'      => $limit,
@@ -917,7 +920,7 @@ class Goal extends AppModel
             //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
+            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
 
         return $res;
@@ -1133,16 +1136,16 @@ class Goal extends AppModel
                     ],
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                 ],
-                'Collaborator'      => [
+                'TargetCollabo'      => [
                     'fields'     => [
-                        'Collaborator.id',
-                        'Collaborator.user_id',
-                        'Collaborator.type',
-                        'Collaborator.approval_status',
-                        'Collaborator.is_wish_approval',
-                        'Collaborator.is_target_evaluation'
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.user_id' => $user_id],
+                    'conditions' => ['TargetCollabo.user_id' => $user_id],
                 ],
             ]
         ];
@@ -1153,7 +1156,7 @@ class Goal extends AppModel
             //進捗を計算
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $goals[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
+            $goals[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
 
         return $goals;
@@ -1217,16 +1220,16 @@ class Goal extends AppModel
                         'KeyResult.completed',
                     ],
                 ],
-                'Collaborator' => [
+                'TargetCollabo' => [
                     'fields'     => [
-                        'Collaborator.id',
-                        'Collaborator.user_id',
-                        'Collaborator.type',
-                        'Collaborator.approval_status',
-                        'Collaborator.is_wish_approval',
-                        'Collaborator.is_target_evaluation'
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.user_id' => $user_id],
+                    'conditions' => ['TargetCollabo.user_id' => $user_id],
                 ],
             ]
         ];
@@ -1235,7 +1238,7 @@ class Goal extends AppModel
             //calc progress
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
+            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
         }
         return $res;
     }
@@ -1326,16 +1329,16 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
-                'Collaborator'      => [
+                'TargetCollabo'      => [
                     'fields'     => [
-                        'Collaborator.id',
-                        'Collaborator.user_id',
-                        'Collaborator.type',
-                        'Collaborator.approval_status',
-                        'Collaborator.is_wish_approval',
-                        'Collaborator.is_target_evaluation'
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.user_id' => $this->my_uid],
+                    'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
                 ]
             ]
         ];
@@ -1353,7 +1356,7 @@ class Goal extends AppModel
             //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
+            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
         return $res;
     }
@@ -1428,16 +1431,16 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
-                'Collaborator'      => [
+                'TargetCollabo'      => [
                     'fields'     => [
-                        'Collaborator.id',
-                        'Collaborator.user_id',
-                        'Collaborator.type',
-                        'Collaborator.approval_status',
-                        'Collaborator.is_wish_approval',
-                        'Collaborator.is_target_evaluation'
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.user_id' => $this->my_uid],
+                    'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
                 ]
             ]
         ];
@@ -1455,7 +1458,7 @@ class Goal extends AppModel
             //進捗を計算
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
             // 認定有効フラグを追加
-            $res[$key]['Collaborator'][0]['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
+            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
         }
         return $res;
     }

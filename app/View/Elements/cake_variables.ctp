@@ -500,6 +500,7 @@
             "Evaluated": "<?=__("Evaluated")?>",
             "Not Evaluated": "<?=__("Not Evaluated")?>",
             "Waiting": "<?=__("Waiting")?>",
+            "Waiting for approval": "<?=__("Waiting for approval")?>",
             "Goal details": "<?= __("Goal details") ?>",
             "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
         },

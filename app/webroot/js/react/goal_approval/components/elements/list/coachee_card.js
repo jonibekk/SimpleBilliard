@@ -13,7 +13,7 @@ export class CoacheeCard extends React.Component {
         return __('Evaluated')
       }
       if(collaborator.approval_status == ApprovalStatus.NEW || collaborator.approval_status == ApprovalStatus.REAPPLICATION) {
-        return __('Waiting')
+        return __('Waiting for approval')
       }
       return __('Not Evaluated')
     })()
