@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-08-31 20:36+0900\n"
-"PO-Revision-Date: 2016-08-31 20:38+0900\n"
+"POT-Creation-Date: 2016-10-06 02:28+0900\n"
+"PO-Revision-Date: 2016-10-06 02:29+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,10 +13,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
-#: Model/Team.php:225;226 Model/User.php:1247
+#: Model/Team.php:225;226 Model/User.php:1230
 msgid "All Team"
 msgstr "チーム全体"
 
@@ -58,7 +58,11 @@ msgstr "以下のリンクをクリックしてGoalousのセットアップを�
 msgid "Goalous"
 msgstr "Goalous(ゴーラス)"
 
-#: Controller/AppController.php:171
+#: Controller/AppController.php:171 View/Pages/contact.ctp:30;46
+#: View/Pages/contact_confirm.ctp:30;46 View/Pages/contact_thanks.ctp:30;46
+#: View/Pages/features.ctp:30;46 View/Pages/home.ctp:30;46
+#: View/Pages/law.ctp:30;46 View/Pages/pricing.ctp:30;46
+#: View/Pages/privacy_policy.ctp:30;46 View/Pages/terms.ctp:31;47
 msgid ""
 "Goalous is one of the best team communication tools. Let your team open. "
 "Your action will be share with your collegues. %s"
@@ -67,32 +71,9 @@ msgstr ""
 "バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
 "す。スマホアプリ・ブラウザで利用可能です。"
 
+#: Controller/AppController.php:172 View/Pages/home.ctp:30;46
 msgid "You can use Goalous on Web and on Mobile App."
 msgstr "スマホアプリ・ブラウザで利用可能です。"
-
-msgid "We accept consultation of introduction."
-msgstr "導入のご相談を受け付けています。"
-
-msgid "It is a confirmation of your inquiry."
-msgstr "お問い合わせ内容の確認です。"
-
-msgid "Thank you for your inquiry."
-msgstr "お問い合わせありがとうございました。"
-
-msgid "Description of the function is here."
-msgstr "機能の説明はこちら。"
-
-msgid "Inscription based on specific trade law is here."
-msgstr "特定商取引法に基づく表記はこちら。"
-
-msgid "Pricing is here."
-msgstr "料金・価格はこちら。"
-
-msgid "Privacy Policy is here."
-msgstr "プライバシーポリシーはこちら。"
-
-msgid "Terms and Conditions is here."
-msgstr "利用規約はこちら。"
 
 #: Controller/AppController.php:220
 msgid "Logged out because the team you logged in is deleted."
@@ -188,7 +169,7 @@ msgstr "処理中にエラーが発生しました。"
 
 #: Controller/CirclesController.php:319;367
 #: Controller/Component/PnotifyComponent.php:63
-#: View/Elements/cake_variables.ctp:79
+#: View/Elements/cake_variables.ctp:89
 msgid "Success"
 msgstr "成功"
 
@@ -207,7 +188,7 @@ msgstr "サークルから外しました。"
 #: Controller/CirclesController.php:418 Controller/GoalsController.php:1290
 #: Controller/PostsController.php:825;848;870
 #: Controller/UsersController.php:228;914;917;992
-#: View/Elements/cake_variables.ctp:38
+#: View/Elements/cake_variables.ctp:48
 msgid "An error has occurred."
 msgstr "エラーが発生しました。"
 
@@ -217,7 +198,7 @@ msgstr "設定を更新しました。"
 
 #: Controller/CirclesController.php:437
 #: Controller/Component/PnotifyComponent.php:65
-#: View/Elements/cake_variables.ctp:80
+#: View/Elements/cake_variables.ctp:90
 msgid "Error"
 msgstr "エラー"
 
@@ -426,13 +407,13 @@ msgstr "アクションを更新しました。"
 msgid "Member Number"
 msgstr "Member Number"
 
-#: Controller/GoalsController.php:1114 Model/TeamMember.php:2113;2117;2121
+#: Controller/GoalsController.php:1114 Model/TeamMember.php:2110;2114
 #: View/Elements/User/profile_setting.ctp:68 View/Users/add_profile.ctp:56
 #: View/Users/register.ctp:30
 msgid "Last Name"
 msgstr "姓(ローマ字)"
 
-#: Controller/GoalsController.php:1115 Model/TeamMember.php:2099;2103;2107
+#: Controller/GoalsController.php:1115 Model/TeamMember.php:2099;2103
 #: View/Elements/User/profile_setting.ctp:78 View/Users/add_profile.ctp:63
 #: View/Users/register.ctp:40
 msgid "First Name"
@@ -454,7 +435,7 @@ msgstr "被評価者"
 msgid "Approval Status"
 msgstr "承認ステータス"
 
-#: Controller/GoalsController.php:1120 View/Elements/cake_variables.ctp:328
+#: Controller/GoalsController.php:1120 View/Elements/cake_variables.ctp:338
 #: View/Evaluations/view.ctp:350 View/GoalApproval/done.ctp:128
 #: View/GoalApproval/index.ctp:131 View/Goals/add.ctp:73
 #: View/Goals/view_info.ctp:24
@@ -469,14 +450,14 @@ msgstr "ゴールカテゴリ"
 msgid "Goal Owner Type"
 msgstr "ゴールオーナー種別"
 
-#: Controller/GoalsController.php:1123 View/Elements/cake_variables.ctp:329
+#: Controller/GoalsController.php:1123 View/Elements/cake_variables.ctp:339
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:24
 #: View/GoalApproval/done.ctp:105 View/GoalApproval/index.ctp:107
 #: View/Goals/add.ctp:153
 msgid "Goal Name"
 msgstr "ゴール名"
 
-#: Controller/GoalsController.php:1124 View/Elements/cake_variables.ctp:330
+#: Controller/GoalsController.php:1124 View/Elements/cake_variables.ctp:340
 #: View/Elements/Goal/modal_add_key_result.ctp:99
 #: View/Elements/Goal/modal_edit_key_result.ctp:97
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:27
@@ -493,7 +474,7 @@ msgstr "程度(達成時)"
 msgid "Measurement(Initial)"
 msgstr "程度(開始時)"
 
-#: Controller/GoalsController.php:1127 View/Elements/cake_variables.ctp:333
+#: Controller/GoalsController.php:1127 View/Elements/cake_variables.ctp:343
 #: View/Elements/Goal/modal_add_key_result.ctp:161
 #: View/Elements/Goal/modal_edit_key_result.ctp:161 View/Goals/add.ctp:237
 msgid "Due Date"
@@ -511,7 +492,7 @@ msgstr "概要"
 #: View/Elements/Goal/modal_add_key_result.ctp:231
 #: View/Elements/Goal/modal_edit_key_result.ctp:230
 #: View/Evaluations/view.ctp:373 View/GoalApproval/done.ctp:125
-#: View/GoalApproval/index.ctp:128 View/Goals/add.ctp:443
+#: View/GoalApproval/index.ctp:128 View/Goals/add.ctp:439
 msgid "Weight"
 msgstr "重要度"
 
@@ -540,7 +521,7 @@ msgid "C"
 msgstr "C"
 
 #: Controller/GoalsController.php:1215;1236 Controller/SetupController.php:298
-#: View/Elements/cake_variables.ctp:296
+#: View/Elements/cake_variables.ctp:306
 msgid "Failed to add an action."
 msgstr "アクションの追加に失敗しました。"
 
@@ -561,7 +542,7 @@ msgid "Anyone"
 msgstr "指定なし"
 
 #: Controller/PagesController.php:193 Model/EvaluateScore.php:86
-#: Model/Team.php:254;265 View/Elements/cake_variables.ctp:407
+#: Model/Team.php:254;265 View/Elements/cake_variables.ctp:420
 #: View/Elements/Team/edit_term_setting.ctp:78;86;98 View/Teams/add.ctp:125
 msgid "Please select"
 msgstr "選択してください"
@@ -603,7 +584,7 @@ msgid "Changed members list."
 msgstr "メンバーを変更しました。"
 
 #: Controller/PostsController.php:195;197;1450
-#: View/Elements/cake_variables.ctp:297
+#: View/Elements/cake_variables.ctp:307
 msgid "Failed to post."
 msgstr "投稿に失敗しました。"
 
@@ -1103,12 +1084,12 @@ msgstr "新しいリカバリコードを生成しました。"
 #: Model/Goal.php:69 View/Elements/Team/evaluation_freeze.ctp:31
 #: View/Elements/Team/evaluation_progress.ctp:42
 #: View/Elements/Team/insight_form_input.ctp:55 View/Evaluations/index.ctp:23
-#: View/Goals/add.ctp:320;346
+#: View/Goals/add.ctp:320;343
 msgid "Current Term"
 msgstr "今期"
 
 #: Controller/UsersController.php:1154 Model/EvaluateTerm.php:518
-#: Model/Goal.php:70
+#: Model/Goal.php:70 View/Goals/add.ctp:344
 msgid "Next Term"
 msgstr "来期"
 
@@ -1143,12 +1124,12 @@ msgstr "デバイス情報が見つかりません。"
 msgid "Failed to save a Device Information."
 msgstr "デバイス情報の保存に失敗しました。"
 
-#: Controller/Component/OgpComponent.php:197
+#: Controller/Component/OgpComponent.php:204
 #: View/Elements/Feed/post_body.ctp:21;24
 msgid "Achieved %s!"
 msgstr "%sを達成しました！"
 
-#: Controller/Component/OgpComponent.php:206
+#: Controller/Component/OgpComponent.php:213
 msgid "Achieved a goal."
 msgstr "ゴール達成しました！"
 
@@ -1181,15 +1162,15 @@ msgstr "ドキュメント"
 msgid "All"
 msgstr "すべて"
 
-#: Model/Circle.php:27 View/Elements/cake_variables.ctp:73;318
+#: Model/Circle.php:27 View/Elements/cake_variables.ctp:83;328
 msgid "Public"
 msgstr "公開"
 
-#: Model/Circle.php:28 View/Elements/cake_variables.ctp:74
+#: Model/Circle.php:28 View/Elements/cake_variables.ctp:84
 msgid "Secret"
 msgstr "秘密"
 
-#: Model/Collaborator.php:41 View/Elements/cake_variables.ctp:257
+#: Model/Collaborator.php:41 View/Elements/cake_variables.ctp:267
 #: View/Elements/my_goals_area.ctp:91
 #: View/Elements/Goal/modal_goal_description.ctp:121
 #: View/Evaluations/view.ctp:365 View/GoalApproval/done.ctp:108
@@ -1210,7 +1191,7 @@ msgid "You"
 msgstr "あなた"
 
 #: Model/Evaluation.php:145;149;942
-#: Model/TeamMember.php:2137;2141;2177;2182;2187
+#: Model/TeamMember.php:2131;2135;2171;2176;2181
 msgid "Evaluator"
 msgstr "評価者"
 
@@ -1249,7 +1230,7 @@ msgstr "入力内容に不足があります。"
 msgid "Failed to save."
 msgstr "保存処理に失敗しました。"
 
-#: Model/Evaluation.php:644 View/Elements/cake_variables.ctp:316
+#: Model/Evaluation.php:644 View/Elements/cake_variables.ctp:326
 #: View/Elements/header_logged_in.ctp:115 View/Elements/modal_add_circle.ctp:49
 #: View/Elements/modal_edit_circle.ctp:293
 #: View/Elements/Feed/site_info_block.ctp:115
@@ -1282,7 +1263,7 @@ msgstr "進行中"
 msgid "Interruption"
 msgstr "中断"
 
-#: Model/Goal.php:37 View/Elements/cake_variables.ctp:367
+#: Model/Goal.php:37 View/Elements/cake_variables.ctp:377
 #: View/Elements/Evaluation/evaluators_status.ctp:31
 #: View/Elements/Goal/modal_goal_description.ctp:167
 #: View/Elements/User/modal_recovery_code.ctp:46
@@ -1620,7 +1601,7 @@ msgstr "%sに共有"
 msgid "Shared %1$s and %2$s others"
 msgstr "%1$sと他%2$s人に共有"
 
-#: Model/Post.php:1183 View/Elements/cake_variables.ctp:61
+#: Model/Post.php:1183 View/Elements/cake_variables.ctp:71
 msgid "Only you"
 msgstr "自分のみ"
 
@@ -1680,85 +1661,85 @@ msgstr "今期から"
 msgid "From next term"
 msgstr "来期から"
 
-#: Model/Team.php:255 View/Elements/cake_variables.ctp:409
+#: Model/Team.php:255 View/Elements/cake_variables.ctp:422
 msgid "Quater"
 msgstr "四半期"
 
-#: Model/Team.php:256 View/Elements/cake_variables.ctp:410
+#: Model/Team.php:256 View/Elements/cake_variables.ctp:423
 msgid "Half a year"
 msgstr "半年"
 
-#: Model/Team.php:257 View/Elements/cake_variables.ctp:411
+#: Model/Team.php:257 View/Elements/cake_variables.ctp:424
 msgid "Year"
 msgstr "年"
 
-#: Model/Team.php:266 View/Elements/cake_variables.ctp:414
+#: Model/Team.php:266 View/Elements/cake_variables.ctp:427
 #: View/Elements/User/profile_setting.ctp:113 View/Users/add_profile.ctp:95
 #: View/Users/register_prof_with_invite.ctp:84
 msgid "Jan"
 msgstr "１月"
 
-#: Model/Team.php:267 View/Elements/cake_variables.ctp:415
+#: Model/Team.php:267 View/Elements/cake_variables.ctp:428
 #: View/Elements/User/profile_setting.ctp:114 View/Users/add_profile.ctp:96
 #: View/Users/register_prof_with_invite.ctp:85
 msgid "Feb"
 msgstr "２月"
 
-#: Model/Team.php:268 View/Elements/cake_variables.ctp:416
+#: Model/Team.php:268 View/Elements/cake_variables.ctp:429
 #: View/Elements/User/profile_setting.ctp:115 View/Users/add_profile.ctp:97
 #: View/Users/register_prof_with_invite.ctp:86
 msgid "Mar"
 msgstr "３月"
 
-#: Model/Team.php:269 View/Elements/cake_variables.ctp:417
+#: Model/Team.php:269 View/Elements/cake_variables.ctp:430
 #: View/Elements/User/profile_setting.ctp:116 View/Users/add_profile.ctp:98
 #: View/Users/register_prof_with_invite.ctp:87
 msgid "Apr"
 msgstr "４月"
 
-#: Model/Team.php:270 View/Elements/cake_variables.ctp:418
+#: Model/Team.php:270 View/Elements/cake_variables.ctp:431
 #: View/Elements/User/profile_setting.ctp:117 View/Users/add_profile.ctp:99
 #: View/Users/register_prof_with_invite.ctp:88
 msgid "May"
 msgstr "５月"
 
-#: Model/Team.php:271 View/Elements/cake_variables.ctp:419
+#: Model/Team.php:271 View/Elements/cake_variables.ctp:432
 #: View/Elements/User/profile_setting.ctp:118 View/Users/add_profile.ctp:100
 #: View/Users/register_prof_with_invite.ctp:89
 msgid "Jun"
 msgstr "６月"
 
-#: Model/Team.php:272 View/Elements/cake_variables.ctp:420
+#: Model/Team.php:272 View/Elements/cake_variables.ctp:433
 #: View/Elements/User/profile_setting.ctp:119 View/Users/add_profile.ctp:101
 #: View/Users/register_prof_with_invite.ctp:90
 msgid "Jul"
 msgstr "７月"
 
-#: Model/Team.php:273 View/Elements/cake_variables.ctp:421
+#: Model/Team.php:273 View/Elements/cake_variables.ctp:434
 #: View/Elements/User/profile_setting.ctp:120 View/Users/add_profile.ctp:102
 #: View/Users/register_prof_with_invite.ctp:91
 msgid "Aug"
 msgstr "８月"
 
-#: Model/Team.php:274 View/Elements/cake_variables.ctp:422
+#: Model/Team.php:274 View/Elements/cake_variables.ctp:435
 #: View/Elements/User/profile_setting.ctp:121 View/Users/add_profile.ctp:103
 #: View/Users/register_prof_with_invite.ctp:92
 msgid "Sep"
 msgstr "９月"
 
-#: Model/Team.php:275 View/Elements/cake_variables.ctp:423
+#: Model/Team.php:275 View/Elements/cake_variables.ctp:436
 #: View/Elements/User/profile_setting.ctp:122 View/Users/add_profile.ctp:104
 #: View/Users/register_prof_with_invite.ctp:93
 msgid "Oct"
 msgstr "１０月"
 
-#: Model/Team.php:276 View/Elements/cake_variables.ctp:424
+#: Model/Team.php:276 View/Elements/cake_variables.ctp:437
 #: View/Elements/User/profile_setting.ctp:123 View/Users/add_profile.ctp:105
 #: View/Users/register_prof_with_invite.ctp:94
 msgid "Nov"
 msgstr "１１月"
 
-#: Model/Team.php:277 View/Elements/cake_variables.ctp:425
+#: Model/Team.php:277 View/Elements/cake_variables.ctp:438
 #: View/Elements/User/profile_setting.ctp:124 View/Users/add_profile.ctp:106
 #: View/Users/register_prof_with_invite.ctp:95
 msgid "Dec"
@@ -1865,7 +1846,7 @@ msgstr "管理者(*)"
 msgid "Evaluated(*)"
 msgstr "評価対象(*)"
 
-#: Model/TeamMember.php:1985;2020;2045;2147
+#: Model/TeamMember.php:1985;2020;2045;2141
 msgid "Member Type"
 msgstr "メンバータイプ"
 
@@ -1873,11 +1854,11 @@ msgstr "メンバータイプ"
 msgid "Language of Local Name"
 msgstr "ローカル姓名の言語コード"
 
-#: Model/TeamMember.php:1987;2221
+#: Model/TeamMember.php:1987;2215
 msgid "Local First Name"
 msgstr "ローカル名"
 
-#: Model/TeamMember.php:1988;2227
+#: Model/TeamMember.php:1988;2221
 msgid "Local Last Name"
 msgstr "ローカル姓"
 
@@ -1890,15 +1871,15 @@ msgstr "電話"
 msgid "Gender"
 msgstr "性別"
 
-#: Model/TeamMember.php:1991;2237
+#: Model/TeamMember.php:1991;2231
 msgid "Birth Year"
 msgstr "誕生年"
 
-#: Model/TeamMember.php:1992;2244
+#: Model/TeamMember.php:1992;2238
 msgid "Birth Month"
 msgstr "誕生月"
 
-#: Model/TeamMember.php:1993;2251 View/Elements/cake_variables.ctp:399
+#: Model/TeamMember.php:1993;2245 View/Elements/cake_variables.ctp:410
 #: View/Elements/User/profile_setting.ctp:127 View/Users/add_profile.ctp:109
 #: View/Users/view_info.ctp:40
 msgid "Birthday"
@@ -1932,7 +1913,7 @@ msgstr "グループ6"
 msgid "Group 7"
 msgstr "グループ7"
 
-#: Model/TeamMember.php:2001;2028;2170
+#: Model/TeamMember.php:2001;2028;2164
 msgid "Coach ID"
 msgstr "コーチID"
 
@@ -2024,7 +2005,7 @@ msgstr "評価者%sによるスコア"
 msgid "Comment by evaluator %s"
 msgstr "評価者%sによるコメント"
 
-#: Model/TeamMember.php:2062;2284
+#: Model/TeamMember.php:2062;2278
 msgid "Score by final evaluator"
 msgstr "最終評価者によるスコア"
 
@@ -2032,7 +2013,7 @@ msgstr "最終評価者によるスコア"
 msgid "Comment by final evaluator"
 msgstr "最終評価者によるコメント"
 
-#: Model/TeamMember.php:2074;2084;2103;2117;2127;2137;2260;2284
+#: Model/TeamMember.php:2074;2084;2103;2114;2121;2131;2254;2278
 msgid "%s is required."
 msgstr "%sは必須項目です。"
 
@@ -2043,7 +2024,7 @@ msgstr "%sは必須項目です。"
 msgid "Email Address"
 msgstr "メールアドレス"
 
-#: Model/TeamMember.php:2078;2237;2244;2251
+#: Model/TeamMember.php:2078;2231;2238;2245
 msgid "%s is not correct."
 msgstr "%s が正しくありません。"
 
@@ -2051,11 +2032,11 @@ msgstr "%s が正しくありません。"
 msgid "Member ID"
 msgstr "メンバーID"
 
-#: Model/TeamMember.php:2088;2099;2113;2147;2163;2187;2221;2227
+#: Model/TeamMember.php:2088;2099;2110;2141;2157;2181;2215;2221
 msgid "%s should be entered in less than 64 characters."
 msgstr "%sは64文字以内で入力してください。"
 
-#: Model/TeamMember.php:2092;2170
+#: Model/TeamMember.php:2092;2164
 msgid "%s doesn't allow you to specify the ID of you."
 msgstr "%sに本人のIDを指定する事はできません。"
 
@@ -2063,60 +2044,56 @@ msgstr "%sに本人のIDを指定する事はできません。"
 msgid "Evaluator ID"
 msgstr "評価者ID"
 
-#: Model/TeamMember.php:2107;2121
-msgid "%s should be entered in alphabet characters."
-msgstr "%sはアルファベットのみで入力してください。"
-
-#: Model/TeamMember.php:2127;2131 View/Elements/cake_variables.ctp:317
+#: Model/TeamMember.php:2121;2125 View/Elements/cake_variables.ctp:327
 #: View/Elements/modal_add_circle.ctp:66
 #: View/Elements/public_circle_item.ctp:33
 msgid "Administrators"
 msgstr "管理者"
 
-#: Model/TeamMember.php:2131;2141;2264
+#: Model/TeamMember.php:2125;2135;2258
 msgid "%s must be either 'ON' or 'OFF'."
 msgstr "%sは'ON'もしくは'OFF'のいずれかである必要があいます。"
 
-#: Model/TeamMember.php:2153;2177
+#: Model/TeamMember.php:2147;2171
 msgid "Please %s fill with align left."
 msgstr "%sは左詰めで記入してください。"
 
-#: Model/TeamMember.php:2153;2158;2163
+#: Model/TeamMember.php:2147;2152;2157
 msgid "Group name"
 msgstr "グループ名"
 
-#: Model/TeamMember.php:2158;2182
+#: Model/TeamMember.php:2152;2176
 msgid "%s is duplicated."
 msgstr "%sが重複しています。"
 
-#: Model/TeamMember.php:2196
+#: Model/TeamMember.php:2190
 msgid "%s should be entered in less than 20 characters."
 msgstr "%sは20文字以内で入力してください。"
 
-#: Model/TeamMember.php:2196
+#: Model/TeamMember.php:2190
 msgid "Phone number"
 msgstr "電話番号"
 
-#: Model/TeamMember.php:2200
+#: Model/TeamMember.php:2194
 msgid ""
 "Telephone number is incorrect. Single-byte number and '-()' are allowed."
 msgstr "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
 
-#: Model/TeamMember.php:2207
+#: Model/TeamMember.php:2201
 msgid "Choose 'male' or 'female'."
 msgstr "'male'もしくは'female'で記入してください。"
 
-#: Model/TeamMember.php:2214
+#: Model/TeamMember.php:2208
 msgid "It is unsupported language code of the local first name and last name."
 msgstr "姓名にサポートされていない言語が入っています。"
 
-#: Model/TeamMember.php:2233
+#: Model/TeamMember.php:2227
 msgid ""
 "If you want to fill in the date of birth, please fill out all of the items "
 "of date."
 msgstr "誕生日を記入する場合は年月日のすべての項目を記入してください。"
 
-#: Model/TeamMember.php:2260;2264
+#: Model/TeamMember.php:2254;2258
 msgid "Active status"
 msgstr "メンバーアクティブ状態"
 
@@ -2132,60 +2109,60 @@ msgstr "女性"
 msgid "Neither"
 msgstr "どちらでもない"
 
-#: Model/User.php:658;699
+#: Model/User.php:659;700
 msgid "Saving Email failed"
 msgstr "メールアドレスの保存に失敗しました。"
 
-#: Model/User.php:667;692
+#: Model/User.php:668;693
 msgid "Saving User failed"
 msgstr "ユーザ情報の保存に失敗しました。"
 
-#: Model/User.php:677;684;711
+#: Model/User.php:678;685;712
 msgid "Saving LocalName failed"
 msgstr "ローカル名の保存に失敗しました。"
 
-#: Model/User.php:737
+#: Model/User.php:738
 msgid "Current Password is incorrect."
 msgstr "現在のパスワードが間違っています。"
 
-#: Model/User.php:791
+#: Model/User.php:792
 msgid "Invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
-#: Model/User.php:794
+#: Model/User.php:795
 msgid "Invitation token is expired."
 msgstr "トークンの期限が切れています。"
 
-#: Model/User.php:820 View/Users/password_reset_request.ctp:31
+#: Model/User.php:821 View/Users/password_reset_request.ctp:31
 #: View/Users/token_resend.ctp:31
 msgid "Enter your email address."
 msgstr "メールアドレスを入力してください。"
 
-#: Model/User.php:832
+#: Model/User.php:833
 msgid "This email address isn't registered at Goalous."
 msgstr "このメールアドレスはGoalousに登録されていません。"
 
-#: Model/User.php:837
+#: Model/User.php:838
 msgid "This email should be authenticated. Check your email box."
 msgstr ""
 "このメールアドレスは認証されていません。以前に送られたメールをご確認くださ"
 "い。"
 
-#: Model/User.php:842
+#: Model/User.php:843
 msgid "The user account is invalid."
 msgstr "ユーザアカウントが有効ではありません。"
 
-#: Model/User.php:916 View/Pages/home.ctp:125 View/Signup/email.ctp:31
+#: Model/User.php:917 View/Pages/home.ctp:125 View/Signup/email.ctp:31
 msgid "Email address is empty."
 msgstr "メールアドレスが入力されていません"
 
-#: Model/User.php:934
+#: Model/User.php:935
 msgid ""
 "Current email address is not authenticated. So, you can't change email "
 "address."
 msgstr "現在のメールアドレスが認証待ちのため、変更できません。"
 
-#: Model/User.php:1293
+#: Model/User.php:1276
 msgid "%1$s member"
 msgstr "%1$s人のメンバー"
 
@@ -2223,12 +2200,15 @@ msgstr "入力必須項目です。"
 msgid "Only Numeric characters are allowed."
 msgstr "許可されているのは数字のみです。"
 
-#: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
+#: Model/Behavior/ExtValidationErrorI18nBehavior.php:18;32
+#: View/Elements/cake_variables.ctp:35
 #: View/Elements/User/profile_setting.ctp:71;81
 #: View/Users/add_profile.ctp:59;66 View/Users/register.ctp:33;43
 #: View/Users/register_prof_with_invite.ctp:35;47
-msgid "Only alphabet characters are allowed."
-msgstr "アルファベットのみで入力してください。"
+msgid ""
+"It includes restricted strings. Allowed characters are only alphanumeric, "
+"space and apostrophe."
+msgstr "使用できる文字はアルファベット、スペース、アポストロフィのみです。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:19
 msgid "Invalid value"
@@ -2247,10 +2227,12 @@ msgid "Both of passwords are not same."
 msgstr "パスワードが一致しません。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:23
+#: View/Elements/cake_variables.ctp:442
 msgid "Password is incorrect."
 msgstr "パスワードが間違っています。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:24
+#: View/Elements/cake_variables.ctp:40
 #: View/Elements/User/modal_change_email.ctp:82
 #: View/Elements/User/profile_setting.ctp:331 View/Setup/profile_add.ctp:141
 msgid "At least %2$d characters is required."
@@ -2279,11 +2261,11 @@ msgid "Some email addresses are incorrect."
 msgstr "メールアドレスが正しくないものがあります。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:31
-#: View/Elements/cake_variables.ctp:19
+#: View/Elements/cake_variables.ctp:19;42
 msgid "Please mix of numbers and alphanumeric."
 msgstr "パスワードは数字と英字を組み合わせて下さい。"
 
-#: View/Elements/cake_variables.ctp:15
+#: View/Elements/cake_variables.ctp:15;33;34;41
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
 
@@ -2292,7 +2274,7 @@ msgstr "%1$d文字以上%2$d文字以下で入力してください。"
 #: View/Elements/Feed/photo_upload_mini.ctp:106
 #: View/Elements/Team/edit_basic_setting.ctp:147
 #: View/Elements/Team/edit_term_setting.ctp:183
-#: View/Elements/User/profile_setting.ctp:323 View/Goals/add.ctp:577
+#: View/Elements/User/profile_setting.ctp:323 View/Goals/add.ctp:573
 #: View/Setup/profile_add.ctp:133 View/Teams/add.ctp:166
 #: View/Teams/add_group_vision.ctp:136 View/Teams/add_team_vision.ctp:128
 #: View/Teams/edit_group_vision.ctp:139 View/Teams/edit_team_vision.ctp:131
@@ -2342,49 +2324,54 @@ msgstr ""
 "アップロードしたファイルの有効期限が切れています。再度アップロードしてくださ"
 "い。"
 
-#: View/Elements/cake_variables.ctp:32 View/Goals/add.ctp:545;560
+#: View/Elements/cake_variables.ctp:32 View/Goals/add.ctp:541;556
 msgid "Enter such date as YYYY/MM/DD."
 msgstr "日付はYYYY/MM/DDの形式で入力してください。"
 
-#: View/Elements/cake_variables.ctp:35
+#: View/Elements/cake_variables.ctp:36;37;38;39
+#: View/Evaluations/view.ctp:114;440
+msgid "Selection required."
+msgstr "選択必須項目です。"
+
+#: View/Elements/cake_variables.ctp:45
 msgid ""
 "You haven't finished your input data yet. Do you want to leave without "
 "finishing?"
 msgstr "入力が途中です。このまま移動しますか？"
 
-#: View/Elements/cake_variables.ctp:36
+#: View/Elements/cake_variables.ctp:46
 msgid "Please enter text."
 msgstr "スペルを入力してください。"
 
-#: View/Elements/cake_variables.ctp:37
+#: View/Elements/cake_variables.ctp:47
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
 
-#: View/Elements/cake_variables.ctp:39 View/Goals/add.ctp:537
+#: View/Elements/cake_variables.ctp:49 View/Goals/add.ctp:533
 msgid "Start date has expired."
 msgstr "開始日が期限を過ぎています。"
 
-#: View/Elements/cake_variables.ctp:40 View/Goals/add.ctp:552
+#: View/Elements/cake_variables.ctp:50 View/Goals/add.ctp:548
 msgid "The limit date must be after start date."
 msgstr "期限は開始日より後である必要があります。"
 
-#: View/Elements/cake_variables.ctp:41
+#: View/Elements/cake_variables.ctp:51
 msgid "Failed to comment."
 msgstr "コメントできませんでした。"
 
-#: View/Elements/cake_variables.ctp:42
+#: View/Elements/cake_variables.ctp:52
 msgid "This comment was deleted."
 msgstr "このコメントは削除されました。"
 
-#: View/Elements/cake_variables.ctp:43
+#: View/Elements/cake_variables.ctp:53
 msgid "Failed to get comment."
 msgstr "コメントを取得できませんでした。"
 
-#: View/Elements/cake_variables.ctp:44;64
+#: View/Elements/cake_variables.ctp:54;74
 msgid "N/A"
 msgstr "該当なし"
 
-#: View/Elements/cake_variables.ctp:45
+#: View/Elements/cake_variables.ctp:55
 msgid ""
 "After leaving secret circle, you can't join again by yourself. Do you really "
 "want to leave this secret circle?"
@@ -2392,37 +2379,37 @@ msgstr ""
 "秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいです"
 "か？"
 
-#: View/Elements/cake_variables.ctp:48
+#: View/Elements/cake_variables.ctp:58
 msgid "Copied the post URL to the clipboard."
 msgstr "クリップボードに投稿URLをコピーしました。"
 
-#: View/Elements/cake_variables.ctp:49
+#: View/Elements/cake_variables.ctp:59
 msgid "Loading..."
 msgstr "読込中･･･"
 
-#: View/Elements/cake_variables.ctp:50
+#: View/Elements/cake_variables.ctp:60
 msgid "Searching..."
 msgstr "検索中･･･"
 
-#: View/Elements/cake_variables.ctp:51 View/Helper/GoalHelper.php:42
+#: View/Elements/cake_variables.ctp:61 View/Helper/GoalHelper.php:42
 msgid "Following"
 msgstr "フォロー中"
 
-#: View/Elements/cake_variables.ctp:52
+#: View/Elements/cake_variables.ctp:62
 #: View/Elements/my_goals_area.ctp:86;99;116
 msgid "More"
 msgstr "もっと見る"
 
-#: View/Elements/cake_variables.ctp:53 View/Elements/Feed/contents.ctp:66
+#: View/Elements/cake_variables.ctp:63 View/Elements/Feed/contents.ctp:66
 #: View/Users/view_posts.ctp:30
 msgid "View previous posts ▼"
 msgstr "さらに投稿を読み込む ▼"
 
-#: View/Elements/cake_variables.ctp:54
+#: View/Elements/cake_variables.ctp:64
 msgid "No further comment."
 msgstr "これ以上のコメントがありません。"
 
-#: View/Elements/cake_variables.ctp:55 View/Elements/modal_action_list.ctp:87
+#: View/Elements/cake_variables.ctp:65 View/Elements/modal_action_list.ctp:87
 #: View/Elements/modal_circle_members.ctp:70
 #: View/Elements/modal_message_range.ctp:30
 #: View/Elements/modal_share_range.ctp:45
@@ -2447,72 +2434,72 @@ msgstr "これ以上のコメントがありません。"
 msgid "Close"
 msgstr "閉じる"
 
-#: View/Elements/cake_variables.ctp:56
+#: View/Elements/cake_variables.ctp:66
 #: View/Elements/Goal/simplex_top_section.ctp:81 View/Helper/GoalHelper.php:17
 msgid "Follow"
 msgstr "フォロー"
 
-#: View/Elements/cake_variables.ctp:57
+#: View/Elements/cake_variables.ctp:67
 msgid "Copy the URL"
 msgstr "URLをコピー"
 
-#: View/Elements/cake_variables.ctp:62
+#: View/Elements/cake_variables.ctp:72
 msgid "Join"
 msgstr "参加"
 
-#: View/Elements/cake_variables.ctp:63
+#: View/Elements/cake_variables.ctp:73
 msgid "..."
 msgstr "不参加"
 
-#: View/Elements/cake_variables.ctp:65
+#: View/Elements/cake_variables.ctp:75
 msgid "Enter text."
 msgstr "入力してください。"
 
-#: View/Elements/cake_variables.ctp:66
+#: View/Elements/cake_variables.ctp:76
 msgid "Search string"
 msgstr "検索文字列が"
 
-#: View/Elements/cake_variables.ctp:67
+#: View/Elements/cake_variables.ctp:77
 msgid "is too long."
 msgstr "文字長すぎます"
 
-#: View/Elements/cake_variables.ctp:68
+#: View/Elements/cake_variables.ctp:78
 msgid "At most,"
 msgstr "最多で"
 
-#: View/Elements/cake_variables.ctp:69
+#: View/Elements/cake_variables.ctp:79
 msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
-#: View/Elements/cake_variables.ctp:70 View/Elements/Feed/common_form.ctp:194
+#: View/Elements/cake_variables.ctp:80 View/Elements/Feed/common_form.ctp:194
 msgid "Select a key result (optional)"
 msgstr "達成要素を選択する(オプション)"
 
-#: View/Elements/cake_variables.ctp:71
+#: View/Elements/cake_variables.ctp:81
 msgid "No key result"
 msgstr "達成要素はありません"
 
-#: View/Elements/cake_variables.ctp:72
+#: View/Elements/cake_variables.ctp:82
 msgid "Add notified parties (optional)"
 msgstr "通知先を追加(オプション)"
 
-#: View/Elements/cake_variables.ctp:75
+#: View/Elements/cake_variables.ctp:85
 msgid "Choose public circle(s) or member(s)"
 msgstr "公開サークルかメンバーを指定しよう"
 
-#: View/Elements/cake_variables.ctp:76
+#: View/Elements/cake_variables.ctp:86
 msgid "Choose member(s)"
 msgstr "メンバーを指定しよう"
 
-#: View/Elements/cake_variables.ctp:77
+#: View/Elements/cake_variables.ctp:87
 msgid "Choose secret circle(s)"
 msgstr "秘密サークルを指定しよう"
 
-#: View/Elements/cake_variables.ctp:78
+#: View/Elements/cake_variables.ctp:88
 msgid "You can't switch in the circle page."
 msgstr "サークルページでは切り替えられません"
 
-#: View/Elements/cake_variables.ctp:81 View/Elements/modal_add_circle.ctp:146
+#: View/Elements/cake_variables.ctp:91 View/Elements/modal_add_circle.ctp:146
 #: View/Elements/modal_add_members_by_csv.ctp:100
 #: View/Elements/modal_collabo.ctp:88 View/Elements/modal_edit_circle.ctp:327
 #: View/Elements/modal_edit_members_by_csv.ctp:97
@@ -2521,164 +2508,164 @@ msgstr "サークルページでは切り替えられません"
 #: View/Elements/User/modal_change_email.ctp:63
 #: View/Elements/User/modal_change_password.ctp:64
 #: View/Elements/User/modal_delete_email.ctp:31
-#: View/Elements/User/simplex_top_section.ctp:65;112
+#: View/Elements/User/simplex_top_section.ctp:69;115
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: View/Elements/cake_variables.ctp:82
+#: View/Elements/cake_variables.ctp:92
 msgid "Name?"
 msgstr "名前を入力"
 
-#: View/Elements/cake_variables.ctp:83
+#: View/Elements/cake_variables.ctp:93
 msgid "Goal Name?"
 msgstr "ゴール名を入力"
 
-#: View/Elements/cake_variables.ctp:84
+#: View/Elements/cake_variables.ctp:94
 msgid "Circle Name?"
 msgstr "サークル名を入力"
 
-#: View/Elements/cake_variables.ctp:85
+#: View/Elements/cake_variables.ctp:95
 #: View/Elements/Feed/circle_filter_menu.ctp:57
 msgid "Leave circle."
 msgstr "サークルを脱退する"
 
-#: View/Elements/cake_variables.ctp:86
+#: View/Elements/cake_variables.ctp:96
 #: View/Elements/Feed/circle_filter_menu.ctp:66
 msgid "Settings"
 msgstr "設定"
 
-#: View/Elements/cake_variables.ctp:87
+#: View/Elements/cake_variables.ctp:97
 msgid "Ironing your data. Please wait..."
 msgstr ""
 
-#: View/Elements/cake_variables.ctp:245 View/Pages/features.ctp:248
+#: View/Elements/cake_variables.ctp:255 View/Pages/features.ctp:248
 msgid "Coach"
 msgstr "コーチ"
 
-#: View/Elements/cake_variables.ctp:251
+#: View/Elements/cake_variables.ctp:261
 #: View/Elements/Goal/modal_goal_description.ctp:139
 #: View/Elements/Goal/simplex_top_section.ctp:52;173
 msgid "Follower"
 msgstr "フォロワー"
 
-#: View/Elements/cake_variables.ctp:298;306;359
+#: View/Elements/cake_variables.ctp:308;316;369
 msgid "Do an action"
 msgstr "アクションする"
 
-#: View/Elements/cake_variables.ctp:299
+#: View/Elements/cake_variables.ctp:309
 #: View/Elements/dashboard_profile_card.ctp:44
 #: View/Elements/Feed/common_form.ctp:57
 #: View/Elements/Feed/site_info_block.ctp:105
 #: View/Elements/Goal/key_results.ctp:102
 #: View/Elements/Goal/simplex_top_section.ctp:36;147
 #: View/Elements/Team/insight_result.ctp:43;76;111
-#: View/Elements/User/simplex_top_section.ctp:129;179
+#: View/Elements/User/simplex_top_section.ctp:132;182
 #: View/Evaluations/view.ctp:342 View/Users/view_goals.ctp:173
 msgid "Action"
 msgstr "アクション"
 
-#: View/Elements/cake_variables.ctp:300 View/Elements/Feed/common_form.ctp:127
+#: View/Elements/cake_variables.ctp:310 View/Elements/Feed/common_form.ctp:127
 msgid "Upload an image as your action"
 msgstr "アクション画像をアップロード"
 
-#: View/Elements/cake_variables.ctp:301 View/Elements/Feed/common_form.ctp:143
+#: View/Elements/cake_variables.ctp:311 View/Elements/Feed/common_form.ctp:143
 msgid "Write an action..."
 msgstr "アクションを説明しよう"
 
-#: View/Elements/cake_variables.ctp:302;327;357
+#: View/Elements/cake_variables.ctp:312;337;367
 #: View/Elements/header_logged_in_right.ctp:51
 #: View/Elements/my_goals_area.ctp:62 View/Elements/Feed/common_form.ctp:93
 msgid "Create a goal"
 msgstr "ゴールを作成する"
 
-#: View/Elements/cake_variables.ctp:303
+#: View/Elements/cake_variables.ctp:313
 msgid "Create another goal"
 msgstr "別のゴールを作成する"
 
-#: View/Elements/cake_variables.ctp:304 View/Pages/contact_confirm.ctp:139
+#: View/Elements/cake_variables.ctp:314 View/Pages/contact_confirm.ctp:139
 #: View/Setup/profile_add.ctp:114
 msgid "Back"
 msgstr "戻る"
 
-#: View/Elements/cake_variables.ctp:305 View/Setup/profile_add.ctp:6
+#: View/Elements/cake_variables.ctp:315 View/Setup/profile_add.ctp:6
 msgid "Set up Goalous"
 msgstr "セットアップ"
 
-#: View/Elements/cake_variables.ctp:307;413
+#: View/Elements/cake_variables.ctp:317;426
 #: View/Elements/User/modal_2fa_register.ctp:97 View/Setup/profile_image.ctp:18
 #: View/Signup/email.ctp:44 View/Teams/invite.ctp:86
 #: View/Users/register_prof_with_invite.ctp:156
 msgid "Next"
 msgstr "次へ"
 
-#: View/Elements/cake_variables.ctp:308;355
+#: View/Elements/cake_variables.ctp:318;365
 msgid "Login from mobile app"
 msgstr "スマホアプリでログイン"
 
-#: View/Elements/cake_variables.ctp:309
+#: View/Elements/cake_variables.ctp:319
 msgid "Install Android app"
 msgstr "Androidアプリ"
 
-#: View/Elements/cake_variables.ctp:310
+#: View/Elements/cake_variables.ctp:320
 msgid "Requires Android 4.4 or later."
 msgstr "4.4以上のOSバージョンの方"
 
-#: View/Elements/cake_variables.ctp:311
+#: View/Elements/cake_variables.ctp:321
 msgid "Install iOS app"
 msgstr "iOSアプリ"
 
-#: View/Elements/cake_variables.ctp:312
+#: View/Elements/cake_variables.ctp:322
 msgid "Requires iOS 8.4 or later."
 msgstr "8.4以上のOSバージョンの方"
 
-#: View/Elements/cake_variables.ctp:313
+#: View/Elements/cake_variables.ctp:323
 msgid "If you don't have a mobile device."
 msgstr "該当するスマホを持っていない方"
 
-#: View/Elements/cake_variables.ctp:314;361
+#: View/Elements/cake_variables.ctp:324;371
 msgid "Join a circle"
 msgstr "サークルに参加する"
 
-#: View/Elements/cake_variables.ctp:315 View/Elements/modal_add_circle.ctp:41
+#: View/Elements/cake_variables.ctp:325 View/Elements/modal_add_circle.ctp:41
 #: View/Elements/modal_edit_circle.ctp:55
 #: View/Elements/Team/insight_circle_result.ctp:35
 msgid "Circle name"
 msgstr "サークル名"
 
-#: View/Elements/cake_variables.ctp:319 View/Elements/modal_add_circle.ctp:71
+#: View/Elements/cake_variables.ctp:329 View/Elements/modal_add_circle.ctp:71
 #: View/Elements/modal_edit_circle.ctp:66
 msgid "Anyone can see the circle, its members and their posts."
 msgstr ""
 "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰で"
 "も自由に参加できます。"
 
-#: View/Elements/cake_variables.ctp:320 View/Elements/modal_add_circle.ctp:78
+#: View/Elements/cake_variables.ctp:330 View/Elements/modal_add_circle.ctp:78
 #: View/Elements/modal_edit_circle.ctp:72
 msgid "Privacy"
 msgstr "プライバシー"
 
-#: View/Elements/cake_variables.ctp:321 View/Elements/modal_add_circle.ctp:73
+#: View/Elements/cake_variables.ctp:331 View/Elements/modal_add_circle.ctp:73
 #: View/Elements/modal_edit_circle.ctp:68
 msgid "Only members can find the circle and see posts."
 msgstr ""
 "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されま"
 "す。サークル管理者だけがメンバーを追加できます。"
 
-#: View/Elements/cake_variables.ctp:322 View/Elements/modal_add_circle.ctp:92
+#: View/Elements/cake_variables.ctp:332 View/Elements/modal_add_circle.ctp:92
 #: View/Elements/modal_edit_circle.ctp:83
 msgid "Circle Description"
 msgstr "サークルの説明"
 
-#: View/Elements/cake_variables.ctp:323 View/Elements/modal_add_circle.ctp:100
+#: View/Elements/cake_variables.ctp:333 View/Elements/modal_add_circle.ctp:100
 #: View/Elements/modal_edit_circle.ctp:98
 msgid "Circle Image"
 msgstr "サークル画像"
 
-#: View/Elements/cake_variables.ctp:324;335
+#: View/Elements/cake_variables.ctp:334;345
 #: View/Elements/modal_add_circle.ctp:110
 #: View/Elements/modal_edit_circle.ctp:112
 #: View/Elements/Team/edit_basic_setting.ctp:63
-#: View/Elements/User/profile_setting.ctp:172;226 View/Goals/add.ctp:475
+#: View/Elements/User/profile_setting.ctp:172;226 View/Goals/add.ctp:471
 #: View/Setup/profile_add.ctp:43 View/Teams/add.ctp:58
 #: View/Teams/add_group_vision.ctp:66 View/Teams/add_team_vision.ctp:58
 #: View/Teams/edit_group_vision.ctp:69 View/Teams/edit_team_vision.ctp:61
@@ -2686,10 +2673,10 @@ msgstr "サークル画像"
 msgid "Select an image"
 msgstr "画像を選択"
 
-#: View/Elements/cake_variables.ctp:325 View/Elements/modal_add_circle.ctp:112
+#: View/Elements/cake_variables.ctp:335 View/Elements/modal_add_circle.ctp:112
 #: View/Elements/modal_edit_circle.ctp:115
 #: View/Elements/Team/edit_basic_setting.ctp:65
-#: View/Elements/User/profile_setting.ctp:174;228 View/Goals/add.ctp:477
+#: View/Elements/User/profile_setting.ctp:174;228 View/Goals/add.ctp:473
 #: View/Setup/profile_add.ctp:45 View/Teams/add.ctp:60
 #: View/Teams/add_group_vision.ctp:68 View/Teams/add_team_vision.ctp:60
 #: View/Teams/edit_group_vision.ctp:71 View/Teams/edit_team_vision.ctp:63
@@ -2697,11 +2684,11 @@ msgstr "画像を選択"
 msgid "Reselect an image"
 msgstr "画像を再選択"
 
-#: View/Elements/cake_variables.ctp:326
+#: View/Elements/cake_variables.ctp:336
 msgid "Create"
 msgstr "作成する"
 
-#: View/Elements/cake_variables.ctp:331
+#: View/Elements/cake_variables.ctp:341
 #: View/Elements/Goal/modal_add_key_result.ctp:132
 #: View/Elements/Goal/modal_edit_key_result.ctp:131
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:33
@@ -2710,7 +2697,7 @@ msgstr "作成する"
 msgid "Initial point"
 msgstr "開始時"
 
-#: View/Elements/cake_variables.ctp:332
+#: View/Elements/cake_variables.ctp:342
 #: View/Elements/Goal/modal_add_key_result.ctp:114
 #: View/Elements/Goal/modal_edit_key_result.ctp:113
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:36
@@ -2719,180 +2706,180 @@ msgstr "開始時"
 msgid "Achieve point"
 msgstr "達成時"
 
-#: View/Elements/cake_variables.ctp:334 View/Evaluations/view.ctp:265
-#: View/Goals/add.ctp:455
+#: View/Elements/cake_variables.ctp:344 View/Evaluations/view.ctp:265
+#: View/Goals/add.ctp:451
 msgid "Goal Image"
 msgstr "ゴール画像"
 
-#: View/Elements/cake_variables.ctp:336
+#: View/Elements/cake_variables.ctp:346
 msgid "Talk with team members"
 msgstr "社員とはなしをする"
 
-#: View/Elements/cake_variables.ctp:337
+#: View/Elements/cake_variables.ctp:347
 msgid "Lunch with team members"
 msgstr "社員とランチに行く"
 
-#: View/Elements/cake_variables.ctp:338
+#: View/Elements/cake_variables.ctp:348
 msgid "Hear complaints of team members"
 msgstr "社員の不満を聞く"
 
-#: View/Elements/cake_variables.ctp:339
+#: View/Elements/cake_variables.ctp:349
 msgid "Create your own"
 msgstr "自分でつくってみる"
 
-#: View/Elements/cake_variables.ctp:340
+#: View/Elements/cake_variables.ctp:350
 msgid "Do something with team members"
 msgstr "社員と ◯ ◯ ◯"
 
-#: View/Elements/cake_variables.ctp:341
+#: View/Elements/cake_variables.ctp:351
 msgid "You do something worthwhile."
 msgstr "社員となんかしよう"
 
-#: View/Elements/cake_variables.ctp:342
+#: View/Elements/cake_variables.ctp:352
 msgid "Open yourself"
 msgstr "あなたのことを ◯ ◯ ◯"
 
-#: View/Elements/cake_variables.ctp:343
+#: View/Elements/cake_variables.ctp:353
 msgid "Increasing people who know you."
 msgstr "みんなに理解してもらおう"
 
-#: View/Elements/cake_variables.ctp:344
+#: View/Elements/cake_variables.ctp:354
 msgid "Give something to team members"
 msgstr "社員に対して ◯ ◯ ◯"
 
-#: View/Elements/cake_variables.ctp:345
+#: View/Elements/cake_variables.ctp:355
 msgid "Be happy everyone."
 msgstr "社員になにかを与えよう"
 
-#: View/Elements/cake_variables.ctp:346;348;363
+#: View/Elements/cake_variables.ctp:356;358;373
 msgid "Post to a circle"
 msgstr "投稿する"
 
-#: View/Elements/cake_variables.ctp:347
+#: View/Elements/cake_variables.ctp:357
 msgid "Create another circle"
 msgstr "自分でつくってみる"
 
-#: View/Elements/cake_variables.ctp:349 View/Elements/Feed/common_form.ctp:312
+#: View/Elements/cake_variables.ctp:359 View/Elements/Feed/common_form.ctp:312
 msgid "Write something..."
 msgstr "何か投稿しよう"
 
-#: View/Elements/cake_variables.ctp:350 View/Setup/profile_add.ctp:6
+#: View/Elements/cake_variables.ctp:360 View/Setup/profile_add.ctp:6
 msgid "Input your profile"
 msgstr "プロフィールを入力する"
 
-#: View/Elements/cake_variables.ctp:351 View/Setup/profile_add.ctp:27
+#: View/Elements/cake_variables.ctp:361 View/Setup/profile_add.ctp:27
 msgid "Your profile picture"
 msgstr "あなたの顔写真"
 
-#: View/Elements/cake_variables.ctp:352
+#: View/Elements/cake_variables.ctp:362
 msgid "Your self-info"
 msgstr "あなたの自己紹介"
 
-#: View/Elements/cake_variables.ctp:353 View/Evaluations/view.ctp:230;548
+#: View/Elements/cake_variables.ctp:363 View/Evaluations/view.ctp:230;548
 #: View/Setup/profile_add.ctp:115
 msgid "Submit"
 msgstr "送信"
 
-#: View/Elements/cake_variables.ctp:354
+#: View/Elements/cake_variables.ctp:364
 msgid "Set your profile picture and self-info."
 msgstr "顔写真と自己紹介を登録しよう"
 
-#: View/Elements/cake_variables.ctp:356
+#: View/Elements/cake_variables.ctp:366
 msgid "Install Goalous's iOS and Android apps."
 msgstr "iOS/Androidアプリをインストール"
 
-#: View/Elements/cake_variables.ctp:358
+#: View/Elements/cake_variables.ctp:368
 msgid "Create or collaborate with a goal."
 msgstr "達成したいゴールを作成しよう"
 
-#: View/Elements/cake_variables.ctp:360
+#: View/Elements/cake_variables.ctp:370
 msgid "Add an Action for your Goal."
 msgstr "ゴールにアクションを登録しよう"
 
-#: View/Elements/cake_variables.ctp:362
+#: View/Elements/cake_variables.ctp:372
 msgid "Create a circle or join."
 msgstr "サークル作成するか参加しよう"
 
-#: View/Elements/cake_variables.ctp:364
+#: View/Elements/cake_variables.ctp:374
 msgid "Share your topic with a circle."
 msgstr "サークルに投稿してみよう"
 
-#: View/Elements/cake_variables.ctp:365
+#: View/Elements/cake_variables.ctp:375
 msgid "STEPS LEFT"
 msgstr "残りのSTEP"
 
-#: View/Elements/cake_variables.ctp:366 View/Elements/circle_list.ctp:87
+#: View/Elements/cake_variables.ctp:376 View/Elements/circle_list.ctp:87
 #: View/Elements/circle_list_in_hamburger.ctp:81
 #: View/Elements/header_logged_in_right.ctp:59
 #: View/Elements/modal_add_circle.ctp:19;149
 msgid "Create a circle"
 msgstr "サークルを作成する"
 
-#: View/Elements/cake_variables.ctp:368
+#: View/Elements/cake_variables.ctp:378
 msgid "Excellent!"
 msgstr "スバらしい"
 
-#: View/Elements/cake_variables.ctp:369
+#: View/Elements/cake_variables.ctp:379
 msgid "I have no iOS/Android devices"
 msgstr "スマホを持っていない"
 
-#: View/Elements/cake_variables.ctp:370 View/Elements/modal_tutorial.ctp:48
+#: View/Elements/cake_variables.ctp:380 View/Elements/modal_tutorial.ctp:48
 msgid "Make a good goal to discuss with your project members."
 msgstr "メンバーとともに価値あるゴールを作ろう。"
 
-#: View/Elements/cake_variables.ctp:371 View/Elements/modal_tutorial.ctp:52
+#: View/Elements/cake_variables.ctp:381 View/Elements/modal_tutorial.ctp:52
 msgid "Have a common goal"
 msgstr "ゴールを共有する"
 
-#: View/Elements/cake_variables.ctp:372 View/Elements/modal_tutorial.ctp:57
+#: View/Elements/cake_variables.ctp:382 View/Elements/modal_tutorial.ctp:57
 msgid "Action for your goal"
 msgstr "ゴールにアクションする"
 
-#: View/Elements/cake_variables.ctp:373 View/Elements/modal_tutorial.ctp:58
+#: View/Elements/cake_variables.ctp:383 View/Elements/modal_tutorial.ctp:58
 msgid "Let's action to show your activity."
 msgstr "活動内容を写真でみんなにシェアしよう。"
 
-#: View/Elements/cake_variables.ctp:374
+#: View/Elements/cake_variables.ctp:384
 msgid "Improve your orgainization"
 msgstr "組織に〇〇〇"
 
-#: View/Elements/cake_variables.ctp:375
+#: View/Elements/cake_variables.ctp:385
 msgid "Please choose one."
 msgstr "どれかを選ぼう。"
 
-#: View/Elements/cake_variables.ctp:376
+#: View/Elements/cake_variables.ctp:386
 msgid "Writing working columns"
 msgstr "シゴトのポリシーを書く"
 
-#: View/Elements/cake_variables.ctp:377
+#: View/Elements/cake_variables.ctp:387
 msgid "Sharing your lovely foods"
 msgstr "好きな食べ物を共有する"
 
-#: View/Elements/cake_variables.ctp:378
+#: View/Elements/cake_variables.ctp:388
 msgid "Writing your insistence"
 msgstr "自分の改善点を共有する"
 
-#: View/Elements/cake_variables.ctp:379
+#: View/Elements/cake_variables.ctp:389
 msgid "Embodying the orgainization motto"
 msgstr "組織の行動指針を体現する"
 
-#: View/Elements/cake_variables.ctp:380
+#: View/Elements/cake_variables.ctp:390
 msgid "Prasing someone"
 msgstr "誰かをホメる"
 
-#: View/Elements/cake_variables.ctp:381
+#: View/Elements/cake_variables.ctp:391
 msgid "Including your orgainization improvements"
 msgstr "組織改善案を共有する"
 
-#: View/Elements/cake_variables.ctp:382
+#: View/Elements/cake_variables.ctp:392
 msgid "Team has been changed, press ok to reload!"
 msgstr "チームが切り替えられました。「OK」を押して再読み込みしてください。"
 
-#: View/Elements/cake_variables.ctp:385
+#: View/Elements/cake_variables.ctp:395
 msgid "Check your email!"
 msgstr "メールをチェックしよう！"
 
-#: View/Elements/cake_variables.ctp:386
+#: View/Elements/cake_variables.ctp:396
 msgid ""
 "We've sent a six-digit confirmation code to %s. Enter it below to confirm "
 "your email address."
@@ -2900,37 +2887,37 @@ msgstr ""
 "%sに6桁の確認コードを送信しました。Eメールを確認して、以下に入力してくださ"
 "い。"
 
-#: View/Elements/cake_variables.ctp:387
+#: View/Elements/cake_variables.ctp:398
 msgid "What's your name?"
 msgstr "あなたの名前は？"
 
-#: View/Elements/cake_variables.ctp:388
+#: View/Elements/cake_variables.ctp:399
 msgid "Your name will only be displayed to your team on Goalous."
 msgstr "あなたの名前はGoalousのチーム内でのみ表示されます。"
 
-#: View/Elements/cake_variables.ctp:389
+#: View/Elements/cake_variables.ctp:400
 #: View/Users/register_prof_with_invite.ctp:70
 msgid "I want to receive news and updates by email from Goalous."
 msgstr "Goalousからのメールによるニュースや更新情報などを受け取る。"
 
-#: View/Elements/cake_variables.ctp:390
+#: View/Elements/cake_variables.ctp:401
 #: View/Users/register_password_with_invite.ctp:12
 msgid "Set your password"
 msgstr "パスワードを設定しよう"
 
-#: View/Elements/cake_variables.ctp:391
+#: View/Elements/cake_variables.ctp:402
 msgid "Create your password to login to Goalous."
 msgstr "Goalousにログインするパスワードを作成します。"
 
-#: View/Elements/cake_variables.ctp:392
+#: View/Elements/cake_variables.ctp:403
 msgid "Please don't close this window."
 msgstr "このページはコードを入力し終わるまで閉じないでください。"
 
-#: View/Elements/cake_variables.ctp:393
+#: View/Elements/cake_variables.ctp:404
 msgid "What do you want to call your Goalous team?"
 msgstr "チームに名前をつけよう"
 
-#: View/Elements/cake_variables.ctp:394
+#: View/Elements/cake_variables.ctp:405
 msgid ""
 "Create a name for your team. A team is a group that can share goals, actions "
 "and posts  with each other. People outside of the team can't access this "
@@ -2939,16 +2926,16 @@ msgstr ""
 "チームは、ゴールやアクション、投稿を共有できる人の集まりです。チーム外の人は"
 "これらの情報にアクセスできません。"
 
-#: View/Elements/cake_variables.ctp:395
+#: View/Elements/cake_variables.ctp:406
 #: View/Users/register_password_with_invite.ctp:36
 msgid "Use 8 or more characters including at least one number."
 msgstr "8文字以上。1つ以上の英字と数字を含む。"
 
-#: View/Elements/cake_variables.ctp:396
+#: View/Elements/cake_variables.ctp:407
 msgid "Choose your team's (company's) term"
 msgstr "チーム(会社)の期間を選択しよう"
 
-#: View/Elements/cake_variables.ctp:397
+#: View/Elements/cake_variables.ctp:408
 msgid ""
 "Set the term for your team. The term can be based on your corporate / "
 "financial calendar, personal evaluations or any period of time the works "
@@ -2957,51 +2944,51 @@ msgstr ""
 "チームに期間を設定します。個人評価や会社の決算に合わせた期間などを選択してく"
 "ださい。"
 
-#: View/Elements/cake_variables.ctp:398 View/Emails/text/contact.ctp:27
+#: View/Elements/cake_variables.ctp:409 View/Emails/text/contact.ctp:27
 #: View/Pages/contact.ctp:120 View/Pages/contact_confirm.ctp:109
 #: View/Users/register_prof_with_invite.ctp:30
 msgid "Your name"
 msgstr "お名前"
 
-#: View/Elements/cake_variables.ctp:400 View/Users/register.ctp:141
+#: View/Elements/cake_variables.ctp:411 View/Users/register.ctp:141
 #: View/Users/register_prof_with_invite.ctp:142
 msgid "I agree to %s and %s of Goalous."
 msgstr "Goalousの%sと%sに同意します。"
 
-#: View/Elements/cake_variables.ctp:400 View/Elements/footer.ctp:36
+#: View/Elements/cake_variables.ctp:412 View/Elements/footer.ctp:36
 msgid "Terms of Service"
 msgstr "利用規約"
 
-#: View/Elements/cake_variables.ctp:400 View/Elements/footer.ctp:23
+#: View/Elements/cake_variables.ctp:413 View/Elements/footer.ctp:23
 #: View/Elements/footer_not_logged_in.ctp:54 View/Users/register.ctp:124
 #: View/Users/register_prof_with_invite.ctp:125
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: View/Elements/cake_variables.ctp:401
+#: View/Elements/cake_variables.ctp:414
 #: View/Elements/User/profile_setting.ctp:79 View/Users/add_profile.ctp:64
 #: View/Users/register.ctp:41 View/Users/register_prof_with_invite.ctp:45
 msgid "eg. Harry"
 msgstr "例) Hiroshi"
 
-#: View/Elements/cake_variables.ctp:402
+#: View/Elements/cake_variables.ctp:415
 #: View/Elements/User/profile_setting.ctp:69 View/Users/add_profile.ctp:57
 #: View/Users/register.ctp:31 View/Users/register_prof_with_invite.ctp:33
 msgid "eg. Armstrong"
 msgstr "例) Suzuki"
 
-#: View/Elements/cake_variables.ctp:403
+#: View/Elements/cake_variables.ctp:416
 #: View/Elements/Team/edit_basic_setting.ctp:36 View/Teams/add.ctp:38
 msgid "eg. Team Goalous"
 msgstr "例) チームGoalous"
 
-#: View/Elements/cake_variables.ctp:404
+#: View/Elements/cake_variables.ctp:417
 #: View/Elements/Team/edit_basic_setting.ctp:35
 #: View/Elements/Team/invite.ctp:34 View/Teams/add.ctp:37
 msgid "Team Name"
 msgstr "チーム名"
 
-#: View/Elements/cake_variables.ctp:405
+#: View/Elements/cake_variables.ctp:418
 #: View/Elements/Goal/modal_add_key_result.ctp:150
 #: View/Elements/Goal/modal_edit_key_result.ctp:150
 #: View/Elements/Team/edit_term_setting.ctp:96
@@ -3010,35 +2997,35 @@ msgstr "チーム名"
 msgid "Term"
 msgstr "期"
 
-#: View/Elements/cake_variables.ctp:406
+#: View/Elements/cake_variables.ctp:419
 #: View/Elements/Team/edit_term_setting.ctp:74
 #: View/Elements/User/account_setting.ctp:85 View/Teams/add.ctp:104
 msgid "Timezone"
 msgstr "タイムゾーン"
 
-#: View/Elements/cake_variables.ctp:408
+#: View/Elements/cake_variables.ctp:421
 #: View/Elements/modal_edit_members_by_csv.ctp:100
 #: View/Elements/Goal/modal_add_key_result.ctp:199
 #: View/Elements/Goal/modal_edit_key_result.ctp:197
-#: View/Goals/add.ctp:39;108;278;328;395
+#: View/Goals/add.ctp:39;108;278;327;391
 msgid "Change"
 msgstr "変更する"
 
-#: View/Elements/cake_variables.ctp:412
+#: View/Elements/cake_variables.ctp:425
 #: View/Elements/User/account_setting.ctp:103 View/Users/login.ctp:44
 msgid "Password"
 msgstr "パスワード"
 
-#: View/Elements/cake_variables.ctp:426
+#: View/Elements/cake_variables.ctp:439
 #: View/Elements/User/account_setting.ctp:71 View/Users/register.ctp:89
 msgid "I receive the news and updates by email from Goalous."
 msgstr "Goalousからのメールによるニュースや更新情報などを受け取る。"
 
-#: View/Elements/cake_variables.ctp:427
+#: View/Elements/cake_variables.ctp:440
 msgid "Choose your team name."
 msgstr "チームに名前をつけよう"
 
-#: View/Elements/cake_variables.ctp:428
+#: View/Elements/cake_variables.ctp:441
 msgid "Select your present term"
 msgstr "現在の期間を選択しましょう"
 
@@ -3142,7 +3129,7 @@ msgstr "ホーム"
 
 #: View/Elements/header_logged_in.ctp:56;58;120
 #: View/Elements/Feed/site_info_block.ctp:109
-#: View/Elements/User/simplex_top_section.ctp:165
+#: View/Elements/User/simplex_top_section.ctp:168
 msgid "Goal"
 msgstr "ゴール"
 
@@ -3255,7 +3242,7 @@ msgstr "例) 営業部"
 #: View/Elements/User/profile_setting.ctp:44;52;75;85;152;277
 #: View/Evaluations/view.ctp:101;427 View/GoalApproval/done.ctp:191
 #: View/GoalApproval/index.ctp:204
-#: View/Goals/add.ctp:83;165;203;219;254;297;433 View/Pages/home.ctp:132
+#: View/Goals/add.ctp:83;165;203;219;254;297;429 View/Pages/home.ctp:132
 #: View/Setup/profile_add.ctp:90 View/Signup/email.ctp:38 View/Teams/add.ctp:42
 #: View/Teams/add_group_vision.ctp:50;104 View/Teams/add_team_vision.ctp:42;96
 #: View/Teams/edit_group_vision.ctp:51;107
@@ -3276,7 +3263,7 @@ msgstr "例) 最新情報を共有しましょう。"
 #: View/Elements/modal_add_circle.ctp:125
 #: View/Elements/modal_edit_circle.ctp:129
 #: View/Elements/Team/edit_basic_setting.ctp:78
-#: View/Elements/User/profile_setting.ctp:187;241 View/Goals/add.ctp:491
+#: View/Elements/User/profile_setting.ctp:187;241 View/Goals/add.ctp:487
 #: View/Teams/add.ctp:73 View/Teams/add_group_vision.ctp:81
 #: View/Teams/add_team_vision.ctp:73 View/Teams/edit_group_vision.ctp:84
 #: View/Teams/edit_team_vision.ctp:76 View/Users/add_profile.ctp:168
@@ -3364,7 +3351,7 @@ msgstr "例） ユーザー数を増やす"
 #: View/Elements/Team/evaluation_score_setting.ctp:51
 #: View/Elements/Team/goal_category_setting.ctp:48
 #: View/GoalApproval/done.ctp:131 View/GoalApproval/index.ctp:134
-#: View/Goals/add.ctp:425 View/Goals/view_info.ctp:101
+#: View/Goals/add.ctp:421 View/Goals/view_info.ctp:101
 #: View/Teams/add_group_vision.ctp:99 View/Teams/add_team_vision.ctp:91
 #: View/Teams/edit_group_vision.ctp:102 View/Teams/edit_team_vision.ctp:94
 msgid "Description"
@@ -3634,7 +3621,7 @@ msgstr "リンクをコピー"
 #: View/Elements/Feed/action_posts.ctp:195 View/Elements/Feed/comment.ctp:170
 #: View/Elements/Feed/posts.ctp:399
 #: View/Elements/Team/insight_result.ctp:55;88;123
-#: View/Elements/User/simplex_top_section.ctp:145
+#: View/Elements/User/simplex_top_section.ctp:148
 msgid "Like!"
 msgstr "いいね！"
 
@@ -3691,13 +3678,13 @@ msgstr "本当にこのコメントを削除しますか？"
 #: View/Elements/Feed/site_info_block.ctp:103
 #: View/Elements/Team/insight_circle_result.ctp:43
 #: View/Elements/Team/insight_result.ctp:49;82;117
-#: View/Elements/User/simplex_top_section.ctp:137;192
+#: View/Elements/User/simplex_top_section.ctp:140;195
 msgid "Posts"
 msgstr "投稿"
 
 #: View/Elements/Feed/common_form.ctp:81
 #: View/Elements/Team/insight_result.ctp:67;100;135
-#: View/Elements/User/simplex_top_section.ctp:79
+#: View/Elements/User/simplex_top_section.ctp:83
 msgid "Message"
 msgstr "メッセージ"
 
@@ -5150,27 +5137,27 @@ msgstr ""
 "地域活性化に貢献できるサービスを作り社会貢献をする事。\n"
 "<br>\n"
 
-#: View/Elements/User/simplex_top_section.ctp:52
+#: View/Elements/User/simplex_top_section.ctp:56
 msgid "Upload Cover Image"
 msgstr "カバー画像をアップロードする"
 
-#: View/Elements/User/simplex_top_section.ctp:59
+#: View/Elements/User/simplex_top_section.ctp:63
 msgid "View Cover Image"
 msgstr "カバー画像を見る"
 
-#: View/Elements/User/simplex_top_section.ctp:75
+#: View/Elements/User/simplex_top_section.ctp:79
 msgid "Edit Profile"
 msgstr "プロフィール編集"
 
-#: View/Elements/User/simplex_top_section.ctp:99
+#: View/Elements/User/simplex_top_section.ctp:102
 msgid "Upload Profile Image"
 msgstr "プロフィール画像をアップロードする"
 
-#: View/Elements/User/simplex_top_section.ctp:106
+#: View/Elements/User/simplex_top_section.ctp:109
 msgid "View Profile Image"
 msgstr "プロフィール画像を見る"
 
-#: View/Elements/User/simplex_top_section.ctp:205
+#: View/Elements/User/simplex_top_section.ctp:208
 msgid "Basic Information"
 msgstr "基本データ"
 
@@ -5317,10 +5304,6 @@ msgstr "コメントを書いてください"
 msgid "<i class='fa fa-paw mr_2px'></i>Evaluation score"
 msgstr "<i class='fa fa-paw mr_2px'></i>評価スコア"
 
-#: View/Evaluations/view.ctp:114;440
-msgid "Selection required."
-msgstr "選択必須項目です。"
-
 #: View/Evaluations/view.ctp:161;175;479;493
 msgid "Not determined."
 msgstr "未確定です。"
@@ -5394,7 +5377,7 @@ msgstr "達成したいことをざっくり書く"
 msgid "eg. Provide a new value to people."
 msgstr "例）新しい価値を人々に提供する"
 
-#: View/Goals/add.ctp:91;376
+#: View/Goals/add.ctp:91;372
 msgid "Next Step"
 msgstr "次のステップ"
 
@@ -5414,27 +5397,27 @@ msgstr "詳しく書く。"
 msgid "Evaluation terms"
 msgstr "評価期間"
 
-#: View/Goals/add.ctp:392
+#: View/Goals/add.ctp:388
 msgid "Add more information"
 msgstr "情報を追加する"
 
-#: View/Goals/add.ctp:426
+#: View/Goals/add.ctp:422
 msgid "Add complements"
 msgstr "情報を補完する"
 
-#: View/Goals/add.ctp:428
+#: View/Goals/add.ctp:424
 msgid "Explain this goal in detail."
 msgstr "ゴールの内容を詳しく書く"
 
-#: View/Goals/add.ctp:444
+#: View/Goals/add.ctp:440
 msgid "Weight of this goal"
 msgstr "このゴールの重要度"
 
-#: View/Goals/add.ctp:458
+#: View/Goals/add.ctp:454
 msgid "Let's add an image that motivated yourself."
 msgstr "イメージに合った画像を追加しましょう"
 
-#: View/Goals/add.ctp:511
+#: View/Goals/add.ctp:507
 msgid "Save Goal"
 msgstr "この内容で作成"
 
@@ -5506,11 +5489,15 @@ msgid "Your Notifications"
 msgstr "すべてのお知らせ"
 
 #: View/Pages/contact.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。導入のご相談を受け付けています。"
-msgstr ""
+msgid "We accept consultation of introduction."
+msgstr "導入のご相談を受け付けています。"
+
+#: View/Pages/contact.ctp:34 View/Pages/contact_confirm.ctp:34
+#: View/Pages/contact_thanks.ctp:34 View/Pages/features.ctp:34
+#: View/Pages/home.ctp:34 View/Pages/law.ctp:34 View/Pages/pricing.ctp:34
+#: View/Pages/privacy_policy.ctp:34 View/Pages/terms.ctp:35
+msgid "goal management, achieve a goal, sns app, evaluation, mbo"
+msgstr "目標管理,目標達成,社内SNS,評価,MBO"
 
 #: View/Pages/contact.ctp:42;78
 msgid "Contact us | Goalous"
@@ -5624,11 +5611,8 @@ msgid "Go to confirm"
 msgstr "確認画面へ"
 
 #: View/Pages/contact_confirm.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。お問い合わせ内容の確認です。"
-msgstr ""
+msgid "It is a confirmation of your inquiry."
+msgstr "お問い合わせ内容の確認です。"
 
 #: View/Pages/contact_confirm.ctp:42;78
 msgid "Confirming | Goalous"
@@ -5656,11 +5640,8 @@ msgid "Sending"
 msgstr "送信中..."
 
 #: View/Pages/contact_thanks.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。お問い合わせありがとうございました。"
-msgstr ""
+msgid "Thank you for your inquiry."
+msgstr "お問い合わせありがとうございました。"
 
 #: View/Pages/contact_thanks.ctp:42
 msgid "お問い合わせ完了 | Goalous(ゴーラス)"
@@ -5717,11 +5698,8 @@ msgid "@ISAOcorp"
 msgstr "@ISAOcorp"
 
 #: View/Pages/features.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。機能の説明はこちら。"
-msgstr ""
+msgid "Description of the function is here."
+msgstr "機能の説明はこちら。"
 
 #: View/Pages/features.ctp:42;78
 msgid "Features | Goalous"
@@ -5894,24 +5872,9 @@ msgstr ""
 "会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインター"
 "フェースを用意しています。"
 
-#: View/Pages/home.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。スマホアプリ・ブラウザで利用可能です。"
-msgstr ""
-
-#: View/Pages/home.ctp:34
-msgid "goal management, achieve a goal, sns app, evaluation, mbo"
-msgstr "目標管理,目標達成,社内SNS,評価,MBO"
-
-#: View/Pages/home.ctp:42
+#: View/Pages/home.ctp:42;78
 msgid "Goalous | Enjoy your work. Achieve your goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
-
-#: View/Pages/home.ctp:78
-msgid "Goalous (ゴーラス) │最強にオープンな社内SNS"
-msgstr ""
 
 #: View/Pages/home.ctp:98
 msgid "Enjoy your work. Achieve your goals."
@@ -6033,11 +5996,8 @@ msgid "This is Goalous flyer."
 msgstr "フライヤー資料です。ぜひご活用ください。"
 
 #: View/Pages/law.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。特定商取引法に基づく表記はこちら。"
-msgstr ""
+msgid "Inscription based on specific trade law is here."
+msgstr "特定商取引法に基づく表記はこちら。"
 
 #: View/Pages/law.ctp:42;78
 msgid "Inscription by Law | Goalous"
@@ -6049,11 +6009,8 @@ msgid "Create a team."
 msgstr "チームを作成してください。"
 
 #: View/Pages/pricing.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。料金・価格はこちら。"
-msgstr ""
+msgid "Pricing is here."
+msgstr "料金・価格はこちら。"
 
 #: View/Pages/pricing.ctp:42;78
 msgid "Pricing | Goalous"
@@ -6126,22 +6083,16 @@ msgid "Feel free to ask us"
 msgstr "無料相談受付中"
 
 #: View/Pages/privacy_policy.ctp:30;46
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。プライバシーポリシーはこちら。"
-msgstr ""
+msgid "Privacy Policy is here."
+msgstr "プライバシーポリシーはこちら。"
 
 #: View/Pages/privacy_policy.ctp:42;78
 msgid "PrivacyPolicy | Goalous"
 msgstr "プライバシーポリシー | Goalous (ゴーラス)"
 
 #: View/Pages/terms.ctp:31;47
-msgid ""
-"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
-"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
-"す。利用規約はこちら。"
-msgstr ""
+msgid "Terms and Conditions is here."
+msgstr "利用規約はこちら。"
 
 #: View/Pages/terms.ctp:43;79
 msgid "Terms of service | Goalous"
@@ -6611,8 +6562,8 @@ msgid "isVerifiedEmail"
 msgstr ""
 
 #: Model/User.php:validation for field first_name;validation last_name
-msgid "isAlphabetOnly"
-msgstr "isAlphabetOnly"
+msgid "userName"
+msgstr ""
 
 #: Model/User.php:validation for field birth_day
 msgid "rule"
@@ -6643,6 +6594,15 @@ msgstr "passwordSameCheck"
 #: Model/User.php:validation for field cover_photo
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid "%s should be entered in alphabet characters."
+#~ msgstr "%sはアルファベットのみで入力してください。"
+
+#~ msgid "Only alphabet characters are allowed."
+#~ msgstr "アルファベットのみで入力してください。"
+
+#~ msgid "isAlphabetOnly"
+#~ msgstr "isAlphabetOnly"
 
 #~ msgid "Feedback"
 #~ msgstr "フィードバック"
