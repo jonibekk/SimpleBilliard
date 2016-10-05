@@ -15,14 +15,14 @@ class SignupController extends AppController
     private $validations = [
         'User'      => [
             'first_name'       => [
-                'maxLength'      => ['rule' => ['maxLength', 128]],
-                'notEmpty'       => ['rule' => 'notEmpty'],
-                'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+                'maxLength' => ['rule' => ['maxLength', 128]],
+                'notEmpty'  => ['rule' => 'notEmpty'],
+                'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
             ],
             'last_name'        => [
-                'maxLength'      => ['rule' => ['maxLength', 128]],
-                'notEmpty'       => ['rule' => 'notEmpty'],
-                'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+                'maxLength' => ['rule' => ['maxLength', 128]],
+                'notEmpty'  => ['rule' => 'notEmpty'],
+                'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
             ],
             'password'         => [
                 'maxLength'      => ['rule' => ['maxLength', 50]],

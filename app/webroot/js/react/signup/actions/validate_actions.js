@@ -9,60 +9,60 @@ export function _checkValue(target) {
     case 'password':
       const pattern = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{8,50}$/
 
-      if(val === '' || !validator.isLength(val, { min: 8 })) {
+      if (val === '' || !validator.isLength(val, {min: 8})) {
         return invalid(name, cake.message.validate.signup_password_min_length)
-      } else if(!validator.isLength(val, { min: 8, max: 50 })) {
+      } else if (!validator.isLength(val, {min: 8, max: 50})) {
         return invalid(name, cake.message.validate.signup_password_max_length)
-      } else if(!validator.matches(val, pattern)) {
+      } else if (!validator.matches(val, pattern)) {
         return invalid(name, cake.message.validate.signup_password_alpha_num_required)
       }
       return valid(name)
     case 'team_name':
-      if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
+      if (val === '' || !validator.isLength(val, {min: 0, max: 128})) {
         return invalid(name, cake.message.validate.signup_team_name_length)
       }
       return valid(name)
     case 'first_name':
-      if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
+      if (val === '' || !validator.isLength(val, {min: 0, max: 128})) {
         return invalid(name, cake.message.validate.signup_user_name_length)
-      }else if(!validator.isAlpha(val)) {
+      } else if (!validator.matches(val, /[a-zA-Z \']+$/)) {
         return invalid(name, cake.message.validate.signup_user_name_alpha)
       }
       return valid(name)
     case 'last_name':
-      if(val === '' || !validator.isLength(val, { min: 0, max: 128 })) {
+      if (val === '' || !validator.isLength(val, {min: 0, max: 128})) {
         return invalid(name, cake.message.validate.signup_user_name_length)
-      }else if(!validator.isAlpha(val)) {
+      } else if (!validator.matches(val, /[a-zA-Z \']+$/)) {
         return invalid(name, cake.message.validate.signup_user_name_alpha)
       }
       return valid(name)
     case 'birth_year':
-      if(!val) {
+      if (!val) {
         return invalid(name, cake.message.validate.signup_birth_day_required)
       }
       return valid(name)
     case 'birth_month':
-      if(!val) {
+      if (!val) {
         return invalid(name, cake.message.validate.signup_birth_day_required)
       }
       return valid(name)
     case 'birth_day':
-      if(!val) {
+      if (!val) {
         return invalid(name, cake.message.validate.signup_birth_day_required)
       }
       return valid(name)
     case 'privacy_policy':
-      if(!target.checked) {
+      if (!target.checked) {
         return invalid(name, cake.message.validate.signup_privacy_policy_required)
       }
       return valid(name)
     case 'term':
-      if(!val) {
+      if (!val) {
         return invalid(name, cake.message.validate.signup_term_required)
       }
       return valid(name)
     case 'start_month':
-      if(!val) {
+      if (!val) {
         return invalid(name, cake.message.validate.signup_start_month_required)
       }
       return valid(name)
