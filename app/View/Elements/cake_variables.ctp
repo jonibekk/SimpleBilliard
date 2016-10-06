@@ -6,7 +6,7 @@
  * Time: 00:40
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
@@ -32,7 +32,7 @@
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
-                signup_user_name_alpha: "<?= __("Only alphabet characters are allowed.") ?>",
+                signup_user_name_alpha: "<?= __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe.") ?>",
                 signup_privacy_policy_required: "<?= __("Selection required.") ?>",
                 signup_birth_day_required: "<?= __("Selection required.") ?>",
                 signup_term_required: "<?= __("Selection required.") ?>",
@@ -393,7 +393,8 @@
 
             // Signup
             "Check your email!": "<?= __("Check your email!") ?>",
-            "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.", $signup_inputed_email = isset($signup_inputed_email) ? $signup_inputed_email : '' )?>",
+            "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.",
+                $signup_inputed_email = isset($signup_inputed_email) ? $signup_inputed_email : '')?>",
             "What's your name?": "<?= __("What's your name?") ?>",
             "Your name will only be displayed to your team on Goalous.": "<?= __("Your name will only be displayed to your team on Goalous.") ?>",
             "I want to receive news and updates by email from Goalous.": "<?= __("I want to receive news and updates by email from Goalous.") ?>",
@@ -407,7 +408,9 @@
             "Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.": "<?= __("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.") ?>",
             "Your name": "<?= __("Your name") ?>",
             "Birthday": "<?= __("Birthday") ?>",
-            "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.", '<a href="/terms" target="_blank" class="signup-privacy-policy-link">' . __("Terms of Service") . '</a>', '<a href="/privacy_policy" target="_blank" class="signup-privacy-policy-link">' . __("Privacy Policy") . '</a>') ?>',
+            "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.",
+                '<a href="/terms" target="_blank" class="signup-privacy-policy-link">' . __("Terms of Service") . '</a>',
+                '<a href="/privacy_policy" target="_blank" class="signup-privacy-policy-link">' . __("Privacy Policy") . '</a>') ?>',
             "eg. Harry": "<?= __("eg. Harry") ?>",
             "eg. Armstrong": "<?= __("eg. Armstrong") ?>",
             "eg. Team Goalous": "<?= __("eg. Team Goalous") ?>",
@@ -438,6 +441,9 @@
             "Select your present term": "<?= __("Select your present term") ?>",
             "Password is incorrect.": "<?= __("Password is incorrect.") ?>"
         },
+        regex: {
+            user_name: "<?= User::USER_NAME_REGEX ?>"
+        },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
         new_notify_message_cnt: <?=isset($new_notify_message_cnt) ? $new_notify_message_cnt : 0?>,
@@ -450,7 +456,7 @@
         unread_msg_post_ids: <?=isset($unread_msg_post_ids) ? json_encode($unread_msg_post_ids) : "''"?>,
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
-        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>"
+        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
     };
 
     function __(text) {
@@ -466,4 +472,4 @@
     <?php endif;?>
     <?php endif;?>
 </script>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
