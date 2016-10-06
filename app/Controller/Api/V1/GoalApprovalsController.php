@@ -206,7 +206,7 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("Set as approval"));
+        $this->Pnotify->outSuccess(__("Set as target"));
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
         $coachee = $this->Goal->Collaborator->findById($collaboratorId);
@@ -263,7 +263,7 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("remove from approval"));
+        $this->Pnotify->outSuccess(__("Removed from target"));
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
         $coachee = $this->Goal->Collaborator->findById($collaboratorId);
@@ -309,7 +309,7 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("remove from approval"));
+        $this->Pnotify->outSuccess(__("Has withdrawn"));
 
         //コーチーと自分の認定未処理件数を更新(キャッシュを削除
         $coachee = $this->Goal->Collaborator->findById($collaboratorId);

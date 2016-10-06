@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-06 16:51+0900\n"
+"PO-Revision-Date: 2016-10-06 17:36+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1126,12 +1126,16 @@ msgid "You don't have access right to this page."
 msgstr "この画面にはアクセスできません。"
 
 #: Controller/Api/V1/GoalApprovalsController.php:209
-msgid "Set as approval"
-msgstr ""
+msgid "Set as target"
+msgstr "評価対象にしました"
 
-#: Controller/Api/V1/GoalApprovalsController.php:266;312
-msgid "remove from approval"
-msgstr ""
+#: Controller/Api/V1/GoalApprovalsController.php:266
+msgid "Removed from target"
+msgstr "評価対象外にしました"
+
+#: Controller/Api/V1/GoalApprovalsController.php:312
+msgid "Has withdrawn"
+msgstr "申請を取り下げました"
 
 #: Controller/Api/V1/GoalApprovalsController.php:376 Model/Evaluation.php:279
 msgid "Failed to save."
