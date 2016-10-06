@@ -25,14 +25,14 @@ export function _checkValue(target) {
     case 'first_name':
       if (val === '' || !validator.isLength(val, {min: 0, max: 128})) {
         return invalid(name, cake.message.validate.signup_user_name_length)
-      } else if (!validator.matches(val, /[a-zA-Z \']+$/)) {
+      } else if (!validator.matches(val, cake.regex.user_name)) {
         return invalid(name, cake.message.validate.signup_user_name_alpha)
       }
       return valid(name)
     case 'last_name':
       if (val === '' || !validator.isLength(val, {min: 0, max: 128})) {
         return invalid(name, cake.message.validate.signup_user_name_length)
-      } else if (!validator.matches(val, /[a-zA-Z \']+$/)) {
+      } else if (!validator.matches(val, cake.regex.user_name)) {
         return invalid(name, cake.message.validate.signup_user_name_alpha)
       }
       return valid(name)
