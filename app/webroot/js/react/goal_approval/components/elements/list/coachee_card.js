@@ -8,6 +8,7 @@ export class CoacheeCard extends React.Component {
     const Type = Collaborator.Type
     const collaborator = this.props.collaborator
     const role = collaborator.type == Type.OWNER ? __('Leader') : __('Collaborator')
+    const is_incomplete = collaborator.approval_status != ApprovalStatus.DONE && collaborator.approval_status != ApprovalStatus.WITHDRAWN
     const status = (() => {
       if(collaborator.is_target_evaluation) {
         return __('Evaluated')
@@ -23,7 +24,7 @@ export class CoacheeCard extends React.Component {
 
     return (
       <li className="goals-approval-list-item">
-          <div className={`goals-approval-list-item ${ collaborator.approval_status != ApprovalStatus.DONE ? "is-incomplete is-waiting" : "is-complete" }`}>
+          <div className={`goals-approval-list-item ${ is_incomplete ? "is-incomplete is-waiting" : "is-complete" }`}>
               <Link className="goals-approval-list-item-link" to={ `/goals/approval/detail/${collaborator.id}` }>
                   <img className="goals-approval-list-item-image" src={ collaborator.user.small_img_url } alt="" width="32" height="32" />
                   <div className="goals-approval-list-item-info">
