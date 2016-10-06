@@ -20,6 +20,12 @@ export default class Edit extends React.Component {
   }
 
   componentWillMount() {
+    // 遷移元がどこかクエリパラメータで指定してあるので編集キャンセル/完了後の遷移先として保存しておく
+    let from = "/"
+    if (Object.keys(this.props.location.query).length > 0) {
+      from = new Buffer(this.props.location.query.from, 'base64').toString()
+    }
+    this.props.init({from})
     this.props.fetchInitialData(this.props.params.goalId)
   }
 
@@ -166,7 +172,7 @@ export default class Edit extends React.Component {
 
 
           <button type="submit" className="goals-create-btn-next btn">{__("Confirm")} ></button>
-          <a className="goals-create-btn-cancel btn" href="/">{__("Cancel")}</a>
+          <a className="goals-create-btn-cancel btn" href={this.props.goal.from}>{__("Cancel")}</a>
         </form>
       </div>
     )

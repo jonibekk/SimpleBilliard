@@ -32,7 +32,8 @@ export default class DetailComponent extends React.Component {
     const coachee_footer = (() => {
       return <CoacheeFooter validationErrors={ detail.validationErrors }
                             is_leader={ detail.collaborator.is_leader }
-                            goal_id={ detail.collaborator.goal.id } />;
+                            goal_id={ detail.collaborator.goal.id }
+                            current_url={this.props.location.pathname}/>;
     })()
     const coach_footer = (() => {
       return <CoachFooter validationErrors={ detail.validationErrors }

@@ -30,6 +30,12 @@ export function validateGoal(goalId, addInputData) {
   }
 }
 
+export function init(data) {
+  return {
+    type: types.INIT,
+    data
+  }
+}
 export function toNextPage(addInputData = {}) {
   return {
     type: types.TO_NEXT_PAGE,
@@ -133,7 +139,7 @@ export function fetchComments() {
 export function saveGoal(addInputData) {
   return (dispatch, getState) => {
     dispatch(disableSubmit())
-    const {inputData, goal} = getState().goal;
+    const {inputData, goal, from} = getState().goal;
     inputData["approval_history"] = addInputData
     // 単位無しの場合開始値と終了値を自動的に0にする
     if (inputData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
@@ -143,7 +149,7 @@ export function saveGoal(addInputData) {
 
     return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
-        document.location.href = '/'
+        document.location.href = from
       },
       (response) => {
         dispatch(invalid(response.data))
