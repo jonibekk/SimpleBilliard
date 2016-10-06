@@ -1225,11 +1225,13 @@ class Goal extends AppModel
                 ],
             ]
         ];
+        $res = $this->find('all', $options);
+
         //calc progress
         foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
         }
-        return $this->find('all', $options);
+        return $res;
     }
 
     /**
