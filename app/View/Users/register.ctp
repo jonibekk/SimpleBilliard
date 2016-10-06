@@ -29,7 +29,7 @@
                 $last_name = $this->Form->input('last_name', [
                     'label'                        => __("Last Name"),
                     'placeholder'                  => __("eg. Armstrong"),
-                    "pattern"                      => '^[a-zA-Z \']+$',
+                    "pattern"                      => User::USER_NAME_REGEX,
                     "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
@@ -39,7 +39,7 @@
                 $first_name = $this->Form->input('first_name', [
                     'label'                        => __("First Name"),
                     'placeholder'                  => __("eg. Harry"),
-                    "pattern"                      => '^[a-zA-Z \']+$',
+                    "pattern"                      => User::USER_NAME_REGEX,
                     "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',

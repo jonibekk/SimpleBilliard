@@ -12,7 +12,7 @@
  * @var boolean            $is_not_use_local_name
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div id="profile">
     <div class="panel panel-default">
         <div class="panel-heading"><?= __("Profile") ?></div>
@@ -67,7 +67,7 @@
             $last_name = $this->Form->input('last_name', [
                 'label'                        => __("Last Name"),
                 'placeholder'                  => __("eg. Armstrong"),
-                "pattern"                      => '^[a-zA-Z \']+$',
+                "pattern"                      => User::USER_NAME_REGEX,
                 "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                 "data-bv-notempty-message"     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
@@ -77,7 +77,7 @@
             $first_name = $this->Form->input('first_name', [
                 'label'                        => __("First Name"),
                 'placeholder'                  => __("eg. Harry"),
-                "pattern"                      => '^[a-zA-Z \']+$',
+                "pattern"                      => User::USER_NAME_REGEX,
                 "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                 "data-bv-notempty-message"     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
@@ -238,7 +238,8 @@
                                     'required'     => false
                                 ]) ?>
                         </span>
-                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?>&nbsp;<?= __('More than %d×%d pixel', 672, 378) ?></span>
+                            <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?>
+                                &nbsp;<?= __('More than %d×%d pixel', 672, 378) ?></span>
                         </div>
                     </div>
 
@@ -345,4 +346,4 @@ Need New Customers?<br>\n
     });
 </script>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

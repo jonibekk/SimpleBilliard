@@ -441,6 +441,9 @@
             "Select your present term": "<?= __("Select your present term") ?>",
             "Password is incorrect.": "<?= __("Password is incorrect.") ?>"
         },
+        regex: {
+            user_name: "<?= User::USER_NAME_REGEX ?>"
+        },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
         new_notify_message_cnt: <?=isset($new_notify_message_cnt) ? $new_notify_message_cnt : 0?>,
@@ -453,7 +456,7 @@
         unread_msg_post_ids: <?=isset($unread_msg_post_ids) ? json_encode($unread_msg_post_ids) : "''"?>,
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
-        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>"
+        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
     };
 
     function __(text) {

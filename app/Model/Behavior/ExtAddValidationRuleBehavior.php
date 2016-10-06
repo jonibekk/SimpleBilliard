@@ -338,8 +338,9 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         Model $Model,
         $check
     ) {
+        App::uses('User', 'Model');
         $value = array_values($check);
         $value = $value[0];
-        return preg_match('/^[a-zA-Z \']+$/', $value);
+        return preg_match('/' . User::USER_NAME_REGEX . '/', $value);
     }
 }

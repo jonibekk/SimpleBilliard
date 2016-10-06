@@ -43,6 +43,8 @@ class User extends AppModel
         self::TYPE_GENDER_NEITHER => ""
     ];
 
+    const USER_NAME_REGEX = '^[a-zA-Z \']+$';
+
     /**
      * 性別タイプの名前をセット
      */

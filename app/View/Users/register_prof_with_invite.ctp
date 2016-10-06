@@ -31,7 +31,7 @@
         <?php //姓と名は言語によって表示順を変える
         $last_name = $this->Form->input('last_name', [
             'placeholder'                  => __("eg. Armstrong"),
-            "pattern"                      => '^[a-zA-Z \']+$',
+            "pattern"                      => User::USER_NAME_REGEX,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
@@ -43,7 +43,7 @@
         ]);
         $first_name = $this->Form->input('first_name', [
             'placeholder'                  => __("eg. Harry"),
-            "pattern"                      => '^[a-zA-Z \']+$',
+            "pattern"                      => User::USER_NAME_REGEX,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
