@@ -9,7 +9,7 @@ class DATABASE_CONFIG
         'host'       => 'localhost',
         'login'      => 'root',
         'password'   => '',
-        'database'   => 'myapp_bench',
+        'database'   => 'myapp',
         'encoding'   => 'utf8mb4',
     );
 
