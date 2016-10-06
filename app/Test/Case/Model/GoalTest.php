@@ -168,22 +168,6 @@ class GoalTest extends GoalousTestCase
         $this->assertTrue(!empty($res));
     }
 
-    function testGetProgress()
-    {
-        $goal = ['KeyResult' => []];
-        $this->Goal->getProgress($goal);
-
-        $goal = [
-            'KeyResult' => [
-                [
-                    'priority' => 1,
-                    'progress' => 0,
-                ]
-            ]
-        ];
-        $this->Goal->getProgress($goal);
-    }
-
     function testSortModified()
     {
         $goals = [

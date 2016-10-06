@@ -15,6 +15,7 @@ App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('Collaborator', 'Model');
 App::uses('Post', 'Model');
+App::import('Service', 'GoalApprovalService');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
 
@@ -463,4 +464,50 @@ class GoalService extends AppService
         $currentTerm = $EvaluateTerm->getCurrentTermData();
         return strtotime($goal['start_date']) >= $currentTerm['start_date'];
     }
+
+    /**
+     * ゴール一覧をビュー用に整形
+     * @param  array $goals [description]
+     * @return array $goals [description]
+     */
+    function processGoals($goals)
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
+        foreach ($goals as $key => $goal) {
+            // 進捗を計算
+            if(!empty($goal['KeyResult'])) {
+                $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
+            }
+            // 認定有効フラグを追加
+            if(!empty($goal['TargetCollabo'])) {
+                $goals[$key]['TargetCollabo']['is_approval_enabled'] = $GoalApprovalService->isApprovable($goal['TargetCollabo']['user_id']);
+            }
+        }
+        return $goals;
+    }
+
+    /**
+     * ゴールの進捗をキーリザルト一覧から取得
+     * @param  array $key_results [description]
+     * @return array $res
+     */
+    function getProgress($key_results)
+    {
+        $res = 0;
+        $target_progress_total = 0;
+        $current_progress_total = 0;
+        foreach ($key_results as $key_result) {
+            $target_progress_total += $key_result['priority'] * 100;
+            $current_progress_total += $key_result['priority'] * $key_result['progress'];
+        }
+        if ($target_progress_total != 0) {
+            $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        }
+        return $res;
+    }
+
 }

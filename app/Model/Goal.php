@@ -303,8 +303,11 @@ class Goal extends AppModel
      * hasOne associations
      */
     public $hasOne = [
-        'TopKeyResult' => [
+        'TopKeyResult'  => [
             'className' => 'KeyResult',
+        ],
+        'TargetCollabo' => [
+            'className' => 'Collaborator',
         ],
     ];
 
@@ -715,7 +718,18 @@ class Goal extends AppModel
                     ],
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
-                ]
+                ],
+                'TargetCollabo'      => [
+                     'fields'     => [
+                         'TargetCollabo.id',
+                         'TargetCollabo.user_id',
+                         'TargetCollabo.type',
+                         'TargetCollabo.approval_status',
+                         'TargetCollabo.is_wish_approval',
+                         'TargetCollabo.is_target_evaluation'
+                     ],
+                     'conditions' => ['TargetCollabo.user_id' => $user_id],
+                 ],
             ],
         ];
         if ($kr_limit) {
@@ -726,16 +740,6 @@ class Goal extends AppModel
             return $this->find($type, $options);
         }
         $res = $this->find('all', $options);
-
-        //進捗を計算
-        foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            foreach ($goal['MyCollabo'] as $cb_info) {
-                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
-                }
-            }
-        }
 
         /**
          * ソート
@@ -880,7 +884,18 @@ class Goal extends AppModel
                     ],
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
-                ]
+                ],
+                'TargetCollabo'      => [
+                     'fields'     => [
+                         'TargetCollabo.id',
+                         'TargetCollabo.user_id',
+                         'TargetCollabo.type',
+                         'TargetCollabo.approval_status',
+                         'TargetCollabo.is_wish_approval',
+                         'TargetCollabo.is_target_evaluation'
+                     ],
+                     'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
+                 ],
             ],
             'limit'      => $limit,
             'page'       => $page
@@ -893,13 +908,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
-        $res = $this->find('all', $options);
-        //進捗を計算
-        foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-        }
-
-        return $res;
+        return $this->find('all', $options);
     }
 
     /**
@@ -1121,19 +1130,23 @@ class Goal extends AppModel
                         'Collaborator.is_wish_approval',
                         'Collaborator.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR]
+                ],
+                'TargetCollabo'      => [
+                    'fields'     => [
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
+                    ],
+                    'conditions' => ['TargetCollabo.user_id' => $user_id],
                 ],
             ]
         ];
         $goals = $this->find('all', $options);
-        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
-
-        //進捗を計算
-        foreach ($goals as $key => $goal) {
-            $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
-        }
-
-        return $goals;
+        return Hash::combine($goals, '{n}.Goal.id', '{n}');
     }
 
     function getMyFollowedGoals(
@@ -1199,12 +1212,24 @@ class Goal extends AppModel
                         'Collaborator.user_id' => $user_id
                     ]
                 ],
+                'TargetCollabo' => [
+                    'fields'     => [
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
+                    ],
+                    'conditions' => ['TargetCollabo.user_id' => $user_id],
+                ],
             ]
         ];
         $res = $this->find('all', $options);
+
         //calc progress
         foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
         }
         return $res;
     }
@@ -1295,6 +1320,17 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
+                'TargetCollabo'      => [
+                    'fields'     => [
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
+                    ],
+                    'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
+                ]
             ]
         ];
 
@@ -1306,17 +1342,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
-        $res = $this->find('all', $options);
-        //進捗を計算
-        foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            foreach ($goal['MyCollabo'] as $cb_info) {
-                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
-                }
-            }
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     // for getting collaborator's goals for showing on right column
@@ -1389,6 +1415,17 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
+                'TargetCollabo'      => [
+                    'fields'     => [
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
+                    ],
+                    'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
+                ]
             ]
         ];
 
@@ -1400,17 +1437,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
-        $res = $this->find('all', $options);
-        //進捗を計算
-        foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            foreach ($goal['MyCollabo'] as $cb_info) {
-                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
-                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['approval_status'];
-                }
-            }
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     /**
@@ -1509,10 +1536,7 @@ class Goal extends AppModel
                 ]
             ]
         ];
-        $res = $this->find('first', $options);
-        $res['Goal']['progress'] = $this->getProgress($res);
-
-        return $res;
+        return $this->find('first', $options);
     }
 
     function getGoalMinimum($id)
@@ -1523,12 +1547,7 @@ class Goal extends AppModel
                 'Goal.team_id' => $this->current_team_id,
             ],
         ];
-        $res = $this->find('first', $options);
-        if (!empty($res)) {
-            $res['Goal']['progress'] = $this->getProgress($res);
-        }
-
-        return $res;
+        return $this->find('first', $options);
     }
 
     /**
@@ -1646,12 +1665,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['conditions']['NOT']['completed'] = null;
         }
         $options = $this->setFilter($options, $search_option);
-        $res = $this->find('all', $options);
-        //進捗を計算
-        foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     function countGoalRes($search_option)
@@ -1791,25 +1805,6 @@ class Goal extends AppModel
                 break;
         }
         return $options;
-    }
-
-    function getProgress($goal)
-    {
-        $res = 0;
-        if (empty($goal['KeyResult'])) {
-            return $res;
-        }
-
-        $target_progress_total = 0;
-        $current_progress_total = 0;
-        foreach ($goal['KeyResult'] as $key_result) {
-            $target_progress_total += $key_result['priority'] * 100;
-            $current_progress_total += $key_result['priority'] * $key_result['progress'];
-        }
-        if ($target_progress_total != 0) {
-            $res = round($current_progress_total / $target_progress_total, 2) * 100;
-        }
-        return $res;
     }
 
     function getAllUserGoalProgress($goal_ids, $user_id)
@@ -2162,5 +2157,26 @@ class Goal extends AppModel
             return true;
         }
         return $this->validationErrors;
+    }
+
+    /**
+     * ゴールの進捗をキーリザルト一覧から取得
+     * TODO: GoalServiceと重複してるので、将来的には削除
+     * @param  array $key_results [description]
+     * @return array $res
+     */
+    function getProgress($key_results)
+    {
+        $res = 0;
+        $target_progress_total = 0;
+        $current_progress_total = 0;
+        foreach ($key_results as $key_result) {
+            $target_progress_total += $key_result['priority'] * 100;
+            $current_progress_total += $key_result['priority'] * $key_result['progress'];
+        }
+        if ($target_progress_total != 0) {
+            $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        }
+        return $res;
     }
 }
