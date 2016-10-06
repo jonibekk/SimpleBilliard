@@ -84,11 +84,6 @@ export default function goal(state = initialState, action) {
       })
 
     case types.REQUEST_SUGGEST:
-      // サジェストをラベル名昇順に並び替え
-      action.suggestions.sort((a,b) => {
-        return (a.name > b.name)? 1 :-1
-      });
-
       return Object.assign({}, state, {
         suggestions: action.suggestions,
         keyword: action.keyword
