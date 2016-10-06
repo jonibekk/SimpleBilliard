@@ -33,9 +33,8 @@ export class CoacheeFooter extends React.Component {
       }
       // Edit goal
       if(this.props.collaborator.is_leader) {
-        return <a>aaa</a>
-        return <a className="btn goals-approval-btn-fullsize-active"
-                  onClick={ () => { document.location.href = `/goals/${this.props.goal_id}/edit` }}>{ __('Edit Goal') }</a>
+        return <a href={`/goals/${this.props.goal_id}/edit?from=${new Buffer(this.props.current_url).toString('base64')}`}
+                  className="btn goals-approval-btn-fullsize-active">{ __('Edit Goal') }</a>
       }
       // Edit role
       return <a href={`/goals/ajax_get_collabo_change_modal/goal_id:${this.props.goal_id}`}
@@ -57,5 +56,6 @@ CoacheeFooter.propTypes = {
   goal_id: React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.number
-  ])
+  ]),
+  current_url:React.PropTypes.string
 }

@@ -33,6 +33,7 @@ export default class DetailComponent extends React.Component {
       return <CoacheeFooter validationErrors={ detail.validationErrors }
                             collaborator={ detail.collaborator }
                             goal_id={ detail.collaborator.goal.id }
+                            current_url={this.props.location.pathname}
                             handleClickWithdraw={ () => this.props.postWithdraw(this.props.params.collaborator_id) } />;
     })()
     const coach_footer = (() => {
