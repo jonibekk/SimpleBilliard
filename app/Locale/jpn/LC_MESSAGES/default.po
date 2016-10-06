@@ -6856,24 +6856,6 @@ msgstr "passwordSameCheck"
 msgid "imageMinWidthHeight"
 msgstr ""
 
-#~ msgid "Owner"
-#~ msgstr "オーナー"
-
-#~ msgid "Display on Home feed"
-#~ msgstr "ホームフィードに表示する"
-
-#~ msgid "%d days pass"
-#~ msgstr "%d日経過"
-
-#~ msgid "Waiting for modified"
-#~ msgstr "修正待ち"
-
-#~ msgid "%d days left"
-#~ msgstr "残り%d日"
-
-#~ msgid "Commented"
-#~ msgstr "コメントしました"
-
 #~ msgid "Move to Done."
 #~ msgstr "処理済みに移動しました。"
 
