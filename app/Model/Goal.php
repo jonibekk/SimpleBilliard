@@ -741,13 +741,6 @@ class Goal extends AppModel
         }
         $res = $this->find('all', $options);
 
-        foreach ($res as $key => $goal) {
-            // 進捗を計算
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
-            // 認定有効フラグを追加
-            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
-        }
-
         /**
          * ソート
          * ソートは優先順位が低いものから処理する
@@ -915,15 +908,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
-        $res = $this->find('all', $options);
-        foreach ($res as $key => $goal) {
-            //進捗を計算
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            // 認定有効フラグを追加
-            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
-        }
-
-        return $res;
+        return $this->find('all', $options);
     }
 
     /**
@@ -1161,16 +1146,7 @@ class Goal extends AppModel
             ]
         ];
         $goals = $this->find('all', $options);
-        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
-
-        foreach ($goals as $key => $goal) {
-            //進捗を計算
-            $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
-            // 認定有効フラグを追加
-            $goals[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
-        }
-
-        return $goals;
+        return Hash::combine($goals, '{n}.Goal.id', '{n}');
     }
 
     function getMyFollowedGoals(
@@ -1249,14 +1225,7 @@ class Goal extends AppModel
                 ],
             ]
         ];
-        $res = $this->find('all', $options);
-        foreach ($res as $key => $goal) {
-            //calc progress
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            // 認定有効フラグを追加
-            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($user_id);
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     /**
@@ -1367,14 +1336,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
-        $res = $this->find('all', $options);
-        foreach ($res as $key => $goal) {
-            //進捗を計算
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            // 認定有効フラグを追加
-            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     // for getting collaborator's goals for showing on right column
@@ -1469,14 +1431,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
-        $res = $this->find('all', $options);
-        foreach ($res as $key => $goal) {
-            //進捗を計算
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-            // 認定有効フラグを追加
-            $res[$key]['TargetCollabo']['is_approval_enabled'] = $this->Team->TeamMember->getEvaluationEnableFlg($this->my_uid);
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     /**
@@ -1575,10 +1530,7 @@ class Goal extends AppModel
                 ]
             ]
         ];
-        $res = $this->find('first', $options);
-        $res['Goal']['progress'] = $this->getProgress($res);
-
-        return $res;
+        return $this->find('first', $options);
     }
 
     function getGoalMinimum($id)
@@ -1589,12 +1541,7 @@ class Goal extends AppModel
                 'Goal.team_id' => $this->current_team_id,
             ],
         ];
-        $res = $this->find('first', $options);
-        if (!empty($res)) {
-            $res['Goal']['progress'] = $this->getProgress($res);
-        }
-
-        return $res;
+        return $this->find('first', $options);
     }
 
     /**
@@ -1712,12 +1659,7 @@ class Goal extends AppModel
             $options['contain']['KeyResult']['conditions']['NOT']['completed'] = null;
         }
         $options = $this->setFilter($options, $search_option);
-        $res = $this->find('all', $options);
-        foreach ($res as $key => $goal) {
-            //進捗を計算
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-        }
-        return $res;
+        return $this->find('all', $options);
     }
 
     function countGoalRes($search_option)
@@ -1857,25 +1799,6 @@ class Goal extends AppModel
                 break;
         }
         return $options;
-    }
-
-    function getProgress($goal)
-    {
-        $res = 0;
-        if (empty($goal['KeyResult'])) {
-            return $res;
-        }
-
-        $target_progress_total = 0;
-        $current_progress_total = 0;
-        foreach ($goal['KeyResult'] as $key_result) {
-            $target_progress_total += $key_result['priority'] * 100;
-            $current_progress_total += $key_result['priority'] * $key_result['progress'];
-        }
-        if ($target_progress_total != 0) {
-            $res = round($current_progress_total / $target_progress_total, 2) * 100;
-        }
-        return $res;
     }
 
     function getAllUserGoalProgress($goal_ids, $user_id)

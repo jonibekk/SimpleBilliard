@@ -463,4 +463,48 @@ class GoalService extends AppService
         $currentTerm = $EvaluateTerm->getCurrentTermData();
         return strtotime($goal['start_date']) >= $currentTerm['start_date'];
     }
+
+    /**
+     * ゴール一覧をビュー用に整形
+     * @param  [type] $goals [description]
+     * @return [type]        [description]
+     */
+    function processGoals($goals)
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        foreach ($goals as $key => $goal) {
+            // 進捗を計算
+            if(!empty($goal['KeyResult'])) {
+                $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
+            }
+            // 認定有効フラグを追加
+            if(!empty($goal['TargetCollabo'])) {
+                $goals[$key]['TargetCollabo']['is_approval_enabled'] = $TeamMember->getEvaluationEnableFlg($goal['TargetCollabo']['user_id']);
+            }
+        }
+        return $goals;
+    }
+
+    /**
+     * ゴールの進捗をキーリザルト一覧から取得
+     * @param  [type] $goal [description]
+     * @return [type]       [description]
+     */
+    function getProgress($key_results)
+    {
+        $res = 0;
+        $target_progress_total = 0;
+        $current_progress_total = 0;
+        foreach ($key_results as $key_result) {
+            $target_progress_total += $key_result['priority'] * 100;
+            $current_progress_total += $key_result['priority'] * $key_result['progress'];
+        }
+        if ($target_progress_total != 0) {
+            $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        }
+        return $res;
+    }
+
 }
