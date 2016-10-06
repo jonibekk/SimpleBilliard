@@ -338,6 +338,8 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         Model $Model,
         $check
     ) {
-        return preg_match('/^[a-zA-Z \']+$/', $check);
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^[a-zA-Z \']+$/', $value);
     }
 }
