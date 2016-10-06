@@ -1584,7 +1584,6 @@ msgstr ""
 "card-head-target\">%2$s</span>を修正しました。"
 
 #: Model/NotifySetting.php:737;742
-#, fuzzy
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has withdrawn <span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -3330,7 +3329,6 @@ msgid "Add by pressing the Enter.(You can save maximum 5 labels)"
 msgstr "Enterを押すと追加されます。(最大5個まで登録可能)"
 
 #: View/Elements/cake_variables.ctp:506
-#, fuzzy
 msgid "Withdrawn"
 msgstr "申請取り下げ取り下げ"
 
