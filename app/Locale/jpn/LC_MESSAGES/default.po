@@ -3330,7 +3330,7 @@ msgstr "Enterを押すと追加されます。(最大5個まで登録可能)"
 
 #: View/Elements/cake_variables.ctp:506
 msgid "Withdrawn"
-msgstr "申請取り下げ取り下げ"
+msgstr "申請取り下げ"
 
 #: View/Elements/circle_list.ctp:78
 #: View/Elements/circle_list_in_hamburger.ctp:74
