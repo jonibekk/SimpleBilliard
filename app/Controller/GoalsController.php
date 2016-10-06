@@ -1177,6 +1177,9 @@ class GoalsController extends AppController
 
     public function ajax_get_my_goals()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
@@ -1207,6 +1210,7 @@ class GoalsController extends AppController
         } else {
             $goals = [];
         }
+        $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
         $this->set(compact('goals', 'type', 'current_term'));
 
@@ -1459,11 +1463,16 @@ class GoalsController extends AppController
      */
     function _setGoalPageHeaderInfo($goal_id)
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $goal = $this->Goal->getGoal($goal_id);
         if (!isset($goal['Goal']['id'])) {
             // ゴールが存在しない
             return false;
         }
+        // 進捗情報を追加
+        $goal['Goal']['progress'] = $GoalService->getProgress($goal['KeyResult']);
         $this->set('goal', $goal);
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);

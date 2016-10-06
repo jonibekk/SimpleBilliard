@@ -36,14 +36,15 @@ class GoalsController extends ApiController
      */
     function post_validate()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $fields = [];
         if ($this->request->query('fields')) {
             $fields = explode(',', $this->request->query('fields'));
             //allが含まれる場合はすべて指定。それ以外はそのまま
             $fields = in_array('all', $fields) ? [] : $fields;
         }
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
 
         $data = $this->request->data;
         if (!empty($_FILES['photo'])) {

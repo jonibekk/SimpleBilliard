@@ -1225,6 +1225,10 @@ class Goal extends AppModel
                 ],
             ]
         ];
+        //calc progress
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
         return $this->find('all', $options);
     }
 
@@ -2151,5 +2155,26 @@ class Goal extends AppModel
             return true;
         }
         return $this->validationErrors;
+    }
+
+    /**
+     * ゴールの進捗をキーリザルト一覧から取得
+     * TODO: GoalServiceと重複してるので、将来的には削除
+     * @param  array $key_results [description]
+     * @return array $res
+     */
+    function getProgress($key_results)
+    {
+        $res = 0;
+        $target_progress_total = 0;
+        $current_progress_total = 0;
+        foreach ($key_results as $key_result) {
+            $target_progress_total += $key_result['priority'] * 100;
+            $current_progress_total += $key_result['priority'] * $key_result['progress'];
+        }
+        if ($target_progress_total != 0) {
+            $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        }
+        return $res;
     }
 }

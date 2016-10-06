@@ -628,6 +628,10 @@ class AppController extends BaseController
 
     public function _setViewValOnRightColumn()
     {
+        App::import('Service', 'GoalService');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $cached_my_goal_area_vals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         if ($cached_my_goal_area_vals !== false) {
             //このキャッシュはviewで利用する複数の変数を格納されているのでここで展開する。
@@ -639,12 +643,15 @@ class AppController extends BaseController
 
             $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
                 MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $my_goals = $GoalService->processGoals($my_goals);
             $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
             $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null,
                 $start_date,
                 $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $collabo_goals = $GoalService->processGoals($collabo_goals);
             $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
             $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
+            $my_previous_goals = $GoalService->processGoals($my_previous_goals);
             $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
             //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
             $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
