@@ -23,7 +23,8 @@ const initialState = {
     labels:[]
   },
   approvalHistories: [],
-  isDisabledSubmit: false
+  isDisabledSubmit: false,
+  from: ""
 }
 
 export default function goal(state = initialState, action) {
@@ -36,6 +37,9 @@ export default function goal(state = initialState, action) {
 
   let inputData = state.inputData
   switch (action.type) {
+    case types.INIT:
+      return Object.assign({}, state, action.data)
+
     case types.INVALID:
       return Object.assign({}, state, {
         validationErrors: action.error.validation_errors,
