@@ -7,11 +7,11 @@
  * @var                    $team_name
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="row">
     <div class="panel panel-default panel-signup">
         <div class="panel-heading signup-title"><?= __('Join the Goalous team for "%s"?', $team_name) ?></div>
-        <img src="/img/signup/user.png" className="signup-header-image" />
+        <img src="/img/signup/user.png" className="signup-header-image"/>
         <div class="signup-description">
             <?= __('Your name will displayed along with your goals and posts in Goalous') ?>
         </div>
@@ -31,27 +31,27 @@
         <?php //姓と名は言語によって表示順を変える
         $last_name = $this->Form->input('last_name', [
             'placeholder'                  => __("eg. Armstrong"),
-            "pattern"                      => '^[a-zA-Z]+$',
-            "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
+            "pattern"                      => User::USER_NAME_REGEX,
+            "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             'required'                     => false,
-            'value' => viaIsSet($last_name)
+            'value'                        => viaIsSet($last_name)
         ]);
         $first_name = $this->Form->input('first_name', [
             'placeholder'                  => __("eg. Harry"),
-            "pattern"                      => '^[a-zA-Z]+$',
-            "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
+            "pattern"                      => User::USER_NAME_REGEX,
+            "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             'required'                     => false,
-            'value' => viaIsSet($first_name)
+            'value'                        => viaIsSet($first_name)
         ]);
         if ($last_first) {
             echo $last_name;
@@ -94,7 +94,7 @@
                         '11' => __('Nov'),
                         '12' => __('Dec'),
                     ],
-                    'default' => viaIsSet($birth_day),
+                    'default'                  => viaIsSet($birth_day),
                     'class'                    => 'form-control inline-fix signup_input-design',
                     'label'                    => false,
                     'dateFormat'               => 'YMD',
@@ -192,4 +192,4 @@
     });
 </script>
 <?php $this->end(); ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
