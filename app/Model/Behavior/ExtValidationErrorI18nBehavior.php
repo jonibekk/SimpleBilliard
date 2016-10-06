@@ -29,7 +29,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'image_type'          => __("Failed to upload. jpg, png and gif are allowed."),
             'emailsCheck'         => __("Some email addresses are incorrect."),
             'passwordPolicy'      => __('Please mix of numbers and alphanumeric.'),
-            'userName'            => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
+            'userNameChar'        => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

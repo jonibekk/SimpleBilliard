@@ -142,14 +142,14 @@ class User extends AppModel
             ],
         ],
         'first_name'         => [
-            'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => ['rule' => 'notEmpty'],
-            'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notEmpty'     => ['rule' => 'notEmpty'],
+            'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'last_name'          => [
-            'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => ['rule' => 'notEmpty'],
-            'userName'  => ['rule' => ['custom', '/^[a-zA-Z \']+$/'],]
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notEmpty'     => ['rule' => 'notEmpty'],
+            'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'gender_type'        => [
             'isString' => [
