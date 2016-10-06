@@ -288,10 +288,37 @@ class GoalApprovalsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("Withdraw approval"));
+        // 保存データ定義
+        $saveData = $GoalApprovalService->generateWithdrawSaveData($collaboratorId);
 
-        return $this->_getResponseSuccess(['collaborator_id' => $collaboratorId]);
+        // 保存処理
+        $response = $this->_postApproval($saveData);
+        if ($response !== true) {
+            return $response;
+        }
+
+        // コーチへ通知
+        $goalId = Hash::get($this->Goal->Collaborator->findById($collaboratorId), 'Collaborator.goal_id');
+        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL);
+
+        // Mixpanelのトラッキング
+        $this->_trackApprovalToMixpanel(
+            MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
+            MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
+            $collaboratorId
+        );
+
+        // リストページに表示する通知カード
+        $this->Pnotify->outSuccess(__("remove from approval"));
+
+        //コーチーと自分の認定未処理件数を更新(キャッシュを削除
+        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
+        $coacheeUserId = Hash::get($coachee, 'Collaborator.user_id');
+        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
+
+        // レスポンス
+        $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
+        return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
     }
 
     /**

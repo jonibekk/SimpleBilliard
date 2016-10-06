@@ -147,16 +147,20 @@ class GoalApprovalService extends AppService
 
         $Collaborator->begin();
 
-        $isSaveSuccessCollaborator = $Collaborator->save($saveData);
-        if (!$isSaveSuccessCollaborator) {
-            $Collaborator->rollback();
-            return false;
+        if(!empty($saveData['Collaborator'])) {
+            $isSaveSuccessCollaborator = $Collaborator->save($saveData);
+            if (!$isSaveSuccessCollaborator) {
+                $Collaborator->rollback();
+                return false;
+            }
         }
 
-        $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
-        if (!$isSaveSuccessApprovalHistory) {
-            $Collaborator->rollback();
-            return false;
+        if(!empty($saveData['ApprovalHistory'])) {
+            $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
+            if (!$isSaveSuccessApprovalHistory) {
+                $Collaborator->rollback();
+                return false;
+            }
         }
 
         $Collaborator->commit();
@@ -230,19 +234,23 @@ class GoalApprovalService extends AppService
         $validation = [];
 
         // collaborator validation
-        $Collaborator->set($data['Collaborator']);
-        $collaborator_validation = $Collaborator->validates();
-        if ($collaborator_validation !== true) {
-            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-            $validation['collaborator'] = $Collaborator->_validationExtract($Collaborator->validationErrors);
+        if(!empty($data['Collaborator'])) {
+            $Collaborator->set($data['Collaborator']);
+            $collaborator_validation = $Collaborator->validates();
+            if ($collaborator_validation !== true) {
+                // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
+                $validation['collaborator'] = $Collaborator->_validationExtract($Collaborator->validationErrors);
+            }
         }
 
         // approval_history validation
-        $ApprovalHistory->set($data['ApprovalHistory']);
-        $approval_history_validation = $ApprovalHistory->validates();
-        if ($approval_history_validation !== true) {
-            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-            $validation['approval_history'] = $ApprovalHistory->_validationExtract($ApprovalHistory->validationErrors);
+        if(!empty($data['ApprovalHistory'])) {
+            $ApprovalHistory->set($data['ApprovalHistory']);
+            $approval_history_validation = $ApprovalHistory->validates();
+            if ($approval_history_validation !== true) {
+                // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
+                $validation['approval_history'] = $ApprovalHistory->_validationExtract($ApprovalHistory->validationErrors);
+            }
         }
 
         if (!empty($validation)) {
@@ -285,6 +293,17 @@ class GoalApprovalService extends AppService
         ];
 
         return $saveData;
+    }
+
+    function generateWithdrawSaveData($collaboratorId)
+    {
+        return [
+            'Collaborator' => [
+                'id' => $collaboratorId,
+                'is_target_evaluation' => false,
+                'approval_status'      => Collaborator::APPROVAL_STATUS_WITHDRAWN
+            ]
+        ];
     }
 
     function addClearImportantWordToApprovalHistories($approvalHistories, $collaboratorUserId)

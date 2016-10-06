@@ -15,6 +15,9 @@ export class CoacheeCard extends React.Component {
       if(collaborator.approval_status == ApprovalStatus.NEW || collaborator.approval_status == ApprovalStatus.REAPPLICATION) {
         return __('Waiting for approval')
       }
+      if(collaborator.approval_status == ApprovalStatus.WITHDRAWN) {
+        return __('Withdrawn')
+      }
       return __('Not Evaluated')
     })()
 
