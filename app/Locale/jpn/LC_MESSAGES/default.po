@@ -4293,7 +4293,7 @@ msgstr "%d日経過"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:211 View/Helper/GoalHelper.php:131
 msgid "Waiting for approval"
-msgstr "承認待ち"
+msgstr "認定待ち"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:213 View/Helper/GoalHelper.php:133
 msgid "In Evaluation"

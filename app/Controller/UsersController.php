@@ -1082,6 +1082,9 @@ class UsersController extends AppController
 
     function view_goals()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $user_id = $this->_getRequiredParam('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1142,6 +1145,8 @@ class UsersController extends AppController
         } else {
             $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
         }
+
+        $goals = $GoalService->processGoals($goals);
         $goals = $this->Goal->setIsCurrentTerm($goals);
 
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
