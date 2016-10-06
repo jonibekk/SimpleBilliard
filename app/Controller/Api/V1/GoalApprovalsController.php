@@ -302,6 +302,7 @@ class GoalApprovalsController extends ApiController
         $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL);
 
         // Mixpanelのトラッキング
+        // TODO: 後ほど他の機能と合わせて一括でMixpanelの設定を行う。
         // $this->_trackApprovalToMixpanel(
         //     MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
         //     MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
