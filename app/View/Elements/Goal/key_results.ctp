@@ -62,8 +62,6 @@
                 <?php if ($kr['KeyResult']['completed']): ?>
                     <?= __('Clear') ?>
                 <?php endif ?>
-                <?php
-                ?>
                 <div class="goal-detail-kr-score">
                     <i class="fa fa-bullseye"></i>
                     <?= $kr['KeyResult']['display_value'] ?>
