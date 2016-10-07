@@ -90,8 +90,8 @@ export default class Edit extends React.Component {
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
             <h1 className="goals-approval-heading">{__("Edit goal & top key result")}</h1>
-            <p
-              className="goals-create-description">{__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")}</p>
+
+            <h2 className="goals-edit-subject"><i className="fa fa-flag"></i> { __("Goal") }</h2>
 
             <label className="goals-create-input-label">{__("Goal name")}</label>
             <input name="name" className="form-control goals-create-input-form" type="text"
@@ -146,10 +146,8 @@ export default class Edit extends React.Component {
             </select>
             <InvalidMessageBox message={validationErrors.priority}/>
           </section>
-          <section className="mb_32px">
-            <h1 className="goals-create-heading">{__("Set Top Key Result")}</h1>
-            <p className="goals-create-description">{__("Create a clear and most important Key Result for your goal.")}</p>
-            <label className="goals-create-input-label">{__("Top Key Result")}</label>
+          <section className="goals-edit-tkr">
+            <h2 className="goals-edit-subject"><i className="fa fa-key"></i> { __("Top Key Result") }</h2>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
