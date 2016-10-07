@@ -7,6 +7,12 @@ App::import('Service', 'AppService');
  */
 class KeyResultService extends AppService
 {
+    /**
+     * キーリザルト一覧を表示用に整形するためのラッパー
+     * @param  array $key_results
+     * @param  string $model_alias
+     * @return array $key_results
+     */
     function processKeyResults($key_results, $model_alias = 'KeyResult')
     {
         foreach($key_results as $k => $v) {
@@ -15,6 +21,11 @@ class KeyResultService extends AppService
         return $key_results;
     }
 
+    /**
+     * キーリザルトを表示用に整形
+     * @param  array $key_result
+     * @return array $key_result
+     */
     function processKeyResult($key_result)
     {
         $unit_name_display = '';
