@@ -472,7 +472,6 @@
             "eg. Increase Goalous weekly active users": "<?=__("eg. Increase Goalous weekly active users")?>",
             "Add description": "<?=__("Add description")?>",
             "Save and share": "<?=__("Save and share")?>",
-            "Edit goal": "<?= __("Edit goal") ?>"
             //goal approval
             "Set as a target for evaluation?": "<?=__("Set as a target for evaluation?")?>",
             "Leader": "<?=__("Leader")?>",
