@@ -89,7 +89,7 @@ export default class Edit extends React.Component {
               acceptCharset="utf-8"
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
-            <h1 className="goals-create-heading">{__("What is your goal ?")}</h1>
+            <h1 className="goals-approval-heading">{__("Edit goal & top key result")}</h1>
             <p
               className="goals-create-description">{__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")}</p>
 

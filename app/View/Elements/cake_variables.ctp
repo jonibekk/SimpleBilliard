@@ -472,6 +472,7 @@
             "eg. Increase Goalous weekly active users": "<?=__("eg. Increase Goalous weekly active users")?>",
             "Add description": "<?=__("Add description")?>",
             "Save and share": "<?=__("Save and share")?>",
+            "Edit goal": "<?= __("Edit goal") ?>"
             //goal approval
             "Set as a target for evaluation?": "<?=__("Set as a target for evaluation?")?>",
             "Leader": "<?=__("Leader")?>",
@@ -503,6 +504,10 @@
             "Waiting for approval": "<?=__("Waiting for approval")?>",
             "Goal details": "<?= __("Goal details") ?>",
             "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
+            // goal edit
+            "Confirm this goal": "<?= __("Confirm this goal") ?>",
+            "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
+            "Save changes": "<?= __("Save changes") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
