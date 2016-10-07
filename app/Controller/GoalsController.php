@@ -3,6 +3,8 @@ App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
 /** @noinspection PhpUndefinedClassInspection */
+App::import('Service', 'KeyResultService');
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * Goals Controller
@@ -205,6 +207,9 @@ class GoalsController extends AppController
 
     public function ajax_get_add_key_result_modal()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
         $this->_ajaxPreProcess();
@@ -219,7 +224,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = KeyResult::$UNIT;
+        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList(Configure::read("label.units"));
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
@@ -726,6 +731,9 @@ class GoalsController extends AppController
 
     public function ajax_get_edit_key_result_modal()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $kr_id = $this->request->params['named']['key_result_id'];
         $this->_ajaxPreProcess();
         try {
@@ -745,7 +753,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = KeyResult::$UNIT;
+        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList(Configure::read("label.units"));
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
