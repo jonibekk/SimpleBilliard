@@ -7,7 +7,7 @@ export default class LabelInput extends React.Component {
   }
   render() {
     const props = {
-      placeholder: "",
+      maxLength: 20,
       value: this.props.keyword,
       onChange: this.props.onChange,
       onKeyDown: this.props.onKeyDown,
@@ -16,12 +16,15 @@ export default class LabelInput extends React.Component {
 
     return (
       <div>
-        <label className="goals-create-input-label">{__("Labels ?")}</label>
+        <label className="goals-create-input-label">{__("Labels")}</label>
+        <p className="goals-create-description">
+          {__("Add by pressing the Enter.(You can save maximum 5 labels)")}
+        </p>
         <AutoSuggest
           suggestions={this.props.suggestions}
           onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
-          renderSuggestion={this.props.renderSuggestion}
+          renderSuggestion={(s) => <span>{s.name}({s.goal_label_count})</span>}
           getSuggestionValue={this.props.getSuggestionValue}
           inputProps={props}
           onSuggestionSelected={this.props.onSuggestionSelected}
@@ -29,9 +32,9 @@ export default class LabelInput extends React.Component {
         />
         <ul className="goals-create-selected-labels">
           {
-            this.props.inputLabels.map((v) => {
+            this.props.inputLabels.map((v, i) => {
               return (
-                <li key={v} className="goals-create-selected-labels-item">
+                <li key={i} className="goals-create-selected-labels-item">
                   <span>{v}</span>
                   <a href="#" className="ml_8px" onClick={this.props.onDeleteLabel} data-label={v}>
                     <i className="fa fa-times-circle" aria-hidden="true"></i>

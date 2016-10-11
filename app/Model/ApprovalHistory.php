@@ -10,11 +10,6 @@ App::uses('AppModel', 'Model');
 class ApprovalHistory extends AppModel
 {
 
-    const ACTION_STATUS_NO_ACTION = 0;
-    const ACTION_STATUS_ONLY_COMMENT = 1;
-    const ACTION_STATUS_EVALUABLE = 2;
-    const ACTION_STATUS_NOT_EVALUABLE = 3;
-    const ACTION_STATUS_REQUEST_MODIFY = 4;
     const STATUS_IS_CLEAR_NO_SELECT = 0;
     const STATUS_IS_CLEAR = 1;
     const STATUS_IS_NOT_CLEAR = 2;
@@ -31,6 +26,16 @@ class ApprovalHistory extends AppModel
         'action_status' => [
             'numeric' => [
                 'rule' => ['numeric'],
+            ],
+        ],
+        'select_clear_status' => [
+            'numeric' => [
+                'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
+            ],
+        ],
+        'select_important_status' => [
+            'numeric' => [
+                'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
             ],
         ],
         'comment'       => [
@@ -56,34 +61,29 @@ class ApprovalHistory extends AppModel
         'User',
     ];
 
-    function add($collaborator_id, $user_id, $action_status = 0, $comment = '')
+    /**
+     * 認定ヒストリー保存
+     * @param array $saveData
+     */
+    function add($saveData)
     {
-        if ($action_status === self::ACTION_STATUS_NO_ACTION && empty($comment) === true) {
+        $this->set($saveData['ApprovalHistory']);
+        if(!$this->validates()) {
             return false;
         }
 
-        $param = [
-            'collaborator_id' => $collaborator_id,
-            'user_id'         => $user_id,
-            'action_status'   => $action_status,
-            'comment'         => $comment,
-        ];
-
-        return $this->save($param);
+        return $this->save($saveData);
     }
 
-    /*
-    function getHistory ($collaborator_id) {
+
+    function findByCollaboratorId($collaboratorId)
+    {
         $options = [
             'conditions' => [
-                'collaborator_id' => $collaborator_id,
-            ],
-            'fields'     => [
-                'id', 'user_id', 'comment', 'created'
+                'collaborator_id' => $collaboratorId,
             ],
         ];
         $res = $this->find('all', $options);
         return $res;
     }
-    */
 }

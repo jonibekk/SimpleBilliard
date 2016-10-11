@@ -14,16 +14,17 @@ export class GoalCard extends React.Component {
               <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
               <div className="goals-approval-detail-info">
                   <p><i className="fa fa-folder-o" aria-hidden="true"></i> { goal.category.name }</p>
-                  <p>{ goal.name }</p>
+                  <p><a href={`/goals/view_info/goal_id:${goal.id}`} target="_blank">{ goal.name }</a></p>
                   <div className="goals-approval-detail-tkr">
                       <h2 className="goals-approval-detail-tkrtitle"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                       <ul className="goals-approval-detail-tkrlist">
-                          <li>{ goal.key_result.name }</li>
-                          <li>{ goal.key_result.value }</li>
-                          <li>{ goal.key_result.desc }</li>
+                          <li>{ goal.top_key_result.name }</li>
+                          <li>{ goal.top_key_result.start_value } <i className="fa fa-angle-right" ariaHidden="true"></i> { goal.top_key_result.target_value }</li>
+                          <li>{ goal.top_key_result.description }</li>
                       </ul>
                   </div>
-                  <a href="" className="goals-approval-detail-tkrlink"><i className="fa fa-angle-down" aria-hidden="true"></i> <span className="goals-approval-interactive-link">View previous</span></a>
+                  {/* 第一フェーズでは実装しない */}
+                  {/* <a href="" className="goals-approval-detail-tkrlink"><i className="fa fa-angle-down" aria-hidden="true"></i> <span className="goals-approval-interactive-link">View previous</span></a> */}
               </div>
           </div>
       </div>

@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Evaluation', 'Model');
+App::import('Service', 'GoalService');
 
 /**
  * Evaluations Controller
@@ -63,6 +64,8 @@ class EvaluationsController extends AppController
 
     function view()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
         $evaluateeId = viaIsSet($this->request->params['named']['user_id']);
         $evaluateTermId = viaIsSet($this->request->params['named']['evaluate_term_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -118,7 +121,7 @@ class EvaluationsController extends AppController
         // set progress
         foreach ($goalList as $goalIndex => $goal) {
             foreach ($goal as $evalKey => $eval) {
-                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($eval['Goal']);
+                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(Hash::get($eval, 'Goal.KeyResult'));
             }
         }
         //remove unnecessary KRs

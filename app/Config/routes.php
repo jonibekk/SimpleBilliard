@@ -21,6 +21,10 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
 
 /**
  * Api
+ * # 説明
+ * 一部の非APIのリバースルーティングで不具合がありREQUEST_URIをチェックする対応をしている
+ * (POSTにおいて何故かAPIのルーティングルールが適用されてしまう。)
+ * FIXME この対応ではAPIでアクセスしてきた際に内部的にページのurlをリバースルーティングで生成する際に問題あり！
  * # versionを追加する場合
  * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
  * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
@@ -28,60 +32,62 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
  * アクションメソッドとして適宜追加していく。(Routingの設定を増やさない)
  * ただし、Methodを限定する事。
  */
-$apiVersions = 'v1|v2|';
-/**
- * REST
- * actionなし
- */
-Router::connect('/api/:apiVersion/:controller',
-    ['action' => 'list', 'prefix' => 'get','[method]' => 'GET'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
-Router::connect('/api/:apiVersion/:controller/:id',
-    ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
-Router::connect('/api/:apiVersion/:controller',
-    ['action' => 'post', '[method]' => 'POST'],
-    ['apiVersion' => $apiVersions]
-);
-Router::connect('/api/:apiVersion/:controller/:id',
-    ['action' => 'put', '[method]' => 'PUT'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
-Router::connect('/api/:apiVersion/:controller/:id',
-    ['action' => 'delete', '[method]' => 'DELETE'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+    $apiVersions = 'v1|v2|';
+    /**
+     * REST
+     * actionなし
+     */
+    Router::connect('/api/:apiVersion/:controller',
+        ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller',
+        ['action' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'put', '[method]' => 'PUT'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'delete', '[method]' => 'DELETE'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
 
-/**
- * REST
- * actionあり
- */
-Router::connect('/api/:apiVersion/:controller/:action',
-    ['prefix' => 'get', '[method]' => 'GET'],
-    ['apiVersion' => $apiVersions]
-);
-Router::connect('/api/:apiVersion/:controller/:id/:action',
-    ['prefix' => 'get', '[method]' => 'GET'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
-Router::connect('/api/:apiVersion/:controller/:action',
-    ['prefix' => 'post', '[method]' => 'POST'],
-    ['apiVersion' => $apiVersions]
-);
-Router::connect('/api/:apiVersion/:controller/:id/:action',
-    ['prefix' => 'post', '[method]' => 'POST'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
-Router::connect('/api/:apiVersion/:controller/:id/:action',
-    ['prefix' => 'put', '[method]' => 'PUT'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
-Router::connect('/api/:apiVersion/:controller/:id/:action',
-    ['prefix' => 'delete', '[method]' => 'DELETE'],
-    ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
-);
+    /**
+     * REST
+     * actionあり
+     */
+    Router::connect('/api/:apiVersion/:controller/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'put', '[method]' => 'PUT'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+}
 
 /**
  * エイリアス

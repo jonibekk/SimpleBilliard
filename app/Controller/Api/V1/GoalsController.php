@@ -1,5 +1,9 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('UploadHelper', 'View/Helper');
+App::import('Service', 'GoalService');
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -8,14 +12,18 @@ App::uses('ApiController', 'Controller/Api');
  * Date: 9/6/16
  * Time: 16:38
  *
- * @property Goal $Goal
+ * @property Goal        $Goal
+ * @property TeamVision  $TeamVision
+ * @property GroupVision $GroupVision
  */
 class GoalsController extends ApiController
 {
+    // TODO:ここで定義しても$this->***で使用出来ない為要調査
     public $uses = [
         'Goal',
         'TeamVision',
         'GroupVision',
+        'ApprovalHistory',
     ];
 
     /**
@@ -34,12 +42,51 @@ class GoalsController extends ApiController
             //allが含まれる場合はすべて指定。それ以外はそのまま
             $fields = in_array('all', $fields) ? [] : $fields;
         }
-        $validation = $this->Goal->validateGoalPOST($this->request->data, $fields);
-        if ($validation === true) {
-            return $this->_getResponseSuccess();
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $data = $this->request->data;
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
         }
-        $validationMsg = $this->_validationExtract($validation);
-        return $this->_getResponseValidationFail($validationMsg);
+
+        $validationErrors = $GoalService->validateSave($data, $fields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * ゴール更新のバリデーションAPI
+     * 成功(Status Code:200)、失敗(Status Code:400)
+     *
+     * @param integer $goalId
+     *
+     * @return CakeResponse
+     */
+    function post_validate_update($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // 403/404チェック
+        $errResponse = $this->_validateEditForbiddenOrNotFound($goalId);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
+
+        $fields = [];
+        $data = $this->request->data;
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
+        }
+
+        $validationErrors = $GoalService->validateSave($data, $fields, $goalId);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+        return $this->_getResponseSuccess();
     }
 
     /**
@@ -47,28 +94,34 @@ class GoalsController extends ApiController
      * formで利用する値を取得する
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     *
+     * @param integer|null $id
+     *
      * @return CakeResponse
      */
     function get_init_form($id = null)
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $res = [];
 
         // 編集の場合、idからゴール情報を取得・設定
         if (!empty($id)) {
-            try {
-                $this->Goal->isPermittedAdmin($id);
-            } catch (RuntimeException$e) {
-                return $this->_getResponseForbidden();
+            // 403/404チェック
+            $errResponse = $this->_validateEditForbiddenOrNotFound($id);
+            if ($errResponse !== true) {
+                return $errResponse;
             }
-            $goal = Hash::extract($this->Goal->findById($id), 'Goal');
-            $goal['key_result'] = Hash::extract($this->KeyResult->getTkr($goal['id']), 'KeyResult');
-            $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['id']), '{n}.Label');
-            $res['goal'] = $goal;
+
+            $res['goal'] = $GoalService->get($id, $this->Auth->user('id'), [
+                GoalService::EXTEND_TOP_KEY_RESULT,
+                GoalService::EXTEND_GOAL_LABELS,
+                GoalService::EXTEND_COLLABORATOR,
+            ]);
         }
 
-        /**
-         * @var Label $Label
-         */
+        /* @var Label $Label */
         $Label = ClassRegistry::init('Label');
 
         if ($this->request->query('data_types')) {
@@ -81,12 +134,18 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('visions', $dataTypes)) {
-            $team_visions = Hash::insert(
-                Hash::extract($this->TeamVision->getTeamVision($this->current_team_id, true, true),
-                    '{n}.TeamVision'), '{n}.type', 'team_vision');
-            $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
+            // TODO:サービスに移行
+            $tmp = $this->TeamVision->getTeamVision($this->current_team_id, true, true);
+            $team_visions = [];
+            foreach ($tmp  as $vision) {
+                $v = $vision['TeamVision'];
+                $v['team'] = $vision['Team'];
+                $team_visions[] = $v;
+            }
+            $team_visions = Hash::insert($team_visions, '{n}.type', 'team_vision');
 
-            $visions = am($team_visions, $group_visions);
+            $group_visions = Hash::insert($this->GroupVision->getMyGroupVision(true), '{n}.type', 'group_vision');
+            $visions = am($group_visions, $team_visions);
             $res['visions'] = $visions;
         }
 
@@ -115,11 +174,21 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
-            $res['priorities'] = Configure::read("label.priorities"); ;
+            $res['priorities'] = Configure::read("label.priorities");
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units"); ;
+            $res['units'] = Configure::read("label.units");
+        }
+
+        if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
+            $TimeExHelper = new TimeExHelper(new View());
+            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+            $res['default_end_dates'] = [
+                'current' => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
+                'next'    => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
+            ];
         }
 
         return $this->_getResponseSuccess($res);
@@ -145,31 +214,28 @@ class GoalsController extends ApiController
     function post()
     {
         $data = $this->request->data;
-        $data['photo'] = $_FILES['photo'];
-        $validateResult = $this->_validateCreateGoal($data);
-        if ($validateResult !== true) {
-            return $validateResult;
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
         }
-        //TODO タグの保存処理まだ
-        $this->Goal->begin();
-        $isSaveSuccess = $this->Goal->add(
-            [
-                'Goal'      => $data,
-                'KeyResult' => [Hash::get($data, 'key_result')],
-                'Label'     => Hash::get($data, 'labels'),
-            ]
-        );
-        if ($isSaveSuccess === false) {
-            $this->Goal->rollback();
-            return $this->_getResponseBadFail(__('Failed to save a goal.'));
-        }
-        $this->Goal->commit();
 
-        $newGoalId = $this->Goal->getLastInsertID();
+        // バリデーション
+        $validateErrors = $this->_validateCreateGoal($data);
+        if (!empty($validateErrors)) {
+            return $this->_getResponseValidationFail($validateErrors);
+        }
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // ゴール作成
+        $newGoalId = $GoalService->create($this->Auth->user('id'), $data);
+        if (!$newGoalId) {
+            return $this->_getResponseInternalServerError();
+        }
 
         //通知
         $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_COACHEE_CREATE_GOAL);
 
         $this->updateSetupStatusIfNotCompleted();
         //コーチと自分の認定件数を更新(キャッシュを削除)
@@ -185,168 +251,115 @@ class GoalsController extends ApiController
     }
 
     /**
+     * ゴール更新
+     *
+     * @param $goalId
+     *
+     * @return CakeResponse
+     */
+    function post_update($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // 403/404チェック
+        $errResponse = $this->_validateEditForbiddenOrNotFound($goalId);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
+
+        $data = $this->request->data;
+        if (!empty($_FILES['photo'])) {
+            $data['photo'] = $_FILES['photo'];
+        }
+
+        // バリデーション
+        $validateErrors = $this->_validateUpdateGoal($data, $goalId);
+        if (!empty($validateErrors)) {
+            return $this->_getResponseValidationFail($validateErrors);
+        }
+
+        // ゴール更新
+        if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        //コーチへの通知
+        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        //コラボレータへの通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
+
+        return $this->_getResponseSuccess();
+    }
+
+    /**
      * ゴール作成のバリデーション
-     * バリデーションエラーの場合はCakeResponseを返すのでaction methodもこれをそのまま返す
      * - key resultがなければバリデーションを通さずレスポンスを返す
      * - ゴールとKRのバリデーションは後ほど組み立てやすいようにそれぞれ別々に実行し、結果をマージしている。
      * TODO: 厳密にバリデーションルール、メッセージを再定義する
      *
      * @param array $data
      *
-     * @return true|CakeResponse
+     * @return array
      */
-    function _validateCreateGoal($data)
+    private function _validateCreateGoal($data)
     {
-        if (!Hash::get($data, 'key_result')) {
-            return $this->_getResponseBadFail(__('top Key Result is required!'));
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $fields = $GoalService->goalValidateFields;
+        $fields[] = "key_result";
+        return $GoalService->validateSave($data, $fields);
+    }
+
+    /**
+     * ゴール編集のバリデーション
+     *
+     * @param array   $data
+     * @param integer $goalId
+     *
+     * @return array
+     */
+    private function _validateUpdateGoal($data, $goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $fields = $GoalService->goalValidateFields;
+        $fields[] = "key_result";
+        $fields[] = "approval_history";
+        return $GoalService->validateSave($data, $fields, $goalId);
+    }
+
+    /**
+     * ゴール編集の403/404バリデーション
+     *
+     * @param $goalId
+     *
+     * @return CakeResponse|true
+     * @internal param array $data
+     */
+    private function _validateEditForbiddenOrNotFound($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // ゴール取得
+        $goal = $GoalService->get($goalId);
+        // ゴールが存在するか
+        if (empty($goal)) {
+            return $this->_getResponseNotFound();
         }
-
-        $validation = [];
-
-        $goal_validation = $this->Goal->validateGoalPOST($data);
-        if ($goal_validation !== true) {
-            $validation = $this->_validationExtract($goal_validation);
+        // ゴール作成者か
+        if ($this->Auth->user('id') != $goal['user_id']) {
+            return $this->_getResponseForbidden();
         }
-
-        $kr_validation = $this->Goal->KeyResult->validateKrPOST($data['key_result']);
-        if ($kr_validation !== true) {
-            $validation['key_result'] = $this->_validationExtract($kr_validation);
-        }
-
-        if (!empty($validation)) {
-            return $this->_getResponseBadFail(__('Validation failed.'), $validation);
+        // 今季以降のゴールか
+        if (!$GoalService->isGoalAfterCurrentTerm($goalId)) {
+            return $this->_getResponseNotFound();
         }
         return true;
     }
-
-    /**
-     * ゴール認定のモック
-     * TODO: ゴール認定API実装の際に書き直す
-     *
-     * @return true|CakeResponse
-     */
-    function post_set_as_target()
-    {
-        $this->Pnotify = $this->Components->load('Pnotify');
-        $validation = true;
-        if ($validation === true) {
-            $this->Pnotify->outSuccess(__("Set as approval"));
-            return $this->_getResponseSuccess();
-        }
-        $validationMsg = ['comment' => 'comment validation error'];
-        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
-    }
-
-    /**
-     * ゴール非認定のPOSTモック
-     * TODO: ゴール認定API実装の際に書き直す
-     *
-     * @return true|CakeResponse
-     */
-    function post_remove_from_target()
-    {
-        $this->Pnotify = $this->Components->load('Pnotify');
-        $validation = true;
-        if ($validation === true) {
-            $this->Pnotify->outSuccess(__("Remove from approval"));
-            return $this->_getResponseSuccess();
-        }
-        $validationMsg = ['comment' => 'comment validation error message'];
-        return $this->_getResponseBadFail(__('Validation failed.'), $validationMsg);
-    }
-
-    /**
-     * 認定詳細ページのINITIAL GETモック
-     * TODO: ゴール認定API実装の際に書き直す
-     *
-     * @return true|CakeResponse
-     */
-    public function get_goal_approval($goal_id)
-    {
-      $res = [
-          "id" => 10,
-          "user_id" => 10,
-          "is_leader" => (boolean)Collaborator::TYPE_OWNER,
-          "approval_status" => Collaborator::STATUS_UNAPPROVED,
-          "wish_approval_flg" => 1,
-          "target_evaluation_flg" => 1,
-          "is_mine" => false, // コーチ/コーチー判定フラグ
-          "role" => "貢献する人",
-          "type" => "Leader",
-          "user" => [
-              "id" => 10,
-              "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-          ],
-          "goal" => [
-              "id" => 10,
-              "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "name" => 'Goalousを世界一に！',
-              "category" => [
-                "name" => "成長"
-              ],
-              "leader" => [
-                  "user" => [
-                      "display_username" => "leader name"
-                  ]
-              ],
-              "key_result" => [
-                  "id" => 10,
-                  "name" => "key result name",
-                  "value" => "key result value",
-                  "desc" => "key result desc"
-              ]
-          ],
-          "approval_histories" => [
-              [
-                  "id" => 10,
-                  "user_id" => 10,
-                  "is_clear_or_not" => 1,
-                  "is_important_or_not" => 0,
-                  "comment" => str_repeat("いいですね！", 10),
-                  "user" => [
-                      "id" => 10,
-                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "display_username" => 'Test Hanako'
-                  ]
-              ],
-              [
-                  "id" => 11,
-                  "user_id" => 10,
-                  "is_clear_or_not" => 1,
-                  "is_important_or_not" => 0,
-                  "comment" => str_repeat("ありがとう！", 10),
-                  "user" => [
-                      "id" => 10,
-                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "display_username" => 'Test Hanako'
-                  ]
-              ],
-              [
-                  "id" => 12,
-                  "user_id" => 10,
-                  "is_clear_or_not" => 1,
-                  "is_important_or_not" => 0,
-                  "comment" => str_repeat("よろしく！", 10),
-                  "user" => [
-                      "id" => 10,
-                      "original_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "small_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "large_img_url" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-                      "display_username" => 'Test Hanako'
-                  ]
-              ]
-          ]
-      ];
-      return $this->_getResponseSuccess($res);
-    }
-
 }

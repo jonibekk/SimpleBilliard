@@ -1,23 +1,26 @@
 import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
+import {KeyResult} from "~/common/constants/Model";
 
 const initialState = {
   toNextPage: false,
-  visions:[],
-  categories:[],
-  labels:[],
-  terms:[],
-  priorities:[],
-  units:[],
+  visions: [],
+  categories: [],
+  labels: [],
+  terms: [],
+  priorities: [],
+  units: [],
+  default_end_dates: {},
   keyword: "",
   suggestions: [],
   suggestionsExcludeSelected: [],
   validationErrors: {
     key_result: {}
   },
-  inputData:{
+  inputData: {
     key_result: {}
-  }
+  },
+  isDisabledSubmit: false
 }
 
 export default function goal(state = initialState, action) {
@@ -32,11 +35,17 @@ export default function goal(state = initialState, action) {
   switch (action.type) {
     case types.INVALID:
       return Object.assign({}, state, {
-        validationErrors: action.error.validation_errors
+        validationErrors: action.error.validation_errors,
+        isDisabledSubmit: false
+      })
+    case types.DISABLE_SUBMIT:
+      return Object.assign({}, state, {
+        isDisabledSubmit: true
       })
     case types.TO_NEXT_PAGE:
       return Object.assign({}, state, {
-        toNextPage: true
+        toNextPage: true,
+        isDisabledSubmit: false
       })
     case types.FETCH_INITIAL_DATA:
       let suggestionsExcludeSelected = state.suggestionsExcludeSelected
@@ -48,13 +57,13 @@ export default function goal(state = initialState, action) {
         inputData,
         suggestionsExcludeSelected,
         toNextPage: false,
-        validationErrors:{key_result: {}}
+        validationErrors: {key_result: {}}
       })
 
     case types.REQUEST_SUGGEST:
       // サジェストをラベル名昇順に並び替え
-      action.suggestions.sort((a,b) => {
-        return (a.name > b.name)? 1 :-1
+      action.suggestions.sort((a, b) => {
+        return (a.name > b.name) ? 1 : -1
       });
 
       return Object.assign({}, state, {
@@ -75,7 +84,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected : addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
+        suggestionsExcludeSelected: addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
       })
 
     case types.ADD_LABEL:
@@ -85,7 +94,7 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         inputData,
         suggestionsExcludeSelected: deleteItemFromSuggestions(state.suggestionsExcludeSelected, action.label),
-        keyword:""
+        keyword: ""
       })
 
     case types.SELECT_SUGGEST:
@@ -95,7 +104,7 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         inputData,
         suggestionsExcludeSelected: deleteItemFromSuggestions(state.suggestionsExcludeSelected, action.suggestion.name),
-        keyword:""
+        keyword: ""
       })
 
     case types.UPDATE_INPUT_DATA:
@@ -106,12 +115,13 @@ export default function goal(state = initialState, action) {
         inputData[action.key] = Object.assign({}, inputData[action.key], action.data)
         state.inputData = inputData
         return Object.assign({}, state)
-      } {
-        inputData = Object.assign({}, inputData, action.data)
-        return Object.assign({}, state, {
-          inputData
-        })
       }
+    {
+      inputData = Object.assign({}, inputData, action.data)
+      return Object.assign({}, state, {
+        inputData
+      })
+    }
     default:
       return state;
   }
@@ -132,7 +142,7 @@ export function updateSelectedLabels(inputData, label, deleteFlg = false) {
   const idx = labels.indexOf(label)
   if (deleteFlg && idx != -1) {
     labels.splice(idx, 1)
-  } else if(!deleteFlg && idx == -1)  {
+  } else if (!deleteFlg && idx == -1) {
     labels.push(label)
   }
 
@@ -193,14 +203,21 @@ export function initInputData(inputData, page, data) {
       if (!inputData.term_type && data.terms.length > 0) {
         inputData["term_type"] = data.terms[0].type
       }
-      if (data.priorities.length > 0) {
-        inputData["priority"] = data.priorities[0].id
+      if (!inputData.priority && data.priorities.length > 0) {
+        inputData["priority"] = KeyResult.Priority.DEFAULT;
+      }
+      if (!inputData.end_date && Object.keys(data.default_end_dates).length > 0) {
+        inputData["end_date"] = data.default_end_dates.current
       }
       break;
     case Page.STEP4:
-      if (!inputData.key_result && data.units.length > 0) {
+      if (Object.keys(inputData.key_result).length == 0) {
         inputData["key_result"] = inputData["key_result"] || {};
-        inputData["key_result"]["value_unit"] = data.units[0].id
+        if (data.units.length > 0) {
+          inputData.key_result["value_unit"] = data.units[0].id
+        }
+        inputData.key_result["start_value"] = 0
+        inputData.key_result["target_value"] = 100
       }
       break;
     default:

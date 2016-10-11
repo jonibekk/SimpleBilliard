@@ -1,5 +1,5 @@
 import React from 'react'
-import { Comment } from './comment'
+import { Comment } from '~/common/components/approval/Comment'
 
 export class Comments extends React.Component {
   constructor(props) {
@@ -14,11 +14,11 @@ export class Comments extends React.Component {
   }
 
   render() {
-    if(Object.keys(this.props.collaborator).length == 0) {
+    if(Object.keys(this.props.approvalHistories).length == 0) {
       return null
     }
 
-    const comments = this.props.collaborator.approval_histories
+    const comments = this.props.approvalHistories
     const latest_comment = comments.length > 0 ? comments[comments.length - 1] : null
     const commets_execpt_latest_comment = comments.length > 1 ? comments.slice(0, -1) : []
     const display_view_more_comments_button = commets_execpt_latest_comment.length > 0 && !this.state.display_all_comments
@@ -37,7 +37,7 @@ export class Comments extends React.Component {
 
           {/* 最新のコメント以外すべて */}
           { this.state.display_all_comments ? commets_execpt_latest_comment.map((comment) => {
-            return <Comment comment={ comment } key={ comment.comment } />;
+            return <Comment comment={ comment } />;
           }) : null}
 
           {/* 最新のコメント */}
@@ -49,6 +49,6 @@ export class Comments extends React.Component {
 }
 
 Comments.propTypes = {
-  collaborator: React.PropTypes.object.isRequired
+  approvalHistories: React.PropTypes.array
 }
-Comments.defaultProps = {collaborator: {}}
+Comments.defaultProps = {approvalHistories: []}

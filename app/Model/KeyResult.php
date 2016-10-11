@@ -100,19 +100,21 @@ class KeyResult extends AppModel
             ],
         ],
         'start_value'  => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']],
-            'notEmpty'  => [
-                'required' => 'create',
-                'rule'     => 'notEmpty',
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true
             ],
         ],
         'target_value' => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']],
-            'notEmpty'  => [
-                'required' => 'create',
-                'rule'     => 'notEmpty',
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true
             ],
         ],
     ];
@@ -154,6 +156,27 @@ class KeyResult extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
         $this->_setPriorityName();
+    }
+
+    /**
+     * 単位値必須チェック
+     * 単位が無い場合は値入力が無いのでチェックしない
+     *
+     * @param      $val
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function requiredCaseExistUnit($val)
+    {
+        $val = array_shift($val);
+        if ($this->data['KeyResult']['value_unit'] == self::UNIT_BINARY) {
+            return true;
+        }
+        if ($val === "") {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -317,6 +340,7 @@ class KeyResult extends AppModel
         $res = $this->find('first', [
             'conditions' => [
                 'goal_id' => $goalId,
+                'tkr_flg' => true,
             ],
         ]);
         return $res;

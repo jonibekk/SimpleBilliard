@@ -1010,9 +1010,11 @@ class TeamMember extends AppModel
                 // チーム全体サークルのCircleMemberに登録
                 $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
                 $row = [
-                    'circle_id' => $teamAllCircle['Circle']['id'],
-                    'team_id'   => $this->current_team_id,
-                    'user_id'   => $user['User']['id'],
+                    'circle_id'             => $teamAllCircle['Circle']['id'],
+                    'team_id'               => $this->current_team_id,
+                    'user_id'               => $user['User']['id'],
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ];
 
                 $circle_member_options = [
@@ -2303,6 +2305,9 @@ class TeamMember extends AppModel
      */
     function getCoachUserIdByMemberUserId($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
@@ -2325,6 +2330,9 @@ class TeamMember extends AppModel
      */
     function getMyMembersList($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: user_id
         // 条件: coach_user_id = パラメータ1 team_id = パラメータ2
@@ -2407,19 +2415,17 @@ class TeamMember extends AppModel
 
     /**
      * Param1のユーザーは評価対象の人なのか
-     * TODO:チームIDは$this->current_team_idを使用すること
-     * @param $user_id
-     * @param $team_id
      *
-     * @return array|null
+     * @param $user_id
+     *
+     * @return boolean
      */
-    function getEvaluationEnableFlg($user_id, $team_id)
+    function getEvaluationEnableFlg($user_id)
     {
         $options = [
             'fields'     => ['active_flg', 'evaluation_enable_flg'],
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
-                'TeamMember.team_id' => $team_id,
             ],
         ];
         $res = $this->find('first', $options);
@@ -2435,8 +2441,9 @@ class TeamMember extends AppModel
         return $evaluation_flg;
     }
 
-    function getCoachId($user_id, $team_id)
+    function getCoachId($user_id, $team_id = null)
     {
+        $team_id = empty($team_id) ? $this->current_team_id : $team_id;
         $options = [
             'conditions' => [
                 'TeamMember.user_id' => $user_id,

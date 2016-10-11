@@ -227,9 +227,11 @@ class Team extends AppModel
             ],
             'CircleMember' => [
                 [
-                    'team_id'   => $this->id,
-                    'user_id'   => $uid,
-                    'admin_flg' => true,
+                    'team_id'               => $this->id,
+                    'user_id'               => $uid,
+                    'admin_flg'             => true,
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ]
             ]
         ];

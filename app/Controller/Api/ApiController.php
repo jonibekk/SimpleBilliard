@@ -98,6 +98,36 @@ class ApiController extends BaseController
     }
 
     /**
+     * NotFound(404)のレスポンスを返す
+     *
+     * @param string     $message
+     *
+     * @return CakeResponse
+     */
+    protected function _getResponseNotFound($message = null)
+    {
+        if (empty($message)) {
+            $message = __("Ooops, Not Found.");
+        }
+        return $this->_getResponse(404, null, null, $message);
+    }
+
+    /**
+     * InternalServerError(500)のレスポンスを返す
+     *
+     * @param string     $message
+     *
+     * @return CakeResponse
+     */
+    protected function _getResponseInternalServerError($message = null)
+    {
+        if (empty($message)) {
+            $message = __("Internal Server Error.");
+        }
+        return $this->_getResponse(500, null, null, $message);
+    }
+
+    /**
      * 通常のバリデーション結果をレスポンスとして返す
      * - バリデーション成功の場合はStatus Code:200
      * - バリデーション失敗の場合はStatus Code:400
@@ -112,8 +142,9 @@ class ApiController extends BaseController
         if ($Model->validates()) {
             return $this->_getResponseSuccess();
         }
+        // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
         return $this->_getResponseBadFail(__('Validation failed.'),
-            $this->_validationExtract($Model->validationErrors));
+            $Model->_validationExtract($Model->validationErrors));
     }
 
     /**
@@ -204,29 +235,6 @@ class ApiController extends BaseController
         $this->Auth->loginRedirect = null;
         $this->Auth->logoutRedirect = null;
         $this->Auth->loginAction = null;
-    }
-
-    /**
-     * バリデーションメッセージの展開
-     * key:valueの形にして1フィールド1メッセージにする
-     *
-     * @param $validationErrors
-     *
-     * @return array
-     */
-    function _validationExtract($validationErrors)
-    {
-        $res = [];
-        if (empty($validationErrors)) {
-            return $res;
-        }
-        if ($validationErrors === true) {
-            return $res;
-        }
-        foreach ($validationErrors as $k => $v) {
-            $res[$k] = $v[0];
-        }
-        return $res;
     }
 
 }

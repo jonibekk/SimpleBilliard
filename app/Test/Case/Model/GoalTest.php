@@ -168,22 +168,6 @@ class GoalTest extends GoalousTestCase
         $this->assertTrue(!empty($res));
     }
 
-    function testGetProgress()
-    {
-        $goal = ['KeyResult' => []];
-        $this->Goal->getProgress($goal);
-
-        $goal = [
-            'KeyResult' => [
-                [
-                    'priority' => 1,
-                    'progress' => 0,
-                ]
-            ]
-        ];
-        $this->Goal->getProgress($goal);
-    }
-
     function testSortModified()
     {
         $goals = [
@@ -330,7 +314,6 @@ class GoalTest extends GoalousTestCase
                 'purpose_id'       => 1,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
                 'term_type'        => 'current',
             ]
@@ -347,7 +330,6 @@ class GoalTest extends GoalousTestCase
                 'purpose_id'       => 1,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
                 'img_url'          => 'https://placeholdit.imgix.net/~text?txtsize=14&txt=test&w=1&h=1',
                 'term_type'        => 'current',
@@ -365,7 +347,6 @@ class GoalTest extends GoalousTestCase
                 'purpose_id'       => 1,
                 'goal_category_id' => 1,
                 'name'             => 'test',
-                'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
                 'term_type'        => 'current',
             ]

@@ -45,21 +45,22 @@ export default class Step1Component extends React.Component {
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__("Set your goal name")}</h1>
-        <p className="goals-create-description">{__("Your name will displayed along with your goals and posts in Goalous.")}</p>
+        <h1 className="goals-create-heading">{__("What is your goal ?")}</h1>
+        <p className="goals-create-description">{__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")}</p>
 
         <Vision visions={visions} visionIdx={this.state.visionIdx} onChangeVision={this.handleChangeVision} />
 
         <form className="goals-create-input" action onSubmit={(e) => this.handleSubmit(e) }>
-          <label className="goals-create-input-label">{__("Goal name?")}</label>
+          <label className="goals-create-input-label">{__("Goal name")}</label>
           <input name="name" className="form-control goals-create-input-form" type="text"
-                 placeholder="e.g. Get goalous users" ref="name"
+                 placeholder={__("eg. Spread Goalous users in the world")} ref="name"
                  onChange={this.handleChange} value={inputData.name}/>
           <InvalidMessageBox message={validationErrors.name}/>
-          <a href="#" className="goals-create-show-sample">
-            <i className="fa fa-eye" aria-hidden="true"/>
-            <span className="goals-create-interactive-link">{__("Show sample")}</span>
-          </a>
+
+          {/*<a href="#" className="goals-create-show-sample">*/}
+            {/*<i className="fa fa-eye" aria-hidden="true"/>*/}
+            {/*<span className="goals-create-interactive-link">{__("View samples")}</span>*/}
+          {/*</a>*/}
 
           <div className="row">
             <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>

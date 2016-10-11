@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
+App::import('Service', 'GoalService');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -39,24 +40,14 @@ class GoalsController extends AppController
             'search_url', 'goal_count', 'my_coaching_users'));
     }
 
-    public function create($step = null, $gucchi = null)
+    public function create($step = null)
     {
+        if ($step !== 'step1') {
+            throw new NotFoundException();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        // TODO: 将来的にstep1以外は許可しない
-        //       今はフロントモック実装のためにすべて許可にしている
-        $steps = ['step1', 'step2', 'step3', 'step4'];
-
-        // TODO: 将来的には `return $this->render("create");`で統一する
-        //       マークアップとSPAをパラで開発するための仮URL
-        if (in_array($step, $steps)) {
-            if ($gucchi) {
-                return $this->render("create_{$step}");
-            }
-            return $this->render("create");
-        }
-
-        throw new NotFoundException("");
+        return $this->render("create");
     }
 
     public function edit($id)
@@ -66,147 +57,35 @@ class GoalsController extends AppController
         } catch (RuntimeException$e) {
             throw new NotFoundException();
         }
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        if (!$GoalService->isGoalAfterCurrentTerm($id)) {
+            throw new NotFoundException();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render("edit");
     }
 
-    public function approval($type = null, $gucchi = null)
+    public function approval($type = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        if (in_array($type, ['list', 'detail'])) {
-            // TODO: マークアップ用の仮View。リリース前にこのブロックを削除する
-            if($gucchi === 'gucchi') {
-                return $this->render("approval_detail");
-            }
-            return $this->render("approval");
+        if (!in_array($type, ['list', 'detail'])) {
+            throw new NotFoundException();
         }
-
-        throw new NotFoundException("");
+        return $this->render("approval");
     }
 
     /**
-     * ゴール作成
-     * URLパラメータでmodeを付ける
-     * mode なしは目標を決める,2はゴールを定める,3は情報を追加
-     *
-     * @return \CakeResponse
+     * 旧ゴール作成ぺージ
+     * 新ゴールぺージへリダイレクトさせる。およびどこから来たかログる。
      */
     public function add()
     {
-        $id = viaIsSet($this->request->params['named']['goal_id']);
-        $this->layout = LAYOUT_ONE_COLUMN;
-        //編集権限を確認。もし権限がある場合はデータをセット
-        if ($id) {
-            $this->request->data['Goal']['id'] = $id;
-            try {
-                $this->Goal->isPermittedAdmin($id);
-                $this->Goal->isNotExistsEvaluation($id);
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage());
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
-        }
-
-        //新規作成以外のケース
-        $isNotNewAdd = (!$this->request->is('post') && !$this->request->is('put')) || empty($this->request->data);
-        if ($isNotNewAdd) {
-            // ゴールの編集
-            if ($id) {
-                $this->request->data = $this->Goal->getAddData($id);
-            }
-            $this->_setGoalAddViewVals();
-            return $this->render();
-        }
-
-        // 新規作成時、モードの指定が無い場合(目的の保存のみ)
-        if (!isset($this->request->params['named']['mode'])) {
-            $this->Pnotify->outSuccess(__("Set a purpose."));
-            //「ゴールを定める」に進む
-            $url = ['mode' => 2, '#' => 'AddGoalFormKeyResultWrap'];
-            $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
-            $this->redirect($url);
-        }
-
-        // 新規作成時 or モードの指定がある場合
-        if ($this->Goal->add($this->request->data)) {
-            //edit goal notify
-            if ($id) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
-                //send notify to coach
-                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
-                    $this->my_uid, $id);
-                if ($my_collabo_status['Collaborator']['approval_status'] == Collaborator::APPROVAL_STATUS_WITHDRAW) {
-                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
-                }
-            }
-            $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
-                $this->Auth->user('id'));
-            if ($coach_id) {
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
-            }
-
-            switch ($this->request->params['named']['mode']) {
-                case 2:
-                    //case of create new one.
-                    if (!$id) {
-                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
-                            $this->Goal->getLastInsertID());
-                        $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
-                            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-                    } else {
-                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
-                    }
-                    $this->Pnotify->outSuccess(__("Saved a goal."));
-                    if ($coach_id) {
-                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
-                            'user_data');
-                    }
-                    //「情報を追加」に進む
-                    $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
-                    break;
-                case 3:
-                    //完了
-                    $this->Pnotify->outSuccess(__("Created a goal."));
-                    // pusherに通知
-                    $socketId = viaIsSet($this->request->data['socket_id']);
-                    $this->NotifyBiz->push($socketId, "all");
-                    //セットアップガイドステータスの更新
-                    $this->updateSetupStatusIfNotCompleted();
-                    // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
-                    // ただし重要度0のゴールであれば認定フラグは対象外にセットする
-                    foreach ($this->request->data['Collaborator'] as $val) {
-                        $approval_status = 0;
-                        if ($val['priority'] === "0") {
-                            $approval_status = 2;
-                        }
-                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $approval_status);
-                    }
-
-                    // 来期ゴールを編集した場合は、マイページの来期ゴール絞り込みページへ遷移
-                    if ($this->Goal->getGoalTermData($id)['id'] == $this->Team->EvaluateTerm->getNextTermId()) {
-                        $this->redirect([
-                            'controller' => 'users',
-                            'action'     => 'view_goals',
-                            'user_id'    => $this->Auth->user('id'),
-                            'term_id'    => $this->Team->EvaluateTerm->getNextTermId(),
-                        ]);
-                    }
-
-                    // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
-                    if ($coach_id && $val['priority'] != "0"
-                    ) {
-                        $this->redirect("/goal_approval");
-                    }
-                    $this->redirect("/");
-                    break;
-            }
-        }
-
-        $this->Pnotify->outError(__("Failed to save a goal."));
-        $this->redirect($this->referer());
+        $this->log("■ Old Create Goal Page Access! referer URL: " . $this->referer());
+        return $this->redirect(['action' => 'create', 'step1']);
     }
 
     /**
@@ -396,7 +275,8 @@ class GoalsController extends AppController
 
     public function edit_collabo()
     {
-        $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
+        $collaborator_id = Hash::get($this->request->params, 'named.collaborator_id');
+        $new = $collaborator_id ? false : true;
         $this->request->allowMethod('post', 'put');
         $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
             $this->Auth->user('id'));
@@ -405,15 +285,10 @@ class GoalsController extends AppController
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
-        $collaborator = $this->request->data['Collaborator'];
-        // もしpriority=0のデータであれば認定対象外なのでapproval_status=2を設定する
-        // そうでなければ再認定が必要なのでapproval_status=0にする
-        $approval_status = 0;
 
-        if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
-            $approval_status = 2;
-        }
-        $this->request->data['Collaborator']['approval_status'] = $approval_status;
+        // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「Reapplication」にする
+        $this->request->data['Collaborator']['approval_status'] = $new ? Collaborator::APPROVAL_STATUS_NEW : Collaborator::APPROVAL_STATUS_REAPPLICATION;
+        $this->request->data['Collaborator']['is_target_evaluation'] = false;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
 
@@ -421,22 +296,36 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $collaborator = $this->request->data['Collaborator'];
+        $collaborator_id = $collaborator_id ? $collaborator_id : $this->Goal->Collaborator->getLastInsertID();
+        $goal = $this->Goal->findById($collaborator['goal_id']);
+        $goal_leader_id = Hash::get($goal, 'Goal.user_id');
+
         //success case.
         $this->Pnotify->outSuccess(__("Start to collaborate."));
         //if new
         Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        if (!$collabo_id) {
+        //mixpanel
+        if ($new) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
-            $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+            // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
+            if($goal_leader_id != $coach_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
+            }
         }
         if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
         ) {
+            if ($new) {
+                //新規の場合
+                $this->_sendNotifyToCoach($collaborator_id, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
+            } else {
+                //更新の場合
+                $this->_sendNotifyToCoach($collaborator_id, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
+            }
+
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
                 'user_data');
-
-            $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());
     }
@@ -1288,6 +1177,9 @@ class GoalsController extends AppController
 
     public function ajax_get_my_goals()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
@@ -1318,6 +1210,7 @@ class GoalsController extends AppController
         } else {
             $goals = [];
         }
+        $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
         $this->set(compact('goals', 'type', 'current_term'));
 
@@ -1570,11 +1463,16 @@ class GoalsController extends AppController
      */
     function _setGoalPageHeaderInfo($goal_id)
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $goal = $this->Goal->getGoal($goal_id);
         if (!isset($goal['Goal']['id'])) {
             // ゴールが存在しない
             return false;
         }
+        // 進捗情報を追加
+        $goal['Goal']['progress'] = $GoalService->getProgress($goal['KeyResult']);
         $this->set('goal', $goal);
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);
@@ -1635,266 +1533,4 @@ class GoalsController extends AppController
         }
         return $this->_ajaxGetResponse($res);
     }
-
-    /**
-     * 以下、ゴール認定リスト/詳細ページ用のモック
-     * TODO: v1/GoalsController.phpにAPi実装後、以下の行は全て削除する
-     */
-
-    const STATUS_TYPE_NEW = 0;
-    const STATUS_TYPE_REAPPROVE = 1;
-
-    public function ajax_get_init_goal_approvals()
-    {
-      $this->_ajaxPreProcess();
-      $res = [
-        [
-          "id" =>  1,
-          "name"=> 'Coach / Evaluated / Leader',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 1,
-            "user_id" => 1,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_APPROVAL,
-            "status_type" => null,
-            "user" => [
-              "id" => 1,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ],
-          ]
-        ],
-        [
-          "id" =>  2,
-          "name"=> 'Coach / Evaluated / Collaborator',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 2,
-            "user_id" => 2,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_APPROVAL,
-            "status_type" => null,
-            "user" => [
-              "id" => 2,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ],
-          ]
-        ],
-        [
-          "id" =>  3,
-          "name"=> 'Coach / Not Evaluated / Leader',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 3,
-            "user_id" => 3,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => null,
-            "user" => [
-              "id" => 3,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ],
-          ]
-        ],
-        [
-          "id" =>  4,
-          "name"=> 'Coach / Not Evaluated / Collaborator',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 4,
-            "user_id" => 4,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => null,
-            "user" => [
-              "id" => 4,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ],
-          ]
-        ],
-        [
-          "id" =>  5,
-          "name"=> 'Coach / Not Evaluated / New / Leader',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 5,
-            "user_id" => 5,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => self::STATUS_TYPE_NEW,
-            "user" => [
-              "id" => 5,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ],
-          ]
-        ],
-        [
-          "id" =>  6,
-          "name"=> 'Coach / Not Evaluated / New / Collaborator',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 6,
-            "user_id" => 6,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => self::STATUS_TYPE_NEW,
-            "user" => [
-              "id" => 6,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  7,
-          "name"=> 'Coach / Not Evaluated / Reapplication / Leader',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 7,
-            "user_id" => 7,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => self::STATUS_TYPE_REAPPROVE,
-            "user" => [
-              "id" => 7,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ]
-      ];
-      return $this->_ajaxGetResponse($res);
-    }
-
-    public function ajax_get_next_goal_approvals() {
-      $this->_ajaxPreProcess();
-      $res = [
-        [
-          "id" =>  8,
-          "name"=> 'Coach / Not Evaluated / Reapplication / Collaborator',
-          "is_coach" => true,
-          "collaborator" => [
-            "id" => 8,
-            "user_id" => 8,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => self::STATUS_TYPE_REAPPROVE,
-            "user" => [
-              "id" => 8,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  9,
-          "name"=> 'Coachee / Evaluated / Leader',
-          "is_coach" => false,
-          "collaborator" => [
-            "id" => 9,
-            "user_id" => 9,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_APPROVAL,
-            "status_type" => null,
-            "user" => [
-              "id" => 9,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  10,
-          "name"=> 'Coachee / Evaluated / Collaborator',
-          "is_coach" => false,
-          "collaborator" => [
-            "id" => 10,
-            "user_id" => 10,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_APPROVAL,
-            "status_type" => null,
-            "user" => [
-              "id" => 10,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  11,
-          "name"=> 'Coachee / Not Evaluated / Complete / Leader',
-          "is_coach" => false,
-          "collaborator" => [
-            "id" => 11,
-            "user_id" => 11,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => null,
-            "user" => [
-              "id" => 11,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  12,
-          "name"=> 'Coachee / Not Evaluated / Complete / Collaborator',
-          "is_coach" => false,
-          "collaborator" => [
-            "id" => 12,
-            "user_id" => 12,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => null,
-            "user" => [
-              "id" => 12,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  13,
-          "name"=> 'Coachee / Not Evaluated / Incomplete / Leader',
-          "is_coach" => false,
-          "collaborator" => [
-            "id" => 13,
-            "user_id" => 13,
-            "type" => Collaborator::TYPE_OWNER,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => self::STATUS_TYPE_NEW,
-            "user" => [
-              "id" => 13,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-        [
-          "id" =>  14,
-          "name"=> 'Coachee / Not Evaluated / Incomplete / Collaborator',
-          "is_coach" => false,
-          "collaborator" => [
-            "id" => 14,
-            "user_id" => 14,
-            "type" => Collaborator::TYPE_COLLABORATOR,
-            "approval_status" => Collaborator::STATUS_UNAPPROVED,
-            "status_type" => self::STATUS_TYPE_NEW,
-            "user" => [
-              "id" => 14,
-              "photo_file_name" => 'http://static.tumblr.com/3e5d6a947659da567990fba7fd677358/qvo076m/sZKn744y4/tumblr_static_ah8scud0vgg0k4cco8s0gwogc.jpg',
-              "display_username" => 'Test Hanako'
-            ]
-          ]
-        ],
-      ];
-      return $this->_ajaxGetResponse($res);
-    }
-
 }

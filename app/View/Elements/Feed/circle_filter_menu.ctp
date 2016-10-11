@@ -5,13 +5,14 @@
  * Date: 8/3/15
  * Time: 11:58 AM
  *
- * @var $current_circle
- * @var $user_status
- * @var $circle_member_count
- * @var $circle_status
+ * @var                    $current_circle
+ * @var                    $user_status
+ * @var                    $circle_member_count
+ * @var                    $circle_status
+ * @var CodeCompletionView $this
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <span id="circle-filter-menu-circle-name"
       class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
         '...') ?></span>
@@ -58,7 +59,7 @@
                     <?php } ?>
                 </li>
             <?php endif; ?>
-            <?php if (($user_status == 'joined' || $user_status == 'admin') && ENV_NAME != 'isao'): ?>
+            <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
                 <li><a href="<?= $this->Html->url([
                         'controller' => 'circles',
                         'action'     => 'ajax_setting',
@@ -68,4 +69,4 @@
         <?php endif ?>
     </ul>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

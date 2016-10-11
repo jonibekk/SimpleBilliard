@@ -1,8 +1,6 @@
 import axios from "axios";
 import FormData from "form-data";
 
-// TODO:いずれreact全体の共通処理として配置(js/react/common/**)
-
 export function getBaseUrl() {
   // テストにおけるモックのURLを定義
   if (typeof cake === "undefined") {
@@ -65,7 +63,8 @@ export function createFormData(data, directAppendKeys = [], formData = null, bas
     } else if (data[key] instanceof Object) {
       formData = createFormData(data[key], directAppendKeys, formData, formKey)
     } else {
-      formData.append(formKey, data[key])
+      const val = data[key] == null ? "" : data[key]
+      formData.append(formKey, val)
     }
   }
   return formData

@@ -1,28 +1,45 @@
 import * as types from "../constants/ActionTypes";
-import {post} from "../../util/api";
+import {post} from "~/util/api";
 import axios from "axios";
+import {KeyResult} from "~/common/constants/Model";
 
-export function validateGoal(page, addData) {
+export function validateGoal(goalId, addInputData) {
   return (dispatch, getState) => {
 
-    const postData = Object.assign(getState().goal.inputData, addData)
-    const fields = Page.VALIDATION_FIELDS[page].join(',')
-    return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
+    const postData = Object.assign(getState().goal.inputData, addInputData)
+    // 単位無しの場合開始値と終了値を自動的に0にする
+    if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      postData.key_result.start_value = 0
+      postData.key_result.target_value = 0
+    }
+
+    return post(`/api/v1/goals/${goalId}/validate_update`, postData, null,
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate success");
-        dispatch(toNextPage())
+        /* eslint-enable no-console */
+        dispatch(toNextPage(addInputData))
       },
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate failed");
+        /* eslint-enable no-console */
         dispatch(invalid(response.data))
       }
     );
   }
 }
 
-export function toNextPage() {
+export function init(data) {
   return {
-    type: types.TO_NEXT_PAGE
+    type: types.INIT,
+    data
+  }
+}
+export function toNextPage(addInputData = {}) {
+  return {
+    type: types.TO_NEXT_PAGE,
+    addInputData
   }
 }
 
@@ -103,11 +120,36 @@ export function fetchInitialData(goalId) {
   }
 }
 
-export function saveGoal() {
+export function fetchComments() {
   return (dispatch, getState) => {
-    return post("/api/v1/goals", getState().goal.inputData, null,
+    const collaboratorId = getState().goal.goal.collaborator.id
+    return axios.get(`/api/v1/goal_approvals/histories?collaborator_id=${collaboratorId}`)
+      .then((response) => {
+        let approvalHistories = response.data.data
+        dispatch({
+          type: types.FETCH_COMMETNS,
+          approvalHistories
+        })
+      })
+      .catch((response) => {
+      })
+  }
+}
+
+export function saveGoal(addInputData) {
+  return (dispatch, getState) => {
+    dispatch(disableSubmit())
+    const {inputData, goal, from} = getState().goal;
+    inputData["approval_history"] = addInputData
+    // 単位無しの場合開始値と終了値を自動的に0にする
+    if (inputData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      inputData.key_result.start_value = 0
+      inputData.key_result.target_value = 0
+    }
+
+    return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
-        dispatch(toNextPage())
+        document.location.href = from
       },
       (response) => {
         dispatch(invalid(response.data))
@@ -116,6 +158,9 @@ export function saveGoal() {
   }
 }
 
+export function disableSubmit() {
+  return { type: types.DISABLE_SUBMIT }
+}
 
 /**
  * 入力値にマッチしたサジェストのリストを取得

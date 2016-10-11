@@ -26,13 +26,27 @@ class Collaborator extends AppModel
     const APPROVAL_STATUS_DONE = 2;
     const APPROVAL_STATUS_WITHDRAW = 3;
 
+    // TODO: 中身をセットする処理は未実装。表示文言が決まり次第実装する。
+    static public $STATUS = [
+        self::APPROVAL_STATUS_NEW => "",
+        self::APPROVAL_STATUS_REAPPLICATION => "",
+        self::APPROVAL_STATUS_DONE => "",
+        self::APPROVAL_STATUS_WITHDRAW => ""
+    ];
+
+    /**
+     * 評価対象判定
+     */
+    const IS_NOT_TARGET_EVALUATION = 0;
+    const IS_TARGET_EVALUATION = 1;
+
     /**
      * タイプの表示名をセット
      */
     private function _setTypeName()
     {
         self::$TYPE[self::TYPE_COLLABORATOR] = __("Collaborator");
-        self::$TYPE[self::TYPE_OWNER] = __("Owner");
+        self::$TYPE[self::TYPE_OWNER] = __("Leader");
     }
 
     /**
@@ -75,7 +89,6 @@ class Collaborator extends AppModel
     public $belongsTo = [
         'Team',
         'Goal',
-        'GoalCategory',
         'User',
     ];
 
@@ -365,6 +378,7 @@ class Collaborator extends AppModel
 
     /**
      * ゴール認定一覧に表示するリスト取得
+     * - 認定ステータス、コラボレーター作成日の順でソート
      *
      * @param $goalUserId
      *
@@ -404,7 +418,7 @@ class Collaborator extends AppModel
                 ],
             ],
             'type'       => 'INNER',
-            'order'      => ['Collaborator.created DESC'],
+            'order'      => ['Collaborator.approval_status ASC', 'Collaborator.created DESC'],
         ];
         $res = $this->find('all', $options);
         return $res;
@@ -594,11 +608,39 @@ class Collaborator extends AppModel
         return $res;
     }
 
+    /**
+     * @deprecated
+     */
     function getCollaborator($team_id, $user_id, $goal_id, $owner = true)
     {
         $options = [
             'conditions' => [
                 'team_id' => $team_id,
+                'user_id' => $user_id,
+                'goal_id' => $goal_id,
+                'type'    => self::TYPE_OWNER,
+            ],
+        ];
+        if ($owner === false) {
+            $options['conditions']['type'] = self::TYPE_COLLABORATOR;
+        }
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * ユニークのレコード取得
+     * @param      $user_id
+     * @param      $goal_id
+     * @param bool $owner
+     *
+     * @return mixed
+     */
+    function getUnique($user_id, $goal_id, $owner = true)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
                 'user_id' => $user_id,
                 'goal_id' => $goal_id,
                 'type'    => self::TYPE_OWNER,
@@ -664,5 +706,96 @@ class Collaborator extends AppModel
         }
 
         return $this->find('count', $options);
+    }
+
+    function getCollaboratorForApproval($collaboratorId)
+    {
+        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $conditions = [
+            'Collaborator.id' => $collaboratorId,
+            'Goal.end_date >='     => $currentTerm['start_date'],
+            'Goal.end_date <='     => $currentTerm['end_date'],
+        ];
+
+        $options = [
+            'fields'     => [
+                'id',
+                'user_id',
+                'approval_status',
+                'is_wish_approval',
+                'is_target_evaluation',
+                'role',
+                'description',
+                'type'
+            ],
+            'conditions' => $conditions,
+            'contain'    => [
+                'Goal' => [
+                    'fields' => [
+                        'Goal.id',
+                        'Goal.name',
+                        'Goal.photo_file_name',
+                    ],
+                    'GoalCategory' => [
+                        'fields' => [
+                            'GoalCategory.name',
+                        ]
+                    ],
+                    'Leader'            => [
+                        'fields'     => [
+                            'Leader.id',
+                            'Leader.user_id'
+                        ],
+                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ],
+                    'TopKeyResult' => [
+                        'conditions' => [
+                            'TopKeyResult.tkr_flg' => '1'
+                        ],
+                        'fields' => [
+                            'TopKeyResult.name',
+                            'TopKeyResult.start_value',
+                            'TopKeyResult.target_value',
+                            'TopKeyResult.value_unit',
+                            'TopKeyResult.description'
+                        ]
+                    ]
+                ],
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+                'ApprovalHistory' => [
+                    'fields' => [
+                        'ApprovalHistory.id',
+                        'ApprovalHistory.collaborator_id',
+                        'ApprovalHistory.user_id',
+                        'ApprovalHistory.comment',
+                        'ApprovalHistory.select_clear_status',
+                        'ApprovalHistory.select_important_status'
+                    ],
+                    'User' => [
+                        'fields' => $this->User->profileFields
+                    ]
+                ]
+            ],
+            'order'      => ['Collaborator.created DESC'],
+        ];
+        return $this->find('first', $options);
+    }
+
+    function getUserIdByCollaboratorId($collaboratorId)
+    {
+        if(!$collaboratorId) {
+            return null;
+        }
+
+        $res = $this->findById($collaboratorId);
+        if(!$res) {
+            return null;
+        }
+        return $res['Collaborator']['user_id'];
     }
 }

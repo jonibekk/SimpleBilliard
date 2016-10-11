@@ -1,5 +1,6 @@
 import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
+import {KeyResult} from "~/common/constants/Model";
 import {post} from "../../util/api";
 import axios from "axios";
 
@@ -10,11 +11,15 @@ export function validateGoal(page, addData) {
     const fields = Page.VALIDATION_FIELDS[page].join(',')
     return post(`/api/v1/goals/validate?fields=${fields}`, postData, null,
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate success");
+        /* eslint-enable no-console */
         dispatch(toNextPage())
       },
       (response) => {
+        /* eslint-disable no-console */
         console.log("validate failed");
+        /* eslint-enable no-console */
         dispatch(invalid(response.data))
       }
     );
@@ -108,9 +113,16 @@ export function fetchInitialData(page) {
 
 export function saveGoal() {
   return (dispatch, getState) => {
+    dispatch(disableSubmit())
+    const postData = getState().goal.inputData
+    if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      postData.key_result.start_value = 0
+      postData.key_result.target_value = 0
+    }
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
-        dispatch(toNextPage())
+        // 成功時はリダイレクト
+        document.location.href = "/"
       },
       (response) => {
         dispatch(invalid(response.data))
@@ -119,6 +131,9 @@ export function saveGoal() {
   }
 }
 
+export function disableSubmit() {
+  return { type: types.DISABLE_SUBMIT }
+}
 
 /**
  * 入力値にマッチしたサジェストのリストを取得
