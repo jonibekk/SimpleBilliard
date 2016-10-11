@@ -42,19 +42,17 @@ class GoalChangeLog extends AppModel
 
     function saveSnapshot($goalId, $userId)
     {
-        $goal = Hash::get($this->Goal->findById($goalId),'Goal');
+        $goal = Hash::get($this->Goal->findById($goalId), 'Goal');
         if (empty($goal)) {
             return false;
         }
         /** @noinspection PhpUndefinedFunctionInspection */
         $goalData = msgpack_pack($goal);
-        debug($goalData);
-        debug(gettype($goalData));
         $data = [
             'user_id' => $userId,
             'team_id' => $this->current_team_id,
             'goal_id' => $goalId,
-            'data'    => $goalData,
+            'data'    => base64_encode($goalData),
         ];
         $this->create();
         return $this->save($data);
@@ -71,10 +69,9 @@ class GoalChangeLog extends AppModel
         if (empty($data)) {
             return null;
         }
-        debug($data);
 
         /** @noinspection PhpUndefinedFunctionInspection */
-        $data['GoalChangeLog']['data'] = msgpack_unpack($data['GoalChangeLog']['data']);
+        $data['GoalChangeLog']['data'] = msgpack_unpack(base64_decode($data['GoalChangeLog']['data']));
         return $data;
     }
 

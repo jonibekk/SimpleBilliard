@@ -1,10 +1,10 @@
 <?php
+App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * GoalChangeLogFixture
-
  */
-class GoalChangeLogFixture extends CakeTestFixture
+class GoalChangeLogFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -46,12 +46,10 @@ class GoalChangeLogFixture extends CakeTestFixture
             'comment'  => '作成者ID(belongsToでUserモデルに関連)'
         ],
         'data'            => [
-            'type'    => 'text',
+            'type'    => 'binary',
             'null'    => false,
             'default' => null,
-            'collate' => 'utf8mb4_general_ci',
             'comment' => 'データ(現時点のゴールのスナップショット)MessagePackで圧縮',
-            'charset' => 'utf8mb4'
         ],
         'del_flg'         => ['type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'],
         'deleted'         => [
