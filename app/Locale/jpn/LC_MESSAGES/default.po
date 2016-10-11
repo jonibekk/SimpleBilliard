@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-06 17:36+0900\n"
+"PO-Revision-Date: 2016-10-07 16:45+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1215,7 +1215,7 @@ msgstr "公開"
 msgid "Secret"
 msgstr "秘密"
 
-#: Model/Collaborator.php:48 View/Elements/cake_variables.ctp:267;487
+#: Model/Collaborator.php:48 View/Elements/cake_variables.ctp:267;488
 #: View/Elements/my_goals_area.ctp:91
 #: View/Elements/Goal/modal_goal_description.ctp:109
 #: View/Evaluations/view.ctp:361 View/GoalApproval/done.ctp:108
@@ -3228,94 +3228,100 @@ msgstr "詳細を追加"
 msgid "Save and share"
 msgstr "保存して共有する"
 
-#: View/Elements/cake_variables.ctp:476
+#: View/Elements/cake_variables.ctp:475
+#: View/Elements/Goal/goal_menu_on_my_page.ctp:36
+#: View/Elements/Goal/my_goal_area_items.ctp:114 View/Goals/add.ctp:32
+msgid "Edit goal"
+msgstr "ゴールを編集"
+
+#: View/Elements/cake_variables.ctp:477
 msgid "Set as a target for evaluation?"
 msgstr "評価対象にしますか？"
 
-#: View/Elements/cake_variables.ctp:478
+#: View/Elements/cake_variables.ctp:479
 msgid "Do you think this Top Key Result is clear ?"
 msgstr "このトップKRは明確ですか？"
 
-#: View/Elements/cake_variables.ctp:479
+#: View/Elements/cake_variables.ctp:480
 msgid "Yes"
 msgstr "はい"
 
-#: View/Elements/cake_variables.ctp:480
+#: View/Elements/cake_variables.ctp:481
 msgid "No"
 msgstr "いいえ"
 
-#: View/Elements/cake_variables.ctp:481
+#: View/Elements/cake_variables.ctp:482
 msgid ""
 "Do you think this Top Key Result is the most important to achieve the goal?"
 msgstr "このトップKRはゴールの達成に最重要ですか？"
 
-#: View/Elements/cake_variables.ctp:482
+#: View/Elements/cake_variables.ctp:483
 msgid "Add as a target for evaluation ?"
 msgstr "このゴールを評価対象にしますか？"
 
-#: View/Elements/cake_variables.ctp:483
+#: View/Elements/cake_variables.ctp:484
 msgid "Add your comment (optional)"
 msgstr "コメントする(オプション)"
 
-#: View/Elements/cake_variables.ctp:484
+#: View/Elements/cake_variables.ctp:485
 msgid "View Previous"
 msgstr "前の履歴を見る"
 
-#: View/Elements/cake_variables.ctp:485
+#: View/Elements/cake_variables.ctp:486
 msgid "View all %s comments"
 msgstr "すべてのコメントを見る(%s)"
 
-#: View/Elements/cake_variables.ctp:486
+#: View/Elements/cake_variables.ctp:487
 msgid "more"
 msgstr "もっと見る"
 
-#: View/Elements/cake_variables.ctp:491
+#: View/Elements/cake_variables.ctp:492
 msgid "Edit Goal"
 msgstr "ゴールを編集する"
 
-#: View/Elements/cake_variables.ctp:492
+#: View/Elements/cake_variables.ctp:493
 #: View/Elements/User/modal_delete_email.ctp:20
 msgid "Confirm"
 msgstr "確認"
 
-#: View/Elements/cake_variables.ctp:493 View/Elements/Team/invite.ctp:81
+#: View/Elements/cake_variables.ctp:494 View/Elements/Team/invite.ctp:81
 #: View/Setup/profile_image.ctp:14 View/Users/add_profile.ctp:194
 msgid "Skip"
 msgstr "スキップ"
 
-#: View/Elements/cake_variables.ctp:494
+#: View/Elements/cake_variables.ctp:495
 msgid "Save & Reapply"
 msgstr "保存して再申請する"
 
-#: View/Elements/cake_variables.ctp:495
+#: View/Elements/cake_variables.ctp:496
 msgid "Edit Role"
 msgstr "役割を編集する"
 
-#: View/Elements/cake_variables.ctp:496
+#: View/Elements/cake_variables.ctp:497
 msgid "Withdraw"
 msgstr "申請を取り下げる"
 
-#: View/Elements/cake_variables.ctp:497
+#: View/Elements/cake_variables.ctp:498
 msgid "Goal approval list"
 msgstr "ゴール認定リスト"
 
-#: View/Elements/cake_variables.ctp:498
+#: View/Elements/cake_variables.ctp:499
 msgid "New"
 msgstr "New"
 
-#: View/Elements/cake_variables.ctp:499
+#: View/Elements/cake_variables.ctp:500
 msgid "Reapply"
 msgstr "再申請"
 
-#: View/Elements/cake_variables.ctp:500
+#: View/Elements/cake_variables.ctp:501
 msgid "Evaluated"
 msgstr "評価対象"
 
-#: View/Elements/cake_variables.ctp:501
+#: View/Elements/cake_variables.ctp:502
 msgid "Not Evaluated"
 msgstr "非評価対象"
 
-#: View/Elements/cake_variables.ctp:502 View/GoalApproval/done.ctp:62
+#: View/Elements/cake_variables.ctp:503 View/GoalApproval/done.ctp:62
 #: View/GoalApproval/index.ctp:62
 msgid "Waiting"
 msgstr "処理待ち"
@@ -3335,6 +3341,25 @@ msgstr "Enterを押すと追加されます。(最大5個まで登録可能)"
 #: View/Elements/cake_variables.ctp:506
 msgid "Withdrawn"
 msgstr "申請取り下げ"
+
+#: View/Elements/cake_variables.ctp:508
+msgid "Confirm this goal"
+msgstr "ゴール編集の確認"
+
+#: View/Elements/cake_variables.ctp:509
+msgid "Edit goal & top key result"
+msgstr "ゴールとトップKRを編集する"
+
+#: View/Elements/cake_variables.ctp:510
+#: View/Elements/modal_edit_circle.ctp:319
+#: View/Elements/Feed/comment_edit_form.ctp:71
+#: View/Elements/Feed/post_edit_form.ctp:69
+#: View/Elements/User/account_setting.ctp:146
+#: View/Elements/User/modal_change_password.ctp:61
+#: View/Elements/User/notify_setting.ctp:91
+#: View/Elements/User/profile_setting.ctp:303
+msgid "Save changes"
+msgstr "変更を保存"
 
 #: View/Elements/circle_list.ctp:78
 #: View/Elements/circle_list_in_hamburger.ctp:74
@@ -3710,16 +3735,6 @@ msgstr ""
 #: View/Elements/modal_edit_circle.ctp:245
 msgid "Remove from the circle"
 msgstr "サークルから外す"
-
-#: View/Elements/modal_edit_circle.ctp:319
-#: View/Elements/Feed/comment_edit_form.ctp:71
-#: View/Elements/Feed/post_edit_form.ctp:69
-#: View/Elements/User/account_setting.ctp:146
-#: View/Elements/User/modal_change_password.ctp:61
-#: View/Elements/User/notify_setting.ctp:91
-#: View/Elements/User/profile_setting.ctp:303
-msgid "Save changes"
-msgstr "変更を保存"
 
 #: View/Elements/modal_edit_circle.ctp:330
 msgid "Delete circle"
@@ -4142,11 +4157,6 @@ msgstr "アクションを追加する"
 #: View/Goals/view_krs.ctp:44
 msgid "Add Key Result"
 msgstr "達成要素を追加"
-
-#: View/Elements/Goal/goal_menu_on_my_page.ctp:36
-#: View/Elements/Goal/my_goal_area_items.ctp:114 View/Goals/add.ctp:32
-msgid "Edit goal"
-msgstr "ゴールを編集"
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:42
 #: View/Elements/Goal/my_goal_area_items.ctp:120

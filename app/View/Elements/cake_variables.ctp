@@ -504,6 +504,11 @@
             "Goal details": "<?= __("Goal details") ?>",
             "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
             "Withdrawn": "<?=__("Withdrawn")?>",
+            // goal edit
+            "Confirm this goal": "<?= __("Confirm this goal") ?>",
+            "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
+            "Save changes": "<?= __("Save changes") ?>",
+            "Top Key Result": "<?= __("Top Key Result") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
