@@ -455,8 +455,8 @@ msgid "Measurement(Initial)"
 msgstr "程度(開始時)"
 
 #: Controller/GoalsController.php:1001 View/Elements/cake_variables.ctp:343
-#: View/Elements/Goal/modal_add_key_result.ctp:161
-#: View/Elements/Goal/modal_edit_key_result.ctp:156 View/Goals/add.ctp:169
+#: View/Elements/Goal/modal_add_key_result.ctp:178
+#: View/Elements/Goal/modal_edit_key_result.ctp:173 View/Goals/add.ctp:169
 msgid "Due Date"
 msgstr "期限"
 
@@ -470,8 +470,8 @@ msgstr "概要"
 
 #: Controller/GoalsController.php:1004 View/Elements/cake_variables.ctp:468
 #: View/Elements/modal_collabo.ctp:74
-#: View/Elements/Goal/modal_add_key_result.ctp:231
-#: View/Elements/Goal/modal_edit_key_result.ctp:225
+#: View/Elements/Goal/modal_add_key_result.ctp:248
+#: View/Elements/Goal/modal_edit_key_result.ctp:242
 #: View/Evaluations/view.ctp:369 View/GoalApproval/done.ctp:116
 #: View/GoalApproval/index.ctp:119 View/Goals/add.ctp:371
 msgid "Weight"
@@ -1106,7 +1106,7 @@ msgid "You don't have permission."
 msgstr ""
 
 #: Controller/Api/ApiController.php:110
-#: Controller/Api/V1/GoalApprovalsController.php:339
+#: Controller/Api/V1/GoalApprovalsController.php:293
 #: View/Errors/error400.ctp:15
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
@@ -1116,11 +1116,11 @@ msgid "Internal Server Error."
 msgstr ""
 
 #: Controller/Api/ApiController.php:146;159
-#: Controller/Api/V1/GoalApprovalsController.php:370
+#: Controller/Api/V1/GoalApprovalsController.php:324
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
-#: Controller/Api/V1/GoalApprovalsController.php:32;45;185;242;287
+#: Controller/Api/V1/GoalApprovalsController.php:32;45;185;242
 #: Model/Evaluation.php:222
 msgid "You don't have access right to this page."
 msgstr "この画面にはアクセスできません。"
@@ -1149,15 +1149,15 @@ msgstr "Goalousの認証コード: %s"
 msgid "日本語"
 msgstr "日本語"
 
-#: Controller/Component/NotifyBizComponent.php:1681
+#: Controller/Component/NotifyBizComponent.php:1678
 msgid "Parameters were wrong"
 msgstr "不正なパラメータです。"
 
-#: Controller/Component/NotifyBizComponent.php:1690
+#: Controller/Component/NotifyBizComponent.php:1687
 msgid "Device Information not exists"
 msgstr "デバイス情報が見つかりません。"
 
-#: Controller/Component/NotifyBizComponent.php:1721
+#: Controller/Component/NotifyBizComponent.php:1718
 msgid "Failed to save a Device Information."
 msgstr "デバイス情報の保存に失敗しました。"
 
@@ -1203,7 +1203,7 @@ msgid "Document"
 msgstr "ドキュメント"
 
 #: Model/AttachedFile.php:141 Model/Goal.php:76;100;1995;2007
-#: Model/KeyResult.php:470;481 Model/NotifySetting.php:250
+#: Model/KeyResult.php:467;478 Model/NotifySetting.php:242
 msgid "All"
 msgstr "すべて"
 
@@ -1402,7 +1402,7 @@ msgstr "5(とても高い)"
 msgid "There is no data of KR."
 msgstr "達成要素のデータがありません。"
 
-#: Model/KeyResult.php:427;440
+#: Model/KeyResult.php:424;437
 msgid "There is no key result."
 msgstr "達成要素が存在しません。"
 
@@ -1414,8 +1414,8 @@ msgstr "達成要素が存在しません。"
 #: View/Elements/Feed/common_form.ctp:145;162;315;484
 #: View/Elements/Feed/new_comment_form.ctp:45
 #: View/Elements/Goal/modal_add_action.ctp:86
-#: View/Elements/Goal/modal_add_key_result.ctp:79;124;142;176;215
-#: View/Elements/Goal/modal_edit_key_result.ctp:73;118;137;170;208;232
+#: View/Elements/Goal/modal_add_key_result.ctp:79;124;142;193;232
+#: View/Elements/Goal/modal_edit_key_result.ctp:73;118;137;187;225;249
 #: View/Elements/Team/edit_basic_setting.ctp:37
 #: View/Elements/Team/eval_score_form_elm.ctp:29;73
 #: View/Elements/Team/goal_category_form_elm.ctp:29;51
@@ -2328,15 +2328,15 @@ msgstr "評価期間内で入力してください。"
 msgid "Data is duplicated."
 msgstr ""
 
-#: Service/GoalApprovalService.php:320 View/Elements/cake_variables.ctp:488
+#: Service/GoalApprovalService.php:301 View/Elements/cake_variables.ctp:488
 msgid "This Top Key Result is clear and most important."
 msgstr "トップKRが明確で最重要である。"
 
-#: Service/GoalApprovalService.php:322 View/Elements/cake_variables.ctp:489
+#: Service/GoalApprovalService.php:303 View/Elements/cake_variables.ctp:489
 msgid "This Top Key Result is not most important."
 msgstr "トップKRが最重要でない。"
 
-#: Service/GoalApprovalService.php:324 View/Elements/cake_variables.ctp:490
+#: Service/GoalApprovalService.php:305 View/Elements/cake_variables.ctp:490
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
 
@@ -2500,9 +2500,9 @@ msgstr "これ以上のコメントがありません。"
 #: View/Elements/Feed/modal_post_liked_users.ctp:35
 #: View/Elements/Feed/modal_post_red_users.ctp:35
 #: View/Elements/Goal/modal_add_action.ctp:144
-#: View/Elements/Goal/modal_add_key_result.ctp:249
+#: View/Elements/Goal/modal_add_key_result.ctp:266
 #: View/Elements/Goal/modal_edit_action_result.ctp:98
-#: View/Elements/Goal/modal_edit_key_result.ctp:244
+#: View/Elements/Goal/modal_edit_key_result.ctp:261
 #: View/Elements/Goal/modal_goal_description.ctp:170
 #: View/Elements/Goal/modal_related_kr_list.ctp:32
 #: View/Elements/User/modal_delete_email.ctp:27
@@ -3061,8 +3061,8 @@ msgid "Team Name"
 msgstr "チーム名"
 
 #: View/Elements/cake_variables.ctp:418
-#: View/Elements/Goal/modal_add_key_result.ctp:150
-#: View/Elements/Goal/modal_edit_key_result.ctp:145
+#: View/Elements/Goal/modal_add_key_result.ctp:167
+#: View/Elements/Goal/modal_edit_key_result.ctp:162
 #: View/Elements/Team/edit_term_setting.ctp:96
 #: View/Elements/Team/insight_form_input.ctp:127 View/Goals/add.ctp:161
 #: View/Teams/add.ctp:123
@@ -3077,8 +3077,8 @@ msgstr "タイムゾーン"
 
 #: View/Elements/cake_variables.ctp:421
 #: View/Elements/modal_edit_members_by_csv.ctp:100
-#: View/Elements/Goal/modal_add_key_result.ctp:199
-#: View/Elements/Goal/modal_edit_key_result.ctp:192
+#: View/Elements/Goal/modal_add_key_result.ctp:216
+#: View/Elements/Goal/modal_edit_key_result.ctp:209
 #: View/Goals/add.ctp:39;104;210;259;323
 msgid "Change"
 msgstr "変更する"
@@ -3190,6 +3190,8 @@ msgstr "オプションを見る"
 
 #: View/Elements/cake_variables.ctp:466 View/Elements/modal_collabo.ctp:60
 #: View/Elements/Goal/modal_add_action.ctp:81
+#: View/Elements/Goal/modal_add_key_result.ctp:151
+#: View/Elements/Goal/modal_edit_key_result.ctp:146
 #: View/Elements/Goal/modal_goal_description.ctp:143
 #: View/Elements/Team/evaluation_score_setting.ctp:51
 #: View/Elements/Team/goal_category_setting.ctp:48
@@ -3565,8 +3567,8 @@ msgstr "例) 営業部"
 #: View/Elements/Feed/comment_edit_form.ctp:47
 #: View/Elements/Feed/common_form.ctp:148;318;487
 #: View/Elements/Feed/new_comment_form.ctp:48
-#: View/Elements/Goal/modal_add_key_result.ctp:82;122;140;179;218
-#: View/Elements/Goal/modal_edit_key_result.ctp:76;116;135;173;211
+#: View/Elements/Goal/modal_add_key_result.ctp:82;122;140;196;235
+#: View/Elements/Goal/modal_edit_key_result.ctp:76;116;135;190;228
 #: View/Elements/Team/edit_basic_setting.ctp:40
 #: View/Elements/Team/eval_score_form_elm.ctp:33;55;77
 #: View/Elements/Team/goal_category_form_elm.ctp:32;55
@@ -4151,7 +4153,7 @@ msgid "Post an action"
 msgstr "アクションを追加する"
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:30
-#: View/Elements/Goal/modal_add_key_result.ctp:29;246
+#: View/Elements/Goal/modal_add_key_result.ctp:29;263
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:64
 #: View/Elements/Goal/my_goal_area_items.ctp:107;146;190;244
 #: View/Goals/view_krs.ctp:44
@@ -4260,21 +4262,26 @@ msgstr "どのくらい？"
 msgid "Please enter a number."
 msgstr "数字を入力してください。"
 
-#: View/Elements/Goal/modal_add_key_result.ctp:189
-#: View/Elements/Goal/modal_edit_key_result.ctp:183 View/Goals/add.ctp:198
+#: View/Elements/Goal/modal_add_key_result.ctp:160
+#: View/Elements/Goal/modal_edit_key_result.ctp:155
+msgid "Optional"
+msgstr "オプション"
+
+#: View/Elements/Goal/modal_add_key_result.ctp:206
+#: View/Elements/Goal/modal_edit_key_result.ctp:200 View/Goals/add.ctp:198
 msgid "Start"
 msgstr "開始"
 
-#: View/Elements/Goal/modal_add_key_result.ctp:195 View/Goals/add.ctp:205
+#: View/Elements/Goal/modal_add_key_result.ctp:212 View/Goals/add.ctp:205
 msgid "(Today)"
 msgstr "（本日）"
 
-#: View/Elements/Goal/modal_add_key_result.ctp:232
-#: View/Elements/Goal/modal_edit_key_result.ctp:226
+#: View/Elements/Goal/modal_add_key_result.ctp:249
+#: View/Elements/Goal/modal_edit_key_result.ctp:243
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
 
-#: View/Elements/Goal/modal_edit_key_result.ctp:29;241
+#: View/Elements/Goal/modal_edit_key_result.ctp:29;258
 msgid "Update Key Result"
 msgstr "達成要素を更新"
 
@@ -7051,9 +7058,6 @@ msgstr ""
 #~ msgid "An error occurred while processing."
 #~ msgstr "処理中にエラーが発生しました。"
 
-#~ msgid "Wating for approval"
-#~ msgstr "認定待ち"
-
 #~ msgid "Wating for modified"
 #~ msgstr "修正待ち"
 
@@ -7283,9 +7287,6 @@ msgstr ""
 
 #~ msgid "Invite new members"
 #~ msgstr "新しいメンバーを招待"
-
-#~ msgid "Comment(Optional)"
-#~ msgstr "コメント(オプション)"
 
 #~ msgid "Comments (optional) will be added to the body of the mail."
 #~ msgstr "Comment will be added to the body of the invitation email."
