@@ -85,7 +85,8 @@ class TkrChangeLog extends AppModel
             'conditions' => [
                 'user_id' => $userId,
                 'goal_id' => $goalId,
-            ]
+            ],
+            'order'      => ['id' => 'desc']
         ]);
 
         $data = Hash::extract($data, 'TkrChangeLog');
