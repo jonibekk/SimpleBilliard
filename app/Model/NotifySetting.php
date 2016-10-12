@@ -38,6 +38,7 @@ class NotifySetting extends AppModel
     const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
     const TYPE_FEED_MESSAGE = 25;
     const TYPE_SETUP_GUIDE = 26;
+    const TYPE_COACHEE_WITHDRAW_APPROVAL = 28;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
@@ -228,7 +229,14 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'setup_guide',
             'icon_class'      => 'fa-book',
             'groups'          => ['all'],
-        ]
+        ],
+        self::TYPE_COACHEE_WITHDRAW_APPROVAL             => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'coachee_withdraw_approval',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
     ];
 
     static public $TYPE_GROUP = [
@@ -717,6 +725,22 @@ class NotifySetting extends AppModel
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has updated <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
+                }
+                break;
+            case self::TYPE_COACHEE_WITHDRAW_APPROVAL:
+                // この通知で必要なオプション値
+                //   - goal_id: 評価対象にしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has withdrawn <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has withdrawn <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
                         h($goal['Goal']['name']));
                 }

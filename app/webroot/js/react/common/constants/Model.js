@@ -12,9 +12,9 @@ export const KeyResult = Object.freeze({
 export const Collaborator = Object.freeze({
   ApprovalStatus: {
     NEW: 0,
-    REAPPLICATION:1,
-    DONE:2,
-    WITHDRAW:3
+    REAPPLICATION: 1,
+    DONE: 2,
+    WITHDRAWN: 3
   },
   Type: {
     TYPE_COLLABORATOR: 0,

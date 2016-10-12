@@ -244,7 +244,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goal = $this->_getGoalsCommonMock();
         $this->_setDefault($Goal);
         $Goal->Goal->Collaborator->id = $this->collabo_id;
-        $Goal->Goal->Collaborator->saveField('approval_status', Collaborator::APPROVAL_STATUS_WITHDRAW);
+        $Goal->Goal->Collaborator->saveField('approval_status', Collaborator::APPROVAL_STATUS_WITHDRAWN);
         $data = [
             'Goal'         => [
                 'description' => 'test',
@@ -984,7 +984,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->saveField('approval_status', Collaborator::APPROVAL_STATUS_WITHDRAW);
+        $Goals->Goal->Collaborator->saveField('approval_status', Collaborator::APPROVAL_STATUS_WITHDRAWN);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 

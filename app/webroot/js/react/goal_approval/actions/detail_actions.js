@@ -77,6 +77,27 @@ export function postRemoveFromTarget(post_data) {
   }
 }
 
+export function postWithdraw(collaborator_id) {
+  return (dispatch) => {
+    dispatch(postingWithdraw())
+
+    return post(`/api/v1/goal_approvals/withdraw`, { collaborator: {id: collaborator_id} }, null,
+      () => {
+        dispatch(finishedPostingWithdraw())
+        dispatch(toListPage())
+      },
+      (response) => {
+        dispatch(finishedPostingWithdraw())
+        /* eslint-disable no-console */
+        console.log("withdraw failed");
+        console.log(response);
+        /* eslint-enable no-console */
+        dispatch(toListPage())
+      }
+    );
+  }
+}
+
 export function setCollaborator(collaborator) {
   return { type: types.SET_COLLABORATOR, collaborator }
 }
@@ -96,9 +117,16 @@ export function toListPage() {
 export function postingRemovefromTarget() {
   return { type: types.POSTING_REMOVE_FROM_TARGET }
 }
+export function postingWithdraw() {
+  return { type: types.POSTING_WITHDRAW }
+}
 
 export function finishedPostingRemoveFromTarget() {
   return { type: types.FINISHED_POSTING_REMOVE_FROM_TARGET }
+}
+
+export function finishedPostingWithdraw() {
+  return { type: types.POSTING_WITHDRAW }
 }
 
 export function invalid(error) {

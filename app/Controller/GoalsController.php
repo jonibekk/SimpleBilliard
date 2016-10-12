@@ -1041,7 +1041,7 @@ class GoalsController extends AppController
                         case Collaborator::APPROVAL_STATUS_DONE:
                             $approval_status = __("Not Evaluable");
                             break;
-                        case Collaborator::APPROVAL_STATUS_WITHDRAW:
+                        case Collaborator::APPROVAL_STATUS_WITHDRAWN:
                             $approval_status = __("Pending modification");
                             break;
                     }

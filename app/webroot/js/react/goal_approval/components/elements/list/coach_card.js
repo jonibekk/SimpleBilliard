@@ -8,7 +8,7 @@ export class CoachCard extends React.Component {
     const Type = Collaborator.Type
     const collaborator = this.props.collaborator
     const role = collaborator.type == Type.OWNER ? __('Leader') : __('Collaborator')
-    const is_incomplete = collaborator.approval_status == ApprovalStatus.NEW || collaborator.approval_status == ApprovalStatus.REAPPLICATION
+    const is_incomplete = collaborator.approval_status != ApprovalStatus.DONE && collaborator.approval_status != ApprovalStatus.WITHDRAWN
     const status = (() => {
       if(collaborator.is_target_evaluation) {
         return __('Evaluated')
@@ -18,6 +18,9 @@ export class CoachCard extends React.Component {
       }
       if(collaborator.approval_status == ApprovalStatus.REAPPLICATION) {
         return __('Reapply')
+      }
+      if(collaborator.approval_status == ApprovalStatus.WITHDRAWN) {
+        return __('Withdrawn')
       }
       return __('Not Evaluated')
     })()

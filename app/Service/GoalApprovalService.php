@@ -142,21 +142,36 @@ class GoalApprovalService extends AppService
      */
     function saveApproval($saveData)
     {
+        /** @var Collaborator $Collaborator */
         $Collaborator = ClassRegistry::init("Collaborator");
+        /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
 
         $Collaborator->begin();
 
-        $isSaveSuccessCollaborator = $Collaborator->save($saveData);
-        if (!$isSaveSuccessCollaborator) {
-            $Collaborator->rollback();
-            return false;
+        // コラボ情報の保存
+        if(Hash::get($saveData, 'Collaborator')) {
+            $isSaveSuccessCollaborator = $Collaborator->save($saveData);
+            if (!$isSaveSuccessCollaborator) {
+                $Collaborator->rollback();
+                return false;
+            }
+
+            // コラボレータとコーチの認定未処理件数キャッシュを削除
+            $collaboUserId = $Collaborator->getUserIdByCollaboratorId($Collaborator->getLastInsertID());
+            $coachUserId = $TeamMember->getCoachId($collaboUserId);
+            $this->deleteUnapprovedCountCache([$collaboUserId, $coachUserId]);
         }
 
-        $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
-        if (!$isSaveSuccessApprovalHistory) {
-            $Collaborator->rollback();
-            return false;
+        // 認定履歴情報の保存
+        if(Hash::get($saveData, 'ApprovalHistory')) {
+            $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
+            if (!$isSaveSuccessApprovalHistory) {
+                $Collaborator->rollback();
+                return false;
+            }
         }
 
         $Collaborator->commit();
@@ -230,19 +245,21 @@ class GoalApprovalService extends AppService
         $validation = [];
 
         // collaborator validation
-        $Collaborator->set($data['Collaborator']);
-        $collaborator_validation = $Collaborator->validates();
-        if ($collaborator_validation !== true) {
-            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-            $validation['collaborator'] = $Collaborator->_validationExtract($Collaborator->validationErrors);
+        if(Hash::get($data, 'Collaborator')) {
+            $Collaborator->set($data['Collaborator']);
+            $collaborator_validation = $Collaborator->validates();
+            if ($collaborator_validation !== true) {
+                $validation['collaborator'] = $this->_validationExtract($Collaborator->validationErrors);
+            }
         }
 
         // approval_history validation
-        $ApprovalHistory->set($data['ApprovalHistory']);
-        $approval_history_validation = $ApprovalHistory->validates();
-        if ($approval_history_validation !== true) {
-            // TODO: _validationExtractがService基底クラスに移行されたらここの呼び出し元も変える
-            $validation['approval_history'] = $ApprovalHistory->_validationExtract($ApprovalHistory->validationErrors);
+        if(Hash::get($data, 'ApprovalHistory')) {
+            $ApprovalHistory->set($data['ApprovalHistory']);
+            $approval_history_validation = $ApprovalHistory->validates();
+            if ($approval_history_validation !== true) {
+                $validation['approval_history'] = $this->_validationExtract($ApprovalHistory->validationErrors);
+            }
         }
 
         if (!empty($validation)) {
@@ -281,6 +298,24 @@ class GoalApprovalService extends AppService
                 'collaborator_id'         => $collaboratorId,
                 'user_id'                 => $userId,
                 'comment'                 => Hash::get($requestData, 'approval_history.comment')
+            ]
+        ];
+
+        return $saveData;
+    }
+
+    /**
+     * 申請取り消しPOSTの保存データを定義
+     * @param  integer $collaboratorId
+     * @return array $saveData
+     */
+    function generateWithdrawSaveData($collaboratorId)
+    {
+        $saveData =  [
+            'Collaborator' => [
+                'id' => $collaboratorId,
+                'is_target_evaluation' => false,
+                'approval_status'      => Collaborator::APPROVAL_STATUS_WITHDRAWN
             ]
         ];
 
