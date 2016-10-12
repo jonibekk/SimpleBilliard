@@ -50,14 +50,15 @@ class GoalChangeLogTest extends GoalousTestCase
         $this->_setDefault();
         $this->GoalChangeLog->saveSnapshot(1,1);
         $snapshot = $this->GoalChangeLog->getLatestSnapshot(1,1);
-        debug($snapshot);
-
+        $this->assertNotEmpty($snapshot);
     }
 
     function testGetLatestSnapshot()
     {
         $this->_setDefault();
-
+        $this->GoalChangeLog->saveSnapshot(1,1);
+        $snapshot = $this->GoalChangeLog->getLatestSnapshot(1,1);
+        $this->assertNotEmpty($snapshot);
     }
 
     function _setDefault()
