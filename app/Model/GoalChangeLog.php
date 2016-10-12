@@ -40,6 +40,15 @@ class GoalChangeLog extends AppModel
         'User',
     ];
 
+    /**
+     * ゴールのスナップショットをログに保存する
+     * dataフィールドにはmaspackした上でbase64_encodeして格納する。
+     *
+     * @param $goalId
+     * @param $userId
+     *
+     * @return bool|mixed
+     */
     function saveSnapshot($goalId, $userId)
     {
         $goal = Hash::get($this->Goal->findById($goalId), 'Goal');
@@ -55,10 +64,19 @@ class GoalChangeLog extends AppModel
             'data'    => base64_encode($goalData),
         ];
         $this->create();
-        return $this->save($data);
+        $ret = $this->save($data);
+        return $ret;
     }
 
-    function getLatestSnapshot($goalId, $userId)
+    /**
+     * ゴールの最新のスナップショットを取得
+     *
+     * @param $goalId
+     * @param $userId
+     *
+     * @return array|null
+     */
+    function findLatestSnapshot($goalId, $userId)
     {
         $data = $this->find('first', [
             'conditions' => [
@@ -66,12 +84,15 @@ class GoalChangeLog extends AppModel
                 'goal_id' => $goalId,
             ]
         ]);
+
+        $data = Hash::extract($data, 'GoalChangeLog');
+
         if (empty($data)) {
             return null;
         }
 
         /** @noinspection PhpUndefinedFunctionInspection */
-        $data['GoalChangeLog']['data'] = msgpack_unpack(base64_decode($data['GoalChangeLog']['data']));
+        $data['data'] = msgpack_unpack(base64_decode($data['data']));
         return $data;
     }
 
