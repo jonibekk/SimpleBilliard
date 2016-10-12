@@ -2,6 +2,7 @@
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
+App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -1040,7 +1041,7 @@ class GoalsController extends AppController
                         case Collaborator::APPROVAL_STATUS_DONE:
                             $approval_status = __("Not Evaluable");
                             break;
-                        case Collaborator::APPROVAL_STATUS_WITHDRAW:
+                        case Collaborator::APPROVAL_STATUS_WITHDRAWN:
                             $approval_status = __("Pending modification");
                             break;
                     }
@@ -1177,6 +1178,9 @@ class GoalsController extends AppController
 
     public function ajax_get_my_goals()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
@@ -1207,6 +1211,7 @@ class GoalsController extends AppController
         } else {
             $goals = [];
         }
+        $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
         $this->set(compact('goals', 'type', 'current_term'));
 
@@ -1360,6 +1365,9 @@ class GoalsController extends AppController
      */
     function view_krs()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
@@ -1377,6 +1385,7 @@ class GoalsController extends AppController
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
+        $key_results = $KeyResultService->processKeyResults($key_results);
         $this->set('key_results', $key_results);
 
         // 未完了のキーリザルト数
@@ -1459,11 +1468,16 @@ class GoalsController extends AppController
      */
     function _setGoalPageHeaderInfo($goal_id)
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $goal = $this->Goal->getGoal($goal_id);
         if (!isset($goal['Goal']['id'])) {
             // ゴールが存在しない
             return false;
         }
+        // 進捗情報を追加
+        $goal['Goal']['progress'] = $GoalService->getProgress($goal['KeyResult']);
         $this->set('goal', $goal);
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);

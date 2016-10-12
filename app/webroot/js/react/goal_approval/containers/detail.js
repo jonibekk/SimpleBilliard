@@ -11,7 +11,8 @@ function mapDispatchToProps(dispatch) {
     fetchCollaborator: (collaborator_id) => dispatch(actions.fetchCollaborator(collaborator_id)),
     postSetAsTarget: (input_data) => dispatch(actions.postSetAsTarget(input_data)),
     postRemoveFromTarget: (input_data) => dispatch(actions.postRemoveFromTarget(input_data)),
-    initDetailPage: () => dispatch(actions.initDetailPage())
+    initDetailPage: () => dispatch(actions.initDetailPage()),
+    postWithdraw: (collaborator_id) => dispatch(actions.postWithdraw(collaborator_id))
   }
 }
 

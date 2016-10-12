@@ -24,7 +24,7 @@ export default class LabelInput extends React.Component {
           suggestions={this.props.suggestions}
           onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
-          renderSuggestion={this.props.renderSuggestion}
+          renderSuggestion={(s) => <span>{s.name}({s.goal_label_count})</span>}
           getSuggestionValue={this.props.getSuggestionValue}
           inputProps={props}
           onSuggestionSelected={this.props.onSuggestionSelected}

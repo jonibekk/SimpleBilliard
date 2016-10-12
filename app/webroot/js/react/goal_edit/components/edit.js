@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import {browserHistory} from "react-router";
 import * as KeyCode from "~/common/constants/KeyCode";
 import UnitSelect from "~/common/components/goal/UnitSelect";
+import PhotoUpload from "~/common/components/goal/PhotoUpload";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import CategorySelect from "~/common/components/goal/CategorySelect";
@@ -19,6 +20,12 @@ export default class Edit extends React.Component {
   }
 
   componentWillMount() {
+    // 遷移元がどこかクエリパラメータで指定してあるので編集キャンセル/完了後の遷移先として保存しておく
+    let from = "/"
+    if (Object.keys(this.props.location.query).length > 0) {
+      from = new Buffer(this.props.location.query.from, 'base64').toString()
+    }
+    this.props.init({from})
     this.props.fetchInitialData(this.props.params.goalId)
   }
 
@@ -49,7 +56,8 @@ export default class Edit extends React.Component {
   }
 
   getInputDomData() {
-    const photo = ReactDOM.findDOMNode(this.refs.photo).files[0]
+    const photoNode = this.refs.innerPhoto.refs.photo
+    const photo = ReactDOM.findDOMNode(photoNode).files[0]
     if (!photo) {
       return {}
     }
@@ -70,21 +78,8 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    // TODO:画面遷移を行うとイベントが発火しなくなる為、コード追加(既存バグ)
-    // 将来的に廃止
-    $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
-      $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
-    });
-
-
     const {suggestions, keyword, validationErrors, inputData, goal} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
-    // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
-    // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
-    // リサイズ後の画像情報が取得できない。
-    // 画像アップロード後submitした時にimgタグの画像情報を取得してもアップロード前の画像情報を取得してしまう。
-    // これはReactの仮想domに反映されていない為。
-    const imgPath = inputData.photo ? inputData.photo.result : goal.medium_large_img_url;
 
     return (
       <div className="panel panel-default col-sm-8 col-sm-offset-2 goals-create">
@@ -94,9 +89,9 @@ export default class Edit extends React.Component {
               acceptCharset="utf-8"
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
-            <h1 className="goals-create-heading">{__("What is your goal ?")}</h1>
-            <p
-              className="goals-create-description">{__("Imagine an ambitious outcome that you want to achieve. If your organization has a vision, you should follow it.")}</p>
+            <h1 className="goals-approval-heading">{__("Edit goal & top key result")}</h1>
+
+            <h2 className="goals-edit-subject"><i className="fa fa-flag"></i> { __("Goal") }</h2>
 
             <label className="goals-create-input-label">{__("Goal name")}</label>
             <input name="name" className="form-control goals-create-input-form" type="text"
@@ -116,7 +111,6 @@ export default class Edit extends React.Component {
               inputLabels={inputData.labels}
               onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
               onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
-              renderSuggestion={(s) => <span>{s.name}</span>}
               getSuggestionValue={(s) => this.props.onSuggestionsFetchRequested}
               onChange={this.props.onChangeAutoSuggest}
               onSuggestionSelected={this.props.onSuggestionSelected}
@@ -127,27 +121,7 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={validationErrors.labels}/>
 
-            <label className="goals-create-input-label">{__("Goal image")}</label>
-            <div
-              className={`goals-create-input-image-upload fileinput_small ${inputData.photo ? "fileinput-exists" : "fileinput-new"}`}
-              data-provides="fileinput">
-              <div
-                className="fileinput-preview thumbnail nailthumb-container photo-design goals-create-input-image-upload-preview"
-                data-trigger="fileinput">
-                <img src={imgPath} width={100} height={100} ref="photo_image"/>
-              </div>
-              <div className="goals-create-input-image-upload-info">
-                {/*<p className="goals-create-input-image-upload-info-text">*/}
-                  {/*{__("This is sample image if you want to upload your original image")}*/}
-                {/*</p>*/}
-                <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
-                  <span className="fileinput-new">{__("Upload an image")}</span>
-                  <span className="fileinput-exists">{__("Reselect an image")}</span>
-                  <input className="goals-create-input-image-upload-info-form" type="file" name="photo" ref="photo"
-                         id="file_photo"/>
-                </label>
-              </div>
-            </div>
+            <PhotoUpload uploadPhoto={inputData.photo} imgUrl={goal.medium_large_img_url} ref="innerPhoto"/>
             <InvalidMessageBox message={validationErrors.photo}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
@@ -172,10 +146,8 @@ export default class Edit extends React.Component {
             </select>
             <InvalidMessageBox message={validationErrors.priority}/>
           </section>
-          <section className="mb_32px">
-            <h1 className="goals-create-heading">{__("Set Top Key Result")}</h1>
-            <p className="goals-create-description">{__("Create a clear and most important Key Result for your goal.")}</p>
-            <label className="goals-create-input-label">{__("Top Key Result")}</label>
+          <section className="goals-edit-tkr">
+            <h2 className="goals-edit-subject"><i className="fa fa-key"></i> { __("Top Key Result") }</h2>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
@@ -198,7 +170,7 @@ export default class Edit extends React.Component {
 
 
           <button type="submit" className="goals-create-btn-next btn">{__("Confirm")} ></button>
-          <a className="goals-create-btn-cancel btn" href="/">{__("Cancel")}</a>
+          <a className="goals-create-btn-cancel btn" href={this.props.goal.from}>{__("Cancel")}</a>
         </form>
       </div>
     )

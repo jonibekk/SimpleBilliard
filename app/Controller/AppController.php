@@ -145,7 +145,8 @@ class AppController extends BaseController
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __(
-            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App."));
+            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
+            __("You can use Goalous on Web and on Mobile App."));
         $this->set('meta_description', $this->meta_description);
 
         $this->_setAppLanguage();
@@ -544,7 +545,7 @@ class AppController extends BaseController
             return false;
         }
         $current_team_id = $this->Session->read('current_team_id');
-        $request_team_id = $this->_getTeamIdFromRequest($this->request->params);
+        $request_team_id = $this->_getTeamIdFromRequest();
         //チームidが判別できない場合は何もせずreturn
         if (!$request_team_id) {
             return false;
@@ -566,8 +567,9 @@ class AppController extends BaseController
         return false;
     }
 
-    public function _getTeamIdFromRequest($request_params)
+    public function _getTeamIdFromRequest()
     {
+        $request_params = $this->request->params;
         if (empty($request_params) ||
             !isset($request_params['controller']) ||
             empty($request_params['controller'])
@@ -580,6 +582,9 @@ class AppController extends BaseController
         //チームID指定されてた場合はチームIDを返す
         if (isset($request_params['named']['team_id']) && !empty($request_params['named']['team_id'])) {
             return $request_params['named']['team_id'];
+        }
+        if ($this->request->query('team_id')) {
+            return $this->request->query('team_id');
         }
         //モデル名抽出
         $model_name = null;
@@ -628,6 +633,10 @@ class AppController extends BaseController
 
     public function _setViewValOnRightColumn()
     {
+        App::import('Service', 'GoalService');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $cached_my_goal_area_vals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         if ($cached_my_goal_area_vals !== false) {
             //このキャッシュはviewで利用する複数の変数を格納されているのでここで展開する。
@@ -639,12 +648,15 @@ class AppController extends BaseController
 
             $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
                 MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $my_goals = $GoalService->processGoals($my_goals);
             $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
             $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null,
                 $start_date,
                 $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $collabo_goals = $GoalService->processGoals($collabo_goals);
             $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
             $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
+            $my_previous_goals = $GoalService->processGoals($my_previous_goals);
             $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
             //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
             $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(

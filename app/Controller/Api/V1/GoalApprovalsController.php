@@ -161,6 +161,7 @@ class GoalApprovalsController extends ApiController
 
     /**
      * ゴール認定対象化API
+     * - IDチェック
      * - アクセス権限チェック
      * - 保存データ定義
      * - バリデーション(失敗したらレスポンス返す)
@@ -178,6 +179,12 @@ class GoalApprovalsController extends ApiController
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
         $collaboratorId = Hash::get($data, 'collaborator.id');
+
+        // IDが存在しない場合はNotFound
+        if (!$collaboratorId) {
+            $this->Pnotify->outError(__("Ooops, Not Found."));
+            return $this->_getResponseNotFound();
+        }
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
@@ -206,20 +213,16 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("Set as approval"));
-
-        //コーチーと自分の認定未処理件数を更新(キャッシュを削除
-        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
-        $coacheeUserId = Hash::get($coachee, 'Collaborator.user_id');
-        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
+        $this->Pnotify->outSuccess(__("Set as target"));
 
         // レスポンス
-        $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
-        return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
+        return $this->_getResponseSuccess(['collaborator_id' => $collaboratorId]);
     }
 
     /**
      * ゴール認定対象外化API
+     * - IDチェック
+     * - アクセス権限チェック
      * - バリデーション(失敗したらレスポンス返す)
      * - 認定ヒストリー新規登録(失敗したらレスポンス返す)
      * - コーチーへ通知
@@ -235,6 +238,12 @@ class GoalApprovalsController extends ApiController
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
         $collaboratorId = Hash::get($data, 'collaborator.id');
+
+        // IDが存在しない場合はNotFound
+        if (!$collaboratorId) {
+            $this->Pnotify->outError(__("Ooops, Not Found."));
+            return $this->_getResponseNotFound();
+        }
 
         // アクセス権限チェック
         $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
@@ -263,16 +272,69 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("remove from approval"));
-
-        //コーチーと自分の認定未処理件数を更新(キャッシュを削除
-        $coachee = $this->Goal->Collaborator->findById($collaboratorId);
-        $coacheeUserId = Hash::get($coachee, 'Collaborator.user_id');
-        $GoalApprovalService->deleteUnapprovedCountCache([$this->my_uid, $coacheeUserId]);
+        $this->Pnotify->outSuccess(__("Removed from target"));
 
         // レスポンス
-        $newApprovalHistoryId = $this->Goal->Collaborator->ApprovalHistory->getLastInsertID();
-        return $this->_getResponseSuccess(['approval_history_id' => $newApprovalHistoryId]);
+        return $this->_getResponseSuccess(['collaborator_id' => $collaboratorId]);
+    }
+
+    /**
+     * ゴール認定申請取り消しAPI
+     * - IDチェック
+     * - アクセス権限チェック
+     * - ステータス変更保存処理
+     * - コーチへ通知
+     * - Mixpanelでトラッキング
+     * - コラボIDを返却
+     *
+     * @return CakeResponse
+     */
+    public function post_withdraw()
+    {
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $myUserId = $this->Auth->user('id');
+        $collaboratorId = Hash::get($this->request->data, 'collaborator.id');
+
+        // IDが存在しない場合はNotFound
+        if (!$collaboratorId) {
+            $this->Pnotify->outError(__("Ooops, Not Found."));
+            return $this->_getResponseNotFound();
+        }
+
+        // アクセス権限チェック
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($collaboratorId, $myUserId);
+        if (!$canAccess) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
+        }
+
+        // 保存データ定義
+        $saveData = $GoalApprovalService->generateWithdrawSaveData($collaboratorId);
+
+        // 保存処理
+        $response = $this->_postApproval($saveData);
+        if ($response !== true) {
+            return $response;
+        }
+
+        // コーチへ通知
+        $goalId = Hash::get($this->Goal->Collaborator->findById($collaboratorId), 'Collaborator.goal_id');
+        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL);
+
+        // Mixpanelのトラッキング
+        // TODO: 現状、Mixpanelのトラッキングに関して実装の抜け漏れが結構あるため、後ほど他の箇所と合わせて一括で整備する
+        //       このコードは後ほどパラメータを変えた上でコメントアウトを外す
+        // $this->_trackApprovalToMixpanel(
+        //     MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
+        //     MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
+        //     $collaboratorId
+        // );
+
+        // リストページに表示する通知カード
+        $this->Pnotify->outSuccess(__("Has withdrawn"));
+
+        // レスポンス
+        return $this->_getResponseSuccess(['collaborator_id' => $collaboratorId]);
     }
 
     /**
@@ -333,6 +395,12 @@ class GoalApprovalsController extends ApiController
         return true;
     }
 
+    /**
+     * ゴール認定系のMixpanelトラッキング
+     * @param  integer $trackType
+     * @param  integer $memberType
+     * @param  integer $collaboratorId
+     */
     function _trackApprovalToMixpanel($trackType, $memberType, $collaboratorId)
     {
         $collaborator = $this->Goal->Collaborator->findById($collaboratorId);

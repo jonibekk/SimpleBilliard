@@ -199,30 +199,6 @@ $kr_count = 0;
             <div class="dashboard-goals-card-body shadow-default">
                 <?php if (isset($goal['Goal']['id'])): ?>
                     <div class="goalsCard-krSeek">
-                        <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
-
-                            <!-- 認定待ちと残り日数 -->
-                            <!-- <div class="pull-right font_12px">
-                                <?php if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
-                                    <?= __("%d days pass", $limit_day * -1) ?>
-                                <?php else: ?>
-                                    <?php if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
-                                        <?php if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
-                                            <span style="color:red"><?= __("Waiting for approval") ?></span>
-                                        <?php elseif ($goal['Goal']['owner_approval_flag'] === '1') : ?>
-                                            <span style="color:#00BFFF"><?= __("In Evaluation") ?></span>
-                                        <?php elseif ($goal['Goal']['owner_approval_flag'] === '2') : ?>
-                                            <?= __("Out of Evaluation") ?>
-                                        <?php elseif ($goal['Goal']['owner_approval_flag'] === '3') : ?>
-                                            <span style="color:red"><?= __("Waiting for modified") ?></span>
-                                        <?php endif ?>
-                                        ・
-                                    <?php endif; ?>
-                                    <?= __("%d days left", $limit_day) ?>
-                                <?php endif; ?>
-                            </div> -->
-                        <?php endif; ?>
-
 
                         <ul class="dashboard-goals-card-body-krs-wrap">
                             <?= $this->element('Goal/key_result_items',
@@ -268,7 +244,7 @@ $kr_count = 0;
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __("Add Key Result") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status"><?= $this->Goal->displayApprovalStatus($goal['MyCollabo'][0]) ?></p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= $this->Goal->displayApprovalStatus($goal['TargetCollabo']) ?></p>
                             </li>
                         </ul>
                     </div>

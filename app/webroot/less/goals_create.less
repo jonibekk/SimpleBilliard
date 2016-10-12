@@ -149,7 +149,7 @@
   &-input {
     &-label {
       display: block;
-      font-size: @fontLarge;
+      font-size: @fontMedium;
       font-weight: normal;
       margin-bottom: @spacing/2;
       &-discription {
@@ -209,7 +209,6 @@
       overflow: hidden;
       &-preview {
         display: inline-block;
-        float: left;
         width: 96px;
         height: 96px;
       }
@@ -217,6 +216,8 @@
         vertical-align: top;
         display: inline-block;
         padding: 0 @spacing/2;
+        height: 96px;
+        line-height:96px;
         &-text {
           margin-bottom: @spacing;
         }
@@ -287,4 +288,11 @@
     }
   }
 
+}
+
+.goals-edit {
+  &-subject {
+    font-size: @fontLarge;
+    font-weight: bold;
+  }
 }
