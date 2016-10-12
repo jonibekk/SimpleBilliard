@@ -6,8 +6,13 @@ App::import('Service', 'AppService');
  */
 class KeyResultService extends AppService
 {
-    function buildKrUnitsSelectList($units_config)
+    /**
+     * KRのValueUnitセレクトボックス値の生成
+     * @return array $unit_select_list
+     */
+    function buildKrUnitsSelectList()
     {
+        $units_config = Configure::read("label.units");
         $unit_select_list = [];
         foreach($units_config as $v) {
             $unit_select_list[$v['id']] = "{$v['label']}({$v['unit']})";

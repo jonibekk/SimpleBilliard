@@ -225,7 +225,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList(Configure::read("label.units"));
+        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
@@ -754,7 +754,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList(Configure::read("label.units"));
+        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
