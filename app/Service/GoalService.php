@@ -16,6 +16,7 @@ App::uses('ApprovalHistory', 'Model');
 App::uses('Collaborator', 'Model');
 App::uses('Post', 'Model');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'KeyResultService');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
 
@@ -132,7 +133,10 @@ class GoalService extends AppService
         }
 
         if (in_array(self::EXTEND_TOP_KEY_RESULT, $extends)) {
-            $data['top_key_result'] = Hash::extract($Goal->KeyResult->getTkr($data['id']), 'KeyResult');
+            /** @var KeyResultService $KeyResultService */
+            $KeyResultService = ClassRegistry::init("KeyResultService");
+            $kr = Hash::extract($Goal->KeyResult->getTkr($data['id']), 'KeyResult');
+            $data['top_key_result'] = $KeyResultService->processKeyResult($kr);
         }
         if (in_array(self::EXTEND_COLLABORATOR, $extends)) {
             $data['collaborator'] = Hash::extract($Goal->Collaborator->getUnique($userId, $data['id']), 'Collaborator');

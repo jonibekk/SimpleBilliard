@@ -31,9 +31,10 @@ export default class DetailComponent extends React.Component {
     const page_title = detail.collaborator.is_mine ? __("Goal details") : __("Set as a target for evaluation?")
     const coachee_footer = (() => {
       return <CoacheeFooter validationErrors={ detail.validationErrors }
-                            is_leader={ detail.collaborator.is_leader }
+                            collaborator={ detail.collaborator }
                             goal_id={ detail.collaborator.goal.id }
-                            current_url={this.props.location.pathname}/>;
+                            current_url={this.props.location.pathname}
+                            handleClickWithdraw={ () => this.props.postWithdraw(this.props.params.collaborator_id) } />;
     })()
     const coach_footer = (() => {
       return <CoachFooter validationErrors={ detail.validationErrors }
@@ -65,5 +66,6 @@ DetailComponent.propTypes = {
   fetchCollaborator: React.PropTypes.func.isRequired,
   postSetAsTarget: React.PropTypes.func.isRequired,
   postRemoveFromTarget: React.PropTypes.func.isRequired,
-  initDetailPage: React.PropTypes.func.isRequired
+  initDetailPage: React.PropTypes.func.isRequired,
+  postWithdraw: React.PropTypes.func.isRequired
 }

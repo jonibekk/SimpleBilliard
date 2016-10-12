@@ -197,7 +197,7 @@ class MixpanelComponent extends Object
                 Collaborator::APPROVAL_STATUS_NEW           => "Pending approval",
                 Collaborator::APPROVAL_STATUS_REAPPLICATION => "Evaluable",
                 Collaborator::APPROVAL_STATUS_DONE          => "Not evaluable",
-                Collaborator::APPROVAL_STATUS_WITHDRAW      => "Pending modification",
+                Collaborator::APPROVAL_STATUS_WITHDRAWN      => "Pending modification",
             ];
             if (isset($collabo['Collaborator']['approval_status'])) {
                 $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['approval_status']];

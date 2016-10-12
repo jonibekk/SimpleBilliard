@@ -2,6 +2,7 @@
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
+App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
@@ -1048,7 +1049,7 @@ class GoalsController extends AppController
                         case Collaborator::APPROVAL_STATUS_DONE:
                             $approval_status = __("Not Evaluable");
                             break;
-                        case Collaborator::APPROVAL_STATUS_WITHDRAW:
+                        case Collaborator::APPROVAL_STATUS_WITHDRAWN:
                             $approval_status = __("Pending modification");
                             break;
                     }
@@ -1372,6 +1373,9 @@ class GoalsController extends AppController
      */
     function view_krs()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
@@ -1389,6 +1393,7 @@ class GoalsController extends AppController
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
+        $key_results = $KeyResultService->processKeyResults($key_results);
         $this->set('key_results', $key_results);
 
         // 未完了のキーリザルト数

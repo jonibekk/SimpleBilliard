@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-07 14:55+0900\n"
+"PO-Revision-Date: 2016-10-07 16:45+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1126,14 +1126,18 @@ msgid "You don't have access right to this page."
 msgstr "この画面にはアクセスできません。"
 
 #: Controller/Api/V1/GoalApprovalsController.php:209
-msgid "Set as approval"
-msgstr "認定待ち"
+msgid "Set as target"
+msgstr "評価対象にしました"
 
 #: Controller/Api/V1/GoalApprovalsController.php:266
-msgid "remove from approval"
-msgstr "サークルから外す"
+msgid "Removed from target"
+msgstr "評価対象外にしました"
 
-#: Controller/Api/V1/GoalApprovalsController.php:330 Model/Evaluation.php:279
+#: Controller/Api/V1/GoalApprovalsController.php:312
+msgid "Has withdrawn"
+msgstr "申請を取り下げました"
+
+#: Controller/Api/V1/GoalApprovalsController.php:376 Model/Evaluation.php:279
 msgid "Failed to save."
 msgstr "保存処理に失敗しました。"
 
@@ -1211,7 +1215,7 @@ msgstr "公開"
 msgid "Secret"
 msgstr "秘密"
 
-#: Model/Collaborator.php:48 View/Elements/cake_variables.ctp:267;487
+#: Model/Collaborator.php:48 View/Elements/cake_variables.ctp:267;488
 #: View/Elements/my_goals_area.ctp:91
 #: View/Elements/Goal/modal_goal_description.ctp:109
 #: View/Evaluations/view.ctp:361 View/GoalApproval/done.ctp:108
@@ -1231,7 +1235,7 @@ msgstr "リーダー"
 msgid "This term can not be frozen."
 msgstr "この期は凍結できません。"
 
-#: Model/Evaluation.php:144;148;636 Model/NotifySetting.php:429
+#: Model/Evaluation.php:144;148;636 Model/NotifySetting.php:437
 msgid "You"
 msgstr "あなた"
 
@@ -1438,27 +1442,27 @@ msgstr "入力必須項目です。"
 msgid "Prease select within %d count maximum."
 msgstr ""
 
-#: Model/NotifySetting.php:243
+#: Model/NotifySetting.php:251
 msgid "Important ones"
 msgstr "重要なもの"
 
-#: Model/NotifySetting.php:244
+#: Model/NotifySetting.php:252
 msgid "Off"
 msgstr "オフ"
 
-#: Model/NotifySetting.php:412;482;488
+#: Model/NotifySetting.php:420;490;496
 msgid ","
 msgstr "、"
 
-#: Model/NotifySetting.php:441 View/Helper/GoalHelper.php:85
+#: Model/NotifySetting.php:449 View/Helper/GoalHelper.php:85
 msgid "Other %d members"
 msgstr "他%d人"
 
-#: Model/NotifySetting.php:471
+#: Model/NotifySetting.php:479
 msgid "Other %d circles"
 msgstr "他%dサークル"
 
-#: Model/NotifySetting.php:478;484
+#: Model/NotifySetting.php:486;492
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> posted in <span "
 "class=\"notify-card-head-target\">%3$s</span>."
@@ -1466,11 +1470,11 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
 "\"notify-card-head-target\">%3$s</span>に投稿しました。"
 
-#: Model/NotifySetting.php:481;487;496;501;520;526;534;538
+#: Model/NotifySetting.php:489;495;504;509;528;534;542;546
 msgid "and %s others"
 msgstr "と%s人"
 
-#: Model/NotifySetting.php:493;498
+#: Model/NotifySetting.php:501;506
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span "
 "class=\"notify-card-head-target\">your </span>post."
@@ -1478,11 +1482,11 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
 "\"notify-card-head-target\">あなた</span>の投稿にコメントしました。"
 
-#: Model/NotifySetting.php:511;757 View/Evaluations/index.ctp:59
+#: Model/NotifySetting.php:519;781 View/Evaluations/index.ctp:59
 msgid "his/her"
 msgstr "自分"
 
-#: Model/NotifySetting.php:517;523
+#: Model/NotifySetting.php:525;531
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on "
 "<span class=\"notify-card-head-target\">%3$s</span>'s post."
@@ -1490,20 +1494,20 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class="
 "\"notify-card-head-target\">%3$s</span>の投稿にコメントしました。"
 
-#: Model/NotifySetting.php:532;536
+#: Model/NotifySetting.php:540;544
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
 "た。"
 
-#: Model/NotifySetting.php:544;548
+#: Model/NotifySetting.php:552;556
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設"
 "定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
 
-#: Model/NotifySetting.php:555;559
+#: Model/NotifySetting.php:563;567
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> add <span class=\"notify-"
 "card-head-target\">you </span>to the circle."
@@ -1511,7 +1515,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルに<span class="
 "\"notify-card-head-target\">あなた</span>を追加しました。"
 
-#: Model/NotifySetting.php:569;574
+#: Model/NotifySetting.php:577;582
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has followed <span class="
 "\"notify-card-head-target\">%2$s</span>."
@@ -1519,7 +1523,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>をフォローしました。"
 
-#: Model/NotifySetting.php:585;590;681;686
+#: Model/NotifySetting.php:593;598;689;694
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has collaborate with "
 "<span class=\"notify-card-head-target\">%2$s</span>."
@@ -1527,7 +1531,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコラボりました。"
 
-#: Model/NotifySetting.php:601;606
+#: Model/NotifySetting.php:609;614
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has changed information "
 "on <span class=\"notify-card-head-target\">%2$s</span>."
@@ -1535,7 +1539,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>の内容を変更しました。"
 
-#: Model/NotifySetting.php:617;622
+#: Model/NotifySetting.php:625;630
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has evaluated <span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -1543,7 +1547,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を評価対象としました。"
 
-#: Model/NotifySetting.php:633;638
+#: Model/NotifySetting.php:641;646
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> requested <span class="
 "\"notify-card-head-target\">%2$s</span> to modify."
@@ -1551,7 +1555,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>に修正依頼をしました。"
 
-#: Model/NotifySetting.php:649;654
+#: Model/NotifySetting.php:657;662
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has not evaluated <span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -1559,7 +1563,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を評価対象外としました。"
 
-#: Model/NotifySetting.php:665;670
+#: Model/NotifySetting.php:673;678
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> created <span class="
 "\"notify-card-head-target\">%2$s</span>."
@@ -1567,7 +1571,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を作成しました。"
 
-#: Model/NotifySetting.php:697;702
+#: Model/NotifySetting.php:705;710
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has changed the role "
 "with <span class=\"notify-card-head-target\">%2$s</span>."
@@ -1575,7 +1579,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>の役割を変更しました。"
 
-#: Model/NotifySetting.php:713;718
+#: Model/NotifySetting.php:721;726
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has updated <span class="
 "\"notify-card-head-target\">%2$s</span>."
@@ -1583,27 +1587,35 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を修正しました。"
 
-#: Model/NotifySetting.php:725
+#: Model/NotifySetting.php:737;742
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has withdrawn <span "
+"class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>の申請を取り下げました。"
+
+#: Model/NotifySetting.php:749
 msgid "Begin evaluation term."
 msgstr "評価期間に入りました。"
 
-#: Model/NotifySetting.php:728
+#: Model/NotifySetting.php:752
 msgid "Fix evaluation."
 msgstr "評価が凍結されました。"
 
-#: Model/NotifySetting.php:731
+#: Model/NotifySetting.php:755
 msgid "Evaluate yourself."
 msgstr "自己評価を実施してください。"
 
-#: Model/NotifySetting.php:734
+#: Model/NotifySetting.php:758
 msgid "Set the Evaluatees score."
 msgstr "被評価者の評価を実施してください。"
 
-#: Model/NotifySetting.php:737
+#: Model/NotifySetting.php:761
 msgid "Last evaluator finished evaluation."
 msgstr "最終者が評価を実施しました。"
 
-#: Model/NotifySetting.php:741;745
+#: Model/NotifySetting.php:765;769
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> commented on <span class="
 "\"notify-card-head-target\">your </span>action."
@@ -1611,7 +1623,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">あなた</span>のアクションにコメントしました。"
 
-#: Model/NotifySetting.php:763;768
+#: Model/NotifySetting.php:787;792
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span "
 "class=\"notify-card-head-target\">%2$s</span>'s action"
@@ -1619,7 +1631,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>も<span class=\"notify-"
 "card-head-target\">%2$s</span>のアクションにコメントしました。"
 
-#: Model/NotifySetting.php:780;785
+#: Model/NotifySetting.php:804;809
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added an action on<span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -1627,16 +1639,16 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にアクションしました。"
 
-#: Model/NotifySetting.php:794;796
+#: Model/NotifySetting.php:818;820
 msgid "<span class=\"notify-card-head-target\">%1$s</span> joined this team."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>がチームに参加しました。"
 
-#: Model/NotifySetting.php:801;805
+#: Model/NotifySetting.php:825;829
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 
-#: Model/NotifySetting.php:803;807
+#: Model/NotifySetting.php:827;831
 msgid " +%s"
 msgstr " +%s"
 
@@ -3218,94 +3230,100 @@ msgstr "詳細を追加"
 msgid "Save and share"
 msgstr "保存して共有する"
 
-#: View/Elements/cake_variables.ctp:476
+#: View/Elements/cake_variables.ctp:475
+#: View/Elements/Goal/goal_menu_on_my_page.ctp:36
+#: View/Elements/Goal/my_goal_area_items.ctp:114 View/Goals/add.ctp:32
+msgid "Edit goal"
+msgstr "ゴールを編集"
+
+#: View/Elements/cake_variables.ctp:477
 msgid "Set as a target for evaluation?"
 msgstr "評価対象にしますか？"
 
-#: View/Elements/cake_variables.ctp:478
+#: View/Elements/cake_variables.ctp:479
 msgid "Do you think this Top Key Result is clear ?"
 msgstr "このトップKRは明確ですか？"
 
-#: View/Elements/cake_variables.ctp:479
+#: View/Elements/cake_variables.ctp:480
 msgid "Yes"
 msgstr "はい"
 
-#: View/Elements/cake_variables.ctp:480
+#: View/Elements/cake_variables.ctp:481
 msgid "No"
 msgstr "いいえ"
 
-#: View/Elements/cake_variables.ctp:481
+#: View/Elements/cake_variables.ctp:482
 msgid ""
 "Do you think this Top Key Result is the most important to achieve the goal?"
 msgstr "このトップKRはゴールの達成に最重要ですか？"
 
-#: View/Elements/cake_variables.ctp:482
+#: View/Elements/cake_variables.ctp:483
 msgid "Add as a target for evaluation ?"
 msgstr "このゴールを評価対象にしますか？"
 
-#: View/Elements/cake_variables.ctp:483
+#: View/Elements/cake_variables.ctp:484
 msgid "Add your comment (optional)"
 msgstr "コメントする(オプション)"
 
-#: View/Elements/cake_variables.ctp:484
+#: View/Elements/cake_variables.ctp:485
 msgid "View Previous"
 msgstr "前の履歴を見る"
 
-#: View/Elements/cake_variables.ctp:485
+#: View/Elements/cake_variables.ctp:486
 msgid "View all %s comments"
 msgstr "すべてのコメントを見る(%s)"
 
-#: View/Elements/cake_variables.ctp:486
+#: View/Elements/cake_variables.ctp:487
 msgid "more"
 msgstr "もっと見る"
 
-#: View/Elements/cake_variables.ctp:491
+#: View/Elements/cake_variables.ctp:492
 msgid "Edit Goal"
 msgstr "ゴールを編集する"
 
-#: View/Elements/cake_variables.ctp:492
+#: View/Elements/cake_variables.ctp:493
 #: View/Elements/User/modal_delete_email.ctp:20
 msgid "Confirm"
 msgstr "確認"
 
-#: View/Elements/cake_variables.ctp:493 View/Elements/Team/invite.ctp:81
+#: View/Elements/cake_variables.ctp:494 View/Elements/Team/invite.ctp:81
 #: View/Setup/profile_image.ctp:14 View/Users/add_profile.ctp:194
 msgid "Skip"
 msgstr "スキップ"
 
-#: View/Elements/cake_variables.ctp:494
+#: View/Elements/cake_variables.ctp:495
 msgid "Save & Reapply"
 msgstr "保存して再申請する"
 
-#: View/Elements/cake_variables.ctp:495
+#: View/Elements/cake_variables.ctp:496
 msgid "Edit Role"
 msgstr "役割を編集する"
 
-#: View/Elements/cake_variables.ctp:496
+#: View/Elements/cake_variables.ctp:497
 msgid "Withdraw"
 msgstr "申請を取り下げる"
 
-#: View/Elements/cake_variables.ctp:497
+#: View/Elements/cake_variables.ctp:498
 msgid "Goal approval list"
 msgstr "ゴール認定リスト"
 
-#: View/Elements/cake_variables.ctp:498
+#: View/Elements/cake_variables.ctp:499
 msgid "New"
 msgstr "New"
 
-#: View/Elements/cake_variables.ctp:499
+#: View/Elements/cake_variables.ctp:500
 msgid "Reapply"
 msgstr "再申請"
 
-#: View/Elements/cake_variables.ctp:500
+#: View/Elements/cake_variables.ctp:501
 msgid "Evaluated"
 msgstr "評価対象"
 
-#: View/Elements/cake_variables.ctp:501
+#: View/Elements/cake_variables.ctp:502
 msgid "Not Evaluated"
 msgstr "非評価対象"
 
-#: View/Elements/cake_variables.ctp:502 View/GoalApproval/done.ctp:62
+#: View/Elements/cake_variables.ctp:503 View/GoalApproval/done.ctp:62
 #: View/GoalApproval/index.ctp:62
 msgid "Waiting"
 msgstr "処理待ち"
@@ -3321,6 +3339,29 @@ msgstr "ゴール詳細"
 #: View/Elements/cake_variables.ctp:505
 msgid "Add by pressing the Enter.(You can save maximum 5 labels)"
 msgstr "Enterを押すと追加されます。(最大5個まで登録可能)"
+
+#: View/Elements/cake_variables.ctp:506
+msgid "Withdrawn"
+msgstr "申請取り下げ"
+
+#: View/Elements/cake_variables.ctp:508
+msgid "Confirm this goal"
+msgstr "ゴール編集の確認"
+
+#: View/Elements/cake_variables.ctp:509
+msgid "Edit goal & top key result"
+msgstr "ゴールとトップKRを編集する"
+
+#: View/Elements/cake_variables.ctp:510
+#: View/Elements/modal_edit_circle.ctp:319
+#: View/Elements/Feed/comment_edit_form.ctp:71
+#: View/Elements/Feed/post_edit_form.ctp:69
+#: View/Elements/User/account_setting.ctp:146
+#: View/Elements/User/modal_change_password.ctp:61
+#: View/Elements/User/notify_setting.ctp:91
+#: View/Elements/User/profile_setting.ctp:303
+msgid "Save changes"
+msgstr "変更を保存"
 
 #: View/Elements/circle_list.ctp:78
 #: View/Elements/circle_list_in_hamburger.ctp:74
@@ -3696,16 +3737,6 @@ msgstr ""
 #: View/Elements/modal_edit_circle.ctp:245
 msgid "Remove from the circle"
 msgstr "サークルから外す"
-
-#: View/Elements/modal_edit_circle.ctp:319
-#: View/Elements/Feed/comment_edit_form.ctp:71
-#: View/Elements/Feed/post_edit_form.ctp:69
-#: View/Elements/User/account_setting.ctp:146
-#: View/Elements/User/modal_change_password.ctp:61
-#: View/Elements/User/notify_setting.ctp:91
-#: View/Elements/User/profile_setting.ctp:303
-msgid "Save changes"
-msgstr "変更を保存"
 
 #: View/Elements/modal_edit_circle.ctp:330
 msgid "Delete circle"
@@ -4128,11 +4159,6 @@ msgstr "アクションを追加する"
 #: View/Goals/view_krs.ctp:44
 msgid "Add Key Result"
 msgstr "達成要素を追加"
-
-#: View/Elements/Goal/goal_menu_on_my_page.ctp:36
-#: View/Elements/Goal/my_goal_area_items.ctp:114 View/Goals/add.ctp:32
-msgid "Edit goal"
-msgstr "ゴールを編集"
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:42
 #: View/Elements/Goal/my_goal_area_items.ctp:120
@@ -6850,44 +6876,6 @@ msgstr "passwordSameCheck"
 #: Model/User.php:validation for field cover_photo
 msgid "imageMinWidthHeight"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Set as target"
-#~ msgstr "評価対象にする"
-
-#, fuzzy
-#~ msgid "Has withdrawn"
-#~ msgstr "申請を取り下げる"
-
-#, fuzzy
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> has withdrawn <span "
-#~ "class=\"notify-card-head-target\">%2$s</span>."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
-#~ "card-head-target\">%2$s</span>を修正しました。"
-
-#, fuzzy
-#~ msgid "Withdrawn"
-#~ msgstr "申請を取り下げる"
-
-#~ msgid "Owner"
-#~ msgstr "オーナー"
-
-#~ msgid "Display on Home feed"
-#~ msgstr "ホームフィードに表示する"
-
-#~ msgid "%d days pass"
-#~ msgstr "%d日経過"
-
-#~ msgid "Waiting for modified"
-#~ msgstr "修正待ち"
-
-#~ msgid "%d days left"
-#~ msgstr "残り%d日"
-
-#~ msgid "Commented"
-#~ msgstr "コメントしました"
 
 #~ msgid "Move to Done."
 #~ msgstr "処理済みに移動しました。"

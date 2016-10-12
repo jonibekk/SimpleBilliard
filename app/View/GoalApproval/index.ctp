@@ -163,7 +163,7 @@
                                                 'div'      => false,
                                                 'disabled' => 'disabled'
                                             ]) ?>
-                                    <?php } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_WITHDRAW) { ?>
+                                    <?php } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_WITHDRAWN) { ?>
                                         <a class="btn btn-primary approval_button"
                                            href="<?= $this->Html->url([
                                                'controller' => 'goals',
