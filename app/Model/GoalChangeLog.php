@@ -60,7 +60,6 @@ class GoalChangeLog extends AppModel
         ];
         $this->create();
         $ret = $this->save($data);
-//        debug($this->getDataSource()->getLog());
         return $ret;
     }
 
