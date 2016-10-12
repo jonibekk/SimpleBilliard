@@ -4,10 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * TkrChangeLog Model
  *
- * @property Team      $Team
  * @property Goal      $Goal
  * @property KeyResult $KeyResult
- * @property User      $User
  */
 class TkrChangeLog extends AppModel
 {
@@ -36,10 +34,8 @@ class TkrChangeLog extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Team',
         'Goal',
         'KeyResult',
-        'User',
     ];
 
     /**
@@ -47,22 +43,20 @@ class TkrChangeLog extends AppModel
      * dataフィールドにはmaspackした上でbase64_encodeして格納する。
      *
      * @param $goalId
-     * @param $userId
      *
      * @return bool|mixed
      */
-    function saveSnapshot($goalId, $userId)
+    function saveSnapshot($goalId)
     {
-        $keyResult = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
+        $keyResult = Hash::get($this->KeyResult->getTkr($goalId), 'KeyResult');
         if (empty($keyResult)) {
             return false;
         }
         /** @noinspection PhpUndefinedFunctionInspection */
         $keyResultData = msgpack_pack($keyResult);
         $data = [
-            'user_id'       => $userId,
             'team_id'       => $this->current_team_id,
-            'key_result_id' => $keyResultData['id'],
+            'key_result_id' => $keyResult['id'],
             'goal_id'       => $goalId,
             'data'          => base64_encode($keyResultData),
         ];
@@ -75,15 +69,13 @@ class TkrChangeLog extends AppModel
      * ゴールの最新のスナップショットを取得
      *
      * @param $goalId
-     * @param $userId
      *
      * @return array|null
      */
-    function findLatestSnapshot($goalId, $userId)
+    function findLatestSnapshot($goalId)
     {
         $data = $this->find('first', [
             'conditions' => [
-                'user_id' => $userId,
                 'goal_id' => $goalId,
             ],
             'order'      => ['id' => 'desc']

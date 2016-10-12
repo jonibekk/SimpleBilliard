@@ -37,14 +37,6 @@ class GoalChangeLogFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'ゴールID(belongsToでGoalモデルに関連)'
         ],
-        'user_id'         => [
-            'type'     => 'biginteger',
-            'null'     => false,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '作成者ID(belongsToでUserモデルに関連)'
-        ],
         'data'            => [
             'type'    => 'binary',
             'null'    => false,
@@ -79,7 +71,6 @@ class GoalChangeLogFixture extends CakeTestFixtureEx
             'team_id'  => ['column' => 'team_id', 'unique' => 0],
             'goal_id'  => ['column' => 'goal_id', 'unique' => 0],
             'modified' => ['column' => 'modified', 'unique' => 0],
-            'user_id'  => ['column' => 'user_id', 'unique' => 0]
         ],
         'tableParameters' => ['charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB']
     ];

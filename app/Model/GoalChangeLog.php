@@ -4,9 +4,7 @@ App::uses('AppModel', 'Model');
 /**
  * GoalChangeLog Model
  *
- * @property Team $Team
  * @property Goal $Goal
- * @property User $User
  */
 class GoalChangeLog extends AppModel
 {
@@ -35,9 +33,7 @@ class GoalChangeLog extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Team',
         'Goal',
-        'User',
     ];
 
     /**
@@ -45,26 +41,26 @@ class GoalChangeLog extends AppModel
      * dataフィールドにはmaspackした上でbase64_encodeして格納する。
      *
      * @param $goalId
-     * @param $userId
      *
      * @return bool|mixed
      */
-    function saveSnapshot($goalId, $userId)
+    function saveSnapshot($goalId)
     {
-        $goal = Hash::get($this->Goal->findById($goalId), 'Goal');
+        $goal = $this->Goal->find('first', ['conditions' => ['id' => $goalId]]);
+        $goal = Hash::get($goal, 'Goal');
         if (empty($goal)) {
             return false;
         }
         /** @noinspection PhpUndefinedFunctionInspection */
         $goalData = msgpack_pack($goal);
         $data = [
-            'user_id' => $userId,
             'team_id' => $this->current_team_id,
             'goal_id' => $goalId,
             'data'    => base64_encode($goalData),
         ];
         $this->create();
         $ret = $this->save($data);
+//        debug($this->getDataSource()->getLog());
         return $ret;
     }
 
@@ -72,15 +68,13 @@ class GoalChangeLog extends AppModel
      * ゴールの最新のスナップショットを取得
      *
      * @param $goalId
-     * @param $userId
      *
      * @return array|null
      */
-    function findLatestSnapshot($goalId, $userId)
+    function findLatestSnapshot($goalId)
     {
         $data = $this->find('first', [
             'conditions' => [
-                'user_id' => $userId,
                 'goal_id' => $goalId,
             ],
             'order'      => ['id' => 'desc']

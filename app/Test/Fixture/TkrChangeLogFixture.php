@@ -45,14 +45,6 @@ class TkrChangeLogFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'キーリザルトID(belongsToでKeyResultモデルに関連)'
         ),
-        'user_id'         => array(
-            'type'     => 'biginteger',
-            'null'     => false,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '作成者ID(belongsToでUserモデルに関連)'
-        ),
         'data'            => array(
             'type'    => 'binary',
             'null'    => false,
@@ -87,7 +79,6 @@ class TkrChangeLogFixture extends CakeTestFixtureEx
             'team_id'       => array('column' => 'team_id', 'unique' => 0),
             'goal_id'       => array('column' => 'goal_id', 'unique' => 0),
             'modified'      => array('column' => 'modified', 'unique' => 0),
-            'user_id'       => array('column' => 'user_id', 'unique' => 0),
             'key_result_id' => array('column' => 'key_result_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')

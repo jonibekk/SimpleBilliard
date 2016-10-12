@@ -45,20 +45,13 @@ class GoalChangeLogTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testSaveSnapshot()
+    function testSaveAndGetSnapshot()
     {
         $this->_setDefault();
-        $this->GoalChangeLog->saveSnapshot(1, 1);
-        $snapshot = $this->GoalChangeLog->findLatestSnapshot(1, 1);
+        $this->GoalChangeLog->saveSnapshot(1);
+        $snapshot = $this->GoalChangeLog->findLatestSnapshot(1);
         $this->assertNotEmpty($snapshot);
-    }
-
-    function testGetLatestSnapshot()
-    {
-        $this->_setDefault();
-        $this->GoalChangeLog->saveSnapshot(1, 1);
-        $snapshot = $this->GoalChangeLog->findLatestSnapshot(1, 1);
-        $this->assertNotEmpty($snapshot);
+        $this->assertNotEmpty($snapshot['data']);
     }
 
     function _setDefault()

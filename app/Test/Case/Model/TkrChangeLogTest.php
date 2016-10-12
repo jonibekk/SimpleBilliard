@@ -44,9 +44,25 @@ class TkrChangeLogTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testSaveAndGetSnapshot()
     {
+        $this->_setDefault();
+        //データの準備
+        $kr = $this->TkrChangeLog->KeyResult->findByGoalId(1);
+        $kr['KeyResult']['tkr_flg'] = true;
+        $this->TkrChangeLog->KeyResult->save($kr);
 
+        $this->TkrChangeLog->saveSnapshot(1);
+        $snapshot = $this->TkrChangeLog->findLatestSnapshot(1);
+        $this->assertNotEmpty($snapshot);
+        $this->assertNotEmpty($snapshot['data']);
+    }
+
+    function _setDefault()
+    {
+        $this->TkrChangeLog->current_team_id = 1;
+        $this->TkrChangeLog->Goal->current_team_id = 1;
+        $this->TkrChangeLog->KeyResult->current_team_id = 1;
     }
 
 }
