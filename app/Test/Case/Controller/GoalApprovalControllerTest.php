@@ -103,7 +103,7 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         $GoalApprovals->TeamMember->id = 1;
         $GoalApprovals->TeamMember->saveField('evaluation_enable_flg', false);
         $GoalApprovals->Collaborator->id = 1;
-        $GoalApprovals->Collaborator->saveField('approval_status', Collaborator::APPROVAL_STATUS_WITHDRAW);
+        $GoalApprovals->Collaborator->saveField('approval_status', Collaborator::APPROVAL_STATUS_WITHDRAWN);
         $this->testAction('/goal_approval/index', ['method' => 'GET',]);
     }
 
@@ -348,7 +348,7 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
 
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $approval_status = $res['Collaborator']['approval_status'];
-        $this->assertEquals($approval_status, Collaborator::APPROVAL_STATUS_WITHDRAW);
+        $this->assertEquals($approval_status, Collaborator::APPROVAL_STATUS_WITHDRAWN);
     }
 
     function testTrackToMixpanel()
@@ -678,4 +678,3 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         return $GoalApproval;
     }
 }
-

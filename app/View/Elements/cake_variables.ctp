@@ -503,6 +503,7 @@
             "Waiting for approval": "<?=__("Waiting for approval")?>",
             "Goal details": "<?= __("Goal details") ?>",
             "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
+            "Withdrawn": "<?=__("Withdrawn")?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
             "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
