@@ -11,11 +11,11 @@ const initialState = {
 
 export default function list(state = initialState, action) {
   switch (action.type) {
-    case types.INIT_COLLABORATORS:
+    case types.INIT_GOAL_MEMBERS:
       return Object.assign({}, state, {
         goal_members: action.goal_members
       })
-    case types.ADD_COLLABORATORS:
+    case types.ADD_GOAL_MEMBERS:
       return Object.assign({}, state, {
         goal_members: [...state.goal_members, ...action.goal_members]
       })
@@ -23,11 +23,11 @@ export default function list(state = initialState, action) {
       return Object.assign({}, state, {
         application_count: action.application_count
       })
-    case types.FETCHING_COLLABORATORS:
+    case types.FETCHING_GOAL_MEMBERS:
       return Object.assign({}, state, {
         fetching_goal_members: true
       })
-    case types.FINISHED_FETCHING_COLLABORATORS:
+    case types.FINISHED_FETCHING_GOAL_MEMBERS:
       return Object.assign({}, state, {
         fetching_goal_members: false
       })

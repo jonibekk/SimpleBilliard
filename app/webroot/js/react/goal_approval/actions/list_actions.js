@@ -44,7 +44,7 @@ export function fetchGoalMembers(is_initialize = false) {
 }
 
 export function initGoalMembers(goal_members) {
-  return {type: types.INIT_COLLABORATORS, goal_members}
+  return {type: types.INIT_GOAL_MEMBERS, goal_members}
 }
 
 export function setApplicationCount(application_count) {
@@ -52,15 +52,15 @@ export function setApplicationCount(application_count) {
 }
 
 export function addGoalMembers(goal_members) {
-  return {type: types.ADD_COLLABORATORS, goal_members}
+  return {type: types.ADD_GOAL_MEMBERS, goal_members}
 }
 
 export function fetchingGoalMembers() {
-  return {type: types.FETCHING_COLLABORATORS}
+  return {type: types.FETCHING_GOAL_MEMBERS}
 }
 
 export function finishedFetchingGoalMembers() {
-  return {type: types.FINISHED_FETCHING_COLLABORATORS}
+  return {type: types.FINISHED_FETCHING_GOAL_MEMBERS}
 }
 
 export function setNextPagingApi(next_getting_api) {
