@@ -61,9 +61,13 @@ class GoalApprovalsController extends ApiController
         $teamId = $this->Session->read('current_team_id');
         $collaborators = $this->_processCollaborators($userId, $teamId, $collaborators);
 
+        // 認定リスト全件数を取得
+        $allApprovalCount = count($collaborators);
+
         $res = [
-            'application_count' => $applicationCount,
-            'collaborators'     => $collaborators
+            'application_count'  => $applicationCount,
+            'all_approval_count' => $allApprovalCount,
+            'collaborators'      => $collaborators
         ];
         return $this->_getResponseSuccess($res);
     }

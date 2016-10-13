@@ -3,6 +3,7 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   collaborators: [],
   application_count: 0,
+  all_approval_count: 0,
   fetching_collaborators: false,
   next_getting_api: null,
   // TODO: 第一フェーズではページネーションは行わないので全件表示する
@@ -22,6 +23,10 @@ export default function list(state = initialState, action) {
     case types.SET_APPLICATION_COUNT:
       return Object.assign({}, state, {
         application_count: action.application_count
+      })
+    case types.SET_ALL_APPROVAL_COUNT:
+      return Object.assign({}, state, {
+        all_approval_count: action.all_approval_count
       })
     case types.FETCHING_COLLABORATORS:
       return Object.assign({}, state, {

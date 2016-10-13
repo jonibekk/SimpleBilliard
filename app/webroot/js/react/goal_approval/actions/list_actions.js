@@ -23,6 +23,7 @@ export function fetchCollaborators(is_initialize = false) {
       if(is_initialize) {
         dispatch(initCollaborators(response.data.data.collaborators))
         dispatch(setApplicationCount(response.data.data.application_count))
+        dispatch(setAllApprovalCount(response.data.data.all_approval_count))
         dispatch(setNextPagingApi('/api/v1/goal_approvals/list'))
         /* eslint-disable no-console */
         console.log('fetch init data')
@@ -49,6 +50,10 @@ export function initCollaborators(collaborators) {
 
 export function setApplicationCount(application_count) {
   return { type: types.SET_APPLICATION_COUNT, application_count }
+}
+
+export function setAllApprovalCount(all_approval_count) {
+  return { type: types.SET_ALL_APPROVAL_COUNT, all_approval_count }
 }
 
 export function addCollaborators(collaborators) {

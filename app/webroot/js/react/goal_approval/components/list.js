@@ -11,11 +11,13 @@ export default class ListComponent extends React.Component {
   }
 
   render() {
+    const data = this.props.list
+
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
-          <h1 className="goals-approval-heading">{__("Goal approval list")} <span>({ this.props.list.application_count })</span></h1>
+          <h1 className="goals-approval-heading">{__("Goal approval list")} <span>({ data.all_approval_count })</span></h1>
           <ul>
-            { this.props.list.collaborators.map((collaborator) => {
+            { data.collaborators.map((collaborator) => {
               if(collaborator.is_mine) {
                 return <CoacheeCard collaborator={ collaborator } key={collaborator.id}  />;
               } else {
@@ -24,8 +26,8 @@ export default class ListComponent extends React.Component {
             }) }
           </ul>
           {/* TODO: fetchCollaboratorsを即時間数で囲わないとなぜかコールした際の引数 がtrueになる。要調査。 */}
-          { !this.props.list.done_loading_all_data ? <ViewMoreButton handleOnClick={ () => this.props.fetchCollaborators() }
-                                                                     is_loading={ this.props.list.fetching_collaborators } /> : null }
+          { !data.done_loading_all_data ? <ViewMoreButton handleOnClick={ () => this.props.fetchCollaborators() }
+                                                                     is_loading={ data.fetching_collaborators } /> : null }
       </section>
     )
   }
