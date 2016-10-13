@@ -35,21 +35,18 @@
   &-list-item{
     border-bottom: 1px solid @subColor4;
     &.is-complete {
-      padding: @spacing;
       .mod-status, .fa {
         color: @subColor3;
       }
     }
     &.is-incomplete {
       background-color: @unreadRed;
-      padding: @spacing;
       .mod-status, .fa {
         color: @keyColor;
       }
     }
     &.is-waiting {
       background-color: @whiteColor;
-      padding: @spacing;
       .mod-status {
         color: @keyColor;
       }
@@ -63,6 +60,7 @@
     &-link {
       color: @subColor1;
       display: table;
+      padding: @spacing;
       &:focus, &:hover {
         color: @subColor1;
         text-decoration: none;
@@ -94,8 +92,8 @@
       text-align: center;
       .fa {
         font-weight: bold;
-        font-size: 20px;
-        width: 20px;
+        font-size: 28px;
+        width: 25px;
       }
     }
     &-view-more-button {
