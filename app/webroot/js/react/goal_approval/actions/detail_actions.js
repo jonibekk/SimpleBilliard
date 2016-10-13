@@ -99,7 +99,7 @@ export function postWithdraw(goal_member_id) {
 }
 
 export function setGoalMember(goal_member) {
-  return {type: types.SET_COLLABORATOR, goal_member}
+  return {type: types.SET_GOAL_MEMBER, goal_member}
 }
 
 export function postingSetAsTarget() {

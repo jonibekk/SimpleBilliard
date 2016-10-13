@@ -106,7 +106,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("GoalMember") ?>
+                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("Collaborator") ?>
                             &nbsp;(<?= count($goal['GoalMember']) ?>)</span></div>
                     <?php if (isset($goal['GoalMember']) && !empty($goal['GoalMember'])): ?>
                         <?php foreach ($goal['GoalMember'] as $collabo): ?>

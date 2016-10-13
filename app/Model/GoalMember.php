@@ -45,7 +45,7 @@ class GoalMember extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_COLLABORATOR] = __("GoalMember");
+        self::$TYPE[self::TYPE_COLLABORATOR] = __("Collaborator");
         self::$TYPE[self::TYPE_OWNER] = __("Leader");
     }
 

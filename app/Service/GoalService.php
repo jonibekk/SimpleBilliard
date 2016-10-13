@@ -38,7 +38,7 @@ class GoalService extends AppService
     /* ゴールの拡張種別 */
     const EXTEND_GOAL_LABELS = "GOAL:EXTEND_GOAL_LABELS";
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
-    const EXTEND_COLLABORATOR = "GOAL:EXTEND_COLLABORATOR";
+    const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
 
     /* ゴールキャッシュ */
     private static $cacheList = [];
@@ -138,7 +138,7 @@ class GoalService extends AppService
             $kr = Hash::extract($Goal->KeyResult->getTkr($data['id']), 'KeyResult');
             $data['top_key_result'] = $KeyResultService->processKeyResult($kr);
         }
-        if (in_array(self::EXTEND_COLLABORATOR, $extends)) {
+        if (in_array(self::EXTEND_GOAL_MEMBERS, $extends)) {
             $data['goal_member'] = Hash::extract($Goal->GoalMember->getUnique($userId, $data['id']), 'GoalMember');
         }
         return $data;
@@ -173,7 +173,7 @@ class GoalService extends AppService
             // ゴール・TKR・コラボレーター取得
             $goal = $this->get($goalId, $userId, [
                 self::EXTEND_TOP_KEY_RESULT,
-                self::EXTEND_COLLABORATOR
+                self::EXTEND_GOAL_MEMBERS
             ]);
             // 本来TKRやコラボレーターが存在しないことは有りえないが一応判定
             if (empty($goal['top_key_result'])) {

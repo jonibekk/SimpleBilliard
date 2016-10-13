@@ -1220,7 +1220,7 @@ msgstr "秘密"
 #: View/Elements/Goal/modal_goal_description.ctp:109
 #: View/Evaluations/view.ctp:361 View/GoalApproval/done.ctp:108
 #: View/GoalApproval/index.ctp:111
-msgid "GoalMember"
+msgid "Collaborator"
 msgstr "コラボレーター"
 
 #: Model/GoalMember.php:49 Model/Evaluation.php:147;151

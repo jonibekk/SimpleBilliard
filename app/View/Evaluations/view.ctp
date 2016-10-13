@@ -358,7 +358,7 @@
                     </div>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __("GoalMember") ?>:
+                    <?= __("Collaborator") ?>:
                     <?= count($goal[0]['Goal']['GoalMember']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">

@@ -108,7 +108,7 @@
                                 : <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['GoalMember']['type'] === (string)GoalMember::TYPE_OWNER ?
-                                    __("Leader") : __("GoalMember"); ?></p>
+                                    __("Leader") : __("Collaborator"); ?></p>
 
                             <p class="approval_body_text"><?= __("Role") ?>
                                 : <?= h($goal['GoalMember']['role']); ?></p>

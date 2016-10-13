@@ -11,7 +11,7 @@ const initialState = {
 
 export default function detail(state = initialState, action) {
   switch (action.type) {
-    case types.SET_COLLABORATOR:
+    case types.SET_GOAL_MEMBER:
       return Object.assign({}, state, {
         goal_member: action.goal_member
       })
