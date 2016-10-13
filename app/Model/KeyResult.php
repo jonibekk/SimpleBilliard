@@ -8,6 +8,7 @@ App::uses('AppModel', 'Model');
  * @property Goal         $Goal
  * @property ActionResult $ActionResult
  * @property Post         $Post
+ * @method findByGoalId($goalId)
  */
 class KeyResult extends AppModel
 {

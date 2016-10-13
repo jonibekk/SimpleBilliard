@@ -61,8 +61,13 @@ export default function goal(state = initialState, action) {
 
     case types.FETCH_INITIAL_DATA:
       let suggestionsExcludeSelected = state.suggestionsExcludeSelected
+      const existLabelIds = action.data.goal.goal_labels.map((el) => {
+        return el.id
+      })
       if (state.suggestionsExcludeSelected.length == 0) {
-        suggestionsExcludeSelected = Object.assign([], action.data.labels)
+        suggestionsExcludeSelected = action.data.labels.filter((el) => {
+          return (existLabelIds.indexOf(el.id) == -1);
+        })
       }
       if (!state.initFlg) {
         inputData = initInputData(action.data.goal)
@@ -84,11 +89,6 @@ export default function goal(state = initialState, action) {
       })
 
     case types.REQUEST_SUGGEST:
-      // サジェストをラベル名昇順に並び替え
-      action.suggestions.sort((a,b) => {
-        return (a.name > b.name)? 1 :-1
-      });
-
       return Object.assign({}, state, {
         suggestions: action.suggestions,
         keyword: action.keyword

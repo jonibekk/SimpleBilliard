@@ -1,5 +1,4 @@
 <?php
-
 App::import('Service', 'AppService');
 
 /**
@@ -7,6 +6,20 @@ App::import('Service', 'AppService');
  */
 class KeyResultService extends AppService
 {
+    /**
+     * KRのValueUnitセレクトボックス値の生成
+     * @return array $unit_select_list
+     */
+    function buildKrUnitsSelectList()
+    {
+        $units_config = Configure::read("label.units");
+        $unit_select_list = [];
+        foreach($units_config as $v) {
+            $unit_select_list[$v['id']] = "{$v['label']}({$v['unit']})";
+        }
+        return $unit_select_list;
+    }
+
     /**
      * キーリザルト一覧を表示用に整形するためのラッパー
      * @param  array $key_results

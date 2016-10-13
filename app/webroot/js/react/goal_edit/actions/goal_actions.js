@@ -171,11 +171,22 @@ export function disableSubmit() {
  * @returns {*}
  */
 function getSuggestions(value, suggestions) {
-  if (!value) {
-    return suggestions.filter((suggestion) => suggestion.name);
+  if (value) {
+    value = value.trim();
+    const regex = new RegExp('^' + value, 'i');
+    suggestions = suggestions.filter((suggestion) => regex.test(suggestion.name));
   }
-  value = value.trim();
-  const regex = new RegExp('^' + value, 'i');
-  return suggestions.filter((suggestion) => regex.test(suggestion.name));
-}
 
+  // サジェストは10件のみ表示
+  suggestions = suggestions.slice(0, 10)
+  // サジェストをラベル名昇順に並び替え
+  suggestions.sort((a, b) => {
+    return (a.goal_label_count < b.goal_label_count) ? 1 : -1
+  });
+
+  // サジェストの先頭に入力文字列を加える
+  if (value) {
+    suggestions.unshift({name: value})
+  }
+  return suggestions
+}
