@@ -154,8 +154,8 @@ class GoalApprovalsController extends ApiController
     function get_histories()
     {
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $goal_memberId = $this->request->query('goal_member_id');
-        $histories = $GoalApprovalService->findHistories($goal_memberId);
+        $goalMemberId = $this->request->query('goal_member_id');
+        $histories = $GoalApprovalService->findHistories($goalMemberId);
         return $this->_getResponseSuccess($histories);
     }
 
@@ -178,16 +178,16 @@ class GoalApprovalsController extends ApiController
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
-        $goal_memberId = Hash::get($data, 'goal_member.id');
+        $goalMemberId = Hash::get($data, 'goal_member.id');
 
         // IDが存在しない場合はNotFound
-        if (!$goal_memberId) {
+        if (!$goalMemberId) {
             $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goal_memberId, $myUserId);
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
         if (!$canAccess) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
@@ -203,20 +203,20 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチーへ通知
-        $this->_sendNotifyToCoachee($goal_memberId, NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
+        $this->_sendNotifyToCoachee($goalMemberId, NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
 
         // Mixpanelのトラッキング
         $this->_trackApprovalToMixpanel(
             MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE,
             MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
-            $goal_memberId
+            $goalMemberId
         );
 
         // リストページに表示する通知カード
         $this->Pnotify->outSuccess(__("Set as target"));
 
         // レスポンス
-        return $this->_getResponseSuccess(['goal_member_id' => $goal_memberId]);
+        return $this->_getResponseSuccess(['goal_member_id' => $goalMemberId]);
     }
 
     /**
@@ -237,16 +237,16 @@ class GoalApprovalsController extends ApiController
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
-        $goal_memberId = Hash::get($data, 'goal_member.id');
+        $goalMemberId = Hash::get($data, 'goal_member.id');
 
         // IDが存在しない場合はNotFound
-        if (!$goal_memberId) {
+        if (!$goalMemberId) {
             $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goal_memberId, $myUserId);
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
         if (!$canAccess) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
@@ -262,20 +262,20 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチーへ通知
-        $this->_sendNotifyToCoachee($goal_memberId, NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION);
+        $this->_sendNotifyToCoachee($goalMemberId, NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION);
 
         // Mixpanelのトラッキング
         $this->_trackApprovalToMixpanel(
             MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
             MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
-            $goal_memberId
+            $goalMemberId
         );
 
         // リストページに表示する通知カード
         $this->Pnotify->outSuccess(__("Removed from target"));
 
         // レスポンス
-        return $this->_getResponseSuccess(['goal_member_id' => $goal_memberId]);
+        return $this->_getResponseSuccess(['goal_member_id' => $goalMemberId]);
     }
 
     /**
@@ -293,23 +293,23 @@ class GoalApprovalsController extends ApiController
     {
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
-        $goal_memberId = Hash::get($this->request->data, 'goal_member.id');
+        $goalMemberId = Hash::get($this->request->data, 'goal_member.id');
 
         // IDが存在しない場合はNotFound
-        if (!$goal_memberId) {
+        if (!$goalMemberId) {
             $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goal_memberId, $myUserId);
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
         if (!$canAccess) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
         // 保存データ定義
-        $saveData = $GoalApprovalService->generateWithdrawSaveData($goal_memberId);
+        $saveData = $GoalApprovalService->generateWithdrawSaveData($goalMemberId);
 
         // 保存処理
         $response = $this->_postApproval($saveData);
@@ -318,7 +318,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチへ通知
-        $goalId = Hash::get($this->Goal->GoalMember->findById($goal_memberId), 'GoalMember.goal_id');
+        $goalId = Hash::get($this->Goal->GoalMember->findById($goalMemberId), 'GoalMember.goal_id');
         $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL);
 
         // Mixpanelのトラッキング
@@ -327,14 +327,14 @@ class GoalApprovalsController extends ApiController
         // $this->_trackApprovalToMixpanel(
         //     MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
         //     MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER,
-        //     $goal_memberId
+        //     $goalMemberId
         // );
 
         // リストページに表示する通知カード
         $this->Pnotify->outSuccess(__("Has withdrawn"));
 
         // レスポンス
-        return $this->_getResponseSuccess(['goal_member_id' => $goal_memberId]);
+        return $this->_getResponseSuccess(['goal_member_id' => $goalMemberId]);
     }
 
     /**
@@ -348,16 +348,16 @@ class GoalApprovalsController extends ApiController
     {
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->my_uid;
-        $goal_memberId = $this->request->query('goal_member_id');
+        $goalMemberId = $this->request->query('goal_member_id');
 
         // パラメータが存在しない場合はNotFound
-        if (!$goal_memberId) {
+        if (!$goalMemberId) {
             $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goal_memberId, $myUserId);
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
         if (!$canAccess) {
             // TODO: モーダルでコラボを抜けた場合のために一時期的にここでエラーを吐かないようにする
             //       Reactでコラボ編集が実装されたらコメントアウトを外す
@@ -365,7 +365,7 @@ class GoalApprovalsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        $res = $this->Goal->GoalMember->getGoalMemberForApproval($goal_memberId);
+        $res = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
         return $this->_getResponseSuccess($GoalApprovalService->formatGoalApprovalForResponse($res, $myUserId));
     }
 
@@ -400,11 +400,11 @@ class GoalApprovalsController extends ApiController
      *
      * @param  integer $trackType
      * @param  integer $memberType
-     * @param  integer $goal_memberId
+     * @param  integer $goalMemberId
      */
-    function _trackApprovalToMixpanel($trackType, $memberType, $goal_memberId)
+    function _trackApprovalToMixpanel($trackType, $memberType, $goalMemberId)
     {
-        $goal_member = $this->Goal->GoalMember->findById($goal_memberId);
+        $goal_member = $this->Goal->GoalMember->findById($goalMemberId);
         $goalId = Hash::get($goal_member, 'GoalMember.goal_id');
         if (!$goalId) {
             return;

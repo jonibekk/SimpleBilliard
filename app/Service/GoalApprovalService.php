@@ -37,22 +37,22 @@ class GoalApprovalService extends AppService
     /**
      * 認定コメントリスト取得
      *
-     * @param $goal_memberId
+     * @param $goalMemberId
      *
      * @return array
      */
-    function findHistories($goal_memberId)
+    function findHistories($goalMemberId)
     {
-        if (empty($goal_memberId)) {
+        if (empty($goalMemberId)) {
             return [];
         }
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         // 認定コメントリスト取得
-        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goal_memberId), '{n}.ApprovalHistory');
+        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
 
-        $goal_member = $GoalMemberService->get($goal_memberId, [
+        $goal_member = $GoalMemberService->get($goalMemberId, [
             GoalMemberService::EXTEND_COACH,
             GoalMemberService::EXTEND_COACHEE,
         ]);
@@ -71,12 +71,12 @@ class GoalApprovalService extends AppService
      * 認定ページアクセス権限チェック
      * 認定ページにおいてユーザーがコラボレーターの情報にアクセスできるかチェック
      *
-     * @param  integer $goal_memberId
+     * @param  integer $goalMemberId
      * @param  integer $userId
      *
      * @return boolean
      */
-    function haveAccessAuthoriyOnApproval($goal_memberId, $userId)
+    function haveAccessAuthoriyOnApproval($goalMemberId, $userId)
     {
         $GoalMember = ClassRegistry::init("GoalMember");
         $Team = ClassRegistry::init("Team");
@@ -88,7 +88,7 @@ class GoalApprovalService extends AppService
             return false;
         }
 
-        if (!($goal_memberId && $userId)) {
+        if (!($goalMemberId && $userId)) {
             return false;
         }
 
@@ -99,7 +99,7 @@ class GoalApprovalService extends AppService
         $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($userId);
 
         // コーチとしてのアクセス権限
-        $goal_memberUserId = $GoalMember->getUserIdByGoalMemberId($goal_memberId);
+        $goal_memberUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
         $haveAuthoriyAsCoach = in_array($goal_memberUserId, $coacheeUserIds);
 
         // コーチーとしてのアクセス権限
@@ -278,7 +278,7 @@ class GoalApprovalService extends AppService
      */
     function generateSaveData($approvalType, $requestData, $userId)
     {
-        $goal_memberId = Hash::get($requestData, 'goal_member.id');
+        $goalMemberId = Hash::get($requestData, 'goal_member.id');
         $selectClearStatus = ApprovalHistory::STATUS_IS_CLEAR;
         $selectImportantStatus = ApprovalHistory::STATUS_IS_IMPORTANT;
         if ($approvalType === GoalMember::IS_NOT_TARGET_EVALUATION) {
@@ -288,14 +288,14 @@ class GoalApprovalService extends AppService
 
         $saveData = [
             'GoalMember'      => [
-                'id'                   => $goal_memberId,
+                'id'                   => $goalMemberId,
                 'is_target_evaluation' => $approvalType,
                 'approval_status'      => GoalMember::APPROVAL_STATUS_DONE
             ],
             'ApprovalHistory' => [
                 'select_clear_status'     => $selectClearStatus,
                 'select_important_status' => $selectImportantStatus,
-                'goal_member_id'          => $goal_memberId,
+                'goal_member_id'          => $goalMemberId,
                 'user_id'                 => $userId,
                 'comment'                 => Hash::get($requestData, 'approval_history.comment')
             ]
@@ -307,15 +307,15 @@ class GoalApprovalService extends AppService
     /**
      * 申請取り消しPOSTの保存データを定義
      *
-     * @param  integer $goal_memberId
+     * @param  integer $goalMemberId
      *
      * @return array $saveData
      */
-    function generateWithdrawSaveData($goal_memberId)
+    function generateWithdrawSaveData($goalMemberId)
     {
         $saveData = [
             'GoalMember' => [
-                'id'                   => $goal_memberId,
+                'id'                   => $goalMemberId,
                 'is_target_evaluation' => false,
                 'approval_status'      => GoalMember::APPROVAL_STATUS_WITHDRAWN
             ]

@@ -709,11 +709,11 @@ class GoalMember extends AppModel
         return $this->find('count', $options);
     }
 
-    function getGoalMemberForApproval($goal_memberId)
+    function getGoalMemberForApproval($goalMemberId)
     {
         $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $conditions = [
-            'GoalMember.id'    => $goal_memberId,
+            'GoalMember.id'    => $goalMemberId,
             'Goal.end_date >=' => $currentTerm['start_date'],
             'Goal.end_date <=' => $currentTerm['end_date'],
         ];
@@ -787,13 +787,13 @@ class GoalMember extends AppModel
         return $this->find('first', $options);
     }
 
-    function getUserIdByGoalMemberId($goal_memberId)
+    function getUserIdByGoalMemberId($goalMemberId)
     {
-        if (!$goal_memberId) {
+        if (!$goalMemberId) {
             return null;
         }
 
-        $res = $this->findById($goal_memberId);
+        $res = $this->findById($goalMemberId);
         if (!$res) {
             return null;
         }

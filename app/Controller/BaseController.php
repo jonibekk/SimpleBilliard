@@ -205,12 +205,12 @@ class BaseController extends Controller
     /**
      * コーチーに通知
      *
-     * @param $goal_memberId
+     * @param $goalMemberId
      * @param $notifyType
      */
-    function _sendNotifyToCoachee($goal_memberId, $notifyType)
+    function _sendNotifyToCoachee($goalMemberId, $notifyType)
     {
-        $goal_member = $this->Goal->GoalMember->findById($goal_memberId);
+        $goal_member = $this->Goal->GoalMember->findById($goalMemberId);
         if (!Hash::get($goal_member, 'GoalMember')) {
             return;
         }

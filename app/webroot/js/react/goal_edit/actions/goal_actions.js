@@ -122,8 +122,8 @@ export function fetchInitialData(goalId) {
 
 export function fetchComments() {
   return (dispatch, getState) => {
-    const goal_memberId = getState().goal.goal.goal_member.id
-    return axios.get(`/api/v1/goal_approvals/histories?goal_member_id=${goal_memberId}`)
+    const goalMemberId = getState().goal.goal.goal_member.id
+    return axios.get(`/api/v1/goal_approvals/histories?goal_member_id=${goalMemberId}`)
       .then((response) => {
         let approvalHistories = response.data.data
         dispatch({

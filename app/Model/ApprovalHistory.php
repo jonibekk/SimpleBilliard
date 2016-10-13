@@ -76,11 +76,11 @@ class ApprovalHistory extends AppModel
         return $this->save($saveData);
     }
 
-    function findByGoalMemberId($goal_memberId)
+    function findByGoalMemberId($goalMemberId)
     {
         $options = [
             'conditions' => [
-                'goal_member_id' => $goal_memberId,
+                'goal_member_id' => $goalMemberId,
             ],
         ];
         $res = $this->find('all', $options);
