@@ -1,10 +1,10 @@
 <?php
+App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * GoalChangeLogFixture
-
  */
-class GoalChangeLogFixture extends CakeTestFixture
+class GoalChangeLogFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -37,21 +37,11 @@ class GoalChangeLogFixture extends CakeTestFixture
             'key'      => 'index',
             'comment'  => 'ゴールID(belongsToでGoalモデルに関連)'
         ],
-        'user_id'         => [
-            'type'     => 'biginteger',
-            'null'     => false,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '作成者ID(belongsToでUserモデルに関連)'
-        ],
         'data'            => [
-            'type'    => 'text',
+            'type'    => 'binary',
             'null'    => false,
             'default' => null,
-            'collate' => 'utf8mb4_general_ci',
             'comment' => 'データ(現時点のゴールのスナップショット)MessagePackで圧縮',
-            'charset' => 'utf8mb4'
         ],
         'del_flg'         => ['type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'],
         'deleted'         => [
@@ -81,7 +71,6 @@ class GoalChangeLogFixture extends CakeTestFixture
             'team_id'  => ['column' => 'team_id', 'unique' => 0],
             'goal_id'  => ['column' => 'goal_id', 'unique' => 0],
             'modified' => ['column' => 'modified', 'unique' => 0],
-            'user_id'  => ['column' => 'user_id', 'unique' => 0]
         ],
         'tableParameters' => ['charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB']
     ];

@@ -65,6 +65,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
+            'key'      => 'index',
             'comment'  => '開始日(unixtime)'
         ),
         'end_date'            => array(
@@ -72,6 +73,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
+            'key'      => 'index',
             'comment'  => '終了日(unixtime)'
         ),
         'current_value'       => array(
@@ -126,44 +128,50 @@ class KeyResultFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => '完了日'
         ),
-        'action_result_count' => array('type'     => 'integer',
-                                       'null'     => false,
-                                       'default'  => '0',
-                                       'unsigned' => true,
-                                       'comment'  => 'アクショントカウント'
+        'action_result_count' => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => true,
+            'comment'  => 'アクショントカウント'
         ),
-        'del_flg'             => array('type'    => 'boolean',
-                                       'null'    => false,
-                                       'default' => '0',
-                                       'key'     => 'index',
-                                       'comment' => '削除フラグ'
+        'tkr_flg'             => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => 'TopKeyResult'
         ),
-        'deleted'             => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => '削除した日付時刻'
+        'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'deleted'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '削除した日付時刻'
         ),
-        'created'             => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => '追加した日付時刻'
+        'created'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '追加した日付時刻'
         ),
-        'modified'            => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'key'      => 'index',
-                                       'comment'  => '更新した日付時刻'
+        'modified'            => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '更新した日付時刻'
         ),
         'indexes'             => array(
-            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
-            'team_id'  => array('column' => 'team_id', 'unique' => 0),
-            'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
-            'goal_id'  => array('column' => 'goal_id', 'unique' => 0),
-            'modified' => array('column' => 'modified', 'unique' => 0),
-            'user_id'  => array('column' => 'user_id', 'unique' => 0)
+            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'team_id'    => array('column' => 'team_id', 'unique' => 0),
+            'goal_id'    => array('column' => 'goal_id', 'unique' => 0),
+            'modified'   => array('column' => 'modified', 'unique' => 0),
+            'user_id'    => array('column' => 'user_id', 'unique' => 0),
+            'start_date' => array('column' => 'start_date', 'unique' => 0),
+            'end_date'   => array('column' => 'end_date', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );

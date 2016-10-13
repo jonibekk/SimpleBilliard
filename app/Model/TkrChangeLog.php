@@ -4,10 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * TkrChangeLog Model
  *
- * @property Team      $Team
  * @property Goal      $Goal
  * @property KeyResult $KeyResult
- * @property User      $User
  */
 class TkrChangeLog extends AppModel
 {
@@ -36,9 +34,62 @@ class TkrChangeLog extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Team',
         'Goal',
         'KeyResult',
-        'User',
     ];
+
+    /**
+     * TKRのスナップショットをログに保存する
+     * dataフィールドにはmaspackした上でbase64_encodeして格納する。
+     *
+     * @param $goalId
+     *
+     * @return bool|mixed
+     */
+    function saveSnapshot($goalId)
+    {
+        $keyResult = Hash::get($this->KeyResult->getTkr($goalId), 'KeyResult');
+        if (empty($keyResult)) {
+            return false;
+        }
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $keyResultData = msgpack_pack($keyResult);
+        $data = [
+            'team_id'       => $this->current_team_id,
+            'key_result_id' => $keyResult['id'],
+            'goal_id'       => $goalId,
+            'data'          => base64_encode($keyResultData),
+        ];
+        $this->create();
+        $ret = $this->save($data);
+        return $ret;
+    }
+
+    /**
+     * ゴールの最新のスナップショットを取得
+     *
+     * @param $goalId
+     *
+     * @return array|null
+     */
+    function findLatestSnapshot($goalId)
+    {
+        $data = $this->find('first', [
+            'conditions' => [
+                'goal_id' => $goalId,
+            ],
+            'order'      => ['id' => 'desc']
+        ]);
+
+        $data = Hash::extract($data, 'TkrChangeLog');
+
+        if (empty($data)) {
+            return null;
+        }
+
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data['data'] = msgpack_unpack(base64_decode($data['data']));
+        return $data;
+    }
+
 }
