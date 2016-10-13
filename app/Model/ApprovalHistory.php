@@ -4,8 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * ApprovalHistory Model
  *
- * @property Collaborator $Collaborator
- * @property User         $User
+ * @property GoalMember $GoalMember
+ * @property User       $User
  */
 class ApprovalHistory extends AppModel
 {
@@ -23,12 +23,12 @@ class ApprovalHistory extends AppModel
      * @var array
      */
     public $validate = [
-        'action_status' => [
+        'action_status'           => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'select_clear_status' => [
+        'select_clear_status'     => [
             'numeric' => [
                 'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
             ],
@@ -38,14 +38,14 @@ class ApprovalHistory extends AppModel
                 'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
             ],
         ],
-        'comment'       => [
+        'comment'                 => [
             'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ],
-        'del_flg'       => [
+        'del_flg'                 => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -57,30 +57,30 @@ class ApprovalHistory extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Collaborator',
+        'GoalMember',
         'User',
     ];
 
     /**
      * 認定ヒストリー保存
+     *
      * @param array $saveData
      */
     function add($saveData)
     {
         $this->set($saveData['ApprovalHistory']);
-        if(!$this->validates()) {
+        if (!$this->validates()) {
             return false;
         }
 
         return $this->save($saveData);
     }
 
-
-    function findByCollaboratorId($collaboratorId)
+    function findByGoalMemberId($goal_memberId)
     {
         $options = [
             'conditions' => [
-                'collaborator_id' => $collaboratorId,
+                'goal_member_id' => $goal_memberId,
             ],
         ];
         $res = $this->find('all', $options);

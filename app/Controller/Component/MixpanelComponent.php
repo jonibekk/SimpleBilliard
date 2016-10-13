@@ -1,5 +1,5 @@
 <?php
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 App::uses('User', 'Model');
 
 /**
@@ -185,22 +185,22 @@ class MixpanelComponent extends Object
             $user_id = $this->Controller->Auth->user('id');
             $team_id = $this->Controller->Session->read('current_team_id');
 
-            $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
+            $collabo = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id);
             if (empty($collabo)) {
-                $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+                $collabo = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id, false);
             }
-            if (isset($collabo['Collaborator']['type'])) {
-                $property['$goal_owner_type'] = $collabo['Collaborator']['type'] == Collaborator::TYPE_OWNER ? 'L' : 'C';
+            if (isset($collabo['GoalMember']['type'])) {
+                $property['$goal_owner_type'] = $collabo['GoalMember']['type'] == GoalMember::TYPE_OWNER ? 'L' : 'C';
             }
 
             $approval_status = [
-                Collaborator::APPROVAL_STATUS_NEW           => "Pending approval",
-                Collaborator::APPROVAL_STATUS_REAPPLICATION => "Evaluable",
-                Collaborator::APPROVAL_STATUS_DONE          => "Not evaluable",
-                Collaborator::APPROVAL_STATUS_WITHDRAWN      => "Pending modification",
+                GoalMember::APPROVAL_STATUS_NEW           => "Pending approval",
+                GoalMember::APPROVAL_STATUS_REAPPLICATION => "Evaluable",
+                GoalMember::APPROVAL_STATUS_DONE          => "Not evaluable",
+                GoalMember::APPROVAL_STATUS_WITHDRAWN     => "Pending modification",
             ];
-            if (isset($collabo['Collaborator']['approval_status'])) {
-                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['approval_status']];
+            if (isset($collabo['GoalMember']['approval_status'])) {
+                $property['$goal_approval_status'] = $approval_status[$collabo['GoalMember']['approval_status']];
             }
         }
         if ($kr_id) {

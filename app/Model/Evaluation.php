@@ -341,7 +341,7 @@ class Evaluation extends AppModel
                             'id'
                         ]
                     ],
-                    'Collaborator' => [
+                    'GoalMember'   => [
                         'fields' => [
                             'user_id',
                             'user_id'
@@ -549,10 +549,11 @@ class Evaluation extends AppModel
     function getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index)
     {
         $goal_evaluations = [];
-        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true, null, 1, Collaborator::APPROVAL_STATUS_REAPPLICATION);
+        $goal_list = $this->Goal->GoalMember->getCollaboGoalList($uid, true, null, 1,
+            GoalMember::APPROVAL_STATUS_REAPPLICATION);
         $goal_list = $this->Goal->filterThisTermIds($goal_list);
         //order by priority of goal
-        $goal_list = $this->Goal->Collaborator->goalIdOrderByPriority($uid, $goal_list);
+        $goal_list = $this->Goal->GoalMember->goalIdOrderByPriority($uid, $goal_list);
 
         foreach ($goal_list as $gid) {
             //self
@@ -570,7 +571,7 @@ class Evaluation extends AppModel
             }
             //leader
             if ($this->Team->EvaluationSetting->isEnabledLeader()) {
-                $leader_uid = $this->Goal->Collaborator->getLeaderUid($gid);
+                $leader_uid = $this->Goal->GoalMember->getLeaderUid($gid);
                 if ($uid !== $leader_uid) {
                     $goal_evaluations[] = $this->getAddRecord($uid, $leader_uid, $term_id, $index++,
                         self::TYPE_LEADER, $gid);

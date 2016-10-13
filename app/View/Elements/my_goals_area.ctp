@@ -12,7 +12,7 @@
  * @var                    $vision
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="right-side-container" id="jsRightSideContainer">
     <?php if ($vision): ?>
 
@@ -28,7 +28,7 @@
             <?=
             $this->Html->image('ajax-loader.gif',
                 [
-                    'class' => 'lazy feed-img-teamvision pull-left',
+                    'class'         => 'lazy feed-img-teamvision pull-left',
                     'data-original' => $this->Upload->uploadUrl([$vision['model'] => $vision],
                         "{$vision['model']}.photo",
                         ['style' => 'medium'])
@@ -88,7 +88,7 @@
     <?php endif; ?>
     <div id="CollaboGoals">
         <div class="col col-xxs-12 mt_16px font_gargoyleGray">
-            <i class="fa fa-child"></i><?= __('Collaborator') ?>(<?= $collabo_goals_count ?>)
+            <i class="fa fa-child"></i><?= __('GoalMember') ?>(<?= $collabo_goals_count ?>)
         </div>
         <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
     </div>
@@ -117,4 +117,4 @@
         </a>
     <?php endif; ?>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

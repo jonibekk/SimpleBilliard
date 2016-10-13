@@ -381,7 +381,7 @@ class NotifyBizComponent extends Component
             = $this->Post->Team->TeamMember->my_uid
             = $this->Post->User->CircleMember->my_uid
             = $this->Goal->my_uid
-            = $this->Goal->Collaborator->my_uid
+            = $this->Goal->GoalMember->my_uid
             = $this->Goal->Follower->my_uid
             = $this->Goal->Team->my_uid
             = $this->Goal->Team->EvaluateTerm->my_uid
@@ -403,7 +403,7 @@ class NotifyBizComponent extends Component
             = $this->Post->Team->TeamMember->current_team_id
             = $this->Post->User->CircleMember->current_team_id
             = $this->Goal->current_team_id
-            = $this->Goal->Collaborator->current_team_id
+            = $this->Goal->GoalMember->current_team_id
             = $this->Goal->Follower->current_team_id
             = $this->Goal->Team->current_team_id
             = $this->Goal->Team->EvaluateTerm->current_team_id
@@ -566,8 +566,8 @@ class NotifyBizComponent extends Component
         }
         $goal_id = $action['ActionResult']['goal_id'];
         //宛先は閲覧可能な全ユーザ
-        //Collaborator
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //GoalMember
+        $goal_members = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //Follower
         $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
         //Coach
@@ -575,7 +575,7 @@ class NotifyBizComponent extends Component
         //通知先に指定されたユーザ
         $share_members = $this->Post->getShareAllMemberList($post['Post']['id']);
 
-        $members = $share_members + $collaborators + $followers + [$coach_id => $coach_id];
+        $members = $share_members + $goal_members + $followers + [$coach_id => $coach_id];
         //exclude inactive users
         $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
@@ -701,11 +701,11 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        $goal_members = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //exclude inactive users
-        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
+        $goal_members = array_intersect($goal_members, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goal_members,
             NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
@@ -727,13 +727,13 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        $goal_members = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //exclude inactive users
-        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
+        $goal_members = array_intersect($goal_members, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
-        unset($collaborators[$user_id]);
+        unset($goal_members[$user_id]);
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goal_members,
             NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
@@ -756,11 +756,11 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        $goal_members = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //exclude inactive users
-        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
+        $goal_members = array_intersect($goal_members, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
-        unset($collaborators[$user_id]);
+        unset($goal_members[$user_id]);
 
         //exclude coach
         App::import('Service', 'GoalApprovalService');
@@ -770,14 +770,14 @@ class NotifyBizComponent extends Component
         $coachId = $this->Team->TeamMember->getCoachId($user_id);
         //チームの評価設定on かつ ユーザが評価対象 かつ コーチが存在している場合はコーチを通知対象から除外
         //コーチには別途、認定関連の通知が届くため。
-        if ($isApprovable && !empty($collaborators[$coachId])) {
-            unset($collaborators[$coachId]);
+        if ($isApprovable && !empty($goal_members[$coachId])) {
+            unset($goal_members[$coachId]);
         }
-        if (empty($collaborators)) {
+        if (empty($goal_members)) {
             return;
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goal_members,
             NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
@@ -803,9 +803,9 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborator = Hash::get($goal, 'MyCollabo.0') ?
+        $goal_member = Hash::get($goal, 'MyCollabo.0') ?
             Hash::get($goal, 'MyCollabo.0') : Hash::get($goal, 'Leader.0');
-        if (empty($collaborator)) {
+        if (empty($goal_member)) {
             return;
         }
 
@@ -818,7 +818,7 @@ class NotifyBizComponent extends Component
         App::import('Service', 'GoalApprovalService');
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $isApprovable = $GoalApprovalService->isApprovable($collaborator['user_id'], $team_id);
+        $isApprovable = $GoalApprovalService->isApprovable($goal_member['user_id'], $team_id);
         if (!$isApprovable) {
             return;
         }
@@ -827,10 +827,10 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $collaborator['id']];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $goal_member['id']];
 
         //認定希望していないゴールはゴール詳細へ
-        if (!$collaborator['is_wish_approval']) {
+        if (!$goal_member['is_wish_approval']) {
             $url = $url_goal_detail;
         } else {
             $url = $url_goal_approval;
@@ -843,14 +843,14 @@ class NotifyBizComponent extends Component
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
     }
 
-    private function _setCollaboApprovalOption($notify_type, $collaborator_id, $to_user_id, $team_id)
+    private function _setCollaboApprovalOption($notify_type, $goal_member_id, $to_user_id, $team_id)
     {
-        $collaborator = $this->Goal->Collaborator->findById($collaborator_id);
-        if (empty($collaborator)) {
+        $goal_member = $this->Goal->GoalMember->findById($goal_member_id);
+        if (empty($goal_member)) {
             return;
         }
 
-        $goal_id = $collaborator['Collaborator']['goal_id'];
+        $goal_id = $goal_member['GoalMember']['goal_id'];
 
         $goal = $this->Goal->getGoal($goal_id);
 
@@ -863,7 +863,7 @@ class NotifyBizComponent extends Component
         App::import('Service', 'GoalApprovalService');
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $isApprovable = $GoalApprovalService->isApprovable($collaborator['user_id'], $team_id);
+        $isApprovable = $GoalApprovalService->isApprovable($goal_member['user_id'], $team_id);
         if (!$isApprovable) {
             return;
         }
@@ -872,17 +872,17 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $collaborator_id];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $goal_member_id];
 
         //認定希望していないゴールはゴール詳細へ
-        if (!$collaborator['Collaborator']['is_wish_approval']) {
+        if (!$goal_member['GoalMember']['is_wish_approval']) {
             $url = $url_goal_detail;
         } else {
             $url = $url_goal_approval;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
-        $this->notify_option['model_id'] = $collaborator_id;
+        $this->notify_option['model_id'] = $goal_member_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);

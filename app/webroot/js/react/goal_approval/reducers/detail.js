@@ -1,19 +1,19 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  collaborator: {},
+  goal_member: {},
   to_list_page: false,
   posting_set_as_target: false,
   posting_remove_from_target: false,
   posting_withdraw: false,
-  validationErrors: { comment: '' }
+  validationErrors: {comment: ''}
 }
 
 export default function detail(state = initialState, action) {
   switch (action.type) {
     case types.SET_COLLABORATOR:
       return Object.assign({}, state, {
-        collaborator: action.collaborator
+        goal_member: action.goal_member
       })
     case types.TO_LIST_PAGE:
       return Object.assign({}, state, {

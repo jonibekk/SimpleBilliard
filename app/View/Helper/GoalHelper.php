@@ -1,6 +1,6 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 
 /**
  * GoalHelper
@@ -62,25 +62,25 @@ class GoalHelper extends AppHelper
     }
 
     /**
-     * @param array $collaborator
+     * @param array $goal_member
      *
      * @return null
      */
-    function displayCollaboratorNameList($collaborator)
+    function displayGoalMemberNameList($goal_member)
     {
-        if (!is_array($collaborator) || empty($collaborator)) {
+        if (!is_array($goal_member) || empty($goal_member)) {
             return null;
         }
         $items = [];
         $i = 1;
-        foreach ($collaborator as $k => $v) {
+        foreach ($goal_member as $k => $v) {
             $items[] = h($v['User']['display_username']);
             if ($i >= 2) {
                 break;
             }
             $i++;
         }
-        $rest_count = count($collaborator) - 2;
+        $rest_count = count($goal_member) - 2;
         if ($rest_count > 0) {
             $items[] = __("Other %d members", $rest_count);
         }
@@ -100,7 +100,7 @@ class GoalHelper extends AppHelper
             return false;
         }
 
-        if (!isset($goal['Collaborator'])) {
+        if (!isset($goal['GoalMember'])) {
             return false;
         }
 
@@ -109,11 +109,11 @@ class GoalHelper extends AppHelper
             return true;
         }
 
-        $collabos = Hash::extract($goal['Collaborator'], '{n}.user_id');
+        $collabos = Hash::extract($goal['GoalMember'], '{n}.user_id');
         if (!$collabos) {
             return false;
         }
-        // Case of coaching user is goal collaborator
+        // Case of coaching user is goal goal_member
         if (array_intersect($collabos, $my_coaching_users)) {
             return true;
         }
@@ -122,25 +122,25 @@ class GoalHelper extends AppHelper
     }
 
     /**
-     * @param array $collaborator
+     * @param array $goal_member
      *
      * @return string
      */
-    function displayApprovalStatus($collaborator)
+    function displayApprovalStatus($goal_member)
     {
         $waiting = __("Waiting for approval");
         $out_of_evaluation = __("Out of Evaluation");
         $in_evaluation = __("In Evaluation");
 
-        if (!($collaborator['is_wish_approval'] && $collaborator['is_approval_enabled'])) {
+        if (!($goal_member['is_wish_approval'] && $goal_member['is_approval_enabled'])) {
             return '';
         }
 
-        if($collaborator['approval_status'] == Collaborator::APPROVAL_STATUS_NEW || $collaborator['approval_status'] == Collaborator::APPROVAL_STATUS_REAPPLICATION) {
+        if ($goal_member['approval_status'] == GoalMember::APPROVAL_STATUS_NEW || $goal_member['approval_status'] == GoalMember::APPROVAL_STATUS_REAPPLICATION) {
             return $waiting;
         }
 
-        if ($collaborator['is_target_evaluation']) {
+        if ($goal_member['is_target_evaluation']) {
             return $in_evaluation;
         }
 

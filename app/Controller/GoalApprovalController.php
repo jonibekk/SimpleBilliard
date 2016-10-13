@@ -1,10 +1,9 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 
 /**
  * OLD GoalApproval Controller
-
  */
 class GoalApprovalController extends AppController
 {

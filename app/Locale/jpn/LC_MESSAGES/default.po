@@ -360,7 +360,7 @@ msgid "You have no right to operate it."
 msgstr "この操作をする権限がありません。"
 
 #: Controller/GoalsController.php:599
-msgid "Quitted a collaborator."
+msgid "Quitted a goal_member."
 msgstr "コラボレータから外れました。"
 
 #: Controller/GoalsController.php:624 Model/Goal.php:1838;1850
@@ -1215,15 +1215,15 @@ msgstr "公開"
 msgid "Secret"
 msgstr "秘密"
 
-#: Model/Collaborator.php:48 View/Elements/cake_variables.ctp:267;488
+#: Model/GoalMember.php:48 View/Elements/cake_variables.ctp:267;488
 #: View/Elements/my_goals_area.ctp:91
 #: View/Elements/Goal/modal_goal_description.ctp:109
 #: View/Evaluations/view.ctp:361 View/GoalApproval/done.ctp:108
 #: View/GoalApproval/index.ctp:111
-msgid "Collaborator"
+msgid "GoalMember"
 msgstr "コラボレーター"
 
-#: Model/Collaborator.php:49 Model/Evaluation.php:147;151
+#: Model/GoalMember.php:49 Model/Evaluation.php:147;151
 #: View/Elements/cake_variables.ctp:477 View/Elements/my_goals_area.ctp:67
 #: View/Elements/Goal/modal_goal_description.ctp:99
 #: View/Evaluations/view.ctp:352 View/GoalApproval/done.ctp:108
@@ -1338,7 +1338,7 @@ msgid "Followers number"
 msgstr "フォロワーが多い順"
 
 #: Model/Goal.php:85
-msgid "Collaborators number"
+msgid "GoalMembers number"
 msgstr "コラボが多い順"
 
 #: Model/Goal.php:86
@@ -6642,7 +6642,7 @@ msgstr "編集"
 #: Model/AttachedFile.php:validation Model/Circle.php:validation
 #: del_flg;validation team_all_flg;validation public_flg
 #: Model/CircleInsight.php:validation Model/CircleMember.php:validation
-#: admin_flg Model/Collaborator.php:validation Model/Comment.php:validation
+#: admin_flg Model/GoalMember.php:validation Model/Comment.php:validation
 #: Model/CommentFile.php:validation Model/CommentLike.php:validation
 #: Model/CommentMention.php:validation Model/CommentRead.php:validation
 #: Model/Device.php:validation Model/Email.php:validation
@@ -6730,7 +6730,7 @@ msgstr "image_type"
 #: select_clear_status;validation select_important_status
 #: Model/AttachedFile.php:validation file_type;validation file_size;validation
 #: model_type Model/CircleInsight.php:validation user_count
-#: Model/Collaborator.php:validation type;validation priority
+#: Model/GoalMember.php:validation type;validation priority
 #: Model/Comment.php:validation comment_like_count;validation
 #: comment_read_count;validation post_id Model/CommentLike.php:validation
 #: comment_id Model/Device.php:validation os_type
@@ -6754,7 +6754,7 @@ msgstr "numeric"
 
 #: Model/ActionResult.php:validation for field goal_id
 #: Model/AppMeta.php:validation key_name;validation value
-#: Model/Circle.php:validation name Model/Collaborator.php:validation
+#: Model/Circle.php:validation name Model/GoalMember.php:validation
 #: role;validation description Model/Device.php:validation device_token
 #: Model/Email.php:validation user_id;validation email
 #: Model/Evaluation.php:validation evaluatee_user_id;validation
@@ -6776,7 +6776,7 @@ msgstr "notEmplty"
 
 #: Model/ActionResult.php:validation for field name
 #: Model/ApprovalHistory.php:validation comment Model/Circle.php:validation
-#: name;validation description Model/Collaborator.php:validation
+#: name;validation description Model/GoalMember.php:validation
 #: role;validation Model/Comment.php:validation body
 #: Model/Email.php:validation email Model/EvaluateScore.php:validation
 #: description;validation index_num Model/Evaluation.php:validation

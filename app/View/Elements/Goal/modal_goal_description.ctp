@@ -9,7 +9,7 @@
  * @var                    $goal
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -106,10 +106,10 @@
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("Collaborator") ?>
-                            &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
-                    <?php if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
-                        <?php foreach ($goal['Collaborator'] as $collabo): ?>
+                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("GoalMember") ?>
+                            &nbsp;(<?= count($goal['GoalMember']) ?>)</span></div>
+                    <?php if (isset($goal['GoalMember']) && !empty($goal['GoalMember'])): ?>
+                        <?php foreach ($goal['GoalMember'] as $collabo): ?>
                             <img src="<?=
                             $this->Upload->uploadUrl($collabo['User'],
                                 'User.photo', ['style' => 'small']) ?>"
@@ -171,4 +171,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

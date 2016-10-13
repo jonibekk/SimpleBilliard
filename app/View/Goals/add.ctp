@@ -24,7 +24,7 @@ $url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request-
 $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="row">
     <!--GoalSet01-->
     <div class="col-sm-8 col-sm-offset-2">
@@ -360,13 +360,13 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             'data-bv-stringlength-max'     => 2000,
                             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                         ]) ?>
-                    <?php if (isset($this->request->data['Collaborator'][0]['id'])) {
-                        echo $this->Form->hidden('Collaborator.0.id',
-                            ['value' => $this->request->data['Collaborator'][0]['id']]);
+                    <?php if (isset($this->request->data['GoalMember'][0]['id'])) {
+                        echo $this->Form->hidden('GoalMember.0.id',
+                            ['value' => $this->request->data['GoalMember'][0]['id']]);
                     }
                     ?>
                     <?=
-                    $this->Form->input('Collaborator.0.priority', [
+                    $this->Form->input('GoalMember.0.priority', [
                         'before'   => '<div class="col col-sm-3 control-label set-importance goal-edit-labels">' .
                             '<label>' . __("Weight") . '</label>' .
                             '<div class="label-addiction">' . __("Weight of this goal") . '</div></div>',
@@ -659,4 +659,4 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     });
 </script>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

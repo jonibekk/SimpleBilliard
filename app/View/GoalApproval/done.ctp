@@ -6,7 +6,7 @@
  * @var                    $value_unit_list
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <style type="text/css">
     .approval_body_text {
         font-size: 14px
@@ -104,17 +104,17 @@
 
                             <p class="approval_body_text"><?= __("Goal Name") ?>: <?= h($goal['Goal']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
-                                    __("Leader") : __("Collaborator"); ?></p>
+                            <p class="approval_body_text"><?= $goal['GoalMember']['type'] === (string)GoalMember::TYPE_OWNER ?
+                                    __("Leader") : __("GoalMember"); ?></p>
 
                             <p class="approval_body_text"><?= __("Role") ?>
-                                : <?= h($goal['Collaborator']['role']); ?></p>
+                                : <?= h($goal['GoalMember']['role']); ?></p>
 
                             <p class="approval_body_text"><?= __("Due") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
                             <p class="approval_body_text"><?= __("Weight") ?>
-                                : <?= $goal['Collaborator']['priority']; ?></p>
+                                : <?= $goal['GoalMember']['priority']; ?></p>
 
                             <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
@@ -136,18 +136,18 @@
                         <div class="panel-body comment-block">
                             <?= $this->Form->create('GoalApproval',
                                 [
-                                    'id'         => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'],
+                                    'id'         => 'GoalApprovalIndexForm_' . $goal['GoalMember']['id'],
                                     'url'        => ['controller' => 'goal_approval', 'action' => 'done'],
                                     'type'       => 'post',
                                     'novalidate' => true
                                 ]); ?>
-                            <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
+                            <?= $this->Form->hidden('goal_member_id', ['value' => $goal['GoalMember']['id']]); ?>
 
                             <?php if ($goal['is_present_term'] === true) { ?>
                                 <div class="row">
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === false) { ?>
-                                            <?php if ($goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_REAPPLICATION) { ?>
+                                            <?php if ($goal['GoalMember']['approval_status'] === (string)GoalMember::APPROVAL_STATUS_REAPPLICATION) { ?>
                                                 <?= $this->Form->button(__("Remove from target of evaluation"),
                                                     [
                                                         'name'  => 'wait_btn',
@@ -155,7 +155,7 @@
                                                         'div'   => false
                                                     ]) ?>
                                             <?php } else {
-                                                if ($goal['Collaborator']['approval_status'] === (string)Collaborator::APPROVAL_STATUS_DONE) { ?>
+                                                if ($goal['GoalMember']['approval_status'] === (string)GoalMember::APPROVAL_STATUS_DONE) { ?>
                                                     <?= $this->Form->button(__("Set as target of evaluation"),
                                                         [
                                                             'name'  => 'approval_btn',
@@ -237,13 +237,13 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         <?php foreach ($goal_info as $goal):?>
-        <?php if(isset($goal['Collaborator']['id'])):?>
-        $('#GoalApprovalIndexForm_<?= $goal['Collaborator']['id']?>').bootstrapValidator({
+        <?php if(isset($goal['GoalMember']['id'])):?>
+        $('#GoalApprovalIndexForm_<?= $goal['GoalMember']['id']?>').bootstrapValidator({
             live: 'enabled',
 
             fields: {}

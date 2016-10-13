@@ -263,8 +263,8 @@
                         locked: true
                     },
                     {
-                        id: "collaborators",
-                        text: "<?=__("Collaborator")?>",
+                        id: "goal_members",
+                        text: "<?=__("GoalMember")?>",
                         icon: "fa fa-child",
                         locked: true
                     }
@@ -484,7 +484,7 @@
             "View Previous": "<?=__("View Previous")?>",
             "View all %s comments": "<?=__("View all %s comments")?>",
             "more": "<?=__("more")?>",
-            "Collaborator": "<?=__("Collaborator")?>",
+            "GoalMember": "<?=__("GoalMember")?>",
             "This Top Key Result is clear and most important.": "<?=__("This Top Key Result is clear and most important.")?>",
             "This Top Key Result is not most important.": "<?=__("This Top Key Result is not most important.")?>",
             "This Top Key Result is not clear.": "<?=__("This Top Key Result is not clear.")?>",

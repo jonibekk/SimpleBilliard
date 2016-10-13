@@ -21,7 +21,7 @@ class KeyResultTest extends GoalousTestCase
         'app.goal',
 
         'app.goal_category',
-        'app.collaborator',
+        'app.goal_member',
         'app.user',
         'app.team',
     );
@@ -131,8 +131,8 @@ class KeyResultTest extends GoalousTestCase
             'user_id' => 1,
             'team_id' => 1,
         ];
-        $this->KeyResult->Goal->Collaborator->create();
-        $this->KeyResult->Goal->Collaborator->save($collabo);
+        $this->KeyResult->Goal->GoalMember->create();
+        $this->KeyResult->Goal->GoalMember->save($collabo);
         $kr = [
             'user_id'      => 1,
             'team_id'      => 1,
@@ -331,8 +331,8 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Goal->current_team_id = 1;
         $this->KeyResult->Team->my_uid = 1;
         $this->KeyResult->Team->current_team_id = 1;
-        $this->KeyResult->Goal->Collaborator->my_uid = 1;
-        $this->KeyResult->Goal->Collaborator->current_team_id = 1;
+        $this->KeyResult->Goal->GoalMember->my_uid = 1;
+        $this->KeyResult->Goal->GoalMember->current_team_id = 1;
         $this->KeyResult->Team->EvaluateTerm->current_team_id = 1;
         $this->KeyResult->Team->EvaluateTerm->my_uid = 1;
         $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
