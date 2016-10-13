@@ -1,5 +1,8 @@
 # Goalous 2.0
-Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
+
+Goalousリポジトリです。 
+- [旧Goalousはこちら](https://github.com/IsaoCorp/goalous_old)
+
 当プロジェクトで管理しているソース、ドキュメント、一切のものはこのページより見つけられます。
 
 ## Health
