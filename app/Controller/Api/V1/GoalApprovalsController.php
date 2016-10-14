@@ -57,7 +57,7 @@ class GoalApprovalsController extends ApiController
         $applicationInfo = __("Complete the approval of %d goal(s).", $applicationCount);
 
         // レスポンスの基となるゴール認定リスト取得
-        $goalMembers = $this->_findCollabrators(
+        $goalMembers = $this->_findGoalMembers(
             $userId,
             $coachId,
             $coacheeIds
@@ -68,7 +68,7 @@ class GoalApprovalsController extends ApiController
         $goalMembers = $this->_processGoalMembers($userId, $teamId, $goalMembers);
 
         // 認定リスト全件数を取得
-        $allApprovalCount = count($collaborators);
+        $allApprovalCount = count($goalMembers);
 
         $res = [
             'application_count'  => $applicationCount,
@@ -135,7 +135,7 @@ class GoalApprovalsController extends ApiController
      * @return array|null
      * @internal param $userType
      */
-    private function _findCollabrators($userId, $coachId, $coacheeIds)
+    private function _findGoalMembers($userId, $coachId, $coacheeIds)
     {
         $isCoach = !empty($coachId);
         $isMember = !empty($coacheeIds);
