@@ -190,6 +190,8 @@ class GoalApprovalService extends AppService
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
         $res = Hash::extract($resByModel, 'GoalMember');
 
@@ -210,6 +212,9 @@ class GoalApprovalService extends AppService
         $goal_memberUserId = $res['user']['id'];
         $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
             $goal_memberUserId);
+
+        // TKRの整形
+        $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
 
         // 画像パス追加
         $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');

@@ -51,6 +51,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // コーチとしてのゴール認定未処理件数取得
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
         $applicationInfo = __("Complete the approval of %d goal(s).", $applicationCount);
@@ -163,6 +164,7 @@ class GoalApprovalsController extends ApiController
      */
     function get_histories()
     {
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $goalMemberId = $this->request->query('goal_member_id');
         $histories = $GoalApprovalService->findHistories($goalMemberId);
@@ -185,6 +187,7 @@ class GoalApprovalsController extends ApiController
     function post_set_as_target()
     {
         App::uses('ApprovalHistory', 'Model');
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
@@ -244,6 +247,7 @@ class GoalApprovalsController extends ApiController
     function post_remove_from_target()
     {
         App::uses('ApprovalHistory', 'Model');
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $data = $this->request->data;
@@ -301,6 +305,7 @@ class GoalApprovalsController extends ApiController
      */
     public function post_withdraw()
     {
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->Auth->user('id');
         $goalMemberId = Hash::get($this->request->data, 'goal_member.id');
@@ -356,6 +361,7 @@ class GoalApprovalsController extends ApiController
      */
     public function get_detail()
     {
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $myUserId = $this->my_uid;
         $goalMemberId = $this->request->query('goal_member_id');
@@ -388,6 +394,7 @@ class GoalApprovalsController extends ApiController
      */
     function _postApproval($saveData)
     {
+        /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
 
         // バリデーション
