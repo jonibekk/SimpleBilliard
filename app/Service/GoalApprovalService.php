@@ -52,17 +52,17 @@ class GoalApprovalService extends AppService
         // 認定コメントリスト取得
         $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
 
-        $goal_member = $GoalMemberService->get($goalMemberId, [
+        $goalMember = $GoalMemberService->get($goalMemberId, [
             GoalMemberService::EXTEND_COACH,
             GoalMemberService::EXTEND_COACHEE,
         ]);
 
         // 認定履歴に評価者からの評価コメント追加
-        $histories = $this->addClearImportantWordToApprovalHistories($histories, $goal_member['user_id']);
+        $histories = $this->addClearImportantWordToApprovalHistories($histories, $goalMember['user_id']);
 
         foreach ($histories as &$v) {
-            $v['user'] = ($v['user_id'] == $goal_member['user_id']) ?
-                $goal_member['coachee'] : $goal_member['coach'];
+            $v['user'] = ($v['user_id'] == $goalMember['user_id']) ?
+                $goalMember['coachee'] : $goalMember['coach'];
         }
         return $histories;
     }

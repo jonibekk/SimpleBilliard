@@ -185,12 +185,12 @@ class MixpanelComponent extends Object
             $user_id = $this->Controller->Auth->user('id');
             $team_id = $this->Controller->Session->read('current_team_id');
 
-            $collabo = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id);
-            if (empty($collabo)) {
-                $collabo = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id, false);
+            $goalMember = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id);
+            if (empty($goalMember)) {
+                $goalMember = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id, false);
             }
-            if (isset($collabo['GoalMember']['type'])) {
-                $property['$goal_owner_type'] = $collabo['GoalMember']['type'] == GoalMember::TYPE_OWNER ? 'L' : 'C';
+            if (isset($goalMember['GoalMember']['type'])) {
+                $property['$goal_owner_type'] = $goalMember['GoalMember']['type'] == GoalMember::TYPE_OWNER ? 'L' : 'C';
             }
 
             $approval_status = [
@@ -199,8 +199,8 @@ class MixpanelComponent extends Object
                 GoalMember::APPROVAL_STATUS_DONE          => "Not evaluable",
                 GoalMember::APPROVAL_STATUS_WITHDRAWN     => "Pending modification",
             ];
-            if (isset($collabo['GoalMember']['approval_status'])) {
-                $property['$goal_approval_status'] = $approval_status[$collabo['GoalMember']['approval_status']];
+            if (isset($goalMember['GoalMember']['approval_status'])) {
+                $property['$goal_approval_status'] = $approval_status[$goalMember['GoalMember']['approval_status']];
             }
         }
         if ($kr_id) {

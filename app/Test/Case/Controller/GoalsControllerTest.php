@@ -58,7 +58,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
 
     public $goal_id = null;
     public $kr_id = null;
-    public $collabo_id = null;
+    public $goalMemberId = null;
     public $purpose_id = null;
 
     function testIndex()
@@ -1333,14 +1333,14 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
         $this->kr_id = $Goals->Goal->KeyResult->getLastInsertID();
-        $goal_member = [
+        $goalMember = [
             'user_id' => 1,
             'team_id' => 1,
             'goal_id' => $this->goal_id,
             'type'    => 1,
         ];
         $Goals->Goal->GoalMember->create();
-        $Goals->Goal->GoalMember->save($goal_member);
+        $Goals->Goal->GoalMember->save($goalMember);
         $this->collabo_id = $Goals->Goal->GoalMember->getLastInsertID();
         return;
     }

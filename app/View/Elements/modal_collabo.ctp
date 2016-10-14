@@ -18,10 +18,10 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate") ?></h4>
         </div>
-        <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
+        <?php $goalMemberId = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
         $this->Form->create('GoalMember', [
-            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', 'goal_member_id' => $collabo_id],
+            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', 'goal_member_id' => $goalMemberId],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [

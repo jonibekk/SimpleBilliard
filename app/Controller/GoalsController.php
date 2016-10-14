@@ -302,9 +302,9 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $goal_member = $this->request->data['GoalMember'];
+        $goalMember = $this->request->data['GoalMember'];
         $goal_member_id = $goal_member_id ? $goal_member_id : $this->Goal->GoalMember->getLastInsertID();
-        $goal = $this->Goal->findById($goal_member['goal_id']);
+        $goal = $this->Goal->findById($goalMember['goal_id']);
         $goal_leader_id = Hash::get($goal, 'Goal.user_id');
 
         //success case.
@@ -314,13 +314,13 @@ class GoalsController extends AppController
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         //mixpanel
         if ($new) {
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goal_member['goal_id']);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalMember['goal_id']);
             // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
             if ($goal_leader_id != $coach_id) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goal_member['goal_id']);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalMember['goal_id']);
             }
         }
-        if ($coach_id && (isset($goal_member['priority']) && $goal_member['priority'] >= '1')
+        if ($coach_id && (isset($goalMember['priority']) && $goalMember['priority'] >= '1')
         ) {
             if ($new) {
                 //新規の場合
@@ -587,19 +587,19 @@ class GoalsController extends AppController
 
     public function delete_collabo()
     {
-        $collabo_id = $this->request->params['named']['goal_member_id'];
+        $goalMemberId = $this->request->params['named']['goal_member_id'];
         $this->request->allowMethod('post', 'put');
-        $this->Goal->GoalMember->id = $collabo_id;
+        $this->Goal->GoalMember->id = $goalMemberId;
         if (!$this->Goal->GoalMember->exists()) {
             $this->Pnotify->outError(__("He/She might quit collaborating."));
         }
         if (!$this->Goal->GoalMember->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__("You have no right to operate it."));
         }
-        $collabo = $this->Goal->GoalMember->findById($collabo_id);
-        if (!empty($collabo)) {
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        if (!empty($goalMember)) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
-                $collabo['GoalMember']['goal_id']);
+                $goalMember['GoalMember']['goal_id']);
         }
         $this->Goal->GoalMember->delete();
         $this->Pnotify->outSuccess(__("Quitted a goal_member."));

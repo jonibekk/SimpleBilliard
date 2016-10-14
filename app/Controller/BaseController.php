@@ -210,14 +210,14 @@ class BaseController extends Controller
      */
     function _sendNotifyToCoachee($goalMemberId, $notifyType)
     {
-        $goal_member = $this->Goal->GoalMember->findById($goalMemberId);
-        if (!Hash::get($goal_member, 'GoalMember')) {
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        if (!Hash::get($goalMember, 'GoalMember')) {
             return;
         }
         $this->NotifyBiz->execSendNotify($notifyType,
-            $goal_member['GoalMember']['goal_id'],
+            $goalMember['GoalMember']['goal_id'],
             null,
-            $goal_member['GoalMember']['user_id']
+            $goalMember['GoalMember']['user_id']
         );
     }
 

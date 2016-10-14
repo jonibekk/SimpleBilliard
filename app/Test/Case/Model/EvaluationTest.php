@@ -912,11 +912,11 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
         $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
 
-        $collabo = $this->Evaluation->Goal->GoalMember->find('all');
-        foreach ($collabo as $k => $v) {
-            $collabo[$k]['GoalMember']['approval_status'] = GoalMember::APPROVAL_STATUS_REAPPLICATION;
+        $goalMember = $this->Evaluation->Goal->GoalMember->find('all');
+        foreach ($goalMember as $k => $v) {
+            $goalMember[$k]['GoalMember']['approval_status'] = GoalMember::APPROVAL_STATUS_REAPPLICATION;
         }
-        $this->Evaluation->Goal->GoalMember->saveAll($collabo);
+        $this->Evaluation->Goal->GoalMember->saveAll($goalMember);
         $this->Evaluation->Goal->id = 1;
         $this->Evaluation->Goal->saveField('start_date', $current_start);
         $this->Evaluation->Goal->saveField('end_date', $current_end);

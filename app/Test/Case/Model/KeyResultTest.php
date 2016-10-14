@@ -126,13 +126,13 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Goal->create();
         $this->KeyResult->Goal->save($goal);
         $goal_id = $this->KeyResult->Goal->getLastInsertID();
-        $collabo = [
+        $goalMember = [
             'goal_id' => $goal_id,
             'user_id' => 1,
             'team_id' => 1,
         ];
         $this->KeyResult->Goal->GoalMember->create();
-        $this->KeyResult->Goal->GoalMember->save($collabo);
+        $this->KeyResult->Goal->GoalMember->save($goalMember);
         $kr = [
             'user_id'      => 1,
             'team_id'      => 1,

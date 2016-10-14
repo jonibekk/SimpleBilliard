@@ -550,13 +550,13 @@ class GoalTest extends GoalousTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
-        $collabo = [
+        $goalMember = [
             'user_id' => 1,
             'team_id' => 1,
             'goal_id' => $goal_id,
         ];
         $this->Goal->GoalMember->create();
-        $this->Goal->GoalMember->save($collabo);
+        $this->Goal->GoalMember->save($goalMember);
         return $goal_id;
     }
 
@@ -710,7 +710,7 @@ class GoalTest extends GoalousTestCase
         $this->Goal->create();
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
-        $collabo = [
+        $goalMember = [
             'user_id' => 1,
             'team_id' => 1,
             'goal_id' => $goal_id,
@@ -729,7 +729,7 @@ class GoalTest extends GoalousTestCase
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->GoalMember->create();
-        $this->Goal->GoalMember->save($collabo);
+        $this->Goal->GoalMember->save($goalMember);
         $res_1 = $this->Goal->getMyPreviousGoals(null, 1, 'all', 2);
         $res_2 = $this->Goal->getMyPreviousGoals(null, 1, 'count', 2);
         $this->assertNotEmpty($res_1);
@@ -795,10 +795,10 @@ class GoalTest extends GoalousTestCase
         // ゴールの期限が範囲内に収まっているかチェック
         $users = $this->Goal->getAllUserGoal(10000, 19999);
         foreach ($users as $user) {
-            foreach ($user['GoalMember'] as $collabo) {
-                if ($collabo['Goal']) {
-                    $this->assertGreaterThanOrEqual(10000, $collabo['Goal']['start_date']);
-                    $this->assertLessThanOrEqual(19999, $collabo['Goal']['end_date']);
+            foreach ($user['GoalMember'] as $goalMember) {
+                if ($goalMember['Goal']) {
+                    $this->assertGreaterThanOrEqual(10000, $goalMember['Goal']['start_date']);
+                    $this->assertLessThanOrEqual(19999, $goalMember['Goal']['end_date']);
                 }
             }
         }

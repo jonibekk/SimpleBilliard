@@ -51,7 +51,7 @@ class GoalApprovalsController extends ApiController
         $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
 
         // レスポンスの基となるゴール認定リスト取得
-        $goal_members = $this->_findCollabrators(
+        $goalMembers = $this->_findCollabrators(
             $userId,
             $coachId,
             $coacheeIds
@@ -59,11 +59,11 @@ class GoalApprovalsController extends ApiController
 
         // レスポンス用に整形
         $teamId = $this->Session->read('current_team_id');
-        $goal_members = $this->_processGoalMembers($userId, $teamId, $goal_members);
+        $goalMembers = $this->_processGoalMembers($userId, $teamId, $goalMembers);
 
         $res = [
             'application_count' => $applicationCount,
-            'goal_members'      => $goal_members
+            'goal_members'      => $goalMembers
         ];
         return $this->_getResponseSuccess($res);
     }
@@ -87,10 +87,10 @@ class GoalApprovalsController extends ApiController
 
         $res = [];
         foreach ($baseData as $k => $v) {
-            $goal_member = $v['GoalMember'];
-            $goal_member['is_mine'] = false;
+            $goalMember = $v['GoalMember'];
+            $goalMember['is_mine'] = false;
             if ($userId === $v['User']['id']) {
-                $goal_member['is_mine'] = true;
+                $goalMember['is_mine'] = true;
                 if ($myEvaluationFlg === false) {
                     continue;
                 }
@@ -100,7 +100,7 @@ class GoalApprovalsController extends ApiController
             $user['original_img_url'] = $Upload->uploadUrl($v, 'User.photo');
             $user['small_img_url'] = $Upload->uploadUrl($v, 'User.photo', ['style' => 'small']);
             $user['large_img_url'] = $Upload->uploadUrl($v, 'User.photo', ['style' => 'large']);
-            $goal_member['user'] = $user;
+            $goalMember['user'] = $user;
 
             /* ゴール情報設定 */
             $goal = $v['Goal'];
@@ -108,8 +108,8 @@ class GoalApprovalsController extends ApiController
             $goal['small_img_url'] = $Upload->uploadUrl($v, 'Goal.photo', ['style' => 'small']);
             $goal['large_img_url'] = $Upload->uploadUrl($v, 'Goal.photo', ['style' => 'large']);
 
-            $goal_member['goal'] = $goal;
-            $res[] = $goal_member;
+            $goalMember['goal'] = $goal;
+            $res[] = $goalMember;
         }
         return $res;
     }
@@ -404,8 +404,8 @@ class GoalApprovalsController extends ApiController
      */
     function _trackApprovalToMixpanel($trackType, $memberType, $goalMemberId)
     {
-        $goal_member = $this->Goal->GoalMember->findById($goalMemberId);
-        $goalId = Hash::get($goal_member, 'GoalMember.goal_id');
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        $goalId = Hash::get($goalMember, 'GoalMember.goal_id');
         if (!$goalId) {
             return;
         }

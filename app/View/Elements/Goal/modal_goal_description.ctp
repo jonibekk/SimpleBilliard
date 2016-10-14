@@ -109,12 +109,13 @@
                     <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("Collaborator") ?>
                             &nbsp;(<?= count($goal['GoalMember']) ?>)</span></div>
                     <?php if (isset($goal['GoalMember']) && !empty($goal['GoalMember'])): ?>
-                        <?php foreach ($goal['GoalMember'] as $collabo): ?>
+                        <?php foreach ($goal['GoalMember'] as $goalMember): ?>
                             <img src="<?=
-                            $this->Upload->uploadUrl($collabo['User'],
+                            $this->Upload->uploadUrl($goalMember['User'],
                                 'User.photo', ['style' => 'small']) ?>"
-                                 style="width:32px;height: 32px;" alt="<?= h($collabo['User']['display_username']) ?>"
-                                 title="<?= h($collabo['User']['display_username']) ?>">
+                                 style="width:32px;height: 32px;"
+                                 alt="<?= h($goalMember['User']['display_username']) ?>"
+                                 title="<?= h($goalMember['User']['display_username']) ?>">
                         <?php endforeach ?>
                     <?php else: ?>
                         <?= __("No Unit") ?>

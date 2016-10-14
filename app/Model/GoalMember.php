@@ -107,13 +107,13 @@ class GoalMember extends AppModel
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $goal_member = [
+        $goalMember = [
             'team_id' => $this->current_team_id,
             'user_id' => $uid,
             'type'    => $type,
             'goal_id' => $goal_id,
         ];
-        $res = $this->save($goal_member);
+        $res = $this->save($goalMember);
         return $res;
     }
 
@@ -428,11 +428,11 @@ class GoalMember extends AppModel
     {
         $this->id = $id;
         $this->save(['approval_status' => $status]);
-        $collabo = $this->findById($this->id);
+        $goalMember = $this->findById($this->id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $collabo['GoalMember']['user_id']),
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $goalMember['GoalMember']['user_id']),
             'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $collabo['GoalMember']['user_id']),
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalMember['GoalMember']['user_id']),
             'user_data');
     }
 

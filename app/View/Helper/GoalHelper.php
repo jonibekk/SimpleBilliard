@@ -62,25 +62,25 @@ class GoalHelper extends AppHelper
     }
 
     /**
-     * @param array $goal_member
+     * @param array $goalMember
      *
      * @return null
      */
-    function displayGoalMemberNameList($goal_member)
+    function displayGoalMemberNameList($goalMember)
     {
-        if (!is_array($goal_member) || empty($goal_member)) {
+        if (!is_array($goalMember) || empty($goalMember)) {
             return null;
         }
         $items = [];
         $i = 1;
-        foreach ($goal_member as $k => $v) {
+        foreach ($goalMember as $k => $v) {
             $items[] = h($v['User']['display_username']);
             if ($i >= 2) {
                 break;
             }
             $i++;
         }
-        $rest_count = count($goal_member) - 2;
+        $rest_count = count($goalMember) - 2;
         if ($rest_count > 0) {
             $items[] = __("Other %d members", $rest_count);
         }
@@ -122,25 +122,25 @@ class GoalHelper extends AppHelper
     }
 
     /**
-     * @param array $goal_member
+     * @param array $goalMember
      *
      * @return string
      */
-    function displayApprovalStatus($goal_member)
+    function displayApprovalStatus($goalMember)
     {
         $waiting = __("Waiting for approval");
         $out_of_evaluation = __("Out of Evaluation");
         $in_evaluation = __("In Evaluation");
 
-        if (!($goal_member['is_wish_approval'] && $goal_member['is_approval_enabled'])) {
+        if (!($goalMember['is_wish_approval'] && $goalMember['is_approval_enabled'])) {
             return '';
         }
 
-        if ($goal_member['approval_status'] == GoalMember::APPROVAL_STATUS_NEW || $goal_member['approval_status'] == GoalMember::APPROVAL_STATUS_REAPPLICATION) {
+        if ($goalMember['approval_status'] == GoalMember::APPROVAL_STATUS_NEW || $goalMember['approval_status'] == GoalMember::APPROVAL_STATUS_REAPPLICATION) {
             return $waiting;
         }
 
-        if ($goal_member['is_target_evaluation']) {
+        if ($goalMember['is_target_evaluation']) {
             return $in_evaluation;
         }
 
