@@ -23,22 +23,18 @@ export class CoacheeCard extends React.Component {
     })()
 
     return (
-      <li className="goals-approval-list-item">
-        <div className={`goals-approval-list-item ${ is_incomplete ? "is-incomplete is-waiting" : "is-complete" }`}>
+      <li className={`goals-approval-list-item ${ is_incomplete ? "is-incomplete is-waiting" : "is-complete" }`}>
           <Link className="goals-approval-list-item-link" to={ `/goals/approval/detail/${goal_member.id}` }>
-            <img className="goals-approval-list-item-image" src={ goal_member.user.small_img_url } alt="" width="32"
-                 height="32"/>
-            <div className="goals-approval-list-item-info">
-              <p className="goals-approval-list-item-info-user-name">{ goal_member.user.display_username }</p>
-              <p className="goals-approval-list-item-info-goal-name">{ goal_member.goal.name }</p>
-              <p className="goals-approval-list-item-info-goal-attr">{ role }・<span
-                className="mod-status">{ status }</span></p>
-            </div>
-            <p className="goals-approval-list-item-detail">
-              <i className="fa fa-check" ariaHidden="true"></i>
-            </p>
+              <img className="goals-approval-list-item-image" src={ goal_member.user.small_img_url } alt="" width="32" height="32" />
+              <div className="goals-approval-list-item-info">
+                  <p className="goals-approval-list-item-info-user-name">{ goal_member.user.display_username }</p>
+                  <p className="goals-approval-list-item-info-goal-name">{ goal_member.goal.name }</p>
+                  <p className="goals-approval-list-item-info-goal-attr">{ role }・<span className="mod-status">{ status }</span></p>
+              </div>
+              <p className="goals-approval-list-item-detail">
+                <i className="fa fa-check" ariaHidden="true"></i>
+              </p>
           </Link>
-        </div>
       </li>
     )
   }

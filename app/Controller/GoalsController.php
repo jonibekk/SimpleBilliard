@@ -602,7 +602,7 @@ class GoalsController extends AppController
                 $goalMember['GoalMember']['goal_id']);
         }
         $this->Goal->GoalMember->delete();
-        $this->Pnotify->outSuccess(__("Quitted a goal_member."));
+        $this->Pnotify->outSuccess(__("Quitted a collaborator."));
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->redirect($this->referer());
