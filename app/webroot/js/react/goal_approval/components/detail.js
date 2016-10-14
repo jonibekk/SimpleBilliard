@@ -52,7 +52,8 @@ export default class DetailComponent extends React.Component {
               <UserCard collaborator={ detail.collaborator } />
               <GoalCard goal={ detail.collaborator.goal }
                         is_leader={ detail.collaborator.is_leader } />
-              <Comments approvalHistories={ detail.collaborator.approval_histories } />
+              <Comments approval_histories={ detail.collaborator.approval_histories }
+                        view_more_text={ detail.collaborator.histories_view_more_text} />
               {/* footer */}
               { detail.collaborator.is_mine ? coachee_footer : coach_footer }
           </div>

@@ -210,8 +210,10 @@ class GoalApprovalService extends AppService
 
         // 認定履歴の文言を追加
         $collaboratorUserId = $res['user']['id'];
-        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
-            $collaboratorUserId);
+        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'], $collaboratorUserId);
+        // 認定コメントの「もっと見る」文言を定義
+        $res['histories_view_more_text'] = __('View %s comments', count($res['approval_histories']) - 1);
+
 
         // TKRの整形
         $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);

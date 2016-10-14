@@ -14,11 +14,11 @@ export class Comments extends React.Component {
   }
 
   render() {
-    if(Object.keys(this.props.approvalHistories).length == 0) {
+    if(Object.keys(this.props.approval_histories).length == 0) {
       return null
     }
 
-    const comments = this.props.approvalHistories
+    const comments = this.props.approval_histories
     const latest_comment = comments.length > 0 ? comments[comments.length - 1] : null
     const commets_execpt_latest_comment = comments.length > 1 ? comments.slice(0, -1) : []
     const display_view_more_comments_button = commets_execpt_latest_comment.length > 0 && !this.state.display_all_comments
@@ -26,7 +26,7 @@ export class Comments extends React.Component {
       return (
         <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments }>
           <i className="fa fa-angle-down" aria-hidden="true"></i>
-          <span className="goals-approval-interactive-link">View all { comments.length - 1 } comments</span>
+          <span className="goals-approval-interactive-link"> { this.props.view_more_text } </span>
         </a>
       )
     }
@@ -49,6 +49,8 @@ export class Comments extends React.Component {
 }
 
 Comments.propTypes = {
-  approvalHistories: React.PropTypes.array
+  approval_histories: React.PropTypes.array,
+  view_more_text: React.PropTypes.string
 }
-Comments.defaultProps = {approvalHistories: []}
+
+Comments.defaultProps = { approval_histories: [], view_more_text: ''}
