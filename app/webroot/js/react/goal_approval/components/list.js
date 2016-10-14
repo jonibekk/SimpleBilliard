@@ -16,7 +16,7 @@ export default class ListComponent extends React.Component {
         return __("Evaluation target goals are listed up here.")
       }
       // 初回データ取得中の場合は何も出さない
-      if(this.props.list.fetching_collaborators) {
+      if(this.props.list.fetching_goal_members) {
         return ""
       }
       return __("There are no evaluation target goals.")
