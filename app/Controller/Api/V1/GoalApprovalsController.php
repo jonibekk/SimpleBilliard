@@ -29,7 +29,9 @@ class GoalApprovalsController extends ApiController
     {
         // チームの評価設定が無効であればForbidden
         if (!$this->Team->EvaluationSetting->isEnabled()) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            // TODO: 認定ページを使用する必要が無い場合は、単純にリストを0件にして表示する。（ここでPnotify設定すると不自然な動きになる）
+            //       API経由でのエラーメッセージ表示は別途一括で設定する必要がある。
+            // $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -42,7 +44,9 @@ class GoalApprovalsController extends ApiController
 
         // コーチとコーチーがいない場合はForbidden
         if (empty($coachId) && empty($coacheeIds)) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            // TODO: 認定ページを使用する必要が無い場合は、単純にリストを0件にして表示する。（ここでPnotify設定すると不自然な動きになる）
+            //       API経由でのエラーメッセージ表示は別途一括で設定する必要がある。
+            // $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
