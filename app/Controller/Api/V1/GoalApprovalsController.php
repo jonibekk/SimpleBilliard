@@ -29,7 +29,9 @@ class GoalApprovalsController extends ApiController
     {
         // チームの評価設定が無効であればForbidden
         if (!$this->Team->EvaluationSetting->isEnabled()) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            // TODO: 認定ページを使用する必要が無い場合は、単純にリストを0件にして表示する。（ここでPnotify設定すると不自然な動きになる）
+            //       API経由でのエラーメッセージ表示は別途一括で設定する必要がある。
+            // $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -42,13 +44,16 @@ class GoalApprovalsController extends ApiController
 
         // コーチとコーチーがいない場合はForbidden
         if (empty($coachId) && empty($coacheeIds)) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            // TODO: 認定ページを使用する必要が無い場合は、単純にリストを0件にして表示する。（ここでPnotify設定すると不自然な動きになる）
+            //       API経由でのエラーメッセージ表示は別途一括で設定する必要がある。
+            // $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
         // コーチとしてのゴール認定未処理件数取得
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
+        $applicationInfo = __("Complete the approval of %d goal(s).", $applicationCount);
 
         // レスポンスの基となるゴール認定リスト取得
         $collaborators = $this->_findCollabrators(
@@ -61,9 +66,14 @@ class GoalApprovalsController extends ApiController
         $teamId = $this->Session->read('current_team_id');
         $collaborators = $this->_processCollaborators($userId, $teamId, $collaborators);
 
+        // 認定リスト全件数を取得
+        $allApprovalCount = count($collaborators);
+
         $res = [
-            'application_count' => $applicationCount,
-            'collaborators'     => $collaborators
+            'application_count'  => $applicationCount,
+            'application_info'   => $applicationInfo,
+            'all_approval_count' => $allApprovalCount,
+            'collaborators'      => $collaborators
         ];
         return $this->_getResponseSuccess($res);
     }

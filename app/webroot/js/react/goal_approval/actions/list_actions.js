@@ -1,14 +1,10 @@
 import * as types from '~/goal_approval/constants/ActionTypes'
 import axios from "axios"
 
-export function fetchCollaborators(is_initialize = false) {
-  return (dispatch, getState) => {
-    const next_getting_api = getState().list.next_getting_api
-    const default_getting_api = '/api/v1/goal_approvals/list'
-    const request_api = next_getting_api ? next_getting_api : default_getting_api
-
+export function fetchCollaborators() {
+  return (dispatch) => {
     dispatch(fetchingCollaborators())
-    return axios.get(request_api, {
+    return axios.get('/api/v1/goal_approvals/list', {
       timeout: 10000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -18,23 +14,10 @@ export function fetchCollaborators(is_initialize = false) {
     })
     .then((response) => {
       dispatch(finishedFetchingCollaborators())
-      // TODO: 第一フェーズではページネーションは行わないので全件表示する
-      // dispatch(setNextPagingApi(response.paging.next))
-      if(is_initialize) {
-        dispatch(initCollaborators(response.data.data.collaborators))
-        dispatch(setApplicationCount(response.data.data.application_count))
-        dispatch(setNextPagingApi('/api/v1/goal_approvals/list'))
-        /* eslint-disable no-console */
-        console.log('fetch init data')
-        /* eslint-enable no-console */
-      } else {
-        dispatch(addCollaborators(response.data.data.collaborators))
-      }
-
-      // TODO: 第一フェーズではページネーションは行わないので全件表示する
-      // if(response.data.data.collaborators.length < List.NUMBER_OF_DISPLAY_LIST_CARD) {
-      //   dispatch(doneLoadingAllData())
-      // }
+      dispatch(setFetchData(response.data.data))
+      /* eslint-disable no-console */
+      console.log('fetch init data')
+      /* eslint-enable no-console */
     })
     .catch(() => {
       dispatch(finishedFetchingCollaborators())
@@ -43,16 +26,8 @@ export function fetchCollaborators(is_initialize = false) {
   }
 }
 
-export function initCollaborators(collaborators) {
-  return { type: types.INIT_COLLABORATORS, collaborators }
-}
-
-export function setApplicationCount(application_count) {
-  return { type: types.SET_APPLICATION_COUNT, application_count }
-}
-
-export function addCollaborators(collaborators) {
-  return { type: types.ADD_COLLABORATORS, collaborators }
+export function setFetchData(fetch_data) {
+  return { type: types.SET_FETCH_DATA, fetch_data }
 }
 
 export function fetchingCollaborators() {
@@ -61,12 +36,4 @@ export function fetchingCollaborators() {
 
 export function finishedFetchingCollaborators() {
   return { type: types.FINISHED_FETCHING_COLLABORATORS }
-}
-
-export function setNextPagingApi(next_getting_api) {
-  return { type: types.SET_NEXT_PAGING_API, next_getting_api }
-}
-
-export function doneLoadingAllData() {
-  return { type: types.DONE_LOADING_ALL_DATA }
 }
