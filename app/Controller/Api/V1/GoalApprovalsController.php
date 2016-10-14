@@ -49,6 +49,7 @@ class GoalApprovalsController extends ApiController
         // コーチとしてのゴール認定未処理件数取得
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
+        $applicationInfo = __("Complete the approval of %d goal(s).", $applicationCount);
 
         // レスポンスの基となるゴール認定リスト取得
         $collaborators = $this->_findCollabrators(
@@ -66,6 +67,7 @@ class GoalApprovalsController extends ApiController
 
         $res = [
             'application_count'  => $applicationCount,
+            'application_info'   => $applicationInfo,
             'all_approval_count' => $allApprovalCount,
             'collaborators'      => $collaborators
         ];
