@@ -119,8 +119,7 @@ class GoalApprovalService extends AppService
     function deleteUnapprovedCountCache($userIds)
     {
         $Goal = ClassRegistry::init("Goal");
-
-        if (getType($userIds) === "integer") {
+        if (gettype($userIds) === "integer") {
             $userIds = [$userIds];
         }
         $deletedCacheUserIds = [];
@@ -276,8 +275,9 @@ class GoalApprovalService extends AppService
     /**
      * ゴール認定POSTデータを保存用に整形
      *
+     * @param          $approvalType
      * @param  array   $requestData
-     * @param  integer $user_id
+     * @param  integer $userId
      *
      * @return array $saveData
      */

@@ -3,7 +3,7 @@ import axios from "axios"
 
 export function fetchGoalMembers() {
   return (dispatch) => {
-    dispatch(fetchGoalMembers())
+    dispatch(fetchingGoalMembers())
     return axios.get('/api/v1/goal_approvals/list', {
       timeout: 10000,
       headers: {

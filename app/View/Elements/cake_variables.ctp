@@ -484,7 +484,7 @@
             "View Previous": "<?=__("View Previous")?>",
             "View all %s comments": "<?=__("View all %s comments")?>",
             "more": "<?=__("more")?>",
-            "GoalMember": "<?=__("Collaborator")?>",
+            "Collaborator": "<?=__("Collaborator")?>",
             "This Top Key Result is clear and most important.": "<?=__("This Top Key Result is clear and most important.")?>",
             "This Top Key Result is not most important.": "<?=__("This Top Key Result is not most important.")?>",
             "This Top Key Result is not clear.": "<?=__("This Top Key Result is not clear.")?>",

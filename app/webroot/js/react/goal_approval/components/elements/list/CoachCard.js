@@ -7,7 +7,7 @@ export class CoachCard extends React.Component {
     const ApprovalStatus = GoalMember.ApprovalStatus
     const Type = GoalMember.Type
     const goal_member = this.props.goal_member
-    const role = goal_member.type == Type.OWNER ? __('Leader') : __('GoalMember')
+    const role = goal_member.type == Type.OWNER ? __('Leader') : __('Collaborator')
     const is_incomplete = goal_member.approval_status != ApprovalStatus.DONE && goal_member.approval_status != ApprovalStatus.WITHDRAWN
     const status = (() => {
       if (goal_member.is_target_evaluation) {
