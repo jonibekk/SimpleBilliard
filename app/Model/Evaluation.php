@@ -540,32 +540,31 @@ class Evaluation extends AppModel
 
     /**
      * @param $uid
-     * @param $term_id
+     * @param $termId
      * @param $evaluators
      * @param $index
      *
      * @return array
      */
-    function getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index)
+    function getAddRecordsOfGoalEvaluation($uid, $termId, $evaluators, $index)
     {
-        $goal_evaluations = [];
-        $goal_list = $this->Goal->GoalMember->getCollaboGoalList($uid, true, null, 1,
-            GoalMember::APPROVAL_STATUS_REAPPLICATION);
-        $goal_list = $this->Goal->filterThisTermIds($goal_list);
+        $goalEvaluations = [];
+        $goalList = $this->Goal->GoalMember->findEvaluatableGoalList($uid);
+        $goalList = $this->Goal->filterThisTermIds($goalList);
         //order by priority of goal
-        $goal_list = $this->Goal->GoalMember->goalIdOrderByPriority($uid, $goal_list);
+        $goalList = $this->Goal->GoalMember->goalIdOrderByPriority($uid, $goalList);
 
-        foreach ($goal_list as $gid) {
+        foreach ($goalList as $gid) {
             //self
             if ($this->Team->EvaluationSetting->isEnabledSelf()) {
-                $goal_evaluations[] = $this->getAddRecord($uid, $uid, $term_id, $index++, self::TYPE_ONESELF, $gid);
+                $goalEvaluations[] = $this->getAddRecord($uid, $uid, $termId, $index++, self::TYPE_ONESELF, $gid);
             }
 
             //evaluator
             if ($this->Team->EvaluationSetting->isEnabledEvaluator() && viaIsSet($evaluators[$uid])) {
                 $evals = $evaluators[$uid];
                 foreach ($evals as $eval_uid) {
-                    $goal_evaluations[] = $this->getAddRecord($uid, $eval_uid, $term_id, $index++,
+                    $goalEvaluations[] = $this->getAddRecord($uid, $eval_uid, $termId, $index++,
                         self::TYPE_EVALUATOR, $gid);
                 }
             }
@@ -573,12 +572,12 @@ class Evaluation extends AppModel
             if ($this->Team->EvaluationSetting->isEnabledLeader()) {
                 $leader_uid = $this->Goal->GoalMember->getLeaderUid($gid);
                 if ($uid !== $leader_uid) {
-                    $goal_evaluations[] = $this->getAddRecord($uid, $leader_uid, $term_id, $index++,
+                    $goalEvaluations[] = $this->getAddRecord($uid, $leader_uid, $termId, $index++,
                         self::TYPE_LEADER, $gid);
                 }
             }
         }
-        return $goal_evaluations;
+        return $goalEvaluations;
     }
 
     /**

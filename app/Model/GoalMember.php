@@ -134,6 +134,22 @@ class GoalMember extends AppModel
         return $res;
     }
 
+    function findEvaluatableGoalList($uid)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'              => $uid,
+                'is_target_evaluation' => true
+            ],
+            'fields'     => [
+                'goal_id',
+                'goal_id'
+            ],
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
+    }
+
     function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1, $approval_status = null)
     {
         $is_default = false;
