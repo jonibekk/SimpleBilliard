@@ -82,7 +82,7 @@ class Goal extends AppModel
                 'action'   => __("Actions number"),
                 'result'   => __("Key results number"),
                 'follow'   => __("Followers number"),
-                'collabo'  => __("GoalMembers number"),
+                'collabo'  => __("Collaborators number"),
                 'progress' => __("Progress rate")
             ]
         ];

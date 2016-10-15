@@ -1342,7 +1342,7 @@ msgid "Followers number"
 msgstr "フォロワーが多い順"
 
 #: Model/Goal.php:85
-msgid "GoalMembers number"
+msgid "Collaborators number"
 msgstr "コラボが多い順"
 
 #: Model/Goal.php:86
