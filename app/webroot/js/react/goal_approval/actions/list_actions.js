@@ -1,9 +1,9 @@
 import * as types from '~/goal_approval/constants/ActionTypes'
 import axios from "axios"
 
-export function fetchCollaborators() {
+export function fetchGoalMembers() {
   return (dispatch) => {
-    dispatch(fetchingCollaborators())
+    dispatch(fetchingGoalMembers())
     return axios.get('/api/v1/goal_approvals/list', {
       timeout: 10000,
       headers: {
@@ -13,14 +13,14 @@ export function fetchCollaborators() {
       dataType: 'json'
     })
     .then((response) => {
-      dispatch(finishedFetchingCollaborators())
+      dispatch(finishedFetchingGoalMembers())
       dispatch(setFetchData(response.data.data))
       /* eslint-disable no-console */
       console.log('fetch init data')
       /* eslint-enable no-console */
     })
     .catch(() => {
-      dispatch(finishedFetchingCollaborators())
+      dispatch(finishedFetchingGoalMembers())
     })
 
   }
@@ -30,10 +30,10 @@ export function setFetchData(fetch_data) {
   return { type: types.SET_FETCH_DATA, fetch_data }
 }
 
-export function fetchingCollaborators() {
-  return { type: types.FETCHING_COLLABORATORS }
+export function fetchingGoalMembers() {
+  return {type: types.FETCHING_GOAL_MEMBERS}
 }
 
-export function finishedFetchingCollaborators() {
-  return { type: types.FINISHED_FETCHING_COLLABORATORS }
+export function finishedFetchingGoalMembers() {
+  return {type: types.FINISHED_FETCHING_GOAL_MEMBERS}
 }

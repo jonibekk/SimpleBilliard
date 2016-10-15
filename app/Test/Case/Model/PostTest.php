@@ -27,7 +27,7 @@ class PostTest extends GoalousTestCase
         'app.goal',
         'app.local_name',
         'app.follower',
-        'app.collaborator',
+        'app.goal_member',
         'app.comment',
         'app.comment_like',
         'app.comment_read',
@@ -746,7 +746,7 @@ class PostTest extends GoalousTestCase
         $this->Post->current_team_id = 1;
         $this->Post->my_uid = 1;
         $this->Post->Goal->Follower->current_team_id = 1;
-        $this->Post->Goal->Collaborator->current_team_id = 1;
+        $this->Post->Goal->GoalMember->current_team_id = 1;
 
         $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
         $this->Post->getRelatedPostList(1, 10000);
@@ -762,9 +762,9 @@ class PostTest extends GoalousTestCase
         $this->Post->current_team_id = 1;
         $this->Post->my_uid = 1;
         $this->Post->Goal->Follower->current_team_id = 1;
-        $this->Post->Goal->Collaborator->current_team_id = 1;
+        $this->Post->Goal->GoalMember->current_team_id = 1;
         $this->Post->Goal->Follower->my_uid = 1;
-        $this->Post->Goal->Collaborator->my_uid = 1;
+        $this->Post->Goal->GoalMember->my_uid = 1;
 
         $this->Post->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1, 'body' => 'test']);
         $res = $this->Post->isGoalPost($this->Post->getLastInsertID());
@@ -776,9 +776,9 @@ class PostTest extends GoalousTestCase
         $this->Post->current_team_id = 1;
         $this->Post->my_uid = 1;
         $this->Post->Goal->Follower->current_team_id = 1;
-        $this->Post->Goal->Collaborator->current_team_id = 1;
+        $this->Post->Goal->GoalMember->current_team_id = 1;
         $this->Post->Goal->Follower->my_uid = 1;
-        $this->Post->Goal->Collaborator->my_uid = 1;
+        $this->Post->Goal->GoalMember->my_uid = 1;
 
         $this->Post->save(['user_id' => 1, 'team_id' => 1, 'body' => 'test']);
         $res = $this->Post->isGoalPost($this->Post->getLastInsertID());
@@ -1313,8 +1313,8 @@ class PostTest extends GoalousTestCase
         $this->Post->Team->TeamMember->current_team_id = $team_id;
         $this->Post->Goal->my_uid = $uid;
         $this->Post->Goal->current_team_id = $team_id;
-        $this->Post->Goal->Collaborator->my_uid = $uid;
-        $this->Post->Goal->Collaborator->current_team_id = $team_id;
+        $this->Post->Goal->GoalMember->my_uid = $uid;
+        $this->Post->Goal->GoalMember->current_team_id = $team_id;
         $this->Post->Team->EvaluateTerm->current_team_id = $team_id;
         $this->Post->Team->EvaluateTerm->my_uid = $uid;
     }

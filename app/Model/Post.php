@@ -398,7 +398,7 @@ class Post extends AppModel
     {
         $g_list = [];
         $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
-        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true));
+        $g_list = array_merge($g_list, $this->Goal->GoalMember->getCollaboGoalList($this->my_uid, true));
         $g_list = array_merge($g_list, $this->Goal->User->TeamMember->getCoachingGoalList($this->my_uid));
 
         if (empty($g_list)) {
@@ -505,7 +505,7 @@ class Post extends AppModel
         }
 
         $post_filter_conditions = [
-            'OR'                            => [],
+            'OR'                           => [],
             'Post.created BETWEEN ? AND ?' => [$start, $end],
         ];
         /**
@@ -741,7 +741,7 @@ class Post extends AppModel
                     ],
                     'MyCollabo' => [
                         'conditions' => [
-                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                            'MyCollabo.type'    => GoalMember::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
                         ],
                         'fields'     => [
@@ -932,8 +932,8 @@ class Post extends AppModel
             'table'      => $db->fullTableName($this->PostShareCircle),
             'alias'      => 'PostShareCircle',
             'conditions' => [
-                'PostShareCircle.circle_id'                => $my_circle_list,
-                'PostShareCircle.team_id'                  => $this->current_team_id,
+                'PostShareCircle.circle_id'               => $my_circle_list,
+                'PostShareCircle.team_id'                 => $this->current_team_id,
                 'PostShareCircle.created BETWEEN ? AND ?' => [$start, $end],
             ],
         ];
@@ -998,7 +998,7 @@ class Post extends AppModel
                     'conditions' => [
                         '`Goal`.`id`=`Post`.`goal_id`',
                         'Post.created BETWEEN ? AND ?' => [$start, $end],
-                        'Post.type'                     => $post_types,
+                        'Post.type'                    => $post_types,
                     ],
                 ]
             ]
@@ -1028,8 +1028,8 @@ class Post extends AppModel
             'table'      => $db->fullTableName($this->PostShareUser),
             'alias'      => 'PostShareUser',
             'conditions' => [
-                'PostShareUser.user_id'                  => $this->my_uid,
-                'PostShareUser.team_id'                  => $this->current_team_id,
+                'PostShareUser.user_id'                 => $this->my_uid,
+                'PostShareUser.team_id'                 => $this->current_team_id,
                 'PostShareUser.created BETWEEN ? AND ?' => [$start, $end],
             ],
         ];
