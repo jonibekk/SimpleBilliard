@@ -914,7 +914,7 @@ class EvaluationTest extends GoalousTestCase
 
         $goalMember = $this->Evaluation->Goal->GoalMember->find('all');
         foreach ($goalMember as $k => $v) {
-            $goalMember[$k]['GoalMember']['approval_status'] = GoalMember::APPROVAL_STATUS_REAPPLICATION;
+            $goalMember[$k]['GoalMember']['is_target_evaluation'] = true;
         }
         $this->Evaluation->Goal->GoalMember->saveAll($goalMember);
         $this->Evaluation->Goal->id = 1;
