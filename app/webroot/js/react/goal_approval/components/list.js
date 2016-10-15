@@ -29,7 +29,7 @@ export default class ListComponent extends React.Component {
           <p className="goals-approval-header-info">{ data.application_info }</p>
           <ul>
             { data.goal_members.map((goal_member) => {
-              if(goal_members.is_mine) {
+              if(goal_member.is_mine) {
                 return <CoacheeCard goal_member={ goal_member } key={goal_member.id}  />;
               } else {
                 return <CoachCard goal_member={ goal_member } key={goal_member.id} />;
