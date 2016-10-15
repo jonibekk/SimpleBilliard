@@ -263,7 +263,7 @@
                         locked: true
                     },
                     {
-                        id: "goal_members",
+                        id: "collaborators",
                         text: "<?=__("Collaborator")?>",
                         icon: "fa fa-child",
                         locked: true
