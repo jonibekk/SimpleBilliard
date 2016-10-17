@@ -15,6 +15,7 @@ export default class Step4Component extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
   }
+
   componentWillMount() {
     this.props.fetchInitialData(Page.STEP4)
   }
@@ -47,7 +48,9 @@ export default class Step4Component extends React.Component {
         <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e)}>
 
           <label className="goals-create-input-label">{__("Top Key Result")}</label>
-          <input name="name" type="text" value={inputData.key_result.name} className="form-control goals-create-input-form goals-create-input-form-tkr-name" placeholder={__("eg. Increase Goalous weekly active users")} onChange={this.handleChange}/>
+          <input name="name" type="text" value={inputData.key_result.name}
+                 className="form-control goals-create-input-form goals-create-input-form-tkr-name"
+                 placeholder={__("eg. Increase Goalous weekly active users")} onChange={this.handleChange}/>
 
           <InvalidMessageBox message={tkrValidationErrors.name}/>
 
@@ -59,15 +62,18 @@ export default class Step4Component extends React.Component {
           <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 
           <a href="#" className={showMoreLinkClass} onClick={this.handleClick}>
-            <i className="fa fa-plus-circle" aria-hidden="true" />
+            <i className="fa fa-plus-circle" aria-hidden="true"/>
             <span className="goals-create-interactive-link">{__("Add description")}</span>
           </a>
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea name="description" value={inputData.key_result.description} className="form-control goals-create-input-form mod-textarea" onChange={this.handleChange} />
+            <textarea name="description" value={inputData.key_result.description}
+                      className="form-control goals-create-input-form mod-textarea" onChange={this.handleChange}
+                      placeholder={__("Optional")}/>
             <InvalidMessageBox message={tkrValidationErrors.description}/>
           </div>
-          <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{__("Save and share")}</button>
+          <button type="submit" className="goals-create-btn-next btn"
+                  disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{__("Save and share")}</button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP3}>{__("Back")}</Link>
         </form>
       </section>
