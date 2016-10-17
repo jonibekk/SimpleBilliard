@@ -4,120 +4,61 @@
 
 .goals-page-card-title {
   line-height: 16px;
+  color: @veryDark;
+  &:hover {
+    color: @serviceColor;
+  }
 }
 
 .goals-page-card-title-text {
   .line-number-limit-2;
-  height: 40px;
   font-weight: bold;
 }
 
-.goals-search-terms-tab {
-  .no-underline;
-  width: 25%;
-  display: inline-block;
-  text-align: center;
-  height: 40px;
-  line-height: 40px;
-  color: @basicGray;
-  &.selected {
-    border-bottom: solid 2px #ae2f2f;
-  }
-  &:hover {
-    background: @goalous;
-    color: @whiteColor;
+.goal-list-card {
+  & + & {
+    border-top: 1px solid #ccc;
   }
 }
 
-.goals-search-filters-tab {
-  .no-underline;
-  width: 33%;
-  text-align: center;
-}
-
-.goals-search-count {
-  padding: 8px 12px;
-  background: @basicGray;
-  color: @whiteColor;
-  border-radius: 4px;
-}
-
-.goals-search-count-number {
-  font-weight: bold;
-  margin: 0 0 0 8px;
-}
-
-.goals-page-cards {
-  padding: 12px 0;
-}
-
-.my-goals-item {
-  padding: 12px 0;
-  border-top: 1px solid #f0f0f0;
-}
-
-.my-goals-item:first-child {
-  border-top: 1px solid #ddd;
-}
-
-.goals-search-filters-tab {
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  display: inline-block;
-  border: none;
-  color: @darkGray;
-  .no-underline;
-  &:hover,
-  &:target,
-  &:active,
-  &:focus {
-    background: @goalous;
-    color: @whiteColor;
+.goal-search {
+  &-keyword {
+    width: 100%;
+    display: table;
+    border-collapse: separate;
+    border: 1px solid #a8a8a8;
+    border-radius: 4px;
+    &-input {
+      background-color: #fff;
+      border-radius: 4px 0 0 4px;
+      box-shadow: none;
+      -webkit-transition: none;
+      transition: none;
+      outline: 0;
+      padding: 8px;
+      display: table-cell;
+      width: 100%;
+      font-size: 14px;
+      border: 0;
+      line-height: 18px;
+    }
+    &-submit {
+      display: table-cell;
+      width: 40px;
+      text-align: center;
+      background-color: #e5e5e5;
+      font-size: 16px;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+    }
   }
-}
-
-.goals-filters-menu {
-  height: 40px;
-  margin: 12px 0;
-  border: 1px solid @basicGray;
-  border-radius: 4px;
-}
-
-.goals-search-filters-category-wrap {
-  border-right: 1px solid @basicGray;
-}
-
-.goals-search-filters-completed-wrap {
-  border-right: 1px solid @basicGray;
-}
-
-.goals-search-filters-category {
-  .goals-search-filters-tab;
-
-}
-
-.goals-search-filters-completed {
-  .goals-search-filters-tab;
-}
-
-.goals-search-filters-order {
-  .goals-search-filters-tab;
-}
-
-.goals-search-filters-tab-caret {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.goals-search-filters-tab-text {
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 72px;
-}
-
-.goals-filters-menu .btn-group.open .dropdown-toggle {
-  box-shadow: none;
+  &-order-text {
+    cursor: pointer;
+  }
+  &-order-select {
+    display: none;
+    color: @darkGray;
+  }
 }
 
 .profile-goals-select-wrap {
