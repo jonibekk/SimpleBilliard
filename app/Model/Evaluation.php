@@ -766,6 +766,12 @@ class Evaluation extends AppModel
             unset($options['conditions']['evaluate_term_id']);
         }
 
+        //前期以前のデータは無視する (現状の仕様上その情報に一切アクセスができないため)
+        $previousStartDate = Hash::get($this->Team->EvaluateTerm->getPreviousTermData(), 'start_date');
+        if ($previousStartDate) {
+            $options['conditions']['created >'] = $previousStartDate;
+        }
+
         // freeze
         $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
         $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
@@ -775,7 +781,6 @@ class Evaluation extends AppModel
         if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId)) {
             $options['conditions']['NOT'][] = ['evaluate_term_id' => $previousTermId];
         }
-
         $count = $this->find('count', $options);
         if (!$count) {
             $count = 0;
