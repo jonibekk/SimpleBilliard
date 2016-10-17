@@ -11,6 +11,7 @@ App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('Collaborator', 'Model');
 App::import('Service', 'CollaboratorService');
+App::import('Service', 'KeyResultService');
 
 class GoalApprovalService extends AppService
 {

@@ -363,12 +363,12 @@ class GoalApprovalsController extends ApiController
     {
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $myUserId = $this->my_uid;
+        $myUserId = $this->Auth->user('id');
         $collaboratorId = $this->request->query('collaborator_id');
 
         // パラメータが存在しない場合はNotFound
         if (!$collaboratorId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
+            // $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Comments } from "~/common/components/approval/Comments";
-import { GoalCard } from "~/common/components/approval/GoalCard";
+import { GoalBlock } from "~/common/components/approval/GoalBlock";
 import { UserCard } from "~/common/components/approval/UserCard";
 import { CoachFooter } from "~/common/components/approval/CoachFooter";
 import { CoacheeFooter } from "~/common/components/approval/CoacheeFooter";
@@ -50,8 +50,8 @@ export default class DetailComponent extends React.Component {
           <h1 className="goals-approval-heading">{ page_title }</h1>
           <div className="goals-approval-detail">
               <UserCard collaborator={ detail.collaborator } />
-              <GoalCard goal={ detail.collaborator.goal }
-                        is_leader={ detail.collaborator.is_leader } />
+              <GoalBlock goal={ detail.collaborator.goal }
+                         is_leader={ detail.collaborator.is_leader } />
               <Comments approval_histories={ detail.collaborator.approval_histories }
                         view_more_text={ detail.collaborator.histories_view_more_text} />
               {/* footer */}

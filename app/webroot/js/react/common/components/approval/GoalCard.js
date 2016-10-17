@@ -1,6 +1,17 @@
 import React from 'react'
 
 export class GoalCard extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { display_previous: false }
+    this.displayPrevious = this.displayPrevious.bind(this)
+  }
+
+  displayPrevious() {
+    this.setState({ display_previous: true })
+  }
+
   render() {
     const goal = this.props.goal
     const is_leader = this.props.is_leader
@@ -8,8 +19,19 @@ export class GoalCard extends React.Component {
     if(Object.keys(goal).length == 0) {
       return null
     }
+    const view_previous_button = () => {
+      return (
+        <div className="goals-approval-detail-view-previous">
+            <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
+              <i className="fa fa-angle-down" aria-hidden="true"></i>
+              <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
+            </a>
+        </div>
+      )
+    }
+
     return (
-      <div className={`goals-approval-detail-goal ${is_leader ? 'mod-bgglay' : '' }`}>
+      <div className={`goals-approval-detail-goal ${is_leader ? 'mod-bgglay' : '' }`} >
           <div className="goals-approval-detail-table">
               <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
               <div className="goals-approval-detail-info">
@@ -25,6 +47,7 @@ export class GoalCard extends React.Component {
                   </div>
               </div>
           </div>
+          { !this.state.display_previous && view_previous_button() }
       </div>
     )
   }
@@ -34,4 +57,4 @@ GoalCard.propTypes = {
   goal: React.PropTypes.object,
   is_leader: React.PropTypes.bool
 }
-GoalCard.defaultProps = { goal: {} };
+GoalCard.defaultProps = { goal: {}, is_leader: true };
