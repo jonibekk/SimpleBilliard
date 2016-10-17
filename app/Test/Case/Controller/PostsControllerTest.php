@@ -26,7 +26,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         'app.goal',
         'app.evaluation_setting',
         'app.key_result',
-        'app.collaborator',
+        'app.goal_member',
         'app.follower',
         'app.cake_session',
         'app.post',

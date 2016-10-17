@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 App::uses('KeyResult', 'Model');
 App::uses('AppUtil', 'Util');
 
@@ -13,7 +13,7 @@ App::uses('AppUtil', 'Util');
  * @property GoalLabel    $GoalLabel
  * @property Post         $Post
  * @property KeyResult    $KeyResult
- * @property Collaborator $Collaborator
+ * @property GoalMember   $GoalMember
  * @property Follower     $Follower
  * @property Evaluation   $Evaluation
  * @property ActionResult $ActionResult
@@ -278,14 +278,14 @@ class Goal extends AppModel
         'CompleteKeyResult'   => [
             'className' => 'KeyResult'
         ],
-        'Collaborator'        => [
+        'GoalMember'          => [
             'dependent' => true,
         ],
         'Leader'              => [
-            'className' => 'Collaborator',
+            'className' => 'GoalMember',
         ],
         'MyCollabo'           => [
-            'className' => 'Collaborator',
+            'className' => 'GoalMember',
         ],
         'Follower'            => [
             'dependent' => true,
@@ -307,7 +307,7 @@ class Goal extends AppModel
             'className' => 'KeyResult',
         ],
         'TargetCollabo' => [
-            'className' => 'Collaborator',
+            'className' => 'GoalMember',
         ],
     ];
 
@@ -411,7 +411,7 @@ class Goal extends AppModel
         $data = $this->convertGoalDateFromPost($data, $goal_term, $data['Goal']['term_type']);
 
         $data = $this->buildTopKeyResult($data, $goal_term);
-        $data = $this->buildCollaboratorDataAsLeader($data);
+        $data = $this->buildGoalMemberDataAsLeader($data);
 
         // setting default image if default image is chosen and image is not selected.
         if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {
@@ -529,14 +529,14 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function buildCollaboratorDataAsLeader($data)
+    function buildGoalMemberDataAsLeader($data)
     {
-        $data['Collaborator'][0]['user_id'] = $this->my_uid;
-        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
+        $data['GoalMember'][0]['user_id'] = $this->my_uid;
+        $data['GoalMember'][0]['team_id'] = $this->current_team_id;
+        $data['GoalMember'][0]['type'] = GoalMember::TYPE_OWNER;
         $priority = Hash::get($data, 'Goal.priority');
         if ($priority !== null) {
-            $data['Collaborator'][0]['priority'] = $priority;
+            $data['GoalMember'][0]['priority'] = $priority;
         }
         return $data;
     }
@@ -584,16 +584,16 @@ class Goal extends AppModel
                 'Goal.id' => $id,
             ],
             'contain'    => [
-                'KeyResult'    => [
+                'KeyResult'  => [
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
                         'KeyResult.team_id'     => $this->current_team_id,
                     ]
                 ],
-                'Collaborator' => [
+                'GoalMember' => [
                     'conditions' => [
-                        'Collaborator.user_id' => $this->my_uid
+                        'GoalMember.user_id' => $this->my_uid
                     ]
                 ],
             ]
@@ -664,7 +664,7 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
         // get goal ids for right column
-        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date,
+        $goal_ids = $this->GoalMember->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date,
             $end_date);
 
         $options = [
@@ -719,17 +719,17 @@ class Goal extends AppModel
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
                 ],
-                'TargetCollabo'      => [
-                     'fields'     => [
-                         'TargetCollabo.id',
-                         'TargetCollabo.user_id',
-                         'TargetCollabo.type',
-                         'TargetCollabo.approval_status',
-                         'TargetCollabo.is_wish_approval',
-                         'TargetCollabo.is_target_evaluation'
-                     ],
-                     'conditions' => ['TargetCollabo.user_id' => $user_id],
-                 ],
+                'TargetCollabo'       => [
+                    'fields'     => [
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
+                    ],
+                    'conditions' => ['TargetCollabo.user_id' => $user_id],
+                ],
             ],
         ];
         if ($kr_limit) {
@@ -807,7 +807,7 @@ class Goal extends AppModel
         //自分がコラボってるの未評価前期ゴールリストを取得
         $options = [
             'conditions' => [
-                'Goal.id'          => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
+                'Goal.id'          => $this->GoalMember->getCollaboGoalList($this->my_uid, false),
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
@@ -885,17 +885,17 @@ class Goal extends AppModel
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
                 ],
-                'TargetCollabo'      => [
-                     'fields'     => [
-                         'TargetCollabo.id',
-                         'TargetCollabo.user_id',
-                         'TargetCollabo.type',
-                         'TargetCollabo.approval_status',
-                         'TargetCollabo.is_wish_approval',
-                         'TargetCollabo.is_target_evaluation'
-                     ],
-                     'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
-                 ],
+                'TargetCollabo'       => [
+                    'fields'     => [
+                        'TargetCollabo.id',
+                        'TargetCollabo.user_id',
+                        'TargetCollabo.type',
+                        'TargetCollabo.approval_status',
+                        'TargetCollabo.is_wish_approval',
+                        'TargetCollabo.is_target_evaluation'
+                    ],
+                    'conditions' => ['TargetCollabo.user_id' => $this->my_uid],
+                ],
             ],
             'limit'      => $limit,
             'page'       => $page
@@ -1016,7 +1016,7 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
         // get goal ids for right column
-        $goal_ids = $this->Collaborator->getIncompleteCollaboGoalIds($user_id, $start_date, $end_date, $limit, $page);
+        $goal_ids = $this->GoalMember->getIncompleteCollaboGoalIds($user_id, $start_date, $end_date, $limit, $page);
 
         if ($type == "count") {
             return $this->getCollaboGoalsByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
@@ -1049,7 +1049,7 @@ class Goal extends AppModel
         if ($user_id == $this->my_uid) {
             $action_limit--;
         }
-        $goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
+        $goal_ids = $this->GoalMember->getCollaboGoalList($user_id, true);
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
@@ -1119,20 +1119,20 @@ class Goal extends AppModel
                         'Leader.is_wish_approval',
                         'Leader.is_target_evaluation'
                     ],
-                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'conditions' => ['Leader.type' => GoalMember::TYPE_OWNER],
                 ],
-                'Collaborator'      => [
+                'GoalMember'        => [
                     'fields'     => [
-                        'Collaborator.id',
-                        'Collaborator.user_id',
-                        'Collaborator.type',
-                        'Collaborator.approval_status',
-                        'Collaborator.is_wish_approval',
-                        'Collaborator.is_target_evaluation'
+                        'GoalMember.id',
+                        'GoalMember.user_id',
+                        'GoalMember.type',
+                        'GoalMember.approval_status',
+                        'GoalMember.is_wish_approval',
+                        'GoalMember.is_target_evaluation'
                     ],
-                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR]
+                    'conditions' => ['GoalMember.type' => GoalMember::TYPE_COLLABORATOR]
                 ],
-                'TargetCollabo'      => [
+                'TargetCollabo'     => [
                     'fields'     => [
                         'TargetCollabo.id',
                         'TargetCollabo.user_id',
@@ -1162,7 +1162,7 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
         $follow_goal_ids = $this->Follower->getFollowList($user_id);
         $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($user_id);
-        $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
+        $collabo_goal_ids = $this->GoalMember->getCollaboGoalList($user_id, true);
         //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
         //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;
@@ -1184,8 +1184,8 @@ class Goal extends AppModel
     function setFollowGoalApprovalFlag($goals)
     {
         foreach ($goals as $key => $goal) {
-            if (isset($goal['Collaborator']['approval_status'])) {
-                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['approval_status'];
+            if (isset($goal['GoalMember']['approval_status'])) {
+                $goals[$key]['Goal']['owner_approval_flag'] = $goal['GoalMember']['approval_status'];
             }
         }
         return $goals;
@@ -1199,7 +1199,7 @@ class Goal extends AppModel
                 'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
-                'KeyResult'    => [
+                'KeyResult'     => [
                     'fields' => [
                         'KeyResult.id',
                         'KeyResult.progress',
@@ -1207,9 +1207,9 @@ class Goal extends AppModel
                         'KeyResult.completed',
                     ],
                 ],
-                'Collaborator' => [
+                'GoalMember'    => [
                     'conditions' => [
-                        'Collaborator.user_id' => $user_id
+                        'GoalMember.user_id' => $user_id
                     ]
                 ],
                 'TargetCollabo' => [
@@ -1317,10 +1317,10 @@ class Goal extends AppModel
                     ]
                 ],
                 'Leader'              => [
-                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'conditions' => ['Leader.type' => GoalMember::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
-                'TargetCollabo'      => [
+                'TargetCollabo'       => [
                     'fields'     => [
                         'TargetCollabo.id',
                         'TargetCollabo.user_id',
@@ -1345,7 +1345,7 @@ class Goal extends AppModel
         return $this->find('all', $options);
     }
 
-    // for getting collaborator's goals for showing on right column
+    // for getting goal_member's goals for showing on right column
     function getCollaboGoalsByGoalId(
         $goal_ids,
         $limit = null,
@@ -1412,10 +1412,10 @@ class Goal extends AppModel
                     ]
                 ],
                 'Leader'              => [
-                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'conditions' => ['Leader.type' => GoalMember::TYPE_OWNER],
                     'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.approval_status'],
                 ],
-                'TargetCollabo'      => [
+                'TargetCollabo'       => [
                     'fields'     => [
                         'TargetCollabo.id',
                         'TargetCollabo.user_id',
@@ -1449,7 +1449,7 @@ class Goal extends AppModel
      */
     function getGoal($id, $collabo_user_id = null)
     {
-        if(!$collabo_user_id) {
+        if (!$collabo_user_id) {
             $collabo_user_id = $this->my_uid;
         }
         $options = [
@@ -1459,8 +1459,8 @@ class Goal extends AppModel
             ],
             'contain'    => [
                 'GoalCategory',
-                'Leader'       => [
-                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                'Leader'     => [
+                    'conditions' => ['Leader.type' => GoalMember::TYPE_OWNER],
                     'fields'     => [
                         'Leader.id',
                         'Leader.user_id',
@@ -1475,31 +1475,31 @@ class Goal extends AppModel
                         'fields' => $this->User->profileFields,
                     ]
                 ],
-                'Collaborator' => [
-                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                'GoalMember' => [
+                    'conditions' => ['GoalMember.type' => GoalMember::TYPE_COLLABORATOR],
                     'fields'     => [
-                        'Collaborator.id',
-                        'Collaborator.user_id',
-                        'Collaborator.type',
-                        'Collaborator.approval_status',
-                        'Collaborator.is_wish_approval',
-                        'Collaborator.is_target_evaluation',
-                        'Collaborator.role',
-                        'Collaborator.description',
+                        'GoalMember.id',
+                        'GoalMember.user_id',
+                        'GoalMember.type',
+                        'GoalMember.approval_status',
+                        'GoalMember.is_wish_approval',
+                        'GoalMember.is_target_evaluation',
+                        'GoalMember.role',
+                        'GoalMember.description',
                     ],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
-                'Follower'     => [
+                'Follower'   => [
                     'fields' => ['Follower.id', 'Follower.user_id'],
                     'User'   => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
-                'MyCollabo'    => [
+                'MyCollabo'  => [
                     'conditions' => [
-                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.type'    => GoalMember::TYPE_COLLABORATOR,
                         'MyCollabo.user_id' => $collabo_user_id,
                     ],
                     'fields'     => [
@@ -1513,7 +1513,7 @@ class Goal extends AppModel
                         'MyCollabo.description',
                     ],
                 ],
-                'MyFollow'     => [
+                'MyFollow'   => [
                     'conditions' => [
                         'MyFollow.user_id' => $collabo_user_id,
                     ],
@@ -1521,7 +1521,7 @@ class Goal extends AppModel
                         'MyFollow.id',
                     ],
                 ],
-                'KeyResult'    => [
+                'KeyResult'  => [
                     'fields' => [
                         'KeyResult.id',
                         'KeyResult.name',
@@ -1531,7 +1531,7 @@ class Goal extends AppModel
                     ],
                     'order'  => ['KeyResult.completed' => 'asc'],
                 ],
-                'User'         => [
+                'User'       => [
                     'fields' => $this->User->profileFields,
                 ]
             ]
@@ -1600,20 +1600,20 @@ class Goal extends AppModel
             'page'       => $page,
             'contain'    => [
                 'Leader'       => [
-                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'conditions' => ['Leader.type' => GoalMember::TYPE_OWNER],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
-                'Collaborator' => [
-                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                'GoalMember'   => [
+                    'conditions' => ['GoalMember.type' => GoalMember::TYPE_COLLABORATOR],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
                 'MyCollabo'    => [
                     'conditions' => [
-                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.type'    => GoalMember::TYPE_COLLABORATOR,
                         'MyCollabo.user_id' => $this->my_uid,
                     ],
                     'fields'     => [
@@ -1772,16 +1772,16 @@ class Goal extends AppModel
                 $options['group'] = ['Goal.id'];
                 break;
             case 'collabo' :
-                $options['order'] = ['count_collaborator desc'];
-                $options['fields'][] = 'count(Collaborator.id) as count_collaborator';
+                $options['order'] = ['count_goal_member desc'];
+                $options['fields'][] = 'count(GoalMember.id) as count_goal_member';
                 $options['joins'] = [
                     [
                         'type'       => 'left',
-                        'table'      => 'collaborators',
-                        'alias'      => 'Collaborator',
+                        'table'      => 'goal_members',
+                        'alias'      => 'GoalMember',
                         'conditions' => [
-                            'Collaborator.goal_id = Goal.id',
-                            'Collaborator.del_flg' => 0,
+                            'GoalMember.goal_id = Goal.id',
+                            'GoalMember.del_flg' => 0,
                         ],
                     ],
                 ];
@@ -1818,11 +1818,11 @@ class Goal extends AppModel
         $target_progress_total = 0;
         $current_progress_total = 0;
         foreach ($goals as $goal) {
-            if (!viaIsSet($goal['Collaborator'][0]['priority'])) {
+            if (!viaIsSet($goal['GoalMember'][0]['priority'])) {
                 continue;
             }
-            $target_progress_total += $goal['Collaborator'][0]['priority'] * 100;
-            $current_progress_total += $goal['Collaborator'][0]['priority'] * $goal['Goal']['progress'];
+            $target_progress_total += $goal['GoalMember'][0]['priority'] * 100;
+            $current_progress_total += $goal['GoalMember'][0]['priority'] * $goal['Goal']['progress'];
         }
         if ($target_progress_total != 0) {
             $res = round($current_progress_total / $target_progress_total, 2) * 100;
@@ -1865,7 +1865,7 @@ class Goal extends AppModel
             'contain'    => [
                 'MyCollabo' => [
                     'conditions' => [
-                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.type'    => GoalMember::TYPE_COLLABORATOR,
                         'MyCollabo.user_id' => $this->my_uid,
                     ],
                     'fields'     => [
@@ -1898,12 +1898,12 @@ class Goal extends AppModel
             ],
             'fields'     => $this->User->profileFields,
             'contain'    => [
-                'LocalName'    => [
+                'LocalName'  => [
                     'conditions' => ['LocalName.language' => $this->me['language']],
                 ],
-                'Collaborator' => [
+                'GoalMember' => [
                     'conditions' => [
-                        'Collaborator.team_id' => $this->current_team_id,
+                        'GoalMember.team_id' => $this->current_team_id,
                     ],
                     'Goal'       => [
                         'conditions' => [
@@ -1913,7 +1913,7 @@ class Goal extends AppModel
                         'GoalCategory',
                     ]
                 ],
-                'TeamMember'   => [
+                'TeamMember' => [
                     'fields'     => [
                         'member_no',
                         'evaluation_enable_flg'
@@ -1925,7 +1925,7 @@ class Goal extends AppModel
                 ]
             ]
         ];
-        $res = $this->Collaborator->User->find('all', $options);
+        $res = $this->GoalMember->User->find('all', $options);
         return $res;
     }
 
@@ -1970,7 +1970,7 @@ class Goal extends AppModel
 
     function getAllMyGoalNameList($start, $end)
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        $goal_ids = $this->GoalMember->getCollaboGoalList($this->my_uid, true);
         $options = [
             'conditions' => [
                 'id'          => $goal_ids,
@@ -2083,7 +2083,7 @@ class Goal extends AppModel
         }
         $g_list = [];
         $g_list = array_merge($g_list, $this->Follower->getFollowList($user_id));
-        $g_list = array_merge($g_list, $this->Collaborator->getCollaboGoalList($user_id, true));
+        $g_list = array_merge($g_list, $this->GoalMember->getCollaboGoalList($user_id, true));
         $g_list = array_merge($g_list, $this->User->TeamMember->getCoachingGoalList($user_id));
         return $g_list;
     }
@@ -2162,7 +2162,9 @@ class Goal extends AppModel
     /**
      * ゴールの進捗をキーリザルト一覧から取得
      * TODO: GoalServiceと重複してるので、将来的には削除
+     *
      * @param  array $key_results [description]
+     *
      * @return array $res
      */
     function getProgress($key_results)

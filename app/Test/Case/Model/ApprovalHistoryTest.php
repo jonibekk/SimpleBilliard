@@ -16,7 +16,7 @@ class ApprovalHistoryTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.approval_history',
-        'app.collaborator',
+        'app.goal_member',
         'app.team',
         'app.user',
     ];
@@ -49,8 +49,14 @@ class ApprovalHistoryTest extends GoalousTestCase
         $cb_id = 999;
         $user_id = 888;
         $comment = 'test';
-        $this->ApprovalHistory->add(['ApprovalHistory' => ['collaborator_id' => $cb_id, 'user_id' => $user_id, 'comment' => $comment]]);
-        $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
+        $this->ApprovalHistory->add([
+            'ApprovalHistory' => [
+                'goal_member_id' => $cb_id,
+                'user_id'        => $user_id,
+                'comment'        => $comment
+            ]
+        ]);
+        $res = $this->ApprovalHistory->find('first', ['conditions' => ['goal_member_id' => $cb_id]]);
         $this->assertEquals($res['ApprovalHistory']['comment'], 'test');
     }
 
@@ -59,8 +65,14 @@ class ApprovalHistoryTest extends GoalousTestCase
         $cb_id = 999;
         $user_id = 888;
         $comment = '';
-        $this->ApprovalHistory->add(['ApprovalHistory' => ['collaborator_id' => $cb_id, 'user_id' => $user_id, 'comment' => $comment]]);
-        $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
+        $this->ApprovalHistory->add([
+            'ApprovalHistory' => [
+                'goal_member_id' => $cb_id,
+                'user_id'        => $user_id,
+                'comment'        => $comment
+            ]
+        ]);
+        $res = $this->ApprovalHistory->find('first', ['conditions' => ['goal_member_id' => $cb_id]]);
         $this->assertEquals($res['ApprovalHistory']['comment'], '');
     }
 

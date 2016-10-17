@@ -23,7 +23,7 @@ class DataUpdateShellTest extends GoalousTestCase
         'app.goal_category',
         'app.key_result',
         'app.action_result',
-        'app.collaborator',
+        'app.goal_member',
         'app.follower',
         'app.team_member',
         'app.member_type',

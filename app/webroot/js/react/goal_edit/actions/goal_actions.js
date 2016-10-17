@@ -122,8 +122,8 @@ export function fetchInitialData(goalId) {
 
 export function fetchComments() {
   return (dispatch, getState) => {
-    const collaboratorId = getState().goal.goal.collaborator.id
-    return axios.get(`/api/v1/goal_approvals/histories?collaborator_id=${collaboratorId}`)
+    const goalMemberId = getState().goal.goal.goal_member.id
+    return axios.get(`/api/v1/goal_approvals/histories?goal_member_id=${goalMemberId}`)
       .then((response) => {
         let approvalHistories = response.data.data
         dispatch({
@@ -159,7 +159,7 @@ export function saveGoal(addInputData) {
 }
 
 export function disableSubmit() {
-  return { type: types.DISABLE_SUBMIT }
+  return {type: types.DISABLE_SUBMIT}
 }
 
 /**

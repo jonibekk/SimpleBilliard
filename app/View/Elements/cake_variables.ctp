@@ -504,6 +504,8 @@
             "Goal details": "<?= __("Goal details") ?>",
             "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
             "Withdrawn": "<?=__("Withdrawn")?>",
+            "Evaluation target goals are listed up here.": "<?= __("Evaluation target goals are listed up here.") ?>",
+            "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
             "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",

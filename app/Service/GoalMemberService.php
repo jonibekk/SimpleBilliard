@@ -7,11 +7,11 @@
  */
 
 App::import('Service', 'AppService');
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 
-class CollaboratorService extends AppService
+class GoalMemberService extends AppService
 {
     /* コラボレーターの拡張種別 */
     const EXTEND_COACH = "GOAL:EXTEND_COACH";
@@ -19,16 +19,17 @@ class CollaboratorService extends AppService
 
     /**
      * idによる単体データ取得
+     *
      * @param       $id
      * @param array $extends
      *
      * @return array|mixed
      */
-    function get($id, $extends =[])
+    function get($id, $extends = [])
     {
-        $Collaborator = ClassRegistry::init("Collaborator");
+        $GoalMember = ClassRegistry::init("GoalMember");
 
-        $data = Hash::extract($Collaborator->findById($id), 'Collaborator');
+        $data = Hash::extract($GoalMember->findById($id), 'GoalMember');
         if (empty($data)) {
             return $data;
         }
@@ -38,12 +39,14 @@ class CollaboratorService extends AppService
 
     /**
      * データ拡張
+     *
      * @param $data
      * @param $extends
      *
      * @return mixed
      */
-    function extend($data, $extends) {
+    function extend($data, $extends)
+    {
         if (empty($data) || empty($extends)) {
             return $data;
         }

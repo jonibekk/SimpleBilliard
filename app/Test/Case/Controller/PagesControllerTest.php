@@ -38,7 +38,7 @@ class PagesControllerTest extends GoalousControllerTestCase
         'app.post_read',
         'app.comment_read',
         'app.goal',
-        'app.collaborator',
+        'app.goal_member',
         'app.group',
         'app.team_member',
         'app.job_category',

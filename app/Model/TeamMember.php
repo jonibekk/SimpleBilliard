@@ -2409,7 +2409,7 @@ class TeamMember extends AppModel
             ],
         ];
         $member_list = $this->find("list", $options);
-        $res = $this->User->Collaborator->getCollaboGoalList($member_list, true, $limit, $page);
+        $res = $this->User->GoalMember->getCollaboGoalList($member_list, true, $limit, $page);
         return $res;
     }
 
