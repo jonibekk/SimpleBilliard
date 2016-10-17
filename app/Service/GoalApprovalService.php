@@ -227,6 +227,9 @@ class GoalApprovalService extends AppService
 
         // TKRの整形
         $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
+        if(Hash::get($res, 'goal.tkr_change_log')) {
+            $res['goal']['tkr_change_log'] = $KeyResultService->processKeyResult($res['goal']['tkr_change_log']);
+        }
 
         // 画像パス追加
         $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
@@ -235,6 +238,13 @@ class GoalApprovalService extends AppService
         $res['goal']['original_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo');
         $res['goal']['small_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'small']);
         $res['goal']['large_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'large']);
+        if(Hash::get($res, 'goal.goal_change_log.photo_file_name')) {
+            // Uploadヘルパーに認識させるため、一時的に仮の配列を作る
+            $tmp = ['Goal' => $res['goal']['goal_change_log']];
+            $res['goal']['goal_change_log']['original_img_url'] = $Upload->uploadUrl($tmp, 'Goal.photo');
+            $res['goal']['goal_change_log']['small_img_url'] = $Upload->uploadUrl($tmp, 'Goal.photo', ['style' => 'small']);
+            $res['goal']['goal_change_log']['large_img_url'] = $Upload->uploadUrl($tmp, 'Goal.photo', ['style' => 'large']);
+        }
 
         // マッピング
         $res['is_leader'] = (boolean)$res['type'];

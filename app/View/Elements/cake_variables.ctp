@@ -506,6 +506,7 @@
             "Withdrawn": "<?=__("Withdrawn")?>",
             "Evaluation target goals are listed up here.": "<?= __("Evaluation target goals are listed up here.") ?>",
             "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
+            "Previous goal": "<?= __("Previous goal") ?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
             "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
