@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 /* eslint-enable no-unused-vars */
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import { Router, Route,　browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
+import {Provider} from 'react-redux'
+import {createStore, applyMiddleware} from 'redux'
+import {Router, Route, browserHistory} from 'react-router'
+import {syncHistoryWithStore} from 'react-router-redux'
 import thunk from 'redux-thunk';
-import { createDevTools } from 'redux-devtools'
+import {createDevTools} from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import createReducer from '../reducers/index'
@@ -16,7 +16,7 @@ import ListContainer from '../containers/list'
 import DetailContainer from '../containers/detail'
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
-    <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+    <LogMonitor theme="tomorrow" preserveScrollTop={false}/>
   </DockMonitor>
 )
 const reducer = createReducer()
@@ -27,10 +27,10 @@ const store = createStore(
 )
 const history = syncHistoryWithStore(browserHistory, store)
 
-export const unlisten = history.listen( () => {
+export const unlisten = history.listen(() => {
   history.listen(location => {
     // Ignore First page loading because in this timing it's sent by server-side
-    if(cake.data.google_tag_manager_id !== "" && location.action == 'PUSH') {
+    if (cake.data.google_tag_manager_id !== "" && location.action == 'PUSH') {
       sendToGoogleTagManager('app')
     }
   })
@@ -44,8 +44,8 @@ export default class Routes extends Component {
         <div>
           <Router history={history}>
             <Route path="/goals/approval">
-              <Route path="list" component={ListContainer} />
-              <Route path="detail/:collaborator_id" component={DetailContainer} />
+              <Route path="list" component={ListContainer}/>
+              <Route path="detail/:goal_member_id" component={DetailContainer}/>
             </Route>
           </Router>
           {/* <DevTools /> */}

@@ -155,28 +155,31 @@ class NotifyBizComponent extends Component
                 $this->_setMyGoalCollaborateOption($model_id, $user_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER:
-                $this->_setMyGoalChangedOption($model_id, $user_id);
+                $this->_setMyGoalChangedOption($model_id, $user_id, $team_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_CREATE_GOAL:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL:
-                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_ROLE:
-                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setCollaboApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
-                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
+                break;
+            case NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_START:
                 $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
@@ -378,7 +381,7 @@ class NotifyBizComponent extends Component
             = $this->Post->Team->TeamMember->my_uid
             = $this->Post->User->CircleMember->my_uid
             = $this->Goal->my_uid
-            = $this->Goal->Collaborator->my_uid
+            = $this->Goal->GoalMember->my_uid
             = $this->Goal->Follower->my_uid
             = $this->Goal->Team->my_uid
             = $this->Goal->Team->EvaluateTerm->my_uid
@@ -390,6 +393,7 @@ class NotifyBizComponent extends Component
             = $this->Team->TeamMember->my_uid
             = $this->Team->Invite->my_uid
             = $this->Team->Invite->FromUser->my_uid
+            = $this->Team->EvaluationSetting->my_uid
             = $user_id;
 
         $this->Post->current_team_id
@@ -399,7 +403,7 @@ class NotifyBizComponent extends Component
             = $this->Post->Team->TeamMember->current_team_id
             = $this->Post->User->CircleMember->current_team_id
             = $this->Goal->current_team_id
-            = $this->Goal->Collaborator->current_team_id
+            = $this->Goal->GoalMember->current_team_id
             = $this->Goal->Follower->current_team_id
             = $this->Goal->Team->current_team_id
             = $this->Goal->Team->EvaluateTerm->current_team_id
@@ -411,6 +415,7 @@ class NotifyBizComponent extends Component
             = $this->Team->TeamMember->current_team_id
             = $this->Team->Invite->current_team_id
             = $this->Team->Invite->FromUser->current_team_id
+            = $this->Team->EvaluationSetting->current_team_id
             = $team_id;
     }
 
@@ -561,8 +566,8 @@ class NotifyBizComponent extends Component
         }
         $goal_id = $action['ActionResult']['goal_id'];
         //宛先は閲覧可能な全ユーザ
-        //Collaborator
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //GoalMember
+        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //Follower
         $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
         //Coach
@@ -570,7 +575,7 @@ class NotifyBizComponent extends Component
         //通知先に指定されたユーザ
         $share_members = $this->Post->getShareAllMemberList($post['Post']['id']);
 
-        $members = $share_members + $collaborators + $followers + [$coach_id => $coach_id];
+        $members = $share_members + $goalMembers + $followers + [$coach_id => $coach_id];
         //exclude inactive users
         $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
@@ -696,11 +701,11 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //exclude inactive users
-        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
+        $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
@@ -722,13 +727,13 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //exclude inactive users
-        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
+        $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
-        unset($collaborators[$user_id]);
+        unset($goalMembers[$user_id]);
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
@@ -743,30 +748,36 @@ class NotifyBizComponent extends Component
      *
      * @param $goal_id
      * @param $user_id
+     * @param $team_id
      */
-    private function _setMyGoalChangedOption($goal_id, $user_id)
+    private function _setMyGoalChangedOption($goal_id, $user_id, $team_id)
     {
         $goal = $this->Goal->getGoal($goal_id);
         if (empty($goal)) {
             return;
         }
-        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
         //exclude inactive users
-        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
+        $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
-        unset($collaborators[$user_id]);
+        unset($goalMembers[$user_id]);
+
         //exclude coach
-        $teamEvaluateIsEnabled = $this->Team->EvaluationSetting->isEnabled();
-        $coachEvaluateIsEnabled = $this->Team->TeamMember->getEvaluationEnableFlg($user_id, $this->NotifySetting->current_team_id);
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($user_id, $team_id);
         $coachId = $this->Team->TeamMember->getCoachId($user_id);
-        if($teamEvaluateIsEnabled && $coachEvaluateIsEnabled && $coacheId && !empty($collaborators[$coacheId])) {
-            unset($collaborators[$coacheId]);
+        //チームの評価設定on かつ ユーザが評価対象 かつ コーチが存在している場合はコーチを通知対象から除外
+        //コーチには別途、認定関連の通知が届くため。
+        if ($isApprovable && !empty($goalMembers[$coachId])) {
+            unset($goalMembers[$coachId]);
         }
-        if (empty($collaborators)) {
+        if (empty($goalMembers)) {
             return;
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
@@ -783,17 +794,18 @@ class NotifyBizComponent extends Component
      * @param $notify_type
      * @param $goal_id
      * @param $to_user_id
+     * @param $team_id
      */
-    private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
+    private function _setApprovalOption($notify_type, $goal_id, $to_user_id, $team_id)
     {
         $goal = $this->Goal->getGoal($goal_id, $to_user_id);
 
         if (empty($goal)) {
             return;
         }
-        $collaborator = Hash::get($goal, 'MyCollabo.0') ?
+        $goalMember = Hash::get($goal, 'MyCollabo.0') ?
             Hash::get($goal, 'MyCollabo.0') : Hash::get($goal, 'Leader.0');
-        if (empty($collaborator)) {
+        if (empty($goalMember)) {
             return;
         }
 
@@ -801,14 +813,24 @@ class NotifyBizComponent extends Component
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
         }
+
+        //認定できないユーザの場合は処理しない
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($goalMember['user_id'], $team_id);
+        if (!$isApprovable) {
+            return;
+        }
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $collaborator['id']];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $goalMember['id']];
 
         //認定希望していないゴールはゴール詳細へ
-        if (!$collaborator['is_wish_approval']) {
+        if (!$goalMember['is_wish_approval']) {
             $url = $url_goal_detail;
         } else {
             $url = $url_goal_approval;
@@ -821,34 +843,46 @@ class NotifyBizComponent extends Component
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
     }
 
-    private function _setCollaboApprovalOption($notify_type, $collaborator_id, $to_user_id)
+    private function _setCollaboApprovalOption($notify_type, $goal_member_id, $to_user_id, $team_id)
     {
-        $collaborator = $this->Goal->Collaborator->findById($collaborator_id);
-        if (empty($collaborator)) {
+        $goalMember = $this->Goal->GoalMember->findById($goal_member_id);
+        if (empty($goalMember)) {
             return;
         }
 
-        $goal_id = $collaborator['Collaborator']['goal_id'];
+        $goal_id = $goalMember['GoalMember']['goal_id'];
+
+        $goal = $this->Goal->getGoal($goal_id);
 
         //inactive user
         if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
         }
+
+        //認定できないユーザの場合は処理しない
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($goalMember['user_id'], $team_id);
+        if (!$isApprovable) {
+            return;
+        }
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $collaborator_id];
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $goal_member_id];
 
         //認定希望していないゴールはゴール詳細へ
-        if (!$collaborator['Collaborator']['is_wish_approval']) {
+        if (!$goalMember['GoalMember']['is_wish_approval']) {
             $url = $url_goal_detail;
         } else {
             $url = $url_goal_approval;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
-        $this->notify_option['model_id'] = $collaborator_id;
+        $this->notify_option['model_id'] = $goal_member_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);

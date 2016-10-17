@@ -12,7 +12,7 @@
  * @var                    $vision
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="right-side-container" id="jsRightSideContainer">
     <?php if ($vision): ?>
 
@@ -28,7 +28,7 @@
             <?=
             $this->Html->image('ajax-loader.gif',
                 [
-                    'class' => 'lazy feed-img-teamvision pull-left',
+                    'class'         => 'lazy feed-img-teamvision pull-left',
                     'data-original' => $this->Upload->uploadUrl([$vision['model'] => $vision],
                         "{$vision['model']}.photo",
                         ['style' => 'medium'])
@@ -117,4 +117,4 @@
         </a>
     <?php endif; ?>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

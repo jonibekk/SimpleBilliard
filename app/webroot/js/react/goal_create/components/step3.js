@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
+import PhotoUpload from "~/common/components/goal/PhotoUpload";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 
 
@@ -26,7 +27,8 @@ export default class Step3Component extends React.Component {
   }
 
   getInputDomData() {
-    const photo =  ReactDOM.findDOMNode(this.refs.photo).files[0]
+    const photoNode = this.refs.innerPhoto.refs.photo
+    const photo = ReactDOM.findDOMNode(photoNode).files[0]
     if (!photo) {
       return {}
     }
@@ -53,13 +55,6 @@ export default class Step3Component extends React.Component {
   }
 
   render() {
-    // TODO:画面遷移を行うとイベントが発火しなくなる為、コード追加(既存バグ)
-    // 将来的に廃止
-    $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
-      $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
-    });
-
-
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "");
 
     const {inputData, priorities, validationErrors} = this.props.goal;
@@ -69,13 +64,6 @@ export default class Step3Component extends React.Component {
         return <option key={v.id} value={v.id}>{v.label}</option>
       });
     }
-    // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
-    // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
-    // リサイズ後の画像情報が取得できない。
-    // 画像アップロード後submitした時にimgタグの画像情報を取得してもアップロード前の画像情報を取得してしまう。
-    // これはReactの仮想domに反映されていない為。
-    const imgPath = inputData.photo ? inputData.photo.result : "/img/no-image-goal.jpg";
-
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
         <h1 className="goals-create-heading">{__("Set goal details")}</h1>
@@ -86,25 +74,8 @@ export default class Step3Component extends React.Component {
               method="post"
               acceptCharset="utf-8"
               onSubmit={(e) => this.handleSubmit(e)}>
-          <label className="goals-create-input-label">{__("Goal image")}</label>
-          <div className={`goals-create-input-image-upload fileinput_small ${inputData.photo ? "fileinput-exists" : "fileinput-new"}`} data-provides="fileinput">
-            <div
-              className="fileinput-preview thumbnail nailthumb-container photo-design goals-create-input-image-upload-preview"
-              data-trigger="fileinput">
-              <img src={imgPath} width={100} height={100} ref="photo_image"/>
-            </div>
-            <div className="goals-create-input-image-upload-info">
-              {/*<p className="goals-create-input-image-upload-info-text">*/}
-                {/*{__("This is sample image if you want to upload your original image")}*/}
-              {/*</p>*/}
-              <label className="goals-create-input-image-upload-info-link " htmlFor="file_photo">
-                <span className="fileinput-new">{__("Upload an image")}</span>
-                <span className="fileinput-exists">{__("Reselect an image")}</span>
-                <input className="goals-create-input-image-upload-info-form" type="file" name="photo" ref="photo"
-                       id="file_photo"/>
-              </label>
-            </div>
-          </div>
+
+          <PhotoUpload uploadPhoto={inputData.photo} ref="innerPhoto"/>
           <InvalidMessageBox message={validationErrors.photo}/>
 
           <label className="goals-create-input-label">{__("Term")}</label>
@@ -123,11 +94,13 @@ export default class Step3Component extends React.Component {
           </a>
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange} value={inputData.description}/>
+            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}
+                      value={inputData.description} placeholder={__("Optional")}/>
             <InvalidMessageBox message={validationErrors.description}/>
 
             <label className="goals-create-input-label">{__("End date")}</label>
-            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange} value={inputData.end_date} />
+            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange}
+                   value={inputData.end_date}/>
             <InvalidMessageBox message={validationErrors.end_date}/>
             <label className="goals-create-input-label">{__("Weight")}</label>
             <select className="goals-create-input-form mod-select" name="priority" ref="priority"

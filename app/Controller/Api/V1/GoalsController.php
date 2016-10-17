@@ -117,7 +117,7 @@ class GoalsController extends ApiController
             $res['goal'] = $GoalService->get($id, $this->Auth->user('id'), [
                 GoalService::EXTEND_TOP_KEY_RESULT,
                 GoalService::EXTEND_GOAL_LABELS,
-                GoalService::EXTEND_COLLABORATOR,
+                GoalService::EXTEND_GOAL_MEMBERS,
             ]);
         }
 

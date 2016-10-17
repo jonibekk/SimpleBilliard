@@ -64,17 +64,7 @@
                 <?php endif ?>
                 <div class="goal-detail-kr-score">
                     <i class="fa fa-bullseye"></i>
-                    <?php
-                    $unit_name_display = '';
-                    // in other unit case, skipping showing unit name
-                    if ($kr['KeyResult']['value_unit'] != KeyResult::UNIT_NUMBER) {
-                            $unit_name_display = KeyResult::$UNIT[$kr['KeyResult']['value_unit']];
-                        }
-                    ?>
-                    <?= h(round($kr['KeyResult']['start_value'],
-                        1)) ?><?= h($unit_name_display) ?> →
-                    <?= h(round($kr['KeyResult']['target_value'],
-                        1)) ?><?= h($unit_name_display) ?>
+                    <?= $kr['KeyResult']['display_value'] ?>
                 </div>
                 <i class="fa fa-calendar"></i>
                 <?= $this->Time->format('Y/m/d', $kr['KeyResult']['start_date'] + $goal_term['timezone'] * HOUR) ?>

@@ -93,19 +93,9 @@
                             <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
                         <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?php if ($page_type === 'following'): ?>
+                            <?php if ($page_type !== 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                    $this->Goal->displayApprovalStatus($goal['Leader'][0])) ?>
-                            <?php else: ?>
-                                <?php if ($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
-                                    <?= __("Approval Status: %s",
-                                        $this->Goal->displayApprovalStatus($goal['Leader'][0])) ?>
-                                <?php else: ?>
-                                    <?php $my_collabo = Hash::extract($goal['Collaborator'],
-                                        "{n}[user_id={$user['User']['id']}]"); ?>
-                                    <?= __("Approval Status: %s",
-                                        $this->Goal->displayApprovalStatus($my_collabo[0])) ?>
-                                <?php endif; ?>
+                                    $this->Goal->displayApprovalStatus($goal['TargetCollabo'])) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">

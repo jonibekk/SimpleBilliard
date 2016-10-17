@@ -103,6 +103,7 @@ class SetupController extends AppController
 
     /**
      * TODO:削除
+     *
      * @deprecated
      */
     public function ajax_create_goal()
@@ -291,7 +292,7 @@ class SetupController extends AppController
         $file_ids = $this->request->data('file_id');
         try {
             $this->Goal->begin();
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("You have no permission."));
             }
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;

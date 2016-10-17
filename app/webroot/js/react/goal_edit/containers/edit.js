@@ -8,6 +8,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    init: (data) => dispatch(actions.init(data)),
     onChangeAutoSuggest(event, {newValue}) {
       dispatch(actions.setKeyword(newValue));
     },
@@ -20,6 +21,7 @@ function mapDispatchToProps(dispatch) {
     validateGoal: (goalId, addInputData) => dispatch(actions.validateGoal(goalId, addInputData)),
     fetchInitialData: (goalId) => dispatch(actions.fetchInitialData(goalId)),
     updateInputData: (data, key = "") => dispatch(actions.updateInputData(data, key))
+
   }
 }
 

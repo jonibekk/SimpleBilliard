@@ -8,6 +8,7 @@ App::uses('AppModel', 'Model');
  * @property Goal         $Goal
  * @property ActionResult $ActionResult
  * @property Post         $Post
+ * @method findByGoalId($goalId)
  */
 class KeyResult extends AppModel
 {
@@ -383,7 +384,7 @@ class KeyResult extends AppModel
         if (empty($goal)) {
             return false;
         }
-        return $this->Goal->Collaborator->isCollaborated($goal['Goal']['id']);
+        return $this->Goal->GoalMember->isCollaborated($goal['Goal']['id']);
     }
 
     function saveEdit($data)
