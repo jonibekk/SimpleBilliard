@@ -27,7 +27,7 @@ export default class ListComponent extends React.Component {
           <h1 className="goals-approval-heading">{__("Goal approval list")} <span>({ data.all_approval_count })</span></h1>
           <p className="goals-approval-header-explain">{ explain_text }</p>
           <p className="goals-approval-header-info">{ data.application_info }</p>
-          <ul>
+          <ul className={`goals-approval-list ${data.goal_members.length == 0 && "empty"}`}>
             { data.goal_members.map((goal_member) => {
               if(goal_member.is_mine) {
                 return <CoacheeCard goal_member={ goal_member } key={goal_member.id}  />;
