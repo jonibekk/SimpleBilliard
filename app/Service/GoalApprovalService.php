@@ -10,6 +10,8 @@ App::import('Service', 'AppService');
 App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GoalChangeLog', 'Model');
+App::uses('TkrChangeLog', 'Model');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 
@@ -186,10 +188,14 @@ class GoalApprovalService extends AppService
      *
      * @return $res
      */
-    public function formatGoalApprovalForResponse($resByModel, $myUserId)
+    public function processGoalApprovalForResponse($resByModel, $myUserId)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
+        /** @var GoalChangeLog $GoalChangeLog */
+        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
+        /** @var TkrChangeLog $TkrChangeLog */
+        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
@@ -207,6 +213,11 @@ class GoalApprovalService extends AppService
             unset($value['User']);
             return $value;
         });
+
+        // ゴール/TKRの変更前のスナップショットを取得
+        $goalId = Hash::extract($res, 'goal.id');
+        $res['goal']['goal_change_log'] = Hash::get($GoalChangeLog->findLatestSnapshot($goalId), 'data');
+        $res['goal']['tkr_change_log'] = Hash::get($TkrChangeLog->findLatestSnapshot($goalId), 'data');
 
         // 認定履歴の文言を追加
         $goal_memberUserId = $res['user']['id'];

@@ -14,6 +14,8 @@ export class GoalCard extends React.Component {
 
   render() {
     const goal = this.props.goal
+    const top_key_result = this.props.top_key_result
+    const category = this.porps.category
     const is_leader = this.props.is_leader
 
     if(Object.keys(goal).length == 0) {
@@ -35,14 +37,14 @@ export class GoalCard extends React.Component {
           <div className="goals-approval-detail-table">
               <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
               <div className="goals-approval-detail-info">
-                  <p><i className="fa fa-folder-o" aria-hidden="true"></i> { goal.category.name }</p>
+                  <p><i className="fa fa-folder-o" aria-hidden="true"></i> { category.name }</p>
                   <p><a href={`/goals/view_info/goal_id:${goal.id}`} target="_blank">{ goal.name }</a></p>
                   <div className="goals-approval-detail-tkr">
                       <h2 className="goals-approval-detail-tkrtitle"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                       <ul className="goals-approval-detail-tkrlist">
-                          <li>{ goal.top_key_result.name }</li>
-                          <li>{ goal.top_key_result.display_value }</li>
-                          <li>{ goal.top_key_result.description }</li>
+                          <li>{ top_key_result.name }</li>
+                          <li>{ top_key_result.display_value }</li>
+                          <li>{ top_key_result.description }</li>
                       </ul>
                   </div>
               </div>
