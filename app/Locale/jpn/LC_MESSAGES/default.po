@@ -2132,6 +2132,7 @@ msgid "%s should be entered in alphabet characters."
 msgstr "%sはアルファベットのみで入力してください。"
 
 #: Model/TeamMember.php:2129;2133 View/Elements/cake_variables.ctp:327
+#: Model/TeamMember.php:2121;2125 View/Elements/cake_variables.ctp:327
 #: View/Elements/modal_add_circle.ctp:66
 #: View/Elements/public_circle_item.ctp:33
 msgid "Administrators"
@@ -2196,54 +2197,54 @@ msgstr "女性"
 msgid "Neither"
 msgstr "どちらでもない"
 
-#: Model/User.php:658;699
+#: Model/User.php:659;700
 msgid "Saving Email failed"
 msgstr "メールアドレスの保存に失敗しました。"
 
-#: Model/User.php:667;692
+#: Model/User.php:668;693
 msgid "Saving User failed"
 msgstr "ユーザ情報の保存に失敗しました。"
 
-#: Model/User.php:677;684;711
+#: Model/User.php:678;685;712
 msgid "Saving LocalName failed"
 msgstr "ローカル名の保存に失敗しました。"
 
-#: Model/User.php:737
+#: Model/User.php:738
 msgid "Current Password is incorrect."
 msgstr "現在のパスワードが間違っています。"
 
-#: Model/User.php:791
+#: Model/User.php:792
 msgid "Invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
-#: Model/User.php:794
+#: Model/User.php:795
 msgid "Invitation token is expired."
 msgstr "トークンの期限が切れています。"
 
-#: Model/User.php:820 View/Users/password_reset_request.ctp:31
+#: Model/User.php:821 View/Users/password_reset_request.ctp:31
 #: View/Users/token_resend.ctp:31
 msgid "Enter your email address."
 msgstr "メールアドレスを入力してください。"
 
-#: Model/User.php:832
+#: Model/User.php:833
 msgid "This email address isn't registered at Goalous."
 msgstr "このメールアドレスはGoalousに登録されていません。"
 
-#: Model/User.php:837
+#: Model/User.php:838
 msgid "This email should be authenticated. Check your email box."
 msgstr ""
 "このメールアドレスは認証されていません。以前に送られたメールをご確認くださ"
 "い。"
 
-#: Model/User.php:842
+#: Model/User.php:843
 msgid "The user account is invalid."
 msgstr "ユーザアカウントが有効ではありません。"
 
-#: Model/User.php:916 View/Pages/home.ctp:125 View/Signup/email.ctp:31
+#: Model/User.php:917 View/Pages/home.ctp:125 View/Signup/email.ctp:31
 msgid "Email address is empty."
 msgstr "メールアドレスが入力されていません"
 
-#: Model/User.php:934
+#: Model/User.php:935
 msgid ""
 "Current email address is not authenticated. So, you can't change email "
 "address."
@@ -2262,8 +2263,10 @@ msgstr "許可されているのは数字のみです。"
 #: View/Elements/User/profile_setting.ctp:71;81
 #: View/Users/add_profile.ctp:59;66 View/Users/register.ctp:33;43
 #: View/Users/register_prof_with_invite.ctp:35;47
-msgid "Only alphabet characters are allowed."
-msgstr "アルファベットのみで入力してください。"
+msgid ""
+"It includes restricted strings. Allowed characters are only alphanumeric, "
+"space and apostrophe."
+msgstr "使用できる文字はアルファベット、スペース、アポストロフィのみです。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:20;33
 msgid "Invalid value"
@@ -2426,11 +2429,11 @@ msgstr "スペルを入力してください。"
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
 
-#: View/Elements/cake_variables.ctp:49 View/Goals/add.ctp:465
+#: View/Elements/cake_variables.ctp:49 View/Goals/add.ctp:533
 msgid "Start date has expired."
 msgstr "開始日が期限を過ぎています。"
 
-#: View/Elements/cake_variables.ctp:50 View/Goals/add.ctp:480
+#: View/Elements/cake_variables.ctp:50 View/Goals/add.ctp:548
 msgid "The limit date must be after start date."
 msgstr "期限は開始日より後である必要があります。"
 
@@ -6855,8 +6858,8 @@ msgid "isVerifiedEmail"
 msgstr ""
 
 #: Model/User.php:validation for field first_name;validation last_name
-msgid "isAlphabetOnly"
-msgstr "isAlphabetOnly"
+msgid "userName"
+msgstr ""
 
 #: Model/User.php:validation for field birth_day
 msgid "rule"
@@ -6887,481 +6890,3 @@ msgstr "passwordSameCheck"
 #: Model/User.php:validation for field cover_photo
 msgid "imageMinWidthHeight"
 msgstr ""
-
-#~ msgid "Move to Done."
-#~ msgstr "処理済みに移動しました。"
-
-#~ msgid "Sent amend request."
-#~ msgstr "修正依頼を送信しました。"
-
-#~ msgid "Failed to update Approvement."
-#~ msgstr "認定の更新に失敗しました。"
-
-#~ msgid "Set a purpose."
-#~ msgstr "ゴールの目的を保存しました。"
-
-#~ msgid "Saved a goal."
-#~ msgstr "ゴールを保存しました。"
-
-#~ msgid "top Key Result is required!"
-#~ msgstr "トップキーリザルトは必須です。"
-
-#~ msgid "Saving Data Failed!"
-#~ msgstr "データの保存に失敗しました。"
-
-#~ msgid "Failed to set a purpose."
-#~ msgstr "ゴールの目的の保存に失敗しました。"
-
-#~ msgid "Unit: %s"
-#~ msgstr "単位: %s"
-
-#~ msgid "Achieve point: %s"
-#~ msgstr "達成時: %s"
-
-#~ msgid "Initial point: %s"
-#~ msgstr "開始時: %s"
-
-#~ msgid "Purpose: %s"
-#~ msgstr "目的: %s"
-
-#~ msgid "Feedback"
-#~ msgstr "フィードバック"
-
-#~ msgid "Open"
-#~ msgstr "オープン"
-
-#~ msgid "Closed"
-#~ msgstr "クローズ"
-
-#~ msgid "Enterprise SNS the most ever open for Goal"
-#~ msgstr "最強にオープンな社内SNS"
-
-#~ msgid "Be open, achieve Goal."
-#~ msgstr "オープンがゴールを切り拓く"
-
-#~ msgid "Code is incorrect."
-#~ msgstr "トークンが正しくありません。"
-
-#~ msgid ""
-#~ "Email address is incorrect. Please enter the address from the email you "
-#~ "received."
-#~ msgstr ""
-#~ "メールアドレスが一致しません。招待が届いたメールアドレスを入力してくださ"
-#~ "い。"
-
-#~ msgid "Sign Up"
-#~ msgstr "新規登録"
-
-#~ msgid ""
-#~ "Use at least 8 characters and use a mix of numbers, alphanumeric and "
-#~ "special characters."
-#~ msgstr "８文字以上で、数字、英語、記号を組み合わせて下さい。"
-
-#~ msgid "Keep this window open while you check for your code."
-#~ msgstr "このページはコードを入力し終わるまで閉じないでください。"
-
-#~ msgid ""
-#~ "Create a name to a group that the team members work to achieve the great "
-#~ "vision. Team is the largest of the range that can be shared the goals and "
-#~ "activities . All information is closed in the team ."
-#~ msgstr ""
-#~ "大いなるビジョン実現を目指すチームメンバーが働くグループに名前をつけましょ"
-#~ "う。チームは、ゴールや活動を共有できる最大の範囲です。あらゆる情報はチーム"
-#~ "の中で閉じています。"
-
-#~ msgid ""
-#~ "There is a need to set the term of your team. Please choose the period "
-#~ "for personal  evaluation or the accounting period."
-#~ msgstr ""
-#~ "チームに期間を設定する必要があります。個人評価をする期間か決算に合わせた期"
-#~ "間を選択してください。"
-
-#~ msgid "good. Know your coworker."
-#~ msgstr "素晴らしい！あなたの同僚に知らせよう！"
-
-#~ msgid "Please mix of numbers, lower case letters and upper case letters."
-#~ msgstr "数字、英小文字、英大文字の混在にしてください。"
-
-#~ msgid "It's free until 31 Aug 2016! Try it!"
-#~ msgstr "2016年8月31日まで完全無料！今すぐお試しください。"
-
-#~ msgid "You can use Goalous free of charge until 31 Aug 2016."
-#~ msgstr "2016年8月31日まで無料でご利用いただけます。"
-
-#~ msgid "Released sale, It's all free until Augast 2016!"
-#~ msgstr ""
-#~ "リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待"
-#~ "ちしております。"
-
-#~ msgid "Harry"
-#~ msgstr "Takashi"
-
-#~ msgid ""
-#~ "Evaluation setting is turned off. Please ask your team administrator."
-#~ msgstr "評価設定がoffになっています。チーム管理者にご確認ください。"
-
-#~ msgid "%"
-#~ msgstr "¥"
-
-#~ msgid "$"
-#~ msgstr "$"
-
-#~ msgid ""
-#~ "You can check who read your posts and get Like from your team members."
-#~ msgstr ""
-#~ "ニュースフィードに投稿してみよう。既読管理ができて、いいね！が伝わります。"
-
-#~ msgid ""
-#~ "Make circle, join circle. There are 2 type of circles. Secret and Public."
-#~ msgstr ""
-#~ "サークルをつくったり、サークルに入ってみよう。サークルには秘密と公開の2種"
-#~ "類があります。"
-
-#~ msgid "Make a goal. You can set it in details at goal page."
-#~ msgstr ""
-#~ "ゴールをつくりましょう。ゴールページでは、より詳細な設定ができます。"
-
-#~ msgid "You can understand your collea"
-#~ msgstr ""
-#~ "全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありま"
-#~ "したか？"
-
-#~ msgid "Messaging"
-#~ msgstr "メッセージ送受信"
-
-#~ msgid "We appeared on Gekkan Jinji Management Feb."
-#~ msgstr "月刊人事マネジメント2016年2月号に掲載されました"
-
-#~ msgid "We appeared on Hito to shigoto no kenkyujo by Idem."
-#~ msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
-
-#~ msgid "湯川啓太"
-#~ msgstr "Keita Yukawa"
-
-#~ msgid "Confirming | Goalous(ゴーラス)"
-#~ msgstr "入力内容確認 | Goalous (ゴーラス)"
-
-#~ msgid "Flier (pdf)"
-#~ msgstr "フライヤー（PDFファイル）"
-
-#~ msgid "This is Goalous flier."
-#~ msgstr "フライヤー資料です。ぜひご活用ください。"
-
-#~ msgid "It's all free."
-#~ msgstr "今だけ、有料プランも完全無料"
-
-#~ msgid "%sが正しくありません。"
-#~ msgstr "%s is not correct."
-
-#~ msgid "Please fill in 'male' or 'female'."
-#~ msgstr "'male'もしくは'female'で記入してください。"
-
-#~ msgid "サポートされていないローカル姓名の言語コードです。"
-#~ msgstr ""
-#~ "It is unsupported language code of the local first name and last name."
-
-#~ msgid "Added circle member(s)."
-#~ msgstr "サークルメンバーを追加しました。"
-
-#~ msgid "Failed to add circle member(s)."
-#~ msgstr "サークルメンバーの追加に失敗しました。"
-
-#~ msgid "An error occurred while processing."
-#~ msgstr "処理中にエラーが発生しました。"
-
-#~ msgid "Wating for modified"
-#~ msgstr "修正待ち"
-
-#~ msgid "File deleted."
-#~ msgstr "ファイルを削除しました"
-
-#~ msgid "Failed to delete file."
-#~ msgstr "ファイルの削除に失敗しました"
-
-#~ msgid "Joined the circle."
-#~ msgstr "サークルに参加しました。"
-
-#~ msgid "Error in joining the circle."
-#~ msgstr "サークルに参加できませんでした。"
-
-#~ msgid "Left the circle."
-#~ msgstr "サークルを脱退しました。"
-
-#~ msgid "Failed to change time period."
-#~ msgstr "期間設定の更新に失敗しました。"
-
-#~ msgid "Failed to delete the team."
-#~ msgstr "チーム削除に失敗しました。"
-
-#~ msgid "Update completed."
-#~ msgstr "更新が完了しました。"
-
-#~ msgid "Changed team to %s"
-#~ msgstr "チームを「%s」に切り換えました。"
-
-#~ msgid "Evaluations suspended."
-#~ msgstr "評価を凍結しました。"
-
-#~ msgid "Evaluation suspension removed."
-#~ msgstr "評価の凍結を解除しました。"
-
-#~ msgid ""
-#~ "Unable to create group vision as you do not belong to this group, or the "
-#~ "vision already exists."
-#~ msgstr ""
-#~ "グループに所属していないか既に存在している為、グループビジョンは作成できま"
-#~ "せん。"
-
-#~ msgid "Group vision added."
-#~ msgstr "グループビジョンを追加しました。"
-
-#~ msgid "Group vision updated."
-#~ msgstr "グループビジョンを更新しました。"
-
-#~ msgid ""
-#~ "Email address is incorrect. Please enter the address from the email you "
-#~ "received. "
-#~ msgstr ""
-#~ "メールアドレスが一致しません。招待が届いたメールアドレスを入力してくださ"
-#~ "い。"
-
-#~ msgid ""
-#~ "Password code incorrect. The validity period may have expired. Please "
-#~ "resend the reset email again."
-#~ msgstr ""
-#~ "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再"
-#~ "設定用のメールを送信してください。"
-
-#~ msgid "Failed to confirm code. "
-#~ msgstr "トークンの認証に失敗しました。"
-
-#~ msgid "The code is not correct."
-#~ msgstr "コードが正しくありません。"
-
-#~ msgid "Achieved '%s!'"
-#~ msgstr "%s を達成しました！"
-
-#~ msgid "Documents"
-#~ msgstr "ドキュメント"
-
-#~ msgid "This period can not be frozen."
-#~ msgstr "この期間は凍結できません。"
-
-#~ msgid ""
-#~ "You can not be evaluated in this period  or do not have permission to "
-#~ "view."
-#~ msgstr "この期間の評価はできないか、表示する権限がありません。"
-
-#~ msgid "0(Certified exempt)"
-#~ msgstr "0 (認定対象外)"
-
-#~ msgid "3(Default)"
-#~ msgstr "3 (デフォルト)"
-
-#~ msgid "5(Very High)"
-#~ msgstr "5 (とても高い)"
-
-#~ msgid "This goal dosen't exist."
-#~ msgstr "このゴールは存在しません。"
-
-#~ msgid "Other $d circles"
-#~ msgstr "他%dサークル"
-
-#~ msgid " and %s others"
-#~ msgstr "と他%s人"
-
-#~ msgid " his/her "
-#~ msgstr "自分"
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on "
-#~ "<span class=\"notify-card-head-target\">%3$s</span>’s post."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class="
-#~ "\"notify-card-head-target\">%3$s</span>の投稿にコメントしました。"
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> has changed the "
-#~ "privacy setting of the circle to ”<span class=\"notify-card-head-target\">"
-#~ "%2$s</span>”"
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバ"
-#~ "シー設定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更し"
-#~ "ました。"
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> also commented on "
-#~ "<span class=\"notify-card-head-target\">%2$s</span>’s action."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span>も<span class=\"notify-"
-#~ "card-head-target\">%2$s</span>のアクションにコメントしました。"
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> added an action on "
-#~ "<span class=\"notify-card-head-target\">%2$s</span>."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
-#~ "card-head-target\">%2$s</span>にアクションしました。"
-
-#~ msgid "Shared %1$s and %1$s"
-#~ msgstr "%1$sと%2$sに共有"
-
-#~ msgid "Shared %1$s, %2$s and %3$s circle(s)"
-#~ msgstr "%1$sと%2$s他%3$sサークルに共有"
-
-#~ msgid "Shared %1$s,%2$s and %3$s others"
-#~ msgstr "%1$s、%2$sと他%3$s人に共有"
-
-#~ msgid "Quarter"
-#~ msgstr "四半期"
-
-#~ msgid "First name"
-#~ msgstr "ファーストネーム"
-
-#~ msgid "Last name"
-#~ msgstr "ラストネーム"
-
-#~ msgid "Create a Goal"
-#~ msgstr "ゴール作成"
-
-#~ msgid "Copy the URL."
-#~ msgstr "以下のURLをコピーしてください。"
-
-#~ msgid "You can't change this setting later."
-#~ msgstr "この設定は後で変更できません"
-
-#~ msgid "Basic Info"
-#~ msgstr "基本情報"
-
-#~ msgid "Set as admin"
-#~ msgstr "管理者にする"
-
-#~ msgid "1. Download users information."
-#~ msgstr "1.ユーザ情報をダウンロード"
-
-#~ msgid "Join Circle"
-#~ msgstr "サークルに参加する"
-
-#~ msgid "Create goal"
-#~ msgstr "ゴールを作成する"
-
-#~ msgid "display on Home feed"
-#~ msgstr "ホームフィードに表示する"
-
-#~ msgid "Uncomplete Key Result"
-#~ msgstr "達成要素を未完了にする"
-
-#~ msgid "Add action"
-#~ msgstr "アクションを追加する"
-
-#~ msgid "eg) I completed making the web site"
-#~ msgstr "例）Webサイトを完成させた"
-
-#~ msgid "Time"
-#~ msgstr "期間"
-
-#~ msgid "Managed registration and update of team members by CSV.file."
-#~ msgstr "チームメンバーの登録や更新をCSVで一括処理します。"
-
-#~ msgid "Confirm to delete goal category"
-#~ msgstr "ゴールカテゴリ削除の確認"
-
-#~ msgid "Items for change."
-#~ msgstr "変更適用対象"
-
-#~ msgid "Next term"
-#~ msgstr "現在の来期の期間"
-
-#~ msgid "Next term after changed"
-#~ msgstr "更新後の来期の期間"
-
-#~ msgid "Pause this term evaluations."
-#~ msgstr "今期の評価を凍結する"
-
-#~ msgid "Would you like to pause this term evaluations?"
-#~ msgstr "今期の評価を凍結します。よろしいですか？"
-
-#~ msgid "Evaluation score setting"
-#~ msgstr "評価スコア設定"
-
-#~ msgid "The action that had been liked"
-#~ msgstr "いいねされたアクション"
-
-#~ msgid "The action that had been commented"
-#~ msgstr "コメントされたアクション"
-
-#~ msgid "The post that had been liked"
-#~ msgstr "いいねされた投稿"
-
-#~ msgid "The post that had been commented"
-#~ msgstr "コメントされた投稿"
-
-#~ msgid "Invite new members"
-#~ msgstr "新しいメンバーを招待"
-
-#~ msgid "Comments (optional) will be added to the body of the mail."
-#~ msgstr "Comment will be added to the body of the invitation email."
-
-#~ msgid "Show Recovery codes."
-#~ msgstr "リカバリーコードを表示"
-
-#~ msgid "2-Step Verification setting"
-#~ msgstr "2段階認証設定"
-
-#~ msgid "Do you really want to cancel the changing of your mail address?%s"
-#~ msgstr "メールアドレス変更をキャンセルしますか？"
-
-#~ msgid "Nothing will be delivered."
-#~ msgstr "通知は送信されません。"
-
-#~ msgid "FIrst Name(%s)"
-#~ msgstr "名(%s)"
-
-#~ msgid "Show Examples."
-#~ msgstr "例文を表示"
-
-#~ msgid "[Now, What is that you can contribute to the team?]<br>\\"
-#~ msgstr ""
-#~ "\n"
-#~ "■ 例文１（技術者向け）<br>\n"
-#~ "【今、チームに貢献できることは？】<br>\n"
-#~ "スリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>\n"
-#~ "【これからチームで実現してみたいことは？(具体的に)】<br>\n"
-#~ "iOS,Androidで100万ダウンロードされるアプリを開発する。<br><br>\n"
-#~ "================================================<br>\n"
-#~ "■ 例文2（技術者以外向け）<br>\n"
-#~ "【今、チームに貢献できることは？】<br>\n"
-#~ "社内の風通しを良くする事。<br><br>\n"
-#~ "【これからチームで実現してみたいことは？(具体的に)】<br>\n"
-#~ "地域活性化に貢献できるサービスを作り社会貢献をする事。\n"
-#~ "<br>\n"
-
-#~ msgid "The member who you have to evaluate"
-#~ msgstr "あなたが評価するメンバー"
-
-#~ msgid "Add complements."
-#~ msgstr "内容を補足しましょう"
-
-#~ msgid "The due date must be after start date."
-#~ msgstr "期限が開始日以前になっています。"
-
-#~ msgid "Load further"
-#~ msgstr "さらに読み込む"
-
-#~ msgid "%s other members"
-#~ msgstr "他%s人"
-
-#~ msgid "Load more files"
-#~ msgstr "もっとファイルを読み込む"
-
-#~ msgid "There was no more files."
-#~ msgstr "これ以上のファイルはありません。"
-
-#~ msgid "Current period"
-#~ msgstr "現在の期間"
-
-#~ msgid "Name of team vision"
-#~ msgstr "チームビジョン名"
-
-#~ msgid "Forgot your password?"
-#~ msgstr "パスワードを忘れた場合はこちら"
