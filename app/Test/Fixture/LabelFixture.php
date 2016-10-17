@@ -31,6 +31,7 @@ class LabelFixture extends CakeTestFixtureEx
         'name'             => array(
             'type'    => 'string',
             'null'    => false,
+            'default' => null,
             'length'  => 128,
             'key'     => 'index',
             'collate' => 'utf8_bin',

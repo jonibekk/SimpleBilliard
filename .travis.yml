@@ -45,6 +45,8 @@ before_script:
   - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
   - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl install msgpack channel://pecl.php.net/msgpack-0.5.7
+  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - cp app/Test/travis/lite_php_browscap.ini /home/travis/browscap.ini
   - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart

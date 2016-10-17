@@ -26,7 +26,7 @@ class NotificationsControllerTest extends GoalousControllerTestCase
         'app.goal_category',
         'app.key_result',
         'app.action_result',
-        'app.collaborator',
+        'app.goal_member',
         'app.follower',
         'app.post_share_user',
         'app.post_share_circle',

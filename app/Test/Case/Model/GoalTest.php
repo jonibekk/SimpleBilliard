@@ -24,7 +24,7 @@ class GoalTest extends GoalousTestCase
         'app.goal',
         'app.goal_label',
         'app.key_result',
-        'app.collaborator',
+        'app.goal_member',
         'app.follower',
         'app.user',
         'app.team',
@@ -166,22 +166,6 @@ class GoalTest extends GoalousTestCase
         $goal_id = $this->Goal->getLastInsertID();
         $res = $this->Goal->getByGoalId($goal_id, null, 1, 'all', null, null, 2);
         $this->assertTrue(!empty($res));
-    }
-
-    function testGetProgress()
-    {
-        $goal = ['KeyResult' => []];
-        $this->Goal->getProgress($goal);
-
-        $goal = [
-            'KeyResult' => [
-                [
-                    'priority' => 1,
-                    'progress' => 0,
-                ]
-            ]
-        ];
-        $this->Goal->getProgress($goal);
     }
 
     function testSortModified()
@@ -438,7 +422,7 @@ class GoalTest extends GoalousTestCase
                 'goal_category_id' => 1,
             ]
         );
-        $this->Goal->Collaborator->save(
+        $this->Goal->GoalMember->save(
             [
                 'user_id'          => 1,
                 'team_id'          => 1,
@@ -468,7 +452,7 @@ class GoalTest extends GoalousTestCase
                 'goal_category_id' => 1,
             ]
         );
-        $this->Goal->Collaborator->save(
+        $this->Goal->GoalMember->save(
             [
                 'user_id' => 1,
                 'team_id' => 1,
@@ -509,8 +493,8 @@ class GoalTest extends GoalousTestCase
         );
         $goal_2 = $this->Goal->getLastInsertID();
 
-        $this->Goal->Collaborator->create();
-        $this->Goal->Collaborator->save(
+        $this->Goal->GoalMember->create();
+        $this->Goal->GoalMember->save(
             [
                 'user_id' => 1,
                 'team_id' => 1,
@@ -566,13 +550,13 @@ class GoalTest extends GoalousTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
-        $collabo = [
+        $goalMember = [
             'user_id' => 1,
             'team_id' => 1,
             'goal_id' => $goal_id,
         ];
-        $this->Goal->Collaborator->create();
-        $this->Goal->Collaborator->save($collabo);
+        $this->Goal->GoalMember->create();
+        $this->Goal->GoalMember->save($goalMember);
         return $goal_id;
     }
 
@@ -600,8 +584,8 @@ class GoalTest extends GoalousTestCase
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
         $this->Goal->KeyResult->current_team_id = 1;
-        $this->Goal->Collaborator->my_uid = 1;
-        $this->Goal->Collaborator->current_team_id = 1;
+        $this->Goal->GoalMember->my_uid = 1;
+        $this->Goal->GoalMember->current_team_id = 1;
         $this->Goal->Follower->my_uid = 1;
         $this->Goal->Follower->current_team_id = 1;
         $this->Goal->Post->my_uid = 1;
@@ -726,7 +710,7 @@ class GoalTest extends GoalousTestCase
         $this->Goal->create();
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
-        $collabo = [
+        $goalMember = [
             'user_id' => 1,
             'team_id' => 1,
             'goal_id' => $goal_id,
@@ -744,8 +728,8 @@ class GoalTest extends GoalousTestCase
         ];
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->KeyResult->save($key_results);
-        $this->Goal->Collaborator->create();
-        $this->Goal->Collaborator->save($collabo);
+        $this->Goal->GoalMember->create();
+        $this->Goal->GoalMember->save($goalMember);
         $res_1 = $this->Goal->getMyPreviousGoals(null, 1, 'all', 2);
         $res_2 = $this->Goal->getMyPreviousGoals(null, 1, 'count', 2);
         $this->assertNotEmpty($res_1);
@@ -811,10 +795,10 @@ class GoalTest extends GoalousTestCase
         // ゴールの期限が範囲内に収まっているかチェック
         $users = $this->Goal->getAllUserGoal(10000, 19999);
         foreach ($users as $user) {
-            foreach ($user['Collaborator'] as $collabo) {
-                if ($collabo['Goal']) {
-                    $this->assertGreaterThanOrEqual(10000, $collabo['Goal']['start_date']);
-                    $this->assertLessThanOrEqual(19999, $collabo['Goal']['end_date']);
+            foreach ($user['GoalMember'] as $goalMember) {
+                if ($goalMember['Goal']) {
+                    $this->assertGreaterThanOrEqual(10000, $goalMember['Goal']['start_date']);
+                    $this->assertLessThanOrEqual(19999, $goalMember['Goal']['end_date']);
                 }
             }
         }
@@ -836,8 +820,8 @@ class GoalTest extends GoalousTestCase
         $user_id = 200;
         $goal_id = 300;
         $goal_list[] = [
-            'Goal'         => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id],
-            'Collaborator' => ['user_id' => $user_id, 'goal_id' => $goal_id, 'approval_status' => 2],
+            'Goal'       => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id],
+            'GoalMember' => ['user_id' => $user_id, 'goal_id' => $goal_id, 'approval_status' => 2],
         ];
         $res = $this->Goal->setFollowGoalApprovalFlag($goal_list);
         $this->assertArrayHasKey('owner_approval_flag', $res[0]['Goal']);
@@ -973,8 +957,8 @@ class GoalTest extends GoalousTestCase
                 'goal_category_id' => 1,
             ]
         );
-        $this->Goal->Collaborator->create();
-        $this->Goal->Collaborator->save(
+        $this->Goal->GoalMember->create();
+        $this->Goal->GoalMember->save(
             [
                 'goal_id' => $this->Goal->getLastInsertID(),
                 'user_id' => $this->Goal->my_uid,

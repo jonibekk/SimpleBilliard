@@ -1082,6 +1082,9 @@ class UsersController extends AppController
 
     function view_goals()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $user_id = $this->_getRequiredParam('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1142,6 +1145,8 @@ class UsersController extends AppController
         } else {
             $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
         }
+
+        $goals = $GoalService->processGoals($goals);
         $goals = $this->Goal->setIsCurrentTerm($goals);
 
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
@@ -1232,7 +1237,7 @@ class UsersController extends AppController
         $team = $this->Team->getCurrentTeam();
         $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
-        $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
+        $goal_ids = $this->Goal->GoalMember->getCollaboGoalList($user_id, true);
         $goal_select_options = $this->Goal->getGoalNameListByGoalIds($goal_ids, true, true);
         $goal_base_url = Router::url([
             'controller' => 'users',

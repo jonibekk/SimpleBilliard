@@ -23,7 +23,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         'app.goal',
         'app.goal_category',
         'app.follower',
-        'app.collaborator',
+        'app.goal_member',
         'app.local_name',
         'app.cake_session',
         'app.team',
@@ -630,8 +630,8 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $Evaluations->Evaluation->Goal->GoalCategory->current_team_id = '1';
         $Evaluations->Evaluation->Goal->KeyResult->my_uid = '1';
         $Evaluations->Evaluation->Goal->KeyResult->current_team_id = '1';
-        $Evaluations->Evaluation->Goal->Collaborator->my_uid = '1';
-        $Evaluations->Evaluation->Goal->Collaborator->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->GoalMember->my_uid = '1';
+        $Evaluations->Evaluation->Goal->GoalMember->current_team_id = '1';
         $Evaluations->Evaluation->Goal->Follower->my_uid = '1';
         $Evaluations->Evaluation->Goal->Follower->current_team_id = '1';
         $Evaluations->Evaluation->Goal->Post->my_uid = '1';

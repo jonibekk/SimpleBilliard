@@ -2409,25 +2409,23 @@ class TeamMember extends AppModel
             ],
         ];
         $member_list = $this->find("list", $options);
-        $res = $this->User->Collaborator->getCollaboGoalList($member_list, true, $limit, $page);
+        $res = $this->User->GoalMember->getCollaboGoalList($member_list, true, $limit, $page);
         return $res;
     }
 
     /**
      * Param1のユーザーは評価対象の人なのか
-     * TODO:チームIDは$this->current_team_idを使用すること
-     * @param $user_id
-     * @param $team_id
      *
-     * @return array|null
+     * @param $user_id
+     *
+     * @return boolean
      */
-    function getEvaluationEnableFlg($user_id, $team_id)
+    function getEvaluationEnableFlg($user_id)
     {
         $options = [
             'fields'     => ['active_flg', 'evaluation_enable_flg'],
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
-                'TeamMember.team_id' => $team_id,
             ],
         ];
         $res = $this->find('first', $options);

@@ -500,8 +500,18 @@
             "Evaluated": "<?=__("Evaluated")?>",
             "Not Evaluated": "<?=__("Not Evaluated")?>",
             "Waiting": "<?=__("Waiting")?>",
+            "Waiting for approval": "<?=__("Waiting for approval")?>",
             "Goal details": "<?= __("Goal details") ?>",
             "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
+            "Withdrawn": "<?=__("Withdrawn")?>",
+            "Evaluation target goals are listed up here.": "<?= __("Evaluation target goals are listed up here.") ?>",
+            "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
+            // goal edit
+            "Confirm this goal": "<?= __("Confirm this goal") ?>",
+            "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
+            "Save changes": "<?= __("Save changes") ?>",
+            "Optional": "<?= __("Optional") ?>",
+            "Top Key Result": "<?= __("Top Key Result") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,

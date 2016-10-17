@@ -3,27 +3,28 @@ import * as types from "../constants/ActionTypes";
 const initialState = {
   initFlg: false,
   toNextPage: false,
-  goal:{},
-  visions:[],
-  categories:[],
-  labels:[],
-  terms:[],
-  priorities:[],
-  units:[],
+  goal: {},
+  visions: [],
+  categories: [],
+  labels: [],
+  terms: [],
+  priorities: [],
+  units: [],
   keyword: "",
   suggestions: [],
   suggestionsExcludeSelected: [],
   validationErrors: {
     key_result: {}
   },
-  inputData:{
+  inputData: {
     key_result: {
       // name:""
     },
-    labels:[]
+    labels: []
   },
   approvalHistories: [],
-  isDisabledSubmit: false
+  isDisabledSubmit: false,
+  from: ""
 }
 
 export default function goal(state = initialState, action) {
@@ -36,6 +37,9 @@ export default function goal(state = initialState, action) {
 
   let inputData = state.inputData
   switch (action.type) {
+    case types.INIT:
+      return Object.assign({}, state, action.data)
+
     case types.INVALID:
       return Object.assign({}, state, {
         validationErrors: action.error.validation_errors,
@@ -57,8 +61,13 @@ export default function goal(state = initialState, action) {
 
     case types.FETCH_INITIAL_DATA:
       let suggestionsExcludeSelected = state.suggestionsExcludeSelected
+      const existLabelIds = action.data.goal.goal_labels.map((el) => {
+        return el.id
+      })
       if (state.suggestionsExcludeSelected.length == 0) {
-        suggestionsExcludeSelected = Object.assign([], action.data.labels)
+        suggestionsExcludeSelected = action.data.labels.filter((el) => {
+          return (existLabelIds.indexOf(el.id) == -1);
+        })
       }
       if (!state.initFlg) {
         inputData = initInputData(action.data.goal)
@@ -68,7 +77,7 @@ export default function goal(state = initialState, action) {
         suggestionsExcludeSelected,
         toNextPage: false,
         initFlg: true,
-        validationErrors:{key_result: {}}
+        validationErrors: {key_result: {}}
       })
 
     case types.FETCH_COMMETNS:
@@ -76,15 +85,10 @@ export default function goal(state = initialState, action) {
         approvalHistories: action.approvalHistories,
         toNextPage: false,
         initFlg: true,
-        validationErrors:{key_result: {}}
+        validationErrors: {key_result: {}}
       })
 
     case types.REQUEST_SUGGEST:
-      // サジェストをラベル名昇順に並び替え
-      action.suggestions.sort((a,b) => {
-        return (a.name > b.name)? 1 :-1
-      });
-
       return Object.assign({}, state, {
         suggestions: action.suggestions,
         keyword: action.keyword
@@ -103,7 +107,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected : addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
+        suggestionsExcludeSelected: addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
       })
 
     case types.ADD_LABEL:
@@ -113,7 +117,7 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         inputData,
         suggestionsExcludeSelected: deleteItemFromSuggestions(state.suggestionsExcludeSelected, action.label),
-        keyword:""
+        keyword: ""
       })
 
     case types.SELECT_SUGGEST:
@@ -123,7 +127,7 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         inputData,
         suggestionsExcludeSelected: deleteItemFromSuggestions(state.suggestionsExcludeSelected, action.suggestion.name),
-        keyword:""
+        keyword: ""
       })
 
     case types.UPDATE_INPUT_DATA:
@@ -134,12 +138,13 @@ export default function goal(state = initialState, action) {
         inputData[action.key] = Object.assign({}, inputData[action.key], action.data)
         state.inputData = inputData
         return Object.assign({}, state)
-      } {
-        inputData = Object.assign({}, inputData, action.data)
-        return Object.assign({}, state, {
-          inputData
-        })
       }
+    {
+      inputData = Object.assign({}, inputData, action.data)
+      return Object.assign({}, state, {
+        inputData
+      })
+    }
     default:
       return state;
   }
@@ -160,7 +165,7 @@ export function updateSelectedLabels(inputData, label, deleteFlg = false) {
   const idx = labels.indexOf(label)
   if (deleteFlg && idx != -1) {
     labels.splice(idx, 1)
-  } else if(!deleteFlg && idx == -1)  {
+  } else if (!deleteFlg && idx == -1) {
     labels.push(label)
   }
 
@@ -222,7 +227,7 @@ export function initInputData(goal) {
     labels: labels,
     end_date: goal.end_date,
     description: goal.description,
-    priority: goal.collaborator.priority,
+    priority: goal.goal_member.priority,
     key_result: {
       name: goal.top_key_result.name,
       value_unit: goal.top_key_result.value_unit,

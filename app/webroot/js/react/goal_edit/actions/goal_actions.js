@@ -30,6 +30,12 @@ export function validateGoal(goalId, addInputData) {
   }
 }
 
+export function init(data) {
+  return {
+    type: types.INIT,
+    data
+  }
+}
 export function toNextPage(addInputData = {}) {
   return {
     type: types.TO_NEXT_PAGE,
@@ -116,8 +122,8 @@ export function fetchInitialData(goalId) {
 
 export function fetchComments() {
   return (dispatch, getState) => {
-    const collaboratorId = getState().goal.goal.collaborator.id
-    return axios.get(`/api/v1/goal_approvals/histories?collaborator_id=${collaboratorId}`)
+    const goalMemberId = getState().goal.goal.goal_member.id
+    return axios.get(`/api/v1/goal_approvals/histories?goal_member_id=${goalMemberId}`)
       .then((response) => {
         let approvalHistories = response.data.data
         dispatch({
@@ -133,7 +139,7 @@ export function fetchComments() {
 export function saveGoal(addInputData) {
   return (dispatch, getState) => {
     dispatch(disableSubmit())
-    const {inputData, goal} = getState().goal;
+    const {inputData, goal, from} = getState().goal;
     inputData["approval_history"] = addInputData
     // 単位無しの場合開始値と終了値を自動的に0にする
     if (inputData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
@@ -143,7 +149,7 @@ export function saveGoal(addInputData) {
 
     return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
       (response) => {
-        document.location.href = '/'
+        document.location.href = from
       },
       (response) => {
         dispatch(invalid(response.data))
@@ -153,7 +159,7 @@ export function saveGoal(addInputData) {
 }
 
 export function disableSubmit() {
-  return { type: types.DISABLE_SUBMIT }
+  return {type: types.DISABLE_SUBMIT}
 }
 
 /**
@@ -165,11 +171,22 @@ export function disableSubmit() {
  * @returns {*}
  */
 function getSuggestions(value, suggestions) {
-  if (!value) {
-    return suggestions.filter((suggestion) => suggestion.name);
+  if (value) {
+    value = value.trim();
+    const regex = new RegExp('^' + value, 'i');
+    suggestions = suggestions.filter((suggestion) => regex.test(suggestion.name));
   }
-  value = value.trim();
-  const regex = new RegExp('^' + value, 'i');
-  return suggestions.filter((suggestion) => regex.test(suggestion.name));
-}
 
+  // サジェストは10件のみ表示
+  suggestions = suggestions.slice(0, 10)
+  // サジェストをラベル名昇順に並び替え
+  suggestions.sort((a, b) => {
+    return (a.goal_label_count < b.goal_label_count) ? 1 : -1
+  });
+
+  // サジェストの先頭に入力文字列を加える
+  if (value) {
+    suggestions.unshift({name: value})
+  }
+  return suggestions
+}

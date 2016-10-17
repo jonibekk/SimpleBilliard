@@ -9,7 +9,7 @@
  * @var $goal_term
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
@@ -41,7 +41,7 @@
                 <p class="goal-detail-info-members-head"><?= __('Members') ?></p>
                 <?php
                 //+1という表示にはせず+2以上の表示にする
-                $member_all = array_merge($goal['Leader'], $goal['Collaborator']);
+                $member_all = array_merge($goal['Leader'], $goal['GoalMember']);
                 //この値は表示するアイテム数、たとえばアイテム数が5で件数が6だった場合は、5つ目の表示は画像の上に+2となる。
                 //アイテム数が6で件数が8だった場合は、6つ目の表示は画像の上に+3となる。
                 //アイテム数が6で件数も同じ場合は、6つ目の表示は通常のユーザ画像表示。
@@ -93,4 +93,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

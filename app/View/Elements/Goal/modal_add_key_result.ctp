@@ -147,6 +147,23 @@
                 </div>
             </div>
             <div class="row">
+                <div>
+                    <h5 class="modal-key-result-headings"><?= __("Description") ?><span
+                            class="modal-key-result-headings-description"><?= __("") ?></span></h5>
+                </div>
+                <div class=" goal-set-input">
+                    <div>
+                        <?=
+                        $this->Form->input('KeyResult.description',
+                            [
+                                'label'                        => false,
+                                'placeholder'                  => __("Optional"),
+                                'rows'                         => 3,
+                            ]) ?>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <h5 class="modal-key-result-headings"><?= __("Term") ?>
                     <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                         <span class="modal-key-result-headings-description">
