@@ -9,7 +9,7 @@
  * @var                    $goals
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-3 col-xs-2">
@@ -22,8 +22,8 @@
                 <?=
                 $this->Html->image('ajax-loader.gif',
                     [
-                        'class' => 'lazy img-rounded',
-                        'style' => 'width: 48px; height: 48px;',
+                        'class'         => 'lazy img-rounded',
+                        'style'         => 'width: 48px; height: 48px;',
                         'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
                             ['style' => 'medium'])
                     ]
@@ -54,8 +54,8 @@
                 <i class="fa fa-check-circle"></i><?= "&nbsp;" . count(($goal['ActionResult'])) . "&nbsp;･&nbsp;" ?>
                 <i class="fa fa-key"></i><?= "&nbsp;" . count($goal['KeyResult']) . "&nbsp;･" ?>
                 <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['Follower']) . "&nbsp;･" ?>
-                <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['Collaborator']) . "&nbsp;" ?>
-                <?= $this->Goal->displayCollaboratorNameList($goal['Collaborator']) ?>
+                <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['GoalMember']) . "&nbsp;" ?>
+                <?= $this->Goal->displayGoalMemberNameList($goal['GoalMember']) ?>
             </div>
             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && is_null($goal['Goal']['completed'])): ?>
                 <div class="col col-xxs-12 mt_5px">
@@ -95,4 +95,4 @@
         </div>
     </div>
 <?php endforeach ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

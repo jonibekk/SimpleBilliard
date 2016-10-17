@@ -15,7 +15,7 @@
  * @var                    $evaluateType
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
@@ -359,7 +359,7 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Collaborator") ?>:
-                    <?= count($goal[0]['Goal']['Collaborator']) ?>
+                    <?= count($goal[0]['Goal']['GoalMember']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Progress") ?>:
@@ -562,7 +562,7 @@ $this->Form->input("evaluate_type", [
 ])
 ?>
 <?= $this->Form->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

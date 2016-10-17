@@ -43,75 +43,81 @@
   }
 
   // /goals/approval/list
-  &-list-item{
-    border-bottom: 1px solid @subColor5;
-    &.is-complete {
-      .mod-status, .fa {
-        color: @subColor3;
-      }
+  &-list {
+    border-top: 1px solid @subColor5;
+    &.empty {
+      border-top: none;
     }
-    &.is-incomplete {
-      background-color: @unreadRed;
-      .mod-status, .fa {
-        color: @keyColor;
+    &-item{
+      border-bottom: 1px solid @subColor5;
+      &.is-complete {
+        .mod-status, .fa {
+          color: @subColor3;
+        }
       }
-    }
-    &.is-waiting {
-      background-color: @whiteColor;
-      .mod-status {
-        color: @keyColor;
+      &.is-incomplete {
+        background-color: @unreadRed;
+        .mod-status, .fa {
+          color: @keyColor;
+        }
       }
-      .fa {
-        color: @subColor3;
+      &.is-waiting {
+        background-color: @whiteColor;
+        .mod-status {
+          color: @keyColor;
+        }
+        .fa {
+          color: @subColor3;
+        }
       }
-    }
-    &:hover {
-      background-color: @hoverRed;
-    }
-    &-link {
-      color: @subColor1;
-      display: table;
-      padding: @spacing;
-      &:focus, &:hover {
+      &:hover {
+        background-color: @hoverRed;
+      }
+      &-link {
         color: @subColor1;
-        text-decoration: none;
+        display: table;
+        padding: @spacing;
+        &:focus, &:hover {
+          color: @subColor1;
+          text-decoration: none;
+        }
       }
-    }
-    &-image {
-      display: table-cell;
-      margin-right: @spacing;
-      max-width: none;
-    }
-    &-info {
-      display: table-cell;
-      vertical-align: top;
-      width: 100%;
-      &-user-name {
-        font-weight: normal;
+      &-image {
+        display: table-cell;
+        margin-right: @spacing;
+        max-width: none;
       }
-      &-goal-name {
-        overflow: hidden;
-        height: 38px;
-        word-wrap : break-word;
-        overflow-wrap : break-word;
-        margin: 0 @spacing @spacing 0;
+      &-info {
+        display: table-cell;
+        vertical-align: top;
+        width: 100%;
+        &-user-name {
+          font-weight: normal;
+        }
+        &-goal-name {
+          overflow: hidden;
+          height: 38px;
+          word-wrap : break-word;
+          overflow-wrap : break-word;
+          margin: 0 @spacing @spacing 0;
+        }
       }
-    }
-    &-detail {
-      display: table-cell;
-      vertical-align: middle;
-      text-align: center;
-      .fa {
-        font-weight: bold;
-        font-size: 28px;
-        width: 25px;
+      &-detail {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        .fa {
+          font-weight: bold;
+          font-size: 28px;
+          width: 25px;
+        }
       }
-    }
-    &-view-more-button {
-      width: 100%;
-      height: 100%;
-      display: block;
-      cursor: pointer;
+      &-view-more-button {
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: pointer;
+      }
     }
   }
 

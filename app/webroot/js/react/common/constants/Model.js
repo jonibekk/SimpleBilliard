@@ -9,7 +9,7 @@ export const KeyResult = Object.freeze({
   }
 })
 
-export const Collaborator = Object.freeze({
+export const GoalMember = Object.freeze({
   ApprovalStatus: {
     NEW: 0,
     REAPPLICATION: 1,

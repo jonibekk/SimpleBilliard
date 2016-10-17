@@ -2,13 +2,13 @@
 App::uses('AppModel', 'Model');
 
 /**
- * Collaborator Model
+ * GoalMember Model
  *
  * @property Team $Team
  * @property Goal $Goal
  * @property User $User
  */
-class Collaborator extends AppModel
+class GoalMember extends AppModel
 {
     /**
      * タイプ
@@ -28,10 +28,10 @@ class Collaborator extends AppModel
 
     // TODO: 中身をセットする処理は未実装。表示文言が決まり次第実装する。
     static public $STATUS = [
-        self::APPROVAL_STATUS_NEW => "",
+        self::APPROVAL_STATUS_NEW           => "",
         self::APPROVAL_STATUS_REAPPLICATION => "",
-        self::APPROVAL_STATUS_DONE => "",
-        self::APPROVAL_STATUS_WITHDRAWN => ""
+        self::APPROVAL_STATUS_DONE          => "",
+        self::APPROVAL_STATUS_WITHDRAWN     => ""
     ];
 
     /**
@@ -107,31 +107,47 @@ class Collaborator extends AppModel
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $collaborator = [
+        $goalMember = [
             'team_id' => $this->current_team_id,
             'user_id' => $uid,
             'type'    => $type,
             'goal_id' => $goal_id,
         ];
-        $res = $this->save($collaborator);
+        $res = $this->save($goalMember);
         return $res;
     }
 
     function edit($data, $uid = null, $type = self::TYPE_COLLABORATOR)
     {
-        if (!isset($data['Collaborator']) || empty($data['Collaborator'])) {
+        if (!isset($data['GoalMember']) || empty($data['GoalMember'])) {
             return false;
         }
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $data['Collaborator']['user_id'] = $uid;
-        $data['Collaborator']['team_id'] = $this->current_team_id;
-        $data['Collaborator']['type'] = $type;
+        $data['GoalMember']['user_id'] = $uid;
+        $data['GoalMember']['team_id'] = $this->current_team_id;
+        $data['GoalMember']['type'] = $type;
 
         $res = $this->save($data);
-        $this->Goal->Follower->deleteFollower($data['Collaborator']['goal_id']);
+        $this->Goal->Follower->deleteFollower($data['GoalMember']['goal_id']);
         return $res;
+    }
+
+    function findEvaluatableGoalList($uid)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'              => $uid,
+                'is_target_evaluation' => true
+            ],
+            'fields'     => [
+                'goal_id',
+                'goal_id'
+            ],
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
     }
 
     function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1, $approval_status = null)
@@ -149,7 +165,7 @@ class Collaborator extends AppModel
                 'user_id' => $user_id,
                 'team_id' => $this->current_team_id,
                 'type'    => [
-                    Collaborator::TYPE_COLLABORATOR,
+                    GoalMember::TYPE_COLLABORATOR,
                 ],
             ],
             'fields'     => [
@@ -173,7 +189,7 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    // for getting incomplete goal ids for collaborator right column
+    // for getting incomplete goal ids for goal_member right column
     function getIncompleteCollaboGoalIds(
         $user_id,
         $start_date,
@@ -198,7 +214,7 @@ class Collaborator extends AppModel
                     'alias'      => 'Goal',
                     'type'       => 'INNER',
                     'conditions' => [
-                        'Goal.id = Collaborator.goal_id',
+                        'Goal.id = GoalMember.goal_id',
                         'Goal.end_date >=' => $start_date,
                         'Goal.end_date <=' => $end_date,
                         'Goal.completed'   => null,
@@ -206,10 +222,10 @@ class Collaborator extends AppModel
                 ]
             ],
             'conditions' => [
-                'Collaborator.user_id' => $user_id,
-                'Collaborator.team_id' => $this->current_team_id,
-                'Collaborator.type'    => [
-                    Collaborator::TYPE_COLLABORATOR,
+                'GoalMember.user_id' => $user_id,
+                'GoalMember.team_id' => $this->current_team_id,
+                'GoalMember.type'    => [
+                    GoalMember::TYPE_COLLABORATOR,
                 ],
             ],
             'fields'     => [
@@ -217,7 +233,7 @@ class Collaborator extends AppModel
                 'goal_id'
             ],
             'order'      => [
-                'Collaborator.priority DESC'
+                'GoalMember.priority DESC'
             ],
             'page'       => $page,
             'limit'      => $limit
@@ -246,7 +262,7 @@ class Collaborator extends AppModel
                     'alias'      => 'Goal',
                     'type'       => 'INNER',
                     'conditions' => [
-                        'Goal.id = Collaborator.goal_id',
+                        'Goal.id = GoalMember.goal_id',
                         'Goal.end_date >=' => $start_date,
                         'Goal.end_date <=' => $end_date,
                         'Goal.completed'   => null,
@@ -254,10 +270,10 @@ class Collaborator extends AppModel
                 ]
             ],
             'conditions' => [
-                'Collaborator.user_id' => $user_id,
-                'Collaborator.team_id' => $this->current_team_id,
-                'type'                 => [
-                    Collaborator::TYPE_OWNER,
+                'GoalMember.user_id' => $user_id,
+                'GoalMember.team_id' => $this->current_team_id,
+                'type'               => [
+                    GoalMember::TYPE_OWNER,
                 ],
             ],
             'fields'     => [
@@ -265,7 +281,7 @@ class Collaborator extends AppModel
                 'goal_id'
             ],
             'order'      => [
-                'Collaborator.priority DESC'
+                'GoalMember.priority DESC'
             ],
             'page'       => $page,
             'limit'      => $limit
@@ -304,8 +320,8 @@ class Collaborator extends AppModel
         }
         $options = [
             'conditions' => [
-                'Collaborator.goal_id' => $goal_id,
-                'Collaborator.user_id' => $uid,
+                'GoalMember.goal_id' => $goal_id,
+                'GoalMember.user_id' => $uid,
             ],
         ];
         $res = $this->find('first', $options);
@@ -323,11 +339,11 @@ class Collaborator extends AppModel
         $term_type = null
     ) {
         $conditions = [
-            'Collaborator.team_id' => $team_id,
-            'Collaborator.user_id' => $goal_user_id,
+            'GoalMember.team_id' => $team_id,
+            'GoalMember.user_id' => $goal_user_id,
         ];
         if (!empty($approvalStatus)) {
-            $conditions['Collaborator.approval_status'] = $approvalStatus;
+            $conditions['GoalMember.approval_status'] = $approvalStatus;
         }
         if ($term_type !== null) {
             $conditions['Goal.end_date >='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['start_date'];
@@ -361,15 +377,15 @@ class Collaborator extends AppModel
                 ]
             ],
             'type'       => 'inner',
-            'order'      => ['Collaborator.created DESC'],
+            'order'      => ['GoalMember.created DESC'],
         ];
         if (!$is_include_priority_0) {
-            $options['conditions']['NOT'] = array('Collaborator.priority' => "0");
+            $options['conditions']['NOT'] = array('GoalMember.priority' => "0");
         }
         if (is_array($approvalStatus)) {
-            unset($options['conditions']['Collaborator.approval_status']);
+            unset($options['conditions']['GoalMember.approval_status']);
             foreach ($approvalStatus as $val) {
-                $options['conditions']['OR'][]['Collaborator.approval_status'] = $val;
+                $options['conditions']['OR'][]['GoalMember.approval_status'] = $val;
             }
         }
         $res = $this->find('all', $options);
@@ -388,10 +404,10 @@ class Collaborator extends AppModel
     {
         $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $conditions = [
-            'Collaborator.team_id' => $this->current_team_id,
-            'Collaborator.user_id' => $goalUserId,
-            'Goal.end_date >='     => $currentTerm['start_date'],
-            'Goal.end_date <='     => $currentTerm['end_date'],
+            'GoalMember.team_id' => $this->current_team_id,
+            'GoalMember.user_id' => $goalUserId,
+            'Goal.end_date >='   => $currentTerm['start_date'],
+            'Goal.end_date <='   => $currentTerm['end_date'],
         ];
 
         $options = [
@@ -418,7 +434,7 @@ class Collaborator extends AppModel
                 ],
             ],
             'type'       => 'INNER',
-            'order'      => ['Collaborator.approval_status ASC', 'Collaborator.created DESC'],
+            'order'      => ['GoalMember.approval_status ASC', 'GoalMember.created DESC'],
         ];
         $res = $this->find('all', $options);
         return $res;
@@ -428,11 +444,11 @@ class Collaborator extends AppModel
     {
         $this->id = $id;
         $this->save(['approval_status' => $status]);
-        $collabo = $this->findById($this->id);
+        $goalMember = $this->findById($this->id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $collabo['Collaborator']['user_id']),
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $goalMember['GoalMember']['user_id']),
             'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $collabo['Collaborator']['user_id']),
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalMember['GoalMember']['user_id']),
             'user_data');
     }
 
@@ -441,9 +457,9 @@ class Collaborator extends AppModel
         $options = [
             'fields'     => ['id', 'type', 'approval_status', 'priority'],
             'conditions' => [
-                'Collaborator.team_id'         => $team_id,
-                'Collaborator.user_id'         => $goal_user_id,
-                'Collaborator.approval_status' => $approval_flg,
+                'GoalMember.team_id'         => $team_id,
+                'GoalMember.user_id'         => $goal_user_id,
+                'GoalMember.approval_status' => $approval_flg,
             ],
             'contain'    => [
                 'Goal' => [
@@ -463,17 +479,17 @@ class Collaborator extends AppModel
                 continue;
             }
             // 自分のゴール + 修正待ち以外
-            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['approval_status'] !== '3') {
+            if ($val['User']['id'] === (string)$user_id && $val['GoalMember']['approval_status'] !== '3') {
                 continue;
             }
             // 自分のゴール + 修正待ち + コラボレーター
-            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['approval_status'] === '3'
-                && $val['Collaborator']['type'] === '0'
+            if ($val['User']['id'] === (string)$user_id && $val['GoalMember']['approval_status'] === '3'
+                && $val['GoalMember']['type'] === '0'
             ) {
                 continue;
             }
             //他人のゴール + 重要度0 = 対象外
-            if ($val['User']['id'] !== (string)$user_id && $val['Collaborator']['priority'] === '0') {
+            if ($val['User']['id'] !== (string)$user_id && $val['GoalMember']['priority'] === '0') {
                 continue;
             }
             $res[] = $val;
@@ -493,14 +509,14 @@ class Collaborator extends AppModel
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
         $options = [
-            'fields'     => ['Collaborator.id'],
+            'fields'     => ['GoalMember.id'],
             'joins'      => [
                 [
                     'table'      => 'goals',
                     'alias'      => 'Goal',
                     'type'       => 'INNER',
                     'conditions' => [
-                        'Goal.id = Collaborator.goal_id',
+                        'Goal.id = GoalMember.goal_id',
                         'Goal.end_date >=' => $currentTerm['start_date'],
                         'Goal.end_date <=' => $currentTerm['end_date'],
                         'Goal.completed'   => null,
@@ -511,14 +527,14 @@ class Collaborator extends AppModel
                     'alias'      => 'TeamMember',
                     'type'       => 'INNER',
                     'conditions' => [
-                        'TeamMember.user_id = Collaborator.user_id',
+                        'TeamMember.user_id = GoalMember.user_id',
                         'TeamMember.coach_user_id' => $userId,
                     ]
                 ]
             ],
             'conditions' => [
-                'Collaborator.team_id'         => $this->current_team_id,
-                'Collaborator.approval_status' => [
+                'GoalMember.team_id'         => $this->current_team_id,
+                'GoalMember.approval_status' => [
                     self::APPROVAL_STATUS_NEW,
                     self::APPROVAL_STATUS_REAPPLICATION,
                 ],
@@ -536,7 +552,7 @@ class Collaborator extends AppModel
                 'goal_id' => $goal_id,
                 'team_id' => $this->current_team_id,
                 'type'    => [
-                    Collaborator::TYPE_OWNER,
+                    GoalMember::TYPE_OWNER,
                 ],
             ],
             'fields'     => [
@@ -544,8 +560,8 @@ class Collaborator extends AppModel
             ],
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['Collaborator']['user_id'])) {
-            return $res['Collaborator']['user_id'];
+        if (viaIsSet($res['GoalMember']['user_id'])) {
+            return $res['GoalMember']['user_id'];
         }
         return null;
     }
@@ -561,12 +577,12 @@ class Collaborator extends AppModel
      *
      * @return array|null
      */
-    function getCollaboratorByGoalId($goal_id, array $params = [])
+    function getGoalMemberByGoalId($goal_id, array $params = [])
     {
         $params = array_merge([
             'limit' => null,
             'page'  => 1,
-            'order' => ['Collaborator.created' => 'ASC'],
+            'order' => ['GoalMember.created' => 'ASC'],
         ], $params);
         $options = [
             'conditions' => [
@@ -589,7 +605,7 @@ class Collaborator extends AppModel
      *
      * @return array
      */
-    function getCollaboratorListByGoalId($goal_id, $type = null)
+    function getGoalMemberListByGoalId($goal_id, $type = null)
     {
         $options = [
             'conditions' => [
@@ -611,7 +627,7 @@ class Collaborator extends AppModel
     /**
      * @deprecated
      */
-    function getCollaborator($team_id, $user_id, $goal_id, $owner = true)
+    function getGoalMember($team_id, $user_id, $goal_id, $owner = true)
     {
         $options = [
             'conditions' => [
@@ -630,6 +646,7 @@ class Collaborator extends AppModel
 
     /**
      * ユニークのレコード取得
+     *
      * @param      $user_id
      * @param      $goal_id
      * @param bool $owner
@@ -689,32 +706,32 @@ class Collaborator extends AppModel
 
         $options = [
             'conditions' => [
-                'Collaborator.team_id' => $this->current_team_id,
+                'GoalMember.team_id' => $this->current_team_id,
             ],
         ];
         if ($params['user_id'] !== null) {
-            $options['conditions']['Collaborator.user_id'] = $params['user_id'];
+            $options['conditions']['GoalMember.user_id'] = $params['user_id'];
         }
         if ($params['start'] !== null) {
-            $options['conditions']["Collaborator.created >="] = $params['start'];
+            $options['conditions']["GoalMember.created >="] = $params['start'];
         }
         if ($params['end'] !== null) {
-            $options['conditions']["Collaborator.created <="] = $params['end'];
+            $options['conditions']["GoalMember.created <="] = $params['end'];
         }
         if ($params['type'] !== null) {
-            $options['conditions']["Collaborator.type"] = $params['type'];
+            $options['conditions']["GoalMember.type"] = $params['type'];
         }
 
         return $this->find('count', $options);
     }
 
-    function getCollaboratorForApproval($collaboratorId)
+    function getGoalMemberForApproval($goalMemberId)
     {
         $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $conditions = [
-            'Collaborator.id' => $collaboratorId,
-            'Goal.end_date >='     => $currentTerm['start_date'],
-            'Goal.end_date <='     => $currentTerm['end_date'],
+            'GoalMember.id'    => $goalMemberId,
+            'Goal.end_date >=' => $currentTerm['start_date'],
+            'Goal.end_date <=' => $currentTerm['end_date'],
         ];
 
         $options = [
@@ -730,8 +747,8 @@ class Collaborator extends AppModel
             ],
             'conditions' => $conditions,
             'contain'    => [
-                'Goal' => [
-                    'fields' => [
+                'Goal'            => [
+                    'fields'       => [
                         'Goal.id',
                         'Goal.name',
                         'Goal.photo_file_name',
@@ -741,13 +758,13 @@ class Collaborator extends AppModel
                             'GoalCategory.name',
                         ]
                     ],
-                    'Leader'            => [
+                    'Leader'       => [
                         'fields'     => [
                             'Leader.id',
                             'Leader.user_id'
                         ],
-                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                        'User' => [
+                        'conditions' => ['Leader.type' => GoalMember::TYPE_OWNER],
+                        'User'       => [
                             'fields' => $this->User->profileFields
                         ]
                     ],
@@ -755,7 +772,7 @@ class Collaborator extends AppModel
                         'conditions' => [
                             'TopKeyResult.tkr_flg' => '1'
                         ],
-                        'fields' => [
+                        'fields'     => [
                             'TopKeyResult.name',
                             'TopKeyResult.start_value',
                             'TopKeyResult.target_value',
@@ -764,38 +781,38 @@ class Collaborator extends AppModel
                         ]
                     ]
                 ],
-                'User' => [
+                'User'            => [
                     'fields' => $this->User->profileFields
                 ],
                 'ApprovalHistory' => [
                     'fields' => [
                         'ApprovalHistory.id',
-                        'ApprovalHistory.collaborator_id',
+                        'ApprovalHistory.goal_member_id',
                         'ApprovalHistory.user_id',
                         'ApprovalHistory.comment',
                         'ApprovalHistory.select_clear_status',
                         'ApprovalHistory.select_important_status'
                     ],
-                    'User' => [
+                    'User'   => [
                         'fields' => $this->User->profileFields
                     ]
                 ]
             ],
-            'order'      => ['Collaborator.created DESC'],
+            'order'      => ['GoalMember.created DESC'],
         ];
         return $this->find('first', $options);
     }
 
-    function getUserIdByCollaboratorId($collaboratorId)
+    function getUserIdByGoalMemberId($goalMemberId)
     {
-        if(!$collaboratorId) {
+        if (!$goalMemberId) {
             return null;
         }
 
-        $res = $this->findById($collaboratorId);
-        if(!$res) {
+        $res = $this->findById($goalMemberId);
+        if (!$res) {
             return null;
         }
-        return $res['Collaborator']['user_id'];
+        return $res['GoalMember']['user_id'];
     }
 }
