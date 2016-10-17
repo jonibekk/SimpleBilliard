@@ -368,7 +368,6 @@ class GoalApprovalsController extends ApiController
 
         // パラメータが存在しない場合はNotFound
         if (!$goalMemberId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
