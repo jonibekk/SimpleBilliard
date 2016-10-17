@@ -54,7 +54,7 @@ class GoalApprovalsController extends ApiController
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         $applicationCount = $GoalApprovalService->countUnapprovedGoal($userId);
-        $applicationInfo = __("Complete the approval of %d goal(s).", $applicationCount);
+        $applicationInfo = ($applicationCount > 0) ? __("Complete the approval of %d goal(s).", $applicationCount) : "";
 
         // レスポンスの基となるゴール認定リスト取得
         $goalMembers = $this->_findGoalMembers(
@@ -368,7 +368,6 @@ class GoalApprovalsController extends ApiController
 
         // パラメータが存在しない場合はNotFound
         if (!$goalMemberId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
