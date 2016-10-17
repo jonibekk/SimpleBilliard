@@ -49,7 +49,7 @@ export default class DetailComponent extends React.Component {
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
           <h1 className="goals-approval-heading">{ page_title }</h1>
           <div className="goals-approval-detail">
-              <UserCard collaborator={ detail.goal_member } />
+              <UserCard goal_member={ detail.goal_member } />
               <GoalBlock goal={ detail.goal_member.goal }
                          is_leader={ detail.goal_member.is_leader } />
               <Comments approval_histories={ detail.goal_member.approval_histories }
