@@ -769,7 +769,7 @@ class Evaluation extends AppModel
         //前期以前のデータは無視する (現状の仕様上その情報に一切アクセスができないため)
         $previousStartDate = Hash::get($this->Team->EvaluateTerm->getPreviousTermData(), 'start_date');
         if ($previousStartDate) {
-            $options['conditions']['created >'] = $previousStartDate;
+            $options['conditions']['created >='] = $previousStartDate;
         }
 
         // freeze
