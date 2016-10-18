@@ -8,10 +8,10 @@
  * @var $goal
  * @var $key_results
  * @var $is_leader
- * @var $is_collaborator
+ * @var $is_goal_member
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
@@ -31,7 +31,7 @@
                 <?= __('KRs of this goal') ?>
                 <!-- todo 数を追加 -->
             </h3>
-            <?php $kr_can_edit = ($is_leader || $is_collaborator); ?>
+            <?php $kr_can_edit = ($is_leader || $is_goal_member); ?>
             <?php if ($kr_can_edit): ?>
                 <div>
                     <a class="btn-add-kr modal-ajax-get-add-key-result"
@@ -64,4 +64,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

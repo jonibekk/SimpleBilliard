@@ -167,7 +167,7 @@ class GoalsController extends AppController
         $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException();
             }
             if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
@@ -217,7 +217,7 @@ class GoalsController extends AppController
         $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException();
             }
         } catch (RuntimeException $e) {
@@ -283,53 +283,53 @@ class GoalsController extends AppController
 
     public function edit_collabo()
     {
-        $collaborator_id = Hash::get($this->request->params, 'named.collaborator_id');
-        $new = $collaborator_id ? false : true;
+        $goal_member_id = Hash::get($this->request->params, 'named.goal_member_id');
+        $new = $goal_member_id ? false : true;
         $this->request->allowMethod('post', 'put');
         $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
             $this->Auth->user('id'));
 
-        if (!isset($this->request->data['Collaborator'])) {
+        if (!isset($this->request->data['GoalMember'])) {
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
 
         // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「Reapplication」にする
-        $this->request->data['Collaborator']['approval_status'] = $new ? Collaborator::APPROVAL_STATUS_NEW : Collaborator::APPROVAL_STATUS_REAPPLICATION;
-        $this->request->data['Collaborator']['is_target_evaluation'] = false;
+        $this->request->data['GoalMember']['approval_status'] = $new ? GoalMember::APPROVAL_STATUS_NEW : GoalMember::APPROVAL_STATUS_REAPPLICATION;
+        $this->request->data['GoalMember']['is_target_evaluation'] = false;
 
-        if (!$this->Goal->Collaborator->edit($this->request->data)) {
+        if (!$this->Goal->GoalMember->edit($this->request->data)) {
 
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
 
-        $collaborator = $this->request->data['Collaborator'];
-        $collaborator_id = $collaborator_id ? $collaborator_id : $this->Goal->Collaborator->getLastInsertID();
-        $goal = $this->Goal->findById($collaborator['goal_id']);
+        $goalMember = $this->request->data['GoalMember'];
+        $goal_member_id = $goal_member_id ? $goal_member_id : $this->Goal->GoalMember->getLastInsertID();
+        $goal = $this->Goal->findById($goalMember['goal_id']);
         $goal_leader_id = Hash::get($goal, 'Goal.user_id');
 
         //success case.
         $this->Pnotify->outSuccess(__("Start to collaborate."));
         //if new
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         //mixpanel
         if ($new) {
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalMember['goal_id']);
             // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
-            if($goal_leader_id != $coach_id) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
+            if ($goal_leader_id != $coach_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalMember['goal_id']);
             }
         }
-        if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
+        if ($coach_id && (isset($goalMember['priority']) && $goalMember['priority'] >= '1')
         ) {
             if ($new) {
                 //新規の場合
-                $this->_sendNotifyToCoach($collaborator_id, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
+                $this->_sendNotifyToCoach($goal_member_id, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
             } else {
                 //更新の場合
-                $this->_sendNotifyToCoach($collaborator_id, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
+                $this->_sendNotifyToCoach($goal_member_id, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
             }
 
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
@@ -352,7 +352,7 @@ class GoalsController extends AppController
         $key_result = null;
         try {
             $this->Goal->begin();
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("You have no permission."));
             }
             $this->Goal->KeyResult->add($this->request->data, $goal_id);
@@ -559,7 +559,7 @@ class GoalsController extends AppController
             ) {
                 throw new RuntimeException(__("There is no action."));
             }
-            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->Collaborator->isCollaborated($action['ActionResult']['goal_id'])) {
+            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['ActionResult']['goal_id'])) {
                 throw new RuntimeException(__("You have no permission."));
             }
         } catch (RuntimeException $e) {
@@ -589,24 +589,24 @@ class GoalsController extends AppController
 
     public function delete_collabo()
     {
-        $collabo_id = $this->request->params['named']['collaborator_id'];
+        $goalMemberId = $this->request->params['named']['goal_member_id'];
         $this->request->allowMethod('post', 'put');
-        $this->Goal->Collaborator->id = $collabo_id;
-        if (!$this->Goal->Collaborator->exists()) {
+        $this->Goal->GoalMember->id = $goalMemberId;
+        if (!$this->Goal->GoalMember->exists()) {
             $this->Pnotify->outError(__("He/She might quit collaborating."));
         }
-        if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
+        if (!$this->Goal->GoalMember->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__("You have no right to operate it."));
         }
-        $collabo = $this->Goal->Collaborator->findById($collabo_id);
-        if (!empty($collabo)) {
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        if (!empty($goalMember)) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
-                $collabo['Collaborator']['goal_id']);
+                $goalMember['GoalMember']['goal_id']);
         }
-        $this->Goal->Collaborator->delete();
+        $this->Goal->GoalMember->delete();
         $this->Pnotify->outSuccess(__("Quitted a collaborator."));
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->redirect($this->referer());
     }
 
@@ -682,7 +682,7 @@ class GoalsController extends AppController
             $limit = GOAL_PAGE_KR_NUMBER;
         }
 
-        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_collaborated) {
             $display_action_count--;
@@ -834,7 +834,7 @@ class GoalsController extends AppController
         $goal_id = $this->request->params['named']['goal_id'];
         $page = $this->request->params['named']['page'];
         // メンバー一覧
-        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+        $members = $this->Goal->GoalMember->getGoalMemberByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
             'page'  => $page,
         ]);
@@ -910,7 +910,7 @@ class GoalsController extends AppController
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         try {
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("This action can't be edited."));
             }
             if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
@@ -1038,20 +1038,20 @@ class GoalsController extends AppController
             $common_record['start_date'] = null;
             $common_record['description'] = null;
             $common_record['priority'] = null;
-            if (!empty($ug_v['Collaborator'])) {
-                foreach ($ug_v['Collaborator'] as $c_v) {
+            if (!empty($ug_v['GoalMember'])) {
+                foreach ($ug_v['GoalMember'] as $c_v) {
                     $approval_status = null;
                     switch ($c_v['approval_status']) {
-                        case Collaborator::APPROVAL_STATUS_NEW:
+                        case GoalMember::APPROVAL_STATUS_NEW:
                             $approval_status = __("Pending approval");
                             break;
-                        case Collaborator::APPROVAL_STATUS_REAPPLICATION:
+                        case GoalMember::APPROVAL_STATUS_REAPPLICATION:
                             $approval_status = __("Evaluable");
                             break;
-                        case Collaborator::APPROVAL_STATUS_DONE:
+                        case GoalMember::APPROVAL_STATUS_DONE:
                             $approval_status = __("Not Evaluable");
                             break;
-                        case Collaborator::APPROVAL_STATUS_WITHDRAWN:
+                        case GoalMember::APPROVAL_STATUS_WITHDRAWN:
                             $approval_status = __("Pending modification");
                             break;
                     }
@@ -1062,7 +1062,7 @@ class GoalsController extends AppController
 
                         $record['valued'] = $approval_status;
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
-                        $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
+                        $record['collabo_type'] = ($c_v['type'] == GoalMember::TYPE_OWNER) ?
                             __("L") : __("C");
                         $record['goal'] = $c_v['Goal']['name'];
                         $record['end_date'] = date("Y/m/d", $c_v['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
@@ -1101,7 +1101,7 @@ class GoalsController extends AppController
         $file_ids = $this->request->data('file_id');
         try {
             $this->Goal->begin();
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("You have no permission."));
             }
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
@@ -1360,7 +1360,7 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+        $members = $this->Goal->GoalMember->getGoalMemberByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
         ]);
         $this->set('members', $members);
@@ -1385,7 +1385,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         //コラボってる？
-        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_collaborated) {
             $display_action_count--;
@@ -1497,7 +1497,7 @@ class GoalsController extends AppController
         $this->set('action_count', $action_count);
 
         // メンバー数
-        $member_count = count($goal['Leader']) + count($goal['Collaborator']);
+        $member_count = count($goal['Leader']) + count($goal['GoalMember']);
         $this->set('member_count', $member_count);
 
         // フォロワー数
@@ -1515,14 +1515,14 @@ class GoalsController extends AppController
         $this->set('is_leader', $is_leader);
 
         // 閲覧者がゴールのコラボレーターかを判別
-        $is_collaborator = false;
-        foreach ($goal['Collaborator'] as $v) {
+        $is_goal_member = false;
+        foreach ($goal['GoalMember'] as $v) {
             if ($this->Auth->user('id') == $v['User']['id']) {
-                $is_collaborator = true;
+                $is_goal_member = true;
                 break;
             }
         }
-        $this->set('is_collaborator', $is_collaborator);
+        $this->set('is_goal_member', $is_goal_member);
 
         // 閲覧者がコーチしているゴールかを判別
         $is_coaching_goal = false;

@@ -2071,8 +2071,8 @@ class TeamMember extends AppModel
     {
         $common_validate = [
             'email'                 => [
-                'notBlank' => [
-                    'rule'    => 'notBlank',
+                'notEmpty' => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Email Address"))
                 ],
                 'email'    => [
@@ -2081,8 +2081,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'member_no'             => [
-                'notBlank'        => [
-                    'rule'    => 'notBlank',
+                'notEmpty'        => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Member ID"))
                 ],
                 'maxLength'       => [
@@ -2096,36 +2096,30 @@ class TeamMember extends AppModel
                 ],
             ],
             'first_name'            => [
-                'maxLength'      => [
+                'maxLength'    => [
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("First Name"))
                 ],
-                'notBlank'       => [
-                    'rule'    => 'notBlank',
+                'notEmpty'     => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("First Name"))
                 ],
-                'isAlphabetOnly' => [
-                    'rule'    => 'isAlphabetOnly',
-                    'message' => __("%s should be entered in alphabet characters.", __("First Name"))
-                ],
+                'userNameChar' => ['rule' => ['userNameChar']],
             ],
             'last_name'             => [
-                'maxLength'      => [
+                'maxLength'    => [
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Last Name"))
                 ],
-                'notBlank'       => [
-                    'rule'    => 'notBlank',
+                'notEmpty'     => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Last Name"))
                 ],
-                'isAlphabetOnly' => [
-                    'rule'    => 'isAlphabetOnly',
-                    'message' => __("%s should be entered in alphabet characters.", __("Last Name"))
-                ],
+                'userNameChar' => ['rule' => ['userNameChar']],
             ],
             'admin_flg'             => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
+                'notEmpty'  => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Administrators"))
                 ],
                 'isOnOrOff' => [
@@ -2134,8 +2128,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'evaluation_enable_flg' => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
+                'notEmpty'  => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Evaluator"))
                 ],
                 'isOnOrOff' => [
@@ -2257,8 +2251,8 @@ class TeamMember extends AppModel
         ];
         $validateOfUpdate = [
             'active_flg' => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
+                'notEmpty'  => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Active status"))
                 ],
                 'isOnOrOff' => [
@@ -2281,8 +2275,8 @@ class TeamMember extends AppModel
         //TODO ルール設定まだしてない
         $validate_rules = [
             'total.final.score' => [
-                'notBlank' => [
-                    'rule'    => 'notBlank',
+                'notEmpty' => [
+                    'rule'    => 'notEmpty',
                     'message' => __("%s is required.", __("Score by final evaluator"))
                 ],
             ],
@@ -2409,7 +2403,7 @@ class TeamMember extends AppModel
             ],
         ];
         $member_list = $this->find("list", $options);
-        $res = $this->User->Collaborator->getCollaboGoalList($member_list, true, $limit, $page);
+        $res = $this->User->GoalMember->getCollaboGoalList($member_list, true, $limit, $page);
         return $res;
     }
 

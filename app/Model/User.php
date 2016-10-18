@@ -25,7 +25,7 @@ App::uses('AppModel', 'Model');
  * @property TeamMember     $TeamMember
  * @property CircleMember   $CircleMember
  * @property LocalName      $LocalName
- * @property Collaborator   $Collaborator
+ * @property GoalMember     $GoalMember
  * @property MemberGroup    $MemberGroup
  * @property RecoveryCode   $RecoveryCode
  */
@@ -42,6 +42,8 @@ class User extends AppModel
         self::TYPE_GENDER_FEMALE  => "",
         self::TYPE_GENDER_NEITHER => ""
     ];
+
+    const USER_NAME_REGEX = '^[a-zA-Z \']+$';
 
     /**
      * 性別タイプの名前をセット
@@ -91,9 +93,9 @@ class User extends AppModel
             ],
             'cover_photo' => [
                 'styles'      => [
-                    'small' => 'f[254x142]',
+                    'small'  => 'f[254x142]',
                     'medium' => 'f[672x378]',
-                    'large' => 'f[2048x1152]',
+                    'large'  => 'f[2048x1152]',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',
@@ -142,14 +144,14 @@ class User extends AppModel
             ],
         ],
         'first_name'         => [
-            'maxLength'      => ['rule' => ['maxLength', 128]],
-            'notBlank'       => ['rule' => 'notBlank'],
-            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notEmpty'     => ['rule' => 'notEmpty'],
+            'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'last_name'          => [
-            'maxLength'      => ['rule' => ['maxLength', 128]],
-            'notBlank'       => ['rule' => 'notBlank'],
-            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notEmpty'     => ['rule' => 'notEmpty'],
+            'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'gender_type'        => [
             'isString' => [
@@ -205,8 +207,8 @@ class User extends AppModel
         ],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'old_password'       => [
-            'notBlank'  => [
-                'rule' => 'notBlank',
+            'notEmpty'  => [
+                'rule' => 'notEmpty',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
@@ -214,8 +216,8 @@ class User extends AppModel
         ],
         'password_request'   => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notBlank'      => [
-                'rule' => 'notBlank',
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
             ],
             'minLength'     => [
                 'rule' => ['minLength', 8],
@@ -226,8 +228,8 @@ class User extends AppModel
         ],
         'password_request2'  => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notBlank'      => [
-                'rule' => 'notBlank',
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
             ],
             'minLength'     => [
                 'rule' => ['minLength', 8],
@@ -238,16 +240,16 @@ class User extends AppModel
         ],
         'password'           => [
             'maxLength' => ['rule' => ['maxLength', 50]],
-            'notBlank'  => [
-                'rule' => 'notBlank',
+            'notEmpty'  => [
+                'rule' => 'notEmpty',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
             ],
         ],
         'password_confirm'   => [
-            'notBlank'          => [
-                'rule' => 'notBlank',
+            'notEmpty'          => [
+                'rule' => 'notEmpty',
             ],
             'passwordSameCheck' => [
                 'rule' => ['passwordSameCheck', 'password'],
@@ -265,8 +267,8 @@ class User extends AppModel
             ],
         ],
         'cover_photo'        => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],],
+            'image_max_size'      => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'          => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],],
             'imageMinWidthHeight' => ['rule' => ['minWidthHeight', 672, 378]],
         ],
         'comment'            => [
@@ -326,7 +328,7 @@ class User extends AppModel
         'CircleMember',
         'Goal',
         'MemberGroup',
-        'Collaborator',
+        'GoalMember',
         'Evaluator',
         'RecoveryCode',
         'Device'
@@ -1359,7 +1361,7 @@ class User extends AppModel
         }
         // ゴール
         $followList = $this->Goal->Follower->getFollowList($this->my_uid);
-        $collaboList = $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true);
+        $collaboList = $this->Goal->GoalMember->getCollaboGoalList($this->my_uid, true);
         $goals = array_unique(array_merge($followList, $collaboList));
         foreach ($goals as $val) {
             $my_channels[] = 'goal_' . $val . '_team_' . $this->current_team_id;

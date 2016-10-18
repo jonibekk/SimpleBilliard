@@ -126,7 +126,7 @@ export default class Edit extends React.Component {
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.onChange}
-                      value={inputData.description}/>
+                      value={inputData.description} placeholder={__("Optional")}/>
             <InvalidMessageBox message={validationErrors.description}/>
 
             <label className="goals-create-input-label">{__("End date")}</label>
@@ -150,10 +150,12 @@ export default class Edit extends React.Component {
             <h2 className="goals-edit-subject"><i className="fa fa-key"></i> { __("Top Key Result") }</h2>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
-                   placeholder={__("eg. Increase Goalous weekly active users")} onChange={(e) => this.onChange(e, "key_result")}/>
+                   placeholder={__("eg. Increase Goalous weekly active users")}
+                   onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.name}/>
 
-            <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units} onChange={(e) => this.onChange(e, "key_result")}/>
+            <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
+                        onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
 
             <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
@@ -163,7 +165,7 @@ export default class Edit extends React.Component {
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description" value={inputData.key_result.description}
                       className="form-control goals-create-input-form mod-textarea"
-                      onChange={(e) => this.onChange(e, "key_result")}/>
+                      onChange={(e) => this.onChange(e, "key_result")} placeholder={__("Optional")}/>
             <InvalidMessageBox message={tkrValidationErrors.description}/>
 
           </section>

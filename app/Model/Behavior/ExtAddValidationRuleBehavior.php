@@ -324,4 +324,23 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return false;
     }
 
+    /**
+     * ユーザ名のバリデーション
+     * ローマ字、スペース、アポストロフィを許可
+     *
+     * @param Model $Model
+     * @param       $check
+     *
+     * @return int
+     */
+    function userNameChar(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
+        App::uses('User', 'Model');
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/' . User::USER_NAME_REGEX . '/', $value);
+    }
 }

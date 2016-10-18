@@ -25,7 +25,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         'app.goal',
         'app.key_result',
         'app.follower',
-        'app.collaborator',
+        'app.goal_member',
         'app.local_name',
         'app.cake_session',
         'app.team',

@@ -9,8 +9,9 @@
 App::import('Service', 'AppService');
 App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
-App::uses('Collaborator', 'Model');
-App::import('Service', 'CollaboratorService');
+App::uses('GoalMember', 'Model');
+App::import('Service', 'GoalMemberService');
+App::import('Service', 'KeyResultService');
 
 class GoalApprovalService extends AppService
 {
@@ -23,13 +24,13 @@ class GoalApprovalService extends AppService
      */
     function countUnapprovedGoal($userId)
     {
-        $Collaborator = ClassRegistry::init("Collaborator");
+        $GoalMember = ClassRegistry::init("GoalMember");
         // Redisのキャッシュデータ取得
-        $count = Cache::read($Collaborator->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+        $count = Cache::read($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         // Redisから無ければDBから取得してRedisに保存
         if ($count === false) {
-            $count = $Collaborator->countUnapprovedGoal($userId);
-            Cache::write($Collaborator->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), $count, 'user_data');
+            $count = $GoalMember->countUnapprovedGoal($userId);
+            Cache::write($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), $count, 'user_data');
         }
         return $count;
     }
@@ -37,32 +38,32 @@ class GoalApprovalService extends AppService
     /**
      * 認定コメントリスト取得
      *
-     * @param $collaboratorId
+     * @param $goalMemberId
      *
      * @return array
      */
-    function findHistories($collaboratorId)
+    function findHistories($goalMemberId)
     {
-        if (empty($collaboratorId)) {
+        if (empty($goalMemberId)) {
             return [];
         }
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
-        $CollaboratorService = ClassRegistry::init("CollaboratorService");
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         // 認定コメントリスト取得
-        $histories = Hash::extract($ApprovalHistory->findByCollaboratorId($collaboratorId), '{n}.ApprovalHistory');
+        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
 
-        $collaborator = $CollaboratorService->get($collaboratorId, [
-            CollaboratorService::EXTEND_COACH,
-            CollaboratorService::EXTEND_COACHEE,
+        $goalMember = $GoalMemberService->get($goalMemberId, [
+            GoalMemberService::EXTEND_COACH,
+            GoalMemberService::EXTEND_COACHEE,
         ]);
 
         // 認定履歴に評価者からの評価コメント追加
-        $histories = $this->addClearImportantWordToApprovalHistories($histories, $collaborator['user_id']);
+        $histories = $this->addClearImportantWordToApprovalHistories($histories, $goalMember['user_id']);
 
         foreach ($histories as &$v) {
-            $v['user'] = ($v['user_id'] == $collaborator['user_id']) ?
-                $collaborator['coachee'] : $collaborator['coach'];
+            $v['user'] = ($v['user_id'] == $goalMember['user_id']) ?
+                $goalMember['coachee'] : $goalMember['coach'];
         }
         return $histories;
     }
@@ -71,14 +72,14 @@ class GoalApprovalService extends AppService
      * 認定ページアクセス権限チェック
      * 認定ページにおいてユーザーがコラボレーターの情報にアクセスできるかチェック
      *
-     * @param  integer $collaboratorId
+     * @param  integer $goalMemberId
      * @param  integer $userId
      *
      * @return boolean
      */
-    function haveAccessAuthoriyOnApproval($collaboratorId, $userId)
+    function haveAccessAuthoriyOnApproval($goalMemberId, $userId)
     {
-        $Collaborator = ClassRegistry::init("Collaborator");
+        $GoalMember = ClassRegistry::init("GoalMember");
         $Team = ClassRegistry::init("Team");
         $TeamMember = ClassRegistry::init("TeamMember");
         $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
@@ -88,7 +89,7 @@ class GoalApprovalService extends AppService
             return false;
         }
 
-        if (!($collaboratorId && $userId)) {
+        if (!($goalMemberId && $userId)) {
             return false;
         }
 
@@ -99,11 +100,11 @@ class GoalApprovalService extends AppService
         $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($userId);
 
         // コーチとしてのアクセス権限
-        $collaboratorUserId = $Collaborator->getUserIdByCollaboratorId($collaboratorId);
-        $haveAuthoriyAsCoach = in_array($collaboratorUserId, $coacheeUserIds);
+        $goal_memberUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+        $haveAuthoriyAsCoach = in_array($goal_memberUserId, $coacheeUserIds);
 
         // コーチーとしてのアクセス権限
-        $haveAuthoriyAsCoachee = $userId == $collaboratorUserId;
+        $haveAuthoriyAsCoachee = $userId == $goal_memberUserId;
 
         return $haveAuthoriyAsCoach || $haveAuthoriyAsCoachee;
     }
@@ -119,8 +120,7 @@ class GoalApprovalService extends AppService
     function deleteUnapprovedCountCache($userIds)
     {
         $Goal = ClassRegistry::init("Goal");
-
-        if (getType($userIds) === "integer") {
+        if (gettype($userIds) === "integer") {
             $userIds = [$userIds];
         }
         $deletedCacheUserIds = [];
@@ -142,39 +142,39 @@ class GoalApprovalService extends AppService
      */
     function saveApproval($saveData)
     {
-        /** @var Collaborator $Collaborator */
-        $Collaborator = ClassRegistry::init("Collaborator");
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
-        $Collaborator->begin();
+        $GoalMember->begin();
 
         // コラボ情報の保存
-        if(Hash::get($saveData, 'Collaborator')) {
-            $isSaveSuccessCollaborator = $Collaborator->save($saveData);
-            if (!$isSaveSuccessCollaborator) {
-                $Collaborator->rollback();
+        if (Hash::get($saveData, 'GoalMember')) {
+            $isSaveSuccessGoalMember = $GoalMember->save($saveData);
+            if (!$isSaveSuccessGoalMember) {
+                $GoalMember->rollback();
                 return false;
             }
 
             // コラボレータとコーチの認定未処理件数キャッシュを削除
-            $collaboUserId = $Collaborator->getUserIdByCollaboratorId($Collaborator->getLastInsertID());
+            $collaboUserId = $GoalMember->getUserIdByGoalMemberId($GoalMember->getLastInsertID());
             $coachUserId = $TeamMember->getCoachId($collaboUserId);
             $this->deleteUnapprovedCountCache([$collaboUserId, $coachUserId]);
         }
 
         // 認定履歴情報の保存
-        if(Hash::get($saveData, 'ApprovalHistory')) {
+        if (Hash::get($saveData, 'ApprovalHistory')) {
             $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
             if (!$isSaveSuccessApprovalHistory) {
-                $Collaborator->rollback();
+                $GoalMember->rollback();
                 return false;
             }
         }
 
-        $Collaborator->commit();
+        $GoalMember->commit();
         return true;
     }
 
@@ -190,8 +190,10 @@ class GoalApprovalService extends AppService
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $res = Hash::extract($resByModel, 'Collaborator');
+        $res = Hash::extract($resByModel, 'GoalMember');
 
         // モデル名整形(大文字->小文字)
         $res['user'] = Hash::extract($resByModel, 'User');
@@ -207,9 +209,12 @@ class GoalApprovalService extends AppService
         });
 
         // 認定履歴の文言を追加
-        $collaboratorUserId = $res['user']['id'];
+        $goal_memberUserId = $res['user']['id'];
         $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
-            $collaboratorUserId);
+            $goal_memberUserId);
+
+        // TKRの整形
+        $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
 
         // 画像パス追加
         $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
@@ -222,7 +227,7 @@ class GoalApprovalService extends AppService
         // マッピング
         $res['is_leader'] = (boolean)$res['type'];
         $res['is_mine'] = $res['user']['id'] == $myUserId;
-        $res['type'] = Collaborator::$TYPE[$res['type']];
+        $res['type'] = GoalMember::$TYPE[$res['type']];
 
         // 不要な要素の削除
         unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
@@ -239,22 +244,22 @@ class GoalApprovalService extends AppService
      */
     function validateApprovalPost($data)
     {
-        $Collaborator = ClassRegistry::init("Collaborator");
+        $GoalMember = ClassRegistry::init("GoalMember");
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
 
         $validation = [];
 
-        // collaborator validation
-        if(Hash::get($data, 'Collaborator')) {
-            $Collaborator->set($data['Collaborator']);
-            $collaborator_validation = $Collaborator->validates();
-            if ($collaborator_validation !== true) {
-                $validation['collaborator'] = $this->_validationExtract($Collaborator->validationErrors);
+        // goal_member validation
+        if (Hash::get($data, 'GoalMember')) {
+            $GoalMember->set($data['GoalMember']);
+            $goal_member_validation = $GoalMember->validates();
+            if ($goal_member_validation !== true) {
+                $validation['goal_member'] = $this->_validationExtract($GoalMember->validationErrors);
             }
         }
 
         // approval_history validation
-        if(Hash::get($data, 'ApprovalHistory')) {
+        if (Hash::get($data, 'ApprovalHistory')) {
             $ApprovalHistory->set($data['ApprovalHistory']);
             $approval_history_validation = $ApprovalHistory->validates();
             if ($approval_history_validation !== true) {
@@ -271,31 +276,32 @@ class GoalApprovalService extends AppService
     /**
      * ゴール認定POSTデータを保存用に整形
      *
+     * @param          $approvalType
      * @param  array   $requestData
-     * @param  integer $user_id
+     * @param  integer $userId
      *
      * @return array $saveData
      */
     function generateSaveData($approvalType, $requestData, $userId)
     {
-        $collaboratorId = Hash::get($requestData, 'collaborator.id');
+        $goalMemberId = Hash::get($requestData, 'goal_member.id');
         $selectClearStatus = ApprovalHistory::STATUS_IS_CLEAR;
         $selectImportantStatus = ApprovalHistory::STATUS_IS_IMPORTANT;
-        if ($approvalType === Collaborator::IS_NOT_TARGET_EVALUATION) {
+        if ($approvalType === GoalMember::IS_NOT_TARGET_EVALUATION) {
             $selectClearStatus = Hash::get($requestData, 'approval_history.select_clear_status');
             $selectImportantStatus = Hash::get($requestData, 'approval_history.select_important_status');
         }
 
         $saveData = [
-            'Collaborator'    => [
-                'id'                   => $collaboratorId,
+            'GoalMember'      => [
+                'id'                   => $goalMemberId,
                 'is_target_evaluation' => $approvalType,
-                'approval_status'      => Collaborator::APPROVAL_STATUS_DONE
+                'approval_status'      => GoalMember::APPROVAL_STATUS_DONE
             ],
             'ApprovalHistory' => [
                 'select_clear_status'     => $selectClearStatus,
                 'select_important_status' => $selectImportantStatus,
-                'collaborator_id'         => $collaboratorId,
+                'goal_member_id'          => $goalMemberId,
                 'user_id'                 => $userId,
                 'comment'                 => Hash::get($requestData, 'approval_history.comment')
             ]
@@ -306,31 +312,33 @@ class GoalApprovalService extends AppService
 
     /**
      * 申請取り消しPOSTの保存データを定義
-     * @param  integer $collaboratorId
+     *
+     * @param  integer $goalMemberId
+     *
      * @return array $saveData
      */
-    function generateWithdrawSaveData($collaboratorId)
+    function generateWithdrawSaveData($goalMemberId)
     {
-        $saveData =  [
-            'Collaborator' => [
-                'id' => $collaboratorId,
+        $saveData = [
+            'GoalMember' => [
+                'id'                   => $goalMemberId,
                 'is_target_evaluation' => false,
-                'approval_status'      => Collaborator::APPROVAL_STATUS_WITHDRAWN
+                'approval_status'      => GoalMember::APPROVAL_STATUS_WITHDRAWN
             ]
         ];
 
         return $saveData;
     }
 
-    function addClearImportantWordToApprovalHistories($approvalHistories, $collaboratorUserId)
+    function addClearImportantWordToApprovalHistories($approvalHistories, $goal_memberUserId)
     {
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         return Hash::map($approvalHistories, '',
-            function ($approvalHistory) use ($collaboratorUserId, $ApprovalHistory) {
+            function ($approvalHistory) use ($goal_memberUserId, $ApprovalHistory) {
                 $clearStatus = $approvalHistory['select_clear_status'];
                 $importantStatus = $approvalHistory['select_important_status'];
 
-                if ($approvalHistory['user_id'] == $collaboratorUserId) {
+                if ($approvalHistory['user_id'] == $goal_memberUserId) {
                     $clearAndImportantWord = '';
                 } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
                     $clearAndImportantWord = __('This Top Key Result is clear and most important.');

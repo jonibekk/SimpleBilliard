@@ -20,13 +20,13 @@ class ApprovalHistoryFixture extends CakeTestFixtureEx
             'key'      => 'primary',
             'comment'  => 'ID'
         ],
-        'collaborator_id'         => [
+        'goal_member_id'          => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index',
-            'comment'  => 'コラボレーターID(hasManyでcollaboratorモデルに関連)'
+            'comment'  => 'コラボレーターID(hasManyでgoal_memberモデルに関連)'
         ],
         'user_id'                 => [
             'type'     => 'biginteger',
@@ -93,9 +93,9 @@ class ApprovalHistoryFixture extends CakeTestFixtureEx
             'comment'  => '更新した日付時刻'
         ],
         'indexes'                 => [
-            'PRIMARY'         => ['column' => 'id', 'unique' => 1],
-            'collaborator_id' => ['column' => 'collaborator_id', 'unique' => 0],
-            'created'         => ['column' => 'created', 'unique' => 0]
+            'PRIMARY'        => ['column' => 'id', 'unique' => 1],
+            'goal_member_id' => ['column' => 'goal_member_id', 'unique' => 0],
+            'created'        => ['column' => 'created', 'unique' => 0]
         ],
         'tableParameters'         => [
             'charset' => 'utf8mb4',
@@ -111,17 +111,17 @@ class ApprovalHistoryFixture extends CakeTestFixtureEx
      */
     public $records = [
         [
-            'id'                  => '1',
-            'collaborator_id'     => '',
-            'user_id'             => '',
-            'comment'             => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'action_status'       => 1,
+            'id'                      => '1',
+            'goal_member_id'          => '',
+            'user_id'                 => '',
+            'comment'                 => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'action_status'           => 1,
             'select_clear_status'     => 0,
             'select_important_status' => 0,
-            'del_flg'             => 1,
-            'deleted'             => 1,
-            'created'             => 1,
-            'modified'            => 1
+            'del_flg'                 => 1,
+            'deleted'                 => 1,
+            'created'                 => 1,
+            'modified'                => 1
         ],
     ];
 

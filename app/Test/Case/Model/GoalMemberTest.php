@@ -1,12 +1,12 @@
 <?php App::uses('GoalousTestCase', 'Test');
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 
 /**
- * Collaborator Test Case
+ * GoalMember Test Case
  *
- * @property Collaborator $Collaborator
+ * @property GoalMember $GoalMember
  */
-class CollaboratorTest extends GoalousTestCase
+class GoalMemberTest extends GoalousTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class CollaboratorTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.collaborator',
+        'app.goal_member',
         'app.follower',
         'app.team',
         'app.evaluate_term',
@@ -36,7 +36,7 @@ class CollaboratorTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Collaborator = ClassRegistry::init('Collaborator');
+        $this->GoalMember = ClassRegistry::init('GoalMember');
     }
 
     /**
@@ -46,7 +46,7 @@ class CollaboratorTest extends GoalousTestCase
      */
     public function tearDown()
     {
-        unset($this->Collaborator);
+        unset($this->GoalMember);
 
         parent::tearDown();
     }
@@ -54,7 +54,7 @@ class CollaboratorTest extends GoalousTestCase
     function testAdd()
     {
         $this->_setDefault();
-        $res = $this->Collaborator->add(1);
+        $res = $this->GoalMember->add(1);
         $this->assertTrue(!empty($res));
     }
 
@@ -67,13 +67,13 @@ class CollaboratorTest extends GoalousTestCase
             'team_id' => 1,
             'role'    => 'test'
         ];
-        $post_data = $this->Collaborator->save($data);
-        $first_saved_id = $post_data['Collaborator']['id'];
-        $post_data['Collaborator']['role'] = 'edited';
-        $res = $this->Collaborator->edit($post_data);
-        $secound_saved_id = $res['Collaborator']['id'];
+        $post_data = $this->GoalMember->save($data);
+        $first_saved_id = $post_data['GoalMember']['id'];
+        $post_data['GoalMember']['role'] = 'edited';
+        $res = $this->GoalMember->edit($post_data);
+        $secound_saved_id = $res['GoalMember']['id'];
 
-        $this->assertEquals('edited', $res['Collaborator']['role']);
+        $this->assertEquals('edited', $res['GoalMember']['role']);
         $this->assertEquals($first_saved_id, $secound_saved_id);
 
     }
@@ -81,7 +81,7 @@ class CollaboratorTest extends GoalousTestCase
     function testGetOwnersStatus()
     {
         $this->_setDefault();
-        $res = $this->Collaborator->getOwnersStatus(1);
+        $res = $this->GoalMember->getOwnersStatus(1);
         $this->assertNotEmpty($res);
     }
 
@@ -90,14 +90,14 @@ class CollaboratorTest extends GoalousTestCase
         $this->_setDefault();
         $team_id = 1;
 
-        $current_term = $this->Collaborator->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $current_term = $this->GoalMember->Goal->Team->EvaluateTerm->getCurrentTermData();
 
         $params = [
             'first_name' => 'test',
             'last_name'  => 'test'
         ];
-        $this->Collaborator->User->save($params);
-        $user_id = $this->Collaborator->User->getLastInsertID();
+        $this->GoalMember->User->save($params);
+        $user_id = $this->GoalMember->User->getLastInsertID();
 
         $params = [
             'user_id'          => $user_id,
@@ -109,8 +109,8 @@ class CollaboratorTest extends GoalousTestCase
             'end_date'         => $current_term['end_date'] - 10,
             'goal_category_id' => 1,
         ];
-        $this->Collaborator->Goal->save($params);
-        $current_goal_id = $this->Collaborator->Goal->getLastInsertID();
+        $this->GoalMember->Goal->save($params);
+        $current_goal_id = $this->GoalMember->Goal->getLastInsertID();
 
         $params = [
             'user_id'          => $user_id,
@@ -122,9 +122,9 @@ class CollaboratorTest extends GoalousTestCase
             'end_date'         => $current_term['end_date'] + 20,
             'goal_category_id' => 1,
         ];
-        $this->Collaborator->Goal->create();
-        $this->Collaborator->Goal->save($params);
-        $next_goal_id = $this->Collaborator->Goal->getLastInsertID();
+        $this->GoalMember->Goal->create();
+        $this->GoalMember->Goal->save($params);
+        $next_goal_id = $this->GoalMember->Goal->getLastInsertID();
 
         $approval_status = 0;
         $params = [
@@ -135,8 +135,8 @@ class CollaboratorTest extends GoalousTestCase
             'type'            => 0,
             'priority'        => 1,
         ];
-        $this->Collaborator->create();
-        $this->Collaborator->save($params);
+        $this->GoalMember->create();
+        $this->GoalMember->save($params);
 
         $params = [
             'user_id'         => $user_id,
@@ -146,11 +146,11 @@ class CollaboratorTest extends GoalousTestCase
             'type'            => 0,
             'priority'        => 1,
         ];
-        $this->Collaborator->create();
-        $this->Collaborator->save($params);
+        $this->GoalMember->create();
+        $this->GoalMember->save($params);
 
         // 評価期間の絞り込み無し
-        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $approval_status);
+        $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status);
         $ids = [];
         foreach ($goal_description as $v) {
             $ids[$v['Goal']['id']] = true;
@@ -159,7 +159,7 @@ class CollaboratorTest extends GoalousTestCase
         $this->assertTrue(isset($ids[$next_goal_id]));
 
         // 今期で絞る
-        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $approval_status, true,
+        $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status, true,
             EvaluateTerm::TYPE_CURRENT);
         $ids = [];
         foreach ($goal_description as $v) {
@@ -180,8 +180,8 @@ class CollaboratorTest extends GoalousTestCase
             'first_name' => 'test',
             'last_name'  => 'test'
         ];
-        $this->Collaborator->User->save($params);
-        $user_id = $this->Collaborator->User->getLastInsertID();
+        $this->GoalMember->User->save($params);
+        $user_id = $this->GoalMember->User->getLastInsertID();
 
         $params = [
             'user_id'          => $user_id,
@@ -191,8 +191,8 @@ class CollaboratorTest extends GoalousTestCase
             'end_date'         => '1427813999',
             'photo_file_name'  => 'aa.png'
         ];
-        $this->Collaborator->Goal->save($params);
-        $goal_id = $this->Collaborator->Goal->getLastInsertID();
+        $this->GoalMember->Goal->save($params);
+        $goal_id = $this->GoalMember->Goal->getLastInsertID();
 
         $approval_status = 0;
         $params = [
@@ -203,9 +203,9 @@ class CollaboratorTest extends GoalousTestCase
             'type'            => 0,
             'priority'        => 0,
         ];
-        $this->Collaborator->save($params);
+        $this->GoalMember->save($params);
 
-        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $approval_status, false);
+        $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status, false);
         $this->assertEmpty($goal_description);
     }
 
@@ -224,12 +224,12 @@ class CollaboratorTest extends GoalousTestCase
             'goal_id'         => $goal_id,
             'approval_status' => $approval_status,
         ];
-        $this->Collaborator->save($params);
-        $id = $this->Collaborator->getLastInsertID();
-        $this->Collaborator->changeApprovalStatus($id, 1);
+        $this->GoalMember->save($params);
+        $id = $this->GoalMember->getLastInsertID();
+        $this->GoalMember->changeApprovalStatus($id, 1);
 
-        $res = $this->Collaborator->findById($id);
-        $this->assertEquals(1, $res['Collaborator']['approval_status']);
+        $res = $this->GoalMember->findById($id);
+        $this->assertEquals(1, $res['GoalMember']['approval_status']);
     }
 
     function testCountCollaboGoal()
@@ -241,8 +241,8 @@ class CollaboratorTest extends GoalousTestCase
             'first_name' => 'test',
             'last_name'  => 'test'
         ];
-        $this->Collaborator->User->save($params);
-        $user_id = $this->Collaborator->User->getLastInsertID();
+        $this->GoalMember->User->save($params);
+        $user_id = $this->GoalMember->User->getLastInsertID();
 
         $params = [
             'user_id'          => $user_id,
@@ -252,8 +252,8 @@ class CollaboratorTest extends GoalousTestCase
             'end_date'         => '1427813999',
             'photo_file_name'  => 'aa.png'
         ];
-        $this->Collaborator->Goal->save($params);
-        $goal_id = $this->Collaborator->Goal->getLastInsertID();
+        $this->GoalMember->Goal->save($params);
+        $goal_id = $this->GoalMember->Goal->getLastInsertID();
 
         $approval_status = 0;
         $params = [
@@ -264,8 +264,8 @@ class CollaboratorTest extends GoalousTestCase
             'type'            => 0,
             'priority'        => 1,
         ];
-        $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
+        $this->GoalMember->save($params);
+        $cnt = $this->GoalMember->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -285,8 +285,8 @@ class CollaboratorTest extends GoalousTestCase
             'type'            => 0,
             'priority'        => 1,
         ];
-        $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
+        $this->GoalMember->save($params);
+        $cnt = $this->GoalMember->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -305,9 +305,9 @@ class CollaboratorTest extends GoalousTestCase
             'approval_status' => $approval_status,
             'type'            => 0,
         ];
-//        $this->Collaborator->deleteAll(['Collaborator.team_id' => $team_id], false);
-        $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
+//        $this->GoalMember->deleteAll(['GoalMember.team_id' => $team_id], false);
+        $this->GoalMember->save($params);
+        $cnt = $this->GoalMember->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -327,8 +327,8 @@ class CollaboratorTest extends GoalousTestCase
             'type'            => 0,
             'priority'        => 0,
         ];
-        $this->Collaborator->save($params);
-        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
+        $this->GoalMember->save($params);
+        $cnt = $this->GoalMember->countCollaboGoal($team_id, $user_id, [$goal_id], $approval_status);
         $this->assertEquals(0, $cnt);
     }
 
@@ -336,54 +336,54 @@ class CollaboratorTest extends GoalousTestCase
     {
         $this->_setDefault();
 
-        $this->Collaborator->save(['goal_id' => 1, 'team_id' => 1, 'user_id' => 1, 'type' => Collaborator::TYPE_OWNER]);
+        $this->GoalMember->save(['goal_id' => 1, 'team_id' => 1, 'user_id' => 1, 'type' => GoalMember::TYPE_OWNER]);
 
-        $actual = $this->Collaborator->getLeaderUid(1);
+        $actual = $this->GoalMember->getLeaderUid(1);
         $this->assertEquals(1, $actual);
     }
 
     function testGetLeaderUidNull()
     {
         $this->_setDefault();
-        $actual = $this->Collaborator->getLeaderUid(111111);
+        $actual = $this->GoalMember->getLeaderUid(111111);
         $this->assertEquals(null, $actual);
     }
 
-    function testGetCollaboratorListByGoalId()
+    function testGetGoalMemberListByGoalId()
     {
         $this->_setDefault();
         $data = [
             'user_id' => 100,
             'goal_id' => 200,
             'team_id' => 1,
-            'type'    => Collaborator::TYPE_COLLABORATOR
+            'type'    => GoalMember::TYPE_COLLABORATOR
         ];
-        $this->Collaborator->save($data);
-        $actual = $this->Collaborator->getCollaboratorListByGoalId(200, Collaborator::TYPE_COLLABORATOR);
+        $this->GoalMember->save($data);
+        $actual = $this->GoalMember->getGoalMemberListByGoalId(200, GoalMember::TYPE_COLLABORATOR);
         $this->assertNotEmpty($actual);
     }
 
-    function testGetCollaboratorByGoalId()
+    function testGetGoalMemberByGoalId()
     {
         $this->_setDefault();
 
         $goal_id = 1;
 
         // ゴールに紐づくコラボレーター全て
-        $res = $this->Collaborator->getCollaboratorByGoalId($goal_id);
+        $res = $this->GoalMember->getGoalMemberByGoalId($goal_id);
         $this->assertNotEmpty($res);
 
         // limit 指定
-        $res2 = $this->Collaborator->getCollaboratorByGoalId($goal_id, ['limit' => 1]);
+        $res2 = $this->GoalMember->getGoalMemberByGoalId($goal_id, ['limit' => 1]);
         $this->assertCount(1, $res2);
 
         // limit + page 指定
-        $res3 = $this->Collaborator->getCollaboratorByGoalId($goal_id, ['limit' => 1, 'page' => 2]);
+        $res3 = $this->GoalMember->getGoalMemberByGoalId($goal_id, ['limit' => 1, 'page' => 2]);
         $this->assertCount(1, $res3);
         $this->assertNotEquals($res2[0]['User']['id'], $res3[0]['User']['id']);
     }
 
-    function testGetCollaboratorOwnerTypeTrue()
+    function testGetGoalMemberOwnerTypeTrue()
     {
         $this->_setDefault();
 
@@ -394,14 +394,14 @@ class CollaboratorTest extends GoalousTestCase
             'team_id' => $team_id,
             'user_id' => $user_id,
             'goal_id' => $goal_id,
-            'type'    => Collaborator::TYPE_OWNER
+            'type'    => GoalMember::TYPE_OWNER
         ];
-        $this->Collaborator->save($data);
-        $res = $this->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
+        $this->GoalMember->save($data);
+        $res = $this->GoalMember->getGoalMember($team_id, $user_id, $goal_id);
         $this->assertCount(1, $res);
     }
 
-    function testGetCollaboratorOwnerTypeFalse()
+    function testGetGoalMemberOwnerTypeFalse()
     {
         $this->_setDefault();
 
@@ -412,10 +412,10 @@ class CollaboratorTest extends GoalousTestCase
             'team_id' => $team_id,
             'user_id' => $user_id,
             'goal_id' => $goal_id,
-            'type'    => Collaborator::TYPE_OWNER
+            'type'    => GoalMember::TYPE_OWNER
         ];
-        $this->Collaborator->save($data);
-        $res = $this->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+        $this->GoalMember->save($data);
+        $res = $this->GoalMember->getGoalMember($team_id, $user_id, $goal_id, false);
         $this->assertCount(0, $res);
     }
 
@@ -423,63 +423,63 @@ class CollaboratorTest extends GoalousTestCase
     {
         $this->_setDefault();
 
-        $this->Collaborator->create();
-        $this->Collaborator->save(
+        $this->GoalMember->create();
+        $this->GoalMember->save(
             [
                 'team_id' => 1,
                 'user_id' => 1,
                 'goal_id' => 1,
-                'type'    => Collaborator::TYPE_OWNER
+                'type'    => GoalMember::TYPE_OWNER
             ]);
-        $this->Collaborator->create();
-        $this->Collaborator->save(
+        $this->GoalMember->create();
+        $this->GoalMember->save(
             [
                 'team_id' => 1,
                 'user_id' => 2,
                 'goal_id' => 1,
-                'type'    => Collaborator::TYPE_COLLABORATOR
+                'type'    => GoalMember::TYPE_COLLABORATOR
             ]);
-        $this->Collaborator->create();
-        $this->Collaborator->save(
+        $this->GoalMember->create();
+        $this->GoalMember->save(
             [
                 'team_id' => 1,
                 'user_id' => 3,
                 'goal_id' => 1,
-                'type'    => Collaborator::TYPE_COLLABORATOR
+                'type'    => GoalMember::TYPE_COLLABORATOR
             ]);
-        $this->Collaborator->create();
-        $this->Collaborator->save(
+        $this->GoalMember->create();
+        $this->GoalMember->save(
             [
                 'team_id' => 1,
                 'user_id' => 3,
                 'goal_id' => 2,
-                'type'    => Collaborator::TYPE_COLLABORATOR
+                'type'    => GoalMember::TYPE_COLLABORATOR
             ]);
         $now = time();
-        $count = $this->Collaborator->getCount(
+        $count = $this->GoalMember->getCount(
             [
                 'start' => $now - HOUR,
                 'end'   => $now + HOUR,
             ]);
         $this->assertEquals(4, $count);
 
-        $count = $this->Collaborator->getCount(
+        $count = $this->GoalMember->getCount(
             [
                 'start' => $now - HOUR,
                 'end'   => $now + HOUR,
-                'type'  => Collaborator::TYPE_OWNER
+                'type'  => GoalMember::TYPE_OWNER
             ]);
         $this->assertEquals(1, $count);
 
-        $count = $this->Collaborator->getCount(
+        $count = $this->GoalMember->getCount(
             [
                 'start' => $now - HOUR,
                 'end'   => $now + HOUR,
-                'type'  => Collaborator::TYPE_COLLABORATOR
+                'type'  => GoalMember::TYPE_COLLABORATOR
             ]);
         $this->assertEquals(3, $count);
 
-        $count = $this->Collaborator->getCount(
+        $count = $this->GoalMember->getCount(
             [
                 'start'   => $now - HOUR,
                 'end'     => $now + HOUR,
@@ -494,7 +494,7 @@ class CollaboratorTest extends GoalousTestCase
 
         $team_id = 1;
         $user_id = 1;
-        $this->Collaborator->deleteAll(['Collaborator.user_id' => $user_id], false);
+        $this->GoalMember->deleteAll(['GoalMember.user_id' => $user_id], false);
         $prepare_data = [
             [
                 'user_id'  => $user_id,
@@ -515,15 +515,15 @@ class CollaboratorTest extends GoalousTestCase
                 'priority' => 3,
             ],
         ];
-        $this->Collaborator->saveAll($prepare_data);
-        $actual = $this->Collaborator->goalIdOrderByPriority($user_id, [4, 3, 5]);
+        $this->GoalMember->saveAll($prepare_data);
+        $actual = $this->GoalMember->goalIdOrderByPriority($user_id, [4, 3, 5]);
         $expected = array(
             (int)5 => '5',
             (int)4 => '4',
             (int)3 => '3'
         );
         $this->assertEquals($expected, $actual);
-        $actual = $this->Collaborator->goalIdOrderByPriority($user_id, [4, 3, 5], 'asc');
+        $actual = $this->GoalMember->goalIdOrderByPriority($user_id, [4, 3, 5], 'asc');
         $expected = array(
             (int)3 => '3',
             (int)4 => '4',
@@ -534,18 +534,18 @@ class CollaboratorTest extends GoalousTestCase
 
     function _setDefault()
     {
-        $this->Collaborator->current_team_id = 1;
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->Goal->current_team_id = 1;
-        $this->Collaborator->Goal->my_uid = 1;
-        $this->Collaborator->Goal->Team->current_team_id = 1;
-        $this->Collaborator->Goal->Team->my_uid = 1;
-        $this->Collaborator->Goal->Team->EvaluateTerm->current_team_id = 1;
-        $this->Collaborator->Goal->Team->EvaluateTerm->my_uid = 1;
+        $this->GoalMember->current_team_id = 1;
+        $this->GoalMember->my_uid = 1;
+        $this->GoalMember->Goal->current_team_id = 1;
+        $this->GoalMember->Goal->my_uid = 1;
+        $this->GoalMember->Goal->Team->current_team_id = 1;
+        $this->GoalMember->Goal->Team->my_uid = 1;
+        $this->GoalMember->Goal->Team->EvaluateTerm->current_team_id = 1;
+        $this->GoalMember->Goal->Team->EvaluateTerm->my_uid = 1;
 
-        $this->Collaborator->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Collaborator->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Collaborator->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
 
     }
 

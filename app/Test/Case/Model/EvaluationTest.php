@@ -24,7 +24,7 @@ class EvaluationTest extends GoalousTestCase
         'app.goal_category',
         'app.key_result',
         'app.action_result',
-        'app.collaborator',
+        'app.goal_member',
         'app.team_member',
         'app.job_category',
         'app.member_type',
@@ -912,11 +912,11 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
         $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
 
-        $collabo = $this->Evaluation->Goal->Collaborator->find('all');
-        foreach ($collabo as $k => $v) {
-            $collabo[$k]['Collaborator']['approval_status'] = Collaborator::APPROVAL_STATUS_REAPPLICATION;
+        $goalMember = $this->Evaluation->Goal->GoalMember->find('all');
+        foreach ($goalMember as $k => $v) {
+            $goalMember[$k]['GoalMember']['is_target_evaluation'] = true;
         }
-        $this->Evaluation->Goal->Collaborator->saveAll($collabo);
+        $this->Evaluation->Goal->GoalMember->saveAll($goalMember);
         $this->Evaluation->Goal->id = 1;
         $this->Evaluation->Goal->saveField('start_date', $current_start);
         $this->Evaluation->Goal->saveField('end_date', $current_end);
@@ -1427,8 +1427,8 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->Evaluator->my_uid = 1;
         $this->Evaluation->Team->EvaluationSetting->current_team_id = 1;
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
-        $this->Evaluation->Goal->Collaborator->current_team_id = 1;
-        $this->Evaluation->Goal->Collaborator->my_uid = 1;
+        $this->Evaluation->Goal->GoalMember->current_team_id = 1;
+        $this->Evaluation->Goal->GoalMember->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
