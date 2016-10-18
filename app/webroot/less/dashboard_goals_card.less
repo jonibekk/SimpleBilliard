@@ -142,31 +142,31 @@ goalcardのheader自体をrelativeで基準にタテ線を引いている。
   .line-number-limit-1();
 }
 
-// Variables
-@container-bg: #fff;
-@font-size-base: 14px;
-@line-height-computed: 1.4;
-@lines-to-show: 2;
-
 .dashboard-goals-card-header-goal-wrap {
   overflow: hidden;
 }
 
+/*
+複数行での３点リーダー表示において、以下ですんなり対応したいところだがIEが未対応のためハックしている
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+*/
 .dashboard-goals-card-header-goal {
   font-weight: bold;
   color: @darkBlack;
-  font-size: @font-size-base;
-  height: @font-size-base * @line-height-computed * @lines-to-show;
-  line-height: @line-height-computed;
+  font-size: @goalTitleFontSize;
+  height: @goalTitleFontSize * @goalTitleLineHeightComputed * @goalTitleLinesToShow;
+  line-height: @goalTitleLineHeightComputed;
   position: relative;
   &:before,
   &:after {
-    background: @container-bg;
+    background: @goalTitleContainerBgColor;
     position: absolute;
   }
   &:before {
     content: "...";
-    top: @font-size-base * @line-height-computed * (@lines-to-show - 1);
+    top: @goalTitleFontSize * @goalTitleLineHeightComputed * (@goalTitleLinesToShow - 1);
     right: 0;
   }
   &:after {
