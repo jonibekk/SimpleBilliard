@@ -9,14 +9,13 @@ export class GoalCard extends React.Component {
     const goal = this.props.goal
     const top_key_result = this.props.top_key_result
     const category = this.props.category
-    const is_current = this.props.is_current
 
     if(Object.keys(goal).length == 0) {
       return null
     }
 
     return (
-      <div className={`goals-approval-detail-goal-card ${!is_current && 'previous'}`}>
+      <div className="goals-approval-detail-goal-card">
           <div className="goals-approval-detail-table">
               <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
               <div className="goals-approval-detail-goal-card-info">
@@ -25,9 +24,9 @@ export class GoalCard extends React.Component {
                   <div className="goals-approval-detail-goal-card-info-tkr">
                       <h2 className="goals-approval-detail-goal-card-info-tkr-title"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
                       <ul className="goals-approval-detail-goal-card-info-tkr-list">
-                          <li>{ top_key_result.name }</li>
-                          <li>{ top_key_result.display_value }</li>
-                          <li>{ top_key_result.description }</li>
+                          { top_key_result.name && <li>{ top_key_result.name }</li>}
+                          { top_key_result.display_value && <li>{ top_key_result.display_value }</li>}
+                          { top_key_result.description && <li>{ top_key_result.description }</li>}
                       </ul>
                   </div>
               </div>
@@ -39,7 +38,7 @@ export class GoalCard extends React.Component {
 
 GoalCard.propTypes = {
   goal: React.PropTypes.object,
-  is_leader: React.PropTypes.bool,
-  is_current: React.PropTypes.bool
+  top_key_result: React.PropTypes.object,
+  category: React.PropTypes.object
 }
-GoalCard.defaultProps = { goal: {}, is_leader: true, is_current: true };
+GoalCard.defaultProps = { goal: {}, top_key_result: {}, category: {} };

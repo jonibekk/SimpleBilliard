@@ -238,7 +238,7 @@ class GoalApprovalService extends AppService
         $res['goal']['original_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo');
         $res['goal']['small_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'small']);
         $res['goal']['large_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'large']);
-        if(Hash::get($res, 'goal.goal_change_log.photo_file_name')) {
+        if(Hash::get($res, 'goal.goal_change_log')) {
             // Uploadヘルパーに認識させるため、一時的に仮の配列を作る
             $tmp = ['Goal' => $res['goal']['goal_change_log']];
             $res['goal']['goal_change_log']['original_img_url'] = $Upload->uploadUrl($tmp, 'Goal.photo');

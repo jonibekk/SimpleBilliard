@@ -20,7 +20,7 @@ export class GoalBlock extends React.Component {
     const view_previous_button = () => {
       return (
         <div className="goals-approval-detail-view-previous">
-            <a className="goals-approval-detail-view-more-comments" onClick={ this.props.displayPrevious }>
+            <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
               <i className="fa fa-angle-down" aria-hidden="true"></i>
               <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
             </a>
@@ -29,28 +29,24 @@ export class GoalBlock extends React.Component {
     }
     const current_goal_card = () => {
       return (
-        <GoalCard displayPrevious={ this.displayPrevious }
-                  goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
+        <GoalCard goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
                   category={ goal.category }
-                  top_key_result={ goal.top_key_result }
-                  is_current={ true }
-                  displayed_previous={ displayed_previous } />
+                  top_key_result={ goal.top_key_result } />
       )
     }
     const previous_goal_card = () => {
       return (
         <GoalCard goal={ goal.goal_change_log }
                   category={goal.category}
-                  top_key_result={goal.tkr_change_log}
-                  is_current={ false } />
+                  top_key_result={goal.tkr_change_log} />
       )
     }
 
     return (
       <div className={ `goals-approval-detail-goal ${is_leader && 'mod-bgglay'}` }>
         { current_goal_card() }
-        { !displayed_previous && <p className="goals-approval-detail-previous-info">{ __('Previous goal') }</p> }
-        { !displayed_previous && view_previous_button() }
+        { displayed_previous && <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p> }
+        { goal.goal_change_log && !displayed_previous && is_leader && view_previous_button() }
         { goal.goal_change_log && displayed_previous && previous_goal_card() }
       </div>
     )
