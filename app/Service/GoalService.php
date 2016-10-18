@@ -165,10 +165,6 @@ class GoalService extends AppService
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
-        /** @var GoalChangeLog $GoalChangeLog */
-        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
-        /** @var TkrChangeLog $TkrChangeLog */
-        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
 
         try {
             // トランザクション開始
@@ -186,10 +182,6 @@ class GoalService extends AppService
             if (empty($goal['goal_member'])) {
                 throw new Exception(sprintf("Not exist goal_member. goalId:%d userId:%d", $goalId, $userId));
             }
-
-            // 更新直前に変更前のスナップショットを撮る
-            $GoalChangeLog->saveSnapshot($goalId);
-            $TkrChangeLog->saveSnapshot($goalId);
 
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);

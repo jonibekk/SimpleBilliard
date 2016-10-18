@@ -37,7 +37,7 @@ export class GoalBlock extends React.Component {
     const previous_goal_card = () => {
       return (
         <GoalCard goal={ goal.goal_change_log }
-                  category={goal.category}
+                  category={goal.goal_change_log.category}
                   top_key_result={goal.tkr_change_log} />
       )
     }

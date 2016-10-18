@@ -154,7 +154,8 @@ class GoalApprovalService extends AppService
         $GoalMember->begin();
 
         // コラボ情報の保存
-        if (Hash::get($saveData, 'GoalMember')) {
+        $goalMemberId = Hash::get($saveData, 'GoalMember.id');
+        if ($goalMemberId) {
             $isSaveSuccessGoalMember = $GoalMember->save($saveData);
             if (!$isSaveSuccessGoalMember) {
                 $GoalMember->rollback();
@@ -162,9 +163,14 @@ class GoalApprovalService extends AppService
             }
 
             // コラボレータとコーチの認定未処理件数キャッシュを削除
-            $collaboUserId = $GoalMember->getUserIdByGoalMemberId($GoalMember->getLastInsertID());
-            $coachUserId = $TeamMember->getCoachId($collaboUserId);
-            $this->deleteUnapprovedCountCache([$collaboUserId, $coachUserId]);
+            $goalMemberUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+            $coachUserId = $TeamMember->getCoachId($goalMemberUserId);
+            $this->deleteUnapprovedCountCache([$goalMemberUserId, $coachUserId]);
+
+            // コーチの場合はゴール/tkr情報のスナップショットを撮る
+            if($coachUserId == $GoalMember->my_uid) {
+                $this->saveSnapshotForApproval($goalMemberId);
+            }
         }
 
         // 認定履歴情報の保存
@@ -192,10 +198,8 @@ class GoalApprovalService extends AppService
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-        /** @var GoalChangeLog $GoalChangeLog */
-        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
-        /** @var TkrChangeLog $TkrChangeLog */
-        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+        /** @var GoalCategory $GoalCategory */
+        $GoalCategory = ClassRegistry::init("GoalCategory");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
@@ -214,16 +218,20 @@ class GoalApprovalService extends AppService
             return $value;
         });
 
-        // ゴール/TKRの変更前のスナップショットを取得
-        $goalId = Hash::extract($res, 'goal.id');
-        $res['goal']['goal_change_log'] = Hash::get($GoalChangeLog->findLatestSnapshot($goalId), 'data');
-        $res['goal']['tkr_change_log'] = Hash::get($TkrChangeLog->findLatestSnapshot($goalId), 'data');
-
         // 認定履歴の文言を追加
         $goal_memberUserId = $res['user']['id'];
         $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
             $goal_memberUserId);
         $res['histories_view_more_text'] = __('View %s comments', count($res['approval_histories']) - 1);
+
+        // ゴール/TKRの変更前のスナップショットを取得
+        $res['goal'] = $this->processChangeLog($res['goal']);
+
+        // カテゴリ追加
+        if(Hash::get($res, 'goal.goal_change_log')) {
+            $category =  $GoalCategory->findById($res['goal']['goal_change_log']['goal_category_id'], ['name']);
+            $res['goal']['goal_change_log']['category'] = Hash::get($category, 'GoalCategory');
+        }
 
         // TKRの整形
         $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
@@ -402,5 +410,81 @@ class GoalApprovalService extends AppService
         $coacheeEvaluateIsEnabled = $TeamMember->getEvaluationEnableFlg($target_user_id);
         $coachId = $TeamMember->getCoachId($target_user_id);
         return (bool)$teamEvaluateIsEnabled && (bool)$coacheeEvaluateIsEnabled && (bool)$coachId;
+    }
+
+    /**
+     * ゴール認定用にゴールとTKRのスナップショットを保存する
+     *
+     * @param  $collaboUserId
+     *
+     * @return boolean
+     */
+    function saveSnapshotForApproval($goalMemberId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalChangeLog $GoalChangeLog */
+        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
+        /** @var TkrChangeLog $TkrChangeLog */
+        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+
+        $goalId = Hash::get($GoalMember->findById($goalMemberId), 'GoalMember.goal_id');
+        if(!$goalId) {
+            return false;
+        }
+
+        return $GoalChangeLog->saveSnapshot($goalId) && $TkrChangeLog->saveSnapshot($goalId);
+    }
+
+    /**
+     * ゴール編集ログの差分を確認し、差分があればレスポンスにログを追加する
+     *
+     * @param  $goal
+     *
+     * @return $goal
+     */
+    function processChangeLog($goal)
+    {
+        /** @var GoalChangeLog $GoalChangeLog */
+        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
+        /** @var TkrChangeLog $TkrChangeLog */
+        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+
+        $goal['goal_change_log'] = null;
+        $goal['tkr_change_log'] = null;
+
+        $goalId = Hash::extract($goal, 'id');
+        $goalChangeLog = Hash::get($GoalChangeLog->findLatestSnapshot($goalId), 'data');
+        $tkrChangeLog = Hash::get($TkrChangeLog->findLatestSnapshot($goalId), 'data');
+        if(!$goalChangeLog || !$tkrChangeLog) {
+            return $goal;
+        }
+
+        // 現在のゴールと変更ログとの差分を計算
+        // 値が違うキーだけ抽出される
+        $goalChangeDiff = Hash::diff($goal, $goalChangeLog);
+        $tkrChangeDiff = Hash::diff($goal['top_key_result'], $tkrChangeLog);
+
+        // Calc goal diff
+        $existGoalDiff = false;
+        foreach(['name', 'photo_file_name', 'goal_category_id'] as $path) {
+            if(Hash::get($goalChangeDiff, $path)) {
+                $existGoalDiff = true;
+            }
+        }
+
+        // Calc tkr diff
+        $existTkrDiff = false;
+        foreach(['name', 'start_value', 'target_value', 'value_unit', 'description'] as $path) {
+            if(Hash::get($tkrChangeDiff, $path)) {
+                $existTkrDiff = true;
+            }
+        }
+
+        if($existGoalDiff || $existTkrDiff) {
+            $goal['goal_change_log'] = $goalChangeLog;
+            $goal['tkr_change_log'] = $tkrChangeLog;
+        }
+        return $goal;
     }
 }
