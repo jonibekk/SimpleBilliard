@@ -43,6 +43,8 @@ class User extends AppModel
         self::TYPE_GENDER_NEITHER => ""
     ];
 
+    const USER_NAME_REGEX = '^[a-zA-Z \']+$';
+
     /**
      * 性別タイプの名前をセット
      */
@@ -142,14 +144,14 @@ class User extends AppModel
             ],
         ],
         'first_name'         => [
-            'maxLength'      => ['rule' => ['maxLength', 128]],
-            'notEmpty'       => ['rule' => 'notEmpty'],
-            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notEmpty'     => ['rule' => 'notEmpty'],
+            'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'last_name'          => [
-            'maxLength'      => ['rule' => ['maxLength', 128]],
-            'notEmpty'       => ['rule' => 'notEmpty'],
-            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notEmpty'     => ['rule' => 'notEmpty'],
+            'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'gender_type'        => [
             'isString' => [
