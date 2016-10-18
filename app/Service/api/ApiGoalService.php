@@ -75,6 +75,8 @@ class ApiGoalService extends ApiService
         $Goal = ClassRegistry::init("Goal");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalLabel $GoalLabel */
+        $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var ActionResult $ActionResult */
@@ -87,6 +89,15 @@ class ApiGoalService extends ApiService
 
         /* ゴール関連情報を取得 */
         /* ループの中で1件ずつ取得するのはパフォーマンスに影響があるのであらかじめまとめて取得しておく */
+
+        // ゴールラベル
+        $goalLabels = $GoalLabel->findByGoalId($goalIds);
+        $goalLabelsEachGoalId = [];
+        foreach($goalLabels as $goalLabel) {
+            $goalId = Hash::get($goalLabel, 'GoalLabel.goal_id');
+            $goalLabelsEachGoalId[$goalId][] = Hash::get($goalLabel, 'Label');
+        }
+
         // リーダー
         $leaders = $GoalMember->findLeaders($goalIds);
         $leadersEachGoalId = Hash::combine($leaders, '{n}.goal_id', '{n}');
@@ -106,6 +117,7 @@ class ApiGoalService extends ApiService
             $goalId = $goal['id'];
 
             $goal = $Goal->attachImgUrl($goal, 'Goal');
+            $goal['goal_labels'] = $goalLabelsEachGoalId[$goalId];
             $goal['leader'] = $leadersEachGoalId[$goalId];
             $goal['kr_count'] = (int)$krCountEachGoalId[$goalId];
             $goal['action_count'] = (int)$actionCountEachGoalId[$goalId];
