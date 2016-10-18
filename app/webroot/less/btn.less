@@ -42,6 +42,7 @@
   color: #231814;
   text-decoration: none;
 }
+
 /*.btn_pureWhite-rougeOrange,*/
 .btn-white {
   border: 1px solid #ccc;
@@ -136,7 +137,7 @@
   display: block;
   width: 144px;
   margin: 0 auto 0;
-  @media screen and (min-width: 520px){
+  @media screen and (min-width: 520px) {
     margin: 12px auto 0;
   }
   height: 36px;
@@ -321,5 +322,20 @@
     color: @whiteColor;
     background: @basicPink;
     text-decoration: none;
+  }
+}
+
+.btn-white-radius {
+  border-radius: 22px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  background-image: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: @veryDark;
+  &:hover, &:active {
+    color: @keyColor;
+    border: 1px solid @cherryBlossomPink;
   }
 }

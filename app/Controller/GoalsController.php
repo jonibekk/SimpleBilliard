@@ -43,6 +43,9 @@ class GoalsController extends AppController
             'search_url', 'goal_count', 'my_coaching_users'));
     }
 
+    // TODO:マークアップ用のアクションメソッドなので後で削除
+    public function list_markup(){}
+
     public function create($step = null)
     {
         if ($step !== 'step1') {
