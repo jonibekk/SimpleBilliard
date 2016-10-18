@@ -143,25 +143,25 @@ goalcardのheader自体をrelativeで基準にタテ線を引いている。
 }
 
 // Variables
-@container-bg: #eee;
+@container-bg: #fff;
 @font-size-base: 14px;
 @line-height-computed: 1.4;
 @lines-to-show: 2;
 
-.dashboard-goals-card-header-goal {
-  color: @darkBlack;
-  .line-number-trigger;
-  font-weight: bold;
+.dashboard-goals-card-header-goal-wrap {
+  overflow: hidden;
 }
 
-.dashboard-goals-card-header-goal-wrap {
+.dashboard-goals-card-header-goal {
+  font-weight: bold;
+  color: @darkBlack;
   font-size: @font-size-base;
   height: @font-size-base * @line-height-computed * @lines-to-show;
   line-height: @line-height-computed;
   position: relative;
   &:before,
   &:after {
-    background: #eee;
+    background: @container-bg;
     position: absolute;
   }
   &:before {
