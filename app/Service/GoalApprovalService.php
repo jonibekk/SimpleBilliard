@@ -192,7 +192,7 @@ class GoalApprovalService extends AppService
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
-            $Goal->rollback();
+            $GoalMember->rollback();
             return false;
         }
 
