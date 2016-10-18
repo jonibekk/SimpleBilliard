@@ -1605,16 +1605,6 @@ class Goal extends AppModel
         $options = $this->setFilter($options, $conditions);
 
         $goals = $this->find('all', $options);
-
-        // 親のゴール情報に関連情報が紐づくようにする
-//        $ret = [];
-//        foreach ($goals as $goal) {
-//            $v = $goal['Goal'];
-//            unset($goal['Goal']);
-//            $v = array_merge($v, $goal);
-//            $ret[] = $v;
-//        }
-
         return Hash::extract($goals, '{n}.Goal');
     }
 
