@@ -164,8 +164,6 @@ class ApiGoalService extends ApiService
         if ($limit + 1 > count($data['data'])) {
             return;
         }
-        $this->log(sprintf('[%s] allData:%s', __METHOD__,
-            var_export(compact('data', 'conditions', 'offset', 'limit', 'order'), true)));
 
         $newOffset = $offset + $limit;
         $queryParams = array_merge(
