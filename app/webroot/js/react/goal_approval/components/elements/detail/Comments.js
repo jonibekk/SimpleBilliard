@@ -6,7 +6,6 @@ export class Comments extends React.Component {
     super(props)
 
     this.state = { display_all_comments: false }
-    this.displayAllComments = this.displayAllComments.bind(this)
   }
 
   displayAllComments() {
@@ -24,7 +23,7 @@ export class Comments extends React.Component {
     const display_view_more_comments_button = commets_execpt_latest_comment.length > 0 && !this.state.display_all_comments
     const view_more_comments_button = () => {
       return (
-        <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments }>
+        <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments.bind(this) }>
           <i className="fa fa-angle-down" aria-hidden="true"></i>
           <span className="goals-approval-interactive-link"> { this.props.view_more_text } </span>
         </a>

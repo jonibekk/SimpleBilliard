@@ -6,16 +6,16 @@ export class GoalCard extends React.Component {
   }
 
   render() {
+    if(Object.keys(this.props.goal).length == 0) {
+      return null
+    }
+
     const goal = this.props.goal
     const top_key_result = this.props.top_key_result
     const category = this.props.category
 
-    if(Object.keys(goal).length == 0) {
-      return null
-    }
-
     return (
-      <div className="goals-approval-detail-goal-card">
+      <div className="goals-approval-detail-goal-card" key={ goal.modified + top_key_result.modified }>
           <div className="goals-approval-detail-table">
               <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
               <div className="goals-approval-detail-goal-card-info">

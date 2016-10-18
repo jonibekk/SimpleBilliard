@@ -17,6 +17,7 @@ export class GoalBlock extends React.Component {
     const goal = this.props.goal
     const is_leader = this.props.is_leader
     const displayed_previous = this.state.displayed_previous
+    const existsChangeLogs = goal.goal_change_log || goal.tkr_change_log
     const view_previous_button = () => {
       return (
         <div className="goals-approval-detail-view-previous">
@@ -27,27 +28,22 @@ export class GoalBlock extends React.Component {
         </div>
       )
     }
-    const current_goal_card = () => {
-      return (
-        <GoalCard goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
-                  category={ goal.category }
-                  top_key_result={ goal.top_key_result } />
-      )
-    }
     const previous_goal_card = () => {
       return (
-        <GoalCard goal={ goal.goal_change_log }
-                  category={goal.goal_change_log.category}
-                  top_key_result={goal.tkr_change_log} />
+        <GoalCard goal={ goal.goal_change_log || goal }
+                  category={ goal.goal_change_log.category || goal.category }
+                  top_key_result={ goal.tkr_change_log || goal.top_key_result } />
       )
     }
 
     return (
       <div className={ `goals-approval-detail-goal ${is_leader && 'mod-bgglay'}` }>
-        { current_goal_card() }
-        { displayed_previous && <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p> }
-        { goal.goal_change_log && !displayed_previous && is_leader && view_previous_button() }
-        { goal.goal_change_log && displayed_previous && previous_goal_card() }
+          <GoalCard goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
+                    category={ goal.category }
+                    top_key_result={ goal.top_key_result } />
+          { displayed_previous && <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p> }
+          { !displayed_previous && existsChangeLogs && is_leader && view_previous_button() }
+          { displayed_previous && existsChangeLogs && previous_goal_card() }
       </div>
     )
   }

@@ -406,7 +406,7 @@ class GoalApprovalsController extends ApiController
         // 保存処理
         $isSaveSuccess = $GoalApprovalService->saveApproval($saveData);
         if ($isSaveSuccess === false) {
-            return $this->_getResponseBadFail(__('Failed to save.'));
+            return $this->_getResponseInternalServerError(__('Failed to save.'));
         }
 
         return true;
