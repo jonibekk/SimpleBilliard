@@ -124,16 +124,46 @@
 
   // /goals/approval/detail
   &-detail {
-    .mod-bgglay {
-      background-color: @smokyWhite;
+    &-goal {
       padding: @spacing @spacing/2;
-    }
-    &-previous {
-      border-top: 1px solid @subColor4;
-      &-info {
+      &.mod-bgglay {
+        background-color: @smokyWhite;
+        padding: @spacing @spacing/2;
+      }
+      &-previous-info {
         color: @subColor3;
         font-weight: bold;
         margin: @spacing 0;
+      }
+      &-card {
+        &.previous {
+          border-top: 1px solid @subColor4;
+        }
+        &-info {
+          &-tkr{
+            margin-top: @spacing;
+            display: table-cell;
+            vertical-align: top;
+            width: 100%;
+            &-title {
+              font-size: @fontMedium;
+              font-weight: bold;
+              margin: 0;
+            }
+            &-list {
+              list-style-type: disc;
+              margin: @spacing/2 0 @spacing;
+              padding-left: 1.5em;
+              .mod-change {
+                color: @keyColor;
+              }
+            }
+            &-link {
+              color: @subColor2;
+              text-decoration: none;
+            }
+          }
+        }
       }
     }
     &-input-comment-form{
@@ -142,9 +172,6 @@
     }
     &-user {
       padding: @spacing 0;
-    }
-    &-goal {
-      padding: @spacing @spacing/2;
     }
     &-comments {
       padding: @spacing @spacing 0;
@@ -176,26 +203,6 @@
       margin-right: @spacing;
       max-width: none;
     }
-    &-tkr{
-      margin-top: @spacing;
-      &title {
-        font-size: @fontMedium;
-        font-weight: bold;
-        margin: 0;
-      }
-      &list {
-        list-style-type: disc;
-        margin: @spacing/2 0 @spacing;
-        padding-left: 1.5em;
-        .mod-change {
-          color: @keyColor;
-        }
-      }
-      &link {
-        display: table;
-        margin: 0 auto;
-      }
-    }
     &-info {
       display: table-cell;
       vertical-align: top;
@@ -210,10 +217,6 @@
       &-alert {
         font-weight: bold;
         color: @keyColor;
-      }
-      &-goal-link {
-        color: @subColor2;
-        text-decoration: none;
       }
     }
     &-view-more {

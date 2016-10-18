@@ -17,12 +17,22 @@ export class GoalBlock extends React.Component {
     const goal = this.props.goal
     const is_leader = this.props.is_leader
     const displayed_previous = this.state.displayed_previous
+    const view_previous_button = () => {
+      return (
+        <div className="goals-approval-detail-view-previous">
+            <a className="goals-approval-detail-view-more-comments" onClick={ this.props.displayPrevious }>
+              <i className="fa fa-angle-down" aria-hidden="true"></i>
+              <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
+            </a>
+        </div>
+      )
+    }
     const current_goal_card = () => {
       return (
         <GoalCard displayPrevious={ this.displayPrevious }
                   goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
-                  category={goal.category}
-                  top_key_result={goal.top_key_result}
+                  category={ goal.category }
+                  top_key_result={ goal.top_key_result }
                   is_current={ true }
                   displayed_previous={ displayed_previous } />
       )
@@ -39,6 +49,8 @@ export class GoalBlock extends React.Component {
     return (
       <div className={ `goals-approval-detail-goal ${is_leader && 'mod-bgglay'}` }>
         { current_goal_card() }
+        { !displayed_previous && <p className="goals-approval-detail-previous-info">{ __('Previous goal') }</p> }
+        { !displayed_previous && view_previous_button() }
         { goal.goal_change_log && displayed_previous && previous_goal_card() }
       </div>
     )
