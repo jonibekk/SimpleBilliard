@@ -893,7 +893,7 @@ class UsersController extends AppController
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Pnotify->outSuccess(__("Succeeded to save 2-Step Verification."));
-        $this->Session->setFlash(null, "flash_click_event", ['id' => 'ShowRecoveryCodeButton'], 'click_event');
+        $this->Flash->set(null,['element'=>'flash_click_event', 'params'=>['id' => 'ShowRecoveryCodeButton'], 'key'=>'click_event']);
         return $this->redirect($this->referer());
     }
 

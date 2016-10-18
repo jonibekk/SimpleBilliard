@@ -16,18 +16,18 @@ class SignupController extends AppController
         'User'      => [
             'first_name'       => [
                 'maxLength'      => ['rule' => ['maxLength', 128]],
-                'notEmpty'       => ['rule' => 'notEmpty'],
+                'notBlank'      => ['rule' => 'notBlank'],
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
             'last_name'        => [
                 'maxLength'      => ['rule' => ['maxLength', 128]],
-                'notEmpty'       => ['rule' => 'notEmpty'],
+                'notBlank'      => ['rule' => 'notBlank'],
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
             'password'         => [
                 'maxLength'      => ['rule' => ['maxLength', 50]],
-                'notEmpty'       => [
-                    'rule' => 'notEmpty',
+                'notBlank'      => [
+                    'rule' => 'notBlank',
                 ],
                 'minLength'      => [
                     'rule' => ['minLength', 8],
@@ -40,11 +40,11 @@ class SignupController extends AppController
                 ]
             ],
             'local_date'       => [
-                'notEmpty' => ['rule' => 'notEmpty',],
+                'notBlank'=> ['rule' => 'notBlank',],
             ],
             'birth_day'        => [
                 'rule'     => ['date', 'ymd'],
-                'notEmpty' => ['rule' => 'notEmpty'],
+                'notBlank'=> ['rule' => 'notBlank'],
             ],
             'update_email_flg' => [
                 'boolean' => [
@@ -55,8 +55,8 @@ class SignupController extends AppController
         'Email'     => [
             'email' => [
                 'maxLength' => ['rule' => ['maxLength', 200]],
-                'notEmpty'  => [
-                    'rule' => 'notEmpty',
+                'notBlank' => [
+                    'rule' => 'notBlank',
                 ],
                 'email'     => [
                     'rule' => ['email'],
@@ -77,7 +77,7 @@ class SignupController extends AppController
                     'rule' => ['isString',],
                 ],
                 'maxLength' => ['rule' => ['maxLength', 128]],
-                'notEmpty'  => ['rule' => ['notEmpty'],],
+                'notBlank' => ['rule' => ['notBlank'],],
             ],
             'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
             'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
@@ -202,7 +202,7 @@ class SignupController extends AppController
         $this->Email->validate = [
             'email' => [
                 'maxLength' => ['rule' => ['maxLength', 200]],
-                'notEmpty'  => ['rule' => 'notEmpty',],
+                'notBlank' => ['rule' => 'notBlank',],
                 'email'     => ['rule' => ['email'],],
             ],
         ];

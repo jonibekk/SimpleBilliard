@@ -589,7 +589,7 @@ class EvaluationTest extends GoalousTestCase
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty']
+            'notBlank'  => ['rule' => 'notBlank']
         ];
         $required = [
             'isString'  => [
@@ -622,7 +622,7 @@ class EvaluationTest extends GoalousTestCase
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty']
+            'notBlank'  => ['rule' => 'notBlank']
         ];
         $this->Evaluation->setNotAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], $required);
@@ -637,14 +637,14 @@ class EvaluationTest extends GoalousTestCase
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty']
+            'notBlank'  => ['rule' => 'notBlank']
         ];
         $required = [
             'isString'  => [
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty'],
+            'notBlank'  => ['rule' => 'notBlank'],
         ];
         $this->Evaluation->setNotAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], $required);
@@ -681,7 +681,7 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
 
         ];
         $required = [
@@ -712,7 +712,7 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
         ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
@@ -725,13 +725,13 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
         ];
         $required = [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
         ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);

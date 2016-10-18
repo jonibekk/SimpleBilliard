@@ -14,6 +14,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
         //ここに全てのエラーメッセージを記載する
         $error_messages = array(
             'notEmpty'              => __("Input is required."),
+            'notBlank'              => __("Input is required."),
             'requiredCaseExistUnit' => __("Input is required."),
             'numeric'               => __("Only Numeric characters are allowed."),
             'isAlphabetOnly'        => __("Only alphabet characters are allowed."),

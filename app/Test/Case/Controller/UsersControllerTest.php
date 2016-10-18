@@ -135,7 +135,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session'  => ['setFlash'],
                 'Auth'     => ['user'],
@@ -192,7 +192,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session'  => ['setFlash'],
                 'Auth'     => ['user'],
@@ -248,7 +248,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'NotifyBiz',
@@ -272,7 +272,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user'],
@@ -300,7 +300,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -340,7 +340,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session'  => ['setFlash'],
                 'Auth',
@@ -391,7 +391,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session' => [
                     'read'
@@ -431,7 +431,7 @@ class UsersControllerTest extends GoalousControllerTestCase
 
     function testSentMailFail()
     {
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'NotifyBiz',
@@ -456,7 +456,7 @@ class UsersControllerTest extends GoalousControllerTestCase
 
     function testVerifySuccess()
     {
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'NotifyBiz',
@@ -495,7 +495,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth',
@@ -523,7 +523,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth',
@@ -550,7 +550,7 @@ class UsersControllerTest extends GoalousControllerTestCase
 
     function generateMockSecurity()
     {
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Security' => ['_validateCsrf', '_validatePost'],
             ],
@@ -574,7 +574,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -615,7 +615,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
@@ -681,7 +681,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
@@ -749,7 +749,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -790,7 +790,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -862,7 +862,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -942,7 +942,7 @@ class UsersControllerTest extends GoalousControllerTestCase
 
     function testPasswordResetPostPassword()
     {
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -999,7 +999,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1031,7 +1031,7 @@ class UsersControllerTest extends GoalousControllerTestCase
 
     function testTokenResendPostEmail()
     {
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1073,7 +1073,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1109,7 +1109,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
@@ -1162,7 +1162,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1194,7 +1194,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1227,7 +1227,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1263,7 +1263,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1299,7 +1299,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1328,7 +1328,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1358,7 +1358,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1388,7 +1388,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1417,7 +1417,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1445,7 +1445,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1478,7 +1478,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1513,7 +1513,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1545,7 +1545,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -1578,7 +1578,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
@@ -2085,7 +2085,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
@@ -2148,7 +2148,7 @@ class UsersControllerTest extends GoalousControllerTestCase
         /**
          * @var UsersController $Users
          */
-        $Users = $this->generate('Users', [
+        $Users = $this->getMock('Users', [
             'components' => [
                 'Session',
                 'Security' => ['_validateCsrf', '_validatePost'],

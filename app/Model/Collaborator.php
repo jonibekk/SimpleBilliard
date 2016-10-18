@@ -57,11 +57,11 @@ class Collaborator extends AppModel
     public $validate = [
         'role'        => [
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => ['rule' => 'notEmpty',],
+            'notBlank'  => ['rule' => 'notBlank',],
         ],
         'description' => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
-            'notEmpty'  => ['rule' => 'notEmpty',],
+            'notBlank'  => ['rule' => 'notBlank',],
         ],
         'type'        => [
             'numeric' => [

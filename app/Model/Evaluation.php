@@ -38,18 +38,18 @@ class Evaluation extends AppModel
             ],
         ],
         'evaluatee_user_id' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
+            'notBlank' => [
+                'rule' => 'notBlank'
             ]
         ],
         'evaluator_user_id' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
+            'notBlank' => [
+                'rule' => 'notBlank'
             ]
         ],
         'evaluate_term_id'  => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
+            'notBlank' => [
+                'rule' => 'notBlank'
             ]
         ],
         'comment'           => [
@@ -417,8 +417,8 @@ class Evaluation extends AppModel
 
     function setAllowEmptyToComment()
     {
-        if (isset($this->validate['comment']['notEmpty'])) {
-            unset($this->validate['comment']['notEmpty']);
+        if (isset($this->validate['comment']['notBlank'])) {
+            unset($this->validate['comment']['notBlank']);
         }
         if (!isset($this->validate['comment']['isString']['allowEmpty'])) {
             $this->validate['comment']['isString']['allowEmpty'] = true;
@@ -428,10 +428,10 @@ class Evaluation extends AppModel
 
     function setNotAllowEmptyToComment()
     {
-        if (isset($this->validate['comment']['notEmpty'])) {
+        if (isset($this->validate['comment']['notBlank'])) {
             return;
         }
-        $this->validate['comment']['notEmpty'] = ['rule' => 'notEmpty'];
+        $this->validate['comment']['notBlank'] = ['rule' => 'notBlank'];
 
         if (isset($this->validate['comment']['isString']['allowEmpty'])) {
             unset($this->validate['comment']['isString']['allowEmpty']);
@@ -441,8 +441,8 @@ class Evaluation extends AppModel
 
     function setAllowEmptyToEvaluateScoreId()
     {
-        if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
-            unset($this->validate['evaluate_score_id']['notEmpty']);
+        if (isset($this->validate['evaluate_score_id']['notBlank'])) {
+            unset($this->validate['evaluate_score_id']['notBlank']);
         }
         if (!isset($this->validate['evaluate_score_id']['numeric']['allowEmpty'])) {
             $this->validate['evaluate_score_id']['numeric']['allowEmpty'] = true;
@@ -452,10 +452,10 @@ class Evaluation extends AppModel
 
     function setNotAllowEmptyToEvaluateScoreId()
     {
-        if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
+        if (isset($this->validate['evaluate_score_id']['notBlank'])) {
             return;
         }
-        $this->validate['evaluate_score_id']['notEmpty'] = ['rule' => 'notEmpty'];
+        $this->validate['evaluate_score_id']['notBlank'] = ['rule' => 'notBlank'];
 
         if (isset($this->validate['evaluate_score_id']['numeric']['allowEmpty'])) {
             unset($this->validate['evaluate_score_id']['numeric']['allowEmpty']);

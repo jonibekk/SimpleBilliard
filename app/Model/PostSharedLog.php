@@ -20,8 +20,8 @@ class PostSharedLog extends AppModel
      */
     public $validate = [
         'shared_list' => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'del_flg'     => [

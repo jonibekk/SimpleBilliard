@@ -2071,8 +2071,8 @@ class TeamMember extends AppModel
     {
         $common_validate = [
             'email'                 => [
-                'notEmpty' => [
-                    'rule'    => 'notEmpty',
+                'notBlank' => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Email Address"))
                 ],
                 'email'    => [
@@ -2081,8 +2081,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'member_no'             => [
-                'notEmpty'        => [
-                    'rule'    => 'notEmpty',
+                'notBlank'        => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Member ID"))
                 ],
                 'maxLength'       => [
@@ -2100,8 +2100,8 @@ class TeamMember extends AppModel
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("First Name"))
                 ],
-                'notEmpty'       => [
-                    'rule'    => 'notEmpty',
+                'notBlank'       => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("First Name"))
                 ],
                 'isAlphabetOnly' => [
@@ -2114,8 +2114,8 @@ class TeamMember extends AppModel
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Last Name"))
                 ],
-                'notEmpty'       => [
-                    'rule'    => 'notEmpty',
+                'notBlank'       => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Last Name"))
                 ],
                 'isAlphabetOnly' => [
@@ -2124,8 +2124,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'admin_flg'             => [
-                'notEmpty'  => [
-                    'rule'    => 'notEmpty',
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Administrators"))
                 ],
                 'isOnOrOff' => [
@@ -2134,8 +2134,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'evaluation_enable_flg' => [
-                'notEmpty'  => [
-                    'rule'    => 'notEmpty',
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Evaluator"))
                 ],
                 'isOnOrOff' => [
@@ -2257,8 +2257,8 @@ class TeamMember extends AppModel
         ];
         $validateOfUpdate = [
             'active_flg' => [
-                'notEmpty'  => [
-                    'rule'    => 'notEmpty',
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Active status"))
                 ],
                 'isOnOrOff' => [
@@ -2281,8 +2281,8 @@ class TeamMember extends AppModel
         //TODO ルール設定まだしてない
         $validate_rules = [
             'total.final.score' => [
-                'notEmpty' => [
-                    'rule'    => 'notEmpty',
+                'notBlank' => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Score by final evaluator"))
                 ],
             ],

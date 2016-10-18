@@ -49,8 +49,8 @@ class TeamVision extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => [
-                'rule' => ['notEmpty'],
+            'notBlank'  => [
+                'rule' => ['notBlank'],
             ],
         ],
         'description' => [
