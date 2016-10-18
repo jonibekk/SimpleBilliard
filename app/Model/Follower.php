@@ -197,4 +197,46 @@ class Follower extends AppModel
         return $res;
     }
 
+    /**
+     * ゴールIDごとの件数取得
+     *
+     * @param $goalIds
+     *
+     * @return bool
+     */
+    public function countEachGoalId($goalIds)
+    {
+        $ret = $this->find('all', [
+            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'conditions' => ['goal_id' => $goalIds],
+            'group' => ['goal_id'],
+        ]);
+        // 0件のゴールも配列要素を作り、値を0として返す
+        $defaultCountEachGoalId = array_fill_keys($goalIds, 0);
+        $ret = Hash::combine($ret, '{n}.Follower.goal_id', '{n}.0.cnt');
+        return $ret + $defaultCountEachGoalId;
+    }
+
+    /**
+     * ゴールごとにフォローしているか判定
+     *
+     * @param $goalIds
+     *
+     * @return bool
+     */
+    public function isFollowingEachGoalId($goalIds, $userId)
+    {
+        $ret = $this->find('all', [
+            'fields'=> ['goal_id', 'count(goal_id) as exist'],
+            'conditions' => [
+                'goal_id' => $goalIds,
+                'user_id' => $userId
+            ],
+            'group' => ['goal_id'],
+        ]);
+        // 0件のゴールも配列要素を作り、値を0として返す
+        $defaultEachGoalId = array_fill_keys($goalIds, 0);
+        $ret = Hash::combine($ret, '{n}.Follower.goal_id', '{n}.0.exist');
+        return $ret + $defaultEachGoalId;
+    }
 }

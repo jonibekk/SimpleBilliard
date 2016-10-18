@@ -532,4 +532,26 @@ class KeyResult extends AppModel
         return $this->validationErrors;
     }
 
+    /**
+     * ゴールIDごとの件数取得
+     *
+     * @param $goalIds
+     *
+     * @return bool
+     */
+    public function countEachGoalId($goalIds)
+    {
+        $ret = $this->find('all', [
+            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'conditions' => ['goal_id' => $goalIds],
+            'group' => ['goal_id'],
+        ]);
+
+        // 0件のゴールも配列要素を作り、値を0として返す
+        $defaultCountEachGoalId = array_fill_keys($goalIds, 0);
+        $ret = Hash::combine($ret, '{n}.KeyResult.goal_id', '{n}.0.cnt');
+        return $ret + $defaultCountEachGoalId;
+    }
+
+
 }

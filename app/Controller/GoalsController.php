@@ -25,22 +25,6 @@ class GoalsController extends AppController
      */
     public function index()
     {
-        $search_option = $this->_getSearchVal();
-        $search_url = $this->_getSearchUrl($search_option);
-        $search_options = $this->Goal->getSearchOptions();
-        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);
-        $goal_count = $this->Goal->countGoalRes($search_option);
-        $this->_setViewValOnRightColumn();
-        $current_global_menu = "goal";
-
-        //アドミン権限チェック
-        $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
-        $is_admin = ($isExistAdminFlg) ? true : false;
-
-        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
-
-        $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
-            'search_url', 'goal_count', 'my_coaching_users'));
     }
 
     // TODO:マークアップ用のアクションメソッドなので後で削除
@@ -124,28 +108,6 @@ class GoalsController extends AppController
         } else {
             return $this->redirect($this->referer());
         }
-    }
-
-    public function ajax_get_more_index_items()
-    {
-        $this->_ajaxPreProcess();
-        $search_option = $this->_getSearchVal();
-        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, $this->request->params, true);
-        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
-
-        $this->set(compact('goals', 'my_coaching_users'));
-
-        //エレメントの出力を変数に格納する
-        //htmlレンダリング結果
-        $response = $this->render('Goal/index_items');
-        $html = $response->__toString();
-        $result = array(
-            'html'          => $html,
-            'count'         => count($goals),
-            'page_item_num' => GOAL_INDEX_ITEMS_NUMBER,
-            'start'         => 0,
-        );
-        return $this->_ajaxGetResponse($result);
     }
 
     public function ajax_get_goal_description_modal()

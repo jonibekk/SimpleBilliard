@@ -146,7 +146,7 @@ class GoalTest extends GoalousTestCase
                 'page' => 1
             ]
         ];
-        $res = $this->Goal->getAllGoals(20, null, $params, true);
+        $res = $this->Goal->search(20, null, $params, true);
         $this->assertTrue(!empty($res));
     }
 
@@ -650,7 +650,7 @@ class GoalTest extends GoalousTestCase
         foreach ($options as $type => $val) {
             foreach ($val as $key => $value) {
                 $search_option[$type][0] = $key;
-                $this->Goal->getAllGoals(null, $search_option);
+                $this->Goal->search(null, $search_option);
             }
         }
     }
@@ -972,7 +972,7 @@ class GoalTest extends GoalousTestCase
     function testCountGoalRes()
     {
         $this->setDefault();
-        $res = $this->Goal->countGoalRes([]);
+        $res = $this->Goal->countSearch([]);
         $this->assertEquals(0, $res);
     }
 

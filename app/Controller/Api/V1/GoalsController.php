@@ -3,6 +3,7 @@ App::uses('ApiController', 'Controller/Api');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
+App::import('Service/Api', 'ApiGoalService');
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -18,6 +19,8 @@ App::import('Service', 'GoalService');
  */
 class GoalsController extends ApiController
 {
+    const GOAL_SEARCH_DEFAULT_LIMIT = 10;
+
     // TODO:ここで定義しても$this->***で使用出来ない為要調査
     public $uses = [
         'Goal',
@@ -55,6 +58,40 @@ class GoalsController extends ApiController
             return $this->_getResponseValidationFail($validationErrors);
         }
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * ゴール検索
+     *
+     * @query_param fields
+     * @return CakeResponse
+     */
+    function get_search()
+    {
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+
+        /* リクエストパラメータ取得 */
+        $offset = $this->request->query('offset');
+        $limit = (int)$this->request->query('limit');
+        $order = $this->request->query('order');
+        $conditions = [
+            'category' => $this->request->query('category'),
+            'progress' => $this->request->query('progress'),
+            'term' => $this->request->query('term'),
+        ];
+
+        // 取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit($limit)) {
+            // TODO:翻訳
+            return $this->_getResponseBadFail("取得件数が上限を超えています");
+        }
+        $limit = empty($limit) ? self::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
+
+        // ゴール検索
+        $searchResult = $ApiGoalService->search($this->Auth->user('id'), $conditions, $offset, $limit, $order);
+
+        return $this->_getResponsePagingSuccess($searchResult);
     }
 
     /**
