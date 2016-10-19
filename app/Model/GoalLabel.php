@@ -209,7 +209,11 @@ class GoalLabel extends AppModel
     function findByGoalId($goalId)
     {
         $res = $this->find('all', [
-            'fields' => ['Label.id','Label.name'],
+            'fields' => [
+                'GoalLabel.goal_id',
+                'Label.id',
+                'Label.name'
+            ],
             'conditions' => [
                 'GoalLabel.team_id' => $this->current_team_id,
                 'GoalLabel.goal_id' => $goalId
