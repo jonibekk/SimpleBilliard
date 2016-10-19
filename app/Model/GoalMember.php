@@ -815,4 +815,5 @@ class GoalMember extends AppModel
         }
         return $res['GoalMember']['user_id'];
     }
+
 }

@@ -363,11 +363,12 @@ class GoalApprovalsController extends ApiController
     {
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $myUserId = $this->my_uid;
+        $myUserId = $this->Auth->user('id');
         $goalMemberId = $this->request->query('goal_member_id');
 
         // パラメータが存在しない場合はNotFound
         if (!$goalMemberId) {
+            // $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
@@ -381,7 +382,7 @@ class GoalApprovalsController extends ApiController
         }
 
         $res = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
-        return $this->_getResponseSuccess($GoalApprovalService->formatGoalApprovalForResponse($res, $myUserId));
+        return $this->_getResponseSuccess($GoalApprovalService->processGoalApprovalForResponse($res, $myUserId));
     }
 
     /**
@@ -405,7 +406,7 @@ class GoalApprovalsController extends ApiController
         // 保存処理
         $isSaveSuccess = $GoalApprovalService->saveApproval($saveData);
         if ($isSaveSuccess === false) {
-            return $this->_getResponseBadFail(__('Failed to save.'));
+            return $this->_getResponseInternalServerError(__('Failed to save.'));
         }
 
         return true;
