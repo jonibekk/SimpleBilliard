@@ -904,5 +904,4 @@ class GoalMember extends AppModel
         $ret = Hash::combine($ret, '{n}.GoalMember.goal_id', '{n}.0.exist');
         return $ret + $defaultEachGoalId;
     }
-
 }

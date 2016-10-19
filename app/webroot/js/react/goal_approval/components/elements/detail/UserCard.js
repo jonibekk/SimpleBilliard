@@ -31,4 +31,4 @@ export class UserCard extends React.Component {
 UserCard.propTypes = {
   goal_member: React.PropTypes.object
 }
-UserCard.defaultProps = {goal_member: {}}
+UserCard.defaultProps = { goal_member: {} }

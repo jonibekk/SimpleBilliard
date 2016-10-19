@@ -59,8 +59,8 @@ class TkrChangeLogTest extends GoalousTestCase
         $this->TkrChangeLog->saveSnapshot(1);
         $snapshot = $this->TkrChangeLog->findLatestSnapshot(1);
         $this->assertNotEmpty($snapshot);
-        $this->assertNotEmpty($snapshot['data']);
-        $this->assertEquals('test2', $snapshot['data']['name']);
+        $this->assertNotEmpty($snapshot);
+        $this->assertEquals('test2', $snapshot['name']);
     }
 
     function _setDefault()

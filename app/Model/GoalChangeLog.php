@@ -85,8 +85,7 @@ class GoalChangeLog extends AppModel
         }
 
         /** @noinspection PhpUndefinedFunctionInspection */
-        $data['data'] = msgpack_unpack(base64_decode($data['data']));
-        return $data;
+        return msgpack_unpack(base64_decode($data['data']));
     }
 
 }

@@ -16,7 +16,6 @@ export function fetchGoalMember(goal_member_id) {
         console.log(error)
         console.log('fetch failed')
         /* eslint-enable no-console */
-        dispatch(toListPage())
       })
   }
 }

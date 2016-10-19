@@ -37,7 +37,7 @@ export default class Confirm extends React.Component {
         <h1 className="goals-approval-heading">{__("Confirm this goal")}</h1>
         <div className="goals-approval-detail">
           <GoalCard inputData={data.inputData} goal={data.goal} categories={data.categories} units={data.units}/>
-          <Comments approvalHistories={ data.approvalHistories }/>
+          <Comments approval_histories={ data.approvalHistories }/>
           <form className="p_10px" onSubmit={this.onSubmit.bind(this)}>
             <textarea name="description" ref="comment" placeholder={__("Add your comment (optional)")} className="form-control goals-create-input-form mod-textarea" />
             <div className="row">
