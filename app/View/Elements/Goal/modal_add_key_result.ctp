@@ -6,21 +6,21 @@
  * Time: 3:19 PM
  *
  * @var CodeCompletionView $this
- * @var                    $goal_id
+ * @var                    $goalId
  * @var                    $goal
  * @var                    $goal_category_list
  * @var                    $priority_list
- * @var                    $kr_priority_list
- * @var                    $kr_value_unit_list
- * @var                    $kr_start_date_format
- * @var                    $kr_end_date_format
- * @var                    $limit_end_date
- * @var                    $limit_start_date
- * @var                    $current_kr_id
- * @var                    $goal_term
+ * @var                    $krPriorityList
+ * @var                    $krValueUnitList
+ * @var                    $krStartDateFormat
+ * @var                    $krEndDateFormat
+ * @var                    $limitEndDate
+ * @var                    $limitStartDate
+ * @var                    $currentKrId
+ * @var                    $goalTerm
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -34,14 +34,14 @@
                 <li>
                     <i class="fa fa-bullseye"></i>
                     <?= h($goal['Goal']['target_value']) ?>
-                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
+                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $krValueUnitList[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
-                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?> - )
-                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
-                        <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR) ?>
+                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR) ?> - )
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
+                        <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
                     <?php endif ?>
                 </li>
             </ul>
@@ -57,10 +57,11 @@
                 'class'     => 'form-control addteam_input-design'
             ],
             'class'         => 'form-horizontal',
-            'url'           => ['controller'    => 'goals',
-                                'action'        => 'add_key_result',
-                                'goal_id'       => $goal_id,
-                                'key_result_id' => $current_kr_id
+            'url'           => [
+                'controller'    => 'goals',
+                'action'        => 'add_key_result',
+                'goal_id'       => $goalId,
+                'key_result_id' => $currentKrId
             ],
             'novalidate'    => true,
             'id'            => 'AddGoalFormKeyResult',
@@ -100,13 +101,13 @@
                                 'wrapInput'           => 'modal-add-kr-change-unit-wrap',
                                 'type'                => 'select',
                                 'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                'target-id'           => 'KeyResult0ValueInputWrap_' . $goal_id,
+                                'target-id'           => 'KeyResult0ValueInputWrap_' . $goalId,
                                 'required'            => true,
                                 'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                'options'             => $kr_value_unit_list
+                                'options'             => $krValueUnitList
                             ]) ?>
                     </div>
-                    <div id="KeyResult0ValueInputWrap_<?= $goal_id ?>" style="">
+                    <div id="KeyResult0ValueInputWrap_<?= $goalId ?>" style="">
                         <div>
                             <?=
                             $this->Form->input('KeyResult.target_value',
@@ -156,18 +157,18 @@
                         <?=
                         $this->Form->input('KeyResult.description',
                             [
-                                'label'                        => false,
-                                'placeholder'                  => __("Optional"),
-                                'rows'                         => 3,
+                                'label'       => false,
+                                'placeholder' => __("Optional"),
+                                'rows'        => 3,
                             ]) ?>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <h5 class="modal-key-result-headings"><?= __("Term") ?>
-                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
                         <span class="modal-key-result-headings-description">
-                            <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                            <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
                         </span>
                     <?php endif ?>
                 </h5>
@@ -179,13 +180,13 @@
                                 "Due Date") ?></label>
 
                         <div class="input-group date goal-set-date"
-                             data-date-end-date="<?= $limit_end_date ?>"
-                             data-date-start-date="<?= $limit_start_date ?>">
+                             data-date-end-date="<?= $limitEndDate ?>"
+                             data-date-start-date="<?= $limitStartDate ?>">
                             <?=
                             $this->Form->input('KeyResult.end_date',
                                 [
-                                    'value'                        => $kr_end_date_format,
-                                    'default'                      => $kr_end_date_format,
+                                    'value'                        => $krEndDateFormat,
+                                    'default'                      => $krEndDateFormat,
                                     'label'                        => false,
                                     'div'                          => false,
                                     'class'                        => "form-control",
@@ -206,25 +207,25 @@
                             __("Start") ?></label>
 
                         <p class="form-control-static"
-                           id="KeyResult0StartDateDefault_<?= $goal_id ?>">
+                           id="KeyResult0StartDateDefault_<?= $goalId ?>">
                                 <span
-                                    class="pull-left"><?= $kr_start_date_format ?>
+                                    class="pull-left"><?= $krStartDateFormat ?>
                                     <?= __("(Today)") ?>
                                     &nbsp;&nbsp;<a href="#" class="target-show-target-del pull-right"
-                                                   show-target-id="KeyResult0StartDateInputWrap_<?= $goal_id ?>"
-                                                   delete-target-id="KeyResult0StartDateDefault_<?= $goal_id ?>">
+                                                   show-target-id="KeyResult0StartDateInputWrap_<?= $goalId ?>"
+                                                   delete-target-id="KeyResult0StartDateDefault_<?= $goalId ?>">
                                         <?= __("Change") ?></a>
                                 </span>
                         </p>
 
                         <div class="input-group date plr_5px goal-set-date none"
-                             data-date-end-date="<?= $limit_end_date ?>"
-                             data-date-start-date="<?= $limit_start_date ?>"
-                             id="KeyResult0StartDateInputWrap_<?= $goal_id ?>">
+                             data-date-end-date="<?= $limitEndDate ?>"
+                             data-date-start-date="<?= $limitStartDate ?>"
+                             id="KeyResult0StartDateInputWrap_<?= $goalId ?>">
                             <?=
                             $this->Form->input('KeyResult.start_date',
                                 [
-                                    'value'                        => $kr_start_date_format,
+                                    'value'                        => $krStartDateFormat,
                                     'label'                        => false,
                                     'div'                          => false,
                                     'class'                        => "form-control",
@@ -253,7 +254,7 @@
                     'default'   => 3,
                     'required'  => false,
                     'style'     => 'width:170px',
-                    'options'   => $kr_priority_list,
+                    'options'   => $krPriorityList,
                     'wrapInput' => 'modal-add-kr-set-importance-wrap'
                 ]) ?>
             </div>
@@ -268,4 +269,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

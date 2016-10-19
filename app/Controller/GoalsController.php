@@ -211,50 +211,50 @@ class GoalsController extends AppController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goalId = viaIsSet($this->request->params['named']['goal_id']);
+        $currentKrId = viaIsSet($this->request->params['named']['key_result_id']);
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goalId)) {
                 throw new RuntimeException();
             }
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
-        $goal = $this->Goal->getGoalMinimum($goal_id);
-        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
-        $priority_list = $this->Goal->priority_list;
-        $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
+        $goal = $this->Goal->getGoalMinimum($goalId);
+        $goalCategoryList = $this->Goal->GoalCategory->getCategoryList();
+        $priorityList = $this->Goal->priority_list;
+        $krPriorityList = $this->Goal->KeyResult->priority_list;
+        $krValueUnitList = $KeyResultService->buildKrUnitsSelectList();
 
         // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
+        $goalTerm = $this->Goal->getGoalTermData($goalId);
 
-        $kr_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + $goal_term['timezone'] * HOUR);
+        $krStartDateFormat = date('Y/m/d', REQUEST_TIMESTAMP + $goalTerm['timezone'] * HOUR);
 
         //期限は現在+2週間にする
         //もしそれがゴールの期限を超える場合はゴールの期限にする
-        $end_date = strtotime('+2 weeks', REQUEST_TIMESTAMP);
-        if ($end_date > $goal['Goal']['end_date']) {
-            $end_date = $goal['Goal']['end_date'];
+        $endDate = strtotime('+2 weeks', REQUEST_TIMESTAMP);
+        if ($endDate > $goal['Goal']['end_date']) {
+            $endDate = $goal['Goal']['end_date'];
         }
-        $kr_end_date_format = date('Y/m/d', $end_date + $goal_term['timezone'] * HOUR);
-        $limit_end_date = date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
-        $limit_start_date = date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
+        $krEndDateFormat = date('Y/m/d', $endDate + $goalTerm['timezone'] * HOUR);
+        $limitEndDate = date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR);
+        $limitStartDate = date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR);
 
         $this->set(compact(
             'goal',
-            'goal_id',
-            'goal_category_list',
-            'goal_term',
-            'priority_list',
-            'kr_priority_list',
-            'kr_value_unit_list',
-            'kr_start_date_format',
-            'kr_end_date_format',
-            'limit_end_date',
-            'limit_start_date',
-            'current_kr_id'
+            'goalId',
+            'goalCategoryList',
+            'goalTerm',
+            'priorityList',
+            'krPriorityList',
+            'krValueUnitList',
+            'krStartDateFormat',
+            'krEndDateFormat',
+            'limitEndDate',
+            'limitStartDate',
+            'currentKrId'
         ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
