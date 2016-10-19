@@ -90,7 +90,7 @@ export default class Edit extends React.Component {
               acceptCharset="utf-8"
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
-            <h1 className="goals-approval-heading">{__("Edit goal & top key result")}</h1>
+            <h1 className="goals-approval-heading">{__("Edit goal & Top Key Result")}</h1>
 
             <h2 className="goals-edit-subject"><i className="fa fa-flag"></i> { __("Goal") }</h2>
 
@@ -149,16 +149,18 @@ export default class Edit extends React.Component {
           </section>
           <section className="goals-edit-tkr">
             <h2 className="goals-edit-subject"><i className="fa fa-key"></i> { __("Top Key Result") }</h2>
+
+            <label className="goals-create-input-label">{__("Top Key Result name")}</label>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")}
                    onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.name}/>
 
+            <label className="goals-create-input-label">{__("Measurement type")}</label>
             <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
                         onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
-
             <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.start_value}/>
             <InvalidMessageBox message={tkrValidationErrors.target_value}/>

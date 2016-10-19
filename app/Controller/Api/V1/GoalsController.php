@@ -289,7 +289,7 @@ class GoalsController extends ApiController
         }
 
         // リファラに表示する通知カード
-        $this->Pnotify->outSuccess(__("Edited goal & top key result"));
+        $this->Pnotify->outSuccess(__("Saved goal & Top Key Result"));
 
         //コーチへの通知
         $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
