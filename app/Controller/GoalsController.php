@@ -222,6 +222,9 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse(null);
         }
         $goal = $this->Goal->getGoalMinimum($goalId);
+        $tkr = $this->Goal->KeyResult->getTkr($goalId);
+        $goal = array_merge($goal, $tkr);
+
         $goalCategoryList = $this->Goal->GoalCategory->getCategoryList();
         $priorityList = $this->Goal->priority_list;
         $krPriorityList = $this->Goal->KeyResult->priority_list;

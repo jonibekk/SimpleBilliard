@@ -33,8 +33,8 @@
                 </li>
                 <li>
                     <i class="fa fa-bullseye"></i>
-                    <?= h($goal['Goal']['target_value']) ?>
-                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $krValueUnitList[$goal['Goal']['value_unit']] ?>
+                    <?= h($goal['KeyResult']['target_value']) ?>
+                    (← <?= h($goal['KeyResult']['start_value']) ?>)<?= $krValueUnitList[$goal['KeyResult']['value_unit']] ?>
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
