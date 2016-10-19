@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {browserHistory} from "react-router";
 import * as KeyCode from "~/common/constants/KeyCode";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import PhotoUpload from "~/common/components/goal/PhotoUpload";
@@ -22,8 +21,8 @@ export default class Edit extends React.Component {
   componentWillMount() {
     // 遷移元がどこかクエリパラメータで指定してあるので編集キャンセル/完了後の遷移先として保存しておく
     let from = "/"
-    if (Object.keys(this.props.location.query).length > 0) {
-      from = new Buffer(this.props.location.query.from, 'base64').toString()
+    if (document.referrer) {
+      from = document.referrer
     }
     this.props.init({from})
     this.props.fetchInitialData(this.props.params.goalId)
@@ -31,7 +30,7 @@ export default class Edit extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      browserHistory.push(`/goals/${this.props.params.goalId}/edit/confirm`)
+      document.location.href = nextProps.goal.from
     }
   }
 
@@ -40,7 +39,7 @@ export default class Edit extends React.Component {
     if (e.keyCode == KeyCode.ENTER) {
       return false
     }
-    this.props.validateGoal(this.props.params.goalId, this.getInputDomData())
+    this.props.saveGoal(this.props.params.goalId, this.getInputDomData())
   }
 
   deleteLabel(e) {
@@ -78,7 +77,7 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal} = this.props.goal
+    const {suggestions, keyword, isDisabledSubmit, validationErrors, inputData, goal} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     return (
@@ -171,7 +170,7 @@ export default class Edit extends React.Component {
           </section>
 
 
-          <button type="submit" className="goals-create-btn-next btn">{__("Confirm")} ></button>
+          <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{__("Save & Reapply")} ></button>
           <a className="goals-create-btn-cancel btn" href={this.props.goal.from}>{__("Cancel")}</a>
         </form>
       </div>
@@ -180,5 +179,5 @@ export default class Edit extends React.Component {
 }
 
 Edit.propTypes = {
-  goal: React.PropTypes.object.isRequired,
+  goal: React.PropTypes.object.isRequired
 }

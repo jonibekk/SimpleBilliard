@@ -45,7 +45,7 @@ export default class Routes extends Component {
             <Route path="goals/(:goalId)/edit" component={EditContainer} />
             <Route path="goals/(:goalId)/edit/confirm" component={ConfirmContainer} />
           </Router>
-          {/* <DevTools / > */}
+          <DevTools / >
         </div>
       </Provider>
     );

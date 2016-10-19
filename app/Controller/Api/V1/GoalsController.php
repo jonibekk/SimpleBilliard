@@ -26,6 +26,10 @@ class GoalsController extends ApiController
         'ApprovalHistory',
     ];
 
+    public $components = [
+        'Pnotify',
+    ];
+
     /**
      * ゴール(KR除く)のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
@@ -283,6 +287,9 @@ class GoalsController extends ApiController
         if (!$GoalService->update($this->Auth->user('id'), $goalId, $data)) {
             return $this->_getResponseInternalServerError();
         }
+
+        // リファラに表示する通知カード
+        $this->Pnotify->outSuccess(__("Edited goal & top key result"));
 
         //コーチへの通知
         $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
