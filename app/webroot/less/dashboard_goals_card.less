@@ -1,39 +1,39 @@
 /*========== ゴールカラム ==========*/
 
 .goals-column-head {
-    border-bottom: 1px solid #808080;
+  border-bottom: 1px solid #808080;
 }
+
 .goals-column-head-vision {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .goals-column-add-icon, .goals-column-add-text {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 /*/goals-column-empty*/
 .goals-column-empty-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 8px 0;
+  border: 1px dashed #aaa;
+  padding: 0;
+  margin: 8px 0;
 }
 
 .goals-column-empty-icon, .goals-column-empty-text {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .goals-column-empty-icon {
-    padding: 12px 0 0;
+  padding: 12px 0 0;
 }
 
 .goals-column-empty-text {
-    padding: 0 0 12px;
+  padding: 0 0 12px;
 }
 
 /*/goals-column-empty*/
-
 
 .dashboard-goals-card {
   width: 100%;
@@ -84,7 +84,6 @@ goalcardのheader自体をrelativeで基準にタテ線を引いている。
   z-index: 1;
 }
 
-
 .dashboard-goals-card-vertical-line {
   position: absolute;
   width: 3px;
@@ -93,7 +92,6 @@ goalcardのheader自体をrelativeで基準にタテ線を引いている。
   top: 44px;
   z-index: 1;
 }
-
 
 .dashboard-goals-card-header-title {
   width: 70%;
@@ -139,19 +137,42 @@ goalcardのheader自体をrelativeで基準にタテ線を引いている。
 }
 
 .dashboard-goals-card-header-purpose {
-    padding-top: 2px;
-    font-size: @fontSmall;
-    .line-number-limit-1();
-}
-
-.dashboard-goals-card-header-goal {
-  color: @darkBlack;
+  padding-top: 2px;
+  font-size: @fontSmall;
   .line-number-limit-1();
-  .line-number-trigger;
-  font-weight: bold;
-  line-height: 1;
 }
 
 .dashboard-goals-card-header-goal-wrap {
-  .line-number-wrap;
+  overflow: hidden;
+}
+
+/*
+複数行での３点リーダー表示において、以下ですんなり対応したいところだがIEが未対応のためハックしている
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+*/
+.dashboard-goals-card-header-goal {
+  font-weight: bold;
+  color: @darkBlack;
+  font-size: @goalTitleFontSize;
+  height: @goalTitleFontSize * @goalTitleLineHeightComputed * @goalTitleLinesToShow;
+  line-height: @goalTitleLineHeightComputed;
+  position: relative;
+  &:before,
+  &:after {
+    background: @goalTitleContainerBgColor;
+    position: absolute;
+  }
+  &:before {
+    content: "...";
+    top: @goalTitleFontSize * @goalTitleLineHeightComputed * (@goalTitleLinesToShow - 1);
+    right: 0;
+  }
+  &:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+  }
+
 }
