@@ -44,6 +44,7 @@ export default class Edit extends React.Component {
 
   deleteLabel(e) {
     const label = e.currentTarget.getAttribute("data-label")
+
     this.props.deleteLabel(label)
   }
 
@@ -77,8 +78,9 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    const {suggestions, keyword, isDisabledSubmit, validationErrors, inputData, goal} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, from} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
+    const from_approval_detail = Boolean(from.match(/\/goals\/approval\/detail/))
 
     return (
       <div className="panel panel-default col-sm-8 col-sm-offset-2 goals-create">
@@ -170,7 +172,7 @@ export default class Edit extends React.Component {
           </section>
 
 
-          <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{__("Save & Reapply")} ></button>
+          <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{ from_approval_detail ? __("Save & Reapply") : __("Save changes")}</button>
           <a className="goals-create-btn-cancel btn" href={this.props.goal.from}>{__("Cancel")}</a>
         </form>
       </div>
