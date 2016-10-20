@@ -34,7 +34,7 @@ class GoalsController extends AppController
         $current_global_menu = "goal";
 
         //アドミン権限チェック
-        $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
+        $isExistAdminFlg = Hash::get($this->User->TeamMember->myStatusWithTeam, 'TeamMember.admin_flg');
         $is_admin = ($isExistAdminFlg) ? true : false;
 
         $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
@@ -147,7 +147,7 @@ class GoalsController extends AppController
 
     public function ajax_get_goal_description_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
@@ -161,8 +161,8 @@ class GoalsController extends AppController
 
     public function ajax_get_add_action_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
@@ -187,8 +187,8 @@ class GoalsController extends AppController
 
     public function ajax_get_related_kr_list_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $user_id = viaIsSet($this->request->params['named']['user_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $user_id = Hash::get($this->request->params, 'named.user_id');
         $krs = [];
         if ($goal_id && $user_id) {
             $krs = $this->Goal->KeyResult->getKrRelatedUserAction($goal_id, $user_id);
@@ -211,8 +211,8 @@ class GoalsController extends AppController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $goalId = viaIsSet($this->request->params['named']['goal_id']);
-        $currentKrId = viaIsSet($this->request->params['named']['key_result_id']);
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        $currentKrId = Hash::get($this->request->params, 'named.key_result_id');
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->GoalMember->isCollaborated($goalId)) {
@@ -347,7 +347,7 @@ class GoalsController extends AppController
     public function add_key_result()
     {
         $goal_id = $this->request->params['named']['goal_id'];
-        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $current_kr_id = Hash::get($this->request->params, 'named.key_result_id');
 
         $this->request->allowMethod('post');
         $key_result = null;
@@ -462,8 +462,8 @@ class GoalsController extends AppController
 
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
-        $goal = viaIsSet($goal);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
+        $goal = Hash::get($goal);
         if (!$goal) {
             $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
         }
@@ -908,8 +908,8 @@ class GoalsController extends AppController
      */
     public function add_action()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         try {
             if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("This action can't be edited."));
@@ -1136,7 +1136,7 @@ class GoalsController extends AppController
         }
 
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName);
 
@@ -1200,7 +1200,7 @@ class GoalsController extends AppController
             $page_num = 1;
         }
 
-        $type = viaIsSet($param_named['type']);
+        $type = Hash::get($param_named, 'type');
         if (!$type) {
             return;
         }
@@ -1299,13 +1299,13 @@ class GoalsController extends AppController
         $res = [];
         foreach (array_keys($options) as $type) {
             //URLパラメータ取得
-            $res[$type][0] = viaIsSet($this->request->params['named'][$type]);
+            $res[$type][0] = Hash::get($this->request->params, "named.$type");
             //パラメータチェック
             if (!in_array($res[$type][0], array_keys($options[$type]))) {
                 $res[$type] = null;
             }
             //表示名取得
-            if (viaIsSet($res[$type])) {
+            if (Hash::get($res, $type)) {
                 $res[$type][1] = $options[$type][$res[$type][0]];
             } ///デフォルト表示名取得
             else {
@@ -1319,7 +1319,7 @@ class GoalsController extends AppController
     {
         $res = ['controller' => 'goals', 'action' => 'index'];
         foreach ($search_option as $key => $val) {
-            if (viaIsSet($val[0])) {
+            if (Hash::get($val, '0')) {
                 $res[$key] = $val[0];
             }
         }
@@ -1420,12 +1420,12 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $page_type = $this->_getRequiredParam('page_type');
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         $params = [
             'type'          => Post::TYPE_ACTION,
             'goal_id'       => $goal_id,

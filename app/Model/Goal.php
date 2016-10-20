@@ -506,13 +506,13 @@ class Goal extends AppModel
             $data['KeyResult'][0]['team_id'] = $this->current_team_id;
         }
 
-        if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
+        if (!Hash::get($data, 'KeyResult.0.start_date')) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
         } else {
             //時間をunixtimeに変換
             $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
         }
-        if (!viaIsSet($data['KeyResult'][0]['end_date'])) {
+        if (!Hash::get($data, 'KeyResult.0.end_date')) {
             $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
         } else {
             //期限を+1day-1secする
@@ -799,7 +799,7 @@ class Goal extends AppModel
         $res = $this->find('all', $options);
         $goal_ids = [];
         foreach ($res as $record) {
-            if (viaIsSet($record['Evaluation']['status']) != 2) {
+            if (Hash::get($record, 'Evaluation.status') != 2) {
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
@@ -832,7 +832,7 @@ class Goal extends AppModel
         ];
         $res = $this->find('all', $options);
         foreach ($res as $record) {
-            if (viaIsSet($record['Evaluation']['status']) != 2) {
+            if (Hash::get($record, 'Evaluation.status') != 2) {
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
@@ -1034,7 +1034,7 @@ class Goal extends AppModel
 
         foreach ($goals as $k => $goal) {
             $goals[$k]['Goal']['is_current_term'] = false;
-            if ($target_end_date = viaIsSet($goal['Goal']['end_date'])) {
+            if ($target_end_date = Hash::get($goal, 'Goal.end_date')) {
                 if ($target_end_date >= $start_date && $target_end_date <= $end_date) {
                     $goals[$k]['Goal']['is_current_term'] = true;
                 }
@@ -1688,7 +1688,7 @@ class Goal extends AppModel
     function setFilter($options, $search_option)
     {
         //期間指定
-        switch (viaIsSet($search_option['term'][0])) {
+        switch (Hash::get($search_option, 'term.0')) {
             case 'previous':
                 $previous_term = $this->Team->EvaluateTerm->getPreviousTermData();
                 if (!empty($previous_term)) {
@@ -1721,11 +1721,11 @@ class Goal extends AppModel
                 break;
         }
         //カテゴリ指定
-        if (viaIsSet($search_option['category'][0]) && $search_option['category'][0] != 'all') {
+        if (Hash::get($search_option, 'category.0') && $search_option['category'][0] != 'all') {
             $options['conditions']['Goal.goal_category_id'] = $search_option['category'][0];
         }
         //進捗指定
-        switch (viaIsSet($search_option['progress'][0])) {
+        switch (Hash::get($search_option, 'progress.0')) {
             case 'complete' :
                 $options['conditions']['NOT']['Goal.completed'] = null;
                 break;
@@ -1734,7 +1734,7 @@ class Goal extends AppModel
                 break;
         }
         //ソート指定
-        switch (viaIsSet($search_option['order'][0])) {
+        switch (Hash::get($search_option, 'order.0')) {
             case 'action' :
                 $options['order'] = ['Goal.action_result_count desc'];
                 break;
@@ -1818,7 +1818,7 @@ class Goal extends AppModel
         $target_progress_total = 0;
         $current_progress_total = 0;
         foreach ($goals as $goal) {
-            if (!viaIsSet($goal['GoalMember'][0]['priority'])) {
+            if (!Hash::get($goal, 'GoalMember.0.priority')) {
                 continue;
             }
             $target_progress_total += $goal['GoalMember'][0]['priority'] * 100;

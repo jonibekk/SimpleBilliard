@@ -142,7 +142,7 @@ class Email extends AppModel
         }
         $options = [
             'conditions' => [
-                'Email.email' => $emails,
+                'Email.email'          => $emails,
                 'Email.email_verified' => 1,
             ],
             'fields'     => ['user_id', 'email'],
@@ -158,7 +158,7 @@ class Email extends AppModel
         $email_team_members = $this->find('all', $options);
 
         foreach ($email_team_members as $k => $v) {
-            if (!viaIsSet($v['User']['TeamMember'])) {
+            if (!Hash::get($v, 'User.TeamMember')) {
                 unset($email_team_members[$k]);
             }
         }

@@ -9,7 +9,7 @@
  * @var $model
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php if (isset($posts) && !empty($posts)): ?>
     <div class="cube-img-column">
         <?php foreach ($posts as $post): ?>
@@ -19,7 +19,7 @@
                     'action'     => 'feed',
                     'post_id'    => $post['Post']['id']
                 ]) ?>"
-                <?php if (viaIsSet($post['ActionResult']['ActionResultFile'][0]['AttachedFile'])): ?>
+                <?php if (Hash::get($post, 'ActionResult.ActionResultFile.0.AttachedFile')): ?>
                     <!-- アクション画像がある場合 -->
                     <?= $this->Html->image('ajax-loader.gif',
                         [
@@ -55,4 +55,4 @@
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

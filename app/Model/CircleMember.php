@@ -486,7 +486,7 @@ class CircleMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        return viaIsSet($res['CircleMember']['show_for_all_feed_flg']);
+        return Hash::get($res, 'CircleMember.show_for_all_feed_flg');
     }
 
     function circleStatusToggle($circle_id, $status)
@@ -654,7 +654,7 @@ class CircleMember extends AppModel
 
         $is_joined_circle = false;
         foreach ($circles as $circle) {
-            if (viaIsSet($circle['Circle']['id'])) {
+            if (Hash::get($circle, 'Circle.id')) {
                 $is_joined_circle = true;
                 break;
             }

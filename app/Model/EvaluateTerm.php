@@ -249,7 +249,7 @@ class EvaluateTerm extends AppModel
     {
         $this->_checkType($type);
         $term = $this->getTermData($type);
-        return viaIsSet($term['id']);
+        return Hash::get($term, 'id');
     }
 
     public function getCurrentTermData()
@@ -496,7 +496,7 @@ class EvaluateTerm extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id,
+                'team_id'       => $this->current_team_id,
                 'start_date <=' => $datetime,
                 'end_date >='   => $datetime,
             ]
