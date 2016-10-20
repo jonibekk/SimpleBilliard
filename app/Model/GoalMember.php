@@ -816,4 +816,51 @@ class GoalMember extends AppModel
         return $res['GoalMember']['user_id'];
     }
 
+    /**
+     * ゴールメンバーが認定希望かどうか判定
+     * @param  $goalMemberId
+     * @return boolean
+     */
+    function isWishGoalApproval($goalMemberId)
+    {
+        if (!$goalMemberId) {
+            return false;
+        }
+
+        $res = $this->findById($goalMemberId, ['is_wish_approval']);
+        if(!$res || !Hash::get($res, 'GoalMember.is_wish_approval')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * ゴールリーダーのIDを取得
+     *
+     * @param  $goalId
+     *
+     * @return $goalMemberId|null
+     */
+    function getGoalLeaderId($goalId)
+    {
+        if (!$goalId) {
+            return null;
+        }
+
+        $res = $this->find('first', [
+            'conditions' => [
+                'id'   => $goalId,
+                'type' => self::TYPE_OWNER
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ]);
+        if (!$res) {
+            return null;
+        }
+        return Hash::get($res, 'GoalMember.id');
+    }
+
 }

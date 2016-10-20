@@ -17,7 +17,6 @@ function mapDispatchToProps(dispatch) {
     onSuggestionSelected: (e, {suggestion}) => dispatch(actions.onSuggestionSelected(suggestion)),
     deleteLabel: (label) => dispatch(actions.deleteLabel(label)),
     addLabel: (label) => dispatch(actions.addLabel(label)),
-    validateGoal: (goalId, addInputData) => dispatch(actions.validateGoal(goalId, addInputData)),
     fetchInitialData: (goalId) => dispatch(actions.fetchInitialData(goalId)),
     updateInputData: (data, key = "") => dispatch(actions.updateInputData(data, key)),
     saveGoal: (goalId, data) => dispatch(actions.saveGoal(goalId, data))
