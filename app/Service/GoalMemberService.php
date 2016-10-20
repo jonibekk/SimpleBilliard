@@ -70,7 +70,7 @@ class GoalMemberService extends AppService
      * # 条件
      * - チームの評価設定がon
      * - ユーザが評価対象
-     * - コーチが存在する 
+     * - コーチが存在する
      * - ゴールメンバーの認定希望フラグON
      *
      * @param  $goalMemberId

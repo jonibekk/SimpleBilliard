@@ -404,10 +404,11 @@ class GoalMember extends AppModel
     {
         $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $conditions = [
-            'GoalMember.team_id' => $this->current_team_id,
-            'GoalMember.user_id' => $goalUserId,
-            'Goal.end_date >='   => $currentTerm['start_date'],
-            'Goal.end_date <='   => $currentTerm['end_date'],
+            'GoalMember.team_id'          => $this->current_team_id,
+            'GoalMember.user_id'          => $goalUserId,
+            'GoalMember.is_wish_approval' => true,
+            'Goal.end_date >='            => $currentTerm['start_date'],
+            'Goal.end_date <='            => $currentTerm['end_date'],
         ];
 
         $options = [
@@ -828,11 +829,11 @@ class GoalMember extends AppModel
         }
 
         $res = $this->findById($goalMemberId, ['is_wish_approval']);
-        if(!$res || !Hash::get($res, 'GoalMember.is_wish_approval')) {
+        if(!$res) {
             return false;
         }
 
-        return true;
+        return Hash::get($res, 'GoalMember.is_wish_approval');
     }
 
     /**
@@ -850,8 +851,8 @@ class GoalMember extends AppModel
 
         $res = $this->find('first', [
             'conditions' => [
-                'id'   => $goalId,
-                'type' => self::TYPE_OWNER
+                'goal_id' => $goalId,
+                'type'    => self::TYPE_OWNER
             ],
             'fields'     => [
                 'id'
