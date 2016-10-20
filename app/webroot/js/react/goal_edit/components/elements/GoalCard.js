@@ -3,8 +3,10 @@ import * as ValueUnit from "../../../common/constants/ValueUnit";
 import {nl2br} from "../../../util/element";
 
 export class GoalCard extends React.Component {
+
+
   render() {
-    const {inputData} = this.props
+    const {inputData, units} = this.props
     if (Object.keys(inputData).length == 0) {
       return null
     }
@@ -16,11 +18,15 @@ export class GoalCard extends React.Component {
       }
     }
 
+
     // 達成開始・目標値表示
-    const unitLabel = (key_result, units) => {
+    const unitLabel = (() => {
+      const {key_result} = inputData
+
       // 完了/未完了の場合
       if (key_result.value_unit == ValueUnit.NONE) {
-        for (const v of units) {
+        for (let i = 0; i < units.length; i++) {
+          let v = units[i];
           if (v.id == key_result.value_unit) {
             return <li>{v.label}</li>
           }
@@ -28,12 +34,15 @@ export class GoalCard extends React.Component {
       }
 
       // 単位が存在する場合
-      for (const v of units) {
+      for (let i = 0; i < units.length; i++) {
+        let v = units[i];
         if (v.id == key_result.value_unit) {
           return <li>{key_result.start_value} {v.unit} -> {key_result.target_value} {v.unit}</li>
         }
       }
-    }
+
+    })()
+
 
     const imgUrl = inputData.photo ? inputData.photo.result : this.props.goal.medium_large_img_url;
 
@@ -49,7 +58,7 @@ export class GoalCard extends React.Component {
                 result</h2>
               <ul className="goals-approval-detail-tkrlist">
                 <li>{ inputData.key_result.name }</li>
-                {unitLabel(inputData.key_result, this.props.units)}
+                {unitLabel}
                 <li>{ nl2br(inputData.key_result.description) }</li>
               </ul>
             </div>
