@@ -175,9 +175,26 @@
       }
     }
     &-comments {
-      padding: @spacing 25px 0;
+      padding: @spacing 15px 0;
       &-comment {
         margin-bottom: 10px;
+      }
+      &-form {
+        display: table;
+        width: 100%;
+        &-left {
+          display: table-cell;
+          width: 100%;
+          padding-right: 10px;
+        }
+        &-right {
+          display: table-cell;
+        }
+        &-button {
+          background-color: #e83b59;
+          border: none;
+          color: #fff;
+        }
       }
     }
     &-view-previous {

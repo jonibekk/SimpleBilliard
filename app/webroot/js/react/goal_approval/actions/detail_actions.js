@@ -88,7 +88,28 @@ export function postWithdraw(goal_member_id) {
       (response) => {
         dispatch(finishedPostingWithdraw())
         /* eslint-disable no-console */
-        console.log("withdraw failed");
+        console.log("failed to withdraw");
+        console.log(response);
+        /* eslint-enable no-console */
+        dispatch(toListPage())
+      }
+    );
+  }
+}
+
+export function saveComment(postData) {
+  return (dispatch) => {
+    dispatch(postingComment())
+
+    return post(`/api/v1/goal_approvals/comment`, postData, null,
+      (response) => {
+        dispatch(finishedPostingComment())
+        addComment(response.data.data)
+      },
+      (response) => {
+        dispatch(finishedPostingWithdraw())
+        /* eslint-disable no-console */
+        console.log("failed to post comment");
         console.log(response);
         /* eslint-enable no-console */
         dispatch(toListPage())
@@ -119,6 +140,13 @@ export function postingRemovefromTarget() {
 export function postingWithdraw() {
   return {type: types.POSTING_WITHDRAW}
 }
+export function postingComment() {
+  return {type: types.POSTING_COMMENT}
+}
+
+export function finishiedPostingComment() {
+  return {type: types.FINISHED_POSTING_COMMENT}
+}
 
 export function finishedPostingRemoveFromTarget() {
   return {type: types.FINISHED_POSTING_REMOVE_FROM_TARGET}
@@ -134,4 +162,8 @@ export function invalid(error) {
 
 export function initDetailPage() {
   return {type: types.INIT_DETAIL_PAGE}
+}
+
+export function addComment(comment) {
+  return {type: types.ADD_COMMENT, comment}
 }
