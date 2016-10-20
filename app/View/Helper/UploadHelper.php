@@ -92,7 +92,7 @@ class UploadHelper extends AppHelper
 
         $url = $this->uploadUrl($data, 'AttachedFile.attached');
         //officeファイルの場合は、office viewerのリンクに変換
-        if ($open_type == "viewer" && viaIsSet($this->ext_settings[$data['file_ext']]['viewer']) == 'office_viewer') {
+        if ($open_type == "viewer" && Hash::get($this->ext_settings[$data['file_ext']]['viewer']) == 'office_viewer') {
             $url = OOV_BASE_URL . urlencode($url);
         }
         return $url;
@@ -120,7 +120,7 @@ class UploadHelper extends AppHelper
             $data = $data['AttachedFile'];
         }
         $ext = $data['file_ext'];
-        if ($class = viaIsSet($this->ext_settings[$ext]['icon_class'])) {
+        if ($class = Hash::get($this->ext_settings[$ext]['icon_class'])) {
             return $class;
         }
         return 'fa-file-o file-other-icon';
@@ -132,7 +132,7 @@ class UploadHelper extends AppHelper
             $data = $data['AttachedFile'];
         }
         $ext = $data['file_ext'];
-        if (viaIsSet($this->ext_settings[$ext]['viewer'])) {
+        if (Hash::get($this->ext_settings[$ext]['viewer'])) {
             return true;
         }
         return false;

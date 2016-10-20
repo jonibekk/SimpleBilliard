@@ -10,7 +10,7 @@
  * @var $item_created
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('User/simplex_top_section') ?>
@@ -48,7 +48,7 @@
                            $this->Html->url([
                                'controller' => 'posts',
                                'action'     => 'ajax_get_user_page_post_feed',
-                               'user_id'    => viaIsSet($this->request->params['named']['user_id']),
+                               'user_id'    => Hash::get($this->request->params['named']['user_id']),
                                'type'       => Post::TYPE_NORMAL,
                            ]) ?>"
                            id="FeedMoreReadLink"
@@ -61,4 +61,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

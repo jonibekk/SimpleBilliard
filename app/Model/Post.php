@@ -1312,7 +1312,7 @@ class Post extends AppModel
         //メンバー共有なら
         $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
         //Postの主が自分ではないなら追加
-        $posted_user_id = viaIsSet($post['Post']['user_id']);
+        $posted_user_id = Hash::get($post['Post']['user_id']);
         if ($this->my_uid != $posted_user_id) {
             $share_member_list[] = $posted_user_id;
         }

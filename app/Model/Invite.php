@@ -132,12 +132,12 @@ class Invite extends AppModel
     function isByBatchSetup($token)
     {
         $invite = $this->getByToken($token);
-        if (!viaIsSet($invite['Invite']['email'])) {
+        if (!Hash::get($invite['Invite']['email'])) {
             return false;
         }
 
         $user = $this->FromUser->getUserByEmail($invite['Invite']['email']);
-        if (viaIsSet($user['User']) && $user['User']['active_flg'] === false && $user['User']['no_pass_flg'] === true) {
+        if (Hash::get($user['User']) && $user['User']['active_flg'] === false && $user['User']['no_pass_flg'] === true) {
             return true;
         }
         return false;
@@ -205,16 +205,18 @@ class Invite extends AppModel
                 'email'          => $invite['Invite']['email'],
                 'email_verified' => false
             ]
-        ]))) {
+        ]))
+        ) {
             return false;
         }
 
-        if(empty($this->ToUser->find('first',[
+        if (empty($this->ToUser->find('first', [
             'conditions' => [
-                'id'          => $email['Email']['user_id'],
+                'id'         => $email['Email']['user_id'],
                 'active_flg' => false
             ]
-        ]))){
+        ]))
+        ) {
             return false;
         }
         return true;

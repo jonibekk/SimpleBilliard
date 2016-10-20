@@ -23,7 +23,7 @@ class PostHelper extends AppHelper
         }
 
         $site_info = json_decode($json_site_info);
-        if (viaIsSet($site_info->url)) {
+        if (Hash::get($site_info->url)) {
             return $site_info->url;
         }
 

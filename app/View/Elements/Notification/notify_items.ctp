@@ -11,13 +11,14 @@
  */
 ?>
 
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php foreach ($notify_items as $notify_item): ?>
     <?=
     $this->element('Notification/notify_item',
-        ['user'          => viaIsSet($notify_item['User']),
-         'notification'  => $notify_item['Notification'],
-         'location_type' => $location_type
+        [
+            'user'          => Hash::get($notify_item['User']),
+            'notification'  => $notify_item['Notification'],
+            'location_type' => $location_type
         ]) ?>
 <?php endforeach; ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

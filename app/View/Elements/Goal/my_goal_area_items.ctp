@@ -108,9 +108,9 @@ $kr_count = 0;
                             </a>
                         </li>
                     <?php endif; ?>
-                    <?php if (!viaIsSet($goal['Evaluation'])): ?>
+                    <?php if (!Hash::get($goal['Evaluation'])): ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="/goals/<?= $goal['Goal']['id']?>/edit">
+                                                   href="/goals/<?= $goal['Goal']['id'] ?>/edit">
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                             </a>
                         </li>
