@@ -64,4 +64,40 @@ class GoalMemberService extends AppService
         }
         return $data;
     }
+
+    /**
+     * ゴールに対するゴールメンバーが認定対象かどうか判定
+     * # 条件
+     * - チームの評価設定がon
+     * - ユーザが評価対象
+     * - コーチが存在する
+     * - ゴールメンバーの認定希望フラグON
+     *
+     * @param  $goalMemberId
+     *
+     * @return boolean
+     */
+    function isApprovableGoalMember($goalMemberId)
+    {
+        if(!$goalMemberId) {
+            return false;
+        }
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
+        // ゴールメンバーのユーザIDを取得
+        $goalMember = $GoalMember->findById($goalMemberId, ['user_id']);
+        if(!$goalMember) {
+            return false;
+        }
+        $goalMemberUserId = Hash::get($goalMember, 'GoalMember.user_id');
+
+        $userIsApproval = $GoalApprovalService->isApprovable($goalMemberUserId);
+        $goalIsApproval = $GoalMember->isWishGoalApproval($goalMemberId);
+
+        return $userIsApproval && $goalIsApproval;
+    }
 }

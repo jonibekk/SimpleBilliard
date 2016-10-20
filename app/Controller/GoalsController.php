@@ -734,6 +734,8 @@ class GoalsController extends AppController
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         $kr_id = $this->request->params['named']['key_result_id'];
         $this->_ajaxPreProcess();
@@ -756,6 +758,13 @@ class GoalsController extends AppController
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
 
+        // 認定可能フラグ追加
+        $is_approvable = false;
+        $goal_leader_id = $this->Goal->GoalMember->getGoalLeaderId($goal_id);
+        if($goal_leader_id) {
+            $is_approvable = $GoalMemberService->isApprovableGoalMember($goal_leader_id);
+        }
+
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
 
@@ -775,7 +784,8 @@ class GoalsController extends AppController
             'kr_end_date_format',
             'limit_end_date',
             'limit_start_date',
-            'goal_term'
+            'goal_term',
+            'is_approvable'
         ));
         $this->request->data = $key_result;
         //エレメントの出力を変数に格納する
