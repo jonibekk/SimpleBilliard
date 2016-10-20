@@ -207,7 +207,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // 保存データ定義
-        $saveData = $GoalApprovalService->generateSaveData(GoalMember::IS_TARGET_EVALUATION, $data, $myUserId);
+        $saveData = $GoalApprovalService->generateApprovalSaveData(GoalMember::IS_TARGET_EVALUATION, $data, $myUserId);
 
         // 保存処理
         $response = $this->_postApproval($saveData);
@@ -267,7 +267,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // 保存データ定義
-        $saveData = $GoalApprovalService->generateSaveData(GoalMember::IS_NOT_TARGET_EVALUATION, $data, $myUserId);
+        $saveData = $GoalApprovalService->generateApprovalSaveData(GoalMember::IS_NOT_TARGET_EVALUATION, $data, $myUserId);
 
         // 保存処理
         $response = $this->_postApproval($saveData);
@@ -312,8 +312,7 @@ class GoalApprovalsController extends ApiController
 
         // IDが存在しない場合はNotFound
         if (!$goalMemberId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
-            return $this->_getResponseNotFound();
+            return $this->_getResponseBadFail();
         }
 
         // アクセス権限チェック
@@ -383,6 +382,50 @@ class GoalApprovalsController extends ApiController
 
         $res = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
         return $this->_getResponseSuccess($GoalApprovalService->processGoalApprovalForResponse($res, $myUserId));
+    }
+
+    /**
+     * 認定コメント登録API
+     * @return [type] [description]
+     */
+    public function post_comment()
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var ApprovalHistory $ApprovalHistory */
+        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
+        $data = $this->request->data;
+        $goalMemberId = Hash::get($data, 'goal_member.id');
+        $myUserId = $this->Auth->user('id');
+
+        // IDが存在しない場合はNotFound
+        if (!$goalMemberId) {
+            return $this->_getResponseBadFail();
+        }
+
+        // アクセス権限チェック
+        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
+        if (!$canAccess) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
+            return $this->_getResponseForbidden();
+        }
+
+        // 保存データ定義
+        $saveData = $GoalApprovalService->generateCommentSaveData($data, $myUserId);
+
+        // 保存処理
+        $response = $this->_postApproval($saveData);
+        if ($response !== true) {
+            return $response;
+        }
+
+        // レスポンス
+        return $this->_getResponseSuccess();
     }
 
     /**

@@ -215,19 +215,6 @@ class GoalService extends AppService
                     , var_export($updateGoalMember, true)));
             }
 
-            // 認定についてのコメント記載があれば登録
-            if (!empty($requestData['approval_history']) && !empty($requestData['approval_history']['comment'])) {
-                $approvalHistory = [
-                    'goal_member_id' => $goal['goal_member']['id'],
-                    'user_id'        => $userId,
-                    'comment'        => $requestData['approval_history']['comment'],
-                ];
-                if (!$ApprovalHistory->save($approvalHistory, false)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s"
-                        , var_export($approvalHistory, true)));
-                }
-            }
-
             // Redisキャッシュ削除
             Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
             Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');

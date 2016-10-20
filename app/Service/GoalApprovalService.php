@@ -315,7 +315,7 @@ class GoalApprovalService extends AppService
      *
      * @return array $saveData
      */
-    function generateSaveData($approvalType, $requestData, $userId)
+    function generateApprovalSaveData($approvalType, $requestData, $userId)
     {
         $goalMemberId = Hash::get($requestData, 'goal_member.id');
         $selectClearStatus = ApprovalHistory::STATUS_IS_CLEAR;
@@ -357,6 +357,26 @@ class GoalApprovalService extends AppService
                 'id'                   => $goalMemberId,
                 'is_target_evaluation' => false,
                 'approval_status'      => GoalMember::APPROVAL_STATUS_WITHDRAWN
+            ]
+        ];
+
+        return $saveData;
+    }
+
+    /**
+     * 認定コメントPOSTの保存データ定義
+     *
+     * @param  $requestData
+     * @param  $userId
+     *
+     * @return $saveData
+     */
+    function generateCommentSaveData($requestData, $userId) {
+        $saveData = [
+            'ApprovalHistory' => [
+                'user_id'                 => $userId,
+                'goal_member_id'          => Hash::get($requestData, 'goal_member.id'),
+                'comment'                 => Hash::get($requestData, 'approval_history.comment')
             ]
         ];
 
