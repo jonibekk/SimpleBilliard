@@ -28,7 +28,7 @@
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
                id="setupIcon"></i>
-            <?php if ($setup_rest_count >= 1): ?>
+            <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
                 <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
                     <span><?= $setup_rest_count ?></span>
                 </div>
