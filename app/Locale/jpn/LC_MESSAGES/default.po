@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-19 15:56+0900\n"
+"PO-Revision-Date: 2016-10-20 14:34+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -132,7 +132,7 @@ msgid "Select a goal."
 msgstr "ゴールを選択する"
 
 #: Controller/AppController.php:706
-#: Controller/GoalsController.php:1336;1358;1382;1416;1422;1459
+#: Controller/GoalsController.php:1346;1368;1392;1426;1432;1469
 #: Controller/SignupController.php:133;356
 #: Controller/TeamsController.php:1034;1091
 #: Controller/UsersController.php:1091;1192;1214;1234;1264
@@ -225,7 +225,7 @@ msgstr "管理者から外しました。"
 msgid "Removed from the circle members."
 msgstr "サークルから外しました。"
 
-#: Controller/CirclesController.php:418 Controller/GoalsController.php:1169
+#: Controller/CirclesController.php:418 Controller/GoalsController.php:1179
 #: Controller/PostsController.php:826;849;871
 #: Controller/UsersController.php:192;878;881;956
 #: View/Elements/cake_variables.ctp:48
@@ -302,7 +302,7 @@ msgstr "コラボしました。"
 msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
 
-#: Controller/GoalsController.php:354;360;394;430;488;519;561;1103
+#: Controller/GoalsController.php:354;360;394;430;488;519;561;1113
 #: Controller/SetupController.php:289;296
 msgid "You have no permission."
 msgstr "権限がありません。"
@@ -375,134 +375,134 @@ msgstr "フォローしました。"
 msgid "Stop following."
 msgstr "フォロー解除しました。"
 
-#: Controller/GoalsController.php:912;915;942
+#: Controller/GoalsController.php:922;925;952
 msgid "This action can't be edited."
 msgstr "このアクションは編集できません。"
 
-#: Controller/GoalsController.php:951 Controller/UsersController.php:307
+#: Controller/GoalsController.php:961 Controller/UsersController.php:307
 msgid "Failed to save data."
 msgstr "データの保存に失敗しました。"
 
-#: Controller/GoalsController.php:955
+#: Controller/GoalsController.php:965
 msgid "Edited the action."
 msgstr "アクションを更新しました。"
 
-#: Controller/GoalsController.php:996
+#: Controller/GoalsController.php:1006
 msgid "Member Number"
 msgstr "Member Number"
 
-#: Controller/GoalsController.php:997 Model/TeamMember.php:2112;2116
+#: Controller/GoalsController.php:1007 Model/TeamMember.php:2112;2116
 #: View/Elements/User/profile_setting.ctp:68 View/Users/add_profile.ctp:56
 #: View/Users/register.ctp:30
 msgid "Last Name"
 msgstr "姓(ローマ字)"
 
-#: Controller/GoalsController.php:998 Model/TeamMember.php:2101;2105
+#: Controller/GoalsController.php:1008 Model/TeamMember.php:2101;2105
 #: View/Elements/User/profile_setting.ctp:78 View/Users/add_profile.ctp:63
 #: View/Users/register.ctp:40
 msgid "First Name"
 msgstr "名(ローマ字)"
 
-#: Controller/GoalsController.php:999
+#: Controller/GoalsController.php:1009
 msgid "LastName"
 msgstr "姓"
 
-#: Controller/GoalsController.php:1000
+#: Controller/GoalsController.php:1010
 msgid "FirstName"
 msgstr "名"
 
-#: Controller/GoalsController.php:1001
+#: Controller/GoalsController.php:1011
 msgid "Member to be Evaluated"
 msgstr "被評価者"
 
-#: Controller/GoalsController.php:1002
+#: Controller/GoalsController.php:1012
 msgid "Approval Status"
 msgstr "承認ステータス"
 
-#: Controller/GoalsController.php:1003 View/Elements/cake_variables.ctp:338
+#: Controller/GoalsController.php:1013 View/Elements/cake_variables.ctp:338
 msgid "Purpose"
 msgstr "目的"
 
-#: Controller/GoalsController.php:1004
+#: Controller/GoalsController.php:1014
 msgid "Goal Category"
 msgstr "ゴールカテゴリ"
 
-#: Controller/GoalsController.php:1005
+#: Controller/GoalsController.php:1015
 msgid "Goal Owner Type"
 msgstr "ゴールオーナー種別"
 
-#: Controller/GoalsController.php:1006 View/Elements/cake_variables.ctp:339
+#: Controller/GoalsController.php:1016 View/Elements/cake_variables.ctp:339
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:24
 msgid "Goal Name"
 msgstr "ゴール名"
 
-#: Controller/GoalsController.php:1007 View/Elements/cake_variables.ctp:340
+#: Controller/GoalsController.php:1017 View/Elements/cake_variables.ctp:340
 #: View/Elements/Goal/modal_add_key_result.ctp:99
-#: View/Elements/Goal/modal_edit_key_result.ctp:92
+#: View/Elements/Goal/modal_edit_key_result.ctp:95
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:27
 msgid "Unit"
 msgstr "単位"
 
-#: Controller/GoalsController.php:1008
+#: Controller/GoalsController.php:1018
 msgid "Measurement(Final)"
 msgstr "程度(達成時)"
 
-#: Controller/GoalsController.php:1009
+#: Controller/GoalsController.php:1019
 msgid "Measurement(Initial)"
 msgstr "程度(開始時)"
 
-#: Controller/GoalsController.php:1010 View/Elements/cake_variables.ctp:343
+#: Controller/GoalsController.php:1020 View/Elements/cake_variables.ctp:343
 #: View/Elements/Goal/modal_add_key_result.ctp:178
-#: View/Elements/Goal/modal_edit_key_result.ctp:173
+#: View/Elements/Goal/modal_edit_key_result.ctp:176
 msgid "Due Date"
 msgstr "期限"
 
-#: Controller/GoalsController.php:1011
+#: Controller/GoalsController.php:1021
 msgid "Start Date"
 msgstr "開始日"
 
-#: Controller/GoalsController.php:1012
+#: Controller/GoalsController.php:1022
 msgid "Desctiption"
 msgstr "概要"
 
-#: Controller/GoalsController.php:1013 View/Elements/cake_variables.ctp:468
+#: Controller/GoalsController.php:1023 View/Elements/cake_variables.ctp:468
 #: View/Elements/modal_collabo.ctp:74
 #: View/Elements/Goal/modal_add_key_result.ctp:248
-#: View/Elements/Goal/modal_edit_key_result.ctp:242
+#: View/Elements/Goal/modal_edit_key_result.ctp:246
 #: View/Evaluations/view.ctp:369
 msgid "Weight"
 msgstr "重要度"
 
-#: Controller/GoalsController.php:1044
+#: Controller/GoalsController.php:1054
 msgid "Pending approval"
 msgstr "承認待ち"
 
-#: Controller/GoalsController.php:1047
+#: Controller/GoalsController.php:1057
 msgid "Evaluable"
 msgstr "評価できます"
 
-#: Controller/GoalsController.php:1050
+#: Controller/GoalsController.php:1060
 msgid "Not Evaluable"
 msgstr "評価できません"
 
-#: Controller/GoalsController.php:1053
+#: Controller/GoalsController.php:1063
 msgid "Pending modification"
 msgstr "修正待ち"
 
-#: Controller/GoalsController.php:1064
+#: Controller/GoalsController.php:1074
 msgid "L"
 msgstr "L"
 
-#: Controller/GoalsController.php:1064
+#: Controller/GoalsController.php:1074
 msgid "C"
 msgstr "C"
 
-#: Controller/GoalsController.php:1094;1115 Controller/SetupController.php:308
+#: Controller/GoalsController.php:1104;1125 Controller/SetupController.php:308
 #: View/Elements/cake_variables.ctp:306
 msgid "Failed to add an action."
 msgstr "アクションの追加に失敗しました。"
 
-#: Controller/GoalsController.php:1150 Controller/SetupController.php:342
+#: Controller/GoalsController.php:1160 Controller/SetupController.php:342
 msgid "Added an action."
 msgstr "アクションを追加しました。"
 
@@ -1415,7 +1415,7 @@ msgstr "達成要素が存在しません。"
 #: View/Elements/Feed/new_comment_form.ctp:45
 #: View/Elements/Goal/modal_add_action.ctp:86
 #: View/Elements/Goal/modal_add_key_result.ctp:79;124;142;193;232
-#: View/Elements/Goal/modal_edit_key_result.ctp:73;118;137;187;225;249
+#: View/Elements/Goal/modal_edit_key_result.ctp:76;121;140;190;228;253
 #: View/Elements/Team/edit_basic_setting.ctp:37
 #: View/Elements/Team/eval_score_form_elm.ctp:29;73
 #: View/Elements/Team/goal_category_form_elm.ctp:29;51
@@ -2502,7 +2502,7 @@ msgstr "これ以上のコメントがありません。"
 #: View/Elements/Goal/modal_add_action.ctp:144
 #: View/Elements/Goal/modal_add_key_result.ctp:266
 #: View/Elements/Goal/modal_edit_action_result.ctp:98
-#: View/Elements/Goal/modal_edit_key_result.ctp:261
+#: View/Elements/Goal/modal_edit_key_result.ctp:276
 #: View/Elements/Goal/modal_goal_description.ctp:171
 #: View/Elements/Goal/modal_related_kr_list.ctp:32
 #: View/Elements/User/modal_delete_email.ctp:27
@@ -2766,14 +2766,14 @@ msgstr "作成する"
 
 #: View/Elements/cake_variables.ctp:341
 #: View/Elements/Goal/modal_add_key_result.ctp:132
-#: View/Elements/Goal/modal_edit_key_result.ctp:126
+#: View/Elements/Goal/modal_edit_key_result.ctp:129
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:33
 msgid "Initial point"
 msgstr "開始時"
 
 #: View/Elements/cake_variables.ctp:342
 #: View/Elements/Goal/modal_add_key_result.ctp:114
-#: View/Elements/Goal/modal_edit_key_result.ctp:108
+#: View/Elements/Goal/modal_edit_key_result.ctp:111
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:36
 msgid "Achieve point"
 msgstr "達成時"
@@ -3061,7 +3061,7 @@ msgstr "チーム名"
 
 #: View/Elements/cake_variables.ctp:418
 #: View/Elements/Goal/modal_add_key_result.ctp:167
-#: View/Elements/Goal/modal_edit_key_result.ctp:162
+#: View/Elements/Goal/modal_edit_key_result.ctp:165
 #: View/Elements/Team/edit_term_setting.ctp:96
 #: View/Elements/Team/insight_form_input.ctp:127 View/Teams/add.ctp:123
 msgid "Term"
@@ -3076,7 +3076,7 @@ msgstr "タイムゾーン"
 #: View/Elements/cake_variables.ctp:421
 #: View/Elements/modal_edit_members_by_csv.ctp:100
 #: View/Elements/Goal/modal_add_key_result.ctp:216
-#: View/Elements/Goal/modal_edit_key_result.ctp:209
+#: View/Elements/Goal/modal_edit_key_result.ctp:212
 msgid "Change"
 msgstr "変更する"
 
@@ -3186,7 +3186,7 @@ msgstr "オプションを見る"
 #: View/Elements/cake_variables.ctp:466 View/Elements/modal_collabo.ctp:60
 #: View/Elements/Goal/modal_add_action.ctp:81
 #: View/Elements/Goal/modal_add_key_result.ctp:151
-#: View/Elements/Goal/modal_edit_key_result.ctp:146
+#: View/Elements/Goal/modal_edit_key_result.ctp:149
 #: View/Elements/Goal/modal_goal_description.ctp:144
 #: View/Elements/Team/evaluation_score_setting.ctp:51
 #: View/Elements/Team/goal_category_setting.ctp:48 View/Goals/view_info.ctp:89
@@ -3279,6 +3279,7 @@ msgid "Skip"
 msgstr "スキップ"
 
 #: View/Elements/cake_variables.ctp:494
+#: View/Elements/Goal/modal_edit_key_result.ctp:266
 msgid "Save & Reapply"
 msgstr "保存して再申請する"
 
@@ -3363,11 +3364,12 @@ msgstr "変更を保存"
 
 #: View/Elements/cake_variables.ctp:514
 #: View/Elements/Goal/modal_add_key_result.ctp:160
-#: View/Elements/Goal/modal_edit_key_result.ctp:155
+#: View/Elements/Goal/modal_edit_key_result.ctp:158
 msgid "Optional"
 msgstr "オプション"
 
 #: View/Elements/cake_variables.ctp:516
+#: View/Elements/Goal/modal_edit_key_result.ctp:68
 msgid "Top Key Result name"
 msgstr "トップKR名"
 
@@ -3580,7 +3582,7 @@ msgstr "例) 営業部"
 #: View/Elements/Feed/common_form.ctp:148;318;487
 #: View/Elements/Feed/new_comment_form.ctp:48
 #: View/Elements/Goal/modal_add_key_result.ctp:82;122;140;196;235
-#: View/Elements/Goal/modal_edit_key_result.ctp:76;116;135;190;228
+#: View/Elements/Goal/modal_edit_key_result.ctp:79;119;138;193;231
 #: View/Elements/Team/edit_basic_setting.ctp:40
 #: View/Elements/Team/eval_score_form_elm.ctp:33;55;77
 #: View/Elements/Team/goal_category_form_elm.ctp:32;55
@@ -4184,23 +4186,31 @@ msgstr "本当にこのゴールを削除しますか？"
 msgid "Leader: %s"
 msgstr "リーダー: %s"
 
-#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:49
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:44
+msgid "Edit Top Key Result"
+msgstr "トップKRを編集する"
+
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:44
 msgid "Edit Key Result"
 msgstr "達成要素を編集する"
 
-#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:55
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:50
 msgid "Uncompete Key Result"
 msgstr "達成要素を未完了にする"
 
-#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:67;92
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:62;86
+msgid "Complete Top Key Result"
+msgstr "トップKRを完了にする"
+
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:62;86
 msgid "Complete Key Result"
 msgstr "達成要素を完了にする"
 
-#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:103
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:97
 msgid "Delete Key Result"
 msgstr "達成要素を削除する"
 
-#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:105
+#: View/Elements/Goal/key_result_edit_menu_dropdown.ctp:99
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこの成果を削除しますか？"
 
@@ -4243,12 +4253,12 @@ msgid "Choose circle or member to notify"
 msgstr "通知したいサークル、ユーザーを選択"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:75
-#: View/Elements/Goal/modal_edit_key_result.ctp:69
+#: View/Elements/Goal/modal_edit_key_result.ctp:72
 msgid "What is set as an indicator of achievement?"
 msgstr "達成の指標として『なに』をどうするか？"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:78
-#: View/Elements/Goal/modal_edit_key_result.ctp:72
+#: View/Elements/Goal/modal_edit_key_result.ctp:75
 msgid "Write in details"
 msgstr "具体的に絞り込んで書く"
 
@@ -4257,23 +4267,23 @@ msgid "eg) Complete making the web site."
 msgstr "例）Webサイトを完成させる"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:90
-#: View/Elements/Goal/modal_edit_key_result.ctp:84
+#: View/Elements/Goal/modal_edit_key_result.ctp:87
 msgid "Measurement"
 msgstr "程度"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:91
-#: View/Elements/Goal/modal_edit_key_result.ctp:85
+#: View/Elements/Goal/modal_edit_key_result.ctp:88
 msgid "How much?"
 msgstr "どのくらい？"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:125;143
-#: View/Elements/Goal/modal_edit_key_result.ctp:119;138
+#: View/Elements/Goal/modal_edit_key_result.ctp:122;141
 #: View/Elements/Team/eval_score_form_elm.ctp:51
 msgid "Please enter a number."
 msgstr "数字を入力してください。"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:206
-#: View/Elements/Goal/modal_edit_key_result.ctp:200
+#: View/Elements/Goal/modal_edit_key_result.ctp:203
 msgid "Start"
 msgstr "開始"
 
@@ -4282,11 +4292,15 @@ msgid "(Today)"
 msgstr "（本日）"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:249
-#: View/Elements/Goal/modal_edit_key_result.ctp:243
+#: View/Elements/Goal/modal_edit_key_result.ctp:247
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
 
-#: View/Elements/Goal/modal_edit_key_result.ctp:29;258
+#: View/Elements/Goal/modal_edit_key_result.ctp:32;268
+msgid "Update Top Key Result"
+msgstr "トップKRを更新"
+
+#: View/Elements/Goal/modal_edit_key_result.ctp:32;263
 msgid "Update Key Result"
 msgstr "達成要素を更新"
 
@@ -4294,7 +4308,7 @@ msgstr "達成要素を更新"
 msgid "KR name"
 msgstr "達成要素名"
 
-#: View/Elements/Goal/modal_edit_key_result.ctp:78
+#: View/Elements/Goal/modal_edit_key_result.ctp:81
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
