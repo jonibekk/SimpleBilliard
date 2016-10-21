@@ -237,3 +237,13 @@ deploy:
     local_dir: s3_upload_dist
     on:
       branch: hotfix
+
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: "goalous-compiled-assets"
+    skip_cleanup: true
+    upload-dir: stage-isao
+    local_dir: s3_upload_dist
+    on:
+      branch: hotfix-isao
