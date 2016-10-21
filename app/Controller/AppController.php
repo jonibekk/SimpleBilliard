@@ -443,7 +443,7 @@ class AppController extends BaseController
 
     public function _decideMobileAppRequest()
     {
-        $ua = viaIsSet($_SERVER['HTTP_USER_AGENT']);
+        $ua = Hash::get($_SERVER, 'HTTP_USER_AGENT');
         if (strpos($ua, 'Goalous App') !== false) {
             $this->is_mb_app = true;
         }
@@ -589,10 +589,10 @@ class AppController extends BaseController
         //モデル名抽出
         $model_name = null;
         foreach ($this->User->model_key_map as $key => $model) {
-            if ($id = viaIsSet($request_params['named'][$key])) {
+            if ($id = Hash::get($request_params, "named.$key")) {
                 $model_name = $model;
                 break;
-            } elseif ($id = viaIsSet($request_params[$key])) {
+            } elseif ($id = Hash::get($request_params, $key)) {
                 $model_name = $model;
                 break;
             }
@@ -615,7 +615,7 @@ class AppController extends BaseController
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
-                $team_id = viaIsSet($team['TeamMember']['team_id']);
+                $team_id = Hash::get($team, 'TeamMember.team_id');
                 break;
             case 'Team':
                 //チームの場合はそのまま
@@ -701,7 +701,7 @@ class AppController extends BaseController
 
     function _getRequiredParam($name)
     {
-        $id = viaIsSet($this->request->params['named'][$name]);
+        $id = Hash::get($this->request->params, "named.$name");
         if (!$id) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
@@ -727,11 +727,11 @@ class AppController extends BaseController
         ];
         $parsed_url = Router::parse($this->referer(null, true));
         $referer_url = $this->referer(null, true);
-        if ($url = viaIsSet($url_map[$parsed_url['action']])) {
-            if ($names = viaIsSet($url['named'])) {
+        if ($url = Hash::get($url_map, Hash::get($parsed_url, 'action'))) {
+            if ($names = Hash::get($url, 'named')) {
                 unset($url['named']);
                 foreach ($names as $name) {
-                    if (viaIsSet($parsed_url['named'][$name])) {
+                    if (Hash::get($parsed_url, "named.$name")) {
                         $url[$name] = $parsed_url['named'][$name];
                     }
                 }

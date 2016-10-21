@@ -9,7 +9,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div
     class="col col-xxs-12 feed-contents post-contents <?= viaIsSet($long_text) ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
     id="PostTextBody_<?= $post['Post']['id'] ?>">
@@ -26,4 +26,4 @@
         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
     <?php endif; ?>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

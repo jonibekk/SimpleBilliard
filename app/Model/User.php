@@ -475,7 +475,7 @@ class User extends AppModel
 
             // Checking teams that belongs to is active
             foreach ($team_member_list as $team_member) {
-                if (viaIsSet($team_member['Team']['id'])) {
+                if (Hash::get($team_member, 'Team.id')) {
                     $active_users_only[] = $user;
                     break;
                 }
@@ -630,7 +630,7 @@ class User extends AppModel
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
         //データを保存
-        if (!viaIsSet($data['Email'][0]['Email']['email_verified']) && !viaIsSet($data['User']['id'])) {
+        if (!Hash::get($data, 'Email.0.Email.email_verified') && !Hash::get($data, 'User.id')) {
             $this->create();
         }
         if ($this->saveAll($data, ['validate' => false])) {
@@ -1537,7 +1537,7 @@ class User extends AppModel
         ];
         $res = $this->findWithoutTeamId('first', $options);
 
-        $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
+        $profile_photo_is_registered = (bool)Hash::get($res, 'User.photo_file_name');
         $comment_is_registered = false;
 
         if (!isset($res['TeamMember'])) {

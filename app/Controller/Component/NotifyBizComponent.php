@@ -529,7 +529,7 @@ class NotifyBizComponent extends Component
     {
         //宛先は招待した人
         $invite = $this->Team->Invite->getInviteById($invite_id);
-        if (!viaIsSet($invite['FromUser']['id']) || !viaIsSet($invite['Team']['name'])) {
+        if (!Hash::get($invite, 'FromUser.id') || !Hash::get($invite, 'Team.name')) {
             return;
         }
         //inactive user
@@ -1161,7 +1161,7 @@ class NotifyBizComponent extends Component
         $original_lang = Configure::read('Config.language');
 
         $post_url = null;
-        if (viaIsSet($this->notify_option['url'])) {
+        if (Hash::get($this->notify_option, 'url')) {
             $post_url = $this->notify_option['url'];
         } else {
             $post_url = Router::url($this->notify_option['url_data'], true);

@@ -375,7 +375,7 @@ class Team extends AppModel
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
-        if (viaIsSet($post_data['Team']['change_from']) == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+        if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
             $this->EvaluateTerm->isStartedEvaluation($current_term_id)
         ) {
             return false;

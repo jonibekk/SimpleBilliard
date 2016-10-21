@@ -35,7 +35,7 @@ class EvaluationsController extends AppController
         // Set selected term
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-        $term_param = viaIsSet($this->request->params['named']['term']);
+        $term_param = Hash::get($this->request->params, 'named.term');
         $selected_term_name = $term_param ? $term_param : 'previous';
         $selected_tab_term_id = '';
         if ($selected_term_name == 'present') {
@@ -66,8 +66,8 @@ class EvaluationsController extends AppController
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
-        $evaluateeId = viaIsSet($this->request->params['named']['user_id']);
-        $evaluateTermId = viaIsSet($this->request->params['named']['evaluate_term_id']);
+        $evaluateeId = Hash::get($this->request->params, 'named.user_id');
+        $evaluateTermId = Hash::get($this->request->params, 'named.evaluate_term_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         $my_uid = $this->Auth->user('id');
 
@@ -121,7 +121,8 @@ class EvaluationsController extends AppController
         // set progress
         foreach ($goalList as $goalIndex => $goal) {
             foreach ($goal as $evalKey => $eval) {
-                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(Hash::get($eval, 'Goal.KeyResult'));
+                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(Hash::get($eval,
+                    'Goal.KeyResult'));
             }
         }
         //remove unnecessary KRs
@@ -151,13 +152,13 @@ class EvaluationsController extends AppController
 
     function add()
     {
-        $evaluateeId = viaIsSet($this->request->params['named']['user_id']);
-        $evaluateTermId = viaIsSet($this->request->params['named']['evaluate_term_id']);
+        $evaluateeId = Hash::get($this->request->params, 'named.user_id');
+        $evaluateTermId = Hash::get($this->request->params, 'named.evaluate_term_id');
 
         $this->request->allowMethod('post', 'put');
 
-        $status = viaIsSet($this->request->data['status']);
-        $evalType = viaIsSet($this->request->data['Evaluation']['evaluate_type']);
+        $status = Hash::get($this->request->data, 'status');
+        $evalType = Hash::get($this->request->data, 'Evaluation.evaluate_type');
         unset($this->request->data['status']);
         unset($this->request->data['Evaluation']);
         // 保存処理実行
@@ -242,7 +243,7 @@ class EvaluationsController extends AppController
 
     public function ajax_get_evaluators_status()
     {
-        $evaluatee_id = viaIsSet($this->request->params['named']['user_id']);
+        $evaluatee_id = Hash::get($this->request->params, 'named.user_id');
         $this->_ajaxPreProcess();
         $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
 
@@ -262,7 +263,7 @@ class EvaluationsController extends AppController
 
     public function ajax_get_evaluatees_by_evaluator()
     {
-        $evaluator_id = viaIsSet($this->request->params['named']['user_id']);
+        $evaluator_id = Hash::get($this->request->params, 'named.user_id');
         $this->_ajaxPreProcess();
         $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
 

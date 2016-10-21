@@ -561,7 +561,7 @@ class GoalMember extends AppModel
             ],
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['GoalMember']['user_id'])) {
+        if (Hash::get($res, 'GoalMember.user_id')) {
             return $res['GoalMember']['user_id'];
         }
         return null;

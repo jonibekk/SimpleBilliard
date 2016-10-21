@@ -146,7 +146,7 @@ class GoalTest extends GoalousTestCase
                 'page' => 1
             ]
         ];
-        $res = $this->Goal->getAllGoals(20, null, $params, true);
+        $res = $this->Goal->getAllGoals(20, [], $params, true);
         $this->assertTrue(!empty($res));
     }
 

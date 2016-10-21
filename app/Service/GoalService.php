@@ -218,9 +218,11 @@ class GoalService extends AppService
             $updateGoalMember = [
                 'id'                   => $goal['goal_member']['id'],
                 'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
-                'priority'             => $requestData['priority'],
                 'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
             ];
+            if (Hash::get($requestData, 'priority') !== null) {
+                $updateGoalMember['priority'] = $requestData['priority'];
+            }
             if (!$GoalMember->save($updateGoalMember, false)) {
                 throw new Exception(sprintf("Failed update goal_member. data:%s"
                     , var_export($updateGoalMember, true)));
