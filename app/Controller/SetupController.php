@@ -328,7 +328,7 @@ class SetupController extends AppController
             }
         }
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName);
         $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;

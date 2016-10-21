@@ -17,7 +17,7 @@ $without_header = isset($without_header) ? $without_header : false;
 $without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
 ?>
 <?php if (!empty($posts)): ?>
-    <?= $this->App->viewStartComment()?>
+    <?= $this->App->viewStartComment() ?>
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
             <?php if (!$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
@@ -215,7 +215,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 //アクションの場合は、ActionResultFileと旧ファイルの両方を集める
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     //新ファイルが存在するか確認
-                    if ($ar_img = viaIsSet($post['ActionResult']['ActionResultFile'][0])) {
+                    if ($ar_img = Hash::get($post, 'ActionResult.ActionResultFile.0')) {
                         $img = [];
                         $img['l'] = $this->Upload->attachedFileUrl($ar_img, "preview");
                         $img['s'] = $this->Upload->uploadUrl($ar_img, "AttachedFile.attached",
@@ -537,5 +537,5 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
         </div>
     <?php endforeach ?>
     <?= $this->element('file_upload_form') ?>
-    <?= $this->App->viewEndComment()?>
+    <?= $this->App->viewEndComment() ?>
 <?php endif ?>

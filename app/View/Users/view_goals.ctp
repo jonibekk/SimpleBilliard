@@ -187,7 +187,7 @@
                                         ?>
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                                                <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                                                <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
                                                     <?= $this->Html->image('ajax-loader.gif',
                                                         [
                                                             'class'         => 'lazy',

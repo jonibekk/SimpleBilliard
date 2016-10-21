@@ -52,11 +52,8 @@ export default function goal(state = initialState, action) {
       })
 
     case types.TO_NEXT_PAGE:
-      inputData = Object.assign({}, inputData, action.addInputData)
       return Object.assign({}, state, {
-        toNextPage: true,
-        isDisabledSubmit: false,
-        inputData
+        toNextPage: true
       })
 
     case types.FETCH_INITIAL_DATA:

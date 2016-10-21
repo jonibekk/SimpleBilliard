@@ -1,5 +1,5 @@
 import React from 'react'
-import {nl2br} from '../../../util/element'
+import {nl2br} from '~/util/element'
 
 export class Comment extends React.Component {
   render() {

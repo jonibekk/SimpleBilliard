@@ -33,20 +33,15 @@ $is_tkr = null;
         <?php if (!$kr['completed']): ?>
             <li role="presentation">
                 <?php
-                //TKRの場合はゴール修正ぺージのリンク
-                if ($is_tkr) {
-                    $url = "/goals/" . $kr['goal_id'] . "/edit";
-                } else {
-                    $url = [
-                        'controller'    => 'goals',
-                        'action'        => 'ajax_get_edit_key_result_modal',
-                        'key_result_id' => $kr['id']
-                    ];
-                }
+                $url = [
+                    'controller'    => 'goals',
+                    'action'        => 'ajax_get_edit_key_result_modal',
+                    'key_result_id' => $kr['id']
+                ];
                 ?>
                 <a href="<?= $this->Html->url($url) ?>"
-                   class="<?= !$is_tkr ? "modal-ajax-get-add-key-result" : null //このクラスがある場合はKR編集モーダル    ?>">
-                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit Key Result") ?></span></a>
+                   class="modal-ajax-get-add-key-result">
+                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= $is_tkr ? __("Edit Top Key Result") : __("Edit Key Result") ?></span></a>
             </li>
         <?php endif ?>
         <li role="presentation">
@@ -64,8 +59,7 @@ $is_tkr = null;
                         'key_result_id' => $kr['id']
                     ]) ?>"
                        class="modal-ajax-get">
-                        <i class="fa fa-check"></i><span class="ml_2px"><?= __(
-                                "Complete Key Result") ?></span>
+                        <i class="fa fa-check"></i><span class="ml_2px"><?= $is_tkr ? __("Complete Top Key Result") : __("Complete Key Result"); ?></span>
                     </a>
                 <?php else: ?>
                     <?=
@@ -89,7 +83,7 @@ $is_tkr = null;
                     <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
                        class="kr_achieve_button">
                         <i class="fa fa-check"></i><span class="ml_2px">
-                                            <?= __("Complete Key Result"); ?>
+                                            <?= $is_tkr ? __("Complete Top Key Result") : __("Complete Key Result"); ?>
                                         </span>
                     </a>
                 <?php endif; ?>

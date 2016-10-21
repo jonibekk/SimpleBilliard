@@ -1,12 +1,11 @@
 import React from 'react'
-import { Comment } from '~/common/components/approval/Comment'
+import { Comment } from "~/goal_approval/components/elements/detail/Comment";
 
 export class Comments extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = { display_all_comments: false }
-    this.displayAllComments = this.displayAllComments.bind(this)
   }
 
   displayAllComments() {
@@ -14,19 +13,19 @@ export class Comments extends React.Component {
   }
 
   render() {
-    if(Object.keys(this.props.approvalHistories).length == 0) {
+    if(Object.keys(this.props.approval_histories).length == 0) {
       return null
     }
 
-    const comments = this.props.approvalHistories
+    const comments = this.props.approval_histories
     const latest_comment = comments.length > 0 ? comments[comments.length - 1] : null
     const commets_execpt_latest_comment = comments.length > 1 ? comments.slice(0, -1) : []
     const display_view_more_comments_button = commets_execpt_latest_comment.length > 0 && !this.state.display_all_comments
     const view_more_comments_button = () => {
       return (
-        <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments }>
+        <a className="goals-approval-detail-view-more-comments" onClick={ this.displayAllComments.bind(this) }>
           <i className="fa fa-angle-down" aria-hidden="true"></i>
-          <span className="goals-approval-interactive-link">View all { comments.length - 1 } comments</span>
+          <span className="goals-approval-interactive-link"> { this.props.view_more_text } </span>
         </a>
       )
     }
@@ -49,6 +48,8 @@ export class Comments extends React.Component {
 }
 
 Comments.propTypes = {
-  approvalHistories: React.PropTypes.array
+  approval_histories: React.PropTypes.array,
+  view_more_text: React.PropTypes.string
 }
-Comments.defaultProps = {approvalHistories: []}
+
+Comments.defaultProps = { approval_histories: [], view_more_text: ''}

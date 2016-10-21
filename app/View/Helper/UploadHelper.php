@@ -120,7 +120,7 @@ class UploadHelper extends AppHelper
             $data = $data['AttachedFile'];
         }
         $ext = $data['file_ext'];
-        if ($class = viaIsSet($this->ext_settings[$ext]['icon_class'])) {
+        if ($class = Hash::get($this->ext_settings, "$ext.icon_class")) {
             return $class;
         }
         return 'fa-file-o file-other-icon';
@@ -132,7 +132,7 @@ class UploadHelper extends AppHelper
             $data = $data['AttachedFile'];
         }
         $ext = $data['file_ext'];
-        if (viaIsSet($this->ext_settings[$ext]['viewer'])) {
+        if (Hash::get($this->ext_settings, "$ext.viewer")) {
             return true;
         }
         return false;

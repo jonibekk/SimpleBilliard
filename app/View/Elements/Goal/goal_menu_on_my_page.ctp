@@ -29,7 +29,7 @@
             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __("Add Key Result") ?></span></a>
         </li>
-        <?php if (!viaIsSet($goal['Evaluation'])): ?>
+        <?php if (!Hash::get($goal, 'Evaluation')): ?>
             <li role="presentation">
                 <a role="menuitem" tabindex="-1"
                    href="/goals/<?= $goal['Goal']['id'] ?>/edit">
