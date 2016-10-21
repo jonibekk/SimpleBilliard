@@ -16,7 +16,7 @@
     <?=
     $this->element('Notification/notify_item',
         [
-            'user'          => Hash::get($notify_item['User']),
+            'user'          => Hash::get($notify_item . 'User'),
             'notification'  => $notify_item['Notification'],
             'location_type' => $location_type
         ]) ?>

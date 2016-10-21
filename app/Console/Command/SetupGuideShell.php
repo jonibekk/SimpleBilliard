@@ -75,8 +75,8 @@ class SetupGuideShell extends AppShell
     public function startup()
     {
         parent::startup();
-        $sessionId = Hash::get($this->params['session_id']);
-        $baseUrl = Hash::get($this->params['base_url']);
+        $sessionId = Hash::get($this->params, 'session_id');
+        $baseUrl = Hash::get($this->params, 'base_url');
 
         if ($sessionId) {
             CakeSession::id($sessionId);
@@ -116,8 +116,8 @@ class SetupGuideShell extends AppShell
      */
     public function main()
     {
-        $team_id = Hash::get($this->params['team_id']);
-        $force = Hash::get($this->params['force']);
+        $team_id = Hash::get($this->params, 'team_id');
+        $force = Hash::get($this->params, 'force');
 
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
         $utcCurrentHour = gmdate("H");
@@ -173,7 +173,7 @@ class SetupGuideShell extends AppShell
     function _isNotifyDay($user_id, $user_singup_time)
     {
         $status = $this->AppController->getAllSetupDataFromRedis($user_id);
-        $setup_update_time = Hash::get($status['setup_last_update_time']);
+        $setup_update_time = Hash::get($status, 'setup_last_update_time');
         // remove last update time for calc rest count
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 

@@ -117,7 +117,7 @@
                     ?>
                     <li class="goal-detail-action-list">
                         <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                            <?php if (Hash::get($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                            <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
                                 <?= $this->Html->image('ajax-loader.gif',
                                     [
                                         'class'         => 'lazy',

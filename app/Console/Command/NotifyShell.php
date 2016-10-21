@@ -30,8 +30,8 @@ class NotifyShell extends AppShell
     public function startup()
     {
         parent::startup();
-        $sessionId = Hash::get($this->params['session_id']);
-        $baseUrl = Hash::get($this->params['base_url']);
+        $sessionId = Hash::get($this->params, 'session_id');
+        $baseUrl = Hash::get($this->params, 'base_url');
 
         if ($sessionId) {
             CakeSession::id($sessionId);

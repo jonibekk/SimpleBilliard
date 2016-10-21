@@ -119,7 +119,7 @@
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
                                             <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
-                                                    Hash::get($my_coaching_users))
+                                                    viaIsSet($my_coaching_users))
                                             ): ?>
                                                 disabled="disabled"
                                             <?php endif ?>
@@ -187,7 +187,7 @@
                                         ?>
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                                                <?php if (Hash::get($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                                                <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
                                                     <?= $this->Html->image('ajax-loader.gif',
                                                         [
                                                             'class'         => 'lazy',

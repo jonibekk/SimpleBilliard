@@ -48,7 +48,7 @@
                            $this->Html->url([
                                'controller' => 'posts',
                                'action'     => 'ajax_get_user_page_post_feed',
-                               'user_id'    => Hash::get($this->request->params['named']['user_id']),
+                               'user_id'    => Hash::get($this->request->params, 'named.user_id'),
                                'type'       => Post::TYPE_NORMAL,
                            ]) ?>"
                            id="FeedMoreReadLink"

@@ -153,7 +153,7 @@
                 ['class' => 'header-nav-function-contents-user-setting']) ?>
         </li>
         <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
-        if (Hash::get($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
+        if (Hash::get($my_member_status, 'TeamMember.admin_flg') && $my_member_status['TeamMember']['admin_flg']):?>
             <li class="header-nav-function-contents-list">
                 <?=
                 $this->Html->link(__('Team Setting'),
@@ -168,7 +168,7 @@
                     ['controller' => 'evaluations', 'action' => 'index'],
                     ['class' => 'header-nav-function-contents-evaluation'])
                 ?>
-                <?php if (Hash::get($evaluable_cnt) && $evaluable_cnt > 0): ?>
+                <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
                     <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
                 <?php endif; ?>
             </li>

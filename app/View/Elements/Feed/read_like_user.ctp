@@ -20,14 +20,14 @@
     <div class="comment-body modal-comment">
         <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($user['display_username']) ?>&nbsp;
-            <?php if (Hash::get($is_admin)): ?>
+            <?php if (viaIsSet($is_admin)): ?>
                 <i class="fa fa-adn team-members-card-admin-icon"></i>
             <?php endif; ?>
         </div>
 
         <?php if ($created): ?>
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                <?= $this->TimeEx->elapsedTime(h($created), Hash::get($type)) ?>
+                <?= $this->TimeEx->elapsedTime(h($created), viaIsSet($type)) ?>
             </div>
         <?php endif; ?>
     </div>

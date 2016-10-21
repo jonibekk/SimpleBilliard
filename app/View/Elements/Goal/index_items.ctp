@@ -67,7 +67,7 @@
                            data-class="toggle-follow"
                            goal-id="<?= $goal['Goal']['id'] ?>"
                             <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
-                                    Hash::get($my_coaching_users))
+                                    viaIsSet($my_coaching_users))
                             ): ?>
                                 disabled="disabled"
                             <?php endif ?>

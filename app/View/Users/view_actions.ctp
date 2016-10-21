@@ -99,11 +99,11 @@
                            $this->Html->url([
                                'controller' => 'posts',
                                'action'     => 'ajax_get_user_page_post_feed',
-                               'user_id'    => Hash::get($this->request->params['named']['user_id']),
-                               'author_id'  => Hash::get($this->request->params['named']['user_id']),
-                               'goal_id'    => Hash::get($this->request->params['named']['goal_id']),
+                               'user_id'    => Hash::get($this->request->params, 'named.user_id'),
+                               'author_id'  => Hash::get($this->request->params, 'named.user_id'),
+                               'goal_id'    => Hash::get($this->request->params, 'named.goal_id'),
                                'type'       => Post::TYPE_ACTION,
-                               'page_type'  => Hash::get($this->request->params['named']['page_type']),
+                               'page_type'  => Hash::get($this->request->params, 'named.page_type'),
                            ]) ?>"
                            id="FeedMoreReadLink"
                            append-target-id="UserPageContents"

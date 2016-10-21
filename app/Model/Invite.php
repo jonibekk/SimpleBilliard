@@ -132,12 +132,14 @@ class Invite extends AppModel
     function isByBatchSetup($token)
     {
         $invite = $this->getByToken($token);
-        if (!Hash::get($invite['Invite']['email'])) {
+        if (!Hash::get($invite, 'Invite.email')) {
             return false;
         }
 
         $user = $this->FromUser->getUserByEmail($invite['Invite']['email']);
-        if (Hash::get($user['User']) && $user['User']['active_flg'] === false && $user['User']['no_pass_flg'] === true) {
+        if (Hash::get($user,
+                'User') && $user['User']['active_flg'] === false && $user['User']['no_pass_flg'] === true
+        ) {
             return true;
         }
         return false;

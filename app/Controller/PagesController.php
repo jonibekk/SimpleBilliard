@@ -77,7 +77,7 @@ class PagesController extends AppController
         $feed_filter = 'all';
         $this->set(compact('feed_filter', 'current_global_menu'));
         $this->set('long_text', false);
-        if ($form_type = Hash::get($this->request->params['common_form_type'])) {
+        if ($form_type = Hash::get($this->request->params, 'common_form_type')) {
             $this->set('common_form_type', $form_type);
         } else {
             $this->set('common_form_type', 'action');
@@ -252,14 +252,14 @@ class PagesController extends AppController
 
         if ($this->Auth->user()) {
             $parsed_referer_url = Router::parse($this->referer('/', true));
-            $request_status = Hash::get($url_params);
+            $request_status = viaIsSet($url_params);
             $status_from_referer = $this->_defineStatusFromReferer();
 
             // When parametes separated from google analitics already exists,
             // ignore redirect for google analitics.
             $reserved_params = ['notify_id', 'after_click', 'common_form', 'team_id', 'from'];
             foreach ($reserved_params as $param) {
-                if (Hash::get($this->request->params[$param]) || Hash::get($this->request->params['named'][$param])) {
+                if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
                     return true;
                 }
             }

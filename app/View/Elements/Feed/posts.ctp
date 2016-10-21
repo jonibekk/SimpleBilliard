@@ -215,7 +215,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 //アクションの場合は、ActionResultFileと旧ファイルの両方を集める
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     //新ファイルが存在するか確認
-                    if ($ar_img = Hash::get($post['ActionResult']['ActionResultFile'][0])) {
+                    if ($ar_img = Hash::get($post, 'ActionResult.ActionResultFile.0')) {
                         $img = [];
                         $img['l'] = $this->Upload->attachedFileUrl($ar_img, "preview");
                         $img['s'] = $this->Upload->uploadUrl($ar_img, "AttachedFile.attached",

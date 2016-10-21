@@ -348,7 +348,7 @@
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Role") ?>:
-                    <?php $role = Hash::get(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
+                    <?php $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
                     <?= ($role) ? h($role) : __("Leader") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
@@ -367,9 +367,9 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Weight") ?>:
-                    <?php $collaboPriority = Hash::get(Hash::extract($goal[0],
+                    <?php $collaboPriority = viaIsSet(Hash::extract($goal[0],
                         "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
-                    <?php $priority = ($collaboPriority) ? $collaboPriority : Hash::get(Hash::extract($goal[0],
+                    <?php $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($goal[0],
                         "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
                     <?= h($priority) ?>
                 </div>
