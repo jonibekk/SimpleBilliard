@@ -606,14 +606,14 @@ class TeamMember extends AppModel
         //チームメンバー情報にコーチ情報をマージ
         foreach ($team_members as $user_id => $val) {
             $coach = [];
-            if (Hash::get($coach_users[$val['TeamMember']['coach_user_id']]['User'])) {
+            if (viaIsSet($coach_users[$val['TeamMember']['coach_user_id']]['User'])) {
                 $coach = $coach_users[$val['TeamMember']['coach_user_id']]['User'];
             }
             $team_members[$user_id]['CoachUser'] = $coach;
         }
         // チームメンバー情報からEmail未確認ユーザーを除外
         foreach ($team_members as $user_id => $val) {
-            if (!Hash::get($user_emails[$user_id])) {
+            if (!Hash::get($user_emails, $user_id)) {
                 unset($team_members[$user_id]);
             }
         }
@@ -759,7 +759,7 @@ class TeamMember extends AppModel
             if (Hash::get($user, 'User')) {
                 $this->csv_datas[$k]['User'] = $user['User'];
             }
-            if (Hash::get($user, 'User.TeamMember'[0]['id'])) {
+            if (Hash::get($user, 'User.TeamMember.0.id')) {
                 $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
             } else {
                 $this->create();
@@ -833,7 +833,7 @@ class TeamMember extends AppModel
                 }
             }
         }
-        if (Hash::get($save_evaluator_data)) {
+        if (viaIsSet($save_evaluator_data)) {
             $this->Team->Evaluator->create();
             $this->Team->Evaluator->saveAll($save_evaluator_data);
         }
@@ -1080,7 +1080,7 @@ class TeamMember extends AppModel
             }
         }
         // saving evaluator data
-        if (Hash::get($save_evaluator_data)) {
+        if (viaIsSet($save_evaluator_data)) {
             $this->Team->Evaluator->create();
             $this->Team->Evaluator->saveAll($save_evaluator_data);
         }
@@ -1160,7 +1160,7 @@ class TeamMember extends AppModel
             }
             //Group
             foreach ($row['group'] as $v) {
-                if (Hash::get($v)) {
+                if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Group'][] = $v;
                 }
             }
@@ -1176,7 +1176,7 @@ class TeamMember extends AppModel
             //duplicate evaluator check.
             $filtered_evaluators = array_filter($row['evaluator_member_no'], "strlen");
             foreach ($row['evaluator_member_no'] as $v) {
-                if (Hash::get($v)) {
+                if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Evaluator'][] = $v;
                 }
             }
@@ -1458,7 +1458,7 @@ class TeamMember extends AppModel
 
             //[15]-[21]Group
             foreach ($row['group'] as $v) {
-                if (Hash::get($v)) {
+                if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Group'][] = $v;
                 }
             }
@@ -1472,7 +1472,7 @@ class TeamMember extends AppModel
 
             //[23]-[29]Evaluator ID
             foreach ($row['evaluator_member_no'] as $v) {
-                if (Hash::get($v)) {
+                if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Evaluator'][] = $v;
                 }
             }
@@ -1753,7 +1753,7 @@ class TeamMember extends AppModel
             $evaluators = $this->Team->Evaluator->find('all', $options);
             foreach ($evaluators as $r_k => $r_v) {
                 $key_index = $r_k + 1;
-                if (Hash::get($r_v, 'EvaluatorUser.TeamMember'[0]['member_no'])) {
+                if (Hash::get($r_v, 'EvaluatorUser.TeamMember.0.member_no')) {
                     $this->csv_datas[$k]['evaluator_member_no.' . $key_index] = $r_v['EvaluatorUser']['TeamMember'][0]['member_no'];
                 }
             }
@@ -1893,7 +1893,7 @@ class TeamMember extends AppModel
     function setTotalSelfEvaluationForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!Hash::get($this->evaluations[$v['User']['id']])) {
+            if (!Hash::get($this->evaluations, Hash::get($v, 'User.id'))) {
                 continue;
             }
             foreach ($this->evaluations[$v['User']['id']] as $eval) {
@@ -1909,7 +1909,7 @@ class TeamMember extends AppModel
     function setTotalEvaluatorEvaluationForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!Hash::get($this->evaluations[$v['User']['id']])) {
+            if (!Hash::get($this->evaluations, Hash::get($v, 'User.id'))) {
                 continue;
             }
             $ek = 1;
@@ -1928,7 +1928,7 @@ class TeamMember extends AppModel
     function setTotalFinalEvaluationForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!Hash::get($this->evaluations[$v['User']['id']])) {
+            if (!Hash::get($this->evaluations, Hash::get($v, 'User.id'))) {
                 continue;
             }
             foreach ($this->evaluations[$v['User']['id']] as $eval) {

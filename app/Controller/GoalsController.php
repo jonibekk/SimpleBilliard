@@ -463,7 +463,7 @@ class GoalsController extends AppController
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
         $socket_id = Hash::get($this->request->data, 'socket_id');
-        $goal = Hash::get($goal);
+        $goal = viaIsSet($goal);
         if (!$goal) {
             $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
         }
