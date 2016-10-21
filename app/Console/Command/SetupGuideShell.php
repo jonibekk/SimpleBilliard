@@ -174,7 +174,7 @@ class SetupGuideShell extends AppShell
     {
         $status = $this->AppController->getAllSetupDataFromRedis($user_id);
         if($status === null) {
-            return true;
+            return false;
         }
         $setup_update_time = Hash::get($status, 'setup_last_update_time');
         // remove last update time for calc rest count
