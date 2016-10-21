@@ -173,6 +173,9 @@ class SetupGuideShell extends AppShell
     function _isNotifyDay($user_id, $user_singup_time)
     {
         $status = $this->AppController->getAllSetupDataFromRedis($user_id);
+        if($status === null) {
+            return true;
+        }
         $setup_update_time = Hash::get($status, 'setup_last_update_time');
         // remove last update time for calc rest count
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);

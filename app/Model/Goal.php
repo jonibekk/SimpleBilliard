@@ -1664,7 +1664,9 @@ class Goal extends AppModel
         if ($is_complete == true) {
             $options['contain']['KeyResult']['conditions']['NOT']['completed'] = null;
         }
-        $options = $this->setFilter($options, $search_option);
+        if($search_option !== null){
+            $options = $this->setFilter($options, $search_option);
+        }
         return $this->find('all', $options);
     }
 
@@ -1685,7 +1687,13 @@ class Goal extends AppModel
         return $res_count ? $res_count : 0;
     }
 
-    function setFilter($options, $search_option)
+    /**
+     * @param array $options
+     * @param array $search_option
+     *
+     * @return mixed
+     */
+    function setFilter(array $options, array $search_option)
     {
         //期間指定
         switch (Hash::get($search_option, 'term.0')) {

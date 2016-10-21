@@ -1688,7 +1688,7 @@ class TeamMember extends AppModel
                 continue;
             }
             $this->csv_datas[$k]['email'] = Hash::get($v,
-                'User.PrimaryEmail'['email']) ? $v['User']['PrimaryEmail']['email'] : null;
+                'User.PrimaryEmail.email') ? $v['User']['PrimaryEmail']['email'] : null;
             $this->csv_datas[$k]['first_name'] = Hash::get($v, 'User.first_name') ? $v['User']['first_name'] : null;
             $this->csv_datas[$k]['last_name'] = Hash::get($v, 'User.last_name') ? $v['User']['last_name'] : null;
             $this->csv_datas[$k]['member_no'] = Hash::get($v,
@@ -1819,7 +1819,7 @@ class TeamMember extends AppModel
         $all_users_include_unverified_user = $this->find('all', $options);
         $all_users = [];
         foreach ($all_users_include_unverified_user as $key => $user) {
-            if (Hash::get($user, 'User.Email'[0]['email_verified'])) {
+            if (Hash::get($user, 'User.Email.0.email_verified')) {
                 unset($user['User']['Email']);
                 $all_users[] = $user;
             }
