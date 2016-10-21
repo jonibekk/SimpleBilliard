@@ -47,7 +47,7 @@ Vagrant.configure('2') do |config|
     doc_root = '/vagrant_data/app/webroot'
     app_root = '/vagrant_data/'
     if ( RUBY_PLATFORM.downcase =~ /darwin/ )
-      npm_recipe = 'local_pnpm'
+      npm_recipe = 'local_yarn'
       config.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
     else
       npm_recipe = 'local_npm'
