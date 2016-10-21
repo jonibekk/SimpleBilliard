@@ -36,7 +36,8 @@ class NotificationsController extends AppController
         if (count($notify_items) < NOTIFY_PAGE_ITEMS_NUMBER) {
             $isExistMoreNotify = false;
         }
-        $this->set(compact('notify_items', 'isExistMoreNotify'));
+        $team = $this->Team->getCurrentTeam();
+        $this->set(compact('notify_items', 'isExistMoreNotify','team'));
         $response = $this->render('/Notifications/index');
 
         $html = $response->__toString();
