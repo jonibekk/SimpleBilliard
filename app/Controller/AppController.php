@@ -45,6 +45,7 @@ class AppController extends BaseController
         'Ogp',
         'Uservoice',
         'Csv',
+        'Flash',
         //        'Benchmark',
     ];
     private $merge_helpers = [
