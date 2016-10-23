@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "950ec3256d5d3930d967ac801c9750c6",
-    "content-hash": "0a2b537bd5664d9948dfd92d771621e0",
+    "hash": "b4491ab6b59a50a96efb132a71d455c8",
+    "content-hash": "162bfa773de20d1a6e145ce5da1c54c3",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -193,16 +193,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "2.8.9",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "73dcbf2aa33b79512373baa63b39adf3fb838608"
+                "reference": "6cdf38c2ef5798692ed9fb22221527b9f4210d19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/73dcbf2aa33b79512373baa63b39adf3fb838608",
-                "reference": "73dcbf2aa33b79512373baa63b39adf3fb838608",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/6cdf38c2ef5798692ed9fb22221527b9f4210d19",
+                "reference": "6cdf38c2ef5798692ed9fb22221527b9f4210d19",
                 "shasum": ""
             },
             "require": {
@@ -232,7 +232,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-09-19 02:18:18"
+            "time": "2016-10-11 01:36:32"
         },
         {
             "name": "cakephp/debug_kit",
