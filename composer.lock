@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b4491ab6b59a50a96efb132a71d455c8",
-    "content-hash": "162bfa773de20d1a6e145ce5da1c54c3",
+    "hash": "b9cbbe5e9c845837196a862cf67757f4",
+    "content-hash": "c0abc0c321394076a7ffc427cba9fd96",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -118,16 +118,16 @@
         },
         {
             "name": "cakedc/migrations",
-            "version": "2.4.2",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CakeDC/migrations.git",
-                "reference": "aecca8fda1b3d38db359493c0387172a590e5bf8"
+                "reference": "8f34f0222c4bf08c5bf8ca3d16d3d486065a52d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CakeDC/migrations/zipball/aecca8fda1b3d38db359493c0387172a590e5bf8",
-                "reference": "aecca8fda1b3d38db359493c0387172a590e5bf8",
+                "url": "https://api.github.com/repos/CakeDC/migrations/zipball/8f34f0222c4bf08c5bf8ca3d16d3d486065a52d5",
+                "reference": "8f34f0222c4bf08c5bf8ca3d16d3d486065a52d5",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "cakephp",
                 "migrations"
             ],
-            "time": "2016-10-04 09:29:47"
+            "time": "2016-10-11 21:20:20"
         },
         {
             "name": "cakedc/utils",
