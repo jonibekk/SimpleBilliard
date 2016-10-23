@@ -1,0 +1,4 @@
+export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
+export const UPDATE_INPUT_DATA = 'UPDATE_INPUT_DATA'
+export const UPDATE_DATA = 'UPDATE_DATA'
+export const SEARCH = 'SEARCH'

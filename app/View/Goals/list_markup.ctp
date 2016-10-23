@@ -1,5 +1,3 @@
-<!--TODO:マークアップ用のアクションメソッドなので後でファイル削除-->
-
 <div class="panel panel-default">
     <!-- search by keyword -->
     <div class="panel-block bd-b-sc4">

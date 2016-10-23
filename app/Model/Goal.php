@@ -1642,6 +1642,32 @@ class Goal extends AppModel
      */
     function setFilter($options, $conditions)
     {
+        // キーワード(ゴール名)
+        $keyword = Hash::get($conditions, 'keyword');
+        if (!empty($keyword)) {
+            $options['conditions']['Goal.name LIKE'] = "%$keyword%";
+        }
+
+        // ゴールラベル
+        // パフォーマンス向上の為、ラベル名ではなくラベルIDによってゴール検索を行う
+        $labelNames = Hash::get($conditions, 'labels');
+        $labelIds = $this->GoalLabel->Label->findIdsByNames($labelNames);
+        if (!empty($labelIds)) {
+            $options['joins'] = [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_labels',
+                    'alias'      => 'GoalLabel',
+                    'conditions' => [
+                        'GoalLabel.goal_id = Goal.id',
+                        'GoalLabel.del_flg' => 0,
+                        'GoalLabel.label_id' => $labelIds,
+                    ],
+                ],
+            ];
+            $options['group'] = ['Goal.id'];
+        }
+
         //期間指定
         switch (Hash::get($conditions, 'term')) {
             case 'previous':
@@ -1675,10 +1701,11 @@ class Goal extends AppModel
                 unset($options['conditions']['Goal.end_date >=']);
                 break;
         }
+
         //カテゴリ指定
         $category = Hash::get($conditions, 'category');
         if (!empty($category) && $category !== 'all') {
-            $options['conditions']['Goal.goal_category_id'] = $conditions['category'][0];
+            $options['conditions']['Goal.goal_category_id'] = $category;
         }
 
         //進捗指定
@@ -1690,6 +1717,7 @@ class Goal extends AppModel
                 $options['conditions']['Goal.completed'] = null;
                 break;
         }
+
         //ソート指定
         switch (Hash::get($conditions, 'order')) {
             case 'action' :

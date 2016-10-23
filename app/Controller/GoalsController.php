@@ -25,6 +25,7 @@ class GoalsController extends AppController
      */
     public function index()
     {
+        $this->_setViewValOnRightColumn();
     }
 
     // TODO:マークアップ用のアクションメソッドなので後で削除

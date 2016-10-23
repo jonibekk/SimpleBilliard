@@ -16,7 +16,7 @@ class ApiGoalService extends ApiService
      *
      * @return array
      */
-    function search($userId, $conditions, $offset, $limit, $order)
+    function search($userId, $conditions, $offset, $limit, $order = "")
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -33,6 +33,7 @@ class ApiGoalService extends ApiService
 
         // ゴール件数取得
         $count = $Goal->countSearch($conditions);
+        $this->log($Goal->getDataSource()->getLog());
         if ($count == 0) {
             return $ret;
         }
@@ -140,7 +141,7 @@ class ApiGoalService extends ApiService
     private function extractConditions($params)
     {
         $conditions = [];
-        $conditionFields = ['term', 'category', 'progress'];
+        $conditionFields = ['keyword', 'term', 'category', 'progress', 'labels'];
         foreach ($conditionFields as $field) {
             if (!empty($params[$field])) {
                 $conditions[$field] = $params[$field];
