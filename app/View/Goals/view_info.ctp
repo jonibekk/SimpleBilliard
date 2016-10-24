@@ -6,7 +6,8 @@
  * Time: 3:33 PM
  *
  * @var $goal
- * @var $goal_term
+ * @var $goalTerm
+ * @var $goalLabels
  */
 ?>
 <?= $this->App->viewStartComment() ?>
@@ -25,15 +26,25 @@
                         ： <?= h($goal['GoalCategory']['name']) ?></p>
                 </div>
             </div>
+            <div class="goal-detail-info-data-wrap">
+                <div class="goal-detail-info-left-icons">
+                    <i class="fa-tags fa"></i>
+                </div>
+                <div class="goal-detail-info-data">
+                    <?php foreach ($goalLabels as $label): ?>
+                        <span class="label label-default"><?= $label['name'] ?></span>
+                    <?php endforeach ?>
+                </div>
+            </div>
             <div class="goal-detail-info-due-wrap">
                 <div class="goal-detail-info-left-icons">
                     <i class="fa-calendar fa"></i>
                 </div>
                 <div class="goal-detail-info-due">
-                    <?= $this->Time->format('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?>
-                    - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
-                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
-                        <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                    <?= $this->Time->format('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR) ?>
+                    - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR) ?>
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
+                        <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
                     <?php endif ?>
                 </div>
             </div>
