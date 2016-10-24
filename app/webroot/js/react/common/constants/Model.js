@@ -29,8 +29,8 @@ export const GoalMember = Object.freeze({
 })
 
 export const TopKeyResult = Object.freeze({
-  IS_NOT_CLEAR: 0,
   IS_CLEAR: 1,
-  IS_NOT_IMPORTANT: 0,
-  IS_IMPORTANT: 1
+  IS_NOT_CLEAR: 2,
+  IS_IMPORTANT: 1,
+  IS_NOT_IMPORTANT: 2
 })
