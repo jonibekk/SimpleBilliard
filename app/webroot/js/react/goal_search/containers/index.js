@@ -8,7 +8,6 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  // return Object.assign({}, LabelInput.getDispatchToProps(dispatch), {
   return {
       fetchInitialData: () => dispatch(actions.fetchInitialData()),
       updateData: (data, key = "") => dispatch(actions.updateData(data, key = "")),

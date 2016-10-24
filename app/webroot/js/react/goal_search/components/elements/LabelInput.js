@@ -7,11 +7,8 @@ import * as KeyCode from "~/common/constants/KeyCode";
 class LabelInput extends React.Component {
 
   deleteLabel(e) {
-
     e.preventDefault()
     const label = e.currentTarget.getAttribute("data-label")
-    console.log("■deleteLabel")
-    console.log({label})
     this.props.dispatch(Module.deleteLabel(label));
   }
 
@@ -35,7 +32,6 @@ class LabelInput extends React.Component {
       value: this.props.keyword,
       onChange: this.onChangeLabelInput.bind(this),
       onKeyDown: this.addLabel.bind(this),
-      // onKeyPress: this.onKeyPress
       className:"form-control gl",
       disabled:this.props.input_labels.length == 3
     };
@@ -43,9 +39,9 @@ class LabelInput extends React.Component {
 
     return (
       <div>
-        <label className="gl-form-label" htmlFor>ラベル</label>
+        <label className="gl-form-label mt_8px" htmlFor>{__("Labels")}</label>
         <p className="gl-form-guide">
-          Enterを押すと追加されます。(最大3個まで検索可能)
+          {__("Add by pressing the Enter.(You can search maximum 3 labels)")}
         </p>
         <AutoSuggest
           suggestions={this.props.suggestions}

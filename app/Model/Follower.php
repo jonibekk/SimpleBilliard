@@ -36,6 +36,15 @@ class Follower extends AppModel
         'User',
     ];
 
+    /**
+     * TODO:サービスに移行する為将来的に削除
+     *
+     * @deprecated
+     *
+     * @param $goal_id
+     *
+     * @return bool|mixed
+     */
     function addFollower($goal_id)
     {
         $data = [
@@ -51,6 +60,33 @@ class Follower extends AppModel
         return $this->save($data);
     }
 
+    /**
+     * フォロー
+     *
+     * @param $goalId
+     * @param $userId
+     *
+     * @return bool|mixed
+     */
+    function add($goalId, $userId)
+    {
+        $data = [
+            'goal_id' => $goalId,
+            'user_id' => $userId,
+            'team_id' => $this->current_team_id,
+        ];
+        return $this->save($data);
+    }
+
+    /**
+     * TODO:サービスに移行する為将来的に削除
+     *
+     * @deprecated
+     *
+     * @param $goal_id
+     *
+     * @return bool|mixed
+     */
     function deleteFollower($goal_id)
     {
         $conditions = [
@@ -61,6 +97,24 @@ class Follower extends AppModel
         $this->deleteAll($conditions);
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true), 'user_data');
         return true;
+    }
+
+    /**
+     * フォロー解除
+     *
+     * @param int|null|string $goalId
+     * @param bool            $userId
+     *
+     * @return bool|mixed
+     */
+    function del($goalId, $userId)
+    {
+        $conditions = [
+            'Follower.goal_id' => $goalId,
+            'Follower.user_id' => $userId,
+            'Follower.team_id' => $this->current_team_id,
+        ];
+        return $this->deleteAll($conditions);
     }
 
     function getFollowList($user_id, $limit = null, $page = 1)
@@ -137,12 +191,14 @@ class Follower extends AppModel
                 'Follower.goal_id' => $goal_id,
                 'Follower.team_id' => $this->current_team_id,
             ],
-            'contain'    => ['User' => [
-                'fields'     => [
-                    'User.id',
-                    'User.*',
+            'contain'    => [
+                'User' => [
+                    'fields' => [
+                        'User.id',
+                        'User.*',
+                    ]
                 ]
-            ]],
+            ],
             'limit'      => $params['limit'],
             'page'       => $params['page'],
             'order'      => $params['order'],
@@ -207,9 +263,9 @@ class Follower extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
         // 0件のゴールも配列要素を作り、値を0として返す
         $defaultCountEachGoalId = array_fill_keys($goalIds, 0);
@@ -227,16 +283,36 @@ class Follower extends AppModel
     public function isFollowingEachGoalId($goalIds, $userId)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'count(goal_id) as exist'],
+            'fields'     => ['goal_id', 'count(goal_id) as exist'],
             'conditions' => [
                 'goal_id' => $goalIds,
                 'user_id' => $userId
             ],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
         // 0件のゴールも配列要素を作り、値を0として返す
         $defaultEachGoalId = array_fill_keys($goalIds, 0);
         $ret = Hash::combine($ret, '{n}.Follower.goal_id', '{n}.0.exist');
         return $ret + $defaultEachGoalId;
+    }
+
+    /**
+     * ユニークのフォロー情報取得
+     *
+     * @param $goalId
+     * @param $userId
+     *
+     * @return array
+     */
+    public function getUnique($goalId, $userId)
+    {
+        $ret = $this->find('first', [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'user_id' => $userId,
+                'team_id' => $this->current_team_id,
+            ]
+        ]);
+        return Hash::get($ret, 'Follower');
     }
 }

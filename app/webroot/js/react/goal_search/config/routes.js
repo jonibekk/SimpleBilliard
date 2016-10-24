@@ -43,7 +43,7 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="goals" component={Container} />
           </Router>
-           <DevTools />
+           {/*<DevTools />*/}
         </div>
       </Provider>
     );

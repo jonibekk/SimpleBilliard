@@ -44,9 +44,10 @@ class ApiController extends BaseController
     {
         parent::beforeFilter();
         $this->_setupAuth();
+        $this->Security->validatePost=false;
+        $this->Security->csrfCheck=false;
         $this->autoRender = false;
-        //htmlを出力してしまうためdebugを無効化
-        Configure::write('debug', 0);
+        $this->Components->unload('DebugKit.Toolbar');
         if (!$this->request->is('ajax')) {
 //            throw new BadRequestException(__('Ajax Only!'),400);
         }

@@ -27,7 +27,7 @@ export default class Goals extends React.Component {
   }
 
   showFilter() {
-    this.props.updateData({showFilter: !this.props.goal_search.showFilter})
+    this.props.updateData({show_filter: !this.props.goal_search.show_filter})
   }
 
   updateFilter(e, key, val) {
@@ -44,16 +44,32 @@ export default class Goals extends React.Component {
   fetchMoreGoals() {
     const {search_result} = this.props.goal_search
     const url = search_result.paging.next
+    if (!url) {
+      return
+    }
     this.props.fetchMoreGoals(url)
 
   }
 
   renderGoals(goals) {
+    let uid = this.makeRandomStr()
     return goals.map((goal) => {
       return (
-        <GoalCard goal={goal} key={goal.id}/>
+        <GoalCard goal={goal} key={`${uid}-${goal.id}`}/>
       )
     })
+  }
+
+  makeRandomStr(length = 8) {
+    // 生成する文字列に含める文字セット
+    const c = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    const cl = c.length;
+    let r = "";
+    for(let i=0; i<length; i++){
+      r += c[Math.floor(Math.random()*cl)];
+    }
+    return r
   }
 
   render() {
@@ -78,19 +94,19 @@ export default class Goals extends React.Component {
         <div className="panel-block bd-b-sc4">
           <form onSubmit={this.searchByKeyword.bind(this)}>
             <div className="goal-search-keyword mb_10px">
-              <input type="text" className="goal-search-keyword-input" placeholder="キーワードで検索" ref="keyword"
+              <input type="text" className="goal-search-keyword-input" placeholder={__("Search by goal name")} ref="keyword"
                      maxLength="50"/>
               <span onClick={this.searchByKeyword.bind(this)} className="goal-search-keyword-submit fa fa-search"/>
             </div>
           </form>
           <div className="text-align_r">
-            <a href="#" onClick={this.showFilter.bind(this)}>絞り込み</a>
+            <a href="#" onClick={this.showFilter.bind(this)}>{__("Filter")}</a>
           </div>
         </div>
 
         {/* search filter */}
         <GoalSearchFilter
-          showFilter={props.showFilter}
+          show_filter={props.show_filter}
           suggestions={props.suggestions}
           label_keyword={props.label_keyword}
           categories={props.categories}
@@ -103,18 +119,20 @@ export default class Goals extends React.Component {
         {/* search result count and order */}
         <div className="panel-block">
           <div className="row">
-            <div className="pull-left">検索結果 {props.search_result.count}件</div>
+            <div className="pull-left">{__("Search result")} {props.search_result.count}{__("Count")}</div>
             <div className="pull-right">
               <div role="group">
                 <p className="dropdown-toggle goal-search-order-text" data-toggle="dropdown" role="button"
                    aria-expanded="false">
                   <span className>{search_orders[order]}</span>
-                  <i className="fa fa-angle-down"/>
+                  <i className="fa fa-angle-down ml_2px"/>
                 </p>
                 <ul className="dropdown-menu pull-right" role="menu">
                   {(() => {
                     let search_orders_el = []
-                    for(let key of Object.keys(search_orders)) {
+                    const search_orders_keys = Object.keys(search_orders)
+                    for(let i = 0;i < search_orders_keys.length;i++) {
+                      let key = search_orders_keys[i]
                       search_orders_el.push(
                         <li key={key}>
                           <a href="#" search-order={key}
@@ -142,8 +160,4 @@ export default class Goals extends React.Component {
       </div>
     )
   }
-}
-
-Goals.propTypes = {
-  // goal_search: React.PropTypes.object.isRequired,
 }

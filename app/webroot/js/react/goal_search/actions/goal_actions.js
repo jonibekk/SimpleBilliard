@@ -1,6 +1,6 @@
 import * as ActionTypes from "~/goal_search/constants/ActionTypes";
 
-import {post} from "~/util/api";
+import {post, del} from "~/util/api";
 import axios from "axios";
 import querystring from "querystring";
 
@@ -76,31 +76,30 @@ export function fetchMoreGoals(url) {
   }
 }
 
-/**
- * 入力値にマッチしたサジェストのリストを取得
- * 空文字(フォーカス時等でもサジェスト表示許可
- *
- * @param value
- * @param suggestions
- * @returns {*}
- */
-function getSuggestions(value, suggestions) {
-  if (value) {
-    value = value.trim();
-    const regex = new RegExp('^' + value, 'i');
-    suggestions = suggestions.filter((suggestion) => regex.test(suggestion.name));
+export function follow(goal_id) {
+  return (dispatch, getState) => {
+    return post(`/api/v1/goals/${goal_id}/follow`)
+      .then((response) => {
+        dispatch({
+          type: ActionTypes.FOLLOW,
+          goal_id
+        })
+      })
+      .catch((response) => {
+      })
   }
+}
 
-  // サジェストは10件のみ表示
-  suggestions = suggestions.slice(0, 10)
-  // サジェストをラベル名昇順に並び替え
-  suggestions.sort((a, b) => {
-    return (a.goal_label_count < b.goal_label_count) ? 1 : -1
-  });
-
-  // サジェストの先頭に入力文字列を加える
-  if (value) {
-    suggestions.unshift({name: value})
+export function unfollow(goal_id) {
+  return (dispatch, getState) => {
+    return del(`/api/v1/goals/${goal_id}/follow`)
+      .then((response) => {
+        dispatch({
+          type: ActionTypes.UNFOLLOW,
+          goal_id
+        })
+      })
+      .catch((response) => {
+      })
   }
-  return suggestions
 }

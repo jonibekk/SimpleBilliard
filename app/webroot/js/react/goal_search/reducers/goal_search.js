@@ -16,11 +16,12 @@ const initialState = {
   suggestions: [],
   suggestions_exclude_selected: [],
   search_conditions: {},
-  showFilter: false
+  show_filter: false,
 }
 
 export default function goal_search(state = initialState, action) {
-  let search_conditions = Object.assign({}, state.search_conditions)
+  let search_conditions = state.search_conditions
+  let search_result = state.search_result
 
   switch (action.type) {
     case ActionTypes.FETCH_INITIAL_DATA:
@@ -47,11 +48,23 @@ export default function goal_search(state = initialState, action) {
       })
 
     case ActionTypes.FETCH_MORE_GOALS:
-      const search_result = {
+      search_result = {
         data: [...state.search_result.data, ...action.search_result.data],
         paging: action.search_result.paging,
         count: action.search_result.count
       }
+      return Object.assign({}, state, {
+        search_result
+      })
+
+    case ActionTypes.FOLLOW:
+      search_result.data = updateGoalsByFollowing(state.search_result.data, action.goal_id)
+      return Object.assign({}, state, {
+        search_result
+      })
+
+    case ActionTypes.UNFOLLOW:
+      search_result.data = updateGoalsByFollowing(search_result.data, action.goal_id, false)
       return Object.assign({}, state, {
         search_result
       })
@@ -108,4 +121,21 @@ export default function goal_search(state = initialState, action) {
     default:
       return state;
   }
+}
+
+/**
+ * フォローアクションによってゴールリストを更新
+ *
+ * @param data
+ * @param goal_id
+ * @param add_flg
+ * @returns {*}
+ */
+export function updateGoalsByFollowing(data, goal_id, add_flg = true) {
+  return data.map((v) => {
+    if (v.id == goal_id) {
+      v.is_follow = add_flg ? true : false;
+    }
+    return v
+  })
 }
