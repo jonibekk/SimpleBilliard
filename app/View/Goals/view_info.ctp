@@ -31,9 +31,13 @@
                     <i class="fa-tags fa"></i>
                 </div>
                 <div class="goal-detail-info-data">
-                    <?php foreach ($goalLabels as $label): ?>
-                        <span class="label label-default"><?= $label['name'] ?></span>
-                    <?php endforeach ?>
+                    <?php if (!empty($goalLabels)): ?>
+                        <?php foreach ($goalLabels as $label): ?>
+                            <span class="label label-default"><?= $label['name'] ?></span>
+                        <?php endforeach ?>
+                    <?php else: ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目 ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="goal-detail-info-due-wrap">
