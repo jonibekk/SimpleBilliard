@@ -30,6 +30,7 @@ class CommentTest extends GoalousTestCase
         'app.key_result',
         'app.post_share_circle',
         'app.local_name',
+        'app.post_share_user',
     );
 
     /**

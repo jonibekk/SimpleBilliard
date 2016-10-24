@@ -33,7 +33,7 @@ class OauthToken extends AppModel
      */
     public $validate = [
         'type'    => ['numeric' => ['rule' => ['numeric'],],],
-        'uid'     => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'uid'     => ['notBlank' => ['rule' => ['notBlank'],],],
         'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 

@@ -145,12 +145,12 @@ class User extends AppModel
         ],
         'first_name'         => [
             'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notEmpty'     => ['rule' => 'notEmpty'],
+            'notBlank'     => ['rule' => 'notBlank'],
             'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'last_name'          => [
             'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notEmpty'     => ['rule' => 'notEmpty'],
+            'notBlank'     => ['rule' => 'notBlank'],
             'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'gender_type'        => [
@@ -207,8 +207,8 @@ class User extends AppModel
         ],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'old_password'       => [
-            'notEmpty'  => [
-                'rule' => 'notEmpty',
+            'notBlank'  => [
+                'rule' => 'notBlank',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
@@ -216,8 +216,8 @@ class User extends AppModel
         ],
         'password_request'   => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notEmpty'      => [
-                'rule' => 'notEmpty',
+            'notBlank'      => [
+                'rule' => 'notBlank',
             ],
             'minLength'     => [
                 'rule' => ['minLength', 8],
@@ -228,8 +228,8 @@ class User extends AppModel
         ],
         'password_request2'  => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notEmpty'      => [
-                'rule' => 'notEmpty',
+            'notBlank'      => [
+                'rule' => 'notBlank',
             ],
             'minLength'     => [
                 'rule' => ['minLength', 8],
@@ -240,16 +240,16 @@ class User extends AppModel
         ],
         'password'           => [
             'maxLength' => ['rule' => ['maxLength', 50]],
-            'notEmpty'  => [
-                'rule' => 'notEmpty',
+            'notBlank'  => [
+                'rule' => 'notBlank',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
             ],
         ],
         'password_confirm'   => [
-            'notEmpty'          => [
-                'rule' => 'notEmpty',
+            'notBlank'          => [
+                'rule' => 'notBlank',
             ],
             'passwordSameCheck' => [
                 'rule' => ['passwordSameCheck', 'password'],

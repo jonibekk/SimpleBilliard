@@ -19,8 +19,8 @@ class Device extends AppModel
      */
     public $validate = [
         'device_token' => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'os_type'      => [
