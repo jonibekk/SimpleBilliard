@@ -58,10 +58,7 @@ else
       code <<-EOS
       source /usr/local/nvm/nvm.sh
       cd #{release_path}
-      if ! pnpm i --no-bin-links; then
-        rm -rf node_modules
-        pnpm i --no-bin-links
-      fi
+      yarn install
       EOS
     end
 

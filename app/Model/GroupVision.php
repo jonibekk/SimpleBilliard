@@ -97,12 +97,12 @@ class GroupVision extends AppModel
 
     function saveGroupVision($data)
     {
-        if (!viaIsSet($data['GroupVision'])) {
+        if (!Hash::get($data, 'GroupVision')) {
             return false;
         }
         $data['GroupVision']['team_id'] = $this->current_team_id;
 
-        if (!viaIsSet($data['GroupVision']['id'])) {
+        if (!Hash::get($data, 'GroupVision.id')) {
             $data['GroupVision']['create_user_id'] = $this->my_uid;
         }
         $data['GroupVision']['modify_user_id'] = $this->my_uid;
@@ -155,7 +155,7 @@ class GroupVision extends AppModel
         $res = [];
         foreach ($group_visions as $group_vision) {
             if ($with_img) {
-                    $group_vision['GroupVision'] = $this->attachImgUrl($group_vision['GroupVision'], 'GroupVision');
+                $group_vision['GroupVision'] = $this->attachImgUrl($group_vision['GroupVision'], 'GroupVision');
             }
             $v = $group_vision['GroupVision'];
             $v['group'] = $group_vision['Group'];
@@ -179,7 +179,7 @@ class GroupVision extends AppModel
                 'GroupVision.group_id'   => $group_ids,
                 'GroupVision.active_flg' => $active_flg
             ],
-            'contain' => ['Group']
+            'contain'    => ['Group']
         ];
         $res = $this->find('all', $options);
         return $res;

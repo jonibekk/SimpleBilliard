@@ -20,20 +20,20 @@ class GoalHelper extends AppHelper
         ];
 
         //if coaching goal then, already following.
-        if (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+        if (Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             $option['disabled'] = "disabled";
             return $option;
         }
 
-        if (viaIsSet($goal['MyCollabo'])) {
+        if (Hash::get($goal, 'MyCollabo')) {
             $option['disabled'] = "disabled";
         }
 
-        if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+        if (empty($goal['MyFollow']) && !Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             return $option;
         }
 
-        if (!empty($goal['MyFollow']) && viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+        if (!empty($goal['MyFollow']) && Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             $option['disabled'] = "disabled";
             return $option;
         }
@@ -52,7 +52,7 @@ class GoalHelper extends AppHelper
             'text'  => __("Collaborate"),
         ];
 
-        if (!viaIsSet($goal['MyCollabo'])) {
+        if (!Hash::get($goal, 'MyCollabo')) {
             return $option;
         }
         $option['class'] = 'collabo-on';

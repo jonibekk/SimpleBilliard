@@ -25,6 +25,7 @@ junit.xml
 # for npm
 /node_modules
 npm-debug.log
+yarn-error.log
 # for Gulp
 /app/webroot/dest
 # for bower

@@ -8,24 +8,26 @@
  */
 ?>
 <?php if ($key_results): ?>
-    <?= $this->App->viewStartComment()?>
+    <?= $this->App->viewStartComment() ?>
     <?php foreach ($key_results as $kr): ?>
         <div class="goal-detail-kr-card">
             <div class="goal-detail-kr-achieve-wrap">
                 <?php if ($kr_can_edit): ?>
                     <?php if ($kr['KeyResult']['completed']): ?>
                         <?= $this->Form->postLink('<i class="fa-check-circle fa goal-detail-kr-achieve-already"></i>',
-                            ['controller'    => 'goals',
-                             'action'        => 'incomplete_kr',
-                             'key_result_id' => $kr['KeyResult']['id']
+                            [
+                                'controller'    => 'goals',
+                                'action'        => 'incomplete_kr',
+                                'key_result_id' => $kr['KeyResult']['id']
                             ],
                             ['escape' => false, 'class' => 'no-line']) ?>
                     <?php else: ?>
                         <?php //最後のKRの場合
                         if ($incomplete_kr_count === 1):?>
-                            <a href="<?= $this->Html->url(['controller'    => 'goals',
-                                                           'action'        => 'ajax_get_last_kr_confirm',
-                                                           'key_result_id' => $kr['KeyResult']['id']
+                            <a href="<?= $this->Html->url([
+                                'controller'    => 'goals',
+                                'action'        => 'ajax_get_last_kr_confirm',
+                                'key_result_id' => $kr['KeyResult']['id']
                             ]) ?>"
                                class="modal-ajax-get no-line">
                                 <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
@@ -104,17 +106,18 @@
                     if ($key == count($kr['ActionResult']) - 1 && $kr['KeyResult']['action_result_count'] > $display_action_count) {
                         $last_many = true;
                         //urlはゴールページの全アクションリスト
-                        $url = ['controller'    => 'goals',
-                                'action'        => 'view_actions',
-                                'goal_id'       => $kr['KeyResult']['goal_id'],
-                                'page_type'     => 'image',
-                                'key_result_id' => $kr['KeyResult']['id']
+                        $url = [
+                            'controller'    => 'goals',
+                            'action'        => 'view_actions',
+                            'goal_id'       => $kr['KeyResult']['goal_id'],
+                            'page_type'     => 'image',
+                            'key_result_id' => $kr['KeyResult']['id']
                         ];
                     }
                     ?>
                     <li class="goal-detail-action-list">
                         <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                            <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                            <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
                                 <?= $this->Html->image('ajax-loader.gif',
                                     [
                                         'class'         => 'lazy',
@@ -157,5 +160,5 @@
             </ul>
         </div>
     <?php endforeach ?>
-    <?= $this->App->viewEndComment()?>
+    <?= $this->App->viewEndComment() ?>
 <?php endif ?>

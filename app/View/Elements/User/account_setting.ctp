@@ -15,7 +15,7 @@
  * @var                             $my_teams
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Account") ?></div>
     <?=
@@ -116,7 +116,7 @@
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
-                    <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
+                    <?php if (Hash::get($this->request->data, 'User.2fa_secret')): ?>
                         <a href="<?= $this->Html->url([
                             'controller' => 'users',
                             'action'     => 'ajax_get_modal_2fa_delete'
@@ -130,7 +130,7 @@
                            class="modal-ajax-get"><?= __("Enable") ?></a>
                     <?php endif; ?>
                 </p>
-                <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
+                <?php if (Hash::get($this->request->data, 'User.2fa_secret')): ?>
                     <p class="form-control-static">
                         <a href="<?= $this->Html->url([
                             'controller' => 'users',
@@ -169,4 +169,4 @@
         ]);
 }
 ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
