@@ -107,7 +107,7 @@ export function postComment(postData) {
         addComment(response.data.data)
       },
       (response) => {
-        dispatch(finishedPostingWithdraw())
+        dispatch(finishedPostingComment())
         /* eslint-disable no-console */
         console.log("failed to post comment");
         console.log(response);
@@ -144,7 +144,7 @@ export function postingComment() {
   return {type: types.POSTING_COMMENT}
 }
 
-export function finishiedPostingComment() {
+export function finishedPostingComment() {
   return {type: types.FINISHED_POSTING_COMMENT}
 }
 

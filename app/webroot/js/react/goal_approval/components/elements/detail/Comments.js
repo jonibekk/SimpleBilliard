@@ -21,7 +21,14 @@ export class Comments extends React.Component {
   }
 
   onSubmit() {
-    const post_data = {}
+    const post_data = {
+      goal_member: {
+        id: this.props.goal_member_id
+      },
+      approval_history: {
+        comment: this.state.comment
+      }
+    }
 
     this.props.postComment(post_data)
   }
@@ -64,7 +71,7 @@ export class Comments extends React.Component {
 
           {/* コメント投稿ボックス */}
           <div className="goals-approval-detail-comments-form">
-            <form onSubmit={ this.onSubmit }>
+            <form onSubmit={ this.onSubmit.bind(this) }>
               <div className="goals-approval-detail-comments-form-textarea">
                 <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) }></Textarea>
               </div>

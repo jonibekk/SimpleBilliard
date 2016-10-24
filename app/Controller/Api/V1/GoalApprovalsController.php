@@ -390,6 +390,7 @@ class GoalApprovalsController extends ApiController
      */
     public function post_comment()
     {
+        $this->log($this->request->data);
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var ApprovalHistory $ApprovalHistory */
