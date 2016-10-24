@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-24 10:04+0900\n"
+"PO-Revision-Date: 2016-10-25 04:47+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.10\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -822,6 +822,9 @@ msgstr "保存処理に失敗しました。"
 
 msgid "Saved goal & Top Key Result"
 msgstr "ゴールとトップKRを変更しました。"
+
+msgid "The following doesn't exist."
+msgstr ""
 
 msgid "Confirmation Code for Goalous: %s"
 msgstr "Goalousの認証コード: %s"
@@ -2352,6 +2355,21 @@ msgstr "トップKR名"
 msgid "Measurement type"
 msgstr "測定タイプ"
 
+msgid "Search by goal name"
+msgstr "ゴール名で検索"
+
+msgid "Filter"
+msgstr "絞り込み"
+
+msgid "Search result"
+msgstr "検索結果"
+
+msgid "Count"
+msgstr "件"
+
+msgid "Add by pressing the Enter.(You can search maximum 3 labels)"
+msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -2892,9 +2910,6 @@ msgstr "ゴールを削除"
 
 msgid "Do you really want to delete this goal?"
 msgstr "本当にこのゴールを削除しますか？"
-
-msgid "Leader: %s"
-msgstr "リーダー: %s"
 
 msgid "Edit Top Key Result"
 msgstr "トップKRを編集する"
@@ -3979,18 +3994,6 @@ msgstr "ゴール詳細"
 msgid "Progress"
 msgstr "進捗"
 
-msgid "Export Data"
-msgstr "CSVの書き出し"
-
-msgid "Our Goals"
-msgstr "みんなのゴール"
-
-msgid "Goals found"
-msgstr "対象ゴール"
-
-msgid "No Goal"
-msgstr "対象ゴールがありません。"
-
 msgid "View more"
 msgstr "もっと見る"
 
@@ -4768,6 +4771,21 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid "Leader: %s"
+#~ msgstr "リーダー: %s"
+
+#~ msgid "Export Data"
+#~ msgstr "CSVの書き出し"
+
+#~ msgid "Our Goals"
+#~ msgstr "みんなのゴール"
+
+#~ msgid "Goals found"
+#~ msgstr "対象ゴール"
+
+#~ msgid "No Goal"
+#~ msgstr "対象ゴールがありません。"
 
 #~ msgid "notEmpty"
 #~ msgstr "notEmplty"

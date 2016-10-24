@@ -534,7 +534,8 @@
             "More Previous": "<?=__("More Previous")?>",
             "All": "<?=__("All")?>",
             "Complete": "<?=__("Complete")?>",
-            "Incomplete": "<?=__("Incomplete")?>"
+            "Incomplete": "<?=__("Incomplete")?>",
+            "Progress": "<?=__("Progress")?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
