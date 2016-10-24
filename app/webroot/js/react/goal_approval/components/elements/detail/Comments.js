@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from "react-dom";
+import Textarea from "react-textarea-autosize";
 import { Comment } from "~/goal_approval/components/elements/detail/Comment";
 
 export class Comments extends React.Component {
@@ -59,7 +60,7 @@ export class Comments extends React.Component {
           <div className="goals-approval-detail-comments-form">
             <form onSubmit={ this.onSubmit }>
               <div className="goals-approval-detail-comments-form-left">
-                <textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) } />
+                <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) }></Textarea>
               </div>
               <div className="goals-approval-detail-comments-form-right">
                 <input
