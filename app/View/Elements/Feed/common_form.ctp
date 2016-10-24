@@ -458,13 +458,13 @@ if (!isset($goal_list_for_action_option)) {
                         'style' => "width: 85%",
                         'value' => !empty($targetUserId) ? 'user_'.$targetUserId : ''
                     ]) ?>
-                    <?php $this->Form->unlockField('Message.share_public') ?>
+                    <?php $this->Form->unlockField('Post.share_public') ?>
                 </div>
                 <?= $this->Form->hidden('share_range', [
                     'id'    => 'messageShareRange',
                     'value' => 'public',
                 ]) ?>
-                <?php $this->Form->unlockField('Message.share_range') ?>
+                <?php $this->Form->unlockField('Post.share_range') ?>
                 <?php $this->Form->unlockField('socket_id') ?>
             </div>
 

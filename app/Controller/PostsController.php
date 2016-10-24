@@ -19,9 +19,6 @@ class PostsController extends AppController
             $this->Security->validatePost = false;
         }
 
-        //TODO: quick fix
-        $this->Security->unlockedActions = ['add_message','message_list'];
-
         if ($this->request->params['action'] === 'ajax_add_post_for_setup_guide') {
             $this->Security->validatePost = false;
             $this->Security->csrfCheck = false;
