@@ -700,7 +700,7 @@ class AppController extends BaseController
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_post_ids'));
     }
 
-    function _getRequiredParam($name)
+    function _getRequiredParamIfNoParamRedirectToReferer($name)
     {
         $id = Hash::get($this->request->params, "named.$name");
         if (!$id) {

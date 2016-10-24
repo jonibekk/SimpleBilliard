@@ -1078,7 +1078,7 @@ class PostsController extends AppController
     {
         $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-        $circle_id = $this->_getRequiredParam('circle_id');
+        $circle_id = $this->_getRequiredParamIfNoParamRedirectToReferer('circle_id');
         $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
         $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
             Hash::get($this->request->params, 'named.file_type'));

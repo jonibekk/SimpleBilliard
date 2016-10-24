@@ -1085,7 +1085,7 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $user_id = $this->_getRequiredParam('user_id');
+        $user_id = $this->_getRequiredParamIfNoParamRedirectToReferer('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
@@ -1186,7 +1186,7 @@ class UsersController extends AppController
      */
     function view_posts()
     {
-        $user_id = $this->_getRequiredParam('user_id');
+        $user_id = $this->_getRequiredParamIfNoParamRedirectToReferer('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
@@ -1207,8 +1207,8 @@ class UsersController extends AppController
 
     function view_actions()
     {
-        $user_id = $this->_getRequiredParam('user_id');
-        $page_type = $this->_getRequiredParam('page_type');
+        $user_id = $this->_getRequiredParamIfNoParamRedirectToReferer('user_id');
+        $page_type = $this->_getRequiredParamIfNoParamRedirectToReferer('page_type');
         $goal_id = Hash::get($this->request->params, 'named.goal_id');
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
@@ -1257,7 +1257,7 @@ class UsersController extends AppController
      */
     function view_info()
     {
-        $user_id = $this->_getRequiredParam('user_id');
+        $user_id = $this->_getRequiredParamIfNoParamRedirectToReferer('user_id');
 
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
