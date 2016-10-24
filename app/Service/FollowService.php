@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yoshidam2
- * Date: 2016/09/21
- * Time: 17:57
- */
-
 App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');

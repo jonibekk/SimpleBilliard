@@ -20,7 +20,7 @@ App::import('Service/Api', 'ApiGoalService');
  */
 class GoalsController extends ApiController
 {
-    const GOAL_SEARCH_DEFAULT_LIMIT = 8;
+    const GOAL_SEARCH_DEFAULT_LIMIT = 10;
 
     // TODO:ここで定義しても$this->***で使用出来ない為要調査
     public $uses = [
