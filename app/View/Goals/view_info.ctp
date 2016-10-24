@@ -33,7 +33,7 @@
                 <div class="goal-detail-info-data">
                     <?php if (!empty($goalLabels)): ?>
                         <?php foreach ($goalLabels as $label): ?>
-                            <span class="label label-default"><?= $label['name'] ?></span>
+                            <span class="goal-detail-label"><?= $label['name'] ?></span>
                         <?php endforeach ?>
                     <?php else: ?>
                         <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目 ?>
