@@ -69,8 +69,8 @@ class Circle extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => [
-                'rule' => ['notEmpty'],
+            'notBlank'  => [
+                'rule' => ['notBlank'],
             ],
         ],
         'description'  => [
@@ -172,7 +172,7 @@ class Circle extends AppModel
         if ($res = $this->saveAll($data)) {
             $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
 
-            if (viaIsSet($data['Circle']['public_flg'])) {
+            if (Hash::get($data, 'Circle.public_flg')) {
                 $this->PostShareCircle->Post->createCirclePost($this->getLastInsertID(), $this->my_uid);
             }
         }
@@ -547,7 +547,7 @@ class Circle extends AppModel
     function getTeamAllCircleId()
     {
         $team_all_circle = $this->getTeamAllCircle();
-        return viaIsSet($team_all_circle['Circle']['id']);
+        return Hash::get($team_all_circle, 'Circle.id');
     }
 
     /**

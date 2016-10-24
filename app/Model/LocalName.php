@@ -16,8 +16,8 @@ class LocalName extends AppModel
      */
     public $validate = [
         'language'   => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'first_name' => [

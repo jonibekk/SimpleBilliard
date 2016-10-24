@@ -17,8 +17,8 @@ class TkrChangeLog extends AppModel
      */
     public $validate = [
         'data'    => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'del_flg' => [

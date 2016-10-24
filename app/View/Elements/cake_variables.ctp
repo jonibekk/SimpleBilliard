@@ -509,10 +509,11 @@
             "Previous": "<?= __("Previous") ?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
-            "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
+            "Edit goal & Top Key Result": "<?=  __("Edit goal & Top Key Result") ?>",
             "Save changes": "<?= __("Save changes") ?>",
             "Optional": "<?= __("Optional") ?>",
-            "Top Key Result": "<?= __("Top Key Result") ?>",
+            "Top Key Result name": "<?= __("Top Key Result name") ?>",
+            "Measurement type": "<?= __("Measurement type") ?>",
             "Creation Date": "<?= __("Creation Date") ?>",
             "Actions number": "<?= __("Actions number") ?>",
             "Key results number": "<?= __("Key results number") ?>",

@@ -21,7 +21,7 @@ class Group extends AppModel
             'isString' => [
                 'rule' => ['isString',],
             ],
-            'notEmpty' => ['rule' => ['notEmpty']]
+            'notBlank' => ['rule' => ['notBlank']]
         ],
         'active_flg' => ['boolean' => ['rule' => ['boolean']]],
         'del_flg'    => ['boolean' => ['rule' => ['boolean']]],

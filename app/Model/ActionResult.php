@@ -113,8 +113,8 @@ class ActionResult extends AppModel
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => [
-                'rule' => 'notEmpty',
+            'notBlank' => [
+                'rule' => 'notBlank',
             ]
         ],
         'key_result_id' => [

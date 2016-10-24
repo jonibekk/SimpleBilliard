@@ -113,7 +113,7 @@ class GoalsController extends AppController
 
     public function ajax_get_goal_description_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
@@ -127,8 +127,8 @@ class GoalsController extends AppController
 
     public function ajax_get_add_action_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
@@ -153,8 +153,8 @@ class GoalsController extends AppController
 
     public function ajax_get_related_kr_list_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $user_id = viaIsSet($this->request->params['named']['user_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $user_id = Hash::get($this->request->params, 'named.user_id');
         $krs = [];
         if ($goal_id && $user_id) {
             $krs = $this->Goal->KeyResult->getKrRelatedUserAction($goal_id, $user_id);
@@ -177,50 +177,53 @@ class GoalsController extends AppController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        $currentKrId = Hash::get($this->request->params, 'named.key_result_id');
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goalId)) {
                 throw new RuntimeException();
             }
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
-        $goal = $this->Goal->getGoalMinimum($goal_id);
-        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
-        $priority_list = $this->Goal->priority_list;
-        $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
+        $goal = $this->Goal->getGoalMinimum($goalId);
+        $tkr = $this->Goal->KeyResult->getTkr($goalId);
+        $goal = array_merge($goal, $tkr);
+
+        $goalCategoryList = $this->Goal->GoalCategory->getCategoryList();
+        $priorityList = $this->Goal->priority_list;
+        $krPriorityList = $this->Goal->KeyResult->priority_list;
+        $krValueUnitList = $KeyResultService->buildKrUnitsSelectList();
 
         // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
+        $goalTerm = $this->Goal->getGoalTermData($goalId);
 
-        $kr_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + $goal_term['timezone'] * HOUR);
+        $krStartDateFormat = date('Y/m/d', REQUEST_TIMESTAMP + $goalTerm['timezone'] * HOUR);
 
         //期限は現在+2週間にする
         //もしそれがゴールの期限を超える場合はゴールの期限にする
-        $end_date = strtotime('+2 weeks', REQUEST_TIMESTAMP);
-        if ($end_date > $goal['Goal']['end_date']) {
-            $end_date = $goal['Goal']['end_date'];
+        $endDate = strtotime('+2 weeks', REQUEST_TIMESTAMP);
+        if ($endDate > $goal['Goal']['end_date']) {
+            $endDate = $goal['Goal']['end_date'];
         }
-        $kr_end_date_format = date('Y/m/d', $end_date + $goal_term['timezone'] * HOUR);
-        $limit_end_date = date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
-        $limit_start_date = date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
+        $krEndDateFormat = date('Y/m/d', $endDate + $goalTerm['timezone'] * HOUR);
+        $limitEndDate = date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR);
+        $limitStartDate = date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR);
 
         $this->set(compact(
             'goal',
-            'goal_id',
-            'goal_category_list',
-            'goal_term',
-            'priority_list',
-            'kr_priority_list',
-            'kr_value_unit_list',
-            'kr_start_date_format',
-            'kr_end_date_format',
-            'limit_end_date',
-            'limit_start_date',
-            'current_kr_id'
+            'goalId',
+            'goalCategoryList',
+            'goalTerm',
+            'priorityList',
+            'krPriorityList',
+            'krValueUnitList',
+            'krStartDateFormat',
+            'krEndDateFormat',
+            'limitEndDate',
+            'limitStartDate',
+            'currentKrId'
         ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
@@ -310,7 +313,7 @@ class GoalsController extends AppController
     public function add_key_result()
     {
         $goal_id = $this->request->params['named']['goal_id'];
-        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $current_kr_id = Hash::get($this->request->params, 'named.key_result_id');
 
         $this->request->allowMethod('post');
         $key_result = null;
@@ -425,7 +428,7 @@ class GoalsController extends AppController
 
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $goal = viaIsSet($goal);
         if (!$goal) {
             $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
@@ -700,6 +703,8 @@ class GoalsController extends AppController
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         $kr_id = $this->request->params['named']['key_result_id'];
         $this->_ajaxPreProcess();
@@ -722,6 +727,13 @@ class GoalsController extends AppController
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
 
+        // 認定可能フラグ追加
+        $is_approvable = false;
+        $goal_leader_id = $this->Goal->GoalMember->getGoalLeaderId($goal_id);
+        if($goal_leader_id) {
+            $is_approvable = $GoalMemberService->isApprovableGoalMember($goal_leader_id);
+        }
+
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
 
@@ -741,7 +753,8 @@ class GoalsController extends AppController
             'kr_end_date_format',
             'limit_end_date',
             'limit_start_date',
-            'goal_term'
+            'goal_term',
+            'is_approvable'
         ));
         $this->request->data = $key_result;
         //エレメントの出力を変数に格納する
@@ -871,8 +884,8 @@ class GoalsController extends AppController
      */
     public function add_action()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         try {
             if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("This action can't be edited."));
@@ -1099,7 +1112,7 @@ class GoalsController extends AppController
         }
 
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName);
 
@@ -1163,7 +1176,7 @@ class GoalsController extends AppController
             $page_num = 1;
         }
 
-        $type = viaIsSet($param_named['type']);
+        $type = Hash::get($param_named, 'type');
         if (!$type) {
             return;
         }
@@ -1262,13 +1275,13 @@ class GoalsController extends AppController
         $res = [];
         foreach (array_keys($options) as $type) {
             //URLパラメータ取得
-            $res[$type][0] = viaIsSet($this->request->params['named'][$type]);
+            $res[$type][0] = Hash::get($this->request->params, "named.$type");
             //パラメータチェック
             if (!in_array($res[$type][0], array_keys($options[$type]))) {
                 $res[$type] = null;
             }
             //表示名取得
-            if (viaIsSet($res[$type])) {
+            if (Hash::get($res, $type)) {
                 $res[$type][1] = $options[$type][$res[$type][0]];
             } ///デフォルト表示名取得
             else {
@@ -1282,7 +1295,7 @@ class GoalsController extends AppController
     {
         $res = ['controller' => 'goals', 'action' => 'index'];
         foreach ($search_option as $key => $val) {
-            if (viaIsSet($val[0])) {
+            if (Hash::get($val, '0')) {
                 $res[$key] = $val[0];
             }
         }
@@ -1383,12 +1396,12 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $page_type = $this->_getRequiredParam('page_type');
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         $params = [
             'type'          => Post::TYPE_ACTION,
             'goal_id'       => $goal_id,
