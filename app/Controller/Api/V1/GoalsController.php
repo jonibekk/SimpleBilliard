@@ -465,7 +465,6 @@ class GoalsController extends ApiController
             return $this->_getResponseBadFail(__("The goal doesn't exist."));
         }
 
-        $this->log("■".__METHOD__.' goalId:'.$goalId);
         // フォロー
         $newId = $FollowService->add($goalId, $this->Auth->user('id'));
         if (!$newId) {

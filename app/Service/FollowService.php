@@ -76,7 +76,6 @@ class FollowService extends AppService
                 throw new Exception(sprintf("Failed follow. conditions:%s"
                     , var_export($conditions, true)));
             }
-            $this->log($Follower->getDataSource()->getLog());
 
             // キャッシュリセット
             Cache::delete($Follower->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true), 'user_data');
