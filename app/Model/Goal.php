@@ -122,9 +122,9 @@ class Goal extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => [
+            'notBlank'  => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
         ],
         'description'      => [
@@ -162,9 +162,9 @@ class Goal extends AppModel
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => [
+            'notBlank' => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
         ],
         'start_date'       => [
@@ -185,9 +185,9 @@ class Goal extends AppModel
 
     public $post_validate = [
         'end_date'  => [
-            'notEmpty'            => [
+            'notBlank'            => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
             'isString'            => ['rule' => 'isString'],
             'dateYmd'             => [
@@ -198,18 +198,18 @@ class Goal extends AppModel
         ],
         'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
-            'notEmpty' => [
+            'notBlank' => [
                 //'required' => 'create',
-                'rule' => 'notEmpty',
+                'rule' => 'notBlank',
             ],
         ]
     ];
 
     public $update_validate = [
         'end_date'  => [
-            'notEmpty'            => [
+            'notBlank'            => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
             'isString'            => ['rule' => 'isString'],
             'dateYmd'             => [
@@ -506,13 +506,13 @@ class Goal extends AppModel
             $data['KeyResult'][0]['team_id'] = $this->current_team_id;
         }
 
-        if (!viaIsSet($data['KeyResult'][0]['start_date'])) {
+        if (!Hash::get($data, 'KeyResult.0.start_date')) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
         } else {
             //時間をunixtimeに変換
             $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
         }
-        if (!viaIsSet($data['KeyResult'][0]['end_date'])) {
+        if (!Hash::get($data, 'KeyResult.0.end_date')) {
             $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
         } else {
             //期限を+1day-1secする
@@ -799,7 +799,7 @@ class Goal extends AppModel
         $res = $this->find('all', $options);
         $goal_ids = [];
         foreach ($res as $record) {
-            if (viaIsSet($record['Evaluation']['status']) != 2) {
+            if (Hash::get($record, 'Evaluation.status') != 2) {
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
@@ -832,7 +832,7 @@ class Goal extends AppModel
         ];
         $res = $this->find('all', $options);
         foreach ($res as $record) {
-            if (viaIsSet($record['Evaluation']['status']) != 2) {
+            if (Hash::get($record, 'Evaluation.status') != 2) {
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
@@ -1034,7 +1034,7 @@ class Goal extends AppModel
 
         foreach ($goals as $k => $goal) {
             $goals[$k]['Goal']['is_current_term'] = false;
-            if ($target_end_date = viaIsSet($goal['Goal']['end_date'])) {
+            if ($target_end_date = Hash::get($goal, 'Goal.end_date')) {
                 if ($target_end_date >= $start_date && $target_end_date <= $end_date) {
                     $goals[$k]['Goal']['is_current_term'] = true;
                 }
@@ -1640,7 +1640,7 @@ class Goal extends AppModel
      *
      * @return mixed
      */
-    function setFilter($options, $conditions)
+    function setFilter(array $options, array $conditions)
     {
         //期間指定
         switch (Hash::get($conditions, 'term')) {
@@ -1775,7 +1775,7 @@ class Goal extends AppModel
         $target_progress_total = 0;
         $current_progress_total = 0;
         foreach ($goals as $goal) {
-            if (!viaIsSet($goal['GoalMember'][0]['priority'])) {
+            if (!Hash::get($goal, 'GoalMember.0.priority')) {
                 continue;
             }
             $target_progress_total += $goal['GoalMember'][0]['priority'] * 100;

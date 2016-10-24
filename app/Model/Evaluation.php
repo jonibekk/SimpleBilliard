@@ -38,18 +38,18 @@ class Evaluation extends AppModel
             ],
         ],
         'evaluatee_user_id' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
+            'notBlank' => [
+                'rule' => 'notBlank'
             ]
         ],
         'evaluator_user_id' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
+            'notBlank' => [
+                'rule' => 'notBlank'
             ]
         ],
         'evaluate_term_id'  => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
+            'notBlank' => [
+                'rule' => 'notBlank'
             ]
         ],
         'comment'           => [
@@ -218,7 +218,7 @@ class Evaluation extends AppModel
     function checkAvailViewEvaluationList()
     {
         $my_team_member_status = $this->Team->TeamMember->getWithTeam();
-        if (!viaIsSet($my_team_member_status['TeamMember'])) {
+        if (!Hash::get($my_team_member_status, 'TeamMember')) {
             throw new RuntimeException(__("You don't have access right to this page."));
         }
         return true;
@@ -417,8 +417,8 @@ class Evaluation extends AppModel
 
     function setAllowEmptyToComment()
     {
-        if (isset($this->validate['comment']['notEmpty'])) {
-            unset($this->validate['comment']['notEmpty']);
+        if (isset($this->validate['comment']['notBlank'])) {
+            unset($this->validate['comment']['notBlank']);
         }
         if (!isset($this->validate['comment']['isString']['allowEmpty'])) {
             $this->validate['comment']['isString']['allowEmpty'] = true;
@@ -428,10 +428,10 @@ class Evaluation extends AppModel
 
     function setNotAllowEmptyToComment()
     {
-        if (isset($this->validate['comment']['notEmpty'])) {
+        if (isset($this->validate['comment']['notBlank'])) {
             return;
         }
-        $this->validate['comment']['notEmpty'] = ['rule' => 'notEmpty'];
+        $this->validate['comment']['notBlank'] = ['rule' => 'notBlank'];
 
         if (isset($this->validate['comment']['isString']['allowEmpty'])) {
             unset($this->validate['comment']['isString']['allowEmpty']);
@@ -441,8 +441,8 @@ class Evaluation extends AppModel
 
     function setAllowEmptyToEvaluateScoreId()
     {
-        if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
-            unset($this->validate['evaluate_score_id']['notEmpty']);
+        if (isset($this->validate['evaluate_score_id']['notBlank'])) {
+            unset($this->validate['evaluate_score_id']['notBlank']);
         }
         if (!isset($this->validate['evaluate_score_id']['numeric']['allowEmpty'])) {
             $this->validate['evaluate_score_id']['numeric']['allowEmpty'] = true;
@@ -452,10 +452,10 @@ class Evaluation extends AppModel
 
     function setNotAllowEmptyToEvaluateScoreId()
     {
-        if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
+        if (isset($this->validate['evaluate_score_id']['notBlank'])) {
             return;
         }
-        $this->validate['evaluate_score_id']['notEmpty'] = ['rule' => 'notEmpty'];
+        $this->validate['evaluate_score_id']['notBlank'] = ['rule' => 'notBlank'];
 
         if (isset($this->validate['evaluate_score_id']['numeric']['allowEmpty'])) {
             unset($this->validate['evaluate_score_id']['numeric']['allowEmpty']);
@@ -520,7 +520,7 @@ class Evaluation extends AppModel
             $evaluations[] = $this->getAddRecord($uid, $uid, $term_id, $index++, self::TYPE_ONESELF);
         }
         //evaluator total
-        if ($this->Team->EvaluationSetting->isEnabledEvaluator() && viaIsSet($evaluators[$uid])) {
+        if ($this->Team->EvaluationSetting->isEnabledEvaluator() && Hash::get($evaluators, $uid)) {
             $evals = $evaluators[$uid];
             foreach ($evals as $eval_uid) {
                 $evaluations[] = $this->getAddRecord($uid, $eval_uid, $term_id, $index++, self::TYPE_EVALUATOR);
@@ -561,7 +561,7 @@ class Evaluation extends AppModel
             }
 
             //evaluator
-            if ($this->Team->EvaluationSetting->isEnabledEvaluator() && viaIsSet($evaluators[$uid])) {
+            if ($this->Team->EvaluationSetting->isEnabledEvaluator() && Hash::get($evaluators, $uid)) {
                 $evals = $evaluators[$uid];
                 foreach ($evals as $eval_uid) {
                     $goalEvaluations[] = $this->getAddRecord($uid, $eval_uid, $termId, $index++,
@@ -716,7 +716,7 @@ class Evaluation extends AppModel
             'order'      => ['index_num' => 'asc']
         ];
         $res = $this->find("first", $options);
-        return viaIsSet($res['Evaluation']['status']);
+        return Hash::get($res, 'Evaluation.status');
     }
 
     function getEvaluateType($evaluateTermId, $evaluateeId)
@@ -800,7 +800,7 @@ class Evaluation extends AppModel
                 'evaluate_term_id'
             ]
         ]);
-        return viaIsSet($res['Evaluation']['evaluate_term_id']);
+        return Hash::get($res, 'Evaluation.evaluate_term_id');
     }
 
     function getEvaluateeIdByEvaluationId($evaluationId)
@@ -813,7 +813,7 @@ class Evaluation extends AppModel
                 'evaluatee_user_id'
             ]
         ]);
-        return viaIsSet($res['Evaluation']['evaluatee_user_id']);
+        return Hash::get($res, 'Evaluation.evaluatee_user_id');
     }
 
     function getEvaluateeIdsByTermId($term_id)
@@ -859,13 +859,13 @@ class Evaluation extends AppModel
             return null;
         }
 
-        $myIndex = viaIsSet(Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num']);
+        $myIndex = Hash::get(Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]"), '0.index_num');
         if ($myIndex === null) {
             return null;
         }
 
         $nextIndex = (int)$myIndex + 1;
-        $nextId = viaIsSet(Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['evaluator_user_id']);
+        $nextId = Hash::get(Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]"), '0.evaluator_user_id');
         if (empty($nextId)) {
             return null;
         }
@@ -1145,7 +1145,7 @@ class Evaluation extends AppModel
         ];
 
         $res = $this->find('first', $options);
-        return viaIsSet($res['Evaluation']['id']);
+        return Hash::get($res, 'Evaluation.id');
     }
 
     function isThisEvaluateType($id, $type)

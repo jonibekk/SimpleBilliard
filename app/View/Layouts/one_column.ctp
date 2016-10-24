@@ -12,7 +12,7 @@ if (!isset($with_header_menu)) {
     $with_header_menu = true;
 }
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="ja">
@@ -44,32 +44,40 @@ if (!isset($with_header_menu)) {
 <?= $this->element('gl_common_js') ?>
 
 <!-- START import react code for setup -->
-<?php if (viaIsSet($this->request->params['controller']) === 'setup'): ?>
+<?php if (Hash::get($this->request->params, 'controller') === 'setup'): ?>
     <?= $this->Html->script('/compiled_assets/js/react_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for setup -->
 
 <!-- START import react code for signup -->
-<?php if(viaIsSet($this->request->params['controller']) === 'signup' && viaIsSet($this->request->params['action']) !== 'email'): ?>
-<?= $this->Html->script('/compiled_assets/js/react_signup_app.min')?>
+<?php if (Hash::get($this->request->params, 'controller') === 'signup' && Hash::get($this->request->params,
+        'action') !== 'email'
+): ?>
+    <?= $this->Html->script('/compiled_assets/js/react_signup_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
 <!-- START import react code for goal create -->
-<?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'create'): ?>
-<?= $this->Html->script('/compiled_assets/js/react_goal_create_app.min')?>
+<?php if (Hash::get($this->request->params, 'controller') === 'goals' && Hash::get($this->request->params,
+        'action') === 'create'
+): ?>
+    <?= $this->Html->script('/compiled_assets/js/react_goal_create_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
 <!-- START import react code for goal edit -->
-<?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'edit'): ?>
-<?= $this->Html->script('/compiled_assets/js/react_goal_edit_app.min')?>
+<?php if (Hash::get($this->request->params, 'controller') === 'goals' && Hash::get($this->request->params,
+        'action') === 'edit'
+): ?>
+    <?= $this->Html->script('/compiled_assets/js/react_goal_edit_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
 <!-- START import react code for goal approval -->
-<?php if(viaIsSet($this->request->params['controller']) === 'goals' && viaIsSet($this->request->params['action']) === 'approval'): ?>
-<?= $this->Html->script('/compiled_assets/js/react_goal_approval_app.min')?>
+<?php if (Hash::get($this->request->params, 'controller') === 'goals' && Hash::get($this->request->params,
+        'action') === 'approval'
+): ?>
+    <?= $this->Html->script('/compiled_assets/js/react_goal_approval_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
@@ -82,4 +90,4 @@ if (!isset($with_header_menu)) {
 } ?>
 </body>
 </html>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
