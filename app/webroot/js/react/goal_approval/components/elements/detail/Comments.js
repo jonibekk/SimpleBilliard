@@ -20,6 +20,12 @@ export class Comments extends React.Component {
     this.setState({ comment })
   }
 
+  onSubmit() {
+    const post_data = {}
+
+    this.props.postComment(post_data)
+  }
+
   render() {
     if(Object.keys(this.props.approval_histories).length == 0) {
       return null

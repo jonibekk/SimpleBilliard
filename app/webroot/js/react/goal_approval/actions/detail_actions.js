@@ -97,7 +97,7 @@ export function postWithdraw(goal_member_id) {
   }
 }
 
-export function saveComment(postData) {
+export function postComment(postData) {
   return (dispatch) => {
     dispatch(postingComment())
 

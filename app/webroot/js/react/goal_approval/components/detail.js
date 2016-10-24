@@ -55,7 +55,7 @@ export default class DetailComponent extends React.Component {
               <Comments approval_histories={ detail.goal_member.approval_histories }
                         view_more_text={ detail.goal_member.histories_view_more_text }
                         is_mine={ detail.is_mine }
-                        saveComment={ (post_data) => this.props.saveComment(post_data) }
+                        postComment={ (post_data) => this.props.postComment(post_data) }
                         posting={ this.props.posting_comment } />
               {/* footer */}
               { detail.goal_member.is_mine ? coachee_footer : coach_footer }

@@ -13,7 +13,7 @@ function mapDispatchToProps(dispatch) {
     postRemoveFromTarget: (input_data) => dispatch(actions.postRemoveFromTarget(input_data)),
     initDetailPage: () => dispatch(actions.initDetailPage()),
     postWithdraw: (goal_member_id) => dispatch(actions.postWithdraw(goal_member_id)),
-    saveComment: (postData) => dispatch(actions.saveComment(postData))
+    postComment: (postData) => dispatch(actions.postComment(postData))
   }
 }
 
