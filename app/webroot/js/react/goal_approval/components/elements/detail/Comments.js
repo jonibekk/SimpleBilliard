@@ -59,12 +59,12 @@ export class Comments extends React.Component {
           {/* コメント投稿ボックス */}
           <div className="goals-approval-detail-comments-form">
             <form onSubmit={ this.onSubmit }>
-              <div className="goals-approval-detail-comments-form-left">
+              <div className="goals-approval-detail-comments-form-textarea">
                 <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) }></Textarea>
               </div>
-              <div className="goals-approval-detail-comments-form-right">
+              <div className="goals-approval-detail-comments-form-submit">
                 <input
-                  className="btn goals-approval-detail-comments-form-button"
+                  className="btn goals-approval-detail-comments-form-submit-button"
                   disabled={`${this.props.posting || !this.state.comment ? "disabled" : ""}`}
                   type="submit"
                   value={__("Send")} />
