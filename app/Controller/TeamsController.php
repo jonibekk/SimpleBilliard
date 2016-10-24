@@ -1131,7 +1131,7 @@ class TeamsController extends AppController
             $this->User->Email->validate = [
                 'email' => [
                     'maxLength' => ['rule' => ['maxLength', 200]],
-                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
             ];

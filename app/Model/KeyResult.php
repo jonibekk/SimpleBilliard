@@ -76,9 +76,9 @@ class KeyResult extends AppModel
     public $validate = [
         'name'         => [
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => [
+            'notBlank'  => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
         ],
         'del_flg'      => [
@@ -95,9 +95,9 @@ class KeyResult extends AppModel
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => [
+            'notBlank' => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
         ],
         'start_value'  => [
