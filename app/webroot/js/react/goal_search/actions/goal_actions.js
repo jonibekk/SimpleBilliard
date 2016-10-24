@@ -61,6 +61,21 @@ export function updateFilter(data) {
   }
 }
 
+export function fetchMoreGoals(url) {
+  return (dispatch, getState) => {
+    return axios.get(`${url}`)
+      .then((response) => {
+        const search_result = response.data
+        dispatch({
+          type: ActionTypes.FETCH_MORE_GOALS,
+          search_result
+        })
+      })
+      .catch((response) => {
+      })
+  }
+}
+
 /**
  * 入力値にマッチしたサジェストのリストを取得
  * 空文字(フォーカス時等でもサジェスト表示許可

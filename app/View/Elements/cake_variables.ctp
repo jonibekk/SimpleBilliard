@@ -512,7 +512,13 @@
             "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
             "Save changes": "<?= __("Save changes") ?>",
             "Optional": "<?= __("Optional") ?>",
-            "Top Key Result": "<?= __("Top Key Result") ?>"
+            "Top Key Result": "<?= __("Top Key Result") ?>",
+            "Creation Date": "<?= __("Creation Date") ?>",
+            "Actions number": "<?= __("Actions number") ?>",
+            "Key results number": "<?= __("Key results number") ?>",
+            "Followers number": "<?= __("Followers number") ?>",
+            "Collaborators number": "<?= __("Collaborators number") ?>",
+            "Progress rate": "<?= __("Progress rate") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

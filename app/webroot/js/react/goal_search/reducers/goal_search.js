@@ -4,11 +4,11 @@ import * as LabelInput from "~/goal_search/modules/LabelInput";
 const initialState = {
   categories: [],
   labels: [],
-  search_result:{
-    data:[],
-    count:0,
+  search_result: {
+    data: [],
+    count: 0,
     paging: {
-      next:''
+      next: ''
     }
   },
   keyword: "",
@@ -16,7 +16,7 @@ const initialState = {
   suggestions: [],
   suggestions_exclude_selected: [],
   search_conditions: {},
-  showFilter:false
+  showFilter: false
 }
 
 export default function goal_search(state = initialState, action) {
@@ -25,7 +25,7 @@ export default function goal_search(state = initialState, action) {
   switch (action.type) {
     case ActionTypes.FETCH_INITIAL_DATA:
       return Object.assign({}, state, action.data, {
-        suggestions_exclude_selected:[...action.data.labels],
+        suggestions_exclude_selected: [...action.data.labels],
       })
 
     case ActionTypes.UPDATE_DATA:
@@ -46,6 +46,15 @@ export default function goal_search(state = initialState, action) {
         search_conditions: action.search_conditions,
       })
 
+    case ActionTypes.FETCH_MORE_GOALS:
+      const search_result = {
+        data: [...state.search_result.data, ...action.search_result.data],
+        paging: action.search_result.paging,
+        count: action.search_result.count
+      }
+      return Object.assign({}, state, {
+        search_result
+      })
 
     /* LabelInput */
     case LabelInput.REQUEST_SUGGEST:
@@ -55,7 +64,7 @@ export default function goal_search(state = initialState, action) {
       })
     case LabelInput.CLEAR_SUGGEST:
       return Object.assign({}, state, {
-        label_keyword:""
+        label_keyword: ""
       })
 
     case LabelInput.SET_KEYWORD:

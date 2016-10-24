@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import * as KeyCode from "~/common/constants/KeyCode";
 import GoalSearchFilter from "~/goal_search/components/elements/GoalSearchFilter";
 import GoalCard from "~/goal_search/components/elements/GoalCard";
+import InfiniteScroll from "redux-infinite-scroll";
 
 export default class Goals extends React.Component {
   constructor(props) {
     super(props)
-
-    this.onChange = this.onChange.bind(this)
+    this.updateFilter = this.updateFilter.bind(this);
   }
 
   componentWillMount() {
@@ -26,24 +26,12 @@ export default class Goals extends React.Component {
     this.props.validateGoal(this.props.params.goalId, this.getInputDomData())
   }
 
-  onKeyPress(e) {
-    // ラベル入力でEnterキーを押した場合submitさせない
-    // e.keyCodeはonKeyPressイベントでは取れないのでe.charCodeを使用
-    if (e.charCode == KeyCode.ENTER) {
-      e.preventDefault()
-      return false
-    }
-  }
-
-  onChange(e, childKey = "") {
-    this.props.updateInputData({[e.target.name]: e.target.value}, childKey)
-  }
-
   showFilter() {
     this.props.updateData({showFilter: !this.props.goal_search.showFilter})
   }
 
-  updateFilter(key, val) {
+  updateFilter(e, key, val) {
+    e.preventDefault()
     this.props.updateFilter({[key]: val})
   }
 
@@ -52,8 +40,37 @@ export default class Goals extends React.Component {
     this.props.updateFilter({keyword: ReactDOM.findDOMNode(this.refs.keyword).value.trim()})
   }
 
+
+  fetchMoreGoals() {
+    const {search_result} = this.props.goal_search
+    const url = search_result.paging.next
+    this.props.fetchMoreGoals(url)
+
+  }
+
+  renderGoals(goals) {
+    return goals.map((goal) => {
+      return (
+        <GoalCard goal={goal} key={goal.id}/>
+      )
+    })
+  }
+
   render() {
     const props = this.props.goal_search
+
+    const goals = props.search_result.data
+
+    const order = props.search_conditions["order"] ? props.search_conditions["order"] : "new";
+
+    const search_orders = {
+      new: __("Creation Date"),
+      action: __("Actions number"),
+      result: __("Key results number"),
+      follow: __("Followers number"),
+      collabo: __("Collaborators number"),
+      progress: __("Progress rate")
+    }
 
     return (
       <div className="panel panel-default">
@@ -61,7 +78,8 @@ export default class Goals extends React.Component {
         <div className="panel-block bd-b-sc4">
           <form onSubmit={this.searchByKeyword.bind(this)}>
             <div className="goal-search-keyword mb_10px">
-              <input type="text" className="goal-search-keyword-input" placeholder="キーワードで検索" ref="keyword" maxLength="50"/>
+              <input type="text" className="goal-search-keyword-input" placeholder="キーワードで検索" ref="keyword"
+                     maxLength="50"/>
               <span onClick={this.searchByKeyword.bind(this)} className="goal-search-keyword-submit fa fa-search"/>
             </div>
           </form>
@@ -90,16 +108,24 @@ export default class Goals extends React.Component {
               <div role="group">
                 <p className="dropdown-toggle goal-search-order-text" data-toggle="dropdown" role="button"
                    aria-expanded="false">
-                  <span className>新着順</span>
+                  <span className>{search_orders[order]}</span>
                   <i className="fa fa-angle-down"/>
                 </p>
                 <ul className="dropdown-menu pull-right" role="menu">
-                  <li><a href="#" search-order="new">新着順</a></li>
-                  <li><a href="#" search-order="action">アクションが多い順</a></li>
-                  <li><a href="#" search-order="result">出した成果が多い順</a></li>
-                  <li><a href="#" search-order="follow">フォロワーが多い順</a></li>
-                  <li><a href="#" search-order="collabo">コラボが多い順</a></li>
-                  <li><a href="#" search-order="progress">進捗率が高い順</a></li>
+                  {(() => {
+                    let search_orders_el = []
+                    for(let key of Object.keys(search_orders)) {
+                      search_orders_el.push(
+                        <li key={key}>
+                          <a href="#" search-order={key}
+                             onClick={(e) => this.updateFilter(e, "order", key)}>
+                            {search_orders[key]}
+                          </a>
+                        </li>
+                      )
+                    }
+                    return search_orders_el
+                  })()}
                 </ul>
               </div>
             </div>
@@ -107,9 +133,12 @@ export default class Goals extends React.Component {
         </div>
 
         {/*goal list*/}
-        {props.search_result.data.map((goal) => {
-          return <GoalCard goal={goal} key={goal.id}/>
-        })}
+        <InfiniteScroll
+          loadMore={this.fetchMoreGoals.bind(this)}
+          items={this.renderGoals(goals)}
+          elementIsScrollable={false}
+        />
+
       </div>
     )
   }
