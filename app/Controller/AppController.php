@@ -45,6 +45,7 @@ class AppController extends BaseController
         'Ogp',
         'Uservoice',
         'Csv',
+        'Flash',
         //        'Benchmark',
     ];
     private $merge_helpers = [
@@ -683,7 +684,7 @@ class AppController extends BaseController
      */
     public function _flashClickEvent($id)
     {
-        $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
+        $this->Flash->set(null,['element'=>'flash_click_event', 'params'=>['id' => $id], 'key'=>'click_event']);
     }
 
     public function _setAvailEvaluation()

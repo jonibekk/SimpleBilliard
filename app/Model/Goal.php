@@ -122,9 +122,9 @@ class Goal extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => [
+            'notBlank'  => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
         ],
         'description'      => [
@@ -162,9 +162,9 @@ class Goal extends AppModel
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => [
+            'notBlank' => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
         ],
         'start_date'       => [
@@ -185,9 +185,9 @@ class Goal extends AppModel
 
     public $post_validate = [
         'end_date'  => [
-            'notEmpty'            => [
+            'notBlank'            => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
             'isString'            => ['rule' => 'isString'],
             'dateYmd'             => [
@@ -198,18 +198,18 @@ class Goal extends AppModel
         ],
         'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
-            'notEmpty' => [
+            'notBlank' => [
                 //'required' => 'create',
-                'rule' => 'notEmpty',
+                'rule' => 'notBlank',
             ],
         ]
     ];
 
     public $update_validate = [
         'end_date'  => [
-            'notEmpty'            => [
+            'notBlank'            => [
                 'required' => 'create',
-                'rule'     => 'notEmpty',
+                'rule'     => 'notBlank',
             ],
             'isString'            => ['rule' => 'isString'],
             'dateYmd'             => [

@@ -16,8 +16,8 @@ class RecoveryCode extends AppModel
      */
     public $validate = [
         'code'          => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'available_flg' => [

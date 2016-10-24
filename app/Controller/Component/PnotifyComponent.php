@@ -17,7 +17,8 @@ class PnotifyComponent extends Component
     private $Controller;
 
     public $components = [
-        'Session'
+        'Session',
+        'Flash'
     ];
 
     /**
@@ -128,7 +129,7 @@ class PnotifyComponent extends Component
         //改行を除去
         $cr = array("\r\n", "\r", "\n");
         $message = str_replace($cr, "", $message);
-        $this->Session->setFlash($message, 'flash_pnotify', $merged_option, 'pnotify');
+        $this->Flash->set($message,['element'=>'flash_pnotify', 'params'=>$merged_option, 'key'=>'pnotify']);
     }
 
 }

@@ -29,8 +29,8 @@ class Label extends AppModel
             'maxLength' => [
                 'rule' => ['maxLength', 20]
             ],
-            'notEmpty'  => [
-                'rule'     => ['notEmpty'],
+            'notBlank'  => [
+                'rule'     => ['notBlank'],
                 'required' => 'create',
             ],
             'isUnique'  => [
