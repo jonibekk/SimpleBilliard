@@ -684,7 +684,7 @@ class AppController extends BaseController
      */
     public function _flashClickEvent($id)
     {
-        $this->Flash->set(null,['element'=>'flash_click_event', 'params'=>['id' => $id], 'key'=>'click_event']);
+        $this->Flash->set(null, ['element' => 'flash_click_event', 'params' => ['id' => $id], 'key' => 'click_event']);
     }
 
     public function _setAvailEvaluation()
@@ -698,16 +698,6 @@ class AppController extends BaseController
         $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
         $unread_msg_post_ids = $this->NotifyBiz->getUnreadMessagePostIds();
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_post_ids'));
-    }
-
-    function _getRequiredParamIfNoParamRedirectToReferer($name)
-    {
-        $id = Hash::get($this->request->params, "named.$name");
-        if (!$id) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
-            return $this->redirect($this->referer());
-        }
-        return $id;
     }
 
     function _getRedirectUrl()

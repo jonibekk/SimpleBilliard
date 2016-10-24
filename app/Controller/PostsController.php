@@ -1078,7 +1078,12 @@ class PostsController extends AppController
     {
         $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-        $circle_id = $this->_getRequiredParamIfNoParamRedirectToReferer('circle_id');
+        $circle_id = Hash::get($this->request->params, "named.circle_id");
+        if (!$circle_id) {
+            $this->Pnotify->outError(__("Invalid screen transition."));
+            return $this->redirect($this->referer());
+        }
+
         $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
         $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
             Hash::get($this->request->params, 'named.file_type'));
