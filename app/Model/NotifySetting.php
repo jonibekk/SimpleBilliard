@@ -233,7 +233,8 @@ class NotifySetting extends AppModel
         self::TYPE_COACHEE_WITHDRAW_APPROVAL             => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
-            'field_prefix'    => 'coachee_withdraw_approval',
+            //TODO 現在、この通知用のカラムが存在しないため、ゴール作成の通知と同じカラム名にしておく。通知設定を細分化しなければ新たに用意する必要なし
+            'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],

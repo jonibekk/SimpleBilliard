@@ -206,14 +206,17 @@ export function initInputData(inputData, page, data) {
       }
       break;
     case Page.STEP4:
-      if (Object.keys(inputData.key_result).length == 0) {
-        inputData["key_result"] = inputData["key_result"] || {};
-        if (data.units.length > 0) {
-          inputData.key_result["value_unit"] = data.units[0].id
-        }
-        inputData.key_result["start_value"] = 0
-        inputData.key_result["target_value"] = 100
+      if (Object.keys(inputData.key_result).length > 0 && inputData.key_result.value_unit) {
+        break;
       }
+      inputData["key_result"] = inputData.key_result || {};
+
+      if (data.units.length > 0) {
+        inputData.key_result["value_unit"] = data.units[0].id
+      }
+      inputData.key_result["start_value"] = 0
+      inputData.key_result["target_value"] = 100
+
       break;
     default:
       return inputData;
