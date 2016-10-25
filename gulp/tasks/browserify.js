@@ -4,7 +4,6 @@ import babelify from 'babelify'
 import source from 'vinyl-source-stream'
 import duration from 'gulp-duration'
 import config from '../config.js'
-import plumber from 'gulp-plumber'
 import handleErrors from '../util/handleErrors'
 
 config.react_apps.map((app_name) => {

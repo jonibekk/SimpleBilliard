@@ -1,5 +1,4 @@
 import notify from "gulp-notify"
-import notifier from "node-notifier"
 
 module.exports = function(err) {
   notify.onError({
