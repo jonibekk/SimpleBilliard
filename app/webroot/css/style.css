@@ -698,6 +698,12 @@ textarea{
 
 /*/ text-align */
 
+
+.d-block {
+    display: block;
+}
+
+
 .tap-btn {
     font-size: 40px;
     line-height: 40px;

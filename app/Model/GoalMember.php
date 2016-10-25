@@ -896,7 +896,8 @@ class GoalMember extends AppModel
             'fields'=> ['goal_id', 'count(goal_id) as exist'],
             'conditions' => [
                 'goal_id' => $goalIds,
-                'user_id' => $userId
+                'user_id' => $userId,
+                'type' => self::TYPE_COLLABORATOR
             ],
             'group' => ['goal_id'],
         ]);

@@ -1602,7 +1602,7 @@ class Goal extends AppModel
             'offset'     => $offset,
         ];
         //
-        $options = $this->setFilter($options, $conditions);
+        $options = $this->setFilter($options, $conditions, $order);
 
         $goals = $this->find('all', $options);
         return Hash::extract($goals, '{n}.Goal');
@@ -1637,11 +1637,38 @@ class Goal extends AppModel
      *
      * @param $options
      * @param $conditions
+     * @param $order
      *
      * @return mixed
      */
-    function setFilter(array $options, array $conditions)
+    function setFilter(array $options, array $conditions, $order = "")
     {
+        // キーワード(ゴール名)
+        $keyword = Hash::get($conditions, 'keyword');
+        if (!empty($keyword)) {
+            $options['conditions']['Goal.name LIKE'] = "%$keyword%";
+        }
+
+        // ゴールラベル
+        // パフォーマンス向上の為、ラベル名ではなくラベルIDによってゴール検索を行う
+        $labelNames = Hash::get($conditions, 'labels');
+        $labelIds = $this->GoalLabel->Label->findIdsByNames($labelNames);
+        if (!empty($labelIds)) {
+            $options['joins'] = [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_labels',
+                    'alias'      => 'GoalLabel',
+                    'conditions' => [
+                        'GoalLabel.goal_id = Goal.id',
+                        'GoalLabel.del_flg'  => 0,
+                        'GoalLabel.label_id' => $labelIds,
+                    ],
+                ],
+            ];
+            $options['group'] = ['Goal.id'];
+        }
+
         //期間指定
         switch (Hash::get($conditions, 'term')) {
             case 'previous':
@@ -1675,10 +1702,11 @@ class Goal extends AppModel
                 unset($options['conditions']['Goal.end_date >=']);
                 break;
         }
+
         //カテゴリ指定
         $category = Hash::get($conditions, 'category');
         if (!empty($category) && $category !== 'all') {
-            $options['conditions']['Goal.goal_category_id'] = $conditions['category'][0];
+            $options['conditions']['Goal.goal_category_id'] = $category;
         }
 
         //進捗指定
@@ -1690,76 +1718,79 @@ class Goal extends AppModel
                 $options['conditions']['Goal.completed'] = null;
                 break;
         }
+
         //ソート指定
-        switch (Hash::get($conditions, 'order')) {
-            case 'action' :
-                $options['order'] = ['Goal.action_result_count desc'];
-                break;
-            case 'result' :
-                $options['order'] = ['count_key_result desc'];
-                $options['fields'][] = 'count(KeyResult.id) as count_key_result';
-                $options['joins'] = [
-                    [
-                        'type'       => 'left',
-                        'table'      => 'key_results',
-                        'alias'      => 'KeyResult',
-                        'conditions' => [
-                            'KeyResult.goal_id = Goal.id',
-                            'KeyResult.del_flg' => 0,
-                            'NOT'               => ['KeyResult.completed' => null],
+        if (!empty($order)) {
+            switch ($order) {
+                case 'action' :
+                    $options['order'] = ['Goal.action_result_count desc'];
+                    break;
+                case 'result' :
+                    $options['order'] = ['count_key_result desc'];
+                    $options['fields'][] = 'count(KeyResult.id) as count_key_result';
+                    $options['joins'] = [
+                        [
+                            'type'       => 'left',
+                            'table'      => 'key_results',
+                            'alias'      => 'KeyResult',
+                            'conditions' => [
+                                'KeyResult.goal_id = Goal.id',
+                                'KeyResult.del_flg' => 0,
+                                'NOT'               => ['KeyResult.completed' => null],
+                            ],
                         ],
-                    ],
-                ];
-                $options['group'] = ['Goal.id'];
-                break;
-            case 'follow' :
-                $options['order'] = ['count_follow desc'];
-                $options['fields'][] = 'count(Follower.id) as count_follow';
-                $options['joins'] = [
-                    [
-                        'type'       => 'left',
-                        'table'      => 'followers',
-                        'alias'      => 'Follower',
-                        'conditions' => [
-                            'Follower.goal_id = Goal.id',
-                            'Follower.del_flg' => 0,
+                    ];
+                    $options['group'] = ['Goal.id'];
+                    break;
+                case 'follow' :
+                    $options['order'] = ['count_follow desc'];
+                    $options['fields'][] = 'count(Follower.id) as count_follow';
+                    $options['joins'] = [
+                        [
+                            'type'       => 'left',
+                            'table'      => 'followers',
+                            'alias'      => 'Follower',
+                            'conditions' => [
+                                'Follower.goal_id = Goal.id',
+                                'Follower.del_flg' => 0,
+                            ],
                         ],
-                    ],
-                ];
-                $options['group'] = ['Goal.id'];
-                break;
-            case 'collabo' :
-                $options['order'] = ['count_goal_member desc'];
-                $options['fields'][] = 'count(GoalMember.id) as count_goal_member';
-                $options['joins'] = [
-                    [
-                        'type'       => 'left',
-                        'table'      => 'goal_members',
-                        'alias'      => 'GoalMember',
-                        'conditions' => [
-                            'GoalMember.goal_id = Goal.id',
-                            'GoalMember.del_flg' => 0,
+                    ];
+                    $options['group'] = ['Goal.id'];
+                    break;
+                case 'collabo' :
+                    $options['order'] = ['count_goal_member desc'];
+                    $options['fields'][] = 'count(GoalMember.id) as count_goal_member';
+                    $options['joins'] = [
+                        [
+                            'type'       => 'left',
+                            'table'      => 'goal_members',
+                            'alias'      => 'GoalMember',
+                            'conditions' => [
+                                'GoalMember.goal_id = Goal.id',
+                                'GoalMember.del_flg' => 0,
+                            ],
                         ],
-                    ],
-                ];
-                $options['group'] = ['Goal.id'];
-                break;
-            case 'progress' :
-                $options['order'] = ['cal_progress desc'];
-                $options['fields'][] = '(SUM(KeyResult.priority * KeyResult.progress)/(SUM(KeyResult.priority * 100)))*100 as cal_progress';
-                $options['joins'] = [
-                    [
-                        'type'       => 'left',
-                        'table'      => 'key_results',
-                        'alias'      => 'KeyResult',
-                        'conditions' => [
-                            'KeyResult.goal_id = Goal.id',
-                            'KeyResult.del_flg' => 0,
+                    ];
+                    $options['group'] = ['Goal.id'];
+                    break;
+                case 'progress' :
+                    $options['order'] = ['cal_progress desc'];
+                    $options['fields'][] = '(SUM(KeyResult.priority * KeyResult.progress)/(SUM(KeyResult.priority * 100)))*100 as cal_progress';
+                    $options['joins'] = [
+                        [
+                            'type'       => 'left',
+                            'table'      => 'key_results',
+                            'alias'      => 'KeyResult',
+                            'conditions' => [
+                                'KeyResult.goal_id = Goal.id',
+                                'KeyResult.del_flg' => 0,
+                            ],
                         ],
-                    ],
-                ];
-                $options['group'] = ['Goal.id'];
-                break;
+                    ];
+                    $options['group'] = ['Goal.id'];
+                    break;
+            }
         }
         return $options;
     }

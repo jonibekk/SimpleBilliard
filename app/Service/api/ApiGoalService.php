@@ -6,17 +6,21 @@ App::import('Service/Api', 'ApiService');
  */
 class ApiGoalService extends ApiService
 {
+    // ゴール検索デフォルト取得件数
+    const GOAL_SEARCH_DEFAULT_LIMIT = 10;
+
     /**
      * ゴール検索
      *
-     * @param $conditions
-     * @param $offset
-     * @param $limit
-     * @param $order
+     * @param        $userId
+     * @param        $conditions
+     * @param        $offset
+     * @param        $limit
+     * @param string $order
      *
      * @return array
      */
-    function search($userId, $conditions, $offset, $limit, $order)
+    function search($userId, $conditions, $offset, $limit, $order = "")
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -33,11 +37,11 @@ class ApiGoalService extends ApiService
 
         // ゴール件数取得
         $count = $Goal->countSearch($conditions);
+//        $this->log($Goal->getDataSource()->getLog());
         if ($count == 0) {
             return $ret;
         }
         $ret['count'] = $count;
-
         // ゴール検索
         $goals = $Goal->search($conditions, $offset, $limit + 1, $order);
         if (empty($goals)) {
@@ -47,11 +51,12 @@ class ApiGoalService extends ApiService
         // APIレスポンス用に整形
         $ret['data'] = $this->formatResponseData($goals);
 
+        // ページング情報設定
+        $this->setPaging($ret, $conditions, $offset, $limit, $order);
+
         // レスポンスデータ拡張
         $ret['data'] = $this->extend($ret['data'], $userId);
 
-        // ページング情報設定
-        $this->setPaging($ret, $conditions, $offset, $limit, $order);
 
         return $ret;
     }
@@ -108,9 +113,23 @@ class ApiGoalService extends ApiService
         $followerCountEachGoalId = $Follower->countEachGoalId($goalIds);
         $goalMemberCountEachGoalId = $GoalMember->countEachGoalId($goalIds);
 
-        // フォロー、コラボしているか
-        $isFollowingCountEachGoalId = $Follower->isFollowingEachGoalId($goalIds, $loginUserId);
-        $isMemberCountEachGoalId = $GoalMember->isMemberCountEachGoalId($goalIds, $loginUserId);
+        $followConditionGoalIds = [];
+        // フォローのアクションを無効にするか
+        foreach ($goals as &$goal) {
+            if ($goal['user_id'] == $loginUserId) {
+                $goal['can_follow'] = false;
+                continue;
+            }
+            if ($goal['completed']){
+                $goal['can_follow'] = false;
+                continue;
+            }
+            $goal['can_follow'] = true;
+            $followConditionGoalIds[] = $goal['id'];
+        }
+
+        // フォローしているか
+        $isFollowingEachGoalId = $Follower->isFollowingEachGoalId($followConditionGoalIds, $loginUserId);
 
         // ゴール毎に関連情報を設定
         foreach ($goals as &$goal) {
@@ -123,8 +142,7 @@ class ApiGoalService extends ApiService
             $goal['action_count'] = (int)$actionCountEachGoalId[$goalId];
             $goal['follower_count'] = (int)$followerCountEachGoalId[$goalId];
             $goal['goal_member_count'] = (int)$goalMemberCountEachGoalId[$goalId];
-            $goal['is_follow'] = (boolean)$isFollowingCountEachGoalId[$goalId];
-            $goal['is_member'] = (boolean)$isMemberCountEachGoalId[$goalId];
+            $goal['is_follow'] = !empty($isFollowingEachGoalId[$goalId]);
         }
         return $goals;
     }
@@ -140,7 +158,7 @@ class ApiGoalService extends ApiService
     private function extractConditions($params)
     {
         $conditions = [];
-        $conditionFields = ['term', 'category', 'progress'];
+        $conditionFields = ['keyword', 'term', 'category', 'progress', 'labels'];
         foreach ($conditionFields as $field) {
             if (!empty($params[$field])) {
                 $conditions[$field] = $params[$field];
@@ -164,7 +182,7 @@ class ApiGoalService extends ApiService
         if ($limit + 1 > count($data['data'])) {
             return;
         }
-
+        array_pop($data['data']);
         $newOffset = $offset + $limit;
         $queryParams = array_merge(
             $conditions,

@@ -141,12 +141,7 @@ class GoalTest extends GoalousTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
-        $params = [
-            'named' => [
-                'page' => 1
-            ]
-        ];
-        $res = $this->Goal->search(20, null, $params, true);
+        $res = $this->Goal->search([], 0, 1);
         $this->assertTrue(!empty($res));
     }
 
@@ -648,9 +643,16 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $options = $this->Goal->getSearchOptions();
         foreach ($options as $type => $val) {
-            foreach ($val as $key => $value) {
-                $search_option[$type][0] = $key;
-                $this->Goal->search(null, $search_option);
+            if ($type === "order") {
+                foreach ($val as $key => $value) {
+                    $searchConditions[$type] = $key;
+                    $this->Goal->search([], 0, 10, $key);
+                }
+            } else {
+                foreach ($val as $key => $value) {
+                    $searchConditions[$type] = $key;
+                    $this->Goal->search($searchConditions, 0, 10);
+                }
             }
         }
     }
