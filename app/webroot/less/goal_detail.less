@@ -147,10 +147,6 @@
   border-radius: 0 0 4px 4px;
 }
 
-.goal-detail-goal-name {
-  font-weight: bold;
-}
-
 .goal-detail-panels {
   background: #f6f5f1;
 }
@@ -160,11 +156,11 @@
 }
 
 .goal-detail-info-due-wrap {
-  margin-bottom: 12px;
+  //margin-bottom: 12px;
 }
 
 .goal-detail-info-members {
-  margin-bottom: 12px;
+  //margin-bottom: 12px;
 }
 
 .goal-detail-info-left-icons {
@@ -211,6 +207,68 @@
   border-radius: 50%;
 }
 
+.goal-detail-ul {
+  padding-left: 1em;
+}
+
+.goal-detail-li {
+  position: relative;
+  padding-left: 0.4em;
+  &:before {
+    font-family: FontAwesome;
+    content: '';
+    position: absolute;
+    left: -1em;
+    top: 0;
+  }
+}
+
+.goal-detail-goal-name-top-section {
+  font-weight: bold;
+}
+
+.goal-detail-goal-name {
+  font-weight: bold;
+  .goal-detail-li;
+  &:before {
+    content: '\f024';
+  }
+}
+
+.goal-detail-goal-category {
+  .goal-detail-li;
+  &:before {
+    content: '\f114';
+  }
+}
+
+.goal-detail-goal-labels {
+  .goal-detail-li;
+  &:before {
+    content: '\f02c';
+  }
+}
+
+.goal-detail-goal-date {
+  .goal-detail-li;
+  &:before {
+    content: '\f073';
+  }
+}
+
+.goal-detail-goal-members {
+  .goal-detail-li;
+  &:before {
+    content: '\f1ae';
+  }
+}
+
+.goal-detail-goal-description {
+  .goal-detail-li;
+  &:before {
+    content: '\f24a';
+  }
+}
 
 /**
  * 使わないことになった
@@ -254,14 +312,13 @@
  *
  */
 
-
 /**
  * Goal page kr
  */
 
- .goal-detail-kr-panel {
-   .goal-detail-panels;
- }
+.goal-detail-kr-panel {
+  .goal-detail-panels;
+}
 
 .goal-detail-kr-progress-score {
   margin-bottom: 12px;
@@ -298,7 +355,7 @@
   background: @backgroundColor1;
   border-radius: 8px;
   padding: 8px 0;
-  .borderBottom &:not(:last-child){
+  .borderBottom &:not(:last-child) {
     margin: 8px 0;
   }
 }
@@ -447,7 +504,7 @@
 
 .goal-detail-follower-avatar {
   .avatar-bordered-rounded;
-  width:64px;
+  width: 64px;
   display: inline-block;
 }
 
@@ -466,7 +523,7 @@
 
 .goal-detail-label {
   display: inline;
-  padding: .2em .6em .3em;
+  padding: .1em .3em .3em;
   font-size: 75%;
   color: #c0c1c1;
   border-radius: .25em;
