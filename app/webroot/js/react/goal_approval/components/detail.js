@@ -1,5 +1,5 @@
 import React from 'react'
-import { Comments } from "~/goal_approval/components/elements/detail/Comments";
+import Comments from "~/goal_approval/components/elements/detail/Comments";
 import { GoalBlock } from "~/goal_approval/components/elements/detail/GoalBlock";
 import { UserCard } from "~/goal_approval/components/elements/detail/UserCard";
 import { CoachFooter } from "~/goal_approval/components/elements/detail/CoachFooter";
@@ -55,10 +55,10 @@ export default class DetailComponent extends React.Component {
               <Comments approval_histories={ detail.goal_member.approval_histories }
                         view_more_text={ detail.goal_member.histories_view_more_text }
                         is_mine={ detail.is_mine }
-                        postComment={ (post_data) => this.props.postComment(post_data) }
                         posting={ detail.posting_comment }
                         goal_member_id={ this.props.params.goal_member_id }
-                        add_comments={ detail.add_comments } />
+                        add_comments={ detail.add_comments }
+                        comment={ detail.comment } />
               {/* footer */}
               { detail.goal_member.is_mine ? coachee_footer : coach_footer }
           </div>

@@ -111,6 +111,7 @@ export function postComment(postData) {
         /* eslint-enable no-console */
         dispatch(finishedPostingComment())
         dispatch(addComment(response.data.data.approval_history))
+        dispatch(updateComment(''))
       },
       (response) => {
         dispatch(finishedPostingComment())
@@ -171,4 +172,8 @@ export function initDetailPage() {
 
 export function addComment(comment) {
   return {type: types.ADD_COMMENT, comment}
+}
+
+export function updateComment(comment) {
+  return {type: types.UPDATE_COMMENT, comment}
 }

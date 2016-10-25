@@ -1,13 +1,15 @@
 import React from 'react'
 import ReactDOM from "react-dom";
+import { connect } from "react-redux";
+import * as actions from "~/goal_approval/actions/detail_actions";
 import Textarea from "react-textarea-autosize";
 import { Comment } from "~/goal_approval/components/elements/detail/Comment";
 
-export class Comments extends React.Component {
+class Comments extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { display_all_comments: false, comment: '' }
+    this.state = { display_all_comments: false }
   }
 
   displayAllComments() {
@@ -17,7 +19,7 @@ export class Comments extends React.Component {
   onChange() {
     const comment = ReactDOM.findDOMNode(this.refs.comment).value.trim()
 
-    this.setState({ comment })
+    this.props.dispatch(actions.updateComment(comment))
   }
 
   onSubmit(e) {
@@ -27,11 +29,11 @@ export class Comments extends React.Component {
         id: this.props.goal_member_id
       },
       approval_history: {
-        comment: this.state.comment
+        comment: this.props.comment
       }
     }
 
-    this.props.postComment(post_data)
+    this.props.dispatch(actions.postComment(post_data))
   }
 
   render() {
@@ -70,12 +72,12 @@ export class Comments extends React.Component {
           <div className="goals-approval-detail-comments-form">
             <form onSubmit={ this.onSubmit.bind(this) }>
               <div className="goals-approval-detail-comments-form-textarea">
-                <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) }></Textarea>
+                <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) } value={ this.props.comment }></Textarea>
               </div>
               <div className="goals-approval-detail-comments-form-submit">
                 <input
                   className="btn goals-approval-detail-comments-form-submit-button"
-                  disabled={`${this.props.posting || !this.state.comment ? "disabled" : ""}`}
+                  disabled={`${this.props.posting || !this.props.comment ? "disabled" : ""}`}
                   type="submit"
                   value={__("Send")} />
               </div>
@@ -93,4 +95,6 @@ Comments.propTypes = {
   posting: React.PropTypes.bool
 }
 
-Comments.defaultProps = { approval_histories: [], view_more_text: '', add_comments: []}
+Comments.defaultProps = { approval_histories: [], view_more_text: '', add_comments: [] }
+
+export default connect()(Comments);

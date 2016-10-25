@@ -8,7 +8,8 @@ const initialState = {
   posting_withdraw: false,
   posting_comment: false,
   validationErrors: { comment: ''},
-  add_comments: []
+  add_comments: [],
+  comment: ''
 }
 
 export default function detail(state = initialState, action) {
@@ -62,6 +63,10 @@ export default function detail(state = initialState, action) {
     case types.ADD_COMMENT:
       return Object.assign({}, state, {
         add_comments: [...state.add_comments, action.comment]
+      })
+    case types.UPDATE_COMMENT:
+      return Object.assign({}, state, {
+        comment: action.comment
       })
     default:
       return state;

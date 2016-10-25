@@ -12,8 +12,7 @@ function mapDispatchToProps(dispatch) {
     postSetAsTarget: (input_data) => dispatch(actions.postSetAsTarget(input_data)),
     postRemoveFromTarget: (input_data) => dispatch(actions.postRemoveFromTarget(input_data)),
     initDetailPage: () => dispatch(actions.initDetailPage()),
-    postWithdraw: (goal_member_id) => dispatch(actions.postWithdraw(goal_member_id)),
-    postComment: (postData) => dispatch(actions.postComment(postData))
+    postWithdraw: (goal_member_id) => dispatch(actions.postWithdraw(goal_member_id))
   }
 }
 
