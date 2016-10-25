@@ -57,6 +57,7 @@ class AppController extends BaseController
         'TimeEx',
         'TextEx',
         'Csv',
+        'Expt',
     ];
 
     private $merge_uses = [];
