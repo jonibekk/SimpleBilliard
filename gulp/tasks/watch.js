@@ -1,7 +1,7 @@
 import gulp from 'gulp'
 import config from '../config.js'
 
-gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch', 'react_goal_create:watch', 'react_goal_edit:watch', 'react_goal_approval:watch'])
+gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch', 'react_goal_create:watch', 'react_goal_edit:watch', 'react_goal_approval:watch', 'react_goal_search:watch'])
 
 gulp.task('js:watch', () => {
   const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
