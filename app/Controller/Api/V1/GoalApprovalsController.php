@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'ApprovalHistoryService');
 
 /**
  * Class GoalApprovalsController
@@ -156,19 +157,6 @@ class GoalApprovalsController extends ApiController
         }
 
         return $res;
-    }
-
-    /**
-     * ゴール認定に関するコメント取得
-     * TODO:閲覧権限チェック追加
-     */
-    function get_histories()
-    {
-        /** @var GoalApprovalService $GoalApprovalService */
-        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $goalMemberId = $this->request->query('goal_member_id');
-        $histories = $GoalApprovalService->findHistories($goalMemberId);
-        return $this->_getResponseSuccess($histories);
     }
 
     /**
@@ -390,7 +378,6 @@ class GoalApprovalsController extends ApiController
      */
     public function post_comment()
     {
-        $this->log($this->request->data);
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var ApprovalHistory $ApprovalHistory */
@@ -399,6 +386,8 @@ class GoalApprovalsController extends ApiController
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        /** @var ApprovalHistoryService $ApprovalHistoryService */
+        $ApprovalHistoryService = ClassRegistry::init("ApprovalHistoryService");
 
         $data = $this->request->data;
         $goalMemberId = Hash::get($data, 'goal_member.id');
@@ -425,8 +414,11 @@ class GoalApprovalsController extends ApiController
             return $response;
         }
 
+        $res = $ApprovalHistory->findByIdWithUser($ApprovalHistory->getLastInsertId());
+        $approval_history = $ApprovalHistoryService->processApprovalHistory($res);
+
         // レスポンス
-        return $this->_getResponseSuccess();
+        return $this->_getResponseSuccess(['approval_history' => $approval_history]);
     }
 
     /**

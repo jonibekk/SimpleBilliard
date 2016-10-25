@@ -56,8 +56,9 @@ export default class DetailComponent extends React.Component {
                         view_more_text={ detail.goal_member.histories_view_more_text }
                         is_mine={ detail.is_mine }
                         postComment={ (post_data) => this.props.postComment(post_data) }
-                        posting={ this.props.posting_comment }
-                        goal_member_id={ this.props.params.goal_member_id } />
+                        posting={ detail.posting_comment }
+                        goal_member_id={ this.props.params.goal_member_id }
+                        add_comments={ detail.add_comments } />
               {/* footer */}
               { detail.goal_member.is_mine ? coachee_footer : coach_footer }
           </div>
@@ -68,10 +69,12 @@ export default class DetailComponent extends React.Component {
 
 DetailComponent.propTypes = {
   detail: React.PropTypes.object.isRequired,
+  add_comments: React.PropTypes.array.isRequired,
   fetchGoalMember: React.PropTypes.func.isRequired,
   postSetAsTarget: React.PropTypes.func.isRequired,
   postRemoveFromTarget: React.PropTypes.func.isRequired,
   initDetailPage: React.PropTypes.func.isRequired,
-  postWithdraw: React.PropTypes.func.isRequired,
-  add_comments: React.PropTypes.array.isRequired
+  postWithdraw: React.PropTypes.func.isRequired
 }
+
+DetailComponent.defaultProps = { detail: {}, add_comments: [] }

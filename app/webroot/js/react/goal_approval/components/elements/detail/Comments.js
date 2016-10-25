@@ -20,7 +20,8 @@ export class Comments extends React.Component {
     this.setState({ comment })
   }
 
-  onSubmit() {
+  onSubmit(e) {
+    e.preventDefault()
     const post_data = {
       goal_member: {
         id: this.props.goal_member_id
@@ -34,10 +35,6 @@ export class Comments extends React.Component {
   }
 
   render() {
-    if(Object.keys(this.props.approval_histories).length == 0) {
-      return null
-    }
-
     const comments = this.props.approval_histories
     const latest_comment = comments.length > 0 ? comments[comments.length - 1] : null
     const commets_execpt_latest_comment = comments.length > 1 ? comments.slice(0, -1) : []

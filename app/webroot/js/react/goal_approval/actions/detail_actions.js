@@ -82,6 +82,9 @@ export function postWithdraw(goal_member_id) {
 
     return post(`/api/v1/goal_approvals/withdraw`, {goal_member: {id: goal_member_id}}, null,
       () => {
+        /* eslint-disable no-console */
+        console.log('post withdraw success')
+        /* eslint-enable no-console */
         dispatch(finishedPostingWithdraw())
         dispatch(toListPage())
       },
@@ -103,8 +106,11 @@ export function postComment(postData) {
 
     return post(`/api/v1/goal_approvals/comment`, postData, null,
       (response) => {
+        /* eslint-disable no-console */
+        console.log('post comment success')
+        /* eslint-enable no-console */
         dispatch(finishedPostingComment())
-        addComment(response.data.data)
+        dispatch(addComment(response.data.data.approval_history))
       },
       (response) => {
         dispatch(finishedPostingComment())
@@ -112,7 +118,6 @@ export function postComment(postData) {
         console.log("failed to post comment");
         console.log(response);
         /* eslint-enable no-console */
-        dispatch(toListPage())
       }
     );
   }

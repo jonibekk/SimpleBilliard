@@ -53,8 +53,12 @@ class GoalApprovalService extends AppService
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         // 認定コメントリスト取得
-        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
+        $histories = $ApprovalHistory->findByGoalMemberId($goalMemberId);
+        if(empty($histories)) {
+            return [];
+        }
 
+        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
         $goalMember = $GoalMemberService->get($goalMemberId, [
             GoalMemberService::EXTEND_COACH,
             GoalMemberService::EXTEND_COACHEE,
@@ -217,6 +221,8 @@ class GoalApprovalService extends AppService
         $User = ClassRegistry::init("User");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var ApprovalHistoryService $ApprovalHistoryService */
+        $ApprovalHistoryService = ClassRegistry::init("ApprovalHistoryService");
 
         // モデル名整形(大文字->小文字)
         $res = Hash::extract($resByModel, 'GoalMember');
@@ -226,11 +232,7 @@ class GoalApprovalService extends AppService
         $res['goal']['leader'] = Hash::extract($resByModel, 'Goal.Leader.0');
         $res['goal']['leader']['user'] = Hash::extract($resByModel, 'Goal.Leader.0.User');
         $res['goal']['top_key_result'] = Hash::extract($resByModel, 'Goal.TopKeyResult');
-        $res['approval_histories'] = Hash::map($resByModel, 'ApprovalHistory', function ($value) {
-            $value['user'] = Hash::extract($value, 'User');
-            unset($value['User']);
-            return $value;
-        });
+        $res['approval_histories'] = $ApprovalHistoryService->processApprovalHistories($resByModel);
 
         // 画像パス追加
         $res['user'] = $User->attachImgUrl($res['user'], 'User');
@@ -385,6 +387,10 @@ class GoalApprovalService extends AppService
 
     function addClearImportantWordToApprovalHistories($approvalHistories, $goal_memberUserId)
     {
+        if(!$approvalHistories || !$goal_memberUserId) {
+            return [];
+        }
+
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         return Hash::map($approvalHistories, '',
             function ($approvalHistory) use ($goal_memberUserId, $ApprovalHistory) {
