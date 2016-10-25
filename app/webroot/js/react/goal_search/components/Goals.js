@@ -19,15 +19,7 @@ export default class Goals extends React.Component {
 
   componentWillReceiveProps(nextProps) {
   }
-
-  onSubmit(e) {
-    e.preventDefault()
-    if (e.keyCode == KeyCode.ENTER) {
-      return false
-    }
-    this.props.validateGoal(this.props.params.goalId, this.getInputDomData())
-  }
-
+  
   showFilter() {
     this.props.updateData({show_filter: !this.props.goal_search.show_filter})
   }
