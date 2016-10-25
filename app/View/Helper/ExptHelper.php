@@ -8,7 +8,7 @@ App::import('Service', 'ExperimentService');
  * 本来、ヘルパーからServiceを参照することは許されない。
  *
  * @author daikihirakata
- * @property ExperimentService $Experiment
+ * @property ExperimentService $ExperimentService
  */
 class ExptHelper extends AppHelper
 {
@@ -16,7 +16,7 @@ class ExptHelper extends AppHelper
     {
         parent::__construct($view, $settings);
 
-        $this->Experiment = ClassRegistry::init('Experiment');
+        $this->ExperimentService = ClassRegistry::init('ExperimentService');
     }
 
     /**
@@ -28,6 +28,6 @@ class ExptHelper extends AppHelper
      */
     function is($name)
     {
-        return $this->Experiment->isDefined($name);
+        return $this->ExperimentService->isDefined($name);
     }
 }
