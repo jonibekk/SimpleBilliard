@@ -39,7 +39,6 @@ class ApiGoalService extends ApiService
             return $ret;
         }
         $ret['count'] = $count;
-$this->log(compact('order'));
         // ゴール検索
         $goals = $Goal->search($conditions, $offset, $limit + 1, $order);
         if (empty($goals)) {
@@ -51,7 +50,6 @@ $this->log(compact('order'));
 
         // ページング情報設定
         $this->setPaging($ret, $conditions, $offset, $limit, $order);
-        $this->log($Goal->getDataSource()->getLog());
 
         // レスポンスデータ拡張
         $ret['data'] = $this->extend($ret['data'], $userId);
