@@ -472,6 +472,22 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $experiments = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'name' => array('type' => 'string', 'null' => false, 'length' => 128, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => '実験の識別子', 'charset' => 'utf8mb4'),
+		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'team_id' => array('column' => 'team_id', 'unique' => 0),
+			'name' => array('column' => 'name', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $followers = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'フォロワーID'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
