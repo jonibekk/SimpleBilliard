@@ -15,7 +15,7 @@
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body goal-detail-info-panel">
-            <ul class="goal-detail-ul">
+            <ul class="goal-detail-items">
                 <li class="goal-detail-goal-name">
                     <?= h($goal['Goal']['name']) ?>
                 </li>
