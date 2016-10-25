@@ -147,10 +147,6 @@
   border-radius: 0 0 4px 4px;
 }
 
-.goal-detail-goal-name {
-  font-weight: bold;
-}
-
 .goal-detail-panels {
   background: #f6f5f1;
 }
@@ -160,11 +156,11 @@
 }
 
 .goal-detail-info-due-wrap {
-  margin-bottom: 12px;
+  //margin-bottom: 12px;
 }
 
 .goal-detail-info-members {
-  margin-bottom: 12px;
+  //margin-bottom: 12px;
 }
 
 .goal-detail-info-left-icons {
@@ -211,6 +207,69 @@
   border-radius: 50%;
 }
 
+.goal-detail-items {
+  padding-left: 1em;
+}
+
+.goal-detail-item {
+  position: relative;
+  padding-left: 0.4em;
+  margin-bottom: 0.5em;
+  &:before {
+    font-family: FontAwesome;
+    content: '';
+    position: absolute;
+    left: -1em;
+    top: 0;
+  }
+}
+
+.goal-detail-goal-name-top-section {
+  font-weight: bold;
+}
+
+.goal-detail-goal-name {
+  font-weight: bold;
+  .goal-detail-item;
+  &:before {
+    content: '\f024';
+  }
+}
+
+.goal-detail-goal-category {
+  .goal-detail-item;
+  &:before {
+    content: '\f114';
+  }
+}
+
+.goal-detail-goal-labels {
+  .goal-detail-item;
+  &:before {
+    content: '\f02c';
+  }
+}
+
+.goal-detail-goal-date {
+  .goal-detail-item;
+  &:before {
+    content: '\f073';
+  }
+}
+
+.goal-detail-goal-members {
+  .goal-detail-item;
+  &:before {
+    content: '\f1ae';
+  }
+}
+
+.goal-detail-goal-description {
+  .goal-detail-item;
+  &:before {
+    content: '\f24a';
+  }
+}
 
 /**
  * 使わないことになった
@@ -254,14 +313,13 @@
  *
  */
 
-
 /**
  * Goal page kr
  */
 
- .goal-detail-kr-panel {
-   .goal-detail-panels;
- }
+.goal-detail-kr-panel {
+  .goal-detail-panels;
+}
 
 .goal-detail-kr-progress-score {
   margin-bottom: 12px;
@@ -298,7 +356,7 @@
   background: @backgroundColor1;
   border-radius: 8px;
   padding: 8px 0;
-  .borderBottom &:not(:last-child){
+  .borderBottom &:not(:last-child) {
     margin: 8px 0;
   }
 }
@@ -447,7 +505,7 @@
 
 .goal-detail-follower-avatar {
   .avatar-bordered-rounded;
-  width:64px;
+  width: 64px;
   display: inline-block;
 }
 
@@ -462,4 +520,13 @@
 
 .goal-detail-member-collab-way {
   .line-number-limit-2(#faf9f7);
+}
+
+.goal-detail-label {
+  background-color: @baseGray;
+  color: @keyColor;
+  display: inline;
+  padding: .1em .3em .1em;
+  font-size: 90%;
+  border-radius: .25em;
 }
