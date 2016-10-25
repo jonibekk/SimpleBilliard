@@ -92,7 +92,7 @@
             </div>
         <?php endif ?>
     </div>
-    <p class="goal-detail-goal-name">
+    <p class="goal-detail-goal-name-top-section">
         <?= h($goal['Goal']['name']) ?>
     </p>
 

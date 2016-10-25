@@ -730,7 +730,7 @@ class GoalsController extends AppController
         // 認定可能フラグ追加
         $is_approvable = false;
         $goal_leader_id = $this->Goal->GoalMember->getGoalLeaderId($goal_id);
-        if($goal_leader_id) {
+        if ($goal_leader_id) {
             $is_approvable = $GoalMemberService->isApprovableGoalMember($goal_leader_id);
         }
 
@@ -1309,8 +1309,8 @@ class GoalsController extends AppController
      */
     function view_followers()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
@@ -1331,8 +1331,8 @@ class GoalsController extends AppController
      */
     function view_members()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
@@ -1355,8 +1355,8 @@ class GoalsController extends AppController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
@@ -1389,14 +1389,13 @@ class GoalsController extends AppController
 
     function view_actions()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        $page_type = $this->_getRequiredParam('page_type');
-        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $page_type = Hash::get($this->request->params, "named.page_type");
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
@@ -1432,15 +1431,17 @@ class GoalsController extends AppController
 
     function view_info()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goalId = Hash::get($this->request->params, "named.goal_id");
+        if (!$goalId || !$this->_setGoalPageHeaderInfo($goalId)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
-        $this->set('goal_term', $goal_term);
+        $goalTerm = $this->Goal->getGoalTermData($goalId);
+        $goalLabels = Hash::extract($this->Goal->GoalLabel->findByGoalId($goalId), '{n}.Label');
+
+        $this->set(compact('goalTerm', 'goalLabels'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();

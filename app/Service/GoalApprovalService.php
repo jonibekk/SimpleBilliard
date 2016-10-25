@@ -371,14 +371,13 @@ class GoalApprovalService extends AppService
                 $clearStatus = $approvalHistory['select_clear_status'];
                 $importantStatus = $approvalHistory['select_important_status'];
 
-                if ($approvalHistory['user_id'] == $goal_memberUserId) {
-                    $clearAndImportantWord = '';
+                $clearAndImportantWord = '';
+                if ($clearStatus == $ApprovalHistory::STATUS_IS_NOT_CLEAR) {
+                    $clearAndImportantWord = __('This Top Key Result is not clear.');
                 } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
                     $clearAndImportantWord = __('This Top Key Result is clear and most important.');
                 } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
                     $clearAndImportantWord = __('This Top Key Result is not most important.');
-                } else {
-                    $clearAndImportantWord = __('This Top Key Result is not clear.');
                 }
 
                 $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
