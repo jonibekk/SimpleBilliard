@@ -30,18 +30,18 @@ class Experiment extends AppModel
     ];
 
     /**
-     * 定義済みの実験かどうかの判定
+     * 定義済みの実験を取得
      * @param $name
      *
-     * @return bool
+     * @return array
      */
-    function isDefined($name)
+    function findExperiment($name)
     {
         $options = [
             'name'    => $name,
             'team_id' => $this->current_team_id
         ];
         $ret = $this->find('first', $options);
-        return (bool)!empty($ret);
+        return $ret;
     }
 }
