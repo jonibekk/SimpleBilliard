@@ -17,6 +17,7 @@ const initialState = {
   suggestions_exclude_selected: [],
   search_conditions: {},
   show_filter: false,
+  loading: true
 }
 
 export default function goal_search(state = initialState, action) {
@@ -27,6 +28,7 @@ export default function goal_search(state = initialState, action) {
     case ActionTypes.FETCH_INITIAL_DATA:
       return Object.assign({}, state, action.data, {
         suggestions_exclude_selected: [...action.data.labels],
+        loading: false
       })
 
     case ActionTypes.UPDATE_DATA:
@@ -45,6 +47,7 @@ export default function goal_search(state = initialState, action) {
       return Object.assign({}, state, {
         search_result: action.search_result,
         search_conditions: action.search_conditions,
+        loading: false
       })
 
     case ActionTypes.FETCH_MORE_GOALS:
@@ -67,6 +70,10 @@ export default function goal_search(state = initialState, action) {
       search_result.data = updateGoalsByFollowing(search_result.data, action.goal_id, false)
       return Object.assign({}, state, {
         search_result
+      })
+    case ActionTypes.LOADING:
+      return Object.assign({}, state, {
+        loading: true
       })
 
     /* LabelInput */

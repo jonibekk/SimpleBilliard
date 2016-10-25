@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import * as KeyCode from "~/common/constants/KeyCode";
 import GoalSearchFilter from "~/goal_search/components/elements/GoalSearchFilter";
 import GoalCard from "~/goal_search/components/elements/GoalCard";
+import NoGoal from "~/goal_search/components/elements/NoGoal";
+import Loading from "~/goal_search/components/elements/Loading";
 import InfiniteScroll from "redux-infinite-scroll";
 
 export default class Goals extends React.Component {
@@ -66,8 +68,8 @@ export default class Goals extends React.Component {
 
     const cl = c.length;
     let r = "";
-    for(let i=0; i<length; i++){
-      r += c[Math.floor(Math.random()*cl)];
+    for (let i = 0; i < length; i++) {
+      r += c[Math.floor(Math.random() * cl)];
     }
     return r
   }
@@ -88,13 +90,32 @@ export default class Goals extends React.Component {
       progress: __("Progress rate")
     }
 
+    // 検索結果エリア
+    let search_result_el;
+    let exist_goal = false;
+    if (props.loading == true) {
+      search_result_el = <Loading />
+    } else if (props.search_result.count > 0) {
+      search_result_el = (
+        <InfiniteScroll
+          loadMore={this.fetchMoreGoals.bind(this)}
+          items={this.renderGoals(goals)}
+          elementIsScrollable={false}
+        />
+      )
+      exist_goal = true
+    } else {
+      search_result_el = <NoGoal />
+    }
+
     return (
       <div className="panel panel-default">
         {/* search by keyword */}
         <div className="panel-block bd-b-sc4">
           <form onSubmit={this.searchByKeyword.bind(this)}>
             <div className="goal-search-keyword mb_10px">
-              <input type="text" className="goal-search-keyword-input" placeholder={__("Search by goal name")} ref="keyword"
+              <input type="text" className="goal-search-keyword-input" placeholder={__("Search by goal name")}
+                     ref="keyword"
                      maxLength="50"/>
               <span onClick={this.searchByKeyword.bind(this)} className="goal-search-keyword-submit fa fa-search"/>
             </div>
@@ -117,7 +138,7 @@ export default class Goals extends React.Component {
 
 
         {/* search result count and order */}
-        <div className="panel-block">
+        <div className={`panel-block ${exist_goal ? "" : "hide"}`}>
           <div className="row">
             <div className="pull-left">{__("Search result")} {props.search_result.count}{__("Count")}</div>
             <div className="pull-right">
@@ -131,7 +152,7 @@ export default class Goals extends React.Component {
                   {(() => {
                     let search_orders_el = []
                     const search_orders_keys = Object.keys(search_orders)
-                    for(let i = 0;i < search_orders_keys.length;i++) {
+                    for (let i = 0; i < search_orders_keys.length; i++) {
                       let key = search_orders_keys[i]
                       search_orders_el.push(
                         <li key={key}>
@@ -150,13 +171,7 @@ export default class Goals extends React.Component {
           </div>
         </div>
 
-        {/*goal list*/}
-        <InfiniteScroll
-          loadMore={this.fetchMoreGoals.bind(this)}
-          items={this.renderGoals(goals)}
-          elementIsScrollable={false}
-        />
-
+        {search_result_el}
       </div>
     )
   }

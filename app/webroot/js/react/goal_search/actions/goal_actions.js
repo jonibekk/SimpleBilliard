@@ -1,5 +1,4 @@
 import * as ActionTypes from "~/goal_search/constants/ActionTypes";
-
 import {post, del} from "~/util/api";
 import axios from "axios";
 import querystring from "querystring";
@@ -27,12 +26,15 @@ export function update(data) {
 
 export function fetchInitialData() {
   return (dispatch) => {
+    dispatch({
+      type: ActionTypes.LOADING,
+    })
     return axios.get(`/api/v1/goals/init_search`)
       .then((response) => {
         let data = response.data.data
         dispatch({
           type: ActionTypes.FETCH_INITIAL_DATA,
-          data
+          data,
         })
       })
       .catch((response) => {

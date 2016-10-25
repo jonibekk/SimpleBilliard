@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
-import { Router, Route,　browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
 import thunk from 'redux-thunk';
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
@@ -23,28 +21,13 @@ const store = createStore(
   DevTools.instrument(),
   applyMiddleware(thunk)
 )
-const history = syncHistoryWithStore(browserHistory, store)
-
-export const unlisten = history.listen( () => {
-  history.listen(location => {
-    // Ignore First page loading because in this timing it's sent by server-side
-    if(cake.data.google_tag_manager_id !== "" && location.action == 'PUSH') {
-      sendToGoogleTagManager('app')
-    }
-  })
-})
 
 // Define setup-guide routes
 export default class Routes extends Component {
   render() {
     return (
       <Provider store={store}>
-        <div>
-          <Router history={history}>
-            <Route path="goals" component={Container} />
-          </Router>
-           {/*<DevTools />*/}
-        </div>
+        <Container/>
       </Provider>
     );
   }

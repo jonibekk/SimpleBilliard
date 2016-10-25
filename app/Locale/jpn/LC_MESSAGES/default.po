@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-25 04:47+0900\n"
+"PO-Revision-Date: 2016-10-25 12:26+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -791,13 +791,13 @@ msgid "You should be logged in."
 msgstr "ログインが必要です。"
 
 msgid "You don't have permission."
-msgstr ""
+msgstr "権限がありません。"
 
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
 
 msgid "Internal Server Error."
-msgstr ""
+msgstr "サーバーエラー"
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
@@ -820,11 +820,14 @@ msgstr "申請を取り下げました"
 msgid "Failed to save."
 msgstr "保存処理に失敗しました。"
 
+msgid "Get count over the upper limit"
+msgstr "取得件数が上限を超えています。"
+
 msgid "Saved goal & Top Key Result"
 msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
-msgstr ""
+msgstr "フォロー中ではありません。"
 
 msgid "Confirmation Code for Goalous: %s"
 msgstr "Goalousの認証コード: %s"
@@ -2369,6 +2372,9 @@ msgstr "件"
 
 msgid "Add by pressing the Enter.(You can search maximum 3 labels)"
 msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
+
+msgid "Progress"
+msgstr "進捗"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -3991,9 +3997,6 @@ msgstr "ゴール評価"
 msgid "Goal Details"
 msgstr "ゴール詳細"
 
-msgid "Progress"
-msgstr "進捗"
-
 msgid "View more"
 msgstr "もっと見る"
 
@@ -4771,87 +4774,3 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
-
-#~ msgid "Leader: %s"
-#~ msgstr "リーダー: %s"
-
-#~ msgid "Export Data"
-#~ msgstr "CSVの書き出し"
-
-#~ msgid "Our Goals"
-#~ msgstr "みんなのゴール"
-
-#~ msgid "Goals found"
-#~ msgstr "対象ゴール"
-
-#~ msgid "No Goal"
-#~ msgstr "対象ゴールがありません。"
-
-#~ msgid "notEmpty"
-#~ msgstr "notEmplty"
-
-#~ msgid "%s should be entered in alphabet characters."
-#~ msgstr "%sはアルファベットのみで入力してください。"
-
-#~ msgid "Done"
-#~ msgstr "処理済み"
-
-#~ msgid "Due"
-#~ msgstr "期限"
-
-#~ msgid "Remove from target of evaluation"
-#~ msgstr "評価対象にしない"
-
-#~ msgid "Set as target of evaluation"
-#~ msgstr "評価対象にする"
-
-#~ msgid "Modify the goal"
-#~ msgstr "ゴールを修正する"
-
-#~ msgid "Request to modify."
-#~ msgstr "修正を依頼"
-
-#~ msgid "Decide Your Purpose"
-#~ msgstr "目的を決める"
-
-#~ msgid "What do you want to achieve?"
-#~ msgstr "達成したいことは？"
-
-#~ msgid "Describe it roughly."
-#~ msgstr "達成したいことをざっくり書く"
-
-#~ msgid "eg. Provide a new value to people."
-#~ msgstr "例）新しい価値を人々に提供する"
-
-#~ msgid "Next Step"
-#~ msgstr "次のステップ"
-
-#~ msgid "Set Reference Values"
-#~ msgstr "基準を定める"
-
-#~ msgid "What is the measurable point?"
-#~ msgstr "達成の指標として<br>『なに』をどうするか？"
-
-#~ msgid "Write in details."
-#~ msgstr "詳しく書く。"
-
-#~ msgid "Evaluation terms"
-#~ msgstr "評価期間"
-
-#~ msgid "Add more information"
-#~ msgstr "情報を追加する"
-
-#~ msgid "Add complements"
-#~ msgstr "情報を補完する"
-
-#~ msgid "Explain this goal in detail."
-#~ msgstr "ゴールの内容を詳しく書く"
-
-#~ msgid "Weight of this goal"
-#~ msgstr "このゴールの重要度"
-
-#~ msgid "Let's add an image that motivated yourself."
-#~ msgstr "イメージに合った画像を追加しましょう"
-
-#~ msgid "Save Goal"
-#~ msgstr "この内容で作成"

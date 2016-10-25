@@ -6,6 +6,9 @@ App::import('Service/Api', 'ApiService');
  */
 class ApiGoalService extends ApiService
 {
+    // ゴール検索デフォルト取得件数
+    const GOAL_SEARCH_DEFAULT_LIMIT = 10;
+
     /**
      * ゴール検索
      *

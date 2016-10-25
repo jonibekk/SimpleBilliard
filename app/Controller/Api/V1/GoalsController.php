@@ -20,8 +20,6 @@ App::import('Service/Api', 'ApiGoalService');
  */
 class GoalsController extends ApiController
 {
-    const GOAL_SEARCH_DEFAULT_LIMIT = 10;
-
     // TODO:ここで定義しても$this->***で使用出来ない為要調査
     public $uses = [
         'Goal',
@@ -90,10 +88,9 @@ class GoalsController extends ApiController
 
         // 取得件数上限チェック
         if (!$ApiGoalService->checkMaxLimit($limit)) {
-            // TODO:翻訳
-            return $this->_getResponseBadFail("取得件数が上限を超えています");
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-        $limit = empty($limit) ? self::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
+        $limit = empty($limit) ? $ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
 
         // ゴール検索
         $searchResult = $ApiGoalService->search($this->Auth->user('id'), $conditions, $offset, $limit, $order);
@@ -103,12 +100,7 @@ class GoalsController extends ApiController
 
 
     /**
-     * Goal作成&編集においての初期化処理API
-     * formで利用する値を取得する
-     *
-     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
-     *
-     * @param integer|null $id
+     * ゴール検索初期データ取得
      *
      * @return CakeResponse
      */
@@ -132,7 +124,7 @@ class GoalsController extends ApiController
         /** @var ApiGoalService $ApiGoalService */
         $ApiGoalService = ClassRegistry::init("ApiGoalService");
         // ゴール検索
-        $res['search_result'] = $ApiGoalService->search($this->Auth->user('id'), [], 0, self::GOAL_SEARCH_DEFAULT_LIMIT);
+        $res['search_result'] = $ApiGoalService->search($this->Auth->user('id'), [], 0, $ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT);
 
         return $this->_getResponseSuccess($res);
     }

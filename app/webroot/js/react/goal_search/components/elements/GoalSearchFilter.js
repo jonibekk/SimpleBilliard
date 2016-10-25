@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from 'react-redux';
+import {connect} from "react-redux";
 import * as actions from "~/goal_search/actions/goal_actions";
 import LabelInput from "~/goal_search/components/elements/LabelInput";
 
@@ -13,6 +13,7 @@ class GoalSearchFilter extends React.Component {
       actions.updateFilter({[e.target.name]: e.target.value})
     )
   }
+
   onClose(e) {
     e.preventDefault()
     this.props.dispatch(
@@ -69,7 +70,7 @@ class GoalSearchFilter extends React.Component {
           />
         </div>
         <div className="text-align_c p_4px">
-          <a href="#" onClick={this.onClose.bind(this)} >
+          <a href="#" onClick={this.onClose.bind(this)}>
             {__("Close")} <span className="fa fa-angle-up"/>
           </a>
         </div>

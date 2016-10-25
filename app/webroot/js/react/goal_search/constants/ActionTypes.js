@@ -5,4 +5,5 @@ export const SEARCH = 'SEARCH'
 export const FETCH_MORE_GOALS = 'FETCH_MORE_GOALS'
 export const FOLLOW = 'FOLLOW'
 export const UNFOLLOW = 'UNFOLLOW'
+export const LOADING = 'LOADING'
 
