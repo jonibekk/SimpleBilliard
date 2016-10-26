@@ -24,6 +24,10 @@ class GoalCard extends React.Component {
   }
 
   render() {
+    // TODO:delete
+    console.log("■GoalCard render")
+    console.log({props})
+
     const {goal} = this.props
     if (!goal) {
       return null

@@ -19,7 +19,7 @@ export default class Goals extends React.Component {
 
   componentWillReceiveProps(nextProps) {
   }
-  
+
   showFilter() {
     this.props.updateData({show_filter: !this.props.goal_search.show_filter})
   }
@@ -70,6 +70,10 @@ export default class Goals extends React.Component {
     const props = this.props.goal_search
 
     const goals = props.search_result.data
+
+    // TODO:delete
+    console.log("■Goals render")
+    console.log({props})
 
     const order = props.search_conditions["order"] ? props.search_conditions["order"] : "new";
 
