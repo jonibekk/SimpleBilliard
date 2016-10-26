@@ -414,6 +414,9 @@ class GoalApprovalsController extends ApiController
             return $response;
         }
 
+        // 通知
+        $GoalApprovalService->sendCommentNotify($goalMemberId, $myUserId, $ApprovalHistory->getLastInsertId());
+
         $res = $ApprovalHistory->findByIdWithUser($ApprovalHistory->getLastInsertId());
         $approval_history = $ApprovalHistoryService->processApprovalHistory($res);
 

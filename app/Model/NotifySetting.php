@@ -39,6 +39,7 @@ class NotifySetting extends AppModel
     const TYPE_FEED_MESSAGE = 25;
     const TYPE_SETUP_GUIDE = 26;
     const TYPE_COACHEE_WITHDRAW_APPROVAL = 28;
+    const TYPE_APPROVAL_COMMENT = 29;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
@@ -238,6 +239,13 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
+        self::TYPE_APPROVAL_COMMENT             => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-comment-o',
+            'groups'          => ['all', 'primary'],
+        ]
     ];
 
     static public $TYPE_GROUP = [
