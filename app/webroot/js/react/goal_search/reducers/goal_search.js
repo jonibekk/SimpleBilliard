@@ -17,7 +17,7 @@ const initialState = {
   suggestions_exclude_selected: [],
   search_conditions: {},
   show_filter: false,
-  loading: true
+  loading: false
 }
 
 export default function goal_search(state = initialState, action) {

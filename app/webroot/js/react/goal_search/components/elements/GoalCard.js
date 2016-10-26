@@ -43,8 +43,10 @@ class GoalCard extends React.Component {
       </a>
     )
 
-    return (
 
+    goal.goal_labels = goal.goal_labels ? goal.goal_labels : []
+
+    return (
       <div className="panel-block bd-b-sc4">
         <div className="row">
           <div className="col-xxs-12">
