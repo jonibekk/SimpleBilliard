@@ -86,6 +86,14 @@ export default class Step3Component extends React.Component {
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>
 
+
+          <div className="checkbox">
+            <label>
+              <input type="checkbox" name="is_wish_approval" value="1"  onChange={this.handleChange} checked="checked" />
+                <span>{__("Wish approval")}</span>
+            </label>
+          </div>
+
           <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
             <i className="fa fa-eye" aria-hidden="true"/>
             <span className="goals-create-interactive-link">
