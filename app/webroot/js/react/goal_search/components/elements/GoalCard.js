@@ -26,7 +26,7 @@ class GoalCard extends React.Component {
   render() {
     // TODO:delete
     console.log("■GoalCard render")
-    console.log({props})
+    console.log({props: this.props})
 
     const {goal} = this.props
     if (!goal) {
@@ -52,6 +52,17 @@ class GoalCard extends React.Component {
         <span className>{__("Following")}</span>
       </a>
     )
+
+    // // TODO:delete
+    // console.log("unfollow_btn el create")
+    // const unfollow_btn = () => {
+    //   return (
+    //     <a href="#" className="btn btn-white-radius active">
+    //       <span className>{__("Following")}</span>
+    //     </a>
+    //   )
+    // }
+
 
 
     // TODO:delete
