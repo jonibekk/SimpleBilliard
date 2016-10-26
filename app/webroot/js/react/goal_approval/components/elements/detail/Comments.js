@@ -12,6 +12,15 @@ class Comments extends React.Component {
     this.state = { display_all_comments: false }
   }
 
+  componentWillReceiveProps(nextProps) {
+    // textareaタグにvalueとstateをリンクさせる方法もあるが、
+    // それだとreact-textarea-autosizeがうまく動いてくれない。
+    // ので、ここで泥臭くDOMをいじる。
+    if (nextProps.comment === '') {
+      ReactDOM.findDOMNode(this.refs.comment).value = ''
+    }
+  }
+
   displayAllComments() {
     this.setState({ display_all_comments: true })
   }
@@ -72,7 +81,7 @@ class Comments extends React.Component {
           <div className="goals-approval-detail-comments-form">
             <form onSubmit={ this.onSubmit.bind(this) }>
               <div className="goals-approval-detail-comments-form-textarea">
-                <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) } value={ this.props.comment }></Textarea>
+                <Textarea className="form-control" rows={1} placeholder={__("Add your comment")} ref="comment" onChange={ this.onChange.bind(this) }></Textarea>
               </div>
               <div className="goals-approval-detail-comments-form-submit">
                 <input
