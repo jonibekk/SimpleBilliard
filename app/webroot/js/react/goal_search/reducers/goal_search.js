@@ -24,13 +24,6 @@ export default function goal_search(state = initialState, action) {
   let search_conditions = state.search_conditions
   let search_result = state.search_result
 
-  // TODO:delete
-  console.log("■reducer")
-  console.log("action.type:"+action.type)
-  console.log({state})
-  console.log({action})
-
-
   switch (action.type) {
     case ActionTypes.FETCH_INITIAL_DATA:
       return Object.assign({}, state, action.data, {
