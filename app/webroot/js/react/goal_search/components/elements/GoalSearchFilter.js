@@ -44,7 +44,7 @@ class GoalSearchFilter extends React.Component {
           <label className="gl-form-horizontal-col gl-form-label" htmlFor>{__("Category")}</label>
           <div className="gl-form-horizontal-col">
             <select name="category" className="form-control gl" onChange={this.onChange.bind(this)}>
-              <option value>{__("All")}</option>
+              <option value="">{__("All")}</option>
               {categories.map((v) => {
                 return <option value={v.id} key={v.id}>{v.name}</option>
               })}
@@ -55,7 +55,7 @@ class GoalSearchFilter extends React.Component {
           <label className="gl-form-horizontal-col gl-form-label" htmlFor>{__("Progress")}</label>
           <div className="gl-form-horizontal-col">
             <select name="progress" className="form-control gl" onChange={this.onChange.bind(this)}>
-              <option value>{__("All")}</option>
+              <option value="">{__("All")}</option>
               <option value="complete">{__("Complete")}</option>
               <option value="incomplete">{__("Incomplete")}</option>
             </select>
