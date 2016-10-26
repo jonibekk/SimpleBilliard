@@ -33,12 +33,18 @@ class GoalCard extends React.Component {
       return null
     }
 
+    // TODO:delete
+    console.log("follow_btn el create")
+
     const follow_btn = (
       <a href="#" className="btn btn-white-radius"
          onClick={(e) => this.follow(e, goal.id)}>
         <span className>{__("Follow")}</span>
       </a>
     )
+
+    // TODO:delete
+    console.log("unfollow_btn el create")
 
     const unfollow_btn = (
       <a href="#" className="btn btn-white-radius active"
@@ -47,61 +53,14 @@ class GoalCard extends React.Component {
       </a>
     )
 
-    return (
 
+    // TODO:delete
+    console.log("render")
+
+    return (
       <div className="panel-block bd-b-sc4">
         <div className="row">
-          <div className="col-xxs-12">
-            <div className="col-xxs-3 col-xs-3">
-              <div>
-                <div className="row mb_8px">
-                  <div className="col-xs-12">
-                    <a href={`/goals/view_info/goal_id:${goal.id}`} className="text-align_c d-block">
-                      <img src={goal.medium_img_url} className="img-rounded"
-                           style={{width: 48, height: 48}} alt={goal.name}/>
-                    </a>
-                  </div>
-                </div>
-                {(() => {
-                  if (!goal.can_follow) {
-                    return null
-                  }
-                  return (
-                    <div className="row text-align_c ">
-                      <div className="col-xs-12">
-                        {goal.is_follow ? unfollow_btn : follow_btn}
-                      </div>
-                    </div>
-                  )
-                })()}
-              </div>
-            </div>
-            <div className="col-xxs-9 col-xs-9 pl_12px">
-              <div className="col-xxs-12 goals-page-card-title-wrapper">
-                <a href={`/goals/view_info/goal_id:${goal.id}`} className="goals-page-card-title">
-                  <p className="goals-page-card-title-text">
-                    <span>{goal.name}</span>
-                  </p>
-                </a>
-              </div>
-              <ul className="gl-labels mb_8px">
-                {goal.goal_labels.map((v) => {
-                  return <li className="gl-labels-item" key={v.id}>{v.name}</li>
-                })}
-              </ul>
-              <p className="font_lightgray font_12px">{__("Leader")}: {goal.leader.display_username}</p>
-              <dl className="gl-goal-info-counts">
-                <dt className="gl-goal-info-counts-title"><i className="fa fa-check-circle"/></dt>
-                <dd className="gl-goal-info-counts-description">{goal.action_count}</dd>
-                <dt className="gl-goal-info-counts-title"><i className="fa fa-key"/></dt>
-                <dd className="gl-goal-info-counts-description">{goal.kr_count}</dd>
-                <dt className="gl-goal-info-counts-title"><i className="fa fa-heart"/></dt>
-                <dd className="gl-goal-info-counts-description">{goal.follower_count}</dd>
-                <dt className="gl-goal-info-counts-title"><i className="fa fa-child"/></dt>
-                <dd className="gl-goal-info-counts-description">{goal.goal_member_count}</dd>
-              </dl>
-            </div>
-          </div>
+          test
         </div>
       </div>
     )
