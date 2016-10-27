@@ -13,6 +13,7 @@ class GoalApprovalsController extends ApiController
 
     public $components = [
         'Pnotify',
+        'NotifyBiz'
     ];
 
     /*
@@ -415,7 +416,7 @@ class GoalApprovalsController extends ApiController
         }
 
         // 通知
-        $GoalApprovalService->sendCommentNotify($goalMemberId, $myUserId, $ApprovalHistory->getLastInsertId());
+        $this->sendCommentNotify($goalMemberId, $myUserId, $ApprovalHistory->getLastInsertId());
 
         $res = $ApprovalHistory->findByIdWithUser($ApprovalHistory->getLastInsertId());
         $approval_history = $ApprovalHistoryService->processApprovalHistory($res);
@@ -471,5 +472,33 @@ class GoalApprovalsController extends ApiController
             $memberType,
             $goalId
         );
+    }
+
+    /**
+     * 認定コメントの通知を送信する
+     *
+     * @param  $goalMemberId
+     * @param  $myUserId
+     * @param  $commentId
+     */
+    function sendCommentNotify($goalMemberId, $myUserId, $commentId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        $goalMemberUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+        $toUser = null;
+
+        // コーチーの場合、コーチに通知
+        if($goalMemberUserId == $myUserId) {
+            /** @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init("TeamMember");
+            $coachUserId = $TeamMember->getCoachUserIdByMemberUserId();
+            $toUser = $coachUserId;
+        // コーチの場合、コーチーに通知
+        } else {
+            $toUser = $goalMemberUserId;
+        }
+
+        return $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_APPROVAL_COMMENT, $goalMemberId, $commentId, $toUser);
     }
 }
