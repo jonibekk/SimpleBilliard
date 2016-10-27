@@ -25,7 +25,7 @@ class ApprovalHistory extends AppModel
     public $validate = [
         'action_status'           => [
             'numeric' => [
-                'rule' => ['numeric'],
+                'rule' => ['range', -1, 4], // 0, 1, 2,3のみ許可
             ],
         ],
         'select_clear_status'     => [
