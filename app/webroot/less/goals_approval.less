@@ -175,9 +175,27 @@
       }
     }
     &-comments {
-      padding: @spacing @spacing 0;
+      padding: @spacing 15px 0;
       &-comment {
         margin-bottom: 10px;
+      }
+      &-form {
+        display: table;
+        width: 100%;
+        &-textarea {
+          display: table-cell;
+          width: 100%;
+          padding-right: 10px;
+        }
+        &-submit {
+          display: table-cell;
+          vertical-align: bottom;
+          &-button {
+            background-color: @keyColor;
+            border: none;
+            color: #fff;
+          }
+        }
       }
     }
     &-view-previous {
@@ -186,9 +204,9 @@
     &-choice {
       text-align: center;
       margin: @spacing 0;
+      padding-top: @spacing * 2;
       border-top: 1px solid @subColor4;
       &-block {
-        margin-top: 15px;
         overflow: hidden;
       }
     }

@@ -2,6 +2,7 @@
 App::uses('ModelType', 'Model');
 
 /**
+ * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
  * @author daikihirakata
  * @property SessionComponent $Session
  * @property AuthComponent    $Auth
@@ -208,6 +209,9 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $this->_setTeamJoinOption($model_id);
+                break;
+            case NotifySetting::TYPE_APPROVAL_COMMENT:
+                $this->_setApprovalCommentOption($model_id, $sub_model_id, $to_user_list, $team_id);
                 break;
             default:
                 break;
@@ -886,6 +890,56 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
+    }
+
+    /**
+     * 認定コメント通知オプション
+     *
+     * @param $notify_type
+     * @param $goal_id
+     * @param $to_user_id
+     * @param $team_id
+     */
+    private function _setApprovalCommentOption($goalMemberId, $commentId, $toUserId, $teamId)
+    {
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        if (empty($goalMember)) {
+            return;
+        }
+
+        //inactive user
+        if (!$this->Team->TeamMember->isActive($toUserId)) {
+            return;
+        }
+
+        //認定できないユーザの場合は処理しない
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable(Hash::get($goalMember, 'GoalMember.user_id'), $teamId);
+        if (!$isApprovable) {
+            return;
+        }
+
+        // TODO: この辺の処理は全部サービス層にうつす。
+        //       副作用がこわいので、後ほど一括で移行。
+        $approvalHistory = $this->Goal->GoalMember->ApprovalHistory->findById($commentId);
+        if (empty($approvalHistory)) {
+            return;
+        }
+        $comment = Hash::get($approvalHistory, 'ApprovalHistory.comment');
+
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserId, NotifySetting::TYPE_APPROVAL_COMMENT);
+
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', Hash::get($goalMember, 'GoalMember.id')];
+
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_APPROVAL_COMMENT;
+        $this->notify_option['url_data'] = $url_goal_approval;
+        $this->notify_option['model_id'] = $goalMemberId;
+        $this->notify_option['item_name'] = json_encode([trim($comment)]);
+        $this->notify_option['options']['goal_id'] = Hash::get($goalMember, 'GoalMember.goal_id');
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserId);
     }
 
     /**

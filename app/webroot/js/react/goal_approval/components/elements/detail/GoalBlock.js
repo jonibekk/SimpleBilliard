@@ -1,7 +1,7 @@
 import React from 'react'
-import { GoalCard } from "~/goal_approval/components/elements/detail/GoalCard";
+import GoalCard from "~/goal_approval/components/elements/detail/GoalCard";
 
-export class GoalBlock extends React.Component {
+export default class GoalBlock extends React.Component {
   constructor(props) {
     super(props)
 
@@ -31,7 +31,7 @@ export class GoalBlock extends React.Component {
     const previous_goal_card = () => {
       return (
         <GoalCard goal={ goal.goal_change_log || goal }
-                  category={ goal.goal_change_log.category || goal.category }
+                  goal_category={ goal.goal_change_log.goal_category || goal.goal_category }
                   top_key_result={ goal.tkr_change_log || goal.top_key_result } />
       )
     }
@@ -39,7 +39,7 @@ export class GoalBlock extends React.Component {
     return (
       <div className={ `goals-approval-detail-goal ${is_leader && 'mod-bgglay'}` }>
           <GoalCard goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
-                    category={ goal.category }
+                    goal_category={ goal.goal_category }
                     top_key_result={ goal.top_key_result } />
           { displayed_previous && <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p> }
           { !displayed_previous && existsChangeLogs && is_leader && view_previous_button() }

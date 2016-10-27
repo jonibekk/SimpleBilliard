@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-25 12:26+0900\n"
+"PO-Revision-Date: 2016-10-27 11:29+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.5.7\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -99,9 +99,6 @@ msgstr "このチームへのアクセス権限がありません。"
 
 msgid "Select a goal."
 msgstr "ゴールを選択する"
-
-msgid "Invalid screen transition."
-msgstr "不正な画面遷移です。"
 
 msgid "Created a circle."
 msgstr "サークルを作成しました。"
@@ -361,6 +358,9 @@ msgstr "アクションの追加に失敗しました。"
 
 msgid "Added an action."
 msgstr "アクションを追加しました。"
+
+msgid "Invalid screen transition."
+msgstr "不正な画面遷移です。"
 
 msgid "Japanese"
 msgstr "Japanese"
@@ -1191,6 +1191,13 @@ msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 msgid " +%s"
 msgstr " +%s"
 
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> commented on <span class="
+"\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>にコメントしました。"
+
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -1668,14 +1675,14 @@ msgstr ""
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
 
+msgid "This Top Key Result is not clear."
+msgstr "トップKRが明確ではない。"
+
 msgid "This Top Key Result is clear and most important."
 msgstr "トップKRが明確で最重要である。"
 
 msgid "This Top Key Result is not most important."
 msgstr "トップKRが最重要でない。"
-
-msgid "This Top Key Result is not clear."
-msgstr "トップKRが明確ではない。"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
@@ -2340,6 +2347,9 @@ msgstr "評価対象として申請されたゴールはありません。"
 msgid "Previous"
 msgstr "前期"
 
+msgid "Send"
+msgstr "送信する"
+
 msgid "Confirm this goal"
 msgstr "ゴール編集の確認"
 
@@ -2832,6 +2842,10 @@ msgstr "ファイル"
 
 msgid "Circle setting"
 msgstr "サークルの設定"
+
+#, fuzzy
+msgid "Display on Home feed"
+msgstr "表示順"
 
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
@@ -4006,6 +4020,10 @@ msgstr "これ以上のアクションはありません。"
 msgid "No one is following."
 msgstr "フォロワーはいません。"
 
+#, fuzzy
+msgid "No Labels"
+msgstr "ラベル"
+
 msgid "Goal progress rate"
 msgstr "ゴール進捗率"
 
@@ -4141,9 +4159,6 @@ msgstr "内容をご確認のうえ、問題なければ送信をクリックし
 
 msgid "Appointed"
 msgstr "ご希望"
-
-msgid "Send"
-msgstr "送信する"
 
 msgid "Sending"
 msgstr "送信中..."

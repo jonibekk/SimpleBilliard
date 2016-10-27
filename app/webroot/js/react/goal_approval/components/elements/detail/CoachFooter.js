@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {TopKeyResult} from '~/common/constants/Model'
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 
-export class CoachFooter extends React.Component {
+export default class CoachFooter extends React.Component {
   constructor(props) {
     super(props);
 
