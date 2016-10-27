@@ -133,6 +133,14 @@ const config =  {
     },
     watch_files: [assets_dir + '/js/react/goal_approval/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
   },
+  react_goal_search: {
+    src: assets_dir + '/js/react/goal_search/app.js',
+    output: {
+      file_name: 'react_goal_search_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/goal_search/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
   browserify : {
     transform : {
       babelify_options : {

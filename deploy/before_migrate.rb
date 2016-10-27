@@ -13,66 +13,32 @@ bash "composer install" do
   EOS
 end
 
+file '/home/deploy/.npmrc' do
+  owner 'deploy'
+  group 'aws'
+  mode '0755'
+end
 
-if node[:deploy][:cake].has_key?(:assets_s3_bucket)
-    # compiled_assetsディレクトリ作成
-    directory "#{release_path}/app/webroot/compiled_assets/js/" do
-      owner 'deploy'
-      group 'www-data'
-      mode 0777
-      action :create
-      recursive true
-      not_if {::File.exists?("#{release_path}/app/webroot/compiled_assets/js/")}
-    end
+bash "yarn install" do
+  user 'deploy'
+  group 'www-data'
+  code <<-EOS
+  source /usr/local/nvm/nvm.sh
+  cd #{release_path}
+  yarn install
+  EOS
+end
 
-    s3_file "/tmp/s3_upload.tar.gz" do
-      remote_path "/#{node[:deploy][:cake][:assets_s3_bucket]}/s3_upload.tar.gz"
-      bucket "goalous-compiled-assets"
-      s3_url "https://s3-ap-northeast-1.amazonaws.com/goalous-compiled-assets"
-      owner  "deploy"
-      group  "www-data"
-      mode   "0644"
-      action :create
-    end
-
-    bash "extract asset files" do
-      user 'deploy'
-      group 'www-data'
-      code <<-EOS
-      cd /tmp
-      tar zxvf s3_upload.tar.gz
-      cp s3_upload/css/goalous.min.css #{release_path}/app/webroot/css/
-      cp s3_upload/js/* #{release_path}/app/webroot/compiled_assets/js/
-      EOS
-    end
-else
-    file '/home/deploy/.npmrc' do
-      owner 'deploy'
-      group 'aws'
-      mode '0755'
-    end
-
-    bash "pnpm install" do
-      user 'deploy'
-      group 'www-data'
-      code <<-EOS
-      source /usr/local/nvm/nvm.sh
-      cd #{release_path}
-      yarn install
-      EOS
-    end
-
-    bash "run gulp build" do
-      user 'deploy'
-      group 'www-data'
-      code <<-EOS
-      source /usr/local/nvm/nvm.sh
-      cd #{release_path}
-      if ! gulp build; then
-        gulp build
-      fi
-      EOS
-    end
+bash "run gulp build" do
+  user 'deploy'
+  group 'www-data'
+  code <<-EOS
+  source /usr/local/nvm/nvm.sh
+  cd #{release_path}
+  if ! gulp build; then
+    gulp build
+  fi
+  EOS
 end
 
 bash "ntpdate" do

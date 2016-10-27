@@ -3,6 +3,8 @@ App::uses('ApiController', 'Controller/Api');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
+App::import('Service', 'FollowService');
+App::import('Service/Api', 'ApiGoalService');
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -60,6 +62,73 @@ class GoalsController extends ApiController
         }
         return $this->_getResponseSuccess();
     }
+
+    /**
+     * ゴール検索
+     *
+     * @query_param fields
+     * @return CakeResponse
+     */
+    function get_search()
+    {
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+
+        /* リクエストパラメータ取得 */
+        $offset = $this->request->query('offset');
+        $limit = (int)$this->request->query('limit');
+        $order = $this->request->query('order');
+        $conditions = [
+            'keyword' => $this->request->query('keyword'),
+            'category' => $this->request->query('category'),
+            'progress' => $this->request->query('progress'),
+            'term' => $this->request->query('term'),
+            'labels' => $this->request->query('labels'),
+        ];
+
+        // 取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit($limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+        $limit = empty($limit) ? ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
+
+        // ゴール検索
+        $searchResult = $ApiGoalService->search($this->Auth->user('id'), $conditions, $offset, $limit, $order);
+
+        return $this->_getResponsePagingSuccess($searchResult);
+    }
+
+
+    /**
+     * ゴール検索初期データ取得
+     *
+     * @return CakeResponse
+     */
+    function get_init_search()
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $res = [];
+
+        /* @var Label $Label */
+        $Label = ClassRegistry::init('Label');
+
+        $res['categories'] = Hash::extract(
+            $this->Goal->GoalCategory->getCategories(['id', 'name']),
+            '{n}.GoalCategory'
+        );
+
+        $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
+
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+        // ゴール検索
+        $res['search_result'] = $ApiGoalService->search($this->Auth->user('id'), [], 0, ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT);
+
+        return $this->_getResponseSuccess($res);
+    }
+
 
     /**
      * ゴール更新のバリデーションAPI
@@ -368,5 +437,73 @@ class GoalsController extends ApiController
             return $this->_getResponseNotFound();
         }
         return true;
+    }
+
+    /**
+     * フォロー
+     *
+     * @param $goalId
+     *
+     * @return CakeResponse|true
+     * @internal param array $data
+     */
+    public function post_follow($goalId)
+    {
+        /** @var FollowService $FollowService */
+        $FollowService = ClassRegistry::init("FollowService");
+
+        // ゴール存在チェック
+        if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
+            return $this->_getResponseBadFail(__("The goal doesn't exist."));
+        }
+
+        // フォロー
+        $newId = $FollowService->add($goalId, $this->Auth->user('id'));
+        if (!$newId) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        // トラッキング
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goalId);
+        // 通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goalId);
+
+        return $this->_getResponseSuccess(['follow_id' => $newId]);
+    }
+
+
+    /**
+     * フォロー解除
+     *
+     * @param $goalId
+     *
+     * @return CakeResponse|true
+     * @internal param array $data
+     */
+    public function delete_follow($goalId)
+    {
+        /** @var FollowService $FollowService */
+        $FollowService = ClassRegistry::init("FollowService");
+
+        // ゴール存在チェック
+        if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
+            return $this->_getResponseBadFail(__("The goal doesn't exist."));
+        }
+        // 解除対象のフォロー存在チェック
+        $userId = $this->Auth->user('id');
+        $following = $FollowService->getUnique($goalId, $userId);
+        if (empty($following)) {
+            return $this->_getResponseBadFail(__("The following doesn't exist."));
+        }
+
+        // フォロー解除
+        if (!$FollowService->delete($goalId, $userId)) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        // トラッキング
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goalId);
+
+        return $this->_getResponseSuccess();
     }
 }
