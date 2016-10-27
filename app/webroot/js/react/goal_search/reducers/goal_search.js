@@ -17,7 +17,8 @@ const initialState = {
   suggestions_exclude_selected: [],
   search_conditions: {},
   show_filter: false,
-  loading: true
+  loading: false,
+  loading_more: false
 }
 
 export default function goal_search(state = initialState, action) {
@@ -57,7 +58,8 @@ export default function goal_search(state = initialState, action) {
         count: action.search_result.count
       }
       return Object.assign({}, state, {
-        search_result
+        search_result,
+        loading_more:false
       })
 
     case ActionTypes.FOLLOW:
@@ -74,6 +76,11 @@ export default function goal_search(state = initialState, action) {
     case ActionTypes.LOADING:
       return Object.assign({}, state, {
         loading: true
+      })
+
+    case ActionTypes.LOADING_MORE:
+      return Object.assign({}, state, {
+        loading_more: true
       })
 
     /* LabelInput */

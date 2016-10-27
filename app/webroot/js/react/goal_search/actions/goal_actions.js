@@ -44,6 +44,10 @@ export function fetchInitialData() {
 
 export function updateFilter(data) {
   return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LOADING,
+    })
+
     // 更新した検索条件によってゴール検索を実行
     let search_conditions = Object.assign(
       getState().goal_search.search_conditions,
@@ -65,6 +69,9 @@ export function updateFilter(data) {
 
 export function fetchMoreGoals(url) {
   return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LOADING_MORE,
+    })
     return axios.get(`${url}`)
       .then((response) => {
         const search_result = response.data

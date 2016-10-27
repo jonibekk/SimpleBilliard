@@ -136,7 +136,7 @@ class ApiGoalService extends ApiService
             $goalId = $goal['id'];
 
             $goal = $Goal->attachImgUrl($goal, 'Goal');
-            $goal['goal_labels'] = $goalLabelsEachGoalId[$goalId];
+            $goal['goal_labels'] = empty($goalLabelsEachGoalId[$goalId]) ? [] : $goalLabelsEachGoalId[$goalId];
             $goal['leader'] = $leadersEachGoalId[$goalId];
             $goal['kr_count'] = (int)$krCountEachGoalId[$goalId];
             $goal['action_count'] = (int)$actionCountEachGoalId[$goalId];

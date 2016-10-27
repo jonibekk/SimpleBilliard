@@ -90,7 +90,7 @@ class GoalsController extends ApiController
         if (!$ApiGoalService->checkMaxLimit($limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-        $limit = empty($limit) ? $ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
+        $limit = empty($limit) ? ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
 
         // ゴール検索
         $searchResult = $ApiGoalService->search($this->Auth->user('id'), $conditions, $offset, $limit, $order);
@@ -124,7 +124,7 @@ class GoalsController extends ApiController
         /** @var ApiGoalService $ApiGoalService */
         $ApiGoalService = ClassRegistry::init("ApiGoalService");
         // ゴール検索
-        $res['search_result'] = $ApiGoalService->search($this->Auth->user('id'), [], 0, $ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT);
+        $res['search_result'] = $ApiGoalService->search($this->Auth->user('id'), [], 0, ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT);
 
         return $this->_getResponseSuccess($res);
     }

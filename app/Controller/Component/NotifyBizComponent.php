@@ -867,7 +867,7 @@ class NotifyBizComponent extends Component
         App::import('Service', 'GoalApprovalService');
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $isApprovable = $GoalApprovalService->isApprovable($goalMember['user_id'], $team_id);
+        $isApprovable = $GoalApprovalService->isApprovable($goalMember['GoalMember']['user_id'], $team_id);
         if (!$isApprovable) {
             return;
         }
@@ -1241,7 +1241,7 @@ class NotifyBizComponent extends Component
 
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
-            $from_user_name = $from_user[0]['User']['display_username'];
+            $from_user_name = Hash::get($from_user,'0.User.display_username');
 
             // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
             $title = "";
