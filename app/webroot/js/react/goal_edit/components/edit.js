@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {browserHistory} from "react-router";
 import * as KeyCode from "~/common/constants/KeyCode";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import PhotoUpload from "~/common/components/goal/PhotoUpload";
@@ -22,8 +21,8 @@ export default class Edit extends React.Component {
   componentWillMount() {
     // 遷移元がどこかクエリパラメータで指定してあるので編集キャンセル/完了後の遷移先として保存しておく
     let from = "/"
-    if (Object.keys(this.props.location.query).length > 0) {
-      from = new Buffer(this.props.location.query.from, 'base64').toString()
+    if (document.referrer) {
+      from = document.referrer
     }
     this.props.init({from})
     this.props.fetchInitialData(this.props.params.goalId)
@@ -31,7 +30,7 @@ export default class Edit extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      browserHistory.push(`/goals/${this.props.params.goalId}/edit/confirm`)
+      document.location.href = nextProps.goal.from
     }
   }
 
@@ -40,11 +39,12 @@ export default class Edit extends React.Component {
     if (e.keyCode == KeyCode.ENTER) {
       return false
     }
-    this.props.validateGoal(this.props.params.goalId, this.getInputDomData())
+    this.props.saveGoal(this.props.params.goalId, this.getInputDomData())
   }
 
   deleteLabel(e) {
     const label = e.currentTarget.getAttribute("data-label")
+
     this.props.deleteLabel(label)
   }
 
@@ -78,7 +78,7 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, from} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     return (
@@ -89,7 +89,7 @@ export default class Edit extends React.Component {
               acceptCharset="utf-8"
               onSubmit={(e) => this.onSubmit(e)}>
           <section className="mb_12px">
-            <h1 className="goals-approval-heading">{__("Edit goal & top key result")}</h1>
+            <h1 className="goals-approval-heading">{__("Edit goal & Top Key Result")}</h1>
 
             <h2 className="goals-edit-subject"><i className="fa fa-flag"></i> { __("Goal") }</h2>
 
@@ -148,16 +148,18 @@ export default class Edit extends React.Component {
           </section>
           <section className="goals-edit-tkr">
             <h2 className="goals-edit-subject"><i className="fa fa-key"></i> { __("Top Key Result") }</h2>
+
+            <label className="goals-create-input-label">{__("Top Key Result name")}</label>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")}
                    onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.name}/>
 
+            <label className="goals-create-input-label">{__("Measurement type")}</label>
             <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
                         onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
-
             <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.start_value}/>
             <InvalidMessageBox message={tkrValidationErrors.target_value}/>
@@ -171,8 +173,8 @@ export default class Edit extends React.Component {
           </section>
 
 
-          <button type="submit" className="goals-create-btn-next btn">{__("Confirm")} ></button>
-          <a className="goals-create-btn-cancel btn" href={this.props.goal.from}>{__("Cancel")}</a>
+          <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{ goal.is_approvable ? __("Save & Reapply") : __("Save changes")}</button>
+          <a className="goals-create-btn-cancel btn" href={ from }>{__("Cancel")}</a>
         </form>
       </div>
     )
@@ -180,5 +182,5 @@ export default class Edit extends React.Component {
 }
 
 Edit.propTypes = {
-  goal: React.PropTypes.object.isRequired,
+  goal: React.PropTypes.object.isRequired
 }

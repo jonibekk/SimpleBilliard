@@ -1,0 +1,54 @@
+/* TODO:今後はcommon.lessにGoalousの共通cssをまとめる */
+
+
+/* form */
+.gl-form {
+  padding: 4px 0;
+  &-horizontal {
+    padding: 4px 0;
+    font-size: 0;
+    &-col {
+      display: inline-block;
+      width: 50%;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+  }
+  &-label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  &-guide {
+    color: @subColor10;
+    font-size: 12px;
+  }
+}
+
+/* parts */
+.gl-labels {
+  &-item {
+    background-color: @baseLightGray;
+    color: @keyColor;
+    font-size: 11px;
+    font-weight: 300;
+    padding: 2px 4px;
+    display: inline-block;
+    border-radius: 4px;
+  }
+  &-item + &-item {
+    margin-left: 4px;
+  }
+}
+
+.gl-goal-info-counts {
+  margin: 0;
+  padding: 0;
+  &-title, &-description {
+    display: inline-block;
+    font-size: 13px;
+  }
+  &-description {
+    margin: 0 8px 0 4px;
+  }
+}
+

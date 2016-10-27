@@ -3,33 +3,6 @@ import {post} from "~/util/api";
 import axios from "axios";
 import {KeyResult} from "~/common/constants/Model";
 
-export function validateGoal(goalId, addInputData) {
-  return (dispatch, getState) => {
-
-    const postData = Object.assign(getState().goal.inputData, addInputData)
-    // 単位無しの場合開始値と終了値を自動的に0にする
-    if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
-      postData.key_result.start_value = 0
-      postData.key_result.target_value = 0
-    }
-
-    return post(`/api/v1/goals/${goalId}/validate_update`, postData, null,
-      (response) => {
-        /* eslint-disable no-console */
-        console.log("validate success");
-        /* eslint-enable no-console */
-        dispatch(toNextPage(addInputData))
-      },
-      (response) => {
-        /* eslint-disable no-console */
-        console.log("validate failed");
-        /* eslint-enable no-console */
-        dispatch(invalid(response.data))
-      }
-    );
-  }
-}
-
 export function init(data) {
   return {
     type: types.INIT,
@@ -46,7 +19,7 @@ export function toNextPage(addInputData = {}) {
 export function invalid(error) {
   return {
     type: types.INVALID,
-    error: error
+    error
   }
 }
 
@@ -56,7 +29,7 @@ export function setKeyword(keyword) {
   keyword = typeof(keyword) == "string" ? keyword : "";
   return {
     type: types.SET_KEYWORD,
-    keyword: keyword
+    keyword
   }
 }
 
@@ -64,7 +37,7 @@ export function updateSuggestions(keyword, suggestions) {
   return {
     type: types.REQUEST_SUGGEST,
     suggestions: getSuggestions(keyword, suggestions),
-    keyword: keyword
+    keyword
   }
 }
 export function onSuggestionsFetchRequested(keyword) {
@@ -80,7 +53,7 @@ export function onSuggestionsClearRequested() {
 export function onSuggestionSelected(suggestion) {
   return {
     type: types.SELECT_SUGGEST,
-    suggestion,
+    suggestion
   }
 }
 
@@ -120,36 +93,21 @@ export function fetchInitialData(goalId) {
   }
 }
 
-export function fetchComments() {
-  return (dispatch, getState) => {
-    const goalMemberId = getState().goal.goal.goal_member.id
-    return axios.get(`/api/v1/goal_approvals/histories?goal_member_id=${goalMemberId}`)
-      .then((response) => {
-        let approvalHistories = response.data.data
-        dispatch({
-          type: types.FETCH_COMMETNS,
-          approvalHistories
-        })
-      })
-      .catch((response) => {
-      })
-  }
-}
-
-export function saveGoal(addInputData) {
+export function saveGoal(goalId, addInputData) {
   return (dispatch, getState) => {
     dispatch(disableSubmit())
-    const {inputData, goal, from} = getState().goal;
-    inputData["approval_history"] = addInputData
+
     // 単位無しの場合開始値と終了値を自動的に0にする
-    if (inputData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
-      inputData.key_result.start_value = 0
-      inputData.key_result.target_value = 0
+    const postData = Object.assign(getState().goal.inputData, addInputData)
+
+    if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
+      postData.key_result.start_value = 0
+      postData.key_result.target_value = 0
     }
 
-    return post(`/api/v1/goals/${goal.id}/update`, inputData, null,
+    return post(`/api/v1/goals/${goalId}/update`, postData, null,
       (response) => {
-        document.location.href = from
+        dispatch(toNextPage())
       },
       (response) => {
         dispatch(invalid(response.data))
@@ -174,6 +132,7 @@ function getSuggestions(value, suggestions) {
   if (value) {
     value = value.trim();
     const regex = new RegExp('^' + value, 'i');
+
     suggestions = suggestions.filter((suggestion) => regex.test(suggestion.name));
   }
 

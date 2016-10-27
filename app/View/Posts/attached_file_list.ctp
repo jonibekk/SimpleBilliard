@@ -14,14 +14,16 @@
  * @var                    $files
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/feed_share_range_filter',
         compact('current_circle', 'user_status', 'circle_member_count', 'circle_status',
             'feed_filter')) ?>
     <?php
     if (isset($user_status)) {
-        if (viaIsSet($params['controller']) == 'posts' && viaIsSet($params['action']) == 'attached_file_list' && ($user_status == 'joined' || $user_status == 'admin')) {
+        if (Hash::get($params, 'controller') == 'posts' && Hash::get($params,
+                'action') == 'attached_file_list' && ($user_status == 'joined' || $user_status == 'admin')
+        ) {
             echo $this->element("Feed/common_form");
         }
     } else {
@@ -39,7 +41,7 @@
             'class'        => 'form-control disable-change-warning file-type-select font_12px',
             'id'           => 'SwitchFileType',
             'options'      => $file_type_options,
-            'default'      => viaisset($this->request->params['named']['file_type']),
+            'default'      => Hash::get($this->request->params, 'named.file_type'),
             'redirect-url' => $circle_file_list_base_url,
             'wrapInput'    => 'circle-uploaded-files-type-select-wrap'
         ])
@@ -75,8 +77,8 @@
                $this->Html->url([
                    'controller' => 'posts',
                    'action'     => 'ajax_get_circle_files',
-                   'circle_id'  => viaIsSet($this->request->params['named']['circle_id']),
-                   'file_type'  => viaIsSet($this->request->params['named']['file_type']),
+                   'circle_id'  => Hash::get($this->request->params, 'named.circle_id'),
+                   'file_type'  => Hash::get($this->request->params, 'named.file_type'),
                ]) ?>"
                id="FeedMoreReadLink"
                append-target-id="CircleFiles"
@@ -90,4 +92,4 @@
 <?php else: ?>
     <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

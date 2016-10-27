@@ -232,7 +232,7 @@ class GlEmailComponent extends Component
         if (!empty($this->SendMail->current_team_id)) {
             $url_data['?']['team_id'] = $this->SendMail->current_team_id;
         }
-        if (viaIsSet($data['url_data'])) {
+        if (Hash::get($data, 'url_data')) {
             $url_data = array_merge($url_data, $data['url_data']);
         }
         $url = Router::url($url_data, true);

@@ -325,7 +325,7 @@ class UsersController extends AppController
             // Disabled user email validation
             // Because in batch case, email is already registered
             $email = $this->User->Email->getNotVerifiedEmail($user_id);
-            $email_from_email_table = viaIsSet($email['Email']['email']);
+            $email_from_email_table = Hash::get($email, 'Email.email');
             $email_from_invite_table = $invite['Invite']['email'];
             if ($email_from_email_table === $email_from_invite_table) {
                 unset($this->User->Email->validate['email']);
@@ -877,7 +877,7 @@ class UsersController extends AppController
             if (!$secret_key = $this->Session->read('2fa_secret_key')) {
                 throw new RuntimeException(__("An error has occurred."));
             }
-            if (!viaIsSet($this->request->data['User']['2fa_code'])) {
+            if (!Hash::get($this->request->data, 'User.2fa_code')) {
                 throw new RuntimeException(__("An error has occurred."));
             }
             if (!$this->TwoFa->verifyKey($secret_key, $this->request->data['User']['2fa_code'])) {
@@ -893,7 +893,8 @@ class UsersController extends AppController
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Pnotify->outSuccess(__("Succeeded to save 2-Step Verification."));
-        $this->Session->setFlash(null, "flash_click_event", ['id' => 'ShowRecoveryCodeButton'], 'click_event');
+        $this->Flash->set(null,
+            ['element' => 'flash_click_event', 'params' => ['id' => 'ShowRecoveryCodeButton'], 'key' => 'click_event']);
         return $this->redirect($this->referer());
     }
 
@@ -975,7 +976,7 @@ class UsersController extends AppController
         $this->_ajaxPreProcess();
         $query = $this->request->query;
         $res = [];
-        if (viaIsSet($query['term']) && viaIsSet($query['page_limit']) && viaIsSet($query['circle_type'])) {
+        if (Hash::get($query, 'term') && Hash::get($query, 'page_limit') && Hash::get($query, 'circle_type')) {
             $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type'],
                 true);
         }
@@ -990,7 +991,7 @@ class UsersController extends AppController
         $this->_ajaxPreProcess();
         $query = $this->request->query;
         $res = [];
-        if (viaIsSet($query['term']) && viaIsSet($query['page_limit'])) {
+        if (Hash::get($query, 'term') && Hash::get($query, 'page_limit')) {
             $res = $this->User->getSecretCirclesSelect2($query['term'], $query['page_limit']);
         }
         return $this->_ajaxGetResponse($res);
@@ -1085,14 +1086,14 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $user_id = $this->_getRequiredParam('user_id');
-        if (!$this->_setUserPageHeaderInfo($user_id)) {
+        $user_id = Hash::get($this->request->params, "named.user_id");
+        if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $this->layout = LAYOUT_ONE_COLUMN;
-        $page_type = viaIsSet($this->request->params['named']['page_type']);
+        $page_type = Hash::get($this->request->params, 'named.page_type');
 
         $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
         $current_id = $current_term['id'];
@@ -1186,8 +1187,8 @@ class UsersController extends AppController
      */
     function view_posts()
     {
-        $user_id = $this->_getRequiredParam('user_id');
-        if (!$this->_setUserPageHeaderInfo($user_id)) {
+        $user_id = Hash::get($this->request->params, "named.user_id");
+        if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
@@ -1207,10 +1208,10 @@ class UsersController extends AppController
 
     function view_actions()
     {
-        $user_id = $this->_getRequiredParam('user_id');
-        $page_type = $this->_getRequiredParam('page_type');
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        if (!in_array($page_type, ['list', 'image'])) {
+        $user_id = Hash::get($this->request->params, "named.user_id");
+        $page_type = Hash::get($this->request->params, "named.page_type");
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        if (!$user_id || !in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
@@ -1257,9 +1258,9 @@ class UsersController extends AppController
      */
     function view_info()
     {
-        $user_id = $this->_getRequiredParam('user_id');
+        $user_id = Hash::get($this->request->params, "named.user_id");
 
-        if (!$this->_setUserPageHeaderInfo($user_id)) {
+        if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());

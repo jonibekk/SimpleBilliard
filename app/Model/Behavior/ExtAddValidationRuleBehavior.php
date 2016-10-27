@@ -293,8 +293,8 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
             return true;
         }
 
-        if (!$user_id = viaIsSet($Model->data['TeamMember']['user_id'])) {
-            if (!$team_member_id = viaIsSet($Model->data['TeamMember']['id'])) {
+        if (!$user_id = Hash::get($Model->data, 'TeamMember.user_id')) {
+            if (!$team_member_id = Hash::get($Model->data, 'TeamMember.id')) {
                 return false;
             }
 
@@ -307,7 +307,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
                     'user_id'
                 ]
             ]);
-            if (!$user_id = viaIsSet($res['TeamMember']['user_id'])) {
+            if (!$user_id = Hash::get($res, 'TeamMember.user_id')) {
                 return false;
             }
         }
@@ -318,10 +318,29 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
             ],
             'fields'     => ['id', 'email_verified']
         ]);
-        if (viaIsSet($email['Email']['email_verified']) == true) {
+        if (Hash::get($email, 'Email.email_verified') == true) {
             return true;
         }
         return false;
     }
 
+    /**
+     * ユーザ名のバリデーション
+     * ローマ字、スペース、アポストロフィを許可
+     *
+     * @param Model $Model
+     * @param       $check
+     *
+     * @return int
+     */
+    function userNameChar(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
+        App::uses('User', 'Model');
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/' . User::USER_NAME_REGEX . '/', $value);
+    }
 }

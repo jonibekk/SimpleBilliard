@@ -17,8 +17,8 @@ class TkrChangeLog extends AppModel
      */
     public $validate = [
         'data'    => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'del_flg' => [
@@ -88,8 +88,7 @@ class TkrChangeLog extends AppModel
         }
 
         /** @noinspection PhpUndefinedFunctionInspection */
-        $data['data'] = msgpack_unpack(base64_decode($data['data']));
-        return $data;
+        return msgpack_unpack(base64_decode($data['data']));
     }
 
 }

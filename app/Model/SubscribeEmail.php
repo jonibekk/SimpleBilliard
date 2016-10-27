@@ -14,8 +14,8 @@ class SubscribeEmail extends AppModel
      */
     public $validate = [
         'email'   => [
-            'notEmpty'      => [
-                'rule' => 'notEmpty',
+            'notBlank'      => [
+                'rule' => 'notBlank',
             ],
             'email'         => [
                 'rule' => ['email'],

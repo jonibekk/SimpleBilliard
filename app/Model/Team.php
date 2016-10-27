@@ -100,7 +100,7 @@ class Team extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => ['rule' => ['notEmpty'],],
+            'notBlank'  => ['rule' => ['notBlank'],],
         ],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'change_from'        => [
@@ -124,7 +124,7 @@ class Team extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'emails'             => [
-            'notEmpty'    => ['rule' => ['notEmpty'],],
+            'notBlank'    => ['rule' => ['notBlank'],],
             'emailsCheck' => [
                 'rule' => ['emailsCheck']
             ],
@@ -295,7 +295,7 @@ class Team extends AppModel
             $this->TeamMember->User->Email->validate = [
                 'email' => [
                     'maxLength' => ['rule' => ['maxLength', 200]],
-                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
             ];
@@ -375,7 +375,7 @@ class Team extends AppModel
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
-        if (viaIsSet($post_data['Team']['change_from']) == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+        if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
             $this->EvaluateTerm->isStartedEvaluation($current_term_id)
         ) {
             return false;

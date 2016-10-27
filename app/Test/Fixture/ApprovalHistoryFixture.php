@@ -48,7 +48,7 @@ class ApprovalHistoryFixture extends CakeTestFixtureEx
             'null'     => false,
             'default'  => '0',
             'unsigned' => true,
-            'comment'  => ' 状態(0 = アクションなし,1 =コメントのみ, 2 = 評価対象にする, 3 = 評価対象にしない, 4 =修正依頼)'
+            'comment'  => ' 状態(0 = アクションなし,1 =コメントのみ, 2 = 評価対象にする, 3 = 評価対象にしない)'
         ],
         'select_clear_status'     => [
             'type'     => 'integer',

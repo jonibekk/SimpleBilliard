@@ -124,32 +124,89 @@
 
   // /goals/approval/detail
   &-detail {
-    .mod-bgglay {
-      background-color: @smokyWhite;
-      padding: @spacing @spacing/2;
+    &-goal {
+      padding: @spacing;
+      &.mod-bgglay {
+        background-color: @smokyWhite;
+      }
+      &-previous-info {
+        color: @subColor3;
+        font-weight: bold;
+        margin: @spacing 0;
+        border-top: 1px solid @subColor4;
+        padding-top: @spacing;
+      }
+      &-card {
+        &-info {
+          display: table-cell;
+          vertical-align: top;
+          width: 100%;
+          &-link {
+            color: @subColor2;
+            text-decoration: none;
+          }
+          &-tkr{
+            margin-top: @spacing;
+            &-title {
+              font-size: @fontMedium;
+              font-weight: bold;
+              margin: 0;
+            }
+            &-list {
+              list-style-type: disc;
+              margin: @spacing/2 0 @spacing;
+              padding-left: 1.5em;
+              .mod-change {
+                color: @keyColor;
+              }
+            }
+          }
+        }
+      }
     }
     &-input-comment-form{
       width: 99%;
       margin-bottom: @spacing;
     }
     &-user {
-      padding: @spacing 0;
-    }
-    &-goal {
-      padding: @spacing @spacing/2;
+      padding: @spacing;
+      &.mod-bgglay {
+        background-color: @smokyWhite;
+      }
     }
     &-comments {
-      padding: @spacing @spacing 0;
+      padding: @spacing 15px 0;
       &-comment {
         margin-bottom: 10px;
       }
+      &-form {
+        display: table;
+        width: 100%;
+        &-textarea {
+          display: table-cell;
+          width: 100%;
+          padding-right: 10px;
+        }
+        &-submit {
+          display: table-cell;
+          vertical-align: bottom;
+          &-button {
+            background-color: @keyColor;
+            border: none;
+            color: #fff;
+          }
+        }
+      }
+    }
+    &-view-previous {
+      text-align: center;
     }
     &-choice {
       text-align: center;
       margin: @spacing 0;
+      padding-top: @spacing * 2;
       border-top: 1px solid @subColor4;
       &-block {
-        margin-top: 15px;
         overflow: hidden;
       }
     }
@@ -164,26 +221,6 @@
       display: table-cell;
       margin-right: @spacing;
       max-width: none;
-    }
-    &-tkr{
-      margin-top: @spacing;
-      &title {
-        font-size: @fontMedium;
-        font-weight: bold;
-        margin: 0;
-      }
-      &list {
-        list-style-type: disc;
-        margin: @spacing/2 0 @spacing;
-        padding-left: 1.5em;
-        .mod-change {
-          color: @keyColor;
-        }
-      }
-      &link {
-        display: table;
-        margin: 0 auto;
-      }
     }
     &-info {
       display: table-cell;
