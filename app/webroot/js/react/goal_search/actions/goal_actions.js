@@ -69,6 +69,9 @@ export function updateFilter(data) {
 
 export function fetchMoreGoals(url) {
   return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LOADING_MORE,
+    })
     return axios.get(`${url}`)
       .then((response) => {
         const search_result = response.data
