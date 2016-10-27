@@ -29,10 +29,11 @@ export default class Step3Component extends React.Component {
   getInputDomData() {
     const photoNode = this.refs.innerPhoto.refs.photo
     const photo = ReactDOM.findDOMNode(photoNode).files[0]
+    const is_wish_approval = ReactDOM.findDOMNode(this.refs.is_wish_approval).checked
     if (!photo) {
-      return {}
+      return {is_wish_approval}
     }
-    return {photo}
+    return {photo, is_wish_approval}
   }
 
   handleSubmit(e) {
@@ -89,8 +90,8 @@ export default class Step3Component extends React.Component {
 
           <div className="checkbox">
             <label>
-              <input type="checkbox" name="is_wish_approval" value="1"  onChange={this.handleChange} checked="checked" />
-                <span>{__("Wish approval")}</span>
+              <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true"  ref="is_wish_approval" />
+                <span>{__("Wish goal approval")}</span>
             </label>
           </div>
 

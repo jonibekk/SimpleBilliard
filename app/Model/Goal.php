@@ -534,7 +534,7 @@ class Goal extends AppModel
         $data['GoalMember'][0]['user_id'] = $this->my_uid;
         $data['GoalMember'][0]['team_id'] = $this->current_team_id;
         $data['GoalMember'][0]['type'] = GoalMember::TYPE_OWNER;
-        $data['GoalMember'][0]['is_wish_approval'] = !empty($data['is_wish_approval']);
+        $data['GoalMember'][0]['is_wish_approval'] = Hash::get($data, 'Goal.is_wish_approval') === "true";
 
         $priority = Hash::get($data, 'Goal.priority');
         if ($priority !== null) {

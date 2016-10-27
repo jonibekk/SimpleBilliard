@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-25 12:26+0900\n"
+"PO-Revision-Date: 2016-10-27 15:59+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -99,9 +99,6 @@ msgstr "このチームへのアクセス権限がありません。"
 
 msgid "Select a goal."
 msgstr "ゴールを選択する"
-
-msgid "Invalid screen transition."
-msgstr "不正な画面遷移です。"
 
 msgid "Created a circle."
 msgstr "サークルを作成しました。"
@@ -361,6 +358,9 @@ msgstr "アクションの追加に失敗しました。"
 
 msgid "Added an action."
 msgstr "アクションを追加しました。"
+
+msgid "Invalid screen transition."
+msgstr "不正な画面遷移です。"
 
 msgid "Japanese"
 msgstr "Japanese"
@@ -1668,14 +1668,14 @@ msgstr ""
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
 
+msgid "This Top Key Result is not clear."
+msgstr "トップKRが明確ではない。"
+
 msgid "This Top Key Result is clear and most important."
 msgstr "トップKRが明確で最重要である。"
 
 msgid "This Top Key Result is not most important."
 msgstr "トップKRが最重要でない。"
-
-msgid "This Top Key Result is not clear."
-msgstr "トップKRが明確ではない。"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
@@ -2376,6 +2376,9 @@ msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 msgid "Progress"
 msgstr "進捗"
 
+msgid "Wish goal approval"
+msgstr "ゴール認定を希望する"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -2832,6 +2835,9 @@ msgstr "ファイル"
 
 msgid "Circle setting"
 msgstr "サークルの設定"
+
+msgid "Display on Home feed"
+msgstr ""
 
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
@@ -4005,6 +4011,9 @@ msgstr "これ以上のアクションはありません。"
 
 msgid "No one is following."
 msgstr "フォロワーはいません。"
+
+msgid "No Labels"
+msgstr ""
 
 msgid "Goal progress rate"
 msgstr "ゴール進捗率"
