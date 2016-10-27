@@ -1,7 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'GoalApprovalService');
-App::import('Service', 'ApprovalHistoryService');
+App::import('Service/Api', 'ApiGoalApprovalService');
 
 /**
  * Class GoalApprovalsController
@@ -351,6 +351,9 @@ class GoalApprovalsController extends ApiController
     {
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        /** @var ApiGoalApprovalService $ApiGoalApprovalService */
+        $ApiGoalApprovalService = ClassRegistry::init("ApiGoalApprovalService");
+
         $myUserId = $this->Auth->user('id');
         $goalMemberId = $this->request->query('goal_member_id');
 
@@ -370,7 +373,7 @@ class GoalApprovalsController extends ApiController
         }
 
         $res = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
-        return $this->_getResponseSuccess($GoalApprovalService->processGoalApprovalForResponse($res, $myUserId));
+        return $this->_getResponseSuccess($ApiGoalApprovalService->processGoalApprovalForResponse($res, $myUserId));
     }
 
     /**
@@ -395,8 +398,8 @@ class GoalApprovalsController extends ApiController
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        /** @var ApprovalHistoryService $ApprovalHistoryService */
-        $ApprovalHistoryService = ClassRegistry::init("ApprovalHistoryService");
+        /** @var ApiService $ApiService */
+        $ApiService = ClassRegistry::init("ApiService");
 
         $data = $this->request->data;
         $goalMemberId = Hash::get($data, 'goal_member.id');
@@ -427,7 +430,7 @@ class GoalApprovalsController extends ApiController
         $this->sendCommentNotify($goalMemberId, $myUserId, $ApprovalHistory->getLastInsertId());
 
         $res = $ApprovalHistory->findByIdWithUser($ApprovalHistory->getLastInsertId());
-        $approval_history = $ApprovalHistoryService->processApprovalHistory($res);
+        $approval_history = $ApiService->formatResponseData($res);
 
         // レスポンス
         // コメント投稿が成功したらフロントで投稿したコメントを表示するため、
