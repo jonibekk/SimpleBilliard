@@ -54,7 +54,10 @@ class GoalCard extends React.Component {
               <div>
                 <div className="row mb_8px">
                   <div className="col-xs-12">
-                    <a href={`/goals/view_info/goal_id:${goal.id}`} className="text-align_c d-block">
+                    <a href={`/goals/view_info/goal_id:${goal.id}`}
+                       className="text-align_c d-block"
+                       target={cake.is_mb_app ? "_self" : "_blank"}
+                    >
                       <img src={goal.medium_img_url} className="img-rounded"
                            style={{width: 48, height: 48}} alt={goal.name}/>
                     </a>
@@ -76,7 +79,10 @@ class GoalCard extends React.Component {
             </div>
             <div className="col-xxs-9 col-xs-9 pl_12px">
               <div className="col-xxs-12 goals-page-card-title-wrapper">
-                <a href={`/goals/view_info/goal_id:${goal.id}`} className="goals-page-card-title">
+                <a href={`/goals/view_info/goal_id:${goal.id}`}
+                   className="goals-page-card-title"
+                   target={cake.is_mb_app ? "_self" : "_blank"}
+                >
                   <p className="goals-page-card-title-text">
                     <span>{goal.name}</span>
                   </p>
