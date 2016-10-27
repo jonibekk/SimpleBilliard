@@ -156,7 +156,7 @@ goalcardのheader自体をrelativeで基準にタテ線を引いている。
   font-weight: bold;
   color: @darkBlack;
   font-size: @goalTitleFontSize;
-  height: @goalTitleFontSize * @goalTitleLineHeightComputed * @goalTitleLinesToShow;
+  max-height: @goalTitleFontSize * @goalTitleLineHeightComputed * @goalTitleLinesToShow;
   line-height: @goalTitleLineHeightComputed;
   position: relative;
   &:before,
