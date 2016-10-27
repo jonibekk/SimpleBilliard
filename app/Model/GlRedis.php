@@ -421,7 +421,7 @@ class GlRedis extends AppModel
      */
     private function generateId()
     {
-        return String::uuid();
+        return CakeText::uuid();
     }
 
     /**
