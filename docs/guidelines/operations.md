@@ -321,33 +321,25 @@ Issueを再び開いて作業を続行するとき。
 
 # ブランチ運用について
 - hotfixの場合(本番環境の緊急バグフィックス)
-    - master -> hofix ブランチ作成
-    - hotfix -> hotfix0000-something ブランチ生成し、hotfixにマージ
+    - master -> hotfix0000-something ブランチ生成し、作業
+    - hotfix環境にdeploy(ブランチの切り替え & Deploy)
     - hotfix.goalous.comで動作確認
-    - master <- hotfix をマージし、本番環境にdeploy
+    - master <- hotfix0000-something をマージし、本番環境にdeploy
     - www.goalous.comで動作確認
-    - stage <- hotfix をマージ
-    - stage-isao <- stage をマージ
-    - master-isao <- satge-isao をマージし、ISAO環境にdeploy
+    - master-isao <- master をマージし、ISAO環境にdeploy
     - isao.goalous.comで動作確認
-    - develop <- stage をマージ
+    - develop <- master をマージ
     - 以上
 - stage fixの場合(ステージング環境でのバグフィックス)
     - stage -> stage-fix0000-something ブランチを生成し、stageにマージ
     - stg.goalous.comで動作確認
-    - stage-isao <- stage をマージ
     - develop <- stage をマージ
     - 以上
-- stage-isao fixの場合(ISAOステージング環境でのバグフィックス、developへのマージはしない)
-    - stage-isao -> stage-isao-fix0000-something ブランチを生成し、stage-isaoにマージ
-    - stg-isao.goalous.comで動作確認
-    - 以上
 - master-isao fixの場合(ISAO環境でのバグフィックス、developへのマージはしない)
-    - master-isao -> hotfix-isao -> hotfix-isao0000-something ブランチを生成
-    - hotfix-isao <- hotfix-isao0000-something をマージ
-    - stg-isao.goalous.comのむき先を一時的にhotfix-isaoに変更しdeploy&動作確認
-    - master-isao <- hotfix-isaoをマージ
-    - stage-isao <- master-isaoをマージ
+    - master-isao -> hotfix-isao0000-something ブランチを生成
+    - stg.goalous.comのむき先を一時的にhotfix-isao0000-somethingに変更しdeploy&動作確認
+    - master-isao <- hotfix-isao0000-something をマージ
+    - develop <- master-isaoをマージ
     - 以上
 
 <hr id="operation_queries">
