@@ -1,6 +1,6 @@
 <?php
 
-class CsvComponent extends Object
+class CsvComponent extends CakeObject
 {
 
     public $name = "Csv";
