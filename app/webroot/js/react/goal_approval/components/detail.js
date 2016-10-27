@@ -1,9 +1,9 @@
 import React from 'react'
 import Comments from "~/goal_approval/components/elements/detail/Comments";
-import { GoalBlock } from "~/goal_approval/components/elements/detail/GoalBlock";
-import { UserCard } from "~/goal_approval/components/elements/detail/UserCard";
-import { CoachFooter } from "~/goal_approval/components/elements/detail/CoachFooter";
-import { CoacheeFooter } from "~/goal_approval/components/elements/detail/CoacheeFooter";
+import GoalBlock from "~/goal_approval/components/elements/detail/GoalBlock";
+import UserCard from "~/goal_approval/components/elements/detail/UserCard";
+import CoachFooter from "~/goal_approval/components/elements/detail/CoachFooter";
+import CoacheeFooter from "~/goal_approval/components/elements/detail/CoacheeFooter";
 
 export default class DetailComponent extends React.Component {
   constructor(props) {

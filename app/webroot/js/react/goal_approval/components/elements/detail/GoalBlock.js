@@ -1,7 +1,7 @@
 import React from 'react'
-import { GoalCard } from "~/goal_approval/components/elements/detail/GoalCard";
+import GoalCard from "~/goal_approval/components/elements/detail/GoalCard";
 
-export class GoalBlock extends React.Component {
+export default class GoalBlock extends React.Component {
   constructor(props) {
     super(props)
 

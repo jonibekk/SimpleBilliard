@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import {Link} from 'react-router'
 import {GoalMember} from "~/common/constants/Model";
 
-export class CoacheeFooter extends React.Component {
+export default class CoacheeFooter extends React.Component {
   constructor(props) {
     super(props)
   }

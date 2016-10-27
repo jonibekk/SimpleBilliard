@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import * as actions from "~/goal_approval/actions/detail_actions";
 import Textarea from "react-textarea-autosize";
-import { Comment } from "~/goal_approval/components/elements/detail/Comment";
+import Comment from "~/goal_approval/components/elements/detail/Comment";
 
 class Comments extends React.Component {
   constructor(props) {

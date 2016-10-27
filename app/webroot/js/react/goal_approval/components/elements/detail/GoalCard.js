@@ -1,6 +1,6 @@
 import React from 'react'
 
-export class GoalCard extends React.Component {
+export default class GoalCard extends React.Component {
   constructor(props) {
     super(props)
   }
