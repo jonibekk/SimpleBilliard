@@ -19,6 +19,14 @@ export function getCsrfTokenKey() {
 }
 
 export function post(uri, data, options, success_callback, error_callback) {
+  return save(uri, data, options, success_callback, error_callback, "post")
+}
+
+export function del(uri, data, options, success_callback, error_callback) {
+  return save(uri, data, options, success_callback, error_callback, "delete")
+}
+
+export function save(uri, data, options, success_callback, error_callback, request_method = "post") {
   options = options || {}
   const base_options = {
     headers: {
@@ -36,8 +44,19 @@ export function post(uri, data, options, success_callback, error_callback) {
   const form_data = createFormData(post_data, ['photo'])
   const url = getBaseUrl() + uri;
 
-  return axios.post(url, form_data, options)
-    .then(success_callback, error_callback)
+  switch (request_method) {
+    case "post":
+      return axios.post(url, form_data, options)
+        .then(success_callback, error_callback)
+
+    case "put":
+      return axios.put(url, form_data, options)
+        .then(success_callback, error_callback)
+
+    case "delete":
+      return axios.delete(url, form_data, options)
+        .then(success_callback, error_callback)
+  }
 }
 
 /**

@@ -117,5 +117,10 @@ if (false) {
          * @var AppHelper
          */
         var $App;
+
+        /**
+         * @var ExptHelper
+         */
+        var $Expt;
     }
 }

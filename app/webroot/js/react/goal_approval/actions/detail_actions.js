@@ -16,7 +16,6 @@ export function fetchGoalMember(goal_member_id) {
         console.log(error)
         console.log('fetch failed')
         /* eslint-enable no-console */
-        dispatch(toListPage())
       })
   }
 }
@@ -83,16 +82,43 @@ export function postWithdraw(goal_member_id) {
 
     return post(`/api/v1/goal_approvals/withdraw`, {goal_member: {id: goal_member_id}}, null,
       () => {
+        /* eslint-disable no-console */
+        console.log('post withdraw success')
+        /* eslint-enable no-console */
         dispatch(finishedPostingWithdraw())
         dispatch(toListPage())
       },
       (response) => {
         dispatch(finishedPostingWithdraw())
         /* eslint-disable no-console */
-        console.log("withdraw failed");
+        console.log("failed to withdraw");
         console.log(response);
         /* eslint-enable no-console */
         dispatch(toListPage())
+      }
+    );
+  }
+}
+
+export function postComment(postData) {
+  return (dispatch) => {
+    dispatch(postingComment())
+
+    return post(`/api/v1/goal_approvals/comment`, postData, null,
+      (response) => {
+        /* eslint-disable no-console */
+        console.log('post comment success')
+        /* eslint-enable no-console */
+        dispatch(finishedPostingComment())
+        dispatch(addComment(response.data.data.approval_history))
+        dispatch(updateComment(''))
+      },
+      (response) => {
+        dispatch(finishedPostingComment())
+        /* eslint-disable no-console */
+        console.log("failed to post comment");
+        console.log(response);
+        /* eslint-enable no-console */
       }
     );
   }
@@ -120,6 +146,13 @@ export function postingRemovefromTarget() {
 export function postingWithdraw() {
   return {type: types.POSTING_WITHDRAW}
 }
+export function postingComment() {
+  return {type: types.POSTING_COMMENT}
+}
+
+export function finishedPostingComment() {
+  return {type: types.FINISHED_POSTING_COMMENT}
+}
 
 export function finishedPostingRemoveFromTarget() {
   return {type: types.FINISHED_POSTING_REMOVE_FROM_TARGET}
@@ -135,4 +168,12 @@ export function invalid(error) {
 
 export function initDetailPage() {
   return {type: types.INIT_DETAIL_PAGE}
+}
+
+export function addComment(comment) {
+  return {type: types.ADD_COMMENT, comment}
+}
+
+export function updateComment(comment) {
+  return {type: types.UPDATE_COMMENT, comment}
 }

@@ -1,6 +1,6 @@
 <?php
 
-class UservoiceComponent extends Object
+class UservoiceComponent extends CakeObject
 {
 
     public $name = "Uservoice";

@@ -74,6 +74,10 @@ class GoalService extends AppService
         $Goal = ClassRegistry::init("Goal");
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
         $TimeExHelper = new TimeExHelper(new View());
 
         $data = self::$cacheList[$id] = Hash::extract($Goal->findById($id), 'Goal');
@@ -102,6 +106,13 @@ class GoalService extends AppService
         // 日付フォーマット
         $data['start_date'] = $TimeExHelper->dateFormat($data['start_date'], $currentTerm['timezone']);
         $data['end_date'] = $TimeExHelper->dateFormat($data['end_date'], $currentTerm['timezone']);
+
+        // 認定可能フラグ追加
+        $data['is_approvable'] = false;
+        $goalLeaderId = $GoalMember->getGoalLeaderId($id);
+        if($goalLeaderId) {
+            $data['is_approvable'] = $GoalMemberService->isApprovableGoalMember($goalLeaderId);
+        }
 
         // キャッシュ変数に保存
         self::$cacheList[$id] = $data;
@@ -207,25 +218,14 @@ class GoalService extends AppService
             $updateGoalMember = [
                 'id'                   => $goal['goal_member']['id'],
                 'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
-                'priority'             => $requestData['priority'],
                 'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
             ];
+            if (Hash::get($requestData, 'priority') !== null) {
+                $updateGoalMember['priority'] = $requestData['priority'];
+            }
             if (!$GoalMember->save($updateGoalMember, false)) {
                 throw new Exception(sprintf("Failed update goal_member. data:%s"
                     , var_export($updateGoalMember, true)));
-            }
-
-            // 認定についてのコメント記載があれば登録
-            if (!empty($requestData['approval_history']) && !empty($requestData['approval_history']['comment'])) {
-                $approvalHistory = [
-                    'goal_member_id' => $goal['goal_member']['id'],
-                    'user_id'        => $userId,
-                    'comment'        => $requestData['approval_history']['comment'],
-                ];
-                if (!$ApprovalHistory->save($approvalHistory, false)) {
-                    throw new Exception(sprintf("Failed save approvalHistory. data:%s"
-                        , var_export($approvalHistory, true)));
-                }
             }
 
             // Redisキャッシュ削除

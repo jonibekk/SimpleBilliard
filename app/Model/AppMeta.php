@@ -14,13 +14,13 @@ class AppMeta extends AppModel
      */
     public $validate = [
         'key_name' => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'value'    => [
-            'notEmpty' => [
-                'rule' => ['notEmpty'],
+            'notBlank' => [
+                'rule' => ['notBlank'],
             ],
         ],
         'del_flg'  => [

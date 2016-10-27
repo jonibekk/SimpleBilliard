@@ -7,7 +7,7 @@
  * @var CodeCompletionView $this
  **/
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <!-- start VWO and Mixpanel Integration Code-->
 <script type="text/javascript">
     var _vis_opt_queue = window._vis_opt_queue || [], _vis_counter = 0, mixpanel = window.mixpanel || [];
@@ -162,7 +162,7 @@
             "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
             "team_name": "<?= h($my_member_status['Team']['name']) ?>",
             "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
-            "teams_belong": <?= h(intval(count($my_teams))) ?>, // Teams count that user belongs to
+            "teams_belong": <?= isset($my_teams) ? h(intval(count($my_teams))) : 0 ?>, // Teams count that user belongs to
             <?php endif ?>
         };
         if (!enabled_intercom_icon) {
@@ -204,4 +204,4 @@
         })()</script>
     <!-- end Intercom -->
 <?php endif; ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

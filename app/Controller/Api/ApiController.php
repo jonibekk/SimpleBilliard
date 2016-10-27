@@ -70,6 +70,23 @@ class ApiController extends BaseController
     }
 
     /**
+     * 成功(Status Code:200)のページングデータ取得用レスポンスを返す
+     *
+     * @param null $ret
+     *
+     * @return CakeResponse
+     * @internal param null|string $data
+     * @internal param null|string $html
+     */
+    protected function _getResponsePagingSuccess($ret = null)
+    {
+        $this->response->type('json');
+        $this->response->body(json_encode($ret));
+        $this->response->statusCode(200);
+        return $this->response;
+    }
+
+    /**
      * リクエスト不正(Status Code:400)のレスポンスを返す
      *
      * @param string     $message

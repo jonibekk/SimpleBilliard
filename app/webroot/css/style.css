@@ -232,6 +232,10 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     padding: 10px 11px;
 }
 
+.panel-block {
+    padding: 10px;
+}
+
 .form-horizontal .form-group {
     margin-right: 0;
     margin-left: 0;
@@ -255,6 +259,11 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     box-shadow: none;
     -webkit-transition: none;
     transition: none;
+}
+.form-control.gl {
+   line-height: 18px;
+    padding:8px;
+    height: auto;
 }
 
 .form-control:focus {
@@ -369,6 +378,10 @@ textarea{
     margin-right: 5px;
 }
 
+.mr_4px {
+    margin-right: 4px;
+}
+
 .mr_8px {
     margin-right: 8px;
 }
@@ -417,6 +430,10 @@ textarea{
 
 .mb_8px {
     margin-bottom: 8px;
+}
+
+.mb_10px {
+    margin-bottom: 10px;
 }
 
 .mb_12px {
@@ -680,6 +697,12 @@ textarea{
 }
 
 /*/ text-align */
+
+
+.d-block {
+    display: block;
+}
+
 
 .tap-btn {
     font-size: 40px;
@@ -975,6 +998,10 @@ textarea{
 
 .bd-b {
     border-bottom: 1px solid #f0f0f0;
+}
+
+.bd-b-sc4 {
+    border-bottom: 1px solid #ccc;
 }
 
 .bd-r {

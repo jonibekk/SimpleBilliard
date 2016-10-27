@@ -2,6 +2,7 @@
 App::uses('ModelType', 'Model');
 
 /**
+ * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
  * @author daikihirakata
  * @property SessionComponent $Session
  * @property AuthComponent    $Auth
@@ -208,6 +209,9 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $this->_setTeamJoinOption($model_id);
+                break;
+            case NotifySetting::TYPE_APPROVAL_COMMENT:
+                $this->_setApprovalCommentOption($model_id, $sub_model_id, $to_user_list, $team_id);
                 break;
             default:
                 break;
@@ -529,7 +533,7 @@ class NotifyBizComponent extends Component
     {
         //宛先は招待した人
         $invite = $this->Team->Invite->getInviteById($invite_id);
-        if (!viaIsSet($invite['FromUser']['id']) || !viaIsSet($invite['Team']['name'])) {
+        if (!Hash::get($invite, 'FromUser.id') || !Hash::get($invite, 'Team.name')) {
             return;
         }
         //inactive user
@@ -863,7 +867,7 @@ class NotifyBizComponent extends Component
         App::import('Service', 'GoalApprovalService');
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $isApprovable = $GoalApprovalService->isApprovable($goalMember['user_id'], $team_id);
+        $isApprovable = $GoalApprovalService->isApprovable($goalMember['GoalMember']['user_id'], $team_id);
         if (!$isApprovable) {
             return;
         }
@@ -886,6 +890,56 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
+    }
+
+    /**
+     * 認定コメント通知オプション
+     *
+     * @param $notify_type
+     * @param $goal_id
+     * @param $to_user_id
+     * @param $team_id
+     */
+    private function _setApprovalCommentOption($goalMemberId, $commentId, $toUserId, $teamId)
+    {
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        if (empty($goalMember)) {
+            return;
+        }
+
+        //inactive user
+        if (!$this->Team->TeamMember->isActive($toUserId)) {
+            return;
+        }
+
+        //認定できないユーザの場合は処理しない
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable(Hash::get($goalMember, 'GoalMember.user_id'), $teamId);
+        if (!$isApprovable) {
+            return;
+        }
+
+        // TODO: この辺の処理は全部サービス層にうつす。
+        //       副作用がこわいので、後ほど一括で移行。
+        $approvalHistory = $this->Goal->GoalMember->ApprovalHistory->findById($commentId);
+        if (empty($approvalHistory)) {
+            return;
+        }
+        $comment = Hash::get($approvalHistory, 'ApprovalHistory.comment');
+
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserId, NotifySetting::TYPE_APPROVAL_COMMENT);
+
+        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', Hash::get($goalMember, 'GoalMember.id')];
+
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_APPROVAL_COMMENT;
+        $this->notify_option['url_data'] = $url_goal_approval;
+        $this->notify_option['model_id'] = $goalMemberId;
+        $this->notify_option['item_name'] = json_encode([trim($comment)]);
+        $this->notify_option['options']['goal_id'] = Hash::get($goalMember, 'GoalMember.goal_id');
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserId);
     }
 
     /**
@@ -1161,7 +1215,7 @@ class NotifyBizComponent extends Component
         $original_lang = Configure::read('Config.language');
 
         $post_url = null;
-        if (viaIsSet($this->notify_option['url'])) {
+        if (Hash::get($this->notify_option, 'url')) {
             $post_url = $this->notify_option['url'];
         } else {
             $post_url = Router::url($this->notify_option['url_data'], true);
@@ -1187,7 +1241,7 @@ class NotifyBizComponent extends Component
 
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
-            $from_user_name = $from_user[0]['User']['display_username'];
+            $from_user_name = Hash::get($from_user,'0.User.display_username');
 
             // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
             $title = "";

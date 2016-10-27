@@ -39,6 +39,7 @@ class NotifySetting extends AppModel
     const TYPE_FEED_MESSAGE = 25;
     const TYPE_SETUP_GUIDE = 26;
     const TYPE_COACHEE_WITHDRAW_APPROVAL = 28;
+    const TYPE_APPROVAL_COMMENT = 29;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
@@ -238,6 +239,13 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
+        self::TYPE_APPROVAL_COMMENT             => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-comment-o',
+            'groups'          => ['all', 'primary'],
+        ]
     ];
 
     static public $TYPE_GROUP = [
@@ -830,6 +838,20 @@ class NotifySetting extends AppModel
                     $title = __('<span class="notify-card-head-target">%1$s%2$s</span>',
                         h($user_text),
                         ($count_num > 0) ? h(__(" +%s", $count_num)) : null);
+                }
+                break;
+            case self::TYPE_APPROVAL_COMMENT:
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
                 }
                 break;
         }

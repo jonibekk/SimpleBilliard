@@ -32,7 +32,7 @@
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
-                signup_user_name_alpha: "<?= __("Only alphabet characters are allowed.") ?>",
+                signup_user_name_alpha: "<?= __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe.") ?>",
                 signup_privacy_policy_required: "<?= __("Selection required.") ?>",
                 signup_birth_day_required: "<?= __("Selection required.") ?>",
                 signup_term_required: "<?= __("Selection required.") ?>",
@@ -506,12 +506,40 @@
             "Withdrawn": "<?=__("Withdrawn")?>",
             "Evaluation target goals are listed up here.": "<?= __("Evaluation target goals are listed up here.") ?>",
             "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
+            "Previous": "<?= __("Previous") ?>",
+            "Send": "<?= __("Send") ?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
-            "Edit goal & top key result": "<?=  __("Edit goal & top key result") ?>",
+            "Edit goal & Top Key Result": "<?=  __("Edit goal & Top Key Result") ?>",
             "Save changes": "<?= __("Save changes") ?>",
             "Optional": "<?= __("Optional") ?>",
-            "Top Key Result": "<?= __("Top Key Result") ?>"
+            "Top Key Result name": "<?= __("Top Key Result name") ?>",
+            "Measurement type": "<?= __("Measurement type") ?>",
+            "Creation Date": "<?= __("Creation Date") ?>",
+            "Actions number": "<?= __("Actions number") ?>",
+            "Key results number": "<?= __("Key results number") ?>",
+            "Followers number": "<?= __("Followers number") ?>",
+            "Collaborators number": "<?= __("Collaborators number") ?>",
+            "Progress rate": "<?= __("Progress rate") ?>",
+            "Follow": "<?= __("Follow") ?>",
+            "Following": "<?= __("Following") ?>",
+            "Search by goal name": "<?= __("Search by goal name") ?>",
+            "Filter": "<?= __("Filter") ?>",
+            "Close": "<?=__("Close")?>",
+            "Search result": "<?=__("Search result")?>",
+            "Count": "<?=__("Count")?>",
+            "Add by pressing the Enter.(You can search maximum 3 labels)": "<?= __("Add by pressing the Enter.(You can search maximum 3 labels)") ?>",
+            'Current Term': "<?=__("Current Term")?>",
+            "Next Term": "<?=__("Next Term")?>",
+            "Previous Term": "<?=__("Previous Term")?>",
+            "More Previous": "<?=__("More Previous")?>",
+            "All": "<?=__("All")?>",
+            "Complete": "<?=__("Complete")?>",
+            "Incomplete": "<?=__("Incomplete")?>",
+            "Progress": "<?=__("Progress")?>"
+        },
+        regex: {
+            user_name: "<?= User::USER_NAME_REGEX ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
@@ -525,7 +553,7 @@
         unread_msg_post_ids: <?=isset($unread_msg_post_ids) ? json_encode($unread_msg_post_ids) : "''"?>,
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
-        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>"
+        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
     };
 
     function __(text) {

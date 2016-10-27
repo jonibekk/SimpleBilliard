@@ -20,4 +20,34 @@ class AppUtil
     {
         return strtotime($date) - $timezone * HOUR;
     }
+
+    /**
+     * 配列か判定(連想配列はfalse)
+     * メモリ増加を防ぐ為参照渡しとする
+     *
+     * @param $ar
+     *
+     * @return bool
+     */
+    static function isVector(&$ar)
+    {
+        reset($ar);
+        list($k) = each($ar);
+        return $k === 0;
+    }
+
+    /**
+     * 連想配列か判定
+     * メモリ増加を防ぐ為参照渡しとする
+     *
+     * @param $ar
+     *
+     * @return bool
+     */
+    static function isHash(&$ar)
+    {
+        reset($ar);
+        list($k) = each($ar);
+        return $k !== 0;
+    }
 }

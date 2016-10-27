@@ -8,7 +8,7 @@
  */
 
 /** @noinspection PhpUndefinedClassInspection */
-class OgpComponent extends Object
+class OgpComponent extends CakeObject
 {
 
     public $name = "Ogp";

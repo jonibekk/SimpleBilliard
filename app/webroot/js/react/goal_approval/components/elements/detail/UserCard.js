@@ -1,6 +1,6 @@
 import React from 'react'
 
-export class UserCard extends React.Component {
+export default class UserCard extends React.Component {
   render() {
     const goal_member = this.props.goal_member
 
@@ -31,4 +31,4 @@ export class UserCard extends React.Component {
 UserCard.propTypes = {
   goal_member: React.PropTypes.object
 }
-UserCard.defaultProps = {goal_member: {}}
+UserCard.defaultProps = { goal_member: {} }

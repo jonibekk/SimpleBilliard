@@ -16,14 +16,14 @@ class Email extends AppModel
      */
     public $validate = [
         'user_id'        => [
-            'notEmpty' => [
-                'rule' => 'notEmpty',
+            'notBlank' => [
+                'rule' => 'notBlank',
             ],
         ],
         'email'          => [
             'maxLength'     => ['rule' => ['maxLength', 200]],
-            'notEmpty'      => [
-                'rule' => 'notEmpty',
+            'notBlank'      => [
+                'rule' => 'notBlank',
             ],
             'email'         => [
                 'rule' => ['email'],
@@ -38,14 +38,14 @@ class Email extends AppModel
 
     public $contact_validate = [
         'want'    => [
-            'notEmpty' => [
-                'rule' => 'notEmpty',
+            'notBlank' => [
+                'rule' => 'notBlank',
             ],
         ],
         'email'   => [
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => [
-                'rule' => 'notEmpty',
+            'notBlank'  => [
+                'rule' => 'notBlank',
             ],
             'email'     => [
                 'rule' => ['email'],
@@ -56,11 +56,11 @@ class Email extends AppModel
             'maxLength' => ['rule' => ['maxLength', 50],],
         ],
         'name'    => [
-            'notEmpty'  => ['rule' => 'notEmpty',],
+            'notBlank'  => ['rule' => 'notBlank',],
             'maxLength' => ['rule' => ['maxLength', 50]],
         ],
         'message' => [
-            'notEmpty'  => ['rule' => 'notEmpty',],
+            'notBlank'  => ['rule' => 'notBlank',],
             'maxLength' => ['rule' => ['maxLength', 3000]],
         ],
         'need'    => [
@@ -142,7 +142,7 @@ class Email extends AppModel
         }
         $options = [
             'conditions' => [
-                'Email.email' => $emails,
+                'Email.email'          => $emails,
                 'Email.email_verified' => 1,
             ],
             'fields'     => ['user_id', 'email'],
@@ -158,7 +158,7 @@ class Email extends AppModel
         $email_team_members = $this->find('all', $options);
 
         foreach ($email_team_members as $k => $v) {
-            if (!viaIsSet($v['User']['TeamMember'])) {
+            if (!Hash::get($v, 'User.TeamMember')) {
                 unset($email_team_members[$k]);
             }
         }

@@ -10,8 +10,9 @@ App::import('Service', 'AppService');
 App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GoalChangeLog', 'Model');
+App::uses('TkrChangeLog', 'Model');
 App::import('Service', 'GoalMemberService');
-App::import('Service', 'KeyResultService');
 
 class GoalApprovalService extends AppService
 {
@@ -51,8 +52,12 @@ class GoalApprovalService extends AppService
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         // 認定コメントリスト取得
-        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
+        $histories = $ApprovalHistory->findByGoalMemberId($goalMemberId);
+        if(empty($histories)) {
+            return [];
+        }
 
+        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
         $goalMember = $GoalMemberService->get($goalMemberId, [
             GoalMemberService::EXTEND_COACH,
             GoalMemberService::EXTEND_COACHEE,
@@ -151,88 +156,50 @@ class GoalApprovalService extends AppService
 
         $GoalMember->begin();
 
-        // コラボ情報の保存
-        if (Hash::get($saveData, 'GoalMember')) {
-            $isSaveSuccessGoalMember = $GoalMember->save($saveData);
-            if (!$isSaveSuccessGoalMember) {
-                $GoalMember->rollback();
-                return false;
+        try {
+            // コラボ情報の保存
+            $goalMemberId = Hash::get($saveData, 'GoalMember.id');
+            if ($goalMemberId) {
+                $isSaveSuccessGoalMember = $GoalMember->save($saveData);
+                if (!$isSaveSuccessGoalMember) {
+                    throw new Exception(sprintf("Failed to save goal member. data:%s"
+                        , var_export($saveData, true)));
+                }
+
+                // コラボレータとコーチの認定未処理件数キャッシュを削除
+                $goalMemberUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+                $coachUserId = $TeamMember->getCoachId($goalMemberUserId);
+                $this->deleteUnapprovedCountCache([$goalMemberUserId, $coachUserId]);
+
+                // コーチの場合はゴール/tkr情報のスナップショットを撮る
+                if($coachUserId == $GoalMember->my_uid) {
+                    $isSaveSuccessSnapshot = $this->saveSnapshotForApproval($goalMemberId);
+                    if(!$isSaveSuccessSnapshot) {
+                        throw new Exception(sprintf("Failed to save snapshot. data:%s"
+                            , var_export($goalMemberId, true)));
+                    }
+                }
             }
 
-            // コラボレータとコーチの認定未処理件数キャッシュを削除
-            $collaboUserId = $GoalMember->getUserIdByGoalMemberId($GoalMember->getLastInsertID());
-            $coachUserId = $TeamMember->getCoachId($collaboUserId);
-            $this->deleteUnapprovedCountCache([$collaboUserId, $coachUserId]);
-        }
-
-        // 認定履歴情報の保存
-        if (Hash::get($saveData, 'ApprovalHistory')) {
-            $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
-            if (!$isSaveSuccessApprovalHistory) {
-                $GoalMember->rollback();
-                return false;
+            // 認定履歴情報の保存
+            if (Hash::get($saveData, 'ApprovalHistory')) {
+                $isSaveSuccessApprovalHistory = $ApprovalHistory->add($saveData);
+                if (!$isSaveSuccessApprovalHistory) {
+                    throw new Exception(sprintf("Failed to save approval history. data:%s"
+                        , var_export($saveData, true)));
+                }
             }
+
+            $GoalMember->commit();
+
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $GoalMember->rollback();
+            return false;
         }
 
-        $GoalMember->commit();
         return true;
-    }
-
-    /**
-     * 認定詳細ページの初期データレスポンスのためにモデルデータをフォーマット
-     *
-     * @param  $resByModel
-     * @param  $myUserId
-     *
-     * @return $res
-     */
-    public function formatGoalApprovalForResponse($resByModel, $myUserId)
-    {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
-
-        $res = Hash::extract($resByModel, 'GoalMember');
-
-        // モデル名整形(大文字->小文字)
-        $res['user'] = Hash::extract($resByModel, 'User');
-        $res['goal'] = Hash::extract($resByModel, 'Goal');
-        $res['goal']['category'] = Hash::extract($resByModel, 'Goal.GoalCategory');
-        $res['goal']['leader'] = Hash::extract($resByModel, 'Goal.Leader.0');
-        $res['goal']['leader']['user'] = Hash::extract($resByModel, 'Goal.Leader.0.User');
-        $res['goal']['top_key_result'] = Hash::extract($resByModel, 'Goal.TopKeyResult');
-        $res['approval_histories'] = Hash::map($resByModel, 'ApprovalHistory', function ($value) {
-            $value['user'] = Hash::extract($value, 'User');
-            unset($value['User']);
-            return $value;
-        });
-
-        // 認定履歴の文言を追加
-        $goal_memberUserId = $res['user']['id'];
-        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
-            $goal_memberUserId);
-
-        // TKRの整形
-        $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
-
-        // 画像パス追加
-        $res['user']['original_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo');
-        $res['user']['small_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo', ['style' => 'small']);
-        $res['user']['large_img_url'] = $Upload->uploadUrl($resByModel, 'User.photo', ['style' => 'large']);
-        $res['goal']['original_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo');
-        $res['goal']['small_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'small']);
-        $res['goal']['large_img_url'] = $Upload->uploadUrl($resByModel, 'Goal.photo', ['style' => 'large']);
-
-        // マッピング
-        $res['is_leader'] = (boolean)$res['type'];
-        $res['is_mine'] = $res['user']['id'] == $myUserId;
-        $res['type'] = GoalMember::$TYPE[$res['type']];
-
-        // 不要な要素の削除
-        unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
-
-        return $res;
     }
 
     /**
@@ -282,7 +249,7 @@ class GoalApprovalService extends AppService
      *
      * @return array $saveData
      */
-    function generateSaveData($approvalType, $requestData, $userId)
+    function generateApprovalSaveData($approvalType, $requestData, $userId)
     {
         $goalMemberId = Hash::get($requestData, 'goal_member.id');
         $selectClearStatus = ApprovalHistory::STATUS_IS_CLEAR;
@@ -330,26 +297,24 @@ class GoalApprovalService extends AppService
         return $saveData;
     }
 
-    function addClearImportantWordToApprovalHistories($approvalHistories, $goal_memberUserId)
-    {
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
-        return Hash::map($approvalHistories, '',
-            function ($approvalHistory) use ($goal_memberUserId, $ApprovalHistory) {
-                $clearStatus = $approvalHistory['select_clear_status'];
-                $importantStatus = $approvalHistory['select_important_status'];
+    /**
+     * 認定コメントPOSTの保存データ定義
+     *
+     * @param  $requestData
+     * @param  $userId
+     *
+     * @return $saveData
+     */
+    function generateCommentSaveData($requestData, $userId) {
+        $saveData = [
+            'ApprovalHistory' => [
+                'user_id'                 => $userId,
+                'goal_member_id'          => Hash::get($requestData, 'goal_member.id'),
+                'comment'                 => Hash::get($requestData, 'approval_history.comment')
+            ]
+        ];
 
-                $clearAndImportantWord = '';
-                if ($clearStatus == $ApprovalHistory::STATUS_IS_NOT_CLEAR) {
-                    $clearAndImportantWord = __('This Top Key Result is not clear.');
-                } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
-                    $clearAndImportantWord = __('This Top Key Result is clear and most important.');
-                } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
-                    $clearAndImportantWord = __('This Top Key Result is not most important.');
-                }
-
-                $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
-                return $approvalHistory;
-            });
+        return $saveData;
     }
 
     /**
@@ -380,4 +345,30 @@ class GoalApprovalService extends AppService
         $coachId = $TeamMember->getCoachId($target_user_id);
         return (bool)$teamEvaluateIsEnabled && (bool)$coacheeEvaluateIsEnabled && (bool)$coachId;
     }
+
+    /**
+     * ゴール認定用にゴールとTKRのスナップショットを保存する
+     *
+     * @param  $collaboUserId
+     *
+     * @return boolean
+     */
+    function saveSnapshotForApproval($goalMemberId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalChangeLog $GoalChangeLog */
+        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
+        /** @var TkrChangeLog $TkrChangeLog */
+        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+
+        $goalId = Hash::get($GoalMember->findById($goalMemberId, ['goal_id']), 'GoalMember.goal_id');
+        if(!$goalId) {
+            $this->log("Failed to get goal member by GoalMember.id : $goalMemberId");
+            return false;
+        }
+
+        return $GoalChangeLog->saveSnapshot($goalId) && $TkrChangeLog->saveSnapshot($goalId);
+    }
+
 }

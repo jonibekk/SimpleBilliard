@@ -29,8 +29,8 @@ class Label extends AppModel
             'maxLength' => [
                 'rule' => ['maxLength', 20]
             ],
-            'notEmpty'  => [
-                'rule'     => ['notEmpty'],
+            'notBlank'  => [
+                'rule'     => ['notBlank'],
                 'required' => 'create',
             ],
             'isUnique'  => [
@@ -96,6 +96,38 @@ class Label extends AppModel
 
         Cache::write($this->getCacheKey(CACHE_KEY_LABEL), $res, 'team_info');
         return $res;
+    }
+
+    /**
+     * タグのリストをゴール件数とともに返す
+     * - 抽出条件はgoal_label_countが0以外のもの
+     * - ソート条件はgoal_label_countの降順
+     * - このデータはキャッシュされている
+     *
+     * @param $names
+     *
+     * @return array
+     * @internal param bool $isExistGoalLabel
+     * @internal param bool $useCache
+     */
+    public function findIdsByNames($names)
+    {
+        if (empty($names)) {
+            return [];
+        }
+        $option = [
+            'fields'     => [
+                'id',
+                'name',
+                'goal_label_count',
+            ],
+            'conditions' => [
+                'name' => $names,
+                'team_id' => $this->current_team_id
+            ]
+        ];
+        $ret = $this->find('all', $option);
+        return Hash::extract($ret, '{n}.Label.id');
     }
 
     /**
