@@ -32,7 +32,7 @@ export const VALIDATION_FIELDS = {
 }
 export const INITIAL_DATA_TYPES = {
   STEP1: [
-    "visions"
+    "visions",
   ],
   STEP2: [
     "categories",
@@ -41,7 +41,8 @@ export const INITIAL_DATA_TYPES = {
   STEP3: [
     "terms",
     "priorities",
-    "default_end_dates"
+    "default_end_dates",
+    "can_approve"
   ],
   STEP4: [
     "units",

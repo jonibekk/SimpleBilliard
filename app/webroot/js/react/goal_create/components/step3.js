@@ -58,7 +58,7 @@ export default class Step3Component extends React.Component {
   render() {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "");
 
-    const {inputData, priorities, validationErrors} = this.props.goal;
+    const {inputData, priorities, validationErrors, can_approve} = this.props.goal;
     let priorityOptions = null;
     if (priorities.length > 0) {
       priorityOptions = priorities.map((v) => {
@@ -87,11 +87,10 @@ export default class Step3Component extends React.Component {
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>
 
-
-          <div className="checkbox">
+          <div className={`checkbox ${can_approve ? "" : "hide"}`}>
             <label>
-              <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true"  ref="is_wish_approval" />
-                <span>{__("Wish goal approval")}</span>
+              <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true" ref="is_wish_approval"/>
+              <span>{__("Wish goal approval")}</span>
             </label>
           </div>
 
