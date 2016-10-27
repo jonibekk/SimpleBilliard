@@ -19,7 +19,7 @@ export default class Goals extends React.Component {
 
   componentWillReceiveProps(nextProps) {
   }
-  
+
   showFilter() {
     this.props.updateData({show_filter: !this.props.goal_search.show_filter})
   }
@@ -91,6 +91,8 @@ export default class Goals extends React.Component {
       search_result_el = (
         <InfiniteScroll
           loadMore={this.fetchMoreGoals.bind(this)}
+          loader={<Loading />}
+          loadingMore={props.loading_more}
           items={this.renderGoals(goals)}
           elementIsScrollable={false}
         />

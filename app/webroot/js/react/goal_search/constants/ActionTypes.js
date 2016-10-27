@@ -6,4 +6,5 @@ export const FETCH_MORE_GOALS = 'FETCH_MORE_GOALS'
 export const FOLLOW = 'FOLLOW'
 export const UNFOLLOW = 'UNFOLLOW'
 export const LOADING = 'LOADING'
+export const LOADING_MORE = 'LOADING_MORE'
 
