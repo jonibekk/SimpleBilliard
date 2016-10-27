@@ -375,6 +375,14 @@ class GoalApprovalsController extends ApiController
 
     /**
      * 認定コメント登録API
+     * - IDチェック
+     * - アクセス権限チェック
+     * - 保存データ定義
+     * - バリデーション(失敗したらレスポンス返す)
+     * - ApprovalHisotry保存(失敗したらレスポンス返す)
+     * - コーチ/コーチーへ通知
+     * - 認定ヒストリーオブジェクトを返す
+     *
      * @return [type] [description]
      */
     public function post_comment()
@@ -422,6 +430,8 @@ class GoalApprovalsController extends ApiController
         $approval_history = $ApprovalHistoryService->processApprovalHistory($res);
 
         // レスポンス
+        // コメント投稿が成功したらフロントで投稿したコメントを表示するため、
+        // 表示用にコメントを整形して返す
         return $this->_getResponseSuccess(['approval_history' => $approval_history]);
     }
 
