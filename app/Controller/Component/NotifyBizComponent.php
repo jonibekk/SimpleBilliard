@@ -2,6 +2,7 @@
 App::uses('ModelType', 'Model');
 
 /**
+ * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
  * @author daikihirakata
  * @property SessionComponent $Session
  * @property AuthComponent    $Auth
@@ -920,6 +921,8 @@ class NotifyBizComponent extends Component
             return;
         }
 
+        // TODO: この辺の処理は全部サービス層にうつす。
+        //       副作用がこわいので、後ほど一括で移行。
         $approvalHistory = $this->Goal->GoalMember->ApprovalHistory->findById($commentId);
         if (empty($approvalHistory)) {
             return;
