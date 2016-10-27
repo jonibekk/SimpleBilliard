@@ -52,7 +52,6 @@ class KeyResultService extends AppService
             $key_result['display_value'] = __('Complete/Incomplete');
             return $key_result;
         }
-
         // in other unit case, skipping showing unit name
         if ($key_result['value_unit'] != KeyResult::UNIT_NUMBER) {
             $unit_name_display = KeyResult::$UNIT[$key_result['value_unit']];
