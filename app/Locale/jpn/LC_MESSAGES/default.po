@@ -2377,7 +2377,7 @@ msgstr "絞り込み"
 msgid "Search result"
 msgstr "検索結果"
 
-msgid "Count"
+msgid " count"
 msgstr "件"
 
 msgid "Add by pressing the Enter.(You can search maximum 3 labels)"
