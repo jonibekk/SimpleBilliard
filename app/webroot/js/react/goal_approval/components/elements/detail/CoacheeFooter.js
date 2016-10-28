@@ -34,7 +34,7 @@ export default class CoacheeFooter extends React.Component {
       // Edit goal
       if (this.props.goal_member.is_leader) {
         return <a
-          href={`/goals/${this.props.goal_id}/edit?from=${new Buffer(this.props.current_url).toString('base64')}`}
+          href={`/goals/${this.props.goal_id}/edit`}
           className="btn goals-approval-btn-fullsize-active">{ __('Edit Goal') }</a>
       }
       // Edit role
