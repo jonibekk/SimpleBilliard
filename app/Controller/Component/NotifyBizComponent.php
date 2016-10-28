@@ -831,13 +831,17 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $goalMember['id']];
+        $url_approval_list = ['controller' => 'goals', 'action' => 'approval', 'list'];
+        $url_approval_detail = ['controller' => 'goals', 'action' => 'approval', 'detail', $goalMember['id']];
 
-        //認定希望していないゴールはゴール詳細へ
+        // 認定希望していないゴールはゴール詳細へ
         if (!$goalMember['is_wish_approval']) {
             $url = $url_goal_detail;
+        // 認定取り下げの場合は認定一覧へ
+        } else if($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
+            $url = $url_approval_list;
         } else {
-            $url = $url_goal_approval;
+            $url = $url_approval_detail;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;

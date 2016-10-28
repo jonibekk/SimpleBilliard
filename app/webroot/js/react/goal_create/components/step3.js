@@ -29,10 +29,11 @@ export default class Step3Component extends React.Component {
   getInputDomData() {
     const photoNode = this.refs.innerPhoto.refs.photo
     const photo = ReactDOM.findDOMNode(photoNode).files[0]
+    const is_wish_approval = ReactDOM.findDOMNode(this.refs.is_wish_approval).checked
     if (!photo) {
-      return {}
+      return {is_wish_approval}
     }
-    return {photo}
+    return {photo, is_wish_approval}
   }
 
   handleSubmit(e) {
@@ -57,7 +58,7 @@ export default class Step3Component extends React.Component {
   render() {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "");
 
-    const {inputData, priorities, validationErrors} = this.props.goal;
+    const {inputData, priorities, validationErrors, can_approve} = this.props.goal;
     let priorityOptions = null;
     if (priorities.length > 0) {
       priorityOptions = priorities.map((v) => {
@@ -85,6 +86,13 @@ export default class Step3Component extends React.Component {
             <option value="next">{__("Next Term")}</option>
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>
+
+          <div className={`checkbox ${can_approve ? "" : "hide"}`}>
+            <label>
+              <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true" ref="is_wish_approval"/>
+              <span>{__("Wish goal approval")}</span>
+            </label>
+          </div>
 
           <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
             <i className="fa fa-eye" aria-hidden="true"/>

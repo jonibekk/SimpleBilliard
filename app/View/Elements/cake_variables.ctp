@@ -536,7 +536,8 @@
             "All": "<?=__("All")?>",
             "Complete": "<?=__("Complete")?>",
             "Incomplete": "<?=__("Incomplete")?>",
-            "Progress": "<?=__("Progress")?>"
+            "Progress": "<?=__("Progress")?>",
+            "Wish goal approval": "<?=__("Wish goal approval")?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
