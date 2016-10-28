@@ -21,8 +21,11 @@ export default class UserCard extends React.Component {
             </p>
             <p>{ goal_member.type }</p>
             <div className={`${goal_member.is_leader ? 'none' : ''}`}>
-              <p>({ __('leader') }:{ goal_member.goal.leader.user.display_username })</p>
-              <p className="goals-approval-detail-info-name">Role:{ goal_member.role }</p>
+              <p>({ __('Leader') }: <a href={`/users/view_goals/user_id:${goal_member.goal.leader.user.id}`} className="goals-approval-detail-info-name-link" target={cake.is_mb_app ? "_self" : "_blank"}>
+                  { goal_member.goal.leader.user.display_username })
+                </a>
+              </p>
+              <p className="goals-approval-detail-info-name">{__("Role")}: { goal_member.role }</p>
               <p>{ goal_member.description }</p>
             </div>
           </div>

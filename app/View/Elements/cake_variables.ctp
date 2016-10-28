@@ -508,6 +508,7 @@
             "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
             "Previous": "<?= __("Previous") ?>",
             "Send": "<?= __("Send") ?>",
+            "Role": "<?= __("Role") ?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
             "Edit goal & Top Key Result": "<?=  __("Edit goal & Top Key Result") ?>",
