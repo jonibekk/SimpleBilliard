@@ -475,6 +475,7 @@ class GoalMember extends AppModel
                         'Goal.id = GoalMember.goal_id',
                         'Goal.end_date >=' => $currentTerm['start_date'],
                         'Goal.end_date <=' => $currentTerm['end_date'],
+                        'Goal.team_id'     => $this->current_team_id,
                         'Goal.completed'   => null,
                     ]
                 ],
@@ -485,6 +486,7 @@ class GoalMember extends AppModel
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
                         'TeamMember.coach_user_id' => $userId,
+                        'TeamMember.team_id'       => $this->current_team_id,
                     ]
                 ]
             ],
@@ -497,7 +499,6 @@ class GoalMember extends AppModel
                 'GoalMember.is_wish_approval' => true
             ],
         ];
-
         $count = $this->find('count', $options);
         return $count;
     }
@@ -828,16 +829,15 @@ class GoalMember extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
         // 0件のゴールも配列要素を作り、値を0として返す
         $defaultCountEachGoalId = array_fill_keys($goalIds, 0);
         $ret = Hash::combine($ret, '{n}.GoalMember.goal_id', '{n}.0.cnt');
         return $ret + $defaultCountEachGoalId;
     }
-
 
     /**
      * ゴールごとにメンバーであるか判定
@@ -849,13 +849,13 @@ class GoalMember extends AppModel
     public function isMemberCountEachGoalId($goalIds, $userId)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'count(goal_id) as exist'],
+            'fields'     => ['goal_id', 'count(goal_id) as exist'],
             'conditions' => [
                 'goal_id' => $goalIds,
                 'user_id' => $userId,
-                'type' => self::TYPE_COLLABORATOR
+                'type'    => self::TYPE_COLLABORATOR
             ],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
         // 0件のゴールも配列要素を作り、値を0として返す
         $defaultEachGoalId = array_fill_keys($goalIds, 0);
@@ -865,7 +865,9 @@ class GoalMember extends AppModel
 
     /**
      * ゴールメンバーが認定希望かどうか判定
+     *
      * @param  $goalMemberId
+     *
      * @return boolean
      */
     function isWishGoalApproval($goalMemberId)
@@ -875,7 +877,7 @@ class GoalMember extends AppModel
         }
 
         $res = $this->findById($goalMemberId, ['is_wish_approval']);
-        if(!$res) {
+        if (!$res) {
             return false;
         }
 
