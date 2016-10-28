@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-27 11:29+0900\n"
+"PO-Revision-Date: 2016-10-27 15:59+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2386,6 +2386,9 @@ msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 msgid "Progress"
 msgstr "進捗"
 
+msgid "Wish goal approval"
+msgstr "ゴール認定を希望する"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -2843,9 +2846,8 @@ msgstr "ファイル"
 msgid "Circle setting"
 msgstr "サークルの設定"
 
-#, fuzzy
 msgid "Display on Home feed"
-msgstr "表示順"
+msgstr "ホームフィードに表示する"
 
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
@@ -4020,7 +4022,6 @@ msgstr "これ以上のアクションはありません。"
 msgid "No one is following."
 msgstr "フォロワーはいません。"
 
-#, fuzzy
 msgid "No Labels"
 msgstr "ラベル"
 
