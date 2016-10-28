@@ -23,7 +23,7 @@ export default class GoalCard extends React.Component {
                   <p><i className="fa fa-folder-o" aria-hidden="true"></i> { goal_category.name }</p>
                   <p><a href={`/goals/view_info/goal_id:${goal.id}`} className="goals-approval-detail-goal-card-info-link" target={cake.is_mb_app ? "_self" : "_blank"}>{ goal.name }</a></p>
                   <div className="goals-approval-detail-goal-card-info-tkr">
-                      <h2 className="goals-approval-detail-goal-card-info-tkr-title"><i className="fa fa-key" aria-hidden="true"></i> Top key result</h2>
+                      <h2 className="goals-approval-detail-goal-card-info-tkr-title"><i className="fa fa-key" aria-hidden="true"></i> Top Key Result</h2>
                       <ul className="goals-approval-detail-goal-card-info-tkr-list">
                           { top_key_result.name &&
                             <li>
