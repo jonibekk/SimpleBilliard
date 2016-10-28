@@ -134,7 +134,7 @@ export default class Goals extends React.Component {
         {/* search result count and order */}
         <div className={`panel-block ${exist_goal ? "" : "hide"}`}>
           <div className="row">
-            <div className="pull-left">{__("Search result")} {props.search_result.count}{__("Count")}</div>
+            <div className="pull-left">{__("Search result")} {props.search_result.count}{__(" count")}</div>
             <div className="pull-right">
               <div role="group">
                 <p className="dropdown-toggle goal-search-order-text" data-toggle="dropdown" role="button"

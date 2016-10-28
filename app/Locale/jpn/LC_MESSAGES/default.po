@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-27 11:29+0900\n"
+"PO-Revision-Date: 2016-10-28 14:57+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -1012,8 +1012,8 @@ msgstr "達成要素が存在しません。"
 msgid "Input is required."
 msgstr "入力必須項目です。"
 
-msgid "Prease select within %d count maximum."
-msgstr ""
+msgid "Label must be at least %d count."
+msgstr "ラベル登録は最大%d個までです。"
 
 msgid "Important ones"
 msgstr "重要なもの"
@@ -2350,6 +2350,9 @@ msgstr "前期"
 msgid "Send"
 msgstr "送信する"
 
+msgid "Role"
+msgstr "役割"
+
 msgid "Confirm this goal"
 msgstr "ゴール編集の確認"
 
@@ -2377,7 +2380,7 @@ msgstr "絞り込み"
 msgid "Search result"
 msgstr "検索結果"
 
-msgid "Count"
+msgid " count"
 msgstr "件"
 
 msgid "Add by pressing the Enter.(You can search maximum 3 labels)"
@@ -2385,6 +2388,15 @@ msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 
 msgid "Progress"
 msgstr "進捗"
+
+msgid "Wish goal approval"
+msgstr "ゴール認定を希望する"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "Level of achievement"
+msgstr "達成度"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -2581,9 +2593,6 @@ msgstr "コラボる"
 
 msgid "Edit Collaborate"
 msgstr "コラボを編集"
-
-msgid "Role"
-msgstr "役割"
 
 msgid "eg) Increasing the number of users"
 msgstr "例） ユーザー数を増やす"
@@ -2843,9 +2852,8 @@ msgstr "ファイル"
 msgid "Circle setting"
 msgstr "サークルの設定"
 
-#, fuzzy
 msgid "Display on Home feed"
-msgstr "表示順"
+msgstr "ホームフィードに表示する"
 
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
@@ -3270,7 +3278,7 @@ msgid "Current term can't be changed during the evaluation period."
 msgstr "評価期間中は今期の変更ができません。"
 
 msgid "Start date"
-msgstr "開始月"
+msgstr "開始日"
 
 msgid "Please select the standard start month."
 msgstr "基準となる期の開始月を選択して下さい。"
@@ -3298,9 +3306,6 @@ msgstr "未完了の評価者をみる"
 
 msgid "Number incomplete"
 msgstr "未完了数"
-
-msgid "Name"
-msgstr "名前"
 
 msgid "Display order"
 msgstr "表示順"
@@ -4020,7 +4025,6 @@ msgstr "これ以上のアクションはありません。"
 msgid "No one is following."
 msgstr "フォロワーはいません。"
 
-#, fuzzy
 msgid "No Labels"
 msgstr "ラベル"
 

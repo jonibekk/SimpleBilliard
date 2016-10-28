@@ -11,6 +11,7 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::import('Service', 'GoalApprovalService');
 
 /**
  * Application Controller
@@ -296,21 +297,20 @@ class AppController extends BaseController
 
     /*
      * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
+     * - チームの評価設定がoffの場合はカウントしない。(0を返す)
      * @param $login_uid
      */
     public function _setUnApprovedCnt($login_uid)
     {
-        $unapproved_cnt = Cache::read($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), 'user_data');
-        if ($unapproved_cnt === false) {
-            $login_user_team_id = $this->Session->read('current_team_id');
-            $member_ids = $this->Team->TeamMember->getMyMembersList($login_uid);
-            array_push($member_ids, $login_uid);
-
-            $unapproved_cnt = $this->Goal->GoalMember->countCollaboGoal($login_user_team_id, $login_uid,
-                $member_ids, [GoalMember::APPROVAL_STATUS_NEW, GoalMember::APPROVAL_STATUS_REAPPLICATION]);
-            Cache::write($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), $unapproved_cnt,
-                'user_data');
+        if($this->Team->EvaluationSetting->isEnabled() === false){
+            return 0;
         }
+
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        // サービス層でキャッシュを行う
+        $unapproved_cnt = $GoalApprovalService->countUnapprovedGoal($login_uid);
+
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
     }

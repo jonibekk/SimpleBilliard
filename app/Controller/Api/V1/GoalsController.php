@@ -264,6 +264,15 @@ class GoalsController extends ApiController
             ];
         }
 
+        // ログインユーザーがゴール認定可能か
+        if ($dataTypes == 'all' || in_array('can_approve', $dataTypes)) {
+            /** @var GoalApprovalService $GoalApprovalService */
+            $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+            $res['can_approve'] = $GoalApprovalService->isApprovable(
+                $this->Auth->user('id'), $this->Session->read('current_team_id')
+            );
+        }
+
         return $this->_getResponseSuccess($res);
     }
 
@@ -406,6 +415,7 @@ class GoalsController extends ApiController
         $fields = $GoalService->goalValidateFields;
         $fields[] = "key_result";
         $fields[] = "approval_history";
+        $fields[] = "labels";
         return $GoalService->validateSave($data, $fields, $goalId);
     }
 

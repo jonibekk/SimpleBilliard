@@ -508,6 +508,7 @@
             "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
             "Previous": "<?= __("Previous") ?>",
             "Send": "<?= __("Send") ?>",
+            "Role": "<?= __("Role") ?>",
             // goal edit
             "Confirm this goal": "<?= __("Confirm this goal") ?>",
             "Edit goal & Top Key Result": "<?=  __("Edit goal & Top Key Result") ?>",
@@ -527,7 +528,7 @@
             "Filter": "<?= __("Filter") ?>",
             "Close": "<?=__("Close")?>",
             "Search result": "<?=__("Search result")?>",
-            "Count": "<?=__("Count")?>",
+            " count": "<?=__(" count")?>",
             "Add by pressing the Enter.(You can search maximum 3 labels)": "<?= __("Add by pressing the Enter.(You can search maximum 3 labels)") ?>",
             'Current Term': "<?=__("Current Term")?>",
             "Next Term": "<?=__("Next Term")?>",
@@ -536,7 +537,10 @@
             "All": "<?=__("All")?>",
             "Complete": "<?=__("Complete")?>",
             "Incomplete": "<?=__("Incomplete")?>",
-            "Progress": "<?=__("Progress")?>"
+            "Progress": "<?=__("Progress")?>",
+            "Wish goal approval": "<?=__("Wish goal approval")?>",
+            "Name": "<?=__("Name")?>",
+            "Level of achievement": "<?=__("Level of achievement")?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

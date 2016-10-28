@@ -41,7 +41,7 @@ class ApiGoalApprovalService extends ApiService
 
         // 認定履歴の文言を追加
         $goal_memberUserId = $res['user']['id'];
-        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
+        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories(Hash::get($res, 'approval_histories'),
             $goal_memberUserId);
         $res['histories_view_more_text'] = __('View %s comments', count($res['approval_histories']) - 1);
 

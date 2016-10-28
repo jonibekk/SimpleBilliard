@@ -20,7 +20,8 @@ const initialState = {
   inputData: {
     key_result: {}
   },
-  isDisabledSubmit: false
+  isDisabledSubmit: false,
+  can_approve: false
 }
 
 export default function goal(state = initialState, action) {

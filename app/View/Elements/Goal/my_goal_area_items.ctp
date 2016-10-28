@@ -144,7 +144,7 @@ $kr_count = 0;
                                class="modal-ajax-get-add-key-result"
                             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __("Add Key Result") ?></span></a>
-                            <a class="modal-ajax-get-collabo"
+                            <a class="modal-ajax-get-collabo collaborate-button"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url([
