@@ -39,26 +39,32 @@ class KeyResultService extends AppService
      * @param  array $key_result
      * @return array $key_result
      */
-    function processKeyResult($key_result)
+    function processKeyResult($keyResult)
     {
-        $unit_name_display = '';
-        $start_value =  h((float)$key_result['start_value']);
-        $target_value = h((float)$key_result['target_value']);
-
-        $key_result['start_value'] = $start_value;
-        $key_result['target_value'] = $target_value;
-
-        if ($key_result['value_unit'] == KeyResult::UNIT_BINARY) {
-            $key_result['display_value'] = __('Complete/Incomplete');
-            return $key_result;
+        // 完了/未完了
+        if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
+            $keyResult['display_value'] = __('Complete/Incomplete');
+            return $keyResult;
         }
-        // in other unit case, skipping showing unit name
-        if ($key_result['value_unit'] != KeyResult::UNIT_NUMBER) {
-            $unit_name_display = KeyResult::$UNIT[$key_result['value_unit']];
-        }
-        $key_result['display_value'] = "{$start_value}{$unit_name_display} → {$target_value}{$unit_name_display}";
 
-        return $key_result;
+        // 少数の不要な0を取り除く
+        $keyResult['start_value'] =  h((float)$keyResult['start_value']);
+        $keyResult['target_value'] = h((float)$keyResult['target_value']);
+
+        // 単位を文頭におくか文末に置くか決める
+        $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
+        $headUnit = '';
+        $tailUnit = '';
+        if (in_array($keyResult['value_unit'], KeyResult::$UNIT_HEAD)) {
+            $headUnit = $unitName;
+        }
+        if (in_array($keyResult['value_unit'], KeyResult::$UNIT_TAIL)) {
+            $tailUnit = $unitName;
+        }
+
+        $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} → {$headUnit}{$keyResult['target_value']}{$tailUnit}";
+
+        return $keyResult;
     }
 
 }
