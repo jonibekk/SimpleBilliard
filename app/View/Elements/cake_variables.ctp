@@ -528,7 +528,7 @@
             "Filter": "<?= __("Filter") ?>",
             "Close": "<?=__("Close")?>",
             "Search result": "<?=__("Search result")?>",
-            "Count": "<?=__("Count")?>",
+            " count": "<?=__(" count")?>",
             "Add by pressing the Enter.(You can search maximum 3 labels)": "<?= __("Add by pressing the Enter.(You can search maximum 3 labels)") ?>",
             'Current Term': "<?=__("Current Term")?>",
             "Next Term": "<?=__("Next Term")?>",
