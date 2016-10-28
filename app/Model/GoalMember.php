@@ -453,51 +453,6 @@ class GoalMember extends AppModel
             'user_data');
     }
 
-    function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
-    {
-        $options = [
-            'fields'     => ['id', 'type', 'approval_status', 'priority'],
-            'conditions' => [
-                'GoalMember.team_id'         => $team_id,
-                'GoalMember.user_id'         => $goal_user_id,
-                'GoalMember.approval_status' => $approval_flg,
-            ],
-            'contain'    => [
-                'Goal' => [
-                    'fields'       => ['id'],
-                    'GoalCategory' => ['fields' => 'id'],
-                ],
-                'User' => [
-                    'fields' => ['id'],
-                ],
-            ],
-            'type'       => 'inner',
-        ];
-
-        $res = [];
-        foreach ($this->find('all', $options) as $key => $val) {
-            if ($this->Goal->isPresentTermGoal($val['Goal']['id']) === false) {
-                continue;
-            }
-            // 自分のゴール + 修正待ち以外
-            if ($val['User']['id'] === (string)$user_id && $val['GoalMember']['approval_status'] !== '3') {
-                continue;
-            }
-            // 自分のゴール + 修正待ち + コラボレーター
-            if ($val['User']['id'] === (string)$user_id && $val['GoalMember']['approval_status'] === '3'
-                && $val['GoalMember']['type'] === '0'
-            ) {
-                continue;
-            }
-            //他人のゴール + 重要度0 = 対象外
-            if ($val['User']['id'] !== (string)$user_id && $val['GoalMember']['priority'] === '0') {
-                continue;
-            }
-            $res[] = $val;
-        }
-        return count($res);
-    }
-
     /**
      * コーチとしての未対応のゴール認定件数取得
      *
@@ -534,11 +489,12 @@ class GoalMember extends AppModel
                 ]
             ],
             'conditions' => [
-                'GoalMember.team_id'         => $this->current_team_id,
-                'GoalMember.approval_status' => [
+                'GoalMember.team_id'          => $this->current_team_id,
+                'GoalMember.approval_status'  => [
                     self::APPROVAL_STATUS_NEW,
                     self::APPROVAL_STATUS_REAPPLICATION,
                 ],
+                'GoalMember.is_wish_approval' => true
             ],
         ];
 
