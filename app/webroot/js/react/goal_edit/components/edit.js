@@ -19,18 +19,20 @@ export default class Edit extends React.Component {
   }
 
   componentWillMount() {
-    // 遷移元がどこかクエリパラメータで指定してあるので編集キャンセル/完了後の遷移先として保存しておく
-    let from = "/"
-    if (document.referrer) {
-      from = document.referrer
+    const referrer = document.referrer || '/'
+    let redirect_to = referrer
+
+    // 認定ページからゴール編集した場合、リダイレクト先を認定リストページにした方が良いと判断.
+    if (referrer.match(/goals\/approval\/detail/)) {
+      redirect_to = '/goals/approval/list'
     }
-    this.props.init({from})
+    this.props.init({redirect_to})
     this.props.fetchInitialData(this.props.params.goalId)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
-      document.location.href = nextProps.goal.from
+      document.location.href = nextProps.goal.redirect_to
     }
   }
 
@@ -78,7 +80,7 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, from} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     return (
@@ -174,7 +176,7 @@ export default class Edit extends React.Component {
 
 
           <button type="submit" className="goals-create-btn-next btn" disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{ goal.is_approvable ? __("Save & Reapply") : __("Save changes")}</button>
-          <a className="goals-create-btn-cancel btn" href={ from }>{__("Cancel")}</a>
+          <a className="goals-create-btn-cancel btn" href={ redirect_to }>{__("Cancel")}</a>
         </form>
       </div>
     )
