@@ -466,6 +466,7 @@ if (!isset($goal_list_for_action_option)) {
                 ]) ?>
                 <?php $this->Form->unlockField('Post.share_range') ?>
                 <?php $this->Form->unlockField('socket_id') ?>
+                <?php $this->Form->unlockField('file_id') ?>
             </div>
 
             <div id="messageDropArea">
