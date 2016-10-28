@@ -148,7 +148,7 @@ class Label extends AppModel
 
         // ラベル数上限チェック
         if (count($labelNames) > self::MAX_SAVE_GOAL_LABEL_COUNT) {
-            return __('Prease select within %d count maximum.', 5);
+            return __('Label must be at least %d count.', 5);
         }
 
         $labels = [];
