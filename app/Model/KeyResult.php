@@ -30,6 +30,21 @@ class KeyResult extends AppModel
     ];
 
     /**
+     * 表示上先頭に持ってくる単位
+     */
+    static public $UNIT_HEAD = [
+        self::UNIT_YEN,
+        self::UNIT_DOLLAR
+    ];
+
+    /**
+     * 表示上末尾に持ってくる単位
+     */
+    static public $UNIT_TAIL = [
+        self::UNIT_PERCENT,
+    ];
+
+    /**
      * 目標値の単位の表示名をセット
      */
     function _setUnitName()
