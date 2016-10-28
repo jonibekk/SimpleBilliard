@@ -13,7 +13,6 @@ App::uses('GoalMember', 'Model');
 App::uses('GoalChangeLog', 'Model');
 App::uses('TkrChangeLog', 'Model');
 App::import('Service', 'GoalMemberService');
-App::import('Service', 'KeyResultService');
 
 class GoalApprovalService extends AppService
 {
@@ -53,8 +52,12 @@ class GoalApprovalService extends AppService
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         // 認定コメントリスト取得
-        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
+        $histories = $ApprovalHistory->findByGoalMemberId($goalMemberId);
+        if(empty($histories)) {
+            return [];
+        }
 
+        $histories = Hash::extract($ApprovalHistory->findByGoalMemberId($goalMemberId), '{n}.ApprovalHistory');
         $goalMember = $GoalMemberService->get($goalMemberId, [
             GoalMemberService::EXTEND_COACH,
             GoalMemberService::EXTEND_COACHEE,
@@ -200,75 +203,6 @@ class GoalApprovalService extends AppService
     }
 
     /**
-     * 認定詳細ページの初期データレスポンスのためにモデルデータをフォーマット
-     *
-     * @param  $resByModel
-     * @param  $myUserId
-     *
-     * @return $res
-     */
-    public function processGoalApprovalForResponse($resByModel, $myUserId)
-    {
-        /** @var GoalCategory $GoalCategory */
-        $GoalCategory = ClassRegistry::init("GoalCategory");
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        /** @var User $User */
-        $User = ClassRegistry::init("User");
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
-
-        // モデル名整形(大文字->小文字)
-        $res = Hash::extract($resByModel, 'GoalMember');
-        $res['user'] = Hash::extract($resByModel, 'User');
-        $res['goal'] = Hash::extract($resByModel, 'Goal');
-        $res['goal']['category'] = Hash::extract($resByModel, 'Goal.GoalCategory');
-        $res['goal']['leader'] = Hash::extract($resByModel, 'Goal.Leader.0');
-        $res['goal']['leader']['user'] = Hash::extract($resByModel, 'Goal.Leader.0.User');
-        $res['goal']['top_key_result'] = Hash::extract($resByModel, 'Goal.TopKeyResult');
-        $res['approval_histories'] = Hash::map($resByModel, 'ApprovalHistory', function ($value) {
-            $value['user'] = Hash::extract($value, 'User');
-            unset($value['User']);
-            return $value;
-        });
-
-        // 画像パス追加
-        $res['user'] = $User->attachImgUrl($res['user'], 'User');
-        $res['goal'] = $Goal->attachImgUrl($res['goal'], 'Goal');
-
-        // 認定履歴の文言を追加
-        $goal_memberUserId = $res['user']['id'];
-        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories($res['approval_histories'],
-            $goal_memberUserId);
-        $res['histories_view_more_text'] = __('View %s comments', count($res['approval_histories']) - 1);
-
-        // TKRの整形
-        $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
-
-        // ゴール/TKRの変更前のスナップショットを取得
-        $res['goal'] = $this->processChangeLog($res['goal']);
-        if(Hash::get($res, 'goal.tkr_change_log')) {
-            // 画像パス追加
-            $res['goal']['goal_change_log'] = $Goal->attachImgUrl($res['goal']['goal_change_log'], 'Goal');
-            // TKRの整形
-            $res['goal']['tkr_change_log'] = $KeyResultService->processKeyResult($res['goal']['tkr_change_log']);
-            // カテゴリ追加
-            $category =  $GoalCategory->findById($res['goal']['goal_change_log']['goal_category_id'], ['name']);
-            $res['goal']['goal_change_log']['category'] = Hash::get($category, 'GoalCategory');
-        }
-
-        // マッピング
-        $res['is_leader'] = (boolean)$res['type'];
-        $res['is_mine'] = $res['user']['id'] == $myUserId;
-        $res['type'] = GoalMember::$TYPE[$res['type']];
-
-        // 不要な要素の削除
-        unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
-
-        return $res;
-    }
-
-    /**
      * ゴール認定POSTのバリデーション
      *
      * @param  array $data 検証するデータ
@@ -315,7 +249,7 @@ class GoalApprovalService extends AppService
      *
      * @return array $saveData
      */
-    function generateSaveData($approvalType, $requestData, $userId)
+    function generateApprovalSaveData($approvalType, $requestData, $userId)
     {
         $goalMemberId = Hash::get($requestData, 'goal_member.id');
         $selectClearStatus = ApprovalHistory::STATUS_IS_CLEAR;
@@ -363,26 +297,24 @@ class GoalApprovalService extends AppService
         return $saveData;
     }
 
-    function addClearImportantWordToApprovalHistories($approvalHistories, $goal_memberUserId)
-    {
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
-        return Hash::map($approvalHistories, '',
-            function ($approvalHistory) use ($goal_memberUserId, $ApprovalHistory) {
-                $clearStatus = $approvalHistory['select_clear_status'];
-                $importantStatus = $approvalHistory['select_important_status'];
+    /**
+     * 認定コメントPOSTの保存データ定義
+     *
+     * @param  $requestData
+     * @param  $userId
+     *
+     * @return $saveData
+     */
+    function generateCommentSaveData($requestData, $userId) {
+        $saveData = [
+            'ApprovalHistory' => [
+                'user_id'                 => $userId,
+                'goal_member_id'          => Hash::get($requestData, 'goal_member.id'),
+                'comment'                 => Hash::get($requestData, 'approval_history.comment')
+            ]
+        ];
 
-                $clearAndImportantWord = '';
-                if ($clearStatus == $ApprovalHistory::STATUS_IS_NOT_CLEAR) {
-                    $clearAndImportantWord = __('This Top Key Result is not clear.');
-                } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
-                    $clearAndImportantWord = __('This Top Key Result is clear and most important.');
-                } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
-                    $clearAndImportantWord = __('This Top Key Result is not most important.');
-                }
-
-                $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
-                return $approvalHistory;
-            });
+        return $saveData;
     }
 
     /**
@@ -437,74 +369,6 @@ class GoalApprovalService extends AppService
         }
 
         return $GoalChangeLog->saveSnapshot($goalId) && $TkrChangeLog->saveSnapshot($goalId);
-    }
-
-    /**
-     * ゴール編集ログの差分を確認し、差分があればレスポンスにログを追加する
-     *
-     * @param  $goal
-     *
-     * @return $goal
-     */
-    function processChangeLog($goal)
-    {
-        // goal
-        $goalDiffCheckPaths = ['name', 'photo_file_name', 'goal_category_id'];
-        $goal['goal_change_log'] = $this->processChangeGoalLog($goal, $goalDiffCheckPaths);
-
-        // tkr
-        $tkrDiffCheckPaths = ['name', 'start_value', 'target_value', 'value_unit', 'description'];
-        $goal['tkr_change_log'] = $this->processChangeTkrLog($goal, $tkrDiffCheckPaths);
-
-        return $goal;
-    }
-
-    function processChangeGoalLog($goal, $diffCheckPaths)
-    {
-        /** @var GoalChangeLog $GoalChangeLog */
-        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
-
-        $goalId = Hash::extract($goal, 'id');
-        $goalChangeLog = $GoalChangeLog->findLatestSnapshot($goalId);
-        if(!$goalChangeLog) {
-            return null;
-        }
-
-        // 現在のゴールと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $goalChangeDiff = Hash::diff($goal, $goalChangeLog);
-
-        // Calc goal diff
-        foreach($diffCheckPaths as $path) {
-            if(Hash::get($goalChangeDiff, $path)) {
-                return $goalChangeLog;
-            }
-        }
-
-        return null;
-    }
-
-    function processChangeTkrLog($goal, $diffCheckPaths)
-    {
-        /** @var TkrChangeLog $TkrChangeLog */
-        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
-
-        $goalId = Hash::extract($goal, 'id');
-        $tkrChangeLog = $TkrChangeLog->findLatestSnapshot($goalId);
-        if(!$tkrChangeLog) {
-            return null;
-        }
-
-        // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $tkrChangeDiff = Hash::diff($goal['top_key_result'], $tkrChangeLog);
-
-        // Calc tkr diff
-        foreach($diffCheckPaths as $path) {
-            if(Hash::get($tkrChangeDiff, $path)) {
-                return $tkrChangeLog;
-            }
-        }
-
-        return null;
     }
 
 }

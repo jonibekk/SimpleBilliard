@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router'
 import {GoalMember} from '~/common/constants/Model'
 
-export class CoachCard extends React.Component {
+export default class CoachCard extends React.Component {
   render() {
     const ApprovalStatus = GoalMember.ApprovalStatus
     const Type = GoalMember.Type

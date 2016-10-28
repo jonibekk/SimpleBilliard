@@ -1,6 +1,6 @@
 import React from 'react'
 
-export class ViewMoreButton extends React.Component {
+export default class ViewMoreButton extends React.Component {
   render() {
     return (
       <div className="panel panel-default feed-read-more">

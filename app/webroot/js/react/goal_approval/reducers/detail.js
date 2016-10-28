@@ -6,7 +6,10 @@ const initialState = {
   posting_set_as_target: false,
   posting_remove_from_target: false,
   posting_withdraw: false,
-  validationErrors: {comment: ''}
+  posting_comment: false,
+  validationErrors: { comment: ''},
+  add_comments: [],
+  comment: ''
 }
 
 export default function detail(state = initialState, action) {
@@ -35,6 +38,14 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         posting_withdraw: true
       })
+    case types.POSTING_COMMENT:
+      return Object.assign({}, state, {
+        posting_comment: true
+      })
+    case types.FINISHED_POSTING_COMMENT:
+      return Object.assign({}, state, {
+        posting_comment: false
+      })
     case types.FINISHED_POSTING_REMOVE_FROM_TARGET:
       return Object.assign({}, state, {
         posting_remove_from_target: false
@@ -49,6 +60,14 @@ export default function detail(state = initialState, action) {
       })
     case types.INIT_DETAIL_PAGE:
       return Object.assign({}, initialState)
+    case types.ADD_COMMENT:
+      return Object.assign({}, state, {
+        add_comments: [...state.add_comments, action.comment]
+      })
+    case types.UPDATE_COMMENT:
+      return Object.assign({}, state, {
+        comment: action.comment
+      })
     default:
       return state;
   }

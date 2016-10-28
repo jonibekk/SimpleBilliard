@@ -8,7 +8,7 @@ App::uses('User', 'Model');
  * Date: 2014/05/28
  * Time: 0:36
  */
-class MixpanelComponent extends Object
+class MixpanelComponent extends CakeObject
 {
 
     /**

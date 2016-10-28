@@ -10,7 +10,7 @@
 /**
  * Class AppService
  */
-class AppService extends Object
+class AppService extends CakeObject
 {
     /**
      * バリデーションメッセージの展開

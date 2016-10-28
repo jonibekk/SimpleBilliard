@@ -1,6 +1,6 @@
 <?php
 
-class LangComponent extends Object
+class LangComponent extends CakeObject
 {
 
     public $name = "Lang";

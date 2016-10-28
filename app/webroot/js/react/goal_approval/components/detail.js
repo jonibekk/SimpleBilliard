@@ -1,9 +1,9 @@
 import React from 'react'
-import { Comments } from "~/goal_approval/components/elements/detail/Comments";
-import { GoalBlock } from "~/goal_approval/components/elements/detail/GoalBlock";
-import { UserCard } from "~/goal_approval/components/elements/detail/UserCard";
-import { CoachFooter } from "~/goal_approval/components/elements/detail/CoachFooter";
-import { CoacheeFooter } from "~/goal_approval/components/elements/detail/CoacheeFooter";
+import Comments from "~/goal_approval/components/elements/detail/Comments";
+import GoalBlock from "~/goal_approval/components/elements/detail/GoalBlock";
+import UserCard from "~/goal_approval/components/elements/detail/UserCard";
+import CoachFooter from "~/goal_approval/components/elements/detail/CoachFooter";
+import CoacheeFooter from "~/goal_approval/components/elements/detail/CoacheeFooter";
 
 export default class DetailComponent extends React.Component {
   constructor(props) {
@@ -53,7 +53,12 @@ export default class DetailComponent extends React.Component {
               <GoalBlock goal={ detail.goal_member.goal }
                          is_leader={ detail.goal_member.is_leader } />
               <Comments approval_histories={ detail.goal_member.approval_histories }
-                        view_more_text={ detail.goal_member.histories_view_more_text} />
+                        view_more_text={ detail.goal_member.histories_view_more_text }
+                        is_mine={ detail.is_mine }
+                        posting={ detail.posting_comment }
+                        goal_member_id={ this.props.params.goal_member_id }
+                        add_comments={ detail.add_comments }
+                        comment={ detail.comment } />
               {/* footer */}
               { detail.goal_member.is_mine ? coachee_footer : coach_footer }
           </div>
@@ -64,9 +69,12 @@ export default class DetailComponent extends React.Component {
 
 DetailComponent.propTypes = {
   detail: React.PropTypes.object.isRequired,
+  add_comments: React.PropTypes.array.isRequired,
   fetchGoalMember: React.PropTypes.func.isRequired,
   postSetAsTarget: React.PropTypes.func.isRequired,
   postRemoveFromTarget: React.PropTypes.func.isRequired,
   initDetailPage: React.PropTypes.func.isRequired,
   postWithdraw: React.PropTypes.func.isRequired
 }
+
+DetailComponent.defaultProps = { detail: {}, add_comments: [] }

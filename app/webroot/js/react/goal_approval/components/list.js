@@ -1,6 +1,6 @@
 import React from 'react'
-import { CoachCard } from '~/goal_approval/components/elements/list/CoachCard'
-import { CoacheeCard } from '~/goal_approval/components/elements/list/CoacheeCard'
+import CoachCard from '~/goal_approval/components/elements/list/CoachCard'
+import CoacheeCard from '~/goal_approval/components/elements/list/CoacheeCard'
 
 export default class ListComponent extends React.Component {
   componentWillMount() {

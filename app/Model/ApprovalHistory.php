@@ -25,7 +25,7 @@ class ApprovalHistory extends AppModel
     public $validate = [
         'action_status'           => [
             'numeric' => [
-                'rule' => ['numeric'],
+                'rule' => ['range', -1, 4], // 0, 1, 2,3のみ許可
             ],
         ],
         'select_clear_status'     => [
@@ -85,5 +85,46 @@ class ApprovalHistory extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    /**
+     * 認定IDからユーザー情報とセットで認定情報を取得する
+     *
+     * @param  $id
+     *
+     * @return array|null
+     */
+    function findByIdWithUser($id)
+    {
+        if (!$id) {
+            return null;
+        }
+
+        $options = [
+            'conditions' => [
+                'ApprovalHistory.id' => $id,
+            ],
+            'fields' => [
+                'ApprovalHistory.id',
+                'ApprovalHistory.goal_member_id',
+                'ApprovalHistory.user_id',
+                'ApprovalHistory.comment',
+                'ApprovalHistory.select_clear_status',
+                'ApprovalHistory.select_important_status'
+            ],
+            'contain' => [
+                'User'   => [
+                    'fields' => $this->User->profileFields
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if(!$res) {
+            return null;
+        }
+
+        $res['ApprovalHistory']['User'] = Hash::get($res, 'User');
+        unset($res['User']);
+        return Hash::get($res, 'ApprovalHistory');
     }
 }
