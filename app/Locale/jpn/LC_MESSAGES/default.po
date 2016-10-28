@@ -3272,7 +3272,7 @@ msgid "Current term can't be changed during the evaluation period."
 msgstr "評価期間中は今期の変更ができません。"
 
 msgid "Start date"
-msgstr "開始月"
+msgstr "開始日"
 
 msgid "Please select the standard start month."
 msgstr "基準となる期の開始月を選択して下さい。"
