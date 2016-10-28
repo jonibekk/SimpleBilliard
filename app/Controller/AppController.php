@@ -296,10 +296,15 @@ class AppController extends BaseController
 
     /*
      * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
+     * - チームの評価設定がoffの場合はカウントしない。(0を返す)
      * @param $login_uid
      */
     public function _setUnApprovedCnt($login_uid)
     {
+        if($this->Team->EvaluationSetting->isEnabled() === false){
+            return 0;
+        }
+
         $unapproved_cnt = Cache::read($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), 'user_data');
         if ($unapproved_cnt === false) {
             $login_user_team_id = $this->Session->read('current_team_id');
