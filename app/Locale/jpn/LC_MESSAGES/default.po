@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-28 12:37+0900\n"
+"PO-Revision-Date: 2016-10-28 14:57+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2350,6 +2350,9 @@ msgstr "前期"
 msgid "Send"
 msgstr "送信する"
 
+msgid "Role"
+msgstr "役割"
+
 msgid "Confirm this goal"
 msgstr "ゴール編集の確認"
 
@@ -2388,6 +2391,12 @@ msgstr "進捗"
 
 msgid "Wish goal approval"
 msgstr "ゴール認定を希望する"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "Level of achievement"
+msgstr "達成度"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -2584,9 +2593,6 @@ msgstr "コラボる"
 
 msgid "Edit Collaborate"
 msgstr "コラボを編集"
-
-msgid "Role"
-msgstr "役割"
 
 msgid "eg) Increasing the number of users"
 msgstr "例） ユーザー数を増やす"
@@ -3300,9 +3306,6 @@ msgstr "未完了の評価者をみる"
 
 msgid "Number incomplete"
 msgstr "未完了数"
-
-msgid "Name"
-msgstr "名前"
 
 msgid "Display order"
 msgstr "表示順"
