@@ -406,6 +406,7 @@ class GoalsController extends ApiController
         $fields = $GoalService->goalValidateFields;
         $fields[] = "key_result";
         $fields[] = "approval_history";
+        $fields[] = "labels";
         return $GoalService->validateSave($data, $fields, $goalId);
     }
 
