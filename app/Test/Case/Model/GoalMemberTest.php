@@ -1,0 +1,452 @@
+<?php App::uses('GoalousTestCase', 'Test');
+App::uses('GoalMember', 'Model');
+
+/**
+ * GoalMember Test Case
+ *
+ * @property GoalMember $GoalMember
+ */
+class GoalMemberTest extends GoalousTestCase
+{
+
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = array(
+        'app.goal_member',
+        'app.follower',
+        'app.team',
+        'app.evaluate_term',
+        'app.user',
+        'app.local_name',
+        'app.goal',
+        'app.goal_category',
+        'app.approval_history',
+
+        'app.team_member',
+    );
+
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->GoalMember = ClassRegistry::init('GoalMember');
+    }
+
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        unset($this->GoalMember);
+
+        parent::tearDown();
+    }
+
+    function testAdd()
+    {
+        $this->_setDefault();
+        $res = $this->GoalMember->add(1);
+        $this->assertTrue(!empty($res));
+    }
+
+    function testEdit()
+    {
+        $this->_setDefault();
+        $data = [
+            'goal_id' => 1,
+            'user_id' => 1,
+            'team_id' => 1,
+            'role'    => 'test'
+        ];
+        $post_data = $this->GoalMember->save($data);
+        $first_saved_id = $post_data['GoalMember']['id'];
+        $post_data['GoalMember']['role'] = 'edited';
+        $res = $this->GoalMember->edit($post_data);
+        $secound_saved_id = $res['GoalMember']['id'];
+
+        $this->assertEquals('edited', $res['GoalMember']['role']);
+        $this->assertEquals($first_saved_id, $secound_saved_id);
+
+    }
+
+    function testGetOwnersStatus()
+    {
+        $this->_setDefault();
+        $res = $this->GoalMember->getOwnersStatus(1);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetCollabeGoalDetail()
+    {
+        $this->_setDefault();
+        $team_id = 1;
+
+        $current_term = $this->GoalMember->Goal->Team->EvaluateTerm->getCurrentTermData();
+
+        $params = [
+            'first_name' => 'test',
+            'last_name'  => 'test'
+        ];
+        $this->GoalMember->User->save($params);
+        $user_id = $this->GoalMember->User->getLastInsertID();
+
+        $params = [
+            'user_id'          => $user_id,
+            'team_id'          => $team_id,
+            'name'             => 'test',
+            'goal_category_id' => 1,
+            'photo_file_name'  => 'aa.png',
+            'start_date'       => $current_term['end_date'] - 20,
+            'end_date'         => $current_term['end_date'] - 10,
+            'goal_category_id' => 1,
+        ];
+        $this->GoalMember->Goal->save($params);
+        $current_goal_id = $this->GoalMember->Goal->getLastInsertID();
+
+        $params = [
+            'user_id'          => $user_id,
+            'team_id'          => $team_id,
+            'name'             => 'test',
+            'goal_category_id' => 1,
+            'photo_file_name'  => 'aa.png',
+            'start_date'       => $current_term['end_date'] + 10,
+            'end_date'         => $current_term['end_date'] + 20,
+            'goal_category_id' => 1,
+        ];
+        $this->GoalMember->Goal->create();
+        $this->GoalMember->Goal->save($params);
+        $next_goal_id = $this->GoalMember->Goal->getLastInsertID();
+
+        $approval_status = 0;
+        $params = [
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $current_goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 1,
+        ];
+        $this->GoalMember->create();
+        $this->GoalMember->save($params);
+
+        $params = [
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $next_goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 1,
+        ];
+        $this->GoalMember->create();
+        $this->GoalMember->save($params);
+
+        // 評価期間の絞り込み無し
+        $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status);
+        $ids = [];
+        foreach ($goal_description as $v) {
+            $ids[$v['Goal']['id']] = true;
+        }
+        $this->assertTrue(isset($ids[$current_goal_id]));
+        $this->assertTrue(isset($ids[$next_goal_id]));
+
+        // 今期で絞る
+        $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status, true,
+            EvaluateTerm::TYPE_CURRENT);
+        $ids = [];
+        foreach ($goal_description as $v) {
+            $ids[$v['Goal']['id']] = true;
+        }
+        $this->assertTrue(isset($ids[$current_goal_id]));
+        $this->assertFalse(isset($ids[$next_goal_id]));
+
+    }
+
+    function testGetCollabeGoalDetailExcludePriorityZero()
+    {
+        $this->_setDefault();
+
+        $team_id = 1;
+
+        $params = [
+            'first_name' => 'test',
+            'last_name'  => 'test'
+        ];
+        $this->GoalMember->User->save($params);
+        $user_id = $this->GoalMember->User->getLastInsertID();
+
+        $params = [
+            'user_id'          => $user_id,
+            'team_id'          => $team_id,
+            'name'             => 'test',
+            'goal_category_id' => 1,
+            'end_date'         => '1427813999',
+            'photo_file_name'  => 'aa.png'
+        ];
+        $this->GoalMember->Goal->save($params);
+        $goal_id = $this->GoalMember->Goal->getLastInsertID();
+
+        $approval_status = 0;
+        $params = [
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+            'type'            => 0,
+            'priority'        => 0,
+        ];
+        $this->GoalMember->save($params);
+
+        $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status, false);
+        $this->assertEmpty($goal_description);
+    }
+
+    function testChangeApprovalStatus()
+    {
+        $this->_setDefault();
+
+        $user_id = 1;
+        $team_id = 1;
+        $goal_id = 999;
+        $approval_status = 0;
+
+        $params = [
+            'user_id'         => $user_id,
+            'team_id'         => $team_id,
+            'goal_id'         => $goal_id,
+            'approval_status' => $approval_status,
+        ];
+        $this->GoalMember->save($params);
+        $id = $this->GoalMember->getLastInsertID();
+        $this->GoalMember->changeApprovalStatus($id, 1);
+
+        $res = $this->GoalMember->findById($id);
+        $this->assertEquals(1, $res['GoalMember']['approval_status']);
+    }
+
+    function testGetLeaderUidNotNull()
+    {
+        $this->_setDefault();
+
+        $this->GoalMember->save(['goal_id' => 1, 'team_id' => 1, 'user_id' => 1, 'type' => GoalMember::TYPE_OWNER]);
+
+        $actual = $this->GoalMember->getLeaderUid(1);
+        $this->assertEquals(1, $actual);
+    }
+
+    function testGetLeaderUidNull()
+    {
+        $this->_setDefault();
+        $actual = $this->GoalMember->getLeaderUid(111111);
+        $this->assertEquals(null, $actual);
+    }
+
+    function testGetGoalMemberListByGoalId()
+    {
+        $this->_setDefault();
+        $data = [
+            'user_id' => 100,
+            'goal_id' => 200,
+            'team_id' => 1,
+            'type'    => GoalMember::TYPE_COLLABORATOR
+        ];
+        $this->GoalMember->save($data);
+        $actual = $this->GoalMember->getGoalMemberListByGoalId(200, GoalMember::TYPE_COLLABORATOR);
+        $this->assertNotEmpty($actual);
+    }
+
+    function testGetGoalMemberByGoalId()
+    {
+        $this->_setDefault();
+
+        $goal_id = 1;
+
+        // ゴールに紐づくコラボレーター全て
+        $res = $this->GoalMember->getGoalMemberByGoalId($goal_id);
+        $this->assertNotEmpty($res);
+
+        // limit 指定
+        $res2 = $this->GoalMember->getGoalMemberByGoalId($goal_id, ['limit' => 1]);
+        $this->assertCount(1, $res2);
+
+        // limit + page 指定
+        $res3 = $this->GoalMember->getGoalMemberByGoalId($goal_id, ['limit' => 1, 'page' => 2]);
+        $this->assertCount(1, $res3);
+        $this->assertNotEquals($res2[0]['User']['id'], $res3[0]['User']['id']);
+    }
+
+    function testGetGoalMemberOwnerTypeTrue()
+    {
+        $this->_setDefault();
+
+        $team_id = 1;
+        $user_id = 100;
+        $goal_id = 200;
+        $data = [
+            'team_id' => $team_id,
+            'user_id' => $user_id,
+            'goal_id' => $goal_id,
+            'type'    => GoalMember::TYPE_OWNER
+        ];
+        $this->GoalMember->save($data);
+        $res = $this->GoalMember->getGoalMember($team_id, $user_id, $goal_id);
+        $this->assertCount(1, $res);
+    }
+
+    function testGetGoalMemberOwnerTypeFalse()
+    {
+        $this->_setDefault();
+
+        $team_id = 1;
+        $user_id = 1;
+        $goal_id = 200;
+        $data = [
+            'team_id' => $team_id,
+            'user_id' => $user_id,
+            'goal_id' => $goal_id,
+            'type'    => GoalMember::TYPE_OWNER
+        ];
+        $this->GoalMember->save($data);
+        $res = $this->GoalMember->getGoalMember($team_id, $user_id, $goal_id, false);
+        $this->assertCount(0, $res);
+    }
+
+    function testGetCount()
+    {
+        $this->_setDefault();
+
+        $this->GoalMember->create();
+        $this->GoalMember->save(
+            [
+                'team_id' => 1,
+                'user_id' => 1,
+                'goal_id' => 1,
+                'type'    => GoalMember::TYPE_OWNER
+            ]);
+        $this->GoalMember->create();
+        $this->GoalMember->save(
+            [
+                'team_id' => 1,
+                'user_id' => 2,
+                'goal_id' => 1,
+                'type'    => GoalMember::TYPE_COLLABORATOR
+            ]);
+        $this->GoalMember->create();
+        $this->GoalMember->save(
+            [
+                'team_id' => 1,
+                'user_id' => 3,
+                'goal_id' => 1,
+                'type'    => GoalMember::TYPE_COLLABORATOR
+            ]);
+        $this->GoalMember->create();
+        $this->GoalMember->save(
+            [
+                'team_id' => 1,
+                'user_id' => 3,
+                'goal_id' => 2,
+                'type'    => GoalMember::TYPE_COLLABORATOR
+            ]);
+        $now = time();
+        $count = $this->GoalMember->getCount(
+            [
+                'start' => $now - HOUR,
+                'end'   => $now + HOUR,
+            ]);
+        $this->assertEquals(4, $count);
+
+        $count = $this->GoalMember->getCount(
+            [
+                'start' => $now - HOUR,
+                'end'   => $now + HOUR,
+                'type'  => GoalMember::TYPE_OWNER
+            ]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->GoalMember->getCount(
+            [
+                'start' => $now - HOUR,
+                'end'   => $now + HOUR,
+                'type'  => GoalMember::TYPE_COLLABORATOR
+            ]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->GoalMember->getCount(
+            [
+                'start'   => $now - HOUR,
+                'end'     => $now + HOUR,
+                'user_id' => 3,
+            ]);
+        $this->assertEquals(2, $count);
+    }
+
+    function testGoalIdOrderByPriority()
+    {
+        $this->_setDefault();
+
+        $team_id = 1;
+        $user_id = 1;
+        $this->GoalMember->deleteAll(['GoalMember.user_id' => $user_id], false);
+        $prepare_data = [
+            [
+                'user_id'  => $user_id,
+                'team_id'  => $team_id,
+                'goal_id'  => 5,
+                'priority' => 5,
+            ],
+            [
+                'user_id'  => $user_id,
+                'team_id'  => $team_id,
+                'goal_id'  => 4,
+                'priority' => 4,
+            ],
+            [
+                'user_id'  => $user_id,
+                'team_id'  => $team_id,
+                'goal_id'  => 3,
+                'priority' => 3,
+            ],
+        ];
+        $this->GoalMember->saveAll($prepare_data);
+        $actual = $this->GoalMember->goalIdOrderByPriority($user_id, [4, 3, 5]);
+        $expected = array(
+            (int)5 => '5',
+            (int)4 => '4',
+            (int)3 => '3'
+        );
+        $this->assertEquals($expected, $actual);
+        $actual = $this->GoalMember->goalIdOrderByPriority($user_id, [4, 3, 5], 'asc');
+        $expected = array(
+            (int)3 => '3',
+            (int)4 => '4',
+            (int)5 => '5'
+        );
+        $this->assertEquals($expected, $actual);
+    }
+
+    function _setDefault()
+    {
+        $this->GoalMember->current_team_id = 1;
+        $this->GoalMember->my_uid = 1;
+        $this->GoalMember->Goal->current_team_id = 1;
+        $this->GoalMember->Goal->my_uid = 1;
+        $this->GoalMember->Goal->Team->current_team_id = 1;
+        $this->GoalMember->Goal->Team->my_uid = 1;
+        $this->GoalMember->Goal->Team->EvaluateTerm->current_team_id = 1;
+        $this->GoalMember->Goal->Team->EvaluateTerm->my_uid = 1;
+
+        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+
+    }
+
+}

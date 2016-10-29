@@ -13,7 +13,7 @@
  * @var
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="users-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('User/simplex_top_section') ?>
     <div class="users-view-actions-panel">
@@ -99,11 +99,11 @@
                            $this->Html->url([
                                'controller' => 'posts',
                                'action'     => 'ajax_get_user_page_post_feed',
-                               'user_id'    => viaIsSet($this->request->params['named']['user_id']),
-                               'author_id'  => viaIsSet($this->request->params['named']['user_id']),
-                               'goal_id'    => viaIsSet($this->request->params['named']['goal_id']),
+                               'user_id'    => Hash::get($this->request->params, 'named.user_id'),
+                               'author_id'  => Hash::get($this->request->params, 'named.user_id'),
+                               'goal_id'    => Hash::get($this->request->params, 'named.goal_id'),
                                'type'       => Post::TYPE_ACTION,
-                               'page_type'  => viaIsSet($this->request->params['named']['page_type']),
+                               'page_type'  => Hash::get($this->request->params, 'named.page_type'),
                            ]) ?>"
                            id="FeedMoreReadLink"
                            append-target-id="UserPageContents"
@@ -116,4 +116,4 @@
         <?php endif; ?>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

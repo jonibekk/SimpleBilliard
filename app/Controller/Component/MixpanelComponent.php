@@ -1,5 +1,5 @@
 <?php
-App::uses('Collaborator', 'Model');
+App::uses('GoalMember', 'Model');
 App::uses('User', 'Model');
 
 /**
@@ -8,7 +8,7 @@ App::uses('User', 'Model');
  * Date: 2014/05/28
  * Time: 0:36
  */
-class MixpanelComponent extends Object
+class MixpanelComponent extends CakeObject
 {
 
     /**
@@ -185,22 +185,22 @@ class MixpanelComponent extends Object
             $user_id = $this->Controller->Auth->user('id');
             $team_id = $this->Controller->Session->read('current_team_id');
 
-            $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
-            if (empty($collabo)) {
-                $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+            $goalMember = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id);
+            if (empty($goalMember)) {
+                $goalMember = $this->Controller->Goal->GoalMember->getGoalMember($team_id, $user_id, $goal_id, false);
             }
-            if (isset($collabo['Collaborator']['type'])) {
-                $property['$goal_owner_type'] = $collabo['Collaborator']['type'] == Collaborator::TYPE_OWNER ? 'L' : 'C';
+            if (isset($goalMember['GoalMember']['type'])) {
+                $property['$goal_owner_type'] = $goalMember['GoalMember']['type'] == GoalMember::TYPE_OWNER ? 'L' : 'C';
             }
 
             $approval_status = [
-                Collaborator::STATUS_UNAPPROVED => "Pending approval",
-                Collaborator::STATUS_APPROVAL   => "Evaluable",
-                Collaborator::STATUS_HOLD       => "Not evaluable",
-                Collaborator::STATUS_MODIFY     => "Pending modification",
+                GoalMember::APPROVAL_STATUS_NEW           => "Pending approval",
+                GoalMember::APPROVAL_STATUS_REAPPLICATION => "Evaluable",
+                GoalMember::APPROVAL_STATUS_DONE          => "Not evaluable",
+                GoalMember::APPROVAL_STATUS_WITHDRAWN     => "Pending modification",
             ];
-            if (isset($collabo['Collaborator']['valued_flg'])) {
-                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
+            if (isset($goalMember['GoalMember']['approval_status'])) {
+                $property['$goal_approval_status'] = $approval_status[$goalMember['GoalMember']['approval_status']];
             }
         }
         if ($kr_id) {

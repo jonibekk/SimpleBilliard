@@ -16,7 +16,7 @@ class JobCategory extends AppModel
      * @var array
      */
     public $validate = [
-        'name'       => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'name'       => ['notBlank' => ['rule' => ['notBlank'],],],
         'active_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'    => ['boolean' => ['rule' => ['boolean'],],],
     ];

@@ -8,10 +8,10 @@
  * @package       app.Controller
  * @since         CakePHP(tm) v 0.2.9
  */
-
-App::uses('Controller', 'Controller');
+App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::import('Service', 'GoalApprovalService');
 
 /**
  * Application Controller
@@ -21,55 +21,35 @@ App::uses('NotifySetting', 'Model');
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent      $Lang
- * @property SessionComponent   $Session
- * @property SecurityComponent  $Security
  * @property TimezoneComponent  $Timezone
  * @property CookieComponent    $Cookie
  * @property CsvComponent       $Csv
- * @property GlEmailComponent   $GlEmail
  * @property PnotifyComponent   $Pnotify
  * @property MixpanelComponent  $Mixpanel
  * @property UservoiceComponent $Uservoice
  * @property OgpComponent       $Ogp
- * @property User               $User
- * @property Post               $Post
- * @property Goal               $Goal
- * @property Team               $Team
- * @property NotifyBizComponent $NotifyBiz
- * @property GlRedis            $GlRedis
  * @property BenchmarkComponent $Benchmark
  */
-class AppController extends Controller
+class AppController extends BaseController
 {
-    public $components = [
+    /**
+     * AppControllerを分割した場合、子クラスでComponent,Helper,Modelがマージされないため、
+     * 中間Controllerは以下を利用。末端Controllerは通常のCakeの規定通り
+     */
+    private $merge_components = [
         'DebugKit.Toolbar' => ['panels' => ['UrlCache.UrlCache']],
-        'Session',
-        //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
-        'Security'         => [
-            'csrfUseOnce' => false,
-            'csrfExpires' => '+24 hour'
-        ],
         'Paginator',
-        'Auth'             => [
-            'flash' => [
-                'element' => 'alert',
-                'key'     => 'auth',
-                'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
-            ]
-        ],
         'Lang',
         'Cookie',
         'Timezone',
-        'GlEmail',
         'Pnotify',
-        'Mixpanel',
         'Ogp',
-        'NotifyBiz',
         'Uservoice',
         'Csv',
+        'Flash',
         //        'Benchmark',
     ];
-    public $helpers = [
+    private $merge_helpers = [
         'Session',
         'Html'      => ['className' => 'BoostCake.BoostCakeHtml'],
         'Form'      => ['className' => 'BoostCake.BoostCakeForm'],
@@ -78,15 +58,10 @@ class AppController extends Controller
         'TimeEx',
         'TextEx',
         'Csv',
+        'Expt',
     ];
 
-    public $uses = [
-        'User',
-        'Post',
-        'Goal',
-        'Team',
-        'GlRedis',
-    ];
+    private $merge_uses = [];
 
     //基本タイトル
     public $title_for_layout;
@@ -110,11 +85,6 @@ class AppController extends Controller
      * 評価対象ゴール件数
      */
     public $evaluable_cnt = 0;
-
-    public $my_uid = null;
-    public $current_team_id = null;
-    public $current_term_id = null;
-    public $next_term_id = null;
 
     /**
      * 通知設定
@@ -156,10 +126,19 @@ class AppController extends Controller
      */
     private $_browser = [];
 
+    public function __construct($request = null, $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->uses = am($this->uses, $this->merge_uses);
+        $this->components = am($this->components, $this->merge_components);
+        $this->helpers = am($this->helpers, $this->merge_helpers);
+    }
+
     public function beforeFilter()
     {
         parent::beforeFilter();
 
+        $this->_setupAuth();
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {
             $this->title_for_layout = __('Goalous');
@@ -169,10 +148,10 @@ class AppController extends Controller
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __(
-            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App."));
+            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
+            __("You can use Goalous on Web and on Mobile App."));
         $this->set('meta_description', $this->meta_description);
 
-        $this->_setSecurity();
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
         //ローカルとISAO環境と本番環境以外でbasic認証を有効にする
@@ -182,8 +161,6 @@ class AppController extends Controller
         $this->set('my_prof', $this->User->getMyProf());
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
-            $this->current_team_id = $this->Session->read('current_team_id');
-            $this->my_uid = $this->Auth->user('id');
 
             $login_uid = $this->Auth->user('id');
 
@@ -196,8 +173,9 @@ class AppController extends Controller
             }
 
             //通知の既読ステータス
-            if (isset($this->request->params['named']['notify_id'])) {
-                $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
+            $notify_id = $this->request->query('notify_id');
+            if ($notify_id) {
+                $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
@@ -319,21 +297,20 @@ class AppController extends Controller
 
     /*
      * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
+     * - チームの評価設定がoffの場合はカウントしない。(0を返す)
      * @param $login_uid
      */
     public function _setUnApprovedCnt($login_uid)
     {
-        $unapproved_cnt = Cache::read($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), 'user_data');
-        if ($unapproved_cnt === false) {
-            $login_user_team_id = $this->Session->read('current_team_id');
-            $member_ids = $this->Team->TeamMember->getMyMembersList($login_uid);
-            array_push($member_ids, $login_uid);
-
-            $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
-                $member_ids, [0, 3]);
-            Cache::write($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), $unapproved_cnt,
-                'user_data');
+        if($this->Team->EvaluationSetting->isEnabled() === false){
+            return 0;
         }
+
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        // サービス層でキャッシュを行う
+        $unapproved_cnt = $GoalApprovalService->countUnapprovedGoal($login_uid);
+
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
     }
@@ -357,17 +334,6 @@ class AppController extends Controller
     {
         $this->evaluable_cnt = $this->Team->Evaluation->getMyTurnCount();
         $this->set('evaluable_cnt', $this->evaluable_cnt);
-    }
-
-    public function _setSecurity()
-    {
-        // sslの判定をHTTP_X_FORWARDED_PROTOに変更
-        $this->request->addDetector('ssl', ['env' => 'HTTP_X_FORWARDED_PROTO', 'value' => 'https']);
-        //サーバー環境のみSSLを強制
-        if (ENV_NAME != "local") {
-            $this->Security->blackHoleCallback = 'forceSSL';
-            $this->Security->requireSecure();
-        }
     }
 
     /**
@@ -479,7 +445,7 @@ class AppController extends Controller
 
     public function _decideMobileAppRequest()
     {
-        $ua = viaIsSet($_SERVER['HTTP_USER_AGENT']);
+        $ua = Hash::get($_SERVER, 'HTTP_USER_AGENT');
         if (strpos($ua, 'Goalous App') !== false) {
             $this->is_mb_app = true;
         }
@@ -488,66 +454,6 @@ class AppController extends Controller
             $this->is_mb_app_ios = true;
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
-    }
-
-    /**
-     * アプリケーション全体の言語設定
-     */
-    public function _setAppLanguage()
-    {
-        //言語設定済かつ自動言語フラグが設定されていない場合は、言語設定を適用。それ以外はブラウザ判定
-        if ($this->Auth->user() && $this->Auth->user('language') && !$this->Auth->user('auto_language_flg')) {
-            Configure::write('Config.language', $this->Auth->user('language'));
-            $this
-                ->set('is_not_use_local_name', $this->User->isNotUseLocalName($this->Auth->user('language')));
-        } else {
-            $lang = $this->Lang->getLanguage();
-            $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
-        }
-    }
-
-    /**
-     * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
-     *
-     * @param $uid
-     *
-     * @return bool
-     */
-    public function _refreshAuth($uid = null)
-    {
-        if (!$uid) {
-            $uid = $this->Auth->user('id');
-        }
-        //言語設定を退避
-        $user_lang = $this->User->findById($uid);
-        $lang = null;
-        if (!empty($user_lang)) {
-            $lang = $user_lang['User']['language'];
-        }
-        $this->Auth->logout();
-        $this->User->resetLocalNames();
-        $this->User->me['language'] = $lang;
-        $this->User->recursive = 0;
-        $user_buff = $this->User->findById($uid);
-        $this->User->recursive = -1;
-        unset($user_buff['User']['password']);
-        $user_buff = array_merge(['User' => []], $user_buff);
-        //配列を整形（Userの中に他の関連データを配置）
-        $user = [];
-        $associations = [];
-        foreach ($user_buff as $key => $val) {
-            if ($key == 'User') {
-                $user[$key] = $val;
-            } else {
-                $associations[$key] = $val;
-            }
-        }
-        if (isset($user['User'])) {
-            $user['User'] = array_merge($user['User'], $associations);
-        }
-        $this->User->me = $user['User'];
-        $res = $this->Auth->login($user['User']);
-        return $res;
     }
 
     function _switchTeam($team_id, $uid = null)
@@ -641,7 +547,7 @@ class AppController extends Controller
             return false;
         }
         $current_team_id = $this->Session->read('current_team_id');
-        $request_team_id = $this->_getTeamIdFromRequest($this->request->params);
+        $request_team_id = $this->_getTeamIdFromRequest();
         //チームidが判別できない場合は何もせずreturn
         if (!$request_team_id) {
             return false;
@@ -663,8 +569,9 @@ class AppController extends Controller
         return false;
     }
 
-    public function _getTeamIdFromRequest($request_params)
+    public function _getTeamIdFromRequest()
     {
+        $request_params = $this->request->params;
         if (empty($request_params) ||
             !isset($request_params['controller']) ||
             empty($request_params['controller'])
@@ -678,13 +585,16 @@ class AppController extends Controller
         if (isset($request_params['named']['team_id']) && !empty($request_params['named']['team_id'])) {
             return $request_params['named']['team_id'];
         }
+        if ($this->request->query('team_id')) {
+            return $this->request->query('team_id');
+        }
         //モデル名抽出
         $model_name = null;
         foreach ($this->User->model_key_map as $key => $model) {
-            if ($id = viaIsSet($request_params['named'][$key])) {
+            if ($id = Hash::get($request_params, "named.$key")) {
                 $model_name = $model;
                 break;
-            } elseif ($id = viaIsSet($request_params[$key])) {
+            } elseif ($id = Hash::get($request_params, $key)) {
                 $model_name = $model;
                 break;
             }
@@ -707,7 +617,7 @@ class AppController extends Controller
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
-                $team_id = viaIsSet($team['TeamMember']['team_id']);
+                $team_id = Hash::get($team, 'TeamMember.team_id');
                 break;
             case 'Team':
                 //チームの場合はそのまま
@@ -725,6 +635,10 @@ class AppController extends Controller
 
     public function _setViewValOnRightColumn()
     {
+        App::import('Service', 'GoalService');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $cached_my_goal_area_vals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         if ($cached_my_goal_area_vals !== false) {
             //このキャッシュはviewで利用する複数の変数を格納されているのでここで展開する。
@@ -736,12 +650,15 @@ class AppController extends Controller
 
             $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
                 MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $my_goals = $GoalService->processGoals($my_goals);
             $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
             $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null,
                 $start_date,
                 $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $collabo_goals = $GoalService->processGoals($collabo_goals);
             $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
             $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
+            $my_previous_goals = $GoalService->processGoals($my_previous_goals);
             $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
             //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
             $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
@@ -768,7 +685,7 @@ class AppController extends Controller
      */
     public function _flashClickEvent($id)
     {
-        $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
+        $this->Flash->set(null, ['element' => 'flash_click_event', 'params' => ['id' => $id], 'key' => 'click_event']);
     }
 
     public function _setAvailEvaluation()
@@ -782,16 +699,6 @@ class AppController extends Controller
         $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
         $unread_msg_post_ids = $this->NotifyBiz->getUnreadMessagePostIds();
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_post_ids'));
-    }
-
-    function _getRequiredParam($name)
-    {
-        $id = viaIsSet($this->request->params['named'][$name]);
-        if (!$id) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
-            return $this->redirect($this->referer());
-        }
-        return $id;
     }
 
     function _getRedirectUrl()
@@ -812,11 +719,11 @@ class AppController extends Controller
         ];
         $parsed_url = Router::parse($this->referer(null, true));
         $referer_url = $this->referer(null, true);
-        if ($url = viaIsSet($url_map[$parsed_url['action']])) {
-            if ($names = viaIsSet($url['named'])) {
+        if ($url = Hash::get($url_map, Hash::get($parsed_url, 'action'))) {
+            if ($names = Hash::get($url, 'named')) {
                 unset($url['named']);
                 foreach ($names as $name) {
-                    if (viaIsSet($parsed_url['named'][$name])) {
+                    if (Hash::get($parsed_url, "named.$name")) {
                         $url[$name] = $parsed_url['named'][$name];
                     }
                 }
@@ -887,28 +794,6 @@ class AppController extends Controller
         return;
     }
 
-    function updateSetupStatusIfNotCompleted()
-    {
-        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
-        if ($setup_guide_is_completed) {
-            return true;
-        }
-
-        $user_id = $this->Auth->user('id');
-        $this->GlRedis->deleteSetupGuideStatus($user_id);
-        $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
-        if ($this->calcSetupRestCount($status_from_mysql) === 0) {
-            $this->User->completeSetupGuide($user_id);
-            $this->_refreshAuth($this->Auth->user('id'));
-            return true;
-        }
-        //set update time
-        $status_from_mysql[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
-
-        $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
-        return true;
-    }
-
     function getAllSetupDataFromRedis($user_id = false)
     {
         $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
@@ -931,26 +816,6 @@ class AppController extends Controller
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         return $status;
-    }
-
-    function calcSetupRestCount($status)
-    {
-        return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
-    }
-
-    function calcSetupCompletePercent($status)
-    {
-        $rest_count = $this->calcSetupRestCount($status);
-        if ($rest_count <= 0) {
-            return 100;
-        }
-
-        $complete_count = count(User::$TYPE_SETUP_GUIDE) - $rest_count;
-        if ($complete_count === 0) {
-            return 0;
-        }
-
-        return 100 - floor(($rest_count / count(User::$TYPE_SETUP_GUIDE) * 100));
     }
 
     public function _setDefaultTeam($team_id)
@@ -1034,6 +899,40 @@ class AppController extends Controller
             $this->redirect($redirect_url);
         }
 
+    }
+
+    /**
+     * Setup Authentication Component
+     *
+     * @return void
+     */
+    protected function _setupAuth()
+    {
+        $this->Auth->authenticate = [
+            'Form2' => [
+                'fields'    => [
+                    'username' => 'email',
+                    'password' => 'password'
+                ],
+                'userModel' => 'User',
+                'scope'     => [
+                    'User.active_flg'             => 1,
+                    'PrimaryEmail.email_verified' => 1
+                ],
+                'recursive' => 0,
+            ]
+        ];
+        $st_login = REFERER_STATUS_LOGIN;
+        $this->Auth->loginRedirect = "/{$st_login}";
+        $this->Auth->logoutRedirect = array(
+            'controller' => 'users',
+            'action'     => 'login'
+        );
+        $this->Auth->loginAction = array(
+            'admin'      => false,
+            'controller' => 'users',
+            'action'     => 'login'
+        );
     }
 
 }

@@ -6,7 +6,7 @@
  * Date: 5/23/14
  * Time: 7:41 PM
  */
-class TimezoneComponent extends Object
+class TimezoneComponent extends CakeObject
 {
 
     public $name = "Timezone";

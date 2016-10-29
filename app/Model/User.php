@@ -25,7 +25,7 @@ App::uses('AppModel', 'Model');
  * @property TeamMember     $TeamMember
  * @property CircleMember   $CircleMember
  * @property LocalName      $LocalName
- * @property Collaborator   $Collaborator
+ * @property GoalMember     $GoalMember
  * @property MemberGroup    $MemberGroup
  * @property RecoveryCode   $RecoveryCode
  */
@@ -145,12 +145,12 @@ class User extends AppModel
         ],
         'first_name'         => [
             'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notEmpty'     => ['rule' => 'notEmpty'],
+            'notBlank'     => ['rule' => 'notBlank'],
             'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'last_name'          => [
             'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notEmpty'     => ['rule' => 'notEmpty'],
+            'notBlank'     => ['rule' => 'notBlank'],
             'userNameChar' => ['rule' => ['userNameChar']],
         ],
         'gender_type'        => [
@@ -207,8 +207,8 @@ class User extends AppModel
         ],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'old_password'       => [
-            'notEmpty'  => [
-                'rule' => 'notEmpty',
+            'notBlank'  => [
+                'rule' => 'notBlank',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
@@ -216,8 +216,8 @@ class User extends AppModel
         ],
         'password_request'   => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notEmpty'      => [
-                'rule' => 'notEmpty',
+            'notBlank'      => [
+                'rule' => 'notBlank',
             ],
             'minLength'     => [
                 'rule' => ['minLength', 8],
@@ -228,8 +228,8 @@ class User extends AppModel
         ],
         'password_request2'  => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notEmpty'      => [
-                'rule' => 'notEmpty',
+            'notBlank'      => [
+                'rule' => 'notBlank',
             ],
             'minLength'     => [
                 'rule' => ['minLength', 8],
@@ -240,16 +240,16 @@ class User extends AppModel
         ],
         'password'           => [
             'maxLength' => ['rule' => ['maxLength', 50]],
-            'notEmpty'  => [
-                'rule' => 'notEmpty',
+            'notBlank'  => [
+                'rule' => 'notBlank',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
             ],
         ],
         'password_confirm'   => [
-            'notEmpty'          => [
-                'rule' => 'notEmpty',
+            'notBlank'          => [
+                'rule' => 'notBlank',
             ],
             'passwordSameCheck' => [
                 'rule' => ['passwordSameCheck', 'password'],
@@ -311,7 +311,6 @@ class User extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Purpose',
         'Badge',
         'CommentLike',
         'CommentMention',
@@ -329,7 +328,7 @@ class User extends AppModel
         'CircleMember',
         'Goal',
         'MemberGroup',
-        'Collaborator',
+        'GoalMember',
         'Evaluator',
         'RecoveryCode',
         'Device'
@@ -476,7 +475,7 @@ class User extends AppModel
 
             // Checking teams that belongs to is active
             foreach ($team_member_list as $team_member) {
-                if (viaIsSet($team_member['Team']['id'])) {
+                if (Hash::get($team_member, 'Team.id')) {
                     $active_users_only[] = $user;
                     break;
                 }
@@ -631,7 +630,7 @@ class User extends AppModel
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
         //データを保存
-        if (!viaIsSet($data['Email'][0]['Email']['email_verified']) && !viaIsSet($data['User']['id'])) {
+        if (!Hash::get($data, 'Email.0.Email.email_verified') && !Hash::get($data, 'User.id')) {
             $this->create();
         }
         if ($this->saveAll($data, ['validate' => false])) {
@@ -1362,7 +1361,7 @@ class User extends AppModel
         }
         // ゴール
         $followList = $this->Goal->Follower->getFollowList($this->my_uid);
-        $collaboList = $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true);
+        $collaboList = $this->Goal->GoalMember->getCollaboGoalList($this->my_uid, true);
         $goals = array_unique(array_merge($followList, $collaboList));
         foreach ($goals as $val) {
             $my_channels[] = 'goal_' . $val . '_team_' . $this->current_team_id;
@@ -1538,7 +1537,7 @@ class User extends AppModel
         ];
         $res = $this->findWithoutTeamId('first', $options);
 
-        $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
+        $profile_photo_is_registered = (bool)Hash::get($res, 'User.photo_file_name');
         $comment_is_registered = false;
 
         if (!isset($res['TeamMember'])) {

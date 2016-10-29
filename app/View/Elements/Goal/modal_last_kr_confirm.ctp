@@ -24,17 +24,16 @@
                     <i class="fa fa-flag"></i><?= __("Goal Name") ?>:<?= h($goal['Goal']['name']) ?>
                 </li>
                 <li>
-                    <?= __("Unit") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
+                    <?= __("Start date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['start_date']) ?>
                 </li>
                 <li>
-                    <?= __("Current point") ?>:<?= h($goal['Goal']['current_value']) ?>
+                    <?= __("End date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
                 </li>
-                <li>
-                    <?= __("Initial point") ?>:<?= h($goal['Goal']['start_value']) ?>
-                </li>
-                <li>
-                    <?= __("Achieve point") ?>:<?= h($goal['Goal']['target_value']) ?>
-                </li>
+                <?php if (!empty($goal['Goal']['description'])):?>
+                    <li>
+                        <?= __("Description") ?>:<?= nl2br($goal['Goal']['description']) ?>
+                    </li>
+                <?php endif;?>
             </ul>
         </div>
         <div class="modal-footer">

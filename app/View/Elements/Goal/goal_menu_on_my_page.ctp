@@ -9,7 +9,7 @@
  * @var                    $goal
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="dropdown pull-right">
     <a href="#"
        class="bd-radius_4px font_lightGray-gray"
@@ -29,15 +29,10 @@
             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __("Add Key Result") ?></span></a>
         </li>
-        <?php if (!viaIsSet($goal['Evaluation'])): ?>
+        <?php if (!Hash::get($goal, 'Evaluation')): ?>
             <li role="presentation">
                 <a role="menuitem" tabindex="-1"
-                   href="<?= $this->Html->url([
-                       'controller' => 'goals',
-                       'action'     => 'add',
-                       'goal_id'    => $goal['Goal']['id'],
-                       'mode'       => 3
-                   ]) ?>">
+                   href="/goals/<?= $goal['Goal']['id'] ?>/edit">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                 </a>
             </li>
@@ -51,4 +46,4 @@
         <?php endif; ?>
     </ul>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

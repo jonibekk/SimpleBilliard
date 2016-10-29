@@ -43,6 +43,28 @@ class TimeExHelper extends AppHelper
     }
 
     /**
+     * format : Y/m/d
+     *
+     * @param        $str
+     * @param null   $timezone
+     * @param string $format
+     *
+     * @return string
+     * @internal param $date_str
+     */
+    public function dateFormat($str, $timezone = null, $format = 'Y-m-d')
+    {
+        if (empty($str)) {
+            return null;
+        }
+
+        if ($timezone === null) {
+            $timezone = $this->timeOffset;
+        }
+        return $this->Time->format($format, $str, null, $timezone);
+    }
+
+    /**
      * format : n/j
      *
      * @param      $date_str

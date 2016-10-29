@@ -39,15 +39,15 @@ Vagrant.configure('2') do |config|
     config.vm.network 'private_network', ip: '192.168.50.4'
 
     config.vm.provider :virtualbox do |vb|
-        vb.memory = 1024
-        vb.cpus = 1
+        vb.memory = 2048
+        vb.cpus = 2
         vb.customize ["modifyvm", :id, "--ioapic", "on"]
     end
     src_dir = './'
     doc_root = '/vagrant_data/app/webroot'
     app_root = '/vagrant_data/'
     if ( RUBY_PLATFORM.downcase =~ /darwin/ )
-      npm_recipe = 'local_pnpm'
+      npm_recipe = 'local_yarn'
       config.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
     else
       npm_recipe = 'local_npm'

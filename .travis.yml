@@ -15,7 +15,6 @@ cache:
   - $HOME/.composer/cache
   - $HOME/apcu-4.0.2
   - $HOME/redis-2.2.7
-  - $HOME/.nvm
 
 services:
   - redis-server
@@ -46,6 +45,8 @@ before_script:
   - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
   - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl install msgpack channel://pecl.php.net/msgpack-0.5.7
+  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - cp app/Test/travis/lite_php_browscap.ini /home/travis/browscap.ini
   - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
@@ -129,24 +130,6 @@ script:
 #  - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist; fi
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
   - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
-  - cd ../
-  - if [ $TRAVIS_EVENT_TYPE = "push" ] && ( [ $TRAVIS_BRANCH = "stage" ] || [ $TRAVIS_BRANCH = "stage-isao" ] || [ $TRAVIS_BRANCH = "hotfix" ] || [ $TRAVIS_BRANCH = "hotfix-isao" ] ) ; then
-    nvm install 5.8.0;
-    nvm use 5.8.0;
-    npm install -g gulp-cli;
-    npm install -g pnpm;
-    npm set progress=false;
-    cd $TRAVIS_BUILD_DIR;
-    travis_retry pnpm i --no-bin-links;
-    gulp build;
-    mkdir s3_upload;
-    mkdir s3_upload/css;
-    mkdir s3_upload/js;
-    cp app/webroot/css/goalous.min.css s3_upload/css/;
-    cp app/webroot/compiled_assets/js/* s3_upload/js/;
-    mkdir s3_upload_dist;
-    tar czvf s3_upload_dist/s3_upload.tar.gz s3_upload;
-    fi
 
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
@@ -186,53 +169,7 @@ deploy:
   - provider: opsworks
     access-key-id: $AWS_ACCESS_KEY
     secret-access-key: $AWS_SECRET_KEY
-    app-id: 6f952832-6c16-4cc7-a9cd-35c3e69d42a2
-    wait-until-deployed: false
-    on:
-      branch: stage-isao
-
-  - provider: opsworks
-    access-key-id: $AWS_ACCESS_KEY
-    secret-access-key: $AWS_SECRET_KEY
     app-id: 35e69705-18d9-4c45-81eb-7e02e0c61fdc
     wait-until-deployed: false
     on:
       branch: dev-ind
-
-  - provider: opsworks
-    access-key-id: $AWS_ACCESS_KEY
-    secret-access-key: $AWS_SECRET_KEY
-    app-id: feaeb538-35a5-4a1c-bab7-01a70c666987
-    wait-until-deployed: false
-    on:
-      branch: hotfix
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: "goalous-compiled-assets"
-    skip_cleanup: true
-    upload-dir: stage
-    local_dir: s3_upload_dist
-    on:
-      branch: stage
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: "goalous-compiled-assets"
-    skip_cleanup: true
-    upload-dir: stage-isao
-    local_dir: s3_upload_dist
-    on:
-      branch: stage-isao
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: "goalous-compiled-assets"
-    skip_cleanup: true
-    upload-dir: stage
-    local_dir: s3_upload_dist
-    on:
-      branch: hotfix

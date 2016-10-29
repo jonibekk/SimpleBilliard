@@ -101,18 +101,28 @@ class SetupController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * TODO:削除
+     *
+     * @deprecated
+     */
     public function ajax_create_goal()
     {
         $this->_ajaxPreProcess();
 
-        // Purpose保存
-        $this->Goal->Purpose->add($this->request->data);
-        $purpose_id = $this->Goal->Purpose->id;
-        $this->request->data['Goal']['purpose_id'] = $purpose_id;
+        $goal = $this->request->data['Goal'];
         // $_FILESとGoalオブジェクトマージ
-        $this->request->data['Goal']['photo'] = $_FILES['photo'];
+        $goal['photo'] = $_FILES['photo'];
         // Goal保存
-        $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
+        //FIXME: [START] tKRモデル対応のために一時的にゴールの内容を無理やりtKRとして登録しているが、React側からこれらの値を渡すようにする！
+        $goal['term_type'] = 'current';
+        $goal['goal_category_id'] = key($this->Goal->GoalCategory->getCategoryList());
+        $tkr['name'] = $goal['name'];
+        $tkr['value_unit'] = $goal['value_unit'];
+        $tkr['start_value'] = $goal['start_value'];
+        $tkr['target_value'] = $goal['target_value'];
+        //FIXME: [END]
+        $res = $this->Goal->add(['Goal' => $goal, 'KeyResult' => [$tkr]]);
         if ($res) {
             $this->Pnotify->outSuccess($msg = __("Created a goal."));
             $error = false;
@@ -282,7 +292,7 @@ class SetupController extends AppController
         $file_ids = $this->request->data('file_id');
         try {
             $this->Goal->begin();
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("You have no permission."));
             }
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
@@ -318,7 +328,7 @@ class SetupController extends AppController
             }
         }
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName);
         $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;

@@ -20,9 +20,6 @@ class CommentLikeTest extends GoalousTestCase
         'app.user',
         'app.team',
         'app.post',
-        'app.goal',
-        'app.key_result',
-        'app.action_result',
         'app.circle',
         'app.local_name',
     );

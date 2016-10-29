@@ -15,7 +15,7 @@
  * @var                    $evaluateType
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
@@ -347,10 +347,6 @@
             </div>
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __("Purpose") ?>:
-                    <?= h($goal[0]['Goal']['Purpose']['name']) ?>
-                </div>
-                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Role") ?>:
                     <?php $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
                     <?= ($role) ? h($role) : __("Leader") ?>
@@ -363,7 +359,7 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Collaborator") ?>:
-                    <?= count($goal[0]['Goal']['Collaborator']) ?>
+                    <?= count($goal[0]['Goal']['GoalMember']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Progress") ?>:
@@ -566,7 +562,7 @@ $this->Form->input("evaluate_type", [
 ])
 ?>
 <?= $this->Form->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {

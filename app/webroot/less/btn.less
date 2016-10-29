@@ -42,6 +42,7 @@
   color: #231814;
   text-decoration: none;
 }
+
 /*.btn_pureWhite-rougeOrange,*/
 .btn-white {
   border: 1px solid #ccc;
@@ -72,7 +73,7 @@
   border-radius: 22px;
 }
 
-.modal-ajax-get-collabo {
+.collaborate-button {
   border-radius: 22px;
 }
 
@@ -136,7 +137,7 @@
   display: block;
   width: 144px;
   margin: 0 auto 0;
-  @media screen and (min-width: 520px){
+  @media screen and (min-width: 520px) {
     margin: 12px auto 0;
   }
   height: 36px;
@@ -321,5 +322,24 @@
     color: @whiteColor;
     background: @basicPink;
     text-decoration: none;
+  }
+}
+
+.btn-white-radius {
+  vertical-align: bottom;
+  border: 1px solid @subColor4;
+  background-color: #fff;
+  background-image: none;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: @veryDark;
+  &:hover, &:active {
+    color: @keyColor;
+    border: 1px solid @cherryBlossomPink;
+  }
+  &.active {
+    color: #fff;
+    background-color: @subColor8;
   }
 }

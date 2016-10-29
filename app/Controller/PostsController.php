@@ -202,13 +202,13 @@ class PostsController extends AppController
         $this->updateSetupStatusIfNotCompleted();
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
-        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+        if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
             $notify_type = NotifySetting::TYPE_FEED_MESSAGE;
         }
         $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
 
-        $socketId = viaIsSet($this->request->data['socket_id']);
-        $share = explode(",", viaIsSet($this->request->data['Post']['share']));
+        $socketId = Hash::get($this->request->data, 'socket_id');
+        $share = explode(",", Hash::get($this->request->data, 'Post.share'));
 
         //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
         if (!$socketId || $share[0] === "") {
@@ -217,7 +217,7 @@ class PostsController extends AppController
         }
 
         $share_circle = false;
-        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+        if (Hash::get($this->request->data, 'Post.type') != Post::TYPE_MESSAGE) {
             //push to pusher
             // チーム全体公開が含まれている場合はチーム全体にのみpush
             if (in_array("public", $share)) {
@@ -234,13 +234,13 @@ class PostsController extends AppController
         }
 
         //push for updating circle list
-        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+        if (Hash::get($this->request->data, 'Post.type') != Post::TYPE_MESSAGE) {
             $this->NotifyBiz->pushUpdateCircleList($socketId, $share);
         }
 
         //publish an event to Mixpanel
         $mixpanel_prop_name = null;
-        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+        if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
             $this->Mixpanel->trackMessage($this->Post->getLastInsertID());
         } else {
             if (in_array("public", $share)) {
@@ -267,7 +267,7 @@ class PostsController extends AppController
      */
     public function post_delete()
     {
-        $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
+        $this->Post->id = Hash::get($this->request->params, 'named.post_id');
         if (!$this->Post->exists()) {
             throw new NotFoundException(__("This post doesn't exist."));
         }
@@ -292,7 +292,7 @@ class PostsController extends AppController
      */
     public function post_edit()
     {
-        $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
+        $this->Post->id = Hash::get($this->request->params, 'named.post_id');
 
         // 例外チェック
         if (!$this->Post->exists()) {
@@ -352,7 +352,7 @@ class PostsController extends AppController
      */
     public function comment_delete()
     {
-        $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
+        $this->Post->Comment->id = Hash::get($this->request->params, 'named.comment_id');;
         $post_id = $this->Post->Comment->field('post_id');
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__("This comment doesn't exist."));
@@ -383,7 +383,7 @@ class PostsController extends AppController
     public function comment_edit()
     {
         $this->request->allowMethod('post');
-        $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
+        $this->Post->Comment->id = Hash::get($this->request->params, 'named.comment_id');
 
         // 例外チェック
         if (!$this->Post->Comment->exists()) {
@@ -394,8 +394,8 @@ class PostsController extends AppController
         }
 
         // ogbをインサートデータに追加
-        $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
-            viaIsSet($this->request->data['Comment']['body']));
+        $this->request->data['Comment'] = $this->_addOgpIndexes(Hash::get($this->request->data, 'Comment'),
+            Hash::get($this->request->data, 'Comment.body'));
 
         // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
@@ -414,7 +414,8 @@ class PostsController extends AppController
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
-        if (isset($this->request->params['named']['notify_id'])) {
+        $notify_id = $this->request->query('notify_id');
+        if ($notify_id) {
             $this->set('long_text', true);
         } else {
             $this->set('long_text', false);
@@ -442,7 +443,7 @@ class PostsController extends AppController
         //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
         //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
         //ここで分岐をする必要がある。
-        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id']);
+        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && $notify_id;
         if ($is_notify_post_permanent_page && !$posts) {
             $response = $this->render('Feed/post_not_found');
         } else {
@@ -670,7 +671,7 @@ class PostsController extends AppController
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
         //エレメントpath
         $elm_path = "Feed/posts";
-        if (viaIsSet($param_named['page_type']) == 'image') {
+        if (Hash::get($param_named, 'page_type') == 'image') {
             $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
             $elm_path = "cube_img_blocks";
         }
@@ -678,7 +679,7 @@ class PostsController extends AppController
         $posts = $this->Post->get($page_num, $item_num, $start, $end, $this->request->params);
         $this->set('posts', $posts);
         $this->set('long_text', false);
-        $without_header = viaIsSet($param_named['without_header']);
+        $without_header = Hash::get($param_named, 'without_header');
         $this->set(compact('without_header'));
 
         // エレメントの出力を変数に格納する
@@ -724,7 +725,7 @@ class PostsController extends AppController
         //ファイル一覧取得
         $files = $this->Post->getFilesOnCircle($param_named['circle_id'],
             $page_num, $item_num, $start, $end,
-            viaIsSet($param_named['file_type']));
+            Hash::get($param_named, 'file_type'));
         $this->set('files', $files);
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果
@@ -765,7 +766,7 @@ class PostsController extends AppController
 
     public function ajax_get_old_comment($get_num)
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
         $long_text = false;
@@ -791,7 +792,7 @@ class PostsController extends AppController
 
     public function ajax_get_latest_comment($last_comment_id = 0)
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
@@ -808,7 +809,7 @@ class PostsController extends AppController
 
     public function ajax_get_new_comment_form($prefix = null)
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $result = [
             'error' => false,
             'msg'   => null,
@@ -829,7 +830,7 @@ class PostsController extends AppController
 
     public function ajax_get_edit_comment_form($id_prefix = null)
     {
-        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $comment_id = Hash::get($this->request->params, 'named.comment_id');
         $result = [
             'error' => false,
             'msg'   => null,
@@ -852,7 +853,7 @@ class PostsController extends AppController
 
     public function ajax_get_edit_post_form()
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $result = [
             'error' => false,
             'msg'   => null,
@@ -874,12 +875,12 @@ class PostsController extends AppController
 
     public function ajax_post_like()
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $res = $this->Post->PostLike->changeLike($post_id);
         if ($res['is_liked']) {
             $post = $this->Post->findById($post_id);
-            $type = viaIsSet($post['Post']['type']);
+            $type = Hash::get($post, 'Post.type');
             $this->Mixpanel->trackLike($type);
         }
         return $this->_ajaxGetResponse($res);
@@ -887,7 +888,7 @@ class PostsController extends AppController
 
     public function ajax_comment_like()
     {
-        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $comment_id = Hash::get($this->request->params, 'named.comment_id');
         $this->_ajaxPreProcess();
         $res = $this->Post->Comment->CommentLike->changeLike($comment_id);
         return $this->_ajaxGetResponse($res);
@@ -895,7 +896,7 @@ class PostsController extends AppController
 
     public function ajax_get_post_liked_users()
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $liked_users = $this->Post->PostLike->getLikedUsers($post_id);
         $this->set(compact('liked_users'));
@@ -910,7 +911,7 @@ class PostsController extends AppController
 
     public function ajax_get_post_red_users()
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $red_users = $this->Post->PostRead->getRedUsers($post_id);
         $this->set(compact('red_users'));
@@ -925,7 +926,7 @@ class PostsController extends AppController
 
     public function ajax_get_comment_liked_users()
     {
-        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $comment_id = Hash::get($this->request->params, 'named.comment_id');
         $this->_ajaxPreProcess();
         $liked_users = $this->Post->Comment->CommentLike->getLikedUsers($comment_id);
         $this->set(compact('liked_users'));
@@ -940,7 +941,7 @@ class PostsController extends AppController
 
     public function ajax_get_comment_red_users()
     {
-        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $comment_id = Hash::get($this->request->params, 'named.comment_id');
         $this->_ajaxPreProcess();
         $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
         $this->set(compact('red_users'));
@@ -955,8 +956,8 @@ class PostsController extends AppController
 
     public function ajax_get_message_red_users()
     {
-        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $comment_id = Hash::get($this->request->params, 'named.comment_id');
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $red_users = [];
         $model = null;
@@ -985,9 +986,9 @@ class PostsController extends AppController
             'error' => false,
             'msg'   => ""
         ];
-        $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
+        $this->Post->id = Hash::get($this->request->data, 'Comment.post_id');
         $post = $this->Post->findById($this->Post->id);
-        $type = viaIsSet($post['Post']['type']);
+        $type = Hash::get($post, 'Post.type');
         try {
             if (!$this->Post->exists()) {
                 throw new RuntimeException(__("This post was deleted."));
@@ -1002,7 +1003,7 @@ class PostsController extends AppController
             }
 
             // ogbをインサートデータに追加
-            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
+            $this->request->data['Comment'] = $this->_addOgpIndexes(Hash::get($this->request->data, 'Comment'),
                 $url_text);
 
             // コメントを追加
@@ -1077,10 +1078,15 @@ class PostsController extends AppController
     {
         $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-        $circle_id = $this->_getRequiredParam('circle_id');
+        $circle_id = Hash::get($this->request->params, "named.circle_id");
+        if (!$circle_id) {
+            $this->Pnotify->outError(__("Invalid screen transition."));
+            return $this->redirect($this->referer());
+        }
+
         $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
         $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
-            viaIsSet($this->request->params['named']['file_type']));
+            Hash::get($this->request->params, 'named.file_type'));
 
         $circle_file_list_base_url = Router::url(
             [
@@ -1161,7 +1167,7 @@ class PostsController extends AppController
         $feed_filter = null;
         $user_status = null;
         $circle_member_count = 0;
-        if ($circle_id = viaIsSet($params['circle_id'])) {
+        if ($circle_id = Hash::get($params, 'circle_id')) {
             $user_status = $this->_userCircleStatus($circle_id);
             $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
                 $circle_id);
@@ -1184,7 +1190,7 @@ class PostsController extends AppController
 
     public function ajax_get_share_circles_users_modal()
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         /** @noinspection PhpUndefinedMethodInspection */
         $circles = $this->Post->PostShareCircle->getShareCirclesAndMembers($post_id);
@@ -1206,7 +1212,7 @@ class PostsController extends AppController
      */
     public function ajax_get_share_message_modal()
     {
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         /** @noinspection PhpUndefinedMethodInspection */
         $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
@@ -1353,7 +1359,7 @@ class PostsController extends AppController
      */
     public function _pushCommentToPost($postId, $date)
     {
-        $socketId = viaIsSet($this->request->data['socket_id']);
+        $socketId = Hash::get($this->request->data, 'socket_id');
         $notifyId = Security::hash($date);
 
         // リクエストデータが正しくないケース

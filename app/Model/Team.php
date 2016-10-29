@@ -19,7 +19,6 @@ App::uses('AppModel', 'Model');
  * @property PostRead          $PostRead
  * @property Post              $Post
  * @property TeamMember        $TeamMember
- * @property Thread            $Thread
  * @property Evaluator         $Evaluator
  * @property EvaluationSetting $EvaluationSetting
  * @property Evaluation        $Evaluation
@@ -101,7 +100,7 @@ class Team extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => ['rule' => ['notEmpty'],],
+            'notBlank'  => ['rule' => ['notBlank'],],
         ],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'change_from'        => [
@@ -125,7 +124,7 @@ class Team extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'emails'             => [
-            'notEmpty'    => ['rule' => ['notEmpty'],],
+            'notBlank'    => ['rule' => ['notBlank'],],
             'emailsCheck' => [
                 'rule' => ['emailsCheck']
             ],
@@ -166,7 +165,6 @@ class Team extends AppModel
         'PostRead',
         'Post',
         'TeamMember',
-        'Thread',
         'Evaluator',
         'Evaluation',
         'EvaluateTerm',
@@ -229,9 +227,11 @@ class Team extends AppModel
             ],
             'CircleMember' => [
                 [
-                    'team_id'   => $this->id,
-                    'user_id'   => $uid,
-                    'admin_flg' => true,
+                    'team_id'               => $this->id,
+                    'user_id'               => $uid,
+                    'admin_flg'             => true,
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ]
             ]
         ];
@@ -295,7 +295,7 @@ class Team extends AppModel
             $this->TeamMember->User->Email->validate = [
                 'email' => [
                     'maxLength' => ['rule' => ['maxLength', 200]],
-                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
             ];
@@ -375,7 +375,7 @@ class Team extends AppModel
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
-        if (viaIsSet($post_data['Team']['change_from']) == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+        if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
             $this->EvaluateTerm->isStartedEvaluation($current_term_id)
         ) {
             return false;

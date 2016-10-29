@@ -15,42 +15,21 @@ class EvaluationTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.purpose',
+
         'app.evaluation',
         'app.team',
-        'app.badge',
         'app.user',
         'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
         'app.goal',
-        'app.purpose',
         'app.goal_category',
         'app.key_result',
         'app.action_result',
-        'app.collaborator',
-        'app.follower',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-        'app.oauth_token',
+        'app.goal_member',
         'app.team_member',
         'app.job_category',
         'app.member_type',
         'app.local_name',
-        'app.member_group',
-        'app.group',
         'app.evaluator',
-        'app.invite',
         'app.evaluate_term',
         'app.evaluate_score',
         'app.evaluation_setting'
@@ -610,7 +589,7 @@ class EvaluationTest extends GoalousTestCase
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty']
+            'notBlank'  => ['rule' => 'notBlank']
         ];
         $required = [
             'isString'  => [
@@ -643,7 +622,7 @@ class EvaluationTest extends GoalousTestCase
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty']
+            'notBlank'  => ['rule' => 'notBlank']
         ];
         $this->Evaluation->setNotAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], $required);
@@ -658,14 +637,14 @@ class EvaluationTest extends GoalousTestCase
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty']
+            'notBlank'  => ['rule' => 'notBlank']
         ];
         $required = [
             'isString'  => [
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
-            'notEmpty'  => ['rule' => 'notEmpty'],
+            'notBlank'  => ['rule' => 'notBlank'],
         ];
         $this->Evaluation->setNotAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], $required);
@@ -702,7 +681,7 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
 
         ];
         $required = [
@@ -733,7 +712,7 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
         ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
@@ -746,13 +725,13 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
         ];
         $required = [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty' => ['rule' => 'notEmpty'],
+            'notBlank' => ['rule' => 'notBlank'],
         ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
@@ -933,11 +912,11 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
         $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
 
-        $collabo = $this->Evaluation->Goal->Collaborator->find('all');
-        foreach ($collabo as $k => $v) {
-            $collabo[$k]['Collaborator']['valued_flg'] = Collaborator::STATUS_APPROVAL;
+        $goalMember = $this->Evaluation->Goal->GoalMember->find('all');
+        foreach ($goalMember as $k => $v) {
+            $goalMember[$k]['GoalMember']['is_target_evaluation'] = true;
         }
-        $this->Evaluation->Goal->Collaborator->saveAll($collabo);
+        $this->Evaluation->Goal->GoalMember->saveAll($goalMember);
         $this->Evaluation->Goal->id = 1;
         $this->Evaluation->Goal->saveField('start_date', $current_start);
         $this->Evaluation->Goal->saveField('end_date', $current_end);
@@ -1448,8 +1427,8 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->Evaluator->my_uid = 1;
         $this->Evaluation->Team->EvaluationSetting->current_team_id = 1;
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
-        $this->Evaluation->Goal->Collaborator->current_team_id = 1;
-        $this->Evaluation->Goal->Collaborator->my_uid = 1;
+        $this->Evaluation->Goal->GoalMember->current_team_id = 1;
+        $this->Evaluation->Goal->GoalMember->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);

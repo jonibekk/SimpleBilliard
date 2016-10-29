@@ -14,7 +14,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.purpose',
+
         'app.action_result',
         'app.cake_session',
         'app.evaluation',
@@ -47,7 +47,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         'app.post_share_user',
         'app.post_share_circle',
         'app.follower',
-        'app.collaborator',
+        'app.goal_member',
         'app.goal',
         'app.goal_category'
     );

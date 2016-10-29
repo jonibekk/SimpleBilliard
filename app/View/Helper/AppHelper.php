@@ -22,19 +22,25 @@ class AppHelper extends UrlCacheAppHelper
 {
     function needDisplayFooter()
     {
-        $controller_name = viaIsSet($this->request->params['controller']);
-        $action_name = viaIsSet($this->request->params['action']);
+        $controller_name = Hash::get($this->request->params, 'controller');
+        $action_name = Hash::get($this->request->params, 'action');
         $need_display_footer = true;
 
         switch ($controller_name) {
             case 'teams':
-                if($action_name === 'invite') $need_display_footer = false;
+                if ($action_name === 'invite') {
+                    $need_display_footer = false;
+                }
                 break;
             case 'posts':
-                if($action_name === 'message') $need_display_footer = false;
+                if ($action_name === 'message') {
+                    $need_display_footer = false;
+                }
                 break;
             case 'users':
-                if($action_name === 'register_with_invite') $need_display_footer = false;
+                if ($action_name === 'register_with_invite') {
+                    $need_display_footer = false;
+                }
                 break;
             case 'setup':
                 $need_display_footer = false;
@@ -70,12 +76,14 @@ class AppHelper extends UrlCacheAppHelper
     /**
      * ViewのHTMLコメント出力共通処理
      *
+     * @param bool $viewEnd
+     *
      * @return string
      */
     private function viewComment($viewEnd = false)
     {
         if (!in_array(ENV_NAME, ["dev", "local"])) {
-             return "";
+            return "";
         }
         $debugBackTrace = debug_backtrace();
         $viewPath = $debugBackTrace[1]["file"];

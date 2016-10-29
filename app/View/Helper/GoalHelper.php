@@ -1,5 +1,6 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
+App::uses('GoalMember', 'Model');
 
 /**
  * GoalHelper
@@ -19,20 +20,20 @@ class GoalHelper extends AppHelper
         ];
 
         //if coaching goal then, already following.
-        if (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+        if (Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             $option['disabled'] = "disabled";
             return $option;
         }
 
-        if (viaIsSet($goal['MyCollabo'])) {
+        if (Hash::get($goal, 'MyCollabo')) {
             $option['disabled'] = "disabled";
         }
 
-        if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+        if (empty($goal['MyFollow']) && !Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             return $option;
         }
 
-        if (!empty($goal['MyFollow']) && viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+        if (!empty($goal['MyFollow']) && Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             $option['disabled'] = "disabled";
             return $option;
         }
@@ -51,7 +52,7 @@ class GoalHelper extends AppHelper
             'text'  => __("Collaborate"),
         ];
 
-        if (!viaIsSet($goal['MyCollabo'])) {
+        if (!Hash::get($goal, 'MyCollabo')) {
             return $option;
         }
         $option['class'] = 'collabo-on';
@@ -61,25 +62,25 @@ class GoalHelper extends AppHelper
     }
 
     /**
-     * @param array $collaborator
+     * @param array $goalMember
      *
      * @return null
      */
-    function displayCollaboratorNameList($collaborator)
+    function displayGoalMemberNameList($goalMember)
     {
-        if (!is_array($collaborator) || empty($collaborator)) {
+        if (!is_array($goalMember) || empty($goalMember)) {
             return null;
         }
         $items = [];
         $i = 1;
-        foreach ($collaborator as $k => $v) {
+        foreach ($goalMember as $k => $v) {
             $items[] = h($v['User']['display_username']);
             if ($i >= 2) {
                 break;
             }
             $i++;
         }
-        $rest_count = count($collaborator) - 2;
+        $rest_count = count($goalMember) - 2;
         if ($rest_count > 0) {
             $items[] = __("Other %d members", $rest_count);
         }
@@ -99,7 +100,7 @@ class GoalHelper extends AppHelper
             return false;
         }
 
-        if (!isset($goal['Collaborator'])) {
+        if (!isset($goal['GoalMember'])) {
             return false;
         }
 
@@ -108,16 +109,42 @@ class GoalHelper extends AppHelper
             return true;
         }
 
-        $collabos = Hash::extract($goal['Collaborator'], '{n}.user_id');
+        $collabos = Hash::extract($goal['GoalMember'], '{n}.user_id');
         if (!$collabos) {
             return false;
         }
-        // Case of coaching user is goal collaborator
+        // Case of coaching user is goal goal_member
         if (array_intersect($collabos, $my_coaching_users)) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param array $goalMember
+     *
+     * @return string
+     */
+    function displayApprovalStatus($goalMember)
+    {
+        $waiting = __("Waiting for approval");
+        $out_of_evaluation = __("Out of Evaluation");
+        $in_evaluation = __("In Evaluation");
+
+        if (!($goalMember['is_wish_approval'] && $goalMember['is_approval_enabled'])) {
+            return '';
+        }
+
+        if ($goalMember['approval_status'] == GoalMember::APPROVAL_STATUS_NEW || $goalMember['approval_status'] == GoalMember::APPROVAL_STATUS_REAPPLICATION) {
+            return $waiting;
+        }
+
+        if ($goalMember['is_target_evaluation']) {
+            return $in_evaluation;
+        }
+
+        return $out_of_evaluation;
     }
 
 }

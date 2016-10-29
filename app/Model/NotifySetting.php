@@ -23,9 +23,10 @@ class NotifySetting extends AppModel
     const TYPE_MY_GOAL_TARGET_FOR_EVALUATION = 10;
     const TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE = 11;
     const TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION = 12;
-    const TYPE_MY_MEMBER_CREATE_GOAL = 13;
-    const TYPE_MY_MEMBER_COLLABORATE_GOAL = 14;
-    const TYPE_MY_MEMBER_CHANGE_GOAL = 15;
+    const TYPE_COACHEE_CREATE_GOAL = 13;
+    const TYPE_COACHEE_COLLABORATE_GOAL = 14;
+    const TYPE_COACHEE_CHANGE_GOAL = 15;
+    const TYPE_COACHEE_CHANGE_ROLE = 27;
     const TYPE_EVALUATION_START = 16;
     const TYPE_EVALUATION_FREEZE = 17;
     const TYPE_EVALUATION_START_CAN_ONESELF = 18;
@@ -37,6 +38,8 @@ class NotifySetting extends AppModel
     const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
     const TYPE_FEED_MESSAGE = 25;
     const TYPE_SETUP_GUIDE = 26;
+    const TYPE_COACHEE_WITHDRAW_APPROVAL = 28;
+    const TYPE_APPROVAL_COMMENT = 29;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
@@ -123,21 +126,28 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_MY_MEMBER_CREATE_GOAL                 => [
+        self::TYPE_COACHEE_CREATE_GOAL                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all'],
         ],
-        self::TYPE_MY_MEMBER_COLLABORATE_GOAL            => [
+        self::TYPE_COACHEE_COLLABORATE_GOAL              => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_collaborate_goal',
             'icon_class'      => 'fa-flag',
             'groups'          => ['all'],
         ],
-        self::TYPE_MY_MEMBER_CHANGE_GOAL                 => [
+        self::TYPE_COACHEE_CHANGE_ROLE                   => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_collaborate_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all'],
+        ],
+        self::TYPE_COACHEE_CHANGE_GOAL                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_change_goal',
@@ -220,6 +230,21 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'setup_guide',
             'icon_class'      => 'fa-book',
             'groups'          => ['all'],
+        ],
+        self::TYPE_COACHEE_WITHDRAW_APPROVAL             => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            //TODO 現在、この通知用のカラムが存在しないため、ゴール作成の通知と同じカラム名にしておく。通知設定を細分化しなければ新たに用意する必要なし
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_APPROVAL_COMMENT             => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-comment-o',
+            'groups'          => ['all', 'primary'],
         ]
     ];
 
@@ -649,7 +674,7 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-            case self::TYPE_MY_MEMBER_CREATE_GOAL:
+            case self::TYPE_COACHEE_CREATE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 新しく作成したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
@@ -665,7 +690,7 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-            case self::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+            case self::TYPE_COACHEE_COLLABORATE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
@@ -681,7 +706,23 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-            case self::TYPE_MY_MEMBER_CHANGE_GOAL:
+            case self::TYPE_COACHEE_CHANGE_ROLE:
+                // この通知で必要なオプション値
+                //   - goal_id: コラボしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the role with <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the role with <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
+                }
+                break;
+            case self::TYPE_COACHEE_CHANGE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を修正したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
@@ -693,6 +734,22 @@ class NotifySetting extends AppModel
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has updated <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
+                }
+                break;
+            case self::TYPE_COACHEE_WITHDRAW_APPROVAL:
+                // この通知で必要なオプション値
+                //   - goal_id: 評価対象にしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has withdrawn <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has withdrawn <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
                         h($goal['Goal']['name']));
                 }
@@ -781,6 +838,20 @@ class NotifySetting extends AppModel
                     $title = __('<span class="notify-card-head-target">%1$s%2$s</span>',
                         h($user_text),
                         ($count_num > 0) ? h(__(" +%s", $count_num)) : null);
+                }
+                break;
+            case self::TYPE_APPROVAL_COMMENT:
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
                 }
                 break;
         }

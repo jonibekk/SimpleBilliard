@@ -6,7 +6,7 @@
  * Date: 5/23/14
  * Time: 7:41 PM
  */
-class TwoFaComponent extends Object
+class TwoFaComponent extends CakeObject
 {
 
     public $name = "TwoFa";

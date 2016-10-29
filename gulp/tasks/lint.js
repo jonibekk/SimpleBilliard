@@ -22,22 +22,15 @@ gulp.task('js:eslint', () => {
     .pipe(duration('js:eslint'))
 })
 
-gulp.task('react_setup:eslint', () => {
-  return gulp.src(config.react_setup.src)
-    .pipe(plumber())
-    .pipe(eslint({ useEslintrc: true }))
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-    .pipe(duration('react_setup:eslint'))
-})
-
-gulp.task('react_signup:eslint', () => {
-  return gulp.src(config.react_signup.src)
-    .pipe(plumber())
-    .pipe(eslint({ useEslintrc: true }))
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-    .pipe(duration('react_signup:eslint'))
+config.react_apps.map((app_name) => {
+  gulp.task(`${app_name}:eslint`, () => {
+    return gulp.src(config[app_name].src)
+      .pipe(plumber())
+      .pipe(eslint({ useEslintrc: true }))
+      .pipe(eslint.format())
+      .pipe(eslint.failAfterError())
+      .pipe(duration(`${app_name}:eslint`))
+  })
 })
 
 gulp.task('css:lesshint', function() {

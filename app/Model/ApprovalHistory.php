@@ -4,17 +4,18 @@ App::uses('AppModel', 'Model');
 /**
  * ApprovalHistory Model
  *
- * @property Collaborator $Collaborator
- * @property User         $User
+ * @property GoalMember $GoalMember
+ * @property User       $User
  */
 class ApprovalHistory extends AppModel
 {
 
-    const ACTION_STATUS_NO_ACTION = 0;
-    const ACTION_STATUS_ONLY_COMMENT = 1;
-    const ACTION_STATUS_EVALUABLE = 2;
-    const ACTION_STATUS_NOT_EVALUABLE = 3;
-    const ACTION_STATUS_REQUEST_MODIFY = 4;
+    const STATUS_IS_CLEAR_NO_SELECT = 0;
+    const STATUS_IS_CLEAR = 1;
+    const STATUS_IS_NOT_CLEAR = 2;
+    const STATUS_IS_IMPORTANT_NO_SELECT = 0;
+    const STATUS_IS_IMPORTANT = 1;
+    const STATUS_IS_NOT_IMPORTANT = 2;
 
     /**
      * Validation rules
@@ -22,19 +23,29 @@ class ApprovalHistory extends AppModel
      * @var array
      */
     public $validate = [
-        'action_status' => [
+        'action_status'           => [
             'numeric' => [
-                'rule' => ['numeric'],
+                'rule' => ['range', -1, 4], // 0, 1, 2,3のみ許可
             ],
         ],
-        'comment'       => [
+        'select_clear_status'     => [
+            'numeric' => [
+                'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
+            ],
+        ],
+        'select_important_status' => [
+            'numeric' => [
+                'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
+            ],
+        ],
+        'comment'                 => [
             'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ],
-        'del_flg'       => [
+        'del_flg'                 => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -46,38 +57,74 @@ class ApprovalHistory extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Collaborator',
+        'GoalMember',
         'User',
     ];
 
-    function add($collaborator_id, $user_id, $action_status = 0, $comment = '')
+    /**
+     * 認定ヒストリー保存
+     *
+     * @param array $saveData
+     */
+    function add($saveData)
     {
-        if ($action_status === self::ACTION_STATUS_NO_ACTION && empty($comment) === true) {
+        $this->set($saveData['ApprovalHistory']);
+        if (!$this->validates()) {
             return false;
         }
 
-        $param = [
-            'collaborator_id' => $collaborator_id,
-            'user_id'         => $user_id,
-            'action_status'   => $action_status,
-            'comment'         => $comment,
-        ];
-
-        return $this->save($param);
+        return $this->save($saveData);
     }
 
-    /*
-    function getHistory ($collaborator_id) {
+    function findByGoalMemberId($goalMemberId)
+    {
         $options = [
             'conditions' => [
-                'collaborator_id' => $collaborator_id,
-            ],
-            'fields'     => [
-                'id', 'user_id', 'comment', 'created'
+                'goal_member_id' => $goalMemberId,
             ],
         ];
         $res = $this->find('all', $options);
         return $res;
     }
-    */
+
+    /**
+     * 認定IDからユーザー情報とセットで認定情報を取得する
+     *
+     * @param  $id
+     *
+     * @return array|null
+     */
+    function findByIdWithUser($id)
+    {
+        if (!$id) {
+            return null;
+        }
+
+        $options = [
+            'conditions' => [
+                'ApprovalHistory.id' => $id,
+            ],
+            'fields' => [
+                'ApprovalHistory.id',
+                'ApprovalHistory.goal_member_id',
+                'ApprovalHistory.user_id',
+                'ApprovalHistory.comment',
+                'ApprovalHistory.select_clear_status',
+                'ApprovalHistory.select_important_status'
+            ],
+            'contain' => [
+                'User'   => [
+                    'fields' => $this->User->profileFields
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if(!$res) {
+            return null;
+        }
+
+        $res['ApprovalHistory']['User'] = Hash::get($res, 'User');
+        unset($res['User']);
+        return Hash::get($res, 'ApprovalHistory');
+    }
 }

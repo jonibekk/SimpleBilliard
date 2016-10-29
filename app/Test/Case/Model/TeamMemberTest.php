@@ -306,7 +306,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->saveNewMembersFromCsv($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -328,7 +328,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[] = $this->getEmptyRowOnCsv();
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -348,7 +348,7 @@ class TeamMemberTest extends GoalousTestCase
         unset($csv_data[1][0]);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -366,7 +366,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[] = $this->TeamMember->_getCsvHeading();
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -385,7 +385,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv();
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -405,7 +405,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1][0] = 'aaa';
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -424,7 +424,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[] = $this->getEmptyRowOnCsv();
         $csv_data[1][0] = 'aaa@aaa.com';
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -445,7 +445,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1][1] = 'aaa';
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -466,7 +466,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -487,7 +487,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -508,7 +508,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -529,7 +529,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -550,7 +550,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -571,7 +571,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -592,7 +592,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -613,7 +613,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -646,7 +646,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -680,7 +680,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -717,7 +717,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -754,7 +754,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -791,7 +791,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -828,7 +828,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -872,7 +872,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -916,7 +916,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -961,7 +961,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1013,7 +1013,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1065,7 +1065,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1117,7 +1117,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1156,7 +1156,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1185,7 +1185,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1225,7 +1225,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1253,7 +1253,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1336,7 +1336,7 @@ class TeamMemberTest extends GoalousTestCase
             'rater7',
         ];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1419,7 +1419,7 @@ class TeamMemberTest extends GoalousTestCase
             'rater7',
         ];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1441,7 +1441,7 @@ class TeamMemberTest extends GoalousTestCase
             ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1469,7 +1469,7 @@ class TeamMemberTest extends GoalousTestCase
         unset($csv_data[0]['email']);
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1497,7 +1497,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[0]['email'] = 'test';
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1524,7 +1524,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1550,7 +1550,7 @@ class TeamMemberTest extends GoalousTestCase
             ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1576,7 +1576,7 @@ class TeamMemberTest extends GoalousTestCase
             ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1603,7 +1603,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1630,7 +1630,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1657,7 +1657,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1684,7 +1684,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1711,7 +1711,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1738,7 +1738,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1765,7 +1765,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1792,7 +1792,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1819,7 +1819,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1846,7 +1846,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1890,7 +1890,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1936,7 +1936,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -1982,7 +1982,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2028,7 +2028,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2074,7 +2074,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2120,7 +2120,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2165,7 +2165,7 @@ class TeamMemberTest extends GoalousTestCase
             ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2211,7 +2211,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2258,7 +2258,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2279,7 +2279,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(33), ['member_no' => 'test']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2301,7 +2301,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(33), ['member_no' => 'test']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2324,7 +2324,7 @@ class TeamMemberTest extends GoalousTestCase
             ['member_no' => 'test', 'total.final.score' => 'aaaaa']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2348,7 +2348,7 @@ class TeamMemberTest extends GoalousTestCase
             ['member_no' => 'member_1', 'total.final.score' => 'aaaaa']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2389,7 +2389,7 @@ class TeamMemberTest extends GoalousTestCase
             ['member_no' => 'member_1', 'total.final.score' => 'A']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
-        if (viaIsSet($actual['error_msg'])) {
+        if (Hash::get($actual, 'error_msg')) {
             unset($actual['error_msg']);
         }
         $excepted = [
@@ -2518,7 +2518,8 @@ class TeamMemberTest extends GoalousTestCase
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
-        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $this->TeamMember->current_team_id = $team_id;
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id);
         $this->assertTrue($flg);
     }
 
@@ -2533,8 +2534,9 @@ class TeamMemberTest extends GoalousTestCase
             'active_flg'            => 0,
             'evaluation_enable_flg' => 1
         ];
+        $this->TeamMember->current_team_id = $team_id;
         $this->TeamMember->save($params);
-        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id);
         $this->assertFalse($flg);
     }
 
@@ -2549,8 +2551,9 @@ class TeamMemberTest extends GoalousTestCase
             'active_flg'            => 1,
             'evaluation_enable_flg' => 0
         ];
+        $this->TeamMember->current_team_id = $team_id;
         $this->TeamMember->save($params);
-        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id);
         $this->assertFalse($flg);
     }
 

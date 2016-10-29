@@ -138,7 +138,10 @@ class TeamsController extends AppController
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
-        $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
+        $goal_categories = [
+            'GoalCategory' => Hash::extract($this->Goal->GoalCategory->getCategories(), '{n}.GoalCategory')
+        ];
+
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
@@ -158,20 +161,20 @@ class TeamsController extends AppController
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
         $current_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($current_term_id);
         $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
-        $current_term_start_date = viaIsSet($current_term['start_date']);
-        $current_term_end_date = viaIsSet($current_term['end_date']) - 1;
-        $current_term_timezone = viaIsSet($current_term['timezone']);
+        $current_term_start_date = Hash::get($current_term, 'start_date');
+        $current_term_end_date = Hash::get($current_term, 'end_date') - 1;
+        $current_term_timezone = Hash::get($current_term, 'timezone');
 
         $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
         $previous_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($previous_term_id);
         $previous_term = $this->Team->EvaluateTerm->getPreviousTermData();
-        $previous_term_start_date = viaIsSet($previous_term['start_date']);
-        $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
-        $previous_term_timezone = viaIsSet($previous_term['timezone']);
+        $previous_term_start_date = Hash::get($previous_term, 'start_date');
+        $previous_term_end_date = Hash::get($previous_term, 'end_date') - 1;
+        $previous_term_timezone = Hash::get($previous_term, 'timezone');
         $next_term = $this->Team->EvaluateTerm->getNextTermData();
-        $next_term_start_date = viaIsSet($next_term['start_date']);
-        $next_term_end_date = viaIsSet($next_term['end_date']) - 1;
-        $next_term_timezone = viaIsSet($next_term['timezone']);
+        $next_term_start_date = Hash::get($next_term, 'start_date');
+        $next_term_end_date = Hash::get($next_term, 'end_date') - 1;
+        $next_term_timezone = Hash::get($next_term, 'timezone');
         //タイムゾーン
         $timezones = $this->Timezone->getTimezones();
 
@@ -268,7 +271,7 @@ class TeamsController extends AppController
 
     function to_inactive_score()
     {
-        $id = viaIsSet($this->request->params['named']['team_id']);
+        $id = Hash::get($this->request->params, 'named.team_id');
         $this->request->allowMethod(['post']);
         $this->Team->Evaluation->EvaluateScore->setToInactive($id);
         $this->Pnotify->outSuccess(__("Deleted score definition."));
@@ -277,7 +280,7 @@ class TeamsController extends AppController
 
     function ajax_get_confirm_inactive_score_modal()
     {
-        $id = viaIsSet($this->request->params['named']['team_id']);
+        $id = Hash::get($this->request->params, 'named.team_id');
         $this->_ajaxPreProcess();
         $this->set(compact('id'));
         $response = $this->render('Team/confirm_to_inactive_score_modal');
@@ -288,7 +291,7 @@ class TeamsController extends AppController
     function ajax_get_score_elm()
     {
         $this->_ajaxPreProcess();
-        if (viaIsSet($this->request->params['named']['index'])) {
+        if (Hash::get($this->request->params, 'named.index')) {
             $this->set(['index' => $this->request->params['named']['index']]);
         }
         $response = $this->render('Team/eval_score_form_elm');
@@ -298,7 +301,7 @@ class TeamsController extends AppController
 
     function ajax_get_confirm_inactive_goal_category_modal()
     {
-        $id = viaIsSet($this->request->params['named']['team_id']);
+        $id = Hash::get($this->request->params, 'named.team_id');
         $this->_ajaxPreProcess();
         $this->set(compact('id'));
         $response = $this->render('Team/confirm_to_inactive_goal_category_modal');
@@ -309,7 +312,7 @@ class TeamsController extends AppController
     function ajax_get_goal_category_elm()
     {
         $this->_ajaxPreProcess();
-        if (viaIsSet($this->request->params['named']['index'])) {
+        if (Hash::get($this->request->params, 'named.index')) {
             $this->set(['index' => $this->request->params['named']['index']]);
         }
         $response = $this->render('Team/goal_category_form_elm');
@@ -319,7 +322,7 @@ class TeamsController extends AppController
 
     function to_inactive_goal_category()
     {
-        $id = viaIsSet($this->request->params['named']['team_id']);
+        $id = Hash::get($this->request->params, 'named.team_id');
         $this->request->allowMethod(['post']);
         $this->Goal->GoalCategory->setToInactive($id);
         $this->Pnotify->outSuccess(__("Deleted goal category."));
@@ -408,7 +411,7 @@ class TeamsController extends AppController
     public function invite()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->set('with_header_menu',false);
+        $this->set('with_header_menu', false);
 
         $from_setting = false;
         if (strstr($this->referer(), "/settings")) {
@@ -605,7 +608,7 @@ class TeamsController extends AppController
 
     function ajax_upload_final_evaluations_csv()
     {
-        $evaluate_term_id = viaIsSet($this->request->params['named']['evaluate_term_id']);
+        $evaluate_term_id = Hash::get($this->request->params, 'named.evaluate_term_id');
         $this->request->allowMethod('post');
         $result = [
             'error' => false,
@@ -640,7 +643,7 @@ class TeamsController extends AppController
 
     function download_final_evaluations_csv()
     {
-        $evaluate_term_id = viaIsSet($this->request->params['named']['evaluate_term_id']);
+        $evaluate_term_id = Hash::get($this->request->params, 'named.evaluate_term_id');
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         $this->layout = false;
@@ -656,7 +659,7 @@ class TeamsController extends AppController
 
     public function ajax_switch_team()
     {
-        $team_id = viaIsSet($this->request->params['named']['team_id']);
+        $team_id = Hash::get($this->request->params, 'named.team_id');
         $this->layout = 'ajax';
         Configure::write('debug', 0);
         $redirect_url = Router::url("/", true);
@@ -922,7 +925,7 @@ class TeamsController extends AppController
         $invite_data = $this->Team->Invite->findById($invite_id);
 
         // if already joined throw error, already exists
-        if ($invite_data['Invite']['email_verified'] ) {
+        if ($invite_data['Invite']['email_verified']) {
             $error_msg = (__("Error, this user already exists."));
             $res['title'] = $error_msg;
             $res['error'] = true;
@@ -1027,7 +1030,7 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        if (!$team_vision_id = viaIsSet($this->request->params['named']['team_vision_id'])) {
+        if (!$team_vision_id = Hash::get($this->request->params, 'named.team_vision_id')) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
@@ -1084,7 +1087,7 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        if (!$group_vision_id = viaIsSet($this->request->params['named']['group_vision_id'])) {
+        if (!$group_vision_id = Hash::get($this->request->params, 'named.group_vision_id')) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
@@ -1128,7 +1131,7 @@ class TeamsController extends AppController
             $this->User->Email->validate = [
                 'email' => [
                     'maxLength' => ['rule' => ['maxLength', 200]],
-                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
             ];

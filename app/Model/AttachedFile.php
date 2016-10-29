@@ -165,7 +165,7 @@ class AttachedFile extends AppModel
      */
     public function preUploadFile($postData)
     {
-        if (!$file_info = viaIsSet($postData['file'])) {
+        if (!$file_info = Hash::get($postData, 'file')) {
             return false;
         }
         /** @var GlRedis $Redis */

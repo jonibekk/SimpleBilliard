@@ -21,20 +21,18 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
+<?php
+$isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
+?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("Update Key Result") ?></h4>
+            <h4 class="modal-title"><?= $isTkr ? __("Update Top Key Result") : __("Update Key Result") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
-                </li>
-                <li>
-                    <i class="fa fa-bullseye"></i>
-                    <?= h($goal['Goal']['target_value']) ?>
-                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
@@ -66,12 +64,12 @@
         <div class="modal-body modal-circle-body">
             <div class="aaa">
                 <div class="row">
-                    <?=
-                    $this->Form->input('KeyResult.name',
+                    <?
+                    $nameLabel = $isTkr ? __("Top Key Result name") : __("KR name");
+                    echo $this->Form->input('KeyResult.name',
                         [
                             'before'                       => '<div class="set-goal">' .
-                                '<h5 class="modal-key-result-headings">' . __(
-                                    "KR name") . '<span class="modal-key-result-headings-description">' . __(
+                                '<h5 class="modal-key-result-headings">' . $nameLabel . '<span class="modal-key-result-headings-description">' . __(
                                     "What is set as an indicator of achievement?") . '</span></label></div>',
                             'label'                        => false,
                             'placeholder'                  => __("Write in details"),
@@ -143,6 +141,23 @@
                                         'data-bv-numeric-message'      => __("Please enter a number."),
                                     ]) ?>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <h5 class="modal-key-result-headings"><?= __("Description") ?><span
+                                class="modal-key-result-headings-description"><?= __("") ?></span></h5>
+                    </div>
+                    <div class=" goal-set-input">
+                        <div>
+                            <?=
+                            $this->Form->input('KeyResult.description',
+                                [
+                                    'label'                        => false,
+                                    'placeholder'                  => __("Optional"),
+                                    'rows'                         => 3,
+                                ]) ?>
                         </div>
                     </div>
                 </div>
@@ -224,26 +239,38 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <?=
-                $this->Form->input('priority', [
-                    'before'                   => '<h5 class="modal-key-result-headings">' . __(
-                            "Weight") . '<span class="modal-key-result-headings-description">' . __(
-                            "Weight of Key Result for the Goal") . '</span></h5>',
-                    'label'                    => false,
-                    'type'                     => 'select',
-                    'default'                  => 1,
-                    'required'                 => true,
-                    "data-bv-notempty-message" => __("Input is required."),
-                    'style'                    => 'width:170px',
-                    'options'                  => $kr_priority_list,
-                    'wrapInput'                => 'modal-edit-kr-set-importance-wrap'
-                ]) ?>
-            </div>
+            <?php if(!$isTkr): ?>
+                <div class="row">
+                    <?=
+                    $this->Form->input('priority', [
+                        'before'                   => '<h5 class="modal-key-result-headings">' . __(
+                                "Weight") . '<span class="modal-key-result-headings-description">' . __(
+                                "Weight of Key Result for the Goal") . '</span></h5>',
+                        'label'                    => false,
+                        'type'                     => 'select',
+                        'default'                  => 1,
+                        'required'                 => true,
+                        "data-bv-notempty-message" => __("Input is required."),
+                        'style'                    => 'width:170px',
+                        'options'                  => $kr_priority_list,
+                        'wrapInput'                => 'modal-edit-kr-set-importance-wrap'
+                    ]) ?>
+                </div>
+            <?php endif; ?>
         </div>
         <div class="modal-footer">
+            <?php
+            $button_value = __("Update Key Result");
+            if($isTkr) {
+                if($is_approvable) {
+                    $button_value = __("Save & Reapply");
+                } else {
+                    $button_value = __("Update Top Key Result");
+                }
+            }
+            ?>
             <?=
-            $this->Form->submit(__("Update Key Result"),
+            $this->Form->submit($button_value,
                 ['class' => 'btn btn-primary', 'div' => false]) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>

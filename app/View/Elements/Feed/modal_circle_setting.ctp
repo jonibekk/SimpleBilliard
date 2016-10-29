@@ -1,9 +1,10 @@
 <?php
 /**
- * @var $circle_member
+ * @var                    $circle_member
+ * @var CodeCompletionView $this
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -28,26 +29,27 @@
         ]); ?>
         <?= $this->Form->hidden('circle_id', ['value' => $circle_member['CircleMember']['circle_id']]); ?>
         <div class="modal-body">
-            <div class="row borderBottom">
-                <div class="col col-xxs-12 mpTB0">
-                    <div class="comment-body modal-comment">
-                        <div class="pull-right">
-                            <?= $this->Form->input("show_for_all_feed_flg",
-                                [
-                                    'label'   => false,
-                                    'div'     => false,
-                                    'type'    => 'checkbox',
-                                    'class'   => 'bt-switch',
-                                    'checked' => $circle_member['CircleMember']['show_for_all_feed_flg'],
-                                ]) ?>
-                        </div>
-
-                        <div class="ptb_10px font_bold">
-                            <?= __("Display on Home feed") ?>
+            <?php if ($this->Expt->is('DisappearSettingShowAllFeed') === false): ?>
+                <div class="row borderBottom">
+                    <div class="col col-xxs-12 mpTB0">
+                        <div class="comment-body modal-comment">
+                            <div class="pull-right">
+                                <?= $this->Form->input("show_for_all_feed_flg",
+                                    [
+                                        'label'   => false,
+                                        'div'     => false,
+                                        'type'    => 'checkbox',
+                                        'class'   => 'bt-switch',
+                                        'checked' => $circle_member['CircleMember']['show_for_all_feed_flg'],
+                                    ]) ?>
+                            </div>
+                            <div class="ptb_10px font_bold">
+                                <?= __("Display on Home feed") ?>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <? endif; ?>
             <div class="row borderBottom">
                 <div class="col col-xxs-12 mpTB0">
                     <div class="comment-body modal-comment">
@@ -74,4 +76,4 @@
 
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

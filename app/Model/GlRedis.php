@@ -421,7 +421,7 @@ class GlRedis extends AppModel
      */
     private function generateId()
     {
-        return String::uuid();
+        return CakeText::uuid();
     }
 
     /**
@@ -455,7 +455,7 @@ class GlRedis extends AppModel
             $notify_id = $post_id;
         }
         if ($type != NotifySetting::TYPE_FEED_MESSAGE) {
-            $url = array_merge($url, ['notify_id' => $notify_id]);
+            $url = array_merge($url, ['?' => ['notify_id' => $notify_id]]);
         }
         $data = [
             'id'            => $notify_id,

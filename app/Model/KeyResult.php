@@ -8,6 +8,7 @@ App::uses('AppModel', 'Model');
  * @property Goal         $Goal
  * @property ActionResult $ActionResult
  * @property Post         $Post
+ * @method findByGoalId($goalId)
  */
 class KeyResult extends AppModel
 {
@@ -26,6 +27,21 @@ class KeyResult extends AppModel
         self::UNIT_DOLLAR  => "",
         self::UNIT_NUMBER  => "",
         self::UNIT_BINARY  => "",
+    ];
+
+    /**
+     * 表示上先頭に持ってくる単位
+     */
+    static public $UNIT_HEAD = [
+        self::UNIT_YEN,
+        self::UNIT_DOLLAR
+    ];
+
+    /**
+     * 表示上末尾に持ってくる単位
+     */
+    static public $UNIT_TAIL = [
+        self::UNIT_PERCENT,
     ];
 
     /**
@@ -75,8 +91,9 @@ class KeyResult extends AppModel
     public $validate = [
         'name'         => [
             'maxLength' => ['rule' => ['maxLength', 200]],
-            'notEmpty'  => [
-                'rule' => 'notEmpty',
+            'notBlank'  => [
+                'required' => 'create',
+                'rule'     => 'notBlank',
             ],
         ],
         'del_flg'      => [
@@ -90,33 +107,49 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'required' => 'create',
+                'rule'     => 'notBlank',
             ],
         ],
         'start_value'  => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true
+            ],
         ],
         'target_value' => [
-            'maxLength' => ['rule' => ['maxLength', 15]],
-            'numeric'   => ['rule' => ['numeric']]
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true
+            ],
         ],
     ];
 
     public $post_validate = [
         'start_date' => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
         ],
         'end_date'   => [
-            'isString' => [
-                'rule'    => 'isString',
-                'message' => 'Invalid Submission',
-            ]
-        ]
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
     ];
 
     /**
@@ -139,6 +172,27 @@ class KeyResult extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
         $this->_setPriorityName();
+    }
+
+    /**
+     * 単位値必須チェック
+     * 単位が無い場合は値入力が無いのでチェックしない
+     *
+     * @param      $val
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function requiredCaseExistUnit($val)
+    {
+        $val = array_shift($val);
+        if ($this->data['KeyResult']['value_unit'] == self::UNIT_BINARY) {
+            return true;
+        }
+        if ($val === "") {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -297,6 +351,17 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getTkr($goalId)
+    {
+        $res = $this->find('first', [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'tkr_flg' => true,
+            ],
+        ]);
+        return $res;
+    }
+
     /**
      * 未完了のキーリザルト数を返す
      *
@@ -334,7 +399,7 @@ class KeyResult extends AppModel
         if (empty($goal)) {
             return false;
         }
-        return $this->Goal->Collaborator->isCollaborated($goal['Goal']['id']);
+        return $this->Goal->GoalMember->isCollaborated($goal['Goal']['id']);
     }
 
     function saveEdit($data)
@@ -456,5 +521,52 @@ class KeyResult extends AppModel
         }
         return $kr['KeyResult']['completed'] ? true : false;
     }
+
+    /**
+     * - バリデーションルールを切り替える
+     * - 必須チェックを外す(オプション)
+     * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
+     *
+     * @param      $data
+     * @param bool $detachRequired
+     *
+     * @return array|true
+     */
+    function validateKrPOST($data, $detachRequired = false)
+    {
+        $validationBackup = $this->validate;
+        $this->validate = am($this->validate, $this->post_validate);
+        if ($detachRequired) {
+            $this->validate = Hash::remove($this->validate, '{s}.{s}.required');
+        }
+        $this->set($data);
+        if ($this->validates()) {
+            $this->validate = $validationBackup;
+            return true;
+        }
+        return $this->validationErrors;
+    }
+
+    /**
+     * ゴールIDごとの件数取得
+     *
+     * @param $goalIds
+     *
+     * @return bool
+     */
+    public function countEachGoalId($goalIds)
+    {
+        $ret = $this->find('all', [
+            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'conditions' => ['goal_id' => $goalIds],
+            'group' => ['goal_id'],
+        ]);
+
+        // 0件のゴールも配列要素を作り、値を0として返す
+        $defaultCountEachGoalId = array_fill_keys($goalIds, 0);
+        $ret = Hash::combine($ret, '{n}.KeyResult.goal_id', '{n}.0.cnt');
+        return $ret + $defaultCountEachGoalId;
+    }
+
 
 }

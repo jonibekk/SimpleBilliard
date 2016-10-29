@@ -17,14 +17,16 @@
  * @var                       $item_created
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?= $this->element('Feed/feed_share_range_filter',
     compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
     if (isset($user_status)) {
-        if (viaIsSet($params['controller']) == 'posts' && (viaIsSet($params['action']) == 'feed' || viaIsSet($params['action']) == 'ajax_circle_feed') && ($user_status == 'joined' || $user_status == 'admin')) {
+        if (Hash::get($params, 'controller') == 'posts' && (Hash::get($params, 'action') == 'feed' || Hash::get($params,
+                    'action') == 'ajax_circle_feed') && ($user_status == 'joined' || $user_status == 'admin')
+        ) {
             echo $this->element("Feed/common_form");
         }
     } else {
@@ -115,4 +117,4 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php endif ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

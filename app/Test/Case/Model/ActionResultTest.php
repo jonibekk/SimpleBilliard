@@ -16,7 +16,7 @@ class ActionResultTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.purpose',
+
         'app.team',
         'app.user',
         'app.email',

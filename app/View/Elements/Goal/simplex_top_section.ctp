@@ -13,13 +13,13 @@
  * @var $is_coaching_goal
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="panel-body goal-detail-upper-panel">
     <div class="goal-detail-avatar-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
             [
-                'class' => 'goal-detail-avatar lazy',
+                'class'         => 'goal-detail-avatar lazy',
                 'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
                     ['style' => 'x_large']),
             ]
@@ -54,12 +54,7 @@
         </div>
         <?php if ($is_leader): ?>
             <?= $this->Html->link(__('Edit a goal'),
-                [
-                    'controller' => 'goals',
-                    'action'     => 'add',
-                    'goal_id'    => $goal['Goal']['id'],
-                    'mode'       => 3,
-                ],
+                '/goals/' . $goal['Goal']['id'] . '/edit',
                 [
                     'class' => 'btn-profile-edit'
                 ])
@@ -82,7 +77,7 @@
                     </a>
                 </div>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4">
-                    <a class="btn btn-white bd-circle_22px modal-ajax-get-collabo p_8px width100_per
+                    <a class="btn btn-white bd-circle_22px modal-ajax-get-collabo collaborate-button p_8px width100_per
                     <?= h($collabo_opt['class']) ?>"
                        data-toggle="modal"
                        data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
@@ -97,13 +92,10 @@
             </div>
         <?php endif ?>
     </div>
-    <p class="goal-detail-goal-name">
+    <p class="goal-detail-goal-name-top-section">
         <?= h($goal['Goal']['name']) ?>
     </p>
 
-    <p class="goal-detail-goal-purpose">
-        <?= h($goal['Purpose']['name']) ?>
-    </p>
 
 </div>
 <div class="goal-detail-tab-group">
@@ -174,4 +166,4 @@
         </p>
     </a>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

@@ -14,7 +14,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.purpose',
+
         'app.goal_category',
         'app.circle_member',
         'app.member_type',
@@ -25,7 +25,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         'app.goal',
         'app.key_result',
         'app.follower',
-        'app.collaborator',
+        'app.goal_member',
         'app.local_name',
         'app.cake_session',
         'app.team',

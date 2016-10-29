@@ -18,8 +18,6 @@ class CommentMentionTest extends GoalousTestCase
         'app.comment_mention',
         'app.post',
         'app.user',
-        'app.notify_setting',
-        'app.team'
     );
 
     /**

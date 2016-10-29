@@ -56,13 +56,13 @@ class GoalHelperTest extends GoalousTestCase
     }
 
     /**
-     * testDisplayCollaboratorNameList method
+     * testDisplayGoalMemberNameList method
      *
      * @return void
      */
-    public function testDisplayCollaboratorNameList()
+    public function testDisplayGoalMemberNameList()
     {
-        $this->markTestIncomplete('testDisplayCollaboratorNameList not implemented.');
+        $this->markTestIncomplete('testDisplayGoalMemberNameList not implemented.');
     }
 
 }

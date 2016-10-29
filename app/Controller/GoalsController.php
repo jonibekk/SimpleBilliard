@@ -1,6 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
+App::import('Service', 'GoalService');
+App::import('Service', 'KeyResultService');
+/** @noinspection PhpUndefinedClassInspection */
+App::import('Service', 'KeyResultService');
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * Goals Controller
@@ -20,179 +25,55 @@ class GoalsController extends AppController
      */
     public function index()
     {
-        $search_option = $this->_getSearchVal();
-        $search_url = $this->_getSearchUrl($search_option);
-        $search_options = $this->Goal->getSearchOptions();
-        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);
-        $goal_count = $this->Goal->countGoalRes($search_option);
         $this->_setViewValOnRightColumn();
-        $current_global_menu = "goal";
+    }
 
-        //アドミン権限チェック
-        $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
-        $is_admin = ($isExistAdminFlg) ? true : false;
+    public function create($step = null)
+    {
+        if ($step !== 'step1') {
+            throw new NotFoundException();
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
 
-        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
+        return $this->render("create");
+    }
 
-        $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
-            'search_url', 'goal_count', 'my_coaching_users'));
+    public function edit($id)
+    {
+        try {
+            $this->Goal->isPermittedAdmin($id);
+        } catch (RuntimeException$e) {
+            throw new NotFoundException();
+        }
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        if (!$GoalService->isGoalAfterCurrentTerm($id)) {
+            throw new NotFoundException();
+        }
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render("edit");
+    }
+
+    public function approval($type = null)
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        if (!in_array($type, ['list', 'detail'])) {
+            throw new NotFoundException();
+        }
+        return $this->render("approval");
     }
 
     /**
-     * ゴール作成
-     * URLパラメータでmodeを付ける
-     * mode なしは目標を決める,2はゴールを定める,3は情報を追加
-     *
-     * @return \CakeResponse
+     * 旧ゴール作成ぺージ
+     * 新ゴールぺージへリダイレクトさせる。およびどこから来たかログる。
      */
     public function add()
     {
-        $purpose_count = $this->Goal->Purpose->getMyPurposeCount();
-        $this->set(compact('purpose_count'));
-        $id = viaIsSet($this->request->params['named']['goal_id']);
-        $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
-        $this->layout = LAYOUT_ONE_COLUMN;
-        //編集権限を確認。もし権限がある場合はデータをセット
-        if ($id) {
-            $this->request->data['Goal']['id'] = $id;
-            try {
-                $this->Goal->isPermittedAdmin($id);
-                $this->Goal->isNotExistsEvaluation($id);
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage());
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
-        }
-
-        //新規作成以外のケース
-        $isNotNewAdd = (!$this->request->is('post') && !$this->request->is('put')) || empty($this->request->data);
-        if ($isNotNewAdd) {
-            // ゴールの編集
-            if ($id) {
-                $this->request->data = $this->Goal->getAddData($id);
-            } // 基準の登録
-            elseif ($purpose_id) {
-                $isNotOwner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
-                if ($isNotOwner) {
-                    $this->Pnotify->outError(__("You have no permission."));
-                    $this->redirect($this->referer());
-                }
-                $this->request->data = $this->Goal->Purpose->findById($purpose_id);
-            }
-            $this->_setGoalAddViewVals();
-            return $this->render();
-        }
-
-        // 新規作成時、モードの指定が無い場合(目的の保存のみ)
-        if (!isset($this->request->params['named']['mode'])) {
-            // 目的の保存実行
-            $isSavedSuccess = $this->Goal->Purpose->add($this->request->data);
-            // 成功
-            if ($isSavedSuccess) {
-                $this->Pnotify->outSuccess(__("Set a purpose."));
-                //「ゴールを定める」に進む
-                $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
-                $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
-                $this->redirect($url);
-            }
-            // 失敗
-            $this->Pnotify->outError(__("Failed to set a purpose."));
-            $this->redirect($this->referer());
-        }
-
-        // 新規作成時 or モードの指定がある場合
-        if ($this->Goal->add($this->request->data)) {
-            //edit goal notify
-            if ($id) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
-                //send notify to coach
-                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
-                    $this->my_uid, $id);
-                if ($my_collabo_status['Collaborator']['valued_flg'] == Collaborator::STATUS_MODIFY) {
-                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
-                }
-            }
-            $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
-                $this->Auth->user('id'));
-            if ($coach_id) {
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
-            }
-
-            switch ($this->request->params['named']['mode']) {
-                case 2:
-                    //case of create new one.
-                    if (!$id) {
-                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
-                            $this->Goal->getLastInsertID());
-                        $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
-                            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-                    } else {
-                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
-                    }
-                    $this->Pnotify->outSuccess(__("Saved a goal."));
-                    if ($coach_id) {
-                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
-                            'user_data');
-                    }
-                    //「情報を追加」に進む
-                    $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
-                    break;
-                case 3:
-                    //完了
-                    $this->Pnotify->outSuccess(__("Created a goal."));
-                    // pusherに通知
-                    $socketId = viaIsSet($this->request->data['socket_id']);
-                    $this->NotifyBiz->push($socketId, "all");
-                    //セットアップガイドステータスの更新
-                    $this->updateSetupStatusIfNotCompleted();
-                    // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
-                    // ただし重要度0のゴールであれば認定フラグは対象外にセットする
-                    foreach ($this->request->data['Collaborator'] as $val) {
-                        $valued_flg = 0;
-                        if ($val['priority'] === "0") {
-                            $valued_flg = 2;
-                        }
-                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $valued_flg);
-                    }
-
-                    // 来期ゴールを編集した場合は、マイページの来期ゴール絞り込みページへ遷移
-                    if ($this->Goal->getGoalTermData($id)['id'] == $this->Team->EvaluateTerm->getNextTermId()) {
-                        $this->redirect([
-                            'controller' => 'users',
-                            'action'     => 'view_goals',
-                            'user_id'    => $this->Auth->user('id'),
-                            'term_id'    => $this->Team->EvaluateTerm->getNextTermId(),
-                        ]);
-                    }
-
-                    // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
-                    if ($coach_id && $val['priority'] != "0"
-                    ) {
-                        $this->redirect("/goal_approval");
-                    }
-                    $this->redirect("/");
-                    break;
-            }
-        }
-
-        $this->Pnotify->outError(__("Failed to save a goal."));
-        $this->redirect($this->referer());
-    }
-
-    /**
-     * @param $goal_id
-     * @param $notify_type
-     */
-    function _sendNotifyToCoach($goal_id, $notify_type)
-    {
-        $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
-            $this->Session->read('current_team_id'));
-        if (!$coach_id) {
-            return;
-        }
-        $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
+        $this->log("■ Old Create Goal Page Access! referer URL: " . $this->referer());
+        return $this->redirect(['action' => 'create', 'step1']);
     }
 
     /**
@@ -227,57 +108,9 @@ class GoalsController extends AppController
         }
     }
 
-    /**
-     * delete method
-     *
-     * @return void
-     */
-    public function delete_purpose()
-    {
-        $purpose_id = $this->request->params['named']['purpose_id'];
-        try {
-            if (!$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
-                throw new RuntimeException(__("You have no permission."));
-            }
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
-        }
-        $this->request->allowMethod('post', 'delete');
-        $this->Goal->Purpose->id = $purpose_id;
-        $this->Goal->Purpose->delete();
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        $this->Pnotify->outSuccess(__("Deleted a goal."));
-        /** @noinspection PhpInconsistentReturnPointsInspection */
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
-    }
-
-    public function ajax_get_more_index_items()
-    {
-        $this->_ajaxPreProcess();
-        $search_option = $this->_getSearchVal();
-        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, $this->request->params, true);
-        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
-
-        $this->set(compact('goals', 'my_coaching_users'));
-
-        //エレメントの出力を変数に格納する
-        //htmlレンダリング結果
-        $response = $this->render('Goal/index_items');
-        $html = $response->__toString();
-        $result = array(
-            'html'          => $html,
-            'count'         => count($goals),
-            'page_item_num' => GOAL_INDEX_ITEMS_NUMBER,
-            'start'         => 0,
-        );
-        return $this->_ajaxGetResponse($result);
-    }
-
     public function ajax_get_goal_description_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
@@ -291,11 +124,11 @@ class GoalsController extends AppController
 
     public function ajax_get_add_action_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException();
             }
             if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
@@ -317,8 +150,8 @@ class GoalsController extends AppController
 
     public function ajax_get_related_kr_list_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $user_id = viaIsSet($this->request->params['named']['user_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $user_id = Hash::get($this->request->params, 'named.user_id');
         $krs = [];
         if ($goal_id && $user_id) {
             $krs = $this->Goal->KeyResult->getKrRelatedUserAction($goal_id, $user_id);
@@ -338,50 +171,56 @@ class GoalsController extends AppController
 
     public function ajax_get_add_key_result_modal()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        $currentKrId = Hash::get($this->request->params, 'named.key_result_id');
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goalId)) {
                 throw new RuntimeException();
             }
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
-        $goal = $this->Goal->getGoalMinimum($goal_id);
-        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
-        $priority_list = $this->Goal->priority_list;
-        $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = KeyResult::$UNIT;
+        $goal = $this->Goal->getGoalMinimum($goalId);
+        $tkr = $this->Goal->KeyResult->getTkr($goalId);
+        $goal = array_merge($goal, $tkr);
+
+        $goalCategoryList = $this->Goal->GoalCategory->getCategoryList();
+        $priorityList = $this->Goal->priority_list;
+        $krPriorityList = $this->Goal->KeyResult->priority_list;
+        $krValueUnitList = $KeyResultService->buildKrUnitsSelectList();
 
         // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
+        $goalTerm = $this->Goal->getGoalTermData($goalId);
 
-        $kr_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + $goal_term['timezone'] * HOUR);
+        $krStartDateFormat = date('Y/m/d', REQUEST_TIMESTAMP + $goalTerm['timezone'] * HOUR);
 
         //期限は現在+2週間にする
         //もしそれがゴールの期限を超える場合はゴールの期限にする
-        $end_date = strtotime('+2 weeks', REQUEST_TIMESTAMP);
-        if ($end_date > $goal['Goal']['end_date']) {
-            $end_date = $goal['Goal']['end_date'];
+        $endDate = strtotime('+2 weeks', REQUEST_TIMESTAMP);
+        if ($endDate > $goal['Goal']['end_date']) {
+            $endDate = $goal['Goal']['end_date'];
         }
-        $kr_end_date_format = date('Y/m/d', $end_date + $goal_term['timezone'] * HOUR);
-        $limit_end_date = date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
-        $limit_start_date = date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
+        $krEndDateFormat = date('Y/m/d', $endDate + $goalTerm['timezone'] * HOUR);
+        $limitEndDate = date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR);
+        $limitStartDate = date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR);
 
         $this->set(compact(
             'goal',
-            'goal_id',
-            'goal_category_list',
-            'goal_term',
-            'priority_list',
-            'kr_priority_list',
-            'kr_value_unit_list',
-            'kr_start_date_format',
-            'kr_end_date_format',
-            'limit_end_date',
-            'limit_start_date',
-            'current_kr_id'
+            'goalId',
+            'goalCategoryList',
+            'goalTerm',
+            'priorityList',
+            'krPriorityList',
+            'krValueUnitList',
+            'krStartDateFormat',
+            'krEndDateFormat',
+            'limitEndDate',
+            'limitStartDate',
+            'currentKrId'
         ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
@@ -408,47 +247,57 @@ class GoalsController extends AppController
 
     public function edit_collabo()
     {
-        $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
+        $goal_member_id = Hash::get($this->request->params, 'named.goal_member_id');
+        $new = $goal_member_id ? false : true;
         $this->request->allowMethod('post', 'put');
         $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
             $this->Auth->user('id'));
 
-        if (!isset($this->request->data['Collaborator'])) {
+        if (!isset($this->request->data['GoalMember'])) {
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
-        $collaborator = $this->request->data['Collaborator'];
-        // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
-        // そうでなければ再認定が必要なのでvalued_flg=0にする
-        $valued_flg = 0;
 
-        if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
-            $valued_flg = 2;
-        }
-        $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
+        // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「Reapplication」にする
+        $this->request->data['GoalMember']['approval_status'] = $new ? GoalMember::APPROVAL_STATUS_NEW : GoalMember::APPROVAL_STATUS_REAPPLICATION;
+        $this->request->data['GoalMember']['is_target_evaluation'] = false;
 
-        if (!$this->Goal->Collaborator->edit($this->request->data)) {
+        if (!$this->Goal->GoalMember->edit($this->request->data)) {
 
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
+
+        $goalMember = $this->request->data['GoalMember'];
+        $goal_member_id = $goal_member_id ? $goal_member_id : $this->Goal->GoalMember->getLastInsertID();
+        $goal = $this->Goal->findById($goalMember['goal_id']);
+        $goal_leader_id = Hash::get($goal, 'Goal.user_id');
 
         //success case.
         $this->Pnotify->outSuccess(__("Start to collaborate."));
         //if new
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        if (!$collabo_id) {
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
-            $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        //mixpanel
+        if ($new) {
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalMember['goal_id']);
+            // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
+            if ($goal_leader_id != $coach_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalMember['goal_id']);
+            }
         }
-        if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
+        if ($coach_id && (isset($goalMember['priority']) && $goalMember['priority'] >= '1')
         ) {
+            if ($new) {
+                //新規の場合
+                $this->_sendNotifyToCoach($goal_member_id, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
+            } else {
+                //更新の場合
+                $this->_sendNotifyToCoach($goal_member_id, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
+            }
+
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
                 'user_data');
-
-            $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());
     }
@@ -461,13 +310,13 @@ class GoalsController extends AppController
     public function add_key_result()
     {
         $goal_id = $this->request->params['named']['goal_id'];
-        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $current_kr_id = Hash::get($this->request->params, 'named.key_result_id');
 
         $this->request->allowMethod('post');
         $key_result = null;
         try {
             $this->Goal->begin();
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("You have no permission."));
             }
             $this->Goal->KeyResult->add($this->request->data, $goal_id);
@@ -576,7 +425,7 @@ class GoalsController extends AppController
 
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $goal = viaIsSet($goal);
         if (!$goal) {
             $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
@@ -674,7 +523,7 @@ class GoalsController extends AppController
             ) {
                 throw new RuntimeException(__("There is no action."));
             }
-            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->Collaborator->isCollaborated($action['ActionResult']['goal_id'])) {
+            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['ActionResult']['goal_id'])) {
                 throw new RuntimeException(__("You have no permission."));
             }
         } catch (RuntimeException $e) {
@@ -704,24 +553,24 @@ class GoalsController extends AppController
 
     public function delete_collabo()
     {
-        $collabo_id = $this->request->params['named']['collaborator_id'];
+        $goalMemberId = $this->request->params['named']['goal_member_id'];
         $this->request->allowMethod('post', 'put');
-        $this->Goal->Collaborator->id = $collabo_id;
-        if (!$this->Goal->Collaborator->exists()) {
+        $this->Goal->GoalMember->id = $goalMemberId;
+        if (!$this->Goal->GoalMember->exists()) {
             $this->Pnotify->outError(__("He/She might quit collaborating."));
         }
-        if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
+        if (!$this->Goal->GoalMember->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__("You have no right to operate it."));
         }
-        $collabo = $this->Goal->Collaborator->findById($collabo_id);
-        if (!empty($collabo)) {
+        $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
+        if (!empty($goalMember)) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
-                $collabo['Collaborator']['goal_id']);
+                $goalMember['GoalMember']['goal_id']);
         }
-        $this->Goal->Collaborator->delete();
+        $this->Goal->GoalMember->delete();
         $this->Pnotify->outSuccess(__("Quitted a collaborator."));
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->redirect($this->referer());
     }
 
@@ -797,7 +646,7 @@ class GoalsController extends AppController
             $limit = GOAL_PAGE_KR_NUMBER;
         }
 
-        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_collaborated) {
             $display_action_count--;
@@ -849,6 +698,11 @@ class GoalsController extends AppController
 
     public function ajax_get_edit_key_result_modal()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
         $kr_id = $this->request->params['named']['key_result_id'];
         $this->_ajaxPreProcess();
         try {
@@ -868,7 +722,14 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = KeyResult::$UNIT;
+        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
+
+        // 認定可能フラグ追加
+        $is_approvable = false;
+        $goal_leader_id = $this->Goal->GoalMember->getGoalLeaderId($goal_id);
+        if ($goal_leader_id) {
+            $is_approvable = $GoalMemberService->isApprovableGoalMember($goal_leader_id);
+        }
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
@@ -889,7 +750,8 @@ class GoalsController extends AppController
             'kr_end_date_format',
             'limit_end_date',
             'limit_start_date',
-            'goal_term'
+            'goal_term',
+            'is_approvable'
         ));
         $this->request->data = $key_result;
         //エレメントの出力を変数に格納する
@@ -910,9 +772,6 @@ class GoalsController extends AppController
             }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
             $goal = $this->Goal->getGoalMinimum($key_result['KeyResult']['goal_id']);
-            $goal['Goal']['start_value'] = (double)$goal['Goal']['start_value'];
-            $goal['Goal']['current_value'] = (double)$goal['Goal']['current_value'];
-            $goal['Goal']['target_value'] = (double)$goal['Goal']['target_value'];
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
@@ -949,7 +808,7 @@ class GoalsController extends AppController
         $goal_id = $this->request->params['named']['goal_id'];
         $page = $this->request->params['named']['page'];
         // メンバー一覧
-        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+        $members = $this->Goal->GoalMember->getGoalMemberByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
             'page'  => $page,
         ]);
@@ -1022,10 +881,10 @@ class GoalsController extends AppController
      */
     public function add_action()
     {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         try {
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("This action can't be edited."));
             }
             if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
@@ -1153,37 +1012,33 @@ class GoalsController extends AppController
             $common_record['start_date'] = null;
             $common_record['description'] = null;
             $common_record['priority'] = null;
-            if (!empty($ug_v['Collaborator'])) {
-                foreach ($ug_v['Collaborator'] as $c_v) {
+            if (!empty($ug_v['GoalMember'])) {
+                foreach ($ug_v['GoalMember'] as $c_v) {
                     $approval_status = null;
-                    switch ($c_v['valued_flg']) {
-                        case Collaborator::STATUS_UNAPPROVED:
+                    switch ($c_v['approval_status']) {
+                        case GoalMember::APPROVAL_STATUS_NEW:
                             $approval_status = __("Pending approval");
                             break;
-                        case Collaborator::STATUS_APPROVAL:
+                        case GoalMember::APPROVAL_STATUS_REAPPLICATION:
                             $approval_status = __("Evaluable");
                             break;
-                        case Collaborator::STATUS_HOLD:
+                        case GoalMember::APPROVAL_STATUS_DONE:
                             $approval_status = __("Not Evaluable");
                             break;
-                        case Collaborator::STATUS_MODIFY:
+                        case GoalMember::APPROVAL_STATUS_WITHDRAWN:
                             $approval_status = __("Pending modification");
                             break;
                     }
                     $record = $common_record;
-                    if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
+                    if (!empty($c_v['Goal'])) {
                         // ゴールが属している評価期間データ
                         $goal_term = $this->Goal->getGoalTermData($c_v['Goal']['id']);
 
                         $record['valued'] = $approval_status;
-                        $record['purpose'] = $c_v['Goal']['Purpose']['name'];
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
-                        $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
+                        $record['collabo_type'] = ($c_v['type'] == GoalMember::TYPE_OWNER) ?
                             __("L") : __("C");
                         $record['goal'] = $c_v['Goal']['name'];
-                        $record['value_unit'] = KeyResult::$UNIT[$c_v['Goal']['value_unit']];
-                        $record['target_value'] = (double)$c_v['Goal']['target_value'];
-                        $record['start_value'] = (double)$c_v['Goal']['start_value'];
                         $record['end_date'] = date("Y/m/d", $c_v['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
                         $record['start_date'] = date("Y/m/d",
                             $c_v['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
@@ -1220,7 +1075,7 @@ class GoalsController extends AppController
         $file_ids = $this->request->data('file_id');
         try {
             $this->Goal->begin();
-            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
                 throw new RuntimeException(__("You have no permission."));
             }
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
@@ -1254,7 +1109,7 @@ class GoalsController extends AppController
         }
 
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $socket_id = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName);
 
@@ -1307,6 +1162,9 @@ class GoalsController extends AppController
 
     public function ajax_get_my_goals()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
@@ -1315,7 +1173,7 @@ class GoalsController extends AppController
             $page_num = 1;
         }
 
-        $type = viaIsSet($param_named['type']);
+        $type = Hash::get($param_named, 'type');
         if (!$type) {
             return;
         }
@@ -1337,6 +1195,7 @@ class GoalsController extends AppController
         } else {
             $goals = [];
         }
+        $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
         $this->set(compact('goals', 'type', 'current_term'));
 
@@ -1413,13 +1272,13 @@ class GoalsController extends AppController
         $res = [];
         foreach (array_keys($options) as $type) {
             //URLパラメータ取得
-            $res[$type][0] = viaIsSet($this->request->params['named'][$type]);
+            $res[$type][0] = Hash::get($this->request->params, "named.$type");
             //パラメータチェック
             if (!in_array($res[$type][0], array_keys($options[$type]))) {
                 $res[$type] = null;
             }
             //表示名取得
-            if (viaIsSet($res[$type])) {
+            if (Hash::get($res, $type)) {
                 $res[$type][1] = $options[$type][$res[$type][0]];
             } ///デフォルト表示名取得
             else {
@@ -1433,7 +1292,7 @@ class GoalsController extends AppController
     {
         $res = ['controller' => 'goals', 'action' => 'index'];
         foreach ($search_option as $key => $val) {
-            if (viaIsSet($val[0])) {
+            if (Hash::get($val, '0')) {
                 $res[$key] = $val[0];
             }
         }
@@ -1447,8 +1306,8 @@ class GoalsController extends AppController
      */
     function view_followers()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
@@ -1469,13 +1328,13 @@ class GoalsController extends AppController
      */
     function view_members()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+        $members = $this->Goal->GoalMember->getGoalMemberByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
         ]);
         $this->set('members', $members);
@@ -1490,14 +1349,17 @@ class GoalsController extends AppController
      */
     function view_krs()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         //コラボってる？
-        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_collaborated) {
             $display_action_count--;
@@ -1507,6 +1369,7 @@ class GoalsController extends AppController
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
+        $key_results = $KeyResultService->processKeyResults($key_results);
         $this->set('key_results', $key_results);
 
         // 未完了のキーリザルト数
@@ -1523,19 +1386,18 @@ class GoalsController extends AppController
 
     function view_actions()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goal_id = Hash::get($this->request->params, "named.goal_id");
+        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        $page_type = $this->_getRequiredParam('page_type');
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $page_type = Hash::get($this->request->params, "named.page_type");
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
-        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
         $params = [
             'type'          => Post::TYPE_ACTION,
             'goal_id'       => $goal_id,
@@ -1566,15 +1428,17 @@ class GoalsController extends AppController
 
     function view_info()
     {
-        $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+        $goalId = Hash::get($this->request->params, "named.goal_id");
+        if (!$goalId || !$this->_setGoalPageHeaderInfo($goalId)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
-        $this->set('goal_term', $goal_term);
+        $goalTerm = $this->Goal->getGoalTermData($goalId);
+        $goalLabels = Hash::extract($this->Goal->GoalLabel->findByGoalId($goalId), '{n}.Label');
+
+        $this->set(compact('goalTerm', 'goalLabels'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1589,11 +1453,16 @@ class GoalsController extends AppController
      */
     function _setGoalPageHeaderInfo($goal_id)
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
         $goal = $this->Goal->getGoal($goal_id);
         if (!isset($goal['Goal']['id'])) {
             // ゴールが存在しない
             return false;
         }
+        // 進捗情報を追加
+        $goal['Goal']['progress'] = $GoalService->getProgress($goal['KeyResult']);
         $this->set('goal', $goal);
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);
@@ -1603,7 +1472,7 @@ class GoalsController extends AppController
         $this->set('action_count', $action_count);
 
         // メンバー数
-        $member_count = count($goal['Leader']) + count($goal['Collaborator']);
+        $member_count = count($goal['Leader']) + count($goal['GoalMember']);
         $this->set('member_count', $member_count);
 
         // フォロワー数
@@ -1621,14 +1490,14 @@ class GoalsController extends AppController
         $this->set('is_leader', $is_leader);
 
         // 閲覧者がゴールのコラボレーターかを判別
-        $is_collaborator = false;
-        foreach ($goal['Collaborator'] as $v) {
+        $is_goal_member = false;
+        foreach ($goal['GoalMember'] as $v) {
             if ($this->Auth->user('id') == $v['User']['id']) {
-                $is_collaborator = true;
+                $is_goal_member = true;
                 break;
             }
         }
-        $this->set('is_collaborator', $is_collaborator);
+        $this->set('is_goal_member', $is_goal_member);
 
         // 閲覧者がコーチしているゴールかを判別
         $is_coaching_goal = false;

@@ -66,16 +66,16 @@ class Circle extends AppModel
     public $validate = [
         'name'         => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => [
-                'rule' => ['notEmpty'],
+            'notBlank'  => [
+                'rule' => ['notBlank'],
             ],
         ],
         'description'  => [
             'isString' => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
         ],
         'del_flg'      => [
@@ -147,13 +147,17 @@ class Circle extends AppModel
         $data['CircleMember'][0]['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['admin_flg'] = true;
         $data['CircleMember'][0]['user_id'] = $this->my_uid;
+        $data['CircleMember'][0]['show_for_all_feed_flg'] = false;
+        $data['CircleMember'][0]['get_notification_flg'] = false;
         if (!empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
                 $val = str_replace('user_', '', $val);;
                 $data['CircleMember'][] = [
-                    'team_id' => $this->current_team_id,
-                    'user_id' => $val
+                    'team_id'               => $this->current_team_id,
+                    'user_id'               => $val,
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ];
                 $this->add_new_member_list[] = $val;
                 Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $val), 'user_data');
@@ -168,7 +172,7 @@ class Circle extends AppModel
         if ($res = $this->saveAll($data)) {
             $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
 
-            if (viaIsSet($data['Circle']['public_flg'])) {
+            if (Hash::get($data, 'Circle.public_flg')) {
                 $this->PostShareCircle->Post->createCirclePost($this->getLastInsertID(), $this->my_uid);
             }
         }
@@ -234,9 +238,11 @@ class Circle extends AppModel
             }
             $new_members[] = [
                 'CircleMember' => [
-                    'circle_id' => $data['Circle']['id'],
-                    'team_id'   => $this->current_team_id,
-                    'user_id'   => $user_id,
+                    'circle_id'             => $data['Circle']['id'],
+                    'team_id'               => $this->current_team_id,
+                    'user_id'               => $user_id,
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ]
             ];
             $this->add_new_member_list[] = $user_id;
@@ -541,7 +547,7 @@ class Circle extends AppModel
     function getTeamAllCircleId()
     {
         $team_all_circle = $this->getTeamAllCircle();
-        return viaIsSet($team_all_circle['Circle']['id']);
+        return Hash::get($team_all_circle, 'Circle.id');
     }
 
     /**

@@ -3,7 +3,7 @@
  * @var $is_mb_app
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
@@ -28,7 +28,7 @@
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
                id="setupIcon"></i>
-            <?php if ($setup_rest_count >= 1): ?>
+            <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
                 <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
                     <span><?= $setup_rest_count ?></span>
                 </div>
@@ -45,7 +45,7 @@
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
                     <a class="header-nav-add-contents-anchor"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'create', 'step1']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
 
                         <p class="header-nav-add-contents-goal"><?= __('Create a goal') ?></p>
@@ -153,7 +153,7 @@
                 ['class' => 'header-nav-function-contents-user-setting']) ?>
         </li>
         <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
-        if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
+        if (Hash::get($my_member_status, 'TeamMember.admin_flg') && $my_member_status['TeamMember']['admin_flg']):?>
             <li class="header-nav-function-contents-list">
                 <?=
                 $this->Html->link(__('Team Setting'),
@@ -175,7 +175,7 @@
         <?php endif; ?>
         <li class="header-nav-function-contents-list">
             <?= $this->Html->link(__('Goal Approval'),
-                ['controller' => 'goal_approval', 'action' => 'index'],
+                ['controller' => 'goals', 'action' => 'approval', 'list'],
                 ['class' => 'header-nav-function-contents-approvement'])
             ?>
             <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
@@ -216,4 +216,4 @@
     </ul>
 </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

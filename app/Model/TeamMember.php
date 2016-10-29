@@ -243,7 +243,7 @@ class TeamMember extends AppModel
             $is_default = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
             if ($res !== false) {
-                if (!empty($res) && viaIsSet($res['User']['id']) && viaIsSet($res['Team']['id'])) {
+                if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
                     return true;
                 }
                 return false;
@@ -272,7 +272,7 @@ class TeamMember extends AppModel
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
-        if (!empty($res) && viaIsSet($res['User']['id']) && viaIsSet($res['Team']['id'])) {
+        if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
             return true;
         }
         return false;
@@ -323,7 +323,7 @@ class TeamMember extends AppModel
     {
         //if exists update
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
-        if (viaIsSet($team_member['TeamMember']['id'])) {
+        if (Hash::get($team_member, 'TeamMember.id')) {
             $team_member['TeamMember']['active_flg'] = true;
             return $this->save($team_member);
         }
@@ -552,21 +552,21 @@ class TeamMember extends AppModel
         $coach_user_ids = Hash::extract($team_members, '{n}.TeamMember.coach_user_id');
         $team_members = Hash::combine($team_members, '{n}.TeamMember.user_id', '{n}');
         //コーチ情報をまとめて取得
-        if (viaIsSet($contain['CoachUser'])) {
+        if (Hash::get($contain, 'CoachUser')) {
             $contain['CoachUser']['conditions']['id'] = $coach_user_ids;
             $coach_users = $this->User->find('all', $contain['CoachUser']);
             $coach_users = Hash::combine($coach_users, '{n}.User.id', '{n}');
         }
         //Email情報をまとめて取得
-        if (viaIsSet($contain['Email'])) {
+        if (Hash::get($contain, 'Email')) {
             $contain['Email']['conditions']['user_id'] = $user_ids;
             $user_emails = $this->User->Email->find('all', $contain['Email']);
             $user_emails = Hash::combine($user_emails, '{n}.Email.user_id', '{n}.Email.email_verified');
         }
         //ユーザ情報とグループ情報を取得して、ユーザ情報にマージ
-        if (viaIsSet($contain['User'])) {
+        if (Hash::get($contain, 'User')) {
             //ユーザ情報を取得
-            $group_options = viaIsSet($contain['User']['MemberGroup']);
+            $group_options = Hash::get($contain, 'User.MemberGroup');
             unset($contain['User']['MemberGroup']);
             $contain['User']['conditions']['id'] = $user_ids;
             $users = $this->User->find('all', $contain['User']);
@@ -574,7 +574,7 @@ class TeamMember extends AppModel
             if ($group_options) {
                 //グループ情報をまとめて取得
                 $group_options['conditions']['user_id'] = $user_ids;
-                if (viaIsSet($group_options['Group'])) {
+                if (Hash::get($group_options, 'Group')) {
                     $group_options['contain']['Group'] = $group_options['Group'];
                     unset($group_options['Group']);
                 }
@@ -613,7 +613,7 @@ class TeamMember extends AppModel
         }
         // チームメンバー情報からEmail未確認ユーザーを除外
         foreach ($team_members as $user_id => $val) {
-            if (!viaIsSet($user_emails[$user_id])) {
+            if (!Hash::get($user_emails, $user_id)) {
                 unset($team_members[$user_id]);
             }
         }
@@ -731,7 +731,7 @@ class TeamMember extends AppModel
          * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
          */
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (viaIsSet($row_v['MemberType']['name'])) {
+            if (Hash::get($row_v, 'MemberType.name')) {
                 $member_type = $this->MemberType->getByNameIfNotExistsSave($row_v['MemberType']['name']);
                 $this->csv_datas[$row_k]['TeamMember']['member_type_id'] = $member_type['MemberType']['id'];
                 unset($this->csv_datas[$row_k]['MemberType']);
@@ -756,10 +756,10 @@ class TeamMember extends AppModel
             ];
             $user = $this->User->Email->find('first', $options);
 
-            if (viaIsSet($user['User'])) {
+            if (Hash::get($user, 'User')) {
                 $this->csv_datas[$k]['User'] = $user['User'];
             }
-            if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
+            if (Hash::get($user, 'User.TeamMember.0.id')) {
                 $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
             } else {
                 $this->create();
@@ -779,7 +779,7 @@ class TeamMember extends AppModel
 
         $member_groups = [];
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (viaIsSet($row_v['Group'])) {
+            if (Hash::get($row_v, 'Group')) {
                 foreach ($row_v['Group'] as $k => $v) {
                     $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
                     $member_groups[] = [
@@ -800,7 +800,7 @@ class TeamMember extends AppModel
          * コーチIDはメンバーIDを検索し、セット
          */
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!viaIsSet($row_v['Coach'])) {
+            if (!Hash::get($row_v, 'Coach')) {
                 continue;
             }
             if ($coach_team_member = $this->getByMemberNo($row_v['Coach'])) {
@@ -819,7 +819,7 @@ class TeamMember extends AppModel
 
         $save_evaluator_data = [];
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!viaIsSet($row_v['Evaluator'])) {
+            if (!Hash::get($row_v, 'Evaluator')) {
                 continue;
             }
             foreach ($row_v['Evaluator'] as $r_k => $r_v) {
@@ -888,7 +888,7 @@ class TeamMember extends AppModel
             }
 
             // add member groups
-            if (viaIsSet($row_v['Group'])) {
+            if (Hash::get($row_v, 'Group')) {
                 foreach ($row_v['Group'] as $k => $v) {
                     // if user with same team and group exists then don't need to insert again
                     $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
@@ -908,7 +908,7 @@ class TeamMember extends AppModel
          * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
          */
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (viaIsSet($row_v['MemberType']['name'])) {
+            if (Hash::get($row_v, 'MemberType.name')) {
                 $member_type = $this->MemberType->getByNameIfNotExistsSave($row_v['MemberType']['name']);
                 $this->csv_datas[$row_k]['TeamMember']['member_type_id'] = $member_type['MemberType']['id'];
                 unset($this->csv_datas[$row_k]['MemberType']);
@@ -924,7 +924,7 @@ class TeamMember extends AppModel
             //メアド存在確認
             $user = $this->User->getUserByEmail($row_v['Email']['email']);
 
-            if (viaIsSet($user['User'])) {
+            if (Hash::get($user, 'User')) {
                 $this->csv_datas[$row_k]['Email'] = $user['Email'];
                 //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
                 $user['User'] = array_merge($user['User'], $row_v['User']);
@@ -942,7 +942,8 @@ class TeamMember extends AppModel
                 $this->User->create();
                 $row_v['User']['no_pass_flg'] = true;
                 $row_v['User']['default_team_id'] = $this->current_team_id;
-                $row_v['User']['language'] = viaIsSet($row_v['LocalName']['language']) ? $row_v['LocalName']['language'] : 'eng';
+                $row_v['User']['language'] = Hash::get($row_v,
+                    'LocalName.language') ? $row_v['LocalName']['language'] : 'eng';
 
                 $user = $this->User->save($row_v['User']);
                 $row_v['Email']['user_id'] = $user['User']['id'];
@@ -964,11 +965,11 @@ class TeamMember extends AppModel
                     'user_id' => $user['User']['id']
                 ]
             ];
-            if (viaIsSet($row_v['LocalName'])) {
+            if (Hash::get($row_v, 'LocalName')) {
                 //save LocalName (if only lang update)
                 $existing_local_name = $this->User->LocalName->find('first', $options);
 
-                if (viaIsSet($existing_local_name['LocalName'])) {
+                if (Hash::get($existing_local_name, 'LocalName')) {
                     $existing_local_name['LocalName'] = array_merge($existing_local_name['LocalName'],
                         $row_v['LocalName']);
                     $existing_local_name = $this->User->LocalName->save($existing_local_name);
@@ -987,7 +988,7 @@ class TeamMember extends AppModel
             }
 
             //MemberGroupの登録
-            if (viaIsSet($row_v['MemberGroup'])) {
+            if (Hash::get($row_v, 'MemberGroup')) {
                 foreach ($row_v['MemberGroup'] as $k => $v) {
                     $row_v['MemberGroup'][$k]['index_num'] = $k;
                     $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
@@ -998,7 +999,7 @@ class TeamMember extends AppModel
             /**
              * TeamMemberに登録
              */
-            if (viaIsSet($row_v['TeamMember'])) {
+            if (Hash::get($row_v, 'TeamMember')) {
                 $row_v['TeamMember']['user_id'] = $user['User']['id'];
                 $row_v['TeamMember']['team_id'] = $this->current_team_id;
                 $row_v['TeamMember']['invitation_flg'] = true;
@@ -1010,9 +1011,11 @@ class TeamMember extends AppModel
                 // チーム全体サークルのCircleMemberに登録
                 $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
                 $row = [
-                    'circle_id' => $teamAllCircle['Circle']['id'],
-                    'team_id'   => $this->current_team_id,
-                    'user_id'   => $user['User']['id'],
+                    'circle_id'             => $teamAllCircle['Circle']['id'],
+                    'team_id'               => $this->current_team_id,
+                    'user_id'               => $user['User']['id'],
+                    'show_for_all_feed_flg' => false,
+                    'get_notification_flg'  => false,
                 ];
 
                 $circle_member_options = [
@@ -1034,7 +1037,7 @@ class TeamMember extends AppModel
          * コーチIDはメンバーIDを検索し、セット
          */
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!viaIsSet($row_v['Coach'])) {
+            if (!Hash::get($row_v, 'Coach')) {
                 continue;
             }
             if ($coach_team_member = $this->getByMemberNo($row_v['Coach'])) {
@@ -1061,7 +1064,7 @@ class TeamMember extends AppModel
                 }
             }
 
-            if (!viaIsSet($row_v['Evaluator'])) {
+            if (!Hash::get($row_v, 'Evaluator')) {
                 continue;
             }
             foreach ($row_v['Evaluator'] as $r_k => $r_v) {
@@ -1150,7 +1153,7 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['TeamMember']['active_flg'] = strtolower($row['active_flg']) == "on" ? true : false;
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
-            if (viaIsSet($row['member_type'])) {
+            if (Hash::get($row, 'member_type')) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             } else {
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
@@ -1163,7 +1166,7 @@ class TeamMember extends AppModel
             }
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
-            if (viaIsSet($row['coach_member_no'])) {
+            if (Hash::get($row, 'coach_member_no')) {
                 $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
             } else {
                 $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
@@ -1363,7 +1366,7 @@ class TeamMember extends AppModel
             }
 
             $row = Hash::expand($row);
-            if (viaIsSet($row['gender'])) {
+            if (Hash::get($row, 'gender')) {
                 $row['gender'] = strtolower($row['gender']);
             }
             $this->set($row);
@@ -1405,45 +1408,49 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) === 'on' ? true : false;
 
             // for coach id set null if not set
-            if (!viaIsSet($row['coach_member_no'])) {
+            if (!Hash::get($row, 'coach_member_no')) {
                 $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
             }
 
-            if (viaIsSet($row['member_type'])) {
+            if (Hash::get($row, 'member_type')) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             } else {
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
 
             // for local name
-            if (viaIsSet($row['language']) && (viaIsSet($row['local_first_name']) || viaIsSet($row['local_last_name']))) {
+            if (Hash::get($row, 'language') && (Hash::get($row, 'local_first_name') || Hash::get($row,
+                        'local_last_name'))
+            ) {
                 $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
-                $this->csv_datas[$key]['LocalName']['first_name'] = viaIsSet($row['local_first_name']) ? $row['local_first_name'] : '';
-                $this->csv_datas[$key]['LocalName']['last_name'] = viaIsSet($row['local_last_name']) ? $row['local_last_name'] : '';
+                $this->csv_datas[$key]['LocalName']['first_name'] = Hash::get($row,
+                    'local_first_name') ? $row['local_first_name'] : '';
+                $this->csv_datas[$key]['LocalName']['last_name'] = Hash::get($row,
+                    'local_last_name') ? $row['local_last_name'] : '';
             } else {
-                if (viaIsSet($row['language'])) {
+                if (Hash::get($row, 'language')) {
                     $this->local_lang_list[$key] = 'Local first name or local last name required with language of local name.';
                 } else {
-                    if (viaIsSet($row['local_first_name']) || viaIsSet($row['local_last_name'])) {
+                    if (Hash::get($row, 'local_first_name') || Hash::get($row, 'local_last_name')) {
                         $this->local_lang_list[$key] = 'Local language required with local first name or local last name.';
                     }
                 }
             }
 
-            if (viaIsSet($row['phone_no'])) {
+            if (Hash::get($row, 'phone_no')) {
                 $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row['phone_no']);
             } else {
                 $this->csv_datas[$key]['User']['phone_no'] = null;
             }
 
-            if (viaIsSet($row['gender'])) {
+            if (Hash::get($row, 'gender')) {
                 $this->csv_datas[$key]['User']['gender_type'] = $row['gender'] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
             } else {
                 $this->csv_datas[$key]['User']['gender_type'] = null;
             }
 
             //[12]Birth Year
-            if (viaIsSet($row['birth_year']) && viaIsSet($row['birth_month']) && viaIsSet($row['birth_day'])) {
+            if (Hash::get($row, 'birth_year') && Hash::get($row, 'birth_month') && Hash::get($row, 'birth_day')) {
                 $this->csv_datas[$key]['User']['birth_day'] = $row['birth_year'] . '/' . $row['birth_month'] . '/' . $row['birth_day'];
             } else {
                 $this->csv_datas[$key]['User']['birth_day'] = null;
@@ -1459,7 +1466,7 @@ class TeamMember extends AppModel
             //[22]Coach ID
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
-            if (viaIsSet($row['coach_member_no'])) {
+            if (Hash::get($row, 'coach_member_no')) {
                 $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
             }
 
@@ -1676,23 +1683,29 @@ class TeamMember extends AppModel
         $this->setAllMembers($team_id);
         //convert csv data
         foreach ($this->all_users as $k => $v) {
-            if (!viaIsSet($v['User']['id'])) {
+            if (!Hash::get($v, 'User.id')) {
                 unset($this->all_users[$k]);
                 continue;
             }
-            $this->csv_datas[$k]['email'] = viaIsSet($v['User']['PrimaryEmail']['email']) ? $v['User']['PrimaryEmail']['email'] : null;
-            $this->csv_datas[$k]['first_name'] = viaIsSet($v['User']['first_name']) ? $v['User']['first_name'] : null;
-            $this->csv_datas[$k]['last_name'] = viaIsSet($v['User']['last_name']) ? $v['User']['last_name'] : null;
-            $this->csv_datas[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
-            $this->csv_datas[$k]['active_flg'] = viaIsSet($v['TeamMember']['active_flg']) && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
-            $this->csv_datas[$k]['admin_flg'] = viaIsSet($v['TeamMember']['admin_flg']) && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
-            $this->csv_datas[$k]['evaluation_enable_flg'] = viaIsSet($v['TeamMember']['evaluation_enable_flg']) && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
-            $this->csv_datas[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
+            $this->csv_datas[$k]['email'] = Hash::get($v,
+                'User.PrimaryEmail.email') ? $v['User']['PrimaryEmail']['email'] : null;
+            $this->csv_datas[$k]['first_name'] = Hash::get($v, 'User.first_name') ? $v['User']['first_name'] : null;
+            $this->csv_datas[$k]['last_name'] = Hash::get($v, 'User.last_name') ? $v['User']['last_name'] : null;
+            $this->csv_datas[$k]['member_no'] = Hash::get($v,
+                'TeamMember.member_no') ? $v['TeamMember']['member_no'] : null;
+            $this->csv_datas[$k]['active_flg'] = Hash::get($v,
+                'TeamMember.active_flg') && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['admin_flg'] = Hash::get($v,
+                'TeamMember.admin_flg') && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
+                'TeamMember.evaluation_enable_flg') && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['member_type'] = Hash::get($v, 'MemberType.name') ? $v['MemberType']['name'] : null;
             //group
-            if (viaIsSet($v['User']['MemberGroup'])) {
+            if (Hash::get($v, 'User.MemberGroup')) {
                 foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
                     $key_index = $g_k + 1;
-                    $this->csv_datas[$k]['group.' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
+                    $this->csv_datas[$k]['group.' . $key_index] = Hash::get($g_v,
+                        'Group.name') ? $g_v['Group']['name'] : null;
                 }
             }
         }
@@ -1707,7 +1720,7 @@ class TeamMember extends AppModel
     function setCoachNumberForCsvData($team_id)
     {
         foreach ($this->all_users as $k => $v) {
-            if (!viaIsSet($v['TeamMember']['coach_user_id'])) {
+            if (!Hash::get($v, 'TeamMember.coach_user_id')) {
                 continue;
             }
             $options = [
@@ -1715,7 +1728,8 @@ class TeamMember extends AppModel
                 'fields'     => ['member_no']
             ];
             $coach_member = $this->find('first', $options);
-            $this->csv_datas[$k]['coach_member_no'] = viaIsSet($coach_member['TeamMember']['member_no']) ? $coach_member['TeamMember']['member_no'] : null;
+            $this->csv_datas[$k]['coach_member_no'] = Hash::get($coach_member,
+                'TeamMember.member_no') ? $coach_member['TeamMember']['member_no'] : null;
         }
         return;
     }
@@ -1739,7 +1753,7 @@ class TeamMember extends AppModel
             $evaluators = $this->Team->Evaluator->find('all', $options);
             foreach ($evaluators as $r_k => $r_v) {
                 $key_index = $r_k + 1;
-                if (viaIsSet($r_v['EvaluatorUser']['TeamMember'][0]['member_no'])) {
+                if (Hash::get($r_v, 'EvaluatorUser.TeamMember.0.member_no')) {
                     $this->csv_datas[$k]['evaluator_member_no.' . $key_index] = $r_v['EvaluatorUser']['TeamMember'][0]['member_no'];
                 }
             }
@@ -1805,7 +1819,7 @@ class TeamMember extends AppModel
         $all_users_include_unverified_user = $this->find('all', $options);
         $all_users = [];
         foreach ($all_users_include_unverified_user as $key => $user) {
-            if (viaIsSet($user['User']['Email'][0]['email_verified'])) {
+            if (Hash::get($user, 'User.Email.0.email_verified')) {
                 unset($user['User']['Email']);
                 $all_users[] = $user;
             }
@@ -1817,15 +1831,18 @@ class TeamMember extends AppModel
     function setUserInfoForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!viaIsSet($v['User']['id'])) {
+            if (!Hash::get($v, 'User.id')) {
                 unset($this->all_users[$k]);
                 continue;
             }
 
-            $this->csv_datas[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
-            $this->csv_datas[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
-            $this->csv_datas[$k]['user_name'] = viaIsSet($v['User']['display_username']) ? $v['User']['display_username'] : null;
-            $this->csv_datas[$k]['coach_user_name'] = viaIsSet($v['CoachUser']['display_username']) ? $v['CoachUser']['display_username'] : null;
+            $this->csv_datas[$k]['member_no'] = Hash::get($v,
+                'TeamMember.member_no') ? $v['TeamMember']['member_no'] : null;
+            $this->csv_datas[$k]['member_type'] = Hash::get($v, 'MemberType.name') ? $v['MemberType']['name'] : null;
+            $this->csv_datas[$k]['user_name'] = Hash::get($v,
+                'User.display_username') ? $v['User']['display_username'] : null;
+            $this->csv_datas[$k]['coach_user_name'] = Hash::get($v,
+                'CoachUser.display_username') ? $v['CoachUser']['display_username'] : null;
         }
         return;
     }
@@ -1876,7 +1893,7 @@ class TeamMember extends AppModel
     function setTotalSelfEvaluationForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!viaIsSet($this->evaluations[$v['User']['id']])) {
+            if (!Hash::get($this->evaluations, Hash::get($v, 'User.id'))) {
                 continue;
             }
             foreach ($this->evaluations[$v['User']['id']] as $eval) {
@@ -1892,7 +1909,7 @@ class TeamMember extends AppModel
     function setTotalEvaluatorEvaluationForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!viaIsSet($this->evaluations[$v['User']['id']])) {
+            if (!Hash::get($this->evaluations, Hash::get($v, 'User.id'))) {
                 continue;
             }
             $ek = 1;
@@ -1911,7 +1928,7 @@ class TeamMember extends AppModel
     function setTotalFinalEvaluationForCsvData()
     {
         foreach ($this->all_users as $k => $v) {
-            if (!viaIsSet($this->evaluations[$v['User']['id']])) {
+            if (!Hash::get($this->evaluations, Hash::get($v, 'User.id'))) {
                 continue;
             }
             foreach ($this->evaluations[$v['User']['id']] as $eval) {
@@ -2069,8 +2086,8 @@ class TeamMember extends AppModel
     {
         $common_validate = [
             'email'                 => [
-                'notEmpty' => [
-                    'rule'    => 'notEmpty',
+                'notBlank' => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Email Address"))
                 ],
                 'email'    => [
@@ -2079,8 +2096,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'member_no'             => [
-                'notEmpty'        => [
-                    'rule'    => 'notEmpty',
+                'notBlank'        => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Member ID"))
                 ],
                 'maxLength'       => [
@@ -2098,8 +2115,8 @@ class TeamMember extends AppModel
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("First Name"))
                 ],
-                'notEmpty'     => [
-                    'rule'    => 'notEmpty',
+                'notBlank'     => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("First Name"))
                 ],
                 'userNameChar' => ['rule' => ['userNameChar']],
@@ -2109,15 +2126,15 @@ class TeamMember extends AppModel
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Last Name"))
                 ],
-                'notEmpty'     => [
-                    'rule'    => 'notEmpty',
+                'notBlank'     => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Last Name"))
                 ],
                 'userNameChar' => ['rule' => ['userNameChar']],
             ],
             'admin_flg'             => [
-                'notEmpty'  => [
-                    'rule'    => 'notEmpty',
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Administrators"))
                 ],
                 'isOnOrOff' => [
@@ -2126,8 +2143,8 @@ class TeamMember extends AppModel
                 ],
             ],
             'evaluation_enable_flg' => [
-                'notEmpty'  => [
-                    'rule'    => 'notEmpty',
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Evaluator"))
                 ],
                 'isOnOrOff' => [
@@ -2249,8 +2266,8 @@ class TeamMember extends AppModel
         ];
         $validateOfUpdate = [
             'active_flg' => [
-                'notEmpty'  => [
-                    'rule'    => 'notEmpty',
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Active status"))
                 ],
                 'isOnOrOff' => [
@@ -2273,8 +2290,8 @@ class TeamMember extends AppModel
         //TODO ルール設定まだしてない
         $validate_rules = [
             'total.final.score' => [
-                'notEmpty' => [
-                    'rule'    => 'notEmpty',
+                'notBlank' => [
+                    'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Score by final evaluator"))
                 ],
             ],
@@ -2297,6 +2314,9 @@ class TeamMember extends AppModel
      */
     function getCoachUserIdByMemberUserId($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
@@ -2319,6 +2339,9 @@ class TeamMember extends AppModel
      */
     function getMyMembersList($user_id)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         // 検索テーブル: team_members
         // 取得カラム: user_id
         // 条件: coach_user_id = パラメータ1 team_id = パラメータ2
@@ -2342,7 +2365,7 @@ class TeamMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['TeamMember']['id'])) {
+        if (Hash::get($res, 'TeamMember.id')) {
             return $res['TeamMember']['id'];
         }
         return null;
@@ -2395,7 +2418,7 @@ class TeamMember extends AppModel
             ],
         ];
         $member_list = $this->find("list", $options);
-        $res = $this->User->Collaborator->getCollaboGoalList($member_list, true, $limit, $page);
+        $res = $this->User->GoalMember->getCollaboGoalList($member_list, true, $limit, $page);
         return $res;
     }
 
@@ -2403,17 +2426,15 @@ class TeamMember extends AppModel
      * Param1のユーザーは評価対象の人なのか
      *
      * @param $user_id
-     * @param $team_id
      *
-     * @return array|null
+     * @return boolean
      */
-    function getEvaluationEnableFlg($user_id, $team_id)
+    function getEvaluationEnableFlg($user_id)
     {
         $options = [
             'fields'     => ['active_flg', 'evaluation_enable_flg'],
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
-                'TeamMember.team_id' => $team_id,
             ],
         ];
         $res = $this->find('first', $options);
@@ -2429,8 +2450,9 @@ class TeamMember extends AppModel
         return $evaluation_flg;
     }
 
-    function getCoachId($user_id, $team_id)
+    function getCoachId($user_id, $team_id = null)
     {
+        $team_id = empty($team_id) ? $this->current_team_id : $team_id;
         $options = [
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
@@ -2439,7 +2461,7 @@ class TeamMember extends AppModel
             'fields'     => ['coach_user_id'],
         ];
         $res = $this->find('first', $options);
-        return viaIsSet($res['TeamMember']['coach_user_id']) ? $res['TeamMember']['coach_user_id'] : null;
+        return Hash::get($res, 'TeamMember.coach_user_id') ? $res['TeamMember']['coach_user_id'] : null;
     }
 
     /**
@@ -2468,7 +2490,7 @@ class TeamMember extends AppModel
             ],
             'fields'     => ['id']
         ]);
-        if ($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
+        if ($team_member_id = Hash::get($team_member, 'TeamMember.id')) {
             return $team_member_id;
         }
         return null;

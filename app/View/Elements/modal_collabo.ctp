@@ -10,7 +10,7 @@
  * @var                    $priority_list
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog modal-collabo-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -18,10 +18,10 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate") ?></h4>
         </div>
-        <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
+        <?php $goalMemberId = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
-        $this->Form->create('Collaborator', [
-            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', 'collaborator_id' => $collabo_id],
+        $this->Form->create('GoalMember', [
+            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', 'goal_member_id' => $goalMemberId],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
@@ -94,9 +94,10 @@
                     <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
                         $this->Form->postLink(__("Quit the collaboration"),
-                            ['controller'      => 'goals',
-                             'action'          => 'delete_collabo',
-                             'collaborator_id' => $goal['MyCollabo'][0]['id']
+                            [
+                                'controller'     => 'goals',
+                                'action'         => 'delete_collabo',
+                                'goal_member_id' => $goal['MyCollabo'][0]['id']
                             ],
                             ['class' => 'pull-left btn btn-link'],
                             __("Do you really want to quit the collaboration?")) ?>
@@ -107,4 +108,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
