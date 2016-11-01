@@ -18,7 +18,7 @@ class OgpComponent extends CakeObject
      */
     var $Controller;
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
         $this->Controller = $controller;
     }

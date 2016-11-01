@@ -22,7 +22,7 @@ class UservoiceComponent extends CakeObject
     {
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
         $this->Controller = $controller;
         //トークンの有効期限は１ヶ月

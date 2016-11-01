@@ -47,7 +47,7 @@ class LangComponent extends CakeObject
 
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
 
     }
