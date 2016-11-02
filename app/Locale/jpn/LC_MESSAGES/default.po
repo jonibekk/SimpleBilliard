@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-28 14:57+0900\n"
+"PO-Revision-Date: 2016-11-02 12:50+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3035,8 +3035,8 @@ msgstr "ゴールページへ"
 msgid "Did you achieve the goal?"
 msgstr "ゴールを達成しましたか？"
 
-msgid "Current point"
-msgstr "現在値"
+msgid "Start date"
+msgstr "開始日"
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中の成果は「完了」となります。"
@@ -3277,9 +3277,6 @@ msgstr "変更適用対象"
 msgid "Current term can't be changed during the evaluation period."
 msgstr "評価期間中は今期の変更ができません。"
 
-msgid "Start date"
-msgstr "開始日"
-
 msgid "Please select the standard start month."
 msgstr "基準となる期の開始月を選択して下さい。"
 
@@ -3349,11 +3346,11 @@ msgstr "評価状況"
 msgid "Evaluation score settings"
 msgstr "評価スコア設定"
 
-msgid "Save evaluation score settings"
-msgstr "評価スコア設定を保存"
-
 msgid "Add definition"
 msgstr "定義を１つ追加"
+
+msgid "Save settings"
+msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
@@ -3430,9 +3427,6 @@ msgstr "最終評価者評価 トータル コメント"
 msgid "Evaluation total comment by Final Evaluator required"
 msgstr "最終評価者評価 トータル コメント 必須"
 
-msgid "Save evaluation settings"
-msgstr "評価設定を保存"
-
 msgid "Begin evaluation"
 msgstr "評価開始"
 
@@ -3480,9 +3474,6 @@ msgstr "ゴールカテゴリ設定"
 
 msgid "Add a goal category"
 msgstr "ゴールカテゴリを追加"
-
-msgid "Save goal category settings"
-msgstr "ゴールカテゴリ設定を保存"
 
 msgid "Reach"
 msgstr "リーチ"
