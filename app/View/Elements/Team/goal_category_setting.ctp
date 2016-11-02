@@ -65,8 +65,7 @@
                  'max_index'       => $max_index,
                  'class'           => 'btn btn-default'
                 ]) ?>
-            <?= $this->Form->submit(__('Save goal category settings'),
-                ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
+            <input class="btn btn-primary team-setting-add-goal-category" type="submit" value="<?= __('Save goal category settings')?>">
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("GoalCategory.$i.name") ?>
