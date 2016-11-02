@@ -198,7 +198,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_body', compact('post')) ?>
-                <?
+                <?php
                 /**
                  * 画像のurlを集める
                  * アクションの場合は１画像

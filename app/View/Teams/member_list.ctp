@@ -1,9 +1,9 @@
-<?
+<?php
 /**
  * @var CodeCompletionView $this
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <style type="text/css">
     .team_member_table {
         background-color: #ffffff;
