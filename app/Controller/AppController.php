@@ -753,7 +753,8 @@ class AppController extends BaseController
     public function getBrowser()
     {
         if (!$this->_browser) {
-            $this->_browser = get_browser(null, true);
+            $browscap = new \BrowscapPHP\Browscap();
+            $this->_browser = (array)$browscap->getBrowser(null);;
         }
         return $this->_browser;
     }
