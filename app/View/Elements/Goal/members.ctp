@@ -46,4 +46,4 @@
         </div>
     <?php endforeach ?>
     <?= $this->App->viewEndComment() ?>
-<? endif ?>
+<?php endif ?>

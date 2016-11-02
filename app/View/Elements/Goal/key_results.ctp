@@ -156,7 +156,7 @@
                             <?php endif; ?>
                         </a>
                     </li>
-                <? endforeach ?>
+                <?php endforeach ?>
             </ul>
         </div>
     <?php endforeach ?>

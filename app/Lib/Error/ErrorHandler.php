@@ -77,12 +77,12 @@ class ErrorHandler
      * This will either use custom exception renderer class if configured,
      * or use the default ExceptionRenderer.
      *
-     * @param Exception $exception
+     * @param Exception|ParseError $exception
      *
      * @return void
      * @see http://php.net/manual/en/function.set-exception-handler.php
      */
-    public static function handleException(Exception $exception)
+    public static function handleException($exception)
     {
         $config = Configure::read('Exception');
         $skip_exceptions = [

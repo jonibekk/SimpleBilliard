@@ -49,7 +49,7 @@
                 <?= $this->element('Goal/key_results', ['kr_can_edit' => $kr_can_edit]) ?>
                 <?php if (!$key_results): ?>
                     <?= __('There is no KR.') ?>
-                <? endif ?>
+                <?php endif ?>
             </div>
         </div>
         <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
