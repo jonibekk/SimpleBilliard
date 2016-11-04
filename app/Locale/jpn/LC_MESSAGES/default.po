@@ -3349,11 +3349,11 @@ msgstr "評価状況"
 msgid "Evaluation score settings"
 msgstr "評価スコア設定"
 
-msgid "Save evaluation score settings"
-msgstr "評価スコア設定を保存"
-
 msgid "Add definition"
 msgstr "定義を１つ追加"
+
+msgid "Save settings"
+msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
@@ -3430,9 +3430,6 @@ msgstr "最終評価者評価 トータル コメント"
 msgid "Evaluation total comment by Final Evaluator required"
 msgstr "最終評価者評価 トータル コメント 必須"
 
-msgid "Save evaluation settings"
-msgstr "評価設定を保存"
-
 msgid "Begin evaluation"
 msgstr "評価開始"
 
@@ -3480,9 +3477,6 @@ msgstr "ゴールカテゴリ設定"
 
 msgid "Add a goal category"
 msgstr "ゴールカテゴリを追加"
-
-msgid "Save goal category settings"
-msgstr "ゴールカテゴリ設定を保存"
 
 msgid "Reach"
 msgstr "リーチ"
