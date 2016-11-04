@@ -104,8 +104,8 @@ class Team extends AppModel
         ],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'change_from'        => [
-            'boolean' => [
-                'rule'       => ['boolean'],
+            'numeric' => [
+                'rule' => ['range', 0, 3], // 1, 2のみ許可
                 'allowEmpty' => true,
             ],
         ],
