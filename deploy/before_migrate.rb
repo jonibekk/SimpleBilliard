@@ -25,7 +25,7 @@ bash "yarn install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   cd #{release_path}
-  yarn install
+  yarn install || true && yarn install
   EOS
 end
 
