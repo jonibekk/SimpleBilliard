@@ -93,6 +93,9 @@
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     box-sizing: border-box;
+    &.mod-child {
+      width: 100%;
+    }
   }
   &-interactive-link {
     color: @subColor3;
@@ -177,8 +180,9 @@
       &.mod-textarea {
         height: 100px;
       }
-      &.mod-select {
-        background-size: 24px 12px !important;
+      &.mod-select-units {
+        width: 60px;
+        margin-right: 5px;
       }
 
       // step4 tkr入力

@@ -136,7 +136,7 @@ export default class Edit extends React.Component {
                    value={inputData.end_date}/>
             <InvalidMessageBox message={validationErrors.end_date}/>
             <label className="goals-create-input-label">{__("Weight")}</label>
-            <select className="goals-create-input-form mod-select" name="priority" ref="priority"
+            <select className="goals-create-input-form" name="priority" ref="priority"
                     value={inputData.priority} onChange={this.onChange}>
               {
                 this.props.goal.priorities.map((v) => {
@@ -159,10 +159,12 @@ export default class Edit extends React.Component {
             <InvalidMessageBox message={tkrValidationErrors.name}/>
 
             <label className="goals-create-input-label">{__("Measurement type")}</label>
-            <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
-                        onChange={(e) => this.onChange(e, "key_result")}/>
+            <div className="goals-create-layout-flex">
+              <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
+                          onChange={(e) => this.onChange(e, "key_result")}/>
+              <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
+            </div>
             <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
-            <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
             <InvalidMessageBox message={tkrValidationErrors.start_value}/>
             <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 
