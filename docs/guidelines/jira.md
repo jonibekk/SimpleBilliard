@@ -1,4 +1,4 @@
-# JIRA運用
+# JIRA/Confluence運用
 
 ## Account
 
