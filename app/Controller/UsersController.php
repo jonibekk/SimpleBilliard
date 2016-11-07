@@ -41,7 +41,6 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if ($this->Auth->user()) {
-            $this->_ifFromUservoiceRedirect();
             return $this->redirect('/');
         }
 
