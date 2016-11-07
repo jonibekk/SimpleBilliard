@@ -25,6 +25,8 @@ bash "yarn install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   cd #{release_path}
+  #TODO 初回実行時にエラーが発生する場合があるので２回実行する(以下がエラー内容) fixする必要あり。
+  #TODO STDERR: warning gulp-for-goalous@0.2.0: Dependency "querystring" listed in "devDependencies" is the name of a built-in module
   yarn install || true && yarn install
   EOS
 end
