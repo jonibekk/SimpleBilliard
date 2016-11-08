@@ -10,7 +10,6 @@ export default class UnitSelect extends React.Component {
 
   onChange(e) {
     this.props.onChange(e)
-    this.setState({ opened_unit_list: false })
   }
 
   render() {
