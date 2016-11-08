@@ -23,7 +23,13 @@
                             <?= count($kr['ActionResult'])?>
                         </dd>
                         <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-database"></i></dt>
-                        <dd class="goal-detail-kr-info-counts-description">TKR</dd>
+                        <dd class="goal-detail-kr-info-counts-description">
+                            <?php if ($kr['KeyResult']['tkr_flg']):?>
+                                TKR
+                            <?php else:?>
+                                <?=$kr['KeyResult']['priority']?>
+                            <?php endif;?>
+                        </dd>
                         <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-clock-o"></i></dt>
                         <dd class="goal-detail-kr-info-counts-description">
                             <?= $this->Time->format('Y/m/d', $kr['KeyResult']['end_date'] + $goal_term['timezone'] * HOUR) ?>
