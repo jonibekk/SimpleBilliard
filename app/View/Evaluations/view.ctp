@@ -17,6 +17,13 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 
+<!-- Back button -->
+<div class="col-sm-8 col-sm-offset-2">
+    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index']) ?>" class="btn-back">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
+</div>
+
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
         'div'       => 'form-group',
@@ -576,3 +583,10 @@ $this->Form->input("evaluate_type", [
     });
 </script>
 <?php $this->end() ?>
+
+<!-- Back button -->
+<div class="col-sm-8 col-sm-offset-2">
+    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index']) ?>" class="btn-back">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
+</div>

@@ -3198,7 +3198,7 @@ function evNotifyPost(options) {
   // URL生成
   var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
 
-  var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+  var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
   $.ajax({
     type: 'GET',
