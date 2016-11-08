@@ -102,8 +102,14 @@ export default class Step3Component extends React.Component {
           </a>
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.handleChange}
-                      value={inputData.description} placeholder={__("Optional")}/>
+            <textarea
+              name="description"
+              className="goals-create-input-form mod-textarea"
+              value={inputData.description}
+              placeholder={__("Optional")}
+              maxLength="2000"
+              onChange={this.handleChange}
+            />
             <InvalidMessageBox message={validationErrors.description}/>
 
             <label className="goals-create-input-label">{__("End date")}</label>

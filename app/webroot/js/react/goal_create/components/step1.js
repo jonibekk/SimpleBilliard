@@ -54,6 +54,7 @@ export default class Step1Component extends React.Component {
           <label className="goals-create-input-label">{__("Goal name")}</label>
           <input name="name" className="form-control goals-create-input-form" type="text"
                  placeholder={__("eg. Spread Goalous users in the world")} ref="name"
+                 maxLength="200"
                  onChange={this.handleChange} value={inputData.name}/>
           <InvalidMessageBox message={validationErrors.name}/>
 
