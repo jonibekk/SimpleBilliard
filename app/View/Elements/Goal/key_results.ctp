@@ -41,7 +41,7 @@
             </div>
             <?php if (!empty($kr['KeyResult']['description'])):?>
                 <div class="showmore-init-none">
-                    <?= $kr['KeyResult']['description'] ?>
+                    <?= nl2br($kr['KeyResult']['description']) ?>
                 </div>
             <?php endif; ?>
         </div>
