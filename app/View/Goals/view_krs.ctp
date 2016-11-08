@@ -26,7 +26,7 @@
                     <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
-            <div class="clearfix mb_4px mt_12px">
+            <div class="clearfix mt_12px">
                 <h3 class="goal-detail-kr-add-heading pull-left">
                     <i class="fa fa-key"></i>
                     <?= __('KRs of this goal') ?>(<?= count($key_results)?>)
