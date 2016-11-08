@@ -54,10 +54,13 @@ export default class Step4Component extends React.Component {
 
           <InvalidMessageBox message={tkrValidationErrors.name}/>
 
-          <UnitSelect value={inputData.key_result.value_unit} units={units} onChange={(e) => this.handleChange(e)}/>
-          <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
 
-          <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.handleChange(e)}/>
+          <div className="goals-create-layout-flex">
+            <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
+                        onChange={(e) => this.handleChange(e)} />
+            <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.handleChange(e)} />
+          </div>
+          <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
           <InvalidMessageBox message={tkrValidationErrors.start_value}/>
           <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 

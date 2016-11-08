@@ -31,4 +31,3 @@ CategorySelect.propTypes = {
   value: React.PropTypes.string
 };
 CategorySelect.defaultProps = {categories: [], value: ""};
-
