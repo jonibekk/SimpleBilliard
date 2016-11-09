@@ -283,7 +283,6 @@ class KeyResult extends AppModel
             ],
             'order'      => [
                 'KeyResult.progress ASC',
-                'KeyResult.start_date ASC',
                 'KeyResult.end_date ASC',
                 'KeyResult.priority DESC',
             ],

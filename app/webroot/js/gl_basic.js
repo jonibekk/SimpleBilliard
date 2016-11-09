@@ -3781,6 +3781,13 @@ function showMore(obj) {
       showText: showText,
       hideText: hideText
     });
+    $('.showmore-init-none').showMore({
+      speedDown: 100,
+      speedUp: 100,
+      height: '0px',
+      showText,
+      hideText
+    });
   }
 }
 function getModalFormFromUrl(e) {
