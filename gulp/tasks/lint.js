@@ -16,8 +16,9 @@ gulp.task('js:coffeelint', () => {
 gulp.task('js:eslint', () => {
   return gulp.src(config.js.src)
     .pipe(plumber())
-    // 今はgl_basicで大量にwarningが出るため、
-    // リファクタ後またenableにする。
+    // TODO: 今はgl_basicで大量にwarningが出るため、
+    //       リファクタ後またenableにする。
+    //       同時にeslintignoreも編集する必要あり。
     .pipe(eslint({ useEslintrc: false }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
