@@ -7,6 +7,7 @@ import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import CategorySelect from "~/common/components/goal/CategorySelect";
 import LabelInput from "~/common/components/goal/LabelInput";
+import {MaxLength} from "~/common/constants/App";
 
 export default class Edit extends React.Component {
   constructor(props) {
@@ -100,7 +101,7 @@ export default class Edit extends React.Component {
                    className="form-control goals-create-input-form" type="text"
                    placeholder={__("eg. Spread Goalous users in the world")} ref="name"
                    value={inputData.name}
-                   maxLength="200"
+                   maxLength={MaxLength.Name}
                    onChange={this.onChange}
             />
             <InvalidMessageBox message={validationErrors.name}/>
@@ -135,7 +136,7 @@ export default class Edit extends React.Component {
                       className="goals-create-input-form mod-textarea"
                       value={inputData.description}
                       placeholder={__("Optional")}
-                      maxLength="2000"
+                      maxLength={MaxLength.Description}
                       onChange={this.onChange}
             />
             <InvalidMessageBox message={validationErrors.description}/>
@@ -164,7 +165,7 @@ export default class Edit extends React.Component {
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")}
-                   maxLength="200"
+                   maxLength={MaxLength.Name}
                    onChange={(e) => this.onChange(e, "key_result")}
             />
             <InvalidMessageBox message={tkrValidationErrors.name}/>
@@ -182,7 +183,7 @@ export default class Edit extends React.Component {
                       className="form-control goals-create-input-form mod-textarea"
                       value={inputData.key_result.description}
                       placeholder={__("Optional")}
-                      maxLength="2000"
+                      maxLength={MaxLength.Description}
                       onChange={(e) => this.onChange(e, "key_result")}
             />
             <InvalidMessageBox message={tkrValidationErrors.description}/>

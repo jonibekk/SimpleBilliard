@@ -5,6 +5,7 @@ import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {KeyResult} from "~/common/constants/Model";
+import {MaxLength} from "~/common/constants/App";
 
 export default class Step4Component extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ export default class Step4Component extends React.Component {
           <input name="name" type="text" value={inputData.key_result.name}
                  className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                  placeholder={__("eg. Increase Goalous weekly active users")}
-                 maxLength="200"
+                 maxLength={MaxLength.Name}
                  onChange={this.handleChange}/>
 
           <InvalidMessageBox message={tkrValidationErrors.name}/>
@@ -73,7 +74,7 @@ export default class Step4Component extends React.Component {
                       value={inputData.key_result.description}
                       className="form-control goals-create-input-form mod-textarea"
                       placeholder={__("Optional")}
-                      maxLength="2000"
+                      maxLength={MaxLength.Description}
                       onChange={this.handleChange}
             />
             <InvalidMessageBox message={tkrValidationErrors.description}/>

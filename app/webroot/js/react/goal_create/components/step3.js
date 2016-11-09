@@ -4,7 +4,7 @@ import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import PhotoUpload from "~/common/components/goal/PhotoUpload";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
-
+import {MaxLength} from "~/common/constants/App";
 
 export default class Step3Component extends React.Component {
   constructor(props) {
@@ -107,7 +107,7 @@ export default class Step3Component extends React.Component {
               className="goals-create-input-form mod-textarea"
               value={inputData.description}
               placeholder={__("Optional")}
-              maxLength="2000"
+              maxLength={MaxLength.Description}
               onChange={this.handleChange}
             />
             <InvalidMessageBox message={validationErrors.description}/>
