@@ -687,10 +687,10 @@ class Goal extends AppModel
                         'KeyResult.end_date <=' => $end_date,
                     ],
                     'order'      => [
-                        'KeyResult.progress ASC',
-                        'KeyResult.start_date ASC',
-                        'KeyResult.end_date ASC',
+                        'KeyResult.completed IS NULL DESC',
+                        'KeyResult.tkr_flg DESC',
                         'KeyResult.priority DESC',
+                        'KeyResult.end_date ASC',
                     ],
                 ],
                 'IncompleteKeyResult' => [
