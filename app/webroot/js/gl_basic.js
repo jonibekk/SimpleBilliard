@@ -3785,8 +3785,8 @@ function showMore(obj) {
       speedDown: 100,
       speedUp: 100,
       height: '0px',
-      showText: showText,
-      hideText: hideText
+      showText,
+      hideText
     });
   }
 }
