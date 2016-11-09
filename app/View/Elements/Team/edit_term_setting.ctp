@@ -146,7 +146,7 @@
             </div>
         </div>
         <div class="form-group none" id="NewNextTerm">
-            <label class="col col-sm-3 control-label form-label"><?= __("Current term after changed") ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __("Next term after changed") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static font_darkRed" id=""></p>

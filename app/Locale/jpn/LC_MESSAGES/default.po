@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-10-28 14:57+0900\n"
+"PO-Revision-Date: 2016-11-07 11:39+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3035,8 +3035,8 @@ msgstr "ゴールページへ"
 msgid "Did you achieve the goal?"
 msgstr "ゴールを達成しましたか？"
 
-msgid "Current point"
-msgstr "現在値"
+msgid "Start date"
+msgstr "開始日"
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中の成果は「完了」となります。"
@@ -3277,9 +3277,6 @@ msgstr "変更適用対象"
 msgid "Current term can't be changed during the evaluation period."
 msgstr "評価期間中は今期の変更ができません。"
 
-msgid "Start date"
-msgstr "開始日"
-
 msgid "Please select the standard start month."
 msgstr "基準となる期の開始月を選択して下さい。"
 
@@ -3294,6 +3291,9 @@ msgstr "変更前の来期"
 
 msgid "Current term after changed"
 msgstr "更新後の今期の期間"
+
+msgid "Next term after changed"
+msgstr "更新後の来期の期間"
 
 msgid "Change term settings"
 msgstr "期間設定を更新"
