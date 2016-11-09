@@ -150,19 +150,20 @@ class GoalsController extends AppController
 
     public function ajax_get_related_kr_list_modal()
     {
-        $goal_id = Hash::get($this->request->params, 'named.goal_id');
-        $user_id = Hash::get($this->request->params, 'named.user_id');
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        $userId = Hash::get($this->request->params, 'named.user_id');
         $krs = [];
-        if ($goal_id && $user_id) {
-            $krs = $this->Goal->KeyResult->getKrRelatedUserAction($goal_id, $user_id);
+        if ($goalId && $userId) {
+            $krs = $this->Goal->KeyResult->getKeyResultsForEvaluation($goalId);
         }
 
-        $krs = Hash::extract($krs, "{n}.KeyResult[progress=100]");
+        $allKrCount = count($krs);
+        $myActionKrCount = count(Hash::extract($krs, "{n}[action_result_count>0]"));
 
         $this->_ajaxPreProcess();
 
         //htmlレンダリング結果
-        $this->set(compact('krs'));
+        $this->set(compact('krs', 'allKrCount', 'myActionKrCount'));
         $response = $this->render('Goal/modal_related_kr_list');
         $html = $response->__toString();
 

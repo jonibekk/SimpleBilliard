@@ -1,0 +1,62 @@
+.eval-view {
+  &-panel {
+    &-title {
+      font-weight: bold;
+    }
+    &-section {
+      border-bottom: 1px solid @subColor4;
+      padding-top: 12px;
+      padding-bottom: 8px;
+    }
+    &-body {
+      .form-label {
+        text-align: left;
+        padding-top: 0;
+      }
+    }
+    &-goal-pic {
+      margin: auto;
+    }
+  }
+  &-btn-submit {
+    padding: 8px 33px;
+  }
+  &-img {
+    display: block;
+    float: left;
+    height: 48px;
+    width: 48px;
+    margin-right: 6px;
+    border-radius: 50%;
+    border: 1px solid @subColor4;
+  }
+  &-result-number, &-action-number {
+    text-align: center;
+    font-size: 33px;
+    font-weight: bold;
+  }
+  &-result-text, &-action-text {
+    text-align: center;
+  }
+}
+
+.eval-term {
+  &-tab-elm {
+    border-bottom: solid 2px #e0e0e0;
+    padding-bottom: 0;
+    &:hover {
+      background: @goalous none;
+      border: none;
+    }
+    &:focus, &:active {
+      background: @goalous none;
+      border: none;
+    }
+  }
+  &-tab-menu {
+    .selected {
+      border-bottom: solid 2px @goalous;
+      background: #ae554f none;
+    }
+  }
+}

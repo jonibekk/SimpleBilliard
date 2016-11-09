@@ -567,5 +567,21 @@ class KeyResult extends AppModel
         return $ret + $defaultCountEachGoalId;
     }
 
+    public function getKeyResultsForEvaluation($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'order'      => [
+                'KeyResult.tkr_flg DESC',
+                'KeyResult.priority DESC'
+            ]
+        ];
+        $res = $this->find('all', $options);
 
+        $krs = Hash::extract($res, "{n}.KeyResult");
+        return $krs;
+    }
 }

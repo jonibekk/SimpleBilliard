@@ -2844,41 +2844,6 @@ Temporary Properties - YOU MUST FIX
     display: inline;
 }
 
-.eval-view-panel-body .form-label {
-    text-align: left;
-    padding-top: 0;
-}
-
-.eval-view-panel-title {
-    font-weight: bold;
-}
-
-.eval-view-panel-goal-pic {
-    margin: auto;
-}
-
-.eval-view-result-number,
-.eval-view-action-number {
-    text-align: center;
-    font-size: 33px;
-    font-weight: bold;
-}
-
-.eval-view-result-text,
-.eval-view-action-text {
-    text-align: center;
-}
-
-.eval-view-img {
-    display: block;
-    float: left;
-    height: 48px;
-    width: 48px;
-    margin-right: 6px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-}
-
 .none-border {
     border: none !important;
 }
@@ -2913,26 +2878,6 @@ Temporary Properties - YOU MUST FIX
     border-bottom: solid 2px #ae2f2f;
 }
 
-.eval-term-tab-elm:focus, .eval-term-tab-elm:active {
-    background: #ae2f2f none;
-    border: none;
-}
-
-.eval-term-tab-elm:hover {
-    background: #ae2f2f none;
-    border: none;
-}
-
-.eval-term-tab-elm {
-    border-bottom: solid 2px #e0e0e0;
-    padding-bottom: 0;
-}
-
-.eval-term-tab-menu > .selected {
-    border-bottom: solid 2px #ae2f2f;
-    background: #ae554f none;
-}
-
 /* tag */
 .tag-sm {
     position: relative;
@@ -2965,16 +2910,6 @@ Temporary Properties - YOU MUST FIX
 
 .tag-info {
     background-color: #029acf;
-}
-
-.eval-view-panel-section {
-    border-bottom: 1px solid #ccc;
-    padding-top: 12px;
-    padding-bottom: 8px;
-}
-
-.eval-view-btn-submit {
-    padding: 8px 33px;
 }
 
 .dot-omission {
