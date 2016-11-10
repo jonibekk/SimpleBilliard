@@ -20,6 +20,7 @@
         <div class="modal-body">
             <ul class="goals-approval-list">
                 <?php foreach ($krs as $kr): ?>
+                <?php $actioned = $kr['action_result_count'] > 0; ?>
                 <li class="goals-approval-list-item is-complete">
                     <a class="goals-approval-list-item-link click-show-post-modal pointer"
                        id="ActionListOpen_<?= $kr['goal_id'] ?>"
@@ -47,7 +48,7 @@
                             <dl class="goal-detail-kr-info-counts mb_4px">
                                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-check-circle"></i></dt>
                                 <dd class="goal-detail-kr-info-counts-description">
-                                    <?= $kr['action_result_count']?>
+                                    <?= $kr['action_result_count'] ?>
                                 </dd>
                                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-database"></i></dt>
                                 <dd class="goal-detail-kr-info-counts-description">

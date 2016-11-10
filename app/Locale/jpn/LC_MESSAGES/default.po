@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-09 14:01+0900\n"
+"PO-Revision-Date: 2016-11-09 14:49+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3314,6 +3314,9 @@ msgstr "定義の説明を書きましょう"
 
 msgid "Paused evaluation settings."
 msgstr "評価凍結設定"
+
+msgid "Evaluation has not started."
+msgstr "評価が開始されていません。"
 
 msgid "Resume current term evaluations."
 msgstr "今期の評価の凍結を解除する"
