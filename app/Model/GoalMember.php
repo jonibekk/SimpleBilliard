@@ -485,8 +485,9 @@ class GoalMember extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
-                        'TeamMember.coach_user_id' => $userId,
-                        'TeamMember.team_id'       => $this->current_team_id,
+                        'TeamMember.coach_user_id'         => $userId,
+                        'TeamMember.team_id'               => $this->current_team_id,
+                        'TeamMember.evaluation_enable_flg' => true,
                     ]
                 ]
             ],
