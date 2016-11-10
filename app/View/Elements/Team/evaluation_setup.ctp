@@ -180,7 +180,7 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
-                <?= $this->Form->submit(__('Save evaluation settings'), ['class' => 'btn btn-primary pull-right']) ?>
+                <?= $this->Form->submit(__('Save settings'), ['class' => 'btn btn-primary pull-right']) ?>
             </div>
         </div>
     </div>

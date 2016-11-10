@@ -18,16 +18,16 @@ export default class ValueStartEndInput extends React.Component {
     }
 
     return (
-      <div>
-        <div className="goals-create-layout-flex">
-          <input name="start_value" value={inputData.start_value}
-                 className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
-                 placeholder={0} onChange={this.onChange.bind(this)}/>
-          <span className="goals-create-input-form-tkr-range-symbol">&gt;</span>
-          <input name="target_value" value={inputData.target_value}
-                 className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
-                 placeholder={100} onChange={this.onChange.bind(this)}/>
-        </div>
+      <div className="goals-create-layout-flex mod-child">
+        <input name="start_value" value={inputData.start_value}
+               className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
+               placeholder={0} onChange={this.onChange.bind(this)}/>
+        <span className="goals-create-input-form-tkr-range-symbol">
+          <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
+        </span>
+        <input name="target_value" value={inputData.target_value}
+               className="form-control goals-create-input-form goals-create-input-form-tkr-range" type="text"
+               placeholder={100} onChange={this.onChange.bind(this)}/>
       </div>
     )
 
@@ -36,4 +36,3 @@ export default class ValueStartEndInput extends React.Component {
 ValueStartEndInput.propTypes = {
   inputData: React.PropTypes.object.isRequired,
 };
-

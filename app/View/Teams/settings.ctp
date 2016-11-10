@@ -22,7 +22,7 @@ $this->set('hidden_sidebar_xxs', true);
         <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
         <li class=""><a href="#goal_category"><?= __("Goal category settings") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("Evaluation settings") ?></a></li>
-        <li class=""><a href="#evaluation_score_setting"><?= __("Evaluation settings") ?></a></li>
+        <li class=""><a href="#evaluation_score_setting"><?= __("Evaluation score settings") ?></a></li>
         <li class=""><a href="#evaluation_start"><?= __("Begin evaluation") ?></a></li>
         <li class=""><a href="#evaluation_freeze"><?= __("Pause evaluation") ?></a></li>
         <li class=""><a href="#final_evaluation"><?= __("Final evaluation") ?></a></li>

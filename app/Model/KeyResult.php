@@ -282,10 +282,10 @@ class KeyResult extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'order'      => [
-                'KeyResult.progress ASC',
-                'KeyResult.start_date ASC',
-                'KeyResult.end_date ASC',
+                'KeyResult.completed IS NULL DESC',
+                'KeyResult.tkr_flg DESC',
                 'KeyResult.priority DESC',
+                'KeyResult.end_date ASC',
             ],
             'limit'      => $params['limit'],
             'page'       => $params['page'],

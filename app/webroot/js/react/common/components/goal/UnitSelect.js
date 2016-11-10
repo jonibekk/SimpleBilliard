@@ -1,5 +1,4 @@
 import React from "react";
-import {KeyResult} from "~/common/constants/Model";
 
 export default class UnitSelect extends React.Component {
   constructor(props) {
@@ -16,21 +15,28 @@ export default class UnitSelect extends React.Component {
       return null
     }
 
-    const unitOptions = units.map((v) => {
-      return <option key={v.id} value={v.id}>{v.label}({v.unit})</option>
+    // HACK: constにしないとeslintにおこられる。
+    //       たぶんもっとスマートに実装できる。
+    const short_unit_list = []
+    const unit_options = units.map((v) => {
+      short_unit_list[v.id] = v.unit
+      return <option key={v.id} value={v.id}>{ `${v.label}(${v.unit})` }</option>
     })
 
-  return(
-    <select name="value_unit" value={value}
-            className="form-control goals-create-input-form goals-create-input-form-tkr-range-unit mod-select"
-            onChange={this.onChange.bind(this)}>
-      {unitOptions}
-    </select>
-  )
-
-}
+    return(
+      <div className="relative">
+          <div className="goals-create-input-form-unit-box">
+              <select name="value_unit" value={value}
+                      className="form-control goals-create-input-form mod-select-units"
+                      onChange={this.onChange.bind(this)}>
+                { unit_options }
+              </select>
+          </div>
+          <span className="goals-create-input-form-unit-label">{ short_unit_list[value] }</span>
+      </div>
+    )
+  }
 }
 UnitSelect.propTypes = {
-  units: React.PropTypes.array.isRequired,
+  units: React.PropTypes.array.isRequired
 };
-
