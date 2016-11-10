@@ -22,36 +22,36 @@ git:
   submodules: false
 before_script:
   - printenv
-  - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi autoconf libxml2-dev libbz2-dev libmcrypt-dev libxslt-dev libicu-dev libcurl4-gnutls-dev libjpeg-dev libpng-dev libgif-dev libmagickwand-dev libmagickcore-dev
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo a2enmod rewrite actions fastcgi alias
-  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+#  - sudo apt-get update
+#  - sudo apt-get install apache2 libapache2-mod-fastcgi autoconf libxml2-dev libbz2-dev libmcrypt-dev libxslt-dev libicu-dev libcurl4-gnutls-dev libjpeg-dev libpng-dev libgif-dev libmagickwand-dev libmagickcore-dev
+#  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+#  - sudo a2enmod rewrite actions fastcgi alias
+#  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   - mkdir build
   - chmod -R 777 ./build
-  - cp app/Test/travis/travis-ci-apache build/travis-ci-apache
-  - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - pecl install oauth-1.2.3
-  - sh -c "if [ ! -e apcu-4.0.2 ]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz && tar -xzf apcu-4.0.2.tgz ; fi"
-  - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
-  - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
-  - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
-  - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - pecl install msgpack channel://pecl.php.net/msgpack-0.5.7
-  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - cp app/Test/travis/lite_php_browscap.ini /home/travis/browscap.ini
-  - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sudo service apache2 restart
+#  - cp app/Test/travis/travis-ci-apache build/travis-ci-apache
+#  - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
+#  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+#  - pecl install oauth-1.2.3
+#  - sh -c "if [ ! -e apcu-4.0.2 ]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz && tar -xzf apcu-4.0.2.tgz ; fi"
+#  - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
+#  - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
+#  - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
+#  - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - pecl install msgpack channel://pecl.php.net/msgpack-0.5.7
+#  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - cp app/Test/travis/lite_php_browscap.ini /home/travis/browscap.ini
+#  - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#  - sudo service apache2 restart
   - composer install --prefer-dist --no-interaction --no-dev
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
-  - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then phpenv config-rm xdebug.ini; fi
+#  - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then phpenv config-rm xdebug.ini; fi
   - phpenv rehash
   - mkdir ./app/tmp
   - chmod -R 777 ./app/tmp
