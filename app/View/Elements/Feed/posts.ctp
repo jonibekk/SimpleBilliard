@@ -360,7 +360,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </div>
                         <?php endforeach ?>
                     </div>
-                    <?php if ($this->Post->isDisplayableGoalButtons($post, $current_term)) : ?>
+                    <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
                         <div class="col col-xxs-12 mt_5px p_5px">

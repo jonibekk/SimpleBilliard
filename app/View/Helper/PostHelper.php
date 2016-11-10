@@ -43,45 +43,35 @@ class PostHelper extends AppHelper
      * - 本人が投稿主の場合
      * - ゴール期限が今期より前の場合
      * - 完了済みのゴール
-     * - KR達成かつ、KRの期限が過去の場合
      *
      * @param array $post
+     * @param array $goal
      * @param array $current_term
      *
      * @return bool
      */
-    function isDisplayableGoalButtons(array $post, array $current_term)
+    function isDisplayableGoalButtons(array $post, array $goal, array $current_term)
     {
-        if (!Hash::get($post, 'Goal.id')) {
-            return false;
-        }
         //KR達成、ゴール作成以外はボタン表示しない
-        if (!in_array($post['Post']['type'], [Post::TYPE_KR_COMPLETE, Post::TYPE_CREATE_GOAL])) {
+        if (!in_array($post['type'], [Post::TYPE_KR_COMPLETE, Post::TYPE_CREATE_GOAL])) {
             return false;
         }
         //本人がゴールリーダの場合はボタン表示しない
-        if ($post['Goal']['user_id'] == $this->Session->read('Auth.User.id')) {
+        if ($goal['user_id'] == $this->Session->read('Auth.User.id')) {
             return false;
         }
         //本人が投稿主の場合はボタン表示しない
-        if ($post['Post']['user_id'] == $this->Session->read('Auth.User.id')) {
+        if ($post['user_id'] == $this->Session->read('Auth.User.id')) {
             return false;
         }
         //ゴール期限が今期より前の場合はボタン表示しない
-        if ($post['Goal']['end_date'] <= $current_term['start_date']) {
+        if ($goal['end_date'] <= $current_term['start_date']) {
             return false;
         }
         //完了済みのゴールはボタン表示しない
-        if (!is_null($post['Goal']['completed'])) {
+        if (!is_null($goal['completed'])) {
             return false;
         }
-        //KR達成かつ、KRの期限が過去の場合はボタン表示しない
-        if ($post['Post']['type'] == Post::TYPE_KR_COMPLETE &&
-            REQUEST_TIMESTAMP > $post['KeyResult']['end_date']
-        ) {
-            return false;
-        }
-
         return true;
     }
 
