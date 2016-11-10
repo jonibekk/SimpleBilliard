@@ -27,7 +27,6 @@ before_script:
   - echo -ne '\n' | pecl install apcu
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - pecl install msgpack channel://pecl.php.net/msgpack-2.0.1
-  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer install --prefer-dist --no-interaction --no-dev
   - Vendor/bin/browscap-php browscap:update
