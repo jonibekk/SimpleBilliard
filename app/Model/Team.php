@@ -104,8 +104,14 @@ class Team extends AppModel
         ],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'change_from'        => [
-            'boolean' => [
-                'rule'       => ['boolean'],
+            'numeric' => [
+                'rule'       => [
+                    'inList',
+                    [
+                        self::OPTION_CHANGE_TERM_FROM_CURRENT,
+                        self::OPTION_CHANGE_TERM_FROM_NEXT
+                    ]
+                ],
                 'allowEmpty' => true,
             ],
         ],

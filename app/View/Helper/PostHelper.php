@@ -1,15 +1,20 @@
 <?php
+App::uses('AppHelper', 'View/Helper');
+App::uses('SessionHelper', 'View/Helper');
+
 /**
  * Created by PhpStorm.
  * User: saekis
  * Date: 16/03/16
  * Time: 18:08
+ *
+ * @property SessionHelper $Session
  */
-
-App::uses('AppHelper', 'View/Helper');
-
 class PostHelper extends AppHelper
 {
+    var $helpers = [
+        'Session'
+    ];
 
     /**
      * @param $json_site_info
@@ -28,6 +33,46 @@ class PostHelper extends AppHelper
         }
 
         return '';
+    }
+
+    /**
+     * フィードの投稿内にフォローとコラボのボタン表示ができるかのチェック
+     * 以下の場合は表示不可
+     * - KR達成、ゴール作成以外の投稿
+     * - 本人がゴールリーダの場合
+     * - 本人が投稿主の場合
+     * - ゴール期限が今期より前の場合
+     * - 完了済みのゴール
+     *
+     * @param array $post
+     * @param array $goal
+     * @param array $current_term
+     *
+     * @return bool
+     */
+    function isDisplayableGoalButtons(array $post, array $goal, array $current_term)
+    {
+        //KR達成、ゴール作成以外はボタン表示しない
+        if (!in_array($post['type'], [Post::TYPE_KR_COMPLETE, Post::TYPE_CREATE_GOAL])) {
+            return false;
+        }
+        //本人がゴールリーダの場合はボタン表示しない
+        if ($goal['user_id'] == $this->Session->read('Auth.User.id')) {
+            return false;
+        }
+        //本人が投稿主の場合はボタン表示しない
+        if ($post['user_id'] == $this->Session->read('Auth.User.id')) {
+            return false;
+        }
+        //ゴール期限が今期より前の場合はボタン表示しない
+        if ($goal['end_date'] <= $current_term['start_date']) {
+            return false;
+        }
+        //完了済みのゴールはボタン表示しない
+        if (!is_null($goal['completed'])) {
+            return false;
+        }
+        return true;
     }
 
 }

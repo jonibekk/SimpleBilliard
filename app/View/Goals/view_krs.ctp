@@ -19,32 +19,35 @@
             <p class="goal-detail-kr-progress-score">
                 <?= __('Goal progress rate') ?>: <?= h($goal['Goal']['progress']) ?>%
             </p>
-            <div class="progress mb_0px goals-column-progress-bar goal-detail-kr-progress-bar-wrap">
-                <div class="progress-bar progress-bar-info goal-detail-kr-progress-bar" role="progressbar"
+            <div class="progress mb_0px goals-column-progress-bar goal-detail-goal-progress-bar-wrap">
+                <div class="progress-bar progress-bar-info goal-detail-goal-progress-bar" role="progressbar"
                      aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
                      aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
                     <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
-            <h3 class="goal-detail-kr-add-heading">
-                <i class="fa fa-key"></i>
-                <?= __('KRs of this goal') ?>
-                <!-- todo 数を追加 -->
-            </h3>
-            <?php $kr_can_edit = ($is_leader || $is_goal_member); ?>
-            <?php if ($kr_can_edit): ?>
-                <div>
-                    <a class="btn-add-kr modal-ajax-get-add-key-result"
-                       href="<?= $this->Html->url([
-                           'controller' => 'goals',
-                           'action'     => 'ajax_get_add_key_result_modal',
-                           'goal_id'    => $goal['Goal']['id']
-                       ]) ?>">
-                        <i class="fa fa-plus btn-add-kr-icon"></i>
-                        <span><?= __("Add Key Result") ?></span>
-                    </a>
-                </div>
-            <?php endif ?>
+            <div class="clearfix mt_12px">
+                <h3 class="goal-detail-kr-add-heading pull-left">
+                    <i class="fa fa-key"></i>
+                    <?= __('KRs of this goal') ?>(<?= count($key_results)?>)
+                    <!-- todo 数を追加 -->
+                </h3>
+                <?php $kr_can_edit = ($is_leader || $is_goal_member); ?>
+                <?php if ($kr_can_edit): ?>
+                    <div class="pull-right">
+                        <a class="modal-ajax-get-add-key-result"
+                           href="<?= $this->Html->url([
+                               'controller' => 'goals',
+                               'action'     => 'ajax_get_add_key_result_modal',
+                               'goal_id'    => $goal['Goal']['id']
+                           ]) ?>">
+                            <i class="fa fa-plus btn-add-kr-icon"></i>
+                            <span><?= __("Add Key Result") ?></span>
+                        </a>
+                    </div>
+                <?php endif ?>
+            </div>
+
             <div class="row borderBottom" id="GoalPageKeyResultContainer">
                 <?= $this->element('Goal/key_results', ['kr_can_edit' => $kr_can_edit]) ?>
                 <?php if (!$key_results): ?>

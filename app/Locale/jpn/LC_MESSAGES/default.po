@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-02 17:48+0900\n"
+"PO-Revision-Date: 2016-11-10 14:48+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.10\n"
+"X-Generator: Poedit 1.8.7\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -1128,18 +1128,11 @@ msgstr ""
 "card-head-target\">%2$s</span>を作成しました。"
 
 msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> has changed the role "
-"with <span class=\"notify-card-head-target\">%2$s</span>."
+"<span class=\"notify-card-head-target\">%1$s</span> has reapplied <span "
+"class=\"notify-card-head-target\">%2$s</span>."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
-"card-head-target\">%2$s</span>の役割を変更しました。"
-
-msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> has updated <span class="
-"\"notify-card-head-target\">%2$s</span>."
-msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
-"card-head-target\">%2$s</span>を修正しました。"
+"card-head-target\">%2$s</span>を再申請しました。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has withdrawn <span "
@@ -2963,9 +2956,6 @@ msgstr "達成要素を削除する"
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこの成果を削除しますか？"
 
-msgid "Due."
-msgstr "期限"
-
 msgid "Clear"
 msgstr "クリア"
 
@@ -3058,6 +3048,9 @@ msgstr "ゴール編集"
 
 msgid "Collaboration"
 msgstr "コラボ"
+
+msgid "KR"
+msgstr "KR"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
@@ -3295,6 +3288,9 @@ msgstr "変更前の来期"
 msgid "Current term after changed"
 msgstr "更新後の今期の期間"
 
+msgid "Next term after changed"
+msgstr "更新後の来期の期間"
+
 msgid "Change term settings"
 msgstr "期間設定を更新"
 
@@ -3318,6 +3314,9 @@ msgstr "定義の説明を書きましょう"
 
 msgid "Paused evaluation settings."
 msgstr "評価凍結設定"
+
+msgid "Evaluation has not started."
+msgstr "評価が開始されていません。"
 
 msgid "Resume current term evaluations."
 msgstr "今期の評価の凍結を解除する"
@@ -3349,11 +3348,11 @@ msgstr "評価状況"
 msgid "Evaluation score settings"
 msgstr "評価スコア設定"
 
-msgid "Save evaluation score settings"
-msgstr "評価スコア設定を保存"
-
 msgid "Add definition"
 msgstr "定義を１つ追加"
+
+msgid "Save settings"
+msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
@@ -3430,9 +3429,6 @@ msgstr "最終評価者評価 トータル コメント"
 msgid "Evaluation total comment by Final Evaluator required"
 msgstr "最終評価者評価 トータル コメント 必須"
 
-msgid "Save evaluation settings"
-msgstr "評価設定を保存"
-
 msgid "Begin evaluation"
 msgstr "評価開始"
 
@@ -3480,9 +3476,6 @@ msgstr "ゴールカテゴリ設定"
 
 msgid "Add a goal category"
 msgstr "ゴールカテゴリを追加"
-
-msgid "Save goal category settings"
-msgstr "ゴールカテゴリ設定を保存"
 
 msgid "Reach"
 msgstr "リーチ"
@@ -3892,8 +3885,8 @@ msgstr "プロフィール画像をアップロードする"
 msgid "View Profile Image"
 msgstr "プロフィール画像を見る"
 
-msgid "Basic Information"
-msgstr "基本データ"
+msgid "Info"
+msgstr "基本情報"
 
 msgid "Welcome to Goalous!"
 msgstr "Goalousへようこそ！"

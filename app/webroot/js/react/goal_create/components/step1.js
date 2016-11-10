@@ -3,6 +3,7 @@ import {browserHistory} from "react-router";
 import * as Page from "../constants/Page";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import Vision from "./elements/Vision";
+import {MaxLength} from "~/common/constants/App";
 
 export default class Step1Component extends React.Component {
   constructor(props) {
@@ -54,6 +55,7 @@ export default class Step1Component extends React.Component {
           <label className="goals-create-input-label">{__("Goal name")}</label>
           <input name="name" className="form-control goals-create-input-form" type="text"
                  placeholder={__("eg. Spread Goalous users in the world")} ref="name"
+                 maxLength={MaxLength.Name}
                  onChange={this.handleChange} value={inputData.name}/>
           <InvalidMessageBox message={validationErrors.name}/>
 

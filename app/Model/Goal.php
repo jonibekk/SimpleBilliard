@@ -687,10 +687,10 @@ class Goal extends AppModel
                         'KeyResult.end_date <=' => $end_date,
                     ],
                     'order'      => [
-                        'KeyResult.progress ASC',
-                        'KeyResult.start_date ASC',
-                        'KeyResult.end_date ASC',
+                        'KeyResult.completed IS NULL DESC',
+                        'KeyResult.tkr_flg DESC',
                         'KeyResult.priority DESC',
+                        'KeyResult.end_date ASC',
                     ],
                 ],
                 'IncompleteKeyResult' => [
@@ -1370,15 +1370,6 @@ class Goal extends AppModel
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
-                    ],
-                    'fields'     => [
-                        'KeyResult.id',
-                        'KeyResult.name',
-                        'KeyResult.end_date',
-                        'KeyResult.action_result_count',
-                        'KeyResult.progress',
-                        'KeyResult.priority',
-                        'KeyResult.completed',
                     ],
                     'order'      => [
                         'KeyResult.progress ASC',

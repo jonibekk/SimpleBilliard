@@ -260,9 +260,10 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     -webkit-transition: none;
     transition: none;
 }
+
 .form-control.gl {
-   line-height: 18px;
-    padding:8px;
+    line-height: 18px;
+    padding: 8px;
     height: auto;
 }
 
@@ -428,6 +429,10 @@ textarea{
     margin-bottom: 2px;
 }
 
+.mb_4px {
+    margin-bottom: 4px;
+}
+
 .mb_8px {
     margin-bottom: 8px;
 }
@@ -450,6 +455,10 @@ textarea{
 
 .p_4px {
     padding: 4px;
+}
+
+.p_5px {
+    padding: 5px;
 }
 
 .p_8px {
@@ -503,6 +512,11 @@ textarea{
 .mtb_3px {
     margin-top: 3px;
     margin-bottom: 3px;
+}
+
+.mtb_4px {
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .mtb_5px {
@@ -569,7 +583,7 @@ textarea{
 }
 
 .pt_20px {
-  padding-top: 20px;
+    padding-top: 20px;
 }
 
 .pr_5px {
@@ -698,11 +712,9 @@ textarea{
 
 /*/ text-align */
 
-
 .d-block {
     display: block;
 }
-
 
 .tap-btn {
     font-size: 40px;
@@ -1098,7 +1110,7 @@ textarea{
     font-weight: bold;
     font-size: 18px;
 
-/ / padding : 10 px 11 px;
+/ / padding: 10 px 11 px;
 }
 
 .design-mystatus {
