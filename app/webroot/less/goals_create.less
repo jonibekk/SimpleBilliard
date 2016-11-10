@@ -182,7 +182,23 @@
       }
       &.mod-select-units {
         width: 60px;
-        margin-right: 5px;
+        margin-bottom: 0;
+        opacity: 0;
+        z-index: 100;
+        position: relative;
+      }
+      &-unit-label {
+        position: absolute;
+        top: 8px;
+        left: 12px;
+        z-index: 99;
+      }
+      &-unit-box {
+        background: url(../img/svg/icon_arrow_open.svgz) right center / 24px 12px no-repeat !important;
+        border: 1px solid #ddd;
+        height: 38px;
+        width: 60px;
+        margin: 0 10px 10px 0;
       }
 
       // step4 tkr入力
@@ -196,8 +212,6 @@
           display: table-cell;
         }
         &-range {
-          &-unit {
-          }
           &-symbol {
             background-color: @subColor5;
             display: table-cell;
