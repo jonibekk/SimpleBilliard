@@ -712,12 +712,12 @@ class NotifySetting extends AppModel
                 $goal = $this->User->Goal->findById($options['goal_id']);
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has changed the role with <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
                         $goal['Goal']['name']);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has changed the role with <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
                         h($goal['Goal']['name']));
                 }
@@ -728,12 +728,12 @@ class NotifySetting extends AppModel
                 $goal = $this->User->Goal->findById($options['goal_id']);
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has updated <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
                         $goal['Goal']['name']);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has updated <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
                         h($goal['Goal']['name']));
                 }

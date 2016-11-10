@@ -26,6 +26,5 @@
     "object-shorthand": 1,
     "indent": [2, 2, {"SwitchCase": 1}],
     "comma-dangle": 1,
-    "newline-after-var": 1
   }
 }

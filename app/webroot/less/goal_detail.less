@@ -330,11 +330,11 @@
   }
 }
 
-.goal-detail-kr-progress-bar-wrap {
+.goal-detail-goal-progress-bar-wrap {
   overflow: visible;
 }
 
-.goal-detail-kr-progress-bar {
+.goal-detail-goal-progress-bar {
   border-radius: 4px 0 0 4px;
   position: relative;
   overflow: visible;
@@ -350,12 +350,15 @@
 
 .goal-detail-kr-add-heading {
   font-size: @fontMedium;
+  margin:0;
+  padding: 0;
+  line-height: normal;
 }
 
 .goal-detail-kr-card {
   background: @backgroundColor1;
-  border-radius: 8px;
-  padding: 8px 0;
+  border-radius: 4px;
+  padding: 10px;
   .borderBottom &:not(:last-child) {
     margin: 8px 0;
   }
@@ -392,7 +395,7 @@
 .goal-detail-kr-card-title {
   font-size: @fontMedium;
   font-weight: bold;
-  .line-number-limit-2;
+  margin: 0;
 }
 
 .goal-detail-action {
@@ -530,3 +533,67 @@
   font-size: 90%;
   border-radius: .25em;
 }
+
+
+.goal-detail-kr-progress-bar-wrap {
+  border-radius: 4px;
+  overflow: visible;
+  background-color: @subColor3;
+  text-align: center;
+  position: relative;
+}
+
+.goal-detail-kr-progress-bar {
+  background-color: @keyColor;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  &.mod-incomplete {
+    border-radius: 4px 0 0 4px;
+    // 進捗率を0〜99%で表すために.rate-{0〜99}のclassのスタイルを生成
+    @iterations: 99;
+    .rate (@i) when (@i >= 0) {
+      &.rate-@{i} {
+        width: ~"@{i}%";
+      }
+      .rate(@i - 1);
+    }
+    .rate (@iterations);
+  }
+  &.mod-complete {
+    border-radius: 4px;
+    width: 100%;
+  }
+}
+
+.goal-detail-kr-progress-text {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  font-size: 12px;
+}
+.goal-detail-kr-flex {
+  display: -webkit-flex;
+  display: flex;
+}
+.goal-detail-kr-block-main {
+  flex: 1;
+}
+.goal-detail-kr-block-side {
+  padding-left: 8px;
+}
+.goal-detail-kr-info-counts {
+  margin: 0;
+  padding: 0;
+  &-title, &-description {
+    display: inline-block;
+    font-size: 13px;
+  }
+  &-description {
+    margin: 0 8px 0 2px;
+  }
+}
+
