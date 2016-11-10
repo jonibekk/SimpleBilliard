@@ -52,6 +52,7 @@ before_script:
 #  - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 #  - sudo service apache2 restart
   - composer install --prefer-dist --no-interaction --no-dev
+  - Vendor/bin/browscap-php browscap:update
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
 #  - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then phpenv config-rm xdebug.ini; fi
