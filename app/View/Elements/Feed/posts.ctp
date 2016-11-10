@@ -12,6 +12,7 @@
  * @var                    $long_text
  * @var                    $without_header
  * @var                    $without_add_comment
+ * @var                    $current_term
  */
 $without_header = isset($without_header) ? $without_header : false;
 $without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
@@ -359,32 +360,30 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </div>
                         <?php endforeach ?>
                     </div>
-                    <?php if ($post['Post']['user_id'] != $this->Session->read('Auth.User.id') && $post['Goal']['end_date'] > $current_term['start_date'] && is_null($post['Goal']['completed'])) : ?>
+                    <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
-                        <div style="padding:5px" class="col col-xxs-12 mt_5px">
-                            <?php if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE || ($post['Post']['type'] == Post::TYPE_KR_COMPLETE && REQUEST_TIMESTAMP <= $post['KeyResult']['end_date'])): ?>
-                                <div class="col col-xxs-6 col-xs-4 mr_5px">
-                                    <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
-                                       class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= h($follow_opt['class']) ?>"
-                                    <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
-                                    <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
-                                    <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
-                                    </a>
-                                </div>
-                                <div class="col col-xxs-5 col-xs-4">
-                                    <a href="<?= $this->Html->url([
-                                        'controller' => 'goals',
-                                        'action'     => 'ajax_get_collabo_change_modal',
-                                        'goal_id'    => $post['Goal']['id']
-                                    ]) ?>"
-                                       data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
-                                       class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>">
-                                        <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
-                                        <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
+                        <div class="col col-xxs-12 mt_5px p_5px">
+                            <div class="col col-xxs-6 col-xs-4 mr_5px">
+                                <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
+                                   class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= h($follow_opt['class']) ?>"
+                                <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
+                                <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
+                                <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
+                                </a>
+                            </div>
+                            <div class="col col-xxs-5 col-xs-4">
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'goals',
+                                    'action'     => 'ajax_get_collabo_change_modal',
+                                    'goal_id'    => $post['Goal']['id']
+                                ]) ?>"
+                                   data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
+                                   class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>">
+                                    <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
+                                    <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
+                                </a>
+                            </div>
                         </div>
                     <? endif; ?>
                 <? endif; ?>

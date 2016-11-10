@@ -57,6 +57,7 @@ class AppController extends BaseController
         'TextEx',
         'Csv',
         'Expt',
+        'Post'
     ];
 
     private $merge_uses = [];
@@ -300,7 +301,7 @@ class AppController extends BaseController
      */
     public function _setUnApprovedCnt($login_uid)
     {
-        if($this->Team->EvaluationSetting->isEnabled() === false){
+        if ($this->Team->EvaluationSetting->isEnabled() === false) {
             return 0;
         }
 
