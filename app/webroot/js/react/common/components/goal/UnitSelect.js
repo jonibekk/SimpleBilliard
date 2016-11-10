@@ -3,9 +3,6 @@ import React from "react";
 export default class UnitSelect extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      opened_unit_list: false
-    }
   }
 
   onChange(e) {
@@ -18,20 +15,24 @@ export default class UnitSelect extends React.Component {
       return null
     }
 
-    const unitOptions = units.map((v) => {
-      return <option key={v.id} value={v.id}>{this.state.opened_unit_list ? `${v.label}(${v.unit})` : v.unit}</option>
+    let short_unit_list = []
+    const unit_options = units.map((v) => {
+      short_unit_list[v.id] = v.unit
+      return <option key={v.id} value={v.id}>{ `${v.label}(${v.unit})` }</option>
     })
 
     return(
-      <select name="value_unit" value={value}
-              className="form-control goals-create-input-form mod-select-units"
-              onChange={this.onChange.bind(this)}
-              onFocus={ () => { this.setState({ opened_unit_list: true })} }
-              onBlur={ () => { this.setState({ opened_unit_list: false })} }>
-        {unitOptions}
-      </select>
+      <div className="relative">
+          <div className="goals-create-input-form-unit-box">
+              <select name="value_unit" value={value}
+                      className="form-control goals-create-input-form mod-select-units"
+                      onChange={this.onChange.bind(this)}>
+                { unit_options }
+              </select>
+          </div>
+          <span className="goals-create-input-form-unit-label">{ short_unit_list[value] }</span>
+      </div>
     )
-
   }
 }
 UnitSelect.propTypes = {
