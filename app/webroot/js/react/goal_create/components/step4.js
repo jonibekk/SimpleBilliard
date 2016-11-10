@@ -5,6 +5,7 @@ import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {KeyResult} from "~/common/constants/Model";
+import {MaxLength} from "~/common/constants/App";
 
 export default class Step4Component extends React.Component {
   constructor(props) {
@@ -50,7 +51,9 @@ export default class Step4Component extends React.Component {
           <label className="goals-create-input-label">{__("Top Key Result")}</label>
           <input name="name" type="text" value={inputData.key_result.name}
                  className="form-control goals-create-input-form goals-create-input-form-tkr-name"
-                 placeholder={__("eg. Increase Goalous weekly active users")} onChange={this.handleChange}/>
+                 placeholder={__("eg. Increase Goalous weekly active users")}
+                 maxLength={MaxLength.Name}
+                 onChange={this.handleChange}/>
 
           <InvalidMessageBox message={tkrValidationErrors.name}/>
 
@@ -70,9 +73,13 @@ export default class Step4Component extends React.Component {
           </a>
           <div className={this.state.showMoreOption ? "" : "hidden"}>
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea name="description" value={inputData.key_result.description}
-                      className="form-control goals-create-input-form mod-textarea" onChange={this.handleChange}
-                      placeholder={__("Optional")}/>
+            <textarea name="description"
+                      value={inputData.key_result.description}
+                      className="form-control goals-create-input-form mod-textarea"
+                      placeholder={__("Optional")}
+                      maxLength={MaxLength.Description}
+                      onChange={this.handleChange}
+            />
             <InvalidMessageBox message={tkrValidationErrors.description}/>
           </div>
           <button type="submit" className="goals-create-btn-next btn"

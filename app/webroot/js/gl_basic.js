@@ -3239,6 +3239,11 @@ function evNotifyPost(options) {
       //ローダーを削除
       $loader_html.remove();
 
+      // Google tag manager トラッキング
+      if (cake.data.google_tag_manager_id !== "") {
+        sendToGoogleTagManager('app');
+      }
+
       action_autoload_more = false;
       autoload_more = false;
       feed_loading_now = false;
@@ -3778,6 +3783,13 @@ function showMore(obj) {
       speedDown: 300,
       speedUp: 300,
       height: '80px',
+      showText: showText,
+      hideText: hideText
+    });
+    $('.showmore-init-none').showMore({
+      speedDown: 100,
+      speedUp: 100,
+      height: '0px',
       showText: showText,
       hideText: hideText
     });

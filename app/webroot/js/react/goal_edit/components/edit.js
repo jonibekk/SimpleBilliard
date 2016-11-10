@@ -7,6 +7,7 @@ import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import CategorySelect from "~/common/components/goal/CategorySelect";
 import LabelInput from "~/common/components/goal/LabelInput";
+import {MaxLength} from "~/common/constants/App";
 
 export default class Edit extends React.Component {
   constructor(props) {
@@ -96,9 +97,13 @@ export default class Edit extends React.Component {
             <h2 className="goals-edit-subject"><i className="fa fa-flag"></i> { __("Goal") }</h2>
 
             <label className="goals-create-input-label">{__("Goal name")}</label>
-            <input name="name" className="form-control goals-create-input-form" type="text"
+            <input name="name"
+                   className="form-control goals-create-input-form" type="text"
                    placeholder={__("eg. Spread Goalous users in the world")} ref="name"
-                   onChange={this.onChange} value={inputData.name}/>
+                   value={inputData.name}
+                   maxLength={MaxLength.Name}
+                   onChange={this.onChange}
+            />
             <InvalidMessageBox message={validationErrors.name}/>
 
             <CategorySelect
@@ -127,8 +132,13 @@ export default class Edit extends React.Component {
             <InvalidMessageBox message={validationErrors.photo}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea className="goals-create-input-form mod-textarea" name="description" onChange={this.onChange}
-                      value={inputData.description} placeholder={__("Optional")}/>
+            <textarea name="description"
+                      className="goals-create-input-form mod-textarea"
+                      value={inputData.description}
+                      placeholder={__("Optional")}
+                      maxLength={MaxLength.Description}
+                      onChange={this.onChange}
+            />
             <InvalidMessageBox message={validationErrors.description}/>
 
             <label className="goals-create-input-label">{__("End date")}</label>
@@ -155,7 +165,9 @@ export default class Edit extends React.Component {
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
                    placeholder={__("eg. Increase Goalous weekly active users")}
-                   onChange={(e) => this.onChange(e, "key_result")}/>
+                   maxLength={MaxLength.Name}
+                   onChange={(e) => this.onChange(e, "key_result")}
+            />
             <InvalidMessageBox message={tkrValidationErrors.name}/>
 
             <label className="goals-create-input-label">{__("Measurement type")}</label>
@@ -169,9 +181,13 @@ export default class Edit extends React.Component {
             <InvalidMessageBox message={tkrValidationErrors.target_value}/>
 
             <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea name="description" value={inputData.key_result.description}
+            <textarea name="description"
                       className="form-control goals-create-input-form mod-textarea"
-                      onChange={(e) => this.onChange(e, "key_result")} placeholder={__("Optional")}/>
+                      value={inputData.key_result.description}
+                      placeholder={__("Optional")}
+                      maxLength={MaxLength.Description}
+                      onChange={(e) => this.onChange(e, "key_result")}
+            />
             <InvalidMessageBox message={tkrValidationErrors.description}/>
 
           </section>

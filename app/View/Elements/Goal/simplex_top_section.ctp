@@ -122,7 +122,7 @@
         <i class="fa fa-key goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__('Results')) ?>
+            <?= h(__('KR')) ?>
         </p>
     </a>
     <a class="goal-detail-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"

@@ -26,7 +26,6 @@ App::import('Service', 'GoalApprovalService');
  * @property CsvComponent       $Csv
  * @property PnotifyComponent   $Pnotify
  * @property MixpanelComponent  $Mixpanel
- * @property UservoiceComponent $Uservoice
  * @property OgpComponent       $Ogp
  * @property BenchmarkComponent $Benchmark
  */
@@ -44,7 +43,6 @@ class AppController extends BaseController
         'Timezone',
         'Pnotify',
         'Ogp',
-        'Uservoice',
         'Csv',
         'Flash',
         //        'Benchmark',
@@ -59,6 +57,7 @@ class AppController extends BaseController
         'TextEx',
         'Csv',
         'Expt',
+        'Post'
     ];
 
     private $merge_uses = [];
@@ -302,7 +301,7 @@ class AppController extends BaseController
      */
     public function _setUnApprovedCnt($login_uid)
     {
-        if($this->Team->EvaluationSetting->isEnabled() === false){
+        if ($this->Team->EvaluationSetting->isEnabled() === false) {
             return 0;
         }
 
@@ -854,8 +853,6 @@ class AppController extends BaseController
         }
         $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
-
-        $this->_ifFromUservoiceRedirect();
     }
 
     /*
@@ -882,23 +879,6 @@ class AppController extends BaseController
         } else {
             return false;
         }
-    }
-
-    public function _ifFromUservoiceRedirect()
-    {
-        $uservoice_token = $this->Uservoice->getToken();
-        //uservoiceのメールから来た場合はリダイレクト
-        if ($this->Session->read('uv_status')) {
-            if ($this->Session->read('uv_status.uv_ssl')) {
-                $protocol = "https://";
-            } else {
-                $protocol = "http://";
-            }
-            $redirect_url = $protocol . USERVOICE_SUBDOMAIN . ".uservoice.com/login_success?sso=" . $uservoice_token;
-            $this->Session->delete('uv_status');
-            $this->redirect($redirect_url);
-        }
-
     }
 
     /**
