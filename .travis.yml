@@ -42,9 +42,10 @@ before_script:
   - echo -ne '\n' | pecl install apcu
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - pecl install msgpack channel://pecl.php.net/msgpack-2.0.1
+  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 #  - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
 #  - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
-#  - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 #  - pecl install msgpack channel://pecl.php.net/msgpack-0.5.7
 #  - echo "extension=msgpack.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 #  - cp app/Test/travis/lite_php_browscap.ini /home/travis/browscap.ini
@@ -54,6 +55,7 @@ before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
 #  - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then phpenv config-rm xdebug.ini; fi
+  - phpenv config-rm xdebug.ini
   - phpenv rehash
   - mkdir ./app/tmp
   - chmod -R 777 ./app/tmp
@@ -104,16 +106,10 @@ before_script:
     );
 
     public function __construct() {
-      \$db = 'mysql';
-      if (!empty(\$_SERVER['DB'])) {
         \$db = \$_SERVER['DB'];
-      }
         \$config = array_merge(\$this->default, \$this->identities[\$db]);
         if (is_array(\$config['database'])) {
           \$config['database'] = \$config['database']['default'];
-        }
-        if (!empty(\$config['schema']) && is_array(\$config['schema'])) {
-          \$config['schema'] = \$config['schema']['default'];
         }
         \$this->default = \$config;
     }
