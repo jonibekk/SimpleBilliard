@@ -3291,6 +3291,9 @@ msgstr "変更前の来期"
 msgid "Current term after changed"
 msgstr "更新後の今期の期間"
 
+msgid "Next term after changed"
+msgstr "更新後の来期の期間"
+
 msgid "Change term settings"
 msgstr "期間設定を更新"
 

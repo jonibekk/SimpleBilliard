@@ -16,6 +16,10 @@ class ApprovalHistory extends AppModel
     const STATUS_IS_IMPORTANT_NO_SELECT = 0;
     const STATUS_IS_IMPORTANT = 1;
     const STATUS_IS_NOT_IMPORTANT = 2;
+    const STATUS_ACTION_NOTING = 0;
+    const STATUS_ACTION_ONLY_COMMENT = 1;
+    const STATUS_ACTION_IS_TARGET_FOR_EVALUATION = 2;
+    const STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION = 3;
 
     /**
      * Validation rules
@@ -25,17 +29,39 @@ class ApprovalHistory extends AppModel
     public $validate = [
         'action_status'           => [
             'numeric' => [
-                'rule' => ['range', -1, 4], // 0, 1, 2,3のみ許可
+                'rule' => [
+                    'inList',
+                    [
+                        self::STATUS_ACTION_NOTING,
+                        self::STATUS_ACTION_ONLY_COMMENT,
+                        self::STATUS_ACTION_IS_TARGET_FOR_EVALUATION,
+                        self::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION
+                    ]
+                ],
             ],
         ],
         'select_clear_status'     => [
             'numeric' => [
-                'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
+                'rule' => [
+                    'inList',
+                    [
+                        self::STATUS_IS_CLEAR_NO_SELECT,
+                        self::STATUS_IS_CLEAR,
+                        self::STATUS_IS_NOT_CLEAR
+                    ]
+                ],
             ],
         ],
         'select_important_status' => [
             'numeric' => [
-                'rule' => ['range', -1, 3], // 0, 1, 2のみ許可
+                'rule' => [
+                    'inList',
+                    [
+                        self::STATUS_IS_IMPORTANT_NO_SELECT,
+                        self::STATUS_IS_IMPORTANT,
+                        self::STATUS_IS_NOT_IMPORTANT
+                    ]
+                ],
             ],
         ],
         'comment'                 => [
@@ -104,7 +130,7 @@ class ApprovalHistory extends AppModel
             'conditions' => [
                 'ApprovalHistory.id' => $id,
             ],
-            'fields' => [
+            'fields'     => [
                 'ApprovalHistory.id',
                 'ApprovalHistory.goal_member_id',
                 'ApprovalHistory.user_id',
@@ -112,14 +138,14 @@ class ApprovalHistory extends AppModel
                 'ApprovalHistory.select_clear_status',
                 'ApprovalHistory.select_important_status'
             ],
-            'contain' => [
-                'User'   => [
+            'contain'    => [
+                'User' => [
                     'fields' => $this->User->profileFields
                 ]
             ]
         ];
         $res = $this->find('first', $options);
-        if(!$res) {
+        if (!$res) {
             return null;
         }
 
