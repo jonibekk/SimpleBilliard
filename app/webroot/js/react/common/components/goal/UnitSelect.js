@@ -15,7 +15,9 @@ export default class UnitSelect extends React.Component {
       return null
     }
 
-    let short_unit_list = []
+    // HACK: constにしないとeslintにおこられる。
+    //       たぶんもっとスマートに実装できる。
+    const short_unit_list = []
     const unit_options = units.map((v) => {
       short_unit_list[v.id] = v.unit
       return <option key={v.id} value={v.id}>{ `${v.label}(${v.unit})` }</option>
