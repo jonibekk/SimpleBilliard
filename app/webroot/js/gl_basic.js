@@ -3239,6 +3239,11 @@ function evNotifyPost(options) {
       //ローダーを削除
       $loader_html.remove();
 
+      // Google tag manager トラッキング
+      if (cake.data.google_tag_manager_id !== "") {
+        sendToGoogleTagManager('app');
+      }
+
       action_autoload_more = false;
       autoload_more = false;
       feed_loading_now = false;
