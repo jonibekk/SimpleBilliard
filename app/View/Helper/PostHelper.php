@@ -36,6 +36,15 @@ class PostHelper extends AppHelper
     }
 
     /**
+     * フィードの投稿内にフォローとコラボのボタン表示ができるかのチェック
+     * 以下の場合は表示不可
+     * - KR達成、ゴール作成以外の投稿
+     * - 本人がゴールリーダの場合
+     * - 本人が投稿主の場合
+     * - ゴール期限が今期より前の場合
+     * - 完了済みのゴール
+     * - KR達成かつ、KRの期限が過去の場合
+     *
      * @param array $post
      * @param array $current_term
      *
@@ -66,7 +75,7 @@ class PostHelper extends AppHelper
         if (!is_null($post['Goal']['completed'])) {
             return false;
         }
-        //KR達成の場合、KRの期限が過去の場合はボタン表示しない
+        //KR達成かつ、KRの期限が過去の場合はボタン表示しない
         if ($post['Post']['type'] == Post::TYPE_KR_COMPLETE &&
             REQUEST_TIMESTAMP > $post['KeyResult']['end_date']
         ) {
