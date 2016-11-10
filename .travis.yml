@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 7.0
+  - 7.0.12
 
 env:
   - DB=mysql
@@ -39,7 +39,9 @@ before_script:
 #  - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
 #  - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 #  - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-#  - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo -ne '\n' | pecl install apcu
+  - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl install msgpack channel://pecl.php.net/msgpack-2.0.1
 #  - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
 #  - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
 #  - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
@@ -106,16 +108,14 @@ before_script:
       if (!empty(\$_SERVER['DB'])) {
         \$db = \$_SERVER['DB'];
       }
-      foreach (array('default') as \$source) {
-        \$config = array_merge(\$this->{\$source}, \$this->identities[\$db]);
+        \$config = array_merge(\$this->default, \$this->identities[\$db]);
         if (is_array(\$config['database'])) {
-          \$config['database'] = \$config['database'][\$source];
+          \$config['database'] = \$config['database']['default'];
         }
         if (!empty(\$config['schema']) && is_array(\$config['schema'])) {
-          \$config['schema'] = \$config['schema'][\$source];
+          \$config['schema'] = \$config['schema']['default'];
         }
-        \$this->{\$source} = \$config;
-      }
+        \$this->default = \$config;
     }
     }" > app/Config/database.php
   - mkdir -p build/logs
