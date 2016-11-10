@@ -28,12 +28,12 @@ before_script:
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - pecl install msgpack channel://pecl.php.net/msgpack-2.0.1
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - phpenv config-rm xdebug.ini
+  - phpenv rehash
   - composer install --prefer-dist --no-interaction --no-dev
   - Vendor/bin/browscap-php browscap:update
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
-  - phpenv config-rm xdebug.ini
-  - phpenv rehash
   - mkdir ./app/tmp
   - chmod -R 777 ./app/tmp
   - echo "<?php
