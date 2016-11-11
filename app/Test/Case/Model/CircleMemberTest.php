@@ -126,7 +126,7 @@ class CircleMemberTest extends GoalousTestCase
         $this->CircleMember->my_uid = 1;
         $this->CircleMember->current_team_id = 1;
 
-        $res = $this->CircleMember->joinNewMember($circle_id);
+        $res = $this->CircleMember->joinNewMember($circle_id, true, true);
         $this->assertTrue(!empty($res));
     }
 

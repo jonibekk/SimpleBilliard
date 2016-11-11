@@ -236,8 +236,8 @@ class Team extends AppModel
                     'team_id'               => $this->id,
                     'user_id'               => $uid,
                     'admin_flg'             => true,
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
+                    'show_for_all_feed_flg' => true,
+                    'get_notification_flg'  => true,
                 ]
             ]
         ];

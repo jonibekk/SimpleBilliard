@@ -82,7 +82,7 @@ class CircleTest extends GoalousTestCase
     function testAddEmpty()
     {
         $this->_setDefault();
-        $this->assertFalse($this->Circle->add([]));
+        $this->assertFalse($this->Circle->add([], true, true));
     }
 
     public function testAddCircles()
@@ -95,7 +95,7 @@ class CircleTest extends GoalousTestCase
                 'members'    => 'user_1,user_2,user_3',
             ]
         ];
-        $res = $this->Circle->add($data);
+        $res = $this->Circle->add($data, true, true);
         $this->assertTrue($res);
     }
 
@@ -176,7 +176,7 @@ class CircleTest extends GoalousTestCase
                 'team_all_flg' => 1,
             ]
         ];
-        $this->Circle->add($data);
+        $this->Circle->add($data, true, true);
 
         $edit_data = [
             'Circle' => [

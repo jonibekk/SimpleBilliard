@@ -27,7 +27,16 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Circle->create();
-        if ($this->Circle->add($this->request->data)) {
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+            $addCircleSuccess = $this->Circle->add($this->request->data, false, false);
+        } else {
+            $addCircleSuccess = $this->Circle->add($this->request->data);
+        }
+
+        if ($addCircleSuccess) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                     null, $this->Circle->add_new_member_list);
