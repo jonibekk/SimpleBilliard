@@ -80,8 +80,27 @@
 
 .kr-card {
   border-radius: 4px;
-  padding: 10px;
   color: @subColor5;
+  &.flex {
+    display: flex;
+    .kr-card-main {
+      padding: 10px;
+      -webkit-box-flex: 1;
+      flex: 1;
+    }
+
+    .kr-card-side {
+      width: 50px;
+      text-align: center;
+      .kr-card-side-angle {
+        display: inline-block;
+        vertical-align: middle;
+        font-weight: 700;
+        font-size: 28px;
+        height: 100%;
+      }
+    }
+  }
   &-title {
     font-size: 14px;
     margin: 0;

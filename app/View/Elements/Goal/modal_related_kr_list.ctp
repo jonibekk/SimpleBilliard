@@ -32,31 +32,38 @@
                            'type'             => Post::TYPE_ACTION,
                            'author_id'        => $this->Session->read('Auth.User.id')
                        ]) ?>">
-                        <div class="kr-card">
-                            <h4 class="kr-card-title <?= $actioned ?>">
-                                <?= h($kr['name']) ?>
-                            </h4>
+                        <div class="kr-card flex">
+                            <div class="kr-card-main">
+                                <h4 class="kr-card-title <?= $actioned ?>">
+                                    <?= h($kr['name']) ?>
+                                </h4>
 
-                            <!--progress bar-->
-                            <? // TODO:KR進捗機能がリリースされ次第、進捗率に合わせたバーの塗りつぶしと「{現在の進捗}/{目標値}」の表示に変える ?>
-                            <div class="kr-progress mtb_4px <?= $actioned ?>">
-                                <span class="kr-progress-text"><?= $kr['display_value'] ?></span>
-                                <div class="kr-progress-bar mod-incomplete rate-0"></div>
+                                <!--progress bar-->
+                                <? // TODO:KR進捗機能がリリースされ次第、進捗率に合わせたバーの塗りつぶしと「{現在の進捗}/{目標値}」の表示に変える ?>
+                                <div class="kr-progress mtb_4px <?= $actioned ?>">
+                                    <span class="kr-progress-text"><?= $kr['display_value'] ?></span>
+                                    <div class="kr-progress-bar mod-incomplete rate-0"></div>
+                                </div>
+                                <dl class="kr-info-counts mb_0px">
+                                    <dt class="kr-info-counts-title <?= $actioned ?>"><i class="fa fa-check-circle"></i></dt>
+                                    <dd class="kr-info-counts-description <?= $actioned ?>">
+                                        <?= $kr['action_result_count'] ?>
+                                    </dd>
+                                    <dt class="kr-info-counts-title"><i class="fa fa-database"></i></dt>
+                                    <dd class="kr-info-counts-description">
+                                        <?php if ($kr['tkr_flg']):?>
+                                            TKR
+                                        <?php else:?>
+                                            <?=$kr['priority']?>
+                                        <?php endif;?>
+                                    </dd>
+                                </dl>
                             </div>
-                            <dl class="kr-info-counts mb_0px">
-                                <dt class="kr-info-counts-title <?= $actioned ?>"><i class="fa fa-check-circle"></i></dt>
-                                <dd class="kr-info-counts-description <?= $actioned ?>">
-                                    <?= $kr['action_result_count'] ?>
-                                </dd>
-                                <dt class="kr-info-counts-title"><i class="fa fa-database"></i></dt>
-                                <dd class="kr-info-counts-description">
-                                    <?php if ($kr['tkr_flg']):?>
-                                        TKR
-                                    <?php else:?>
-                                        <?=$kr['priority']?>
-                                    <?php endif;?>
-                                </dd>
-                            </dl>
+                            <div class="kr-card-side">
+                                <div class="kr-card-side-angle">
+                                    <i class="fa fa-angle-right"></i>
+                                </div>
+                            </div>
                         </div>
                     </a>
                 </li>
