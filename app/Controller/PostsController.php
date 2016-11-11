@@ -1382,7 +1382,17 @@ class PostsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        if ($this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'])) {
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'],
+                false, false);
+        } else {
+            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id']);
+        }
+
+        if ($circleJoinedSuccess) {
             $this->Pnotify->outSuccess(__("Joined the circle"));
         } else {
             $this->Pnotify->outError(__("Failed to join the circle."));

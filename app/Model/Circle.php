@@ -133,11 +133,13 @@ class Circle extends AppModel
     /**
      * 新規サークル追加(管理者として自分を登録)
      *
-     * @param array $data
+     * @param array   $data
+     * @param boolean $show_for_all_feed_flg
+     * @param boolean $get_notification_flg
      *
      * @return mixed
      */
-    function add($data)
+    function add($data, $show_for_all_feed_flg = true, $get_notification_flg = true)
     {
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
@@ -147,8 +149,8 @@ class Circle extends AppModel
         $data['CircleMember'][0]['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['admin_flg'] = true;
         $data['CircleMember'][0]['user_id'] = $this->my_uid;
-        $data['CircleMember'][0]['show_for_all_feed_flg'] = false;
-        $data['CircleMember'][0]['get_notification_flg'] = false;
+        $data['CircleMember'][0]['show_for_all_feed_flg'] = $show_for_all_feed_flg;
+        $data['CircleMember'][0]['get_notification_flg'] = $get_notification_flg;
         if (!empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
@@ -156,8 +158,8 @@ class Circle extends AppModel
                 $data['CircleMember'][] = [
                     'team_id'               => $this->current_team_id,
                     'user_id'               => $val,
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
+                    'show_for_all_feed_flg' => $show_for_all_feed_flg,
+                    'get_notification_flg'  => $get_notification_flg,
                 ];
                 $this->add_new_member_list[] = $val;
                 Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $val), 'user_data');
