@@ -150,11 +150,17 @@ class GoalsController extends AppController
 
     public function ajax_get_related_kr_list_modal()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $goalId = Hash::get($this->request->params, 'named.goal_id');
         $userId = Hash::get($this->request->params, 'named.user_id');
         $krs = [];
         if ($goalId && $userId) {
             $krs = $this->Goal->KeyResult->getKeyResultsForEvaluation($goalId);
+            foreach($krs as $k => $v) {
+                $krs[$k] = $KeyResultService->processKeyResult($v, '/');
+            }
         }
 
         $allKrCount = count($krs);

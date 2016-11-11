@@ -60,3 +60,86 @@
     }
   }
 }
+
+.eval-modal {
+  .kr-items {
+    border-top: 1px solid #e3e3e3;
+    .kr-item {
+      border-bottom: 1px solid #e3e3e3;
+      &-link {
+        display: block;
+        width: 100%;
+        text-decoration: none;
+        &:hover, &:focus, &:active {
+          background: @hoverRed none;
+        }
+      }
+    }
+  }
+}
+
+.kr-card {
+  border-radius: 4px;
+  padding: 10px;
+  color: @subColor5;
+  &-title {
+    font-size: 14px;
+    margin: 0;
+    color: @darkBlack;
+  }
+}
+
+.kr-progress {
+  border-radius: 4px;
+  overflow: visible;
+  text-align: center;
+  position: relative;
+  background-color: #999;
+
+  &-text {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 12px;
+  }
+}
+
+.kr-info-counts {
+  color: @darkGray;
+  &-title {
+    display: inline-block;
+    font-size: 13px;
+    &.actioned {
+      color: @acidRed;
+    }
+  }
+  &-description {
+    margin: 0 8px 0 2px;
+    display: inline-block;
+    font-size: 13px;
+    &.actioned {
+      color: @acidRed;
+    }
+  }
+}
+
+.no-action-kr-card {
+  .kr-item-link {
+    pointer-events: none;
+  }
+  .kr-card-title {
+    color: @subColor5;
+  }
+  .kr-info-counts {
+    color: @subColor5;
+  }
+  .kr-progress {
+    background: @subColor5;
+  }
+  .kr-info-counts-title {
+    color: @subColor5;
+  }
+  .kr-info-counts-description {
+    color: @subColor5;
+  }
+}
