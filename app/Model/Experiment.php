@@ -31,6 +31,7 @@ class Experiment extends AppModel
 
     /**
      * 定義済みの実験を取得
+     *
      * @param $name
      *
      * @return array
@@ -38,8 +39,10 @@ class Experiment extends AppModel
     function findExperiment($name)
     {
         $options = [
-            'name'    => $name,
-            'team_id' => $this->current_team_id
+            'conditions' => [
+                'name'    => $name,
+                'team_id' => $this->current_team_id
+            ]
         ];
         $ret = $this->find('first', $options);
         return $ret;
