@@ -34,13 +34,13 @@
                        ]) ?>">
                         <div class="kr-card flex">
                             <div class="kr-card-main">
-                                <h4 class="kr-card-title <?= $actioned ?>">
+                                <h4 class="kr-card-title">
                                     <?= h($kr['name']) ?>
                                 </h4>
 
                                 <!--progress bar-->
                                 <? // TODO:KR進捗機能がリリースされ次第、進捗率に合わせたバーの塗りつぶしと「{現在の進捗}/{目標値}」の表示に変える ?>
-                                <div class="kr-progress mtb_4px <?= $actioned ?>">
+                                <div class="kr-progress mtb_4px">
                                     <span class="kr-progress-text"><?= $kr['display_value'] ?></span>
                                     <div class="kr-progress-bar mod-incomplete rate-0"></div>
                                 </div>
@@ -60,9 +60,7 @@
                                 </dl>
                             </div>
                             <div class="kr-card-side">
-                                <div class="kr-card-side-angle">
-                                    <i class="fa fa-angle-right"></i>
-                                </div>
+                                <i class="fa fa-angle-right"></i>
                             </div>
                         </div>
                     </a>

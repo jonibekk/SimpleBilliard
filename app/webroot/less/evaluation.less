@@ -83,6 +83,8 @@
   color: @subColor5;
   &.flex {
     display: flex;
+    -webkit-align-items: center; /* 縦方向中央揃え（Safari用） */
+     align-items: center; /* 縦方向中央揃え */
     .kr-card-main {
       padding: 10px;
       -webkit-box-flex: 1;
@@ -90,15 +92,12 @@
     }
 
     .kr-card-side {
-      width: 50px;
+      width: 30px;
       text-align: center;
-      .kr-card-side-angle {
-        display: inline-block;
-        vertical-align: middle;
-        font-weight: 700;
-        font-size: 28px;
-        height: 100%;
-      }
+      font-weight: 700;
+      font-size: 28px;
+      height: 100%;
+      color: @subColor10;
     }
   }
   &-title {
@@ -160,5 +159,8 @@
   }
   .kr-info-counts-description {
     color: @subColor5;
+  }
+  .kr-card-side .fa {
+    display: none;
   }
 }
