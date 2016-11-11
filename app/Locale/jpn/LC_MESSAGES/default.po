@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-09 14:49+0900\n"
+"PO-Revision-Date: 2016-11-11 09:38+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2956,9 +2956,6 @@ msgstr "達成要素を削除する"
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこの成果を削除しますか？"
 
-msgid "Due."
-msgstr "期限"
-
 msgid "Clear"
 msgstr "クリア"
 
@@ -3039,9 +3036,6 @@ msgstr "※どちらを選択しても、選択中の成果は「完了」とな
 
 msgid "Achieve the goal"
 msgstr "ゴール達成"
-
-msgid "KR list"
-msgstr "KR一覧"
 
 msgid "Add Reference Values"
 msgstr "基準を追加する"
@@ -4005,6 +3999,12 @@ msgstr "修正して提出"
 
 msgid "Evaluation of goal"
 msgstr "ゴール評価"
+
+msgid "View results"
+msgstr "成果を見る"
+
+msgid "View action"
+msgstr "アクションを見る"
 
 msgid "Goal Details"
 msgstr "ゴール詳細"
