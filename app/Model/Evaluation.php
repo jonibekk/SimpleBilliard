@@ -145,7 +145,7 @@ class Evaluation extends AppModel
         self::$TYPE[self::TYPE_EVALUATOR]['index'] = __("Evaluator");
         self::$TYPE[self::TYPE_FINAL_EVALUATOR]['index'] = __("Final Evaluator");
         self::$TYPE[self::TYPE_LEADER]['index'] = __("Leader");
-        self::$TYPE[self::TYPE_ONESELF]['view'] = __("You");
+        self::$TYPE[self::TYPE_ONESELF]['view'] = __("Evaluatee");
         self::$TYPE[self::TYPE_EVALUATOR]['view'] = __("Evaluator");
         self::$TYPE[self::TYPE_FINAL_EVALUATOR]['view'] = __("Final Evaluator");
         self::$TYPE[self::TYPE_LEADER]['view'] = __("Leader");

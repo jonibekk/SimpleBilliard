@@ -9,7 +9,7 @@ bash "composer install" do
   user 'deploy'
   group 'www-data'
   code <<-EOS
-  cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
+  cd #{release_path}; composer self-update; yes | composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
 bash 'update browscap' do

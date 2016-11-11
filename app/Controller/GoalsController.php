@@ -1369,9 +1369,8 @@ class GoalsController extends AppController
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
-        $key_results = $KeyResultService->processKeyResults($key_results);
+        $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
         $this->set('key_results', $key_results);
-
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
         $this->set('incomplete_kr_count', $incomplete_kr_count);

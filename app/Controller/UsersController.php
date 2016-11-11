@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Post', 'Model');
+App::import('Service', 'GoalService');
 
 /**
  * Users Controller

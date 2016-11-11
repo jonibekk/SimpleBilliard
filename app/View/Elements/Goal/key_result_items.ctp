@@ -63,10 +63,18 @@ if ($is_init) {
                class="dashboard-goals-card-body-add-krs-past-action">
                 <i class="fa-check fa dashboard-goals-card-body-krs-past-action-icon"></i>
                 <span
-                    class="dashboard-goals-card-body-krs-past-action-number"><?= h($kr['action_result_count']) ?></span>
+                    class="mr_4px dashboard-goals-card-body-krs-past-action-number"><?= h($kr['action_result_count']) ?></span>
             </a>
+            <i class="fa-database fa"></i>
+            <span class="mr_4px dashboard-goals-card-body-krs-past-action-number">
+                <?php if ($kr['tkr_flg']):?>
+                    TKR
+                <?php else:?>
+                    <?= $kr['priority'] ?>
+                <?php endif;?>
+            </span>
+            <i class="fa fa-clock-o"></i>
             <span class="dashboard-goals-card-body-krs-date">
-            <?= __('Due.') ?>
             <?= $this->TimeEx->dateNoYear($kr['end_date']) ?>
             </span>
         </div>

@@ -141,7 +141,7 @@
     <!-- start Intercom -->
     <script>
         enabled_intercom_icon = true;
-        if (window.innerWidth <= 480) {
+        if (window.innerWidth < 992) {
             enabled_intercom_icon = false;
         }
         window.intercomSettings = {
