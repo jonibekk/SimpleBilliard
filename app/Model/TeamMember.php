@@ -1014,8 +1014,8 @@ class TeamMember extends AppModel
                     'circle_id'             => $teamAllCircle['Circle']['id'],
                     'team_id'               => $this->current_team_id,
                     'user_id'               => $user['User']['id'],
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
+                    'show_for_all_feed_flg' => true,
+                    'get_notification_flg'  => true,
                 ];
 
                 $circle_member_options = [
