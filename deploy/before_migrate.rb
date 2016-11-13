@@ -9,6 +9,7 @@ bash "composer install" do
   user 'deploy'
   group 'www-data'
   code <<-EOS
+  source /opt/phpbrew/bashrc
   cd #{release_path}; composer self-update; yes | composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
@@ -16,6 +17,7 @@ bash 'update browscap' do
   user 'deploy'
   group 'www-data'
   code <<-EOS
+  source /opt/phpbrew/bashrc
   cd #{release_path}; Vendor/bin/browscap-php browscap:update
   EOS
 end
