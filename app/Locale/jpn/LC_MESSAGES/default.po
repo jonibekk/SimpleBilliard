@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -3978,6 +3978,9 @@ msgstr "あなたが評価するメンバー"
 
 msgid "Incomplete:%s"
 msgstr "未完了:%s"
+
+msgid "Back to evaluation list"
+msgstr "評価リストに戻る"
 
 msgid "Total Evaluation"
 msgstr "トータル評価"

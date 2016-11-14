@@ -2826,22 +2826,6 @@ Temporary Properties - YOU MUST FIX
     font-weight: bold;
 }
 
-.btn-back-notifications {
-    display: block;
-    border: 1px solid #d2d4d5;
-    border-radius: 4px;
-    width: 70px;
-    height: 30px;
-    padding: 4px;
-    text-align: center;
-    background-color: #f5f5f5;
-    margin-bottom: 5px;
-}
-
-.btn-back-notifications:hover {
-    background-color: #ddd;
-}
-
 /*photo-upボタン*/
 .comment-contents .new-comment-add-pic {
     display: inline;
