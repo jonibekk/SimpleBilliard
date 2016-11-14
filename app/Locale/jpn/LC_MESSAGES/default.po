@@ -3982,6 +3982,9 @@ msgstr "あなたが評価するメンバー"
 msgid "Incomplete:%s"
 msgstr "未完了:%s"
 
+msgid "Back to evaluation list"
+msgstr "評価リストに戻る"
+
 msgid "Total Evaluation"
 msgstr "トータル評価"
 
