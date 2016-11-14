@@ -20,7 +20,7 @@
 <section id="signup" class="signup">
     <div class="container text-center">
         <h2 class="title"><?= __('Let\'s go to Goalous!') ?></h2>
-        <p class="summary"><?= __('It\'s free until 31 Dec 2016! Try it!') ?></p>
+        <p class="summary"><?= __('It\'s free until the summer of 2017! Try it!') ?></p>
         <p class="row">
             <a href="<?= $this->Html->url(['controller' => 'signup', 'action' => 'email', '?' => ['type' => 'bottom']]) ?>"
                class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">

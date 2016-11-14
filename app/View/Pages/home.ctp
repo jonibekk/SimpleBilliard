@@ -96,7 +96,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
     <div class="lp-signup ">
         <span class="lp-signup-key-concept"><?= __("Enjoy your work. Achieve your goals.") ?></span>
-        <span class="lp-signup-pay-free"><?= __('You can use Goalous free of charge until 31 Dec 2016.') ?></span>
+        <span class="lp-signup-pay-free"><?= __('You can use Goalous free of charge until the summer of 2017.') ?></span>
 
         <div class="lp-signup-form">
             <div class="lp-signup-form-opacity-box">
