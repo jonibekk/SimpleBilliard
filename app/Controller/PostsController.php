@@ -746,7 +746,6 @@ class PostsController extends AppController
         $this->_setFeedMoreReadUrl('posts', 'ajax_get_action_list_more');
         $start = null;
         $end = null;
-        $extractedByKR = isset($this->request->params['named']['key_result_id']);
         if (isset($this->request->params['named']['evaluate_term_id'])) {
             $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
             if (isset($term['EvaluateTerm'])) {
@@ -755,7 +754,8 @@ class PostsController extends AppController
             }
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
-        $this->set(compact('posts, extractedByKR'));
+        $extractedByKR = isset($this->request->params['named']['key_result_id']);
+        $this->set(compact('posts', 'extractedByKR'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
