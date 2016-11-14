@@ -17,6 +17,11 @@ bash "composer install" do
     'PHPBREW_HOME' => '/opt/phpbrew'
   )
 end
+
+execute 'chmod browscap resources' do
+  command "chmod 777 -R #{release_path}/Vendor/browscap/browscap-php/src/../resources/"
+end
+
 bash 'update browscap' do
   user 'deploy'
   group 'www-data'
@@ -29,6 +34,7 @@ bash 'update browscap' do
     'PHPBREW_HOME' => '/opt/phpbrew'
   )
 end
+
 
 file '/home/deploy/.npmrc' do
   owner 'deploy'
