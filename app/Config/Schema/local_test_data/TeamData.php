@@ -6,12 +6,14 @@ class TeamData
 
     public $records = [
         [
-            'id'   => '1',
-            'name' => 'TeamA',
+            'id'       => '1',
+            'name'     => 'TeamA',
+            'timezone' => 9,
         ],
         [
-            'id'   => '2',
-            'name' => 'TeamB',
+            'id'       => '2',
+            'name'     => 'TeamB',
+            'timezone' => 9,
         ],
     ];
 }

@@ -104,8 +104,14 @@ class Team extends AppModel
         ],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'change_from'        => [
-            'boolean' => [
-                'rule'       => ['boolean'],
+            'numeric' => [
+                'rule'       => [
+                    'inList',
+                    [
+                        self::OPTION_CHANGE_TERM_FROM_CURRENT,
+                        self::OPTION_CHANGE_TERM_FROM_NEXT
+                    ]
+                ],
                 'allowEmpty' => true,
             ],
         ],
@@ -230,8 +236,8 @@ class Team extends AppModel
                     'team_id'               => $this->id,
                     'user_id'               => $uid,
                     'admin_flg'             => true,
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
+                    'show_for_all_feed_flg' => true,
+                    'get_notification_flg'  => true,
                 ]
             ]
         ];

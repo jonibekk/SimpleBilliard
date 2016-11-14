@@ -1371,15 +1371,6 @@ class Goal extends AppModel
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
                     ],
-                    'fields'     => [
-                        'KeyResult.id',
-                        'KeyResult.name',
-                        'KeyResult.end_date',
-                        'KeyResult.action_result_count',
-                        'KeyResult.progress',
-                        'KeyResult.priority',
-                        'KeyResult.completed',
-                    ],
                     'order'      => [
                         'KeyResult.progress ASC',
                         'KeyResult.start_date ASC',

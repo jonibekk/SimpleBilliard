@@ -436,18 +436,25 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function joinNewMember($circle_id)
+    /**
+     * @param         $circle_id
+     * @param boolean $show_for_all_feed_flg
+     * @param boolean $get_notification_flg
+     *
+     * @return mixed
+     */
+    function joinNewMember($circle_id, $show_for_all_feed_flg = true, $get_notification_flg = true)
     {
         if (!empty($this->isBelong($circle_id))) {
-            return;
+            return false;
         }
         $options = [
             'CircleMember' => [
                 'circle_id'             => $circle_id,
                 'team_id'               => $this->current_team_id,
                 'user_id'               => $this->my_uid,
-                'show_for_all_feed_flg' => false,
-                'get_notification_flg'  => false,
+                'show_for_all_feed_flg' => $show_for_all_feed_flg,
+                'get_notification_flg'  => $get_notification_flg,
             ]
         ];
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');

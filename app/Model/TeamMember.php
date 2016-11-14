@@ -1010,13 +1010,27 @@ class TeamMember extends AppModel
 
                 // チーム全体サークルのCircleMemberに登録
                 $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
-                $row = [
-                    'circle_id'             => $teamAllCircle['Circle']['id'],
-                    'team_id'               => $this->current_team_id,
-                    'user_id'               => $user['User']['id'],
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
-                ];
+                App::import('Service', 'ExperimentService');
+                /** @var ExperimentService $ExperimentService */
+                $ExperimentService = ClassRegistry::init('ExperimentService');
+                if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+                    $row = [
+                        'circle_id'             => $teamAllCircle['Circle']['id'],
+                        'team_id'               => $this->current_team_id,
+                        'user_id'               => $user['User']['id'],
+                        'show_for_all_feed_flg' => false,
+                        'get_notification_flg'  => false,
+                    ];
+                } else {
+                    $row = [
+                        'circle_id'             => $teamAllCircle['Circle']['id'],
+                        'team_id'               => $this->current_team_id,
+                        'user_id'               => $user['User']['id'],
+                        'show_for_all_feed_flg' => true,
+                        'get_notification_flg'  => true,
+                    ];
+                }
+
 
                 $circle_member_options = [
                     'conditions' => [

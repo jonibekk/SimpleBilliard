@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.7\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -3285,6 +3285,9 @@ msgstr "変更前の来期"
 msgid "Current term after changed"
 msgstr "更新後の今期の期間"
 
+msgid "Next term after changed"
+msgstr "更新後の来期の期間"
+
 msgid "Change term settings"
 msgstr "期間設定を更新"
 
@@ -3879,8 +3882,8 @@ msgstr "プロフィール画像をアップロードする"
 msgid "View Profile Image"
 msgstr "プロフィール画像を見る"
 
-msgid "Basic Information"
-msgstr "基本データ"
+msgid "Info"
+msgstr "基本情報"
 
 msgid "Welcome to Goalous!"
 msgstr "Goalousへようこそ！"
