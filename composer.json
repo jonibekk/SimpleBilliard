@@ -10,7 +10,7 @@
     "satooshi/php-coveralls": "~1.0",
     "pusher/pusher-php-server": "~2.4",
     "mixpanel/mixpanel-php": "~2.6",
-    "aws/aws-sdk-php": "~2.6.0",
+    "aws/aws-sdk-php": "~2.0",
     "pragmarx/google2fa": "~0.7",
     "oefenweb/cakephp-redis": "~1.1.0",
     "dereuromark/cakephp-url-cache": "~1.0.0",
