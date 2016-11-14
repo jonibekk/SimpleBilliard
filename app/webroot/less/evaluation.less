@@ -19,7 +19,7 @@
     }
   }
   &-btn-submit {
-    padding: 8px 33px;
+    padding: 8px 32px;
   }
   &-img {
     display: block;
@@ -42,8 +42,6 @@
 
 .eval-term {
   &-tab-elm {
-    border-bottom: solid 2px #e0e0e0;
-    padding-bottom: 0;
     &:hover {
       background: @goalous none;
       border: none;
@@ -59,13 +57,16 @@
       background: #ae554f none;
     }
   }
+  &-numbers {
+    padding: 1px 5px;
+  }
 }
 
 .eval-modal {
   .kr-items {
-    border-top: 1px solid #e3e3e3;
+    border-top: 1px solid @subColor5;
     .kr-item {
-      border-bottom: 1px solid #e3e3e3;
+      border-bottom: 1px solid @subColor5;
       &-link {
         display: block;
         width: 100%;
@@ -112,7 +113,7 @@
   overflow: visible;
   text-align: center;
   position: relative;
-  background-color: #999;
+  background-color: @subColor3;
 
   &-text {
     position: relative;

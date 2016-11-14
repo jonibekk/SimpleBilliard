@@ -568,11 +568,16 @@ class KeyResult extends AppModel
         return $ret + $defaultCountEachGoalId;
     }
 
-    public function getKeyResultsForEvaluation($goal_id)
+    /**
+     * 評価ページ表示用にKR一覧を取得
+     * @param $goalId
+     * @return $krs
+     */
+    public function getKeyResultsForEvaluation($goalId)
     {
         $options = [
             'conditions' => [
-                'goal_id' => $goal_id,
+                'goal_id' => $goalId,
                 'team_id' => $this->current_team_id,
             ],
             'order'      => [
