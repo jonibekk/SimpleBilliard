@@ -3037,9 +3037,6 @@ msgstr "※どちらを選択しても、選択中の成果は「完了」とな
 msgid "Achieve the goal"
 msgstr "ゴール達成"
 
-msgid "List of completed KRs"
-msgstr "完了済のキーリザルト一覧"
-
 msgid "Add Reference Values"
 msgstr "基準を追加する"
 
@@ -4008,6 +4005,12 @@ msgstr "修正して提出"
 
 msgid "Evaluation of goal"
 msgstr "ゴール評価"
+
+msgid "View results"
+msgstr "成果を見る"
+
+msgid "View action"
+msgstr "アクションを見る"
 
 msgid "Goal Details"
 msgstr "ゴール詳細"

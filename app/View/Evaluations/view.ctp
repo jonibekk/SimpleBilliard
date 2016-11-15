@@ -302,7 +302,7 @@
                                        'user_id'    => $evaluateeId,
                                        'goal_id'    => $goal[0]['Goal']['id']
                                    ]) ?>">
-                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]")) ?>
+                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[action_result_count>0]")) ?>
                                 </a>
                             </div>
                         </div>
@@ -315,7 +315,7 @@
                                        'user_id'    => $evaluateeId,
                                        'goal_id'    => $goal[0]['Goal']['id']
                                    ]) ?>">
-                                    <?= __("Results") ?>
+                                    <?= __("View results") ?>
                                 </a>
                             </div>
                         </div>
@@ -346,7 +346,7 @@
                                    'author_id'        => $evaluateeId,
                                    'evaluate_term_id' => $evaluateTermId
                                ]) ?>">
-                                <?= __("Action") ?>
+                                <?= __("View action") ?>
                             </a>
                         </div>
                     </div>

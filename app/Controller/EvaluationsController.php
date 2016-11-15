@@ -125,18 +125,6 @@ class EvaluationsController extends AppController
                     'Goal.KeyResult'));
             }
         }
-        //remove unnecessary KRs
-        foreach ($goalList as $goalIndex => $goal) {
-            foreach ($goal as $evalKey => $eval) {
-                if (!empty($eval['Goal']['KeyResult'])) {
-                    foreach ($eval['Goal']['KeyResult'] as $kr_k => $kr) {
-                        if (empty($kr['ActionResult'])) {
-                            unset($goalList[$goalIndex][$evalKey]['Goal']['KeyResult'][$kr_k]);
-                        }
-                    }
-                }
-            }
-        }
 
         $this->set(compact('scoreList',
             'totalList',

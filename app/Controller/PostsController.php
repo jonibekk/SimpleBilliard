@@ -754,7 +754,8 @@ class PostsController extends AppController
             }
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
-        $this->set(compact('posts'));
+        $extractedByKR = isset($this->request->params['named']['key_result_id']);
+        $this->set(compact('posts', 'extractedByKR'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
