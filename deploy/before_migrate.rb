@@ -22,9 +22,9 @@ end
 bash "yarn install" do
   user 'deploy'
   group 'www-data'
-  environment 'HOME' => '/home/deploy'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
+  export HOME='/home/deploy'
   cd #{release_path}
   yarn install
   EOS
@@ -33,9 +33,9 @@ end
 bash "run gulp build" do
   user 'deploy'
   group 'www-data'
-  environment 'HOME' => '/home/deploy'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
+  export HOME='/home/deploy'
   cd #{release_path}
   if ! gulp build; then
     gulp build
