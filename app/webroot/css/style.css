@@ -2522,61 +2522,6 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-/*===== dashboardProfileCard =====*/
-
-.dashboardProfileCard {
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    max-width: 100%;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    margin-bottom: 16px;
-}
-
-.dashboardProfileCard-bg {
-    background-image: url(../img/dashboard-profile-card-bg.jpg);
-    background-size: 100%;
-    background-position: 0 50%;
-    height: 50px;
-}
-
-.dashboardProfileCard-avatarImage {
-    border: 2px solid #fff;
-    border-radius: 50%;
-    margin: -25px 0 0 2px;
-    position: relative;
-    width: 52px;
-}
-
-.dashboardProfileCard-userField {
-    width: 64%;
-    float: right;
-    margin: 4px 0 0 0;
-}
-
-.dashboardProfileCard-stats {
-    clear: right;
-}
-
-.dashboardProfileCard-score {
-    line-height: 30px;
-    font-size: 45px;
-}
-
-.dashboardProfileCard-activityList {
-}
-
-.dashboardProfileCard-activity {
-    padding: 1px;
-}
-
-.dashboardProfileCard-point {
-    margin-bottom: 15px;
-    margin-top: 10px;
-}
-
-/*=====/ dashboardProfileCard ======*/
-
 /*===== goalsCard-activity =====*/
 .goalsCard-activity {
     padding: 1px;
