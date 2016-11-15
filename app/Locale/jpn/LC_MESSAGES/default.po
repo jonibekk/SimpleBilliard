@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-14 16:27+0900\n"
+"PO-Revision-Date: 2016-11-15 15:25+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3037,6 +3037,9 @@ msgstr "※どちらを選択しても、選択中の成果は「完了」とな
 msgid "Achieve the goal"
 msgstr "ゴール達成"
 
+msgid "KRs"
+msgstr ""
+
 msgid "Add Reference Values"
 msgstr "基準を追加する"
 
@@ -3154,9 +3157,8 @@ msgid ""
 "After logged in, you can get contact with us by support tool. We can help "
 "you as soon as possible."
 msgstr ""
-"2017年夏までの無料キャンペーン中にご登録いただいたお客様は、ログイン後"
-"に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたし"
-"ます。"
+"2017年夏までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用"
+"できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
 
 msgid "Which company offer Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
@@ -3443,6 +3445,9 @@ msgstr "評価設定が有効でないため、評価を開始することがで
 
 msgid "In evaluation term"
 msgstr "評価期間中です。"
+
+msgid "Add definition of evaluation score"
+msgstr "評価スコアの定義を1つ以上追加してください。"
 
 msgid "Start current term evaluations"
 msgstr "今期の評価を開始する"
@@ -4464,8 +4469,8 @@ msgstr "今だけ、有料プランも完全無料"
 
 msgid "Released sale, It's all free until the summer of 2017!"
 msgstr ""
-"リリース記念で2017年夏までPlusをご利用いただけます。フィードバックをお待"
-"ちしております。"
+"リリース記念で2017年夏までPlusをご利用いただけます。フィードバックをお待ちし"
+"ております。"
 
 msgid "Plus"
 msgstr "Plus"
