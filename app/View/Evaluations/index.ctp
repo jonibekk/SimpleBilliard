@@ -15,7 +15,7 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix eval-list">
     <div class="panel-heading"><?= __("Evaluation") ?></div>
     <div class="panel-body eval-view-panel-body">
         <div class="goal-search-menu">

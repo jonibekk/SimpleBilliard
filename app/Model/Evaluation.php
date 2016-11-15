@@ -605,38 +605,25 @@ class Evaluation extends AppModel
         return $record;
     }
 
-    function getEvalStatus($term_id, $user_id)
+    function getEvalStatus($termId, $userId)
     {
-        $options = [
-            'conditions' => [
-                'evaluatee_user_id' => $user_id,
-                'evaluate_term_id'  => $term_id,
-                'team_id'           => $this->current_team_id,
-                'goal_id'           => null,
-            ],
-            'fields'     => [
-                'id',
-                'evaluate_type',
-                'status',
-                'evaluator_user_id',
-                'evaluatee_user_id',
-                'my_turn_flg'
-            ],
-            'order'      => ['index_num' => 'asc'],
-        ];
-        $data = $this->find('all', $options);
-        $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
+        $evaluations = $this->getEvaluationListForIndex($termId, $userId);
+
+        $evaluations = Hash::combine($evaluations, '{n}.id', '{n}');
         $flow = [];
         $evaluator_index = 1;
         $status_text = ['your_turn' => false, 'body' => null];
         //update flow
-        foreach ($data as $val) {
+        foreach ($evaluations as $val) {
             $name = self::$TYPE[$val['evaluate_type']]['index'];
+            $otherEvaluator = false;
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
+                $user_name = $val['evaluator_user']['display_username'];
                 if ($val['evaluator_user_id'] == $this->my_uid) {
                     $name = __("You");
                 } else {
-                    $name .= $evaluator_index;
+                    $name = "${evaluator_index}(${user_name})";
+                    $otherEvaluator = true;
                 }
                 $evaluator_index++;
             } //自己評価で被評価者が自分以外の場合は「メンバー」
@@ -644,9 +631,10 @@ class Evaluation extends AppModel
                 $name = __('Members');
             }
             $flow[] = [
-                'name'      => $name,
-                'status'    => $val['status'],
-                'this_turn' => $val['my_turn_flg'],
+                'name'            => $name,
+                'status'          => $val['status'],
+                'this_turn'       => $val['my_turn_flg'],
+                'other_evaluator' => $otherEvaluator
             ];
             //update status_text
             if ($val['my_turn_flg'] === false) {
@@ -670,7 +658,7 @@ class Evaluation extends AppModel
         if (empty($flow)) {
             return [];
         }
-        $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
+        $user = $this->Team->TeamMember->User->getProfileAndEmail($userId);
         $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
         return $res;
     }
@@ -1159,6 +1147,45 @@ class Evaluation extends AppModel
                 ]
             ]
         );
+    }
+
+    /**
+     * 評価インデックスページ用の評価一覧データを取得
+     * @param  $teamId
+     * @param  $userId
+     * @return [type]         [description]
+     */
+    function getEvaluationListForIndex($termId, $userId) {
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => $userId,
+                'evaluate_term_id'  => $termId,
+                'team_id'           => $this->current_team_id,
+                'goal_id'           => null,
+            ],
+            'fields'     => [
+                'id',
+                'evaluate_type',
+                'status',
+                'evaluator_user_id',
+                'evaluatee_user_id',
+                'my_turn_flg'
+            ],
+            'contain'    => [
+                'EvaluatorUser' => [
+                    'fields' => ['first_name', 'last_name']
+                ]
+            ],
+            'order'      => ['index_num' => 'asc'],
+        ];
+        $findData = $this->find('all', $options);
+
+        $retData = [];
+        foreach($findData as $key => $val) {
+            $retData[$key] = $val['Evaluation'];
+            $retData[$key]['evaluator_user'] = $val['EvaluatorUser'];
+        }
+        return $retData;
     }
 
 }
