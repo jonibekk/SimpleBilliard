@@ -22,6 +22,7 @@ end
 bash "yarn install" do
   user 'deploy'
   group 'www-data'
+  environment 'HOME' => '/home/deploy'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
   cd #{release_path}
