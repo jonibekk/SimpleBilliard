@@ -32,7 +32,7 @@
                        class="btn btn-default eval-term-tab-elm <?= $selected ?>" role="button">
                         <?php if ($incompleteNum > 0 && !$isFrozens[$key]):
                             ?>
-                            <div class="btn btn-xs bell-notify-box notify-evaluation-numbers" id="bellNum"
+                            <div class="btn btn-xs bell-notify-box eval-term-numbers" id="bellNum"
                                  style="opacity:1;">
                                 <span><?= $incompleteNum ?></span>
                             </div>

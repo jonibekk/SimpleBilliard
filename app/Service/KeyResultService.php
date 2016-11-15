@@ -46,7 +46,7 @@ class KeyResultService extends AppService
      * @return array $key_result
      * @internal param array $key_result
      */
-    function processKeyResult($keyResult, $symbol)
+    function processKeyResult($keyResult, $symbol = '→')
     {
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {

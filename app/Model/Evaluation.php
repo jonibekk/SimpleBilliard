@@ -317,6 +317,7 @@ class Evaluation extends AppModel
                             'user_id',
                             'priority',
                             'progress',
+                            'action_result_count'
                         ],
                         'ActionResult' => [
                             'conditions' => [

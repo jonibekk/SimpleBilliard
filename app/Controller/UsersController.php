@@ -1020,7 +1020,15 @@ class UsersController extends AppController
         $this->Circle->current_team_id = $invite['Invite']['team_id'];
         $this->Circle->CircleMember->current_team_id = $invite['Invite']['team_id'];
         $teamAllCircle = $this->Circle->getTeamAllCircle();
-        $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+            $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false, false);
+        } else {
+            $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
+        }
+
         $this->Circle->current_team_id = $tmp;
         $this->Circle->CircleMember->current_team_id = $tmp;
         //cache削除

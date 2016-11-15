@@ -342,3 +342,33 @@
     background-color: @subColor8;
   }
 }
+
+.btn-back {
+    display: inline-block;
+    border: 1px solid @lightGray;
+    border-radius: 4px;
+    height: auto;
+    min-width: 70px;
+    padding: 5px 10px;
+    text-align: center;
+    background-color: @smokyWhite;
+    margin-bottom: 5px;
+    text-decoration: none;
+
+    &-text {
+      color: @darkGray;
+    }
+
+    .fa {
+      font-size: 18px;
+      color: @subColor10;
+      line-height: 20px;
+      vertical-align: middle;
+      padding-right: 7px;
+    }
+}
+
+.btn-back:hover {
+    background-color: @lighterGray;
+    text-decoration: none;
+}
