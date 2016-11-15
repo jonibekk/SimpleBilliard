@@ -24,6 +24,7 @@ bash "yarn install" do
   group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
+  export USER='deploy'
   export HOME='/home/deploy'
   cd #{release_path}
   yarn install
@@ -35,6 +36,7 @@ bash "run gulp build" do
   group 'www-data'
   code <<-EOS
   source /usr/local/nvm/nvm.sh
+  export USER='deploy'
   export HOME='/home/deploy'
   cd #{release_path}
   if ! gulp build; then
