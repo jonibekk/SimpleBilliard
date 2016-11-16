@@ -634,8 +634,7 @@ class TeamsController extends AppController
         } else {
             $this->Team->TeamMember->commit();
             $result['msg'] = __("%s people's last evaluations are completed.", $save_res['success_count']);
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL,
-                $this->Team->EvaluateTerm->getCurrentTermId());
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL, $evaluate_term_id);
             Cache::clear(false, 'team_info');
         }
         return $this->_ajaxGetResponse($result);
