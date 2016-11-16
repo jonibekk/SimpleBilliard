@@ -39,7 +39,7 @@
             </div>
             <br>
 
-            <div class="profile-goals-select-wrap btn-group" role="group">
+            <div class="profile-goals-select-wrap btn-group mb_12px" role="group">
                 <a href="<?= $this->Html->url([
                     'controller' => 'users',
                     'action'     => 'view_goals',

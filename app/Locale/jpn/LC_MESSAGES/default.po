@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-14 16:27+0900\n"
+"PO-Revision-Date: 2016-11-16 16:36+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -90,9 +90,6 @@ msgstr "スマホアプリ・ブラウザで利用可能です。"
 
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
-
-msgid "Invalid access"
-msgstr "不正なアクセスです。"
 
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
@@ -223,6 +220,15 @@ msgstr "権限がありません。"
 
 msgid "Added a key result."
 msgstr "達成要素を追加しました。"
+
+msgid "Some error occurred. Please try again from the start."
+msgstr "エラーが発生しました。もう一度最初から登録してください。"
+
+msgid "Success."
+msgstr "成功"
+
+msgid "Invalid Request."
+msgstr "不正なリクエストです。"
 
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
@@ -508,9 +514,6 @@ msgstr "データがありません。"
 msgid "Invalid Data"
 msgstr "不正なデータです。"
 
-msgid "Some error occurred. Please try again from the start."
-msgstr "エラーが発生しました。もう一度最初から登録してください。"
-
 msgid "Failed to create a team."
 msgstr "チーム作成に失敗しました。"
 
@@ -701,6 +704,9 @@ msgstr "%sさん、またお会いしましょう"
 
 msgid "Logged out"
 msgstr "ログアウトしました"
+
+msgid "Invalid access"
+msgstr "不正なアクセスです。"
 
 msgid "The invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
@@ -1193,6 +1199,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコメントしました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
+"another KR <span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
+"<span class=\"notify-card-head-target\">%2$s</span>."
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -2929,6 +2942,9 @@ msgstr "達成要素を追加"
 msgid "Edit goal"
 msgstr "ゴールを編集"
 
+msgid "Change TKR"
+msgstr "TKRを変更"
+
 msgid "Delete goal"
 msgstr "ゴールを削除"
 
@@ -3019,6 +3035,18 @@ msgstr "達成要素名"
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
+msgid "Change Top KR"
+msgstr "トップKRを変更"
+
+msgid "Top KR"
+msgstr "トップKR"
+
+msgid "Select Top KR you would like to change."
+msgstr "トップKRとしたいKRを選択してください。"
+
+msgid "Current"
+msgstr "現在"
+
 msgid "Goal Summary"
 msgstr "ゴール概要"
 
@@ -3036,6 +3064,9 @@ msgstr "※どちらを選択しても、選択中の成果は「完了」とな
 
 msgid "Achieve the goal"
 msgstr "ゴール達成"
+
+msgid "KRs"
+msgstr ""
 
 msgid "Add Reference Values"
 msgstr "基準を追加する"
@@ -3154,9 +3185,8 @@ msgid ""
 "After logged in, you can get contact with us by support tool. We can help "
 "you as soon as possible."
 msgstr ""
-"2017年夏までの無料キャンペーン中にご登録いただいたお客様は、ログイン後"
-"に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたし"
-"ます。"
+"2017年夏までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用"
+"できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
 
 msgid "Which company offer Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
@@ -4464,8 +4494,8 @@ msgstr "今だけ、有料プランも完全無料"
 
 msgid "Released sale, It's all free until the summer of 2017!"
 msgstr ""
-"リリース記念で2017年夏までPlusをご利用いただけます。フィードバックをお待"
-"ちしております。"
+"リリース記念で2017年夏までPlusをご利用いただけます。フィードバックをお待ちし"
+"ております。"
 
 msgid "Plus"
 msgstr "Plus"

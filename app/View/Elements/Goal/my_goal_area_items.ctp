@@ -114,6 +114,21 @@ $kr_count = 0;
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                             </a>
                         </li>
+                        <?php if (count($goal['KeyResult']) > 1):?>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1"
+                                   class="modal-ajax-get-exchange-tkr"
+                                   href="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_exchange_tkr_modal',
+                                       'goal_id'    => $goal['Goal']['id']
+                                   ]) ?>">
+                                    <hr class="dashboard-goals-card-horizontal-line">
+                                    <i class="fa fa-exchange"></i>
+                                    <span class="ml_2px"><?= __("Change TKR") ?></span>
+                                </a>
+                            </li>
+                        <?php endif;?>
                         <li role="presentation">
                             <?=
                             $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
