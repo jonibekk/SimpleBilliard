@@ -131,8 +131,6 @@ class AmazonTransport extends AbstractTransport
     {
         $this->_generateAmazonSes();
 
-        //for fixing curl 35 error by using php7.
-        $this->_amazonSes->setSslVerification(false);
         /**
          * @var Guzzle\Service\Resource\Model $response
          */
