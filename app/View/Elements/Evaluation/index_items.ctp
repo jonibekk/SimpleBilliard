@@ -29,7 +29,7 @@
                      'class'  => 'pull-left img-circle mtb_3px'
                     ]) ?>
             </div>
-            <div class="eval-list-item-right">
+            <div class="eval-list-item-center">
                 <p class="font_bold"><?= h($user['User']['display_username']) ?></p>
                 <?php foreach ($user['flow'] as $k => $v): ?>
                     <?php if ($k !== 0): ?>&nbsp;<i class="fa fa-long-arrow-right font_lightgray"></i>&nbsp;<?php endif ?>
@@ -43,6 +43,9 @@
                 <?php else: ?>
                     <p class="font_verydark"></p>
                 <?php endif; ?>
+            </div>
+            <div class="eval-list-item-right">
+                <i class="fa fa-angle-right font_lightgray" aria-hidden="true"></i>
             </div>
         </div>
     </a>

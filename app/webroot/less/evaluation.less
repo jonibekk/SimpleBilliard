@@ -4,10 +4,23 @@
     justify-content: flex-start;
     &-left {
       width: 48px;
-      margin-right: 10px;
+    }
+    &-center {
+      flex: 1;
+      margin: 0 10px;
     }
     &-right {
-      flex: 1;
+      width: 25px;
+      vertical-align: middle;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .fa {
+        font-weight: 700;
+        font-size: 28px;
+        width: 25px;
+      }
     }
   }
 }
