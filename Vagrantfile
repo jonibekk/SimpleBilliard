@@ -44,14 +44,14 @@ Vagrant.configure('2') do |config|
         vb.customize ["modifyvm", :id, "--ioapic", "on"]
     end
     src_dir = './'
-    doc_root = '/vagrant_data/app/webroot'
-    app_root = '/vagrant_data/'
+    doc_root = '/vagrant/app/webroot'
+    app_root = '/vagrant/'
     if ( RUBY_PLATFORM.downcase =~ /darwin/ )
       npm_recipe = 'local_yarn'
-      config.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
+      config.vm.synced_folder src_dir, '/vagrant', :nfs => true, mount_options: ['actimeo=2']
     else
       npm_recipe = 'local_npm'
-      config.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
+      config.vm.synced_folder src_dir, '/vagrant', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
     end
 
     config.vm.provision :chef_solo do |chef|
