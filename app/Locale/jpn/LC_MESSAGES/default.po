@@ -3474,6 +3474,9 @@ msgstr "評価設定が有効でないため、評価を開始することがで
 msgid "In evaluation term"
 msgstr "評価期間中です。"
 
+msgid "Add definition of evaluation score"
+msgstr "評価スコアの定義を1つ以上追加してください。"
+
 msgid "Start current term evaluations"
 msgstr "今期の評価を開始する"
 
