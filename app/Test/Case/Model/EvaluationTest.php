@@ -805,12 +805,14 @@ class EvaluationTest extends GoalousTestCase
             (int)0 => [
                 'name'      => 'You',
                 'status'    => '0',
-                'this_turn' => true
+                'this_turn' => true,
+                'other_evaluator' => false
             ],
             (int)1 => [
-                'name'      => 'Evaluator1',
+                'name'      => '1(firstname lastname)',
                 'status'    => '0',
-                'this_turn' => false
+                'this_turn' => false,
+                'other_evaluator' => true
             ]
         ];
         $actual = $this->Evaluation->getEvalStatus($term_id, 1);
