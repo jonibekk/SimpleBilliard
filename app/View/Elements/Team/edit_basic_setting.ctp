@@ -98,7 +98,7 @@
             'options'    => Team::$TYPE,
             'wrapInput'  => 'team-setting-basic-plan',
             'afterInput' => '<span class="help-block font_11px">'
-                .__("You can use Goalous free of charge until 31 Dec 2016.") // 同様の文言がteam/add.ctp
+                .__("You can use Goalous free of charge until the summer of 2017.") // 同様の文言がteam/add.ctp
                 // . __("フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
                 // . '<br>'
                 // . __("このプランはチーム作成後にいつでも変更できます。")

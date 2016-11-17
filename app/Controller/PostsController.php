@@ -754,7 +754,8 @@ class PostsController extends AppController
             }
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
-        $this->set(compact('posts'));
+        $extractedByKR = isset($this->request->params['named']['key_result_id']);
+        $this->set(compact('posts', 'extractedByKR'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -1382,7 +1383,17 @@ class PostsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        if ($this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'])) {
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'],
+                false, false);
+        } else {
+            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id']);
+        }
+
+        if ($circleJoinedSuccess) {
             $this->Pnotify->outSuccess(__("Joined the circle"));
         } else {
             $this->Pnotify->outError(__("Failed to join the circle."));

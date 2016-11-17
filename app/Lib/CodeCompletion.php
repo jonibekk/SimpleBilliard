@@ -122,5 +122,11 @@ if (false) {
          * @var ExptHelper
          */
         var $Expt;
+
+        /**
+         * @var PostHelper
+         */
+        var $Post;
+
     }
 }

@@ -202,10 +202,10 @@
                'action'     => 'view_info',
                'user_id'    => $user['User']['id'],
            ]) ?>">
-        <i class="fa fa-user profile-user-tab-icon"></i>
+        <i class="fa fa-info-circle profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__('Basic Information')) ?>
+            <?= h(__('Info')) ?>
         </p>
     </a>
 </div>

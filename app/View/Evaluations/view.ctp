@@ -17,6 +17,13 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 
+<!-- Back button -->
+<div class="col-sm-8 col-sm-offset-2">
+    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index']) ?>" class="btn-back">
+        <i class="fa fa-chevron-left"></i><span class="btn-back-text"><?= __('Back to evaluation list') ?></span>
+    </a>
+</div>
+
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
         'div'       => 'form-group',
@@ -295,7 +302,7 @@
                                        'user_id'    => $evaluateeId,
                                        'goal_id'    => $goal[0]['Goal']['id']
                                    ]) ?>">
-                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]")) ?>
+                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[action_result_count>0]")) ?>
                                 </a>
                             </div>
                         </div>
@@ -308,7 +315,7 @@
                                        'user_id'    => $evaluateeId,
                                        'goal_id'    => $goal[0]['Goal']['id']
                                    ]) ?>">
-                                    <?= __("Results") ?>
+                                    <?= __("View results") ?>
                                 </a>
                             </div>
                         </div>
@@ -339,7 +346,7 @@
                                    'author_id'        => $evaluateeId,
                                    'evaluate_term_id' => $evaluateTermId
                                ]) ?>">
-                                <?= __("Action") ?>
+                                <?= __("View action") ?>
                             </a>
                         </div>
                     </div>
@@ -576,3 +583,11 @@ $this->Form->input("evaluate_type", [
     });
 </script>
 <?php $this->end() ?>
+
+<!-- Back button -->
+<div class="col-sm-8 col-sm-offset-2">
+    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index']) ?>" class="btn-back">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+        <span class="btn-back-text"><?= __('Back to evaluation list') ?></span>
+    </a>
+</div>
