@@ -159,7 +159,7 @@ class KeyResultService extends AppService
             $goalId = Hash::get($kr, 'goal_id');
             // ゴール・TKR・コラボレーター取得
             $tkr = $KeyResult->find('first', [
-                'condition' => [
+                'conditions' => [
                     'tkr_flg' => true,
                     'goal_id' => $goalId
                 ]
@@ -186,10 +186,7 @@ class KeyResultService extends AppService
 
             // 認定対象の場合のみゴールの認定ステータスを更新
             $goalLeaderId = $GoalMember->getGoalLeaderId($goalId);
-            $this->log(sprintf("[%s] data:%v", __METHOD__, compact('goalId','tkrId','dropTkr', 'addTkr', 'goalLeaderId')));
-            $this->log(sprintf("[%s] 認定対象の場合のみゴールの認定ステータスを更新", __METHOD__));
             if ($GoalMemberService->isApprovableGoalMember($goalLeaderId)) {
-            $this->log(sprintf("[%s] 再申請", __METHOD__));
                 // コーチに再申請(リーダーのみでコラボレーターのコーチには再申請は起こらない)
                 $updateGoalMember = [
                     'user_id'                   => $leaderUserId,

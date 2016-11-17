@@ -25,6 +25,10 @@ App::import('View', 'Helper/UploadHelper');
  */
 class GoalService extends AppService
 {
+    const TERM_TYPE_CURRENT = 'current';
+    const TERM_TYPE_PREVIOUS = 'previous';
+    const TERM_TYPE_NEXT = 'next';
+
     public $goalValidateFields = [
         "name",
         "goal_category_id",
@@ -518,4 +522,43 @@ class GoalService extends AppService
         return $res;
     }
 
+    /**
+     * あてはまる評価期間をゴールごとに設定
+     *
+     * @param $goals
+     *
+     * @return mixed
+     */
+    function extendTermType($goals)
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // 評価期間取得
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        $nextTerm = $EvaluateTerm->getNextTermData();
+
+        $goalIds = Hash::extract($goals, '{n}.Goal.id');
+        $countKrEachGoal = $KeyResult->countEachGoalId($goalIds);
+
+        // あてはまる評価期間をゴールごとに設定
+        foreach ($goals as $k => &$v) {
+            $startDate = $v['Goal']['start_date'];
+            if ($currentTerm['start_date'] <= $startDate
+                && $startDate <= $currentTerm['end_date']
+            ) {
+                $v['Goal']['term_type'] = 'current';
+            } elseif ($nextTerm['start_date'] <= $startDate
+                && $startDate <= $nextTerm['end_date']
+            ) {
+                $v['Goal']['term_type'] = 'next';
+            } else {
+                $v['Goal']['term_type'] = 'previous';
+            }
+            $v['Goal']['kr_count'] = $countKrEachGoal[$v['Goal']['id']];
+        }
+        return $goals;
+    }
 }

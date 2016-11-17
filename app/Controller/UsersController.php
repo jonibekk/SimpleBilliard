@@ -1154,10 +1154,8 @@ class UsersController extends AppController
         } else {
             $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
         }
-
         $goals = $GoalService->processGoals($goals);
-        $goals = $this->Goal->setIsCurrentTerm($goals);
-
+        $goals = $GoalService->extendTermType($goals);
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_mine) {

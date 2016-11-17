@@ -36,7 +36,10 @@
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                 </a>
             </li>
-            <?php if (count($goal['KeyResult']) > 1):?>
+            <?php if ($goal['Goal']['kr_count'] > 1
+                && $goal['Goal']['user_id'] == $this->Session->read('Auth.User.id')
+                && $goal['Goal']['term_type'] != GoalService::TERM_TYPE_PREVIOUS
+            ):?>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
                        class="modal-ajax-get-exchange-tkr"
