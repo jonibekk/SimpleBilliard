@@ -37,8 +37,8 @@
                 </a>
             </li>
             <?php if ($goal['Goal']['kr_count'] > 1
+                && (($goal['Goal']['term_type'] == GoalService::TERM_TYPE_CURRENT && !$isStartedEvaluation) || $goal['Goal']['term_type'] == GoalService::TERM_TYPE_NEXT)
                 && $goal['Goal']['user_id'] == $this->Session->read('Auth.User.id')
-                && $goal['Goal']['term_type'] != GoalService::TERM_TYPE_PREVIOUS
             ):?>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"

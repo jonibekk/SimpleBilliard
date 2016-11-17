@@ -114,7 +114,7 @@ $kr_count = 0;
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                             </a>
                         </li>
-                        <?php if (count($goal['KeyResult']) > 1):?>
+                        <?php if (count($goal['KeyResult']) > 1 && !$isStartedEvaluation):?>
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1"
                                    class="modal-ajax-get-exchange-tkr"

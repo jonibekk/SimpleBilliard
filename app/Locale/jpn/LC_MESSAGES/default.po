@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-16 16:36+0900\n"
+"PO-Revision-Date: 2016-11-17 17:23+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -90,6 +90,9 @@ msgstr "スマホアプリ・ブラウザで利用可能です。"
 
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
+
+msgid "Invalid access"
+msgstr "不正なアクセスです。"
 
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
@@ -705,9 +708,6 @@ msgstr "%sさん、またお会いしましょう"
 msgid "Logged out"
 msgstr "ログアウトしました"
 
-msgid "Invalid access"
-msgstr "不正なアクセスです。"
-
 msgid "The invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
@@ -1202,10 +1202,10 @@ msgstr ""
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
-"another KR <span class=\"notify-card-head-target\">%2$s</span>."
+"another KR."
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
-"<span class=\"notify-card-head-target\">%2$s</span>."
+"<span class=\"notify-card-head-target\">%1$s</span> がトップKRを別のKRに変更"
+"しました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -4822,3 +4822,10 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid ""
+#~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
+#~ "another KR <span class=\"notify-card-head-target\">%2$s</span>."
+#~ msgstr ""
+#~ "<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
+#~ "<span class=\"notify-card-head-target\">%2$s</span>."

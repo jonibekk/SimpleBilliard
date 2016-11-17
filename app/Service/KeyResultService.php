@@ -189,8 +189,7 @@ class KeyResultService extends AppService
             if ($GoalMemberService->isApprovableGoalMember($goalLeaderId)) {
                 // コーチに再申請(リーダーのみでコラボレーターのコーチには再申請は起こらない)
                 $updateGoalMember = [
-                    'user_id'                   => $leaderUserId,
-                    'goal_id'                   => $goalId,
+                    'id'                   => $goalLeaderId,
                     'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
                     'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
                 ];

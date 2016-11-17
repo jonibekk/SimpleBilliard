@@ -490,7 +490,8 @@ $this->log(sprintf("[%s] 今期以降のゴールか",__METHOD__));
 
 $this->log(sprintf("[%s] isStartedEvaluation",__METHOD__));
         // 評価開始前か
-        if ($this->Team->EvaluateTerm->isStartedEvaluation($this->current_team_id)) {
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        if ($this->Team->EvaluateTerm->isStartedEvaluation($currentTermId)) {
             return __("Some error occurred. Please try again from the start.");
         }
         return "";

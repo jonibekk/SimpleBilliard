@@ -1171,7 +1171,10 @@ class UsersController extends AppController
 
         $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
 
-        $this->set(compact(
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+
+            $this->set(compact(
             'term',
             'term_id',
             'term_base_url',
@@ -1181,7 +1184,8 @@ class UsersController extends AppController
             'goals',
             'is_mine',
             'display_action_count',
-            'my_coaching_users'
+            'my_coaching_users',
+            'isStartedEvaluation'
         ));
         return $this->render();
     }
