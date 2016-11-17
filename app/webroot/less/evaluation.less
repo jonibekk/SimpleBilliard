@@ -1,3 +1,29 @@
+.eval-list {
+  &-item {
+    display: flex;
+    justify-content: flex-start;
+    &-left {
+      width: 48px;
+    }
+    &-center {
+      flex: 1;
+      margin: 0 10px;
+    }
+    &-right {
+      width: 25px;
+      vertical-align: middle;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .fa {
+        font-weight: 700;
+        font-size: 28px;
+      }
+    }
+  }
+}
+
 .eval-view {
   &-panel {
     &-title {
