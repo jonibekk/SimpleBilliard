@@ -409,7 +409,6 @@ class GoalsController extends AppController
     {
         $formData = $this->request->data('KeyResult');
         $krId = Hash::get($formData, 'id');
-        $this->log(compact('krId'));
 
         $errMsg = $this->validateExchangeTkr($krId);
         if (!empty($errMsg)) {
@@ -420,7 +419,6 @@ class GoalsController extends AppController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
         // TKRを変更
-        $this->log("change tkr");
         if (!$KeyResultService->exchangeTkr($krId, $this->Auth->user('id'))) {
             $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
             $this->redirect($this->referer());
@@ -464,17 +462,14 @@ class GoalsController extends AppController
 
         // KRが存在するか
         $kr = $KeyResultService->get($krId);
-$this->log(sprintf("[%s] KRが存在するか",__METHOD__));
         if (empty($kr)) {
             return __("Some error occurred. Please try again from the start.");
         }
-$this->log(sprintf("[%s] TKRでないか",__METHOD__));
         // TKRでないか
         if ($kr['tkr_flg']) {
             return __("Some error occurred. Please try again from the start.");
         }
 
-$this->log(sprintf("[%s] ログインユーザーのゴールか",__METHOD__));
         $goalId = $kr['goal_id'];
         $goal = $GoalService->get($goalId);
         // ログインユーザーのゴールか
@@ -482,13 +477,11 @@ $this->log(sprintf("[%s] ログインユーザーのゴールか",__METHOD__));
             return __("Some error occurred. Please try again from the start.");
         }
 
-$this->log(sprintf("[%s] 今期以降のゴールか",__METHOD__));
         // 今期以降のゴールか
         if (!$GoalService->isGoalAfterCurrentTerm($goalId)) {
             return __("Some error occurred. Please try again from the start.");
         }
 
-$this->log(sprintf("[%s] isStartedEvaluation",__METHOD__));
         // 評価開始前か
         $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
         if ($this->Team->EvaluateTerm->isStartedEvaluation($currentTermId)) {
