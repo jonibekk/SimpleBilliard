@@ -504,6 +504,11 @@ textarea{
     padding-right: 11px;
 }
 
+.plr_12px {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
 .plr_18px {
     padding-left: 18px;
     padding-right: 18px;
