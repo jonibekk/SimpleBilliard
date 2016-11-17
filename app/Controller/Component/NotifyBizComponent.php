@@ -839,12 +839,10 @@ class NotifyBizComponent extends Component
         if (!$goalMember['is_wish_approval']) {
             $url = $url_goal_detail;
             // 認定取り下げの場合は認定一覧へ
+        } elseif ($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
+            $url = $url_approval_list;
         } else {
-            if ($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
-                $url = $url_approval_list;
-            } else {
-                $url = $url_approval_detail;
-            }
+            $url = $url_approval_detail;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
