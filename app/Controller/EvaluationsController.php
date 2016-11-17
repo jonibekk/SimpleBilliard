@@ -2,12 +2,13 @@
 App::uses('AppController', 'Controller');
 App::uses('Evaluation', 'Model');
 App::import('Service', 'GoalService');
+App::import('Service', 'EvaluationService');
 
 /**
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
- * @var                 $selected_tab_term_id
+ * @var                 $selectedTabTermId
  */
 class EvaluationsController extends AppController
 {
@@ -33,31 +34,35 @@ class EvaluationsController extends AppController
         }
 
         // Set selected term
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-        $term_param = Hash::get($this->request->params, 'named.term');
-        $selected_term_name = $term_param ? $term_param : 'previous';
-        $selected_tab_term_id = '';
-        if ($selected_term_name == 'present') {
-            $selected_tab_term_id = $current_term_id;
-        } elseif ($selected_term_name == 'previous') {
-            $selected_tab_term_id = $previous_term_id;
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        $termParam = Hash::get($this->request->params, 'named.term');
+        $selectedTermName = $termParam ? $termParam : 'previous';
+        $selectedTabTermId = '';
+        if ($selectedTermName == 'present') {
+            $selectedTabTermId = $currentTermId;
+        } elseif ($selectedTermName == 'previous') {
+            $selectedTabTermId = $previousTermId;
         }
 
-        $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
-        $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
-        $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
+        /** @var  EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init('EvaluationService');
+
+        $incompleteNumberList = $this->Evaluation->getIncompleteNumberList();
+        $myEval[] = $EvaluationService->getEvalStatus($selectedTabTermId, $this->Auth->user('id'));
+        $myEvaluatees = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($selectedTabTermId);
 
         // Get term frozen status
         $isFrozens = [];
-        $isFrozens['present'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
-        $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
+        $isFrozens['present'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId);
+        $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId);
 
-        $this->set(compact('incomplete_number_list',
-            'my_evaluatees',
-            'my_eval',
-            'selected_tab_term_id',
-            'selected_term_name',
+        $this->set(compact(
+            'incompleteNumberList',
+            'myEvaluatees',
+            'myEval',
+            'selectedTabTermId',
+            'selectedTermName',
             'isFrozens'
         ));
     }
@@ -123,18 +128,6 @@ class EvaluationsController extends AppController
             foreach ($goal as $evalKey => $eval) {
                 $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(Hash::get($eval,
                     'Goal.KeyResult'));
-            }
-        }
-        //remove unnecessary KRs
-        foreach ($goalList as $goalIndex => $goal) {
-            foreach ($goal as $evalKey => $eval) {
-                if (!empty($eval['Goal']['KeyResult'])) {
-                    foreach ($eval['Goal']['KeyResult'] as $kr_k => $kr) {
-                        if (empty($kr['ActionResult'])) {
-                            unset($goalList[$goalIndex][$evalKey]['Goal']['KeyResult'][$kr_k]);
-                        }
-                    }
-                }
             }
         }
 
