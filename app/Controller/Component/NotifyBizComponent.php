@@ -3,6 +3,7 @@ App::uses('ModelType', 'Model');
 
 /**
  * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
+ *
  * @author daikihirakata
  * @property SessionComponent $Session
  * @property AuthComponent    $Auth
@@ -837,11 +838,13 @@ class NotifyBizComponent extends Component
         // 認定希望していないゴールはゴール詳細へ
         if (!$goalMember['is_wish_approval']) {
             $url = $url_goal_detail;
-        // 認定取り下げの場合は認定一覧へ
-        } else if($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
-            $url = $url_approval_list;
+            // 認定取り下げの場合は認定一覧へ
         } else {
-            $url = $url_approval_detail;
+            if ($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
+                $url = $url_approval_list;
+            } else {
+                $url = $url_approval_detail;
+            }
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
@@ -934,9 +937,15 @@ class NotifyBizComponent extends Component
         $comment = Hash::get($approvalHistory, 'ApprovalHistory.comment');
 
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserId, NotifySetting::TYPE_APPROVAL_COMMENT);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserId,
+            NotifySetting::TYPE_APPROVAL_COMMENT);
 
-        $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', Hash::get($goalMember, 'GoalMember.id')];
+        $url_goal_approval = [
+            'controller' => 'goals',
+            'action'     => 'approval',
+            'detail',
+            Hash::get($goalMember, 'GoalMember.id')
+        ];
 
         $this->notify_option['notify_type'] = NotifySetting::TYPE_APPROVAL_COMMENT;
         $this->notify_option['url_data'] = $url_goal_approval;
@@ -1001,10 +1010,21 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
             $notify_type);
 
+        //期間タイプの設定
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        $termType = null;
+        if ($term_id == $currentTermId) {
+            $termType = 'present';
+        } elseif ($term_id == $previousTermId) {
+            $termType = 'previous';
+        }
+
+        //通知のurlの元データ
         $notify_list_url = [
             'controller' => 'evaluations',
             'action'     => 'index',
-            'term'       => 'present',
+            'term'       => $termType,
             'team_id'    => $this->NotifySetting->current_team_id
         ];
 
@@ -1245,7 +1265,7 @@ class NotifyBizComponent extends Component
 
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
-            $from_user_name = Hash::get($from_user,'0.User.display_username');
+            $from_user_name = Hash::get($from_user, '0.User.display_username');
 
             // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
             $title = "";
