@@ -11,7 +11,6 @@ class DATABASE_CONFIG
         'password'   => '',
         'database'   => 'myapp',
         'encoding'   => 'utf8mb4',
-        'unix_socket' => '/var/run/mysqld/mysqld.sock',
     );
 
     public $test = array(
