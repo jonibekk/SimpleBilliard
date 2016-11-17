@@ -23,7 +23,7 @@
                     ['class' => 'dashboard-profile-card-avatarImage inline-block']) ?>
             </a>
         </div>
-        <div class="text-align_c">
+        <div class="text-align_c plr_12px">
             <a href="<?= $this->Html->url([
                 'controller' => 'users',
                 'action'     => 'view_goals',

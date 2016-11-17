@@ -839,12 +839,10 @@ class NotifyBizComponent extends Component
         if (!$goalMember['is_wish_approval']) {
             $url = $url_goal_detail;
             // 認定取り下げの場合は認定一覧へ
+        } elseif ($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
+            $url = $url_approval_list;
         } else {
-            if ($notify_type == NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL) {
-                $url = $url_approval_list;
-            } else {
-                $url = $url_approval_detail;
-            }
+            $url = $url_approval_detail;
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
@@ -1010,10 +1008,21 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
             $notify_type);
 
+        //期間タイプの設定
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        $termType = null;
+        if ($term_id == $currentTermId) {
+            $termType = 'present';
+        } elseif ($term_id == $previousTermId) {
+            $termType = 'previous';
+        }
+
+        //通知のurlの元データ
         $notify_list_url = [
             'controller' => 'evaluations',
             'action'     => 'index',
-            'term'       => 'present',
+            'term'       => $termType,
             'team_id'    => $this->NotifySetting->current_team_id
         ];
 
