@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b22b44ccb8c4ed889a264d958a01a763",
+    "content-hash": "cfcd11dee2e1aa747a8c813786b70a56",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -113,35 +113,34 @@
         },
         {
             "name": "browscap/browscap-php",
-            "version": "3.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/browscap/browscap-php.git",
-                "reference": "027e230295075298a63afa8dc05e931c2ddf9c85"
+                "reference": "64d86c8262a6f7fc2a5b5aad67301f68a380e69c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/browscap/browscap-php/zipball/027e230295075298a63afa8dc05e931c2ddf9c85",
-                "reference": "027e230295075298a63afa8dc05e931c2ddf9c85",
+                "url": "https://api.github.com/repos/browscap/browscap-php/zipball/64d86c8262a6f7fc2a5b5aad67301f68a380e69c",
+                "reference": "64d86c8262a6f7fc2a5b5aad67301f68a380e69c",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2",
                 "mimmi20/wurflcache": "^1.3",
                 "monolog/monolog": "^1.7",
-                "php": "^5.6|^7.0",
-                "symfony/console": "^2.6|^3.0",
-                "symfony/filesystem": "^2.6|^3.0",
-                "symfony/finder": "^2.6|^3.0"
+                "php": "^5.6 || ^7.0",
+                "symfony/console": "^2.6 || ^3.0",
+                "symfony/filesystem": "^2.6 || ^3.0",
+                "symfony/finder": "^2.6 || ^3.0"
             },
             "require-dev": {
-                "fabpot/php-cs-fixer": "^1.11",
+                "friendsofphp/php-cs-fixer": "^1.11",
                 "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": "^5.2",
+                "phpunit/phpunit": "^5.3",
                 "squizlabs/php_codesniffer": "^2.5"
             },
             "suggest": {
-                "browscap/browscap": "to update the source file without downloading, for PHP 5.6+",
                 "ext-curl": "to use curl requests to get the ini file"
             },
             "bin": [
@@ -179,7 +178,7 @@
                 "get_browser",
                 "user agent"
             ],
-            "time": "2016-07-12T10:51:44+00:00"
+            "time": "2016-08-08 08:16:41"
         },
         {
             "name": "cakedc/migrations",
@@ -2474,53 +2473,6 @@
     ],
     "packages-dev": [
         {
-            "name": "andrewsville/php-token-reflection",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Andrewsville/PHP-Token-Reflection.git",
-                "reference": "e6d0ac2baf66cdf154be34c3d2a2aa1bd4b426ee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Andrewsville/PHP-Token-Reflection/zipball/e6d0ac2baf66cdf154be34c3d2a2aa1bd4b426ee",
-                "reference": "e6d0ac2baf66cdf154be34c3d2a2aa1bd4b426ee",
-                "shasum": ""
-            },
-            "require": {
-                "ext-tokenizer": "*",
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "TokenReflection": "./"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3"
-            ],
-            "authors": [
-                {
-                    "name": "Ondřej Nešpor",
-                    "homepage": "https://github.com/andrewsville"
-                },
-                {
-                    "name": "Jaroslav Hanslík",
-                    "homepage": "https://github.com/kukulich"
-                }
-            ],
-            "description": "Library emulating the PHP internal reflection using just the tokenized source code.",
-            "homepage": "http://andrewsville.github.com/PHP-Token-Reflection/",
-            "keywords": [
-                "library",
-                "reflection",
-                "tokenizer"
-            ],
-            "time": "2014-08-06T16:37:08+00:00"
-        },
-        {
             "name": "apigen/apigen",
             "version": "v4.1.2",
             "source": {
@@ -4059,17 +4011,77 @@
             "time": "2014-11-02T09:23:27+00:00"
         },
         {
-            "name": "sebastian/comparator",
-            "version": "1.2.0",
+            "name": "popsul/php-token-reflection",
+            "version": "1.5.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "937efb279bd37a375bcadf584dec0726f84dbf22"
+                "url": "https://github.com/POPSuL/PHP-Token-Reflection.git",
+                "reference": "11c93bf7562dc00c517e08e4a53de5cb50565a74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/937efb279bd37a375bcadf584dec0726f84dbf22",
-                "reference": "937efb279bd37a375bcadf584dec0726f84dbf22",
+                "url": "https://api.github.com/repos/POPSuL/PHP-Token-Reflection/zipball/11c93bf7562dc00c517e08e4a53de5cb50565a74",
+                "reference": "11c93bf7562dc00c517e08e4a53de5cb50565a74",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "andrewsville/php-token-reflection": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "TokenReflection": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Nešpor",
+                    "homepage": "https://github.com/andrewsville"
+                },
+                {
+                    "name": "Jaroslav Hanslík",
+                    "homepage": "https://github.com/kukulich"
+                },
+                {
+                    "name": "Boris Momčilović",
+                    "homepage": "https://github.com/kornrunner"
+                },
+                {
+                    "name": "Viktor Suprun",
+                    "homepage": "https://github.com/POPSuL"
+                }
+            ],
+            "description": "Library emulating the PHP internal reflection using just the tokenized source code.",
+            "keywords": [
+                "library",
+                "reflection",
+                "tokenizer"
+            ],
+            "time": "2016-07-12T09:59:01+00:00"
+        },
+        {
+            "name": "sebastian/comparator",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/comparator.git",
+                "reference": "ce2bda23a56456f19e35d98241446b581f648c14"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/ce2bda23a56456f19e35d98241446b581f648c14",
+                "reference": "ce2bda23a56456f19e35d98241446b581f648c14",
                 "shasum": ""
             },
             "require": {
@@ -4120,7 +4132,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2015-07-26T15:48:44+00:00"
+            "time": "2016-11-17T14:39:37+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -4243,16 +4255,16 @@
         },
         {
             "name": "sebastian/recursion-context",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "79860854756415e1cec8d186c9cf261cafd87dfc"
+                "reference": "938df7a6478e72795e5f8266cff24d06e3136f2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/79860854756415e1cec8d186c9cf261cafd87dfc",
-                "reference": "79860854756415e1cec8d186c9cf261cafd87dfc",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/938df7a6478e72795e5f8266cff24d06e3136f2e",
+                "reference": "938df7a6478e72795e5f8266cff24d06e3136f2e",
                 "shasum": ""
             },
             "require": {
@@ -4292,20 +4304,20 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-11-14T15:54:23+00:00"
+            "time": "2016-11-15T06:55:36+00:00"
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.4.1",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "e827b5254d3e58c736ea2c5616710983d80b0b70"
+                "reference": "19495c181d6d53a0a13414154e52817e3b504189"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/e827b5254d3e58c736ea2c5616710983d80b0b70",
-                "reference": "e827b5254d3e58c736ea2c5616710983d80b0b70",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/19495c181d6d53a0a13414154e52817e3b504189",
+                "reference": "19495c181d6d53a0a13414154e52817e3b504189",
                 "shasum": ""
             },
             "require": {
@@ -4338,7 +4350,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2016-09-14T15:17:56+00:00"
+            "time": "2016-11-14T17:59:58+00:00"
         },
         {
             "name": "symfony/options-resolver",
@@ -4461,7 +4473,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kaz29/cake_slack": 20
+        "kaz29/cake_slack": 20,
+        "browscap/browscap-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
