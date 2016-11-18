@@ -16,7 +16,7 @@ bash "composer install" do
 end
 
 execute 'chmod browscap resources' do
-  command "chmod 777 -R #{release_path}/Vendor/browscap/browscap-php/src/../resources/"
+  command "chmod 755 -R #{release_path}/Vendor/browscap/browscap-php/src/../resources/"
 end
 
 bash 'update browscap' do
