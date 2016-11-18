@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
 App::uses('KeyResult', 'Model');
+App::uses('TeamMember', 'Model');
 
 /**
  * Class KeyResultService
@@ -144,6 +145,8 @@ class KeyResultService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMemberService $GoalMemberService */
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
@@ -197,12 +200,17 @@ class KeyResultService extends AppService
                     throw new Exception(sprintf("Failed reapply goal. data:%s"
                         , var_export($updateGoalMember, true)));
                 }
+
+                // 認定に関するRedisキャッシュ削除
+                $coachId = $TeamMember->getCoachId($leaderUserId,
+                    Hash::get($kr, 'team_id'));
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
-
             // Redisキャッシュ削除
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
             Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
             // トランザクション完了
             $Goal->commit();

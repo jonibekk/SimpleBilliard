@@ -36,10 +36,7 @@
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
                 </a>
             </li>
-            <?php if ($goal['Goal']['kr_count'] > 1
-                && (($goal['Goal']['term_type'] == GoalService::TERM_TYPE_CURRENT && !$isStartedEvaluation) || $goal['Goal']['term_type'] == GoalService::TERM_TYPE_NEXT)
-                && $goal['Goal']['user_id'] == $this->Session->read('Auth.User.id')
-            ):?>
+            <?php if($this->Goal->canExchangeTkr($goal['Goal']['kr_count'], $goal['Goal']['term_type'], $isStartedEvaluation, $goal['Goal']['user_id'], $this->Session->read('Auth.User.id'))):?>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
                        class="modal-ajax-get-exchange-tkr"

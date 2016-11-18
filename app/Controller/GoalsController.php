@@ -410,10 +410,10 @@ class GoalsController extends AppController
         $formData = $this->request->data('KeyResult');
         $krId = Hash::get($formData, 'id');
 
-        $errMsg = $this->validateExchangeTkr($krId);
+        $errMsg = $this->_validateExchangeTkr($krId);
         if (!empty($errMsg)) {
             $this->Pnotify->outError($errMsg);
-            $this->redirect($this->referer());
+            return $this->redirect($this->referer());
         }
 
         /** @var KeyResultService $KeyResultService */
@@ -421,7 +421,7 @@ class GoalsController extends AppController
         // TKRを変更
         if (!$KeyResultService->exchangeTkr($krId, $this->Auth->user('id'))) {
             $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
-            $this->redirect($this->referer());
+            return $this->redirect($this->referer());
         }
 
         //コーチへの通知
@@ -435,7 +435,7 @@ class GoalsController extends AppController
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));
         if ($paramsReferer['controller'] == 'pages' && $paramsReferer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
+            return $this->redirect('/after_click:SubHeaderMenuGoal');
         } else {
             return $this->redirect($this->referer());
         }
@@ -448,7 +448,7 @@ class GoalsController extends AppController
      *
      * @return bool|mixed
      */
-    private function validateExchangeTkr($krId)
+    private function _validateExchangeTkr($krId)
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
@@ -471,22 +471,26 @@ class GoalsController extends AppController
         }
 
         $goalId = $kr['goal_id'];
-        $goal = $GoalService->get($goalId);
+        $goal = $this->Goal->getById($goalId);
         // ログインユーザーのゴールか
         if ($goal['user_id'] !== $this->Auth->user('id')) {
             return __("Some error occurred. Please try again from the start.");
         }
 
         // 今期以降のゴールか
-        if (!$GoalService->isGoalAfterCurrentTerm($goalId)) {
+        $termType = $GoalService->getTermType($goal['start_date']);
+        if ($termType == GoalService::TERM_TYPE_PREVIOUS) {
             return __("Some error occurred. Please try again from the start.");
+        }
+        // 評価開始前か
+        if ($termType == GoalService::TERM_TYPE_CURRENT) {
+            $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+            $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+            if ($isStartedEvaluation) {
+                return __("Some error occurred. Please try again from the start.");
+            }
         }
 
-        // 評価開始前か
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        if ($this->Team->EvaluateTerm->isStartedEvaluation($currentTermId)) {
-            return __("Some error occurred. Please try again from the start.");
-        }
         return "";
     }
 

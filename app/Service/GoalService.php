@@ -545,20 +545,47 @@ class GoalService extends AppService
 
         // あてはまる評価期間をゴールごとに設定
         foreach ($goals as $k => &$v) {
-            $startDate = $v['Goal']['start_date'];
-            if ($currentTerm['start_date'] <= $startDate
-                && $startDate <= $currentTerm['end_date']
-            ) {
-                $v['Goal']['term_type'] = 'current';
-            } elseif ($nextTerm['start_date'] <= $startDate
-                && $startDate <= $nextTerm['end_date']
-            ) {
-                $v['Goal']['term_type'] = 'next';
-            } else {
-                $v['Goal']['term_type'] = 'previous';
-            }
+            $v['Goal']['term_type'] = $this->getTermType($v['Goal']['start_date'], $currentTerm, $nextTerm);
             $v['Goal']['kr_count'] = $countKrEachGoal[$v['Goal']['id']];
         }
         return $goals;
+    }
+
+    /**
+     * ゴールのあてはまる評価期間を取得
+     *
+     * @param $startDate
+     * @param $currentTerm
+     * @param $nextTerm
+     *
+     * @return string
+     */
+    function getTermType($startDate, $currentTerm = null, $nextTerm = null)
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+
+        // 評価期間取得
+        if (empty($currentTerm)) {
+            $currentTerm = $EvaluateTerm->getCurrentTermData();
+        }
+        if (empty($nextTerm)) {
+            $nextTerm = $EvaluateTerm->getNextTermData();
+        }
+
+        // あてはまる評価期間をゴールごとに設定
+        if ($currentTerm['start_date'] <= $startDate
+            && $startDate <= $currentTerm['end_date']
+        ) {
+            return self::TERM_TYPE_CURRENT;
+        }
+
+        if ($nextTerm['start_date'] <= $startDate
+            && $startDate <= $nextTerm['end_date']
+        ) {
+            return self::TERM_TYPE_NEXT;
+        }
+
+        return self::TERM_TYPE_PREVIOUS;
     }
 }

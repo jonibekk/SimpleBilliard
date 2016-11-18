@@ -147,4 +147,34 @@ class GoalHelper extends AppHelper
         return $out_of_evaluation;
     }
 
+    /**
+     * TKR変更可能か
+     *
+     * @param $krCount
+     * @param $termType
+     * @param $isStartedEvaluation
+     * @param $leaderUserId
+     *
+     * @return string
+     * @internal param array $goalMember
+     */
+    function canExchangeTkr($krCount, $termType, $isStartedEvaluation, $leaderUserId, $loginUserId)
+    {
+        if ($krCount <= 1) {
+            return false;
+        }
+
+        if ($termType == GoalService::TERM_TYPE_PREVIOUS) {
+            return false;
+        }
+
+        if ($termType == GoalService::TERM_TYPE_CURRENT && $isStartedEvaluation) {
+            return false;
+        }
+
+        if ($leaderUserId != $loginUserId) {
+            return false;
+        }
+        return true;
+    }
 }
