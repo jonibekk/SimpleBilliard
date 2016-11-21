@@ -167,10 +167,8 @@
         };
         if (!enabled_intercom_icon) {
             window.intercomSettings.hide_default_launcher = true;
-            window.intercomSettings.custom_launcher_selector = "#Intercom";
         }
-        //contact for evaluation on team setting page.
-        window.intercomSettings.custom_launcher_selector = "#ContactForEvaluation";
+        window.intercomSettings.custom_launcher_selector = ".intercom-launcher";
 
     </script>
     <script>(function () {
