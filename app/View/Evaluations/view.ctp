@@ -565,6 +565,9 @@ $this->Form->input("evaluate_type", [
 ])
 ?>
 <?= $this->Form->end() ?>
+<!-- Back button -->
+<?= $this->GlHtml->backBtn("/evaluations?term_id=".$evaluateTermId, __('Back to evaluation list')) ?>
+
 <?= $this->App->viewEndComment() ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
@@ -579,6 +582,3 @@ $this->Form->input("evaluate_type", [
     });
 </script>
 <?php $this->end() ?>
-
-<!-- Back button -->
-<?= $this->GlHtml->backBtn("/evaluations?term_id=".$evaluateTermId, __('Back to evaluation list'))?>
