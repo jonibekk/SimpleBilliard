@@ -6,7 +6,7 @@ App::uses('ExceptionRenderer', 'Error');
  */
 class ApiExceptionRenderer extends ExceptionRenderer
 {
-    public function __construct(Exception $exception)
+    public function __construct($exception)
     {
         parent::__construct($exception);
         $this->method = 'errorApi';
