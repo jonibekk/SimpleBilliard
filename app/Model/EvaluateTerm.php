@@ -59,6 +59,13 @@ class EvaluateTerm extends AppModel
         'Evaluator',
     ];
 
+    /**
+     * TODO:findAllメソッドに統合
+     * @deprecated
+     * @param bool $order_desc
+     *
+     * @return array|null
+     */
     function getAllTerm($order_desc = true)
     {
         $options = [
@@ -75,6 +82,25 @@ class EvaluateTerm extends AppModel
         $res = $this->find('all', $options);
         $res = Hash::combine($res, '{n}.EvaluateTerm.id', '{n}.EvaluateTerm');
         return $res;
+    }
+
+    /**
+     * チームの全評価期間取得
+     *
+     * @return array|null
+     */
+    function findAll()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id
+            ],
+            'order'      => [
+                'start_date' => 'desc'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.EvaluateTerm');
     }
 
     function changeToInProgress($id)

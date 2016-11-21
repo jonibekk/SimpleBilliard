@@ -33,38 +33,84 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        // Set selected term
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
-        $termParam = Hash::get($this->request->params, 'named.term');
-        $selectedTermName = $termParam ? $termParam : 'previous';
-        $selectedTabTermId = '';
-        if ($selectedTermName == 'present') {
-            $selectedTabTermId = $currentTermId;
-        } elseif ($selectedTermName == 'previous') {
-            $selectedTabTermId = $previousTermId;
+        // 評価期間ID取得
+        $termId = Hash::get($this->request->query, 'term_id');
+
+        // 全評価期間取得
+        $allTerms = $this->Team->EvaluateTerm->findAll();
+        array_shift($allTerms);
+        $allTermIds = Hash::extract($allTerms, '{n}.id');
+
+        if (empty($termId)) {
+            // デフォルトは前期
+            $termId = $this->Team->EvaluateTerm->getPreviousTermId();
+        } else {
+            // 存在しない評価期間を指定した場合エラー
+            if (!in_array($termId, $allTermIds)) {
+                return $this->redirect($this->referer());
+            }
         }
+
+        // 評価期間選択用ラベル取得
+        $termLabels = $this->_getTermLabels($allTerms);
 
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');
 
-        $incompleteNumberList = $this->Evaluation->getIncompleteNumberList();
-        $myEval[] = $EvaluationService->getEvalStatus($selectedTabTermId, $this->Auth->user('id'));
-        $myEvaluatees = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($selectedTabTermId);
+        $incompSelfEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF, $termId, false);
+        $incompEvaluateeEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR, $termId, false);
+        $selfEval = $EvaluationService->getEvalStatus($termId, $this->Auth->user('id'));
+        $evaluateesEval = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($termId);
+
+        // 該当期間が評価開始されているか
+        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($termId);
 
         // Get term frozen status
-        $isFrozens = [];
-        $isFrozens['present'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId);
-        $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId);
+        $isFrozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($termId);
 
         $this->set(compact(
-            'incompleteNumberList',
-            'myEvaluatees',
-            'myEval',
-            'selectedTabTermId',
-            'selectedTermName',
-            'isFrozens'
+            'termId',
+            'termLabels',
+            'incompSelfEvalCnt',
+            'incompEvaluateeEvalCnt',
+            'selfEval',
+            'evaluateesEval',
+            'isFrozen',
+            'isStartedEvaluation'
         ));
+    }
+
+    /**
+     * 評価期間選択用ラベルを取得
+     *
+     * @param $terms
+     *
+     * @return array
+     */
+    private function _getTermLabels($terms)
+    {
+        if (!is_array($terms)) {
+            return [];
+        }
+        $termLabels = [];
+
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+
+        foreach ($terms as $term) {
+            $termId = $term['id'];
+            if ($termId == $currentTermId) {
+                $termLabels[$termId] = __("Current Term");
+            } elseif ($termId == $previousTermId) {
+                $termLabels[$termId] = __("Previous Term");
+            } else {
+                $timezoneSec = $term['timezone'] * 3600;
+                $fmtStartDate = date('Y/m/d', $term['start_date'] + $timezoneSec);
+                $fmtEndDate = date('Y/m/d', $term['end_date'] + $timezoneSec);
+                $termLabels[$term['id']] = $fmtStartDate. " - " .$fmtEndDate;
+            }
+        }
+        return $termLabels;
     }
 
     function view()
