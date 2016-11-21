@@ -14,13 +14,16 @@ class ApiExceptionRenderer extends ExceptionRenderer
 
     public function errorApi($error)
     {
-        if(get_class($error) == 'Error'){
+        if (get_class($error) == 'Error') {
             $message = __('Internal Server Error');
             $code = 500;
-            CakeLog::error($error->getMessage());
-            CakeLog::error($error->getTraceAsString());
-        }
-        else{
+            $log_message = sprintf("[%s] %s\n%s",
+                get_class($error),
+                CakeLog::error($error->getMessage()),
+                CakeLog::error($error->getTraceAsString())
+            );
+            CakeLog::write(LOG_ERR, $log_message);
+        } else {
             $message = $error->getMessage();
             $code = $error->getCode();
         }
