@@ -243,7 +243,7 @@ class ErrorHandler {
      * @throws InternalErrorException If the Exception renderer threw an exception during rendering, and debug is 0.
      */
     public static function handleFatalError($code, $description, $file, $line) {
-        $logMessage = 'Fatal Error (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
+        $logMessage = 'Fatal Error (' . $code . '): ' . $description . ' in [' . $file . ':' . $line . ']';
         CakeLog::write(LOG_ERR, $logMessage);
 
         $exceptionHandler = Configure::read('Exception.handler');
@@ -325,7 +325,7 @@ class ErrorHandler {
      */
     protected static function _getErrorMessage($error, $code, $description, $file, $line) {
         $errorConfig = Configure::read('Error');
-        $message = $error . ' (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
+        $message = $error . ' (' . $code . '): ' . $description . ' in [' . $file . ':' . $line . ']';
         if (!empty($errorConfig['trace'])) {
             // https://bugs.php.net/bug.php?id=65322
             if (version_compare(PHP_VERSION, '5.4.21', '<')) {
