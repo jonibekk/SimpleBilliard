@@ -535,4 +535,20 @@ class AppModel extends Model
         return $res;
     }
 
+    /**
+     * idによる単体情報取得
+     *
+     * @param $id
+     *
+     * @return array
+     */
+    function getById($id)
+    {
+        if (empty($id)) {
+            return [];
+        }
+        $ret = $this->findById($id);
+        return reset($ret);
+    }
+
 }

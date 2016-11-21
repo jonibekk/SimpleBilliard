@@ -499,6 +499,7 @@ $(document).ready(function () {
 
   //noinspection JSUnresolvedVariable
   $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+  $(document).on("click", '.modal-ajax-get-exchange-tkr', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable
   $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-add-action', function (e) {
