@@ -577,6 +577,7 @@ class Post extends AppModel
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterKrPostList($db,
                             $this->orgParams['key_result_id'],
+                            $this->orgParams['author_id'] ? $this->orgParams['author_id'] : null,
                             self::TYPE_ACTION,
                             $start, $end) . ')');
             } //特定ゴール指定
@@ -1084,7 +1085,7 @@ class Post extends AppModel
         return true;
     }
 
-    public function getSubQueryFilterKrPostList(DboSource $db, $key_result_id, $type, $start = null, $end = null)
+    public function getSubQueryFilterKrPostList(DboSource $db, $key_result_id, $user_id = null, $type, $start = null, $end = null)
     {
         $query = [
             'fields'     => ['Post.id'],
@@ -1107,6 +1108,9 @@ class Post extends AppModel
 
         if ($start !== null && $end !== null) {
             $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
+        }
+        if ($user_id) {
+            $query['conditions']['Post.user_id'] = $user_id;
         }
         $res = $db->buildStatement($query, $this);
         return $res;
