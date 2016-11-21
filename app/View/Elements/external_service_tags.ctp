@@ -169,6 +169,9 @@
             window.intercomSettings.hide_default_launcher = true;
             window.intercomSettings.custom_launcher_selector = "#Intercom";
         }
+        //contact for evaluation on team setting page.
+        window.intercomSettings.custom_launcher_selector = "#ContactForEvaluation";
+
     </script>
     <script>(function () {
             var w = window;

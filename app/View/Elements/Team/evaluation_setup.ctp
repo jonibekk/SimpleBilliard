@@ -28,7 +28,9 @@
     <div class="panel-heading"><?= __("Evaluation settings") ?></div>
     <div class="panel-body form-horizontal">
         <?php if ($this->Expt->is('EnableEvaluationFeature') === false): ?>
-            <?= __('Evaluation feature is disabled now. If you would like to use it, please contact us.') ?>
+            <?= __('Evaluation feature is disabled now. If you would like to use it,') ?> <a
+                href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io" id="#ContactForEvaluation"
+                class=""><?= __('please contact us.') ?></a>
         <?php else: ?>
             <?=
             $this->Form->create('EvaluationSetting', [
