@@ -14,8 +14,16 @@ class ApiExceptionRenderer extends ExceptionRenderer
 
     public function errorApi($error)
     {
-        $message = $error->getMessage();
-        $code = $error->getCode();
+        if(get_class($error) == 'Error'){
+            $message = __('Internal Server Error');
+            $code = 500;
+            CakeLog::error($error->getMessage());
+            CakeLog::error($error->getTraceAsString());
+        }
+        else{
+            $message = $error->getMessage();
+            $code = $error->getCode();
+        }
         switch (get_class($error)) {
             case 'MissingActionException':
             case 'MissingControllerException':
