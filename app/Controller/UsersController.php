@@ -1155,7 +1155,7 @@ class UsersController extends AppController
             $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
         }
         $goals = $GoalService->processGoals($goals);
-        $goals = $GoalService->extendTermType($goals);
+        $goals = $GoalService->extendTermType($goals, $this->Auth->user('id'));
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_mine) {
@@ -1171,10 +1171,8 @@ class UsersController extends AppController
 
         $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
 
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
 
-            $this->set(compact(
+        $this->set(compact(
             'term',
             'term_id',
             'term_base_url',
@@ -1184,8 +1182,7 @@ class UsersController extends AppController
             'goals',
             'is_mine',
             'display_action_count',
-            'my_coaching_users',
-            'isStartedEvaluation'
+            'my_coaching_users'
         ));
         return $this->render();
     }

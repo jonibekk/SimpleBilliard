@@ -16,6 +16,7 @@ App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
@@ -114,7 +115,7 @@ class GoalService extends AppService
         // 認定可能フラグ追加
         $data['is_approvable'] = false;
         $goalLeaderId = $GoalMember->getGoalLeaderId($id);
-        if($goalLeaderId) {
+        if ($goalLeaderId) {
             $data['is_approvable'] = $GoalMemberService->isApprovableGoalMember($goalLeaderId);
         }
 
@@ -526,10 +527,11 @@ class GoalService extends AppService
      * あてはまる評価期間をゴールごとに設定
      *
      * @param $goals
+     * @param $loginUserId
      *
      * @return mixed
      */
-    function extendTermType($goals)
+    function extendTermType($goals, $loginUserId)
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
@@ -545,8 +547,10 @@ class GoalService extends AppService
 
         // あてはまる評価期間をゴールごとに設定
         foreach ($goals as $k => &$v) {
+            $goalId = $v['Goal']['id'];
             $v['Goal']['term_type'] = $this->getTermType($v['Goal']['start_date'], $currentTerm, $nextTerm);
-            $v['Goal']['kr_count'] = $countKrEachGoal[$v['Goal']['id']];
+            $v['Goal']['can_exchange_tkr'] = $this->canExchangeTkr($goalId, $v['Goal']['term_type'], $loginUserId);
+            $v['Goal']['kr_count'] = $countKrEachGoal[$goalId];
         }
         return $goals;
     }
@@ -587,5 +591,51 @@ class GoalService extends AppService
         }
 
         return self::TERM_TYPE_PREVIOUS;
+    }
+
+    /**
+     * TKR変更可能か
+     *
+     * @param $goalId
+     * @param $termType
+     * @param $loginUserId
+     *
+     * @return string
+     */
+    function canExchangeTkr($goalId, $termType, $loginUserId)
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
+        // 前期
+        if ($termType == GoalService::TERM_TYPE_PREVIOUS) {
+            return false;
+        }
+
+        if ($termType == GoalService::TERM_TYPE_CURRENT) {
+            $currentTermId = $EvaluateTerm->getCurrentTermId();
+            // 評価開始中でないか
+            if ($EvaluateTerm->isStartedEvaluation($currentTermId)) {
+                return false;
+            }
+        }
+
+        // KR数取得
+        $krCount = $KeyResult->getKrCount($goalId);
+        // TKRとして変更するKRが存在するか
+        if ($krCount < 2) {
+            return false;
+        }
+
+
+        // リーダーか
+        if (!$GoalMemberService->isLeader($goalId, $loginUserId)) {
+            return false;
+        }
+        return true;
     }
 }

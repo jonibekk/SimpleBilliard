@@ -137,4 +137,24 @@ class GoalMemberService extends AppService
 
         return $userIsApproval && $goalIsApproval;
     }
+
+    /**
+     * ゴールに対するゴールメンバーが認定対象かどうか判定
+     * # 条件
+     * - チームの評価設定がon
+     * - ユーザが評価対象
+     * - コーチが存在する
+     * - ゴールメンバーの認定希望フラグON
+     *
+     * @param  $goalId
+     * @param  $userId
+     *
+     * @return boolean
+     */
+    function isLeader($goalId, $userId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        return $GoalMember->isLeader($goalId, $userId);
+    }
 }

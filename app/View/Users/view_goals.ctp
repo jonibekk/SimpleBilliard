@@ -90,7 +90,7 @@
                             </a>
                         </div>
                         <?php if ($is_mine && $page_type != "following"): ?>
-                            <?= $this->element('Goal/goal_menu_on_my_page', compact('goal', 'isStartedEvaluation')) ?>
+                            <?= $this->element('Goal/goal_menu_on_my_page', compact('goal')) ?>
                         <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type !== 'following'): ?>
