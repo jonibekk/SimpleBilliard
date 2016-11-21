@@ -3388,7 +3388,7 @@ msgid "Evaluation feature is disabled now. If you would like to use it,"
 msgstr "評価機能は現在無効化されています。もしご利用になりたい場合は、"
 
 msgid "please contact us."
-msgstr "お問い合わせ下さい。"
+msgstr "こちらからお問い合わせください。"
 
 msgid "Evaluate"
 msgstr "評価する"
