@@ -39,7 +39,7 @@
             </div>
             <br>
 
-            <div class="profile-goals-select-wrap btn-group" role="group">
+            <div class="profile-goals-select-wrap btn-group mb_12px" role="group">
                 <a href="<?= $this->Html->url([
                     'controller' => 'users',
                     'action'     => 'view_goals',
@@ -90,7 +90,7 @@
                             </a>
                         </div>
                         <?php if ($is_mine && $page_type != "following"): ?>
-                            <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
+                            <?= $this->element('Goal/goal_menu_on_my_page', compact('goal')) ?>
                         <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type !== 'following'): ?>
@@ -147,7 +147,7 @@
                             <?php endif; ?>
                             <div class="col col-xxs-12 mt_5px">
                                 <ul class="profile-user-actions">
-                                    <?php if ($is_mine && $goal['Goal']['is_current_term']): ?>
+                                    <?php if ($is_mine && $goal['Goal']['term_type'] == GoalService::TERM_TYPE_CURRENT): ?>
                                         <li class="profile-user-action-list">
                                             <a class="profile-user-add-action"
                                                href="<?= $this->Html->url([

@@ -912,4 +912,27 @@ class GoalMember extends AppModel
         }
         return Hash::get($res, 'GoalMember.id');
     }
+
+    /**
+     * ゴールリーダか判定
+     *
+     * @param  $goalId
+     *
+     * @return boolean
+     */
+    function isLeader($goalId, $userId)
+    {
+        if (empty($goalId) || empty($userId)) {
+            return false;
+        }
+
+        $cnt = $this->find('count', [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'user_id' => $userId,
+                'type'    => self::TYPE_OWNER
+            ],
+        ]);
+        return $cnt == 1;
+    }
 }
