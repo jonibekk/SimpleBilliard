@@ -17,10 +17,7 @@ class GlHtmlHelper extends AppHelper
     {
         $labelTag = "";
         if (!empty($label)) {
-            $labelTag = <<<HTML
-                <span class="btn-back-text">{$label}</span>
-HTML;
-
+            $labelTag = '<span class="btn-back-text">'.$label.'</span>';
         }
         $html = <<<HTML
             <div class="col-sm-8 col-sm-offset-2">
