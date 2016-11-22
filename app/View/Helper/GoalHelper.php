@@ -146,5 +146,4 @@ class GoalHelper extends AppHelper
 
         return $out_of_evaluation;
     }
-
 }
