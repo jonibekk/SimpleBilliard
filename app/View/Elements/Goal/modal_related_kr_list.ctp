@@ -20,7 +20,8 @@
         <div class="modal-body">
             <ul class="kr-items">
                 <?php foreach ($krs as $kr): ?>
-                <?php $actioned = $kr['action_result_count'] > 0 ? 'actioned' : ''; ?>
+                <?php $actionCount = count($kr['ActionResult']); ?>
+                <?php $actioned = $actionCount > 0 ? 'actioned' : ''; ?>
                 <li class="kr-item <?= !$actioned ? 'no-action-kr-card' : '' ?>">
                     <a class="kr-item-link click-show-post-modal"
                        id="ActionListOpen_<?= $kr['goal_id'] ?>"
@@ -30,7 +31,8 @@
                            'goal_id'          => $kr['goal_id'],
                            'key_result_id'    => $kr['id'],
                            'type'             => Post::TYPE_ACTION,
-                           'author_id'        => $this->Session->read('Auth.User.id')
+                           'author_id'        => $userId,
+                           'evaluate_term_id' => $evaluateTermId
                        ]) ?>">
                         <div class="kr-card flex">
                             <div class="kr-card-main">
@@ -47,7 +49,7 @@
                                 <dl class="kr-info-counts mb_0px">
                                     <dt class="kr-info-counts-title <?= $actioned ?>"><i class="fa fa-check-circle"></i></dt>
                                     <dd class="kr-info-counts-description <?= $actioned ?>">
-                                        <?= $kr['action_result_count'] ?>
+                                        <?= $actionCount ?>
                                     </dd>
                                     <dt class="kr-info-counts-title"><i class="fa fa-database"></i></dt>
                                     <dd class="kr-info-counts-description">
