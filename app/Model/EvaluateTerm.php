@@ -89,7 +89,7 @@ class EvaluateTerm extends AppModel
      *
      * @return array|null
      */
-    function findAll()
+    function findByTeam()
     {
         $options = [
             'conditions' => [

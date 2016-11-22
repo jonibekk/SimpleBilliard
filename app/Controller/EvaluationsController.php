@@ -37,7 +37,7 @@ class EvaluationsController extends AppController
         $termId = Hash::get($this->request->query, 'term_id');
 
         // 全評価期間取得
-        $allTerms = $this->Team->EvaluateTerm->findAll();
+        $allTerms = $this->Team->EvaluateTerm->findByTeam();
         array_shift($allTerms);
         $allTermIds = Hash::extract($allTerms, '{n}.id');
 
