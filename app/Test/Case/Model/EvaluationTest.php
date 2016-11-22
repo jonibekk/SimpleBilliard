@@ -927,16 +927,6 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->getIncompleteEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
-    function testGetIncompleteNumberList()
-    {
-        $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->_saveEvaluations();
-
-        $res = $this->Evaluation->getIncompleteNumberList();
-        $this->assertNotEmpty($res);
-    }
-
     function testGetEvaluators()
     {
         $this->_setDefault();
