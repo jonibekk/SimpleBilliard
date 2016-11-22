@@ -14,7 +14,7 @@ class ApiExceptionRenderer extends ExceptionRenderer
 
     public function errorApi($error)
     {
-        if (get_class($error) == 'Error') {
+        if (in_array(get_class($error), ['Error', 'InternalErrorException'])) {
             $message = __('Internal Server Error');
             $code = 500;
             $log_message = sprintf("[%s] %s\n%s",
