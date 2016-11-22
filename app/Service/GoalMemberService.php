@@ -100,4 +100,61 @@ class GoalMemberService extends AppService
 
         return $userIsApproval && $goalIsApproval;
     }
+
+    /**
+     * ゴールに対するゴールメンバーが認定対象かどうか判定
+     * # 条件
+     * - チームの評価設定がon
+     * - ユーザが評価対象
+     * - コーチが存在する
+     * - ゴールメンバーの認定希望フラグON
+     *
+     * @param  $goalId
+     * @param  $userId
+     *
+     * @return boolean
+     */
+    function isApprovableByGoalId($goalId, $userId)
+    {
+        if(empty($goalId) || empty($userId)) {
+            return false;
+        }
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
+        // ゴールメンバーのユーザIDを取得
+        $goalMember = $GoalMember->findByGoalIdAndUserId($goalId, $userId);
+        if(empty($goalMember)) {
+            return false;
+        }
+        $goalMemberId = Hash::get($goalMember, 'GoalMember.id');
+
+        $userIsApproval = $GoalApprovalService->isApprovable($userId);
+        $goalIsApproval = $GoalMember->isWishGoalApproval($goalMemberId);
+
+        return $userIsApproval && $goalIsApproval;
+    }
+
+    /**
+     * ゴールに対するゴールメンバーが認定対象かどうか判定
+     * # 条件
+     * - チームの評価設定がon
+     * - ユーザが評価対象
+     * - コーチが存在する
+     * - ゴールメンバーの認定希望フラグON
+     *
+     * @param  $goalId
+     * @param  $userId
+     *
+     * @return boolean
+     */
+    function isLeader($goalId, $userId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        return $GoalMember->isLeader($goalId, $userId);
+    }
 }

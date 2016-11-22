@@ -812,23 +812,6 @@ class Evaluation extends AppModel
         $this->updateAll(['my_turn_flg' => false], $conditions);
     }
 
-    function getIncompleteNumberList()
-    {
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-
-        return [
-            'present'  => [
-                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $current_term_id, false),
-                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $current_term_id, false)
-            ],
-            'previous' => [
-                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $previous_term_id, false),
-                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $previous_term_id, false)
-            ]
-        ];
-    }
-
     function getIsEditable($evaluateTermId, $evaluateeId)
     {
         // check frozen

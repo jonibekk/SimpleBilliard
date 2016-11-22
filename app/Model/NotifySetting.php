@@ -26,7 +26,6 @@ class NotifySetting extends AppModel
     const TYPE_COACHEE_CREATE_GOAL = 13;
     const TYPE_COACHEE_COLLABORATE_GOAL = 14;
     const TYPE_COACHEE_CHANGE_GOAL = 15;
-    const TYPE_COACHEE_CHANGE_ROLE = 27;
     const TYPE_EVALUATION_START = 16;
     const TYPE_EVALUATION_FREEZE = 17;
     const TYPE_EVALUATION_START_CAN_ONESELF = 18;
@@ -38,18 +37,21 @@ class NotifySetting extends AppModel
     const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
     const TYPE_FEED_MESSAGE = 25;
     const TYPE_SETUP_GUIDE = 26;
+    const TYPE_COACHEE_CHANGE_ROLE = 27;
     const TYPE_COACHEE_WITHDRAW_APPROVAL = 28;
     const TYPE_APPROVAL_COMMENT = 29;
+    const TYPE_COACHEE_EXCHANGE_TKR = 30;
+    const TYPE_TKR_EXCHANGED_BY_LEADER = 31;
 
     static public $TYPE = [
-        self::TYPE_FEED_POST                             => [
+        self::TYPE_FEED_POST                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_post',
             'icon_class'      => 'fa-comment-o',
             'groups'          => ['all'],
         ],
-        self::TYPE_FEED_COMMENTED_ON_MY_POST             => [
+        self::TYPE_FEED_COMMENTED_ON_MY_POST => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_post',
@@ -231,7 +233,7 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-book',
             'groups'          => ['all'],
         ],
-        self::TYPE_COACHEE_WITHDRAW_APPROVAL             => [
+        self::TYPE_COACHEE_WITHDRAW_APPROVAL => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             //TODO 現在、この通知用のカラムが存在しないため、ゴール作成の通知と同じカラム名にしておく。通知設定を細分化しなければ新たに用意する必要なし
@@ -239,11 +241,25 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_APPROVAL_COMMENT             => [
+        self::TYPE_APPROVAL_COMMENT          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-comment-o',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_COACHEE_EXCHANGE_TKR      => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_TKR_EXCHANGED_BY_LEADER => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
             'groups'          => ['all', 'primary'],
         ]
     ];
@@ -854,6 +870,19 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
+            case self::TYPE_COACHEE_EXCHANGE_TKR:
+            case self::TYPE_TKR_EXCHANGED_BY_LEADER:
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> changed Top KR to another KR.',
+                        $user_text);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> changed Top KR to another KR.',
+                        h($user_text));
+                }
+                break;
+
         }
 
         if ($options['style'] == 'plain') {

@@ -57,7 +57,8 @@ class AppController extends BaseController
         'TextEx',
         'Csv',
         'Expt',
-        'Post'
+        'Post',
+        'GlHtml'
     ];
 
     private $merge_uses = [];
@@ -665,18 +666,22 @@ class AppController extends BaseController
                 $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
             );
             $goal_list_for_action_option = [null => __('Select a goal.')] + $current_term_goals_name_list;
+
+            $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+            $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+
             Cache::set('duration', 60 * 15, 'user_data');//15 minutes
             Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
                 compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
                     'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
                     'my_previous_goals_count'),
-                'user_data');
+                'user_data', 'isStartedEvaluation');
         }
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
         $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
             'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-            'my_previous_goals_count'));
+            'my_previous_goals_count', 'isStartedEvaluation'));
     }
 
     /**
