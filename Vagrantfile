@@ -34,7 +34,8 @@ Vagrant.configure('2') do |config|
         end
     end
 
-    config.vm.box = 'hashicorp/precise32'
+    # config.vm.box = 'ubuntu/trusty64'
+    config.vm.box = 'bigplants/ubuntu14_php7_nginx_mysql_redis'
     # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
     config.vm.network 'private_network', ip: '192.168.50.4'
 
