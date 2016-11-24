@@ -687,10 +687,10 @@ class Goal extends AppModel
                         'KeyResult.end_date <=' => $end_date,
                     ],
                     'order'      => [
-                        'KeyResult.progress ASC',
-                        'KeyResult.start_date ASC',
-                        'KeyResult.end_date ASC',
+                        'KeyResult.completed IS NULL DESC',
+                        'KeyResult.tkr_flg DESC',
                         'KeyResult.priority DESC',
+                        'KeyResult.end_date ASC',
                     ],
                 ],
                 'IncompleteKeyResult' => [
@@ -1030,22 +1030,6 @@ class Goal extends AppModel
         return $res;
     }
 
-    function setIsCurrentTerm($goals)
-    {
-        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-
-        foreach ($goals as $k => $goal) {
-            $goals[$k]['Goal']['is_current_term'] = false;
-            if ($target_end_date = Hash::get($goal, 'Goal.end_date')) {
-                if ($target_end_date >= $start_date && $target_end_date <= $end_date) {
-                    $goals[$k]['Goal']['is_current_term'] = true;
-                }
-            }
-        }
-        return $goals;
-    }
-
     function getGoalsWithAction($user_id, $action_limit = MY_PAGE_ACTION_NUMBER, $start_date = null, $end_date = null)
     {
         //対象が自分だった場合プラスボタンを出力する関係上、アクション件数を-1にする
@@ -1062,7 +1046,7 @@ class Goal extends AppModel
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
-            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.end_date'],
+            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.start_date', 'Goal.end_date'],
             'contain'    => [
                 'ActionResult'      => [
                     'fields'           => [
@@ -1370,15 +1354,6 @@ class Goal extends AppModel
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
-                    ],
-                    'fields'     => [
-                        'KeyResult.id',
-                        'KeyResult.name',
-                        'KeyResult.end_date',
-                        'KeyResult.action_result_count',
-                        'KeyResult.progress',
-                        'KeyResult.priority',
-                        'KeyResult.completed',
                     ],
                     'order'      => [
                         'KeyResult.progress ASC',

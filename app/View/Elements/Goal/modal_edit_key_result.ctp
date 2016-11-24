@@ -68,6 +68,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                     $nameLabel = $isTkr ? __("Top Key Result name") : __("KR name");
                     echo $this->Form->input('KeyResult.name',
                         [
+                            'type' => 'text',
                             'before'                       => '<div class="set-goal">' .
                                 '<h5 class="modal-key-result-headings">' . $nameLabel . '<span class="modal-key-result-headings-description">' . __(
                                     "What is set as an indicator of achievement?") . '</span></label></div>',
@@ -76,8 +77,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                             "data-bv-notempty-message"     => __("Input is required."),
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 200,
+                            'maxlength'     => 200,
                             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                            'rows'                         => 1,
                             'afterInput'                   => '<span class="help-block font_12px">' . __(
                                     "eg) Increasing the internal market share of A") . '</span>'
                         ]) ?>
@@ -157,6 +158,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                     'label'                        => false,
                                     'placeholder'                  => __("Optional"),
                                     'rows'                         => 3,
+                                    'maxlength'     => 2000,
                                 ]) ?>
                         </div>
                     </div>

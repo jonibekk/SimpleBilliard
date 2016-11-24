@@ -22,7 +22,26 @@
         </div>
         <div class="modal-body" id="ActionListBody">
             <?php if (!empty($posts)): ?>
-                <?php if (isset($posts[0]['Goal']['id']) && $posts[0]['Goal']['id']): ?>
+                <?php if (isset($extractedByKR) && $extractedByKR): ?>
+                    <!--START Key Result Post Header -->
+                    <div class="panel panel-default">
+                        <div class="panel-body pt_10px plr_11px pb_8px bd-b">
+                            <div class="col col-xxs-12">
+                                <div class="ln_contain w_88per">
+                                    <a href="<?= $this->Html->url([
+                                        'controller' => 'goals',
+                                        'action'     => 'ajax_get_goal_description_modal',
+                                        'goal_id'    => $posts[0]['Goal']['id']
+                                    ]) ?>"
+                                       class="no-line font_verydark modal-ajax-get">
+                                        <i class="fa fa-key font_gray"></i>&nbsp;<?= h($posts[0]['ActionResult']['KeyResult']['name']) ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END Key Result Post Header -->
+                <?php elseif (Hash::get($posts, '0.Goal.id')): ?>
                     <!--START Goal Post Header -->
                     <div class="panel panel-default">
                         <div class="panel-body pt_10px plr_11px pb_8px bd-b">

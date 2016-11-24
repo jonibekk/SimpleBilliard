@@ -499,6 +499,7 @@ $(document).ready(function () {
 
   //noinspection JSUnresolvedVariable
   $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+  $(document).on("click", '.modal-ajax-get-exchange-tkr', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable
   $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-add-action', function (e) {
@@ -3198,7 +3199,7 @@ function evNotifyPost(options) {
   // URL生成
   var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
 
-  var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+  var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
   $.ajax({
     type: 'GET',
@@ -3238,6 +3239,11 @@ function evNotifyPost(options) {
 
       //ローダーを削除
       $loader_html.remove();
+
+      // Google tag manager トラッキング
+      if (cake.data.google_tag_manager_id !== "") {
+        sendToGoogleTagManager('app');
+      }
 
       action_autoload_more = false;
       autoload_more = false;
@@ -3778,6 +3784,13 @@ function showMore(obj) {
       speedDown: 300,
       speedUp: 300,
       height: '80px',
+      showText: showText,
+      hideText: hideText
+    });
+    $('.showmore-init-none').showMore({
+      speedDown: 100,
+      speedUp: 100,
+      height: '0px',
       showText: showText,
       hideText: hideText
     });

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-07 11:39+0900\n"
+"PO-Revision-Date: 2016-11-22 13:53+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -200,6 +200,12 @@ msgstr ""
 "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
 "い。"
 
+msgid "Current Term"
+msgstr "今期"
+
+msgid "Previous Term"
+msgstr "前期"
+
 msgid "Saved the draft."
 msgstr "下書きを保存しました。"
 
@@ -223,6 +229,15 @@ msgstr "権限がありません。"
 
 msgid "Added a key result."
 msgstr "達成要素を追加しました。"
+
+msgid "Some error occurred. Please try again from the start."
+msgstr "エラーが発生しました。もう一度最初から登録してください。"
+
+msgid "Success."
+msgstr "成功"
+
+msgid "Invalid Request."
+msgstr "不正なリクエストです。"
 
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
@@ -508,9 +523,6 @@ msgstr "データがありません。"
 msgid "Invalid Data"
 msgstr "不正なデータです。"
 
-msgid "Some error occurred. Please try again from the start."
-msgstr "エラーが発生しました。もう一度最初から登録してください。"
-
 msgid "Failed to create a team."
 msgstr "チーム作成に失敗しました。"
 
@@ -775,14 +787,8 @@ msgstr "2段階認証を解除しました。"
 msgid "Generated new recovery codes."
 msgstr "新しいリカバリコードを生成しました。"
 
-msgid "Current Term"
-msgstr "今期"
-
 msgid "Next Term"
 msgstr "来期"
-
-msgid "Previous Term"
-msgstr "前期"
 
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
@@ -895,6 +901,9 @@ msgstr "最終評価者"
 msgid "Leader"
 msgstr "リーダー"
 
+msgid "Evaluatee"
+msgstr "被評価者"
+
 msgid "Self"
 msgstr "自己"
 
@@ -906,18 +915,6 @@ msgstr "今期は評価できないか、閲覧権限がありません。"
 
 msgid "There is something you can't leave empty."
 msgstr "入力内容に不足があります。"
-
-msgid "Members"
-msgstr "メンバー"
-
-msgid "Waiting for the evaluation by %s."
-msgstr "%sの評価待ちです"
-
-msgid "Please evaluate yourself."
-msgstr "自己評価をしてください"
-
-msgid "Please evaluate."
-msgstr "評価をしてください"
 
 msgid "Not allowed to specify."
 msgstr "*指定は禁止です！！"
@@ -1125,18 +1122,11 @@ msgstr ""
 "card-head-target\">%2$s</span>を作成しました。"
 
 msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> has changed the role "
-"with <span class=\"notify-card-head-target\">%2$s</span>."
+"<span class=\"notify-card-head-target\">%1$s</span> has reapplied <span "
+"class=\"notify-card-head-target\">%2$s</span>."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
-"card-head-target\">%2$s</span>の役割を変更しました。"
-
-msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> has updated <span class="
-"\"notify-card-head-target\">%2$s</span>."
-msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
-"card-head-target\">%2$s</span>を修正しました。"
+"card-head-target\">%2$s</span>を再申請しました。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has withdrawn <span "
@@ -1197,6 +1187,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコメントしました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
+"another KR."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> がトップKRを別のKRに変更"
+"しました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -1671,6 +1668,18 @@ msgstr "評価期間内で入力してください。"
 
 msgid "Data is duplicated."
 msgstr ""
+
+msgid "Members"
+msgstr "メンバー"
+
+msgid "Waiting for the evaluation by %s."
+msgstr "%sの評価待ちです"
+
+msgid "Please evaluate yourself."
+msgstr "自己評価をしてください"
+
+msgid "Please evaluate."
+msgstr "評価をしてください"
 
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
@@ -2933,6 +2942,9 @@ msgstr "達成要素を追加"
 msgid "Edit goal"
 msgstr "ゴールを編集"
 
+msgid "Change TKR"
+msgstr "TKRを変更"
+
 msgid "Delete goal"
 msgstr "ゴールを削除"
 
@@ -2959,9 +2971,6 @@ msgstr "達成要素を削除する"
 
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこの成果を削除しますか？"
-
-msgid "Due."
-msgstr "期限"
 
 msgid "Clear"
 msgstr "クリア"
@@ -3026,6 +3035,18 @@ msgstr "達成要素名"
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
+msgid "Change Top KR"
+msgstr "トップKRを変更"
+
+msgid "Top KR"
+msgstr "トップKR"
+
+msgid "Select Top KR you would like to change."
+msgstr "トップKRとしたいKRを選択してください。"
+
+msgid "Current"
+msgstr "現在"
+
 msgid "Goal Summary"
 msgstr "ゴール概要"
 
@@ -3044,8 +3065,8 @@ msgstr "※どちらを選択しても、選択中の成果は「完了」とな
 msgid "Achieve the goal"
 msgstr "ゴール達成"
 
-msgid "List of completed KRs"
-msgstr "完了済のキーリザルト一覧"
+msgid "KRs"
+msgstr ""
 
 msgid "Add Reference Values"
 msgstr "基準を追加する"
@@ -3055,6 +3076,9 @@ msgstr "ゴール編集"
 
 msgid "Collaboration"
 msgstr "コラボ"
+
+msgid "KR"
+msgstr "KR"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
@@ -3136,7 +3160,7 @@ msgstr ""
 "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
 msgid "What should we do after the campaign?"
-msgstr "無償期間（2016年12月31日まで）の後はどうなりますか？"
+msgstr "無償期間（2017年夏まで）の後はどうなりますか？"
 
 msgid "There will appear some limit, but data will not be deleted."
 msgstr ""
@@ -3161,9 +3185,8 @@ msgid ""
 "After logged in, you can get contact with us by support tool. We can help "
 "you as soon as possible."
 msgstr ""
-"2016年12月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後"
-"に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたし"
-"ます。"
+"2017年夏までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用"
+"できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
 
 msgid "Which company offer Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
@@ -3185,8 +3208,8 @@ msgstr "その他のご質問はありますか？"
 msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
-msgid "It's free until 31 Dec 2016! Try it!"
-msgstr "2016年12月31日まで完全無料！今すぐお試しください。"
+msgid "It's free until the summer of 2017! Try it!"
+msgstr "2017年夏まで完全無料！今すぐお試しください。"
 
 msgid "Are you on Goalous? %s. Any question ? %s."
 msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
@@ -3252,8 +3275,8 @@ msgstr "チーム画像"
 msgid "Plan"
 msgstr "プラン"
 
-msgid "You can use Goalous free of charge until 31 Dec 2016."
-msgstr "2016年12月31日まで無料でご利用できます。"
+msgid "You can use Goalous free of charge until the summer of 2017."
+msgstr "2017年夏まで無料でご利用できます。"
 
 msgid "Change basic settings"
 msgstr "基本設定を更新"
@@ -3307,17 +3330,23 @@ msgstr "未完了の評価者をみる"
 msgid "Number incomplete"
 msgstr "未完了数"
 
-msgid "Display order"
-msgstr "表示順"
+msgid "eg. A-E or 1-5"
+msgstr "例) A〜E, 1〜5"
+
+msgid "eg. 1 (Numeric)"
+msgstr "例) 1 (数値)"
 
 msgid "Input is required"
 msgstr "入力必須項目です。"
 
-msgid "Please explain the definition."
-msgstr "定義の説明を書きましょう"
+msgid "Please explain the score."
+msgstr "スコアの説明を書きましょう"
 
 msgid "Paused evaluation settings."
 msgstr "評価凍結設定"
+
+msgid "Evaluation has not started."
+msgstr "評価が開始されていません。"
 
 msgid "Resume current term evaluations."
 msgstr "今期の評価の凍結を解除する"
@@ -3349,14 +3378,23 @@ msgstr "評価状況"
 msgid "Evaluation score settings"
 msgstr "評価スコア設定"
 
-msgid "Save evaluation score settings"
-msgstr "評価スコア設定を保存"
+msgid "Display order"
+msgstr "表示順"
 
 msgid "Add definition"
 msgstr "定義を１つ追加"
 
+msgid "Save settings"
+msgstr "設定を保存"
+
 msgid "Evaluation settings"
 msgstr "評価設定"
+
+msgid "Evaluation feature is disabled now. If you would like to use it,"
+msgstr "評価機能は現在無効化されています。もしご利用になりたい場合は、"
+
+msgid "please contact us."
+msgstr "こちらからお問い合わせください。"
 
 msgid "Evaluate"
 msgstr "評価する"
@@ -3430,9 +3468,6 @@ msgstr "最終評価者評価 トータル コメント"
 msgid "Evaluation total comment by Final Evaluator required"
 msgstr "最終評価者評価 トータル コメント 必須"
 
-msgid "Save evaluation settings"
-msgstr "評価設定を保存"
-
 msgid "Begin evaluation"
 msgstr "評価開始"
 
@@ -3450,6 +3485,9 @@ msgstr "評価設定が有効でないため、評価を開始することがで
 
 msgid "In evaluation term"
 msgstr "評価期間中です。"
+
+msgid "Add definition of evaluation score"
+msgstr "評価スコアの定義を1つ以上追加してください。"
 
 msgid "Start current term evaluations"
 msgstr "今期の評価を開始する"
@@ -3480,9 +3518,6 @@ msgstr "ゴールカテゴリ設定"
 
 msgid "Add a goal category"
 msgstr "ゴールカテゴリを追加"
-
-msgid "Save goal category settings"
-msgstr "ゴールカテゴリ設定を保存"
 
 msgid "Reach"
 msgstr "リーチ"
@@ -3892,8 +3927,8 @@ msgstr "プロフィール画像をアップロードする"
 msgid "View Profile Image"
 msgstr "プロフィール画像を見る"
 
-msgid "Basic Information"
-msgstr "基本データ"
+msgid "Info"
+msgstr "基本情報"
 
 msgid "Welcome to Goalous!"
 msgstr "Goalousへようこそ！"
@@ -3989,6 +4024,9 @@ msgstr "あなたが評価するメンバー"
 msgid "Incomplete:%s"
 msgstr "未完了:%s"
 
+msgid "Back to evaluation list"
+msgstr "評価リストに戻る"
+
 msgid "Total Evaluation"
 msgstr "トータル評価"
 
@@ -4013,6 +4051,12 @@ msgstr "修正して提出"
 msgid "Evaluation of goal"
 msgstr "ゴール評価"
 
+msgid "View results"
+msgstr "成果を見る"
+
+msgid "View action"
+msgstr "アクションを見る"
+
 msgid "Goal Details"
 msgstr "ゴール詳細"
 
@@ -4030,9 +4074,6 @@ msgstr "ラベル"
 
 msgid "Goal progress rate"
 msgstr "ゴール進捗率"
-
-msgid "KRs of this goal"
-msgstr "このゴールの達成要素"
 
 msgid "There is no KR."
 msgstr "達成要素は登録されていません"
@@ -4466,10 +4507,10 @@ msgstr "料金・価格 | Goalous(ゴーラス)"
 msgid "It's all free"
 msgstr "今だけ、有料プランも完全無料"
 
-msgid "Released sale, It's all free until December 2016!"
+msgid "Released sale, It's all free until the summer of 2017!"
 msgstr ""
-"リリース記念で2016年12月までPlusをご利用いただけます。フィードバックをお待ち"
-"しております。"
+"リリース記念で2017年夏までPlusをご利用いただけます。フィードバックをお待ちし"
+"ております。"
 
 msgid "Plus"
 msgstr "Plus"
@@ -4793,3 +4834,10 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid ""
+#~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
+#~ "another KR <span class=\"notify-card-head-target\">%2$s</span>."
+#~ msgstr ""
+#~ "<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
+#~ "<span class=\"notify-card-head-target\">%2$s</span>."

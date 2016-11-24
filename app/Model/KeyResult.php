@@ -282,10 +282,10 @@ class KeyResult extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'order'      => [
-                'KeyResult.progress ASC',
-                'KeyResult.start_date ASC',
-                'KeyResult.end_date ASC',
+                'KeyResult.completed IS NULL DESC',
+                'KeyResult.tkr_flg DESC',
                 'KeyResult.priority DESC',
+                'KeyResult.end_date ASC',
             ],
             'limit'      => $params['limit'],
             'page'       => $params['page'],
@@ -568,5 +568,38 @@ class KeyResult extends AppModel
         return $ret + $defaultCountEachGoalId;
     }
 
+    /**
+     * 評価ページ表示用にKR一覧を取得
+     * @param $goalId
+     * @return $krs
+     */
+    public function getKeyResultsForEvaluation($goalId, $userId)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'team_id' => $this->current_team_id,
+            ],
+            'order'      => [
+                'KeyResult.tkr_flg DESC',
+                'KeyResult.priority DESC'
+            ],
+            'contain'    => [
+                'ActionResult' => [
+                    'conditions' =>[
+                        'user_id' => $userId
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
 
+        $krs = [];
+        foreach($res as $key => $val) {
+            $krs[$key] = Hash::extract($val, "KeyResult");
+            $krs[$key]['ActionResult'] = Hash::extract($val, "ActionResult");
+        }
+
+        return $krs;
+    }
 }

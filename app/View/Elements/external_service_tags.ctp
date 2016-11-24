@@ -141,7 +141,7 @@
     <!-- start Intercom -->
     <script>
         enabled_intercom_icon = true;
-        if (window.innerWidth <= 480) {
+        if (window.innerWidth < 992) {
             enabled_intercom_icon = false;
         }
         window.intercomSettings = {
@@ -167,8 +167,9 @@
         };
         if (!enabled_intercom_icon) {
             window.intercomSettings.hide_default_launcher = true;
-            window.intercomSettings.custom_launcher_selector = "#Intercom";
         }
+        window.intercomSettings.custom_launcher_selector = ".intercom-launcher";
+
     </script>
     <script>(function () {
             var w = window;

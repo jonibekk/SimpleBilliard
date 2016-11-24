@@ -2,12 +2,13 @@
 App::uses('AppController', 'Controller');
 App::uses('Evaluation', 'Model');
 App::import('Service', 'GoalService');
+App::import('Service', 'EvaluationService');
 
 /**
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
- * @var                 $selected_tab_term_id
+ * @var                 $selectedTabTermId
  */
 class EvaluationsController extends AppController
 {
@@ -32,34 +33,84 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        // Set selected term
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-        $term_param = Hash::get($this->request->params, 'named.term');
-        $selected_term_name = $term_param ? $term_param : 'previous';
-        $selected_tab_term_id = '';
-        if ($selected_term_name == 'present') {
-            $selected_tab_term_id = $current_term_id;
-        } elseif ($selected_term_name == 'previous') {
-            $selected_tab_term_id = $previous_term_id;
+        // 評価期間ID取得
+        $termId = Hash::get($this->request->query, 'term_id');
+
+        // 全評価期間取得
+        $allTerms = $this->Team->EvaluateTerm->findByTeam();
+        array_shift($allTerms);
+        $allTermIds = Hash::extract($allTerms, '{n}.id');
+
+        if (empty($termId)) {
+            // デフォルトは前期
+            $termId = $this->Team->EvaluateTerm->getPreviousTermId();
+        } else {
+            // 存在しない評価期間を指定した場合エラー
+            if (!in_array($termId, $allTermIds)) {
+                return $this->redirect($this->referer());
+            }
         }
 
-        $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
-        $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
-        $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
+        // 評価期間選択用ラベル取得
+        $termLabels = $this->_getTermLabels($allTerms);
+
+        /** @var  EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init('EvaluationService');
+
+        $incompSelfEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF, $termId, false);
+        $incompEvaluateeEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR, $termId, false);
+        $selfEval = $EvaluationService->getEvalStatus($termId, $this->Auth->user('id'));
+        $evaluateesEval = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($termId);
+
+        // 該当期間が評価開始されているか
+        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($termId);
 
         // Get term frozen status
-        $isFrozens = [];
-        $isFrozens['present'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
-        $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
+        $isFrozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($termId);
 
-        $this->set(compact('incomplete_number_list',
-            'my_evaluatees',
-            'my_eval',
-            'selected_tab_term_id',
-            'selected_term_name',
-            'isFrozens'
+        $this->set(compact(
+            'termId',
+            'termLabels',
+            'incompSelfEvalCnt',
+            'incompEvaluateeEvalCnt',
+            'selfEval',
+            'evaluateesEval',
+            'isFrozen',
+            'isStartedEvaluation'
         ));
+    }
+
+    /**
+     * 評価期間選択用ラベルを取得
+     *
+     * @param $terms
+     *
+     * @return array
+     */
+    private function _getTermLabels($terms)
+    {
+        if (!is_array($terms)) {
+            return [];
+        }
+        $termLabels = [];
+
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+
+        foreach ($terms as $term) {
+            $termId = $term['id'];
+            if ($termId == $currentTermId) {
+                $termLabels[$termId] = __("Current Term");
+            } elseif ($termId == $previousTermId) {
+                $termLabels[$termId] = __("Previous Term");
+            } else {
+                $timezoneSec = $term['timezone'] * 3600;
+                $fmtStartDate = date('Y/m/d', $term['start_date'] + $timezoneSec);
+                $fmtEndDate = date('Y/m/d', $term['end_date'] + $timezoneSec);
+                $termLabels[$term['id']] = $fmtStartDate. " - " .$fmtEndDate;
+            }
+        }
+        return $termLabels;
     }
 
     function view()
@@ -123,18 +174,6 @@ class EvaluationsController extends AppController
             foreach ($goal as $evalKey => $eval) {
                 $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(Hash::get($eval,
                     'Goal.KeyResult'));
-            }
-        }
-        //remove unnecessary KRs
-        foreach ($goalList as $goalIndex => $goal) {
-            foreach ($goal as $evalKey => $eval) {
-                if (!empty($eval['Goal']['KeyResult'])) {
-                    foreach ($eval['Goal']['KeyResult'] as $kr_k => $kr) {
-                        if (empty($kr['ActionResult'])) {
-                            unset($goalList[$goalIndex][$evalKey]['Goal']['KeyResult'][$kr_k]);
-                        }
-                    }
-                }
             }
         }
 

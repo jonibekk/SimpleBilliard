@@ -145,7 +145,7 @@ class Evaluation extends AppModel
         self::$TYPE[self::TYPE_EVALUATOR]['index'] = __("Evaluator");
         self::$TYPE[self::TYPE_FINAL_EVALUATOR]['index'] = __("Final Evaluator");
         self::$TYPE[self::TYPE_LEADER]['index'] = __("Leader");
-        self::$TYPE[self::TYPE_ONESELF]['view'] = __("You");
+        self::$TYPE[self::TYPE_ONESELF]['view'] = __("Evaluatee");
         self::$TYPE[self::TYPE_EVALUATOR]['view'] = __("Evaluator");
         self::$TYPE[self::TYPE_FINAL_EVALUATOR]['view'] = __("Final Evaluator");
         self::$TYPE[self::TYPE_LEADER]['view'] = __("Leader");
@@ -317,6 +317,7 @@ class Evaluation extends AppModel
                             'user_id',
                             'priority',
                             'progress',
+                            'action_result_count'
                         ],
                         'ActionResult' => [
                             'conditions' => [
@@ -604,88 +605,6 @@ class Evaluation extends AppModel
         return $record;
     }
 
-    function getEvalStatus($term_id, $user_id)
-    {
-        $options = [
-            'conditions' => [
-                'evaluatee_user_id' => $user_id,
-                'evaluate_term_id'  => $term_id,
-                'team_id'           => $this->current_team_id,
-                'goal_id'           => null,
-            ],
-            'fields'     => [
-                'id',
-                'evaluate_type',
-                'status',
-                'evaluator_user_id',
-                'evaluatee_user_id',
-                'my_turn_flg'
-            ],
-            'order'      => ['index_num' => 'asc'],
-        ];
-        $data = $this->find('all', $options);
-        $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
-        $flow = [];
-        $evaluator_index = 1;
-        $status_text = ['your_turn' => false, 'body' => null];
-        //update flow
-        foreach ($data as $val) {
-            $name = self::$TYPE[$val['evaluate_type']]['index'];
-            if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
-                if ($val['evaluator_user_id'] == $this->my_uid) {
-                    $name = __("You");
-                } else {
-                    $name .= $evaluator_index;
-                }
-                $evaluator_index++;
-            } //自己評価で被評価者が自分以外の場合は「メンバー」
-            elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
-                $name = __('Members');
-            }
-            $flow[] = [
-                'name'      => $name,
-                'status'    => $val['status'],
-                'this_turn' => $val['my_turn_flg'],
-            ];
-            //update status_text
-            if ($val['my_turn_flg'] === false) {
-                continue;
-            }
-            if ($val['evaluator_user_id'] != $this->my_uid) {
-                $status_text['body'] = __("Waiting for the evaluation by %s.", $name);
-                continue;
-            }
-            //your turn
-            $status_text['your_turn'] = true;
-            switch ($val['evaluate_type']) {
-                case self::TYPE_ONESELF:
-                    $status_text['body'] = __("Please evaluate yourself.");
-                    break;
-                case self::TYPE_EVALUATOR:
-                    $status_text['body'] = __("Please evaluate.");
-                    break;
-            }
-        }
-        if (empty($flow)) {
-            return [];
-        }
-        $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
-        $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
-        return $res;
-    }
-
-    function getEvaluateeEvalStatusAsEvaluator($term_id)
-    {
-        $evaluatee_list = $this->getEvaluateeListEvaluableAsEvaluator($term_id);
-        $evaluatees = [];
-        foreach ($evaluatee_list as $uid) {
-            $user = $this->Team->TeamMember->User->getProfileAndEmail($uid);
-            $evaluation = $this->getEvalStatus($term_id, $uid);
-            $evaluatees[] = array_merge($user, $evaluation);
-        }
-        return $evaluatees;
-    }
-
     function getEvaluateeListEvaluableAsEvaluator($term_id)
     {
         $options = [
@@ -891,23 +810,6 @@ class Evaluation extends AppModel
             'evaluate_term_id'  => $termId
         ];
         $this->updateAll(['my_turn_flg' => false], $conditions);
-    }
-
-    function getIncompleteNumberList()
-    {
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-
-        return [
-            'present'  => [
-                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $current_term_id, false),
-                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $current_term_id, false)
-            ],
-            'previous' => [
-                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $previous_term_id, false),
-                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $previous_term_id, false)
-            ]
-        ];
     }
 
     function getIsEditable($evaluateTermId, $evaluateeId)
@@ -1158,6 +1060,45 @@ class Evaluation extends AppModel
                 ]
             ]
         );
+    }
+
+    /**
+     * 評価インデックスページ用の評価一覧データを取得
+     * @param  $teamId
+     * @param  $userId
+     * @return [type]         [description]
+     */
+    function getEvaluationListForIndex($termId, $userId) {
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => $userId,
+                'evaluate_term_id'  => $termId,
+                'team_id'           => $this->current_team_id,
+                'goal_id'           => null,
+            ],
+            'fields'     => [
+                'id',
+                'evaluate_type',
+                'status',
+                'evaluator_user_id',
+                'evaluatee_user_id',
+                'my_turn_flg'
+            ],
+            'contain'    => [
+                'EvaluatorUser' => [
+                    'fields' => ['first_name', 'last_name']
+                ]
+            ],
+            'order'      => ['index_num' => 'asc'],
+        ];
+        $findData = $this->find('all', $options);
+
+        $retData = [];
+        foreach($findData as $key => $val) {
+            $retData[$key] = $val['Evaluation'];
+            $retData[$key]['evaluator_user'] = $val['EvaluatorUser'];
+        }
+        return $retData;
     }
 
 }

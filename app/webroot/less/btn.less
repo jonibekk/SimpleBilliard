@@ -186,14 +186,13 @@
 }
 
 .btn-edit-kr {
-  font-size: 24px;
-  margin: 5px 0;
-  color: @lightGray;
+  font-size: 18px;
+  color: @subColor3;
   border: 1px solid @lightGray;
   border-radius: 4px;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+  width: 36px;
+  height: 32px;
+  line-height: 32px;
   text-align: center;
 }
 
@@ -342,4 +341,35 @@
     color: #fff;
     background-color: @subColor8;
   }
+}
+
+.btn-back {
+    display: inline-block;
+    border: 1px solid @lightGray;
+    border-radius: 4px;
+    height: auto;
+    min-width: 70px;
+    padding: 5px 10px;
+    text-align: center;
+    background-color: @smokyWhite;
+    margin-bottom: 5px;
+    text-decoration: none;
+
+    &-text {
+      color: @darkGray;
+      vertical-align: middle;
+    }
+
+    .fa {
+      font-size: 18px;
+      color: @subColor10;
+      line-height: 20px;
+      vertical-align: middle;
+      padding-right: 7px;
+    }
+}
+
+.btn-back:hover {
+    background-color: @lighterGray;
+    text-decoration: none;
 }
