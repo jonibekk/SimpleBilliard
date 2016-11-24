@@ -85,9 +85,9 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
     /**
      * read
      *
-     * @param type $id
+     * @param  $id
      *
-     * @return type
+     * @return string
      * - Return whatever is stored in key
      */
     public function read($id)
@@ -96,7 +96,11 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
             App::uses('ConnectionManager', 'Model');
             $this->store = ConnectionManager::getDataSource('redis');
         }
-        return $this->store->get($this->key . $id);
+        $sessionStr = $this->store->get($this->key . $id);
+        if(is_string($sessionStr)){
+            return $sessionStr;
+        }
+        return '';
     }
 
     /**

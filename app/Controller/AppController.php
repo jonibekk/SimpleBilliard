@@ -674,8 +674,8 @@ class AppController extends BaseController
             Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
                 compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
                     'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-                    'my_previous_goals_count'),
-                'user_data', 'isStartedEvaluation');
+                    'my_previous_goals_count','isStartedEvaluation'),
+                'user_data');
         }
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
@@ -759,7 +759,8 @@ class AppController extends BaseController
     public function getBrowser()
     {
         if (!$this->_browser) {
-            $this->_browser = get_browser(null, true);
+            $browscap = new \BrowscapPHP\Browscap();
+            $this->_browser = (array)$browscap->getBrowser(null);;
         }
         return $this->_browser;
     }

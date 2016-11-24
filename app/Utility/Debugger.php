@@ -346,7 +346,7 @@ class Debugger
                 $trace['path'] = self::trimPath($trace['file']);
                 $trace['reference'] = $reference;
                 unset($trace['object'], $trace['args']);
-                $back[] = String::insert($tpl, $trace, array('before' => '{:', 'after' => '}'));
+                $back[] = CakeText::insert($tpl, $trace, array('before' => '{:', 'after' => '}'));
             }
         }
 
@@ -777,7 +777,7 @@ class Debugger
 
         if (isset($tpl['links'])) {
             foreach ($tpl['links'] as $key => $val) {
-                $links[$key] = String::insert($val, $data, $insertOpts);
+                $links[$key] = CakeText::insert($val, $data, $insertOpts);
             }
         }
 
@@ -793,7 +793,7 @@ class Debugger
             if (is_array($value)) {
                 $value = join("\n", $value);
             }
-            $info .= String::insert($tpl[$key], array($key => $value) + $data, $insertOpts);
+            $info .= CakeText::insert($tpl[$key], array($key => $value) + $data, $insertOpts);
         }
         $links = join(' ', $links);
 
@@ -801,7 +801,7 @@ class Debugger
             /** @noinspection PhpInconsistentReturnPointsInspection */
             return call_user_func($tpl['callback'], $data, compact('links', 'info'));
         }
-        echo String::insert($tpl['error'], compact('links', 'info') + $data, $insertOpts);
+        echo CakeText::insert($tpl['error'], compact('links', 'info') + $data, $insertOpts);
     }
 
     /**

@@ -9,9 +9,26 @@ bash "composer install" do
   user 'deploy'
   group 'www-data'
   code <<-EOS
+  source /opt/phpbrew/bashrc
   cd #{release_path}; composer self-update; yes | composer install --no-interaction --no-dev --prefer-dist
   EOS
+  environment('PHPBREW_ROOT' => '/opt/phpbrew', 'PHPBREW_HOME' => '/opt/phpbrew')
 end
+
+execute 'chmod browscap resources' do
+  command "chmod 775 -R #{release_path}/Vendor/browscap/browscap-php/src/../resources/"
+end
+
+bash 'update browscap' do
+  user 'deploy'
+  group 'www-data'
+  code <<-EOS
+  source /opt/phpbrew/bashrc
+  cd #{release_path}; Vendor/bin/browscap-php browscap:update || true && Vendor/bin/browscap-php browscap:update
+  EOS
+  environment('PHPBREW_ROOT' => '/opt/phpbrew', 'PHPBREW_HOME' => '/opt/phpbrew')
+end
+
 
 file '/home/deploy/.npmrc' do
   owner 'deploy'

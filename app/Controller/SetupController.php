@@ -6,6 +6,15 @@ App::uses('Post', 'Model');
 
 /**
  * Setup Controller
+ *
+ * @property Circle       $Circle
+ * @property User         $User
+ * @property Goal         $Goal
+ * @property Team         $Team
+ * @property KeyResult    $KeyResult
+ * @property Post         $Post
+ * @property Device       $Device
+ * @property ActionResult $ActionResult
  */
 class SetupController extends AppController
 {
@@ -151,7 +160,9 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        $this->request->data['Circle']['photo'] = $_FILES['photo'];
+        if (Hash::get($_FILES, 'photo')) {
+            $this->request->data['Circle']['photo'] = $_FILES['photo'];
+        }
         $this->Circle->create();
         if ($res = $this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {

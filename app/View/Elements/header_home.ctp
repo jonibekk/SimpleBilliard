@@ -11,8 +11,8 @@
  * @var                    $nav_disable
  */
 ?>
-<?= $this->App->viewStartComment()?>
-<?
+<?= $this->App->viewStartComment() ?>
+<?php
 if (!isset($top_lang)) {
     $top_lang = null;
 }
@@ -79,4 +79,4 @@ if (!isset($top_lang)) {
         </nav> <!-- //main-nav -->
     </div> <!-- //container -->
 </header> <!-- //header -->
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

@@ -11,8 +11,8 @@ if (!isset($page_type)) {
 }
 
 ?>
-<?= $this->App->viewStartComment()?>
-<? if (GOOGLE_TAG_MANAGER_ID): ?>
+<?= $this->App->viewStartComment() ?>
+<?php if (GOOGLE_TAG_MANAGER_ID): ?>
     <!-- Google Tag Manager -->
     <!--suppress JSUnresolvedVariable -->
     <noscript>
@@ -44,5 +44,5 @@ if (!isset($page_type)) {
         }
     </script>
     <!-- End Google Tag Manager -->
-<? endif; ?>
-<?= $this->App->viewEndComment()?>
+<?php endif; ?>
+<?= $this->App->viewEndComment() ?>

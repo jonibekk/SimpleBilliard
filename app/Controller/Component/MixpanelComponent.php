@@ -79,7 +79,7 @@ class MixpanelComponent extends CakeObject
 
     var $alreadySetUser = false;
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
         $this->Controller = $controller;
         $user = $this->getUserInfo();

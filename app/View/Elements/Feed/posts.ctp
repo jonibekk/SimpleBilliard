@@ -199,7 +199,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_body', compact('post')) ?>
-                <?
+                <?php
                 /**
                  * 画像のurlを集める
                  * アクションの場合は１画像
@@ -361,8 +361,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         <?php endforeach ?>
                     </div>
                     <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
-                        <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
-                        <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
+                        <?php $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
+                        <?php $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
                         <div class="col col-xxs-12 mt_5px p_5px">
                             <div class="col col-xxs-6 col-xs-4 mr_5px">
                                 <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
@@ -385,8 +385,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 </a>
                             </div>
                         </div>
-                    <? endif; ?>
-                <? endif; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
                 <div class="col col-xxs-12 feeds-post-btns-area">
                     <div class="feeds-post-btns-wrap-left">
                         <a href="#"

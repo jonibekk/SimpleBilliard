@@ -35,7 +35,7 @@ if (!isset($message_page_image)) {
 }
 
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col col-xxs-12">
     <?php if ($page_type != 'feed'): ?>
         <div class="pull-right">
@@ -74,7 +74,7 @@ if (!isset($message_page_image)) {
             </div>
         </div>
     <?php endif; ?>
-    <?
+    <?php
     $icon_url = $this->Upload->attachedFileUrl($data, "viewer");
     if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG) {
         $icon_url = $this->Upload->uploadUrl($data, 'AttachedFile.attached');
@@ -200,4 +200,4 @@ if (!isset($message_page_image)) {
 
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
