@@ -19,6 +19,7 @@ App::uses('Controller', 'Controller');
  * @property NotifyBizComponent $NotifyBiz
  * @property GlEmailComponent   $GlEmail
  * @property MixpanelComponent  $Mixpanel
+ * @property LangComponent      $Lang
  * @property User               $User
  * @property Post               $Post
  * @property Goal               $Goal
@@ -43,6 +44,7 @@ class BaseController extends Controller
         'NotifyBiz',
         'GlEmail',
         'Mixpanel',
+        'Lang',
     ];
 
     public $uses = [
@@ -189,7 +191,7 @@ class BaseController extends Controller
     }
 
     /**
-     * @param $goal_id
+     * @param $model_id
      * @param $notify_type
      */
     function _sendNotifyToCoach($model_id, $notify_type)

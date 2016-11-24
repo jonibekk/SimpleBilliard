@@ -4,7 +4,7 @@
  */
 ?>
 <?php if ($followers): ?>
-    <?= $this->App->viewStartComment()?>
+    <?= $this->App->viewStartComment() ?>
     <?php foreach ($followers as $follower): ?>
         <div class="goal-detail-follower-card">
             <a href="<?= $this->Html->url([
@@ -32,5 +32,5 @@
             </a>
         </div>
     <?php endforeach ?>
-    <?= $this->App->viewEndComment()?>
-<? endif ?>
+    <?= $this->App->viewEndComment() ?>
+<?php endif ?>

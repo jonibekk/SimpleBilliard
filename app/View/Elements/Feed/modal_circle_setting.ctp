@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
             <div class="row borderBottom">
                 <div class="col col-xxs-12 mpTB0">
                     <div class="comment-body modal-comment">

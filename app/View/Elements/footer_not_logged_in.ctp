@@ -10,12 +10,12 @@
  * @var                    $this             View
  */
 ?>
-<?
+<?php
 if (!isset($top_lang)) {
     $top_lang = null;
 }
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <footer class="footer <?= $is_mb_app ? 'hide' : null ?>">
     <div class="footer-content">
         <div class="container">
@@ -118,4 +118,4 @@ if (!isset($top_lang)) {
     </div><!--//bottom-bar-->
 </footer>
 <div id="layer-black"></div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

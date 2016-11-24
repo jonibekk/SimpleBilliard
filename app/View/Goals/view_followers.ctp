@@ -9,7 +9,7 @@
  * @var $followers
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
@@ -18,7 +18,7 @@
                 <?= $this->element('Goal/followers') ?>
                 <?php if (!$followers): ?>
                     <?= __('No one is following.') ?>
-                <? endif ?>
+                <?php endif ?>
             </div>
         </div>
         <div class="panel-body panel-read-more-body">
@@ -32,4 +32,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

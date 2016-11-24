@@ -15,7 +15,7 @@ class TimezoneComponent extends CakeObject
     {
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
 
     }
