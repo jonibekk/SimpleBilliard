@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-15 15:25+0900\n"
+"PO-Revision-Date: 2016-11-22 13:53+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -200,6 +200,12 @@ msgstr ""
 "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
 "い。"
 
+msgid "Current Term"
+msgstr "今期"
+
+msgid "Previous Term"
+msgstr "前期"
+
 msgid "Saved the draft."
 msgstr "下書きを保存しました。"
 
@@ -223,6 +229,15 @@ msgstr "権限がありません。"
 
 msgid "Added a key result."
 msgstr "達成要素を追加しました。"
+
+msgid "Some error occurred. Please try again from the start."
+msgstr "エラーが発生しました。もう一度最初から登録してください。"
+
+msgid "Success."
+msgstr "成功"
+
+msgid "Invalid Request."
+msgstr "不正なリクエストです。"
 
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
@@ -508,9 +523,6 @@ msgstr "データがありません。"
 msgid "Invalid Data"
 msgstr "不正なデータです。"
 
-msgid "Some error occurred. Please try again from the start."
-msgstr "エラーが発生しました。もう一度最初から登録してください。"
-
 msgid "Failed to create a team."
 msgstr "チーム作成に失敗しました。"
 
@@ -775,14 +787,8 @@ msgstr "2段階認証を解除しました。"
 msgid "Generated new recovery codes."
 msgstr "新しいリカバリコードを生成しました。"
 
-msgid "Current Term"
-msgstr "今期"
-
 msgid "Next Term"
 msgstr "来期"
-
-msgid "Previous Term"
-msgstr "前期"
 
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
@@ -909,18 +915,6 @@ msgstr "今期は評価できないか、閲覧権限がありません。"
 
 msgid "There is something you can't leave empty."
 msgstr "入力内容に不足があります。"
-
-msgid "Members"
-msgstr "メンバー"
-
-msgid "Waiting for the evaluation by %s."
-msgstr "%sの評価待ちです"
-
-msgid "Please evaluate yourself."
-msgstr "自己評価をしてください"
-
-msgid "Please evaluate."
-msgstr "評価をしてください"
 
 msgid "Not allowed to specify."
 msgstr "*指定は禁止です！！"
@@ -1193,6 +1187,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコメントしました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
+"another KR."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> がトップKRを別のKRに変更"
+"しました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -1667,6 +1668,18 @@ msgstr "評価期間内で入力してください。"
 
 msgid "Data is duplicated."
 msgstr ""
+
+msgid "Members"
+msgstr "メンバー"
+
+msgid "Waiting for the evaluation by %s."
+msgstr "%sの評価待ちです"
+
+msgid "Please evaluate yourself."
+msgstr "自己評価をしてください"
+
+msgid "Please evaluate."
+msgstr "評価をしてください"
 
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
@@ -2929,6 +2942,9 @@ msgstr "達成要素を追加"
 msgid "Edit goal"
 msgstr "ゴールを編集"
 
+msgid "Change TKR"
+msgstr "TKRを変更"
+
 msgid "Delete goal"
 msgstr "ゴールを削除"
 
@@ -3018,6 +3034,18 @@ msgstr "達成要素名"
 
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
+
+msgid "Change Top KR"
+msgstr "トップKRを変更"
+
+msgid "Top KR"
+msgstr "トップKR"
+
+msgid "Select Top KR you would like to change."
+msgstr "トップKRとしたいKRを選択してください。"
+
+msgid "Current"
+msgstr "現在"
 
 msgid "Goal Summary"
 msgstr "ゴール概要"
@@ -3302,14 +3330,17 @@ msgstr "未完了の評価者をみる"
 msgid "Number incomplete"
 msgstr "未完了数"
 
-msgid "Display order"
-msgstr "表示順"
+msgid "eg. A-E or 1-5"
+msgstr "例) A〜E, 1〜5"
+
+msgid "eg. 1 (Numeric)"
+msgstr "例) 1 (数値)"
 
 msgid "Input is required"
 msgstr "入力必須項目です。"
 
-msgid "Please explain the definition."
-msgstr "定義の説明を書きましょう"
+msgid "Please explain the score."
+msgstr "スコアの説明を書きましょう"
 
 msgid "Paused evaluation settings."
 msgstr "評価凍結設定"
@@ -3347,6 +3378,9 @@ msgstr "評価状況"
 msgid "Evaluation score settings"
 msgstr "評価スコア設定"
 
+msgid "Display order"
+msgstr "表示順"
+
 msgid "Add definition"
 msgstr "定義を１つ追加"
 
@@ -3355,6 +3389,12 @@ msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
+
+msgid "Evaluation feature is disabled now. If you would like to use it,"
+msgstr "評価機能は現在無効化されています。もしご利用になりたい場合は、"
+
+msgid "please contact us."
+msgstr "こちらからお問い合わせください。"
 
 msgid "Evaluate"
 msgstr "評価する"
@@ -4794,3 +4834,10 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid ""
+#~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
+#~ "another KR <span class=\"notify-card-head-target\">%2$s</span>."
+#~ msgstr ""
+#~ "<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
+#~ "<span class=\"notify-card-head-target\">%2$s</span>."

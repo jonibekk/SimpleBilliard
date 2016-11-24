@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
+App::import('Service', 'GoalMemberService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
@@ -155,21 +156,22 @@ class GoalsController extends AppController
 
         $goalId = Hash::get($this->request->params, 'named.goal_id');
         $userId = Hash::get($this->request->params, 'named.user_id');
+        $evaluateTermId = Hash::get($this->request->params, 'named.evaluate_term_id');
         $krs = [];
         if ($goalId && $userId) {
-            $krs = $this->Goal->KeyResult->getKeyResultsForEvaluation($goalId);
+            $krs = $this->Goal->KeyResult->getKeyResultsForEvaluation($goalId, $userId);
             foreach($krs as $k => $v) {
                 $krs[$k] = $KeyResultService->processKeyResult($v, '/');
             }
         }
 
         $allKrCount = count($krs);
-        $myActionKrCount = count(Hash::extract($krs, "{n}[action_result_count>0]"));
+        $myActionKrCount = count(Hash::extract($krs, "{n}.ActionResult.0.id"));
 
         $this->_ajaxPreProcess();
 
         //htmlレンダリング結果
-        $this->set(compact('krs', 'allKrCount', 'myActionKrCount'));
+        $this->set(compact('krs', 'allKrCount', 'myActionKrCount', 'evaluateTermId', 'userId'));
         $response = $this->render('Goal/modal_related_kr_list');
         $html = $response->__toString();
 
@@ -231,6 +233,50 @@ class GoalsController extends AppController
         ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * TKR交換モーダル表示
+     *
+     * @return CakeResponse|null
+     */
+    public function ajax_get_exchange_tkr_modal()
+    {
+        $this->_ajaxPreProcess();
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        if (empty($goalId)) {
+            return $this->_ajaxGetResponse(null);
+        }
+
+        $isApproval = $GoalMemberService->isApprovableByGoalId($goalId, $this->Auth->user('id'));
+
+        $allKrs = $KeyResultService->findByGoalId($goalId);
+        $tkr = [];
+        $krs = [];
+        foreach ($allKrs as $kr) {
+            if ($kr['tkr_flg']) {
+                $tkr = $kr;
+            } else {
+                $krs[$kr['id']] = $kr['name'];
+            }
+        }
+
+        $this->set(compact(
+            'goalId',
+            'tkr',
+            'krs',
+            'isApproval'
+        ));
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_exchange_tkr');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
@@ -355,6 +401,98 @@ class GoalsController extends AppController
         } else {
             return $this->redirect($this->referer());
         }
+    }
+
+    /**
+     * 別のKRをTKRとして変更
+     */
+    public function exchange_tkr()
+    {
+        $formData = $this->request->data('KeyResult');
+        $krId = Hash::get($formData, 'id');
+
+        $errMsg = $this->_validateExchangeTkr($krId);
+        if (!empty($errMsg)) {
+            $this->Pnotify->outError($errMsg);
+            return $this->redirect($this->referer());
+        }
+
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        // TKRを変更
+        if (!$KeyResultService->exchangeTkr($krId, $this->Auth->user('id'))) {
+            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            return $this->redirect($this->referer());
+        }
+
+        //コーチへの通知
+        $goalId = Hash::get($KeyResultService->get($krId), 'goal_id');
+        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_EXCHANGE_TKR);
+        //コラボレータへの通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_TKR_EXCHANGED_BY_LEADER, $goalId, null);
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $krId);
+        $this->Pnotify->outSuccess(__("Success."));
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        $paramsReferer = Router::parse($this->referer(null, true));
+        if ($paramsReferer['controller'] == 'pages' && $paramsReferer['pass'][0] == 'home') {
+            return $this->redirect('/after_click:SubHeaderMenuGoal');
+        } else {
+            return $this->redirect($this->referer());
+        }
+    }
+
+    /**
+     * TKR交換バリデーション
+     *
+     * @param $krId
+     *
+     * @return bool|mixed
+     */
+    private function _validateExchangeTkr($krId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        // パラメータ存在チェック
+        if (empty($krId)) {
+            return __("Invalid Request.");
+        }
+
+        // KRが存在するか
+        $kr = $KeyResultService->get($krId);
+        if (empty($kr)) {
+            return __("Some error occurred. Please try again from the start.");
+        }
+        // TKRでないか
+        if ($kr['tkr_flg']) {
+            return __("Some error occurred. Please try again from the start.");
+        }
+
+        $goalId = $kr['goal_id'];
+        $goal = $this->Goal->getById($goalId);
+        // ログインユーザーのゴールか
+        if ($goal['user_id'] !== $this->Auth->user('id')) {
+            return __("Some error occurred. Please try again from the start.");
+        }
+
+        // 今期以降のゴールか
+        $termType = $GoalService->getTermType($goal['start_date']);
+        if ($termType == GoalService::TERM_TYPE_PREVIOUS) {
+            return __("Some error occurred. Please try again from the start.");
+        }
+        // 評価開始前か
+        if ($termType == GoalService::TERM_TYPE_CURRENT) {
+            $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+            $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+            if ($isStartedEvaluation) {
+                return __("Some error occurred. Please try again from the start.");
+            }
+        }
+
+        return "";
     }
 
     public function edit_key_result()

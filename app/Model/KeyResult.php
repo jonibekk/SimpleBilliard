@@ -573,7 +573,7 @@ class KeyResult extends AppModel
      * @param $goalId
      * @return $krs
      */
-    public function getKeyResultsForEvaluation($goalId)
+    public function getKeyResultsForEvaluation($goalId, $userId)
     {
         $options = [
             'conditions' => [
@@ -583,11 +583,23 @@ class KeyResult extends AppModel
             'order'      => [
                 'KeyResult.tkr_flg DESC',
                 'KeyResult.priority DESC'
+            ],
+            'contain'    => [
+                'ActionResult' => [
+                    'conditions' =>[
+                        'user_id' => $userId
+                    ]
+                ]
             ]
         ];
         $res = $this->find('all', $options);
 
-        $krs = Hash::extract($res, "{n}.KeyResult");
+        $krs = [];
+        foreach($res as $key => $val) {
+            $krs[$key] = Hash::extract($val, "KeyResult");
+            $krs[$key]['ActionResult'] = Hash::extract($val, "ActionResult");
+        }
+
         return $krs;
     }
 }

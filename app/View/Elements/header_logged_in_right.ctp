@@ -204,7 +204,7 @@
         <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
             <li class="header-nav-function-contents-list" id="IntercomLink">
                 <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
-                   class="header-nav-function-contents-support" id="Intercom"><?= __('Support') ?></a>
+                   class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
             </li>
         <?php endif; ?>
         <li class="header-nav-function-contents-list">

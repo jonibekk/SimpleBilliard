@@ -18,11 +18,7 @@
 <?= $this->App->viewStartComment() ?>
 
 <!-- Back button -->
-<div class="col-sm-8 col-sm-offset-2">
-    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index']) ?>" class="btn-back">
-        <i class="fa fa-chevron-left"></i><span class="btn-back-text"><?= __('Back to evaluation list') ?></span>
-    </a>
-</div>
+<?= $this->GlHtml->backBtn("/evaluations?term_id=".$evaluateTermId, __('Back to evaluation list'))?>
 
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
@@ -300,9 +296,10 @@
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_related_kr_list_modal',
                                        'user_id'    => $evaluateeId,
-                                       'goal_id'    => $goal[0]['Goal']['id']
+                                       'goal_id'    => $goal[0]['Goal']['id'],
+                                       'evaluate_term_id' => $evaluateTermId
                                    ]) ?>">
-                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[action_result_count>0]")) ?>
+                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}.ActionResult.0.id")) ?>
                                 </a>
                             </div>
                         </div>
@@ -313,7 +310,8 @@
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_related_kr_list_modal',
                                        'user_id'    => $evaluateeId,
-                                       'goal_id'    => $goal[0]['Goal']['id']
+                                       'goal_id'    => $goal[0]['Goal']['id'],
+                                       'evaluate_term_id' => $evaluateTermId
                                    ]) ?>">
                                     <?= __("View results") ?>
                                 </a>
@@ -569,6 +567,9 @@ $this->Form->input("evaluate_type", [
 ])
 ?>
 <?= $this->Form->end() ?>
+<!-- Back button -->
+<?= $this->GlHtml->backBtn("/evaluations?term_id=".$evaluateTermId, __('Back to evaluation list')) ?>
+
 <?= $this->App->viewEndComment() ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
@@ -583,11 +584,3 @@ $this->Form->input("evaluate_type", [
     });
 </script>
 <?php $this->end() ?>
-
-<!-- Back button -->
-<div class="col-sm-8 col-sm-offset-2">
-    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index']) ?>" class="btn-back">
-        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
-        <span class="btn-back-text"><?= __('Back to evaluation list') ?></span>
-    </a>
-</div>

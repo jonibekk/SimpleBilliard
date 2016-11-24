@@ -901,39 +901,6 @@ class GoalTest extends GoalousTestCase
         $this->assertEquals(2, $goals[1]['User']['id']);
     }
 
-    function testSetIsCurrentTerm()
-    {
-        $this->setDefault();
-        $goals = [
-            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date']],],
-            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date']],],
-            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getNextTermData()['end_date']],],
-        ];
-        $actual = $this->Goal->setIsCurrentTerm($goals);
-        foreach ($actual as $k => $v) {
-            unset($actual[$k]['Goal']['end_date']);
-        }
-        $expected = [
-            (int)0 => [
-                'Goal' => [
-                    'is_current_term' => false
-                ]
-            ],
-            (int)1 => [
-                'Goal' => [
-                    'is_current_term' => true
-                ]
-            ],
-            (int)2 => [
-                'Goal' => [
-                    'is_current_term' => false
-                ]
-            ]
-        ];
-
-        $this->assertEquals($expected, $actual);
-    }
-
     function testGetGoalTermData()
     {
         $this->setDefault();
