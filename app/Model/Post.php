@@ -597,8 +597,8 @@ class Post extends AppModel
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
                     $post_filter_conditions['OR'][] =
                         $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db, null,
-                        self::TYPE_ACTION, $start,
-                        $end) . ')');
+                                self::TYPE_ACTION, $start,
+                                $end) . ')');
                 }
             } //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
