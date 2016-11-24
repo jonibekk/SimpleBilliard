@@ -82,6 +82,11 @@ class DATABASE_CONFIG
         if (isset($this->redis_test)) {
             $this->redis_test['prefix'] = ENV_NAME . ":" . $this->redis_test['prefix'];
         }
+        //localの場合は、socket接続がうまくいかないので。。
+        if(ENV_NAME == 'local'){
+            $this->default['unix_socket'] = '/var/run/mysqld/mysqld.sock';
+        }
+
         // Selenium経由の場合defaultを参照するのでIPで振り分ける
         // 仮想環境経由:192.168.50.1, ローカル環境経由:127.0.0.1
 //        if (stristr(env('HTTP_USER_AGENT'), 'selenium') && env('REMOTE_ADDR') === '192.168.50.1') {

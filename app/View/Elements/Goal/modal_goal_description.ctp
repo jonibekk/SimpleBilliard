@@ -42,8 +42,8 @@
                 </div>
                 <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                     <div class="col col-xxs-6">
-                        <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
-                        <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
+                        <?php $follow_opt = $this->Goal->getFollowOption($goal) ?>
+                        <?php $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
                         <div>
                             <a class="btn btn-white bd-circle_22px mt_16px toggle-follow font_verydark <?= h($follow_opt['class']) ?>"
                                href="#"

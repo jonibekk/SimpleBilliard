@@ -245,7 +245,7 @@ $kr_count = 0;
                                             +</p>
                                     </a>
                                 </li>
-                            <? endif; ?>
+                            <?php endif; ?>
                             <li class="dashboard-goals-card-body-add-kr clearfix">
                                 <a class="dashboard-goals-card-body-add-kr-link modal-ajax-get-add-key-result"
                                    href="<?= $this->Html->url([

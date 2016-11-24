@@ -38,7 +38,6 @@ class UsersController extends AppController
      */
     public function login()
     {
-        $this->_uservoiceSetSession();
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if ($this->Auth->user()) {
@@ -1037,15 +1036,6 @@ class UsersController extends AppController
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
-    }
-
-    function _uservoiceSetSession()
-    {
-        if (isset($this->request->query['uv_login'])) {
-            $this->Session->write('uv_status', $this->request->query);
-        } else {
-            $this->Session->delete('uv_status');
-        }
     }
 
     public function ajax_get_user_detail($user_id)

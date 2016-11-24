@@ -59,7 +59,7 @@
                     'class' => 'btn-profile-edit'
                 ])
             ?>
-        <? else: ?>
+        <?php else: ?>
             <div class="col col-xxs-12 mt_18px">
                 <?php $follow_opt = $this->Goal->getFollowOption($goal); ?>
                 <?php $collabo_opt = $this->Goal->getCollaboOption($goal); ?>

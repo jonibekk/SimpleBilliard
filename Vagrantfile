@@ -34,7 +34,8 @@ Vagrant.configure('2') do |config|
         end
     end
 
-    config.vm.box = 'hashicorp/precise32'
+    # config.vm.box = 'ubuntu/trusty64'
+    config.vm.box = 'bigplants/ubuntu14_php7_nginx_mysql_redis'
     # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
     config.vm.network 'private_network', ip: '192.168.50.4'
 
@@ -44,14 +45,14 @@ Vagrant.configure('2') do |config|
         vb.customize ["modifyvm", :id, "--ioapic", "on"]
     end
     src_dir = './'
-    doc_root = '/vagrant_data/app/webroot'
-    app_root = '/vagrant_data/'
+    doc_root = '/vagrant/app/webroot'
+    app_root = '/vagrant/'
     if ( RUBY_PLATFORM.downcase =~ /darwin/ )
       npm_recipe = 'local_yarn'
-      config.vm.synced_folder src_dir, '/vagrant_data', :nfs => true, mount_options: ['actimeo=2']
+      config.vm.synced_folder src_dir, '/vagrant', :nfs => true, mount_options: ['actimeo=2']
     else
       npm_recipe = 'local_npm'
-      config.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
+      config.vm.synced_folder src_dir, '/vagrant', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
     end
 
     config.vm.provision :chef_solo do |chef|

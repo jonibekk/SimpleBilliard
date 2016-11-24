@@ -1,5 +1,4 @@
 {
-  "name": "status-site",
   "require": {
     "cakephp/cakephp": "~2.9.0",
     "phpunit/phpunit": "~3.7.0",
@@ -11,23 +10,24 @@
     "satooshi/php-coveralls": "~1.0",
     "pusher/pusher-php-server": "~2.4",
     "mixpanel/mixpanel-php": "~2.6",
-    "aws/aws-sdk-php": "~2.6.0",
+    "aws/aws-sdk-php": "~2.0",
     "pragmarx/google2fa": "~0.7",
     "oefenweb/cakephp-redis": "~1.1.0",
     "dereuromark/cakephp-url-cache": "~1.0.0",
-    "kaz29/cake_slack": "dev-master"
+    "kaz29/cake_slack": "dev-master",
+    "browscap/browscap-php": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",
-    "apigen/apigen": "*"
+    "apigen/apigen": "~4.0"
   },
   "config": {
     "vendor-dir": "Vendor/"
   },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.jp"
-        }
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.jp"
     }
+  }
 }

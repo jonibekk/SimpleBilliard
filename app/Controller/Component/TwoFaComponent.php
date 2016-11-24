@@ -24,7 +24,7 @@ class TwoFaComponent extends CakeObject
         }
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 

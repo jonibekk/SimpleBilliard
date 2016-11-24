@@ -1031,7 +1031,6 @@ class TeamMember extends AppModel
                     ];
                 }
 
-
                 $circle_member_options = [
                     'conditions' => [
                         $row
@@ -2326,7 +2325,7 @@ class TeamMember extends AppModel
      *
      * @return array|null
      */
-    function getCoachUserIdByMemberUserId($user_id)
+    function getCoachUserIdByMemberUserId($user_id = null)
     {
         if (!$user_id) {
             $user_id = $this->my_uid;
