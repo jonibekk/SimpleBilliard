@@ -296,9 +296,10 @@
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_related_kr_list_modal',
                                        'user_id'    => $evaluateeId,
-                                       'goal_id'    => $goal[0]['Goal']['id']
+                                       'goal_id'    => $goal[0]['Goal']['id'],
+                                       'evaluate_term_id' => $evaluateTermId
                                    ]) ?>">
-                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[action_result_count>0]")) ?>
+                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}.ActionResult.0.id")) ?>
                                 </a>
                             </div>
                         </div>
@@ -309,7 +310,8 @@
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_related_kr_list_modal',
                                        'user_id'    => $evaluateeId,
-                                       'goal_id'    => $goal[0]['Goal']['id']
+                                       'goal_id'    => $goal[0]['Goal']['id'],
+                                       'evaluate_term_id' => $evaluateTermId
                                    ]) ?>">
                                     <?= __("View results") ?>
                                 </a>
