@@ -1063,8 +1063,11 @@ class Post extends AppModel
                 'Post.team_id' => $this->current_team_id,
             ],
         ];
+        // 仕様上アクションの投稿日時は必ずゴールの期間内になるためこの条件は必要無いが、
+        // MySQLで投稿テーブルを日付でパーティショニングしてるため、検索条件に投稿日時を追加している。
+        // これが無いと投稿データをフルスキャンしてしまう。
         if ($start && $end) {
-            $query['conditions']['Post.modified BETWEEN ? AND ?'] = [$start, $end];
+            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
         }
         if ($goal_id) {
             $query['conditions']['Post.goal_id'] = $goal_id;
@@ -1106,6 +1109,9 @@ class Post extends AppModel
             ],
         ];
 
+        // 仕様上アクションの投稿日時は必ずゴールの期間内になるためこの条件は必要無いが、
+        // MySQLで投稿テーブルを日付でパーティショニングしてるため、検索条件に投稿日時を追加している。
+        // これが無いと投稿データをフルスキャンしてしまう。
         if ($start !== null && $end !== null) {
             $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
         }
