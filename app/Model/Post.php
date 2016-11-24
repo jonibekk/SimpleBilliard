@@ -578,8 +578,7 @@ class Post extends AppModel
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterKrPostList($db,
                             $this->orgParams['key_result_id'],
                             $this->orgParams['author_id'] ? $this->orgParams['author_id'] : null,
-                            self::TYPE_ACTION,
-                            $start, $end) . ')');
+                            self::TYPE_ACTION) . ')');
             } //特定ゴール指定
             elseif ($this->orgParams['goal_id']) {
                 //アクションのみの場合
@@ -587,8 +586,7 @@ class Post extends AppModel
                     $post_filter_conditions['OR'][] =
                         $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db,
                                 $this->orgParams['goal_id'],
-                                self::TYPE_ACTION, $start,
-                                $end) . ')');
+                                self::TYPE_ACTION) . ')');
 
                 }
             } //投稿主指定
@@ -597,8 +595,7 @@ class Post extends AppModel
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
                     $post_filter_conditions['OR'][] =
                         $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db, null,
-                                self::TYPE_ACTION, $start,
-                                $end) . ')');
+                                self::TYPE_ACTION) . ')');
                 }
             } //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
@@ -1050,9 +1047,7 @@ class Post extends AppModel
     public function getSubQueryFilterGoalPostList(
         DboSource $db,
         $goal_id = null,
-        $type = self::TYPE_ACTION,
-        $start = null,
-        $end = null
+        $type = self::TYPE_ACTION
     ) {
         $query = [
             'fields'     => ['Post.id'],
@@ -1063,9 +1058,6 @@ class Post extends AppModel
                 'Post.team_id' => $this->current_team_id,
             ],
         ];
-        if ($start && $end) {
-            $query['conditions']['Post.modified BETWEEN ? AND ?'] = [$start, $end];
-        }
         if ($goal_id) {
             $query['conditions']['Post.goal_id'] = $goal_id;
         }
@@ -1085,7 +1077,7 @@ class Post extends AppModel
         return true;
     }
 
-    public function getSubQueryFilterKrPostList(DboSource $db, $key_result_id, $user_id = null, $type, $start = null, $end = null)
+    public function getSubQueryFilterKrPostList(DboSource $db, $key_result_id, $user_id = null, $type)
     {
         $query = [
             'fields'     => ['Post.id'],
@@ -1106,9 +1098,6 @@ class Post extends AppModel
             ],
         ];
 
-        if ($start !== null && $end !== null) {
-            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
-        }
         if ($user_id) {
             $query['conditions']['Post.user_id'] = $user_id;
         }
