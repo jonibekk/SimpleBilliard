@@ -811,6 +811,10 @@ class GoalsController extends AppController
             }
         }
 
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
+
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
 
@@ -1510,11 +1514,13 @@ class GoalsController extends AppController
             $display_action_count--;
         }
         $this->set(compact('is_collaborated', 'display_action_count'));
+        $kr_count =  $this->Goal->KeyResult->getKrCount($goal_id);
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
         $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
+        $this->set('kr_count', $kr_count);
         $this->set('key_results', $key_results);
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
