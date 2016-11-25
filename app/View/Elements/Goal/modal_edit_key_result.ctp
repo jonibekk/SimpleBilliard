@@ -64,7 +64,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
         <div class="modal-body modal-circle-body">
             <div class="aaa">
                 <div class="row">
-                    <?
+                    <?php
                     $nameLabel = $isTkr ? __("Top Key Result name") : __("KR name");
                     echo $this->Form->input('KeyResult.name',
                         [

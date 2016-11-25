@@ -111,8 +111,8 @@
                         <?php if ($page_type != "following"): ?>
                             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): //ゴールのリーダが自分以外の場合に表示?>
                                 <div class="col col-xxs-12 mt_5px">
-                                    <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
-                                    <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
+                                    <?php $follow_opt = $this->Goal->getFollowOption($goal) ?>
+                                    <?php $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
                                     <div class="col col-xxs-6 col-xs-4 mr_5px">
                                         <a class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= h($follow_opt['class']) ?>"
                                            href="#"
@@ -227,7 +227,7 @@
                                                 <?php endif; ?>
                                             </a>
                                         </li>
-                                    <? endforeach ?>
+                                    <?php endforeach ?>
                                 </ul>
                             </div>
                         <?php endif; ?>

@@ -10,7 +10,7 @@
  * @var                    $goal
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -29,23 +29,24 @@
                 <li>
                     <?= __("End date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
                 </li>
-                <?php if (!empty($goal['Goal']['description'])):?>
+                <?php if (!empty($goal['Goal']['description'])): ?>
                     <li>
                         <?= __("Description") ?>:<?= nl2br($goal['Goal']['description']) ?>
                     </li>
-                <?php endif;?>
+                <?php endif; ?>
             </ul>
         </div>
         <div class="modal-footer">
             <div class="text-align_l font_12px font_rouge mb_12px">
-                <? __('Whichever you choose, this kr will be finished.') ?>
+                <?php __('Whichever you choose, this kr will be finished.') ?>
             </div>
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller'    => 'goals',
-                                    'action'        => 'complete_kr',
-                                    'key_result_id' => $kr_id,
-                                    true
+                'url'           => [
+                    'controller'    => 'goals',
+                    'action'        => 'complete_kr',
+                    'key_result_id' => $kr_id,
+                    true
                 ],
                 'inputDefaults' => [
                     'div'       => 'form-group',
@@ -55,10 +56,11 @@
                 'class'         => 'form-feed-notify'
             ]); ?>
             <?php $this->Form->unlockField('socket_id') ?>
-            <a href="<?= $this->Html->url(['controller'    => 'goals',
-                                           'action'        => 'ajax_get_add_key_result_modal',
-                                           'goal_id'       => $goal['Goal']['id'],
-                                           'key_result_id' => $kr_id
+            <a href="<?= $this->Html->url([
+                'controller'    => 'goals',
+                'action'        => 'ajax_get_add_key_result_modal',
+                'goal_id'       => $goal['Goal']['id'],
+                'key_result_id' => $kr_id
             ]) ?>"
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __(
                     "Add Key Result") ?></a>
@@ -69,4 +71,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

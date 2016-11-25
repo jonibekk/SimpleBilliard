@@ -27,7 +27,8 @@ Page毎に要素が変わるもの
 $meta_contact = [
     [
         "name"    => "description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("We accept consultation of introduction.")),
+        "content" => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
+            __("We accept consultation of introduction.")),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +44,8 @@ $meta_contact = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("We accept consultation of introduction.")),
+        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
+            __("We accept consultation of introduction.")),
     ],
     [
         "property" => "og:url",
@@ -80,7 +82,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>
 <?php $this->end() ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-promo" class="contact-promo section">
     <div class="bg-mask"></div>
@@ -184,7 +186,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="contact-form col-md-8 col-xs-12 col-md-offset-2 text-center">
             <label class="control-label"><?= __('You can request your sales person.') ?></label>
-            <? $this->Form->unlockField('sales_people') ?>
+            <?php $this->Form->unlockField('sales_people') ?>
             <div class="form-group sales text-left">
                 <?php
                 $sales_people = [
@@ -210,7 +212,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     ],
                 ]
                 ?>
-                <? foreach ($sales_people as $k => $v): ?>
+                <?php foreach ($sales_people as $k => $v): ?>
                     <label class="col-sm-6 col-xs-12 salesperson">
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -226,10 +228,11 @@ for ($i = 0; $i < $num_ogp; $i++) {
                             <div class="media">
                                 <div class="media-left media-middle">
                                     <?= $this->Html->image($v['img'],
-                                        array('alt'    => 'photo',
-                                              'width'  => '60',
-                                              'height' => '60',
-                                              'class'  => 'img-circle'
+                                        array(
+                                            'alt'    => 'photo',
+                                            'width'  => '60',
+                                            'height' => '60',
+                                            'class'  => 'img-circle'
                                         )); ?>
                                 </div>
                                 <div class="media-body media-middle">
@@ -243,7 +246,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         </div><!-- /input-group -->
                     </label><!-- /.col-sm-6 col-xs-12 -->
 
-                <? endforeach; ?>
+                <?php endforeach; ?>
             </div><!--//form-group-->
         </div>
         <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
@@ -286,4 +289,4 @@ for ($i = 0; $i < $num_ogp; $i++) {
     </div><!--//row-->
 </section>
 
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

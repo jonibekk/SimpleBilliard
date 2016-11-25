@@ -19,7 +19,7 @@
     $id_prefix = null;
 }
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_4px">
         <a href="<?= $this->Html->url([
@@ -93,7 +93,7 @@
                 class="col col-xxs-12 <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= nl2br($this->TextEx->autoLink($comment['body'])) ?></div>
 
-            <?
+            <?php
             /**
              * 画像のurlを集める
              */
@@ -191,4 +191,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

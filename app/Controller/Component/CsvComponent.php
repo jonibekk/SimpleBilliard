@@ -9,7 +9,7 @@ class CsvComponent extends CakeObject
     {
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 
