@@ -811,6 +811,10 @@ class GoalsController extends AppController
             }
         }
 
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
+
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
 

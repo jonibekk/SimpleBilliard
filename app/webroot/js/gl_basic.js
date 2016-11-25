@@ -3558,9 +3558,11 @@ function evBasicReadMore(options) {
     success: function (data) {
       if (!$.isEmptyObject(data.html)) {
         var $content = $(data.html);
-        $content.hide();
+        $content.fadeOut();
         $list_container.append($content);
-        $content.show("slow");
+
+        showMore($content);
+        $content.fadeIn();
 
         // ページ番号インクリメント
         next_page_num++;
@@ -3732,6 +3734,13 @@ function showMore(obj) {
       speedDown: 300,
       speedUp: 300,
       height: '920px',
+      showText: showText,
+      hideText: hideText
+    });
+    $(obj).find('.showmore-init-none').showMore({
+      speedDown: 100,
+      speedUp: 100,
+      height: '0px',
       showText: showText,
       hideText: hideText
     });
