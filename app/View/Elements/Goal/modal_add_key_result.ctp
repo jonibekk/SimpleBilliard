@@ -119,9 +119,9 @@
                                     'default'                      => 100,
                                     'required'                     => true,
                                     'data-bv-stringlength'         => 'true',
-                                    'data-bv-stringlength-max'     => 50,
+                                    'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
                                     'data-bv-stringlength-message' => __("It's over limit characters (%s).",
-                                        50),
+                                        KeyResult::MAX_LENGTH_VALUE),
                                     "data-bv-notempty-message"     => __("Input is required."),
                                     'data-bv-numeric-message'      => __("Please enter a number."),
                                 ]) ?>
@@ -137,9 +137,9 @@
                                     'default'                      => 0,
                                     'required'                     => true,
                                     'data-bv-stringlength'         => 'true',
-                                    'data-bv-stringlength-max'     => 50,
+                                    'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
                                     'data-bv-stringlength-message' => __("It's over limit characters (%s).",
-                                        50),
+                                        KeyResult::MAX_LENGTH_VALUE),
                                     "data-bv-notempty-message"     => __("Input is required."),
                                     'data-bv-numeric-message'      => __("Please enter a number."),
                                 ]) ?>

@@ -859,9 +859,7 @@ class GoalsController extends AppController
                 throw new RuntimeException();
             }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
-            $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
-            $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
-            $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
+            $key_result['KeyResult'] = $KeyResultService->processKeyResult($key_result['KeyResult']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
