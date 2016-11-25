@@ -236,8 +236,8 @@ class KeyResultService extends AppService
      * @return $float_deleted_right_zero
      */
     public function formatBigFloat($floatNum) {
-        $float_deleted_index = sprintf("%.3f", $floatNum);
-        $float_deleted_right_zero = h(preg_replace("/\.?0*$/", '', $float_deleted_index));
-        return $float_deleted_right_zero;
+        $floatDeletedIndex = sprintf("%.3f", $floatNum);
+        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
+        return $floatDeletedRightZero;
     }
 }
