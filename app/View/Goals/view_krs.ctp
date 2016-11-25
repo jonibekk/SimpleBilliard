@@ -29,7 +29,7 @@
             <div class="clearfix mt_12px">
                 <h3 class="goal-detail-kr-add-heading pull-left">
                     <i class="fa fa-key"></i>
-                    <?= __('Key Results') ?>(<?= count($key_results)?>)
+                    <?= __('Key Results') ?>(<?= $kr_count?>)
                     <!-- todo 数を追加 -->
                 </h3>
                 <?php $kr_can_edit = ($is_leader || $is_goal_member); ?>
