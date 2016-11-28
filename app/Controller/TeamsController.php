@@ -1084,14 +1084,23 @@ class TeamsController extends AppController
 
     function edit_group_vision()
     {
+        App::import('Service', 'VisionService');
+        /** @var VisionService $VisionService */
+        $VisionService = ClassRegistry::init('VisionService');
+
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if (!$group_vision_id = Hash::get($this->request->params, 'named.group_vision_id')) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        if (!$this->Team->GroupVision->exists($group_vision_id)) {
+        if (!$VisionService->isExistsGroupVision($group_vision_id)) {
             $this->Pnotify->outError(__("Page does not exist."));
+            return $this->redirect($this->referer());
+        }
+
+        if (!$VisionService->hasPermissionToEdit($group_vision_id)) {
+            $this->Pnotify->outError(__("You don't have permission."));
             return $this->redirect($this->referer());
         }
 
@@ -1100,7 +1109,7 @@ class TeamsController extends AppController
             return $this->render();
         }
 
-        if ($this->Team->GroupVision->saveGroupVision($this->request->data, false)) {
+        if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
             $this->Pnotify->outSuccess(__("Updated group vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
