@@ -186,6 +186,25 @@ class GroupVision extends AppModel
     }
 
     /**
+     * グループ名も含めグループビジョンを取得する
+     *
+     * @param $id
+     *
+     * @return array|null
+     */
+    function findWithGroupById($id)
+    {
+        $options = [
+            'conditions' => [
+                'GroupVision.id' => $id,
+            ],
+            'contain'    => ['Group']
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
      * AngularJSのテンプレート側から処理しやすく加工
      *
      * @param $team_id

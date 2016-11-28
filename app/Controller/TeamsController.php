@@ -1103,9 +1103,8 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__("You don't have permission."));
             return $this->redirect($this->referer());
         }
-
         if ($this->request->is('get')) {
-            $this->request->data = $this->Team->GroupVision->findById($group_vision_id);
+            $this->request->data = $this->Team->GroupVision->findWithGroupById($group_vision_id);
             return $this->render();
         }
 

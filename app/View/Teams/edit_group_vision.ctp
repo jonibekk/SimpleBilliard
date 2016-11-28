@@ -32,6 +32,13 @@
             ]); ?>
             <?= $this->Form->hidden('id') ?>
             <div class="panel-body add-team-panel-body">
+                <div class="form-group"><label
+                        class="col col-sm-3 control-label form-label"><?= __('Group name') ?></label>
+                    <p class="col col-sm-6 form-control-static">
+                        <?= $this->request->data['Group']['name'] ?>
+                    </p>
+                </div>
+                <hr>
                 <?=
                 $this->Form->input('name',
                     [
