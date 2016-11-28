@@ -21,6 +21,8 @@ export function generateStartMonthList(term) {
 }
 
 export function generateTermRangeFormat(start_month, end_month) {
+  start_month = new Date(start_month)
+  end_month = new Date(end_month)
   const formatted_start_date = dateFormat(start_month.getFullYear(), parseInt(start_month.getMonth()) + 1, 1)
   const formatted_end_date = dateFormat(end_month.getFullYear(), parseInt(end_month.getMonth()) + 1, end_month.getDate())
   const formatted = `${formatted_start_date} - ${formatted_end_date}`

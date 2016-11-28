@@ -7,7 +7,7 @@ const initialState = {
   visions: [],
   categories: [],
   labels: [],
-  terms: [],
+  terms: {},
   priorities: [],
   units: [],
   default_end_dates: {},
@@ -105,12 +105,12 @@ export default function goal(state = initialState, action) {
         state.inputData = inputData
         return Object.assign({}, state)
       }
-    {
-      inputData = Object.assign({}, inputData, action.data)
-      return Object.assign({}, state, {
-        inputData
-      })
-    }
+      {
+        inputData = Object.assign({}, inputData, action.data)
+        return Object.assign({}, state, {
+          inputData
+        })
+      }
     default:
       return state;
   }
