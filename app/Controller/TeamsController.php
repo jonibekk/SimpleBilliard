@@ -1094,8 +1094,6 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__("Page does not exist."));
             return $this->redirect($this->referer());
         }
-        $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
-        $this->set(compact('group_list'));
 
         if ($this->request->is('get')) {
             $this->request->data = $this->Team->GroupVision->findById($group_vision_id);
