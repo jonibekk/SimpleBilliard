@@ -25,13 +25,6 @@ const initialState = {
 }
 
 export default function goal(state = initialState, action) {
-  /* eslint-disable no-console */
-  console.log("---reducer start---")
-  console.log(action.type)
-  console.log({state})
-  console.log({action})
-  /* eslint-disable no-console */
-
   let inputData = state.inputData
   switch (action.type) {
     case types.INVALID:

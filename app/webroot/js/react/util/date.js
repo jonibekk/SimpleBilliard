@@ -8,17 +8,23 @@ export function generateStartMonthList(term) {
 
   for(let i = parseInt(term); i > 0; i--) {
     const start_month = new Date(this_year, this_month - (i - 1), 1)
-    const formatted_start_date = dateFormat(start_month.getFullYear(), parseInt(start_month.getMonth()) + 1, 1)
     const end_month = new Date(this_year, (this_month - (i - 1)) + parseInt(term), 0)
-    const formatted_end_date = dateFormat(end_month.getFullYear(), parseInt(end_month.getMonth()) + 1, end_month.getDate())
+    const range = generateTermRangeFormat(start_month, end_month);
 
     start_month_list.push({
       start_month: parseInt(start_month.getMonth()) + 1,
-      range: `${formatted_start_date} - ${formatted_end_date}`
+      range
     })
   }
 
   return start_month_list
+}
+
+export function generateTermRangeFormat(start_month, end_month) {
+  const formatted_start_date = dateFormat(start_month.getFullYear(), parseInt(start_month.getMonth()) + 1, 1)
+  const formatted_end_date = dateFormat(end_month.getFullYear(), parseInt(end_month.getMonth()) + 1, end_month.getDate())
+  const formatted = `${formatted_start_date} - ${formatted_end_date}`
+  return formatted
 }
 
 export function dateFormat(year, month, day) {
