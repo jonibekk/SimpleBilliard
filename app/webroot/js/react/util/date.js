@@ -1,5 +1,11 @@
 import { MonthName } from "~/common/constants/Date";
 
+/**
+ * termを元に、現在日時から評価開始年月の一覧を生成する
+ *
+ * @param  integer term 3|4|6|12
+ * @return start_month_list
+ */
 export function generateStartMonthList(term) {
   const date = new Date()
   const this_month = date.getMonth()
@@ -20,6 +26,12 @@ export function generateStartMonthList(term) {
   return start_month_list
 }
 
+/**
+ * 期間を表示用にフォーマット
+ * @param  date start_month
+ * @param  date end_month
+ * @return formatted
+ */
 export function generateTermRangeFormat(start_month, end_month) {
   start_month = new Date(start_month)
   end_month = new Date(end_month)
@@ -29,6 +41,12 @@ export function generateTermRangeFormat(start_month, end_month) {
   return formatted
 }
 
+/**
+ * 年月を表示用にフォーマット
+ * @param  integer year
+ * @param  integer month
+ * @param  integer day
+ */
 export function dateFormat(year, month, day) {
   const double_digit_month = month < 10 ? "0" + String(parseInt(month)) : month
   const translated_month_name = MonthName[double_digit_month]
