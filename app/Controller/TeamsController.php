@@ -1028,21 +1028,22 @@ class TeamsController extends AppController
 
     function edit_team_vision()
     {
+        $redirectTo = "/teams/main#/vision/".$this->current_team_id;
         $this->layout = LAYOUT_ONE_COLUMN;
         try {
             $this->Team->TeamMember->adminCheck();
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
 
         if (!$team_vision_id = Hash::get($this->request->params, 'named.team_vision_id')) {
             $this->Pnotify->outError(__("Invalid screen transition."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
         if (!$this->Team->TeamVision->exists($team_vision_id)) {
             $this->Pnotify->outError(__("Page does not exist."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
 
         if ($this->request->is('get')) {
@@ -1052,11 +1053,10 @@ class TeamsController extends AppController
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data, false)) {
             $this->Pnotify->outSuccess(__("Updated team vision."));
-            //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
-            return $this->redirect("/");
+            return $this->redirect($redirectTo);
         } else {
             $this->Pnotify->outError(__("Failed to save team vision."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
         return $this->render();
     }
@@ -1117,19 +1117,21 @@ class TeamsController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
 
+        $redirectTo = "http://goalous2/teams/main#/group_vision/".$this->current_team_id;
+
         if (!$group_vision_id = Hash::get($this->request->params, 'named.group_vision_id')) {
             $this->Pnotify->outError(__("Invalid screen transition."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
         if (!$VisionService->isExistsGroupVision($group_vision_id)) {
             $this->Pnotify->outError(__("Page does not exist."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
 
         //変更できるのはチーム管理者もしくは、そのグループに所属しているメンバ
         if (!$VisionService->hasPermissionToEdit($group_vision_id)) {
             $this->Pnotify->outError(__("You don't have a permission."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
         if ($this->request->is('get')) {
             $this->request->data = $this->Team->GroupVision->findWithGroupById($group_vision_id);
@@ -1139,10 +1141,10 @@ class TeamsController extends AppController
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
             $this->Pnotify->outSuccess(__("Updated group vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
-            return $this->redirect("/");
+            return $this->redirect($redirectTo);
         } else {
             $this->Pnotify->outError(__("Failed to save group vision."));
-            return $this->redirect($this->referer());
+            return $this->redirect($redirectTo);
         }
         return $this->render();
     }
