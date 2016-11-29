@@ -4,6 +4,7 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'FollowService');
+App::import('Service', 'EvaluateTermService');
 App::import('Service/Api', 'ApiGoalService');
 
 /** @noinspection PhpUndefinedClassInspection */
@@ -234,16 +235,12 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
+            $EvaluateTermService = ClassRegistry::init('EvaluateTermService');
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
-            $current['type'] = 'current';
-            //TODO 個別にdate formatしているが一括で変更する仕組みを考えたほうがいい
-            $current['start_date'] = date('Y-m-d', $current['start_date'] + $current['timezone'] * HOUR);
-            $current['end_date'] = date('Y-m-d', $current['end_date'] + $current['timezone'] * HOUR);
+            $current = $EvaluateTermService->processEvaluateTerm($current, $type = EvaluateTerm::TERM_TYPE_CURRENT);
             $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
-            $next['type'] = 'next';
-            $next['start_date'] = date('Y-m-d', $next['start_date'] + $next['timezone'] * HOUR);
-            $next['end_date'] = date('Y-m-d', $next['end_date'] + $next['timezone'] * HOUR);
-            $res['terms'] = [$current, $next];
+            $next = $EvaluateTermService->processEvaluateTerm($next, $type = EvaluateTerm::TERM_TYPE_NEXT);
+            $res['terms'] = [EvaluateTerm::TERM_TYPE_CURRENT => $current, EvaluateTerm::TERM_TYPE_NEXT => $next];
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
@@ -259,8 +256,8 @@ class GoalsController extends ApiController
             $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
             $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
             $res['default_end_dates'] = [
-                'current' => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
-                'next'    => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
+                EvaluateTerm::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
+                EvaluateTerm::TERM_TYPE_NEXT    => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
             ];
         }
 
