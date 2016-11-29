@@ -116,6 +116,24 @@ class Group extends AppModel
     }
 
     /**
+     * 全てのグループのリストを返す
+     *
+     * @param bool $is_active
+     *
+     * @return array|null
+     */
+    function getAllList($is_active = true)
+    {
+        $options = [
+            'conditions' => [
+                'active_flg' => $is_active,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
      * グループ名がキーワードにマッチするグループを返す
      *
      * @param $keyword

@@ -1057,7 +1057,11 @@ class TeamsController extends AppController
     function add_group_vision()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision();
+        if ($this->Team->TeamMember->isAdmin()) {
+            $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision(false);
+        } else {
+            $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision(true);
+        }
 
         if (empty($group_list)) {
             $this->Pnotify->outError(__("Unable to create group vision as you don't belong to this group or the vision already exists."));
