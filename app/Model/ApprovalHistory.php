@@ -16,7 +16,7 @@ class ApprovalHistory extends AppModel
     const STATUS_IS_IMPORTANT_NO_SELECT = 0;
     const STATUS_IS_IMPORTANT = 1;
     const STATUS_IS_NOT_IMPORTANT = 2;
-    const STATUS_ACTION_NOTING = 0;
+    const STATUS_ACTION_NOTHING = 0;
     const STATUS_ACTION_ONLY_COMMENT = 1;
     const STATUS_ACTION_IS_TARGET_FOR_EVALUATION = 2;
     const STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION = 3;
@@ -32,7 +32,7 @@ class ApprovalHistory extends AppModel
                 'rule' => [
                     'inList',
                     [
-                        self::STATUS_ACTION_NOTING,
+                        self::STATUS_ACTION_NOTHING,
                         self::STATUS_ACTION_ONLY_COMMENT,
                         self::STATUS_ACTION_IS_TARGET_FOR_EVALUATION,
                         self::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION
@@ -151,6 +151,25 @@ class ApprovalHistory extends AppModel
 
         $res['ApprovalHistory']['User'] = Hash::get($res, 'User');
         unset($res['User']);
+        return Hash::get($res, 'ApprovalHistory');
+    }
+
+    /**
+     * ゴールメンバーを元に、ユーザーの最新コメントを取得する
+     * @param  $goalMemberId
+     * @param  $userId
+     */
+    function findLatestByUserId($goalMemberId, $userId)
+    {
+        $options = [
+            'conditions' => [
+                'goal_member_id' => $goalMemberId,
+                'user_id'        => $userId
+            ],
+            'order' => 'id desc'
+        ];
+        $res = $this->find('first', $options);
+        if(!$res) return null;
         return Hash::get($res, 'ApprovalHistory');
     }
 }
