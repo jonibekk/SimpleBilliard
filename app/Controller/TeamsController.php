@@ -1054,14 +1054,22 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    /**
+     * グループビジョンの作成
+     * # グループビジョンを作成できるユーザ
+     * - チーム管理者
+     * - グループに所属しているメンバー
+     *
+     * @return CakeResponse
+     */
     function add_group_vision()
     {
+        App::import('Service', 'VisionService');
+        /** @var VisionService $VisionService */
+        $VisionService = ClassRegistry::init('VisionService');
+
         $this->layout = LAYOUT_ONE_COLUMN;
-        if ($this->Team->TeamMember->isAdmin()) {
-            $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision(false);
-        } else {
-            $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision(true);
-        }
+        $group_list = $VisionService->getGroupListAddableVision();
 
         if (empty($group_list)) {
             $this->Pnotify->outError(__("Unable to create group vision as you don't belong to this group or the vision already exists."));
@@ -1086,6 +1094,14 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    /**
+     * グループビジョンの変更
+     * # グループビジョンを作成できるユーザ
+     * - チーム管理者
+     * - そのグループに所属しているメンバー
+     *
+     * @return CakeResponse
+     */
     function edit_group_vision()
     {
         App::import('Service', 'VisionService');
@@ -1103,6 +1119,7 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        //変更できるのはチーム管理者もしくは、そのグループに所属しているメンバ
         if (!$VisionService->hasPermissionToEdit($group_vision_id)) {
             $this->Pnotify->outError(__("You don't have a permission."));
             return $this->redirect($this->referer());

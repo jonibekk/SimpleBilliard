@@ -11,6 +11,29 @@ App::uses('TeamMember', 'Model');
 class VisionService extends AppService
 {
     /**
+     * Visionを追加できるグループのリストを取得
+     * # 対象グループの条件
+     * - チーム管理者の場合はアクティブなvisionが存在しない全てのグループ。
+     * - チーム管理者以外の場合は自分が所属しているグループでかつアクティブなvisionが存在しないグループ。
+     *
+     * @return array|null
+     */
+    function getGroupListAddableVision()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var MemberGroup $MemberGroup */
+        $MemberGroup = ClassRegistry::init('MemberGroup');
+
+        if ($TeamMember->isAdmin()) {
+            $group_list = $MemberGroup->getMyGroupListNotExistsVision(false);
+        } else {
+            $group_list = $MemberGroup->getMyGroupListNotExistsVision(true);
+        }
+        return $group_list;
+    }
+
+    /**
      * グループビジョンを編集できるのは、グループに所属してるユーザもしくはチーム管理者のみ
      *
      * @param $groupVisionId
