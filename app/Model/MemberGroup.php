@@ -116,13 +116,13 @@ class MemberGroup extends AppModel
     /**
      * まだグループビジョンが存在しないグループのリストを返す
      *
-     * @param bool $is_only_my_group
+     * @param bool $isOnlyMyGroup
      *
      * @return array|null
      */
-    function getMyGroupListNotExistsVision($is_only_my_group = true)
+    function getMyGroupListNotExistsVision($isOnlyMyGroup = true)
     {
-        if ($is_only_my_group) {
+        if ($isOnlyMyGroup) {
             $group_list = $this->getMyGroupList();
         } else {
             $group_list = $this->Group->getAllList();

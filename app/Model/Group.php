@@ -118,15 +118,15 @@ class Group extends AppModel
     /**
      * 全てのグループのリストを返す
      *
-     * @param bool $is_active
+     * @param bool $isActive
      *
      * @return array|null
      */
-    function getAllList($is_active = true)
+    function getAllList($isActive = true)
     {
         $options = [
             'conditions' => [
-                'active_flg' => $is_active,
+                'active_flg' => $isActive,
             ]
         ];
         $res = $this->find('list', $options);
