@@ -26,9 +26,9 @@ class VisionService extends AppService
         $MemberGroup = ClassRegistry::init('MemberGroup');
 
         if ($TeamMember->isAdmin()) {
-            $group_list = $MemberGroup->getMyGroupListNotExistsVision(false);
+            $group_list = $MemberGroup->getGroupListNotExistsVision(false);
         } else {
-            $group_list = $MemberGroup->getMyGroupListNotExistsVision(true);
+            $group_list = $MemberGroup->getGroupListNotExistsVision(true);
         }
         return $group_list;
     }

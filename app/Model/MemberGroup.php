@@ -120,7 +120,7 @@ class MemberGroup extends AppModel
      *
      * @return array|null
      */
-    function getMyGroupListNotExistsVision($isOnlyMyGroup = true)
+    function getGroupListNotExistsVision($isOnlyMyGroup = true)
     {
         if ($isOnlyMyGroup) {
             $group_list = $this->getMyGroupList();
