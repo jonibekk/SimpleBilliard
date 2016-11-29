@@ -30,7 +30,9 @@
 
                     <div class="vision_modified_date">
                         <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}}
-                        ({{item.GroupVision.member_count}})<br>
+                        <span ng-if="item.GroupVision.member_count > 0">({{item.GroupVision.member_count}}メンバー)</span>
+                        <span ng-if="item.GroupVision.member_count == 0">(メンバーはおりません)</span>
+                        <br>
                         <span ng-bind-html="item.GroupVision.modified"/>
                     </div>
                 </div>
