@@ -796,7 +796,7 @@ msgstr "メールアドレスの登録ができました。"
 msgid "You should be logged in."
 msgstr "ログインが必要です。"
 
-msgid "You don't have permission."
+msgid "You don't have a permission."
 msgstr "権限がありません。"
 
 msgid "Ooops, Not Found."
@@ -964,7 +964,7 @@ msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入�
 msgid "This goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
-msgid "You don't have permission to edit this goal."
+msgid "You don't have a permission to edit this goal."
 msgstr "このゴールの編集の権限がありません。"
 
 msgid "You can't change the goal in the evaluation."

@@ -109,7 +109,7 @@ class ApiController extends BaseController
     protected function _getResponseForbidden($message = null)
     {
         if (empty($message)) {
-            $message = __("You don't have permission.");
+            $message = __("You don't have a permission.");
         }
         return $this->_getResponse(403, null, null, $message);
     }

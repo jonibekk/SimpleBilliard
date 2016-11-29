@@ -1104,7 +1104,7 @@ class TeamsController extends AppController
         }
 
         if (!$VisionService->hasPermissionToEdit($group_vision_id)) {
-            $this->Pnotify->outError(__("You don't have permission."));
+            $this->Pnotify->outError(__("You don't have a permission."));
             return $this->redirect($this->referer());
         }
         if ($this->request->is('get')) {
