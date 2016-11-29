@@ -28,6 +28,8 @@ export function generateStartMonthList(term) {
 
 /**
  * 期間を表示用にフォーマット
+ * 「2016/4/1」, 「2016/9/30」 -> 「04月 1, 2016 - 09月 30, 2016」
+ *
  * @param  date start_month
  * @param  date end_month
  * @return formatted
@@ -43,15 +45,18 @@ export function generateTermRangeFormat(start_month, end_month) {
 
 /**
  * 年月を表示用にフォーマット
+ * 「2016/4/1」->「04月 1, 2016」
  * @param  integer year
  * @param  integer month
  * @param  integer day
  */
 export function dateFormat(year, month, day) {
-  const double_digit_month = month < 10 ? "0" + String(parseInt(month)) : month
+  const double_digit_month = ('00' + month).slice(-2);
   const translated_month_name = MonthName[double_digit_month]
-  let month_name = ''
 
+  // 日本語の翻訳は月の数字が「１月」のように大文字+1桁になるため、
+  // ここで「01月」を月名として代入する
+  let month_name = ''
   if(translated_month_name.match(/月/)) {
     month_name = double_digit_month + '月'
   } else {
