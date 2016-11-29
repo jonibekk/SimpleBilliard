@@ -7,7 +7,10 @@ App::uses('ApprovalHistory', 'Model');
  */
 class ApiApprovalHistoryService extends ApiService
 {
-
+    /**
+     * 認定履歴一覧をレスポンス用に変換
+     * @param  $approvalHistories
+     */
     function processApprovalHistories($approvalHistories)
     {
         if(!$approvalHistories) {
@@ -41,6 +44,14 @@ class ApiApprovalHistoryService extends ApiService
         return $clearAndImportantWord;
     }
 
+    /**
+     * 認定におけるコーチの最新アクションのstatementを追加
+     *
+     * @param  $goalMemberId
+     * @param  $userId
+     *
+     * @return $statement
+     */
     function getLatestCoachActionStatement($goalMemberId, $userId)
     {
         /** @var ApprovalHistory $ApprovalHistory */
