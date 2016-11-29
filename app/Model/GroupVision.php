@@ -205,48 +205,6 @@ class GroupVision extends AppModel
     }
 
     /**
-     * AngularJSのテンプレート側から処理しやすく加工
-     *
-     * @param $team_id
-     * @param $data
-     *
-     * @return mixed
-     */
-    function convertData($team_id, $data)
-    {
-        App::import('Service', 'GroupService');
-        /** @var GroupService $GroupService */
-        $GroupService = ClassRegistry::init('GroupService');
-        $group_list = $GroupService->getAllGroupsWithMemberCount();
-        $upload = new UploadHelper(new View());
-        $time = new TimeExHelper(new View());
-
-        if (isset($data['GroupVision']) === true) {
-            $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo',
-                ['style' => 'original']);
-            $data['GroupVision']['modified'] = $time->elapsedTime(h($data['GroupVision']['modified']));
-            if (isset($group_list[$data['GroupVision']['group_id']]) === true) {
-                $data['GroupVision']['group_name'] = $group_list[$data['GroupVision']['group_id']]['name'];
-                $data['GroupVision']['member_count'] = $group_list[$data['GroupVision']['group_id']]['member_count'];
-            }
-
-        } else {
-            foreach ($data as $key => $group) {
-                $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'],
-                    'GroupVision.photo',
-                    ['style' => 'large']);
-                $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
-                if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
-                    $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']]['name'];
-                    $data[$key]['GroupVision']['member_count'] = $group_list[$group['GroupVision']['group_id']]['member_count'];
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * アーカイブ設定
      *
      * @param $group_vision_id

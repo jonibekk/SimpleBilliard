@@ -719,8 +719,10 @@ class TeamsController extends AppController
     function ajax_get_group_vision($team_id, $active_flg = 1)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->GroupVision->getGroupVision($team_id, $active_flg);
-        $group_vision_list = $this->Team->GroupVision->convertData($team_id, $res);
+        App::import('Service', 'VisionService');
+        /** @var VisionService $VisionService */
+        $VisionService = ClassRegistry::init('VisionService');
+        $group_vision_list = $VisionService->buildGroupVisionListForResponse($team_id, $active_flg);
         return $this->_ajaxGetResponse($group_vision_list);
     }
 
@@ -779,8 +781,10 @@ class TeamsController extends AppController
     function ajax_get_team_vision_detail($team_vision_id, $active_flg)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamVision->getTeamVisionDetail($team_vision_id, $active_flg);
-        $team_vision_detail = $this->Team->TeamVision->convertData($res);
+        App::import('Service', 'VisionService');
+        /** @var VisionService $VisionService */
+        $VisionService = ClassRegistry::init('VisionService');
+        $team_vision_detail = $VisionService->buildTeamVisionDetailForResponse($team_vision_id, $active_flg);
         return $this->_ajaxGetResponse($team_vision_detail);
     }
 
@@ -795,9 +799,10 @@ class TeamsController extends AppController
     function ajax_get_group_vision_detail($group_vision_id, $active_flg)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->GroupVision->getGroupVisionDetail($group_vision_id, $active_flg);
-        $team_id = $this->Session->read('current_team_id');
-        $group_vision_detail = $this->Team->GroupVision->convertData($team_id, $res);
+        App::import('Service', 'VisionService');
+        /** @var VisionService $VisionService */
+        $VisionService = ClassRegistry::init('VisionService');
+        $group_vision_detail = $VisionService->buildGroupVisionDetailForResponse($group_vision_id, $active_flg);
         return $this->_ajaxGetResponse($group_vision_detail);
     }
 
@@ -825,8 +830,10 @@ class TeamsController extends AppController
     function ajax_get_team_vision($team_id, $active_flg = 1)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamVision->getTeamVision($team_id, $active_flg);
-        $team_vision_list = $this->Team->TeamVision->convertData($res);
+        App::import('Service', 'VisionService');
+        /** @var VisionService $VisionService */
+        $VisionService = ClassRegistry::init('VisionService');
+        $team_vision_list = $VisionService->buildTeamVisionListForResponse($team_id, $active_flg);
         return $this->_ajaxGetResponse($team_vision_list);
     }
 
