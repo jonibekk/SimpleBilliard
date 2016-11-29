@@ -26,10 +26,11 @@
             ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg === true ? 1 : 0})">
             <div class="row">
                 <div class="col-xs-11">
-                    <p class="vision_title">{{item.GroupVision.name}} </p>
+                    <p class="vision_title">{{item.GroupVision.name}}</p>
 
                     <div class="vision_modified_date">
-                        <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}} <br>
+                        <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}}
+                        ({{item.GroupVision.member_count}})<br>
                         <span ng-bind-html="item.GroupVision.modified"/>
                     </div>
                 </div>

@@ -58,6 +58,28 @@ class Group extends AppModel
         return $res;
     }
 
+    /**
+     * 全てのグループと所属ユーザのidを返す
+     *
+     * @return array|null
+     */
+    function getAllGroupWithMemberIds()
+    {
+        $activeUsers = $this->Team->TeamMember->getActiveTeamMembersList();
+        $options = [
+            'fields'  => ['Group.id', 'Group.name'],
+            'contain' => [
+                'MemberGroup' => [
+                    'conditions' => ['MemberGroup.user_id' => $activeUsers],
+                    'fields'     => ['MemberGroup.user_id']
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
     function getByName($name, $team_id = null)
     {
         if (!$team_id) {

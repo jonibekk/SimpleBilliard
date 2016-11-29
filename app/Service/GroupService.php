@@ -34,4 +34,21 @@ class GroupService extends AppService
         return true;
     }
 
+    /**
+     * 全てのグループをメンバー数付きで返す
+     *
+     * @return array
+     */
+    function getAllGroupsWithMemberCount()
+    {
+        /** @var Group $Group */
+        $Group = ClassRegistry::init("Group");
+        $allGroups = $Group->getAllGroupWithMemberIds();
+        foreach ($allGroups as &$group) {
+            $group['Group']['member_count'] = count($group['MemberGroup']);
+        }
+        $ret = Hash::combine($allGroups, '{n}.Group.id', '{n}.Group');
+        return $ret;
+    }
+
 }
