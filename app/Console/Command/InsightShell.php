@@ -107,7 +107,7 @@ class InsightShell extends AppShell
             ///////////////////////////////////////////
             // グループメンバー数
             ///////////////////////////////////////////
-            $group_list = $this->Team->Group->getByAllName($team['Team']['id']);
+            $group_list = $this->Team->Group->getAllGroupList($team['Team']['id']);
             foreach ($group_list as $group_id => $name) {
                 $group_member_list = $this->MemberGroup->getGroupMemberUserId($team['Team']['id'], $group_id);
                 // 同じ日のデータが存在しない場合だけ登録する

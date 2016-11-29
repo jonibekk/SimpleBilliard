@@ -214,7 +214,7 @@ class GroupVision extends AppModel
      */
     function convertData($team_id, $data)
     {
-        $group_list = $this->Group->getByAllName($team_id);
+        $group_list = $this->Group->getAllGroupList($team_id);
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
 

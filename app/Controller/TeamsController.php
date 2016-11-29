@@ -883,7 +883,7 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
-        $group_info = $this->Team->Group->getByAllName($team_id);
+        $group_info = $this->Team->Group->getAllGroupList($team_id);
         return $this->_ajaxGetResponse($group_info);
     }
 
@@ -1195,7 +1195,7 @@ class TeamsController extends AppController
         $this->set($date_info);
 
         // 全グループ
-        $group_list = $this->Team->Group->getByAllName($this->current_team_id);
+        $group_list = $this->Team->Group->getAllGroupList($this->current_team_id);
         $this->set('group_list', $group_list);
 
         // システム管理者のためのクリーンアップ
@@ -1705,7 +1705,7 @@ class TeamsController extends AppController
         $this->set($date_info);
 
         // 全グループ
-        $group_list = $this->Team->Group->getByAllName($this->current_team_id);
+        $group_list = $this->Team->Group->getAllGroupList($this->current_team_id);
         $this->set('group_list', $group_list);
 
         // システム管理者のためのクリーンアップ

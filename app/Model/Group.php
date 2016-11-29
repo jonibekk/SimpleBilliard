@@ -46,7 +46,7 @@ class Group extends AppModel
         'GroupVision',
     ];
 
-    function getByAllName($team_id)
+    function getAllGroupList($team_id)
     {
         $options = [
             'fields'     => ['id', 'name'],
