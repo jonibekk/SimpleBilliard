@@ -12,6 +12,13 @@ App::uses('TeamMember', 'Model');
 class VisionService extends AppService
 {
     /**
+     * 全グループのキャッシュ用
+     *
+     * @var array
+     */
+    private $allGroups = [];
+
+    /**
      * Visionを追加できるグループのリストを取得
      * # 対象グループの条件
      * - チーム管理者の場合はアクティブなvisionが存在しない全てのグループ。
@@ -98,25 +105,12 @@ class VisionService extends AppService
      */
     function buildGroupVisionListForResponse(int $teamId, bool $activeFlg): array
     {
-        /** @var GroupService $GroupService */
-        $GroupService = ClassRegistry::init('GroupService');
-        $groupList = $GroupService->findAllGroupsWithMemberCount();
-        $upload = new UploadHelper(new View());
-        $time = new TimeExHelper(new View());
         /** @var GroupVision $GroupVision */
         $GroupVision = ClassRegistry::init('GroupVision');
         $groupVisions = $GroupVision->findGroupVisions($teamId, $activeFlg);
 
         foreach ($groupVisions as &$groupVision) {
-            $data = $groupVision['GroupVision'];
-            $groupId = $data['group_id'];
-            $data['photo_path'] = $upload->uploadUrl($data, 'GroupVision.photo', ['style' => 'large']);
-            $data['modified'] = $time->elapsedTime($data['modified']);
-            if (isset($groupList[$groupId])) {
-                $data['group_name'] = $groupList[$groupId]['name'];
-                $data['member_count'] = $groupList[$groupId]['member_count'];
-            }
-            $groupVision['GroupVision'] = $data;
+            $groupVision['GroupVision'] = $this->extendGroupVision($groupVision['GroupVision'], 'large');
         }
         return $groupVisions;
     }
@@ -131,25 +125,10 @@ class VisionService extends AppService
      */
     function buildGroupVisionDetailForResponse(int $groupVisionId, bool $activeFlg): array
     {
-        /** @var GroupService $GroupService */
-        $GroupService = ClassRegistry::init('GroupService');
-        $groupList = $GroupService->findAllGroupsWithMemberCount();
-        $upload = new UploadHelper(new View());
-        $time = new TimeExHelper(new View());
         /** @var GroupVision $GroupVision */
         $GroupVision = ClassRegistry::init('GroupVision');
         $data = $GroupVision->getGroupVisionDetail($groupVisionId, $activeFlg);
-        $groupId = $data['GroupVision']['group_id'];
-        $vision = $data['GroupVision'];
-
-        $vision['photo_path'] = $upload->uploadUrl($vision, 'GroupVision.photo',
-            ['style' => 'original']);
-        $vision['modified'] = $time->elapsedTime($vision['modified']);
-        if (isset($groupList[$groupId])) {
-            $vision['group_name'] = $groupList[$groupId]['name'];
-            $vision['member_count'] = $groupList[$groupId]['member_count'];
-        }
-        $data['GroupVision'] = $vision;
+        $data['GroupVision'] = $this->extendGroupVision($data['GroupVision'], 'original');
         return $data;
     }
 
@@ -167,13 +146,8 @@ class VisionService extends AppService
         $TeamVision = ClassRegistry::init('TeamVision');
         $data = $TeamVision->getTeamVision($teamId, $activeFlg);
 
-        $upload = new UploadHelper(new View());
-        $time = new TimeExHelper(new View());
-
         foreach ($data as &$team) {
-            $team['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo',
-                ['style' => 'large']);
-            $team['TeamVision']['modified'] = $time->elapsedTime($team['TeamVision']['modified']);
+            $team['TeamVision'] = $this->extendTeamVision($team['TeamVision'], 'large');
         }
         return $data;
     }
@@ -191,16 +165,62 @@ class VisionService extends AppService
         /** @var TeamVision $TeamVision */
         $TeamVision = ClassRegistry::init('TeamVision');
         $data = $TeamVision->getTeamVisionDetail($teamVisionId, $activeFlg);
+        $data['TeamVision'] = $this->extendTeamVision($data['TeamVision'], 'original');
+        return $data;
+    }
 
+    /**
+     * グループビジョンのデータ拡張
+     * # 拡張するデータ
+     * - 画像パス
+     * - 更新日のフォーマット
+     * - グループ名
+     * - グループのメンバー数
+     *
+     * @param array  $data
+     * @param string $imgSize
+     *
+     * @return array
+     */
+    function extendGroupVision(array $data, string $imgSize = 'large'): array
+    {
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
+        /** @var GroupService $GroupService */
+        $GroupService = ClassRegistry::init('GroupService');
+        $allGroups = $this->allGroups ?? $GroupService->findAllGroupsWithMemberCount();
 
-        $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo',
-            ['style' => 'original']);
-        $data['TeamVision']['modified'] = $time->elapsedTime($data['TeamVision']['modified']);
-
+        $groupId = $data['group_id'];
+        $data['photo_path'] = $upload->uploadUrl($data, 'GroupVision.photo', ['style' => $imgSize]);
+        $data['modified'] = $time->elapsedTime($data['modified']);
+        if (isset($allGroups[$groupId])) {
+            $data['group_name'] = $allGroups[$groupId]['name'];
+            $data['member_count'] = $allGroups[$groupId]['member_count'];
+        }
+        unset($upload, $time);
         return $data;
+    }
 
+    /**
+     * チームビジョンのデータ拡張
+     * # 拡張するデータ
+     * - 画像パス
+     * - 更新日のフォーマット
+     *
+     * @param array  $data
+     * @param string $imgSize
+     *
+     * @return array
+     */
+    function extendTeamVision(array $data, string $imgSize = 'large'): array
+    {
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+        $data['photo_path'] = $upload->uploadUrl($data, 'TeamVision.photo',
+            ['style' => $imgSize]);
+        $data['modified'] = $time->elapsedTime($data['modified']);
+        unset($upload, $time);
+        return $data;
     }
 
 }
