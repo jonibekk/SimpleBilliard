@@ -110,11 +110,9 @@ class VisionService extends AppService
         foreach ($groupVisions as &$groupVision) {
             $data = $groupVision['GroupVision'];
             $groupId = $data['group_id'];
-            $data['photo_path'] = $upload->uploadUrl($data,
-                'GroupVision.photo',
-                ['style' => 'large']);
+            $data['photo_path'] = $upload->uploadUrl($data, 'GroupVision.photo', ['style' => 'large']);
             $data['modified'] = $time->elapsedTime($data['modified']);
-            if (isset($groupList[$groupId]) === true) {
+            if (isset($groupList[$groupId])) {
                 $data['group_name'] = $groupList[$groupId]['name'];
                 $data['member_count'] = $groupList[$groupId]['member_count'];
             }
@@ -141,14 +139,17 @@ class VisionService extends AppService
         /** @var GroupVision $GroupVision */
         $GroupVision = ClassRegistry::init('GroupVision');
         $data = $GroupVision->getGroupVisionDetail($groupVisionId, $activeFlg);
+        $groupId = $data['GroupVision']['group_id'];
+        $vision = $data['GroupVision'];
 
-        $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo',
+        $vision['photo_path'] = $upload->uploadUrl($vision, 'GroupVision.photo',
             ['style' => 'original']);
-        $data['GroupVision']['modified'] = $time->elapsedTime($data['GroupVision']['modified']);
-        if (isset($groupList[$data['GroupVision']['group_id']]) === true) {
-            $data['GroupVision']['group_name'] = $groupList[$data['GroupVision']['group_id']]['name'];
-            $data['GroupVision']['member_count'] = $groupList[$data['GroupVision']['group_id']]['member_count'];
+        $vision['modified'] = $time->elapsedTime($vision['modified']);
+        if (isset($groupList[$groupId])) {
+            $vision['group_name'] = $groupList[$groupId]['name'];
+            $vision['member_count'] = $groupList[$groupId]['member_count'];
         }
+        $data['GroupVision'] = $vision;
         return $data;
     }
 
