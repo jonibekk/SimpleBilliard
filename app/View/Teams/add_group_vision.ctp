@@ -10,7 +10,7 @@
  * @var                    $group_list
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -35,7 +35,7 @@
                 $this->Form->input('group_id', [
                     'label'   => __("Group"),
                     'type'    => 'select',
-                    'options' => $group_list,
+                    'options' => $groupList,
                 ]) ?>
                 <hr>
                 <?=
@@ -142,4 +142,4 @@
     });
 </script>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

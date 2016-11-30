@@ -42,6 +42,7 @@ class MemberGroup extends AppModel
 
     /**
      * get all ids list
+     *
      * @param $team_id
      * @param $user_id
      *
@@ -52,8 +53,8 @@ class MemberGroup extends AppModel
         $options = [
             'fields'     => ['id'],
             'conditions' => [
-                'team_id'  => $team_id,
-                'user_id'  => $user_id
+                'team_id' => $team_id,
+                'user_id' => $user_id
             ]
         ];
         return $this->find('list', $options);
@@ -61,6 +62,7 @@ class MemberGroup extends AppModel
 
     /**
      * get member group id
+     *
      * @param $team_id
      * @param $user_id
      * @param $group_id
@@ -114,11 +116,17 @@ class MemberGroup extends AppModel
     /**
      * まだグループビジョンが存在しないグループのリストを返す
      *
+     * @param bool $isOnlyMyGroup
+     *
      * @return array|null
      */
-    function getMyGroupListNotExistsVision()
+    function findGroupListNotExistsVision($isOnlyMyGroup = true)
     {
-        $group_list = $this->getMyGroupList();
+        if ($isOnlyMyGroup) {
+            $group_list = $this->getMyGroupList();
+        } else {
+            $group_list = $this->Group->getAllList();
+        }
         $group_ids = array_keys($group_list);
         $group_visions = $this->Group->GroupVision->getGroupVisionsByGroupIds($group_ids, true);
         $exists_group_ids = array_unique(Hash::extract($group_visions, '{n}.GroupVision.group_id'));

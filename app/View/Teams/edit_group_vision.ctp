@@ -10,7 +10,7 @@
  * @var                    $group_list
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -32,12 +32,12 @@
             ]); ?>
             <?= $this->Form->hidden('id') ?>
             <div class="panel-body add-team-panel-body">
-                <?=
-                $this->Form->input('group_id', [
-                    'label'   => __("Group"),
-                    'type'    => 'select',
-                    'options' => $group_list,
-                ]) ?>
+                <div class="form-group"><label
+                        class="col col-sm-3 control-label form-label"><?= __('Group name') ?></label>
+                    <p class="col col-sm-6 form-control-static">
+                        <?= $this->request->data['Group']['name'] ?>
+                    </p>
+                </div>
                 <hr>
                 <?=
                 $this->Form->input('name',
@@ -145,4 +145,4 @@
     });
 </script>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
