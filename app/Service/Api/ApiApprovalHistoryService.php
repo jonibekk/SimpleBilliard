@@ -33,15 +33,14 @@ class ApiApprovalHistoryService extends ApiService
      */
     function getClearImportantWord($clearStatus, $importantStatus)
     {
-        $clearAndImportantWord = '';
         if ($clearStatus == ApprovalHistory::STATUS_IS_NOT_CLEAR) {
-            $clearAndImportantWord = __('This Top Key Result is not clear.');
+            return __('This Top Key Result is not clear.');
         } elseif ($clearStatus == ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == ApprovalHistory::STATUS_IS_IMPORTANT) {
-            $clearAndImportantWord = __('This Top Key Result is clear and most important.');
+            return __('This Top Key Result is clear and most important.');
         } elseif ($clearStatus == ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
-            $clearAndImportantWord = __('This Top Key Result is not most important.');
+            return __('This Top Key Result is not most important.');
         }
-        return $clearAndImportantWord;
+        return '';
     }
 
     /**
