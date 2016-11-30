@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-22 13:53+0900\n"
+"PO-Revision-Date: 2016-11-29 18:56+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1681,9 +1681,6 @@ msgstr "自己評価をしてください"
 msgid "Please evaluate."
 msgstr "評価をしてください"
 
-msgid "View %s comments"
-msgstr "%s件のコメントを見る"
-
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
 
@@ -1692,6 +1689,15 @@ msgstr "トップKRが明確で最重要である。"
 
 msgid "This Top Key Result is not most important."
 msgstr "トップKRが最重要でない。"
+
+msgid "You have added this goal as a target of evaluation."
+msgstr "あなたはこのゴールを評価対象にしました。"
+
+msgid "You have not added this goal as a target of evaluation."
+msgstr "あなたはこのゴールを評価対象にしませんでした。"
+
+msgid "View %s comments"
+msgstr "%s件のコメントを見る"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
