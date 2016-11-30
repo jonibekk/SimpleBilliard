@@ -78,7 +78,7 @@ class MemberGroupTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->_saveGroup();
-        $this->assertNotEmpty($this->MemberGroup->getGroupListNotExistsVision());
+        $this->assertNotEmpty($this->MemberGroup->findGroupListNotExistsVision());
     }
 
     function testGetMyGroupListNotExistsVisionEmpty()
@@ -97,7 +97,7 @@ class MemberGroupTest extends GoalousTestCase
                 'modified_user_id' => 1,
             ]
         );
-        $this->assertEmpty($this->MemberGroup->getGroupListNotExistsVision());
+        $this->assertEmpty($this->MemberGroup->findGroupListNotExistsVision());
     }
 
     function testGetGroupMember()

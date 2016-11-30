@@ -39,11 +39,11 @@ class GroupService extends AppService
      *
      * @return array
      */
-    function getAllGroupsWithMemberCount()
+    function findAllGroupsWithMemberCount()
     {
         /** @var Group $Group */
         $Group = ClassRegistry::init("Group");
-        $allGroups = $Group->getAllGroupWithMemberIds();
+        $allGroups = $Group->findAllGroupWithMemberIds();
         foreach ($allGroups as &$group) {
             $group['Group']['member_count'] = count($group['MemberGroup']);
         }

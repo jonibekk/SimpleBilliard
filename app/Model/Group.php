@@ -46,7 +46,7 @@ class Group extends AppModel
         'GroupVision',
     ];
 
-    function getAllGroupList($team_id)
+    function findAllList($team_id)
     {
         $options = [
             'fields'     => ['id', 'name'],
@@ -61,11 +61,14 @@ class Group extends AppModel
     /**
      * 全てのグループと所属ユーザのidを返す
      *
-     * @return array|null
+     * @return array
      */
-    function getAllGroupWithMemberIds()
+    function findAllGroupWithMemberIds(): array
     {
         $activeUsers = $this->Team->TeamMember->getActiveTeamMembersList();
+        if (empty($activeUsers)) {
+            return [];
+        }
         $options = [
             'fields'  => ['Group.id', 'Group.name'],
             'contain' => [
@@ -77,7 +80,7 @@ class Group extends AppModel
         ];
         $res = $this->find('all', $options);
 
-        return $res;
+        return (array)$res;
     }
 
     function getByName($name, $team_id = null)
@@ -142,9 +145,9 @@ class Group extends AppModel
      *
      * @param bool $isActive
      *
-     * @return array|null
+     * @return array
      */
-    function getAllList($isActive = true)
+    function getAllList(bool $isActive = true): array
     {
         $options = [
             'conditions' => [
@@ -152,7 +155,7 @@ class Group extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return $res;
+        return (array)$res;
     }
 
     /**

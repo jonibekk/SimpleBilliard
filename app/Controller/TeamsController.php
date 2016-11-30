@@ -711,18 +711,18 @@ class TeamsController extends AppController
     /**
      * グループビジョン一覧取得
      *
-     * @param     $team_id
-     * @param int $active_flg
+     * @param int $teamId
+     * @param int $activeFlg
      *
      * @return CakeResponse
      */
-    function ajax_get_group_vision($team_id, $active_flg = 1)
+    function ajax_get_group_vision(int $teamId, int $activeFlg = 1): CakeResponse
     {
         $this->_ajaxPreProcess();
         App::import('Service', 'VisionService');
         /** @var VisionService $VisionService */
         $VisionService = ClassRegistry::init('VisionService');
-        $group_vision_list = $VisionService->buildGroupVisionListForResponse($team_id, $active_flg);
+        $group_vision_list = $VisionService->buildGroupVisionListForResponse($teamId, $activeFlg);
         return $this->_ajaxGetResponse($group_vision_list);
     }
 
@@ -752,57 +752,57 @@ class TeamsController extends AppController
     function ajax_get_login_user_group_id($team_id, $user_id)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->Group->MemberGroup->getMyGroupList($team_id, $user_id);
+        $res = $this->Team->Group->MemberGroup->getMyGroupList();
         return $this->_ajaxGetResponse($res);
     }
 
     /**
      * グループビジョンの削除
      *
-     * @param $group_vision_id
+     * @param int $groupVisionId
      *
      * @return CakeResponse
      */
-    function ajax_delete_group_vision($group_vision_id)
+    function ajax_delete_group_vision(int $groupVisionId): CakeResponse
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->GroupVision->deleteGroupVision($group_vision_id);
+        $res = $this->Team->GroupVision->deleteGroupVision($groupVisionId);
         return $this->_ajaxGetResponse($res);
     }
 
     /**
      * チームビジョンの詳細を取得
      *
-     * @param $team_vision_id
-     * @param $active_flg
+     * @param int $teamVisionId
+     * @param int $activeFlg
      *
      * @return CakeResponse
      */
-    function ajax_get_team_vision_detail($team_vision_id, $active_flg)
+    function ajax_get_team_vision_detail(int $teamVisionId, int $activeFlg): CakeResponse
     {
         $this->_ajaxPreProcess();
         App::import('Service', 'VisionService');
         /** @var VisionService $VisionService */
         $VisionService = ClassRegistry::init('VisionService');
-        $team_vision_detail = $VisionService->buildTeamVisionDetailForResponse($team_vision_id, $active_flg);
+        $team_vision_detail = $VisionService->buildTeamVisionDetailForResponse($teamVisionId, $activeFlg);
         return $this->_ajaxGetResponse($team_vision_detail);
     }
 
     /**
      * グループビジョンの詳細を取得
      *
-     * @param $group_vision_id
-     * @param $active_flg
+     * @param int $groupVisionId
+     * @param int $activeFlg
      *
      * @return CakeResponse
      */
-    function ajax_get_group_vision_detail($group_vision_id, $active_flg)
+    function ajax_get_group_vision_detail(int $groupVisionId, int $activeFlg): CakeResponse
     {
         $this->_ajaxPreProcess();
         App::import('Service', 'VisionService');
         /** @var VisionService $VisionService */
         $VisionService = ClassRegistry::init('VisionService');
-        $group_vision_detail = $VisionService->buildGroupVisionDetailForResponse($group_vision_id, $active_flg);
+        $group_vision_detail = $VisionService->buildGroupVisionDetailForResponse($groupVisionId, $activeFlg);
         return $this->_ajaxGetResponse($group_vision_detail);
     }
 
@@ -820,27 +820,50 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse(['is_admin_user' => $is_admin_user]);
     }
 
-    function ajax_delete_team_vision($team_vision_id)
+    /**
+     * チームビジョンの削除
+     *
+     * @param int $teamVisionId
+     *
+     * @return CakeResponse
+     */
+    function ajax_delete_team_vision(int $teamVisionId): CakeResponse
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamVision->deleteTeamVision($team_vision_id);
+        $res = $this->Team->TeamVision->deleteTeamVision($teamVisionId);
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_team_vision($team_id, $active_flg = 1)
+    /**
+     * チームビジョンの一覧取得
+     *
+     * @param int $teamId
+     * @param int $activeFlg
+     *
+     * @return CakeResponse
+     */
+    function ajax_get_team_vision(int $teamId, int $activeFlg = 1): CakeResponse
     {
         $this->_ajaxPreProcess();
         App::import('Service', 'VisionService');
         /** @var VisionService $VisionService */
         $VisionService = ClassRegistry::init('VisionService');
-        $team_vision_list = $VisionService->buildTeamVisionListForResponse($team_id, $active_flg);
+        $team_vision_list = $VisionService->buildTeamVisionListForResponse($teamId, $activeFlg);
         return $this->_ajaxGetResponse($team_vision_list);
     }
 
-    function ajax_set_team_vision_archive($team_archive_id, $active_flg = 1)
+    /**
+     * チームビジョンをアーカイブする
+     *
+     * @param int $teamArchiveId
+     * @param int $activeFlg
+     *
+     * @return CakeResponse
+     */
+    function ajax_set_team_vision_archive(int $teamArchiveId, int $activeFlg = 1): CakeResponse
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamVision->setTeamVisionActiveFlag($team_archive_id, $active_flg);
+        $res = $this->Team->TeamVision->setTeamVisionActiveFlag($teamArchiveId, $activeFlg);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -890,7 +913,7 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
-        $group_info = $this->Team->Group->getAllGroupList($team_id);
+        $group_info = $this->Team->Group->findAllList($team_id);
         return $this->_ajaxGetResponse($group_info);
     }
 
@@ -998,6 +1021,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * チームビジョンを追加
+
+     */
     function add_team_vision()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1006,7 +1033,7 @@ class TeamsController extends AppController
 
         try {
             $this->Team->TeamMember->adminCheck();
-            if (!empty($this->Team->TeamVision->getTeamVision($this->Session->read('current_team_id'), true))) {
+            if (!empty($this->Team->TeamVision->getTeamVision($this->current_team_id, true))) {
                 throw new RuntimeException(__("Team vision already exists, new one cannot be made."));
             }
         } catch (RuntimeException $e) {
@@ -1020,15 +1047,17 @@ class TeamsController extends AppController
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
             $this->Pnotify->outSuccess(__("Team vision is added."));
-            //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
-            return $this->redirect($redirectTo);
         } else {
             $this->Pnotify->outError(__("Failed to save team vision."));
-            return $this->redirect($redirectTo);
         }
-        return $this->render();
+        return $this->redirect($redirectTo);
     }
 
+    /**
+     * チームビジョンを変更
+     *
+     * @return mixed
+     */
     function edit_team_vision()
     {
         $redirectTo = "/teams/main#/vision/" . $this->current_team_id;
@@ -1054,14 +1083,12 @@ class TeamsController extends AppController
             return $this->render();
         }
 
-        if ($this->Team->TeamVision->saveTeamVision($this->request->data, false)) {
+        if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
             $this->Pnotify->outSuccess(__("Updated team vision."));
-            return $this->redirect($redirectTo);
         } else {
             $this->Pnotify->outError(__("Failed to save team vision."));
-            return $this->redirect($redirectTo);
         }
-        return $this->render();
+        return $this->redirect($redirectTo);
     }
 
     /**
@@ -1070,7 +1097,7 @@ class TeamsController extends AppController
      * - チーム管理者
      * - グループに所属しているメンバー
      *
-     * @return CakeResponse
+     * @return mixed
      */
     function add_group_vision()
     {
@@ -1079,15 +1106,15 @@ class TeamsController extends AppController
         $VisionService = ClassRegistry::init('VisionService');
 
         $this->layout = LAYOUT_ONE_COLUMN;
-        $group_list = $VisionService->getGroupListAddableVision();
-        $redirectTo = "http://goalous2/teams/main#/group_vision/" . $this->current_team_id;
+        $groupList = $VisionService->getGroupListAddableVision();
+        $redirectTo = "/teams/main#/group_vision/" . $this->current_team_id;
 
-        if (empty($group_list)) {
+        if (empty($groupList)) {
             $this->Pnotify->outError(__("Unable to create group vision as you don't belong to this group or the vision already exists."));
             return $this->redirect($redirectTo);
         }
 
-        $this->set(compact('group_list'));
+        $this->set(compact('groupList'));
 
         if ($this->request->is('get')) {
             return $this->render();
@@ -1095,13 +1122,10 @@ class TeamsController extends AppController
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
             $this->Pnotify->outSuccess(__("Added group vision."));
-            return $this->redirect($redirectTo);
         } else {
             $this->Pnotify->outError(__("Failed to save group vision."));
-            return $this->redirect($redirectTo);
         }
-
-        return $this->render();
+        return $this->redirect($redirectTo);
     }
 
     /**
@@ -1110,7 +1134,7 @@ class TeamsController extends AppController
      * - チーム管理者
      * - そのグループに所属しているメンバー
      *
-     * @return CakeResponse
+     * @return mixed
      */
     function edit_group_vision()
     {
@@ -1122,33 +1146,31 @@ class TeamsController extends AppController
 
         $redirectTo = "http://goalous2/teams/main#/group_vision/" . $this->current_team_id;
 
-        if (!$group_vision_id = Hash::get($this->request->params, 'named.group_vision_id')) {
+        if (!$groupVisionId = Hash::get($this->request->params, 'named.group_vision_id')) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($redirectTo);
         }
-        if (!$VisionService->isExistsGroupVision($group_vision_id)) {
+        if (!$VisionService->existsGroupVision($groupVisionId)) {
             $this->Pnotify->outError(__("Page does not exist."));
             return $this->redirect($redirectTo);
         }
 
         //変更できるのはチーム管理者もしくは、そのグループに所属しているメンバ
-        if (!$VisionService->hasPermissionToEdit($group_vision_id)) {
+        if (!$VisionService->hasPermissionToEdit($groupVisionId)) {
             $this->Pnotify->outError(__("You don't have a permission."));
             return $this->redirect($redirectTo);
         }
         if ($this->request->is('get')) {
-            $this->request->data = $this->Team->GroupVision->findWithGroupById($group_vision_id);
+            $this->request->data = $this->Team->GroupVision->findWithGroupById($groupVisionId);
             return $this->render();
         }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
             $this->Pnotify->outSuccess(__("Updated group vision."));
-            return $this->redirect($redirectTo);
         } else {
             $this->Pnotify->outError(__("Failed to save group vision."));
-            return $this->redirect($redirectTo);
         }
-        return $this->render();
+        return $this->redirect($redirectTo);
     }
 
     /**
@@ -1206,7 +1228,7 @@ class TeamsController extends AppController
         $this->set($date_info);
 
         // 全グループ
-        $group_list = $this->Team->Group->getAllGroupList($this->current_team_id);
+        $group_list = $this->Team->Group->findAllList($this->current_team_id);
         $this->set('group_list', $group_list);
 
         // システム管理者のためのクリーンアップ
@@ -1716,7 +1738,7 @@ class TeamsController extends AppController
         $this->set($date_info);
 
         // 全グループ
-        $group_list = $this->Team->Group->getAllGroupList($this->current_team_id);
+        $group_list = $this->Team->Group->findAllList($this->current_team_id);
         $this->set('group_list', $group_list);
 
         // システム管理者のためのクリーンアップ

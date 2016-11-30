@@ -27,42 +27,41 @@ class VisionService extends AppService
         $MemberGroup = ClassRegistry::init('MemberGroup');
 
         if ($TeamMember->isAdmin()) {
-            $group_list = $MemberGroup->getGroupListNotExistsVision(false);
+            $groupList = $MemberGroup->findGroupListNotExistsVision(false);
         } else {
-            $group_list = $MemberGroup->getGroupListNotExistsVision(true);
+            $groupList = $MemberGroup->findGroupListNotExistsVision(true);
         }
-        return $group_list;
+        return $groupList;
     }
 
     /**
      * グループビジョンを編集できるのは、グループに所属してるユーザもしくはチーム管理者のみ
      *
-     * @param $groupVisionId
+     * @param int $groupVisionId
      *
      * @return bool
      */
-    function hasPermissionToEdit($groupVisionId): bool
+    function hasPermissionToEdit(int $groupVisionId): bool
     {
-        $isGroupMember = $this->isGroupMemberByGroupVisionId($groupVisionId);
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        $isAdmin = $TeamMember->isAdmin();
-
-        if ($isGroupMember || $isAdmin) {
+        if ($TeamMember->isAdmin()) {
             return true;
         }
-
+        if ($this->isGroupMemberByGroupVisionId($groupVisionId)) {
+            return true;
+        }
         return false;
     }
 
     /**
      * グループビジョンIDを元にログインユーザがグループに所属しているかのチェック
      *
-     * @param $groupVisionId
+     * @param int $groupVisionId
      *
      * @return bool
      */
-    function isGroupMemberByGroupVisionId($groupVisionId): bool
+    function isGroupMemberByGroupVisionId(int $groupVisionId): bool
     {
         /** @var GroupVision $GroupVision */
         $GroupVision = ClassRegistry::init("GroupVision");
@@ -76,31 +75,32 @@ class VisionService extends AppService
     }
 
     /**
-     * @param $group_vision_id
+     * グループビジョンが存在しているかのチェック
+     *
+     * @param int $groupVisionId
      *
      * @return bool
      */
-    function isExistsGroupVision($group_vision_id): bool
+    function existsGroupVision(int $groupVisionId): bool
     {
         /** @var GroupVision $GroupVision */
         $GroupVision = ClassRegistry::init("GroupVision");
-        return (bool)$GroupVision->exists($group_vision_id);
+        return $GroupVision->exists($groupVisionId);
     }
 
     /**
      * グループビジョンリストページ用のデータの構築
      *
-     * @param $teamId
-     * @param $activeFlg
+     * @param int  $teamId
+     * @param bool $activeFlg
      *
-     * @return array|null
+     * @return array
      */
-    function buildGroupVisionListForResponse($teamId, $activeFlg)
+    function buildGroupVisionListForResponse(int $teamId, bool $activeFlg): array
     {
-        App::import('Service', 'GroupService');
         /** @var GroupService $GroupService */
         $GroupService = ClassRegistry::init('GroupService');
-        $groupList = $GroupService->getAllGroupsWithMemberCount();
+        $groupList = $GroupService->findAllGroupsWithMemberCount();
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
         /** @var GroupVision $GroupVision */
@@ -109,13 +109,14 @@ class VisionService extends AppService
 
         foreach ($groupVisions as &$groupVision) {
             $data = $groupVision['GroupVision'];
+            $groupId = $data['group_id'];
             $data['photo_path'] = $upload->uploadUrl($data,
                 'GroupVision.photo',
                 ['style' => 'large']);
-            $data['modified'] = $time->elapsedTime(h($data['modified']));
-            if (isset($groupList[$data['group_id']]) === true) {
-                $data['group_name'] = $groupList[$data['group_id']]['name'];
-                $data['member_count'] = $groupList[$data['group_id']]['member_count'];
+            $data['modified'] = $time->elapsedTime($data['modified']);
+            if (isset($groupList[$groupId]) === true) {
+                $data['group_name'] = $groupList[$groupId]['name'];
+                $data['member_count'] = $groupList[$groupId]['member_count'];
             }
             $groupVision['GroupVision'] = $data;
         }
@@ -125,17 +126,16 @@ class VisionService extends AppService
     /**
      * グループビジョン詳細ページ用のデータの構築
      *
-     * @param $groupVisionId
-     * @param $activeFlg
+     * @param int  $groupVisionId
+     * @param bool $activeFlg
      *
-     * @return array|null
+     * @return array
      */
-    function buildGroupVisionDetailForResponse($groupVisionId, $activeFlg)
+    function buildGroupVisionDetailForResponse(int $groupVisionId, bool $activeFlg): array
     {
-        App::import('Service', 'GroupService');
         /** @var GroupService $GroupService */
         $GroupService = ClassRegistry::init('GroupService');
-        $groupList = $GroupService->getAllGroupsWithMemberCount();
+        $groupList = $GroupService->findAllGroupsWithMemberCount();
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
         /** @var GroupVision $GroupVision */
@@ -144,7 +144,7 @@ class VisionService extends AppService
 
         $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo',
             ['style' => 'original']);
-        $data['GroupVision']['modified'] = $time->elapsedTime(h($data['GroupVision']['modified']));
+        $data['GroupVision']['modified'] = $time->elapsedTime($data['GroupVision']['modified']);
         if (isset($groupList[$data['GroupVision']['group_id']]) === true) {
             $data['GroupVision']['group_name'] = $groupList[$data['GroupVision']['group_id']]['name'];
             $data['GroupVision']['member_count'] = $groupList[$data['GroupVision']['group_id']]['member_count'];
@@ -155,12 +155,12 @@ class VisionService extends AppService
     /**
      * チームビジョンリストページ用のデータの構築
      *
-     * @param $teamId
-     * @param $activeFlg
+     * @param int  $teamId
+     * @param bool $activeFlg
      *
-     * @return array|mixed|null
+     * @return array
      */
-    function buildTeamVisionListForResponse($teamId, $activeFlg)
+    function buildTeamVisionListForResponse(int $teamId, bool $activeFlg): array
     {
         /** @var TeamVision $TeamVision */
         $TeamVision = ClassRegistry::init('TeamVision');
@@ -172,7 +172,7 @@ class VisionService extends AppService
         foreach ($data as &$team) {
             $team['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo',
                 ['style' => 'large']);
-            $team['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
+            $team['TeamVision']['modified'] = $time->elapsedTime($team['TeamVision']['modified']);
         }
         return $data;
     }
@@ -180,12 +180,12 @@ class VisionService extends AppService
     /**
      * チームビジョン詳細ページ用のデータの構築
      *
-     * @param $teamVisionId
-     * @param $activeFlg
+     * @param int  $teamVisionId
+     * @param bool $activeFlg
      *
-     * @return array|null
+     * @return array
      */
-    function buildTeamVisionDetailForResponse($teamVisionId, $activeFlg)
+    function buildTeamVisionDetailForResponse(int $teamVisionId, bool $activeFlg): array
     {
         /** @var TeamVision $TeamVision */
         $TeamVision = ClassRegistry::init('TeamVision');
@@ -196,7 +196,7 @@ class VisionService extends AppService
 
         $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo',
             ['style' => 'original']);
-        $data['TeamVision']['modified'] = $time->elapsedTime(h($data['TeamVision']['modified']));
+        $data['TeamVision']['modified'] = $time->elapsedTime($data['TeamVision']['modified']);
 
         return $data;
 
