@@ -69,7 +69,7 @@ class GroupVisionTest extends GoalousTestCase
             'name'    => $name
         ];
         $this->GroupVision->save($data);
-        $res = $this->GroupVision->getGroupVision($team_id, 1);
+        $res = $this->GroupVision->findGroupVisions($team_id, 1);
         $this->assertEquals($res[0]['GroupVision']['name'], $name);
     }
 

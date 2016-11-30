@@ -105,7 +105,7 @@ class VisionService extends AppService
         $time = new TimeExHelper(new View());
         /** @var GroupVision $GroupVision */
         $GroupVision = ClassRegistry::init('GroupVision');
-        $groupVisions = $GroupVision->getGroupVision($teamId, $activeFlg);
+        $groupVisions = $GroupVision->findGroupVisions($teamId, $activeFlg);
 
         foreach ($groupVisions as &$groupVision) {
             $data = $groupVision['GroupVision'];
