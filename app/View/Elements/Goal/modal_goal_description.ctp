@@ -26,7 +26,7 @@
                 </a>
             </h4>
         </div>
-        <div class="modal-body modal-circle-body">
+        <div class="modal-body modal-circle-body without-footer">
             <div class="col col-xxs-12">
                 <div class="col col-xxs-6">
                     <a href="<?= $this->Html->url([
@@ -165,10 +165,6 @@
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-        </div>
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

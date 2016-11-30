@@ -32,7 +32,7 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
                         count($admin_circle_members)) ?></a>
             </li>
         </ul>
-        <div class="modal-body modal-feed-body tab-content">
+        <div class="modal-body modal-feed-body tab-content without-footer">
             <div class="tab-pane fade in active" id="ModalCircleMemberTab1_<?= $circle_id ?>">
                 <?php if (!empty($circle_members)): ?>
                     <div class="row borderBottom">
@@ -65,9 +65,6 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
                     <?php endforeach ?>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

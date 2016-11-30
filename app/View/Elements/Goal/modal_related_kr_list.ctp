@@ -17,7 +17,7 @@
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("KRs") ?> (<span class="<?= $myActionKrCount > 0 ? 'modal-title-red' : '' ?>"><?= $myActionKrCount ?></span>/<?= $allKrCount ?>)</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body without-footer">
             <ul class="kr-items">
                 <?php foreach ($krs as $kr): ?>
                 <?php $actionCount = count($kr['ActionResult']); ?>

@@ -20,7 +20,7 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Action list") ?></h4>
         </div>
-        <div class="modal-body" id="ActionListBody">
+        <div class="modal-body without-footer" id="ActionListBody">
             <?php if (!empty($posts)): ?>
                 <?php if (isset($extractedByKR) && $extractedByKR): ?>
                     <!--START Key Result Post Header -->
@@ -100,10 +100,6 @@
                     </div>
                 </div>
             <?php endif; ?>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default"
-                    data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>
