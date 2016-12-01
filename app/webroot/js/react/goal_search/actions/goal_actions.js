@@ -54,7 +54,13 @@ export function updateFilter(data) {
       getState().goal_search.search_conditions,
       data
     )
-    let queries = querystring.stringify(search_conditions);
+
+    let queries = search_conditions;
+    if ('labels' in queries) {
+      queries["labels[]"] = queries.labels
+      delete queries.labels
+    }
+    queries = querystring.stringify(queries)
     history.pushState(null, "", '?' + queries);
 
     return axios.get(`/api/v1/goals/search?${queries}`)
