@@ -26,6 +26,10 @@ class GoalsController extends AppController
      */
     public function index()
     {
+        //headerのアイコン下にバーを表示するための判定用変数をviewに渡す
+        $current_global_menu = "goal";
+        $this->set(compact('current_global_menu'));
+
         $this->_setViewValOnRightColumn();
     }
 
@@ -160,7 +164,7 @@ class GoalsController extends AppController
         $krs = [];
         if ($goalId && $userId) {
             $krs = $this->Goal->KeyResult->getKeyResultsForEvaluation($goalId, $userId);
-            foreach($krs as $k => $v) {
+            foreach ($krs as $k => $v) {
                 $krs[$k] = $KeyResultService->processKeyResult($v, '/');
             }
         }
@@ -1512,7 +1516,7 @@ class GoalsController extends AppController
             $display_action_count--;
         }
         $this->set(compact('is_collaborated', 'display_action_count'));
-        $kr_count =  $this->Goal->KeyResult->getKrCount($goal_id);
+        $kr_count = $this->Goal->KeyResult->getKrCount($goal_id);
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
