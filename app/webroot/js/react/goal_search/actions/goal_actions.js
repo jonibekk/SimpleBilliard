@@ -29,7 +29,8 @@ export function fetchInitialData() {
     dispatch({
       type: ActionTypes.LOADING,
     })
-    return axios.get(`/api/v1/goals/init_search`)
+    let query = location.search
+    return axios.get(`/api/v1/goals/init_search` + query)
       .then((response) => {
         let data = response.data.data
         dispatch({
