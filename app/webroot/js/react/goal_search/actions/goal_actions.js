@@ -54,7 +54,10 @@ export function updateFilter(data) {
       getState().goal_search.search_conditions,
       data
     )
-    return axios.get(`/api/v1/goals/search?${querystring.stringify(search_conditions)}`)
+    let queries = querystring.stringify(search_conditions);
+    history.pushState(null, "", '?' + queries);
+
+    return axios.get(`/api/v1/goals/search?${queries}`)
       .then((response) => {
         const search_result = response.data
         dispatch({
