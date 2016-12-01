@@ -18,7 +18,7 @@
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Pending Evaluator (%s)", count($incomplete_evaluators)) ?></h4>
         </div>
-        <div class="modal-body without-footer">
+        <div class="modal-body">
             <?php if (!empty($incomplete_evaluators)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($incomplete_evaluators as $user): ?>

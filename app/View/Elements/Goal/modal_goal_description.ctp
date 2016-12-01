@@ -26,7 +26,7 @@
                 </a>
             </h4>
         </div>
-        <div class="modal-body modal-circle-body without-footer">
+        <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
                 <div class="col col-xxs-6">
                     <a href="<?= $this->Html->url([

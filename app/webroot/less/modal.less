@@ -28,23 +28,6 @@
 + modals.ctp
  */
 
-/*
-### モーダル共通の設定
-*/
-
-/*モーダル全体*/
-.modal-body {
-    overflow-y: scroll;
-    padding: 15px;
-    flex: 1;
-    @media @small {
-      max-height: 460px;
-      &.without-footer {
-        max-height: 530px;
-      }
-    }
-}
-
 .modal-circle-body {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -56,25 +39,32 @@
 }
 
 .modal-dialog {
+  height: 80%;
   width: 100%;
   max-width: 484px;
   margin: 8% auto 0;
   display: flex;
   flex-direction: column;
-  @media screen and (max-width: 480px) {
-  }
 }
 
 .modal-tutorial-dialog {
   width: 98%;
 }
 
-.modal-collabo-dialog {
-  width: 98%;
+.modal-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
   padding: 15px;
+}
+
+.modal-body {
+    overflow-y: scroll;
+    padding: 15px;
+    flex: 1;
 }
 
 .modal-footer {
