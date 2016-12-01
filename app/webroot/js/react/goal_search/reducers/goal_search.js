@@ -27,10 +27,13 @@ export default function goal_search(state = initialState, action) {
 
   switch (action.type) {
     case ActionTypes.FETCH_INITIAL_DATA:
-      return Object.assign({}, state, action.data, {
+      let ret = Object.assign({}, state, action.data, {
         suggestions_exclude_selected: [...action.data.labels],
         loading: false
       })
+      // console.log('FETCH_INITIAL_DATA')
+      // console.log(ret)
+      return ret
 
     case ActionTypes.UPDATE_DATA:
       if (action.key) {

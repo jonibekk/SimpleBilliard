@@ -55,7 +55,7 @@ export function updateFilter(data) {
       data
     )
 
-    let queries = search_conditions;
+    let queries = Object.assign({},search_conditions)
     if ('labels' in queries) {
       queries["labels[]"] = queries.labels
       delete queries.labels
