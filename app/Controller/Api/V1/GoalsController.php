@@ -116,22 +116,13 @@ class GoalsController extends ApiController
      */
     private function _fetchSearchConditions(): array
     {
-        $conditions = [];
-        if ($this->request->query('keyword')) {
-            $conditions['keyword'] = $this->request->query('keyword');
-        }
-        if ($this->request->query('category')) {
-            $conditions['category'] = $this->request->query('category');
-        }
-        if ($this->request->query('progress')) {
-            $conditions['progress'] = $this->request->query('progress');
-        }
-        if ($this->request->query('term')) {
-            $conditions['term'] = $this->request->query('term');
-        }
-        if ($this->request->query('labels')) {
-            $conditions['labels'] = $this->request->query('labels');
-        }
+        $conditions = [
+            'keyword'  => $this->request->query('keyword'),
+            'category' => $this->request->query('category'),
+            'progress' => $this->request->query('progress'),
+            'term'     => $this->request->query('term'),
+            'labels'   => $this->request->query('labels') ?? [],
+        ];
         return $conditions;
     }
 
