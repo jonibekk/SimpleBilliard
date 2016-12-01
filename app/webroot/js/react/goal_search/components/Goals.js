@@ -70,7 +70,7 @@ export default class Goals extends React.Component {
     const props = this.props.goal_search
 
     const goals = props.search_result.data
-console.log(props.search_conditions)
+    console.log(props.search_conditions)
     const order = props.search_conditions["order"] ? props.search_conditions["order"] : "new";
 
     const search_orders = {
@@ -110,7 +110,7 @@ console.log(props.search_conditions)
             <div className="goal-search-keyword mb_10px">
               <input type="text" className="goal-search-keyword-input" placeholder={__("Search by goal name")}
                      ref="keyword"
-                     maxLength="50"/>
+                     maxLength="50" defaultValue={props.search_conditions.keyword}/>
               <span onClick={this.searchByKeyword.bind(this)} className="goal-search-keyword-submit fa fa-search"/>
             </div>
           </form>
