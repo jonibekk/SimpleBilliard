@@ -70,7 +70,7 @@ export default class Goals extends React.Component {
     const props = this.props.goal_search
 
     const goals = props.search_result.data
-// console.log(props.search_conditions)
+console.log(props.search_conditions)
     const order = props.search_conditions["order"] ? props.search_conditions["order"] : "new";
 
     const search_orders = {
