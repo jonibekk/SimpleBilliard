@@ -3,6 +3,7 @@
 ### モーダル一覧
 **ゴール関連**
 + コラボ modal_collabo.ctp
++ ゴール作成時のTips modal_tips_add_goal.ctp
 + アクション一覧 modal_action_list.ctp
 
 **サークル関連**
@@ -28,33 +29,14 @@
 + modals.ctp
  */
 
-.modal-circle-body {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.modal-circle-body hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
+/*
+### モーダル共通の設定
+*/
 
 .modal-dialog {
-  height: 80%;
   width: 100%;
   max-width: 484px;
   margin: 8% auto 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-tutorial-dialog {
-  width: 98%;
-}
-
-.modal-content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .modal-header {
@@ -62,9 +44,9 @@
 }
 
 .modal-body {
-    overflow-y: scroll;
-    padding: 15px;
-    flex: 1;
+  overflow-y: scroll;
+  padding: 15px;
+  max-height: 324px;
 }
 
 .modal-footer {
