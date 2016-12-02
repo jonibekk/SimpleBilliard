@@ -34,9 +34,11 @@
 */
 
 .modal-dialog {
-  width: 100%;
-  max-width: 484px;
   margin: 8% auto 0;
+  width: 100%;
+  @media screen and (min-width: 480px){
+    max-width: 484px;
+  }
 }
 
 .modal-header {
