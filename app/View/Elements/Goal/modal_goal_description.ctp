@@ -15,7 +15,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("Goal Summary") ?>
+            <h4 class="modal-title"><?= __("Goal Summary") ?>&nbsp;
                 <a class=""
                    href="<?= $this->Html->url([
                        'controller' => 'goals',
