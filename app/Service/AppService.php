@@ -1,4 +1,5 @@
 <?php
+App::uses('GlRedis', 'Model');
 /**
  * Created by PhpStorm.
  * User: yoshidam2

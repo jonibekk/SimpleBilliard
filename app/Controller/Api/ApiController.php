@@ -102,7 +102,7 @@ class ApiController extends BaseController
     /**
      * アクセス権限無しのレスポンスを返す
      *
-     * @param string     $message
+     * @param string $message
      *
      * @return CakeResponse
      */
@@ -117,7 +117,7 @@ class ApiController extends BaseController
     /**
      * NotFound(404)のレスポンスを返す
      *
-     * @param string     $message
+     * @param string $message
      *
      * @return CakeResponse
      */
@@ -130,9 +130,23 @@ class ApiController extends BaseController
     }
 
     /**
+     * リソースの衝突
+     * 既にリソースが更新されている
+     *
+     * @return CakeResponse
+     */
+    protected function _getResponseConflict($message = null)
+    {
+        if (empty($message)) {
+            $message = __("Error, data conflicted.");
+        }
+        return $this->_getResponse(409, null, null, $message);
+    }
+
+    /**
      * InternalServerError(500)のレスポンスを返す
      *
-     * @param string     $message
+     * @param string $message
      *
      * @return CakeResponse
      */

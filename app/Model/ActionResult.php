@@ -124,10 +124,118 @@ class ActionResult extends AppModel
             ],
         ],
         'name'          => [
-            'maxLength' => ['rule' => ['maxLength', 10000]],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public $postValidate = [
+        'goal_id'                  => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'rule' => 'notBlank',
+            ],
+        ],
+        'name'                     => [
+            'notBlank'  => ['rule' => 'notBlank', 'required' => true],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+        ],
+        'key_result_id'            => [
+            'numeric'         => [
+                'rule' => ['numeric'],
+            ],
+            'validateExistKr' => [
+                'rule'     => ['validateExistKr'],
+                'required' => true
+            ],
+        ],
+        'key_result_current_value' => [
+            'notBlank'           => [
+                'rule'     => 'notBlank',
+                'required' => true
+            ],
+            'validateKrProgress' => [
+                'rule' => ['validateKrProgress'],
+                //                'message' => ""
+            ],
+        ],
+    ];
+
+    /**
+     * アクションに紐付けるKRが存在するか
+     */
+    function validateExistKr($val)
+    {
+        $krId = array_shift($val);
+        if (empty($krId)) {
+            return false;
+        }
+        $kr = $this->KeyResult->getById($krId);
+        if (empty($kr)) {
+            return false;
+        }
+        $goalId = $this->data['ActionResult']['goal_id'];
+        if ($kr['goal_id'] != $goalId) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * KR進捗更新チェック
+     *
+     * @param      $val
+     *
+     * @return array|null
+     * @internal param $data
+     */
+    function validateKrProgress($val)
+    {
+        $currentVal = array_shift($val);
+        if ($currentVal === "") {
+            return true;
+        }
+
+        $krId = Hash::get($this->data, 'ActionResult.key_result_id');
+        $kr = $this->KeyResult->getById($krId);
+        if (empty($kr)) {
+            return false;
+        }
+
+        // 単位が完了/未完了の場合
+        if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
+            return $currentVal == 100;
+        }
+
+        // それ以外の単位
+        $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
+        // 進捗が変わらない場合は許容
+        $currentDiff = $currentVal - $kr['current_value'];
+        if ($currentDiff == 0) {
+            return true;
+        }
+        // KRの進捗値の増加/減少の方向が合っているか
+        if (($isProgressIncrease && $currentDiff < 0) || (!$isProgressIncrease && $currentDiff > 0)) {
+            $this->invalidate('key_result_current_value',
+                __("You can not change the direction of KR progress increase or decrease."));
+            return false;
+        }
+        if (($isProgressIncrease && $currentVal > $kr['target_value']) || (!$isProgressIncrease && $currentVal < $kr['target_value'])) {
+            $this->invalidate('key_result_current_value',
+                __("You can not input KR current value over KR target value."));
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * belongsTo associations
@@ -520,7 +628,6 @@ class ActionResult extends AppModel
         return (bool)$this->findWithoutTeamId('all', $options);
     }
 
-
     /**
      * ゴールIDごとの件数取得
      *
@@ -531,9 +638,9 @@ class ActionResult extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
         // 0件のゴールも配列要素を作り、値を0として返す
         $defaultCountEachGoalId = array_fill_keys($goalIds, 0);

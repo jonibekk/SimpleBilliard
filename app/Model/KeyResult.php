@@ -316,6 +316,31 @@ class KeyResult extends AppModel
     }
 
     /**
+     * 未完了KRリスト取得
+     *
+     * @param int $goalId
+     *
+     * @return array
+     */
+    function findIncomplete(int $goalId): array
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goalId,
+                'team_id'   => $this->current_team_id,
+                'completed' => null
+            ],
+            'order'      => [
+                'KeyResult.tkr_flg DESC',
+                'KeyResult.priority DESC',
+                'KeyResult.end_date ASC',
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.KeyResult');
+    }
+
+    /**
      * ユーザがアクションしたKRのみ抽出
      * Extraction KR with only exist user action
      *
@@ -559,9 +584,9 @@ class KeyResult extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
 
         // 0件のゴールも配列要素を作り、値を0として返す
@@ -572,7 +597,9 @@ class KeyResult extends AppModel
 
     /**
      * 評価ページ表示用にKR一覧を取得
+     *
      * @param $goalId
+     *
      * @return $krs
      */
     public function getKeyResultsForEvaluation($goalId, $userId)
@@ -588,7 +615,7 @@ class KeyResult extends AppModel
             ],
             'contain'    => [
                 'ActionResult' => [
-                    'conditions' =>[
+                    'conditions' => [
                         'user_id' => $userId
                     ]
                 ]
@@ -597,7 +624,7 @@ class KeyResult extends AppModel
         $res = $this->find('all', $options);
 
         $krs = [];
-        foreach($res as $key => $val) {
+        foreach ($res as $key => $val) {
             $krs[$key] = Hash::extract($val, "KeyResult");
             $krs[$key]['ActionResult'] = Hash::extract($val, "ActionResult");
         }
