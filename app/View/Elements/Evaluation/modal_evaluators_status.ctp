@@ -18,7 +18,7 @@
             <h4 class="modal-title"><?= __("%s Evaluation Status",
                     $evaluatee['EvaluateeUser']['display_username']) ?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body without-footer">
             <?php if (!empty($evaluators)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($evaluators as $user): ?>

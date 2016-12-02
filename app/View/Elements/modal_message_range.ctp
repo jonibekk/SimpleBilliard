@@ -15,7 +15,7 @@
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title font_18px font_bold"><?= __("Members in this topic", $total_share_user_count) ?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body without-footer">
             <div class="row borderBottom">
                 <?php if (!empty($users)): ?>
                     <?php foreach ($users as $user): ?>

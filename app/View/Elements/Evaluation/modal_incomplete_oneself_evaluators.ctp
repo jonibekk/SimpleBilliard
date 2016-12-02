@@ -18,7 +18,7 @@
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Pending self-evaluation") ?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body without-footer">
             <?php if (!empty($oneself_incomplete_users)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($oneself_incomplete_users as $user): ?>

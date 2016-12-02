@@ -18,7 +18,7 @@
             <h4 class="modal-title font_18px font_bold"><?= __("%s members Like! this post.",
                     count($liked_users)) ?></h4>
         </div>
-        <div class="modal-body modal-feed-body">
+        <div class="modal-body without-footer">
             <?php if (!empty($liked_users)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($liked_users as $user): ?>

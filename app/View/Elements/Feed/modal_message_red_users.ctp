@@ -18,7 +18,7 @@
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("%s members read this message.", count($red_users)) ?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body without-footer">
             <?php if (!empty($red_users)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($red_users as $user): ?>
