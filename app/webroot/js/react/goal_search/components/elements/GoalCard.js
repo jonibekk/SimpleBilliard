@@ -90,7 +90,11 @@ class GoalCard extends React.Component {
               </div>
               <ul className="gl-labels mb_8px">
                 {goal.goal_labels.map((v) => {
-                  return <li className="gl-labels-item" key={v.id}>{v.name}</li>
+                  return <li className="gl-labels-item" key={v.id}>
+                    <a href={`/goals?labels[]=${v.name}`}
+                       target={cake.is_mb_app ? "_self" : "_blank"}
+                    >{v.name}</a>
+                    </li>
                 })}
               </ul>
               <p className="font_lightgray font_12px">{__("Leader")}: {goal.leader.display_username}</p>
