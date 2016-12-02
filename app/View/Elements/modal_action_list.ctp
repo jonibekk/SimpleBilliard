@@ -54,13 +54,14 @@
                                     ]) ?>"
                                        class="no-line font_verydark modal-ajax-get">
                                         <?=
-                                        $this->Html->image('ajax-loader.gif',
+                                        $this->Html->image('svg/pre-load.svg',
                                             [
                                                 'class' => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($posts[0],
                                                     "Goal.photo",
                                                     ['style' => 'small']),
-                                                'width' => '32px',
+                                                'width'  => '32px',
+                                                'height' => '32px',
                                                 'error-img' => "/img/no-image-link.png",
                                             ]
                                         )

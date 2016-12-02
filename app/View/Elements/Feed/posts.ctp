@@ -50,13 +50,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 ]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
-                                    $this->Html->image('ajax-loader.gif',
+                                    $this->Html->image('svg/pre-load.svg',
                                         [
                                             'class'         => 'post-heading-goal-avatar  lazy media-object',
                                             'data-original' => $this->Upload->uploadUrl($post,
                                                 "Goal.photo",
                                                 ['style' => 'small']),
                                             'width'         => '32px',
+                                            'height'        => '32px',
                                             'error-img'     => "/img/no-image-link.png",
                                         ]
                                     )
@@ -91,13 +92,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 ]) ?>"
                                    class="no-line font_verydark">
                                     <?=
-                                    $this->Html->image('ajax-loader.gif',
+                                    $this->Html->image('svg/pre-load.svg',
                                         [
                                             'class'         => 'post-heading-circle-avatar lazy media-object',
                                             'data-original' => $this->Upload->uploadUrl($post,
                                                 "Circle.photo",
                                                 ['style' => 'small']),
                                             'width'         => '32px',
+                                            'height'        => '32px',
                                             'error-img'     => "/img/no-image-link.png",
                                         ]
                                     )
@@ -184,7 +186,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         'user_id'    => $post['User']['id']
                     ]) ?>">
                         <?=
-                        $this->Html->image('ajax-loader.gif',
+                        $this->Html->image('svg/pre-load.svg',
                             [
                                 'class'         => 'lazy feed-img',
                                 'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
@@ -300,13 +302,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <div class="media">
                                     <div class="pull-left">
                                         <?=
-                                        $this->Html->image('ajax-loader.gif',
+                                        $this->Html->image('svg/pre-load.svg',
                                             [
                                                 'class'         => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($post,
                                                     "Circle.photo",
                                                     ['style' => 'medium_large']),
                                                 'width'         => '80px',
+                                                'height'        => '80px',
                                             ]
                                         )
                                         ?>
@@ -499,7 +502,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php if (!$without_add_comment): ?>
                     <div class="col-xxs-12 box-align feed-contents comment-contents">
                         <?=
-                        $this->Html->image('ajax-loader.gif',
+                        $this->Html->image('svg/pre-load.svg',
                             [
                                 'class'         => 'lazy comment-img',
                                 'data-original' => $this->Upload->uploadUrl($my_prof,

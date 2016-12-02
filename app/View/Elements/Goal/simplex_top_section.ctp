@@ -17,7 +17,7 @@
 <div class="panel-body goal-detail-upper-panel">
     <div class="goal-detail-avatar-wrap">
         <?=
-        $this->Html->image('ajax-loader.gif',
+        $this->Html->image('svg/pre-load.svg',
             [
                 'class'         => 'goal-detail-avatar lazy',
                 'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',

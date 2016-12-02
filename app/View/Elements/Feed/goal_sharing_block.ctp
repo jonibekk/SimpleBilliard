@@ -21,13 +21,14 @@
             <div class="media">
                 <div class="pull-left">
                     <?=
-                    $this->Html->image('ajax-loader.gif',
+                    $this->Html->image('svg/pre-load.svg',
                         [
-                            'class' => 'lazy media-object',
+                            'class'  => 'lazy media-object',
                             'data-original' => $this->Upload->uploadUrl($post,
                                 "Goal.photo",
                                 ['style' => 'medium_large']),
-                            'width' => '80px',
+                            'width'  => '80px',
+                            'height' => '80px'
                         ]
                     )
                     ?>
