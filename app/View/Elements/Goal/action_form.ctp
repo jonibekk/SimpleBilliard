@@ -17,7 +17,9 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
             </ul>
         </div>
         <!-- Tab panes -->
-        <?= $this->element('Goal/action_form_content', compact('is_edit_mode')) ?>
+        <div class="tab-content">
+            <?= $this->element('Goal/action_form_content', compact('is_edit_mode')) ?>
+        </div>
     </div>
 
     <?= $this->element('file_upload_form') ?>
