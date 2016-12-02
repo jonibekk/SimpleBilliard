@@ -29,6 +29,7 @@ export function fetchInitialData() {
     dispatch({
       type: ActionTypes.LOADING,
     })
+    //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
     let query = location.search
     return axios.get(`/api/v1/goals/init_search` + query)
       .then((response) => {
@@ -56,6 +57,7 @@ export function updateFilter(data) {
     )
 
     let queries = Object.assign({},search_conditions)
+    //querystring.stringifyすると配列がqueryのkeyダブってセットされてしまう(hoge=aaa&hoge=bbb)ので、hoge[]にキーを事前に書き換える
     if ('labels' in queries) {
       queries["labels[]"] = queries.labels
       delete queries.labels
