@@ -16,7 +16,9 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("%s members read this message.", count($red_users)) ?></h4>
+            <h4 class="modal-title">
+                <?= __("Read") ?> (<?= count($red_users) ?>)
+            </h4>
         </div>
         <div class="modal-body without-footer">
             <?php if (!empty($red_users)): ?>
