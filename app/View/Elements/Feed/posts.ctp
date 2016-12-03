@@ -1,19 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daikihirakata
- * Date: 2014/07/06
- * Time: 1:03
- *
- * @var                    $posts
- * @var                    $my_member_status
- * @var CodeCompletionView $this
- * @var                    $goal
- * @var                    $long_text
- * @var                    $without_header
- * @var                    $without_add_comment
- * @var                    $current_term
- */
 $without_header = isset($without_header) ? $without_header : false;
 $without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
 ?>

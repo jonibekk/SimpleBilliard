@@ -1,5 +1,10 @@
+<?php
+/**
+ * TODO:全体的にHTML構成に問題があるので修正
+ */
+?>
 <div class="posts-panel-body panel-body">
-    <div class="col col-xxs-12 feed-user">
+    <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
             <div class="dropdown">
                 <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
@@ -61,7 +66,6 @@
         </a>
         <?= $this->element('Feed/display_share_range', compact('post')) ?>
     </div>
-    <?= $this->element('Feed/post_content', compact('post')) ?>
     <?php
     /**
      * 画像のurlを集める
@@ -92,23 +96,42 @@
             }
         }
     }
-
     ?>
-    <?php if (!empty($imgs)): ?>
+    <div class="col col-xxs-12 feed-contents font_bold mb_4px">
+        <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
+    </div>
 </div>
+<?php //TODO:.colが.rowの中になく単体で存在することはBootstrapの仕様としてありえない ?>
 <div
-    class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
+    class="col col-xxs-12 <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_4px' ?>">
     <?php foreach ($imgs as $v): ?>
         <a href="<?= $v['l'] ?>" rel='lightbox' data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
             <?= $this->Html->image($v['s']) ?>
         </a>
     <?php endforeach; ?>
 </div>
-<div class="panel-body pt_10px plr_11px pb_8px">
-
-    <?php endif; ?>
-
-
+<div class="panel-body">
+    <div class="col col-xxs-12 font_bold font_14px font_verydark pt_4px">
+        <i class="fa fa-tachometer"></i>
+        <?php
+        $changValue = $post['ActionResult']['key_result_change_value'];
+        $displayChangeValue = "";
+        if ($changValue > 0) {
+            $displayChangeValue .= '+';
+        } elseif ($changValue < 0) {
+            $displayChangeValue .= '-';
+        }
+        $displayChangeValue .= AppUtil::formatBigFloat($post['ActionResult']['key_result_change_value']);
+        ?>
+        <?= AppUtil::formatBigFloat($post['ActionResult']['key_result_before_value']) ?>
+        / <?= AppUtil::formatBigFloat($post['ActionResult']['KeyResult']['target_value']) ?>
+        (<span class="font_rougeOrange"><?= $displayChangeValue ?></span>)
+    </div>
+    <div
+        class="col col-xxs-12 feed-contents post-contents mod-action showmore-action font_14px font_verydark box-align"
+        id="PostTextBody_<?= $post['Post']['id'] ?>">
+        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
+    </div>
     <?php if ($post['Post']['site_info']): ?>
         <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
         <?= $this->element('Feed/site_info_block', [
@@ -116,23 +139,19 @@
             'img_src'   => $this->Upload->uploadUrl($post, "Post.site_photo", ['style' => 'small']),
         ]) ?>
     <?php endif; ?>
-
-    <div class="col col-xxs-12 pt_6px feed-contents">
-        <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
-    </div>
     <div class="col col-xxs-12 pt_10px">
-            <?php foreach ($post['ActionResult']['ActionResultFile'] as $k => $file): ?>
-                <?php if ($k === 0) {
-                    continue;
-                } ?>
-                <div class="panel panel-default file-wrap-on-post">
-                    <div class="panel-body pt_10px plr_11px pb_8px">
-                        <?= $this->element('Feed/attached_file_item',
-                            ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
-                    </div>
+        <?php foreach ($post['ActionResult']['ActionResultFile'] as $k => $file): ?>
+            <?php if ($k === 0) {
+                continue;
+            } ?>
+            <div class="panel panel-default file-wrap-on-post">
+                <div class="panel-body pt_10px plr_11px pb_8px">
+                    <?= $this->element('Feed/attached_file_item',
+                        ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
                 </div>
-            <?php endforeach ?>
-        </div>
+            </div>
+        <?php endforeach ?>
+    </div>
     <div class="col col-xxs-12 feeds-post-btns-area">
         <div class="feeds-post-btns-wrap-left">
             <a href="#"
