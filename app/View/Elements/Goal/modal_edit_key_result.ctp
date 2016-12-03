@@ -105,6 +105,10 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                         </div>
                         <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
                              style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
+                            <div class="iii">
+                                <?= $this->Form->label(null, __("Initial point"))?>
+                                <p class="ptb_4px"><?= Hash::get($this->request->data, 'KeyResult.start_value')?></p>
+                            </div>
                             <div class="ggg">
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
@@ -114,24 +118,6 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                         'type'                         => 'number',
                                         'step'                         => '0.1',
                                         'default'                      => 100,
-                                        'required'                     => true,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
-                                    ]) ?>
-                            </div>
-                            <div class="iii">
-                                <?=
-                                $this->Form->input('KeyResult.start_value',
-                                    [
-                                        'label'                        => __("Initial point"),
-                                        'wrapInput'                    => 'jjj',
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 0,
                                         'required'                     => true,
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
