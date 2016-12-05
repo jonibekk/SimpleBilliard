@@ -15,10 +15,11 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font_18px font_bold"><?= __("%s members Like! this post.",
-                    count($liked_users)) ?></h4>
+            <h4 class="modal-title font_18px font_bold">
+                <?= __("Like!") ?>(<?= count($liked_users) ?>)
+            </h4>
         </div>
-        <div class="modal-body modal-feed-body">
+        <div class="modal-body without-footer">
             <?php if (!empty($liked_users)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($liked_users as $user): ?>
@@ -30,9 +31,6 @@
             <?php else: ?>
                 <?= __("There is no like! yet.") ?>
             <?php endif ?>
-        </div>
-        <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

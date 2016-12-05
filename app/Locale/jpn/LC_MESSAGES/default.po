@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-29 18:56+0900\n"
+"PO-Revision-Date: 2016-12-02 10:59+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2891,11 +2891,8 @@ msgstr "このメッセージを%s人が読みました。"
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
 
-msgid "%s members Like! this post."
-msgstr "この投稿を%s人が「いいね！」と言っています。"
-
-msgid "%s people read this post."
-msgstr "この投稿を%s人が読みました。"
+msgid "Read"
+msgstr "既読"
 
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
@@ -3055,9 +3052,6 @@ msgstr "現在"
 
 msgid "Goal Summary"
 msgstr "ゴール概要"
-
-msgid "Go to Goal page"
-msgstr "ゴールページへ"
 
 msgid "Did you achieve the goal?"
 msgstr "ゴールを達成しましたか？"
@@ -4840,10 +4834,3 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
-#~ "another KR <span class=\"notify-card-head-target\">%2$s</span>."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
-#~ "<span class=\"notify-card-head-target\">%2$s</span>."
