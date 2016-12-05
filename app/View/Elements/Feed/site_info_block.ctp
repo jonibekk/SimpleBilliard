@@ -37,7 +37,7 @@ if (isset($site_info['type']) && (
                     <div class="pull-left">
                         <?php if ($img_src): ?>
                             <?=
-                            $this->Html->image('svg/pre-load.svg', [
+                            $this->Html->image('pre-load.svg', [
                                 'class'         => 'lazy media-object',
                                 'data-original' => $img_src,
                                 'width'         => '80px',

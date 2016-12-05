@@ -50,7 +50,7 @@ if (!isset($id_prefix)) {
             <?php if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
                 <?php $delete_style = "display:block" ?>
                 <?=
-                $this->Html->image('svg/pre-load.svg',
+                $this->Html->image('pre-load.svg',
                     [
                         'class'         => 'lazy',
                         'style'         => 'width: 50px; height: 50px;',

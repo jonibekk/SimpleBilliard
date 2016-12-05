@@ -21,7 +21,7 @@
             <div class="media">
                 <div class="pull-left">
                     <?=
-                    $this->Html->image('svg/pre-load.svg',
+                    $this->Html->image('pre-load.svg',
                         [
                             'class'  => 'lazy media-object',
                             'data-original' => $this->Upload->uploadUrl($post,

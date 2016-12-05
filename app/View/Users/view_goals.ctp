@@ -67,7 +67,7 @@
                             'goal_id'    => $goal['Goal']['id']
                         ]) ?>">
                             <?=
-                            $this->Html->image('svg/pre-load.svg',
+                            $this->Html->image('pre-load.svg',
                                 [
                                     'class'         => 'lazy img-rounded profile-goals-img',
                                     'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
@@ -188,7 +188,7 @@
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
                                                 <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
-                                                    <?= $this->Html->image('svg/pre-load.svg',
+                                                    <?= $this->Html->image('pre-load.svg',
                                                         [
                                                             'class'         => 'lazy',
                                                             'width'         => "48px",
@@ -205,7 +205,7 @@
                                                     <?php for ($i = 1; $i <= 5; $i++): ?>
                                                         <?php
                                                         if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
-                                                            echo $this->Html->image('svg/pre-load.svg',
+                                                            echo $this->Html->image('pre-load.svg',
                                                                 [
                                                                     'class'         => 'lazy',
                                                                     'width'         => "48px",

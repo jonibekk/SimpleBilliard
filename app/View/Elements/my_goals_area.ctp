@@ -26,7 +26,7 @@
         <div
             class="col col-xxs-12 mt_5px mb_12px font_gargoyleGray right-column-vision-objective goals-column-teamvision-panel-base">
             <?=
-            $this->Html->image('svg/pre-load.svg',
+            $this->Html->image('pre-load.svg',
                 [
                     'class'         => 'lazy feed-img-teamvision pull-left',
                     'data-original' => $this->Upload->uploadUrl([$vision['model'] => $vision],

@@ -54,7 +54,7 @@
                                     ]) ?>"
                                        class="no-line font_verydark modal-ajax-get">
                                         <?=
-                                        $this->Html->image('svg/pre-load.svg',
+                                        $this->Html->image('pre-load.svg',
                                             [
                                                 'class' => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($posts[0],

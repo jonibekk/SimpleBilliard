@@ -28,7 +28,7 @@
             'user_id'    => $user['id']
         ]) ?>">
             <?=
-            $this->Html->image('svg/pre-load.svg',
+            $this->Html->image('pre-load.svg',
                 [
                     'class'         => 'lazy comment-img',
                     'data-original' => $this->Upload->uploadUrl($user, 'User.photo',

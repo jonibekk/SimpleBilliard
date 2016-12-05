@@ -50,7 +50,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 ]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
-                                    $this->Html->image('svg/pre-load.svg',
+                                    $this->Html->image('pre-load.svg',
                                         [
                                             'class'         => 'post-heading-goal-avatar  lazy media-object',
                                             'data-original' => $this->Upload->uploadUrl($post,
@@ -92,7 +92,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 ]) ?>"
                                    class="no-line font_verydark">
                                     <?=
-                                    $this->Html->image('svg/pre-load.svg',
+                                    $this->Html->image('pre-load.svg',
                                         [
                                             'class'         => 'post-heading-circle-avatar lazy media-object',
                                             'data-original' => $this->Upload->uploadUrl($post,
@@ -186,7 +186,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         'user_id'    => $post['User']['id']
                     ]) ?>">
                         <?=
-                        $this->Html->image('svg/pre-load.svg',
+                        $this->Html->image('pre-load.svg',
                             [
                                 'class'         => 'lazy feed-img',
                                 'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
@@ -302,7 +302,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <div class="media">
                                     <div class="pull-left">
                                         <?=
-                                        $this->Html->image('svg/pre-load.svg',
+                                        $this->Html->image('pre-load.svg',
                                             [
                                                 'class'         => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($post,
@@ -502,7 +502,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php if (!$without_add_comment): ?>
                     <div class="col-xxs-12 box-align feed-contents comment-contents">
                         <?=
-                        $this->Html->image('svg/pre-load.svg',
+                        $this->Html->image('pre-load.svg',
                             [
                                 'class'         => 'lazy comment-img',
                                 'data-original' => $this->Upload->uploadUrl($my_prof,

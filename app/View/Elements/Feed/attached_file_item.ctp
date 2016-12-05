@@ -95,7 +95,7 @@ if (!isset($message_page_image)) {
                 <div>
                     <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
                         <?=
-                        $this->Html->image('svg/pre-load.svg',
+                        $this->Html->image('pre-load.svg',
                             [
                                 'class'         => 'lazy',
                                 'data-original' => $this->Upload->uploadUrl($data,
@@ -150,7 +150,7 @@ if (!isset($message_page_image)) {
                    class="link-dark-gray">
                     <div>
                         <?=
-                        $this->Html->image('svg/pre-load.svg',
+                        $this->Html->image('pre-load.svg',
                             [
                                 'class'         => 'lazy',
                                 'data-original' => $this->Upload->uploadUrl($user, 'User.photo',

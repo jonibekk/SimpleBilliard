@@ -21,7 +21,7 @@
                 ]) ?>"
                 <?php if (Hash::get($post, 'ActionResult.ActionResultFile.0.AttachedFile')): ?>
                     <!-- アクション画像がある場合 -->
-                    <?= $this->Html->image('svg/pre-load.svg',
+                    <?= $this->Html->image('pre-load.svg',
                         [
                             'class'         => 'cube-img-blocks-img lazy',
                             'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
@@ -35,7 +35,7 @@
                     <?php for ($i = 1; $i <= 5; $i++): ?>
                         <?php
                         if (!empty($post['ActionResult']["photo{$i}_file_name"]) || $i == 5) {
-                            echo $this->Html->image('svg/pre-load.svg',
+                            echo $this->Html->image('pre-load.svg',
                                 [
                                     'class'         => 'lazy img-responsive',
                                     'width'         => '186px',

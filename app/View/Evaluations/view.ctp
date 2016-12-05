@@ -56,7 +56,7 @@
                                 <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
                             <?php else: ?>
                                 <?=
-                                $this->Html->image('svg/pre-load.svg',
+                                $this->Html->image('pre-load.svg',
                                     [
                                         'class'         => 'lazy eval-view-img',
                                         'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
@@ -131,7 +131,7 @@
                                 <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
                             <?php else: ?>
                                 <?=
-                                $this->Html->image('svg/pre-load.svg',
+                                $this->Html->image('pre-load.svg',
                                     [
                                         'class'         => 'lazy eval-view-img',
                                         'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
@@ -260,7 +260,7 @@
                     ]) ?>"
                        target="_blank">
                         <?=
-                        $this->Html->image('svg/pre-load.svg',
+                        $this->Html->image('pre-load.svg',
                             [
                                 'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
                                 'width'         => "128px",
@@ -384,7 +384,7 @@
                     <div class="col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <?=
-                            $this->Html->image('svg/pre-load.svg',
+                            $this->Html->image('pre-load.svg',
                                 [
                                     'class'         => 'lazy eval-view-img',
                                     'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
@@ -451,7 +451,7 @@
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <?=
-                            $this->Html->image('svg/pre-load.svg',
+                            $this->Html->image('pre-load.svg',
                                 [
                                     'class'         => 'lazy eval-view-img',
                                     'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
