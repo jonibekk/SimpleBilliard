@@ -1,6 +1,7 @@
 <?php
 App::import('Service/Api', 'ApiService');
 App::import('Service', 'KeyResultService');
+APP::import('Service/Api', 'ApiApprovalHistoryService');
 
 /**
  * Class ApiGoalApprovalService
@@ -40,10 +41,17 @@ class ApiGoalApprovalService extends ApiService
         $res['goal'] = $Goal->attachImgUrl($res['goal'], 'Goal');
 
         // 認定履歴の文言を追加
-        $goal_memberUserId = $res['user']['id'];
-        $res['approval_histories'] = $this->addClearImportantWordToApprovalHistories(Hash::get($res, 'approval_histories'),
-            $goal_memberUserId);
-        $res['histories_view_more_text'] = __('View %s comments', count($res['approval_histories']) - 1);
+        /** @var ApiApprovalHistoryService $ApiApprovalHistoryService */
+        $ApiApprovalHistoryService = ClassRegistry::init("ApiApprovalHistoryService");
+        $res['approval_histories'] = $ApiApprovalHistoryService->processApprovalHistories($res['approval_histories']);
+        $historiesCount = count($res['approval_histories']);
+        $res['histories_view_more_text'] = '';
+        if ($historiesCount > 1) {
+            // 画面上に一件デフォルトで履歴を表示するので、
+            // 画面から隠れている履歴は(合計 - 1)件。
+            $res['histories_view_more_text'] = __('View %s comments', $historiesCount - 1);
+        }
+        $res['latest_coach_action_statement'] = $ApiApprovalHistoryService->getLatestCoachActionStatement($res['id'], $myUserId);
 
         // TKRの整形
         $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
@@ -137,37 +145,6 @@ class ApiGoalApprovalService extends ApiService
         }
 
         return null;
-    }
-
-    /**
-     * コーチによるゴール認定文言の追加
-     * @param $approvalHistories
-     * @param $goal_memberUserId
-     */
-    function addClearImportantWordToApprovalHistories($approvalHistories, $goalMemberUserId)
-    {
-        if(!$approvalHistories || !$goalMemberUserId) {
-            return [];
-        }
-
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
-        return Hash::map($approvalHistories, '',
-            function ($approvalHistory) use ($goalMemberUserId, $ApprovalHistory) {
-                $clearStatus = $approvalHistory['select_clear_status'];
-                $importantStatus = $approvalHistory['select_important_status'];
-
-                $clearAndImportantWord = '';
-                if ($clearStatus == $ApprovalHistory::STATUS_IS_NOT_CLEAR) {
-                    $clearAndImportantWord = __('This Top Key Result is not clear.');
-                } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_IMPORTANT) {
-                    $clearAndImportantWord = __('This Top Key Result is clear and most important.');
-                } elseif ($clearStatus == $ApprovalHistory::STATUS_IS_CLEAR && $importantStatus == $ApprovalHistory::STATUS_IS_NOT_IMPORTANT) {
-                    $clearAndImportantWord = __('This Top Key Result is not most important.');
-                }
-
-                $approvalHistory['clear_and_important_word'] = $clearAndImportantWord;
-                return $approvalHistory;
-            });
     }
 
 }

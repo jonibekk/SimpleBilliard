@@ -419,6 +419,8 @@ class KeyResult extends AppModel
     function isPermitted($kr_id)
     {
         $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
+        $this->log(__METHOD__);
+        $this->log(compact('key_result'));
         if (empty($key_result)) {
             return false;
         }

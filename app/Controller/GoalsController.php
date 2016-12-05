@@ -35,6 +35,10 @@ class GoalsController extends AppController
      */
     public function index()
     {
+        //headerのアイコン下にバーを表示するための判定用変数をviewに渡す
+        $current_global_menu = "goal";
+        $this->set(compact('current_global_menu'));
+
         $this->_setViewValOnRightColumn();
     }
 

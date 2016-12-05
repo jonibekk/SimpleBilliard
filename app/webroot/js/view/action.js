@@ -71,14 +71,6 @@ var Page = {
           var errors = body.validation_errors;
           errHtml = errTemplate.replace(/#error#/g,Object.values(errors).join('<br>'));
           $(self.conf.form).prepend(errHtml);
-          // Object.keys(errors).forEach(function (key) {
-            // var input = $(self.conf.form).find('input[name="data[ActionResult][' + key + ']"]:enabled');
-            // $(input).after('<small class="help-block">' + errors[key] +'</small>');
-
-
-          // });
-          // $(self.conf.form).find(".action-kr-progress-edit-item.is-active .action-kr-progress-edit-item-box-right").
-
           return false;
         }
 

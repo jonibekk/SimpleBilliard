@@ -82,7 +82,7 @@ export default class CoachFooter extends React.Component {
               htmlFor="" onClick={ this.handleClickNotClear.bind(this) }>{__("No")}</a>
           </div>
 
-          <div className="goals-approval-detail-choice-block">
+          <div className="goals-approval-detail-choice-block mt_18px">
             <label className="goals-approval-input-label"
                    htmlFor="">{__("Do you think this Top Key Result is the most important to achieve the goal?")}</label>
             <a
@@ -93,7 +93,7 @@ export default class CoachFooter extends React.Component {
               htmlFor="" onClick={ this.handleClickNotImportant.bind(this) }>{__("No")}</a>
           </div>
 
-          <div className="goals-approval-detail-choice-block">
+          <div className="goals-approval-detail-choice-block mt_18px">
             <label className="goals-approval-input-label" htmlFor="">{__("Add as a target for evaluation ?")}</label>
             <textarea className="form-control goals-approval-detail-input-comment-form" name="comment" ref="comment"
                       id="comment" cols="30" rows="2" placeholder={__("Add your comment (optional)")}></textarea>

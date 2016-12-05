@@ -164,15 +164,18 @@ class ActionResult extends AppModel
             ],
             'validateKrProgress' => [
                 'rule' => ['validateKrProgress'],
-                //                'message' => ""
             ],
         ],
     ];
 
     /**
      * アクションに紐付けるKRが存在するか
+     *
+     * @param array $val
+     *
+     * @return bool
      */
-    function validateExistKr($val)
+    function validateExistKr(array $val) : bool
     {
         $krId = array_shift($val);
         if (empty($krId)) {
@@ -192,12 +195,11 @@ class ActionResult extends AppModel
     /**
      * KR進捗更新チェック
      *
-     * @param      $val
+     * @param array $val
      *
-     * @return array|null
-     * @internal param $data
+     * @return bool
      */
-    function validateKrProgress($val)
+    function validateKrProgress(array $val) : bool
     {
         $currentVal = array_shift($val);
         if ($currentVal === "") {
@@ -222,12 +224,13 @@ class ActionResult extends AppModel
         if ($currentDiff == 0) {
             return true;
         }
-        // KRの進捗値の増加/減少の方向が合っているか
+        // KRの進捗値の増加の方向が合っているか
         if (($isProgressIncrease && $currentDiff < 0) || (!$isProgressIncrease && $currentDiff > 0)) {
             $this->invalidate('key_result_current_value',
                 __("You can not change the direction of KR progress increase or decrease."));
             return false;
         }
+        // KRの進捗値の減少の方向が合っているか
         if (($isProgressIncrease && $currentVal > $kr['target_value']) || (!$isProgressIncrease && $currentVal < $kr['target_value'])) {
             $this->invalidate('key_result_current_value',
                 __("You can not input KR current value over KR target value."));
