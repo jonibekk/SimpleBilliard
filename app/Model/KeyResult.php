@@ -217,6 +217,8 @@ class KeyResult extends AppModel
             $this->invalidate("value_unit", $errMsg);
             return false;
         }
+
+        // 完了/未完了の単位の場合、開始/目標値の入力が無いのでチェック不要
         if ($unit == self::UNIT_BINARY) {
             return true;
         }
@@ -230,9 +232,10 @@ class KeyResult extends AppModel
 
         $inputKr = $this->data['KeyResult'];
         if (empty($inputKr['target_value'])) {
-            return true;
+            return false;
         }
 
+        // 目標値が変更無い場合はチェック不要
         if ($inputKr['target_value'] == $kr['target_value']) {
             return true;
         }
