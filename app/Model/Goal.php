@@ -2200,9 +2200,12 @@ class Goal extends AppModel
                 'KeyResult.completed' => null,
             ],
         ], $this);
-        $options['conditions'][] = $db->expression("EXISTS (".$subQuery.")");
+        $options['conditions'][] = $db->expression("EXISTS (" . $subQuery . ")");
 
         $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
         return Hash::extract($res, '{n}.Goal');
     }
 
