@@ -32,11 +32,8 @@ class ActionService extends AppService
      * @param array $fileIds
      * @param       $share
      *
-     * @return mixed|string
+     * @return bool|int
      * @throws Exception
-     * @internal param int $goalId
-     * @internal param int $userId
-     * @internal param $goalId
      */
     function create(array $action, array $fileIds, $share)
     {
@@ -125,7 +122,7 @@ class ActionService extends AppService
         Cache::delete($ActionResult->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($ActionResult->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
 
-        return $newActionId;
+        return (int)$newActionId;
 
     }
 }

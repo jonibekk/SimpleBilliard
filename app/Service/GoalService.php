@@ -638,4 +638,19 @@ class GoalService extends AppService
         }
         return true;
     }
+
+    /**
+     * アクション可能なゴール取得
+     *
+     * @param int $userId
+     *
+     * @return array
+     */
+    function findCanAction(int $userId) : array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        // コラボも含めて自分のゴールリスト取得
+        return $Goal->findCanAction($userId);
+    }
 }

@@ -27,7 +27,7 @@ class ActionsController extends ApiController
         $goalId = Hash::get($this->request->data, 'ActionResult.goal_id');
         $data = $this->request->data ?? [];
         $errRes = $this->_validateCreateAction($data);
-        if (!empty($errRes)) {
+        if ($errRes !== true) {
             return $errRes;
         }
 
@@ -58,7 +58,7 @@ class ActionsController extends ApiController
         $channelName = "goal_" . $goalId;
         $this->NotifyBiz->push($socketId, $channelName);
 
-        $krId = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
+        $krId = $this->request->data['ActionResult']['key_result_id'] ?? null;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goalId, $krId,
             $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
@@ -73,9 +73,10 @@ class ActionsController extends ApiController
     /**
      * アクション登録のバリデーション
      *
+     *
      * @param array $data
      *
-     * @return CakeResponse | null
+     * @return CakeResponse | true
      */
     private function _validateCreateAction(array $data)
     {
@@ -88,7 +89,6 @@ class ActionsController extends ApiController
         $goalId = Hash::get($data, 'ActionResult.goal_id');
         $goal = $GoalService->get($goalId);
         if (empty($goal)) {
-            $this->log(sprintf("[%s]Not exist goal. goal_id:%s", __METHOD__, $goalId), LOG_INFO);
             return $this->_getResponseBadFail(__("Not exist"));
         }
 
@@ -109,10 +109,14 @@ class ActionsController extends ApiController
         $krBeforeValue = Hash::get($data, "kr_before_value");
         $krId = Hash::get($data, 'ActionResult.key_result_id');
         $kr = $KeyResultService->get($krId);
-        $this->log(sprintf("[%s] request:%s db:%s", __METHOD__, $krBeforeValue,
-            Security::hash(Hash::get($kr, 'current_value'))));
         if ($krBeforeValue != Security::hash(Hash::get($kr, 'current_value'))) {
             return $this->_getResponseConflict("KR progress has been updated by another user. Please try again.");
+        }
+
+        // 画像アップロードチェック
+        $fileIds = $this->request->data('file_id');
+        if (empty($fileIds) || !is_array($fileIds)) {
+            return $this->_getResponseBadFail(__("Failed to upload image."));
         }
 
         // ゴールメンバーか
@@ -121,6 +125,6 @@ class ActionsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        return null;
+        return true;
     }
 }
