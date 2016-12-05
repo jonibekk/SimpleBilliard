@@ -1,14 +1,8 @@
-<?php
-// 「ゴールを選択する」の選択肢を削除
-// TODO:本来要素が無い状態で渡すべきだが、AppControllerの_setViewValOnRightColumnで設定しており影響範囲が広すぎるので将来的に修正
-unset($goal_list_for_action_option[""]);
-?>
-
 <div class="tab-pane fade" id="ActionForm">
-    <?php if (count($goal_list_for_action_option) <= 0): ?>
+    <?php if (count($canActionGoals) == 0): ?>
         <div class="post-panel-body plr_11px ptb_7px">
             <div class="alert alert-warning" role="alert">
-                <?= __('You have no goal.') ?>
+                <?= __('There is no goal that you can take action.') ?>
                 <a href="/goals/create/step1"
                    class="alert-link"><?= __('Create a goal') ?></a>
             </div>
@@ -83,7 +77,7 @@ unset($goal_list_for_action_option[""]);
                         'data-bv-notempty-message' => __("Input is required."),
                         'class'                    => 'form-control js-change-goal',
                         'id'                       => 'GoalSelectOnActionForm',
-                        'options'                  => $goal_list_for_action_option,
+                        'options'                  => $canActionGoals,
                         'target-value'             =>
                             isset($this->request->data['ActionResult']['key_result_id'])
                                 ? $this->request->data['ActionResult']['key_result_id']
