@@ -666,6 +666,9 @@ class AppController extends BaseController
                 $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
             );
             $goal_list_for_action_option = [null => __('Select a goal.')] + $current_term_goals_name_list;
+            // アクション可能なゴール数
+            $canActionGoals = $this->Goal->findCanAction($this->Auth->user('id'));
+            $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
 
             $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
             $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
@@ -674,14 +677,14 @@ class AppController extends BaseController
             Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
                 compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
                     'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-                    'my_previous_goals_count','isStartedEvaluation'),
+                    'my_previous_goals_count','isStartedEvaluation', 'canActionGoals'),
                 'user_data');
         }
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
         $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
             'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-            'my_previous_goals_count', 'isStartedEvaluation'));
+            'my_previous_goals_count', 'isStartedEvaluation', 'canActionGoals'));
     }
 
     /**
