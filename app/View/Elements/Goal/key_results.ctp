@@ -14,8 +14,11 @@
                     <!--progress bar-->
                     <?php // TODO:KR進捗機能がリリースされ次第、進捗率に合わせたバーの塗りつぶしと「{現在の進捗}/{目標値}」の表示に変える ?>
                     <div class="goal-detail-kr-progress-bar-wrap mtb_4px">
-                        <span class="goal-detail-kr-progress-text"><?= $kr['KeyResult']['display_value'] ?></span>
-                        <div class="goal-detail-kr-progress-bar mod-incomplete rate-0"></div>
+                        <span class="goal-detail-kr-progress-text">
+                            <?= $kr['KeyResult']['display_current_end_value']?>
+                        </span>
+                        <?php $progressClass = $kr['KeyResult']['progress_rate'] == 100 ? "mod-complete" : "mod-incomplete rate-".$kr['KeyResult']['progress_rate']?>
+                        <div class="goal-detail-kr-progress-bar <?=$progressClass?>"></div>
                     </div>
                     <dl class="goal-detail-kr-info-counts mb_4px">
                         <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-check-circle"></i></dt>
