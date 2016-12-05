@@ -78,12 +78,7 @@ class GoalsController extends ApiController
         if (!$ApiGoalService->checkMaxLimit((int)$this->request->query('limit'))) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-
-        try {
-            $searchResult = $this->_findSearchResults();
-        } catch (Exception $e) {
-            return $this->_getResponseBadFail($e->getMessage());
-        }
+        $searchResult = $this->_findSearchResults();
         return $this->_getResponsePagingSuccess($searchResult);
     }
 
