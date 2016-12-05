@@ -20,7 +20,7 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Action list") ?></h4>
         </div>
-        <div class="modal-body" id="ActionListBody">
+        <div class="modal-body without-footer" id="ActionListBody">
             <?php if (!empty($posts)): ?>
                 <?php if (isset($extractedByKR) && $extractedByKR): ?>
                     <!--START Key Result Post Header -->
@@ -54,13 +54,14 @@
                                     ]) ?>"
                                        class="no-line font_verydark modal-ajax-get">
                                         <?=
-                                        $this->Html->image('ajax-loader.gif',
+                                        $this->Html->image('pre-load.svg',
                                             [
                                                 'class' => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($posts[0],
                                                     "Goal.photo",
                                                     ['style' => 'small']),
-                                                'width' => '32px',
+                                                'width'  => '32px',
+                                                'height' => '32px',
                                                 'error-img' => "/img/no-image-link.png",
                                             ]
                                         )
@@ -100,10 +101,6 @@
                     </div>
                 </div>
             <?php endif; ?>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default"
-                    data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>
