@@ -47,13 +47,14 @@ class KeyResultService extends AppService
 
     /**
      * KRのValueUnitセレクトボックス値の生成
+     *
      * @return array $unit_select_list
      */
     function buildKrUnitsSelectList()
     {
         $units_config = Configure::read("label.units");
         $unit_select_list = [];
-        foreach($units_config as $v) {
+        foreach ($units_config as $v) {
             $unit_select_list[$v['id']] = "{$v['label']}({$v['unit']})";
         }
         return $unit_select_list;
@@ -70,7 +71,7 @@ class KeyResultService extends AppService
      */
     function processKeyResults($key_results, $model_alias = 'KeyResult', $symbol = '→')
     {
-        foreach($key_results as $k => $v) {
+        foreach ($key_results as $k => $v) {
             $key_results[$k][$model_alias] = $this->processKeyResult($v[$model_alias], $symbol);
         }
         return $key_results;
@@ -97,6 +98,7 @@ class KeyResultService extends AppService
         // 桁数が多いと指数表記(111E+など)になるため、ここで数字をフォーマットする
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
+        $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
 
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
@@ -187,7 +189,6 @@ class KeyResultService extends AppService
                     , var_export($addTkr, true)));
             }
 
-
             // 認定対象の場合のみゴールの認定ステータスを更新
             $goalLeaderId = $GoalMember->getGoalLeaderId($goalId);
             if ($GoalMemberService->isApprovableGoalMember($goalLeaderId)) {
@@ -227,7 +228,6 @@ class KeyResultService extends AppService
 
     /**
      * 少数/整数を表示用にフォーマットする
-     *
      * 1234.123000 -> 1234.123
      * 1234567890 -> 1234567890
      *
@@ -235,9 +235,35 @@ class KeyResultService extends AppService
      *
      * @return $float_deleted_right_zero
      */
-    public function formatBigFloat($floatNum) {
+    public function formatBigFloat($floatNum)
+    {
         $floatDeletedIndex = sprintf("%.3f", $floatNum);
         $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
         return $floatDeletedRightZero;
+    }
+
+    /**
+     * 未完了KRリスト取得
+     *
+     * @param int $goalId
+     *
+     * @return array
+     */
+    public function findIncomplete(int $goalId): array
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        $krs = $KeyResult->findIncomplete($goalId);
+        if (empty($krs)) {
+            return [];
+        }
+        foreach ($krs as &$kr) {
+            $kr['start_value'] = $this->formatBigFloat($kr['start_value']);
+            $kr['target_value'] = $this->formatBigFloat($kr['target_value']);
+            $kr['hash_current_value'] = Security::hash($kr['current_value']);
+            $kr['current_value'] = $this->formatBigFloat($kr['current_value']);
+
+        }
+        return $krs;
     }
 }

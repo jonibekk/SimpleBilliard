@@ -411,9 +411,6 @@ $(document).ready(function () {
   $(document).on("change", ".change-target-enabled", evTargetEnabled);
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".click-this-remove", evRemoveThis);
-  //noinspection JSUnresolvedVariable
-  $(document).on("change", ".change-next-select-with-value", evChangeTargetSelectWithValue);
-  //noinspection JSUnresolvedVariable
   $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".check-target-toggle", evToggle);
@@ -745,21 +742,6 @@ $(document).ready(function () {
     return checkUploadFileExpire('PostDisplayForm');
   });
 
-  // アクションフォーム submit 時
-  $(document).on('submit', '#CommonActionDisplayForm', function (e) {
-    var res = checkUploadFileExpire('CommonActionDisplayForm');
-    if (!res) {
-      // 画像アップロード画面に戻す
-      var $ActionImageAddButton = $('#ActionImageAddButton');
-      var target_ids = $ActionImageAddButton.attr('target-id').split(',');
-
-      for (var i = 0; i < target_ids.length; i++) {
-        $('#' + target_ids[i]).hide();
-      }
-      $ActionImageAddButton.show();
-    }
-    return res;
-  });
 
   // メッセージフォーム submit 時
   $(document).on('submit', '#MessageDisplayForm', function (e) {
@@ -860,10 +842,6 @@ $(document).ready(function () {
   // Ctrl(Command) + Enter 押下時のコールバック
   ///////////////////////////////////////////////////////////////////////////
 
-  // アクションフォーム
-  bindCtrlEnterAction('#CommonActionDisplayForm', function (e) {
-    $('#CommonActionSubmit').trigger('click');
-  });
 
   // 投稿フォーム
   bindCtrlEnterAction('#PostDisplayForm', function (e) {
@@ -1578,16 +1556,6 @@ function setSelectOptions(url, select_id, target_toggle_id, selected) {
       }
     }
   });
-}
-
-function evChangeTargetSelectWithValue() {
-  attrUndefinedCheck(this, 'target-id');
-  attrUndefinedCheck(this, 'ajax-url');
-  var target_id = $(this).attr("target-id");
-  var url = $(this).attr("ajax-url") + $(this).val();
-  var target_toggle_id = $(this).attr("toggle-target-id") != undefined ? $(this).attr("toggle-target-id") : null;
-  var selected = $(this).attr('target-value');
-  setSelectOptions(url, target_id, target_toggle_id, selected);
 }
 
 function evShowAndThisWideClose() {
@@ -5280,6 +5248,7 @@ $(document).ready(function () {
       if ($button.size()) {
         evTargetShowThisDelete.call($button.get(0));
       }
+      $('#GoalSelectOnActionForm').trigger('change');
       $(file.previewTemplate).show();
     },
     afterQueueComplete: function (file) {
