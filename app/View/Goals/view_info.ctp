@@ -25,10 +25,14 @@
                 <li class="goal-detail-goal-labels">
                     <?php if (!empty($goalLabels)): ?>
                         <?php foreach ($goalLabels as $label): ?>
-                            <span class="goal-detail-label"><?= $label['name'] ?></span>
+                            <span class="goal-detail-label">
+                                <a href="/goals?labels[]=<?= $label['name'] ?>"
+                                   target="<?= $is_mb_app ? "_self" : "_blank" ?>"><?= $label['name'] ?>
+                                </a>
+                            </span>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目     ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目       ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
