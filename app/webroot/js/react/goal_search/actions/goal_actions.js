@@ -44,6 +44,13 @@ export function fetchInitialData() {
   }
 }
 
+export function updateKeyword(data) {
+  return {
+    type: ActionTypes.UPDATE_KEYWORD,
+    data,
+  }
+}
+
 export function updateFilter(data) {
   return (dispatch, getState) => {
     dispatch({
@@ -56,7 +63,7 @@ export function updateFilter(data) {
       data
     )
 
-    let queries = Object.assign({},search_conditions)
+    let queries = Object.assign({}, search_conditions)
     //querystring.stringifyすると配列がqueryのkeyダブってセットされてしまう(hoge=aaa&hoge=bbb)ので、hoge[]にキーを事前に書き換える
     if ('labels' in queries) {
       queries["labels[]"] = queries.labels
