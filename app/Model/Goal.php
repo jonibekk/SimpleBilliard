@@ -1046,7 +1046,14 @@ class Goal extends AppModel
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
-            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.start_date', 'Goal.end_date'],
+            'fields'     => [
+                'Goal.id',
+                'Goal.user_id',
+                'Goal.name',
+                'Goal.photo_file_name',
+                'Goal.start_date',
+                'Goal.end_date'
+            ],
             'contain'    => [
                 'ActionResult'      => [
                     'fields'           => [
@@ -2147,4 +2154,59 @@ class Goal extends AppModel
         }
         return $res;
     }
+
+    /**
+     * アクション可能なゴールリストを取得
+     *
+     * 条件
+     * ・ゴールメンバー
+     * ・今期のゴール
+     * ・未完了なKRが存在する
+     *
+     * @param int    $userId
+     *
+     * @return array $res
+     * @internal param array $key_results [description]
+     */
+    function findCanAction(int $userId): array
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $options = [
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.user_id' => $userId,
+                        'GoalMember.team_id' => $this->current_team_id,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'Goal.end_date >=' => $currentTerm['start_date'],
+                'Goal.end_date <=' => $currentTerm['end_date'],
+            ],
+        ];
+        // アクション可能なゴールを抽出(未完了なKRが存在するか)
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => array('KeyResult.id'),
+            'table'      => 'key_results',
+            'alias'      => 'KeyResult',
+            'conditions' => [
+                'KeyResult.goal_id = Goal.id',
+                'KeyResult.completed' => null,
+            ],
+        ], $this);
+        $options['conditions'][] = $db->expression("EXISTS (" . $subQuery . ")");
+
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.Goal');
+    }
+
 }
