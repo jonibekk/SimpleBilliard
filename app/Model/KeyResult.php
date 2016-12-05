@@ -116,6 +116,10 @@ class KeyResult extends AppModel
                 'required' => 'create',
                 'rule'     => 'notBlank',
             ],
+            'validateEditProgressStartEnd' => [
+                'on' => 'update',
+                'rule' => 'validateEditProgressStartEnd',
+            ],
         ],
         'start_value'  => [
             'requiredCaseExistUnit' => [
@@ -192,6 +196,79 @@ class KeyResult extends AppModel
             return true;
         }
         if ($val === "") {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * バリデーション
+     * KR進捗の進捗開始/終了値更新
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateEditProgressStartEnd(array $val) : bool
+    {
+        $unit = array_shift($val);
+        $errMsg = __("Invalid Request.");
+        if (empty($unit)) {
+            $this->invalidate("value_unit", $errMsg);
+            return false;
+        }
+        if ($unit == self::UNIT_BINARY) {
+            return true;
+        }
+
+        $krId = Hash::get($this->data, 'KeyResult.id');
+        $kr = $this->getById($krId);
+        if (empty($kr)) {
+            $this->invalidate("value_unit", $errMsg);
+            return false;
+        }
+
+        $inputKr = $this->data['KeyResult'];
+        if (empty($inputKr['target_value'])) {
+            return true;
+        }
+
+        if ($inputKr['target_value'] == $kr['target_value']) {
+            return true;
+        }
+
+        $inputDiffStartEnd = $inputKr['target_value'] - $kr['start_value'];
+        // 開始値と目標値が同じ値でないか
+        if ($inputDiffStartEnd == 0) {
+            $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
+            return false;
+        }
+
+        $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
+        // 進捗の値が増加から減少の方向に変更してないか
+        if ($isProgressIncrease && $inputDiffStartEnd < 0) {
+            $this->invalidate('value_unit', __("You can not change the values from increase to decrease."));
+            return false;
+        }
+
+        // 進捗の値が減少から増加の方向に変更してないか
+        if (!$isProgressIncrease && $inputDiffStartEnd > 0) {
+            $this->invalidate('value_unit', __("You can not change the values from decrease to increase."));
+            return false;
+        }
+
+        // 目標値を現在値と同じ値への変更はOK
+        if ($inputKr['target_value'] == $kr['current_value']) {
+            return true;
+        }
+
+        /* 目標値が現在値未満の値でないか */
+        if ($isProgressIncrease && $inputKr['target_value'] < $kr['current_value']) {
+            $this->invalidate('value_unit', __("You can not change target value less than current value"));
+            return false;
+        }
+        if (!$isProgressIncrease && $inputKr['target_value'] > $kr['current_value']) {
+            $this->invalidate('value_unit', __("You can not change target value less than current value"));
             return false;
         }
         return true;
@@ -419,8 +496,6 @@ class KeyResult extends AppModel
     function isPermitted($kr_id)
     {
         $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
-        $this->log(__METHOD__);
-        $this->log(compact('key_result'));
         if (empty($key_result)) {
             return false;
         }
@@ -448,6 +523,10 @@ class KeyResult extends AppModel
         $validate_backup = $this->validate;
         $this->validate = array_merge($this->validate, $this->post_validate);
         if (!$this->validates()) {
+            // 今はエラーの詳細ではなくただ失敗したことしか画面に表示していないので
+            // 何が原因で失敗したのかが全く分からない。
+            // よってログに出力
+            $this->log($this->validationErrors, LOG_INFO);
             return false;
         }
         $this->validate = $validate_backup;
