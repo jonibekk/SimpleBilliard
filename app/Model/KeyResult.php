@@ -116,6 +116,9 @@ class KeyResult extends AppModel
                 'required' => 'create',
                 'rule'     => 'notBlank',
             ],
+            'validateEditProgressStartEnd' => [
+                'rule' => 'validateEditProgressStartEnd',
+            ],
         ],
         'start_value'  => [
             'requiredCaseExistUnit' => [
@@ -192,6 +195,79 @@ class KeyResult extends AppModel
             return true;
         }
         if ($val === "") {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * バリデーション
+     * KR進捗の開始/終了更新
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateEditProgressStartEnd($val)
+    {
+        $unit = array_shift($val);
+        $errMsg = __("Invalid Request.");
+        if (empty($unit)) {
+            $this->invalidate("value_unit", $errMsg);
+            return false;
+        }
+        if ($unit == self::UNIT_BINARY) {
+            return true;
+        }
+
+        $krId = Hash::get($this->data, 'KeyResult.id');
+        $kr = $this->getById($krId);
+        if (empty($kr)) {
+            $this->invalidate("value_unit", $errMsg);
+            return false;
+        }
+
+        $inputKr = $this->data['KeyResult'];
+        if (empty($inputKr['target_value'])) {
+            return true;
+        }
+
+        if ($inputKr['target_value'] == $kr['target_value']) {
+            return true;
+        }
+
+        $inputDiffStartEnd = $inputKr['target_value'] - $kr['start_value'];
+        // 開始値と目標値が同じ値でないか
+        if ($inputDiffStartEnd == 0) {
+            $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
+            return false;
+        }
+
+        $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
+        // 進捗の値が増加から減少の方向に変更してないか
+        if ($isProgressIncrease && $inputDiffStartEnd < 0) {
+            $this->invalidate('value_unit', __("You can not change the values from increase to decrease."));
+            return false;
+        }
+
+        // 進捗の値が減少から増加の方向に変更してないか
+        if (!$isProgressIncrease && $inputDiffStartEnd > 0) {
+            $this->invalidate('value_unit', __("You can not change the values from decrease to increase."));
+            return false;
+        }
+
+        // 目標値を現在値と同じ値への変更はOK
+        if ($inputKr['target_value'] == $kr['current_value']) {
+            return true;
+        }
+
+        /* 目標値が現在値未満の値でないか */
+        if ($isProgressIncrease && $inputKr['target_value'] < $kr['current_value']) {
+            $this->invalidate('value_unit', __("You can not change target value less than current value"));
+            return false;
+        }
+        if (!$isProgressIncrease && $inputKr['target_value'] > $kr['current_value']) {
+            $this->invalidate('value_unit', __("You can not change target value less than current value"));
             return false;
         }
         return true;
@@ -313,6 +389,31 @@ class KeyResult extends AppModel
 
         $res = $this->find($find_type, $options);
         return $res;
+    }
+
+    /**
+     * 未完了KRリスト取得
+     *
+     * @param int $goalId
+     *
+     * @return array
+     */
+    function findIncomplete(int $goalId): array
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goalId,
+                'team_id'   => $this->current_team_id,
+                'completed' => null
+            ],
+            'order'      => [
+                'KeyResult.tkr_flg DESC',
+                'KeyResult.priority DESC',
+                'KeyResult.end_date ASC',
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.KeyResult');
     }
 
     /**
@@ -559,9 +660,9 @@ class KeyResult extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
 
         // 0件のゴールも配列要素を作り、値を0として返す
@@ -572,7 +673,9 @@ class KeyResult extends AppModel
 
     /**
      * 評価ページ表示用にKR一覧を取得
+     *
      * @param $goalId
+     *
      * @return $krs
      */
     public function getKeyResultsForEvaluation($goalId, $userId)
@@ -588,7 +691,7 @@ class KeyResult extends AppModel
             ],
             'contain'    => [
                 'ActionResult' => [
-                    'conditions' =>[
+                    'conditions' => [
                         'user_id' => $userId
                     ]
                 ]
@@ -597,7 +700,7 @@ class KeyResult extends AppModel
         $res = $this->find('all', $options);
 
         $krs = [];
-        foreach($res as $key => $val) {
+        foreach ($res as $key => $val) {
             $krs[$key] = Hash::extract($val, "KeyResult");
             $krs[$key]['ActionResult'] = Hash::extract($val, "ActionResult");
         }

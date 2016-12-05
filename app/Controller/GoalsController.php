@@ -4,6 +4,7 @@ App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalMemberService');
+App::import('Service', 'ActionService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
@@ -15,10 +16,18 @@ App::import('Service', 'KeyResultService');
  */
 class GoalsController extends AppController
 {
+    public $components = [
+        'Security',
+    ];
 
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $allowed_actions = ['add_completed_action'];
+        //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
+        if (in_array($this->request->params['action'], $allowed_actions)) {
+            $this->Security->validatePost = false;
+        }
     }
 
     /**
@@ -939,13 +948,25 @@ class GoalsController extends AppController
 
     public function ajax_get_kr_list()
     {
-        $goal_id = $this->request->params['named']['goal_id'];
+        $goalId = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
-        $kr_list = [];
-        if ($goal_id) {
-            $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list", true);
+        if (empty($goalId)) {
+            return $this->_ajaxGetResponse([
+                'html' => '',
+            ]);
         }
-        return $this->_ajaxGetResponse($kr_list);
+
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        $krs = $KeyResultService->findIncomplete($goalId);
+        $this->set('krs', $krs);
+        // HTML出力
+        $response = $this->render('Action/input_kr_progress');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse([
+            'html' => $html,
+        ]);
     }
 
     /**
@@ -1210,7 +1231,7 @@ class GoalsController extends AppController
 
     /**
      * 完了アクション追加
-     * TODO 今後様々なバリエーションのアクションが追加されるが、全てこのfunctionで処理する
+     * TODO:API化したので廃止予定
      */
     public function add_completed_action()
     {
@@ -1286,29 +1307,6 @@ class GoalsController extends AppController
         ] : $this->referer();
         return $this->redirect($url);
 
-    }
-
-    public function ajax_get_new_action_form()
-    {
-        $goal_id = $this->request->params['named']['goal_id'];
-        $result = [
-            'error' => true,
-            'msg'   => __("An error has occurred."),
-            'html'  => null
-        ];
-        $this->_ajaxPreProcess();
-        if (isset($this->request->params['named']['ar_count'])
-            && $this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))
-        ) {
-            $this->set('ar_count', $this->request->params['named']['ar_count']);
-            $this->set(compact('goal_id'));
-            $response = $this->render('Goal/add_new_action_form');
-            $html = $response->__toString();
-            $result['html'] = $html;
-            $result['error'] = false;
-            $result['msg'] = null;
-        }
-        return $this->_ajaxGetResponse($result);
     }
 
     public function ajax_get_my_goals()
