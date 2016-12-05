@@ -72,6 +72,13 @@ class GoalsController extends ApiController
      */
     function get_search()
     {
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+        // 取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit((int)$this->request->query('limit'))) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+
         try {
             $searchResult = $this->_findSearchResults();
         } catch (Exception $e) {
@@ -98,10 +105,6 @@ class GoalsController extends ApiController
         $order = $this->request->query('order');
         $conditions = $this->_fetchSearchConditions();
 
-        // 取得件数上限チェック
-        if (!$ApiGoalService->checkMaxLimit($limit)) {
-            throw new Exception(__("Get count over the upper limit"));
-        }
         $limit = empty($limit) ? ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
 
         // ゴール検索
@@ -133,13 +136,16 @@ class GoalsController extends ApiController
      */
     function get_init_search()
     {
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+        // 取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit((int)$this->request->query('limit'))) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+
         $res = [];
         // ゴール検索
-        try {
-            $res['search_result'] = $this->_findSearchResults();
-        } catch (Exception $e) {
-            return $this->_getResponseBadFail($e->getMessage());
-        }
+        $res['search_result'] = $this->_findSearchResults();
         // 検索条件を返却
         $res['search_conditions'] = $this->_fetchSearchConditions();
 
