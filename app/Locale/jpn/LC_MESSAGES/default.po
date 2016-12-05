@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-29 18:56+0900\n"
+"PO-Revision-Date: 2016-12-05 11:05+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -681,6 +681,9 @@ msgstr "グループビジョンを追加しました。"
 msgid "Failed to save group vision."
 msgstr "グループビジョンの保存に失敗しました。"
 
+msgid "You don't have a permission."
+msgstr "権限がありません。"
+
 msgid "Updated group vision."
 msgstr "グループビジョンを更新しました。"
 
@@ -795,9 +798,6 @@ msgstr "メールアドレスの登録ができました。"
 
 msgid "You should be logged in."
 msgstr "ログインが必要です。"
-
-msgid "You don't have a permission."
-msgstr "権限がありません。"
 
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
@@ -2834,8 +2834,8 @@ msgstr "投稿"
 msgid "Message"
 msgstr "メッセージ"
 
-msgid "You have no goal."
-msgstr "今期のゴールがありません。"
+msgid "There is no goal that you can take action."
+msgstr "アクションできるゴールがありません。"
 
 msgid "View options"
 msgstr "オプションを表示"

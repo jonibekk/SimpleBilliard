@@ -88,7 +88,7 @@ if (!isset($goal_list_for_action_option)) {
             <?php if (count($goal_list_for_action_option) <= 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
-                        <?= __('You have no goal.') ?>
+                        <?= __('There is no goal that you can take action.') ?>
                         <a href="/goals/create/step1"
                            class="alert-link"><?= __('Create a goal') ?></a>
                     </div>
