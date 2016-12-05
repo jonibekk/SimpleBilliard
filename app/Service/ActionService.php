@@ -20,7 +20,7 @@ App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
 
 /**
- * Class GoalService
+ * Class ActionService
  */
 class ActionService extends AppService
 {

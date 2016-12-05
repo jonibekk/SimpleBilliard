@@ -164,15 +164,18 @@ class ActionResult extends AppModel
             ],
             'validateKrProgress' => [
                 'rule' => ['validateKrProgress'],
-                //                'message' => ""
             ],
         ],
     ];
 
     /**
      * アクションに紐付けるKRが存在するか
+     *
+     * @param array $val
+     *
+     * @return bool
      */
-    function validateExistKr($val)
+    function validateExistKr(array $val) : bool
     {
         $krId = array_shift($val);
         if (empty($krId)) {
@@ -192,12 +195,11 @@ class ActionResult extends AppModel
     /**
      * KR進捗更新チェック
      *
-     * @param      $val
+     * @param array $val
      *
-     * @return array|null
-     * @internal param $data
+     * @return bool
      */
-    function validateKrProgress($val)
+    function validateKrProgress(array $val) : bool
     {
         $currentVal = array_shift($val);
         if ($currentVal === "") {

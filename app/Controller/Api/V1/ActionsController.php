@@ -5,17 +5,8 @@ App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'ActionService');
 
-/** @noinspection PhpUndefinedClassInspection */
-
 /**
- * Created by PhpStorm.
- * User: daikihirakata
- * Date: 9/6/16
- * Time: 16:38
- *
- * @property Goal        $Goal
- * @property TeamVision  $TeamVision
- * @property GroupVision $GroupVision
+ * Class ActionsController
  */
 class ActionsController extends ApiController
 {
