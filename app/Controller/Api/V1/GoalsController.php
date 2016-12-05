@@ -74,31 +74,55 @@ class GoalsController extends ApiController
     {
         /** @var ApiGoalService $ApiGoalService */
         $ApiGoalService = ClassRegistry::init("ApiGoalService");
+        // 取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit((int)$this->request->query('limit'))) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+        $searchResult = $this->_findSearchResults();
+        return $this->_getResponsePagingSuccess($searchResult);
+    }
+
+    /**
+     * ゴール検索の共通処理
+     * ゴール初期データと検索用API両方で利用する
+     *
+     * @return array
+     * @throws Exception もし取得上限数超えていたら例外投げる
+     */
+    private function _findSearchResults(): array
+    {
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
 
         /* リクエストパラメータ取得 */
         $offset = $this->request->query('offset');
         $limit = (int)$this->request->query('limit');
         $order = $this->request->query('order');
-        $conditions = [
-            'keyword' => $this->request->query('keyword'),
-            'category' => $this->request->query('category'),
-            'progress' => $this->request->query('progress'),
-            'term' => $this->request->query('term'),
-            'labels' => $this->request->query('labels'),
-        ];
+        $conditions = $this->_fetchSearchConditions();
 
-        // 取得件数上限チェック
-        if (!$ApiGoalService->checkMaxLimit($limit)) {
-            return $this->_getResponseBadFail(__("Get count over the upper limit"));
-        }
         $limit = empty($limit) ? ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
 
         // ゴール検索
         $searchResult = $ApiGoalService->search($this->Auth->user('id'), $conditions, $offset, $limit, $order);
-
-        return $this->_getResponsePagingSuccess($searchResult);
+        return $searchResult;
     }
 
+    /**
+     * クエリパラメータからゴール検索条件を取得
+     *
+     * @return array
+     */
+    private function _fetchSearchConditions(): array
+    {
+        $conditions = [
+            'keyword'  => $this->request->query('keyword'),
+            'category' => $this->request->query('category'),
+            'progress' => $this->request->query('progress'),
+            'term'     => $this->request->query('term'),
+            'labels'   => $this->request->query('labels') ?? [],
+        ];
+        return $conditions;
+    }
 
     /**
      * ゴール検索初期データ取得
@@ -107,10 +131,18 @@ class GoalsController extends ApiController
      */
     function get_init_search()
     {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+        // 取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit((int)$this->request->query('limit'))) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
 
         $res = [];
+        // ゴール検索
+        $res['search_result'] = $this->_findSearchResults();
+        // 検索条件を返却
+        $res['search_conditions'] = $this->_fetchSearchConditions();
 
         /* @var Label $Label */
         $Label = ClassRegistry::init('Label');
@@ -122,14 +154,8 @@ class GoalsController extends ApiController
 
         $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
 
-        /** @var ApiGoalService $ApiGoalService */
-        $ApiGoalService = ClassRegistry::init("ApiGoalService");
-        // ゴール検索
-        $res['search_result'] = $ApiGoalService->search($this->Auth->user('id'), [], 0, ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT);
-
         return $this->_getResponseSuccess($res);
     }
-
 
     /**
      * ゴール更新のバリデーションAPI
@@ -211,7 +237,7 @@ class GoalsController extends ApiController
             // TODO:サービスに移行
             $tmp = $this->TeamVision->getTeamVision($this->current_team_id, true, true);
             $team_visions = [];
-            foreach ($tmp  as $vision) {
+            foreach ($tmp as $vision) {
                 $v = $vision['TeamVision'];
                 $v['team'] = $vision['Team'];
                 $team_visions[] = $v;
@@ -256,8 +282,10 @@ class GoalsController extends ApiController
             $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
             $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
             $res['default_end_dates'] = [
-                EvaluateTerm::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'], $currentTerm['timezone']),
-                EvaluateTerm::TERM_TYPE_NEXT    => $TimeExHelper->dateFormat($nextTerm['end_date'], $nextTerm['timezone']),
+                EvaluateTerm::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'],
+                    $currentTerm['timezone']),
+                EvaluateTerm::TERM_TYPE_NEXT    => $TimeExHelper->dateFormat($nextTerm['end_date'],
+                    $nextTerm['timezone']),
             ];
         }
 
@@ -477,7 +505,6 @@ class GoalsController extends ApiController
 
         return $this->_getResponseSuccess(['follow_id' => $newId]);
     }
-
 
     /**
      * フォロー解除

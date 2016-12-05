@@ -9,10 +9,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-      fetchInitialData: () => dispatch(actions.fetchInitialData()),
-      updateData: (data, key = "") => dispatch(actions.updateData(data, key = "")),
-      updateFilter: (data) => dispatch(actions.updateFilter(data)),
-      fetchMoreGoals: (url) => dispatch(actions.fetchMoreGoals(url))
+    fetchInitialData: () => dispatch(actions.fetchInitialData()),
+    updateData: (data, key = "") => dispatch(actions.updateData(data, key = "")),
+    updateFilter: (data) => dispatch(actions.updateFilter(data)),
+    updateKeyword: (data) => dispatch(actions.updateKeyword(data)),
+    fetchMoreGoals: (url) => dispatch(actions.fetchMoreGoals(url))
   }
 }
 
