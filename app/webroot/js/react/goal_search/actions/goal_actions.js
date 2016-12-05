@@ -30,8 +30,7 @@ export function fetchInitialData() {
       type: ActionTypes.LOADING,
     })
     //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
-    let query = location.search
-    return axios.get(`/api/v1/goals/init_search` + query)
+    return axios.get(`/api/v1/goals/init_search` + location.search)
       .then((response) => {
         let data = response.data.data
         dispatch({
