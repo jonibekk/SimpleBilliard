@@ -49,8 +49,11 @@ class TkrChangeLogTest extends GoalousTestCase
         $this->_setDefault();
         //データの準備
         $kr = $this->TkrChangeLog->KeyResult->findByGoalId(1);
-        $kr['KeyResult']['tkr_flg'] = true;
-        $this->TkrChangeLog->KeyResult->save($kr);
+        $saveKr = [
+            'id' => $kr['KeyResult']['id'],
+            'tkr_flg' => true
+        ];
+        $this->TkrChangeLog->KeyResult->save($saveKr);
         $this->TkrChangeLog->KeyResult->id = $kr['KeyResult']['id'];
         $this->TkrChangeLog->KeyResult->saveField('name', 'test1');
         $this->TkrChangeLog->saveSnapshot(1);
@@ -58,7 +61,6 @@ class TkrChangeLogTest extends GoalousTestCase
         $this->TkrChangeLog->KeyResult->saveField('name', 'test2');
         $this->TkrChangeLog->saveSnapshot(1);
         $snapshot = $this->TkrChangeLog->findLatestSnapshot(1);
-        $this->assertNotEmpty($snapshot);
         $this->assertNotEmpty($snapshot);
         $this->assertEquals('test2', $snapshot['name']);
     }
