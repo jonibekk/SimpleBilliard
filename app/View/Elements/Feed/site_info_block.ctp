@@ -37,10 +37,11 @@ if (isset($site_info['type']) && (
                     <div class="pull-left">
                         <?php if ($img_src): ?>
                             <?=
-                            $this->Html->image('ajax-loader.gif', [
+                            $this->Html->image('pre-load.svg', [
                                 'class'         => 'lazy media-object',
                                 'data-original' => $img_src,
                                 'width'         => '80px',
+                                'height'        => '80px',
                                 'error-img'     => "/img/no-image-link.png",
                             ])
                             ?>
