@@ -3715,7 +3715,7 @@ function showMore(obj) {
     $(obj).find('.showmore-action').showMore({
       speedDown: 300,
       speedUp: 300,
-      height: '58px',
+      height: '42px',
       showText: showText,
       hideText: hideText
     });
@@ -3782,7 +3782,7 @@ function showMore(obj) {
     $('.showmore-action').showMore({
       speedDown: 300,
       speedUp: 300,
-      height: '58px',
+      height: '42px',
       showText: showText,
       hideText: hideText
     });

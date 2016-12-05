@@ -779,7 +779,8 @@ class Post extends AppModel
                         'photo4_file_name',
                         'photo5_file_name',
                         'key_result_before_value',
-                        'key_result_change_value'
+                        'key_result_change_value',
+                        'key_result_target_value'
                     ],
                     'KeyResult'        => [
                         'fields' => [

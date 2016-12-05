@@ -111,7 +111,8 @@
     <?php endforeach; ?>
 </div>
 <div class="panel-body">
-    <div class="col col-xxs-12 font_bold font_14px font_verydark pt_4px">
+    <?php if (!is_null($post['ActionResult']['key_result_target_value'])):?>
+        <div class="feed-progress">
         <i class="fa fa-tachometer"></i>
         <?php
         $changValue = $post['ActionResult']['key_result_change_value'];
@@ -124,13 +125,16 @@
         $displayChangeValue .= AppUtil::formatBigFloat($post['ActionResult']['key_result_change_value']);
         ?>
         <?= AppUtil::formatBigFloat($post['ActionResult']['key_result_before_value']) ?>
-        / <?= AppUtil::formatBigFloat($post['ActionResult']['KeyResult']['target_value']) ?>
-        (<span class="font_rougeOrange"><?= $displayChangeValue ?></span>)
+        / <span class="feed-progress-target"><?= AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']) ?></span>
+        ( <span class="feed-progress-change"><?= $displayChangeValue ?></span> )
     </div>
+    <?php endif;?>
     <div
         class="col col-xxs-12 feed-contents post-contents mod-action showmore-action font_14px font_verydark box-align"
         id="PostTextBody_<?= $post['Post']['id'] ?>">
-        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
+<?php //チェックアイコンはすぐに戻す可能性があるのでコメントアウト ?>
+<!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
+        <?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
     </div>
     <?php if ($post['Post']['site_info']): ?>
         <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
