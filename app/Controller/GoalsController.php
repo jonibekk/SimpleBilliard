@@ -504,15 +504,23 @@ class GoalsController extends AppController
      *
      * @return [type] [description]
      */
-    public function exchange_leader()
+    public function change_leader_with_collaboration()
     {
         /** @var GoalService $GoalService */
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
         $formData = $this->request->data('GoalMember');
-        $goalId = Hash::get($formData, 'goal_id');
 
-        $errMsg = $GoalMemberService->validateExchangeLeader($goalId);
+        // バリデーション
+        $validationRes = $GoalMemberService->validateChangeLeader($formData, $type = $GoalMemberService::CHANGE_LEADER_WITH_COLLABORATION);
+        if ($validationRes !== true) {
+            $this->Pnotify->outError($validationRes);
+            return $this->redirect($this->referer());
+        }
+
+        $changedLeader = $GoalService->changeLeaderWithCollaboration();
 
         // レコードのTYPEをそれぞれ変更するやり方
         // リーダーのTYPEをコラボレーターに、コラボレーターのTYPEをリーダーに変更する

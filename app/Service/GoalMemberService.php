@@ -17,6 +17,11 @@ class GoalMemberService extends AppService
     const EXTEND_COACH = "GOAL:EXTEND_COACH";
     const EXTEND_COACHEE = "GOAL:EXTEND_COACHEE";
 
+    /* リーダー変更リクエストの種類 */
+    const CHANGE_LEADER_WITH_COLLABORATION = 1;
+    const CHANGE_LEADER_WITH_QUIT = 2;
+    const CHANGE_LEADER_FROM_GOAL_MEMBER = 3;
+
     /**
      * idによる単体データ取得
      *
@@ -158,7 +163,103 @@ class GoalMemberService extends AppService
         return $GoalMember->isLeader($goalId, $userId);
     }
 
-    public function validateExchangeLeader(int $goalId)
+    /**
+     * アクティブなゴールリーダーIDを取得
+     * @param  int $goalId [description]
+     * @return [type]         [description]
+     */
+    function getAcitiveLeaderId(int $goalId)
+    {
+        if (!$goalId) {
+            return null;
+        }
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        $res = $GoalMember->find('first', [
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'GoalMember.type'       => self::TYPE_OWNER,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ]);
+        if (empty($res)) {
+            return null;
+        }
+        return Hash::get($res, 'GoalMember.id');
+    }
+
+    /**
+     * ゴールメンバーがアクティブかどうか判定
+     * @param  int  $goalMemberId
+     * @return bool
+     */
+    function isActiveGoalMember(int $goalMemberId): bool
+    {
+        if (!$goalMemberId) {
+            return false;
+        }
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        $res = $GoalMember->find('first', [
+            'conditions' => [
+                'GoalMember.id'         => $goalMemberId,
+                'GoalMember.type'       => self::TYPE_COLLABORATOR,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ]);
+
+        return (boolean)$res;
+    }
+
+    public function validateChangeLeader(int $formData, int $changeType)
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
@@ -166,10 +267,9 @@ class GoalMemberService extends AppService
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
 
         // パラメータ存在チェック
+        $goalId = Hash::get($formData, 'Goal.id');
         if (empty($goalId)) {
             return __("Invalid Request.");
         }
@@ -196,24 +296,48 @@ class GoalMemberService extends AppService
             }
         }
 
-        // 自分がゴールメンバーかどうか
-        if (!$GoalMember->isCollaborated()) {
-            return __("You don't have a permission to edit this goal.");
+        // リーダーがinactiveのケース
+        if ($changeType === self::CHANGE_LEADER_FROM_GOAL_MEMBER) {
+            // 自分がゴールメンバーかどうか
+            if (!$GoalMember->isCollaborated()) {
+                return __("Some error occurred. Please try again from the start.");
+            }
+
+            // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
+            $goalLeaderId = $this->getAcitiveLeaderId($goalId);
+            if ($goalLeaderId) {
+                return __("Some error occurred. Please try again from the start.");
+            }
+        // 自分がリーダーのケース
+        } else {
+            // 自分がリーダーかどうか
+            $loginUserIsLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
+            if (!$loginUserIsLeader) {
+                return __("Some error occurred. Please try again from the start.");
+            }
         }
 
-        // 自分がリーダーかどうか
-        $loginUserisLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
-        if ($loginUserisLeader) {
-            return true;
-        }
-
-        // リーダーが存在するか
-        // 自分がリーダーでなく、他にリーダーが存在する場合はリーダー変更の権限無し
-        $goalLeaderId = $GoalMember->getGoalLeaderId($goalId);
-        if ($goalLeaderId) {
-            return __("You don't have a permission to edit this goal.");
+        // 変更後のリーダーがアクティブなゴールメンバーかどうか
+        $newLeaderId = Hash::get($formData, 'GoalMember.id');
+        if (!$this->isActiveGoalMember($newLeaderId)) {
+            return __("Some error occurred. Please try again from the start.");
         }
 
         return true;
+    }
+
+    public function changeLeaderWithCollaboration()
+    {
+
+    }
+
+    public function changeLeaderWithQuitGoal()
+    {
+
+    }
+
+    public function changeLeaderByGoalMember()
+    {
+
     }
 }
