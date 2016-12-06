@@ -40,6 +40,7 @@ bash "yarn install" do
   user 'deploy'
   group 'www-data'
   code <<-EOS
+  source /usr/local/nvm/nvm.sh
   export USER='deploy'
   export HOME='/home/deploy'
   cd #{release_path}
