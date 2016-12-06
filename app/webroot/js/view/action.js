@@ -24,6 +24,12 @@ var Page = {
     });
     // フォームサブミット
     $(this.conf.form).submit(function (e) {
+      // アクション編集の場合submitさせる
+      // TODO:将来的にAPI化
+      if ($(this).data('is-edit')) {
+        return true;
+      }
+
       e.stopImmediatePropagation();
       e.preventDefault();
       if (self.submit_flg) {
