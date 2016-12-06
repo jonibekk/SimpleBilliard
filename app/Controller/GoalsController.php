@@ -499,6 +499,27 @@ class GoalsController extends AppController
         return "";
     }
 
+    /**
+     * リーダー変更アクション
+     *
+     * @return [type] [description]
+     */
+    public function exchange_leader()
+    {
+        /** @var GoalService $GoalService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
+        $formData = $this->request->data('GoalMember');
+        $goalId = Hash::get($formData, 'goal_id');
+
+        $errMsg = $GoalMemberService->validateExchangeLeader($goalId);
+
+        // レコードのTYPEをそれぞれ変更するやり方
+        // リーダーのTYPEをコラボレーターに、コラボレーターのTYPEをリーダーに変更する
+
+        // リーダーが不在の場合は誰でもリーダー変更を許可
+    }
+
     public function edit_key_result()
     {
         $kr_id = $this->request->params['named']['key_result_id'];

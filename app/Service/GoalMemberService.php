@@ -157,4 +157,63 @@ class GoalMemberService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         return $GoalMember->isLeader($goalId, $userId);
     }
+
+    public function validateExchangeLeader(int $goalId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        // パラメータ存在チェック
+        if (empty($goalId)) {
+            return __("Invalid Request.");
+        }
+
+        // ゴールが存在するか
+        $goal = $this->Goal->findById($goalId);
+        if (empty($goal)) {
+            return __("This goal doesn't exist.");
+        }
+
+        // 今期以降のゴールか
+        $isAfterCurrentGoal = $GoalService->isAfterCurrentGoal($goalId);
+        if(!$isAfterCurrentGoal) {
+            return __("Can change leader after current term's goal.");
+        }
+
+        // 評価開始前か
+        $termType = $GoalService->getTermType(Hash::get($goal, 'Goal.start_date'));
+        if ($termType == GoalService::TERM_TYPE_CURRENT) {
+            $currentTermId = $EvaluateTerm->getCurrentTermId();
+            $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
+            if ($isStartedEvaluation) {
+                return __("Some error occurred. Please try again from the start.");
+            }
+        }
+
+        // 自分がゴールメンバーかどうか
+        if (!$GoalMember->isCollaborated()) {
+            return __("You don't have a permission to edit this goal.");
+        }
+
+        // 自分がリーダーかどうか
+        $loginUserisLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
+        if ($loginUserisLeader) {
+            return true;
+        }
+
+        // リーダーが存在するか
+        // 自分がリーダーでなく、他にリーダーが存在する場合はリーダー変更の権限無し
+        $goalLeaderId = $GoalMember->getGoalLeaderId($goalId);
+        if ($goalLeaderId) {
+            return __("You don't have a permission to edit this goal.");
+        }
+
+        return true;
+    }
 }
