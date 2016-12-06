@@ -421,6 +421,25 @@ class KeyResult extends AppModel
     }
 
     /**
+     * 未完了KR数取得
+     *
+     * @param int $goalId
+     *
+     * @return int
+     */
+    function countIncomplete(int $goalId): int
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goalId,
+                'team_id'   => $this->current_team_id,
+                'completed' => null
+            ],
+        ];
+        return $this->find('count', $options);
+    }
+
+    /**
      * ユーザがアクションしたKRのみ抽出
      * Extraction KR with only exist user action
      *
