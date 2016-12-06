@@ -37,6 +37,22 @@ class AppUtil
     }
 
     /**
+     * 少数/整数を表示用にフォーマットする
+     * 1234.123000 -> 1234.123
+     * 1234567890 -> 1234567890
+     *
+     * @param float $floatNum
+     *
+     * @return string
+     */
+    static function formatBigFloat(float $floatNum) : string
+    {
+        $floatDeletedIndex = sprintf("%.3f", $floatNum);
+        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
+        return $floatDeletedRightZero;
+    }
+
+    /**
      * 連想配列か判定
      * メモリ増加を防ぐ為参照渡しとする
      *
