@@ -671,34 +671,58 @@ class GoalsController extends AppController
         }
     }
 
+    /**
+     * アクション削除
+     * TODO:トランザクション処理をサービス移行、アクション削除をAPI化
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function delete_action()
     {
-        $ar_id = $this->request->params['named']['action_result_id'];
+        $arId = $this->request->params['named']['action_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$action = $this->Goal->ActionResult->find('first',
-                ['conditions' => ['ActionResult.id' => $ar_id],])
-            ) {
+            $this->Goal->ActionResult->begin();
+            $action = $this->Goal->ActionResult->getById($arId);
+            if (empty($action)) {
                 throw new RuntimeException(__("There is no action."));
             }
-            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['ActionResult']['goal_id'])) {
+
+            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['goal_id'])) {
                 throw new RuntimeException(__("You have no permission."));
             }
+            $this->Goal->ActionResult->id = $arId;
+            $this->Goal->ActionResult->delete();
+            $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($arId, AttachedFile::TYPE_MODEL_ACTION_RESULT);
+
+            /* アクション時に進めたKR進捗分を戻す */
+            $krPrgChangeVal = $action['key_result_change_value'];
+            $krId = $action['key_result_id'];
+            if (!is_null($krPrgChangeVal) && !empty($krId)) {
+                $kr = $this->Goal->KeyResult->getById($krId);
+                if (empty($kr)) {
+                    throw new RuntimeException(__("No exist kr."));
+                }
+                $updateKr = [
+                    'id' => $krId,
+                    'current_value' => $kr['current_value'] - $krPrgChangeVal
+                ];
+                // KR更新
+                $this->Goal->KeyResult->save($updateKr, false);
+            }
+            $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
+            $this->Goal->ActionResult->rollback();
             $this->Pnotify->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Goal->ActionResult->id = $ar_id;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_ACTION,
-            $action['ActionResult']['goal_id'],
-            $action['ActionResult']['key_result_id'],
-            $ar_id);
-        $this->Goal->ActionResult->delete();
-        $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($ar_id,
-            AttachedFile::TYPE_MODEL_ACTION_RESULT);
-        if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
-            $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
+            $action['goal_id'],
+            $action['key_result_id'],
+            $arId);
+        if (isset($action['goal_id']) && !empty($action['goal_id'])) {
+            $this->_flashClickEvent("ActionListOpen_" . $action['goal_id']);
         }
 
         $this->Pnotify->outSuccess(__("Deleted an action."));
