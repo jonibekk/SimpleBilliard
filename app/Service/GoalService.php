@@ -653,4 +653,41 @@ class GoalService extends AppService
         // コラボも含めて自分のゴールリスト取得
         return $Goal->findCanAction($userId);
     }
+
+    /**
+     * ゴール完了
+     *
+     * @param $goalId
+     *
+     * @return bool
+     */
+    function complete(int $goalId) : bool
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+        try {
+            $Goal->begin();
+
+            // ゴール完了
+            $Goal->complete($goalId);
+            // ゴール完了の投稿
+            if (!$Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $goalId, null)) {
+                throw new Exception("Create goal complete post. goalId:".$goalId);
+            }
+
+            $Goal->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $Goal->rollback();
+            return false;
+        }
+        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        return true;
+
+    }
+
 }

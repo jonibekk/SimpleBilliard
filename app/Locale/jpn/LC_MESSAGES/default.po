@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-05 11:05+0900\n"
+"PO-Revision-Date: 2016-12-06 14:04+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -265,6 +265,9 @@ msgstr "成果を削除しました。"
 
 msgid "There is no action."
 msgstr "アクションが存在しません。"
+
+msgid "No exist kr."
+msgstr "KRが存在しません。"
 
 msgid "Deleted an action."
 msgstr "アクションを削除しました。"
@@ -802,11 +805,20 @@ msgstr "ログインが必要です。"
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
 
+msgid "Error, data conflicted."
+msgstr ""
+
 msgid "Internal Server Error."
 msgstr "サーバーエラー"
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
+
+msgid "Not exist"
+msgstr "存在しません。"
+
+msgid "Failed to upload image."
+msgstr "画像アップロードに失敗しました。"
 
 msgid "Complete the approval of %d goal(s)."
 msgstr "%d件のゴール認定を完了してください"
@@ -867,6 +879,12 @@ msgstr "APIが見つかりません。"
 
 msgid "CSRF Error!"
 msgstr "CSRFエラーです。"
+
+msgid "You can not change the direction of KR progress increase or decrease."
+msgstr "進捗の増加/減少の方向は変更できません。"
+
+msgid "You can not input KR current value over KR target value."
+msgstr "進捗現在値が目標値を超えることはできません。"
 
 msgid "Images"
 msgstr "画像"
@@ -999,6 +1017,18 @@ msgstr "3(デフォルト)"
 
 msgid "5(Very high)"
 msgstr "5(とても高い)"
+
+msgid "You can not change start value and target value to the same value."
+msgstr "進捗開始値を目標値と同じ値に変更できません。"
+
+msgid "You can not change the values from increase to decrease."
+msgstr "進捗を増加から減少に変更できません。"
+
+msgid "You can not change the values from decrease to increase."
+msgstr "進捗を減少から増加に変更できません。"
+
+msgid "You can not change target value less than current value"
+msgstr "進捗目標値を現在値より少ない値に変更できません。"
 
 msgid "There is no data of KR."
 msgstr "達成要素のデータがありません。"
@@ -2834,12 +2864,6 @@ msgstr "投稿"
 msgid "Message"
 msgstr "メッセージ"
 
-msgid "There is no goal that you can take action."
-msgstr "アクションできるゴールがありません。"
-
-msgid "View options"
-msgstr "オプションを表示"
-
 msgid "To:"
 msgstr "To:"
 
@@ -2897,9 +2921,6 @@ msgstr "既読"
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
 
-msgid "Not exist"
-msgstr "存在しません。"
-
 msgid "Edit post"
 msgstr "投稿を編集"
 
@@ -2927,17 +2948,11 @@ msgstr "チームビジョン"
 msgid "Group Vision"
 msgstr "グループビジョン"
 
-msgid "Let's share the actions that you've done today!"
-msgstr "今日やったアクションを共有しよう！"
+msgid "There is no goal that you can take action."
+msgstr "アクションできるゴールがありません。"
 
-msgid "Results"
-msgstr "成果"
-
-msgid "Nothing"
-msgstr "なし"
-
-msgid "Post an action"
-msgstr "アクションを追加する"
+msgid "View options"
+msgstr "オプションを表示"
 
 msgid "Add Key Result"
 msgstr "達成要素を追加"
@@ -2977,6 +2992,9 @@ msgstr "本当にこの成果を削除しますか？"
 
 msgid "Clear"
 msgstr "クリア"
+
+msgid "Post an action"
+msgstr "アクションを追加する"
 
 msgid "Add an image to show the result of your action."
 msgstr "アクションの結果がわかる画像を追加しよう"
@@ -3026,6 +3044,15 @@ msgstr "（本日）"
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
 
+msgid "Let's share the actions that you've done today!"
+msgstr "今日やったアクションを共有しよう！"
+
+msgid "Results"
+msgstr "成果"
+
+msgid "Nothing"
+msgstr "なし"
+
 msgid "Update Top Key Result"
 msgstr "トップKRを更新"
 
@@ -3070,6 +3097,9 @@ msgstr ""
 
 msgid "Add Reference Values"
 msgstr "基準を追加する"
+
+msgid "Achieve goal"
+msgstr "ゴールを達成"
 
 msgid "Edit a goal"
 msgstr "ゴール編集"
@@ -4799,6 +4829,9 @@ msgstr "email"
 msgid "emailIsUnique"
 msgstr "emailUnique"
 
+msgid "validateEditProgressStartEnd"
+msgstr ""
+
 msgid "requiredCaseExistUnit"
 msgstr ""
 
@@ -4834,6 +4867,9 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid "You have no goal."
+#~ msgstr "今期のゴールがありません。"
 
 #~ msgid ""
 #~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "

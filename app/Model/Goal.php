@@ -2187,6 +2187,7 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.end_date >=' => $currentTerm['start_date'],
                 'Goal.end_date <=' => $currentTerm['end_date'],
+                'Goal.completed' => null
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
@@ -2206,6 +2207,58 @@ class Goal extends AppModel
         if (empty($res)) {
             return [];
         }
+        return Hash::extract($res, '{n}.Goal');
+    }
+
+
+    /**
+     * 完了アクションが可能なゴールリスト取得
+     *
+     * @param int   $userId
+     *
+     * @return array
+     */
+    function findCanComplete(int $userId): array
+    {
+        $options = [
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.user_id' => $userId,
+                        'GoalMember.team_id' => $this->current_team_id,
+                        'GoalMember.type' => GoalMember::TYPE_OWNER,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'Goal.completed' => null,
+                'Goal.deleted' => null,
+            ],
+        ];
+        // アクション可能なゴールを抽出(未完了なKRが存在するか)
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => array('KeyResult.id'),
+            'table'      => 'key_results',
+            'alias'      => 'KeyResult',
+            'conditions' => [
+                'KeyResult.goal_id = Goal.id',
+                'KeyResult.completed' => null,
+            ],
+        ], $this);
+        $options['conditions'][] = $db->expression("NOT EXISTS (" . $subQuery . ")");
+
+        $res = $this->find('all', $options);
+        $this->log($this->getDataSource()->getLog());
+        $this->log(compact('res'));
+        if (empty($res)) {
+            return [];
+        }
+
         return Hash::extract($res, '{n}.Goal');
     }
 
