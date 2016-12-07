@@ -501,6 +501,9 @@ class GoalsController extends AppController
 
     /**
      * 現リーダーによるリーダー交換アクション
+     * - Form値のバリデーション
+     * - リーダー交換処理実行
+     * - 関係者に通知
      *
      */
     public function exchange_leader_by_leader()
@@ -519,7 +522,12 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $changedLeader = $GoalService->changeLeader($formDatam);
+        $changedLeader = $GoalService->changeLeader($formDatam, $changeType);
+        if (!$changedLeader) {
+            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            return $this->redirect($this->referer());
+        }
+
         return $this->redirect($this->referer());
     }
 
@@ -535,7 +543,6 @@ class GoalsController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-
         // バリデーション
         $formData = $this->request->data;
         $changeType = $GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER;
@@ -545,7 +552,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $changedLeader = $GoalService->changeLeader($formDatam);
+        $changedLeader = $GoalService->changeLeader($formDatam, $changeType);
         return $this->redirect($this->referer());
     }
 

@@ -217,7 +217,7 @@ class GoalMemberService extends AppService
      * @param  int  $goalMemberId
      * @return bool
      */
-    function isActiveGoalMember(int $goalMemberId): bool
+    function isActiveGoalMember(int $goalMemberId, int $goalId): bool
     {
         if (!$goalMemberId) {
             return false;
@@ -230,6 +230,7 @@ class GoalMemberService extends AppService
             'conditions' => [
                 'GoalMember.id'         => $goalMemberId,
                 'GoalMember.type'       => self::TYPE_COLLABORATOR,
+                'Goal.id'               => $goalId,
                 'TeamMember.active_flg' => true,
                 'User.active_flg'       => true
             ],
@@ -237,6 +238,14 @@ class GoalMemberService extends AppService
                 'GoalMember.id'
             ],
             'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'conditions' => [
+                        'Goal.id = GoalMember.goal_id',
+                    ],
+                ],
                 [
                     'type'       => 'LEFT',
                     'table'      => 'team_members',
@@ -326,17 +335,73 @@ class GoalMemberService extends AppService
         }
 
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
-        $newLeaderId = Hash::get($formData, 'GoalMember.id');
-        if (!$this->isActiveGoalMember($newLeaderId)) {
+        $newLeaderId = Hash::get($formData, 'NewLeader.id');
+        if (!$this->isActiveGoalMember($newLeaderId, $goalId)) {
             return __("Some error occurred. Please try again from the start.");
         }
 
         return true;
     }
 
-    function changeLeader(array $data)
+    /**
+     * リーダー変更処理
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
+    function changeLeader(int $changeType, array $data): bool
     {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
 
+        try {
+            // トランザクション開始
+            $GoalMember->begin();
+
+            // コラボレーター -> リーダー
+            $newLeader = ['id' => Hash::get($data, 'NewLeader.id'), 'type' => $GoalMember::TYPE_OWNER, 'role' => null, 'description' => null];
+            if (!$GoalMember->save($newLeader, false)) {
+                throw new Exception(sprintf("Failed to change leader. data:%s"
+                    , var_export($newLeader, true)));
+            }
+
+            // リーダー -> コラボレーター
+            if ($changeType == self::CHANGE_LEADER_WITH_COLLABORATION) {
+                if (!$GoalMember->save($data['GoalMember'])) {
+                    throw new Exception(sprintf("Failed to collaborate. data:%s"
+                        , var_export($data['GoalMember'], true)));
+                }
+            }
+
+            // ゴール脱退
+            if ($changeType === self::CHANGE_LEADER_WITH_QUIT) {
+                if (!$GoalMember->delete(Hash::get($data, 'GoalMember.id'))) {
+                    throw new Exception(sprintf("Failed to quit goal. data:%s"
+                        , var_export($data['GoalMember'], true)));
+                }
+
+                // 認定対象の場合のみ未認定カウントキャッシュを削除
+                $goalMemberId = Hash::get($data, 'GoalMember.id');
+                if ($this->isApprovableGoalMember($goalMemberId)) {
+                    $quitUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+                    $coachId = $TeamMember->getCoachId($quitUserId);
+                    Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
+                }
+            }
+
+            // Redisキャッシュ削除
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+
+            // トランザクション完了
+            $GoalMember->commit();
+
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $GoalMember->rollback();
+            return false;
+        }
+        return true;
     }
 
 }
