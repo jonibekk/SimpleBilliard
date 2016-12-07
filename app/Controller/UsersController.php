@@ -1163,7 +1163,7 @@ class UsersController extends AppController
 
         // 完了アクションが可能なゴールIDリスト
         $canCompleteGoalIds = Hash::extract(
-            $GoalService->findCanComplete($this->my_uid), '{n}.id'
+            $this->Goal->findCanComplete($this->my_uid), '{n}.id'
         );
 
         $this->set([

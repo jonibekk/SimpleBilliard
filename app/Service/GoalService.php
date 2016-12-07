@@ -161,20 +161,6 @@ class GoalService extends AppService
     }
 
     /**
-     * 完了アクションが可能なゴールリスト取得
-     *
-     * @param int   $userId
-     *
-     * @return array
-     */
-    function findCanComplete(int $userId) : array
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        return $Goal->findCanComplete($userId);
-    }
-
-    /**
      * ゴール更新
      *
      * @param $userId
