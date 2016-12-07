@@ -9,11 +9,14 @@ class ApiApprovalHistoryService extends ApiService
 {
     /**
      * 認定履歴一覧をレスポンス用に変換
-     * @param  $approvalHistories
+     *
+     * @param  array $approvalHistories
+     *
+     * @return array
      */
-    function processApprovalHistories($approvalHistories)
+    function processApprovalHistories($approvalHistories): array
     {
-        if(!$approvalHistories) {
+        if (!$approvalHistories) {
             return [];
         }
 
@@ -28,10 +31,13 @@ class ApiApprovalHistoryService extends ApiService
 
     /**
      * コーチによるゴール認定文言の追加
-     * @param $approvalHistories
-     * @param $goalMemberUserId
+     *
+     * @param int $clearStatus
+     * @param int $importantStatus
+     *
+     * @return string
      */
-    function getClearImportantWord($clearStatus, $importantStatus)
+    function getClearImportantWord($clearStatus, $importantStatus): string
     {
         if ($clearStatus == ApprovalHistory::STATUS_IS_NOT_CLEAR) {
             return __('This Top Key Result is not clear.');
@@ -46,29 +52,30 @@ class ApiApprovalHistoryService extends ApiService
     /**
      * 認定におけるコーチの最新アクションのstatementを追加
      *
-     * @param  $goalMemberId
-     * @param  $userId
+     * @param int $goalMemberId
+     * @param int $userId
      *
-     * @return $statement
+     * @return string
      */
-    function getLatestCoachActionStatement($goalMemberId, $userId)
+    function getLatestCoachActionStatement($goalMemberId, $userId): string
     {
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
 
         $statement = '';
         $latestHistory = $ApprovalHistory->findLatestByUserId($goalMemberId, $userId);
-        if(!$latestHistory) return $statement;
+        if (!$latestHistory) {
+            return $statement;
+        }
 
         $actionStatus = Hash::get($latestHistory, 'action_status');
-        if($actionStatus == $ApprovalHistory::STATUS_ACTION_IS_TARGET_FOR_EVALUATION) {
+        if ($actionStatus == $ApprovalHistory::STATUS_ACTION_IS_TARGET_FOR_EVALUATION) {
             $statement = __("You have added this goal as a target of evaluation.");
-        } elseif($actionStatus == $ApprovalHistory::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION) {
+        } elseif ($actionStatus == $ApprovalHistory::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION) {
             $statement = __("You have not added this goal as a target of evaluation.");
         }
 
         return $statement;
     }
-
 
 }
