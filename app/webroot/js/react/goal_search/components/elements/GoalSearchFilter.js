@@ -26,13 +26,13 @@ class GoalSearchFilter extends React.Component {
       return null
     }
     const {suggestions, label_keyword, categories, labels, search_conditions} = this.props
-
     return (
       <div className="panel-block bd-b-sc4 ">
         <div className="gl-form-horizontal">
           <label className="gl-form-horizontal-col gl-form-label" htmlFor>{__("Term")}</label>
           <div className="gl-form-horizontal-col">
-            <select name="term" className="form-control gl" onChange={this.onChange.bind(this)}>
+            <select name="term" className="form-control gl" onChange={this.onChange.bind(this)}
+                    defaultValue={search_conditions.term}>
               <option value="present">{__("Current Term")}</option>
               <option value="next">{__("Next Term")}</option>
               <option value="previous">{__("Previous Term")}</option>
@@ -43,7 +43,8 @@ class GoalSearchFilter extends React.Component {
         <div className="gl-form-horizontal">
           <label className="gl-form-horizontal-col gl-form-label" htmlFor>{__("Category")}</label>
           <div className="gl-form-horizontal-col">
-            <select name="category" className="form-control gl" onChange={this.onChange.bind(this)}>
+            <select name="category" className="form-control gl" onChange={this.onChange.bind(this)}
+                    defaultValue={search_conditions.category}>
               <option value="">{__("All")}</option>
               {categories.map((v) => {
                 return <option value={v.id} key={v.id}>{v.name}</option>
@@ -54,7 +55,8 @@ class GoalSearchFilter extends React.Component {
         <div className="gl-form-horizontal">
           <label className="gl-form-horizontal-col gl-form-label" htmlFor>{__("Progress")}</label>
           <div className="gl-form-horizontal-col">
-            <select name="progress" className="form-control gl" onChange={this.onChange.bind(this)}>
+            <select name="progress" className="form-control gl" onChange={this.onChange.bind(this)}
+                    defaultValue={search_conditions.progress}>
               <option value="">{__("All")}</option>
               <option value="complete">{__("Complete")}</option>
               <option value="incomplete">{__("Incomplete")}</option>

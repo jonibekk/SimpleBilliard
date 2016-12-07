@@ -26,7 +26,7 @@ before_script:
   - chmod -R 777 ./build
   - echo -ne '\n' | pecl install apcu
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - pecl install msgpack channel://pecl.php.net/msgpack-2.0.1
+  - pecl install msgpack channel://pecl.php.net/msgpack-2.0.2
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - phpenv config-rm xdebug.ini
   - phpenv rehash
