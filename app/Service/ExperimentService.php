@@ -21,6 +21,10 @@ class ExperimentService extends AppService
      */
     function isDefined($name)
     {
+        if (defined('ENABLE_ALL_EXPERIMENTS') && ENABLE_ALL_EXPERIMENTS) {
+            $this->log('enable experiments');
+            return true;
+        }
         /** @var  Experiment $Experiment */
         $Experiment = ClassRegistry::init('Experiment');
         $res = Cache::read($Experiment->getCacheKey(CACHE_KEY_EXPERIMENT . ":" . $name), 'team_info');
