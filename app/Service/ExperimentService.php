@@ -14,7 +14,8 @@ class ExperimentService extends AppService
     /**
      * 定義済みの実験かどうかを返す
      * 頻繁に参照されるため、キャッシュを利用
-     * ENABLE_ALL_EXPERIMENTSがtrueの場合は無条件にtrueを返す
+     * FORCE_ENABLE_ALL_EXPERIMENTSがtrueの場合は全てtrueを返す
+     * FORCE_DISABLE_ALL_EXPERIMENTSがtrueの場合は全てfalseを返す。FORCE_ENABLE_ALL_EXPERIMENTSより優先される
      *
      * @param $name
      *
@@ -22,7 +23,10 @@ class ExperimentService extends AppService
      */
     function isDefined($name)
     {
-        if (defined('ENABLE_ALL_EXPERIMENTS') && ENABLE_ALL_EXPERIMENTS) {
+        if (defined('FORCE_DISABLE_ALL_EXPERIMENTS') && FORCE_DISABLE_ALL_EXPERIMENTS) {
+            return false;
+        }
+        if (defined('FORCE_ENABLE_ALL_EXPERIMENTS') && FORCE_ENABLE_ALL_EXPERIMENTS) {
             return true;
         }
         /** @var  Experiment $Experiment */
