@@ -11,6 +11,11 @@ App::uses('AppModel', 'Model');
  */
 class Experiment extends AppModel
 {
+    //現存する実験の種類。不要になったら削除。
+    const NAME_DISAPPEAR_SETTING_SHOW_ALL_FEED = 'DisappearSettingShowAllFeed';
+    const NAME_CIRCLE_DEFAULT_SETTING_OFF = 'CircleDefaultSettingOff';
+    const NAME_ENABLE_EVALUATION_FEATURE = 'EnableEvaluationFeature';
+
     /**
      * Validation rules
      *

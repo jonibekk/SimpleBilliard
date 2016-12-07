@@ -1023,7 +1023,7 @@ class UsersController extends AppController
         App::import('Service', 'ExperimentService');
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
             $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false, false);
         } else {
             $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
