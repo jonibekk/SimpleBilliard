@@ -166,7 +166,7 @@ class GoalMemberService extends AppService
     /**
      * アクティブなゴールリーダーIDを取得
      * @param  int $goalId [description]
-     * @return [type]         [description]
+     * @return int || null
      */
     function getAcitiveLeaderId(int $goalId)
     {
@@ -268,6 +268,13 @@ class GoalMemberService extends AppService
         return (boolean)$res;
     }
 
+    /**
+     * ゴール変更リクエストのバリデーション
+     *
+     * @param  array  $formData
+     * @param  int    $changeType
+     * @return true || string
+     */
     public function validateChangeLeader(array $formData, int $changeType)
     {
         /** @var GoalMember $GoalMember */
@@ -347,8 +354,8 @@ class GoalMemberService extends AppService
 
     /**
      * リーダー変更処理
-     * @param  array  $data [description]
-     * @return [type]       [description]
+     * @param  array  $data
+     * @return bool
      */
     function changeLeader(array $data, int $changeType): bool
     {
