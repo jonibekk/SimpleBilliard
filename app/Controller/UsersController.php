@@ -1161,6 +1161,12 @@ class UsersController extends AppController
 
         $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
 
+        $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
+
+        // 完了アクションが可能なゴールIDリスト
+        $canCompleteGoalIds = Hash::extract(
+            $GoalService->findCanComplete($this->my_uid), '{n}.id'
+        );
 
         $this->set(compact(
             'term',
@@ -1172,7 +1178,8 @@ class UsersController extends AppController
             'goals',
             'is_mine',
             'display_action_count',
-            'my_coaching_users'
+            'my_coaching_users',
+            'canCompleteGoalIds'
         ));
         return $this->render();
     }

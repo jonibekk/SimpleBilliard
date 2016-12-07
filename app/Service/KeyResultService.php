@@ -308,4 +308,18 @@ class KeyResultService extends AppService
         }
         return $krs;
     }
+
+    /**
+     * 未完了KR数取得
+     *
+     * @param int $goalId
+     *
+     * @return int
+     */
+    public function countIncomplete(int $goalId): int
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        return $KeyResult->countIncomplete($goalId);
+    }
 }

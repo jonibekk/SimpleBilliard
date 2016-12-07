@@ -72,6 +72,76 @@ class GoalsController extends AppController
         return $this->render("edit");
     }
 
+    /**
+     * ゴール完了
+     *
+     * @param $goalId
+     *
+     * @return \Cake\Network\Response|CakeResponse|null
+     */
+    public function complete($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        // バリデーション
+        $errMsg = $this->_validateComplete($goalId);
+        if ($errMsg !== true) {
+            $this->Pnotify->outError($errMsg);
+            return $this->redirect($this->referer());
+        }
+
+        // ゴール完了
+        if (!$GoalService->complete($goalId)) {
+            $this->Pnotify->outSuccess(__("Internal Server Error."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL, $goalId);
+        $this->Pnotify->outSuccess(__("Completed a goal."));
+        // pusherに通知
+        $socketId = Hash::get($this->request->data, 'socket_id');
+        $channelName = "goal_" . $goalId;
+        $this->NotifyBiz->push($socketId, $channelName);
+
+        return $this->redirect('/');
+
+    }
+
+    /**
+     * @param $goalId
+     *
+     * @return string
+     */
+    public function _validateComplete($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        if (empty($goalId) || is_int($goalId)) {
+            return __("Not exist");
+        }
+        $goal = $GoalService->get($goalId);
+        // 対象のゴールが存在するか
+        if (empty($goal)) {
+            return __("Not exist");
+        }
+        // ゴールのリーダーか
+        if (!$GoalMemberService->isLeader($goalId, $this->Auth->user('id'))) {
+            return __("You have no permission.");
+        }
+        // 未完了のKRが残っている場合はゴール完了できない
+        if ($KeyResultService->countIncomplete($goalId) > 0) {
+            return __("You have no permission.");
+        }
+        return true;
+    }
+
+
+
     public function approval($type = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
