@@ -1884,24 +1884,6 @@ textarea.comment-post-form {
     line-height: 36px;
 }
 
-/*モーダル全体*/
-.modal-body {
-    max-height: 324px;
-    overflow-y: scroll;
-}
-
-/*/モーダル全体*/
-/*モーダル個別*/
-.modal-circle-body hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.modal-circle-body {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
 .va_bl {
     vertical-align: baseline;
     line-height: 1px;
@@ -2409,10 +2391,6 @@ textarea.comment-post-form {
     .s2-post-dropdown {
         width: 386px !important;
         margin-right: 4px;
-    }
-
-    .modal-body {
-        max-height: 460px;
     }
 
     .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {

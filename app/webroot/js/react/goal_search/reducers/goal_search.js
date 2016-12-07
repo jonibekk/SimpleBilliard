@@ -44,6 +44,12 @@ export default function goal_search(state = initialState, action) {
       }
       return Object.assign({}, state, action.data)
 
+    case ActionTypes.UPDATE_KEYWORD:
+      search_conditions.keyword = action.data.keyword
+      return Object.assign({}, state, {
+        search_conditions,
+      })
+
     case ActionTypes.SEARCH:
       return Object.assign({}, state, {
         search_result: action.search_result,
@@ -59,7 +65,7 @@ export default function goal_search(state = initialState, action) {
       }
       return Object.assign({}, state, {
         search_result,
-        loading_more:false
+        loading_more: false
       })
 
     case ActionTypes.FOLLOW:

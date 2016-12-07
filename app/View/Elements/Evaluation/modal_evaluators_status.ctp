@@ -18,7 +18,7 @@
             <h4 class="modal-title"><?= __("%s Evaluation Status",
                     $evaluatee['EvaluateeUser']['display_username']) ?></h4>
         </div>
-        <div class="modal-body modal-feed-body">
+        <div class="modal-body without-footer">
             <?php if (!empty($evaluators)): ?>
                 <div class="row borderBottom">
                     <?php foreach ($evaluators as $user): ?>
@@ -30,9 +30,6 @@
             <?php else: ?>
                 <?= __("No one has read this comment yet.") ?>
             <?php endif ?>
-        </div>
-        <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

@@ -2891,11 +2891,8 @@ msgstr "このメッセージを%s人が読みました。"
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
 
-msgid "%s members Like! this post."
-msgstr "この投稿を%s人が「いいね！」と言っています。"
-
-msgid "%s people read this post."
-msgstr "この投稿を%s人が読みました。"
+msgid "Read"
+msgstr "既読"
 
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
@@ -3055,9 +3052,6 @@ msgstr "現在"
 
 msgid "Goal Summary"
 msgstr "ゴール概要"
-
-msgid "Go to Goal page"
-msgstr "ゴールページへ"
 
 msgid "Did you achieve the goal?"
 msgstr "ゴールを達成しましたか？"
