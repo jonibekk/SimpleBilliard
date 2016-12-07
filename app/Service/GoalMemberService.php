@@ -418,4 +418,127 @@ class GoalMemberService extends AppService
         return true;
     }
 
+    /**
+     * アクティブなコラボレーター一覧をリスト形式で返す
+     *
+     * @param  int   $goalId
+     * @return array
+     */
+    function getActiveCollaboratorList(int $goalId): array
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        $options = [
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'GoalMember.type'       => $GoalMember::TYPE_COLLABORATOR,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id',
+                'User.*'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ];
+
+        $res = $GoalMember->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+
+        $combined = Hash::combine($res, '{n}.GoalMember.id', '{n}.User.display_username');
+        return $combined;
+    }
+
+    function getActiveLeader(int $goalId): array
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        $options = [
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'GoalMember.type'       => $GoalMember::TYPE_OWNER,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id',
+                'User.*'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ];
+
+        $res = $GoalMember->find('first', $options);
+        return $res ?? [];
+    }
+
+    /**
+     * ゴールのリーダー変更可能かチェックする
+     * # 条件
+     * ## リーダーのケース
+     * - 自分がリーダーで
+     * - アクティブなコラボレーターが一人以上存在する場合
+     * ## コラボレーターのケース
+     * - 自分がコラボレーターで
+     * - アクティブなリーダーが存在しない場合
+     *
+     * @param  int  $goalId
+     * @return bool
+     */
+    function canChangeLeader(int $goalId): bool
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        // リーダーのケース
+        $isLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
+        $collaborators = $this->getActiveCollaboratorList($goalId);
+        if ($isLeader && count($collaborators) > 0) {
+            return true;
+        }
+
+        // コラボレーターのケース
+        if (!$isLeader && !$this->getAcitiveLeaderId($goalId)) {
+            return true;
+        }
+
+        return false;
+    }
 }

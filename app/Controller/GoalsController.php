@@ -286,6 +286,44 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * リーダー変更モーダル表示
+     *
+     * @return CakeResponse|null
+     */
+    public function ajax_get_exchange_leader_modal()
+    {
+        $this->_ajaxPreProcess();
+
+        // ゴール存在チェック
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        if (empty($goalId)) {
+            return $this->_ajaxGetResponse(null);
+        }
+
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
+        // ビュー変数セット
+        $isLeader = true;
+        $goalMembers = $GoalMemberService->getActiveCollaboratorList($goalId);
+        $currentLeader = $GoalMemberService->getActiveLeader($goalId);
+        $priorityList = $this->Goal->priority_list;
+        $this->set(compact(
+            'goalId',
+            'isLeader',
+            'goalMembers',
+            'currentLeader',
+            'priorityList'
+        ));
+
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_exchange_leader');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_collabo_change_modal()
     {
         $goal_id = $this->request->params['named']['goal_id'];
