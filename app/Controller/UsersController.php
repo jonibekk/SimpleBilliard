@@ -1084,103 +1084,101 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $user_id = Hash::get($this->request->params, "named.user_id");
-        if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
+        $userId = Hash::get($this->request->params, "named.user_id");
+        if (!$userId || !$this->_setUserPageHeaderInfo($userId)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $this->layout = LAYOUT_ONE_COLUMN;
-        $page_type = Hash::get($this->request->params, 'named.page_type');
+        $pageType = Hash::get($this->request->params, 'named.page_type');
 
-        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
-        $current_id = $current_term['id'];
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $currentId = $currentTerm['id'];
 
-        $next_term = $this->Team->EvaluateTerm->getNextTermData();
-        $next_id = $next_term['id'];
+        $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+        $nextId = $nextTerm['id'];
 
-        $previous_term = $this->Team->EvaluateTerm->getPreviousTermData();
-        $previous_id = $previous_term['id'];
+        $previousTerm = $this->Team->EvaluateTerm->getPreviousTermData();
+        $previousId = $previousTerm['id'];
 
-        function show_date($start_date, $end_date, $all_timezone)
+        function show_date($startDate, $endDate, $allTimezone)
         {
-            return date('Y/m/d', $start_date + $all_timezone * 3600) . " - " . date('Y/m/d',
-                $end_date + $all_timezone * 3600);
+            return date('Y/m/d', $startDate + $allTimezone * 3600) . " - " . date('Y/m/d',
+                $endDate + $allTimezone * 3600);
         }
 
-        $all_term = $this->Team->EvaluateTerm->getAllTerm();
-        $all_id = array_column($all_term, 'id');
-        $all_start_date = array_column($all_term, 'start_date');
-        $all_end_date = array_column($all_term, 'end_date');
-        $all_timezone = array_column($all_term, 'timezone');
-        $all_term = array_map("show_date", $all_start_date, $all_end_date, $all_timezone);
+        $allTerm = $this->Team->EvaluateTerm->getAllTerm();
+        $allId = array_column($allTerm, 'id');
+        $allStartDate = array_column($allTerm, 'start_date');
+        $allEndDate = array_column($allTerm, 'end_date');
+        $allTimezone = array_column($allTerm, 'timezone');
+        $allTerm = array_map("show_date", $allStartDate, $allEndDate, $allTimezone);
 
         $term1 = array(
-            $current_id  => __("Current Term"),
-            $next_id     => __("Next Term"),
-            $previous_id => __("Previous Term"),
+            $currentId  => __("Current Term"),
+            $nextId     => __("Next Term"),
+            $previousId => __("Previous Term"),
         );
-        $term2 = array_combine($all_id, $all_term);
+        $term2 = array_combine($allId, $allTerm);
         $term = $term1 + $term2;
 
         if (isset($this->request->params['named']['term_id'])) {
-            $term_id = $this->request->params['named']['term_id'];
-            $target_term = $this->Team->EvaluateTerm->findById($term_id);
-            $start_date = $target_term['EvaluateTerm']['start_date'];
-            $end_date = $target_term['EvaluateTerm']['end_date'];
+            $termId = $this->request->params['named']['term_id'];
+            $targetTerm = $this->Team->EvaluateTerm->findById($termId);
+            $startDate = $targetTerm['EvaluateTerm']['start_date'];
+            $endDate = $targetTerm['EvaluateTerm']['end_date'];
         } else {
-            $term_id = $current_id;
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+            $termId = $currentId;
+            $startDate = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+            $endDate = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         }
 
-        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id, $start_date, $end_date);
-        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id, $start_date, $end_date);
-        $my_goals_count += $collabo_goals_count;
-        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', $user_id, $start_date, $end_date);
+        $myGoalsCount = $this->Goal->getMyGoals(null, 1, 'count', $userId, $startDate, $endDate);
+        $collaboGoalsCount = $this->Goal->getMyCollaboGoals(null, 1, 'count', $userId, $startDate, $endDate);
+        $myGoalsCount += $collaboGoalsCount;
+        $followGoalsCount = $this->Goal->getMyFollowedGoals(null, 1, 'count', $userId, $startDate, $endDate);
 
-        if ($page_type == "following") {
-            $goals = $this->Goal->getMyFollowedGoals(null, 1, 'all', $user_id, $start_date, $end_date);
+        if ($pageType == "following") {
+            $goals = $this->Goal->getMyFollowedGoals(null, 1, 'all', $userId, $startDate, $endDate);
         } else {
-            $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
+            $goals = $this->Goal->getGoalsWithAction($userId, MY_PAGE_ACTION_NUMBER, $startDate, $endDate);
         }
         $goals = $GoalService->processGoals($goals);
         $goals = $GoalService->extendTermType($goals, $this->Auth->user('id'));
-        $is_mine = $user_id == $this->Auth->user('id') ? true : false;
-        $display_action_count = MY_PAGE_ACTION_NUMBER;
-        if ($is_mine) {
-            $display_action_count--;
+        $isMine = $userId == $this->Auth->user('id') ? true : false;
+        $displayActionCount = MY_PAGE_ACTION_NUMBER;
+        if ($isMine) {
+            $displayActionCount--;
         }
 
-        $term_base_url = Router::url([
+        $termBaseUrl = Router::url([
             'controller' => 'users',
             'action'     => 'view_goals',
-            'user_id'    => $user_id,
-            'page_type'  => $page_type
+            'user_id'    => $userId,
+            'page_type'  => $pageType
         ]);
 
-        $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
-
-        $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
+        $myCoachingUsers = $this->User->TeamMember->getMyMembersList($this->my_uid);
 
         // 完了アクションが可能なゴールIDリスト
         $canCompleteGoalIds = Hash::extract(
             $GoalService->findCanComplete($this->my_uid), '{n}.id'
         );
 
-        $this->set(compact(
-            'term',
-            'term_id',
-            'term_base_url',
-            'my_goals_count',
-            'follow_goals_count',
-            'page_type',
-            'goals',
-            'is_mine',
-            'display_action_count',
-            'my_coaching_users',
-            'canCompleteGoalIds'
-        ));
+        $this->set([
+            'term' => $term,
+            'term_id' => $termId,
+            'term_base_url' => $termBaseUrl,
+            'my_goals_count' => $myGoalsCount,
+            'follow_goals_count' => $followGoalsCount,
+            'page_type' => $pageType,
+            'goals' => $goals,
+            'is_mine' => $isMine,
+            'display_action_count' => $displayActionCount,
+            'my_coaching_users' => $myCoachingUsers,
+            'canCompleteGoalIds' => $canCompleteGoalIds
+        ]);
         return $this->render();
     }
 
