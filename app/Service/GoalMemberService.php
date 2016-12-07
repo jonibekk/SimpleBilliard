@@ -194,6 +194,7 @@ class GoalMemberService extends AppService
                     'alias'      => 'TeamMember',
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id'
                     ],
                 ],
                 [
@@ -252,6 +253,7 @@ class GoalMemberService extends AppService
                     'alias'      => 'TeamMember',
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id'
                     ],
                 ],
                 [
@@ -361,6 +363,8 @@ class GoalMemberService extends AppService
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
 
         try {
             // トランザクション開始
@@ -371,6 +375,14 @@ class GoalMemberService extends AppService
             if (!$GoalMember->save($newLeader, false)) {
                 throw new Exception(sprintf("Failed to change leader. data:%s"
                     , var_export($newLeader, true)));
+            }
+            $newLeaderUserId = $GoalMember->getUserIdByGoalMemberId(Hash::get($data, 'NewLeader.id'));
+
+            // Goalのリーダーuid変更
+            $Goal->id = Hash::get($data, 'Goal.id');
+            if (!$Goal->saveField('user_id', $newLeaderUserId)) {
+                throw new Exception(sprintf("Failed to change leader uid Goal model. data:%s"
+                    , var_export($newLeaderUserId, true)));
             }
 
             // リーダー -> コラボレーター
@@ -405,6 +417,9 @@ class GoalMemberService extends AppService
             // Redisキャッシュ削除
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+            // 新しいリーダーのキャッシュも削除する
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId), 'user_data');
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $newLeaderUserId), 'user_data');
 
             // トランザクション完了
             $GoalMember->commit();
@@ -447,6 +462,7 @@ class GoalMemberService extends AppService
                     'alias'      => 'TeamMember',
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id'
                     ],
                 ],
                 [
@@ -492,6 +508,7 @@ class GoalMemberService extends AppService
                     'alias'      => 'TeamMember',
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id'
                     ],
                 ],
                 [

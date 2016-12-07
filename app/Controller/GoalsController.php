@@ -305,7 +305,7 @@ class GoalsController extends AppController
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         // ビュー変数セット
-        $isLeader = true;
+        $isLeader = $this->Goal->GoalMember->isLeader($goalId, $this->Auth->user('id'));
         $goalMembers = $GoalMemberService->getActiveCollaboratorList($goalId);
         $currentLeader = $GoalMemberService->getActiveLeader($goalId);
         $priorityList = $this->Goal->priority_list;
@@ -366,18 +366,21 @@ class GoalsController extends AppController
         $goalMember = $this->request->data['GoalMember'];
         $goal_member_id = $goal_member_id ? $goal_member_id : $this->Goal->GoalMember->getLastInsertID();
         $goal = $this->Goal->findById($goalMember['goal_id']);
-        $goal_leader_id = Hash::get($goal, 'Goal.user_id');
+        $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
 
         //success case.
         $this->Pnotify->outSuccess(__("Start to collaborate."));
         //if new
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId), 'user_data');
         //mixpanel
         if ($new) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalMember['goal_id']);
             // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
-            if ($goal_leader_id != $coach_id) {
+            if ($goalLeaderUserId != $coach_id) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalMember['goal_id']);
             }
         }
@@ -793,14 +796,20 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     * コラボ削除アクション
+     */
     public function delete_collabo()
     {
-        $goalMemberId = $this->request->params['named']['goal_member_id'];
         $this->request->allowMethod('post', 'put');
+
+        // ゴールメンバー存在チェック
+        $goalMemberId = $this->request->params['named']['goal_member_id'];
         $this->Goal->GoalMember->id = $goalMemberId;
         if (!$this->Goal->GoalMember->exists()) {
             $this->Pnotify->outError(__("He/She might quit collaborating."));
         }
+        // 権限チェック
         if (!$this->Goal->GoalMember->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__("You have no right to operate it."));
         }
@@ -809,10 +818,19 @@ class GoalsController extends AppController
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
                 $goalMember['GoalMember']['goal_id']);
         }
+
+        // コラボ削除実行
         $this->Goal->GoalMember->delete();
         $this->Pnotify->outSuccess(__("Quitted a collaborator."));
+
+        $goalLeaderUserId = Hash::get($goalMember, 'Goal.user_id');
+
+        // キャッシュ削除
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId), 'user_data');
         $this->redirect($this->referer());
     }
 

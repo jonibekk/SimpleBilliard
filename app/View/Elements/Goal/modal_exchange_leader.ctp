@@ -36,58 +36,65 @@
                         'required'            => true,
                         'options'             => $goalMembers
                     ]) ?>
-                <p class="mb_8px"><?= __("Current")?> : <?= Hash::get($currentLeader, 'User.display_username') ?></p>
 
                 <?php if ($isLeader): ?>
-                <hr>
-                <h5 class="modal-key-result-headings"><?= __("Collaborator") ?></h5>
-                <p class="mb_8px"><?= __("Select whether you collaborate or quit this goal.")?></p>
-                <?= $this->Form->hidden('id', ['value' => Hash::get($currentLeader, 'GoalMember.id')]); ?>
-                <?=
-                $this->Form->input('GoalMember.role',
-                    [
-                        'label'                        => __("Role"),
-                        'placeholder'                  => __("eg) Increasing the number of users"),
-                        "data-bv-notempty-message"     => __("Input is required."),
-                        'data-bv-stringlength'         => 'true',
-                        'data-bv-stringlength-max'     => 200,
-                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                        'required'                     => true,
-                        'rows'                         => 1
+                    <p class="mb_8px"><?= __("Current")?> : <?= Hash::get($currentLeader, 'User.display_username') ?></p>
+                    <hr>
+                    <h5 class="modal-key-result-headings"><?= __("Collaborator") ?></h5>
+                    <p class="mb_8px"><?= __("Select whether you collaborate or quit this goal.")?></p>
+                    <?= $this->Form->hidden('id', ['value' => Hash::get($currentLeader, 'GoalMember.id')]); ?>
+                    <?=
+                    $this->Form->input('GoalMember.role',
+                        [
+                            'label'                        => __("Role"),
+                            'placeholder'                  => __("eg) Increasing the number of users"),
+                            "data-bv-notempty-message"     => __("Input is required."),
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                            'required'                     => true,
+                            'rows'                         => 1
+                        ]) ?>
+                    <?=
+                    $this->Form->input('GoalMember.description',
+                        [
+                            'label'                        => __("Description"),
+                            'placeholder'                  => __("eg) I will get the users by advertising."),
+                            "data-bv-notempty-message"     => __("Input is required."),
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 2000,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                            'required'                     => true,
+                            'rows'                         => 1
+                        ]) ?>
+                    <?=
+                    $this->Form->input('GoalMember.priority',
+                        [
+                            'label'                    => __("Weight"),
+                            "data-bv-notempty-message" => __("Input is required."),
+                            'required'                 => true,
+                            'type'                     => 'select',
+                            'default'                  => 3,
+                            'options'                  => $priorityList
+                        ]) ?>
+                    <?= $this->Form->button(__("Save & Collaborate"), [
+                        'class' => 'btn btn-fullsize-active mt_12px',
+                        'name'  => 'change_type',
+                        'value' => GoalMemberService::CHANGE_LEADER_WITH_COLLABORATION,
                     ]) ?>
-                <?=
-                $this->Form->input('GoalMember.description',
-                    [
-                        'label'                        => __("Description"),
-                        'placeholder'                  => __("eg) I will get the users by advertising."),
-                        "data-bv-notempty-message"     => __("Input is required."),
-                        'data-bv-stringlength'         => 'true',
-                        'data-bv-stringlength-max'     => 2000,
-                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-                        'required'                     => true,
-                        'rows'                         => 1
+                    <hr>
+                    <?= $this->Form->button(__("Save & Quit this goal"), [
+                        'class' => 'btn btn-fullsize-active',
+                        'name'  => 'change_type',
+                        'value' => GoalMemberService::CHANGE_LEADER_WITH_QUIT,
                     ]) ?>
-                <?=
-                $this->Form->input('GoalMember.priority',
-                    [
-                        'label'                    => __("Weight"),
-                        "data-bv-notempty-message" => __("Input is required."),
-                        'required'                 => true,
-                        'type'                     => 'select',
-                        'default'                  => 3,
-                        'options'                  => $priorityList
+                <?php else: ?>
+                <?php // コラボレーターの場合(リーダー不在) ?>
+                    <?= $this->Form->button(__("Save"), [
+                        'class' => 'btn btn-fullsize-active mt_12px',
+                        'name'  => 'change_type',
+                        'value' => GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER,
                     ]) ?>
-                <?= $this->Form->button(__("Save & Collaborate"), [
-                    'class' => 'btn btn-fullsize-active mt_12px',
-                    'name'  => 'change_type',
-                    'value' => GoalMemberService::CHANGE_LEADER_WITH_COLLABORATION,
-                ]) ?>
-                <hr>
-                <?= $this->Form->button(__("Save & Quit this goal"), [
-                    'class' => 'btn btn-fullsize-active',
-                    'name'  => 'change_type',
-                    'value' => GoalMemberService::CHANGE_LEADER_WITH_QUIT,
-                ]) ?>
                 <?php endif; ?>
             </div>
         </div>
