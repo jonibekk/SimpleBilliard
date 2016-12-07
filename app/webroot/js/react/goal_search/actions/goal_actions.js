@@ -29,7 +29,8 @@ export function fetchInitialData() {
     dispatch({
       type: ActionTypes.LOADING,
     })
-    return axios.get(`/api/v1/goals/init_search`)
+    //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
+    return axios.get(`/api/v1/goals/init_search` + location.search)
       .then((response) => {
         let data = response.data.data
         dispatch({
@@ -39,6 +40,13 @@ export function fetchInitialData() {
       })
       .catch((response) => {
       })
+  }
+}
+
+export function updateKeyword(data) {
+  return {
+    type: ActionTypes.UPDATE_KEYWORD,
+    data,
   }
 }
 
@@ -53,7 +61,17 @@ export function updateFilter(data) {
       getState().goal_search.search_conditions,
       data
     )
-    return axios.get(`/api/v1/goals/search?${querystring.stringify(search_conditions)}`)
+
+    let queries = Object.assign({}, search_conditions)
+    //querystring.stringifyすると配列がqueryのkeyダブってセットされてしまう(hoge=aaa&hoge=bbb)ので、hoge[]にキーを事前に書き換える
+    if ('labels' in queries) {
+      queries["labels[]"] = queries.labels
+      delete queries.labels
+    }
+    queries = querystring.stringify(queries)
+    history.pushState(null, "", '?' + queries);
+
+    return axios.get(`/api/v1/goals/search?${queries}`)
       .then((response) => {
         const search_result = response.data
         dispatch({

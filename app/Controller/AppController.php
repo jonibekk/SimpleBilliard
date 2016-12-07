@@ -673,7 +673,7 @@ class AppController extends BaseController
 
             // 完了アクションが可能なゴールIDリスト
             $canCompleteGoalIds = Hash::extract(
-                $GoalService->findCanComplete($userId), '{n}.id'
+                $this->Goal->findCanComplete($userId), '{n}.id'
             );
 
 
