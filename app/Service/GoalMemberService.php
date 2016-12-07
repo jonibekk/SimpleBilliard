@@ -180,7 +180,7 @@ class GoalMemberService extends AppService
         $res = $GoalMember->find('first', [
             'conditions' => [
                 'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => self::TYPE_OWNER,
+                'GoalMember.type'       => $GoalMember::TYPE_OWNER,
                 'TeamMember.active_flg' => true,
                 'User.active_flg'       => true
             ],
@@ -229,7 +229,7 @@ class GoalMemberService extends AppService
         $res = $GoalMember->find('first', [
             'conditions' => [
                 'GoalMember.id'         => $goalMemberId,
-                'GoalMember.type'       => self::TYPE_COLLABORATOR,
+                'GoalMember.type'       => $GoalMember::TYPE_COLLABORATOR,
                 'Goal.id'               => $goalId,
                 'TeamMember.active_flg' => true,
                 'User.active_flg'       => true
@@ -268,10 +268,12 @@ class GoalMemberService extends AppService
         return (boolean)$res;
     }
 
-    public function validateChangeLeader(int $formData, int $changeType)
+    public function validateChangeLeader(array $formData, int $changeType)
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
         /** @var GoalService $GoalService */
@@ -284,7 +286,7 @@ class GoalMemberService extends AppService
         }
 
         // ゴールが存在するか
-        $goal = $this->Goal->findById($goalId);
+        $goal = $Goal->findById($goalId);
         if (empty($goal)) {
             return __("This goal doesn't exist.");
         }
@@ -292,7 +294,7 @@ class GoalMemberService extends AppService
         // 今期以降のゴールか
         $isAfterCurrentGoal = $GoalService->isAfterCurrentGoal($goalId);
         if(!$isAfterCurrentGoal) {
-            return __("Can change leader after current term's goal.");
+            return __("Can't change leader before current term's goal.");
         }
 
         // 評価開始前か
@@ -301,35 +303,35 @@ class GoalMemberService extends AppService
             $currentTermId = $EvaluateTerm->getCurrentTermId();
             $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
             if ($isStartedEvaluation) {
-                return __("Some error occurred. Please try again from the start.");
+                return __("You can't change the goal in the evaluation.");
             }
         }
 
         // リーダーがinactiveのケース
         if ($changeType === self::CHANGE_LEADER_FROM_GOAL_MEMBER) {
             // 自分がゴールメンバーかどうか
-            if (!$GoalMember->isCollaborated()) {
-                return __("Some error occurred. Please try again from the start.");
+            if (!$GoalMember->isCollaborated($goalId)) {
+                return __("You don't have a permission to edit this goal as member.");
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
             $goalLeaderId = $this->getAcitiveLeaderId($goalId);
             if ($goalLeaderId) {
-                return __("Some error occurred. Please try again from the start.");
+                return __("You don't have a permission to edit this goal. Exist leader.");
             }
         // 自分がリーダーのケース
         } else {
             // 自分がリーダーかどうか
             $loginUserIsLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
             if (!$loginUserIsLeader) {
-                return __("Some error occurred. Please try again from the start.");
+                return __("You don't have a permission to edit this goal because you aren't leader.");
             }
 
             // リーダーを変更して自分がコラボする場合
             if ($changeType === self::CHANGE_LEADER_WITH_COLLABORATION) {
                 $GoalMember->set($formData);
                 if (!$GoalMember->validates()) {
-                    return __("Some error occurred. Please try again from the start.");
+                    return __("Invalid value");
                 }
             }
         }
@@ -337,7 +339,7 @@ class GoalMemberService extends AppService
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
         $newLeaderId = Hash::get($formData, 'NewLeader.id');
         if (!$this->isActiveGoalMember($newLeaderId, $goalId)) {
-            return __("Some error occurred. Please try again from the start.");
+            return __("Invalid member ID.");
         }
 
         return true;
@@ -348,7 +350,7 @@ class GoalMemberService extends AppService
      * @param  array  $data [description]
      * @return [type]       [description]
      */
-    function changeLeader(int $changeType, array $data): bool
+    function changeLeader(array $data, int $changeType): bool
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
@@ -366,6 +368,7 @@ class GoalMemberService extends AppService
 
             // リーダー -> コラボレーター
             if ($changeType == self::CHANGE_LEADER_WITH_COLLABORATION) {
+                $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
                 if (!$GoalMember->save($data['GoalMember'])) {
                     throw new Exception(sprintf("Failed to collaborate. data:%s"
                         , var_export($data['GoalMember'], true)));
@@ -374,9 +377,13 @@ class GoalMemberService extends AppService
 
             // ゴール脱退
             if ($changeType === self::CHANGE_LEADER_WITH_QUIT) {
-                if (!$GoalMember->delete(Hash::get($data, 'GoalMember.id'))) {
+                $goalMemberId = Hash::get($data, 'GoalMember.id');
+                $GoalMember->delete($goalMemberId);
+                // 論理削除している関係で必ずdelete()メソッドは必ずfalseを返す。
+                // よって削除が成功してるかどうか泥臭くチェックしてる。泣
+                if (!empty($GoalMember->findById($goalMemberId))) {
                     throw new Exception(sprintf("Failed to quit goal. data:%s"
-                        , var_export($data['GoalMember'], true)));
+                        , var_export($goalMemberId, true)));
                 }
 
                 // 認定対象の場合のみ未認定カウントキャッシュを削除

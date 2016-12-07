@@ -19,6 +19,8 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->Security->validatePost = false;
+        $this->Security->csrfCheck = false;
     }
 
     /**
@@ -508,21 +510,20 @@ class GoalsController extends AppController
      */
     public function exchange_leader_by_leader()
     {
-        /** @var GoalService $GoalService */
+        /** @var GoalMemberService $GoalMemberService */
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
 
         // バリデーション
         $formData = $this->request->data;
         $changeType = Hash::get($formData, 'change_type');
         $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
+            $this->log($validationRes);
             $this->Pnotify->outError($validationRes);
             return $this->redirect($this->referer());
         }
 
-        $changedLeader = $GoalService->changeLeader($formDatam, $changeType);
+        $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
         if (!$changedLeader) {
             $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
             return $this->redirect($this->referer());
@@ -538,21 +539,20 @@ class GoalsController extends AppController
      */
     public function assign_leader_by_goal_member()
     {
-        /** @var GoalService $GoalService */
+        /** @var GoalMemberService $GoalMemberService */
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
 
         // バリデーション
         $formData = $this->request->data;
         $changeType = $GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER;
         $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
+            $this->log($validationRes);
             $this->Pnotify->outError($validationRes);
             return $this->redirect($this->referer());
         }
 
-        $changedLeader = $GoalService->changeLeader($formDatam, $changeType);
+        $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
         return $this->redirect($this->referer());
     }
 

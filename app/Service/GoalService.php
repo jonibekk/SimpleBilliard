@@ -651,7 +651,7 @@ class GoalService extends AppService
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
-        $goal = $Goal->findByid($goalid);
+        $goal = $Goal->findByid($goalId);
         if (!$goal) {
             return false;
         }
