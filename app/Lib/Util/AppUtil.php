@@ -50,4 +50,22 @@ class AppUtil
         list($k) = each($ar);
         return $k !== 0;
     }
+
+
+    /**
+     * 少数/整数を表示用にフォーマットする
+     * 1234.123000 -> 1234.123
+     * 1234567890 -> 1234567890
+     *
+     * @param  $floatNum
+     *
+     * @return $float_deleted_right_zero
+     */
+    public function formatBigFloat($floatNum)
+    {
+        $floatDeletedIndex = sprintf("%.3f", $floatNum);
+        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
+        return $floatDeletedRightZero;
+    }
+
 }

@@ -534,13 +534,34 @@
   border-radius: .25em;
 }
 
-
+.goal-detail-kr-progress-block {
+  padding: 4px 0;
+  cursor: pointer;
+  //background-color: #f5f5f5;
+  //box-shadow:1px 1px 2px 1px @subColor5;
+}
 .goal-detail-kr-progress-bar-wrap {
   border-radius: 4px;
   overflow: visible;
   background-color: @subColor4;
   text-align: center;
   position: relative;
+  //margin:0 4px;
+}
+.goal-detail-kr-progress-values {
+  display: flex;
+  color: @subColor3;
+  font-size: 1.1rem;
+  &-left {
+    display: block;
+    text-align: left;
+    flex: 1;
+  }
+  &-right {
+    display: block;
+    text-align: right;
+    flex: 1;
+  }
 }
 
 .goal-detail-kr-progress-bar {
@@ -573,7 +594,7 @@
   position: relative;
   z-index: 1;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 1.1rem;
 }
 .goal-detail-kr-flex {
   display: -webkit-flex;

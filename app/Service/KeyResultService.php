@@ -92,6 +92,7 @@ class KeyResultService extends AppService
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
             $keyResult['display_current_end_value'] = __('Complete/Incomplete');
+            $keyResult['progress_rate'] = empty($keyResult['completed']) ? 0 : 100;
             return $keyResult;
         }
 
@@ -113,9 +114,6 @@ class KeyResultService extends AppService
         }
 
         $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
-
-        // 「進捗現在値 / 目標値」の表示
-        $keyResult['display_current_end_value'] = "{$headUnit}{$keyResult['current_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
 
         $keyResult['progress_rate'] = $this->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
 
@@ -264,6 +262,22 @@ class KeyResultService extends AppService
      * @return $float_deleted_right_zero
      */
     public function formatBigFloat($floatNum)
+    {
+        $floatDeletedIndex = sprintf("%.3f", $floatNum);
+        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
+        return $floatDeletedRightZero;
+    }
+
+    /**
+     * 少数/整数を表示用にフォーマットする
+     * 1234.123000 -> 1234.123
+     * 1234567890 -> 1234567890
+     *
+     * @param  $floatNum
+     *
+     * @return $float_deleted_right_zero
+     */
+    public function formatUnitValue($value, $unit)
     {
         $floatDeletedIndex = sprintf("%.3f", $floatNum);
         $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);

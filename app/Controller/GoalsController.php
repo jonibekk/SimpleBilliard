@@ -20,6 +20,8 @@ class GoalsController extends AppController
         'Security',
     ];
 
+    public $helpers = ['NumberEx'];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
