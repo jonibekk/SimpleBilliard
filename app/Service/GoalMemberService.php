@@ -270,7 +270,7 @@ class GoalMemberService extends AppService
 
         // パラメータ存在チェック
         $goalId = Hash::get($formData, 'Goal.id');
-        if (empty($goalId)) {
+        if (empty($goalId) || empty($changeType)) {
             return __("Invalid Request.");
         }
 
@@ -315,6 +315,14 @@ class GoalMemberService extends AppService
             if (!$loginUserIsLeader) {
                 return __("Some error occurred. Please try again from the start.");
             }
+
+            // リーダーを変更して自分がコラボする場合
+            if ($changeType === self::CHANGE_LEADER_WITH_COLLABORATION) {
+                $GoalMember->set($formData);
+                if (!$GoalMember->validates()) {
+                    return __("Some error occurred. Please try again from the start.");
+                }
+            }
         }
 
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
@@ -326,18 +334,9 @@ class GoalMemberService extends AppService
         return true;
     }
 
-    public function changeLeaderWithCollaboration()
+    function changeLeader(array $data)
     {
 
     }
 
-    public function changeLeaderWithQuitGoal()
-    {
-
-    }
-
-    public function changeLeaderByGoalMember()
-    {
-
-    }
 }

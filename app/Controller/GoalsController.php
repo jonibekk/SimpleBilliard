@@ -500,32 +500,53 @@ class GoalsController extends AppController
     }
 
     /**
-     * リーダー変更アクション
+     * 現リーダーによるリーダー交換アクション
      *
-     * @return [type] [description]
      */
-    public function change_leader_with_collaboration()
+    public function exchange_leader_by_leader()
     {
         /** @var GoalService $GoalService */
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $formData = $this->request->data('GoalMember');
-
         // バリデーション
-        $validationRes = $GoalMemberService->validateChangeLeader($formData, $type = $GoalMemberService::CHANGE_LEADER_WITH_COLLABORATION);
+        $formData = $this->request->data;
+        $changeType = Hash::get($formData, 'change_type');
+        $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
             $this->Pnotify->outError($validationRes);
             return $this->redirect($this->referer());
         }
 
-        $changedLeader = $GoalService->changeLeaderWithCollaboration();
+        $changedLeader = $GoalService->changeLeader($formDatam);
+        return $this->redirect($this->referer());
+    }
 
-        // レコードのTYPEをそれぞれ変更するやり方
-        // リーダーのTYPEをコラボレーターに、コラボレーターのTYPEをリーダーに変更する
+    /**
+     * ゴールメンバーによるリーダーアサインアクション
+     * - 現リーダーがinactiveの場合のみ
+     *
+     */
+    public function assign_leader_by_goal_member()
+    {
+        /** @var GoalService $GoalService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
-        // リーダーが不在の場合は誰でもリーダー変更を許可
+
+        // バリデーション
+        $formData = $this->request->data;
+        $changeType = $GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER;
+        $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
+        if ($validationRes !== true) {
+            $this->Pnotify->outError($validationRes);
+            return $this->redirect($this->referer());
+        }
+
+        $changedLeader = $GoalService->changeLeader($formDatam);
+        return $this->redirect($this->referer());
     }
 
     public function edit_key_result()

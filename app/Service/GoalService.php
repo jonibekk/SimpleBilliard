@@ -631,6 +631,7 @@ class GoalService extends AppService
             return false;
         }
 
+
         // リーダーか
         if (!$GoalMemberService->isLeader($goalId, $loginUserId)) {
             return false;
@@ -661,4 +662,5 @@ class GoalService extends AppService
 
         return $goalStartDate >= $baseStartDate;
     }
+
 }
