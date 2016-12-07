@@ -65,4 +65,4 @@ define('CACHE_HOMEPAGE', false);
 define('SETUP_GUIDE_NOTIFY_DAYS', "2,5,10");
 define('SETUP_GUIDE_NOTIFY_HOUR', "11");
 define('SETUP_GUIDE_NOTIFY_URL', "http://192.168.50.4");
-define('ENABLE_ALL_EXPERIMENTS', true);
+define('ENABLE_ALL_EXPERIMENTS', true);//trueの場合は実験の存在の有無にかかわらず全ての実験が有効化される

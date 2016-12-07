@@ -14,6 +14,7 @@ class ExperimentService extends AppService
     /**
      * 定義済みの実験かどうかを返す
      * 頻繁に参照されるため、キャッシュを利用
+     * ENABLE_ALL_EXPERIMENTSがtrueの場合は無条件にtrueを返す
      *
      * @param $name
      *
@@ -22,7 +23,6 @@ class ExperimentService extends AppService
     function isDefined($name)
     {
         if (defined('ENABLE_ALL_EXPERIMENTS') && ENABLE_ALL_EXPERIMENTS) {
-            $this->log('enable experiments');
             return true;
         }
         /** @var  Experiment $Experiment */
