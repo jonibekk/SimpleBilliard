@@ -9,23 +9,24 @@
         </div>
     <?php else: ?>
         <?= $this->Form->create('ActionResult', [
-            'url'           => $is_edit_mode
+            'url'              => $is_edit_mode
                 ? [
                     'controller'       => 'goals',
                     'action'           => 'edit_action',
                     'action_result_id' => $this->request->data['ActionResult']['id']
                 ]
                 : ['controller' => 'goals', 'action' => 'add_completed_action'],
-            'inputDefaults' => [
+            'inputDefaults'    => [
                 'div'       => 'form-group',
                 'label'     => false,
                 'wrapInput' => '',
                 'class'     => 'form-control',
             ],
-            'id'            => 'CommonActionDisplayForm',
-            'type'          => 'file',
-            'novalidate'    => true,
-            'class'         => 'form-feed-notify'
+            'data-is-edit' => $is_edit_mode,
+            'id'               => 'CommonActionDisplayForm',
+            'type'             => 'file',
+            'novalidate'       => true,
+            'class'            => 'form-feed-notify'
         ]); ?>
         <div class="post-panel-body plr_11px ptb_7px">
             <a href="#"
@@ -66,34 +67,36 @@
         </div>
         <!-- 目印 -->
         <div id="ActionUploadFileDropArea" class="action-upload-file-drop-area">
-            <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
-                <div class="input-group feed-action-goal-select-wrap">
-                    <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
-                    <?=
-                    $this->Form->input('goal_id', [
-                        'label'                    => false,
-                        'div'                      => false,
-                        'required'                 => true,
-                        'data-bv-notempty-message' => __("Input is required."),
-                        'class'                    => 'form-control js-change-goal',
-                        'id'                       => 'GoalSelectOnActionForm',
-                        'options'                  => $canActionGoals,
-                        'target-value'             =>
-                            isset($this->request->data['ActionResult']['key_result_id'])
-                                ? $this->request->data['ActionResult']['key_result_id']
-                                : "",
-                        'ajax-url'                 =>
-                            $this->Html->url([
-                                'controller' => 'goals',
-                                'action'     => 'ajax_get_kr_list',
-                                'goal_id'    => ""
-                            ]),
-                    ])
-                    ?>
+            <?php if (!$is_edit_mode): ?>
+                <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
+                    <div class="input-group feed-action-goal-select-wrap">
+                        <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
+                        <?=
+                        $this->Form->input('goal_id', [
+                            'label'                    => false,
+                            'div'                      => false,
+                            'required'                 => true,
+                            'data-bv-notempty-message' => __("Input is required."),
+                            'class'                    => 'form-control js-change-goal',
+                            'id'                       => 'GoalSelectOnActionForm',
+                            'options'                  => $canActionGoals,
+                            'target-value'             =>
+                                isset($this->request->data['ActionResult']['key_result_id'])
+                                    ? $this->request->data['ActionResult']['key_result_id']
+                                    : "",
+                            'ajax-url'                 =>
+                                $this->Html->url([
+                                    'controller' => 'goals',
+                                    'action'     => 'ajax_get_kr_list',
+                                    'goal_id'    => ""
+                                ]),
+                        ])
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <ul class="action-kr-progress-edit" id="SelectKrProgress">
-            </ul>
+                <ul class="action-kr-progress-edit" id="SelectKrProgress">
+                </ul>
+            <?php endif; ?>
 
 
             <?php

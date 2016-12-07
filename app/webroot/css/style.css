@@ -1387,6 +1387,10 @@ ul.example-indent {
 .post-contents {
     padding: 10px 0 0 0;
 }
+.post-contents.mod-action {
+    padding: 4px 0;
+    margin:0;
+}
 
 .comment-block {
     border-top: 1px solid #dddddd;

@@ -3712,6 +3712,14 @@ function showMore(obj) {
       showText: showText,
       hideText: hideText
     });
+    $(obj).find('.showmore-action').showMore({
+      speedDown: 300,
+      speedUp: 300,
+      height: '42px',
+      showText: showText,
+      hideText: hideText
+    });
+
   }
   else {
     $('.showmore').showMore({
@@ -3768,6 +3776,13 @@ function showMore(obj) {
       speedDown: 100,
       speedUp: 100,
       height: '0px',
+      showText: showText,
+      hideText: hideText
+    });
+    $('.showmore-action').showMore({
+      speedDown: 300,
+      speedUp: 300,
+      height: '42px',
       showText: showText,
       hideText: hideText
     });
