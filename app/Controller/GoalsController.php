@@ -19,8 +19,6 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->validatePost = false;
-        $this->Security->csrfCheck = false;
     }
 
     /**
