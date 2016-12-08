@@ -456,11 +456,11 @@ class GoalService extends AppService
     /**
      * 対象のゴールが今季以降のゴールか
      *
-     * @param $goalId
+     * @param int $goalId
      *
      * @return bool
      */
-    function isGoalAfterCurrentTerm($goalId)
+    function isGoalAfterCurrentTerm(int $goalId): bool
     {
         $goal = $this->get($goalId);
         if (empty($goal)) {
@@ -638,4 +638,5 @@ class GoalService extends AppService
         }
         return true;
     }
+
 }

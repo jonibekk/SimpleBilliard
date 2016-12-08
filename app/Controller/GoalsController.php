@@ -499,6 +499,69 @@ class GoalsController extends AppController
         return "";
     }
 
+    /**
+     * 現リーダーによるリーダー交換アクション
+     * - Form値のバリデーション
+     * - リーダー交換処理実行
+     * - 関係者に通知
+     *
+     */
+    public function exchange_leader_by_leader()
+    {
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
+        // バリデーション
+        $formData = $this->request->data;
+        $changeType = Hash::get($formData, 'change_type');
+        $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
+        if ($validationRes !== true) {
+            $this->Pnotify->outError($validationRes);
+            return $this->redirect($this->referer());
+        }
+
+        $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
+        if (!$changedLeader) {
+            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__("Changed leader."));
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * ゴールメンバーによるリーダーアサインアクション
+     * 現リーダーがinactiveの場合のみ
+     * - Form値のバリデーション
+     * - リーダー交換処理実行
+     * - 関係者に通知
+     *
+     */
+    public function assign_leader_by_goal_member()
+    {
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+
+        // バリデーション
+        $formData = $this->request->data;
+        $changeType = $GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER;
+        $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
+        if ($validationRes !== true) {
+            $this->Pnotify->outError($validationRes);
+            return $this->redirect($this->referer());
+        }
+
+        $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
+        if (!$changedLeader) {
+            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__("Changed leader."));
+        return $this->redirect($this->referer());
+    }
+
     public function edit_key_result()
     {
         $kr_id = $this->request->params['named']['key_result_id'];

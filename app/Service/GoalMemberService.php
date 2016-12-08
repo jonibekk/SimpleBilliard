@@ -17,6 +17,11 @@ class GoalMemberService extends AppService
     const EXTEND_COACH = "GOAL:EXTEND_COACH";
     const EXTEND_COACHEE = "GOAL:EXTEND_COACHEE";
 
+    /* リーダー変更リクエストの種類 */
+    const CHANGE_LEADER_WITH_COLLABORATION = 1;
+    const CHANGE_LEADER_WITH_QUIT = 2;
+    const CHANGE_LEADER_FROM_GOAL_MEMBER = 3;
+
     /**
      * idによる単体データ取得
      *
@@ -157,4 +162,155 @@ class GoalMemberService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         return $GoalMember->isLeader($goalId, $userId);
     }
+
+    /**
+     * ゴール変更リクエストのバリデーション
+     *
+     * @param  array  $formData
+     * @param  int    $changeType
+     * @return true || string
+     */
+    public function validateChangeLeader(array $formData, int $changeType)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        // パラメータ存在チェック
+        $goalId = Hash::get($formData, 'Goal.id');
+        if (empty($goalId) || empty($changeType)) {
+            return __("Invalid Request.");
+        }
+
+        // ゴールが存在するか
+        $goal = $Goal->findById($goalId);
+        if (empty($goal)) {
+            return __("This goal doesn't exist.");
+        }
+
+        // 今期以降のゴールか
+        $isAfterCurrentGoal = $GoalService->isGoalAfterCurrentTerm($goalId);
+        if(!$isAfterCurrentGoal) {
+            return __("Can't change leader before current term's goal.");
+        }
+
+        // 評価開始前か
+        $termType = $GoalService->getTermType(Hash::get($goal, 'Goal.start_date'));
+        if ($termType == GoalService::TERM_TYPE_CURRENT) {
+            $currentTermId = $EvaluateTerm->getCurrentTermId();
+            $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
+            if ($isStartedEvaluation) {
+                return __("You can't change the goal in the evaluation.");
+            }
+        }
+
+        // リーダーがinactiveのケース
+        if ($changeType === self::CHANGE_LEADER_FROM_GOAL_MEMBER) {
+            // 自分がゴールメンバーかどうか
+            if (!$GoalMember->isCollaborated($goalId)) {
+                return __("You don't have a permission to edit this goal as member.");
+            }
+
+            // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
+            $goalLeaderId = $GoalMember->getAcitiveLeaderId($goalId);
+            if ($goalLeaderId) {
+                return __("You don't have a permission to edit this goal. Exist leader.");
+            }
+        // 自分がリーダーのケース
+        } else {
+            // 自分がリーダーかどうか
+            $loginUserIsLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
+            if (!$loginUserIsLeader) {
+                return __("You don't have a permission to edit this goal because you aren't leader.");
+            }
+
+            // リーダーを変更して自分がコラボする場合
+            if ($changeType === self::CHANGE_LEADER_WITH_COLLABORATION) {
+                $GoalMember->set($formData);
+                if (!$GoalMember->validates()) {
+                    return __("Invalid value");
+                }
+            }
+        }
+
+        // 変更後のリーダーがアクティブなゴールメンバーかどうか
+        $newLeaderId = Hash::get($formData, 'NewLeader.id');
+        if (!$GoalMember->isActiveGoalMember($newLeaderId, $goalId)) {
+            return __("Invalid member ID.");
+        }
+
+        return true;
+    }
+
+    /**
+     * リーダー変更処理
+     * @param  array  $data
+     * @return bool
+     */
+    function changeLeader(array $data, int $changeType): bool
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        try {
+            // トランザクション開始
+            $GoalMember->begin();
+
+            // コラボレーター -> リーダー
+            $newLeader = ['id' => Hash::get($data, 'NewLeader.id'), 'type' => $GoalMember::TYPE_OWNER, 'role' => null, 'description' => null];
+            if (!$GoalMember->save($newLeader, false)) {
+                throw new Exception(sprintf("Failed to change leader. data:%s"
+                    , var_export($newLeader, true)));
+            }
+
+            // リーダー -> コラボレーター
+            if ($changeType == self::CHANGE_LEADER_WITH_COLLABORATION) {
+                $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
+                if (!$GoalMember->save($data['GoalMember'])) {
+                    throw new Exception(sprintf("Failed to collaborate. data:%s"
+                        , var_export($data['GoalMember'], true)));
+                }
+            }
+
+            // ゴール脱退
+            if ($changeType === self::CHANGE_LEADER_WITH_QUIT) {
+                $goalMemberId = Hash::get($data, 'GoalMember.id');
+                $GoalMember->delete($goalMemberId);
+                // 論理削除している関係で必ずdelete()メソッドは必ずfalseを返す。
+                // よって削除が成功してるかどうか泥臭くチェックしてる。泣
+                if (!empty($GoalMember->findById($goalMemberId))) {
+                    throw new Exception(sprintf("Failed to quit goal. data:%s"
+                        , var_export($goalMemberId, true)));
+                }
+
+                // 認定対象の場合のみ未認定カウントキャッシュを削除
+                $goalMemberId = Hash::get($data, 'GoalMember.id');
+                if ($this->isApprovableGoalMember($goalMemberId)) {
+                    $quitUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+                    $coachId = $TeamMember->getCoachId($quitUserId);
+                    Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
+                }
+            }
+
+            // Redisキャッシュ削除
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+
+            // トランザクション完了
+            $GoalMember->commit();
+
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $GoalMember->rollback();
+            return false;
+        }
+        return true;
+    }
+
 }
