@@ -217,8 +217,8 @@ class GoalMemberService extends AppService
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
-            $goalLeaderId = $GoalMember->getAcitiveLeaderId($goalId);
-            if ($goalLeaderId) {
+            $goalLeader = $GoalMember->getActiveLeader($goalId);
+            if ($goalLeader) {
                 return __("You don't have a permission to edit this goal. Exist leader.");
             }
         // 自分がリーダーのケース
@@ -256,6 +256,8 @@ class GoalMemberService extends AppService
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
 
         try {
             // トランザクション開始
@@ -266,6 +268,14 @@ class GoalMemberService extends AppService
             if (!$GoalMember->save($newLeader, false)) {
                 throw new Exception(sprintf("Failed to change leader. data:%s"
                     , var_export($newLeader, true)));
+            }
+            $newLeaderUserId = $GoalMember->getUserIdByGoalMemberId(Hash::get($data, 'NewLeader.id'));
+
+            // Goalのリーダーuid変更
+            $Goal->id = Hash::get($data, 'Goal.id');
+            if (!$Goal->saveField('user_id', $newLeaderUserId)) {
+                throw new Exception(sprintf("Failed to change leader uid Goal model. data:%s"
+                    , var_export($newLeaderUserId, true)));
             }
 
             // リーダー -> コラボレーター
@@ -300,6 +310,9 @@ class GoalMemberService extends AppService
             // Redisキャッシュ削除
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+            // 新しいリーダーのキャッシュも削除する
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId), 'user_data');
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $newLeaderUserId), 'user_data');
 
             // トランザクション完了
             $GoalMember->commit();
@@ -313,4 +326,37 @@ class GoalMemberService extends AppService
         return true;
     }
 
+    /**
+     * ゴールのリーダー変更可能かチェックする
+     * # 条件
+     * ## リーダーのケース
+     * - 自分がリーダーで
+     * - アクティブなコラボレーターが一人以上存在する場合
+     * ## コラボレーターのケース
+     * - 自分がコラボレーターで
+     * - アクティブなリーダーが存在しない場合
+     *
+     * @param  int  $goalId
+     * @return bool
+     */
+    function canChangeLeader(int $goalId): bool
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        // リーダーのケース
+        $isLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
+        $collaborators = $GoalMember->getActiveCollaboratorList($goalId);
+        if ($isLeader && count($collaborators) > 0) {
+            return true;
+        }
+
+        // コラボレーターのケース
+        $isCollaborator = $GoalMember->isCollaborator($goalId, $GoalMember->my_uid);
+        if ($isCollaborator && !$GoalMember->getActiveLeader($goalId)) {
+            return true;
+        }
+
+        return false;
+    }
 }

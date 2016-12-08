@@ -487,6 +487,8 @@ class GoalService extends AppService
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         foreach ($goals as $key => $goal) {
             // 進捗を計算
@@ -497,6 +499,8 @@ class GoalService extends AppService
             if (!empty($goal['TargetCollabo'])) {
                 $goals[$key]['TargetCollabo']['is_approval_enabled'] = $GoalApprovalService->isApprovable($goal['TargetCollabo']['user_id']);
             }
+            // リーダー変更可能フラグを追加
+            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal, 'Goal.id'));
         }
         return $goals;
     }
