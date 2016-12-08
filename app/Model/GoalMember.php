@@ -942,7 +942,7 @@ class GoalMember extends AppModel
      *
      * @param  int $goalId
      *
-     * @return int || null
+     * @return array || null
      */
     function getActiveLeader(int $goalId)
     {
