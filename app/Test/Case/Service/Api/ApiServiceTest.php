@@ -1,18 +1,17 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('Experiment', 'Model');
-App::import('Service', 'ExperimentService');
+App::import('Service/Api', 'ApiService');
 
 /**
- * ExperimentServiceTest Class
+ * ApiServiceTest Class
  * Created by PhpStorm.
  * User: daikihirakata
  * Date: 2016/12/08
  * Time: 17:50
  *
- * @property ExperimentService $ExperimentService
+ * @property ApiService $ApiService
  */
-class ExperimentServiceTest extends GoalousTestCase
+class ApiServiceTest extends GoalousTestCase
 {
     /**
      * Fixtures
@@ -20,8 +19,8 @@ class ExperimentServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.experiment',
     ];
+
     /**
      * setUp method
      *
@@ -30,13 +29,16 @@ class ExperimentServiceTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->ExperimentService = ClassRegistry::init('ExperimentService');
+        $this->ApiService = ClassRegistry::init('ApiService');
     }
 
-    function testIsDefined()
+    function test_checkMaxLimit()
     {
         $this->markTestIncomplete('testClear not implemented.');
     }
 
-
+    function test_formatResponseData()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
 }

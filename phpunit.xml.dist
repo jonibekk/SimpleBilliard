@@ -4,6 +4,7 @@
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">app/Model</directory>
             <directory suffix=".php">app/Service</directory>
+            <directory suffix=".php">app/Service/Api</directory>
             <directory suffix=".php">app/View/Helper</directory>
             <exclude>
                 <directory suffix=".php">app/View</directory>
