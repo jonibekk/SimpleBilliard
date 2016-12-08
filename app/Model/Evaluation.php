@@ -1064,11 +1064,14 @@ class Evaluation extends AppModel
 
     /**
      * 評価インデックスページ用の評価一覧データを取得
-     * @param  $teamId
-     * @param  $userId
-     * @return [type]         [description]
+     *
+     * @param $termId
+     * @param $userId
+     *
+     * @return array
      */
-    function getEvaluationListForIndex($termId, $userId) {
+    function getEvaluationListForIndex(int $termId, int $userId): array
+    {
         $options = [
             'conditions' => [
                 'evaluatee_user_id' => $userId,
@@ -1094,7 +1097,7 @@ class Evaluation extends AppModel
         $findData = $this->find('all', $options);
 
         $retData = [];
-        foreach($findData as $key => $val) {
+        foreach ($findData as $key => $val) {
             $retData[$key] = $val['Evaluation'];
             $retData[$key]['evaluator_user'] = $val['EvaluatorUser'];
         }
