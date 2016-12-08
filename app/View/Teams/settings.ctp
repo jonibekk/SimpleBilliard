@@ -22,7 +22,7 @@ $this->set('hidden_sidebar_xxs', true);
         <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
         <li class=""><a href="#goal_category"><?= __("Goal category settings") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("Evaluation settings") ?></a></li>
-        <?php if ($this->Expt->is('EnableEvaluationFeature') === true): ?>
+        <?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true): ?>
             <li class=""><a href="#evaluation_score_setting"><?= __("Evaluation score settings") ?></a></li>
             <li class=""><a href="#evaluation_start"><?= __("Begin evaluation") ?></a></li>
             <li class=""><a href="#evaluation_freeze"><?= __("Pause evaluation") ?></a></li>
@@ -50,7 +50,7 @@ $this->set('hidden_sidebar_xxs', true);
 <div id="evaluation">
     <?= $this->element('Team/evaluation_setup') ?>
 </div>
-<?php if ($this->Expt->is('EnableEvaluationFeature') === true): ?>
+<?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true): ?>
     <div id="evaluation_score_setting">
         <?= $this->element('Team/evaluation_score_setting') ?>
     </div>

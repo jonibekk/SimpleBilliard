@@ -14,6 +14,8 @@ class ExperimentService extends AppService
     /**
      * 定義済みの実験かどうかを返す
      * 頻繁に参照されるため、キャッシュを利用
+     * FORCE_ENABLE_ALL_EXPERIMENTSがtrueの場合は全てtrueを返す
+     * FORCE_DISABLE_ALL_EXPERIMENTSがtrueの場合は全てfalseを返す。FORCE_ENABLE_ALL_EXPERIMENTSより優先される
      *
      * @param $name
      *
@@ -21,6 +23,12 @@ class ExperimentService extends AppService
      */
     function isDefined($name)
     {
+        if (defined('FORCE_DISABLE_ALL_EXPERIMENTS') && FORCE_DISABLE_ALL_EXPERIMENTS) {
+            return false;
+        }
+        if (defined('FORCE_ENABLE_ALL_EXPERIMENTS') && FORCE_ENABLE_ALL_EXPERIMENTS) {
+            return true;
+        }
         /** @var  Experiment $Experiment */
         $Experiment = ClassRegistry::init('Experiment');
         $res = Cache::read($Experiment->getCacheKey(CACHE_KEY_EXPERIMENT . ":" . $name), 'team_info');
