@@ -217,7 +217,7 @@ class GoalMemberService extends AppService
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
-            $goalLeaderId = $GoalMember->getActiveLeaderId($goalId);
+            $goalLeaderId = $GoalMember->getActiveLeader($goalId);
             if ($goalLeaderId) {
                 return __("You don't have a permission to edit this goal. Exist leader.");
             }
@@ -327,99 +327,6 @@ class GoalMemberService extends AppService
     }
 
     /**
-     * アクティブなコラボレーター一覧をリスト形式で返す
-     *
-     * @param  int   $goalId
-     * @return array
-     */
-    function getActiveCollaboratorList(int $goalId): array
-    {
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init("GoalMember");
-
-        $options = [
-            'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => $GoalMember::TYPE_COLLABORATOR,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
-            ],
-            'fields'     => [
-                'GoalMember.id',
-                'User.*'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'team_members',
-                    'alias'      => 'TeamMember',
-                    'conditions' => [
-                        'TeamMember.user_id = GoalMember.user_id',
-                        'TeamMember.team_id = GoalMember.team_id'
-                    ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'users',
-                    'alias'      => 'User',
-                    'conditions' => [
-                        'User.id = GoalMember.user_id'
-                    ],
-                ],
-            ]
-        ];
-
-        $res = $GoalMember->find('all', $options);
-        if (empty($res)) {
-            return [];
-        }
-
-        $combined = Hash::combine($res, '{n}.GoalMember.id', '{n}.User.display_username');
-        return $combined;
-    }
-
-    function getActiveLeader(int $goalId): array
-    {
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init("GoalMember");
-
-        $options = [
-            'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => $GoalMember::TYPE_OWNER,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
-            ],
-            'fields'     => [
-                'GoalMember.id',
-                'User.*'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'team_members',
-                    'alias'      => 'TeamMember',
-                    'conditions' => [
-                        'TeamMember.user_id = GoalMember.user_id',
-                        'TeamMember.team_id = GoalMember.team_id'
-                    ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'users',
-                    'alias'      => 'User',
-                    'conditions' => [
-                        'User.id = GoalMember.user_id'
-                    ],
-                ],
-            ]
-        ];
-
-        $res = $GoalMember->find('first', $options);
-        return $res ?? [];
-    }
-
-    /**
      * ゴールのリーダー変更可能かチェックする
      * # 条件
      * ## リーダーのケース
@@ -439,13 +346,13 @@ class GoalMemberService extends AppService
 
         // リーダーのケース
         $isLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
-        $collaborators = $this->getActiveCollaboratorList($goalId);
+        $collaborators = $GoalMember->getActiveCollaboratorList($goalId);
         if ($isLeader && count($collaborators) > 0) {
             return true;
         }
 
         // コラボレーターのケース
-        if (!$isLeader && !$this->getActiveLeaderId($goalId)) {
+        if (!$isLeader && !$GoalMember->getActiveLeader($goalId)) {
             return true;
         }
 

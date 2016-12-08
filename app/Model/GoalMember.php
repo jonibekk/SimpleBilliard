@@ -938,50 +938,52 @@ class GoalMember extends AppModel
     }
 
     /**
-     * アクティブなゴールリーダーIDを取得
+     * アクティブなゴールリーダーを取得.
+     *
      * @param  int $goalId
+     *
      * @return int || null
      */
-    function getActiveLeaderId(int $goalId)
+    function getActiveLeader(int $goalId): array
     {
-        if (!$goalId) {
-            return null;
-        }
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
 
-        $res = $this->find('first', [
-            'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => self::TYPE_OWNER,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
-            ],
-            'fields'     => [
-                'GoalMember.id'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'team_members',
-                    'alias'      => 'TeamMember',
-                    'conditions' => [
-                        'TeamMember.user_id = GoalMember.user_id',
-                        'TeamMember.team_id = GoalMember.team_id'
-                    ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'users',
-                    'alias'      => 'User',
-                    'conditions' => [
-                        'User.id = GoalMember.user_id'
-                    ],
-                ],
-            ]
-        ]);
-        if (empty($res)) {
-            return null;
-        }
-        return Hash::get($res, 'GoalMember.id');
+        $options = [
+             'conditions' => [
+                 'GoalMember.goal_id' => $goalId,
+                 'GoalMember.type' => $GoalMember::TYPE_OWNER,
+                 'TeamMember.active_flg' => true,
+                 'User.active_flg' => true,
+             ],
+             'fields' => [
+                 'GoalMember.id',
+                 'User.*',
+             ],
+             'joins' => [
+                 [
+                     'type' => 'LEFT',
+                     'table' => 'team_members',
+                     'alias' => 'TeamMember',
+                     'conditions' => [
+                         'TeamMember.user_id = GoalMember.user_id',
+                         'TeamMember.team_id = GoalMember.team_id',
+                     ],
+                 ],
+                 [
+                     'type' => 'LEFT',
+                     'table' => 'users',
+                     'alias' => 'User',
+                     'conditions' => [
+                         'User.id = GoalMember.user_id',
+                     ],
+                 ],
+             ],
+         ];
+
+        $res = $GoalMember->find('first', $options);
+
+        return $res ?? [];
     }
 
     /**
@@ -1037,4 +1039,54 @@ class GoalMember extends AppModel
 
         return (boolean)$res;
     }
+
+    /**
+     * アクティブなコラボレーター一覧をリスト形式で返す
+     *
+     * @param  int   $goalId
+     * @return array
+     */
+    function getActiveCollaboratorList(int $goalId): array
+    {
+        $options = [
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'GoalMember.type'       => self::TYPE_COLLABORATOR,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id',
+                'User.*'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id'
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+
+        $combined = Hash::combine($res, '{n}.GoalMember.id', '{n}.User.display_username');
+        return $combined;
+    }
+
 }

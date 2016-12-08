@@ -37,7 +37,7 @@
                         'options'             => $goalMembers
                     ]) ?>
 
-                <?php if ($isLeader): ?>
+                <?php if ($isLeader && $currentLeader): ?>
                     <p class="mb_8px"><?= __("Current")?> : <?= Hash::get($currentLeader, 'User.display_username') ?></p>
                     <hr>
                     <h5 class="modal-key-result-headings"><?= __("Collaborator") ?></h5>
