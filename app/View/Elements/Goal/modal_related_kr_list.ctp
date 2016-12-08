@@ -41,7 +41,7 @@
                                 </h4>
 
                                 <!--progress bar-->
-                                <?= $this->GlHtml->krProgressBar($kr)?>
+                                <?= $this->element('KeyResult/progress_bar', ['kr' => $kr]) ?>
                                 <dl class="kr-info-counts mb_0px">
                                     <dt class="kr-info-counts-title <?= $actioned ?>"><i class="fa fa-check-circle"></i></dt>
                                     <dd class="kr-info-counts-description <?= $actioned ?>">

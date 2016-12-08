@@ -15,7 +15,7 @@
                 </div>
             </div>
             <!--progress bar-->
-            <?= $this->GlHtml->krProgressBar($kr['KeyResult'])?>
+            <?= $this->element('KeyResult/progress_bar', ['kr' => $kr['KeyResult']]) ?>
 
             <dl class="goal-detail-kr-info-counts mb_4px">
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-check-circle"></i></dt>
