@@ -25,6 +25,7 @@ class NumberExHelper extends AppHelper
      */
     public function formatHumanReadable($num, $options = [])
     {
+        $num = AppUtil::formatBigFloat($num);
         $options = array_merge(
             [
                 'convert_start' => 0,
@@ -59,4 +60,82 @@ class NumberExHelper extends AppHelper
         return $num;
     }
 
+    /**
+     * 進捗値フォーマット
+     *
+     * @param float $val
+     * @param int   $unit
+     * @param bool  $isEnd
+     *
+     * @return mixed|string
+     */
+    public function formatProgressValue(float $val, int $unit, bool $isEnd = false)
+    {
+        $val = AppUtil::formatBigFloat($val);
+        if ($unit == KeyResult::UNIT_BINARY) {
+            return $isEnd ? __("Complete") : __("Incomplete");
+        }
+
+        $unitName = KeyResult::$UNIT[$unit];
+        if (in_array($unit, KeyResult::$UNIT_HEAD)) {
+            return $unitName.$val;
+        }
+        if (in_array($unit, KeyResult::$UNIT_TAIL)) {
+            return $val.$unitName;
+        }
+
+        return $val;
+    }
+
+    /**
+     * 進捗値短縮フォーマット
+     *
+     * @param float $val
+     * @param int   $unit
+     * @param bool  $isEnd
+     *
+     * @return mixed|string
+     */
+    public function shortFormatProgressValue(float $val, int $unit, bool $isEnd = false)
+    {
+        if ($unit == KeyResult::UNIT_BINARY) {
+            return $isEnd ? __("Complete") : __("Incomplete");
+        }
+        $fmtVal = $this->formatHumanReadable(round($val));
+        $unitName = KeyResult::$UNIT[$unit];
+        if (in_array($unit, KeyResult::$UNIT_HEAD)) {
+            return $unitName.$fmtVal;
+        }
+        if (in_array($unit, KeyResult::$UNIT_TAIL)) {
+            return $fmtVal.$unitName;
+        }
+
+        return $fmtVal;
+    }
+
+    /**
+     * 進捗率計算
+     *
+     * @param $start
+     * @param $end
+     * @param $current
+     *
+     * @return int
+     */
+    public function calcProgressRate(float $start, float $end, float $current) : int
+    {
+        if ($current == $end) {
+            return 100;
+        }
+        // 分母
+        $denominator = $end - $start;
+        // 分子
+        $numerator = $current - $start;
+        // 小数点は切り捨て
+        $rate = floor($numerator / $denominator * 100);
+        if ($rate == 0 && $numerator > 0) {
+            return 1;
+        }
+        return $rate;
+    }
 }

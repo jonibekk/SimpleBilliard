@@ -504,6 +504,7 @@ class Goal extends AppModel
             $data['KeyResult'][0]['tkr_flg'] = true;
             $data['KeyResult'][0]['user_id'] = $this->my_uid;
             $data['KeyResult'][0]['team_id'] = $this->current_team_id;
+            $data['KeyResult'][0]['current_value'] = $data['KeyResult'][0]['start_value'];
         }
 
         if (!Hash::get($data, 'KeyResult.0.start_date')) {
