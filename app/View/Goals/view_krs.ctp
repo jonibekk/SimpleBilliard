@@ -12,7 +12,7 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="col-sm-8 col-sm-offset-2" id="ViewKrs">
+<div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body goal-detail-kr-panel">
