@@ -164,113 +164,6 @@ class GoalMemberService extends AppService
     }
 
     /**
-     * アクティブなゴールリーダーIDを取得
-     * @param  int $goalId [description]
-     * @return int || null
-     */
-    function getAcitiveLeaderId(int $goalId)
-    {
-        if (!$goalId) {
-            return null;
-        }
-
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init("GoalMember");
-
-        $res = $GoalMember->find('first', [
-            'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => $GoalMember::TYPE_OWNER,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
-            ],
-            'fields'     => [
-                'GoalMember.id'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'team_members',
-                    'alias'      => 'TeamMember',
-                    'conditions' => [
-                        'TeamMember.user_id = GoalMember.user_id',
-                        'TeamMember.team_id = GoalMember.team_id'
-                    ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'users',
-                    'alias'      => 'User',
-                    'conditions' => [
-                        'User.id = GoalMember.user_id'
-                    ],
-                ],
-            ]
-        ]);
-        if (empty($res)) {
-            return null;
-        }
-        return Hash::get($res, 'GoalMember.id');
-    }
-
-    /**
-     * ゴールメンバーがアクティブかどうか判定
-     * @param  int  $goalMemberId
-     * @return bool
-     */
-    function isActiveGoalMember(int $goalMemberId, int $goalId): bool
-    {
-        if (!$goalMemberId) {
-            return false;
-        }
-
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init("GoalMember");
-
-        $res = $GoalMember->find('first', [
-            'conditions' => [
-                'GoalMember.id'         => $goalMemberId,
-                'GoalMember.type'       => $GoalMember::TYPE_COLLABORATOR,
-                'Goal.id'               => $goalId,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
-            ],
-            'fields'     => [
-                'GoalMember.id'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'goals',
-                    'alias'      => 'Goal',
-                    'conditions' => [
-                        'Goal.id = GoalMember.goal_id',
-                    ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'team_members',
-                    'alias'      => 'TeamMember',
-                    'conditions' => [
-                        'TeamMember.user_id = GoalMember.user_id',
-                        'TeamMember.team_id = GoalMember.team_id'
-                    ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'users',
-                    'alias'      => 'User',
-                    'conditions' => [
-                        'User.id = GoalMember.user_id'
-                    ],
-                ],
-            ]
-        ]);
-
-        return (boolean)$res;
-    }
-
-    /**
      * ゴール変更リクエストのバリデーション
      *
      * @param  array  $formData
@@ -301,7 +194,7 @@ class GoalMemberService extends AppService
         }
 
         // 今期以降のゴールか
-        $isAfterCurrentGoal = $GoalService->isAfterCurrentGoal($goalId);
+        $isAfterCurrentGoal = $GoalService->isGoalAfterCurrentTerm($goalId);
         if(!$isAfterCurrentGoal) {
             return __("Can't change leader before current term's goal.");
         }
@@ -324,7 +217,7 @@ class GoalMemberService extends AppService
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
-            $goalLeaderId = $this->getAcitiveLeaderId($goalId);
+            $goalLeaderId = $GoalMember->getActiveLeaderId($goalId);
             if ($goalLeaderId) {
                 return __("You don't have a permission to edit this goal. Exist leader.");
             }
@@ -347,7 +240,7 @@ class GoalMemberService extends AppService
 
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
         $newLeaderId = Hash::get($formData, 'NewLeader.id');
-        if (!$this->isActiveGoalMember($newLeaderId, $goalId)) {
+        if (!$GoalMember->isActiveGoalMember($newLeaderId, $goalId)) {
             return __("Invalid member ID.");
         }
 
@@ -552,7 +445,7 @@ class GoalMemberService extends AppService
         }
 
         // コラボレーターのケース
-        if (!$isLeader && !$this->getAcitiveLeaderId($goalId)) {
+        if (!$isLeader && !$this->getActiveLeaderId($goalId)) {
             return true;
         }
 

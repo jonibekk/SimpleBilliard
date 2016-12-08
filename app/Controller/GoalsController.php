@@ -557,7 +557,6 @@ class GoalsController extends AppController
         $changeType = Hash::get($formData, 'change_type');
         $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
-            $this->log($validationRes);
             $this->Pnotify->outError($validationRes);
             return $this->redirect($this->referer());
         }
@@ -568,12 +567,16 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $this->Pnotify->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
     }
 
     /**
      * ゴールメンバーによるリーダーアサインアクション
-     * - 現リーダーがinactiveの場合のみ
+     * 現リーダーがinactiveの場合のみ
+     * - Form値のバリデーション
+     * - リーダー交換処理実行
+     * - 関係者に通知
      *
      */
     public function assign_leader_by_goal_member()
@@ -586,12 +589,17 @@ class GoalsController extends AppController
         $changeType = $GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER;
         $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
-            $this->log($validationRes);
             $this->Pnotify->outError($validationRes);
             return $this->redirect($this->referer());
         }
 
         $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
+        if (!$changedLeader) {
+            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
     }
 
