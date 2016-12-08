@@ -936,4 +936,103 @@ class GoalMember extends AppModel
         ]);
         return $cnt == 1;
     }
+
+    /**
+     * アクティブなゴールリーダーIDを取得
+     * @param  int $goalId
+     * @return int || null
+     */
+    function getAcitiveLeaderId(int $goalId)
+    {
+        if (!$goalId) {
+            return null;
+        }
+
+        $res = $this->find('first', [
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'GoalMember.type'       => self::TYPE_OWNER,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ]);
+        if (empty($res)) {
+            return null;
+        }
+        return Hash::get($res, 'GoalMember.id');
+    }
+
+    /**
+     * ゴールメンバーがアクティブかどうか判定
+     * @param  int  $goalMemberId
+     * @return bool
+     */
+    function isActiveGoalMember(int $goalMemberId, int $goalId): bool
+    {
+        if (!$goalMemberId) {
+            return false;
+        }
+
+        $res = $this->find('first', [
+            'conditions' => [
+                'GoalMember.id'         => $goalMemberId,
+                'GoalMember.type'       => self::TYPE_COLLABORATOR,
+                'Goal.id'               => $goalId,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => [
+                'GoalMember.id'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'conditions' => [
+                        'Goal.id = GoalMember.goal_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ]);
+
+        return (boolean)$res;
+    }
 }

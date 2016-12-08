@@ -456,11 +456,11 @@ class GoalService extends AppService
     /**
      * 対象のゴールが今季以降のゴールか
      *
-     * @param $goalId
+     * @param int $goalId
      *
      * @return bool
      */
-    function isGoalAfterCurrentTerm($goalId)
+    function isGoalAfterCurrentTerm(int $goalId): bool
     {
         $goal = $this->get($goalId);
         if (empty($goal)) {
@@ -637,30 +637,6 @@ class GoalService extends AppService
             return false;
         }
         return true;
-    }
-
-    /**
-     * ゴールが今期以降のものかどうか
-     * @param  int  $goalId
-     * @return bool
-     */
-    function isAfterCurrentGoal(int $goalId): bool
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
-
-        $goal = $Goal->findByid($goalId);
-        if (!$goal) {
-            return false;
-        }
-
-        $currentTerm = $EvaluateTerm->getCurrentTermData();
-        $baseStartDate = Hash::get($currentTerm, 'start_date');
-        $goalStartDate = Hash::get($goal, 'Goal.start_date');
-
-        return $goalStartDate >= $baseStartDate;
     }
 
 }
