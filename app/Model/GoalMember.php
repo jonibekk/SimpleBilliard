@@ -944,7 +944,7 @@ class GoalMember extends AppModel
      *
      * @return int || null
      */
-    function getActiveLeader(int $goalId): array
+    function getActiveLeader(int $goalId)
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
@@ -983,7 +983,7 @@ class GoalMember extends AppModel
 
         $res = $GoalMember->find('first', $options);
 
-        return $res ?? [];
+        return $res ?? null;
     }
 
     /**

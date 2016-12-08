@@ -217,8 +217,8 @@ class GoalMemberService extends AppService
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
-            $goalLeaderId = $GoalMember->getActiveLeader($goalId);
-            if ($goalLeaderId) {
+            $goalLeader = $GoalMember->getActiveLeader($goalId);
+            if ($goalLeader) {
                 return __("You don't have a permission to edit this goal. Exist leader.");
             }
         // 自分がリーダーのケース
