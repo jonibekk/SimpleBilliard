@@ -307,7 +307,7 @@ class GoalsController extends AppController
         // ビュー変数セット
         $isLeader = $this->Goal->GoalMember->isLeader($goalId, $this->Auth->user('id'));
         $goalMembers = $this->Goal->GoalMember->getActiveCollaboratorList($goalId);
-        $currentLeader = $GoalMemberService->getActiveLeader($goalId);
+        $currentLeader = $this->Goal->GoalMember->getActiveLeader($goalId);
         $priorityList = $this->Goal->priority_list;
         $this->set(compact(
             'goalId',
@@ -342,10 +342,10 @@ class GoalsController extends AppController
 
     public function edit_collabo()
     {
-        $goal_member_id = Hash::get($this->request->params, 'named.goal_member_id');
-        $new = $goal_member_id ? false : true;
+        $goalMemberId = Hash::get($this->request->params, 'named.goal_member_id');
+        $new = $goalMemberId ? false : true;
         $this->request->allowMethod('post', 'put');
-        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
+        $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId(
             $this->Auth->user('id'));
 
         if (!isset($this->request->data['GoalMember'])) {
@@ -364,7 +364,7 @@ class GoalsController extends AppController
         }
 
         $goalMember = $this->request->data['GoalMember'];
-        $goal_member_id = $goal_member_id ? $goal_member_id : $this->Goal->GoalMember->getLastInsertID();
+        $goalMemberId = $goalMemberId ? $goalMemberId : $this->Goal->GoalMember->getLastInsertID();
         $goal = $this->Goal->findById($goalMember['goal_id']);
         $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
 
@@ -380,21 +380,21 @@ class GoalsController extends AppController
         if ($new) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalMember['goal_id']);
             // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
-            if ($goalLeaderUserId != $coach_id) {
+            if ($goalLeaderUserId != $coachId) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalMember['goal_id']);
             }
         }
-        if ($coach_id && (isset($goalMember['priority']) && $goalMember['priority'] >= '1')
+        if ($coachId && (isset($goalMember['priority']) && $goalMember['priority'] >= '1')
         ) {
             if ($new) {
                 //新規の場合
-                $this->_sendNotifyToCoach($goal_member_id, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
+                $this->_sendNotifyToCoach($goalMemberId, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
             } else {
                 //更新の場合
-                $this->_sendNotifyToCoach($goal_member_id, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
+                $this->_sendNotifyToCoach($goalMemberId, NotifySetting::TYPE_COACHEE_CHANGE_ROLE);
             }
 
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId),
                 'user_data');
         }
         return $this->redirect($this->referer());
