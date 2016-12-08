@@ -669,7 +669,15 @@ $(document).ready(function () {
     e.preventDefault();
     imageLazyOn();
   });
-
+  // KR進捗の詳細値を表示
+  $(document).on("mouseenter click", '.js-show-detail-progress-value', function (e) {
+    var current_value = $(this).data('current_value');
+    var start_value = $(this).data('start_value');
+    var target_value = $(this).data('target_value');
+    $(this).find('.krProgress-text').text(current_value);
+    $(this).find('.krProgress-valuesLeft').text(start_value);
+    $(this).find('.krProgress-valuesRight').text(target_value);
+  });
   //team term setting
   $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths , #TeamTimezone', function () {
     var startTermMonth = $('#TeamStartTermMonth').val();

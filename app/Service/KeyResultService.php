@@ -91,8 +91,6 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
-            $keyResult['display_current_end_value'] = __('Complete/Incomplete');
-            $keyResult['progress_rate'] = empty($keyResult['completed']) ? 0 : 100;
             return $keyResult;
         }
 
@@ -115,31 +113,7 @@ class KeyResultService extends AppService
 
         $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
 
-        $keyResult['progress_rate'] = $this->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
-
         return $keyResult;
-    }
-
-    /**
-     * 進捗率計算
-     *
-     * @param $start
-     * @param $end
-     * @param $current
-     *
-     * @return int
-     */
-    function calcProgressRate(float $start, float $end, float $current) : int
-    {
-        if ($current == $end) {
-            return 100;
-        }
-        // 分母
-        $denominator = $end - $start;
-        // 分子
-        $numerator = $current - $start;
-        // 小数点は切り捨て
-        return floor($numerator / $denominator * 100);
     }
 
     /**

@@ -113,4 +113,29 @@ class NumberExHelper extends AppHelper
         return $fmtVal;
     }
 
+    /**
+     * 進捗率計算
+     *
+     * @param $start
+     * @param $end
+     * @param $current
+     *
+     * @return int
+     */
+    public function calcProgressRate(float $start, float $end, float $current) : int
+    {
+        if ($current == $end) {
+            return 100;
+        }
+        // 分母
+        $denominator = $end - $start;
+        // 分子
+        $numerator = $current - $start;
+        // 小数点は切り捨て
+        $rate = floor($numerator / $denominator * 100);
+        if ($rate == 0 && $numerator > 0) {
+            return 1;
+        }
+        return $rate;
+    }
 }

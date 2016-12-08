@@ -8,7 +8,7 @@ import config from '../config.js'
 
 gulp.task("js:uglify", () => {
   return gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js')
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
     }))

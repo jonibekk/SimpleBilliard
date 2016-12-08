@@ -15,46 +15,7 @@
                 </div>
             </div>
             <!--progress bar-->
-            <?php
-                $currentValue = $this->NumberEx->formatProgressValue($kr['KeyResult']['current_value'], $kr['KeyResult']['value_unit']);
-                $shortCurrentValue = $this->NumberEx->shortFormatProgressValue($kr['KeyResult']['current_value'], $kr['KeyResult']['value_unit']);
-
-                $startValue = "";
-                $targetValue = "";
-                $shortStartValue = "";
-                $shortTargetValue = "";
-                if ($kr['KeyResult']['value_unit'] != KeyResult::UNIT_BINARY) {
-                    $startValue = $this->NumberEx->formatProgressValue($kr['KeyResult']['start_value'], $kr['KeyResult']['value_unit']);
-                    $targetValue = $this->NumberEx->formatProgressValue($kr['KeyResult']['target_value'], $kr['KeyResult']['value_unit']);
-                    $shortStartValue = $this->NumberEx->shortFormatProgressValue($kr['KeyResult']['start_value'], $kr['KeyResult']['value_unit']);
-                    $shortTargetValue = $this->NumberEx->shortFormatProgressValue($kr['KeyResult']['target_value'], $kr['KeyResult']['value_unit']);
-                }
-            ?>
-            <div class="goal-detail-kr-progress-block js-show-detail-progress-value"
-                 data-current_value="<?=$currentValue?>"
-                 data-start_value="<?=$startValue?>"
-                 data-target_value="<?=$targetValue?>"
-            >
-                <div class="goal-detail-kr-progress-bar-wrap">
-                    <span class="goal-detail-kr-progress-text">
-                        <?= $shortCurrentValue ?>
-                    </span>
-                    <?php $progressClass = $kr['KeyResult']['progress_rate'] == 100 ? "mod-complete" : "mod-incomplete rate-".$kr['KeyResult']['progress_rate']?>
-                    <div class="goal-detail-kr-progress-bar <?=$progressClass?>"></div>
-                </div>
-                <div class="goal-detail-kr-progress-values">
-                    <div class="goal-detail-kr-progress-values-left">
-                        <span>
-                            <?= $shortStartValue ?>
-                        </span>
-                    </div>
-                    <div class="goal-detail-kr-progress-values-right">
-                        <span>
-                            <?= $shortTargetValue ?>
-                        </span>
-                    </div>
-                </div>
-            </div>
+            <?= $this->GlHtml->krProgressBar($kr['KeyResult'])?>
 
             <dl class="goal-detail-kr-info-counts mb_4px">
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-check-circle"></i></dt>
