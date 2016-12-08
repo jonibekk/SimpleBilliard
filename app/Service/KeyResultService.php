@@ -243,22 +243,6 @@ class KeyResultService extends AppService
     }
 
     /**
-     * 少数/整数を表示用にフォーマットする
-     * 1234.123000 -> 1234.123
-     * 1234567890 -> 1234567890
-     *
-     * @param  $floatNum
-     *
-     * @return $float_deleted_right_zero
-     */
-    public function formatUnitValue($value, $unit)
-    {
-        $floatDeletedIndex = sprintf("%.3f", $floatNum);
-        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
-        return $floatDeletedRightZero;
-    }
-
-    /**
      * 未完了KRリスト取得
      *
      * @param int $goalId
