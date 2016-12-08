@@ -301,9 +301,6 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse(null);
         }
 
-        /** @var GoalMemberService $GoalMemberService */
-        $GoalMemberService = ClassRegistry::init("GoalMemberService");
-
         // ビュー変数セット
         $isLeader = $this->Goal->GoalMember->isLeader($goalId, $this->Auth->user('id'));
         $goalMembers = $this->Goal->GoalMember->getActiveCollaboratorList($goalId);

@@ -82,7 +82,10 @@
                         'name'  => 'change_type',
                         'value' => GoalMemberService::CHANGE_LEADER_WITH_COLLABORATION,
                     ]) ?>
-                    <hr>
+                    <div class="text-on-the-line-box">
+                        <p class="text">OR</p>
+                        <hr>
+                    </div>
                     <?= $this->Form->button(__("Save & Quit this goal"), [
                         'class' => 'btn btn-fullsize-active',
                         'name'  => 'change_type',

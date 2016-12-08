@@ -938,6 +938,27 @@ class GoalMember extends AppModel
     }
 
     /**
+     * コラボレーターか判定
+     *
+     * @param $goalId
+     * @param $userId
+     *
+     * @return boolean
+     */
+    function isCollaborator(int $goalId, int $userId): bool
+    {
+        $res = $this->find('count', [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'user_id' => $userId,
+                'type'    => self::TYPE_COLLABORATOR
+            ],
+        ]);
+
+        return (bool)$res;
+    }
+
+    /**
      * アクティブなゴールリーダーを取得.
      *
      * @param  int $goalId
@@ -982,7 +1003,6 @@ class GoalMember extends AppModel
          ];
 
         $res = $GoalMember->find('first', $options);
-
         return $res ?? null;
     }
 

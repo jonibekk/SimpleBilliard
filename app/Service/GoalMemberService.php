@@ -352,7 +352,8 @@ class GoalMemberService extends AppService
         }
 
         // コラボレーターのケース
-        if (!$isLeader && !$GoalMember->getActiveLeader($goalId)) {
+        $isCollaborator = $GoalMember->isCollaborator($goalId, $GoalMember->my_uid);
+        if ($isCollaborator && !$GoalMember->getActiveLeader($goalId)) {
             return true;
         }
 
