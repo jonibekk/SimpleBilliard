@@ -1147,13 +1147,13 @@ class GoalsController extends AppController
      */
     public function add_action()
     {
-        $goal_id = Hash::get($this->request->params, 'named.goal_id');
-        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        $keyResultId = Hash::get($this->request->params, 'named.key_result_id');
         try {
-            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
+            if (!empty($goalId) && !$this->Goal->GoalMember->isCollaborated($goalId)) {
                 throw new RuntimeException(__("This action can't be edited."));
             }
-            if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!empty($keyResultId) && !$this->Goal->KeyResult->isPermitted($keyResultId)) {
                 throw new RuntimeException(__("This action can't be edited."));
             }
         } catch (RuntimeException $e) {
@@ -1161,10 +1161,10 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->request->data['ActionResult']['goal_id'] = $goal_id;
-        $this->request->data['ActionResult']['key_result_id'] = $key_result_id;
-        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
-        $this->set(compact('kr_list', 'key_result_id'));
+        $this->request->data['ActionResult']['goal_id'] = $goalId;
+        $this->request->data['ActionResult']['key_result_id'] = $keyResultId;
+        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
+        $this->set(['kr_list' => $kr_list, 'key_result_id' => $keyResultId]);
 
         $this->_setViewValOnRightColumn();
         $this->set('common_form_type', 'action');
