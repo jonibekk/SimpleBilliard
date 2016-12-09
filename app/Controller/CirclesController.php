@@ -30,7 +30,7 @@ class CirclesController extends AppController
         App::import('Service', 'ExperimentService');
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
             $addCircleSuccess = $this->Circle->add($this->request->data, false, false);
         } else {
             $addCircleSuccess = $this->Circle->add($this->request->data);

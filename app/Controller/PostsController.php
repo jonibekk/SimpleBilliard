@@ -1386,7 +1386,7 @@ class PostsController extends AppController
         App::import('Service', 'ExperimentService');
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
             $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'],
                 false, false);
         } else {

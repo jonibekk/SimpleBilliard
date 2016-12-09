@@ -1013,7 +1013,7 @@ class TeamMember extends AppModel
                 App::import('Service', 'ExperimentService');
                 /** @var ExperimentService $ExperimentService */
                 $ExperimentService = ClassRegistry::init('ExperimentService');
-                if ($ExperimentService->isDefined('CircleDefaultSettingOff')) {
+                if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
                     $row = [
                         'circle_id'             => $teamAllCircle['Circle']['id'],
                         'team_id'               => $this->current_team_id,
