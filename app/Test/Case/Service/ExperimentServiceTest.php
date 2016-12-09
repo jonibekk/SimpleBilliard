@@ -22,6 +22,7 @@ class ExperimentServiceTest extends GoalousTestCase
     public $fixtures = [
         'app.experiment',
     ];
+
     /**
      * setUp method
      *
@@ -31,12 +32,14 @@ class ExperimentServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->ExperimentService = ClassRegistry::init('ExperimentService');
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init('Experiment');
+        $Experiment->current_team_id = 1;
     }
 
     function testIsDefined()
     {
-        $this->markTestIncomplete('testClear not implemented.');
+        $this->assertTrue($this->ExperimentService->isDefined('test'));
     }
-
 
 }
