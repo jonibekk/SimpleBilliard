@@ -57,6 +57,24 @@ class AddColumnToActionResults extends CakeMigration {
  * @return bool Should process continue
  */
 	public function after($direction) {
-		return true;
+        if ($direction == 'up') {
+            // KRの現在値を更新値と同じ値に更新
+            $KeyResult = ClassRegistry::init('KeyResult');
+            $krs = $KeyResult->find('all', [
+                'conditions' => [
+                    'completed' => null,
+                    'start_value != current_value'
+                ],
+                'fields'     => [
+                    'KeyResult.id',
+                    'KeyResult.start_value',
+                ],
+            ]);
+            foreach ($krs as &$v) {
+                $v['KeyResult']['current_value'] = $v['KeyResult']['start_value'];
+            }
+            $KeyResult->saveAll($krs, ['validate' => false, 'deep' => false]);
+        }
+        return true;
 	}
 }
