@@ -49,7 +49,7 @@ class GoalHelper extends AppHelper
         $option = [
             'class' => 'collabo-off',
             'style' => null,
-            'text'  => __("Collaborate"),
+            'text'  => __("Collabo"),
         ];
 
         if (!Hash::get($goal, 'MyCollabo')) {
