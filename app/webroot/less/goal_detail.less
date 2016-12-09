@@ -350,7 +350,7 @@
 
 .goal-detail-kr-add-heading {
   font-size: @fontMedium;
-  margin:0;
+  margin: 0;
   padding: 0;
   line-height: normal;
 }
@@ -525,15 +525,19 @@
   .line-number-limit-2(#faf9f7);
 }
 
-.goal-detail-label {
-  background-color: @baseGray;
-  color: @keyColor;
-  display: inline;
-  padding: .1em .3em .1em;
-  font-size: 90%;
-  border-radius: .25em;
+.goal-detail {
+  &-label {
+    background-color: @baseGray;
+    color: @keyColor;
+    display: inline;
+    padding: .1em .3em .1em;
+    font-size: 90%;
+    border-radius: .25em;
+  }
+  &-label + &-label {
+    margin-left: 4px;
+  }
 }
-
 
 .goal-detail-kr-progress-bar-wrap {
   border-radius: 4px;
@@ -575,16 +579,20 @@
   color: #ffffff;
   font-size: 12px;
 }
+
 .goal-detail-kr-flex {
   display: -webkit-flex;
   display: flex;
 }
+
 .goal-detail-kr-block-main {
   flex: 1;
 }
+
 .goal-detail-kr-block-side {
   padding-left: 8px;
 }
+
 .goal-detail-kr-info-counts {
   margin: 0;
   padding: 0;
