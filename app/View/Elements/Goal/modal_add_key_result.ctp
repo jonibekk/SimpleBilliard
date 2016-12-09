@@ -27,24 +27,6 @@
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Add Key Result") ?></h4>
-            <ul class="add-key-result-goal-info">
-                <li>
-                    <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
-                </li>
-                <li>
-                    <i class="fa fa-bullseye"></i>
-                    <?= h($goal['KeyResult']['target_value']) ?>
-                    (← <?= h($goal['KeyResult']['start_value']) ?>)<?= $krValueUnitList[$goal['KeyResult']['value_unit']] ?>
-                </li>
-                <li>
-                    <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR) ?>
-                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR) ?> - )
-                    <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
-                        <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
-                    <?php endif ?>
-                </li>
-            </ul>
         </div>
         <?=
         $this->Form->create('KeyResult', [
@@ -67,6 +49,24 @@
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>
         <div class="modal-body modal-circle-body">
+            <ul class="add-key-result-goal-info">
+                <li>
+                    <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
+                </li>
+                <li>
+                    <i class="fa fa-bullseye"></i>
+                    <?= h($goal['KeyResult']['target_value']) ?>
+                    (← <?= h($goal['KeyResult']['start_value']) ?>)<?= $krValueUnitList[$goal['KeyResult']['value_unit']] ?>
+                </li>
+                <li>
+                    <i class="fa fa-calendar"></i>
+                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR) ?>
+                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR) ?> - )
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
+                        <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
+                    <?php endif ?>
+                </li>
+            </ul>
             <div class="row">
                 <?=
                 $this->Form->input('KeyResult.name',
