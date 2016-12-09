@@ -57,7 +57,7 @@
                 'rows'                         => 1,
                 'required'                     => true,
                 'placeholder'                  => __("Write an action..."),
-                'class'                        => 'form-control change-warning',
+                'class'                        => 'form-control disable-change-warning',
                 'data-bv-notempty-message'     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 10000,

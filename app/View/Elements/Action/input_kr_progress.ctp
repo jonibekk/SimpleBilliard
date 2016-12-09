@@ -17,7 +17,7 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                     <?php $inputName = "data[ActionResult][key_result_current_value]"?>
                     <?php if ($kr['value_unit'] == KeyResult::UNIT_BINARY): ?>
                         <input type="checkbox" name="<?=$inputName?>"
-                               class="js-kr-progress-check-complete"
+                               class="js-kr-progress-check-complete disable-change-warning"
                                data-size="small" data-off-text="incomplete"
                                data-on-text="complete"
                                value="100"
@@ -27,7 +27,7 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                     <?= Hash::get($units, $kr['value_unit']) ?>
                     <input type="number"
                            name="<?=$inputName?>"
-                           class="action-kr-progress-edit-textbox form-control mlr_4px"
+                           class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
                            min="<?= $kr['current_value'] ?>"
                            max="<?= $kr['target_value'] ?>"
                            value="<?= $kr['current_value'] ?>"
