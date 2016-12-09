@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-06 14:04+0900\n"
+"PO-Revision-Date: 2016-12-09 09:50+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2633,10 +2633,10 @@ msgstr "管理者(%s)"
 msgid "No one in this circle."
 msgstr "このサークルにはメンバーがいません。"
 
-msgid "Collaborate"
-msgstr "コラボる"
+msgid "Collabo"
+msgstr "コラボ"
 
-msgid "Edit Collaborate"
+msgid "Edit Collabo"
 msgstr "コラボを編集"
 
 msgid "eg) Increasing the number of users"
@@ -2909,14 +2909,11 @@ msgstr "このコメントを%s人が読みました。"
 msgid "No one read this comment."
 msgstr "まだ、このコメントを読んだ人はいません。"
 
-msgid "%s members read this message."
-msgstr "このメッセージを%s人が読みました。"
+msgid "Read"
+msgstr "既読"
 
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
-
-msgid "Read"
-msgstr "既読"
 
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
@@ -3103,9 +3100,6 @@ msgstr "ゴールを達成"
 
 msgid "Edit a goal"
 msgstr "ゴール編集"
-
-msgid "Collaboration"
-msgstr "コラボ"
 
 msgid "KR"
 msgstr "KR"

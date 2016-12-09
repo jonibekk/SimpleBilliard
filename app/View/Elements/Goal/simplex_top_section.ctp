@@ -86,7 +86,7 @@
                            'action'     => 'ajax_get_collabo_change_modal',
                            'goal_id'    => $goal['Goal']['id']
                        ]) ?>">
-                        <span class=""><?= __('Collaboration') ?></span>
+                        <span class=""><?= __("Collabo") ?></span>
                     </a>
                 </div>
             </div>
