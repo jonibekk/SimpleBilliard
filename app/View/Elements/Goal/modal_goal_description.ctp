@@ -15,18 +15,18 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("Goal Summary") ?>&nbsp;&nbsp;
+            <h4 class="modal-title"><?= __("Goal Summary") ?>&nbsp;
                 <a class=""
                    href="<?= $this->Html->url([
                        'controller' => 'goals',
                        'action'     => 'view_info',
                        'goal_id'    => $goal['Goal']['id']
                    ]) ?>">
-                    <?= __('Go to Goal page') ?>
+                    <i class="fa fa-external-link"></i>
                 </a>
             </h4>
         </div>
-        <div class="modal-body modal-circle-body">
+        <div class="modal-body without-footer">
             <div class="col col-xxs-12">
                 <div class="col col-xxs-6">
                     <a href="<?= $this->Html->url([
@@ -165,10 +165,6 @@
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-        </div>
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

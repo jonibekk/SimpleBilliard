@@ -7,7 +7,7 @@ const initialState = {
   visions: [],
   categories: [],
   labels: [],
-  terms: [],
+  terms: {},
   priorities: [],
   units: [],
   default_end_dates: {},
@@ -25,13 +25,6 @@ const initialState = {
 }
 
 export default function goal(state = initialState, action) {
-  /* eslint-disable no-console */
-  console.log("---reducer start---")
-  console.log(action.type)
-  console.log({state})
-  console.log({action})
-  /* eslint-disable no-console */
-
   let inputData = state.inputData
   switch (action.type) {
     case types.INVALID:
@@ -112,12 +105,12 @@ export default function goal(state = initialState, action) {
         state.inputData = inputData
         return Object.assign({}, state)
       }
-    {
-      inputData = Object.assign({}, inputData, action.data)
-      return Object.assign({}, state, {
-        inputData
-      })
-    }
+      {
+        inputData = Object.assign({}, inputData, action.data)
+        return Object.assign({}, state, {
+          inputData
+        })
+      }
     default:
       return state;
   }

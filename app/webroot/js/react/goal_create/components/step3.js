@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {browserHistory, Link} from "react-router";
-import * as Page from "../constants/Page";
+import * as Page from "~/goal_create/constants/Page";
 import PhotoUpload from "~/common/components/goal/PhotoUpload";
-import InvalidMessageBox from "../../common/components/InvalidMessageBox";
+import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {MaxLength} from "~/common/constants/App";
+import { generateTermRangeFormat } from "~/util/date";
 
 export default class Step3Component extends React.Component {
   constructor(props) {
@@ -58,13 +59,25 @@ export default class Step3Component extends React.Component {
   render() {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "");
 
-    const {inputData, priorities, validationErrors, can_approve} = this.props.goal;
+    const {inputData, priorities, validationErrors, can_approve, terms} = this.props.goal;
     let priorityOptions = null;
     if (priorities.length > 0) {
       priorityOptions = priorities.map((v) => {
         return <option key={v.id} value={v.id}>{v.label}</option>
       });
     }
+    let termOptions = [];
+    if (Object.keys(terms).length) {
+      termOptions = [
+        <option value="current" key={terms.current.start_date}>
+          {`${__("This Term")} ( ${generateTermRangeFormat(terms.current.start_date, terms.current.end_date) } ) `}
+        </option>,
+        <option value="next" key={terms.next.start_date}>
+          {`${__("Next Term")} ( ${generateTermRangeFormat(terms.next.start_date, terms.next.end_date)} ) `}
+        </option>
+      ]
+    }
+
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
         <h1 className="goals-create-heading">{__("Set goal details")}</h1>
@@ -82,8 +95,7 @@ export default class Step3Component extends React.Component {
           <label className="goals-create-input-label">{__("Term")}</label>
           <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
                   value={inputData.term_type} onChange={this.handleChange}>
-            <option value="current">{__("This Term")}</option>
-            <option value="next">{__("Next Term")}</option>
+            { termOptions }
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>
 
@@ -127,7 +139,6 @@ export default class Step3Component extends React.Component {
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP2}>{__("Back")}</Link>
         </form>
       </section>
-
     )
   }
 }

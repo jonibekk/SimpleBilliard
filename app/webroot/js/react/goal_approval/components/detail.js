@@ -44,11 +44,13 @@ export default class DetailComponent extends React.Component {
                           handlePostSetAsTarget={ input_data => this.props.postSetAsTarget(input_data) }
                           handlePostRemoveFromTarget={ input_data => this.props.postRemoveFromTarget(input_data) }/>;
     })()
+    const coach_action = detail.goal_member.latest_coach_action_statement
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-approval">
           <h1 className="goals-approval-heading">{ page_title }</h1>
           <div className="goals-approval-detail">
+              { coach_action && <div className="goals-approval-detail-coach-action">{ coach_action }</div> }
               <UserCard goal_member={ detail.goal_member } />
               <GoalBlock goal={ detail.goal_member.goal }
                          is_leader={ detail.goal_member.is_leader } />

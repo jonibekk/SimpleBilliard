@@ -48,7 +48,7 @@
         <?php $this->Form->unlockField('Circle.0.join'); ?>
         <?php $this->Form->unlockField('Circle.0.circle_id'); ?>
         <?= $this->Form->end() ?>
-        <div class="modal-body modal-feed-body tab-content">
+        <div class="modal-body tab-content">
             <div class="tab-pane fade in active" id="tab1">
                 <?php $key = 0 ?>
                 <?php if (!empty($non_joined_circles)): ?>

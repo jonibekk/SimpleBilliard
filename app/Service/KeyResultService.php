@@ -94,8 +94,9 @@ class KeyResultService extends AppService
         }
 
         // 少数の不要な0を取り除く
-        $keyResult['start_value'] =  h((float)$keyResult['start_value']);
-        $keyResult['target_value'] = h((float)$keyResult['target_value']);
+        // 桁数が多いと指数表記(111E+など)になるため、ここで数字をフォーマットする
+        $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
+        $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
 
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
@@ -224,4 +225,19 @@ class KeyResultService extends AppService
         return true;
     }
 
+    /**
+     * 少数/整数を表示用にフォーマットする
+     *
+     * 1234.123000 -> 1234.123
+     * 1234567890 -> 1234567890
+     *
+     * @param  $floatNum
+     *
+     * @return $float_deleted_right_zero
+     */
+    public function formatBigFloat($floatNum) {
+        $floatDeletedIndex = sprintf("%.3f", $floatNum);
+        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
+        return $floatDeletedRightZero;
+    }
 }

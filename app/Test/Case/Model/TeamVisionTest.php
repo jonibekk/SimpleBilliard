@@ -130,38 +130,6 @@ class TeamVisionTest extends GoalousTestCase
         $this->assertCount(0, $res);
     }
 
-    function testConvertData()
-    {
-        $team_id = 1;
-        $name = 'test';
-        $image_name = 'test.jpg';
-        $data = [
-            'team_id'         => $team_id,
-            'name'            => $name,
-            'photo_file_name' => $image_name
-        ];
-        $this->TeamVision->save($data);
-        $res = $this->TeamVision->getTeamVision($team_id, 1);
-        $convert_data = $this->TeamVision->convertData($res);
-        $this->assertNotEquals($image_name, $convert_data[0]['TeamVision']['photo_path']);
-    }
-
-    function testConvertDetailData()
-    {
-        $team_id = 1;
-        $name = 'test';
-        $image_name = 'test.jpg';
-        $data = [
-            'team_id'         => $team_id,
-            'name'            => $name,
-            'photo_file_name' => $image_name
-        ];
-        $this->TeamVision->save($data);
-        $res = $this->TeamVision->getTeamVisionDetail($this->TeamVision->getLastInsertID(), 1);
-        $convert_data = $this->TeamVision->convertData($res);
-        $this->assertNotEquals($image_name, $convert_data['TeamVision']['photo_path']);
-    }
-
     function testGetTeamVisionDetail()
     {
         $team_id = 1;

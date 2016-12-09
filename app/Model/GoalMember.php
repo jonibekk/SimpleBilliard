@@ -795,7 +795,8 @@ class GoalMember extends AppModel
                         'ApprovalHistory.user_id',
                         'ApprovalHistory.comment',
                         'ApprovalHistory.select_clear_status',
-                        'ApprovalHistory.select_important_status'
+                        'ApprovalHistory.select_important_status',
+                        'ApprovalHistory.action_status'
                     ],
                     'User'   => [
                         'fields' => $this->User->profileFields

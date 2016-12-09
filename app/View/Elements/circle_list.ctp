@@ -34,7 +34,7 @@
                            oldest-post-time="<?= $circle['Circle']['created'] ?>"
                            href="#">
                             <?=
-                            $this->Html->image('ajax-loader.gif',
+                            $this->Html->image('pre-load.svg',
                                 [
                                     'class'         => 'lazy dashboard-circle-list-pic',
                                     'data-original' => $this->Upload->uploadUrl($circle, 'Circle.photo',
