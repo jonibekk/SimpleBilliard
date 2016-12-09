@@ -30,19 +30,6 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= $isTkr ? __("Update Top Key Result") : __("Update Key Result") ?></h4>
-            <ul class="add-key-result-goal-info">
-                <li>
-                    <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
-                </li>
-                <li>
-                    <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
-                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?> - )
-                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
-                        <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
-                    <?php endif ?>
-                </li>
-            </ul>
         </div>
         <?=
         $this->Form->create('KeyResult', [
@@ -62,6 +49,19 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
         <?= $this->Form->hidden('KeyResult.id', ['value' => $kr_id]) ?>
         <?= $this->Form->hidden('KeyResult.goal_id', ['value' => $this->request->data['KeyResult']['goal_id']]) ?>
         <div class="modal-body modal-circle-body">
+            <ul class="add-key-result-goal-info">
+                <li>
+                    <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
+                </li>
+                <li>
+                    <i class="fa fa-calendar"></i>
+                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
+                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?> - )
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
+                        <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                    <?php endif ?>
+                </li>
+            </ul>
             <div class="aaa">
                 <div class="row">
                     <?php
