@@ -15,7 +15,6 @@
     } else {
         $progressRate = $this->NumberEx->calcProgressRate($kr['start_value'], $kr['target_value'],
             $kr['current_value']);
-        $this->log(compact('progressRate'));
         $startValue = $this->NumberEx->formatProgressValue($kr['start_value'],
             $kr['value_unit']);
         $targetValue = $this->NumberEx->formatProgressValue($kr['target_value'],
