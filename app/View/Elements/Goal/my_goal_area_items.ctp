@@ -168,7 +168,7 @@ $kr_count = 0;
                                    'goal_id'    => $goal['Goal']['id']
                                ]) ?>">
                                 <i class="fa fa-pencil"></i>
-                                <span class="ml_2px"><?= __("Edit Collaborate") ?></span>
+                                <span class="ml_2px"><?= __("Edit Collabo") ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
