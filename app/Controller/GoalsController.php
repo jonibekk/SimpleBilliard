@@ -599,6 +599,9 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        // 通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'));
+
         $this->Pnotify->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
     }

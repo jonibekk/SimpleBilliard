@@ -827,15 +827,19 @@ class NotifyBizComponent extends Component
         if ($isApprovable && empty($goalMembers[$coachId])) {
             $goalMembers[$coachId] = $coachId;
         }
+
         // 旧リーダーのコーチを追加
-        $isApprovableOldLeader = $GoalApprovalService->isApprovable($oldLeaderUserId, $teamId);
-        $oldLeaderCoachId = $this->Team->TeamMember->getCoachId($oldLeaderUserId);
-        if ($isApprovableOldLeader && empty($goalMembers[$oldLeaderCoachId])) {
-            $goalMembers[$oldLeaderCoachId] = $oldLeaderCoachId;
+        if ($oldLeaderUserId) {
+            $isApprovableOldLeader = $GoalApprovalService->isApprovable($oldLeaderUserId, $teamId);
+            $oldLeaderCoachId = $this->Team->TeamMember->getCoachId($oldLeaderUserId);
+            if ($isApprovableOldLeader && empty($goalMembers[$oldLeaderCoachId])) {
+                $goalMembers[$oldLeaderCoachId] = $oldLeaderCoachId;
+            }
+            if (empty($goalMembers)) {
+                return;
+            }
         }
-        if (empty($goalMembers)) {
-            return;
-        }
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             $notifyType);
