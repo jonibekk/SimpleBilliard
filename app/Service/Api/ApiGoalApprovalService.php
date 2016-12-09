@@ -11,12 +11,12 @@ class ApiGoalApprovalService extends ApiService
     /**
      * 認定詳細ページの初期データレスポンスのためにモデルデータをフォーマット
      *
-     * @param  $resByModel
-     * @param  $myUserId
+     * @param  array $resByModel
+     * @param  int   $myUserId
      *
-     * @return $res
+     * @return array
      */
-    public function processGoalApprovalForResponse($resByModel, $myUserId)
+    public function processGoalApprovalForResponse(array $resByModel, int $myUserId): array
     {
         /** @var GoalCategory $GoalCategory */
         $GoalCategory = ClassRegistry::init("GoalCategory");
@@ -29,6 +29,9 @@ class ApiGoalApprovalService extends ApiService
 
         // モデル名整形(大文字->小文字)
         $goalMember = Hash::get($resByModel, 'GoalMember');
+        if(empty($goalMember)){
+            return [];
+        }
         $res = $this->formatResponseData($resByModel);
         $res = Hash::merge($goalMember, $res);
         unset($res['goal_member']);
@@ -51,20 +54,21 @@ class ApiGoalApprovalService extends ApiService
             // 画面から隠れている履歴は(合計 - 1)件。
             $res['histories_view_more_text'] = __('View %s comments', $historiesCount - 1);
         }
-        $res['latest_coach_action_statement'] = $ApiApprovalHistoryService->getLatestCoachActionStatement($res['id'], $myUserId);
+        $res['latest_coach_action_statement'] = $ApiApprovalHistoryService->getLatestCoachActionStatement($res['id'],
+            $myUserId);
 
         // TKRの整形
         $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
 
         // ゴール/TKRの変更前のスナップショットを取得
         $res['goal'] = $this->processChangeLog($res['goal']);
-        if(Hash::get($res, 'goal.tkr_change_log')) {
+        if (Hash::get($res, 'goal.tkr_change_log')) {
             // 画像パス追加
             $res['goal']['goal_change_log'] = $Goal->attachImgUrl($res['goal']['goal_change_log'], 'Goal');
             // TKRの整形
             $res['goal']['tkr_change_log'] = $KeyResultService->processKeyResult($res['goal']['tkr_change_log']);
             // カテゴリ追加
-            $category =  $GoalCategory->findById($res['goal']['goal_change_log']['goal_category_id'], ['name']);
+            $category = $GoalCategory->findById($res['goal']['goal_change_log']['goal_category_id'], ['name']);
             $res['goal']['goal_change_log']['goal_category'] = Hash::get($category, 'GoalCategory');
         }
 
@@ -106,7 +110,7 @@ class ApiGoalApprovalService extends ApiService
 
         $goalId = Hash::extract($goal, 'id');
         $goalChangeLog = $GoalChangeLog->findLatestSnapshot($goalId);
-        if(!$goalChangeLog) {
+        if (!$goalChangeLog) {
             return null;
         }
 
@@ -114,8 +118,8 @@ class ApiGoalApprovalService extends ApiService
         $goalChangeDiff = Hash::diff($goal, $goalChangeLog);
 
         // Calc goal diff
-        foreach($diffCheckPaths as $path) {
-            if(Hash::get($goalChangeDiff, $path)) {
+        foreach ($diffCheckPaths as $path) {
+            if (Hash::get($goalChangeDiff, $path)) {
                 return $goalChangeLog;
             }
         }
@@ -130,7 +134,7 @@ class ApiGoalApprovalService extends ApiService
 
         $goalId = Hash::extract($goal, 'id');
         $tkrChangeLog = $TkrChangeLog->findLatestSnapshot($goalId);
-        if(!$tkrChangeLog) {
+        if (!$tkrChangeLog) {
             return null;
         }
 
@@ -138,8 +142,8 @@ class ApiGoalApprovalService extends ApiService
         $tkrChangeDiff = Hash::diff($goal['top_key_result'], $tkrChangeLog);
 
         // Calc tkr diff
-        foreach($diffCheckPaths as $path) {
-            if(Hash::get($tkrChangeDiff, $path)) {
+        foreach ($diffCheckPaths as $path) {
+            if (Hash::get($tkrChangeDiff, $path)) {
                 return $tkrChangeLog;
             }
         }

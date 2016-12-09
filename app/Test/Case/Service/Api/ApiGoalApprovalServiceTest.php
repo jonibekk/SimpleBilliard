@@ -10,6 +10,9 @@ App::import('Service/Api', 'ApiGoalApprovalService');
  * Time: 17:50
  *
  * @property ApiGoalApprovalService $ApiGoalApprovalService
+ * @property GoalCategory           $GoalCategory
+ * @property Goal                   $Goal
+ * @property User                   $User
  */
 class ApiGoalApprovalServiceTest extends GoalousTestCase
 {
@@ -19,6 +22,9 @@ class ApiGoalApprovalServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
+        'app.goal_category',
+        'app.goal',
+        'app.user'
     ];
 
     /**
@@ -30,10 +36,21 @@ class ApiGoalApprovalServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->ApiGoalApprovalService = ClassRegistry::init('ApiGoalApprovalService');
+        $this->User = ClassRegistry::init('User');
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->Goal = ClassRegistry::init('Goal');
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+        $this->GoalCategory = ClassRegistry::init('GoalCategory');
+        $this->GoalCategory->my_uid = 1;
+        $this->GoalCategory->current_team_id = 1;
     }
 
     function test_processGoalApprovalForResponse()
     {
+        $res = $this->ApiGoalApprovalService->processGoalApprovalForResponse([],1);
+        $this->assertEmpty($res);
         $this->markTestIncomplete('testClear not implemented.');
     }
 
