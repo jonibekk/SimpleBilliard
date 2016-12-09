@@ -68,6 +68,7 @@ class ActionService extends AppService
                 'key_result_id'           => $krId,
                 'key_result_before_value' => Hash::get($kr, 'current_value'),
                 'key_result_change_value' => $krChangeVal,
+                'key_result_target_value' => Hash::get($kr, 'target_value'),
                 'completed'               => $now
             ];
 

@@ -2254,8 +2254,6 @@ class Goal extends AppModel
         $options['conditions'][] = $db->expression("NOT EXISTS (" . $subQuery . ")");
 
         $res = $this->find('all', $options);
-        $this->log($this->getDataSource()->getLog());
-        $this->log(compact('res'));
         if (empty($res)) {
             return [];
         }
