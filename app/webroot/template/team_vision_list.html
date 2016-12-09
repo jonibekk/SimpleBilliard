@@ -1,7 +1,8 @@
 <!-- start app/webroot/template/team_vision_list.html -->
 <div class="row teamvision-visionadd-btnarea">
     <div class="col-xs-4">
-        <a href="/teams/add_team_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button" ng-class="{disabled: !(isTeamAdmin && teamVisionCount == 0)}">
+        <a href="/teams/add_team_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button"
+           ng-class="{disabled: !(isTeamAdmin && teamVisionCount == 0)}">
             <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
     </div>
 
@@ -12,20 +13,17 @@
 </div>
 
 
-
-
 <div class="teamvision-list-panel-base">
     <div class="teamvision-list-panel-head">
         <i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )
     </div>
 
 
-
-<!-- repeatstart -->
+    <!-- repeatstart -->
     <div class="pointer teamvision-list-panel-cards" ng-repeat="item in teamVisionList">
-        <div class="pull-right ng-if="login_user_admin_flg === true"">
+        <div class="pull-right" ng-if="login_user_admin_flg === true">
             <div class="dropdown teamvision_setting_btn">
-                <button class="btn dropdown-toggle teamvision_setting_btn_border" type="button"
+                <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                         id="dropdownMenu1"
                         data-toggle="dropdown" aria-expanded="true">
                     <i class="fa fa-cog header-function-icon"
@@ -47,19 +45,19 @@
                 </ul>
             </div>
         </div>
-        <div ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
+        <div
+            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
             <div class="teamvision-list-panel-imagebox">
                 <img ng-src="{{item.TeamVision.photo_path}}"/>
             </div>
             <p class="teamvision-list-title">{{item.TeamVision.name}}</p>
         </div>
 
-            <div class="teamvision_modified_date">
-                最終更新日:<span ng-bind-html="item.TeamVision.modified"/>
-            </div>
+        <div class="teamvision_modified_date">
+            最終更新日:<span ng-bind-html="item.TeamVision.modified"/>
+        </div>
     </div>
-<!-- repeatEND -->
-
+    <!-- repeatEND -->
 
 
 </div>

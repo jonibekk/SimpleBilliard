@@ -258,6 +258,7 @@ class GoalApprovalService extends AppService
             $selectClearStatus = Hash::get($requestData, 'approval_history.select_clear_status');
             $selectImportantStatus = Hash::get($requestData, 'approval_history.select_important_status');
         }
+        $actionStatus = $this->getActionStatusByApprovalType($approvalType);
 
         $saveData = [
             'GoalMember'      => [
@@ -270,7 +271,8 @@ class GoalApprovalService extends AppService
                 'select_important_status' => $selectImportantStatus,
                 'goal_member_id'          => $goalMemberId,
                 'user_id'                 => $userId,
-                'comment'                 => Hash::get($requestData, 'approval_history.comment')
+                'comment'                 => Hash::get($requestData, 'approval_history.comment'),
+                'action_status'           => $actionStatus
             ]
         ];
 
@@ -310,11 +312,27 @@ class GoalApprovalService extends AppService
             'ApprovalHistory' => [
                 'user_id'                 => $userId,
                 'goal_member_id'          => Hash::get($requestData, 'goal_member.id'),
-                'comment'                 => Hash::get($requestData, 'approval_history.comment')
+                'comment'                 => Hash::get($requestData, 'approval_history.comment'),
+                'action_status'           => ApprovalHistory::STATUS_ACTION_ONLY_COMMENT
             ]
         ];
 
         return $saveData;
+    }
+
+    /**
+     * 認定タイプからコーチのアクションステータスを返す
+     * @param  $approvalType
+     * @return $actionStatus
+     */
+    function getActionStatusByApprovalType($approvalType) {
+        $actionStatus = ApprovalHistory::STATUS_ACTION_NOTHING;
+        if($approvalType === GoalMember::IS_NOT_TARGET_EVALUATION) {
+            $actionStatus = ApprovalHistory::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION;
+        } else if($approvalType === GoalMember::IS_TARGET_EVALUATION) {
+            $actionStatus = ApprovalHistory::STATUS_ACTION_IS_TARGET_FOR_EVALUATION;
+        }
+        return $actionStatus;
     }
 
     /**

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-11-22 13:53+0900\n"
+"PO-Revision-Date: 2016-12-09 09:50+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -681,6 +681,9 @@ msgstr "グループビジョンを追加しました。"
 msgid "Failed to save group vision."
 msgstr "グループビジョンの保存に失敗しました。"
 
+msgid "You don't have a permission."
+msgstr "権限がありません。"
+
 msgid "Updated group vision."
 msgstr "グループビジョンを更新しました。"
 
@@ -795,9 +798,6 @@ msgstr "メールアドレスの登録ができました。"
 
 msgid "You should be logged in."
 msgstr "ログインが必要です。"
-
-msgid "You don't have permission."
-msgstr "権限がありません。"
 
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
@@ -964,7 +964,7 @@ msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入�
 msgid "This goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
-msgid "You don't have permission to edit this goal."
+msgid "You don't have a permission to edit this goal."
 msgstr "このゴールの編集の権限がありません。"
 
 msgid "You can't change the goal in the evaluation."
@@ -1681,9 +1681,6 @@ msgstr "自己評価をしてください"
 msgid "Please evaluate."
 msgstr "評価をしてください"
 
-msgid "View %s comments"
-msgstr "%s件のコメントを見る"
-
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
 
@@ -1692,6 +1689,15 @@ msgstr "トップKRが明確で最重要である。"
 
 msgid "This Top Key Result is not most important."
 msgstr "トップKRが最重要でない。"
+
+msgid "You have added this goal as a target of evaluation."
+msgstr "あなたはこのゴールを評価対象にしました。"
+
+msgid "You have not added this goal as a target of evaluation."
+msgstr "あなたはこのゴールを評価対象にしませんでした。"
+
+msgid "View %s comments"
+msgstr "%s件のコメントを見る"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
@@ -2597,10 +2603,10 @@ msgstr "管理者(%s)"
 msgid "No one in this circle."
 msgstr "このサークルにはメンバーがいません。"
 
-msgid "Collaborate"
-msgstr "コラボる"
+msgid "Collabo"
+msgstr "コラボ"
 
-msgid "Edit Collaborate"
+msgid "Edit Collabo"
 msgstr "コラボを編集"
 
 msgid "eg) Increasing the number of users"
@@ -2879,17 +2885,11 @@ msgstr "このコメントを%s人が読みました。"
 msgid "No one read this comment."
 msgstr "まだ、このコメントを読んだ人はいません。"
 
-msgid "%s members read this message."
-msgstr "このメッセージを%s人が読みました。"
+msgid "Read"
+msgstr "既読"
 
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
-
-msgid "%s members Like! this post."
-msgstr "この投稿を%s人が「いいね！」と言っています。"
-
-msgid "%s people read this post."
-msgstr "この投稿を%s人が読みました。"
 
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
@@ -3050,9 +3050,6 @@ msgstr "現在"
 msgid "Goal Summary"
 msgstr "ゴール概要"
 
-msgid "Go to Goal page"
-msgstr "ゴールページへ"
-
 msgid "Did you achieve the goal?"
 msgstr "ゴールを達成しましたか？"
 
@@ -3073,9 +3070,6 @@ msgstr "基準を追加する"
 
 msgid "Edit a goal"
 msgstr "ゴール編集"
-
-msgid "Collaboration"
-msgstr "コラボ"
 
 msgid "KR"
 msgstr "KR"
@@ -4834,10 +4828,3 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
-#~ "another KR <span class=\"notify-card-head-target\">%2$s</span>."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
-#~ "<span class=\"notify-card-head-target\">%2$s</span>."

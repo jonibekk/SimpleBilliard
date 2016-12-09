@@ -76,6 +76,8 @@ class KeyResult extends AppModel
         5 => 5,
     ];
 
+    const MAX_LENGTH_VALUE = 15;
+
     /**
      * Display field
      *

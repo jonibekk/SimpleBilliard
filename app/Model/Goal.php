@@ -559,7 +559,7 @@ class Goal extends AppModel
             throw new RuntimeException(__("This goal doesn't exist."));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
-            throw new RuntimeException(__("You don't have permission to edit this goal."));
+            throw new RuntimeException(__("You don't have a permission to edit this goal."));
         }
         return true;
     }

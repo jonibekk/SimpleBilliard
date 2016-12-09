@@ -26,6 +26,10 @@ class GoalsController extends AppController
      */
     public function index()
     {
+        //headerのアイコン下にバーを表示するための判定用変数をviewに渡す
+        $current_global_menu = "goal";
+        $this->set(compact('current_global_menu'));
+
         $this->_setViewValOnRightColumn();
     }
 
@@ -160,7 +164,7 @@ class GoalsController extends AppController
         $krs = [];
         if ($goalId && $userId) {
             $krs = $this->Goal->KeyResult->getKeyResultsForEvaluation($goalId, $userId);
-            foreach($krs as $k => $v) {
+            foreach ($krs as $k => $v) {
                 $krs[$k] = $KeyResultService->processKeyResult($v, '/');
             }
         }
@@ -811,6 +815,10 @@ class GoalsController extends AppController
             }
         }
 
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
+
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
 
@@ -855,9 +863,7 @@ class GoalsController extends AppController
                 throw new RuntimeException();
             }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
-            $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
-            $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
-            $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
+            $key_result['KeyResult'] = $KeyResultService->processKeyResult($key_result['KeyResult']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
@@ -1510,11 +1516,13 @@ class GoalsController extends AppController
             $display_action_count--;
         }
         $this->set(compact('is_collaborated', 'display_action_count'));
+        $kr_count = $this->Goal->KeyResult->getKrCount($goal_id);
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
         $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
+        $this->set('kr_count', $kr_count);
         $this->set('key_results', $key_results);
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);

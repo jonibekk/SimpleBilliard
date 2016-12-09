@@ -11,12 +11,12 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="modal-dialog modal-collabo-dialog">
+<div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate") ?></h4>
+            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collabo") : __("Edit Collabo") ?></h4>
         </div>
         <?php $goalMemberId = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
@@ -88,7 +88,7 @@
                         <?= __("Cancel") ?>
                     </button>
                     <?=
-                    $this->Form->submit(empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate"),
+                    $this->Form->submit(empty($goal['MyCollabo']) ? __("Collabo") : __("Edit Collabo"),
                         ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
                     <?php if (!empty($goal['MyCollabo'])): ?>

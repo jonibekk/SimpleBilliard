@@ -1,7 +1,8 @@
 <!-- start app/webroot/template/group_vision_list.html -->
 <div class="row" style="padding-bottom:10px;">
     <div class="col-xs-4">
-        <a href="/teams/add_group_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button" ng-class="{disabled: allMyGroupVisionCreated}">
+        <a href="/teams/add_group_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button"
+           ng-class="{disabled: allMyGroupVisionCreated}">
             <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
     </div>
 
@@ -13,7 +14,7 @@
 
 <table class="table table-hover team_member_table">
     <tr>
-        <th colspan="2"><i class="fa fa-plane"></i> グループビジョン ( {{GroupVisionCount}} )</th>
+        <th colspan="4"><i class="fa fa-plane"></i> グループビジョン ( {{GroupVisionCount}} )</th>
     </tr>
     <tr ng-repeat="item in GroupVisionList">
         <td class="pointer" width="20%"
@@ -25,18 +26,21 @@
             ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg === true ? 1 : 0})">
             <div class="row">
                 <div class="col-xs-11">
-                    <p class="vision_title">{{item.GroupVision.name}} </p>
+                    <p class="vision_title">{{item.GroupVision.name}}</p>
 
                     <div class="vision_modified_date">
-                        <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}} <br>
+                        <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}}
+                        <span ng-if="item.GroupVision.member_count > 0">({{item.GroupVision.member_count}}メンバー)</span>
+                        <span ng-if="item.GroupVision.member_count == 0">(メンバーはおりません)</span>
+                        <br>
                         <span ng-bind-html="item.GroupVision.modified"/>
                     </div>
                 </div>
             </div>
         </td>
 
-        <td ng-show="item.GroupVision.showSettingBox">
-            <div class="pull-right header-function dropdown">
+        <td>
+            <div ng-show="item.GroupVision.showSettingBox" class="pull-right header-function dropdown">
                 <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                         id="dropdownMenu1"
                         data-toggle="dropdown" aria-expanded="true">
