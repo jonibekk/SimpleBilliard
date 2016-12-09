@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('ApprovalHistory', 'Model');
 App::import('Service/Api', 'ApiApprovalHistoryService');
 
 /**
@@ -19,6 +20,7 @@ class ApiApprovalHistoryServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
+        'app.approval_history'
     ];
 
     /**
@@ -109,6 +111,34 @@ class ApiApprovalHistoryServiceTest extends GoalousTestCase
 
     function test_getLatestCoachActionStatement()
     {
-        $this->markTestIncomplete('testClear not implemented.');
+        /** @var ApprovalHistory $ApprovalHistory */
+        $ApprovalHistory = ClassRegistry::init('ApprovalHistory');
+        $ApprovalHistory->current_team_id = 1;
+        $ret = $this->ApiApprovalHistoryService->getLatestCoachActionStatement(1,1);
+        $this->assertEquals('',$ret);
+
+        $ApprovalHistory->save(
+            [
+                'goal_member_id'          => 1,
+                'user_id'                 => 1,
+                'action_status'           => $ApprovalHistory::STATUS_ACTION_IS_TARGET_FOR_EVALUATION,
+                'select_clear_status'     => 0,
+                'select_important_status' => 0,
+            ]
+        );
+        $ret = $this->ApiApprovalHistoryService->getLatestCoachActionStatement(1,1);
+        $this->assertEquals('You have added this goal as a target of evaluation.',$ret);
+
+        $ApprovalHistory->save(
+            [
+                'goal_member_id'          => 2,
+                'user_id'                 => 2,
+                'action_status'           => $ApprovalHistory::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION,
+                'select_clear_status'     => 0,
+                'select_important_status' => 0,
+            ]
+        );
+        $ret = $this->ApiApprovalHistoryService->getLatestCoachActionStatement(2,2);
+        $this->assertEquals('You have not added this goal as a target of evaluation.',$ret);
     }
 }

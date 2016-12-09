@@ -37,7 +37,7 @@ class ApiApprovalHistoryService extends ApiService
      *
      * @return string
      */
-    function getClearImportantWord($clearStatus, $importantStatus): string
+    function getClearImportantWord(int $clearStatus, int $importantStatus): string
     {
         if ($clearStatus == ApprovalHistory::STATUS_IS_NOT_CLEAR) {
             return __('This Top Key Result is not clear.');
@@ -57,7 +57,7 @@ class ApiApprovalHistoryService extends ApiService
      *
      * @return string
      */
-    function getLatestCoachActionStatement($goalMemberId, $userId): string
+    function getLatestCoachActionStatement(int $goalMemberId, int $userId): string
     {
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
