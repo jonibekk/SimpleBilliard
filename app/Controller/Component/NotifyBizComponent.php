@@ -823,7 +823,9 @@ class NotifyBizComponent extends Component
 
         // 現リーダーのコーチを追加
         $isApprovable = $GoalApprovalService->isApprovable($userId, $teamId);
-        $coachId = $this->Team->TeamMember->getCoachId($userId);
+        $coachId = $this->Team->TeamMember->getCoachId(Hash::get($goal, 'Goal.user_id'));
+        $this->log($isApprovable ? 'true' : 'false');
+        $this->log("current_coach: $coachId");
         if ($isApprovable && empty($goalMembers[$coachId])) {
             $goalMembers[$coachId] = $coachId;
         }
@@ -832,6 +834,8 @@ class NotifyBizComponent extends Component
         if ($oldLeaderUserId) {
             $isApprovableOldLeader = $GoalApprovalService->isApprovable($oldLeaderUserId, $teamId);
             $oldLeaderCoachId = $this->Team->TeamMember->getCoachId($oldLeaderUserId);
+            $this->log($isApprovableOldLeader ? 'true' : 'false');
+            $this->log("old_coach: $oldLeaderCoachId");
             if ($isApprovableOldLeader && empty($goalMembers[$oldLeaderCoachId])) {
                 $goalMembers[$oldLeaderCoachId] = $oldLeaderCoachId;
             }

@@ -213,20 +213,20 @@ class GoalMemberService extends AppService
         if ($changeType === self::CHANGE_LEADER_FROM_GOAL_MEMBER) {
             // 自分がゴールメンバーかどうか
             if (!$GoalMember->isCollaborated($goalId)) {
-                return __("You don't have a permission to edit this goal as member.");
+                return __("Some error occurred. Please try again from the start.");
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
             $goalLeader = $GoalMember->getActiveLeader($goalId);
             if ($goalLeader) {
-                return __("You don't have a permission to edit this goal. Exist leader.");
+                return __("Some error occurred. Please try again from the start.");
             }
         // 自分がリーダーのケース
         } else {
             // 自分がリーダーかどうか
             $loginUserIsLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
             if (!$loginUserIsLeader) {
-                return __("You don't have a permission to edit this goal because you aren't leader.");
+                return __("Some error occurred. Please try again from the start.");
             }
 
             // リーダーを変更して自分がコラボする場合
@@ -241,7 +241,7 @@ class GoalMemberService extends AppService
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
         $newLeaderId = Hash::get($formData, 'NewLeader.id');
         if (!$GoalMember->isActiveGoalMember($newLeaderId, $goalId)) {
-            return __("Invalid member ID.");
+            return __("Some error occurred. Please try again from the start.");
         }
 
         return true;
@@ -282,7 +282,7 @@ class GoalMemberService extends AppService
             // 現リーダーがアクティブの場合は役割とタイプを変更
             // 現リーダーが非アクティブの場合はタイプのみ変更
             $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
-            if (!$GoalMember->save($data['GoalMember'])) {
+            if (!$GoalMember->save($data['GoalMember'], false)) {
                 throw new Exception(sprintf("Failed to collaborate. data:%s"
                     , var_export($data['GoalMember'], true)));
             }
