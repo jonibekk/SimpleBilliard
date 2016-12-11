@@ -184,19 +184,19 @@ class GoalMemberService extends AppService
         // パラメータ存在チェック
         $goalId = Hash::get($formData, 'Goal.id');
         if (empty($goalId) || empty($changeType)) {
-            return __("Invalid Request.");
+            return __("Some error occurred. Please try again from the start.");
         }
 
         // ゴールが存在するか
         $goal = $Goal->findById($goalId);
         if (empty($goal)) {
-            return __("This goal doesn't exist.");
+            return __("Some error occurred. Please try again from the start.");
         }
 
         // 今期以降のゴールか
         $isAfterCurrentGoal = $GoalService->isGoalAfterCurrentTerm($goalId);
         if(!$isAfterCurrentGoal) {
-            return __("Can't change leader before current term's goal.");
+            return __("Some error occurred. Please try again from the start.");
         }
 
         // 評価開始前か
@@ -205,7 +205,7 @@ class GoalMemberService extends AppService
             $currentTermId = $EvaluateTerm->getCurrentTermId();
             $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
             if ($isStartedEvaluation) {
-                return __("You can't change the goal in the evaluation.");
+                return __("Some error occurred. Please try again from the start.");
             }
         }
 
@@ -279,12 +279,12 @@ class GoalMemberService extends AppService
             }
 
             // リーダー -> コラボレーター
-            if ($changeType == self::CHANGE_LEADER_WITH_COLLABORATION) {
-                $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
-                if (!$GoalMember->save($data['GoalMember'])) {
-                    throw new Exception(sprintf("Failed to collaborate. data:%s"
-                        , var_export($data['GoalMember'], true)));
-                }
+            // 現リーダーがアクティブの場合は役割とタイプを変更
+            // 現リーダーが非アクティブの場合はタイプのみ変更
+            $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
+            if (!$GoalMember->save($data['GoalMember'])) {
+                throw new Exception(sprintf("Failed to collaborate. data:%s"
+                    , var_export($data['GoalMember'], true)));
             }
 
             // ゴール脱退

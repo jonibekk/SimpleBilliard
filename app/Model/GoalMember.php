@@ -504,6 +504,22 @@ class GoalMember extends AppModel
         return $count;
     }
 
+    function getLeader(int $goalId)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'team_id' => $this->current_team_id,
+                'type'    => [
+                    GoalMember::TYPE_OWNER,
+                ],
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        return $res ?? null;
+    }
+
     function getLeaderUid($goal_id)
     {
         $options = [

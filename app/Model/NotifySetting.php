@@ -895,11 +895,11 @@ class NotifySetting extends AppModel
                 $leaderName = $goalMember['User']['display_username'];
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> changed leader to <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has changed the leader to <span class="notify-card-head-target">%2$s</span>.',
                         $user_text, $leaderName);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> changed leader to <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has changed the leader to <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text), h($leaderName));
                 }
                 break;

@@ -304,7 +304,9 @@ class GoalsController extends AppController
         // ビュー変数セット
         $isLeader = $this->Goal->GoalMember->isLeader($goalId, $this->Auth->user('id'));
         $goalMembers = $this->Goal->GoalMember->getActiveCollaboratorList($goalId);
-        $currentLeader = $this->Goal->GoalMember->getActiveLeader($goalId);
+        // リーダーが非アクティブの可能性もあるので、
+        // アクティブ/非アクティブに関わらず取得する
+        $currentLeader = $this->Goal->GoalMember->getLeader($goalId);
         $priorityList = $this->Goal->priority_list;
         $this->set(compact(
             'goalId',
