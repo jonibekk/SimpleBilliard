@@ -58,11 +58,12 @@
   &-bar {
     border-radius: 4px;
     overflow: visible;
-    background-color: @subColor4;
+    background-color: @slightGray;
     text-align: center;
     position: relative;
     &Current {
-      background-color: @subColor14;
+      //background-color: @subColor14;
+      .horizontal-gradient(#00a8e6, #407fdf);
       position: absolute;
       top: 0;
       left: 0;
@@ -107,6 +108,8 @@
     z-index: 1;
     color: #ffffff;
     font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
   }
 
 }
