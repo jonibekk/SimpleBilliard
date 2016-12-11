@@ -577,7 +577,7 @@ class NotifyBizComponent extends Component
         $goal_id = $action['ActionResult']['goal_id'];
         //宛先は閲覧可能な全ユーザ
         //GoalMember
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
         //Follower
         $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
         //Coach
@@ -711,7 +711,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
@@ -737,7 +737,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -767,7 +767,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -811,7 +811,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goalId);
+        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goalId);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -824,8 +824,6 @@ class NotifyBizComponent extends Component
         // 現リーダーのコーチを追加
         $isApprovable = $GoalApprovalService->isApprovable($userId, $teamId);
         $coachId = $this->Team->TeamMember->getCoachId(Hash::get($goal, 'Goal.user_id'));
-        $this->log($isApprovable ? 'true' : 'false');
-        $this->log("current_coach: $coachId");
         if ($isApprovable && empty($goalMembers[$coachId])) {
             $goalMembers[$coachId] = $coachId;
         }
@@ -834,8 +832,6 @@ class NotifyBizComponent extends Component
         if ($oldLeaderUserId) {
             $isApprovableOldLeader = $GoalApprovalService->isApprovable($oldLeaderUserId, $teamId);
             $oldLeaderCoachId = $this->Team->TeamMember->getCoachId($oldLeaderUserId);
-            $this->log($isApprovableOldLeader ? 'true' : 'false');
-            $this->log("old_coach: $oldLeaderCoachId");
             if ($isApprovableOldLeader && empty($goalMembers[$oldLeaderCoachId])) {
                 $goalMembers[$oldLeaderCoachId] = $oldLeaderCoachId;
             }

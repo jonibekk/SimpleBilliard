@@ -580,16 +580,37 @@ class GoalMember extends AppModel
      *
      * @return array
      */
-    function getGoalMemberListByGoalId($goal_id, $type = null)
+    function getActiveGoalMemberListByGoalId($goal_id, $type = null)
     {
         $options = [
             'conditions' => [
-                'goal_id' => $goal_id,
-                'team_id' => $this->current_team_id,
+                'GoalMember.goal_id' => $goal_id,
+                'GoalMember.team_id' => $this->current_team_id,
+                'TeamMember.active_flg' => true,
+                'User.active_flg' => true,
             ],
             'fields'     => [
-                'user_id',
-                'user_id'
+                'GoalMember.user_id',
+                'GoalMember.user_id'
+            ],
+            'joins' => [
+                [
+                    'type' => 'LEFT',
+                    'table' => 'team_members',
+                    'alias' => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id',
+                    ],
+                ],
+                [
+                    'type' => 'LEFT',
+                    'table' => 'users',
+                    'alias' => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id',
+                    ],
+                ],
             ],
         ];
         if ($type !== null) {
