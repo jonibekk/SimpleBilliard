@@ -158,12 +158,9 @@ class ActionResult extends AppModel
             ],
         ],
         'key_result_current_value' => [
-            'notBlank'           => [
-                'rule'     => 'notBlank',
-                'required' => true
-            ],
             'validateKrProgress' => [
-                'rule' => ['validateKrProgress'],
+                'rule'     => ['validateKrProgress'],
+                'required' => true
             ],
         ],
     ];
@@ -175,7 +172,7 @@ class ActionResult extends AppModel
      *
      * @return bool
      */
-    function validateExistKr(array $val) : bool
+    function validateExistKr(array $val): bool
     {
         $krId = array_shift($val);
         if (empty($krId)) {
@@ -199,7 +196,7 @@ class ActionResult extends AppModel
      *
      * @return bool
      */
-    function validateKrProgress(array $val) : bool
+    function validateKrProgress(array $val): bool
     {
         $currentVal = array_shift($val);
         if ($currentVal === "") {
@@ -214,7 +211,7 @@ class ActionResult extends AppModel
 
         // 単位が完了/未完了の場合
         if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
-            return $currentVal == 100;
+            return in_array($currentVal, [0, 100]);
         }
 
         // それ以外の単位

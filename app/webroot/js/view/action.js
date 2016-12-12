@@ -46,6 +46,7 @@ var Page = {
     });
   },
   submit: function (form) {
+    var self = this;
     if (!checkUploadFileExpire(form.id)) {
       // 画像アップロード画面に戻す
       var $btn_add_img = $('#ActionImageAddButton');
@@ -57,12 +58,16 @@ var Page = {
       $btn_add_img.show();
     }
 
-    console.log('ajax post') //TODO.delete
-    var self = this;
+    var form_data = $(form).serializeArray();
+    var switch_el =  $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
+    if (switch_el.size() > 0 && !switch_el.prop('checked')) {
+      form_data.push({name: "data[ActionResult][key_result_current_value]", value: 0});
+    }
+
     $.ajax({
       url: "/api/v1/actions",
       type: 'POST',
-      data: $(form).serialize(),
+      data: form_data,
       success: function (data) {
         location.href= "/";
       },
