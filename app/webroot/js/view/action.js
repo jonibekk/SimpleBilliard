@@ -57,6 +57,7 @@ var Page = {
       }
       $btn_add_img.show();
     }
+    $(form).find(".changed").removeClass("changed");
 
     var form_data = $(form).serializeArray();
     var switch_el =  $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
