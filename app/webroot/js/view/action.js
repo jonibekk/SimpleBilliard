@@ -97,6 +97,7 @@ var Page = {
     });
   },
   selectGoal: function (el) {
+    $(el).closest(".has-success").removeClass("has-success");
     var goal_id = $(el).val();
 
     attrUndefinedCheck(el, "ajax-url");
