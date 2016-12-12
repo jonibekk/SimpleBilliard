@@ -514,6 +514,24 @@ class GoalMember extends AppModel
                     GoalMember::TYPE_OWNER,
                 ],
             ],
+            'joins'      => [
+                [
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id',
+                    ]
+                ]
+            ],
+            'fields'     => [
+                'GoalMember.goal_id',
+                'User.id',
+                'User.photo_file_name',
+                'User.first_name',
+                'User.last_name',
+                'User.middle_name',
+            ],
         ];
 
         $res = $this->find('first', $options);
