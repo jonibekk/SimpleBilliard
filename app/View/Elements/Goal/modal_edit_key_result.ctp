@@ -107,6 +107,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                                 'options'             => $kr_value_unit_list
                                             ]) ?>
                                     </div>
+                                    <span class="goals-create-input-form-unit-label"></span>
                                 </div>
                                 <div class="goals-create-layout-flex mod-child">
                                     <?=
