@@ -2,7 +2,7 @@
 /**
  * TODO:全体的にHTML構成に問題があるので修正
  */
-$kr = Hash::get($post,'ActionResult.KeyResult');
+$kr = Hash::get($post, 'ActionResult.KeyResult');
 ?>
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
@@ -101,7 +101,7 @@ $kr = Hash::get($post,'ActionResult.KeyResult');
 </div>
 <?php //TODO:.colが.rowの中になく単体で存在することはBootstrapの仕様としてありえない ?>
 <div
-    class="col col-xxs-12 <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_4px' ?>">
+    class="col col-xxs-12 <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_16px' ?>">
     <?php foreach ($imgs as $v): ?>
         <a href="<?= $v['l'] ?>" rel='lightbox' data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
             <?= $this->Html->image($v['s']) ?>
@@ -109,8 +109,8 @@ $kr = Hash::get($post,'ActionResult.KeyResult');
     <?php endforeach; ?>
 </div>
 <div class="panel-body">
-    <?php if (!empty($kr)):?>
-        <div class="col col-xxs-12 feed-contents font_bold mb_4px">
+    <?php if (!empty($kr)): ?>
+        <div class="col col-xxs-12 feed-contents font_bold">
             <i class="fa fa-key disp_i"></i>&nbsp;<?= $kr['name'] ?>
         </div>
         <?php if (!is_null($post['ActionResult']['key_result_target_value'])): ?>
@@ -119,7 +119,7 @@ $kr = Hash::get($post,'ActionResult.KeyResult');
                 <?php
                 $changValue = $post['ActionResult']['key_result_change_value'];
                 $displayChangeValue = "";
-                if ($changValue > 0) {
+                if ($changValue >= 0) {
                     $displayChangeValue .= '+';
                 } elseif ($changValue < 0) {
                     $displayChangeValue .= '-';
@@ -128,14 +128,23 @@ $kr = Hash::get($post,'ActionResult.KeyResult');
                 $displayChangeValue .= AppUtil::formatBigFloat($post['ActionResult']['key_result_change_value']);
                 $currentValue = (int)$post['ActionResult']['key_result_before_value'] + (int)$post['ActionResult']['key_result_change_value'];
                 $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
-                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']), $unitId);
+                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']),
+                    $unitId);
                 ?>
-                <?= $currentValue ?>
-                ( <span class="feed-progress-change"><?= $displayChangeValue ?></span> ) /
-                <span class="feed-progress-target"><?= $targetValue ?></span>
+                <span class="feed-progress-strong">
+                    <?= $currentValue ?>
+                    &nbsp;(
+                    <?php if ($displayChangeValue === '+0'): ?>
+                        </span><?= $displayChangeValue ?><span class="feed-progress-strong">
+                    <?php else: ?>
+                        <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                    <?php endif; ?>
+                    )&nbsp;
+                </span>
+                / <?= $targetValue ?>
             </div>
         <?php endif; ?>
-    <?php endif;?>
+    <?php endif; ?>
     <div
         class="col col-xxs-12 feed-contents post-contents mod-action showmore-action font_14px font_verydark box-align"
         id="PostTextBody_<?= $post['Post']['id'] ?>">
