@@ -2781,6 +2781,11 @@ Temporary Properties - YOU MUST FIX
     text-overflow: ellipsis;
     display: block;
 }
+.oneline-ellipsis{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 .goal-search-elm:focus, .goal-search-elm:active {
     background: #ae2f2f none;

@@ -11,7 +11,7 @@
 //echo json_encode($post);
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="font_11px font_lightgray">
+<div class="font_11px font_lightgray oneline-ellipsis">
     <!-- only show if created within 1hr -->
     <?php if ($post['Post']['created'] > REQUEST_TIMESTAMP_ONE_HR_AGO) { ?>
             <span class="label label-primary">New</span>
@@ -49,5 +49,17 @@
             </a>
         <?php endif; ?>
     <?php endif; ?>
+    <?php if($post['Post']['type'] == Post::TYPE_ACTION):?>
+        <a href="<?= $this->Html->url([
+            'controller' => 'goals',
+            'action'     => 'ajax_get_goal_description_modal',
+            'goal_id'    => $post['Goal']['id']
+        ]) ?>"
+           class="ml_8px modal-ajax-get link-dark-gray">
+            <i class="fa fa-flag"></i>
+            <span><?= $post['Goal']['name'] ?></span>
+        </a>
+
+    <?php endif;?>
 </div>
 <?= $this->App->viewEndComment()?>
