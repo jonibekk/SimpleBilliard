@@ -1163,8 +1163,8 @@ class GoalsController extends AppController
         }
         $this->request->data['ActionResult']['goal_id'] = $goalId;
         $this->request->data['ActionResult']['key_result_id'] = $keyResultId;
-        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
-        $this->set(['kr_list' => $kr_list, 'key_result_id' => $keyResultId]);
+        $krList = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
+        $this->set(['kr_list' => $krList, 'key_result_id' => $keyResultId]);
 
         $this->_setViewValOnRightColumn();
         $this->set('common_form_type', 'action');
