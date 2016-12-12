@@ -1691,16 +1691,6 @@ msgstr "自己評価をしてください"
 msgid "Please evaluate."
 msgstr "評価をしてください"
 
-msgid "You don't have a permission to edit this goal as member."
-msgstr ""
-
-msgid "You don't have a permission to edit this goal. Exist leader."
-msgstr ""
-
-msgid ""
-"You don't have a permission to edit this goal because you aren't leader."
-msgstr ""
-
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
 
