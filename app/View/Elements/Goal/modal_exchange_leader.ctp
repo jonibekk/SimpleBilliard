@@ -36,7 +36,7 @@
                         'required'            => true,
                         'options'             => $goalMembers
                     ]) ?>
-                <?= $this->Form->hidden('id', ['value' => Hash::get($currentLeader, 'GoalMember.id')]); ?>
+                <?= $this->Form->hidden('GoalMember.id', ['value' => Hash::get($currentLeader, 'GoalMember.id')]); ?>
                 <?php if ($isLeader): ?>
                     <p class="mb_8px"><?= __("Current")?> : <?= Hash::get($currentLeader, 'User.display_username') ?></p>
                     <hr>

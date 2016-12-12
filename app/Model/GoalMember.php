@@ -525,6 +525,7 @@ class GoalMember extends AppModel
                 ]
             ],
             'fields'     => [
+                'GoalMember.id',
                 'GoalMember.goal_id',
                 'User.id',
                 'User.photo_file_name',
