@@ -85,47 +85,60 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                 </div>
                 <div class="row">
                     <div class="ddd">
-                        <h5 class="modal-key-result-headings"><?= __("Measurement") ?><span
+                        <h5 class="modal-key-result-headings"><?= __("Measurement type") ?><span
                                 class="modal-key-result-headings-description"><?= __("How much?") ?></span></h5>
                     </div>
                     <div class="goal-set-input">
-                        <div class="eee">
-                            <?=
-                            $this->Form->input('KeyResult.value_unit',
-                                [
-                                    'label'               => __("Unit"),
-                                    'wrapInput'           => 'modal-edit-kr-change-unit',
-                                    'type'                => 'select',
-                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                    'target-id'           => 'KeyResult0ValueInputWrap_' . $kr_id,
-                                    'required'            => true,
-                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                    'options'             => $kr_value_unit_list
-                                ]) ?>
-                        </div>
                         <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
                              style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
-                            <div class="iii">
-                                <?= $this->Form->label(null, __("Initial point"))?>
-                                <p class="ptb_4px"><?= Hash::get($this->request->data, 'KeyResult.start_value')?></p>
-                            </div>
-                            <div class="ggg">
-                                <?=
-                                $this->Form->input('KeyResult.target_value',
-                                    [
-                                        'label'                        => __("Achieve point"),
-                                        'wrapInput'                    => 'hhh',
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 100,
-                                        'required'                     => true,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
-                                    ]) ?>
+                            <div class="goals-create-layout-flex">
+                                <div class="relative">
+                                    <div class="goals-create-input-form-unit-box">
+                                        <?=
+                                        $this->Form->input('KeyResult.value_unit',
+                                            [
+                                                'label'               => false,
+                                                'wrapInput'           => 'modal-edit-kr-change-unit',
+                                                'type'                => 'select',
+                                                'class'               => 'form-control goals-create-input-form mod-select-units',
+                                                'target-id'           => 'KeyResult0ValueInputWrap_' . $kr_id,
+                                                'required'            => true,
+                                                'hidden-option-value' => KeyResult::UNIT_BINARY,
+                                                'options'             => $kr_value_unit_list
+                                            ]) ?>
+                                    </div>
+                                </div>
+                                <div class="goals-create-layout-flex mod-child">
+                                    <?=
+                                    $this->Form->input(null,
+                                        [
+                                            'name'     => null,
+                                            'label'    => false,
+                                            'class'    => 'form-control goals-create-input-form goals-create-input-form-tkr-range disabled',
+                                            'value'    => Hash::get($this->request->data, 'KeyResult.start_value'),
+                                            'disabled' => 'disabled'
+                                        ]) ?>
+                                  <span class="goals-create-input-form-tkr-range-symbol">
+                                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                  </span>
+                                  <?=
+                                  $this->Form->input('KeyResult.target_value',
+                                      [
+                                          'label'                        => false,
+                                          'wrapInput'                    => 'hhh',
+                                          'type'                         => 'number',
+                                          'step'                         => '0.1',
+                                          'default'                      => 100,
+                                          'required'                     => true,
+                                          'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
+                                          'data-bv-stringlength'         => 'true',
+                                          'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
+                                          'data-bv-stringlength-message' => __(
+                                              "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
+                                          "data-bv-notempty-message"     => __("Input is required."),
+                                          'data-bv-numeric-message'      => __("Please enter a number."),
+                                      ]) ?>
+                                </div>
                             </div>
                         </div>
                     </div>
