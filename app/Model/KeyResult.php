@@ -299,7 +299,7 @@ class KeyResult extends AppModel
 
         if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
             $data['KeyResult']['start_value'] = 0;
-            $data['KeyResult']['target_value'] = 1;
+            $data['KeyResult']['target_value'] = 100;
         }
         $data['KeyResult']['current_value'] = $data['KeyResult']['start_value'];
 
