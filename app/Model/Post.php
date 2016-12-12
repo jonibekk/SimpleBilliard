@@ -786,7 +786,8 @@ class Post extends AppModel
                         'fields' => [
                             'id',
                             'name',
-                            'target_value'
+                            'target_value',
+                            'value_unit'
                         ],
                     ],
                     'ActionResultFile' => [

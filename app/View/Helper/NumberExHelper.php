@@ -138,4 +138,25 @@ class NumberExHelper extends AppHelper
         }
         return $rate;
     }
+
+    /**
+     * 単位付加
+     *
+     * @param string $val
+     * @param int    $unitId
+     *
+     * @return string
+     */
+    public function addUnit(string $val, int $unitId) : string
+    {
+        // 単位を文頭におくか文末に置くか決める
+        $unitName = KeyResult::$UNIT[$unitId];
+        if (in_array($unitId, KeyResult::$UNIT_HEAD)) {
+            return $unitName.$val;
+        }
+        if (in_array($unitId, KeyResult::$UNIT_TAIL)) {
+            return $val.$unitName;
+        }
+        return $val;
+    }
 }

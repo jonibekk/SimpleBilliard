@@ -2,6 +2,7 @@
 /**
  * TODO:全体的にHTML構成に問題があるので修正
  */
+$kr = Hash::get($post,'ActionResult.KeyResult');
 ?>
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
@@ -97,9 +98,6 @@
         }
     }
     ?>
-    <div class="col col-xxs-12 feed-contents font_bold mb_4px">
-        <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
-    </div>
 </div>
 <?php //TODO:.colが.rowの中になく単体で存在することはBootstrapの仕様としてありえない ?>
 <div
@@ -111,27 +109,33 @@
     <?php endforeach; ?>
 </div>
 <div class="panel-body">
-    <?php if (!is_null($post['ActionResult']['key_result_target_value'])): ?>
-        <div class="feed-progress">
-            <i class="fa fa-tachometer"></i>
-            <?php
-            $changValue = $post['ActionResult']['key_result_change_value'];
-            $displayChangeValue = "";
-            if ($changValue > 0) {
-                $displayChangeValue .= '+';
-            } elseif ($changValue < 0) {
-                $displayChangeValue .= '-';
-            }
-            $displayChangeValue .= AppUtil::formatBigFloat($post['ActionResult']['key_result_change_value']);
-            $currentValue = (int)$post['ActionResult']['key_result_before_value'] + (int)$post['ActionResult']['key_result_change_value'];
-            $currentValue = AppUtil::formatBigFloat($currentValue);
-            ?>
-            <?= $currentValue ?>
-            / <span
-                class="feed-progress-target"><?= AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']) ?></span>
-            ( <span class="feed-progress-change"><?= $displayChangeValue ?></span> )
+    <?php if (!empty($kr)):?>
+        <div class="col col-xxs-12 feed-contents font_bold mb_4px">
+            <i class="fa fa-key disp_i"></i>&nbsp;<?= $kr['name'] ?>
         </div>
-    <?php endif; ?>
+        <?php if (!is_null($post['ActionResult']['key_result_target_value'])): ?>
+            <div class="feed-progress">
+                <i class="fa fa-tachometer"></i>
+                <?php
+                $changValue = $post['ActionResult']['key_result_change_value'];
+                $displayChangeValue = "";
+                if ($changValue > 0) {
+                    $displayChangeValue .= '+';
+                } elseif ($changValue < 0) {
+                    $displayChangeValue .= '-';
+                }
+                $unitId = $kr['value_unit'];
+                $displayChangeValue .= AppUtil::formatBigFloat($post['ActionResult']['key_result_change_value']);
+                $currentValue = (int)$post['ActionResult']['key_result_before_value'] + (int)$post['ActionResult']['key_result_change_value'];
+                $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
+                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']), $unitId);
+                ?>
+                <?= $currentValue ?>
+                ( <span class="feed-progress-change"><?= $displayChangeValue ?></span> ) /
+                <span class="feed-progress-target"><?= $targetValue ?></span>
+            </div>
+        <?php endif; ?>
+    <?php endif;?>
     <div
         class="col col-xxs-12 feed-contents post-contents mod-action showmore-action font_14px font_verydark box-align"
         id="PostTextBody_<?= $post['Post']['id'] ?>">
