@@ -158,9 +158,12 @@ class ActionResult extends AppModel
             ],
         ],
         'key_result_current_value' => [
+            'notBlank'           => [
+                'rule'     => 'notBlank',
+                'required' => true
+            ],
             'validateKrProgress' => [
                 'rule'     => ['validateKrProgress'],
-                'required' => true
             ],
         ],
     ];

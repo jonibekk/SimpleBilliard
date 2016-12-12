@@ -53,6 +53,10 @@ class ActionService extends AppService
             $krId = Hash::get($action, 'key_result_id');
             $kr = $KeyResult->getById($krId);
             $krCurrentVal = Hash::get($action, 'key_result_current_value');
+            if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
+                $krCurrentVal = empty($krCurrentVal) ? 0 : 100;
+            }
+
             $krChangeVal = $krCurrentVal - Hash::get($kr, 'current_value');
             $goalId = Hash::get($action, 'goal_id');
             $teamId = Hash::get($action, 'team_id');
