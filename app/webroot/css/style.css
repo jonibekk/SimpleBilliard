@@ -411,9 +411,9 @@ textarea{
     margin-left: 16px;
 }
 
-.mlr_5px {
-    margin-left: 5px;
-    margin-right: 5px;
+.mlr_4px {
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
 .mb-pb_5px {
@@ -1386,6 +1386,10 @@ ul.example-indent {
 
 .post-contents {
     padding: 10px 0 0 0;
+}
+.post-contents.mod-action {
+    padding: 4px 0;
+    margin:0;
 }
 
 .comment-block {

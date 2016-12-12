@@ -37,7 +37,6 @@ class ApiGoalService extends ApiService
 
         // ゴール件数取得
         $count = $Goal->countSearch($conditions);
-//        $this->log($Goal->getDataSource()->getLog());
         if ($count == 0) {
             return $ret;
         }

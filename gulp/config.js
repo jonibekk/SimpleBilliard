@@ -4,12 +4,18 @@ const node_modules_dir = './node_modules'
 const config =  {
   dest: assets_dir + '/dest',
   js: {
-    src: [assets_dir + '/js/gl_basic.js'],
+    src: [
+      assets_dir + '/js/gl_basic.js',
+      assets_dir + '/js/view/*.js'
+    ],
     output: {
       file_name: 'goalous',
       path: compiled_assets_dir + '/js'
     },
-    watch_files: [assets_dir + '/js/gl_basic.js']
+    watch_files: [
+        assets_dir + '/js/gl_basic.js',
+        assets_dir + '/js/view/*.js'
+    ],
   },
   js_prerender: {
     src: [
