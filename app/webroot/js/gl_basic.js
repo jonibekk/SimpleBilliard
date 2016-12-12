@@ -670,7 +670,7 @@ $(document).ready(function () {
     imageLazyOn();
   });
   // KR進捗の詳細値を表示
-  $(document).on("mouseenter click", '.js-show-detail-progress-value', function (e) {
+  $(document).on("click", '.js-show-detail-progress-value', function (e) {
     var current_value = $(this).data('current_value');
     var start_value = $(this).data('start_value');
     var target_value = $(this).data('target_value');
