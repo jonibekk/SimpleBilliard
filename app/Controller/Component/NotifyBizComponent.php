@@ -577,7 +577,7 @@ class NotifyBizComponent extends Component
         $goal_id = $action['ActionResult']['goal_id'];
         //宛先は閲覧可能な全ユーザ
         //GoalMember
-        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //Follower
         $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
         //Coach
@@ -711,7 +711,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
@@ -737,7 +737,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -767,7 +767,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -811,7 +811,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getActiveGoalMemberListByGoalId($goalId);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goalId);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me

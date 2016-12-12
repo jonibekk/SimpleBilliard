@@ -599,7 +599,7 @@ class GoalMember extends AppModel
      *
      * @return array
      */
-    function getActiveGoalMemberListByGoalId($goal_id, $type = null)
+    function findActiveByGoalId($goal_id, $type = null)
     {
         $options = [
             'conditions' => [

@@ -248,7 +248,7 @@ class GoalMemberTest extends GoalousTestCase
         $this->assertEquals(null, $actual);
     }
 
-    function testGetActiveGoalMemberListByGoalId()
+    function testFindActiveByGoalId()
     {
         $this->_setDefault();
         $data = [
@@ -269,7 +269,7 @@ class GoalMemberTest extends GoalousTestCase
             'active_flg' => true
         ];
         $this->GoalMember->User->TeamMember->save($teamMemberData, false);
-        $actual = $this->GoalMember->getActiveGoalMemberListByGoalId(200, GoalMember::TYPE_COLLABORATOR);
+        $actual = $this->GoalMember->findActiveByGoalId(200, GoalMember::TYPE_COLLABORATOR);
         $this->assertNotEmpty($actual);
     }
 
