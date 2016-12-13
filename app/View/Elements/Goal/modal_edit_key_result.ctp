@@ -93,22 +93,21 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                              style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
                             <div class="goals-create-layout-flex">
                                 <div class="relative">
-                                    <div class="goals-create-input-form-unit-box">
+                                    <div class="goals-create-input-form-unit-box is-disable is-radius">
                                         <?php $unit = Hash::get($this->request->data, 'KeyResult.value_unit'); ?>
                                         <?=
                                         $this->Form->input(null,
                                             [
-                                                'name'                => null,
-                                                'label'               => false,
-                                                'type'                => 'select',
-                                                'required'            => false,
-                                                'class'               => 'form-control goals-create-input-form js-select-value-unit',
-                                                'options'             => [$unit => $kr_value_unit_list[$unit]],
-                                                'selected'            => $kr_value_unit_list[$unit],
-                                                'data-unit-id'        => $unit
+                                                'name'         => null,
+                                                'label'        => false,
+                                                'type'         => 'select',
+                                                'required'     => false,
+                                                'class'        => 'form-control goals-create-input-form js-select-value-unit',
+                                                'data-unit-id' => $unit,
+                                                'disabled'     => 'disabled'
                                             ]) ?>
                                     </div>
-                                    <span className="goals-create-input-form-unit-label js-short-value-unit"></span>
+                                    <span class="goals-create-input-form-unit-label"><?= $krShortValueUnitList[$unit] ?></span>
                                 </div>
                                 <div class="goals-create-layout-flex mod-child">
                                     <?=
@@ -117,7 +116,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                             'name'     => null,
                                             'label'    => false,
                                             'type'     => 'text',
-                                            'class'    => 'form-control goals-create-input-form goals-create-input-form-tkr-range disabled',
+                                            'class'    => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
                                             'value'    => Hash::get($this->request->data, 'KeyResult.start_value'),
                                             'disabled' => 'disabled'
                                         ]) ?>

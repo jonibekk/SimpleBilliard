@@ -284,6 +284,7 @@ class GoalsController extends AppController
         $priorityList = $this->Goal->priority_list;
         $krPriorityList = $this->Goal->KeyResult->priority_list;
         $krValueUnitList = $KeyResultService->buildKrUnitsSelectList();
+        $krShortValueUnitList = $KeyResultService->buildKrUnitsSelectList($short = true);
 
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goalId);
@@ -308,6 +309,7 @@ class GoalsController extends AppController
             'priorityList',
             'krPriorityList',
             'krValueUnitList',
+            'krShortValueUnitList',
             'krStartDateFormat',
             'krEndDateFormat',
             'limitEndDate',
@@ -976,8 +978,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
-        $kr_short_value_unit_list = $KeyResultService->buildKrUnitsSelectList($short = true);
+        $krShortValueUnitList = $KeyResultService->buildKrUnitsSelectList($short = true);
 
         // 認定可能フラグ追加
         $is_approvable = false;
@@ -1000,8 +1001,7 @@ class GoalsController extends AppController
             'goal_category_list',
             'priority_list',
             'kr_priority_list',
-            'kr_value_unit_list',
-            'kr_short_value_unit_list',
+            'krShortValueUnitList',
             'kr_start_date_format',
             'kr_end_date_format',
             'limit_end_date',

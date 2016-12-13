@@ -295,8 +295,7 @@
             user_id: "<?= $this->Session->read('Auth.User.id')?>",
             kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>,
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
-            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
-            kr_short_value_unit_list: <?= isset($kr_short_value_unit_list) ? json_encode($kr_short_value_unit_list) : "''" ?>
+            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
