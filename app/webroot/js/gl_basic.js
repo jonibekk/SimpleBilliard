@@ -5599,12 +5599,6 @@ function evAjaxEditCircleAdminStatus(e) {
     });
 }
 
-// 短縮系の測定値表示
-$(function() {
-  $(".js-select-value-unit")
-});
-
-
 function evAjaxLeaveCircle(e) {
   e.preventDefault();
 
