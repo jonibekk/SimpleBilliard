@@ -379,4 +379,125 @@ class ActionResultTest extends GoalousTestCase
         $this->ActionResult->my_uid = 1;
     }
 
+    function testValidatePost()
+    {
+        $this->_setDefault();
+
+        $base = [
+            'goal_id'       => 1,
+            'name'          => 'test',
+            'key_result_id' => 1,
+        ];
+
+        $this->ActionResult->validate = $this->ActionResult->postValidate;
+
+        // フィールドなし
+        $updateAction = $base;
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("Input is required.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        // 空文字エラー
+        $updateAction = array_merge($base, ['key_result_current_value' => ""]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("Input is required.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        // 現在値が数値でないエラー
+        $updateAction = array_merge($base, [
+            'key_result_id' => 3,
+            'key_result_current_value' => 'a'
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+    $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("Invalid value");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        // 存在しないKRのId
+        $updateAction = array_merge($base, [
+            'key_result_id' => 99999999999]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_id');
+        $expectErrMsg = __("Please select");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        /* 単位が完了/未完了の場合 */
+        $updateAction = array_merge($base, [
+            'key_result_id' => 3,
+            'key_result_current_value' => 0
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $this->assertEmpty($err);
+
+        $updateAction = array_merge($base, [
+            'key_result_id' => 3,
+            'key_result_current_value' => 1
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $this->assertEmpty($err);
+
+        $updateAction = array_merge($base, [
+            'key_result_id' => 3,
+            'key_result_current_value' => 0.1
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("Invalid Request.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        $updateAction = array_merge($base, [
+            'key_result_id' => 3,
+            'key_result_current_value' => 1.1
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("Invalid Request.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        // 進捗が変わらない場合はOK
+        $updateAction = array_merge($base, [
+            'key_result_id' => 1,
+            'key_result_current_value' => 11
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $this->assertEmpty($err);
+
+
+        // 現在値が減っていないか 進捗方向：増加
+        $updateAction = array_merge($base, [
+            'key_result_id' => 1,
+            'key_result_current_value' => 10.999
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("You can not reduce current value.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        // 現在値が減っていないか 進捗方向：減少
+        $updateAction = array_merge($base, [
+            'key_result_id' => 2,
+            'key_result_current_value' => 99.001
+        ]);
+        $this->ActionResult->set($updateAction);
+        $this->ActionResult->validates();
+        $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
+        $expectErrMsg = __("You can not reduce current value.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+    }
+
 }

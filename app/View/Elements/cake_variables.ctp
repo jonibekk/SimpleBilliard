@@ -541,7 +541,9 @@
             "Progress": "<?=__("Progress")?>",
             "Wish goal approval": "<?=__("Wish goal approval")?>",
             "Name": "<?=__("Name")?>",
-            "Level of achievement": "<?=__("Level of achievement")?>"
+            "Level of achievement": "<?=__("Level of achievement")?>",
+            "Achieved": "<?= __("Achieved") ?>",
+            "Unachieved": "<?= __("Unachieved") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

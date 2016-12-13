@@ -37,6 +37,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'checkRangeTerm'        => __("Input in the term."),
             'isUnique'              => __('Data is duplicated.'),
             'validateExistKr'       => __("Please select"),
+            'decimal'       => __("Invalid value"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);
