@@ -2631,10 +2631,10 @@ msgid "No one in this circle."
 msgstr "このサークルにはメンバーがいません。"
 
 msgid "Collabo"
-msgstr ""
+msgstr "コラボ"
 
 msgid "Edit Collabo"
-msgstr ""
+msgstr "コラボを編集"
 
 msgid "eg) Increasing the number of users"
 msgstr "例） ユーザー数を増やす"
@@ -4858,47 +4858,3 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
-
-#~ msgid ""
-#~ "You can not change the direction of KR progress increase or decrease."
-#~ msgstr "進捗の増加/減少の方向は変更できません。"
-
-#~ msgid "You can not input KR current value over KR target value."
-#~ msgstr "進捗現在値が目標値を超えることはできません。"
-
-#~ msgid "You can not change current value less than latest"
-#~ msgstr "今の現在値より低い値に変更はできません。"
-
-#~ msgid "Collaborate"
-#~ msgstr "コラボる"
-
-#~ msgid "Edit Collaborate"
-#~ msgstr "コラボを編集"
-
-#~ msgid "%s members read this message."
-#~ msgstr "このメッセージを%s人が読みました。"
-
-#~ msgid "%s members Like! this post."
-#~ msgstr "この投稿を%s人が「いいね！」と言っています。"
-
-#~ msgid "%s people read this post."
-#~ msgstr "この投稿を%s人が読みました。"
-
-#~ msgid "Clear"
-#~ msgstr "クリア"
-
-#~ msgid "Go to Goal page"
-#~ msgstr "ゴールページへ"
-
-#~ msgid "Collaboration"
-#~ msgstr "コラボ"
-
-#~ msgid "You have no goal."
-#~ msgstr "今期のゴールがありません。"
-
-#~ msgid ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to "
-#~ "another KR <span class=\"notify-card-head-target\">%2$s</span>."
-#~ msgstr ""
-#~ "<span class=\"notify-card-head-target\">%1$s</span> がTKRを変更しました。 "
-#~ "<span class=\"notify-card-head-target\">%2$s</span>."
