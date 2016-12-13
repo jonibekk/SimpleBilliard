@@ -162,11 +162,11 @@ class ActionResult extends AppModel
                 'rule'     => 'notBlank',
                 'required' => true
             ],
-            'decimal'         => [
+            'decimal'            => [
                 'rule' => ['decimal'],
             ],
             'validateKrProgress' => [
-                'rule'     => ['validateKrProgress'],
+                'rule' => ['validateKrProgress'],
             ],
         ],
     ];
@@ -207,7 +207,8 @@ class ActionResult extends AppModel
         $errMsg = __("Invalid Request.");
         $currentVal = array_shift($val);
         if ($currentVal === "") {
-            return true;
+            $this->invalidate('key_result_current_value', $errMsg);
+            return false;
         }
 
         $krId = Hash::get($this->data, 'ActionResult.key_result_id');
@@ -222,9 +223,10 @@ class ActionResult extends AppModel
             if (!in_array($currentVal, [0, 1])) {
                 $this->invalidate('key_result_current_value', $errMsg);
                 return false;
-             }
-             return true;
+            }
+            return true;
         }
+
 
         // それ以外の単位
         $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
@@ -236,13 +238,25 @@ class ActionResult extends AppModel
 
         /* 現在値が減っていないか */
         if ($isProgressIncrease && $currentDiff < 0) {
-            $this->invalidate('key_result_current_value', __("You can not reduce current value."));
+            $this->invalidate('key_result_current_value', __("You can not decrease current value."));
             return false;
         }
+        /* 現在値が増えていないか */
         if (!$isProgressIncrease && $currentDiff > 0) {
-            $this->invalidate('key_result_current_value', __("You can not reduce current value."));
+            $this->invalidate('key_result_current_value', __("You can not increase current value."));
             return false;
         }
+
+        /* 目標値を超えていないか */
+        if ($isProgressIncrease && $currentVal > $kr['target_value']) {
+            $this->invalidate('key_result_current_value', __("Current value over target value."));
+            return false;
+        }
+        if (!$isProgressIncrease && $currentVal < $kr['target_value']) {
+            $this->invalidate('key_result_current_value', __("Current value over target value."));
+            return false;
+        }
+
         return true;
     }
 

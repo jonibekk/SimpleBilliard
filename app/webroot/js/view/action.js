@@ -81,7 +81,7 @@ var Page = {
         var errTemplate = '<div id="ActionFormErrors" class="alert alert-danger mtb_8px ml_8px mr_8px">#error#</div>';
         if (res.status == 400 && body.validation_errors) {
           var errors = body.validation_errors;
-          errHtml = errTemplate.replace(/#error#/g,Object.values(errors).join('<br>'));
+          errHtml = errTemplate.replace(/#error#/,Object.values(errors).join('<br>'));
           $(self.conf.form).prepend(errHtml);
           return false;
         }
