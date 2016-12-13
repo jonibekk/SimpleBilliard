@@ -117,16 +117,18 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
             <div class="feed-progress">
                 <i class="fa fa-tachometer"></i>
                 <?php
-                $changValue = $post['ActionResult']['key_result_change_value'];
+                $changeValue = $post['ActionResult']['key_result_change_value'];
                 $displayChangeValue = "";
-                if ($changValue >= 0) {
+                if ($changeValue >= 0) {
                     $displayChangeValue .= '+';
-                } elseif ($changValue < 0) {
+                } elseif ($changeValue < 0) {
                     $displayChangeValue .= '-';
                 }
                 $unitId = $kr['value_unit'];
-                $displayChangeValue .= AppUtil::formatBigFloat($post['ActionResult']['key_result_change_value']);
-                $currentValue = (int)$post['ActionResult']['key_result_before_value'] + (int)$post['ActionResult']['key_result_change_value'];
+                $displayChangeValue .= AppUtil::formatBigFloat($changeValue);
+
+                $currentValue = bcadd($post['ActionResult']['key_result_before_value'], $changeValue, 3);
+
                 $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
                 $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']),
                     $unitId);
