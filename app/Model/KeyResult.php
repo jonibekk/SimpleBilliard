@@ -590,7 +590,6 @@ class KeyResult extends AppModel
         unset($current_kr['KeyResult']['modified']);
         //progressを元に戻し、current_valueにstart_valueをsetする
         $current_kr['KeyResult']['progress'] = 0;
-        $current_kr['KeyResult']['current_value'] = $current_kr['KeyResult']['start_value'];
         $this->save($current_kr);
         return true;
     }
