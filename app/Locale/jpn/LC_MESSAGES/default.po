@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-13 14:23+0900\n"
+"PO-Revision-Date: 2016-12-13 17:08+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -950,10 +950,10 @@ msgid "More Previous"
 msgstr "もっと前"
 
 msgid "Complete"
-msgstr "達成"
+msgstr "完了"
 
 msgid "Incomplete"
-msgstr "未達成"
+msgstr "未完了"
 
 msgid "Creation Date"
 msgstr "新着順"
@@ -2439,6 +2439,12 @@ msgstr "名前"
 
 msgid "Level of achievement"
 msgstr "達成度"
+
+msgid "Achieved"
+msgstr "達成"
+
+msgid "Unachieved"
+msgstr "未達成"
 
 msgid "View Circles"
 msgstr "サークルを見る"

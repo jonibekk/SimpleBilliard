@@ -74,8 +74,8 @@ class Goal extends AppModel
             ],
             'progress' => [
                 'all'        => __("All"),
-                'complete'   => __("Complete"),
-                'incomplete' => __("Incomplete")
+                'achieved'   => __("Achieved"),
+                'unachieved' => __("Unachieved")
             ],
             'order'    => [
                 'new'      => __("Creation Date"),
@@ -1697,10 +1697,10 @@ class Goal extends AppModel
 
         //進捗指定
         switch (Hash::get($conditions, 'progress')) {
-            case 'complete' :
+            case 'achieved' :
                 $options['conditions']['NOT']['Goal.completed'] = null;
                 break;
-            case 'incomplete' :
+            case 'unachieved' :
                 $options['conditions']['Goal.completed'] = null;
                 break;
         }

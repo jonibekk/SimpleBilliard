@@ -58,8 +58,8 @@ class GoalSearchFilter extends React.Component {
             <select name="progress" className="form-control gl" onChange={this.onChange.bind(this)}
                     defaultValue={search_conditions.progress}>
               <option value="">{__("All")}</option>
-              <option value="complete">{__("Complete")}</option>
-              <option value="incomplete">{__("Incomplete")}</option>
+              <option value="achieved">{__("Achieved")}</option>
+              <option value="unachieved">{__("Unachieved")}</option>
             </select>
           </div>
         </div>
@@ -95,4 +95,3 @@ GoalSearchFilter.defaultProps = {
 }
 
 export default connect()(GoalSearchFilter);
-
