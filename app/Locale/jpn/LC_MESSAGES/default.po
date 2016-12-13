@@ -880,8 +880,14 @@ msgstr "APIが見つかりません。"
 msgid "CSRF Error!"
 msgstr "CSRFエラーです。"
 
-msgid "You can not reduce current value."
+msgid "You can not decrease current value."
 msgstr "現在値は減らせません。"
+
+msgid "You can not increase current value."
+msgstr "現在値は増やせません。"
+
+msgid "Current value over target value."
+msgstr "現在値が目標値を超えています。"
 
 msgid "Images"
 msgstr "画像"
