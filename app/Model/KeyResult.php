@@ -666,7 +666,7 @@ class KeyResult extends AppModel
      */
     function validateKrPOST($data, $detachRequired = false, $goalId = null)
     {
-        $validationBackup = $this->validate;
+        $validationBackup = $validation = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
         if ($detachRequired) {
             $validation = Hash::remove($this->validate, '{s}.{s}.required');
