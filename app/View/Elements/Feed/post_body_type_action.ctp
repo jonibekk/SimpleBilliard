@@ -53,7 +53,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
             'user_id'    => $post['User']['id']
         ]) ?>">
             <?=
-            $this->Html->image('ajax-loader.gif',
+            $this->Html->image('pre-load.svg',
                 [
                     'class'         => 'lazy feed-img',
                     'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
@@ -286,7 +286,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
     <?php if (!$without_add_comment): ?>
         <div class="col-xxs-12 box-align feed-contents comment-contents">
             <?=
-            $this->Html->image('ajax-loader.gif',
+            $this->Html->image('pre-load.svg',
                 [
                     'class'         => 'lazy comment-img',
                     'data-original' => $this->Upload->uploadUrl($my_prof,
