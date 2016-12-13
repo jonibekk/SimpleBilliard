@@ -89,8 +89,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                 class="modal-key-result-headings-description"><?= __("How much?") ?></span></h5>
                     </div>
                     <div class="goal-set-input">
-                        <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
-                             style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
+                        <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>">
                             <div class="goals-create-layout-flex">
                                 <div class="relative">
                                     <div class="goals-create-input-form-unit-box is-disable is-radius">
@@ -109,7 +108,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                     </div>
                                     <span class="goals-create-input-form-unit-label"><?= $krShortValueUnitList[$unit] ?></span>
                                 </div>
-                                <div class="goals-create-layout-flex mod-child">
+                                <div class="goals-create-layout-flex mod-child" style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
                                     <?=
                                     $this->Form->input(null,
                                         [

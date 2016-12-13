@@ -112,7 +112,7 @@
                                 </div>
                                 <span class="goals-create-input-form-unit-label js-display-short-unit"><?= $krShortValueUnitList[KeyResult::UNIT_PERCENT] ?></span>
                             </div>
-                            <div class="goals-create-layout-flex mod-child">
+                            <div class="goals-create-layout-flex mod-child js-kr-start-end-value">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
                                     [
@@ -280,11 +280,18 @@
 $(function() {
   var kr_short_value_unit_list = <?= isset($krShortValueUnitList) ? json_encode($krShortValueUnitList
   ) : "''" ?>;
-  console.log(kr_short_value_unit_list);
   $(document).on('change', '.js-select-value-unit', function() {
       var selected_unit = $(this).val();
       $('.js-display-short-unit').html(kr_short_value_unit_list[selected_unit]);
-  });
+
+      var no_value = '<?= KeyResult::UNIT_BINARY ?>';
+      var start_end_area = $('.js-kr-start-end-value');
+      if (selected_unit == no_value) {
+          start_end_area.hide();
+      } else {
+          start_end_area.show();
+      }
+   });
 });
 </script>
 <?= $this->App->viewEndComment() ?>
