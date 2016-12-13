@@ -6,7 +6,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
     <?= $this->App->viewStartComment() ?>
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <?php if (!$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
+            <?php if ($post['Post']['type'] != Post::TYPE_ACTION && !$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>

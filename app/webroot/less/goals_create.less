@@ -199,6 +199,9 @@
         height: 38px;
         width: 60px;
         margin: 0 10px 10px 0;
+        &.is-disable {
+          background: @subColor5 url(../img/svg/icon_arrow_open.svgz) right center / 24px 12px no-repeat !important;
+        }
       }
 
       // step4 tkr入力
@@ -220,11 +223,14 @@
             width: 30px;
             height: 38px;
           }
+          &[disabled] {
+            background-color: @subColor5;
+          }
         }
       }
 
       &.disabled {
-        background: @baseLightGray;
+        background-color: @baseLightGray;
       }
     }
 

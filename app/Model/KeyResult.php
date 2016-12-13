@@ -192,7 +192,11 @@ class KeyResult extends AppModel
     function requiredCaseExistUnit($val)
     {
         $val = array_shift($val);
-        if ($this->data['KeyResult']['value_unit'] == self::UNIT_BINARY) {
+        $unitId = Hash::get($this->data, 'KeyResult.value_unit');
+        if (empty($unitId)) {
+            return true;
+        }
+        if ($unitId == self::UNIT_BINARY) {
             return true;
         }
         if ($val === "") {
@@ -534,10 +538,10 @@ class KeyResult extends AppModel
             return false;
         }
 
+        $kr = $this->getById(Hash::get($data, 'KeyResult.id'));
         //on/offの場合は現在値0,目標値1をセット
-        if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
+        if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
             $data['KeyResult']['start_value'] = 0;
-            $data['KeyResult']['current_value'] = 0;
             $data['KeyResult']['target_value'] = 1;
         }
 

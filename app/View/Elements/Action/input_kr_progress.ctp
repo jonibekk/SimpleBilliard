@@ -20,7 +20,7 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                                class="js-kr-progress-check-complete disable-change-warning"
                                data-size="small" data-off-text="incomplete"
                                data-on-text="complete"
-                               value="100"
+                               value="1"
                                 />
 
                     <?php else: ?>

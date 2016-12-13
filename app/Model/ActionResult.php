@@ -158,9 +158,12 @@ class ActionResult extends AppModel
             ],
         ],
         'key_result_current_value' => [
+            'notBlank'           => [
+                'rule'     => 'notBlank',
+                'required' => true
+            ],
             'validateKrProgress' => [
                 'rule'     => ['validateKrProgress'],
-                'required' => true
             ],
         ],
     ];
@@ -211,7 +214,7 @@ class ActionResult extends AppModel
 
         // 単位が完了/未完了の場合
         if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
-            return in_array($currentVal, [0, 100]);
+            return in_array($currentVal, [0, 1]);
         }
 
         // それ以外の単位
