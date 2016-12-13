@@ -162,6 +162,9 @@ class ActionResult extends AppModel
                 'rule'     => 'notBlank',
                 'required' => true
             ],
+            'decimal'         => [
+                'rule' => ['decimal'],
+            ],
             'validateKrProgress' => [
                 'rule'     => ['validateKrProgress'],
             ],
@@ -201,6 +204,7 @@ class ActionResult extends AppModel
      */
     function validateKrProgress(array $val): bool
     {
+        $errMsg = __("Invalid Request.");
         $currentVal = array_shift($val);
         if ($currentVal === "") {
             return true;
@@ -209,12 +213,17 @@ class ActionResult extends AppModel
         $krId = Hash::get($this->data, 'ActionResult.key_result_id');
         $kr = $this->KeyResult->getById($krId);
         if (empty($kr)) {
+            $this->invalidate('key_result_current_value', $errMsg);
             return false;
         }
 
         // 単位が完了/未完了の場合
         if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
-            return in_array($currentVal, [0, 1]);
+            if (!in_array($currentVal, [0, 1])) {
+                $this->invalidate('key_result_current_value', $errMsg);
+                return false;
+             }
+             return true;
         }
 
         // それ以外の単位
@@ -224,19 +233,16 @@ class ActionResult extends AppModel
         if ($currentDiff == 0) {
             return true;
         }
-        // KRの進捗値の増加の方向が合っているか
-        if (($isProgressIncrease && $currentDiff < 0) || (!$isProgressIncrease && $currentDiff > 0)) {
-            $this->invalidate('key_result_current_value',
-                __("You can not change the direction of KR progress increase or decrease."));
-            return false;
-        }
-        // KRの進捗値の減少の方向が合っているか
-        if (($isProgressIncrease && $currentVal > $kr['target_value']) || (!$isProgressIncrease && $currentVal < $kr['target_value'])) {
-            $this->invalidate('key_result_current_value',
-                __("You can not input KR current value over KR target value."));
-            return false;
-        }
 
+        /* 現在値が減っていないか */
+        if ($isProgressIncrease && $currentDiff < 0) {
+            $this->invalidate('key_result_current_value', __("You can not reduce current value."));
+            return false;
+        }
+        if (!$isProgressIncrease && $currentDiff > 0) {
+            $this->invalidate('key_result_current_value', __("You can not reduce current value."));
+            return false;
+        }
         return true;
     }
 

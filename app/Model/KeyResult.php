@@ -270,7 +270,7 @@ class KeyResult extends AppModel
             $this->invalidate('target_value', __("You can not change target value less than current value"));
             return false;
         }
-        $this->log($targetVal);
+
         if (!$isProgressIncrease && $targetVal > $kr['current_value']) {
             $this->invalidate('target_value', __("You can not change target value less than current value"));
             return false;

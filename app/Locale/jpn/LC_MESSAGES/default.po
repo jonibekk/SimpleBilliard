@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-09 09:50+0900\n"
+"PO-Revision-Date: 2016-12-13 14:23+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -215,6 +215,18 @@ msgstr "自己評価を確定しました。"
 msgid "Submitted the evaluation by evaluator."
 msgstr "評価者の評価を確定しました。"
 
+msgid "Internal Server Error."
+msgstr "サーバーエラー"
+
+msgid "Completed a goal."
+msgstr "ゴールを完了にしました。"
+
+msgid "Not exist"
+msgstr "存在しません。"
+
+msgid "You have no permission."
+msgstr "権限がありません。"
+
 msgid "Deleted a goal."
 msgstr "ゴールを削除しました。"
 
@@ -223,9 +235,6 @@ msgstr "コラボしました。"
 
 msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
-
-msgid "You have no permission."
-msgstr "権限がありません。"
 
 msgid "Added a key result."
 msgstr "達成要素を追加しました。"
@@ -247,9 +256,6 @@ msgstr "達成要素の保存に失敗しました。"
 
 msgid "Updated KR."
 msgstr "達成要素を更新しました。"
-
-msgid "Completed a goal."
-msgstr "ゴールを完了にしました。"
 
 msgid "Completed a key result."
 msgstr "成果を完了にしました。"
@@ -808,14 +814,8 @@ msgstr "お探しのページが見つかりませんでした。"
 msgid "Error, data conflicted."
 msgstr ""
 
-msgid "Internal Server Error."
-msgstr "サーバーエラー"
-
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
-
-msgid "Not exist"
-msgstr "存在しません。"
 
 msgid "Failed to upload image."
 msgstr "画像アップロードに失敗しました。"
@@ -880,11 +880,8 @@ msgstr "APIが見つかりません。"
 msgid "CSRF Error!"
 msgstr "CSRFエラーです。"
 
-msgid "You can not change the direction of KR progress increase or decrease."
-msgstr "進捗の増加/減少の方向は変更できません。"
-
-msgid "You can not input KR current value over KR target value."
-msgstr "進捗現在値が目標値を超えることはできません。"
+msgid "You can not reduce current value."
+msgstr "現在値は減らせません。"
 
 msgid "Images"
 msgstr "画像"
@@ -2634,10 +2631,10 @@ msgid "No one in this circle."
 msgstr "このサークルにはメンバーがいません。"
 
 msgid "Collabo"
-msgstr "コラボ"
+msgstr ""
 
 msgid "Edit Collabo"
-msgstr "コラボを編集"
+msgstr ""
 
 msgid "eg) Increasing the number of users"
 msgstr "例） ユーザー数を増やす"
@@ -2910,7 +2907,7 @@ msgid "No one read this comment."
 msgstr "まだ、このコメントを読んだ人はいません。"
 
 msgid "Read"
-msgstr "既読"
+msgstr ""
 
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
@@ -2918,26 +2915,26 @@ msgstr "まだ、このメッセージを読んだ人はいません。"
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
 
-msgid "Edit post"
-msgstr "投稿を編集"
-
 msgid "Delete the action"
 msgstr "アクションを削除"
 
 msgid "Do you really want to delete this action?"
 msgstr "本当にこのアクションを削除しますか？"
 
-msgid "Delete post"
-msgstr "投稿を削除"
-
-msgid "Do you really want to delete this post?"
-msgstr "本当にこの投稿を削除しますか？"
-
 msgid "Comments"
 msgstr "コメント"
 
 msgid "(%s)"
 msgstr "(%s)"
+
+msgid "Edit post"
+msgstr "投稿を編集"
+
+msgid "Delete post"
+msgstr "投稿を削除"
+
+msgid "Do you really want to delete this post?"
+msgstr "本当にこの投稿を削除しますか？"
 
 msgid "Team Vision"
 msgstr "チームビジョン"
@@ -2966,6 +2963,12 @@ msgstr "ゴールを削除"
 msgid "Do you really want to delete this goal?"
 msgstr "本当にこのゴールを削除しますか？"
 
+msgid "Achieve goal"
+msgstr "ゴールを達成"
+
+msgid "Do you really want to complete this goal?"
+msgstr ""
+
 msgid "Edit Top Key Result"
 msgstr "トップKRを編集する"
 
@@ -2986,9 +2989,6 @@ msgstr "達成要素を削除する"
 
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこの成果を削除しますか？"
-
-msgid "Clear"
-msgstr "クリア"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -3094,9 +3094,6 @@ msgstr ""
 
 msgid "Add Reference Values"
 msgstr "基準を追加する"
-
-msgid "Achieve goal"
-msgstr "ゴールを達成"
 
 msgid "Edit a goal"
 msgstr "ゴール編集"
@@ -4823,10 +4820,10 @@ msgstr "email"
 msgid "emailIsUnique"
 msgstr "emailUnique"
 
-msgid "validateEditProgressStartEnd"
+msgid "requiredCaseExistUnit"
 msgstr ""
 
-msgid "requiredCaseExistUnit"
+msgid "validateEditProgressStartEnd"
 msgstr ""
 
 msgid "isUnique"
@@ -4861,6 +4858,40 @@ msgstr "passwordSameCheck"
 
 msgid "imageMinWidthHeight"
 msgstr ""
+
+#~ msgid ""
+#~ "You can not change the direction of KR progress increase or decrease."
+#~ msgstr "進捗の増加/減少の方向は変更できません。"
+
+#~ msgid "You can not input KR current value over KR target value."
+#~ msgstr "進捗現在値が目標値を超えることはできません。"
+
+#~ msgid "You can not change current value less than latest"
+#~ msgstr "今の現在値より低い値に変更はできません。"
+
+#~ msgid "Collaborate"
+#~ msgstr "コラボる"
+
+#~ msgid "Edit Collaborate"
+#~ msgstr "コラボを編集"
+
+#~ msgid "%s members read this message."
+#~ msgstr "このメッセージを%s人が読みました。"
+
+#~ msgid "%s members Like! this post."
+#~ msgstr "この投稿を%s人が「いいね！」と言っています。"
+
+#~ msgid "%s people read this post."
+#~ msgstr "この投稿を%s人が読みました。"
+
+#~ msgid "Clear"
+#~ msgstr "クリア"
+
+#~ msgid "Go to Goal page"
+#~ msgstr "ゴールページへ"
+
+#~ msgid "Collaboration"
+#~ msgstr "コラボ"
 
 #~ msgid "You have no goal."
 #~ msgstr "今期のゴールがありません。"
