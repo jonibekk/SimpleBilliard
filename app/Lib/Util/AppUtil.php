@@ -41,15 +41,16 @@ class AppUtil
      * 1234.123000 -> 1234.123
      * 1234567890 -> 1234567890
      *
-     * @param float $floatNum
+     * @param string $val
      *
      * @return string
      */
-    static function formatBigFloat(float $floatNum) : string
+    static function formatBigFloat(string $val) : string
     {
-        $floatDeletedIndex = sprintf("%.3f", $floatNum);
-        $floatDeletedRightZero = preg_replace("/\.?0*$/", '', $floatDeletedIndex);
-        return $floatDeletedRightZero;
+        if (!preg_match('/\./', $val)) {
+            return $val;
+        }
+        return preg_replace('/\.?0+$/', '', $val);
     }
 
     /**

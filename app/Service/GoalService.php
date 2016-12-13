@@ -435,7 +435,7 @@ class GoalService extends AppService
 
         // TKR バリデーション
         if (empty($fields) || in_array('key_result', $fields)) {
-            $krValidation = $KeyResult->validateKrPOST($data['key_result']);
+            $krValidation = $KeyResult->validateKrPOST($data['key_result'], false, $goalId);
 
             if ($krValidation !== true) {
                 $validationErrors['key_result'] = $this->validationExtract($krValidation);

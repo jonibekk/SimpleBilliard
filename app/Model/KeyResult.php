@@ -660,16 +660,24 @@ class KeyResult extends AppModel
      *
      * @param      $data
      * @param bool $detachRequired
+     * @param null $goalId
      *
      * @return array|true
      */
-    function validateKrPOST($data, $detachRequired = false)
+    function validateKrPOST($data, $detachRequired = false, $goalId = null)
     {
         $validationBackup = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
         if ($detachRequired) {
-            $this->validate = Hash::remove($this->validate, '{s}.{s}.required');
+            $validation = Hash::remove($this->validate, '{s}.{s}.required');
         }
+        // 編集時
+        if (!is_null($goalId)) {
+            $tkr = $this->getTkr($goalId);
+            $data['id'] = Hash::get($tkr, 'KeyResult.id');
+            $validation = Hash::remove($this->validate, '{s}.{s}.on');
+        }
+        $this->validate = $validation;
         $this->set($data);
         if ($this->validates()) {
             $this->validate = $validationBackup;
