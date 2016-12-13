@@ -1440,12 +1440,16 @@ class GoalsController extends AppController
         }
         $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        // アクション可能なゴール数
+        $userId = $this->Auth->user('id');
+        $canActionGoals = $this->Goal->findCanAction($userId);
+        $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
         // 完了アクションが可能なゴールIDリスト
         $canCompleteGoalIds = Hash::extract(
-            $this->Goal->findCanComplete($this->my_uid), '{n}.id'
+            $this->Goal->findCanComplete($userId), '{n}.id'
         );
 
-        $this->set(compact('goals', 'type', 'current_term','canCompleteGoalIds'));
+        $this->set(compact('goals', 'type', 'current_term','canActionGoals','canCompleteGoalIds'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
