@@ -2913,7 +2913,7 @@ msgid "No one read this comment."
 msgstr "まだ、このコメントを読んだ人はいません。"
 
 msgid "Read"
-msgstr ""
+msgstr "既読"
 
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
