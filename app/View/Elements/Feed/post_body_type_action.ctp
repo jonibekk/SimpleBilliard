@@ -133,17 +133,27 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']),
                     $unitId);
                 ?>
-                <span class="feed-progress-strong">
-                    <?= $currentValue ?>
-                    &nbsp;(
-                    <?php if ($displayChangeValue === '+0'): ?>
-                        </span><?= $displayChangeValue ?><span class="feed-progress-strong">
+                <?php if ($unitId == KeyResult::UNIT_BINARY): ?>
+                    <?php if ($changeValue == 0): ?>
+                        <?= __('Incomplete') ?>
                     <?php else: ?>
-                        <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                        <span class="feed-progress-strong">
+                            <?= __('Complete') ?>
+                        </span>
                     <?php endif; ?>
-                    )&nbsp;
-                </span>
-                / <?= $targetValue ?>
+                <?php else: ?>
+                    <span class="feed-progress-strong">
+                        <?= $currentValue ?>
+                        &nbsp;(
+                        <?php if ($displayChangeValue === '+0'): ?>
+                            </span><?= $displayChangeValue ?><span class="feed-progress-strong">
+                        <?php else: ?>
+                            <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                        <?php endif; ?>
+                        )&nbsp;
+                    </span>
+                    / <?= $targetValue ?>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     <?php endif; ?>
