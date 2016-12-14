@@ -92,6 +92,19 @@ class ActionsController extends ApiController
             return $this->_getResponseBadFail(__("Not exist"));
         }
 
+        // 画像アップロードチェック
+        $fileIds = $this->request->data('file_id');
+        if (empty($fileIds) || !is_array($fileIds)) {
+            return $this->_getResponseBadFail(__("Failed to upload image."));
+        }
+        $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
+        $mimeType = Hash::get($file, 'info.type');
+        if (!in_array($mimeType, ['image/jpeg', 'image/gif', 'image/png'])) {
+            return $this->_getResponseBadFail(__("Failed to upload. jpg, png and gif are allowed."));
+
+        }
+
+
         // アクションのフォームバリデーション
         $action = Hash::get($data, 'ActionResult');
         $this->Goal->ActionResult->validate = $this->Goal->ActionResult->postValidate;
@@ -111,12 +124,6 @@ class ActionsController extends ApiController
         $kr = $KeyResultService->get($krId);
         if ($krBeforeValue != Security::hash(Hash::get($kr, 'current_value'))) {
             return $this->_getResponseConflict("KR progress has been updated by another user. Please try again.");
-        }
-
-        // 画像アップロードチェック
-        $fileIds = $this->request->data('file_id');
-        if (empty($fileIds) || !is_array($fileIds)) {
-            return $this->_getResponseBadFail(__("Failed to upload image."));
         }
 
         // ゴールメンバーか
