@@ -768,7 +768,7 @@ class GoalsController extends AppController
             /* アクション時に進めたKR進捗分を戻す */
             $krPrgChangeVal = $action['key_result_change_value'];
             $krId = $action['key_result_id'];
-            if (!is_null($krPrgChangeVal) && !empty($krId)) {
+            if (!is_null($krPrgChangeVal) && $krPrgChangeVal != 0 && !empty($krId)) {
                 $kr = $this->Goal->KeyResult->getById($krId);
                 if (empty($kr)) {
                     throw new RuntimeException(__("No exist kr."));
@@ -777,6 +777,9 @@ class GoalsController extends AppController
                     'id' => $krId,
                     'current_value' => $kr['current_value'] - $krPrgChangeVal
                 ];
+                if (!empty($kr['completed'])) {
+                    $updateKr['completed'] = null;
+                }
                 // KR更新
                 $this->Goal->KeyResult->save($updateKr, false);
             }
