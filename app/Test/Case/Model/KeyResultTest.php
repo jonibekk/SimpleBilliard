@@ -182,19 +182,17 @@ class KeyResultTest extends GoalousTestCase
     function testSaveEdit()
     {
         $this->setDefault();
-
         $this->assertFalse($this->KeyResult->saveEdit([]));
 
         $data = [
             'KeyResult' => [
+                'id'      => 1,
                 'user_id'      => 1,
                 'team_id'      => 1,
                 'name'         => 'test',
                 'goal_id'      => 8,
-                'value_unit'   => KeyResult::UNIT_BINARY,
                 'start_date'   => '2015/7/7',
                 'end_date'     => '2015/10/7',
-                'start_value'  => 0,
                 'target_value' => 100,
             ]
         ];
