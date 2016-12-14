@@ -189,9 +189,7 @@ export function initInputData(inputData, page, data) {
       }
       break;
     case Page.STEP3:
-      if (!inputData.term_type && data.terms.length > 0) {
-        inputData["term_type"] = data.terms[0].type
-      }
+      inputData["term_type"] = 'current'
       if (!inputData.priority && data.priorities.length > 0) {
         inputData["priority"] = KeyResult.Priority.DEFAULT;
       }

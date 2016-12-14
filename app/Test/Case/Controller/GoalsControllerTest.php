@@ -894,14 +894,6 @@ class GoalsControllerTest extends GoalousControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetNewActionFormSuccess()
-    {
-        $this->_getGoalsCommonMock();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_new_action_form/goal_id:1/ar_count:9', ['method' => 'GET']);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-    }
-
     function testCompleteKrSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();

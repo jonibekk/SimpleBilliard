@@ -20,6 +20,8 @@ App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
+// TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
+App::uses('NumberExHelper', 'View/Helper');
 
 /**
  * Class GoalService
@@ -435,7 +437,7 @@ class GoalService extends AppService
 
         // TKR バリデーション
         if (empty($fields) || in_array('key_result', $fields)) {
-            $krValidation = $KeyResult->validateKrPOST($data['key_result']);
+            $krValidation = $KeyResult->validateKrPOST($data['key_result'], false, $goalId);
 
             if ($krValidation !== true) {
                 $validationErrors['key_result'] = $this->validationExtract($krValidation);
@@ -476,6 +478,7 @@ class GoalService extends AppService
 
     /**
      * ゴール一覧をビュー用に整形
+     * TODO:引数に依存しすぎている。渡す側は＄goalsにKeyResultやTargetCollaboを含めなきゃいけないことがわからない
      *
      * @param  array $goals [description]
      *
@@ -504,6 +507,8 @@ class GoalService extends AppService
     /**
      * ゴールの進捗をキーリザルト一覧から取得
      *
+     * TODO:将来的にゴールIDのみを引数として渡し、そのゴールIDから各KR取得→KR進捗率計算→ゴール進捗率計算の順に処理を行うようにする。またキャッシュ化も必要。
+     *
      * @param  array $key_results [description]
      *
      * @return array $res
@@ -513,10 +518,33 @@ class GoalService extends AppService
         $res = 0;
         $target_progress_total = 0;
         $current_progress_total = 0;
+        $NumberExHelper = new NumberExHelper(new View());
+
+        $errFlg = false;
         foreach ($key_results as $key_result) {
             $target_progress_total += $key_result['priority'] * 100;
-            $current_progress_total += $key_result['priority'] * $key_result['progress'];
+            if (!Hash::check($key_result, 'start_value')
+                || !Hash::check($key_result, 'target_value')
+                || !Hash::check($key_result, 'current_value'))
+            {
+                $errFlg = true;
+                $progress = 0;
+            } else {
+                $progress = $NumberExHelper->calcProgressRate($key_result['start_value'], $key_result['target_value'], $key_result['current_value']);
+            }
+            $current_progress_total += $key_result['priority'] * $progress;
         }
+
+        // 本メソッドを呼ぶ箇所が多いため抜け漏れを検知する為にtrycatchを入れる
+        try {
+            if ($errFlg) {
+                throw new Exception(sprintf("Not found field to calc progress    %s", var_export(compact('key_results'), true)));
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
         if ($target_progress_total != 0) {
             $res = round($current_progress_total / $target_progress_total, 2) * 100;
         }
@@ -638,4 +666,56 @@ class GoalService extends AppService
         }
         return true;
     }
+
+    /**
+     * アクション可能なゴール取得
+     *
+     * @param int $userId
+     *
+     * @return array
+     */
+    function findCanAction(int $userId) : array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        // コラボも含めて自分のゴールリスト取得
+        return $Goal->findCanAction($userId);
+    }
+
+    /**
+     * ゴール完了
+     *
+     * @param $goalId
+     *
+     * @return bool
+     */
+    function complete(int $goalId) : bool
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+        try {
+            $Goal->begin();
+
+            // ゴール完了
+            $Goal->complete($goalId);
+            // ゴール完了の投稿
+            if (!$Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $goalId, null)) {
+                throw new Exception("Create goal complete post. goalId:".$goalId);
+            }
+
+            $Goal->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $Goal->rollback();
+            return false;
+        }
+        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        return true;
+
+    }
+
 }

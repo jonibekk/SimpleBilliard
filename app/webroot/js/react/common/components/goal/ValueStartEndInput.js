@@ -10,7 +10,7 @@ export default class ValueStartEndInput extends React.Component {
     // intput type="number"ではmaxLengthが無視されるため、
     // ここで入力文字数を制限する
     const length = String(e.target.value).length
-    if(length > KeyResult.MAX_LENGTH_VALUE) {
+    if (length > KeyResult.MAX_LENGTH_VALUE) {
       return false;
     }
 
@@ -18,7 +18,7 @@ export default class ValueStartEndInput extends React.Component {
   }
 
   render() {
-    const {inputData} = this.props
+    const {inputData, isEdit} = this.props
     // 単位無しだったらエリア非表示
     if (inputData.value_unit == KeyResult.ValueUnit.NONE) {
       return null
@@ -31,7 +31,9 @@ export default class ValueStartEndInput extends React.Component {
                placeholder={0}
                type="text"
                onChange={this.onChange.bind(this)}
-               maxLength={KeyResult.MAX_LENGTH_VALUE} />
+               maxLength={KeyResult.MAX_LENGTH_VALUE}
+               disabled={isEdit}
+        />
         <span className="goals-create-input-form-tkr-range-symbol">
           <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
         </span>
@@ -40,7 +42,7 @@ export default class ValueStartEndInput extends React.Component {
                placeholder={100}
                type="text"
                onChange={this.onChange.bind(this)}
-               maxLength={KeyResult.MAX_LENGTH_VALUE} />
+               maxLength={KeyResult.MAX_LENGTH_VALUE}/>
       </div>
     )
 
@@ -48,4 +50,8 @@ export default class ValueStartEndInput extends React.Component {
 }
 ValueStartEndInput.propTypes = {
   inputData: React.PropTypes.object.isRequired,
+  isEdit: React.PropTypes.bool,
+};
+ValueStartEndInput.defaultProps = {
+  isEdit: false
 };

@@ -40,7 +40,7 @@ export default class Top extends React.Component {
         index: TYPE_ACTION,
         subject: __('Do an action'),
         explain: __('Add an Action for your Goal.'),
-        link: '/setup/action/image'
+        link: '/goals/add_action'
       },
       {
         index: TYPE_CIRCLE_JOIN,
@@ -121,7 +121,7 @@ export default class Top extends React.Component {
                 )
               }
               // ゴール作成の場合はリダイレクト
-              if (text.index == TYPE_GOAL) {
+              if (text.index == TYPE_GOAL || text.index == TYPE_ACTION) {
                 return (
                   <a href={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
                     {content()}
