@@ -69,7 +69,7 @@ class NumberExHelper extends AppHelper
      *
      * @return mixed|string
      */
-    public function formatProgressValue(float $val, int $unit, bool $isEnd = false)
+    public function formatProgressValue(string $val, int $unit, bool $isEnd = false)
     {
         $val = AppUtil::formatBigFloat($val);
         if ($unit == KeyResult::UNIT_BINARY) {
