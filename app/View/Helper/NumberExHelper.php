@@ -69,11 +69,11 @@ class NumberExHelper extends AppHelper
      *
      * @return mixed|string
      */
-    public function formatProgressValue(float $val, int $unit, bool $isEnd = false)
+    public function formatProgressValue(string $val, int $unit)
     {
         $val = AppUtil::formatBigFloat($val);
         if ($unit == KeyResult::UNIT_BINARY) {
-            return $isEnd ? __("Complete") : __("Incomplete");
+            return !empty($val) ? __("Complete") : __("Incomplete");
         }
 
         $unitName = KeyResult::$UNIT[$unit];
@@ -92,14 +92,13 @@ class NumberExHelper extends AppHelper
      *
      * @param float $val
      * @param int   $unit
-     * @param bool  $isEnd
      *
      * @return mixed|string
      */
-    public function shortFormatProgressValue(float $val, int $unit, bool $isEnd = false)
+    public function shortFormatProgressValue(float $val, int $unit)
     {
         if ($unit == KeyResult::UNIT_BINARY) {
-            return $isEnd ? __("Complete") : __("Incomplete");
+            return !empty($val) ? __("Complete") : __("Incomplete");
         }
         $fmtVal = $this->formatHumanReadable(round($val));
         $unitName = KeyResult::$UNIT[$unit];
@@ -122,9 +121,9 @@ class NumberExHelper extends AppHelper
      *
      * @return int
      */
-    public function calcProgressRate(float $start, float $end, float $current) : int
+    public function calcProgressRate(string $start, string $end, string $current) : int
     {
-        if ($current == $end) {
+        if ($current >= $end) {
             return 100;
         }
         // 分母

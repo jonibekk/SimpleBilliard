@@ -536,6 +536,10 @@ class KeyResult extends AppModel
         }
 
         $kr = $this->getById(Hash::get($data, 'KeyResult.id'));
+        if (empty($kr)) {
+            $this->log(sprintf("Not exist kr %s", var_export($data, true)));
+            return false;
+        }
         //on/offの場合は現在値0,目標値1をセット
         if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
             $data['KeyResult']['start_value'] = 0;
@@ -590,7 +594,6 @@ class KeyResult extends AppModel
         unset($current_kr['KeyResult']['modified']);
         //progressを元に戻し、current_valueにstart_valueをsetする
         $current_kr['KeyResult']['progress'] = 0;
-        $current_kr['KeyResult']['current_value'] = $current_kr['KeyResult']['start_value'];
         $this->save($current_kr);
         return true;
     }

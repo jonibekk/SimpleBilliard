@@ -74,8 +74,8 @@ class Goal extends AppModel
             ],
             'progress' => [
                 'all'        => __("All"),
-                'complete'   => __("Complete"),
-                'incomplete' => __("Incomplete")
+                'achieved'   => __("Achieved"),
+                'unachieved' => __("Unachieved")
             ],
             'order'    => [
                 'new'      => __("Creation Date"),
@@ -1080,7 +1080,14 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'         => [
-                    'fields'     => ['KeyResult.id', 'KeyResult.progress', 'KeyResult.priority'],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.start_value',
+                        'KeyResult.target_value',
+                        'KeyResult.current_value',
+                    ],
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
@@ -1276,6 +1283,9 @@ class Goal extends AppModel
                         'KeyResult.progress',
                         'KeyResult.priority',
                         'KeyResult.completed',
+                        'KeyResult.start_value',
+                        'KeyResult.target_value',
+                        'KeyResult.current_value',
                     ],
                     'order'      => [
                         'KeyResult.progress ASC',
@@ -1513,6 +1523,9 @@ class Goal extends AppModel
                         'KeyResult.name',
                         'KeyResult.progress',
                         'KeyResult.priority',
+                        'KeyResult.start_value',
+                        'KeyResult.target_value',
+                        'KeyResult.current_value',
                         'KeyResult.completed',
                     ],
                     'order'  => ['KeyResult.completed' => 'asc'],
@@ -1697,10 +1710,10 @@ class Goal extends AppModel
 
         //進捗指定
         switch (Hash::get($conditions, 'progress')) {
-            case 'complete' :
+            case 'achieved' :
                 $options['conditions']['NOT']['Goal.completed'] = null;
                 break;
-            case 'incomplete' :
+            case 'unachieved' :
                 $options['conditions']['Goal.completed'] = null;
                 break;
         }

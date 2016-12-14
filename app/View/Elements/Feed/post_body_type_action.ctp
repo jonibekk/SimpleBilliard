@@ -53,7 +53,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
             'user_id'    => $post['User']['id']
         ]) ?>">
             <?=
-            $this->Html->image('ajax-loader.gif',
+            $this->Html->image('pre-load.svg',
                 [
                     'class'         => 'lazy feed-img',
                     'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
@@ -121,8 +121,6 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 $displayChangeValue = "";
                 if ($changeValue >= 0) {
                     $displayChangeValue .= '+';
-                } elseif ($changeValue < 0) {
-                    $displayChangeValue .= '-';
                 }
                 $unitId = $kr['value_unit'];
                 $displayChangeValue .= AppUtil::formatBigFloat($changeValue);
@@ -133,17 +131,27 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']),
                     $unitId);
                 ?>
-                <span class="feed-progress-strong">
-                    <?= $currentValue ?>
-                    &nbsp;(
-                    <?php if ($displayChangeValue === '+0'): ?>
-                        </span><?= $displayChangeValue ?><span class="feed-progress-strong">
+                <?php if ($unitId == KeyResult::UNIT_BINARY): ?>
+                    <?php if ($changeValue == 0): ?>
+                        <?= __('Incomplete') ?>
                     <?php else: ?>
-                        <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                        <span class="feed-progress-strong">
+                            <?= __('Complete') ?>
+                        </span>
                     <?php endif; ?>
-                    )&nbsp;
-                </span>
-                / <?= $targetValue ?>
+                <?php else: ?>
+                    <span class="feed-progress-strong">
+                        <?= $currentValue ?>
+                        &nbsp;(
+                        <?php if ($displayChangeValue === '+0'): ?>
+                            </span><?= $displayChangeValue ?><span class="feed-progress-strong">
+                        <?php else: ?>
+                            <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                        <?php endif; ?>
+                        )&nbsp;
+                    </span>
+                    / <?= $targetValue ?>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     <?php endif; ?>
@@ -286,7 +294,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
     <?php if (!$without_add_comment): ?>
         <div class="col-xxs-12 box-align feed-contents comment-contents">
             <?=
-            $this->Html->image('ajax-loader.gif',
+            $this->Html->image('pre-load.svg',
                 [
                     'class'         => 'lazy comment-img',
                     'data-original' => $this->Upload->uploadUrl($my_prof,
