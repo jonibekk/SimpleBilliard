@@ -52,3 +52,62 @@
   }
 }
 
+.krProgress {
+  padding: 4px 0;
+  cursor: pointer;
+  &-bar {
+    border-radius: 4px;
+    overflow: visible;
+    background-color: @slightGray;
+    text-align: center;
+    position: relative;
+    &Current {
+      //background-color: @subColor14;
+      .horizontal-gradient(#00a8e6, #407fdf);
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      &.is-incomplete {
+        border-radius: 4px 0 0 4px;
+        // 進捗率を0〜99%で表すために.rate-{0〜99}のclassのスタイルを生成
+        @iterations: 99;
+        .rate (@i) when (@i >= 0) {
+          &.mod-rate@{i} {
+            width: ~"@{i}%";
+          }
+          .rate(@i - 1);
+        }
+        .rate (@iterations);
+      }
+      &.is-complete {
+        border-radius: 4px;
+        width: 100%;
+      }
+    }
+  }
+  &-values {
+    display: flex;
+    color: @subColor3;
+    font-size: 1.1rem;
+    &Left {
+      display: block;
+      text-align: left;
+      flex: 1;
+    }
+    &Right {
+      display: block;
+      text-align: right;
+      flex: 1;
+    }
+  }
+  &-text {
+    position: relative;
+    z-index: 1;
+    color: #ffffff;
+    font-size: 1.1rem;
+  }
+
+}

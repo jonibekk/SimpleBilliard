@@ -539,47 +539,6 @@
   }
 }
 
-.goal-detail-kr-progress-bar-wrap {
-  border-radius: 4px;
-  overflow: visible;
-  background-color: @subColor3;
-  text-align: center;
-  position: relative;
-}
-
-.goal-detail-kr-progress-bar {
-  background-color: @keyColor;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  &.mod-incomplete {
-    border-radius: 4px 0 0 4px;
-    // 進捗率を0〜99%で表すために.rate-{0〜99}のclassのスタイルを生成
-    @iterations: 99;
-    .rate (@i) when (@i >= 0) {
-      &.rate-@{i} {
-        width: ~"@{i}%";
-      }
-      .rate(@i - 1);
-    }
-    .rate (@iterations);
-  }
-  &.mod-complete {
-    border-radius: 4px;
-    width: 100%;
-  }
-}
-
-.goal-detail-kr-progress-text {
-  position: relative;
-  z-index: 1;
-  color: #ffffff;
-  font-size: 12px;
-}
-
 .goal-detail-kr-flex {
   display: -webkit-flex;
   display: flex;

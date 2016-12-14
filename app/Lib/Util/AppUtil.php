@@ -37,6 +37,23 @@ class AppUtil
     }
 
     /**
+     * 少数/整数を表示用にフォーマットする
+     * 1234.123000 -> 1234.123
+     * 1234567890 -> 1234567890
+     *
+     * @param string $val
+     *
+     * @return string
+     */
+    static function formatBigFloat(string $val) : string
+    {
+        if (!preg_match('/\./', $val)) {
+            return $val;
+        }
+        return preg_replace('/\.?0+$/', '', $val);
+    }
+
+    /**
      * 連想配列か判定
      * メモリ増加を防ぐ為参照渡しとする
      *

@@ -22,7 +22,7 @@ $is_tkr = null;
     <?= $this->App->viewStartComment() ?>
     <?php if (!$without_dropdown_link): ?>
         <div class="btn-edit-kr-wrap pull-right dropdown">
-        <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
+        <a href="#" class="font_lightGray-gray font_14px"
            data-toggle="dropdown"
            id="download">
             <i class="fa fa-ellipsis-h btn-edit-kr"></i>
