@@ -17,7 +17,7 @@
 <div class="panel-body goal-detail-upper-panel">
     <div class="goal-detail-avatar-wrap">
         <?=
-        $this->Html->image('ajax-loader.gif',
+        $this->Html->image('pre-load.svg',
             [
                 'class'         => 'goal-detail-avatar lazy',
                 'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
@@ -86,7 +86,7 @@
                            'action'     => 'ajax_get_collabo_change_modal',
                            'goal_id'    => $goal['Goal']['id']
                        ]) ?>">
-                        <span class=""><?= __('Collaboration') ?></span>
+                        <span class=""><?= __("Collabo") ?></span>
                     </a>
                 </div>
             </div>

@@ -69,7 +69,7 @@ class GroupVisionTest extends GoalousTestCase
             'name'    => $name
         ];
         $this->GroupVision->save($data);
-        $res = $this->GroupVision->getGroupVision($team_id, 1);
+        $res = $this->GroupVision->findGroupVisions($team_id, 1);
         $this->assertEquals($res[0]['GroupVision']['name'], $name);
     }
 
@@ -107,58 +107,6 @@ class GroupVisionTest extends GoalousTestCase
         ];
         $res = $this->GroupVision->find('first', $options);
         $this->assertCount(0, $res);
-    }
-
-    function testConvertData()
-    {
-        $team_id = 999;
-        $group_id = 888;
-        $group_name = 'sdg';
-
-        $data = [
-            'team_id' => $team_id,
-            'id'      => $group_id,
-            'name'    => $group_name
-        ];
-        $this->GroupVision->Group->save($data);
-
-        $name = 'test';
-        $data = [
-            'team_id'  => $team_id,
-            'group_id' => $group_id,
-            'name'     => $name,
-        ];
-        $this->GroupVision->save($data);
-        $res = $this->GroupVision->getGroupVision($team_id, 1);
-        $convert_data = $this->GroupVision->convertData($team_id, $res);
-
-        $this->assertEquals($group_name, $convert_data[0]['GroupVision']['group_name']);
-    }
-
-    function testConvertDetailData()
-    {
-        $team_id = 999;
-        $group_id = 888;
-        $group_name = 'sdg';
-
-        $data = [
-            'team_id' => $team_id,
-            'id'      => $group_id,
-            'name'    => $group_name
-        ];
-        $this->GroupVision->Group->save($data);
-
-        $name = 'test';
-        $data = [
-            'team_id'  => $team_id,
-            'group_id' => $group_id,
-            'name'     => $name,
-        ];
-        $this->GroupVision->save($data);
-        $res = $this->GroupVision->getGroupVisionDetail($this->GroupVision->getLastInsertID(), 1);
-        $convert_data = $this->GroupVision->convertData($team_id, $res);
-
-        $this->assertEquals($group_name, $convert_data['GroupVision']['group_name']);
     }
 
     function _setDefault()

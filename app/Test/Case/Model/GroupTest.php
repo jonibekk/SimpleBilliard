@@ -57,7 +57,7 @@ class GroupTest extends GoalousTestCase
             'name'    => 'SDG'
         ];
         $this->Group->save($params);
-        $res = $this->Group->getByAllName($team_id);
+        $res = $this->Group->findAllList($team_id);
         $this->assertContains('SDG', $res);
     }
 

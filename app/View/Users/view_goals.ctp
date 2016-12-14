@@ -67,7 +67,7 @@
                             'goal_id'    => $goal['Goal']['id']
                         ]) ?>">
                             <?=
-                            $this->Html->image('ajax-loader.gif',
+                            $this->Html->image('pre-load.svg',
                                 [
                                     'class'         => 'lazy img-rounded profile-goals-img',
                                     'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
@@ -188,11 +188,11 @@
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
                                                 <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
-                                                    <?= $this->Html->image('ajax-loader.gif',
+                                                    <?= $this->Html->image('pre-load.svg',
                                                         [
                                                             'class'         => 'lazy',
-                                                            'width'         => 48,
-                                                            'height'        => 48,
+                                                            'width'         => "48px",
+                                                            'height'        => "48px",
                                                             'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
                                                                 "AttachedFile.attached",
                                                                 ['style' => 'x_small']),
@@ -205,11 +205,11 @@
                                                     <?php for ($i = 1; $i <= 5; $i++): ?>
                                                         <?php
                                                         if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
-                                                            echo $this->Html->image('ajax-loader.gif',
+                                                            echo $this->Html->image('pre-load.svg',
                                                                 [
                                                                     'class'         => 'lazy',
-                                                                    'width'         => 48,
-                                                                    'height'        => 48,
+                                                                    'width'         => "48px",
+                                                                    'height'        => "48px",
                                                                     'data-original' => $this->Upload->uploadUrl($action,
                                                                         "ActionResult.photo$i",
                                                                         ['style' => 'x_small']),

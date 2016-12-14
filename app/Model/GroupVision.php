@@ -114,20 +114,20 @@ class GroupVision extends AppModel
     /**
      * チームに所属するすべてのグループビジョンを取得
      *
-     * @param $team_id
-     * @param $active_flg
+     * @param int  $teamId
+     * @param bool $activeFlg
      *
-     * @return array|null
+     * @return array
      */
-    function getGroupVision($team_id, $active_flg)
+    function findGroupVisions(int $teamId, bool $activeFlg): array
     {
         $options = [
             'conditions' => [
-                'team_id'    => $team_id,
-                'active_flg' => $active_flg,
+                'team_id'    => $teamId,
+                'active_flg' => $activeFlg,
             ]
         ];
-        return $this->find('all', $options);
+        return (array)$this->find('all', $options);
     }
 
     /**
@@ -186,40 +186,22 @@ class GroupVision extends AppModel
     }
 
     /**
-     * AngularJSのテンプレート側から処理しやすく加工
+     * グループ名も含めグループビジョンを取得する
      *
-     * @param $team_id
-     * @param $data
+     * @param $id
      *
-     * @return mixed
+     * @return array|null
      */
-    function convertData($team_id, $data)
+    function findWithGroupById($id)
     {
-        $group_list = $this->Group->getByAllName($team_id);
-        $upload = new UploadHelper(new View());
-        $time = new TimeExHelper(new View());
-
-        if (isset($data['GroupVision']) === true) {
-            $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo',
-                ['style' => 'original']);
-            $data['GroupVision']['modified'] = $time->elapsedTime(h($data['GroupVision']['modified']));
-            if (isset($group_list[$data['GroupVision']['group_id']]) === true) {
-                $data['GroupVision']['group_name'] = $group_list[$data['GroupVision']['group_id']];
-            }
-
-        } else {
-            foreach ($data as $key => $group) {
-                $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'],
-                    'GroupVision.photo',
-                    ['style' => 'large']);
-                $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
-                if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
-                    $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']];
-                }
-            }
-        }
-
-        return $data;
+        $options = [
+            'conditions' => [
+                'GroupVision.id' => $id,
+            ],
+            'contain'    => ['Group']
+        ];
+        $res = $this->find('first', $options);
+        return $res;
     }
 
     /**

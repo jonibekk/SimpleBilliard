@@ -372,8 +372,9 @@ class GoalApprovalsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        $res = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
-        return $this->_getResponseSuccess($ApiGoalApprovalService->processGoalApprovalForResponse($res, $myUserId));
+        $goalMember = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
+        $res = $ApiGoalApprovalService->processGoalApprovalForResponse($goalMember, $myUserId);
+        return $this->_getResponseSuccess($res);
     }
 
     /**

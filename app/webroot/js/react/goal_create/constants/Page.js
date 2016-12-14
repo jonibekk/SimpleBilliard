@@ -28,6 +28,7 @@ export const VALIDATION_FIELDS = {
     "description",
     "end_date",
     "priority",
+    "terms"
   ],
 }
 export const INITIAL_DATA_TYPES = {

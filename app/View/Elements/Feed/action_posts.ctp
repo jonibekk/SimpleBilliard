@@ -103,7 +103,7 @@
                                                rel="lightbox"
                                                data-lightbox="ActionLightBoxPost_<?= $post['Post']['id'] ?>">
                                                 <?=
-                                                $this->Html->image('ajax-loader.gif',
+                                                $this->Html->image('pre-load.svg',
                                                     [
                                                         'class'         => 'lazy bd-s',
                                                         'data-original' => $this->Upload->uploadUrl($post,
@@ -144,13 +144,14 @@
                                 <div class="media">
                                     <div class="pull-left">
                                         <?=
-                                        $this->Html->image('ajax-loader.gif',
+                                        $this->Html->image('pre-load.svg',
                                             [
                                                 'class'         => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($post,
                                                     "Post.site_photo",
                                                     ['style' => 'small']),
                                                 'width'         => '80px',
+                                                'height'        => '80px',
                                                 'error-img'     => "/img/no-image-link.png",
                                             ]
                                         )
@@ -264,7 +265,7 @@
                 </div>
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <?=
-                    $this->Html->image('ajax-loader.gif',
+                    $this->Html->image('pre-load.svg',
                         [
                             'class'         => 'lazy comment-img',
                             'data-original' => $this->Upload->uploadUrl($my_prof,

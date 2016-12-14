@@ -29,7 +29,7 @@
         ]); ?>
         <?= $this->Form->hidden('circle_id', ['value' => $circle_member['CircleMember']['circle_id']]); ?>
         <div class="modal-body">
-            <?php if ($this->Expt->is('DisappearSettingShowAllFeed') === false): ?>
+            <?php if ($this->Expt->is(Experiment::NAME_DISAPPEAR_SETTING_SHOW_ALL_FEED) === false): ?>
                 <div class="row borderBottom">
                     <div class="col col-xxs-12 mpTB0">
                         <div class="comment-body modal-comment">

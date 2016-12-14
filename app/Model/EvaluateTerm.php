@@ -14,6 +14,7 @@ class EvaluateTerm extends AppModel
     const STATUS_EVAL_IN_PROGRESS = 1;
     const STATUS_EVAL_FROZEN = 2;
     const STATUS_EVAL_FINISHED = 3;
+
     const TYPE_CURRENT = 0;
     const TYPE_PREVIOUS = 1;
     const TYPE_NEXT = 2;
@@ -22,6 +23,9 @@ class EvaluateTerm extends AppModel
         self::TYPE_PREVIOUS,
         self::TYPE_NEXT,
     ];
+
+    const TERM_TYPE_CURRENT = 'current';
+    const TERM_TYPE_NEXT = 'next';
 
     private $previousTerm = [];
     private $currentTerm = [];
