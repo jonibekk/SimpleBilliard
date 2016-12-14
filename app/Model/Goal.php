@@ -1080,7 +1080,14 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'         => [
-                    'fields'     => ['KeyResult.id', 'KeyResult.progress', 'KeyResult.priority'],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.start_value',
+                        'KeyResult.target_value',
+                        'KeyResult.current_value',
+                    ],
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
@@ -1276,6 +1283,9 @@ class Goal extends AppModel
                         'KeyResult.progress',
                         'KeyResult.priority',
                         'KeyResult.completed',
+                        'KeyResult.start_value',
+                        'KeyResult.target_value',
+                        'KeyResult.current_value',
                     ],
                     'order'      => [
                         'KeyResult.progress ASC',
@@ -1513,6 +1523,9 @@ class Goal extends AppModel
                         'KeyResult.name',
                         'KeyResult.progress',
                         'KeyResult.priority',
+                        'KeyResult.start_value',
+                        'KeyResult.target_value',
+                        'KeyResult.current_value',
                         'KeyResult.completed',
                     ],
                     'order'  => ['KeyResult.completed' => 'asc'],
