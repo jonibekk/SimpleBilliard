@@ -485,7 +485,7 @@ class ActionResultTest extends GoalousTestCase
         $this->ActionResult->set($updateAction);
         $this->ActionResult->validates();
         $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
-        $expectErrMsg = __("You can not reduce current value.");
+        $expectErrMsg = __("You can not decrease current value.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
         // 現在値が減っていないか 進捗方向：減少
@@ -496,7 +496,7 @@ class ActionResultTest extends GoalousTestCase
         $this->ActionResult->set($updateAction);
         $this->ActionResult->validates();
         $err = Hash::get($this->ActionResult->validationErrors, 'key_result_current_value');
-        $expectErrMsg = __("You can not reduce current value.");
+        $expectErrMsg = __("You can not increase current value.");
         $this->assertTrue(in_array($expectErrMsg, $err));
     }
 
