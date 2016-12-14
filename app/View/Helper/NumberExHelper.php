@@ -123,7 +123,7 @@ class NumberExHelper extends AppHelper
      */
     public function calcProgressRate(string $start, string $end, string $current) : int
     {
-        if ($current >= $end) {
+        if ($current == $end) {
             return 100;
         }
         // 分母
