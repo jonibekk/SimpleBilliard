@@ -1,5 +1,5 @@
 <div class="tab-pane fade" id="ActionForm">
-    <?php if (count($canActionGoals) == 0): ?>
+    <?php if (!isset($canActionGoals) || count($canActionGoals) == 0)://メッセージ一覧ページでは$canActionGoalsがセットされない ?>
         <div class="post-panel-body plr_11px ptb_7px">
             <div class="alert alert-warning" role="alert">
                 <?= __('There is no goal that you can take action.') ?>
