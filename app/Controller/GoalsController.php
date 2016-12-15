@@ -138,8 +138,6 @@ class GoalsController extends AppController
         return true;
     }
 
-
-
     public function approval($type = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -765,20 +763,24 @@ class GoalsController extends AppController
             }
             $this->Goal->ActionResult->id = $arId;
             $this->Goal->ActionResult->delete();
-            $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($arId, AttachedFile::TYPE_MODEL_ACTION_RESULT);
+            $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($arId,
+                AttachedFile::TYPE_MODEL_ACTION_RESULT);
 
             /* アクション時に進めたKR進捗分を戻す */
             $krPrgChangeVal = $action['key_result_change_value'];
             $krId = $action['key_result_id'];
-            if (!is_null($krPrgChangeVal) && !empty($krId)) {
+            if (!is_null($krPrgChangeVal) && $krPrgChangeVal != 0 && !empty($krId)) {
                 $kr = $this->Goal->KeyResult->getById($krId);
                 if (empty($kr)) {
                     throw new RuntimeException(__("No exist kr."));
                 }
                 $updateKr = [
-                    'id' => $krId,
+                    'id'            => $krId,
                     'current_value' => $kr['current_value'] - $krPrgChangeVal
                 ];
+                if (!empty($kr['completed'])) {
+                    $updateKr['completed'] = null;
+                }
                 // KR更新
                 $this->Goal->KeyResult->save($updateKr, false);
             }
@@ -1442,7 +1444,19 @@ class GoalsController extends AppController
         }
         $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
-        $this->set(compact('goals', 'type', 'current_term'));
+        // アクション可能なゴール数
+        $userId = $this->Auth->user('id');
+        $canActionGoals = $this->Goal->findCanAction($userId);
+        $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
+        // 完了アクションが可能なゴールIDリスト
+        $canCompleteGoalIds = Hash::extract(
+            $this->Goal->findCanComplete($userId), '{n}.id'
+        );
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+
+        $this->set(compact('goals', 'type', 'current_term', 'canActionGoals', 'canCompleteGoalIds',
+            'isStartedEvaluation'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果

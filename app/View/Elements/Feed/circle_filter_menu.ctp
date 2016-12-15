@@ -37,7 +37,7 @@
         <i class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"
            style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
     </a>
-    <ul aria-labelledby="dropdownMenu1" role="menu"
+    <ul aria-labelledby="dropdownMenu1" role="menu" id="OpenCircleSettingMenu"
         class="dropdown-menu dropdown-menu-right frame-arrow-icon">
         <?php if (isset($user_status)): ?>
             <?php if (!$current_circle['Circle']['team_all_flg'] && $user_status != 'admin'): ?>

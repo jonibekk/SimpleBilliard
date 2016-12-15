@@ -77,6 +77,8 @@ var Page = {
         var body = res.responseJSON;
         var message = body.message;
         var errHtml = "";
+
+        $(form).find('input[type=submit]').prop("disabled", false);
         // バリデーションエラー
         var errTemplate = '<div id="ActionFormErrors" class="alert alert-danger mtb_8px ml_8px mr_8px">#error#</div>';
         if (res.status == 400 && body.validation_errors) {

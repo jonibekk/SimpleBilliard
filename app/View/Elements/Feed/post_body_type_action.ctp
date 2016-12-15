@@ -121,8 +121,6 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 $displayChangeValue = "";
                 if ($changeValue >= 0) {
                     $displayChangeValue .= '+';
-                } elseif ($changeValue < 0) {
-                    $displayChangeValue .= '-';
                 }
                 $unitId = $kr['value_unit'];
                 $displayChangeValue .= AppUtil::formatBigFloat($changeValue);

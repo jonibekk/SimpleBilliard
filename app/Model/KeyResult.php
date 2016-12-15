@@ -536,6 +536,10 @@ class KeyResult extends AppModel
         }
 
         $kr = $this->getById(Hash::get($data, 'KeyResult.id'));
+        if (empty($kr)) {
+            $this->log(sprintf("Not exist kr %s", var_export($data, true)));
+            return false;
+        }
         //on/offの場合は現在値0,目標値1をセット
         if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
             $data['KeyResult']['start_value'] = 0;
@@ -665,7 +669,7 @@ class KeyResult extends AppModel
      */
     function validateKrPOST($data, $detachRequired = false, $goalId = null)
     {
-        $validationBackup = $this->validate;
+        $validationBackup = $validation = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
         if ($detachRequired) {
             $validation = Hash::remove($this->validate, '{s}.{s}.required');
