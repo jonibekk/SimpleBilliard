@@ -19,6 +19,11 @@ class AttachedFile extends AppModel
     const TYPE_FILE_VIDEO = 1;
     const TYPE_FILE_DOC = 2;
 
+    /**
+     * フロントエンド含めすべての添付ファイル(画像含む)のサイズ上限チェックにこのルールを適用する
+     */
+    const ATTACHABLE_MAX_FILE_SIZE_MB = 25;
+
     static public $TYPE_FILE = [
         self::TYPE_FILE_IMG   => ['name' => null, 'type' => 'image'],
         self::TYPE_FILE_VIDEO => ['name' => null, 'type' => 'video'],
@@ -71,7 +76,8 @@ class AttachedFile extends AppModel
      */
     public $validate = [
         'attached'   => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 20971520],], //20mb
+            'image_max_size' => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
+            // convert to byte
         ],
         'file_type'  => [
             'numeric' => [
@@ -166,6 +172,10 @@ class AttachedFile extends AppModel
     public function preUploadFile($postData)
     {
         if (!$file_info = Hash::get($postData, 'file')) {
+            return false;
+        }
+        //ファイル上限チェック
+        if($file_info['size'] > self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024){
             return false;
         }
         /** @var GlRedis $Redis */

@@ -4717,7 +4717,7 @@ $(document).ready(function () {
   Dropzone.options.UploadFileForm = {
     paramName: "file",
     maxFiles: 10,
-    maxFilesize: 25, // MB
+    maxFilesize: cake.attachable_max_file_size_mb, // MB
     url: cake.url.upload_file,
     addRemoveLink: true,
     dictFileTooBig: cake.message.validate.dropzone_file_too_big,
