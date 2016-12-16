@@ -261,6 +261,7 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
+            /** @var EvaluateTermService $EvaluateTermService */
             $EvaluateTermService = ClassRegistry::init('EvaluateTermService');
             $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
             $current = $EvaluateTermService->processEvaluateTerm($current, $type = EvaluateTerm::TERM_TYPE_CURRENT);

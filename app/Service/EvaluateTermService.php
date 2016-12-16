@@ -7,14 +7,14 @@ App::import('Service', 'AppService');
 class EvaluateTermService extends AppService
 {
     /**
-     * EvaluteTermデータをレスポンス用に整形
+     * EvaluateTermデータをレスポンス用に整形
      *
-     * @param  $data
-     * @param  $type
+     * @param  array  $data
+     * @param  string $type
      *
-     * @return [type]       [description]
+     * @return array
      */
-    function processEvaluateTerm($data, $type)
+    function processEvaluateTerm(array $data, string $type): array
     {
         $data['type'] = $type;
         $data['start_date'] = $this->regenerateDateByTimezone($data['start_date'], $data['timezone']);
@@ -24,11 +24,14 @@ class EvaluateTermService extends AppService
 
     /**
      * timezoneを元にdate文字列を再生成
-     * @param  $date
-     * @param  $timezone
-     * @return $formatted
+     *
+     * @param  int $date
+     * @param  int $timezone
+     *
+     * @return string
      */
-    function regenerateDateByTimezone($date, $timezone) {
+    function regenerateDateByTimezone(int $date, int $timezone): string
+    {
         $formatted = date('Y-m-d', $date + $timezone * HOUR);
         return $formatted;
     }
