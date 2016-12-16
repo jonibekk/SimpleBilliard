@@ -165,7 +165,7 @@
       }
     }
     &-form {
-      border-radius: 0;
+      border-radius: 4px;
       margin-bottom: @spacing;
       width: 100%;
       height: 38px;
@@ -190,7 +190,7 @@
       &-unit-label {
         position: absolute;
         top: 8px;
-        left: 12px;
+        left: 18px;
         z-index: 99;
       }
       &-unit-box {
@@ -199,6 +199,12 @@
         height: 38px;
         width: 60px;
         margin: 0 10px 10px 0;
+        &.is-disable {
+          background: @subColor5 url(../img/svg/icon_arrow_open.svgz) right center / 24px 12px no-repeat !important;
+        }
+        &.is-radius {
+          border-radius: 4px;
+        }
       }
 
       // step4 tkr入力
@@ -219,6 +225,9 @@
             text-align: center;
             width: 30px;
             height: 38px;
+          }
+          &[disabled] {
+            background-color: @subColor5;
           }
         }
       }

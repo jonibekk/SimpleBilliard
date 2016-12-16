@@ -44,6 +44,30 @@ class ActionResultFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'キーリザルトID(belongsToでGoalモデルに関連)'
         ),
+        'key_result_before_value'         => array(
+            'type'     => 'decimal',
+            'null'     => true,
+            'default'  => null,
+            'length'   => '18,3',
+            'unsigned' => true,
+            'comment'  => 'KR進捗値(更新前)'
+        ),
+        'key_result_change_value'         => array(
+            'type'     => 'decimal',
+            'null'     => true,
+            'default'  => null,
+            'length'   => '18,3',
+            'unsigned' => false,
+            'comment'  => 'KR進捗増減値'
+        ),
+        'key_result_target_value'         => array(
+            'type'     => 'decimal',
+            'null'     => true,
+            'default'  => null,
+            'length'   => '18,3',
+            'unsigned' => true,
+            'comment'  => 'KR進捗目標値'
+        ),
         'user_id'          => array(
             'type'     => 'biginteger',
             'null'     => false,

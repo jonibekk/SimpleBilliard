@@ -172,9 +172,17 @@ export default class Edit extends React.Component {
 
             <label className="goals-create-input-label">{__("Measurement type")}</label>
             <div className="goals-create-layout-flex">
-              <UnitSelect value={inputData.key_result.value_unit} units={this.props.goal.units}
-                          onChange={(e) => this.onChange(e, "key_result")}/>
-              <ValueStartEndInput inputData={inputData.key_result} onChange={(e) => this.onChange(e, "key_result")}/>
+              <UnitSelect
+                value={inputData.key_result.value_unit}
+                units={this.props.goal.units}
+                isEdit={true}
+                onChange={(e) => this.onChange(e, "key_result")}
+              />
+              <ValueStartEndInput
+                inputData={inputData.key_result}
+                isEdit={true}
+                onChange={(e) => this.onChange(e, "key_result")}
+              />
             </div>
             <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
             <InvalidMessageBox message={tkrValidationErrors.start_value}/>
