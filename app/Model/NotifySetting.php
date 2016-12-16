@@ -42,6 +42,7 @@ class NotifySetting extends AppModel
     const TYPE_APPROVAL_COMMENT = 29;
     const TYPE_COACHEE_EXCHANGE_TKR = 30;
     const TYPE_TKR_EXCHANGED_BY_LEADER = 31;
+    const TYPE_EXCHANGED_LEADER = 32;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                 => [
@@ -256,6 +257,13 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_TKR_EXCHANGED_BY_LEADER => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_EXCHANGED_LEADER => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
@@ -882,7 +890,19 @@ class NotifySetting extends AppModel
                         h($user_text));
                 }
                 break;
-
+            case self::TYPE_EXCHANGED_LEADER:
+                $goalMember = $this->User->Goal->GoalMember->getActiveLeader($options['goal_id']);
+                $leaderName = $goalMember['User']['display_username'];
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the leader to <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text, $leaderName);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the leader to <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text), h($leaderName));
+                }
+                break;
         }
 
         if ($options['style'] == 'plain') {

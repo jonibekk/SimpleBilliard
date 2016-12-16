@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-13 17:08+0900\n"
+"PO-Revision-Date: 2016-12-16 14:58+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -247,6 +247,9 @@ msgstr "成功"
 
 msgid "Invalid Request."
 msgstr "不正なリクエストです。"
+
+msgid "Changed leader."
+msgstr "リーダーを変更しました。"
 
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
@@ -820,6 +823,11 @@ msgstr "データの検証に失敗しました。"
 msgid "Failed to upload image."
 msgstr "画像アップロードに失敗しました。"
 
+msgid "Failed to upload. jpg, png and gif are allowed."
+msgstr ""
+"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
+"ださい。"
+
 msgid "Complete the approval of %d goal(s)."
 msgstr "%d件のゴール認定を完了してください"
 
@@ -955,11 +963,11 @@ msgstr "0 (認定対象外)"
 msgid "More Previous"
 msgstr "もっと前"
 
-msgid "Complete"
-msgstr "完了"
+msgid "Achieved"
+msgstr "達成"
 
-msgid "Incomplete"
-msgstr "未完了"
+msgid "Unachieved"
+msgstr "未達成"
 
 msgid "Creation Date"
 msgstr "新着順"
@@ -1227,6 +1235,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span> がトップKRを別のKRに変更"
 "しました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has changed the leader "
+"to <span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> がリーダーを <span class="
+"\"notify-card-head-target\">%2$s</span> に変更しました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -1682,11 +1697,6 @@ msgstr "ファイルサイズが上限を超えています。"
 msgid "The Image does not have enough vertical or horizontal size."
 msgstr "画像の幅もしくは高さが足りていません。"
 
-msgid "Failed to upload. jpg, png and gif are allowed."
-msgstr ""
-"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
-"ださい。"
-
 msgid "Some email addresses are incorrect."
 msgstr "メールアドレスが正しくないものがあります。"
 
@@ -1713,6 +1723,12 @@ msgstr "自己評価をしてください"
 
 msgid "Please evaluate."
 msgstr "評価をしてください"
+
+msgid "You can't change leader in the goal before current term."
+msgstr "今期より前のゴールのリーダーは変更できません。"
+
+msgid "You cant't change leader in the goal during the evaluation period."
+msgstr "評価期間中のゴールのリーダーは変更できません。"
 
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
@@ -2434,6 +2450,12 @@ msgstr "件"
 msgid "Add by pressing the Enter.(You can search maximum 3 labels)"
 msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 
+msgid "Complete"
+msgstr "完了"
+
+msgid "Incomplete"
+msgstr "未完了"
+
 msgid "Progress"
 msgstr "進捗"
 
@@ -2445,12 +2467,6 @@ msgstr "名前"
 
 msgid "Level of achievement"
 msgstr "達成度"
-
-msgid "Achieved"
-msgstr "達成"
-
-msgid "Unachieved"
-msgstr "未達成"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -2906,20 +2922,14 @@ msgstr "ホームフィードに表示する"
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
 
-msgid "%s people liked this comment."
-msgstr "このコメントに%s人が「いいね！」と言っています。"
-
 msgid "There is no like! yet."
 msgstr "まだ、いいね！と言っている人はいません。"
 
-msgid "%s people read this comment."
-msgstr "このコメントを%s人が読みました。"
+msgid "Read"
+msgstr "既読"
 
 msgid "No one read this comment."
 msgstr "まだ、このコメントを読んだ人はいません。"
-
-msgid "Read"
-msgstr "既読"
 
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
@@ -3035,9 +3045,6 @@ msgstr "具体的に絞り込んで書く"
 msgid "eg) Complete making the web site."
 msgstr "例）Webサイトを完成させる"
 
-msgid "Measurement"
-msgstr "程度"
-
 msgid "How much?"
 msgstr "どのくらい？"
 
@@ -3074,6 +3081,27 @@ msgstr "達成要素名"
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
+msgid "Change leader"
+msgstr "リーダーを変更"
+
+msgid "Select the leader name you want to change."
+msgstr "変更したいリーダーの名前を選択してください。"
+
+msgid "Current"
+msgstr "現在"
+
+msgid "Select whether you collaborate or quit this goal."
+msgstr "このゴールにコラボるか抜けるかを選択してください。"
+
+msgid "Save & Collaborate"
+msgstr "保存して、コラボる"
+
+msgid "Save & Quit this goal"
+msgstr "保存して、ゴールメンバーから抜ける"
+
+msgid "Save"
+msgstr "保存する"
+
 msgid "Change Top KR"
 msgstr "トップKRを変更"
 
@@ -3082,9 +3110,6 @@ msgstr "トップKR"
 
 msgid "Select Top KR you would like to change."
 msgstr "トップKRとしたいKRを選択してください。"
-
-msgid "Current"
-msgstr "現在"
 
 msgid "Goal Summary"
 msgstr "ゴール概要"
