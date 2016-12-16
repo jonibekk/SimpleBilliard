@@ -4,6 +4,7 @@ App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalMemberService');
+App::import('Service', 'ActionService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
@@ -15,10 +16,18 @@ App::import('Service', 'KeyResultService');
  */
 class GoalsController extends AppController
 {
+    public $components = [
+        'Security',
+    ];
 
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $allowed_actions = ['add_completed_action'];
+        //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
+        if (in_array($this->request->params['action'], $allowed_actions)) {
+            $this->Security->validatePost = false;
+        }
     }
 
     /**
@@ -59,6 +68,74 @@ class GoalsController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render("edit");
+    }
+
+    /**
+     * ゴール完了
+     *
+     * @param $goalId
+     *
+     * @return \Cake\Network\Response|CakeResponse|null
+     */
+    public function complete($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        // バリデーション
+        $errMsg = $this->_validateComplete($goalId);
+        if ($errMsg !== true) {
+            $this->Pnotify->outError($errMsg);
+            return $this->redirect($this->referer());
+        }
+
+        // ゴール完了
+        if (!$GoalService->complete($goalId)) {
+            $this->Pnotify->outSuccess(__("Internal Server Error."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL, $goalId);
+        $this->Pnotify->outSuccess(__("Completed a goal."));
+        // pusherに通知
+        $socketId = Hash::get($this->request->data, 'socket_id');
+        $channelName = "goal_" . $goalId;
+        $this->NotifyBiz->push($socketId, $channelName);
+
+        return $this->redirect('/');
+
+    }
+
+    /**
+     * @param $goalId
+     *
+     * @return string
+     */
+    public function _validateComplete($goalId)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        if (empty($goalId) || is_int($goalId)) {
+            return __("Not exist");
+        }
+        $goal = $GoalService->get($goalId);
+        // 対象のゴールが存在するか
+        if (empty($goal)) {
+            return __("Not exist");
+        }
+        // ゴールのリーダーか
+        if (!$GoalMemberService->isLeader($goalId, $this->Auth->user('id'))) {
+            return __("You have no permission.");
+        }
+        // 未完了のKRが残っている場合はゴール完了できない
+        if ($KeyResultService->countIncomplete($goalId) > 0) {
+            return __("You have no permission.");
+        }
+        return true;
     }
 
     public function approval($type = null)
@@ -205,6 +282,7 @@ class GoalsController extends AppController
         $priorityList = $this->Goal->priority_list;
         $krPriorityList = $this->Goal->KeyResult->priority_list;
         $krValueUnitList = $KeyResultService->buildKrUnitsSelectList();
+        $krShortValueUnitList = $KeyResultService->buildKrUnitsSelectList($isShort = true);
 
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goalId);
@@ -229,6 +307,7 @@ class GoalsController extends AppController
             'priorityList',
             'krPriorityList',
             'krValueUnitList',
+            'krShortValueUnitList',
             'krStartDateFormat',
             'krEndDateFormat',
             'limitEndDate',
@@ -771,34 +850,62 @@ class GoalsController extends AppController
         }
     }
 
+    /**
+     * アクション削除
+     * TODO:トランザクション処理をサービス移行、アクション削除をAPI化
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function delete_action()
     {
-        $ar_id = $this->request->params['named']['action_result_id'];
+        $arId = $this->request->params['named']['action_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$action = $this->Goal->ActionResult->find('first',
-                ['conditions' => ['ActionResult.id' => $ar_id],])
-            ) {
+            $this->Goal->ActionResult->begin();
+            $action = $this->Goal->ActionResult->getById($arId);
+            if (empty($action)) {
                 throw new RuntimeException(__("There is no action."));
             }
-            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['ActionResult']['goal_id'])) {
+
+            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['goal_id'])) {
                 throw new RuntimeException(__("You have no permission."));
             }
+            $this->Goal->ActionResult->id = $arId;
+            $this->Goal->ActionResult->delete();
+            $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($arId,
+                AttachedFile::TYPE_MODEL_ACTION_RESULT);
+
+            /* アクション時に進めたKR進捗分を戻す */
+            $krPrgChangeVal = $action['key_result_change_value'];
+            $krId = $action['key_result_id'];
+            if (!is_null($krPrgChangeVal) && $krPrgChangeVal != 0 && !empty($krId)) {
+                $kr = $this->Goal->KeyResult->getById($krId);
+                if (empty($kr)) {
+                    throw new RuntimeException(__("No exist kr."));
+                }
+                $updateKr = [
+                    'id'            => $krId,
+                    'current_value' => $kr['current_value'] - $krPrgChangeVal
+                ];
+                if (!empty($kr['completed'])) {
+                    $updateKr['completed'] = null;
+                }
+                // KR更新
+                $this->Goal->KeyResult->save($updateKr, false);
+            }
+            $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
+            $this->Goal->ActionResult->rollback();
             $this->Pnotify->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Goal->ActionResult->id = $ar_id;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_ACTION,
-            $action['ActionResult']['goal_id'],
-            $action['ActionResult']['key_result_id'],
-            $ar_id);
-        $this->Goal->ActionResult->delete();
-        $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($ar_id,
-            AttachedFile::TYPE_MODEL_ACTION_RESULT);
-        if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
-            $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
+            $action['goal_id'],
+            $action['key_result_id'],
+            $arId);
+        if (isset($action['goal_id']) && !empty($action['goal_id'])) {
+            $this->_flashClickEvent("ActionListOpen_" . $action['goal_id']);
         }
 
         $this->Pnotify->outSuccess(__("Deleted an action."));
@@ -997,7 +1104,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
-        $kr_value_unit_list = $KeyResultService->buildKrUnitsSelectList();
+        $krShortValueUnitList = $KeyResultService->buildKrUnitsSelectList($isShort = true);
 
         // 認定可能フラグ追加
         $is_approvable = false;
@@ -1020,7 +1127,7 @@ class GoalsController extends AppController
             'goal_category_list',
             'priority_list',
             'kr_priority_list',
-            'kr_value_unit_list',
+            'krShortValueUnitList',
             'kr_start_date_format',
             'kr_end_date_format',
             'limit_end_date',
@@ -1063,13 +1170,25 @@ class GoalsController extends AppController
 
     public function ajax_get_kr_list()
     {
-        $goal_id = $this->request->params['named']['goal_id'];
+        $goalId = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
-        $kr_list = [];
-        if ($goal_id) {
-            $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list", true);
+        if (empty($goalId)) {
+            return $this->_ajaxGetResponse([
+                'html' => '',
+            ]);
         }
-        return $this->_ajaxGetResponse($kr_list);
+
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        $krs = $KeyResultService->findIncomplete($goalId);
+        $this->set('krs', $krs);
+        // HTML出力
+        $response = $this->render('Action/input_kr_progress');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse([
+            'html' => $html,
+        ]);
     }
 
     /**
@@ -1156,13 +1275,13 @@ class GoalsController extends AppController
      */
     public function add_action()
     {
-        $goal_id = Hash::get($this->request->params, 'named.goal_id');
-        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
+        $goalId = Hash::get($this->request->params, 'named.goal_id');
+        $keyResultId = Hash::get($this->request->params, 'named.key_result_id');
         try {
-            if (!$this->Goal->GoalMember->isCollaborated($goal_id)) {
+            if (!empty($goalId) && !$this->Goal->GoalMember->isCollaborated($goalId)) {
                 throw new RuntimeException(__("This action can't be edited."));
             }
-            if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!empty($keyResultId) && !$this->Goal->KeyResult->isPermitted($keyResultId)) {
                 throw new RuntimeException(__("This action can't be edited."));
             }
         } catch (RuntimeException $e) {
@@ -1170,10 +1289,10 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->request->data['ActionResult']['goal_id'] = $goal_id;
-        $this->request->data['ActionResult']['key_result_id'] = $key_result_id;
-        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
-        $this->set(compact('kr_list', 'key_result_id'));
+        $this->request->data['ActionResult']['goal_id'] = $goalId;
+        $this->request->data['ActionResult']['key_result_id'] = $keyResultId;
+        $krList = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
+        $this->set(['kr_list' => $krList, 'key_result_id' => $keyResultId]);
 
         $this->_setViewValOnRightColumn();
         $this->set('common_form_type', 'action');
@@ -1334,7 +1453,7 @@ class GoalsController extends AppController
 
     /**
      * 完了アクション追加
-     * TODO 今後様々なバリエーションのアクションが追加されるが、全てこのfunctionで処理する
+     * TODO:API化したので廃止予定
      */
     public function add_completed_action()
     {
@@ -1412,29 +1531,6 @@ class GoalsController extends AppController
 
     }
 
-    public function ajax_get_new_action_form()
-    {
-        $goal_id = $this->request->params['named']['goal_id'];
-        $result = [
-            'error' => true,
-            'msg'   => __("An error has occurred."),
-            'html'  => null
-        ];
-        $this->_ajaxPreProcess();
-        if (isset($this->request->params['named']['ar_count'])
-            && $this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))
-        ) {
-            $this->set('ar_count', $this->request->params['named']['ar_count']);
-            $this->set(compact('goal_id'));
-            $response = $this->render('Goal/add_new_action_form');
-            $html = $response->__toString();
-            $result['html'] = $html;
-            $result['error'] = false;
-            $result['msg'] = null;
-        }
-        return $this->_ajaxGetResponse($result);
-    }
-
     public function ajax_get_my_goals()
     {
         /** @var GoalService $GoalService */
@@ -1472,7 +1568,19 @@ class GoalsController extends AppController
         }
         $goals = $GoalService->processGoals($goals);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
-        $this->set(compact('goals', 'type', 'current_term'));
+        // アクション可能なゴール数
+        $userId = $this->Auth->user('id');
+        $canActionGoals = $this->Goal->findCanAction($userId);
+        $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
+        // 完了アクションが可能なゴールIDリスト
+        $canCompleteGoalIds = Hash::extract(
+            $this->Goal->findCanComplete($userId), '{n}.id'
+        );
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+
+        $this->set(compact('goals', 'type', 'current_term', 'canActionGoals', 'canCompleteGoalIds',
+            'isStartedEvaluation'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果

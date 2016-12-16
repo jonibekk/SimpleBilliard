@@ -1,14 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: daikihirakata
- * Date: 5/19/15
- * Time: 02:04
- *
- * @var                    $post
- * @var CodeCompletionView $this
- */
-?>
 <?= $this->App->viewStartComment() ?>
 <div
     class="col col-xxs-12 feed-contents post-contents <?= viaIsSet($long_text) ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"

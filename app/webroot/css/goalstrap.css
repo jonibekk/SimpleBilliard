@@ -3010,7 +3010,11 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 }
 
 .progress-bar-info {
-    background-color: #029acf;
+    /*background-color: #3897f0;*/
+    background-color: #00a8e6;
+    background-image: -webkit-gradient(linear,left top,right top,from(#00a8e6),to(#407fdf));
+    background-image: -webkit-linear-gradient(left,#00a8e6,#407fdf);
+    background-image: -o-linear-gradient(left,#00a8e6,#407fdf);
 }
 
 .progress-striped .progress-bar-info {
