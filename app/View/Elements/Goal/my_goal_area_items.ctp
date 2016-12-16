@@ -141,7 +141,7 @@ $kr_count = 0;
                                    ]) ?>">
                                     <hr class="dashboard-goals-card-horizontal-line">
                                     <i class="fa fa-exchange"></i>
-                                    <span class="ml_2px"><?= __("Change Leader") ?></span>
+                                    <span class="ml_2px"><?= __("Change leader") ?></span>
                                 </a>
                             </li>
                         <?php endif;?>
@@ -208,7 +208,7 @@ $kr_count = 0;
                                    ]) ?>">
                                     <hr class="dashboard-goals-card-horizontal-line">
                                     <i class="fa fa-exchange"></i>
-                                    <span class="ml_2px"><?= __("Change Leader") ?></span>
+                                    <span class="ml_2px"><?= __("Change leader") ?></span>
                                 </a>
                             </li>
                         <?php endif;?>

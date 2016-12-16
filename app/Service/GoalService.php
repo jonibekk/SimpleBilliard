@@ -397,7 +397,7 @@ class GoalService extends AppService
      *
      * @param array        $data
      * @param array        $fields
-     * @param integer|null $goalId
+     * @param int|null $goalId
      *
      * @return array
      */
@@ -699,6 +699,7 @@ class GoalService extends AppService
         $Goal = ClassRegistry::init("Goal");
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
+
 
         try {
             $Goal->begin();

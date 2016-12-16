@@ -184,19 +184,19 @@ class GoalMemberService extends AppService
         // パラメータ存在チェック
         $goalId = Hash::get($formData, 'Goal.id');
         if (empty($goalId) || empty($changeType)) {
-            return __("Invalid Request.");
+            return __("Invalid value");
         }
 
         // ゴールが存在するか
         $goal = $Goal->findById($goalId);
         if (empty($goal)) {
-            return __("This goal doesn't exist.");
+            return __("The goal doesn't exist.");
         }
 
         // 今期以降のゴールか
         $isAfterCurrentGoal = $GoalService->isGoalAfterCurrentTerm($goalId);
         if(!$isAfterCurrentGoal) {
-            return __("Can't change leader before current term's goal.");
+            return __("You can't change leader in the goal before current term.");
         }
 
         // 評価開始前か
@@ -205,7 +205,8 @@ class GoalMemberService extends AppService
             $currentTermId = $EvaluateTerm->getCurrentTermId();
             $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
             if ($isStartedEvaluation) {
-                return __("You can't change the goal in the evaluation.");
+                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader being evaluating. goalId:%s", $goalId)));
+                return __("You cant't change leader in the goal during the evaluation period.");
             }
         }
 
@@ -213,26 +214,30 @@ class GoalMemberService extends AppService
         if ($changeType === self::CHANGE_LEADER_FROM_GOAL_MEMBER) {
             // 自分がゴールメンバーかどうか
             if (!$GoalMember->isCollaborated($goalId)) {
-                return __("You don't have a permission to edit this goal as member.");
+                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader not being goal member. goalId:%s, userId:%s" , $goalId, $GoalMember->my_uid)));
+                return __("You don't have a permission to edit this goal.");
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
             $goalLeader = $GoalMember->getActiveLeader($goalId);
             if ($goalLeader) {
-                return __("You don't have a permission to edit this goal. Exist leader.");
+                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader existing leader. goalId:%s, userId:%s" , $goalId, $GoalMember->my_uid)));
+                return __("You don't have a permission to edit this goal.");
             }
         // 自分がリーダーのケース
         } else {
             // 自分がリーダーかどうか
             $loginUserIsLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
             if (!$loginUserIsLeader) {
-                return __("You don't have a permission to edit this goal because you aren't leader.");
+                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader not being leader. goalId:%s, userId:%s" , $goalId, $GoalMember->my_uid)));
+                return __("You don't have a permission to edit this goal.");
             }
 
             // リーダーを変更して自分がコラボする場合
             if ($changeType === self::CHANGE_LEADER_WITH_COLLABORATION) {
                 $GoalMember->set($formData);
                 if (!$GoalMember->validates()) {
+                    $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader not being able to collabo. data:%s" , var_export($formData, true))));
                     return __("Invalid value");
                 }
             }
@@ -241,7 +246,8 @@ class GoalMemberService extends AppService
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
         $newLeaderId = Hash::get($formData, 'NewLeader.id');
         if (!$GoalMember->isActiveGoalMember($newLeaderId, $goalId)) {
-            return __("Invalid member ID.");
+            $this->log(sprintf("Failed to change leader not being active member. goalId:%s, newLeaderId:%s" , $goalId, $newLeaderId));
+            return __("Some error occurred. Please try again from the start.");
         }
 
         return true;
@@ -279,12 +285,12 @@ class GoalMemberService extends AppService
             }
 
             // リーダー -> コラボレーター
-            if ($changeType == self::CHANGE_LEADER_WITH_COLLABORATION) {
-                $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
-                if (!$GoalMember->save($data['GoalMember'])) {
-                    throw new Exception(sprintf("Failed to collaborate. data:%s"
-                        , var_export($data['GoalMember'], true)));
-                }
+            // 現リーダーがアクティブの場合は役割とタイプを変更
+            // 現リーダーが非アクティブの場合はタイプのみ変更
+            $data['GoalMember']['type'] = $GoalMember::TYPE_COLLABORATOR;
+            if (!$GoalMember->save($data['GoalMember'], false)) {
+                throw new Exception(sprintf("Failed to collaborate. data:%s"
+                    , var_export($data['GoalMember'], true)));
             }
 
             // ゴール脱退

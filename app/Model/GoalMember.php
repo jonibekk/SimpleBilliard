@@ -504,6 +504,41 @@ class GoalMember extends AppModel
         return $count;
     }
 
+    function getLeader(int $goalId)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'team_id' => $this->current_team_id,
+                'type'    => [
+                    GoalMember::TYPE_OWNER,
+                ],
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id',
+                    ]
+                ]
+            ],
+            'fields'     => [
+                'GoalMember.id',
+                'GoalMember.goal_id',
+                'User.id',
+                'User.photo_file_name',
+                'User.first_name',
+                'User.last_name',
+                'User.middle_name',
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        return $res ?? null;
+    }
+
     function getLeaderUid($goal_id)
     {
         $options = [
@@ -564,16 +599,37 @@ class GoalMember extends AppModel
      *
      * @return array
      */
-    function getGoalMemberListByGoalId($goal_id, $type = null)
+    function findActiveByGoalId($goal_id, $type = null)
     {
         $options = [
             'conditions' => [
-                'goal_id' => $goal_id,
-                'team_id' => $this->current_team_id,
+                'GoalMember.goal_id' => $goal_id,
+                'GoalMember.team_id' => $this->current_team_id,
+                'TeamMember.active_flg' => true,
+                'User.active_flg' => true,
             ],
             'fields'     => [
-                'user_id',
-                'user_id'
+                'GoalMember.user_id',
+                'GoalMember.user_id'
+            ],
+            'joins' => [
+                [
+                    'type' => 'LEFT',
+                    'table' => 'team_members',
+                    'alias' => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id',
+                    ],
+                ],
+                [
+                    'type' => 'LEFT',
+                    'table' => 'users',
+                    'alias' => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id',
+                    ],
+                ],
             ],
         ];
         if ($type !== null) {

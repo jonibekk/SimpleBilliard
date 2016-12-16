@@ -36,13 +36,12 @@
                         'required'            => true,
                         'options'             => $goalMembers
                     ]) ?>
-
-                <?php if ($isLeader && $currentLeader): ?>
+                <?= $this->Form->hidden('GoalMember.id', ['value' => Hash::get($currentLeader, 'GoalMember.id')]); ?>
+                <?php if ($isLeader): ?>
                     <p class="mb_8px"><?= __("Current")?> : <?= Hash::get($currentLeader, 'User.display_username') ?></p>
                     <hr>
                     <h5 class="modal-key-result-headings"><?= __("Collaborator") ?></h5>
                     <p class="mb_8px"><?= __("Select whether you collaborate or quit this goal.")?></p>
-                    <?= $this->Form->hidden('id', ['value' => Hash::get($currentLeader, 'GoalMember.id')]); ?>
                     <?=
                     $this->Form->input('GoalMember.role',
                         [

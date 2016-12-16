@@ -383,7 +383,9 @@ class GoalsController extends AppController
         // ビュー変数セット
         $isLeader = $this->Goal->GoalMember->isLeader($goalId, $this->Auth->user('id'));
         $goalMembers = $this->Goal->GoalMember->getActiveCollaboratorList($goalId);
-        $currentLeader = $this->Goal->GoalMember->getActiveLeader($goalId);
+        // リーダーが非アクティブの可能性もあるので、
+        // アクティブ/非アクティブに関わらず取得する
+        $currentLeader = $this->Goal->GoalMember->getLeader($goalId);
         $priorityList = $this->Goal->priority_list;
         $this->set(compact(
             'goalId',
@@ -643,6 +645,9 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        // 通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'), $this->Auth->user('id'));
+
         $this->Pnotify->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
     }
@@ -674,6 +679,9 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
             return $this->redirect($this->referer());
         }
+
+        // 通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'));
 
         $this->Pnotify->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
