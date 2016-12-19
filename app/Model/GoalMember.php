@@ -1166,7 +1166,7 @@ class GoalMember extends AppModel
     }
 
     /**
-     * IDよりGoalIdを取得する
+     * GoalMemberIdよりGoalIdを取得する
      *
      * @param  int $id
      *

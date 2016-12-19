@@ -3,7 +3,6 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   goal_member: {},
   to_list_page: false,
-  to_top_page: false,
   posting_set_as_target: false,
   posting_remove_from_target: false,
   posting_withdraw: false,
@@ -22,10 +21,6 @@ export default function detail(state = initialState, action) {
     case types.TO_LIST_PAGE:
       return Object.assign({}, state, {
         to_list_page: true
-      })
-    case types.TO_TOP_PAGE:
-      return Object.assign({}, state, {
-        to_top_page: true
       })
     case types.POSTING_SET_AS_TARGET:
       return Object.assign({}, state, {

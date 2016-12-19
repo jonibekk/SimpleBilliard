@@ -19,10 +19,6 @@ export default class DetailComponent extends React.Component {
     if (nextProps.detail.to_list_page) {
       document.location.href = '/goals/approval/list'
     }
-
-    if (nextProps.detail.to_top_page) {
-      document.location.href = '/'
-    }
   }
 
   render() {
