@@ -1165,4 +1165,29 @@ class GoalMember extends AppModel
         return $combined;
     }
 
+    /**
+     * IDよりGoalIdを取得する
+     *
+     * @param  int $id
+     *
+     * @return int|null
+     */
+    function getGoalIdById(int $id) {
+        $options = [
+            'conditions' => [
+                'id' => $id
+            ],
+            'fields'     => [
+                'goal_id'
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (!$res) {
+            return null;
+        }
+
+        $goalId = Hash::get($res, 'GoalMember.goal_id');
+        return $goalId;
+    }
+
 }
