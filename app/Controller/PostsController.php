@@ -1240,14 +1240,23 @@ class PostsController extends AppController
      *
      * @return CakeResponse
      */
-    public function ajax_upload_file()
+    public function ajax_upload_file(): CakeResponse
     {
         $this->_ajaxPreProcess();
-        $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
+        try {
+            $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
+        } catch (Exception $e) {
+            return $this->_ajaxGetResponse([
+                'error' => true,
+                'msg'   => $e->getMessage(),
+                'id'    => "",
+            ]);
+        }
+
         return $this->_ajaxGetResponse([
-            'error' => $file_id ? false : true,
-            'msg'   => $file_id ? "" : __('Failed to upload.'),
-            'id'    => $file_id ? $file_id : "",
+            'error' => false,
+            'msg'   => "",
+            'id'    => $file_id,
         ]);
     }
 

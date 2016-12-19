@@ -87,8 +87,12 @@ class AttachedFileTest extends GoalousTestCase
 
     function testPreUpLoadFileFail()
     {
-        $res = $this->AttachedFile->preUploadFile([]);
-        $this->assertFalse($res);
+        try{
+            $this->AttachedFile->preUploadFile([]);
+        }catch (Exception $e){
+
+        }
+        $this->assertTrue(isset($e));
     }
 
     function testCancelUploadFileSuccess()

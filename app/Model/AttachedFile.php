@@ -23,6 +23,10 @@ class AttachedFile extends AppModel
      * フロントエンド含めすべての添付ファイル(画像含む)のサイズ上限チェックにこのルールを適用する
      */
     const ATTACHABLE_MAX_FILE_SIZE_MB = 25;
+    /**
+     * アップロード可能な画像ファイルの画素数
+     */
+    const ATTACHABLE_MAX_PIXEL = 25000000;//2500万画素
 
     static public $TYPE_FILE = [
         self::TYPE_FILE_IMG   => ['name' => null, 'type' => 'image'],
@@ -167,17 +171,29 @@ class AttachedFile extends AppModel
      *
      * @param array $postData
      *
-     * @return false|string
+     * @return string
+     * @throws Exception エラーメッセージ
      */
-    public function preUploadFile($postData)
+    public function preUploadFile(array $postData): string
     {
         if (!$file_info = Hash::get($postData, 'file')) {
-            return false;
+            $this->log(sprintf("[%s] file not exists.", __METHOD__));
+            $this->log(sprintf("PostData: %s", var_export($postData, true)));
+            $this->log(Debugger::trace());
+            throw new Exception(__('Failed to upload.'));
         }
         //ファイル上限チェック
-        if($file_info['size'] > self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024){
-            return false;
+        if ($file_info['size'] > self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024) {
+            throw new Exception(__("%sMB is the limit.", self::ATTACHABLE_MAX_FILE_SIZE_MB));
         }
+        //ファイルの画素数チェック
+        if (strpos($file_info['type'], 'image') !== false) {
+            list($imgWidth, $imgHeight) = getimagesize($file_info['tmp_name']);
+            if ($imgWidth * $imgHeight > self::ATTACHABLE_MAX_PIXEL) {
+                throw new Exception(__("%s pixel is the limit.", self::ATTACHABLE_MAX_PIXEL));
+            }
+        }
+
         /** @var GlRedis $Redis */
         $Redis = ClassRegistry::init('GlRedis');
         $hashed_key = $Redis->savePreUploadFile($file_info, $this->current_team_id, $this->my_uid);
