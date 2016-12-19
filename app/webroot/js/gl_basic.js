@@ -422,7 +422,7 @@ $(document).ready(function () {
   $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
   $(document).on("click", ".notify-click-target", evNotifyPost);
   $(document).on("click", ".message-click-target", evMessage);
-  $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
+  $(document).on("click", ".js-dashboard-circle-list", evCircleFeed);
   $(document).on("click", ".circle-link", evCircleFeed);
   $(document).on("click", ".btn-back-notifications", evNotifications);
   $(document).on("click", ".call-notifications", evNotifications);
@@ -3274,8 +3274,9 @@ function evCircleFeed(options) {
   }
 
   //サークルリストのわきに表示されている未読数リセット
-  $obj.children(".dashboard-circle-count-box").html("");
+  $obj.children(".js-circle-count-box").html("");
   $obj.children(".circle-count_box").children(".count-value").html("");
+  $obj.removeClass('is-unread').addClass('is-read');
 
   //アドレスバー書き換え
   if (!updateAddressBar(get_url)) {
@@ -3957,7 +3958,7 @@ $(document).ready(function () {
         if ($circle[0] === undefined) {
           return true;
         }
-        var $unread_count = $circle.find('.dashboard-circle-count-box');
+        var $unread_count = $circle.find('.js-circle-count-box');
         var unread_count = $unread_count.text().trim();
         if (unread_count == "") {
           $unread_count.text(1);
@@ -3966,6 +3967,7 @@ $(document).ready(function () {
         } else if (unread_count != "9+") {
           $unread_count.text(Number(unread_count) + 1);
         }
+        $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread')
         $circle.prependTo('#jsDashboardCircleListBody');
       });
 
