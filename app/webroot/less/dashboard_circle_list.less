@@ -180,15 +180,11 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
     .dashboard-circle-count-box {
       display: none;
     }
-
-    .dashboard-circle-name-box {
-      color: @slightGray;
-    }
   }
 
   &.is-unread {
     .dashboard-circle-name-box {
-      color: @veryDark;
+      font-weight: bold;
     }
   }
 }
@@ -199,8 +195,7 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
 
 .dashboard-circle-name-box {
   margin: 4px 0;
-
-  // .line-number-limit-1(@baseLightGray);
+  color: @veryDark;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
