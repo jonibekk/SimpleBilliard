@@ -13,7 +13,7 @@
 <?= $this->App->viewStartComment()?>
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
-        <p class="dashboard-circle-list-title circle_heading">Circles</p>
+        <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?></p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
         <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
@@ -53,10 +53,9 @@
                             <div class="dashboard-circle-count-box-wrapper">
                                 <div class="dashboard-circle-count-box js-circle-count-box">
                                     <?php if ($isUnread): ?>
-                                        <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                            9+
-                                        <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                            <?= $circle['CircleMember']['unread_count'] ?>
+                                        <?php $unreadCount = $circle['CircleMember']['unread_count']; ?>
+                                        <?php if ($unreadCount > 0): ?>
+                                            <?= $this->NumberEx->addPlusIfOverLimit($unreadCount, $limit = 9); ?>
                                         <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
