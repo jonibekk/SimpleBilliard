@@ -3259,8 +3259,8 @@ function evCircleFeed(options) {
   var team_all_flg = sanitize($obj.attr('team-all-flg'));
   var oldest_post_time = sanitize($obj.attr('oldest-post-time'));
   updateCakeValue(circle_id, title, image_url);
-
-  if ($obj.attr('class') == 'circle-link') {
+  console.log($obj.attr('class'));
+  if ($obj.hasClass('circle-link')) {
     //ハンバーガーから来た場合は隠す
     $("#header-slide-menu").click();
   }

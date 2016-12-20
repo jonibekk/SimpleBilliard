@@ -16,7 +16,7 @@
         <p class="dashboard-circle-list-title circle_heading">Circles</p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
-        <div class="dashboard-circle-list-body js-dashboard-circle-list-body" id="jsDashboardCircleListBody">
+        <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
             <?php if (!empty($my_circles)): ?>
                 <?php foreach ($my_circles as $circle): ?>
                     <?php $isUnread = ($circle['CircleMember']['unread_count'] > 0); ?>

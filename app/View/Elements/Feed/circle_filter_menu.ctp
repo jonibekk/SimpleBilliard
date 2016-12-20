@@ -15,7 +15,7 @@
 <?= $this->App->viewStartComment() ?>
 <?=
 $this->Upload->uploadImage($current_circle, 'Circle.photo', ['style' => 'small'],
-    ['width' => '16px', 'height' => '16px']) ?>
+    ['width' => '12px', 'height' => '12px', 'class' => 'mr_5px']) ?>
 <span id="circle-filter-menu-circle-name"
       class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
         '...') ?></span>
