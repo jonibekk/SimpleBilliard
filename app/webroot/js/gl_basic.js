@@ -3393,6 +3393,7 @@ function evCircleFeed(options) {
       $("#FeedMoreReadLink").css("display", "inline");
 
       $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
+      $(".js-circle-filter-menu-image").attr('src', image_url);
 
       //サークル設定メニュー生成
       if (!team_all_flg && data.user_status == "joined") {
