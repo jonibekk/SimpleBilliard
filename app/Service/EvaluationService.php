@@ -7,18 +7,17 @@ class EvaluationService extends AppService
     /**
      * 認定リストのステータスをフォーマット
      *
-     * @param $termId
-     * @param $userId
+     * @param int $termId
+     * @param int $userId
      *
-     * @return $res
+     * @return array
      */
-    function getEvalStatus($termId, $userId)
+    function getEvalStatus(int $termId, int $userId): array
     {
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');
 
         $evaluations = $Evaluation->getEvaluationListForIndex($termId, $userId);
-
         $evaluations = Hash::combine($evaluations, '{n}.id', '{n}');
         $flow = [];
         $evaluator_index = 1;
@@ -76,7 +75,12 @@ class EvaluationService extends AppService
         return $res;
     }
 
-    function getEvaluateeEvalStatusAsEvaluator($termId)
+    /**
+     * @param int $termId
+     *
+     * @return array
+     */
+    function getEvaluateeEvalStatusAsEvaluator(int $termId): array
     {
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');

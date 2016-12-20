@@ -397,7 +397,7 @@ class GoalService extends AppService
      *
      * @param array        $data
      * @param array        $fields
-     * @param integer|null $goalId
+     * @param int|null $goalId
      *
      * @return array
      */
@@ -458,11 +458,11 @@ class GoalService extends AppService
     /**
      * 対象のゴールが今季以降のゴールか
      *
-     * @param $goalId
+     * @param int $goalId
      *
      * @return bool
      */
-    function isGoalAfterCurrentTerm($goalId)
+    function isGoalAfterCurrentTerm(int $goalId): bool
     {
         $goal = $this->get($goalId);
         if (empty($goal)) {
@@ -490,6 +490,8 @@ class GoalService extends AppService
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         foreach ($goals as $key => $goal) {
             // 進捗を計算
@@ -500,6 +502,8 @@ class GoalService extends AppService
             if (!empty($goal['TargetCollabo'])) {
                 $goals[$key]['TargetCollabo']['is_approval_enabled'] = $GoalApprovalService->isApprovable($goal['TargetCollabo']['user_id']);
             }
+            // リーダー変更可能フラグを追加
+            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal, 'Goal.id'));
         }
         return $goals;
     }
@@ -695,6 +699,7 @@ class GoalService extends AppService
         $Goal = ClassRegistry::init("Goal");
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
+
 
         try {
             $Goal->begin();

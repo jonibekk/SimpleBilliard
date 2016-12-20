@@ -189,8 +189,8 @@ class GoalApprovalsController extends ApiController
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
-        if (!$canAccess) {
+        $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
+        if (!$haveAccessAuthority) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
@@ -249,8 +249,8 @@ class GoalApprovalsController extends ApiController
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
-        if (!$canAccess) {
+        $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
+        if (!$haveAccessAuthority) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
@@ -305,8 +305,8 @@ class GoalApprovalsController extends ApiController
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
-        if (!$canAccess) {
+        $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
+        if (!$haveAccessAuthority) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
@@ -349,6 +349,10 @@ class GoalApprovalsController extends ApiController
      */
     public function get_detail()
     {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         /** @var ApiGoalApprovalService $ApiGoalApprovalService */
@@ -359,16 +363,21 @@ class GoalApprovalsController extends ApiController
 
         // パラメータが存在しない場合はNotFound
         if (!$goalMemberId) {
-            // $this->Pnotify->outError(__("Ooops, Not Found."));
+            $this->Pnotify->outError(__("Ooops, Not Found."));
+            return $this->_getResponseNotFound();
+        }
+
+        // ゴールが今期以外のものならNotFound
+        $goalId = $GoalMember->getGoalIdById($goalMemberId);
+        if (!$goalId || !$Goal->isPresentTermGoal($goalId)) {
+            $this->Pnotify->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
-        if (!$canAccess) {
-            // TODO: モーダルでコラボを抜けた場合のために一時期的にここでエラーを吐かないようにする
-            //       Reactでコラボ編集が実装されたらコメントアウトを外す
-            // $this->Pnotify->outError(__("You don't have access right to this page."));
+        $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
+        if (!$haveAccessAuthority) {
+            $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -412,8 +421,8 @@ class GoalApprovalsController extends ApiController
         }
 
         // アクセス権限チェック
-        $canAccess = $GoalApprovalService->haveAccessAuthoriyOnApproval($goalMemberId, $myUserId);
-        if (!$canAccess) {
+        $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
+        if (!$haveAccessAuthority) {
             $this->Pnotify->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }

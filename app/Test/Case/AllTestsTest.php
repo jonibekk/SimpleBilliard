@@ -34,6 +34,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite = new CakeTestSuite('All Application Test');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'View' . DS . 'Helper');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Model');
+        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service');
+        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service' . DS . 'Api');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Console');
         return $suite;
     }
