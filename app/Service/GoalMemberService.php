@@ -84,7 +84,7 @@ class GoalMemberService extends AppService
      */
     function isApprovableGoalMember($goalMemberId)
     {
-        if(!$goalMemberId) {
+        if (!$goalMemberId) {
             return false;
         }
 
@@ -95,7 +95,7 @@ class GoalMemberService extends AppService
 
         // ゴールメンバーのユーザIDを取得
         $goalMember = $GoalMember->findById($goalMemberId, ['user_id']);
-        if(!$goalMember) {
+        if (!$goalMember) {
             return false;
         }
         $goalMemberUserId = Hash::get($goalMember, 'GoalMember.user_id');
@@ -121,7 +121,7 @@ class GoalMemberService extends AppService
      */
     function isApprovableByGoalId($goalId, $userId)
     {
-        if(empty($goalId) || empty($userId)) {
+        if (empty($goalId) || empty($userId)) {
             return false;
         }
 
@@ -132,7 +132,7 @@ class GoalMemberService extends AppService
 
         // ゴールメンバーのユーザIDを取得
         $goalMember = $GoalMember->findByGoalIdAndUserId($goalId, $userId);
-        if(empty($goalMember)) {
+        if (empty($goalMember)) {
             return false;
         }
         $goalMemberId = Hash::get($goalMember, 'GoalMember.id');
@@ -164,10 +164,26 @@ class GoalMemberService extends AppService
     }
 
     /**
+     * ゴールメンバーか判定
+     *
+     * @param  $goalId
+     * @param  $userId
+     *
+     * @return boolean
+     */
+    function isMember(int $goalId, int $userId): bool
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        return $GoalMember->isCollaborated($goalId, $userId);
+    }
+
+    /**
      * ゴール変更リクエストのバリデーション
      *
-     * @param  array  $formData
-     * @param  int    $changeType
+     * @param  array $formData
+     * @param  int   $changeType
+     *
      * @return true || string
      */
     public function validateChangeLeader(array $formData, int $changeType)
@@ -195,7 +211,7 @@ class GoalMemberService extends AppService
 
         // 今期以降のゴールか
         $isAfterCurrentGoal = $GoalService->isGoalAfterCurrentTerm($goalId);
-        if(!$isAfterCurrentGoal) {
+        if (!$isAfterCurrentGoal) {
             return __("You can't change leader in the goal before current term.");
         }
 
@@ -205,7 +221,8 @@ class GoalMemberService extends AppService
             $currentTermId = $EvaluateTerm->getCurrentTermId();
             $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
             if ($isStartedEvaluation) {
-                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader being evaluating. goalId:%s", $goalId)));
+                $this->log(sprintf("[%s]%s", __METHOD__,
+                    sprintf("Failed to change leader being evaluating. goalId:%s", $goalId)));
                 return __("You cant't change leader in the goal during the evaluation period.");
             }
         }
@@ -214,22 +231,28 @@ class GoalMemberService extends AppService
         if ($changeType === self::CHANGE_LEADER_FROM_GOAL_MEMBER) {
             // 自分がゴールメンバーかどうか
             if (!$GoalMember->isCollaborated($goalId)) {
-                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader not being goal member. goalId:%s, userId:%s" , $goalId, $GoalMember->my_uid)));
+                $this->log(sprintf("[%s]%s", __METHOD__,
+                    sprintf("Failed to change leader not being goal member. goalId:%s, userId:%s", $goalId,
+                        $GoalMember->my_uid)));
                 return __("You don't have a permission to edit this goal.");
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
             $goalLeader = $GoalMember->getActiveLeader($goalId);
             if ($goalLeader) {
-                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader existing leader. goalId:%s, userId:%s" , $goalId, $GoalMember->my_uid)));
+                $this->log(sprintf("[%s]%s", __METHOD__,
+                    sprintf("Failed to change leader existing leader. goalId:%s, userId:%s", $goalId,
+                        $GoalMember->my_uid)));
                 return __("You don't have a permission to edit this goal.");
             }
-        // 自分がリーダーのケース
+            // 自分がリーダーのケース
         } else {
             // 自分がリーダーかどうか
             $loginUserIsLeader = $GoalMember->isLeader($goalId, $GoalMember->my_uid);
             if (!$loginUserIsLeader) {
-                $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader not being leader. goalId:%s, userId:%s" , $goalId, $GoalMember->my_uid)));
+                $this->log(sprintf("[%s]%s", __METHOD__,
+                    sprintf("Failed to change leader not being leader. goalId:%s, userId:%s", $goalId,
+                        $GoalMember->my_uid)));
                 return __("You don't have a permission to edit this goal.");
             }
 
@@ -237,7 +260,9 @@ class GoalMemberService extends AppService
             if ($changeType === self::CHANGE_LEADER_WITH_COLLABORATION) {
                 $GoalMember->set($formData);
                 if (!$GoalMember->validates()) {
-                    $this->log(sprintf("[%s]%s", __METHOD__, sprintf("Failed to change leader not being able to collabo. data:%s" , var_export($formData, true))));
+                    $this->log(sprintf("[%s]%s", __METHOD__,
+                        sprintf("Failed to change leader not being able to collabo. data:%s",
+                            var_export($formData, true))));
                     return __("Invalid value");
                 }
             }
@@ -246,7 +271,8 @@ class GoalMemberService extends AppService
         // 変更後のリーダーがアクティブなゴールメンバーかどうか
         $newLeaderId = Hash::get($formData, 'NewLeader.id');
         if (!$GoalMember->isActiveGoalMember($newLeaderId, $goalId)) {
-            $this->log(sprintf("Failed to change leader not being active member. goalId:%s, newLeaderId:%s" , $goalId, $newLeaderId));
+            $this->log(sprintf("Failed to change leader not being active member. goalId:%s, newLeaderId:%s", $goalId,
+                $newLeaderId));
             return __("Some error occurred. Please try again from the start.");
         }
 
@@ -255,7 +281,9 @@ class GoalMemberService extends AppService
 
     /**
      * リーダー変更処理
-     * @param  array  $data
+     *
+     * @param  array $data
+     *
      * @return bool
      */
     function changeLeader(array $data, int $changeType): bool
@@ -270,7 +298,11 @@ class GoalMemberService extends AppService
             $GoalMember->begin();
 
             // コラボレーター -> リーダー
-            $newLeader = ['id' => Hash::get($data, 'NewLeader.id'), 'type' => $GoalMember::TYPE_OWNER, 'role' => null, 'description' => null];
+            $newLeader = ['id'          => Hash::get($data, 'NewLeader.id'),
+                          'type'        => $GoalMember::TYPE_OWNER,
+                          'role'        => null,
+                          'description' => null
+            ];
             if (!$GoalMember->save($newLeader, false)) {
                 throw new Exception(sprintf("Failed to change leader. data:%s"
                     , var_export($newLeader, true)));
@@ -317,7 +349,8 @@ class GoalMemberService extends AppService
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
             // 新しいリーダーのキャッシュも削除する
-            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId), 'user_data');
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId),
+                'user_data');
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $newLeaderUserId), 'user_data');
 
             // トランザクション完了
@@ -342,7 +375,8 @@ class GoalMemberService extends AppService
      * - 自分がコラボレーターで
      * - アクティブなリーダーが存在しない場合
      *
-     * @param  int  $goalId
+     * @param  int $goalId
+     *
      * @return bool
      */
     function canChangeLeader(int $goalId): bool
