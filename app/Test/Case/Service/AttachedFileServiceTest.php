@@ -51,25 +51,24 @@ class AttachedFileServiceTest extends GoalousTestCase
         $this->assertFalse($res['error']);
     }
 
-    function testPreUpLoadFileFail()
+    function testPreUpLoadFileFailEmpty()
     {
         $res = $this->AttachedFileService->preUploadFile([]);
-        $this->assertFalse($res['error']);
+        $this->assertTrue($res['error']);
     }
 
-    function testCancelUploadFileSuccess()
+    function testPreUpLoadFileFailSizeOver()
     {
         $data = [
             'file' => [
                 'name'     => 'test',
                 'type'     => 'image/jpeg',
                 'tmp_name' => IMAGES . 'no-image.jpg',
-                'size'     => '12345',
+                'size'     => Attachedfile::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024 + 1,
             ]
         ];
-        $resPreUpload = $this->AttachedFileService->preUploadFile($data);
-        $res = $this->AttachedFile->cancelUploadFile($resPreUpload['id']);
-        $this->assertTrue($res);
+        $res = $this->AttachedFileService->preUploadFile($data);
+        $this->assertTrue($res['error']);
     }
 
 }

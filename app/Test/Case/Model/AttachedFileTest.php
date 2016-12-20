@@ -1,5 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('AttachedFile', 'Model');
+App::import('Service', 'AttachedFileService');
 
 /**
  * AttachedFile Test Case
@@ -70,6 +71,23 @@ class AttachedFileTest extends GoalousTestCase
         $this->AttachedFile->PostFile->Post->PostShareCircle->my_uid = 1;
         $this->AttachedFile->PostFile->Post->PostShareUser->current_team_id = 1;
         $this->AttachedFile->PostFile->Post->PostShareUser->my_uid = 1;
+    }
+
+    function testCancelUploadFileSuccess()
+    {
+        $data = [
+            'file' => [
+                'name'     => 'test',
+                'type'     => 'image/jpeg',
+                'tmp_name' => IMAGES . 'no-image.jpg',
+                'size'     => '12345',
+            ]
+        ];
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        $resPreUpload = $AttachedFileService->preUploadFile($data);
+        $res = $this->AttachedFile->cancelUploadFile($resPreUpload['id']);
+        $this->assertTrue($res);
     }
 
     function testCancelUploadFileFail()

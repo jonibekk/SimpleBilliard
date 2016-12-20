@@ -48,6 +48,7 @@ class AttachedFileService extends AppService
             $this->log(sprintf("[%s] file not exists.", __METHOD__));
             $this->log(sprintf("PostData: %s", var_export($postData, true)));
             $this->log(Debugger::trace());
+            $ret['error'] = true;
             $ret['msg'] = __('Failed to upload.');
             return $ret;
         }
