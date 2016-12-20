@@ -167,40 +167,6 @@ class AttachedFile extends AppModel
     }
 
     /**
-     * ファイルの仮アップロード
-     *
-     * @param array $postData
-     *
-     * @return string
-     * @throws Exception エラーメッセージ
-     */
-    public function preUploadFile(array $postData): string
-    {
-        if (!$file_info = Hash::get($postData, 'file')) {
-            $this->log(sprintf("[%s] file not exists.", __METHOD__));
-            $this->log(sprintf("PostData: %s", var_export($postData, true)));
-            $this->log(Debugger::trace());
-            throw new Exception(__('Failed to upload.'));
-        }
-        //ファイル上限チェック
-        if ($file_info['size'] > self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024) {
-            throw new Exception(__("%sMB is the limit.", self::ATTACHABLE_MAX_FILE_SIZE_MB));
-        }
-        //ファイルの画素数チェック
-        if (strpos($file_info['type'], 'image') !== false) {
-            list($imgWidth, $imgHeight) = getimagesize($file_info['tmp_name']);
-            if ($imgWidth * $imgHeight > self::ATTACHABLE_MAX_PIXEL) {
-                throw new Exception(__("%s pixel is the limit.", self::ATTACHABLE_MAX_PIXEL));
-            }
-        }
-
-        /** @var GlRedis $Redis */
-        $Redis = ClassRegistry::init('GlRedis');
-        $hashed_key = $Redis->savePreUploadFile($file_info, $this->current_team_id, $this->my_uid);
-        return $hashed_key;
-    }
-
-    /**
      * ファイルアップロードのキャンセル
      *
      * @param string $hashed_key

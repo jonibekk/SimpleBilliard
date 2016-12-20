@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Service', 'AttachedFileService');
 
 /**
  * Posts Controller
@@ -1243,21 +1244,11 @@ class PostsController extends AppController
     public function ajax_upload_file(): CakeResponse
     {
         $this->_ajaxPreProcess();
-        try {
-            $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
-        } catch (Exception $e) {
-            return $this->_ajaxGetResponse([
-                'error' => true,
-                'msg'   => $e->getMessage(),
-                'id'    => "",
-            ]);
-        }
 
-        return $this->_ajaxGetResponse([
-            'error' => false,
-            'msg'   => "",
-            'id'    => $file_id,
-        ]);
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        $ret = $AttachedFileService->preUploadFile($this->request->params['form']);
+        return $this->_ajaxGetResponse($ret);
     }
 
     /**
