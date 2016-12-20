@@ -53,7 +53,7 @@ $(function () {
   var previewTemplateActionImage =
     '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
     '  <div class="dz-action-photo-details">' +
-    '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
+    '    <div class="dz-action-photo-thumb-container pull-left"><i class="fa fa-image action-image-add-button-icon js-img-icon" style="display: none;"></i><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
     '  </div>' +
     '  <div class="dz-action-photo-progress progress">' +
     '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
@@ -116,21 +116,6 @@ $(function () {
     // ファイルアップロード完了時
     success: function (file, res) {
       var $preview = $(file.previewTemplate);
-      // エラー
-      if (res.error) {
-        $preview.remove();
-        PNotify.removeAll();
-        new PNotify({
-          type: 'error',
-          title: cake.message.notice.d,
-          text: res.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-        });
-        return;
-      }
-
       // 処理成功
       // submit するフォームに hidden でファイルID追加
       var $form = $('#' + $uploadFileForm._params.formID);
@@ -152,6 +137,7 @@ $(function () {
 
       // コールバック関数（afterSuccess）
       $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
+
     },
     // ファイル削除ボタン押下時
     removedfile: function (file) {
@@ -323,13 +309,14 @@ $(function () {
       });
     },
     // ファイルアップロード失敗
-    error: function (file, errorMessage) {
-      var $preview = $(file.previewTemplate);
-      // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
-      $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
-      setTimeout(function () {
-        $preview.remove();
-      }, 4000);
+    error: function (file, error) {
+      //引数errorがオブジェクトかテキストで渡ってくるケースがあるので、エラーメッセージを取り出す。
+      var errorMessage = "";
+      if (typeof error == 'object') {
+        errorMessage = error.msg;
+      } else if (typeof error == 'string') {
+        errorMessage = error;
+      }
       $uploadFileForm.hide();
       PNotify.removeAll();
       new PNotify({
@@ -340,6 +327,10 @@ $(function () {
         delay: 8000,
         mouse_reset: false
       });
+
+      // コールバック関数（afterError）
+      $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterError.call(this, file);
+
     }
   };
 
@@ -463,7 +454,8 @@ $(function () {
       afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : empty,
       afterSuccess: params.afterSuccess ? params.afterSuccess : empty,
       beforeSending: params.beforeSending ? params.beforeSending : empty,
-      afterQueueComplete: params.afterQueueComplete ? params.afterQueueComplete : empty
+      afterQueueComplete: params.afterQueueComplete ? params.afterQueueComplete : empty,
+      afterError: params.afterError ? params.afterError : empty
     };
   };
 
@@ -528,6 +520,14 @@ $(function () {
       else {
         $('#PostSubmit').removeAttr('disabled');
       }
+    },
+    afterError: function (file) {
+      var $preview = $(file.previewTemplate);
+      // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
+      $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
+      setTimeout(function () {
+        $preview.remove();
+      }, 4000);
     }
   };
   $uploadFileForm.registerDragDropArea('#PostForm', postParams);
@@ -560,6 +560,14 @@ $(function () {
           Dropzone.instances[0].files.length = 0;
         }
       });
+    },
+    afterError: function (file) {
+      var $preview = $(file.previewTemplate);
+      // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
+      $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
+      setTimeout(function () {
+        $preview.remove();
+      }, 4000);
     }
   };
   var messageDzOptions = {
@@ -583,6 +591,9 @@ $(function () {
       $('#CommonActionSubmit').on('click', $uploadFileForm._forbitSubmit);
     },
     beforeAccept: function (file) {
+      //アップロード用アイコンを再表示
+      var $preview = $(file.previewTemplate);
+      $preview.find('.js-img-icon').hide();
       var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
       // 画像を２枚同時に選択（ドラッグ）された時の対応
@@ -626,6 +637,12 @@ $(function () {
       // フォームをsubmit可能にする
       $('#CommonActionSubmit').off('click', $uploadFileForm._forbitSubmit);
     },
+    afterError: function (file) {
+      var $preview = $(file.previewTemplate);
+      $preview.find('img').remove();
+      $preview.find('.progress').remove();
+      $preview.find('.js-img-icon').show();
+    }
   };
   var actionImageDzOptions = {
     acceptedFiles: "image/*",
@@ -651,6 +668,10 @@ $(function () {
       $('#CommonActionSubmit').on('click', $uploadFileForm._forbitSubmit);
     },
     beforeAccept: function (file) {
+      //アップロード用アイコンを再表示
+      var $preview = $(file.previewTemplate);
+      $preview.find('.js-img-icon').hide();
+
       var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
       // Dropzone の管理ファイルから外す
@@ -708,6 +729,12 @@ $(function () {
       // フォームをsubmit可能にする
       $('#CommonActionSubmit').off('click', $uploadFileForm._forbitSubmit);
     },
+    afterError: function (file) {
+      var $preview = $(file.previewTemplate);
+      $preview.find('img').remove();
+      $preview.find('.progress').remove();
+      $preview.find('.js-img-icon').show();
+    }
   };
   var actionImage2DzOptions = {
     acceptedFiles: "image/*",
@@ -736,6 +763,14 @@ $(function () {
       // フォームをsubmit可能にする
       $('#CommonActionShare').off('click', $uploadFileForm._forbitSubmit);
       $('#CommonActionShare').removeAttr('disabled')
+    },
+    afterError: function (file) {
+      var $preview = $(file.previewTemplate);
+      // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
+      $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
+      setTimeout(function () {
+        $preview.remove();
+      }, 4000);
     }
   };
   $uploadFileForm.registerDragDropArea('#ActionUploadFileDropArea', actionParams);
