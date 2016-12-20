@@ -26,7 +26,7 @@
             'id'               => 'CommonActionDisplayForm',
             'type'             => 'file',
             'novalidate'       => true,
-            'class'            => 'form-feed-notify'
+            'class'            => 'form-feed-notify action-form'
         ]); ?>
         <div class="post-panel-body plr_11px ptb_7px">
             <a href="#"
