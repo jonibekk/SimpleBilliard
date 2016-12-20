@@ -27,7 +27,6 @@ class AttachedFile extends AppModel
      * アップロード可能な画像ファイルの画素数
      */
     const ATTACHABLE_MAX_PIXEL = 25000000;//2500万画素
-//    const ATTACHABLE_MAX_PIXEL = 1;//for test
 
     static public $TYPE_FILE = [
         self::TYPE_FILE_IMG   => ['name' => null, 'type' => 'image'],

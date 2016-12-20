@@ -53,7 +53,7 @@ $(function () {
   var previewTemplateActionImage =
     '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
     '  <div class="dz-action-photo-details">' +
-    '    <div class="dz-action-photo-thumb-container pull-left"><i class="fa fa-image action-image-add-button-icon js-img-icon" style="display: none;"></i><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
+    '    <div class="dz-action-photo-thumb-container pull-left"><i class="fa fa-camera action-image-add-button-icon js-img-icon" style="display: none;"></i><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
     '  </div>' +
     '  <div class="dz-action-photo-progress progress">' +
     '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +

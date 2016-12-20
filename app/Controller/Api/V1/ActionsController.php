@@ -73,7 +73,6 @@ class ActionsController extends ApiController
     /**
      * アクション登録のバリデーション
      *
-     *
      * @param array $data
      *
      * @return CakeResponse | true
@@ -95,7 +94,7 @@ class ActionsController extends ApiController
         // 画像アップロードチェック
         $fileIds = $this->request->data('file_id');
         if (empty($fileIds) || !is_array($fileIds)) {
-            return $this->_getResponseBadFail(__("Failed to upload image."));
+            return $this->_getResponseBadFail(__("Pleas Reselect an image."));
         }
         $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
         $mimeType = Hash::get($file, 'info.type');
@@ -103,7 +102,6 @@ class ActionsController extends ApiController
             return $this->_getResponseBadFail(__("Failed to upload. jpg, png and gif are allowed."));
 
         }
-
 
         // アクションのフォームバリデーション
         $action = Hash::get($data, 'ActionResult');
