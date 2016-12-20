@@ -81,6 +81,9 @@ class KeyResultServiceTest extends GoalousTestCase
         $this->markTestIncomplete('testClear not implemented.');
     }
 
+    /**
+     * 更新バリデーション
+     */
     function testValidateUpdate()
     {
         // KRが存在するか
@@ -120,6 +123,9 @@ class KeyResultServiceTest extends GoalousTestCase
         $this->assertNotEmpty(Hash::get($err, 'validation_errors'));
     }
 
+    /**
+     * 更新データ作成
+     */
     function testBuildUpdateKr()
     {
         $data = [
@@ -157,5 +163,15 @@ class KeyResultServiceTest extends GoalousTestCase
         $this->assertEquals($updateKr['current_value'], 0);
         $this->assertEquals($updateKr['target_value'], 1);
 
+    }
+
+    /**
+     * 更新
+     */
+    function testUpdate()
+    {
+        // TODO:ケース作成
+        // ※必ずテスト書くためにわざと失敗するようにしている
+        $this->assertFalse();
     }
 }
