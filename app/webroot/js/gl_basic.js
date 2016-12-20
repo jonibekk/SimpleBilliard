@@ -3950,9 +3950,9 @@ $(document).ready(function () {
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
 
-  if ($('#jsDashboardCircleListBody')[0] !== undefined) {
+  if ($('.js-dashboard-circle-list-body')[0] !== undefined) {
     pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
-      var $circle_list = $('#jsDashboardCircleListBody');
+      var $circle_list = $('.js-dashboard-circle-list-body');
       $.each(data.circle_ids, function (i, circle_id) {
         var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
         if ($circle[0] === undefined) {
@@ -3968,7 +3968,7 @@ $(document).ready(function () {
           $unread_count.text(Number(unread_count) + 1);
         }
         $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread')
-        $circle.prependTo('#jsDashboardCircleListBody');
+        $circle.prependTo('.js-dashboard-circle-list-body');
       });
 
     });

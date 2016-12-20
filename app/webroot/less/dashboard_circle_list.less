@@ -15,7 +15,6 @@
 }
 .circle-name_box {
   display: block;
-  width: 112px;
   height: 16px;
   line-height: 16px;
   font-size: 12px;
@@ -112,31 +111,13 @@
   color: @veryDark;
 }
 
-/**
-Scrollbarを隠すために使っています。
-Wrapをスクロールバーのサイズ分(16px)実際に大きくしています。
-Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装されればそちらで書き換えるのが一番早いと思います。
-気になる人は ::-webkit-scrollbar などでググってください。サンプルとしては以下のコードがWebKit系のブラウザであれば動作します。
-
-```
-.dashboard-circle-list-body::-webkit-scrollbar {
-  display: none;
-}
-```
-*/
-
 .dashboard-circle-list-body-wrap {
   overflow: hidden;
-  width: 168px;
+  width: 100%;
 }
 .dashboard-circle-list-body {
   overflow-y: scroll;
-  width: 185px;
-  padding-right: 17px;
-  // サークルリストの処理のため。非常に見難くなっているため再度また使うことになるだろうと思われる。
-  //
-  // background: @baseLightGray;
-  // box-shadow: inset 0 0 1px @basicGray;
+  width: 100%;
 }
 .dashboard-circle-list-footer {
   padding: 4px;
@@ -154,6 +135,31 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
 .circleListMore:nth-child(n+9) {
   display: none;
 }
+.dashboard-circle-unread-point {
+  margin: 3px 3px 0 0;
+  width: 7px;
+  .circle {
+    background: @keyColor;
+    height: 5px;
+    width: 5px;
+  }
+}
+.dashboard-circle-count-box-wrapper {
+  width: 25px;
+  height: 16px;
+  margin: 4px 0px 4px 2px;
+}
+.dashboard-circle-count-box {
+  width: 100%;
+  height: 100%;
+  background: @subColor3;
+  border-radius: 50% ~"/" 70%;
+  color: @white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .dashboard-circle-list-row-wrap {
   height: 32px;
   overflow: hidden;
@@ -164,7 +170,7 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
   justify-content: row;
   width: 100%;
   height: 32px;
-  padding: 4px 24px 4px 4px;
+  padding: 4px 24px 4px 2px;
   font-size: @fontSmall;
   &:hover,
   &:active,
@@ -176,9 +182,12 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
   }
 
   &.is-read {
-    .dashboard-circle-unread-point > .fa,
     .dashboard-circle-count-box {
       display: none;
+    }
+    .dashboard-circle-unread-point > .circle {
+      background: @subColor3;
+      // display: none;
     }
   }
 
@@ -198,7 +207,6 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
   color: @veryDark;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   height: 16px;
   vertical-align: middle;
   flex: 1;
@@ -219,8 +227,6 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
   .no-underline;
 }
 .dashboard-circle-list-edit {
-  // width: 32px;
-  // height: 32px;
   display: inline-block;
   line-height: 32px;
   .btn-animated;
@@ -231,25 +237,4 @@ Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装され�
   &:focus {
     color: @darkGray;
   }
-}
-
-.dashboard-circle-unread-point {
-  height: 16px;
-  width: 16px;
-  margin: 4px 0;
-  .fa {
-    color: @keyColor;
-    font-size: 10px;
-  }
-}
-
-.dashboard-circle-count-box {
-  width: 25px;
-  background: @subColor3;
-  border-radius: 50% ~"/" 70%;
-  margin: 4px 0;
-  height: 16px;
-  vertical-align: middle;
-  text-align: center;
-  color: @white;
 }

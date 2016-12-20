@@ -11,12 +11,12 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="dashboard-circle-list layout-sub_padding clearfix" id="jsDashboardCircleList">
+<div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading">Circles</p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
-        <div class="dashboard-circle-list-body" id="jsDashboardCircleListBody">
+        <div class="dashboard-circle-list-body js-dashboard-circle-list-body" id="jsDashboardCircleListBody">
             <?php if (!empty($my_circles)): ?>
                 <?php foreach ($my_circles as $circle): ?>
                     <?php $isUnread = ($circle['CircleMember']['unread_count'] > 0); ?>
@@ -45,19 +45,21 @@
                            oldest-post-time="<?= $circle['Circle']['created'] ?>"
                            href="#">
                             <div class="dashboard-circle-unread-point">
-                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <div class="circle"></div>
                             </div>
                             <p class="dashboard-circle-name-box"
                                title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?>
                             </p>
-                            <div class="dashboard-circle-count-box js-circle-count-box">
-                                <?php if ($isUnread): ?>
-                                    <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                        9+
-                                    <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                        <?= $circle['CircleMember']['unread_count'] ?>
+                            <div class="dashboard-circle-count-box-wrapper">
+                                <div class="dashboard-circle-count-box js-circle-count-box">
+                                    <?php if ($isUnread): ?>
+                                        <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
+                                            9+
+                                        <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
+                                            <?= $circle['CircleMember']['unread_count'] ?>
+                                        <?php endif; ?>
                                     <?php endif; ?>
-                                <?php endif; ?>
+                                </div>
                             </div>
                         </a>
                     </div>
