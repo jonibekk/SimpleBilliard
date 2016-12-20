@@ -158,6 +158,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール1',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '2',
@@ -165,6 +167,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール2',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '3',
@@ -172,6 +176,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール3',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '4',
@@ -179,18 +185,24 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール4',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '5',
             'user_id' => '14',
 
             'team_id' => '1',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '6',
             'user_id' => '1',
 
             'team_id' => '1',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '7',
@@ -198,6 +210,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'その他ゴール1',
+            'start_date' => 10000,
+            'end_date'   => 19999,
         ],
         [
             'id'      => '8',
