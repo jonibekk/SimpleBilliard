@@ -983,7 +983,7 @@ function resizeImgBase64(imgBase64, width, height, callback) {
 function checkUploadFileExpire(formID) {
   var $form = $('#' + formID);
 
-  var res = true;
+  var res = true;1
   $form.find('input[type=hidden][name="data[file_id][]"]').each(function () {
     var $hidden = $(this);
     var now = Math.floor(new Date().getTime() / 1000);
@@ -1084,6 +1084,14 @@ function getAjaxFormReplaceElm() {
             $uploadFileForm._sending = false;
             // フォームをsubmit可能にする
             $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._forbitSubmit);
+          },
+          afterError: function (file) {
+            var $preview = $(file.previewTemplate);
+            // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
+            $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
+            setTimeout(function () {
+              $preview.remove();
+            }, 4000);
           }
         };
         $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
