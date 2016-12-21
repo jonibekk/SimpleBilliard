@@ -94,7 +94,7 @@ class ActionsController extends ApiController
         // 画像アップロードチェック
         $fileIds = $this->request->data('file_id');
         if (empty($fileIds) || !is_array($fileIds)) {
-            return $this->_getResponseBadFail(__("Pleas Reselect an image."));
+            return $this->_getResponseBadFail(__("Please reselect an image."));
         }
         $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
         $mimeType = Hash::get($file, 'info.type');

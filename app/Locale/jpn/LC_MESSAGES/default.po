@@ -817,7 +817,7 @@ msgstr ""
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
-msgid "Pleas Reselect an image."
+msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
 
 msgid "Failed to upload. jpg, png and gif are allowed."
