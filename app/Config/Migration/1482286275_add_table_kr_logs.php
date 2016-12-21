@@ -33,7 +33,7 @@ class AddTableKrLogs extends CakeMigration
                         'default'  => null,
                         'unsigned' => true,
                         'key'      => 'index',
-                        'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+                        'comment'  => 'チームID'
                     ),
                     'goal_id'            => array(
                         'type'     => 'biginteger',
@@ -41,7 +41,7 @@ class AddTableKrLogs extends CakeMigration
                         'default'  => null,
                         'unsigned' => true,
                         'key'      => 'index',
-                        'comment'  => 'ゴールID(belongsToでGoalモデルに関連)'
+                        'comment'  => 'ゴールID'
                     ),
                     'user_id'            => array(
                         'type'     => 'biginteger',
@@ -56,19 +56,20 @@ class AddTableKrLogs extends CakeMigration
                         'default'  => null,
                         'unsigned' => true,
                         'key'      => 'index',
-                        'comment'  => 'キーリザルトID(belongsToでKeyResultモデルに関連)'
+                        'comment'  => 'キーリザルトID'
+                    ),
+                    'type' => array(
+                        'type'    => 'integer',
+                        'null'    => false,
+                        'unsigned' => true,
+                        'default' => '0',
+                        'comment' => '種別(0:KR編集時ログ, 1:コーチ認定時ログ)'
                     ),
                     'data'               => array(
                         'type'    => 'binary',
                         'null'    => false,
                         'default' => null,
                         'comment' => 'KRのスナップショット(MessagePackで圧縮)'
-                    ),
-                    'coach_approval_flg' => array(
-                        'type'    => 'boolean',
-                        'null'    => false,
-                        'default' => '0',
-                        'comment' => 'コーチ認定フラグ'
                     ),
                     'del_flg'            => array(
                         'type'    => 'boolean',
@@ -172,7 +173,7 @@ class AddTableKrLogs extends CakeMigration
                         'default'  => null,
                         'length'   => '18,3',
                         'unsigned' => true,
-                        'comment'  => '進捗値(更新前)'
+                        'comment'  => '更新前進捗値'
                     ),
                     'change_value'     => array(
                         'type'     => 'decimal',
@@ -268,13 +269,13 @@ class AddTableKrLogs extends CakeMigration
             $KrChangeLog = ClassRegistry::init('KrChangeLog');
             $insertSql = <<<SQL
                 INSERT INTO kr_change_logs
-                    (id, team_id, goal_id, key_result_id, `data`, coach_approval_flg, del_flg, deleted, created, modified)
+                    (id, team_id, goal_id, key_result_id, data, type, del_flg, deleted, created, modified)
                 SELECT 
                     id,
                     team_id,
                     goal_id,
                     key_result_id,
-                    `data`,
+                    data,
                     1,
                     del_flg,
                     deleted,
