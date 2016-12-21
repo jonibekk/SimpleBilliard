@@ -443,7 +443,8 @@ class GoalsController extends AppController
 
         $goalMember = $this->request->data['GoalMember'];
         $goalMemberId = $goalMemberId ? $goalMemberId : $this->Goal->GoalMember->getLastInsertID();
-        $goal = $this->Goal->findById($goalMember['goal_id']);
+        $goalId = $goalMember['goal_id'];
+        $goal = $this->Goal->findById($goalId);
         $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
 
         //success case.
@@ -454,16 +455,19 @@ class GoalsController extends AppController
         // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId), 'user_data');
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId), 'user_data');
+
         //mixpanel
         if ($new) {
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalMember['goal_id']);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalId);
             // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
             if ($goalLeaderUserId != $coachId) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalMember['goal_id']);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalId);
             }
         }
-        if ($coachId && (isset($goalMember['priority']) && $goalMember['priority'] >= '1')
-        ) {
+
+        //コーチへ通知 & 未認定件数キャッシュクリア
+        $isOver1Priority = (isset($goalMember['priority']) && $goalMember['priority'] >= '1');
+        if ($coachId && $isOver1Priority && $this->Goal->isPresentTermGoal($goalId) ) {
             if ($new) {
                 //新規の場合
                 $this->_sendNotifyToCoach($goalMemberId, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);

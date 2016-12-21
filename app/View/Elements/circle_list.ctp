@@ -11,16 +11,27 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="dashboard-circle-list layout-sub_padding clearfix" id="jsDashboardCircleList">
+<div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
-        <p class="dashboard-circle-list-title circle_heading">Circles</p>
+        <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?></p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
-        <div class="dashboard-circle-list-body" id="jsDashboardCircleListBody">
+        <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
             <?php if (!empty($my_circles)): ?>
                 <?php foreach ($my_circles as $circle): ?>
+                    <?php $isUnread = ($circle['CircleMember']['unread_count'] > 0); ?>
                     <div class="dashboard-circle-list-row-wrap" circle_id="<?= $circle['Circle']['id'] ?>">
-                        <a class="dashboard-circle-list-row"
+                        <?php if ($circle['CircleMember']['admin_flg']): ?>
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'circles',
+                                'action'     => 'ajax_get_edit_modal',
+                                'circle_id'  => $circle['Circle']['id']
+                            ]) ?>"
+                               class="dashboard-circle-list-edit-wrap modal-ajax-get-circle-edit">
+                                <i class="fa fa-cog dashboard-circle-list-edit"></i>
+                            </a>
+                        <?php endif; ?>
+                        <a class="dashboard-circle-list-row js-dashboard-circle-list <?= $isUnread ? 'is-unread' : 'is-read' ?>"
                            get-url="<?= $this->Html->url([
                                'controller' => 'posts',
                                'action'     => 'feed',
@@ -33,39 +44,22 @@
                            team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
                            oldest-post-time="<?= $circle['Circle']['created'] ?>"
                            href="#">
-                            <?=
-                            $this->Html->image('pre-load.svg',
-                                [
-                                    'class'         => 'lazy dashboard-circle-list-pic',
-                                    'data-original' => $this->Upload->uploadUrl($circle, 'Circle.photo',
-                                        ['style' => 'small']),
-                                    'width'         => '16px',
-                                    'height'        => '16px',
-                                    'error-img'     => "/img/no-image-circle.jpg",
-                                ]
-                            )
-                            ?>
+                            <div class="dashboard-circle-unread-point">
+                                <div class="circle"></div>
+                            </div>
                             <p class="dashboard-circle-name-box"
-                               title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
-                            <span class="dashboard-circle-count-box">
-                                <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                    9+
-                                <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                    <?= $circle['CircleMember']['unread_count'] ?>
-                                <?php endif; ?>
-
-                                <?php if ($circle['CircleMember']['admin_flg']): ?>
-                                    <a href="<?= $this->Html->url([
-                                        'controller' => 'circles',
-                                        'action'     => 'ajax_get_edit_modal',
-                                        'circle_id'  => $circle['Circle']['id']
-                                    ]) ?>"
-                                       class="dashboard-circle-list-edit-wrap modal-ajax-get-circle-edit">
-                                        <i class="fa fa-cog dashboard-circle-list-edit"></i>
-                                    </a>
-                                <?php endif; ?>
-
-                            </span>
+                               title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?>
+                            </p>
+                            <div class="dashboard-circle-count-box-wrapper">
+                                <div class="dashboard-circle-count-box js-circle-count-box">
+                                    <?php if ($isUnread): ?>
+                                        <?php $unreadCount = $circle['CircleMember']['unread_count']; ?>
+                                        <?php if ($unreadCount > 0): ?>
+                                            <?= $this->NumberEx->addPlusIfOverLimit($unreadCount, $limit = 9); ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </a>
                     </div>
                 <?php endforeach ?>

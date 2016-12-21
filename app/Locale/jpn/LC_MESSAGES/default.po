@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-16 14:58+0900\n"
+"PO-Revision-Date: 2016-12-21 09:49+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -473,9 +473,6 @@ msgstr "コメントしました。"
 msgid "This file doesn't exist."
 msgstr "ファイルが存在しません。"
 
-msgid "Failed to upload."
-msgstr "アップロードに失敗しました。"
-
 msgid "Deleted the file."
 msgstr "ファイルを削除しました。"
 
@@ -820,8 +817,8 @@ msgstr ""
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
-msgid "Failed to upload image."
-msgstr "画像アップロードに失敗しました。"
+msgid "Please reselect an image."
+msgstr "画像ファイルを選択し直してください。"
 
 msgid "Failed to upload. jpg, png and gif are allowed."
 msgstr ""
@@ -1712,6 +1709,15 @@ msgstr "評価期間内で入力してください。"
 msgid "Data is duplicated."
 msgstr ""
 
+msgid "Failed to upload."
+msgstr "アップロードに失敗しました。"
+
+msgid "%sMB is the limit."
+msgstr "%sMBがアップロードできるファイルの上限です。"
+
+msgid "%s pixel is the limit."
+msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
 msgid "Members"
 msgstr "メンバー"
 
@@ -2468,6 +2474,9 @@ msgstr "名前"
 msgid "Level of achievement"
 msgstr "達成度"
 
+msgid "Circles"
+msgstr "サークル"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -2737,9 +2746,6 @@ msgstr "ファイルを選択"
 msgid "Members in this topic"
 msgstr "会話のメンバー (%s)"
 
-msgid "Circles"
-msgstr "サークル"
-
 msgid "Unjoined"
 msgstr "参加していない"
 
@@ -2888,6 +2894,12 @@ msgstr "投稿"
 
 msgid "Message"
 msgstr "メッセージ"
+
+msgid "Save"
+msgstr "保存する"
+
+msgid "Post"
+msgstr "投稿する"
 
 msgid "To:"
 msgstr "To:"
@@ -3098,9 +3110,6 @@ msgstr "保存して、コラボる"
 
 msgid "Save & Quit this goal"
 msgstr "保存して、ゴールメンバーから抜ける"
-
-msgid "Save"
-msgstr "保存する"
 
 msgid "Change Top KR"
 msgstr "トップKRを変更"

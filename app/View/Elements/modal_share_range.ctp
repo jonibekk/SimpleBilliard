@@ -19,7 +19,7 @@
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title font_18px font_bold"><?= __("Shared with %s people", $total_share_user_count) ?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body without-footer">
             <div class="row borderBottom">
                 <?php if (!empty($circles)): ?>
                     <?php foreach ($circles as $key => $circle): ?>
@@ -40,9 +40,6 @@
                     <?php endforeach ?>
                 <?php endif; ?>
             </div>
-        </div>
-        <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>
