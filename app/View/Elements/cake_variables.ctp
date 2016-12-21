@@ -390,6 +390,7 @@
             "Prasing someone": "<?= __("Prasing someone") ?>",
             "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>",
             "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>",
+            "Post": "<?= __("Post") ?>",
 
             // Signup
             "Check your email!": "<?= __("Check your email!") ?>",
