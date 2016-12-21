@@ -422,7 +422,7 @@ $(document).ready(function () {
   $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
   $(document).on("click", ".notify-click-target", evNotifyPost);
   $(document).on("click", ".message-click-target", evMessage);
-  $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
+  $(document).on("click", ".js-dashboard-circle-list", evCircleFeed);
   $(document).on("click", ".circle-link", evCircleFeed);
   $(document).on("click", ".btn-back-notifications", evNotifications);
   $(document).on("click", ".call-notifications", evNotifications);
@@ -3259,8 +3259,7 @@ function evCircleFeed(options) {
   var team_all_flg = sanitize($obj.attr('team-all-flg'));
   var oldest_post_time = sanitize($obj.attr('oldest-post-time'));
   updateCakeValue(circle_id, title, image_url);
-
-  if ($obj.attr('class') == 'circle-link') {
+  if ($obj.hasClass('circle-link')) {
     //ハンバーガーから来た場合は隠す
     $("#header-slide-menu").click();
   }
@@ -3274,8 +3273,9 @@ function evCircleFeed(options) {
   }
 
   //サークルリストのわきに表示されている未読数リセット
-  $obj.children(".dashboard-circle-count-box").html("");
+  $obj.children(".js-circle-count-box").html("");
   $obj.children(".circle-count_box").children(".count-value").html("");
+  $obj.removeClass('is-unread').addClass('is-read');
 
   //アドレスバー書き換え
   if (!updateAddressBar(get_url)) {
@@ -3392,6 +3392,7 @@ function evCircleFeed(options) {
       $("#FeedMoreReadLink").css("display", "inline");
 
       $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
+      $(".js-circle-filter-menu-image").attr('src', image_url);
 
       //サークル設定メニュー生成
       if (!team_all_flg && data.user_status == "joined") {
@@ -3949,15 +3950,15 @@ $(document).ready(function () {
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
 
-  if ($('#jsDashboardCircleListBody')[0] !== undefined) {
+  if ($('.js-dashboard-circle-list-body')[0] !== undefined) {
     pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
-      var $circle_list = $('#jsDashboardCircleListBody');
+      var $circle_list = $('.js-dashboard-circle-list-body');
       $.each(data.circle_ids, function (i, circle_id) {
         var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
         if ($circle[0] === undefined) {
           return true;
         }
-        var $unread_count = $circle.find('.dashboard-circle-count-box');
+        var $unread_count = $circle.find('.js-circle-count-box');
         var unread_count = $unread_count.text().trim();
         if (unread_count == "") {
           $unread_count.text(1);
@@ -3966,7 +3967,8 @@ $(document).ready(function () {
         } else if (unread_count != "9+") {
           $unread_count.text(Number(unread_count) + 1);
         }
-        $circle.prependTo('#jsDashboardCircleListBody');
+        $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread')
+        $circle.prependTo('.js-dashboard-circle-list-body');
       });
 
     });
