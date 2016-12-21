@@ -130,6 +130,8 @@
     }
     var self = this;
     $(this).find(".changed").removeClass("changed");
+    $(this).find('.help-block').remove();
+    $(this).find('.js-validation-err').remove();
 
     var form_data = $(this).serializeArray();
 
@@ -142,8 +144,31 @@
         console.log(data);
       },
       error: function (res, textStatus, errorThrown) {
+        $modal.find('.js-validation-err').remove();
         var body = res.responseJSON;
         console.log(body);
+        // バリデーションエラー
+        var errTemplate = '<div class="has-error"><small class="js-validation-err help-block"  style="display: block;">#error#</small></div>';
+        if (res.status == 400 && body.validation_errors) {
+          var errors = body.validation_errors;
+          for (var key in errors) {
+            if (errors.hasOwnProperty(key)) {
+              errHtml = errTemplate.replace(/#error#/g, errors[key]);
+              // if (key == "target_value") {
+                // $modal.find('.js-progress-block').after(errHtml);
+              // } else {
+              //   $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
+              // }
+              $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
+            }
+          }
+          return false;
+        }
+
+        var errHtml = '<div class="js-validation-err alert alert-danger mtb_8px ml_8px mr_8px">' + body.message  +'</div>';
+        $(form).prepend(errHtml);
+        return false;
+
       }
     });
     return false;

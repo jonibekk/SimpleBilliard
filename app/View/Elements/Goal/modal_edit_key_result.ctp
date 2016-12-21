@@ -91,7 +91,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                         ※単位を変更すると今までのKRの進捗が全てリセットされますのでご注意下さい。
                     </small>
                 </div>
-                <div class="goal-set-input">
+                <div class="goal-set-input js-progress-block">
                     <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>">
                         <div class="goals-create-layout-flex">
                             <div class="relative">
@@ -103,6 +103,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                             'label'               => false,
                                             'wrapInput'           => 'modal-add-kr-change-unit-wrap',
                                             'type'                => 'select',
+                                            'required'                     => true,
                                             'class'               => 'form-control goals-create-input-form mod-select-units js-select-value-unit',
                                             'target-id'           => 'KeyResult0ValueInputWrap_' . $goalId,
                                             'required'            => true,
@@ -122,14 +123,14 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                         'label'                        => false,
                                         'type'                         => 'number',
                                         'default'                      => 0,
+                                        'required'                     => true,
                                         'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range js-start-value',
-                                        'value'                        => Hash::get($this->request->data, 'KeyResult.start_value'),
+                                        'placeholder' => Hash::get($this->request->data, 'KeyResult.start_value'),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
                                         'data-bv-stringlength-message' => __(
                                             "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
                                         "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
                                         'disabled'                     => 'disabled'
                                     ]) ?>
                                 <span class="goals-create-input-form-tkr-range-symbol">
@@ -144,12 +145,12 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                         'default'                      => 100,
                                         'required'                     => true,
                                         'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
+                                        'placeholder' => Hash::get($this->request->data, 'KeyResult.target_value'),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
                                         'data-bv-stringlength-message' => __(
                                             "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
                                         "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-numeric-message'      => __("Please enter a number."),
                                     ]) ?>
                             </div>
                         </div>
@@ -163,14 +164,14 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                             'label'                        => false,
                             'type'                         => 'number',
                             'default'                      => 0,
+                            'required'                     => true,
                             'class'                        => 'form-control goals-create-input-form',
-                            'value'                        => Hash::get($this->request->data, 'KeyResult.current_value'),
+                            'placeholder'                        => Hash::get($this->request->data, 'KeyResult.current_value'),
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
                             'data-bv-stringlength-message' => __(
                                 "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
                             "data-bv-notempty-message"     => __("Input is required."),
-                            'data-bv-numeric-message'      => __("Please enter a number."),
                         ]) ?>
                 </div>
             </div>
@@ -203,8 +204,9 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
 
                 <div class="goal-set-input">
                     <div class="form-group" id="KeyResult0EndDateContainer">
-                        <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?=
-                            __("Due Date") ?></label>
+                        <div>
+                            <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?= __("Due Date") ?></label>
+                        </div>
 
                         <div class="input-group date goal-set-date"
                              data-date-end-date="<?= $limit_end_date ?>"
