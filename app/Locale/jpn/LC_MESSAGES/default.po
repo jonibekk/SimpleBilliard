@@ -1716,7 +1716,7 @@ msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
 msgid "%s pixel is the limit."
-msgstr "%s画素がアップロードできるファイルの上限です。"
+msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
 msgid "Members"
 msgstr "メンバー"

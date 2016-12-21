@@ -104,7 +104,7 @@ class AttachedFileService extends AppService
         if (strpos($fileInfo['type'], 'image') !== false) {
             list($imgWidth, $imgHeight) = getimagesize($fileInfo['tmp_name']);
             if ($imgWidth * $imgHeight > AttachedFile::ATTACHABLE_MAX_PIXEL) {
-                $ret['msg'] = __("%s pixel is the limit.", AttachedFile::ATTACHABLE_MAX_PIXEL);
+                $ret['msg'] = __("%s pixel is the limit.", number_format(AttachedFile::ATTACHABLE_MAX_PIXEL));
                 return $ret;
             }
         }
