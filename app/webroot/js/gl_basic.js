@@ -3259,7 +3259,7 @@ function evCircleFeed(options) {
   var team_all_flg = sanitize($obj.attr('team-all-flg'));
   var oldest_post_time = sanitize($obj.attr('oldest-post-time'));
   updateCakeValue(circle_id, title, image_url);
-  if ($obj.hasClass('circle-link')) {
+  if ($obj.hasClass('is-hamburger')) {
     //ハンバーガーから来た場合は隠す
     $("#header-slide-menu").click();
   }
@@ -3954,21 +3954,24 @@ $(document).ready(function () {
     pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
       var $circle_list = $('.js-dashboard-circle-list-body');
       $.each(data.circle_ids, function (i, circle_id) {
-        var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
-        if ($circle[0] === undefined) {
-          return true;
-        }
-        var $unread_count = $circle.find('.js-circle-count-box');
-        var unread_count = $unread_count.text().trim();
-        if (unread_count == "") {
-          $unread_count.text(1);
-        } else if (Number(unread_count) == 9) {
-          $unread_count.text("9+");
-        } else if (unread_count != "9+") {
-          $unread_count.text(Number(unread_count) + 1);
-        }
-        $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread')
-        $circle.prependTo('.js-dashboard-circle-list-body');
+        var $circles = $circle_list.children('[circle_id=' + circle_id + ']');
+        $circles.each(function(i){
+          var $circle = $(this);
+          if ($circle === undefined) {
+            return true;
+          }
+          var $unread_count = $circle.find('.js-circle-count-box');
+          var unread_count = $unread_count.text().trim();
+          if (unread_count == "") {
+            $unread_count.text(1);
+          } else if (Number(unread_count) == 9) {
+            $unread_count.text("9+");
+          } else if (unread_count != "9+") {
+            $unread_count.html(Number(unread_count) + 1);
+          }
+          $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread');
+          $circle.parent().prepend($circle);
+        });
       });
 
     });
