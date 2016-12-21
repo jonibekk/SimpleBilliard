@@ -10,11 +10,19 @@
     init(options);
     return this;
   }
+
+  /**
+   * 初期化
+   * @param options
+   */
   function init(options) {
     kr_id = options.kr_id;
     //noinspection JSUnresolvedVariable
     var url = "/goals/ajax_get_edit_key_result_modal/key_result_id:" + kr_id;
+
+    // TODO:他にならってこのセレクタ指定をしているが、別の方法を検討
     $modal = $('<div class="modal on fade" tabindex="-1"></div>');
+
     // $(form).unbind("submit");
     $.get(url, function (data) {
       $modal.append(data);
@@ -42,6 +50,10 @@
 
   }
 
+  /**
+   * バリデーション設定取得
+   * @returns object
+   */
   function getValidatorOptions() {
     return {
       live: 'enabled',
@@ -81,6 +93,10 @@
     };
   }
 
+  /**
+   * モーダル表示時処理
+   * @param e
+   */
   function showInitModal(e) {
     $modal.find('.input-group.date').datepicker({
       format: "yyyy/mm/dd",
@@ -96,6 +112,10 @@
       });
   }
 
+  /**
+   * 進捗単位変更イベント処理
+   * @param e
+   */
   function changeUnit(e) {
     var selected_unit = e.target.value;
     $modal.find('.js-display-short-unit').html(short_units[selected_unit]);
@@ -120,6 +140,10 @@
     }
   }
 
+  /**
+   * 更新処理
+   * @param e
+   */
   function submit(e) {
     e.preventDefault;
     e.stopImmediatePropagation();
