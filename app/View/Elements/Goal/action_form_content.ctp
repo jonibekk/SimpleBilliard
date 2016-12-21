@@ -150,7 +150,7 @@
                         <?=
                         $this->Form->submit(__($is_edit_mode ? "保存する" : "アクション登録"),
                             [
-                                'class' => 'btn btn-primary pull-right post-submit-button',
+                                'class' => 'btn btn-primary pull-right post-submit-button js-action-submit-button',
                                 'id'    => 'CommonActionSubmit'
                             ]) ?>
                     </div>

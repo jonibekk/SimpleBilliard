@@ -49,7 +49,7 @@ var Page = {
     var self = this;
 
     // 多重サブミット対策
-    $(form).find('input[type="submit"]').addClass("is-disabled");
+    $(form).find('.js-action-submit-button').addClass("is-disabled");
 
     if (!checkUploadFileExpire(form.id)) {
       // 画像アップロード画面に戻す
@@ -84,7 +84,7 @@ var Page = {
         var errHtml = "";
 
         // 多重サブミット対策を解除する
-        $(form).find('input[type="submit"]').removeClass("is-disabled");
+        $(form).find('.js-action-submit-button').removeClass("is-disabled");
 
         // 既にエラーメッセージが表示されてる場合はそれを非表示にする
         if ($('.action-form-errors').length) {
