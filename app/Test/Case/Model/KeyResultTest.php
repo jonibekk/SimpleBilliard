@@ -445,7 +445,7 @@ class KeyResultTest extends GoalousTestCase
     {
         $this->setDefault();
 
-        $this->KeyResult->validate = $this->KeyResult->update_validate;
+        $this->KeyResult->validate = $this->KeyResult->updateValidate;
         // フィールドなし
         $updateKr = ['id' => 1, 'value_unit' => 0];
         $this->KeyResult->set($updateKr);
