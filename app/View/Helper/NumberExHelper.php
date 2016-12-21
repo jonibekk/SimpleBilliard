@@ -158,4 +158,12 @@ class NumberExHelper extends AppHelper
         }
         return $val;
     }
+
+    public function filterByLimitIfOver(int $number, int $limit)
+    {
+        if ($number > $limit) {
+            return "${limit}+";
+        }
+        return $number;
+    }
 }

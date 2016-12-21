@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-20 16:27+0900\n"
+"PO-Revision-Date: 2016-12-21 09:49+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2474,6 +2474,9 @@ msgstr "名前"
 msgid "Level of achievement"
 msgstr "達成度"
 
+msgid "Circles"
+msgstr "サークル"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -2743,9 +2746,6 @@ msgstr "ファイルを選択"
 msgid "Members in this topic"
 msgstr "会話のメンバー (%s)"
 
-msgid "Circles"
-msgstr "サークル"
-
 msgid "Unjoined"
 msgstr "参加していない"
 
@@ -2894,6 +2894,12 @@ msgstr "投稿"
 
 msgid "Message"
 msgstr "メッセージ"
+
+msgid "Save"
+msgstr "保存する"
+
+msgid "Post"
+msgstr "投稿する"
 
 msgid "To:"
 msgstr "To:"
@@ -3104,9 +3110,6 @@ msgstr "保存して、コラボる"
 
 msgid "Save & Quit this goal"
 msgstr "保存して、ゴールメンバーから抜ける"
-
-msgid "Save"
-msgstr "保存する"
 
 msgid "Change Top KR"
 msgstr "トップKRを変更"
