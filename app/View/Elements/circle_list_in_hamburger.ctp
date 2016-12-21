@@ -12,12 +12,12 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<p class="circle_heading"><?= __("Circles") ?></p>
+<p class="circle_heading is-humberger"><?= __("Circles") ?></p>
 <div class="layout-sub_padding clearfix layout-circle-humbarger js-dashboard-circle-list-body">
     <?php if (!empty($my_circles)): ?>
         <?php foreach ($my_circles as $circle): ?>
             <?php $isUnread = ($circle['CircleMember']['unread_count'] > 0); ?>
-            <div class="circle-layout clearfix circleListMore <?= $is_mb_app ? "mtb_15px" : null ?>">
+            <div class="circle-layout clearfix circleListMore <?= $is_mb_app = true ? "mtb_15px" : null ?>">
                 <?php if ($circle['CircleMember']['admin_flg']): ?>
                     <a href="<?= $this->Html->url([
                         'controller' => 'circles',
