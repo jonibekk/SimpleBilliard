@@ -473,9 +473,6 @@ msgstr "コメントしました。"
 msgid "This file doesn't exist."
 msgstr "ファイルが存在しません。"
 
-msgid "Failed to upload."
-msgstr "アップロードに失敗しました。"
-
 msgid "Deleted the file."
 msgstr "ファイルを削除しました。"
 
@@ -820,8 +817,8 @@ msgstr ""
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
-msgid "Failed to upload image."
-msgstr "画像アップロードに失敗しました。"
+msgid "Please reselect an image."
+msgstr "画像ファイルを選択し直してください。"
 
 msgid "Failed to upload. jpg, png and gif are allowed."
 msgstr ""
@@ -1711,6 +1708,15 @@ msgstr "評価期間内で入力してください。"
 
 msgid "Data is duplicated."
 msgstr ""
+
+msgid "Failed to upload."
+msgstr "アップロードに失敗しました。"
+
+msgid "%sMB is the limit."
+msgstr "%sMBがアップロードできるファイルの上限です。"
+
+msgid "%s pixel is the limit."
+msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
 msgid "Members"
 msgstr "メンバー"
