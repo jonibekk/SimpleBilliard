@@ -323,7 +323,7 @@ class KeyResultService extends AppService
         if (!$KeyResult->validates()) {
             return [
                 "status_code"       => 400,
-                "validation_errors" => $KeyResult->validationErrors
+                "validation_errors" => $this->validationExtract($KeyResult->validationErrors)
             ];
         }
         return [];

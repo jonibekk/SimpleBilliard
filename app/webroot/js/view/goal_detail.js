@@ -12,10 +12,9 @@ var ViewKrs = {
       $(url).modal('open');
     } else {
       var kr_id = $(this).data('kr_id');
-      $(this).modalEditKr({kr_id: kr_id});
+      $(this).modalKrEdit({kr_id: kr_id});
     }
   }
-
 };
 jQuery(function ($) {
   ViewKrs.init();

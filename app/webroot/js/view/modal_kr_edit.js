@@ -6,7 +6,7 @@
   var kr_id;
   var form;
 
-  $.fn.modalEditKr = function (options) {
+  $.fn.modalKrEdit = function (options) {
     init(options);
     return this;
   }
@@ -128,21 +128,24 @@
       /* キャンセルの時の処理 */
       return false;
     }
-    return false;
     var self = this;
     $(this).find(".changed").removeClass("changed");
 
     var form_data = $(this).serializeArray();
 
     $.ajax({
-      url: "/api/v1/key_result/"+kr_id,
+      url: "/api/v1/key_results/"+kr_id,
       type: 'PUT',
       data: form_data,
       success: function (data) {
-        location.href = "/";
+        // location.reload(true);
+        console.log(data);
       },
       error: function (res, textStatus, errorThrown) {
+        var body = res.responseJSON;
+        console.log(body);
       }
     });
+    return false;
   }
 })(jQuery);

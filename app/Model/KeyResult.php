@@ -136,14 +136,13 @@ class KeyResult extends AppModel
             'requiredCaseExistUnit' => [
                 'rule' => ['requiredCaseExistUnit'],
             ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+            ],
             'validateEditProgressStartEnd' => [
                 'allowEmpty' => false,
                 'on' => 'update',
                 'rule' => 'validateEditProgressStartEnd',
-            ],
-            'numeric'               => [
-                'rule'       => ['numeric'],
-                'allowEmpty' => true
             ],
         ],
     ];
@@ -244,7 +243,6 @@ class KeyResult extends AppModel
         }
 
         $krId = Hash::get($this->data, 'KeyResult.id');
-        $startVal = Hash::get($this->data, 'KeyResult.start_value');
         $kr = $this->getById($krId);
         if (empty($kr)) {
             $this->invalidate('target_value', $errMsg);
@@ -259,6 +257,12 @@ class KeyResult extends AppModel
         // 目標値が変更無い場合はチェック不要
         if ($targetVal == $kr['target_value']) {
             return true;
+        }
+
+        if (Hash::check($this->data, 'KeyResult.start_value')) {
+            $startVal = Hash::get($this->data, 'KeyResult.start_value');
+        } else {
+            $startVal = $kr['start_value'];
         }
 
         $inputDiffStartEnd = $targetVal - $startVal;
