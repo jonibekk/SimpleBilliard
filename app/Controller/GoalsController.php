@@ -687,6 +687,10 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function edit_key_result()
     {
         $kr_id = $this->request->params['named']['key_result_id'];

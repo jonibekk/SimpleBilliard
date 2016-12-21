@@ -191,7 +191,8 @@ class KeyResultFixture extends CakeTestFixtureEx
             'value_unit'    => '0',
             'start_value'   => '10',
             'target_value'  => '100',
-            'current_value' => '11'
+            'current_value' => '11',
+            'completed'     => null,
         ],
         [
             'id'            => '2',
@@ -203,6 +204,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'start_value'   => '100',
             'target_value'  => '0',
             'current_value' => '99',
+            'completed'     => null,
         ],
         [
             'id'            => '3',
@@ -214,6 +216,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'start_value'   => '0',
             'target_value'  => '1',
             'current_value' => '0',
+            'completed'     => null,
         ],
         [
             'id'            => '4',
@@ -226,6 +229,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'start_value'   => '0',
             'target_value'  => '1',
             'current_value' => '1',
+            'completed'     => null,
         ],
         [
             'id'            => '5',
@@ -237,6 +241,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'start_value'   => '0.001',
             'target_value'  => '123456789012345.999',
             'current_value' => '0.003',
+            'completed'     => null,
         ],
         [
             'id'            => '6',
@@ -248,6 +253,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'start_value'   => '123456789012345',
             'target_value'  => '1',
             'current_value' => '123456789012343',
+            'completed'     => '12345',
         ],
     ];
 

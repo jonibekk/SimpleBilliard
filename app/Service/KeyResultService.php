@@ -2,6 +2,9 @@
 App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
 App::uses('KeyResult', 'Model');
+App::uses('Goal', 'Model');
+App::uses('KrChangeLog', 'Model');
+App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
 
 /**
@@ -281,4 +284,156 @@ class KeyResultService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         return $KeyResult->countIncomplete($goalId);
     }
+
+    /**
+     * 更新バリデーション
+     *
+     * @param int $userId
+     * @param int $krId
+     * @param     $data
+     *
+     * @return array
+     */
+    public function validateUpdate(int $userId, int $krId, $data): array
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // KRが存在するか
+        $kr = $this->get($krId);
+        if (empty($kr)) {
+            return ["status_code" => 400, "message" => __("Not exist")];
+        }
+
+        // ゴールメンバーか
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
+        if (!$GoalMemberService->isMember($kr['goal_id'], $userId)) {
+            return ["status_code" => 403, "message" => __("You have no permission.")];
+        }
+
+        // KRが既に完了していないか
+        if ($KeyResult->isCompleted($krId)) {
+            return ["status_code" => 400, "message" => __("You can't edit achieved KR.")];
+        }
+
+        // フォームバリデーション
+        $KeyResult->validate = am($KeyResult->validate, $KeyResult->updateValidate);
+        $KeyResult->set($data);
+        if (!$KeyResult->validates()) {
+            return [
+                "status_code"       => 400,
+                "validation_errors" => $KeyResult->validationErrors
+            ];
+        }
+        return [];
+    }
+
+    /**
+     * 更新データ作成
+     *
+     * @param int   $krId
+     * @param array $requestData
+     *
+     * @return array|bool
+     * @throws Exception
+     * @internal param $goalId
+     */
+    function buildUpdateKr(int $krId, array $requestData): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $kr = $this->get($krId);
+        if (empty($kr)) {
+            throw new Exception(sprintf("Not exist kr. krId:%d", $krId));
+        }
+
+        $updateKr = [
+            'id'          => $krId,
+            'name'        => Hash::get($requestData, 'name'),
+            'description' => Hash::get($requestData, 'description'),
+            'value_unit'  => Hash::get($requestData, 'value_unit'),
+        ];
+
+        // 完了/未完了の場合は固定値をセット
+        if ($requestData['value_unit'] == KeyResult::UNIT_BINARY) {
+            $updateKr = am($updateKr, [
+                'start_value'  => 0,
+                'target_value'  => 1,
+                'current_value'  => 0,
+            ]);
+        } else {
+            $updateKr = am($updateKr, [
+                'start_value'  => Hash::get($requestData, 'start_value'),
+                'target_value'  => Hash::get($requestData, 'target_value'),
+            ]);
+            if (Hash::check($requestData, 'current_value')) {
+                $updateKr['current_value']  = Hash::get($requestData, 'current_value');
+                $updateKr['completed'] = ($updateKr['target_value'] == $updateKr['current_value']) ? time() : null;
+            }
+        }
+
+        // ゴールが属している評価期間データ
+        $goalTerm = $Goal->getGoalTermData($kr['goal_id']);
+        // 開始日・終了日設定
+        $updateKr['start_date'] = strtotime($requestData['start_date']) - $goalTerm['timezone'] * HOUR;
+        $updateKr['end_date'] = strtotime('+1 day -1 sec',
+                strtotime($requestData['end_date'])) - $goalTerm['timezone'] * HOUR;
+
+        return $updateKr;
+    }
+
+    /**
+     * 更新
+     *
+     * @param int   $userId
+     * @param int   $krId
+     * @param array $requestData
+     *
+     * @return bool
+     */
+    function update(int $userId, int $krId, array $requestData): bool
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var KrChangeLog $KrChangeLog */
+        $KrChangeLog = ClassRegistry::init("KrChangeLog");
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init("KrProgressLog");
+
+        try {
+            // トランザクション開始
+            $KeyResult->begin();
+            // KR更新
+            $updateKr = $this->buildUpdateKr($krId, $requestData);
+            if (!$KeyResult->save($updateKr, false)) {
+                throw new Exception(sprintf("Failed update kr. data:%s"
+                    , var_export($updateKr, true)));
+            }
+            // KR進捗リセット(アクションによるKR進捗ログ削除)
+            if (!$KrProgressLog->deleteAll(['key_result_id' => $krId, 'del_flg' => false])) {
+                throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
+            }
+
+            // KR変更ログ保存
+            if (!$KrChangeLog->saveSnapshot($userId, $krId)) {
+                throw new Exception(sprintf("Failed save kr snapshot. krId:%s", $krId));
+            }
+
+            // Redisキャッシュ削除
+            Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+
+            // トランザクション完了
+            $KeyResult->commit();
+
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $KeyResult->rollback();
+            return false;
+        }
+        return true;
+    }
+
 }

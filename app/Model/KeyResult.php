@@ -98,6 +98,13 @@ class KeyResult extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
+        'description'      => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+        ],
         'del_flg'      => [
             'boolean' => [
                 'rule' => ['boolean'],
@@ -109,12 +116,11 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
+            'notBlank' => [
+                'rule'     => 'notBlank',
+            ],
             'numeric'  => [
                 'rule' => ['numeric'],
-            ],
-            'notBlank' => [
-                'required' => 'create',
-                'rule'     => 'notBlank',
             ],
         ],
         'start_value'  => [
@@ -155,6 +161,20 @@ class KeyResult extends AppModel
             'dateYmd'  => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
+            ],
+        ],
+    ];
+
+    public $updateValidate = [
+        'current_value' => [
+            'requiredCaseExistUnit' => [
+                'rule' => ['requiredCaseExistUnit'],
+            ],
+            'numeric'               => [
+                'rule'       => ['numeric'],
+            ],
+            'validateProgressCurrent' => [
+                'rule' => ['validateProgressCurrent'],
             ],
         ],
     ];
@@ -224,6 +244,7 @@ class KeyResult extends AppModel
         }
 
         $krId = Hash::get($this->data, 'KeyResult.id');
+        $startVal = Hash::get($this->data, 'KeyResult.start_value');
         $kr = $this->getById($krId);
         if (empty($kr)) {
             $this->invalidate('target_value', $errMsg);
@@ -240,7 +261,7 @@ class KeyResult extends AppModel
             return true;
         }
 
-        $inputDiffStartEnd = $targetVal - $kr['start_value'];
+        $inputDiffStartEnd = $targetVal - $startVal;
         // 開始値と目標値が同じ値でないか
         if ($inputDiffStartEnd == 0) {
             $this->invalidate('target_value', __("You can not change start value and target value to the same value."));
@@ -276,6 +297,42 @@ class KeyResult extends AppModel
             return false;
         }
         return true;
+    }
+
+    /**
+     * バリデーション
+     * KR進捗の進捗開始/終了値更新
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateProgressCurrent(array $val) : bool
+    {
+        $currentVal = array_shift($val);
+        $errMsg = __("Invalid Request.");
+
+        // 単位が完了/未完了の場合
+        $unitId = Hash::get($this->data, 'KeyResult.value_unit');
+        if ($unitId == KeyResult::UNIT_BINARY) {
+            return true;
+        }
+
+        $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        $startVal = Hash::get($this->data, 'KeyResult.start_value');
+        $isProgressIncrease = ($targetVal - $startVal) > 0;
+
+        /* 現在値が開始値と終了値の間か */
+        // 進捗方向：増加
+        if ($isProgressIncrease && $startVal <= $currentVal && $currentVal <= $targetVal) {
+            return true;
+        }
+        // 進捗方向：減少
+        if (!$isProgressIncrease && $startVal >= $currentVal && $currentVal >= $targetVal) {
+            return true;
+        }
+        $this->invalidate('current_value', __("Please input current value between start value and target value."));
+        return false;
     }
 
     /**
