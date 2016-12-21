@@ -3958,25 +3958,31 @@ $(document).ready(function () {
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
 
+  // サークル投稿リアルタイム通知設定
   if ($('.js-dashboard-circle-list-body')[0] !== undefined) {
     pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
       var $circle_list = $('.js-dashboard-circle-list-body');
-      $.each(data.circle_ids, function (i, circle_id) {
+      var my_joined_circles = data.circle_ids;
+      $.each(my_joined_circles, function (i, circle_id) {
+        // $circlesはdashboardとhamburgerそれぞれのサークルリストを含むインスタンス。
         var $circles = $circle_list.children('[circle_id=' + circle_id + ']');
         $circles.each(function(i){
           var $circle = $(this);
           if ($circle === undefined) {
             return true;
           }
-          var $unread_count = $circle.find('.js-circle-count-box');
-          var unread_count = $unread_count.text().trim();
+
+          // サークル未読数のアップデート
+          var $unread_box = $circle.find('.js-circle-count-box');
+          var unread_count = $unread_box.text().trim();
           if (unread_count == "") {
-            $unread_count.text(1);
+            $unread_box.text(1);
           } else if (Number(unread_count) == 9) {
-            $unread_count.text("9+");
+            $unread_box.text("9+");
           } else if (unread_count != "9+") {
-            $unread_count.html(Number(unread_count) + 1);
+            $unread_box.html(Number(unread_count) + 1);
           }
+
           $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread');
           $circle.parent().prepend($circle);
         });
