@@ -24,7 +24,7 @@
 <?php
 $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
 ?>
-<div class="modal-dialog" id="ModalEditKr">
+<div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span

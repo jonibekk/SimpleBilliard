@@ -164,8 +164,7 @@
       type: 'PUT',
       data: form_data,
       success: function (data) {
-        // location.reload(true);
-        console.log(data);
+        location.reload(true);
       },
       error: function (res, textStatus, errorThrown) {
         $modal.find('.js-validation-err').remove();
@@ -178,11 +177,6 @@
           for (var key in errors) {
             if (errors.hasOwnProperty(key)) {
               errHtml = errTemplate.replace(/#error#/g, errors[key]);
-              // if (key == "target_value") {
-                // $modal.find('.js-progress-block').after(errHtml);
-              // } else {
-              //   $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
-              // }
               $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
             }
           }
