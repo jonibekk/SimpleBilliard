@@ -47,6 +47,10 @@ var Page = {
   },
   submit: function (form) {
     var self = this;
+
+    // 多重サブミット対策
+    $(form).find('.js-action-submit-button').addClass("is-disabled");
+
     if (!checkUploadFileExpire(form.id)) {
       // 画像アップロード画面に戻す
       var $btn_add_img = $('#ActionImageAddButton');
@@ -70,17 +74,25 @@ var Page = {
       type: 'POST',
       data: form_data,
       success: function (data) {
+        // 処理中に値が変更されたケースを想定して、入力途中の警告イベントを解除する
+        $(window).off('beforeunload');
         location.href= "/";
       },
       error: function (res, textStatus, errorThrown) {
-        $(self.conf.form).find("#ActionFormErrors").remove();
         var body = res.responseJSON;
         var message = body.message;
         var errHtml = "";
 
-        $(form).find('input[type=submit]').prop("disabled", false);
+        // 多重サブミット対策を解除する
+        $(form).find('.js-action-submit-button').removeClass("is-disabled");
+
+        // 既にエラーメッセージが表示されてる場合はそれを非表示にする
+        if ($('.action-form-errors').length) {
+          $('.action-form-errors').remove();
+        }
+
         // バリデーションエラー
-        var errTemplate = '<div id="ActionFormErrors" class="alert alert-danger mtb_8px ml_8px mr_8px">#error#</div>';
+        var errTemplate = '<div class="action-form-errors alert alert-danger mtb_8px ml_8px mr_8px">#error#</div>';
         if (res.status == 400 && body.validation_errors) {
           var errors = body.validation_errors;
           var errMsgs = [];

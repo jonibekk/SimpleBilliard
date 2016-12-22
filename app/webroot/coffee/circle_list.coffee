@@ -7,9 +7,10 @@ window.onload = (resizeLoad) ->
     circleListHeight = winHeight-380 + "px"
   else
     circleListHeight = winHeight-336 + "px"
-  CircleListBody = document.getElementById ("jsDashboardCircleListBody")
-  if CircleListBody?
-    CircleListBody.style.height = circleListHeight
+  circleListBodys = document.getElementsByClassName ("js-dashboard-circle-list-body")
+  if circleListBodys?
+    for body, index in circleListBodys
+      circleListBodys[index].style.height = circleListHeight
 ###
  todo
  Scrollの処理。
@@ -25,9 +26,11 @@ window.onresize = (resizeChanged) ->
     circleListHeight = winHeight-380 + "px"
   else
     circleListHeight = winHeight-336 + "px"
-  CircleListBody = document.getElementById ("jsDashboardCircleListBody")
-  if CircleListBody?
-    CircleListBody.style.height = circleListHeight
+  circleListBodys = document.getElementsByClassName ("js-dashboard-circle-list-body")
+  if circleListBodys?
+    for body, index in circleListBodys
+      circleListBodys[index].style.height = circleListHeight
+
 
 reloadScrollBars = ->
   document.documentElement.style.overflow = 'auto'
