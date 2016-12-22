@@ -96,7 +96,9 @@ export default class Term extends React.Component {
                       <p className="signup-timezone-label-wrapper">
                           <span className="signup-goal-timezone-label">(GMT+9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</span>
                           <a href="#" onClick={ () => { this.props.changeToTimezoneSelectMode() } }>{__("Change")}</a>
-                          <select ref="timezone" className="none" defaultValue="+9.0"></select>
+                          <select ref="timezone" className="none" defaultValue="+9.0">
+                            <option value="+9.0">{cake.data.timezones["+9.0"]}</option>
+                          </select>
                       </p>
                     )
                   }})() }
