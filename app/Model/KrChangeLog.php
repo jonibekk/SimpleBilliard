@@ -47,7 +47,7 @@ class KrChangeLog extends AppModel
      * @return bool|mixed
      * @internal param $goalId
      */
-    function saveSnapshot(int $userId, int $krId): bool
+    function saveSnapshot(int $userId, int $krId)
     {
         $kr = $this->KeyResult->getById($krId);
         if (empty($kr)) {
@@ -63,8 +63,10 @@ class KrChangeLog extends AppModel
             'data'          => base64_encode($keyResultData),
         ];
         $this->create();
-        $ret = $this->save($data);
-        return $ret;
+        if (!$this->save($data)) {
+            return false;
+        }
+        return $this->getLastInsertID();
     }
 
     /**

@@ -40,7 +40,8 @@ $is_tkr = null;
                 ];
                 ?>
                 <a href="<?= $this->Html->url($url) ?>"
-                   class="modal-ajax-get-add-key-result">
+                   class="js-show-modal-edit-kr"
+                    data-kr_id="<?=$kr['id']?>">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= $is_tkr ? __("Edit Top Key Result") : __("Edit Key Result") ?></span></a>
             </li>
         <?php endif ?>

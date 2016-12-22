@@ -43,17 +43,16 @@ class KeyResultsController extends ApiController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $data = Hash::get($this->request->data, 'KeyResult');
-
+        $requestData = Hash::get($this->request->data, 'KeyResult');
         // バリデーション
-        $err = $KeyResultService->validateUpdate($this->my_uid, $krId, $data);
+        $err = $KeyResultService->validateUpdate($this->my_uid, $krId, $requestData);
         if (!empty($err)) {
             // TODO:失敗全般用のレスポンス作成メソッド追加検討
-            $this->_getResponse(Hash::get('status_code'), null, null, Hash::get('message'),
-                Hash::get('validation_errors'));
+            return $this->_getResponse(Hash::get($err, 'status_code'), null, null
+                , Hash::get($err, 'message'), Hash::get($err, 'validation_errors'));
         }
         // KR更新
-        if (!$KeyResultService->update($this->my_uid, $krId, $data)) {
+        if (!$KeyResultService->update($this->my_uid, $krId, $requestData)) {
             $this->_getResponseInternalServerError();
         }
 

@@ -544,7 +544,8 @@ App::uses('AttachedFile', 'Model');
             "Name": "<?=__("Name")?>",
             "Level of achievement": "<?=__("Level of achievement")?>",
             "Achieved": "<?= __("Achieved") ?>",
-            "Unachieved": "<?= __("Unachieved") ?>"
+            "Unachieved": "<?= __("Unachieved") ?>",
+            "Would you like to save?": "<?= __("Would you like to save?") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

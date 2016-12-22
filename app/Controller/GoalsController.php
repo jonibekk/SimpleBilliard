@@ -455,7 +455,6 @@ class GoalsController extends AppController
         // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId), 'user_data');
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId), 'user_data');
-
         //mixpanel
         if ($new) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalId);
@@ -627,7 +626,7 @@ class GoalsController extends AppController
      * - Form値のバリデーション
      * - リーダー交換処理実行
      * - 関係者に通知
-     *
+
      */
     public function exchange_leader_by_leader()
     {
@@ -650,7 +649,8 @@ class GoalsController extends AppController
         }
 
         // 通知
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'), $this->Auth->user('id'));
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'),
+            $this->Auth->user('id'));
 
         $this->Pnotify->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
@@ -662,7 +662,7 @@ class GoalsController extends AppController
      * - Form値のバリデーション
      * - リーダー交換処理実行
      * - 関係者に通知
-     *
+
      */
     public function assign_leader_by_goal_member()
     {
@@ -957,8 +957,10 @@ class GoalsController extends AppController
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId), 'user_data');
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId), 'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId),
+            'user_data');
+        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId),
+            'user_data');
         $this->redirect($this->referer());
     }
 
@@ -1112,6 +1114,7 @@ class GoalsController extends AppController
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
+        $krValueUnitList = $KeyResultService->buildKrUnitsSelectList();
         $krShortValueUnitList = $KeyResultService->buildKrUnitsSelectList($isShort = true);
 
         // 認定可能フラグ追加
@@ -1135,6 +1138,7 @@ class GoalsController extends AppController
             'goal_category_list',
             'priority_list',
             'kr_priority_list',
+            'krValueUnitList',
             'krShortValueUnitList',
             'kr_start_date_format',
             'kr_end_date_format',
