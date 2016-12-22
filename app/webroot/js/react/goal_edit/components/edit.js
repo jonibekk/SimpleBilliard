@@ -175,12 +175,11 @@ export default class Edit extends React.Component {
               <UnitSelect
                 value={inputData.key_result.value_unit}
                 units={this.props.goal.units}
-                isEdit={true}
                 onChange={(e) => this.onChange(e, "key_result")}
               />
               <ValueStartEndInput
                 inputData={inputData.key_result}
-                isEdit={true}
+                kr={goal.top_key_result}
                 onChange={(e) => this.onChange(e, "key_result")}
               />
             </div>

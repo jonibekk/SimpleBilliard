@@ -691,45 +691,6 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    /**
-     *
-     * @return \Cake\Network\Response|null
-     */
-    public function edit_key_result()
-    {
-        $kr_id = $this->request->params['named']['key_result_id'];
-        $this->request->allowMethod('post', 'put');
-        $kr = null;
-        try {
-            if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
-                throw new RuntimeException(__("You have no permission."));
-            }
-            if ($this->Goal->KeyResult->isCompleted($kr_id)) {
-                throw new RuntimeException(__("You can't edit achieved KR."));
-            }
-            if (!$kr = $this->Goal->KeyResult->saveEdit($this->request->data)) {
-                throw new RuntimeException(__("Failed to save KR."));
-            }
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect($this->referer());
-        }
-        $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
-
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-
-        $this->Pnotify->outSuccess(__("Updated KR."));
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $params_referer = Router::parse($this->referer(null, true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
-        } else {
-            return $this->redirect($this->referer());
-        }
-    }
-
     public function complete_kr($with_goal = null)
     {
         $kr_id = $this->request->params['named']['key_result_id'];
