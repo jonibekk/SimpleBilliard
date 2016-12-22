@@ -164,7 +164,7 @@ class KeyResult extends AppModel
         ],
     ];
 
-    public $update_validate = [
+    public $updateValidate = [
         'current_value' => [
             'requiredCaseExistUnit' => [
                 'rule' => ['requiredCaseExistUnit'],

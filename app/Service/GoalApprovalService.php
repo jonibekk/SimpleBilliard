@@ -82,7 +82,7 @@ class GoalApprovalService extends AppService
      *
      * @return boolean
      */
-    function haveAccessAuthoriyOnApproval($goalMemberId, $userId)
+    function haveAccessAuthorityOnApproval($goalMemberId, $userId)
     {
         $GoalMember = ClassRegistry::init("GoalMember");
         $Team = ClassRegistry::init("Team");

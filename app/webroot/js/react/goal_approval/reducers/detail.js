@@ -22,6 +22,10 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         to_list_page: true
       })
+    case types.TO_TOP_PAGE:
+      return Object.assign({}, state, {
+        to_top_page: true
+      })
     case types.POSTING_SET_AS_TARGET:
       return Object.assign({}, state, {
         posting_set_as_target: true

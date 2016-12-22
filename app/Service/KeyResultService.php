@@ -318,7 +318,7 @@ class KeyResultService extends AppService
         }
 
         // フォームバリデーション
-        $KeyResult->validate = am($KeyResult->validate, $KeyResult->post_validate);
+        $KeyResult->validate = am($KeyResult->validate, $KeyResult->updateValidate);
         $KeyResult->set($data);
         if (!$KeyResult->validates()) {
             return [
@@ -335,7 +335,7 @@ class KeyResultService extends AppService
      * @param int   $krId
      * @param array $requestData
      *
-     * @return bool
+     * @return array|bool
      * @throws Exception
      * @internal param $goalId
      */
@@ -392,7 +392,6 @@ class KeyResultService extends AppService
      * @param array $requestData
      *
      * @return bool
-     * @internal param $goalId
      */
     function update(int $userId, int $krId, array $requestData): bool
     {

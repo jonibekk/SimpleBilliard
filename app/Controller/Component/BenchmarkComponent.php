@@ -37,7 +37,7 @@ class BenchmarkComponent extends Component
         }
         //ファイル名を整形
         $file = substr($file, strpos($file, 'app/') + 3, strlen($file));
-        $mem = memory_get_usage() / 1024 / 1024; //mega
+        $mem = memory_get_peak_usage() / 1024 / 1024; //mega
         $time *= 1000;//convert to ms from s.
         $this->_marks[] = array(
             'time' => $time,

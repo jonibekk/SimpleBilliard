@@ -12,61 +12,58 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="layout-sub_padding clearfix layout-circle-humbarger">
-    <p class="circle_heading">Circles</p>
+<p class="circle_heading"><?= __("Circles") ?></p>
+<div class="layout-sub_padding clearfix layout-circle-humbarger js-dashboard-circle-list-body">
     <?php if (!empty($my_circles)): ?>
         <?php foreach ($my_circles as $circle): ?>
+            <?php $isUnread = ($circle['CircleMember']['unread_count'] > 0); ?>
             <div class="circle-layout clearfix circleListMore <?= $is_mb_app ? "mtb_15px" : null ?>">
-                <div class="circle-link"
-                     get-url="<?= $this->Html->url([
-                         'controller' => 'posts',
-                         'action'     => 'feed',
-                         'circle_id'  => $circle['Circle']['id']
-                     ]) ?>"
-                     image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
-                     title="<?= h($circle['Circle']['name']) ?>"
-                     circle-id="<?= $circle['Circle']['id'] ?>"
-                     public-flg="<?= $circle['Circle']['public_flg'] ?>"
-                     team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
-                     oldest-post-time="<?= $circle['Circle']['created'] ?>"
-                >
-                    <a href="#">
-                        <div class="circle-icon_box">
-                            <?=
-                            $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                                ['width' => '16px', 'height' => '16px']) ?>
-                        </div>
-                        <div class="circle-name_box">
-                            <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
-                        </div>
-                    </a>
-
-                    <div class="circle-count_box">
-                        <p class="count-value">
-                            <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                9+
-                            <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                <?= $circle['CircleMember']['unread_count'] ?>
-                            <?php endif; ?>
-                        </p>
+                <?php if ($circle['CircleMember']['admin_flg']): ?>
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'circles',
+                        'action'     => 'ajax_get_edit_modal',
+                        'circle_id'  => $circle['Circle']['id']
+                    ]) ?>"
+                       class="dashboard-circle-list-edit-wrap modal-ajax-get-circle-edit"><i
+                            class="fa fa-cog dashboard-circle-list-edit font_14px"></i></a>
+                <?php endif; ?>
+                <a class="dashboard-circle-list-row js-dashboard-circle-list circle-link <?= $isUnread ? 'is-unread' : 'is-read' ?>"
+                   get-url="<?= $this->Html->url([
+                       'controller' => 'posts',
+                       'action'     => 'feed',
+                       'circle_id'  => $circle['Circle']['id']
+                   ]) ?>"
+                   image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
+                   title="<?= h($circle['Circle']['name']) ?>"
+                   circle-id="<?= $circle['Circle']['id'] ?>"
+                   public-flg="<?= $circle['Circle']['public_flg'] ?>"
+                   team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
+                   oldest-post-time="<?= $circle['Circle']['created'] ?>"
+                   href="#">
+                    <div class="dashboard-circle-unread-point">
+                        <div class="circle"></div>
                     </div>
-                </div>
-                <div class="circle-function_box clearfix">
-                    <?php if ($circle['CircleMember']['admin_flg']): ?>
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'circles',
-                            'action'     => 'ajax_get_edit_modal',
-                            'circle_id'  => $circle['Circle']['id']
-                        ]) ?>"
-                           class="modal-ajax-get-circle-edit font_lightGray-gray develop-floatleft"><i
-                                class="fa fa-cog circle-function font_14px"></i></a>
-                    <?php endif; ?>
-                </div>
+                    <p class="dashboard-circle-name-box"
+                       title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?>
+                    </p>
+                    <div class="dashboard-circle-count-box-wrapper">
+                        <div class="dashboard-circle-count-box js-circle-count-box">
+                            <?php if ($isUnread): ?>
+                                <?php $unreadCount = $circle['CircleMember']['unread_count']; ?>
+                                <?php if ($unreadCount > 0): ?>
+                                    <?= $this->NumberEx->addPlusIfOverLimit($unreadCount, $limit = 9); ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </a>
             </div>
         <?php endforeach ?>
         <?php if (count($my_circles) > 8): ?>
-            <i class="fa fa-angle-double-down circle-toggle-icon"></i><a
-                class="pl_5px font_12px font_gray click-circle-trigger on"><?= __("View All") ?></a>
+            <div class="circle-view-all-block">
+                <i class="fa fa-angle-double-down circle-toggle-icon"></i><a
+                    class="pl_5px font_12px font_gray click-circle-trigger on"><?= __("View All") ?></a>
+            </div>
         <?php endif; ?>
     <?php endif; ?>
     <div class="clearfix develop--circle-seek <?= $is_mb_app ? "mtb_15px" : null ?>">
