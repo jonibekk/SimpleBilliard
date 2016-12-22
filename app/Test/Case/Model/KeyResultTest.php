@@ -179,28 +179,6 @@ class KeyResultTest extends GoalousTestCase
         $this->assertEquals(0, $this->KeyResult->getProgress(100, 150, 75));
     }
 
-    function testSaveEdit()
-    {
-        $this->setDefault();
-        $this->assertFalse($this->KeyResult->saveEdit([]));
-
-        $data = [
-            'KeyResult' => [
-                'id'           => 1,
-                'user_id'      => 1,
-                'team_id'      => 1,
-                'name'         => 'test',
-                'goal_id'      => 8,
-                'start_date'   => '2015/7/7',
-                'end_date'     => '2015/10/7',
-                'target_value' => 100,
-                'value_unit'   => 1
-            ]
-        ];
-        $res = $this->KeyResult->saveEdit($data);
-        $this->assertNotEmpty($res);
-    }
-
     function testComplete()
     {
         $this->setDefault();

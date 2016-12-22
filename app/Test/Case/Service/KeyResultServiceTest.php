@@ -25,10 +25,11 @@ class KeyResultServiceTest extends GoalousTestCase
         'app.action_result',
         'app.evaluate_term',
         'app.key_result',
+        'app.kr_change_log',
+        'app.kr_progress_log',
         'app.goal',
-
-        'app.goal_category',
         'app.goal_member',
+        'app.goal_category',
         'app.user',
         'app.team',
     );
@@ -170,8 +171,19 @@ class KeyResultServiceTest extends GoalousTestCase
      */
     function testUpdate()
     {
-        // TODO:ケース作成
-        // ※必ずテスト書くためにわざと失敗するようにしている
-        $this->assertFalse();
+        $data = [
+            'id'            => '1',
+            'name'          => 'test',
+            'value_unit'    => 0,
+            'start_value'   => 10,
+            'target_value'  => 100,
+            'current_value' => 11,
+            'description' => "This is test.",
+            'start_date' => date('Y/m/d', 10000),
+            'end_date' => date('Y/m/d', 19999),
+        ];
+        $this->EvaluateTerm->current_team_id = 1;
+        $ret = $this->KeyResultService->update(1, 1, $data);
+        self::assertTrue($ret);
     }
 }
