@@ -732,6 +732,9 @@ class KeyResult extends AppModel
     {
         $validationBackup = $validation = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
+        if (!empty($goalId)) {
+            $this->validate = am($this->validate, $this->updateValidate);
+        }
         if ($detachRequired) {
             $validation = Hash::remove($this->validate, '{s}.{s}.required');
         }
