@@ -201,13 +201,15 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                             </span>
                     <?php endif ?>
                 </h5>
+                <div class="mb_4px">
+                    <span class="help-block font_12px"><?= __("Please input start date / end date of KR between start date / end date of the goal.")?></span>
+                </div>
 
                 <div class="goal-set-input">
                     <div class="form-group" id="KeyResult0EndDateContainer">
                         <div>
                             <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?= __("Due Date") ?></label>
                         </div>
-
                         <div class="input-group date goal-set-date"
                              data-date-end-date="<?= $limit_end_date ?>"
                              data-date-start-date="<?= $limit_start_date ?>">
