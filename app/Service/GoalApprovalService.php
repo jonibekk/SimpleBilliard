@@ -11,7 +11,7 @@ App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('GoalChangeLog', 'Model');
-App::uses('TkrChangeLog', 'Model');
+App::uses('KrChangeLog', 'Model');
 App::import('Service', 'GoalMemberService');
 
 class GoalApprovalService extends AppService
@@ -377,8 +377,8 @@ class GoalApprovalService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalChangeLog $GoalChangeLog */
         $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
-        /** @var TkrChangeLog $TkrChangeLog */
-        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+        /** @var KrChangeLog $KrChangeLog */
+        $KrChangeLog = ClassRegistry::init("KrChangeLog");
 
         $goalId = Hash::get($GoalMember->findById($goalMemberId, ['goal_id']), 'GoalMember.goal_id');
         if(!$goalId) {
@@ -386,7 +386,7 @@ class GoalApprovalService extends AppService
             return false;
         }
 
-        return $GoalChangeLog->saveSnapshot($goalId) && $TkrChangeLog->saveSnapshot($goalId);
+        return $GoalChangeLog->saveSnapshot($goalId) && $KrChangeLog->saveSnapshot($goalId);
     }
 
 }

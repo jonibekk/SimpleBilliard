@@ -38,6 +38,12 @@ class KrChangeLog extends AppModel
     ];
 
     /**
+     * ログタイプ
+     */
+    const TYPE_MODIFY = 0;
+    const TYPE_APPROVAL_BY_COACH = 1;
+
+    /**
      * KRのスナップショットをログに保存する
      * dataフィールドにはmaspackした上でbase64_encodeして格納する。
      *
@@ -47,7 +53,7 @@ class KrChangeLog extends AppModel
      * @return bool|mixed
      * @internal param $goalId
      */
-    function saveSnapshot(int $userId, int $krId)
+    function saveSnapshot(int $userId, int $krId, int $type)
     {
         $kr = $this->KeyResult->getById($krId);
         if (empty($kr)) {
@@ -61,6 +67,7 @@ class KrChangeLog extends AppModel
             'user_id'       => $userId,
             'key_result_id' => $krId,
             'data'          => base64_encode($keyResultData),
+            'type'          => $type
         ];
         $this->create();
         if (!$this->save($data)) {
@@ -76,16 +83,17 @@ class KrChangeLog extends AppModel
      *
      * @return array|null
      */
-    function findLatestSnapshot($goalId)
+    function getLatestSnapshot($goalId, $type)
     {
         $data = $this->find('first', [
             'conditions' => [
                 'goal_id' => $goalId,
+                'type'    => $type
             ],
             'order'      => ['id' => 'desc']
         ]);
 
-        $data = Hash::extract($data, 'TkrChangeLog');
+        $data = Hash::extract($data, 'KrChangeLog');
 
         if (empty($data)) {
             return null;

@@ -97,8 +97,8 @@ class ApiGoalApprovalService extends ApiService
         $goal['goal_change_log'] = $this->processChangeGoalLog($goal, $goalDiffCheckPaths);
 
         // tkr
-        $tkrDiffCheckPaths = ['name', 'start_value', 'target_value', 'value_unit', 'description'];
-        $goal['tkr_change_log'] = $this->processChangeTkrLog($goal, $tkrDiffCheckPaths);
+        $krDiffCheckPaths = ['name', 'start_value', 'target_value', 'value_unit', 'description'];
+        $goal['kr_change_log'] = $this->processChangeKrLog($goal, $krDiffCheckPaths);
 
         return $goal;
     }
@@ -127,24 +127,24 @@ class ApiGoalApprovalService extends ApiService
         return null;
     }
 
-    function processChangeTkrLog($goal, $diffCheckPaths)
+    function processChangeKrLog($goal, $diffCheckPaths)
     {
-        /** @var TkrChangeLog $TkrChangeLog */
-        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+        /** @var KrChangeLog $KrChangeLog */
+        $KrChangeLog = ClassRegistry::init("KrChangeLog");
 
         $goalId = Hash::extract($goal, 'id');
-        $tkrChangeLog = $TkrChangeLog->findLatestSnapshot($goalId);
-        if (!$tkrChangeLog) {
+        $krChangeLog = $KrChangeLog->getLatestSnapshot($goalId, $KrChangeLog::TYPE_APPROVAL_BY_COACH);
+        if (!$krChangeLog) {
             return null;
         }
 
         // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $tkrChangeDiff = Hash::diff($goal['top_key_result'], $tkrChangeLog);
+        $krChangeDiff = Hash::diff($goal['top_key_result'], $krChangeLog);
 
         // Calc tkr diff
         foreach ($diffCheckPaths as $path) {
-            if (Hash::get($tkrChangeDiff, $path)) {
-                return $tkrChangeLog;
+            if (Hash::get($krChangeDiff, $path)) {
+                return $krChangeLog;
             }
         }
 
