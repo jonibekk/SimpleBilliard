@@ -1,5 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('AttachedFile', 'Model');
+App::import('Service', 'AttachedFileService');
 
 /**
  * AttachedFile Test Case
@@ -72,36 +73,20 @@ class AttachedFileTest extends GoalousTestCase
         $this->AttachedFile->PostFile->Post->PostShareUser->my_uid = 1;
     }
 
-    function testPreUpLoadFileSuccess()
-    {
-        $data = [
-            'file' => [
-                'name'     => 'test',
-                'type'     => 'image/jpeg',
-                'tmp_name' => IMAGES . 'no-image.jpg'
-            ]
-        ];
-        $res = $this->AttachedFile->preUploadFile($data);
-        $this->assertNotEmpty($res);
-    }
-
-    function testPreUpLoadFileFail()
-    {
-        $res = $this->AttachedFile->preUploadFile([]);
-        $this->assertFalse($res);
-    }
-
     function testCancelUploadFileSuccess()
     {
         $data = [
             'file' => [
                 'name'     => 'test',
                 'type'     => 'image/jpeg',
-                'tmp_name' => IMAGES . 'no-image.jpg'
+                'tmp_name' => IMAGES . 'no-image.jpg',
+                'size'     => '12345',
             ]
         ];
-        $hashed_key = $this->AttachedFile->preUploadFile($data);
-        $res = $this->AttachedFile->cancelUploadFile($hashed_key);
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        $resPreUpload = $AttachedFileService->preUploadFile($data);
+        $res = $this->AttachedFile->cancelUploadFile($resPreUpload['id']);
         $this->assertTrue($res);
     }
 
@@ -135,17 +120,6 @@ class AttachedFileTest extends GoalousTestCase
         $this->assertTrue($res);
         $this->assertCount(2, $this->AttachedFile->find('all'));
         $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
-    }
-
-    function testSaveRelatedFilesFailSizeOver()
-    {
-        $this->_setDefault();
-        $hashes = $this->_prepareTestFiles(10000000000000);
-        $upload_setting = $this->AttachedFile->actsAs['Upload'];
-        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
-        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
-        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
-        $this->assertFalse($res);
     }
 
     function testSaveRelatedFilesActionImgSuccess()
@@ -228,40 +202,6 @@ class AttachedFileTest extends GoalousTestCase
         $this->assertCount(3, $post_files);
         $this->assertEquals(4, $post_files[1]['PostFile']['id']);
         $this->assertEquals(3, $post_files[1]['PostFile']['attached_file_id']);
-    }
-
-    function testUpdateRelatedFilesFailSizeOver()
-    {
-        $this->_setDefault();
-        $this->_resetTable();
-        $hashes = $this->_prepareTestFiles(100000000);
-        $upload_setting = $this->AttachedFile->actsAs['Upload'];
-        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
-        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
-        $prepare_post_file_data = [
-            'AttachedFile' => [
-                'attached_file_name' => 'test.jpg',
-                'user_id'            => 1,
-                'team_id'            => 1,
-                'file_type'          => AttachedFile::TYPE_FILE_IMG,
-                'file_ext'           => 'jpg',
-                'file_size'          => '1111',
-                'model_type'         => AttachedFile::TYPE_MODEL_POST
-            ],
-            'PostFile'     => [
-                [
-                    'post_id'   => 1,
-                    'index_num' => 0,
-                    'team_id'   => 1,
-                ]
-            ]
-        ];
-        $this->AttachedFile->saveAll($prepare_post_file_data);
-        $prepare_post_file_data['PostFile']['index_num'] = 1;
-        $this->AttachedFile->saveAll($prepare_post_file_data);
-        $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, array_merge([1], $hashes),
-            [2]);
-        $this->assertFalse($res);
     }
 
     /**
@@ -519,7 +459,10 @@ class AttachedFileTest extends GoalousTestCase
                 'remote'   => true
             ]
         ];
-        $hash_1 = $this->AttachedFile->preUploadFile($data);
+        App::import('Service', 'AttachedFileService');
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        $hash_1 = $AttachedFileService->preUploadFile($data);
         $data = [
             'file' => [
                 'name'     => 'test.php',
@@ -529,9 +472,9 @@ class AttachedFileTest extends GoalousTestCase
                 'remote'   => true
             ]
         ];
-        $hash_2 = $this->AttachedFile->preUploadFile($data);
+        $hash_2 = $AttachedFileService->preUploadFile($data);
 
-        return [$hash_1, $hash_2];
+        return [$hash_1['id'], $hash_2['id']];
     }
 
     function _resetTable()

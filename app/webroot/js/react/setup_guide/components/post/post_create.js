@@ -84,7 +84,7 @@ export default class PostCreate extends React.Component {
                   </a>
                   <div className="row form-horizontal form-group post-share-range" id="PostShare">
                     <div className="submit">
-                      <input className="btn btn-primary pull-right post-submit-button" id="PostSubmit" type="submit" value="Post"
+                      <input className="btn btn-primary pull-right post-submit-button" id="PostSubmit" type="submit" value={__("Post")}
                       disabled={!Boolean(this.props.post.can_click_submit_button)} />
                     </div>
                   </div>

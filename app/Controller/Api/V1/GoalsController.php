@@ -341,16 +341,21 @@ class GoalsController extends ApiController
             return $this->_getResponseInternalServerError();
         }
 
-        //通知
-        $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
-        $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_COACHEE_CREATE_GOAL);
+        // コーチへ通知
+        // 来期のゴール関係の処理はコーチへ通知しない
+        if ($this->Goal->isPresentTermGoal($newGoalId)) {
+            $this->NotifyBiz->push(Hash::get($data, 'socket_id'), "all");
+            $this->_sendNotifyToCoach($newGoalId, NotifySetting::TYPE_COACHEE_CREATE_GOAL);
+        }
 
+        // セットアップガイドステータス更新
         $this->updateSetupStatusIfNotCompleted();
+
         //コーチと自分の認定件数を更新(キャッシュを削除)
-        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
-        if ($coach_id) {
+        $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+        if ($coachId) {
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
         }
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL, $newGoalId);
@@ -395,8 +400,11 @@ class GoalsController extends ApiController
         // リファラに表示する通知カード
         $this->Pnotify->outSuccess(__("Saved goal & Top Key Result"));
 
-        //コーチへの通知
-        $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        // コーチへ通知
+        // 来期のゴール関係の処理はコーチへ通知しない
+        if ($this->Goal->isPresentTermGoal($goalId)) {
+            $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        }
         //コラボレータへの通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
 

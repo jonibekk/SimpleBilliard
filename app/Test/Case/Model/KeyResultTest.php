@@ -342,7 +342,7 @@ class KeyResultTest extends GoalousTestCase
     function testValidateEditProgress()
     {
         $this->setDefault();
-        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->update_validate);
+        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->updateValidate);
         $krs = $this->KeyResult->findAllByDelFlg(0);
         $krs = Hash::combine($krs, '{n}.KeyResult.id', '{n}.KeyResult');
 
@@ -474,7 +474,7 @@ class KeyResultTest extends GoalousTestCase
     {
         $this->setDefault();
 
-        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->update_validate);
+        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->updateValidate);
         // フィールドなし
         $updateKr = ['id' => 1, 'value_unit' => 0];
         $this->KeyResult->set($updateKr);
