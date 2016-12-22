@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-21 09:49+0900\n"
+"PO-Revision-Date: 2016-12-22 10:58+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1037,6 +1037,9 @@ msgstr "進捗を減少から増加に変更できません。"
 
 msgid "You can not change target value less than current value"
 msgstr "進捗目標値を現在値より少ない値に変更できません。"
+
+msgid "Please input current value between start value and target value."
+msgstr "現在値は開始値と目標値の範囲内で入力してください。"
 
 msgid "There is no data of KR."
 msgstr "達成要素のデータがありません。"
@@ -2142,6 +2145,9 @@ msgstr "組織改善案を共有する"
 msgid "Team has been changed, press ok to reload!"
 msgstr "チームが切り替えられました。「OK」を押して再読み込みしてください。"
 
+msgid "Post"
+msgstr "投稿する"
+
 msgid "Check your email!"
 msgstr "メールをチェックしよう！"
 
@@ -2473,6 +2479,9 @@ msgstr "名前"
 
 msgid "Level of achievement"
 msgstr "達成度"
+
+msgid "Would you like to save?"
+msgstr "保存してよろしいですか？"
 
 msgid "Circles"
 msgstr "サークル"
@@ -2898,9 +2907,6 @@ msgstr "メッセージ"
 msgid "Save"
 msgstr "保存する"
 
-msgid "Post"
-msgstr "投稿する"
-
 msgid "To:"
 msgstr "To:"
 
@@ -3093,14 +3099,21 @@ msgstr "達成要素名"
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
+msgid "Unit,start/target value"
+msgstr "単位 開始値/目標値"
+
+msgid "If you change the unit, all progress of KR will be reset."
+msgstr ""
+"※単位を変更すると今までのKRの進捗が全てリセットされますのでご注意下さい。"
+
+msgid "Current"
+msgstr "現在"
+
 msgid "Change leader"
 msgstr "リーダーを変更"
 
 msgid "Select the leader name you want to change."
 msgstr "変更したいリーダーの名前を選択してください。"
-
-msgid "Current"
-msgstr "現在"
 
 msgid "Select whether you collaborate or quit this goal."
 msgstr "このゴールにコラボるか抜けるかを選択してください。"

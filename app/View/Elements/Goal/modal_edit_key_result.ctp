@@ -88,7 +88,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                 <h6 class="modal-key-result-headings mod-small"><?= __("Unit,start/target value") ?></h6>
                 <div class="has-error js-show-warning-unit-change" style="display: none;">
                     <small class="help-block">
-                        ※単位を変更すると今までのKRの進捗が全てリセットされますのでご注意下さい。
+                        <?= __("If you change the unit, all progress of KR will be reset.")?>
                     </small>
                 </div>
                 <div class="goal-set-input js-progress-block">
