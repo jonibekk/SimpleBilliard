@@ -291,6 +291,13 @@ class ActionResult extends AppModel
     ];
 
     /**
+     * hasOne associations
+     */
+    public $hasOne = [
+        'KrProgressLog',
+    ];
+
+    /**
      * アクションと添付ファイルのデータを返す
      *
      * @param $action_result_id

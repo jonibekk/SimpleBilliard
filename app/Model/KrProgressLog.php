@@ -2,11 +2,18 @@
 App::uses('AppModel', 'Model');
 
 /**
- * KrChangeLog Model
+ * KrProgressLog Model
  *
- * @property Goal      $Goal
- * @property KeyResult $KeyResult
+ * @property ActionResult $ActionResult
  */
 class KrProgressLog extends AppModel
 {
+    /**
+     * belongsTo associations
+     *
+     * @var array
+     */
+    public $belongsTo = [
+        'ActionResult',
+    ];
 }
