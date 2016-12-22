@@ -339,101 +339,130 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
     }
 
-    function testValidateEditProgressStartEnd()
+    function testValidateEditProgress()
     {
         $this->setDefault();
-        $this->KeyResult->save([
-            'goal_id'      => 1,
-            'team_id'      => 1,
-            'user_id'      => 1,
-            'name'         => 'test1',
-            'value_unit'   => 1,
-            'start_value'  => 0,
-            'target_value' => 100,
-        ]);
-        // 作成時にvalidateEditProgressStartEndのバリデーションは実行していないこと
-        $this->assertEmpty($this->KeyResult->validationErrors);
+        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->update_validate);
+        $krs = $this->KeyResult->findAllByDelFlg(0);
+        $krs = Hash::combine($krs, '{n}.KeyResult.id', '{n}.KeyResult');
 
         // フィールドなし
         $updateKr = ['id' => 1];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
-        $this->assertEmpty($err);
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
+        $expectErrMsg = __("Input is required.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
 
-        // 空文字エラー
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 1, 'target_value' => ""];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
-        $this->assertNotEmpty($err);
 
         // 単位が完了/未完了の場合はチェック不要
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 3, 'target_value' => 100];
-        $this->KeyResult->save($updateKr);
+        $updateKr = ['id' => 3, 'value_unit'=> KeyResult::UNIT_BINARY, 'target_value' => 100];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
+        $this->assertEmpty($err);
+
+        /* 開始値必須チェック */
+        // 単位変更無しの場合必須チェックはしない
+        $updateKr = ['id' => 1, 'value_unit' => $krs[1]['value_unit']];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_value');
+        $this->assertEmpty($err);
+
+        // 単位変更したら必須チェック
+        $updateKr = ['id' => 1, 'value_unit' => 1];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_value');
+        $this->assertEmpty($err);
+
+        $updateKr = ['id' => 1, 'value_unit' => 1, 'start_value' => ""];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_value');
+        $expectErrMsg = __("Input is required.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        /* 目標値必須チェック */
+        $updateKr = ['id' => 1, 'value_unit' => 0];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
         $this->assertEmpty($err);
 
-        // 変更無し
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 1, 'start_value' => 10, 'target_value' => 100];
-        $this->KeyResult->save($updateKr);
+        $updateKr = ['id' => 1, 'value_unit' => 1, 'target_value' => ""];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $expectErrMsg = __("Input is required.");
+        $this->assertTrue(in_array($expectErrMsg, $err));
+
+        // 変更無し
+        $updateKr = $krs[1];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $this->assertEmpty($err);
 
         // 開始値と目標値が同じ値でないか
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 1, 'start_value' => 10, 'target_value' => 10];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $updateKr = ['id' => 1, 'value_unit' => $krs[1]['value_unit'], 'start_value' => 10, 'target_value' => 10];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $expectErrMsg = __("You can not change start value and target value to the same value.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
+        /* 進捗方向チェック */
         // 進捗の値が増加から減少の方向に変更してないか
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 1, 'start_value' => 10, 'target_value' => 9.999];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $updateKr = ['id' => 1, 'value_unit' => $krs[1]['value_unit'], 'start_value' => 10, 'target_value' => 9.999];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $expectErrMsg = __("You can not change the values from increase to decrease.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
+        $updateKr = ['id' => 1, 'value_unit' => 1, 'start_value' => 10, 'target_value' => 9.999];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
+        $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
+
         // 進捗の値が減少から増加の方向に変更してないか
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 2, 'start_value' => 100, 'target_value' => 101];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $updateKr = ['id' => 2, 'value_unit' => $krs[2]['value_unit'], 'start_value' => -100, 'target_value' => -99.999];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $expectErrMsg = __("You can not change the values from decrease to increase.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
-        // 進捗の値が減少から増加の方向に変更してないか
-        $this->KeyResult->clear();
-        $updateKr = ['id' => 2, 'start_value' => 100, 'target_value' => 101];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
-        $expectErrMsg = __("You can not change the values from decrease to increase.");
-        $this->assertTrue(in_array($expectErrMsg, $err));
+        $updateKr = ['id' => 2, 'value_unit' => 0, 'start_value' => 100, 'target_value' => 99];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
+        $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
 
         // 目標値を現在値と同じ値への変更はOK
-        $this->KeyResult->clear();
         $currentVal = Hash::get($this->KeyResult->getById(5), 'current_value');
         $updateKr = ['id' => 5, 'start_value' => 0.001, 'target_value' => $currentVal];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $this->assertEmpty($err);
 
         // 目標値が現在値未満の値でないか 進捗方向：増加
-        $this->KeyResult->clear();
         $updateKr = ['id' => 5, 'start_value' => 0.001, 'target_value' => 0.002];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $expectErrMsg = __("You can not change target value less than current value");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
         // 目標値が現在値未満の値でないか 進捗方向：減少
-        $this->KeyResult->clear();
         $updateKr = ['id' => 6, 'start_value' => 123456789012345, 'target_value' => 123456789012344.9];
-        $this->KeyResult->save($updateKr);
-        $err = Hash::get($this->KeyResult->validationErrors, 'target_value');
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $expectErrMsg = __("You can not change target value less than current value");
         $this->assertTrue(in_array($expectErrMsg, $err));
     }
@@ -445,7 +474,7 @@ class KeyResultTest extends GoalousTestCase
     {
         $this->setDefault();
 
-        $this->KeyResult->validate = $this->KeyResult->update_validate;
+        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->update_validate);
         // フィールドなし
         $updateKr = ['id' => 1, 'value_unit' => 0];
         $this->KeyResult->set($updateKr);

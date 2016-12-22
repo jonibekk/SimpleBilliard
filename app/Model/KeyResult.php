@@ -98,7 +98,7 @@ class KeyResult extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'description'      => [
+        'description'  => [
             'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
@@ -116,11 +116,18 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
-            'notBlank' => [
+            'notBlank'               => [
+                'required' => true,
                 'rule'     => 'notBlank',
+                'last'     => true,
             ],
-            'numeric'  => [
+            'numeric'                => [
                 'rule' => ['numeric'],
+                'last' => true,
+            ],
+            'validateCreateProgress' => [
+                'allowEmpty' => false,
+                'rule'       => 'validateCreateProgress'
             ],
         ],
         'start_value'  => [
@@ -137,12 +144,7 @@ class KeyResult extends AppModel
                 'rule' => ['requiredCaseExistUnit'],
             ],
             'numeric'               => [
-                'rule'       => ['numeric'],
-            ],
-            'validateEditProgressStartEnd' => [
-                'allowEmpty' => false,
-                'on' => 'update',
-                'rule' => 'validateEditProgressStartEnd',
+                'rule' => ['numeric'],
             ],
         ],
     ];
@@ -166,14 +168,29 @@ class KeyResult extends AppModel
 
     public $update_validate = [
         'current_value' => [
-            'requiredCaseExistUnit' => [
+            'requiredCaseExistUnit'   => [
                 'rule' => ['requiredCaseExistUnit'],
             ],
-            'numeric'               => [
-                'rule'       => ['numeric'],
+            'numeric'                 => [
+                'rule' => ['numeric'],
             ],
             'validateProgressCurrent' => [
                 'rule' => ['validateProgressCurrent'],
+            ],
+        ],
+        'value_unit'    => [
+            'notBlank'             => [
+                'required' => true,
+                'rule'     => 'notBlank',
+                'last'     => true,
+            ],
+            'numeric'              => [
+                'rule' => ['numeric'],
+                'last' => true,
+            ],
+            'validateEditProgress' => [
+                'allowEmpty' => false,
+                'rule'       => 'validateEditProgress'
             ],
         ],
     ];
@@ -226,63 +243,118 @@ class KeyResult extends AppModel
     }
 
     /**
-     * バリデーション
-     * KR進捗の進捗開始/終了値更新
+     * 作成時進捗バリデーション
      *
      * @param $val
      *
      * @return bool
      */
-    function validateEditProgressStartEnd(array $val) : bool
+    function validateCreateProgress(array $val): bool
     {
-        $targetVal = array_shift($val);
+        $unitId = array_shift($val);
         $errMsg = __("Invalid Request.");
-        if ($targetVal === "") {
-            $this->invalidate('target_value', $errMsg);
+        if ($unitId === "") {
+            $this->invalidate('value_unit', $errMsg);
+            return false;
+        }
+
+        // 単位が完了/未完了の場合
+        if ($unitId == KeyResult::UNIT_BINARY) {
+            return true;
+        }
+
+        /* 開始値・目標値必須チェック */
+        // 単位が完了/未完了以外であれば必須なのでここでチェックするしかない
+        // 開始値
+        $startVal = Hash::get($this->data, 'KeyResult.start_value');
+        if ($startVal === "" || is_null($startVal)) {
+            $this->invalidate('start_value', __("Input is required."));
+            return false;
+        }
+        // 目標値
+        $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        if ($targetVal === "" || is_null($targetVal)) {
+            $this->invalidate('target_value', __("Input is required."));
+            return false;
+        }
+
+        // 開始値と目標値が同じ値でないか
+        $inputDiffStartEnd = $targetVal - $startVal;
+        if ($inputDiffStartEnd == 0) {
+            $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 更新時進捗バリデーション
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateEditProgress(array $val): bool
+    {
+        $unitId = array_shift($val);
+        $errMsg = __("Invalid Request.");
+        if ($unitId === "" || is_null($unitId)) {
+            $this->invalidate('value_unit', $errMsg);
             return false;
         }
 
         $krId = Hash::get($this->data, 'KeyResult.id');
         $kr = $this->getById($krId);
         if (empty($kr)) {
-            $this->invalidate('target_value', $errMsg);
+            $this->invalidate('value_unit', $errMsg);
             return false;
         }
 
         // 単位が完了/未完了の場合
-        if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
+        if ($unitId == KeyResult::UNIT_BINARY) {
             return true;
         }
 
-        // 目標値が変更無い場合はチェック不要
-        if ($targetVal == $kr['target_value']) {
-            return true;
-        }
-
+        /* 開始値・目標値必須チェック */
+        // 単位が完了/未完了以外であれば必須なのでここでチェックするしかない
+        // 開始値(単位変更なしの場合は開始値が変更出来ないので、元の開始値を使用する
         if (Hash::check($this->data, 'KeyResult.start_value')) {
             $startVal = Hash::get($this->data, 'KeyResult.start_value');
+            if ($startVal === "") {
+                $this->invalidate('start_value', __("Input is required."));
+                return false;
+            }
         } else {
             $startVal = $kr['start_value'];
+        }
+
+        // 目標値
+        $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        if ($targetVal === "" || is_null($targetVal)) {
+            $this->invalidate('target_value', __("Input is required."));
+            return false;
         }
 
         $inputDiffStartEnd = $targetVal - $startVal;
         // 開始値と目標値が同じ値でないか
         if ($inputDiffStartEnd == 0) {
-            $this->invalidate('target_value', __("You can not change start value and target value to the same value."));
+            $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
             return false;
         }
 
         $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
-        // 進捗の値が増加から減少の方向に変更してないか
-        if ($isProgressIncrease && $inputDiffStartEnd < 0) {
-            $this->invalidate('target_value', __("You can not change the values from increase to decrease."));
-            return false;
-        }
-
-        // 進捗の値が減少から増加の方向に変更してないか
-        if (!$isProgressIncrease && $inputDiffStartEnd > 0) {
-            $this->invalidate('target_value', __("You can not change the values from decrease to increase."));
-            return false;
+        if ($unitId == $kr['value_unit']) {
+            // 進捗の値が増加から減少の方向に変更してないか
+            if ($isProgressIncrease && $inputDiffStartEnd < 0) {
+                $this->invalidate('value_unit', __("You can not change the values from increase to decrease."));
+                return false;
+            }
+            $this->log($unitId);
+            // 進捗の値が減少から増加の方向に変更してないか
+            if (!$isProgressIncrease && $inputDiffStartEnd > 0) {
+                $this->invalidate('value_unit', __("You can not change the values from decrease to increase."));
+                return false;
+            }
         }
 
         // 目標値を現在値と同じ値への変更はOK
@@ -292,12 +364,12 @@ class KeyResult extends AppModel
 
         /* 目標値が現在値未満の値でないか */
         if ($isProgressIncrease && $targetVal < $kr['current_value']) {
-            $this->invalidate('target_value', __("You can not change target value less than current value"));
+            $this->invalidate('value_unit', __("You can not change target value less than current value"));
             return false;
         }
 
         if (!$isProgressIncrease && $targetVal > $kr['current_value']) {
-            $this->invalidate('target_value', __("You can not change target value less than current value"));
+            $this->invalidate('value_unit', __("You can not change target value less than current value"));
             return false;
         }
         return true;
@@ -311,7 +383,7 @@ class KeyResult extends AppModel
      *
      * @return bool
      */
-    function validateProgressCurrent(array $val) : bool
+    function validateProgressCurrent(array $val): bool
     {
         $currentVal = array_shift($val);
         $errMsg = __("Invalid Request.");
@@ -588,48 +660,6 @@ class KeyResult extends AppModel
             return false;
         }
         return $this->Goal->GoalMember->isCollaborated($goal['Goal']['id']);
-    }
-
-    function saveEdit($data)
-    {
-        if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
-            return false;
-        }
-
-        $kr = $this->getById(Hash::get($data, 'KeyResult.id'));
-        if (empty($kr)) {
-            $this->log(sprintf("Not exist kr %s", var_export($data, true)));
-            return false;
-        }
-        //on/offの場合は現在値0,目標値1をセット
-        if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
-            $data['KeyResult']['start_value'] = 0;
-            $data['KeyResult']['target_value'] = 1;
-        }
-
-        $this->set($data);
-        $validate_backup = $this->validate;
-        $this->validate = array_merge($this->validate, $this->post_validate);
-        if (!$this->validates()) {
-            // 今はエラーの詳細ではなくただ失敗したことしか画面に表示していないので
-            // 何が原因で失敗したのかが全く分からない。
-            // よってログに出力
-            $this->log($this->validationErrors, LOG_INFO);
-            return false;
-        }
-        $this->validate = $validate_backup;
-
-        // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($data['KeyResult']['goal_id']);
-
-        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
-        $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
-//TODO 現在値を使わないため、この計算は行わない
-//        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
-//                                                            $data['KeyResult']['target_value'],
-//                                                            $data['KeyResult']['current_value']);
-        return $this->save($data);
     }
 
     function complete($kr_id)
