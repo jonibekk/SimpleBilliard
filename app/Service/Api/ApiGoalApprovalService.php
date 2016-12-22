@@ -96,7 +96,7 @@ class ApiGoalApprovalService extends ApiService
         $goalDiffCheckPaths = ['name', 'photo_file_name', 'goal_category_id'];
         $goal['goal_change_log'] = $this->processChangeGoalLog($goal, $goalDiffCheckPaths);
 
-        // tkr
+        // kr
         $krDiffCheckPaths = ['name', 'start_value', 'target_value', 'value_unit', 'description'];
         $goal['kr_change_log'] = $this->processChangeKrLog($goal, $krDiffCheckPaths);
 

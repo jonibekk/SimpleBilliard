@@ -12,6 +12,7 @@ App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('GoalChangeLog', 'Model');
 App::uses('KrChangeLog', 'Model');
+App::uses('KeyResult', 'Model');
 App::import('Service', 'GoalMemberService');
 
 class GoalApprovalService extends AppService
@@ -375,6 +376,8 @@ class GoalApprovalService extends AppService
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var keyResult $keyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalChangeLog $GoalChangeLog */
         $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
         /** @var KrChangeLog $KrChangeLog */
@@ -386,7 +389,16 @@ class GoalApprovalService extends AppService
             return false;
         }
 
-        return $GoalChangeLog->saveSnapshot($goalId) && $KrChangeLog->saveSnapshot($goalId);
+        $tkrId = Hash::get($KeyResult->getTkr($goalId), 'KeyResult.id');
+        if (!$tkrId) {
+            $this->log("Failed to get tkr id by Goal.id : $goalMemberId");
+            return false;
+        }
+
+        $savedGoalSnapshot = $GoalChangeLog->saveSnapshot($goalId);
+        $savedTkrSnapshot = $KrChangeLog->saveSnapshot($goalId, $tkrId, $KrChangeLog::TYPE_APPROVAL_BY_COACH);
+
+        return $savedGoalSnapshot && $savedTkrSnapshot;
     }
 
 }
