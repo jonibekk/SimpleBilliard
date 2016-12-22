@@ -253,7 +253,7 @@ class KeyResult extends AppModel
     {
         $unitId = array_shift($val);
         $errMsg = __("Invalid Request.");
-        if ($unitId === "") {
+        if ($unitId === "" || is_null($unitId)) {
             $this->invalidate('value_unit', $errMsg);
             return false;
         }
@@ -349,7 +349,6 @@ class KeyResult extends AppModel
                 $this->invalidate('value_unit', __("You can not change the values from increase to decrease."));
                 return false;
             }
-            $this->log($unitId);
             // 進捗の値が減少から増加の方向に変更してないか
             if (!$isProgressIncrease && $inputDiffStartEnd > 0) {
                 $this->invalidate('value_unit', __("You can not change the values from decrease to increase."));
