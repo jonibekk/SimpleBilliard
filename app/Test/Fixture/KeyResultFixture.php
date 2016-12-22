@@ -229,7 +229,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'start_value'   => '0',
             'target_value'  => '1',
             'current_value' => '1',
-            'completed'     => null,
+            'completed'     => 12345,
         ],
         [
             'id'            => '5',
