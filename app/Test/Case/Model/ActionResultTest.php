@@ -16,7 +16,6 @@ class ActionResultTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.action_result',
-
         'app.team',
         'app.user',
         'app.email',
@@ -24,7 +23,8 @@ class ActionResultTest extends GoalousTestCase
         'app.goal_category',
         'app.key_result',
         'app.attached_file',
-        'app.action_result_file'
+        'app.action_result_file',
+        'app.kr_progress_log',
     );
 
     /**

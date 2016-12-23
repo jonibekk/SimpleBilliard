@@ -610,7 +610,12 @@ class KeyResult extends AppModel
         return $res;
     }
 
-    function getTkr($goalId)
+    /**
+     * TKR取得
+     * @param  int $goalId
+     * @return null|array
+     */
+    function getTkr(int $goalId)
     {
         $res = $this->find('first', [
             'conditions' => [
@@ -618,6 +623,9 @@ class KeyResult extends AppModel
                 'tkr_flg' => true,
             ],
         ]);
+        if (!$res) {
+            return null;
+        }
         return $res;
     }
 

@@ -412,12 +412,12 @@ class KeyResultService extends AppService
                     , var_export($updateKr, true)));
             }
             // KR進捗リセット(アクションによるKR進捗ログ削除)
-            if (!$KrProgressLog->deleteAll(['key_result_id' => $krId, 'del_flg' => false])) {
+            if (!$KrProgressLog->deleteAll(['KrProgressLog.key_result_id' => $krId, 'KrProgressLog.del_flg' => false])) {
                 throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
             }
 
             // KR変更ログ保存
-            if (!$KrChangeLog->saveSnapshot($userId, $krId)) {
+            if (!$KrChangeLog->saveSnapshot($userId, $krId, $KrChangeLog::TYPE_MODIFY)) {
                 throw new Exception(sprintf("Failed save kr snapshot. krId:%s", $krId));
             }
 

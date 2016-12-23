@@ -113,22 +113,22 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <div class="col col-xxs-12 feed-contents font_bold">
             <i class="fa fa-key disp_i"></i>&nbsp;<?= $kr['name'] ?>
         </div>
-        <?php if (!is_null($post['ActionResult']['key_result_target_value'])): ?>
+        <?php if (!is_null($post['ActionResult']['KrProgressLog']['target_value'])): ?>
             <div class="feed-progress">
                 <i class="fa fa-tachometer"></i>
                 <?php
-                $changeValue = $post['ActionResult']['key_result_change_value'];
+                $changeValue = $post['ActionResult']['KrProgressLog']['change_value'];
                 $displayChangeValue = "";
                 if ($changeValue >= 0) {
                     $displayChangeValue .= '+';
                 }
-                $unitId = $kr['value_unit'];
+                $unitId = $post['ActionResult']['KrProgressLog']['value_unit'];
                 $displayChangeValue .= AppUtil::formatBigFloat($changeValue);
 
-                $currentValue = bcadd($post['ActionResult']['key_result_before_value'], $changeValue, 3);
+                $currentValue = bcadd($post['ActionResult']['KrProgressLog']['before_value'], $changeValue, 3);
 
                 $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
-                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['key_result_target_value']),
+                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['KrProgressLog']['target_value']),
                     $unitId);
                 ?>
                 <?php if ($unitId == KeyResult::UNIT_BINARY): ?>
