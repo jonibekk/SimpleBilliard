@@ -184,6 +184,6 @@ class KeyResultServiceTest extends GoalousTestCase
         ];
         $this->EvaluateTerm->current_team_id = 1;
         $ret = $this->KeyResultService->update(1, 1, $data);
-        self::assertTrue($ret);
+        $this->assertTrue($ret);
     }
 }
