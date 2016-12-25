@@ -1,25 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: bigplants
- * Date: 6/6/14
- * Time: 3:19 PM
- *
- * @var CodeCompletionView $this
- * @var                    $goal_id
- * @var                    $goal
- * @var                    $kr_id
- * @var                    $goal_category_list
- * @var                    $priority_list
- * @var                    $kr_priority_list
- * @var                    $kr_value_unit_list
- * @var                    $kr_start_date_format
- * @var                    $kr_end_date_format
- * @var                    $limit_end_date
- * @var                    $limit_start_date
- * @var                    $goal_term
- */
-?>
 <?= $this->App->viewStartComment() ?>
 <?php
 $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
@@ -86,10 +64,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                 <h5 class="modal-key-result-headings"><?= __("Measurement type") ?><span
                         class="modal-key-result-headings-description"><?= __("How much?") ?></span></h5>
                 <h6 class="modal-key-result-headings mod-small"><?= __("Unit,start/target value") ?></h6>
-                <div class="has-error js-show-warning-unit-change" style="display: none;">
-                    <small class="help-block">
-                        <?= __("If you change the unit, all progress of KR will be reset.")?>
-                    </small>
+                <div class="warning js-show-warning-unit-change" style="display: none;">
+                    <?= __("If you change the unit, all progress of KR will be reset.") ?>
                 </div>
                 <div class="goal-set-input js-progress-block">
                     <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>">
@@ -100,38 +76,31 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                     <?=
                                     $this->Form->input('KeyResult.value_unit',
                                         [
-                                            'label'               => false,
-                                            'wrapInput'           => 'modal-add-kr-change-unit-wrap',
-                                            'type'                => 'select',
-                                            'required'                     => true,
-                                            'class'               => 'form-control goals-create-input-form mod-select-units js-select-value-unit',
-                                            'target-id'           => 'KeyResult0ValueInputWrap_' . $goalId,
-                                            'required'            => true,
-                                            'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                            'options'             => $krValueUnitList,
+                                            'label'            => false,
+                                            'wrapInput'        => 'modal-add-kr-change-unit-wrap',
+                                            'type'             => 'select',
+                                            'required'         => true,
+                                            'class'            => 'form-control goals-create-input-form mod-select-units js-select-value-unit',
+                                            'options'          => $krValueUnitList,
                                             'data-short_units' => json_encode($krShortValueUnitList),
-                                            'value' => $unit
+                                            'value'            => $unit
                                         ]) ?>
                                 </div>
-                                <span class="goals-create-input-form-unit-label js-display-short-unit"><?= $krShortValueUnitList[KeyResult::UNIT_PERCENT] ?></span>
+                                <span
+                                    class="goals-create-input-form-unit-label js-display-short-unit"><?= $krShortValueUnitList[KeyResult::UNIT_PERCENT] ?></span>
                             </div>
                             <div class="goals-create-layout-flex mod-child js-unit-values"
                                  style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
                                     [
-                                        'label'                        => false,
-                                        'type'                         => 'number',
-                                        'default'                      => 0,
-                                        'required'                     => true,
-                                        'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range js-start-value',
+                                        'label'       => false,
+                                        'type'        => 'number',
+                                        'default'     => 0,
+                                        'required'    => true,
+                                        'class'       => 'form-control goals-create-input-form goals-create-input-form-tkr-range js-start-value',
                                         'placeholder' => Hash::get($this->request->data, 'KeyResult.start_value'),
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'disabled'                     => 'disabled'
+                                        'disabled'    => 'disabled'
                                     ]) ?>
                                 <span class="goals-create-input-form-tkr-range-symbol">
                                 <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
@@ -145,12 +114,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                         'default'                      => 100,
                                         'required'                     => true,
                                         'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
-                                        'placeholder' => Hash::get($this->request->data, 'KeyResult.target_value'),
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                                        'data-bv-stringlength-message' => __(
-                                            "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
-                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'placeholder'                  => Hash::get($this->request->data,
+                                            'KeyResult.target_value'),
                                     ]) ?>
                             </div>
                         </div>
@@ -166,12 +131,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                             'default'                      => 0,
                             'required'                     => true,
                             'class'                        => 'form-control goals-create-input-form',
-                            'placeholder'                        => Hash::get($this->request->data, 'KeyResult.current_value'),
-                            'data-bv-stringlength'         => 'true',
-                            'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                            'data-bv-stringlength-message' => __(
-                                "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
-                            "data-bv-notempty-message"     => __("Input is required."),
+                            'placeholder'                  => Hash::get($this->request->data,
+                                'KeyResult.current_value'),
                         ]) ?>
                 </div>
             </div>
@@ -202,13 +163,15 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                     <?php endif ?>
                 </h5>
                 <div class="mb_4px">
-                    <span class="help-block font_12px"><?= __("Please input start date / end date of KR between start date / end date of the goal.")?></span>
+                    <span
+                        class="help-block font_12px"><?= __("Please input start date / end date of KR between start date / end date of the goal.") ?></span>
                 </div>
 
                 <div class="goal-set-input">
                     <div class="form-group" id="KeyResult0EndDateContainer">
                         <div>
-                            <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?= __("Due Date") ?></label>
+                            <label for="KeyResult0EndDate"
+                                   class="control-label goal-set-mid-label"><?= __("Due Date") ?></label>
                         </div>
                         <div class="input-group date goal-set-date"
                              data-date-end-date="<?= $limit_end_date ?>"

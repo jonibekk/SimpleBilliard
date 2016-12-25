@@ -43,7 +43,8 @@
       $modal.on('hidden.bs.modal', function (e) {
         $(self).empty();
       });
-      $modal.find('form').bootstrapValidator(getValidatorOptions);
+      // TODO:APIのエラーメッセージ表示と衝突するため一時的にコメントアウト。将来的にどうするか検討
+      // $modal.find('form').bootstrapValidator(getValidatorOptions());
       $modal.modal();
       $('body').addClass('modal-open');
     });
@@ -154,7 +155,6 @@
     }
     var self = this;
     $(this).find(".changed").removeClass("changed");
-    $(this).find('.help-block').remove();
     $(this).find('.js-validation-err').remove();
 
     var form_data = $(this).serializeArray();
@@ -168,8 +168,8 @@
       },
       error: function (res, textStatus, errorThrown) {
         $modal.find('.js-validation-err').remove();
+        $modal.find('.has-success').removeClass('has-success');
         var body = res.responseJSON;
-        console.log(body);
         // バリデーションエラー
         var errTemplate = '<div class="has-error"><small class="js-validation-err help-block"  style="display: block;">#error#</small></div>';
         if (res.status == 400 && body.validation_errors) {
@@ -177,7 +177,11 @@
           for (var key in errors) {
             if (errors.hasOwnProperty(key)) {
               errHtml = errTemplate.replace(/#error#/g, errors[key]);
-              $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
+              if (key == "value_unit") {
+                $modal.find('.js-progress-block').after(errHtml);
+              } else {
+                $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
+              }
             }
           }
           return false;

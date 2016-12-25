@@ -330,9 +330,9 @@ class KeyResult extends AppModel
 
         // 目標値
         $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        // 目標値は別の空判定バリデーションがある為trueとする
         if ($targetVal === "" || is_null($targetVal)) {
-            $this->invalidate('target_value', __("Input is required."));
-            return false;
+            return true;
         }
 
         $inputDiffStartEnd = $targetVal - $startVal;
