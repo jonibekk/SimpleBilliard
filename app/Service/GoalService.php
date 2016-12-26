@@ -221,7 +221,6 @@ class GoalService extends AppService
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');
             $updateTkr = $KeyResultService->buildUpdateKr($tkrId, $inputTkrData, false);
-            $this->log(compact('updateTkr'));
             if (!$KeyResult->save($updateTkr, false)) {
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
