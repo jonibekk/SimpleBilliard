@@ -83,7 +83,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                             'class'            => 'form-control goals-create-input-form mod-select-units js-select-value-unit',
                                             'options'          => $krValueUnitList,
                                             'data-short_units' => json_encode($krShortValueUnitList),
-                                            'value'            => $unit
+                                            'value'            => $unit,
+                                            'data-origin'            => $unit
                                         ]) ?>
                                 </div>
                                 <span

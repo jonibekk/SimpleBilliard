@@ -149,7 +149,11 @@
     e.preventDefault;
     e.stopImmediatePropagation();
 
-    if (!confirm(cake.translation["Would you like to save?"])) {
+    var selectUnit = $(this).find('.js-select-value-unit');
+    var oldUnit = $(selectUnit).data('origin');
+    var inputUnit = $(selectUnit).val();
+    var confirmMsg = oldUnit == inputUnit ? cake.translation["Would you like to save?"] : cake.translation["All progress of this KR will be reset, is it really OK?"];
+    if (!confirm(confirmMsg)) {
       /* キャンセルの時の処理 */
       return false;
     }
@@ -164,6 +168,12 @@
       type: 'PUT',
       data: form_data,
       success: function (data) {
+        new PNotify({
+          type: 'success',
+          text: cake.translation["Updated KR."],
+          delay: 4000,
+          mouse_reset: false
+        });
         location.reload(true);
       },
       error: function (res, textStatus, errorThrown) {
