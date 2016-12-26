@@ -334,12 +334,13 @@ class KeyResultService extends AppService
      *
      * @param int   $krId
      * @param array $requestData
+     * @param bool  $includeStartEndDate
      *
      * @return array|bool
      * @throws Exception
      * @internal param $goalId
      */
-    function buildUpdateKr(int $krId, array $requestData): array
+    function buildUpdateKr(int $krId, array $requestData, bool $includeStartEndDate = true): array
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -359,27 +360,30 @@ class KeyResultService extends AppService
         // 完了/未完了の場合は固定値をセット
         if ($requestData['value_unit'] == KeyResult::UNIT_BINARY) {
             $updateKr = am($updateKr, [
-                'start_value'  => 0,
+                'start_value'   => 0,
                 'target_value'  => 1,
-                'current_value'  => 0,
+                'current_value' => 0,
             ]);
         } else {
             $updateKr = am($updateKr, [
-                'start_value'  => Hash::get($requestData, 'start_value'),
+                'start_value'   => Hash::get($requestData, 'start_value'),
                 'target_value'  => Hash::get($requestData, 'target_value'),
+                'current_value' => Hash::get($requestData, 'current_value'),
             ]);
-            if (Hash::check($requestData, 'current_value')) {
-                $updateKr['current_value']  = Hash::get($requestData, 'current_value');
-                $updateKr['completed'] = ($updateKr['target_value'] == $updateKr['current_value']) ? time() : null;
+            // 未完了かつ進捗現在値が目標値に達してたら完了とする
+            if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
+                $updateKr['completed'] = time();
             }
         }
 
         // ゴールが属している評価期間データ
-        $goalTerm = $Goal->getGoalTermData($kr['goal_id']);
-        // 開始日・終了日設定
-        $updateKr['start_date'] = strtotime($requestData['start_date']) - $goalTerm['timezone'] * HOUR;
-        $updateKr['end_date'] = strtotime('+1 day -1 sec',
-                strtotime($requestData['end_date'])) - $goalTerm['timezone'] * HOUR;
+        if ($includeStartEndDate) {
+            $goalTerm = $Goal->getGoalTermData($kr['goal_id']);
+            // 開始日・終了日設定
+            $updateKr['start_date'] = strtotime($requestData['start_date']) - $goalTerm['timezone'] * HOUR;
+            $updateKr['end_date'] = strtotime('+1 day -1 sec',
+                    strtotime($requestData['end_date'])) - $goalTerm['timezone'] * HOUR;
+        }
 
         return $updateKr;
     }
@@ -412,7 +416,11 @@ class KeyResultService extends AppService
                     , var_export($updateKr, true)));
             }
             // KR進捗リセット(アクションによるKR進捗ログ削除)
-            if (!$KrProgressLog->deleteAll(['KrProgressLog.key_result_id' => $krId, 'KrProgressLog.del_flg' => false])) {
+            if (!$KrProgressLog->deleteAll([
+                'KrProgressLog.key_result_id' => $krId,
+                'KrProgressLog.del_flg'       => false
+            ])
+            ) {
                 throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
             }
 

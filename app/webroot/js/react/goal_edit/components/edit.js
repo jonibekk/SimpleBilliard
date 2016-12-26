@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as KeyCode from "~/common/constants/KeyCode";
+import {KeyResult} from "~/common/constants/Model";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import PhotoUpload from "~/common/components/goal/PhotoUpload";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
@@ -84,9 +85,26 @@ export default class Edit extends React.Component {
     const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
+
     let progress_reset_warning = null
-    if (goal.top_key_result && inputData.key_result.value_unit != goal.top_key_result.value_unit) {
+    const change_unit = goal.top_key_result && inputData.key_result.value_unit != goal.top_key_result.value_unit
+    if (change_unit) {
       progress_reset_warning = <div className="warning">{__("If you change the unit, all progress of KR will be reset.")}</div>
+    }
+
+    let current_value_input = null
+    if (inputData.key_result.value_unit != KeyResult.ValueUnit.NONE) {
+      current_value_input = (
+        <div>
+          <label className="goals-create-input-label">{__("Current")}</label>
+          <input name="current_value" type="text" value={inputData.key_result.current_value}
+                 className="form-control goals-create-input-form"
+                 placeholder={inputData.key_result.current_value}
+                 onChange={(e) => this.onChange(e, "key_result")}
+          />
+          <InvalidMessageBox message={tkrValidationErrors.current_value}/>
+        </div>
+      )
     }
 
     return (
@@ -192,6 +210,8 @@ export default class Edit extends React.Component {
             <InvalidMessageBox message={tkrValidationErrors.value_unit}/>
             <InvalidMessageBox message={tkrValidationErrors.start_value}/>
             <InvalidMessageBox message={tkrValidationErrors.target_value}/>
+
+            {current_value_input}
 
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description"

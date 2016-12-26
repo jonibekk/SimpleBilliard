@@ -170,6 +170,7 @@ class KeyResult extends AppModel
         'current_value' => [
             'numeric'                 => [
                 'rule' => ['numeric'],
+                'last'     => true,
             ],
             'validateProgressCurrent' => [
                 'rule' => ['validateProgressCurrent'],
@@ -354,17 +355,24 @@ class KeyResult extends AppModel
         }
 
         // 目標値を現在値と同じ値への変更はOK
+        if (Hash::check($this->data, 'KeyResult.current_value')) {
+            $currentVal = Hash::get($this->data, 'KeyResult.current_value');
+        } else {
+            $currentVal = $kr['current_value'];
+        }
+
+
         if ($targetVal == $kr['current_value']) {
             return true;
         }
 
         /* 目標値が現在値未満の値でないか */
-        if ($isProgressIncrease && $targetVal < $kr['current_value']) {
+        if ($isProgressIncrease && $targetVal < $currentVal) {
             $this->invalidate('value_unit', __("You can not change target value less than current value"));
             return false;
         }
 
-        if (!$isProgressIncrease && $targetVal > $kr['current_value']) {
+        if (!$isProgressIncrease && $targetVal > $currentVal) {
             $this->invalidate('value_unit', __("You can not change target value less than current value"));
             return false;
         }
