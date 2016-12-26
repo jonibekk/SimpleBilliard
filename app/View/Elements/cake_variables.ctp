@@ -545,7 +545,8 @@ App::uses('AttachedFile', 'Model');
             "Level of achievement": "<?=__("Level of achievement")?>",
             "Achieved": "<?= __("Achieved") ?>",
             "Unachieved": "<?= __("Unachieved") ?>",
-            "Would you like to save?": "<?= __("Would you like to save?") ?>"
+            "Would you like to save?": "<?= __("Would you like to save?") ?>",
+            "If you change the unit, all progress of KR will be reset.": "<?= __("If you change the unit, all progress of KR will be reset.") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
