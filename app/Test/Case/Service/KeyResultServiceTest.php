@@ -132,7 +132,7 @@ class KeyResultServiceTest extends GoalousTestCase
         $data = [
             'id'            => '1',
             'name'          => 'test',
-            'value_unit'    => 0,
+            'value_unit'    => 1,
             'start_value'   => 10,
             'target_value'  => 100,
             'current_value' => 11,
