@@ -113,7 +113,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <div class="col col-xxs-12 feed-contents font_bold">
             <i class="fa fa-key disp_i"></i>&nbsp;<?= $kr['name'] ?>
         </div>
-        <?php if (!is_null($post['ActionResult']['KrProgressLog']['target_value'])): ?>
+        <?php if (!is_null(Hash::get($post, 'ActionResult.KrProgressLog.target_value'))): ?>
             <div class="feed-progress">
                 <i class="fa fa-tachometer"></i>
                 <?php

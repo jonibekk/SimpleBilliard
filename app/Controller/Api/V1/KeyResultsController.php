@@ -36,6 +36,8 @@ class KeyResultsController extends ApiController
     /**
      * 更新
      *
+     * @param int $krId
+     *
      * @return \Cake\Network\Response|null
      */
     public function put(int $krId)
