@@ -366,10 +366,13 @@ class KeyResultService extends AppService
             ]);
         } else {
             $updateKr = am($updateKr, [
-                'start_value'   => Hash::get($requestData, 'start_value'),
                 'target_value'  => Hash::get($requestData, 'target_value'),
                 'current_value' => Hash::get($requestData, 'current_value'),
             ]);
+            // 単位変更している場合だけ開始値入力が有効になるので更新に含める
+            if ($requestData['value_unit'] != $kr['value_unit']) {
+                $updateKr['start_value'] = Hash::get($requestData, 'start_value');
+            }
             // 未完了かつ進捗現在値が目標値に達してたら完了とする
             if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
                 $updateKr['completed'] = time();
