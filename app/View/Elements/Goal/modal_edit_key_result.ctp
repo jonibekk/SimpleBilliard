@@ -121,7 +121,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                         </div>
                     </div>
                 </div>
-                <div class="js-unit-values">
+                <div class="js-unit-values" <?php if ($unit == KeyResult::UNIT_BINARY): ?>style="display: none;"<?php endif;?> >
                     <h6 class="modal-key-result-headings mod-small"><?= __("Current") ?></h6>
                     <?php
                     echo $this->Form->input('KeyResult.current_value',
