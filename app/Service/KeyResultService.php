@@ -418,10 +418,13 @@ class KeyResultService extends AppService
                 throw new Exception(sprintf("Failed update kr. data:%s"
                     , var_export($updateKr, true)));
             }
-            // KR進捗リセット(アクションによるKR進捗ログ削除)
-            if (!$KrProgressLog->deleteByKrId($krId)
-            ) {
-                throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
+            // 進捗単位を変更した場合はKR進捗リセット(アクションによるKR進捗ログ削除)
+            $kr = $this->get($krId);
+            if ($requestData['value_unit'] != $kr['value_unit']) {
+                if (!$KrProgressLog->deleteByKrId($krId)
+                ) {
+                    throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
+                }
             }
 
             // KR変更ログ保存
