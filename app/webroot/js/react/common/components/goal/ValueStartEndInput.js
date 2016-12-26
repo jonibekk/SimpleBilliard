@@ -18,7 +18,7 @@ export default class ValueStartEndInput extends React.Component {
   }
 
   render() {
-    const {inputData, isEdit} = this.props
+    const {inputData, kr} = this.props
     // 単位無しだったらエリア非表示
     if (inputData.value_unit == KeyResult.ValueUnit.NONE) {
       return null
@@ -32,7 +32,7 @@ export default class ValueStartEndInput extends React.Component {
                type="text"
                onChange={this.onChange.bind(this)}
                maxLength={KeyResult.MAX_LENGTH_VALUE}
-               disabled={isEdit}
+               disabled={kr.value_unit == inputData.value_unit}
         />
         <span className="goals-create-input-form-tkr-range-symbol">
           <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
@@ -50,8 +50,8 @@ export default class ValueStartEndInput extends React.Component {
 }
 ValueStartEndInput.propTypes = {
   inputData: React.PropTypes.object.isRequired,
-  isEdit: React.PropTypes.bool,
+  kr: React.PropTypes.object.isRequired,
 };
 ValueStartEndInput.defaultProps = {
-  isEdit: false
+  kr: {}
 };

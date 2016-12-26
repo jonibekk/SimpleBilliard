@@ -797,6 +797,14 @@ class Post extends AppModel
                                 'fields' => $this->User->profileFields
                             ]
                         ]
+                    ],
+                    'KrProgressLog'    => [
+                        'fields' => [
+                            'value_unit',
+                            'before_value',
+                            'change_value',
+                            'target_value',
+                        ]
                     ]
                 ],
                 'PostFile'        => [

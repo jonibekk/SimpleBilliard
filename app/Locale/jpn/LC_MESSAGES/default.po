@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-21 09:49+0900\n"
+"PO-Revision-Date: 2016-12-26 17:52+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -250,15 +250,6 @@ msgstr "不正なリクエストです。"
 
 msgid "Changed leader."
 msgstr "リーダーを変更しました。"
-
-msgid "You can't edit achieved KR."
-msgstr "完了済の成果は編集出来ません。"
-
-msgid "Failed to save KR."
-msgstr "達成要素の保存に失敗しました。"
-
-msgid "Updated KR."
-msgstr "達成要素を更新しました。"
 
 msgid "Completed a key result."
 msgstr "成果を完了にしました。"
@@ -1026,6 +1017,9 @@ msgstr "3(デフォルト)"
 msgid "5(Very high)"
 msgstr "5(とても高い)"
 
+msgid "Input is required."
+msgstr "入力必須項目です。"
+
 msgid "You can not change start value and target value to the same value."
 msgstr "進捗開始値を目標値と同じ値に変更できません。"
 
@@ -1038,14 +1032,17 @@ msgstr "進捗を減少から増加に変更できません。"
 msgid "You can not change target value less than current value"
 msgstr "進捗目標値を現在値より少ない値に変更できません。"
 
+msgid "Please input current value between start value and target value."
+msgstr "現在値は開始値と目標値の範囲内で入力してください。"
+
 msgid "There is no data of KR."
 msgstr "達成要素のデータがありません。"
 
+msgid "Failed to save KR."
+msgstr "達成要素の保存に失敗しました。"
+
 msgid "There is no key result."
 msgstr "達成要素が存在しません。"
-
-msgid "Input is required."
-msgstr "入力必須項目です。"
 
 msgid "Label must be at least %d count."
 msgstr "ラベル登録は最大%d個までです。"
@@ -1736,6 +1733,9 @@ msgstr "今期より前のゴールのリーダーは変更できません。"
 msgid "You cant't change leader in the goal during the evaluation period."
 msgstr "評価期間中のゴールのリーダーは変更できません。"
 
+msgid "You can't edit achieved KR."
+msgstr "完了済の成果は編集出来ません。"
+
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
 
@@ -2142,6 +2142,9 @@ msgstr "組織改善案を共有する"
 msgid "Team has been changed, press ok to reload!"
 msgstr "チームが切り替えられました。「OK」を押して再読み込みしてください。"
 
+msgid "Post"
+msgstr "投稿する"
+
 msgid "Check your email!"
 msgstr "メールをチェックしよう！"
 
@@ -2473,6 +2476,22 @@ msgstr "名前"
 
 msgid "Level of achievement"
 msgstr "達成度"
+
+msgid "Would you like to save?"
+msgstr "保存してよろしいですか？"
+
+msgid "If you change the unit, all progress of KR will be reset."
+msgstr ""
+"※単位を変更すると今までのKRの進捗が全てリセットされますのでご注意下さい。"
+
+msgid "Current"
+msgstr "現在"
+
+msgid "All progress of this KR will be reset, is it really OK?"
+msgstr "このKRの全ての進捗がリセットされますが、本当によろしいですか？"
+
+msgid "Updated KR."
+msgstr "達成要素を更新しました。"
 
 msgid "Circles"
 msgstr "サークル"
@@ -2898,9 +2917,6 @@ msgstr "メッセージ"
 msgid "Save"
 msgstr "保存する"
 
-msgid "Post"
-msgstr "投稿する"
-
 msgid "To:"
 msgstr "To:"
 
@@ -3001,7 +3017,7 @@ msgid "Achieve goal"
 msgstr "ゴールを達成"
 
 msgid "Do you really want to complete this goal?"
-msgstr ""
+msgstr "このゴールを達成して本当によろしいですか？"
 
 msgid "Edit Top Key Result"
 msgstr "トップKRを編集する"
@@ -3093,14 +3109,19 @@ msgstr "達成要素名"
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
+msgid "Unit,start/target value"
+msgstr "単位 開始値/目標値"
+
+msgid ""
+"Please input start date / end date of KR between start date / end date of "
+"the goal."
+msgstr "開始日/期限はゴールの開始日/期限の間で入力してください"
+
 msgid "Change leader"
 msgstr "リーダーを変更"
 
 msgid "Select the leader name you want to change."
 msgstr "変更したいリーダーの名前を選択してください。"
-
-msgid "Current"
-msgstr "現在"
 
 msgid "Select whether you collaborate or quit this goal."
 msgstr "このゴールにコラボるか抜けるかを選択してください。"
@@ -4866,10 +4887,10 @@ msgstr "email"
 msgid "emailIsUnique"
 msgstr "emailUnique"
 
-msgid "requiredCaseExistUnit"
+msgid "validateCreateProgress"
 msgstr ""
 
-msgid "validateEditProgressStartEnd"
+msgid "requiredCaseExistUnit"
 msgstr ""
 
 msgid "isUnique"

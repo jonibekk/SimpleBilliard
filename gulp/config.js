@@ -6,7 +6,7 @@ const config =  {
   js: {
     src: [
       assets_dir + '/js/gl_basic.js',
-      assets_dir + '/js/view/*.js'
+      assets_dir + '/js/view/**/*.js'
     ],
     output: {
       file_name: 'goalous',
@@ -14,7 +14,7 @@ const config =  {
     },
     watch_files: [
         assets_dir + '/js/gl_basic.js',
-        assets_dir + '/js/view/*.js'
+        assets_dir + '/js/view/**/*.js'
     ],
   },
   js_prerender: {

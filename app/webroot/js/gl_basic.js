@@ -427,6 +427,18 @@ $(document).ready(function () {
   $(document).on("click", ".btn-back-notifications", evNotifications);
   $(document).on("click", ".call-notifications", evNotifications);
   $(document).on("click", ".message-list-panel-card-link", evMessage);
+  // TODO:delete.進捗グラフリリース時に不要になるので必ず削除
+  $(document).on("click", '.js-show-modal-edit-kr', function (e) {
+      e.preventDefault();
+      var url = $(this).attr('href');
+      if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+      } else {
+        var kr_id = $(this).data('kr_id');
+        $(this).modalKrEdit({kr_id: kr_id});
+      }
+    }
+  );
   $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
   $(document).on("touchend", "#layer-black", function () {
     $('.navbar-offcanvas').offcanvas('hide');
@@ -983,7 +995,7 @@ function resizeImgBase64(imgBase64, width, height, callback) {
 function checkUploadFileExpire(formID) {
   var $form = $('#' + formID);
 
-  var res = true;1
+  var res = true;
   $form.find('input[type=hidden][name="data[file_id][]"]').each(function () {
     var $hidden = $(this);
     var now = Math.floor(new Date().getTime() / 1000);
@@ -3966,7 +3978,7 @@ $(document).ready(function () {
       $.each(my_joined_circles, function (i, circle_id) {
         // $circlesはdashboardとhamburgerそれぞれのサークルリストを含むインスタンス。
         var $circles = $circle_list.children('[circle_id=' + circle_id + ']');
-        $circles.each(function(i){
+        $circles.each(function (i) {
           var $circle = $(this);
           if ($circle === undefined) {
             return true;

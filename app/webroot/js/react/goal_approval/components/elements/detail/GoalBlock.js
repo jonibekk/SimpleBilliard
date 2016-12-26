@@ -17,7 +17,7 @@ export default class GoalBlock extends React.Component {
     const goal = this.props.goal
     const is_leader = this.props.is_leader
     const displayed_previous = this.state.displayed_previous
-    const existsChangeLogs = goal.goal_change_log || goal.tkr_change_log
+    const existsChangeLogs = goal.goal_change_log || goal.kr_change_log
     const view_previous_button = () => {
       return (
         <div className="goals-approval-detail-view-previous">
@@ -32,7 +32,7 @@ export default class GoalBlock extends React.Component {
       return (
         <GoalCard goal={ goal.goal_change_log || goal }
                   goal_category={ goal.goal_change_log.goal_category || goal.goal_category }
-                  top_key_result={ goal.tkr_change_log || goal.top_key_result } />
+                  top_key_result={ goal.kr_change_log || goal.top_key_result } />
       )
     }
 
