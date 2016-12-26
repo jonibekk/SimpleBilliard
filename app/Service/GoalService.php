@@ -229,7 +229,7 @@ class GoalService extends AppService
 
             // TKRの進捗単位を変更した場合は進捗リセット
             if ($goal['top_key_result']['value_unit'] != $updateTkr['value_unit']) {
-                if (!$KrProgressLog->deleteAll(['KrProgressLog.key_result_id' => $tkrId, 'KrProgressLog.del_flg' => false])) {
+                if (!$KrProgressLog->deleteByKrId($tkrId)) {
                     throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $tkrId));
                 }
             }

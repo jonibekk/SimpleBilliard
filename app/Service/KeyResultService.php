@@ -416,10 +416,7 @@ class KeyResultService extends AppService
                     , var_export($updateKr, true)));
             }
             // KR進捗リセット(アクションによるKR進捗ログ削除)
-            if (!$KrProgressLog->deleteAll([
-                'KrProgressLog.key_result_id' => $krId,
-                'KrProgressLog.del_flg'       => false
-            ])
+            if (!$KrProgressLog->deleteByKrId($krId)
             ) {
                 throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
             }

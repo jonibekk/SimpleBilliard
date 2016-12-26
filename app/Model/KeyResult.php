@@ -399,9 +399,15 @@ class KeyResult extends AppModel
         }
 
         $targetVal = Hash::get($this->data, 'KeyResult.target_value');
-        $startVal = Hash::get($this->data, 'KeyResult.start_value');
-        $isProgressIncrease = bcsub($targetVal, $startVal, 3) > 0;
+        if (Hash::check($this->data, 'KeyResult.start_value')) {
+            $startVal = Hash::get($this->data, 'KeyResult.start_value');
+        } else {
+            $krId = Hash::get($this->data, 'KeyResult.id');
+            $kr = $this->getById($krId);
+            $startVal = Hash::get($kr,'start_value');
+        }
 
+        $isProgressIncrease = bcsub($targetVal, $startVal, 3) > 0;
         /* 現在値が開始値と終了値の間か */
         // 進捗方向：増加
         if ($isProgressIncrease && $startVal <= $currentVal && $currentVal <= $targetVal) {
