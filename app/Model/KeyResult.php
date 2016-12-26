@@ -168,9 +168,6 @@ class KeyResult extends AppModel
 
     public $updateValidate = [
         'current_value' => [
-            'requiredCaseExistUnit'   => [
-                'rule' => ['requiredCaseExistUnit'],
-            ],
             'numeric'                 => [
                 'rule' => ['numeric'],
             ],
@@ -279,7 +276,7 @@ class KeyResult extends AppModel
         }
 
         // 開始値と目標値が同じ値でないか
-        $inputDiffStartEnd = $targetVal - $startVal;
+        $inputDiffStartEnd = bcsub($targetVal, $startVal, 3);
         if ($inputDiffStartEnd == 0) {
             $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
             return false;
@@ -335,14 +332,14 @@ class KeyResult extends AppModel
             return true;
         }
 
-        $inputDiffStartEnd = $targetVal - $startVal;
+        $inputDiffStartEnd = bcsub($targetVal, $startVal, 3);
         // 開始値と目標値が同じ値でないか
         if ($inputDiffStartEnd == 0) {
             $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
             return false;
         }
 
-        $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
+        $isProgressIncrease = bcsub($kr['target_value'], $kr['start_value'], 3) > 0;
         if ($unitId == $kr['value_unit']) {
             // 進捗の値が増加から減少の方向に変更してないか
             if ($isProgressIncrease && $inputDiffStartEnd < 0) {
@@ -395,7 +392,7 @@ class KeyResult extends AppModel
 
         $targetVal = Hash::get($this->data, 'KeyResult.target_value');
         $startVal = Hash::get($this->data, 'KeyResult.start_value');
-        $isProgressIncrease = ($targetVal - $startVal) > 0;
+        $isProgressIncrease = bcsub($targetVal, $startVal, 3) > 0;
 
         /* 現在値が開始値と終了値の間か */
         // 進捗方向：増加

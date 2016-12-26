@@ -400,6 +400,14 @@ class KeyResultTest extends GoalousTestCase
         $expectErrMsg = __("You can not change the values from increase to decrease.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
+        // 開始値・目標値マイナス
+        $updateKr = ['id' => 1, 'value_unit' => 1, 'start_value' => -10, 'target_value' => -9.999];
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
+        $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
+
+        // 単位変更時は進捗方向チェック不要
         $updateKr = ['id' => 1, 'value_unit' => 1, 'start_value' => 10, 'target_value' => 9.999];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -414,6 +422,7 @@ class KeyResultTest extends GoalousTestCase
         $expectErrMsg = __("You can not change the values from decrease to increase.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
+        // 単位変更時は進捗方向チェック不要
         $updateKr = ['id' => 2, 'value_unit' => 0, 'start_value' => 100, 'target_value' => 99];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
