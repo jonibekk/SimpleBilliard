@@ -63,7 +63,7 @@ class KeyResultsController extends ApiController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr, $krId);
 
         // コーチへの通知(ゴール・TKR編集時の通知と同じにする。「ゴール情報を変更しました」)
-        $this->_sendNotifyToCoach(Hash::get($kr, 'goal__id'), NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        $this->_sendNotifyToCoach(Hash::get($kr, 'goal_id'), NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
         // メンバーへの通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MEMBER_CHANGE_KR, $krId, null);
 
