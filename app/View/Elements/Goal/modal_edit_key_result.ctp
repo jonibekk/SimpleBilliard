@@ -84,7 +84,6 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                             'options'          => $krValueUnitList,
                                             'data-short_units' => json_encode($krShortValueUnitList),
                                             'value'            => $unit,
-                                            'data-origin'            => $unit
                                         ]) ?>
                                 </div>
                                 <span

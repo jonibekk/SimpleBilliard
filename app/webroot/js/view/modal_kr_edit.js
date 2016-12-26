@@ -3,6 +3,7 @@
   var short_units = {};
   var $modal;
   var current_unit;
+  var current_start_value;
   var kr_id;
   var form;
 
@@ -38,6 +39,7 @@
       current_unit = $select_unit.val();
       $modal.find('.js-display-short-unit').html(short_units[current_unit]);
 
+      current_start_value = $($modal.find('.js-start-value')).val();
 
       $modal.on('change', '.js-select-value-unit', changeUnit);
       $modal.on('hidden.bs.modal', function (e) {
@@ -123,13 +125,14 @@
 
     /* 元の単位から変更した場合、注意メッセージ表示 */
     var warning_unit_change = $modal.find('.js-show-warning-unit-change').show();
-    var start_value = $modal.find('.js-start-value');
+    var $start_value = $($modal.find('.js-start-value'));
     if (current_unit != selected_unit) {
       warning_unit_change.show();
-      $(start_value).prop('disabled', false);
+      $start_value.prop('disabled', false);
     } else {
       warning_unit_change.hide();
-      $(start_value).prop('disabled', true);
+      $start_value.val(current_start_value);
+      $start_value.prop('disabled', true);
     }
     /* 単位が「完了/未完了」の場合、開始/現在/目標値を非表示にする */
     var no_value = 2;
@@ -149,11 +152,10 @@
     e.preventDefault;
     e.stopImmediatePropagation();
 
-    var selectUnit = $(this).find('.js-select-value-unit');
-    var oldUnit = $(selectUnit).data('origin');
-    var inputUnit = $(selectUnit).val();
-    var confirmMsg = oldUnit == inputUnit ? cake.translation["Would you like to save?"] : cake.translation["All progress of this KR will be reset, is it really OK?"];
-    if (!confirm(confirmMsg)) {
+    var $select_unit = $($(this).find('.js-select-value-unit'));
+    var input_unit = $select_unit.val();
+    var confirm_msg = current_unit == input_unit ? cake.translation["Would you like to save?"] : cake.translation["All progress of this KR will be reset, is it really OK?"];
+    if (!confirm(confirm_msg)) {
       /* キャンセルの時の処理 */
       return false;
     }
@@ -168,6 +170,7 @@
       type: 'PUT',
       data: form_data,
       success: function (data) {
+        PNotify.removeAll();
         new PNotify({
           type: 'success',
           text: cake.translation["Updated KR."],
