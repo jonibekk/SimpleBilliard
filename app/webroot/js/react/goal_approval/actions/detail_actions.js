@@ -16,6 +16,7 @@ export function fetchGoalMember(goal_member_id) {
         console.log(error)
         console.log('fetch failed')
         /* eslint-enable no-console */
+        dispatch(toTopPage())
       })
   }
 }
@@ -138,6 +139,10 @@ export function finishedPostingSetAsTarget() {
 
 export function toListPage() {
   return {type: types.TO_LIST_PAGE}
+}
+
+export function toTopPage() {
+  return {type: types.TO_TOP_PAGE}
 }
 
 export function postingRemovefromTarget() {

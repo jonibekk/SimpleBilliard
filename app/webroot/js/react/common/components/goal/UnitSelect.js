@@ -10,7 +10,7 @@ export default class UnitSelect extends React.Component {
   }
 
   render() {
-    const {value, units, isEdit} = this.props
+    const {value, units} = this.props
     if (units.length == 0) {
       return null
     }
@@ -25,12 +25,11 @@ export default class UnitSelect extends React.Component {
 
     return(
       <div className="relative">
-          <div className={`goals-create-input-form-unit-box ${isEdit && "is-disable"}`}>
+          <div className="goals-create-input-form-unit-box">
               <select
                 name="value_unit"
                 value={value}
                 className="form-control goals-create-input-form mod-select-units"
-                disabled={isEdit}
                 onChange={this.onChange.bind(this)}
               >
                 { unit_options }
@@ -43,8 +42,4 @@ export default class UnitSelect extends React.Component {
 }
 UnitSelect.propTypes = {
   units: React.PropTypes.array.isRequired,
-  isEdit: React.PropTypes.bool
-};
-UnitSelect.defaultProps = {
-  isEdit: false
 };

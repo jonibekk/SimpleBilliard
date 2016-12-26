@@ -160,6 +160,9 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_TKR_EXCHANGED_BY_LEADER:
                 $this->_setMyGoalChangedOption($notify_type, $model_id, $user_id, $team_id);
                 break;
+            case NotifySetting::TYPE_MEMBER_CHANGE_KR:
+                $this->_setMemberChangeKrOption($notify_type, $model_id, $user_id, $team_id);
+                break;
             case NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
@@ -215,6 +218,9 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_APPROVAL_COMMENT:
                 $this->_setApprovalCommentOption($model_id, $sub_model_id, $to_user_list, $team_id);
+                break;
+            case NotifySetting::TYPE_EXCHANGED_LEADER:
+                $this->_setGoalLeaderChangedOption($notify_type, $model_id, $sub_model_id, $user_id, $team_id);
                 break;
             default:
                 break;
@@ -574,7 +580,7 @@ class NotifyBizComponent extends Component
         $goal_id = $action['ActionResult']['goal_id'];
         //宛先は閲覧可能な全ユーザ
         //GoalMember
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //Follower
         $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
         //Coach
@@ -708,7 +714,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
@@ -734,7 +740,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -764,7 +770,7 @@ class NotifyBizComponent extends Component
         if (empty($goal)) {
             return;
         }
-        $goalMembers = $this->Goal->GoalMember->getGoalMemberListByGoalId($goal_id);
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goal_id);
         //exclude inactive users
         $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
@@ -793,7 +799,106 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goal_id);
+    }
 
+    /**
+     * 自分がオーナーのゴールがリーダーによって変更されたときのオプション
+     *
+     * @param $notifyType
+     * @param $krId
+     * @param $userId
+     * @param $teamId
+     */
+    private function _setMemberChangeKrOption($notifyType, $krId, $userId, $teamId)
+    {
+        $kr = $this->Goal->KeyResult->getById($krId);
+        if (empty($kr)) {
+            return;
+        }
+        $goalId = Hash::get($kr, 'goal_id');
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goalId);
+        //exclude inactive users
+        $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
+        //exclude me
+        unset($goalMembers[$userId]);
+
+        //exclude coach
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $isApprovable = $GoalApprovalService->isApprovable($userId, $teamId);
+        $coachId = $this->Team->TeamMember->getCoachId($userId);
+        //チームの評価設定on かつ ユーザが評価対象 かつ コーチが存在している場合はコーチを通知対象から除外
+        //コーチには別途、認定関連の通知が届くため。
+        if ($isApprovable && !empty($goalMembers[$coachId])) {
+            unset($goalMembers[$coachId]);
+        }
+        if (empty($goalMembers)) {
+            return;
+        }
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
+            $notifyType);
+        $this->notify_option['notify_type'] = $notifyType;
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goalId];
+        $this->notify_option['model_id'] = $krId;
+        $this->notify_option['item_name'] = json_encode([$kr['name']]);
+        $this->notify_option['options']['kr_id'] = $krId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goalId);
+    }
+
+    /**
+     * ゴールのリーダーが変更されたときのオプション
+     *
+     * @param $notify_type
+     * @param $goal_id
+     * @param $user_id
+     * @param $team_id
+     */
+    private function _setGoalLeaderChangedOption($notifyType, $goalId, $oldLeaderUserId, $userId, $teamId)
+    {
+        $goal = $this->Goal->getGoal($goalId);
+        if (empty($goal)) {
+            return;
+        }
+        $goalMembers = $this->Goal->GoalMember->findActiveByGoalId($goalId);
+        //exclude inactive users
+        $goalMembers = array_intersect($goalMembers, $this->Team->TeamMember->getActiveTeamMembersList());
+        //exclude me
+        unset($goalMembers[$userId]);
+
+        App::import('Service', 'GoalApprovalService');
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+
+        // 現リーダーのコーチを追加
+        $isApprovable = $GoalApprovalService->isApprovable($userId, $teamId);
+        $coachId = $this->Team->TeamMember->getCoachId(Hash::get($goal, 'Goal.user_id'));
+        if ($isApprovable && empty($goalMembers[$coachId])) {
+            $goalMembers[$coachId] = $coachId;
+        }
+
+        // 旧リーダーのコーチを追加
+        if ($oldLeaderUserId) {
+            $isApprovableOldLeader = $GoalApprovalService->isApprovable($oldLeaderUserId, $teamId);
+            $oldLeaderCoachId = $this->Team->TeamMember->getCoachId($oldLeaderUserId);
+            if ($isApprovableOldLeader && empty($goalMembers[$oldLeaderCoachId])) {
+                $goalMembers[$oldLeaderCoachId] = $oldLeaderCoachId;
+            }
+            if (empty($goalMembers)) {
+                return;
+            }
+        }
+
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
+            $notifyType);
+        $this->notify_option['notify_type'] = $notifyType;
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goalId];
+        $this->notify_option['model_id'] = $goalId;
+        $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+        $this->notify_option['options']['goal_id'] = $goalId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goalId);
     }
 
     /**

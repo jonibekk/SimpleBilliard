@@ -42,6 +42,8 @@ class NotifySetting extends AppModel
     const TYPE_APPROVAL_COMMENT = 29;
     const TYPE_COACHEE_EXCHANGE_TKR = 30;
     const TYPE_TKR_EXCHANGED_BY_LEADER = 31;
+    const TYPE_EXCHANGED_LEADER = 32;
+    const TYPE_MEMBER_CHANGE_KR = 33;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                 => [
@@ -98,6 +100,13 @@ class NotifySetting extends AppModel
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_collaborate',
             'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_MEMBER_CHANGE_KR => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_goal_changed_by_leader',
+            'icon_class'      => 'fa-key',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MY_GOAL_CHANGED_BY_LEADER             => [
@@ -256,6 +265,13 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_TKR_EXCHANGED_BY_LEADER => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_EXCHANGED_LEADER => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
@@ -642,6 +658,22 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
+            case self::TYPE_MEMBER_CHANGE_KR:
+                // この通知で必要なオプション値
+                //   - kr_id: 内容を変更したゴールID
+                $kr = $this->User->Goal->KeyResult->getById($options['kr_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed information on <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $kr['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed information on <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($kr['name']));
+                }
+                break;
             case self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象にしたゴールID
@@ -882,7 +914,19 @@ class NotifySetting extends AppModel
                         h($user_text));
                 }
                 break;
-
+            case self::TYPE_EXCHANGED_LEADER:
+                $goalMember = $this->User->Goal->GoalMember->getActiveLeader($options['goal_id']);
+                $leaderName = $goalMember['User']['display_username'];
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the leader to <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text, $leaderName);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed the leader to <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text), h($leaderName));
+                }
+                break;
         }
 
         if ($options['style'] == 'plain') {

@@ -39,6 +39,8 @@ class ActionService extends AppService
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init("KrProgressLog");
         /** @var ActionResult $ActionResult */
         $ActionResult = ClassRegistry::init("ActionResult");
         /** @var Post $Post */
@@ -63,27 +65,40 @@ class ActionService extends AppService
             $userId = Hash::get($action, 'user_id');
             $now = REQUEST_TIMESTAMP;
 
-            $saveAction = [
+            // アクション保存
+            $actionSaveData = [
                 'goal_id'                 => $goalId,
                 'team_id'                 => $teamId,
                 'user_id'                 => $userId,
                 'type'                    => ActionResult::TYPE_KR,
                 'name'                    => Hash::get($action, 'name'),
                 'key_result_id'           => $krId,
-                'key_result_before_value' => Hash::get($kr, 'current_value'),
-                'key_result_change_value' => $krChangeVal,
-                'key_result_target_value' => Hash::get($kr, 'target_value'),
                 'completed'               => $now
             ];
-
-            // アクション保存
-            if (!$ActionResult->save($saveAction, false)) {
+            if (!$ActionResult->save($actionSaveData, false)) {
                 throw new Exception(sprintf("Failed create action. data:%s"
-                    , var_export($saveAction, true)));
+                    , var_export($actionSaveData, true)));
+            }
+            $newActionId = $ActionResult->getLastInsertID();
+
+            // KR進捗ログ保存
+            $progressLogSaveData = [
+                'goal_id'          => $goalId,
+                'team_id'          => $teamId,
+                'user_id'          => $userId,
+                'key_result_id'    => $krId,
+                'action_result_id' => $newActionId,
+                'value_unit'       => Hash::get($kr, 'value_unit'),
+                'before_value'     => Hash::get($kr, 'current_value'),
+                'change_value'     => $krChangeVal,
+                'target_value'     => Hash::get($kr, 'target_value'),
+            ];
+            if (!$KrProgressLog->save($progressLogSaveData)) {
+                throw new Exception(sprintf("Failed save kr progress log. data:%s"
+                    , var_export($progressLogSaveData, true)));
             }
 
             // アクションとしての投稿
-            $newActionId = $ActionResult->getLastInsertID();
             if (!$Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
                 $newActionId, $share, PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
             ) {
