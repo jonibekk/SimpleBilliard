@@ -320,7 +320,7 @@ class KeyResult extends AppModel
             $startVal = Hash::get($this->data, 'KeyResult.start_value');
             if ($startVal === "") {
                 $this->invalidate('start_value', __("Input is required."));
-                return false;
+                return true;
             }
         } else {
             $startVal = $kr['start_value'];
