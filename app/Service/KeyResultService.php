@@ -211,7 +211,6 @@ class KeyResultService extends AppService
                 // 認定に関するRedisキャッシュ削除
                 $coachId = $TeamMember->getCoachId($leaderUserId,
                     Hash::get($kr, 'team_id'));
-                Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
                 Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
