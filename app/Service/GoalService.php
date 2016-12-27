@@ -186,6 +186,8 @@ class GoalService extends AppService
         $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var KrChangeLog $KrChangeLog */
@@ -257,6 +259,12 @@ class GoalService extends AppService
             if (!$GoalMember->save($updateGoalMember, false)) {
                 throw new Exception(sprintf("Failed update goal_member. data:%s"
                     , var_export($updateGoalMember, true)));
+            }
+
+            //コーチの認定件数を更新(キャッシュを削除)
+            $coachId = $TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+            if ($coachId) {
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
             // Redisキャッシュ削除
