@@ -44,6 +44,8 @@ class KeyResultsController extends ApiController
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         $requestData = Hash::get($this->request->data, 'KeyResult');
         // バリデーション
@@ -62,8 +64,12 @@ class KeyResultsController extends ApiController
         $kr = $KeyResultService->get($krId);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr, $krId);
 
-        // コーチへの通知(ゴール・TKR編集時の通知と同じにする。「ゴール情報を変更しました」)
-        $this->_sendNotifyToCoach(Hash::get($kr, 'goal_id'), NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        // TKRかつ紐づくゴールが認定対象の場合、コーチへ通知する(ゴール・TKR編集時の通知と同じ)
+        $goalId = Hash::get($kr, 'goal_id');
+        if (Hash::get($kr, 'tkr_flg') && $GoalMemberService->isApprovableByGoalId($goalId, $this->my_uid)) {
+            $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+        }
+
         // メンバーへの通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MEMBER_CHANGE_KR, $krId, null);
 

@@ -3,6 +3,7 @@ App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
 App::uses('KeyResult', 'Model');
 App::uses('Goal', 'Model');
+App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
@@ -404,10 +405,16 @@ class KeyResultService extends AppService
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
         /** @var KrChangeLog $KrChangeLog */
         $KrChangeLog = ClassRegistry::init("KrChangeLog");
         /** @var KrProgressLog $KrProgressLog */
         $KrProgressLog = ClassRegistry::init("KrProgressLog");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         try {
             // トランザクション開始
@@ -431,6 +438,32 @@ class KeyResultService extends AppService
             if (!$KrChangeLog->saveSnapshot($userId, $krId, $KrChangeLog::TYPE_MODIFY)) {
                 throw new Exception(sprintf("Failed save kr snapshot. krId:%s", $krId));
             }
+
+            // TKRかつ紐づくゴールが認定対象の場合、再申請のステータスに変更
+            $goalId = Hash::get($kr, 'goal_id');
+            if (Hash::get($kr, 'tkr_flg') && $GoalMemberService->isApprovableByGoalId($goalId, $userId)) {
+                $goalMemberId = Hash::get($GoalMember->getUnique($userId, $goalId), 'GoalMember.id');
+                if (empty($goalMemberId)) {
+                    throw new Exception(sprintf("Not exist goal_member. data:%s"
+                        , var_export(compact('goalId', 'userId'), true)));
+                }
+                $updateGoalMember = [
+                    'id'                   => $goalMemberId,
+                    'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
+                    'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
+                ];
+                if (Hash::get($requestData, 'priority') !== null) {
+                    $updateGoalMember['priority'] = $requestData['priority'];
+                }
+                if (!$GoalMember->save($updateGoalMember, false)) {
+                    throw new Exception(sprintf("Failed update goal_member. data:%s"
+                        , var_export($updateGoalMember, true)));
+                }
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($userId);
+                //コーチの認定件数キャッシュを削除
+                Cache::delete($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
+            }
+
 
             // Redisキャッシュ削除
             Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
