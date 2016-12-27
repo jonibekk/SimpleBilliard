@@ -405,6 +405,8 @@ class KeyResultService extends AppService
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var KrChangeLog $KrChangeLog */
@@ -457,6 +459,9 @@ class KeyResultService extends AppService
                     throw new Exception(sprintf("Failed update goal_member. data:%s"
                         , var_export($updateGoalMember, true)));
                 }
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($userId);
+                //コーチの認定件数キャッシュを削除
+                Cache::delete($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
 
