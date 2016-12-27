@@ -24,7 +24,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'aeiou control-label modal-label'
+                        'class' => 'circle-create-label'
                     ],
                     'wrapInput' => false,
                     'class'     => 'form-control modal_input-design',
@@ -46,7 +46,7 @@
                         'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                     ]) ?>
                 <div class="form-group">
-                    <label class="ccc control-label modal-label"><?= __('Members') ?></label>
+                    <label class="circle-create-label"><?= __('Members') ?></label>
 
                     <div class="ddd">
                         <?=
@@ -75,8 +75,7 @@
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'     => 'radio',
-                    'before'   => '<label class="eee control-label modal-label">' . __(
-                            'Privacy') . '</label>',
+                    'before'   => '<label class="circle-create-label">' . __('Privacy') . '</label>',
                     'legend'   => false,
                     'class'    => false,
                     'options'  => $privacy_option,
@@ -97,7 +96,7 @@
                         'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                     ]) ?>
                 <div class="form-group">
-                    <label for="" class="f control-label modal-label"><?= __("Circle Image") ?></label>
+                    <label for="" class="circle-create-label"><?= __("Circle Image") ?></label>
 
                     <div class="ggg">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">

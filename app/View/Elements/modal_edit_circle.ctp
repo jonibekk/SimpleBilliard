@@ -69,7 +69,7 @@
                             "Only members can find the circle and see posts.") . '</span>';
                     ?>
                     <div class="form-group">
-                        <label class="control-label modal-label"><?= __('Privacy') ?></label>
+                        <label class="block"><?= __('Privacy') ?></label>
 
                         <div>
                             <span class="font_14px">

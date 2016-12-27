@@ -1,3 +1,4 @@
+<?= $this->App->viewStartComment() ?>
 <div class="tab-pane fade" id="ActionForm">
     <?php if (!isset($canActionGoals) || count($canActionGoals) == 0)://メッセージ一覧ページでは$canActionGoalsがセットされない ?>
         <div class="post-panel-body plr_11px ptb_7px">
@@ -181,3 +182,4 @@
         <?= $this->Form->end() ?>
     <?php endif; ?>
 </div>
+<?= $this->App->viewEndComment() ?>
