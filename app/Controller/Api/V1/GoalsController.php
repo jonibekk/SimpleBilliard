@@ -303,6 +303,47 @@ class GoalsController extends ApiController
     }
 
     /**
+     * ゴール進捗のログを返す
+     *
+     * @return CakeResponse
+     */
+    function get_progress_logs():CakeResponse
+    {
+        $mock = [
+            [
+                'progress'=>10,
+                'dsate'=>'2016-10-1',
+            ],
+            [
+                'progress'=>20,
+                'dsate'=>'2016-10-2',
+            ],
+            [
+                'progress'=>30,
+                'dsate'=>'2016-10-3',
+            ],
+            [
+                'progress'=>40,
+                'dsate'=>'2016-10-4',
+            ],
+            [
+                'progress'=>50,
+                'dsate'=>'2016-10-5',
+            ],
+            [
+                'progress'=>60,
+                'dsate'=>'2016-10-6',
+            ],
+            [
+                'progress'=>70,
+                'dsate'=>'2016-10-7',
+            ],
+        ];
+
+        return $this->_getResponseSuccess($mock);
+    }
+
+    /**
      * ゴール新規登録API
      * *必須フィールド
      * - socket_id: pusherへのpush用
