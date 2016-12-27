@@ -7,6 +7,7 @@
  */
 
 App::import('Service', 'AppService');
+App::import('Service', 'GoalApprovalService');
 App::uses('GoalMember', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
