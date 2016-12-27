@@ -238,7 +238,8 @@ class PostTest extends GoalousTestCase
             'Post' => [
                 'body'       => 'test',
                 'site_photo' => [
-                    'type' => 'binary/octet-stream'
+                    'type'     => 'binary/octet-stream',
+                    'tmp_name' => "",
                 ]
             ],
         ];

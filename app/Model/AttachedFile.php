@@ -80,8 +80,10 @@ class AttachedFile extends AppModel
      */
     public $validate = [
         'attached'   => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
             // convert to byte
+            'image_max_size' => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
+            'image_type'     => ['rule' => ['attachmentImageType',],]
+
         ],
         'file_type'  => [
             'numeric' => [
