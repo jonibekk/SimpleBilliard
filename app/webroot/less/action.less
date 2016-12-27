@@ -1,4 +1,13 @@
 .action {
+  &-form {
+    /* 多重サブミット防止のために追加したクラス */
+    input[type="submit"].is-disabled {
+      opacity: .3;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+  }
   &-kr-progress-edit {
     padding: 10px 6px;
     &-item {
@@ -26,6 +35,9 @@
       &-box-right {
         flex:1;
         min-width: 0;
+        .bootstrap-switch-small {
+          width: 200px;
+        }
       }
       &-check-circle {
         width: 32px;
@@ -76,9 +88,4 @@
       height: auto;
     }
   }
-}
-
-
-.bootstrap-switch-small {
-  width: 200px;
 }

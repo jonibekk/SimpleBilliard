@@ -1,3 +1,4 @@
+<?= $this->App->viewStartComment() ?>
 <div class="tab-pane fade" id="ActionForm">
     <?php if (!isset($canActionGoals) || count($canActionGoals) == 0)://メッセージ一覧ページでは$canActionGoalsがセットされない ?>
         <div class="post-panel-body plr_11px ptb_7px">
@@ -26,7 +27,7 @@
             'id'               => 'CommonActionDisplayForm',
             'type'             => 'file',
             'novalidate'       => true,
-            'class'            => 'form-feed-notify'
+            'class'            => 'form-feed-notify action-form'
         ]); ?>
         <div class="post-panel-body plr_11px ptb_7px">
             <a href="#"
@@ -150,7 +151,7 @@
                         <?=
                         $this->Form->submit(__($is_edit_mode ? "保存する" : "アクション登録"),
                             [
-                                'class' => 'btn btn-primary pull-right post-submit-button',
+                                'class' => 'btn btn-primary pull-right post-submit-button js-action-submit-button',
                                 'id'    => 'CommonActionSubmit'
                             ]) ?>
                     </div>
@@ -181,3 +182,4 @@
         <?= $this->Form->end() ?>
     <?php endif; ?>
 </div>
+<?= $this->App->viewEndComment() ?>

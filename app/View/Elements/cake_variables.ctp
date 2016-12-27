@@ -5,6 +5,7 @@
  * Date: 7/21/16
  * Time: 00:40
  */
+App::uses('AttachedFile', 'Model');
 ?>
 <?= $this->App->viewStartComment() ?>
 <script type="text/javascript">
@@ -390,6 +391,7 @@
             "Prasing someone": "<?= __("Prasing someone") ?>",
             "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>",
             "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>",
+            "Post": "<?= __("Post") ?>",
 
             // Signup
             "Check your email!": "<?= __("Check your email!") ?>",
@@ -542,7 +544,12 @@
             "Name": "<?=__("Name")?>",
             "Level of achievement": "<?=__("Level of achievement")?>",
             "Achieved": "<?= __("Achieved") ?>",
-            "Unachieved": "<?= __("Unachieved") ?>"
+            "Unachieved": "<?= __("Unachieved") ?>",
+            "Would you like to save?": "<?= __("Would you like to save?") ?>",
+            "If you change the unit, all progress of KR will be reset.": "<?= __("If you change the unit, all progress of KR will be reset.") ?>",
+            "Current": "<?= __("Current") ?>",
+            "All progress of this KR will be reset, is it really OK?": "<?= __("All progress of this KR will be reset, is it really OK?") ?>",
+            "Updated KR.": "<?= __("Updated KR.") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
@@ -560,6 +567,7 @@
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
         current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
+        attachable_max_file_size_mb: "<?= AttachedFile::ATTACHABLE_MAX_FILE_SIZE_MB?>"
     };
 
     function __(text) {

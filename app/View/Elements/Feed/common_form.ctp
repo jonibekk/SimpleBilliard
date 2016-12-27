@@ -201,7 +201,7 @@ if (!isset($goal_list_for_action_option)) {
 
                         <div class="row form-horizontal form-group post-share-range" id="PostShare">
                             <?=
-                            $this->Form->submit(__($is_edit_mode ? "Save" : "Post"),
+                            $this->Form->submit($is_edit_mode ? __("Save") : __("Post"),
                                 [
                                     'class'    => 'btn btn-primary pull-right post-submit-button',
                                     'id'       => 'PostSubmit',

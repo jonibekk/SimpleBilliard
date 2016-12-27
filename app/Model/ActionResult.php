@@ -86,23 +86,23 @@ class ActionResult extends AppModel
     public $validate = [
         'photo1'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo2'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo3'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo4'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo5'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'del_flg'       => [
             'boolean' => [
@@ -227,7 +227,6 @@ class ActionResult extends AppModel
             return true;
         }
 
-
         // それ以外の単位
         $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
         // 進捗が変わらない場合は許容
@@ -288,6 +287,13 @@ class ActionResult extends AppModel
             'dependent' => true,
         ],
         'ActionResultFile',
+    ];
+
+    /**
+     * hasOne associations
+     */
+    public $hasOne = [
+        'KrProgressLog',
     ];
 
     /**

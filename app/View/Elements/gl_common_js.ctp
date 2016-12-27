@@ -17,6 +17,7 @@
 <?php
 echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
 echo $this->Html->script('/compiled_assets/js/vendors.min');
+echo $this->Html->script('/js/dropzone_setting');
 echo $this->Html->script('/compiled_assets/js/goalous.min');
 echo $this->Html->script('/compiled_assets/js/ng_app.min');
 ?>

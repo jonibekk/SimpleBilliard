@@ -24,7 +24,6 @@ class GoalMemberTest extends GoalousTestCase
         'app.goal',
         'app.goal_category',
         'app.approval_history',
-
         'app.team_member',
     );
 
@@ -249,7 +248,7 @@ class GoalMemberTest extends GoalousTestCase
         $this->assertEquals(null, $actual);
     }
 
-    function testGetGoalMemberListByGoalId()
+    function testFindActiveByGoalId()
     {
         $this->_setDefault();
         $data = [
@@ -259,7 +258,18 @@ class GoalMemberTest extends GoalousTestCase
             'type'    => GoalMember::TYPE_COLLABORATOR
         ];
         $this->GoalMember->save($data);
-        $actual = $this->GoalMember->getGoalMemberListByGoalId(200, GoalMember::TYPE_COLLABORATOR);
+        $userData = [
+            'id' => 100,
+            'active_flg' => true
+        ];
+        $this->GoalMember->User->save($userData, false);
+        $teamMemberData = [
+            'team_id' => 1,
+            'user_id' => 100,
+            'active_flg' => true
+        ];
+        $this->GoalMember->User->TeamMember->save($teamMemberData, false);
+        $actual = $this->GoalMember->findActiveByGoalId(200, GoalMember::TYPE_COLLABORATOR);
         $this->assertNotEmpty($actual);
     }
 

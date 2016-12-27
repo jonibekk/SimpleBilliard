@@ -11,7 +11,8 @@ App::uses('Goal', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('GoalChangeLog', 'Model');
-App::uses('TkrChangeLog', 'Model');
+App::uses('KrChangeLog', 'Model');
+App::uses('KeyResult', 'Model');
 App::import('Service', 'GoalMemberService');
 
 class GoalApprovalService extends AppService
@@ -82,7 +83,7 @@ class GoalApprovalService extends AppService
      *
      * @return boolean
      */
-    function haveAccessAuthoriyOnApproval($goalMemberId, $userId)
+    function haveAccessAuthorityOnApproval($goalMemberId, $userId)
     {
         $GoalMember = ClassRegistry::init("GoalMember");
         $Team = ClassRegistry::init("Team");
@@ -375,10 +376,12 @@ class GoalApprovalService extends AppService
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var keyResult $keyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalChangeLog $GoalChangeLog */
         $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
-        /** @var TkrChangeLog $TkrChangeLog */
-        $TkrChangeLog = ClassRegistry::init("TkrChangeLog");
+        /** @var KrChangeLog $KrChangeLog */
+        $KrChangeLog = ClassRegistry::init("KrChangeLog");
 
         $goalId = Hash::get($GoalMember->findById($goalMemberId, ['goal_id']), 'GoalMember.goal_id');
         if(!$goalId) {
@@ -386,7 +389,16 @@ class GoalApprovalService extends AppService
             return false;
         }
 
-        return $GoalChangeLog->saveSnapshot($goalId) && $TkrChangeLog->saveSnapshot($goalId);
+        $tkrId = Hash::get($KeyResult->getTkr($goalId), 'KeyResult.id');
+        if (!$tkrId) {
+            $this->log("Failed to get tkr id by Goal.id : $goalMemberId");
+            return false;
+        }
+
+        $savedGoalSnapshot = $GoalChangeLog->saveSnapshot($goalId);
+        $savedTkrSnapshot = $KrChangeLog->saveSnapshot($goalId, $tkrId, $KrChangeLog::TYPE_APPROVAL_BY_COACH);
+
+        return $savedGoalSnapshot && $savedTkrSnapshot;
     }
 
 }

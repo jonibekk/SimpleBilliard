@@ -10,6 +10,7 @@
   }
   &__input {
     width: 100%;
+    border-radius: 4px;
     padding: 8px;
     border: 1px solid @baseGray;
     outline: none;
@@ -108,7 +109,7 @@
     padding: @spacing;
     &-title {
       font-size: @fontMedium;
-      font-weight: nomal;
+      font-weight: normal;
       margin: 0;
       padding-bottom: @spacing;
       overflow: hidden;
@@ -165,7 +166,7 @@
       }
     }
     &-form {
-      border-radius: 0;
+      border-radius: 4px;
       margin-bottom: @spacing;
       width: 100%;
       height: 38px;
@@ -190,17 +191,21 @@
       &-unit-label {
         position: absolute;
         top: 8px;
-        left: 12px;
+        left: 18px;
         z-index: 99;
       }
       &-unit-box {
         background: url(../img/svg/icon_arrow_open.svgz) right center / 24px 12px no-repeat !important;
         border: 1px solid #ddd;
+        border-radius: 4px;
         height: 38px;
         width: 60px;
         margin: 0 10px 10px 0;
         &.is-disable {
           background: @subColor5 url(../img/svg/icon_arrow_open.svgz) right center / 24px 12px no-repeat !important;
+        }
+        &.is-radius {
+          border-radius: 4px;
         }
       }
 
@@ -216,7 +221,6 @@
         }
         &-range {
           &-symbol {
-            background-color: @subColor5;
             display: table-cell;
             padding: 9px;
             text-align: center;

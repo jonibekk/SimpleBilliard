@@ -156,10 +156,13 @@ class ApprovalHistory extends AppModel
 
     /**
      * ゴールメンバーを元に、ユーザーの最新コメントを取得する
-     * @param  $goalMemberId
-     * @param  $userId
+     *
+     * @param  int $goalMemberId
+     * @param  int $userId
+     *
+     * @return mixed|null
      */
-    function findLatestByUserId($goalMemberId, $userId)
+    function findLatestByUserId(int $goalMemberId, int $userId)
     {
         $options = [
             'conditions' => [
