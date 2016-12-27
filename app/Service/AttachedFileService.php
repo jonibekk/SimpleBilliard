@@ -54,6 +54,8 @@ class AttachedFileService extends AppService
         }
 
         $resValidation = $this->preUploadValidation($fileInfo);
+        //本アップロード時も判定できるように。
+        $fileInfo['img_type'] = exif_imagetype($fileInfo['tmp_name']);
 
         if ($resValidation['error']) {
             return array_merge($ret, $resValidation);
@@ -100,13 +102,20 @@ class AttachedFileService extends AppService
             return $ret;
         }
 
-        //ファイルの画素数チェック(画像の場合のみ)
         if (strpos($fileInfo['type'], 'image') !== false) {
+            //ファイルの画素数チェック(画像の場合のみ)
             list($imgWidth, $imgHeight) = getimagesize($fileInfo['tmp_name']);
             if ($imgWidth * $imgHeight > AttachedFile::ATTACHABLE_MAX_PIXEL) {
                 $ret['msg'] = __("%s pixel is the limit.", number_format(AttachedFile::ATTACHABLE_MAX_PIXEL));
                 return $ret;
             }
+            //ファイルタイプのチェック(gif, jpeg, pngのみ許可)
+            $imgType = exif_imagetype($fileInfo['tmp_name']);
+            if (!in_array($imgType, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG], true)) {
+                $ret['msg'] = __("Failed to upload. jpg, png and gif are allowed.");
+                return $ret;
+            }
+
         }
 
         $ret['error'] = false;

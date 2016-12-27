@@ -97,10 +97,8 @@ class ActionsController extends ApiController
             return $this->_getResponseBadFail(__("Please reselect an image."));
         }
         $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
-        $mimeType = Hash::get($file, 'info.type');
-        if (!in_array($mimeType, ['image/jpeg', 'image/gif', 'image/png'])) {
+        if (!in_array($file['info']['img_type'], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG], true)) {
             return $this->_getResponseBadFail(__("Failed to upload. jpg, png and gif are allowed."));
-
         }
 
         // アクションのフォームバリデーション

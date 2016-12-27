@@ -575,27 +575,21 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
-    public function attachmentContentType(
+    public function attachmentImageType(
         /** @noinspection PhpUnusedParameterInspection */
         Model $model,
         $value,
-        $contentTypes
+        $imageTypes
     ) {
         $value = array_shift($value);
-        if (!is_array($contentTypes)) {
-            $contentTypes = array($contentTypes);
+        if (!is_array($imageTypes)) {
+            $imageTypes = array($imageTypes);
         }
         if (!empty($value['tmp_name'])) {
-            foreach ($contentTypes as $contentType) {
-                if (substr($contentType, 0, 1) == '/') {
-                    if (preg_match($contentType, $value['type'])) {
-                        return true;
-                    }
-                } elseif ($contentType == $value['type']) {
-                    return true;
-                }
+            $targetImgType = exif_imagetype($value['tmp_name']);
+            if (!in_array($targetImgType, $imageTypes, true)) {
+                return false;
             }
-            return false;
         }
         return true;
     }
@@ -645,11 +639,13 @@ class UploadBehavior extends ModelBehavior
         if (!$this->isUpload($value)) {
             return true;
         }
-        return $this->_validateDimension($value, 'min', 'x', $minWidth) && $this->_validateDimension($value, 'min', 'y', $minHeight);
+        return $this->_validateDimension($value, 'min', 'x', $minWidth) && $this->_validateDimension($value, 'min', 'y',
+                $minHeight);
     }
 
     /**
      * アップロードされているか判定
+     *
      * @param $upload
      *
      * @return bool

@@ -95,7 +95,7 @@ class Circle extends AppModel
         ],
         'photo'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
         ],
         'description'  => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
