@@ -257,7 +257,7 @@ class User extends AppModel
         ],
         'photo'              => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'hometown'           => [
             'maxLength' => ['rule' => ['maxLength', 128]],
@@ -268,7 +268,7 @@ class User extends AppModel
         ],
         'cover_photo'        => [
             'image_max_size'      => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'          => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],],
+            'image_type'          => ['rule' => ['attachmentImageType',],],
             'imageMinWidthHeight' => ['rule' => ['minWidthHeight', 672, 378]],
         ],
         'comment'            => [

@@ -575,15 +575,29 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
+    /**
+     * 許可している画像かどうかチェック
+     * JPEG, GIF, PNGのみ許可
+     * 画像以外の場合は、検査スルーする
+     *
+     * @param Model $model
+     * @param array $value file info
+     *
+     * @return bool
+     */
     public function attachmentImageType(
         /** @noinspection PhpUnusedParameterInspection */
         Model $model,
-        $value,
-        $imageTypes
+        array $value
     ) {
+        $imageTypes = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG];
         $value = array_shift($value);
         if (!is_array($imageTypes)) {
             $imageTypes = array($imageTypes);
+        }
+        //画像以外はスルー
+        if (strpos($value['type'], 'image') === false) {
+            return true;
         }
         if (!empty($value['tmp_name'])) {
             $targetImgType = exif_imagetype($value['tmp_name']);

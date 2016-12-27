@@ -95,7 +95,7 @@ class Circle extends AppModel
         ],
         'photo'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'description'  => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
@@ -141,6 +141,7 @@ class Circle extends AppModel
      */
     function add($data, $show_for_all_feed_flg = true, $get_notification_flg = true)
     {
+        $this->log($data);
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
         }

@@ -143,27 +143,27 @@ class Post extends AppModel
         'del_flg'         => ['boolean' => ['rule' => ['boolean'],],],
         'photo1'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo2'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo3'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo4'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo5'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'site_photo'      => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'body'            => [
             'maxLength' => ['rule' => ['maxLength', 10000]],
@@ -1101,8 +1101,14 @@ class Post extends AppModel
         return true;
     }
 
-    public function getSubQueryFilterKrPostList(DboSource $db, $key_result_id, $user_id = null, $type, $start = null, $end = null)
-    {
+    public function getSubQueryFilterKrPostList(
+        DboSource $db,
+        $key_result_id,
+        $user_id = null,
+        $type,
+        $start = null,
+        $end = null
+    ) {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),

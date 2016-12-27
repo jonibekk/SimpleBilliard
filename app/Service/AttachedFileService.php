@@ -110,15 +110,36 @@ class AttachedFileService extends AppService
                 return $ret;
             }
             //ファイルタイプのチェック(gif, jpeg, pngのみ許可)
-            $imgType = exif_imagetype($fileInfo['tmp_name']);
-            if (!in_array($imgType, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG], true)) {
-                $ret['msg'] = __("Failed to upload. jpg, png and gif are allowed.");
+            $ret = $this->validateImgType($fileInfo);
+            if ($ret['error']) {
                 return $ret;
             }
-
         }
 
         $ret['error'] = false;
+        return $ret;
+    }
+
+    /**
+     * @param array $fileInfo
+     *
+     * @return array
+     */
+    function validateImgType(array $fileInfo): array
+    {
+        $ret = [
+            'error' => false,
+            'msg'   => "",
+        ];
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        //一時的にデータをセット
+        $AttachedFile->set(['attached' => $fileInfo]);
+        if ($AttachedFile->validates()) {
+            return $ret;
+        }
+        $ret['error'] = true;
+        $ret['msg'] = $AttachedFile->validationErrors['attached'][0];
         return $ret;
     }
 

@@ -85,27 +85,27 @@ class Comment extends AppModel
         'del_flg'            => ['boolean' => ['rule' => ['boolean']]],
         'photo1'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo2'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo3'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo4'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo5'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'site_photo'         => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'body'               => [
             'maxLength' => ['rule' => ['maxLength', 5000]],

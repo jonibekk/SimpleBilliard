@@ -4,6 +4,7 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'ActionService');
+App::import('Service', 'AttachedFileService');
 
 /**
  * Class ActionsController
@@ -83,6 +84,8 @@ class ActionsController extends ApiController
         $GoalService = ClassRegistry::init("GoalService");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init("AttachedFileService");
 
         // ゴール存在チェック
         $goalId = Hash::get($data, 'ActionResult.goal_id');
@@ -97,8 +100,14 @@ class ActionsController extends ApiController
             return $this->_getResponseBadFail(__("Please reselect an image."));
         }
         $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
-        if (!in_array($file['info']['img_type'], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG], true)) {
-            return $this->_getResponseBadFail(__("Failed to upload. jpg, png and gif are allowed."));
+        //バリデーションの為に一時的に保存する
+        file_put_contents($file['info']['tmp_name'], $file['content']);
+        $imgValidateRes = $AttachedFileService->validateImgType($file['info']);
+        //一時保存したファイルを削除
+        unlink($file['info']['tmp_name']);
+
+        if ($imgValidateRes['error']) {
+            return $this->_getResponseBadFail($imgValidateRes['msg']);
         }
 
         // アクションのフォームバリデーション

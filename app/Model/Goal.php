@@ -156,7 +156,7 @@ class Goal extends AppModel
         ],
         'photo'            => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType', [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG]],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'goal_category_id' => [
             'numeric'  => [
@@ -2171,13 +2171,12 @@ class Goal extends AppModel
 
     /**
      * アクション可能なゴールリストを取得
-     *
      * 条件
      * ・ゴールメンバー
      * ・今期のゴール
      * ・未完了なKRが存在する
      *
-     * @param int    $userId
+     * @param int $userId
      *
      * @return array $res
      * @internal param array $key_results [description]
@@ -2201,7 +2200,7 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.end_date >=' => $currentTerm['start_date'],
                 'Goal.end_date <=' => $currentTerm['end_date'],
-                'Goal.completed' => null
+                'Goal.completed'   => null
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
@@ -2224,11 +2223,10 @@ class Goal extends AppModel
         return Hash::extract($res, '{n}.Goal');
     }
 
-
     /**
      * 完了アクションが可能なゴールリスト取得
      *
-     * @param int   $userId
+     * @param int $userId
      *
      * @return array
      */
@@ -2244,13 +2242,13 @@ class Goal extends AppModel
                         'GoalMember.goal_id = Goal.id',
                         'GoalMember.user_id' => $userId,
                         'GoalMember.team_id' => $this->current_team_id,
-                        'GoalMember.type' => GoalMember::TYPE_OWNER,
+                        'GoalMember.type'    => GoalMember::TYPE_OWNER,
                     ],
                 ]
             ],
             'conditions' => [
                 'Goal.completed' => null,
-                'Goal.deleted' => null,
+                'Goal.deleted'   => null,
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
