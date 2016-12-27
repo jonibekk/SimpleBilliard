@@ -141,7 +141,6 @@ class Circle extends AppModel
      */
     function add($data, $show_for_all_feed_flg = true, $get_notification_flg = true)
     {
-        $this->log($data);
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
         }
