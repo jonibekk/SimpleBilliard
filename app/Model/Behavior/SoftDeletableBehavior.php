@@ -292,9 +292,9 @@ class SoftDeletableBehavior extends ModelBehavior
                 }
             } else {
                 if (empty($queryData['conditions'])
-                    || (!in_array($this->__settings[$Model->alias]['field'], array_keys($queryData['conditions']))
+                    || (!in_array($this->__settings[$Model->alias]['field'], array_keys($queryData['conditions']), true)
                         && !in_array($Model->alias . '.' . $this->__settings[$Model->alias]['field'],
-                            array_keys($queryData['conditions'])))
+                            array_keys($queryData['conditions']), true))
                 ) {
                     $include = true;
                 }
