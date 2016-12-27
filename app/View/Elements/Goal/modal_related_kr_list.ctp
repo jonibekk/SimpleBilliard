@@ -41,11 +41,7 @@
                                 </h4>
 
                                 <!--progress bar-->
-                                <? // TODO:KR進捗機能がリリースされ次第、進捗率に合わせたバーの塗りつぶしと「{現在の進捗}/{目標値}」の表示に変える ?>
-                                <div class="kr-progress mtb_4px">
-                                    <span class="kr-progress-text"><?= $kr['display_value'] ?></span>
-                                    <div class="kr-progress-bar mod-incomplete rate-0"></div>
-                                </div>
+                                <?= $this->element('KeyResult/progress_bar', ['kr' => $kr]) ?>
                                 <dl class="kr-info-counts mb_0px">
                                     <dt class="kr-info-counts-title <?= $actioned ?>"><i class="fa fa-check-circle"></i></dt>
                                     <dd class="kr-info-counts-description <?= $actioned ?>">

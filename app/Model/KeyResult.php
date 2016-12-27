@@ -98,6 +98,13 @@ class KeyResult extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
+        'description'  => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+        ],
         'del_flg'      => [
             'boolean' => [
                 'rule' => ['boolean'],
@@ -109,12 +116,18 @@ class KeyResult extends AppModel
             ],
         ],
         'value_unit'   => [
-            'numeric'  => [
-                'rule' => ['numeric'],
-            ],
-            'notBlank' => [
-                'required' => 'create',
+            'notBlank'               => [
+                'required' => true,
                 'rule'     => 'notBlank',
+                'last'     => true,
+            ],
+            'numeric'                => [
+                'rule' => ['numeric'],
+                'last' => true,
+            ],
+            'validateCreateProgress' => [
+                'allowEmpty' => false,
+                'rule'       => 'validateCreateProgress'
             ],
         ],
         'start_value'  => [
@@ -131,8 +144,7 @@ class KeyResult extends AppModel
                 'rule' => ['requiredCaseExistUnit'],
             ],
             'numeric'               => [
-                'rule'       => ['numeric'],
-                'allowEmpty' => true
+                'rule' => ['numeric'],
             ],
         ],
     ];
@@ -150,6 +162,33 @@ class KeyResult extends AppModel
             'dateYmd'  => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
+            ],
+        ],
+    ];
+
+    public $updateValidate = [
+        'current_value' => [
+            'numeric'                 => [
+                'rule' => ['numeric'],
+                'last'     => true,
+            ],
+            'validateProgressCurrent' => [
+                'rule' => ['validateProgressCurrent'],
+            ],
+        ],
+        'value_unit'    => [
+            'notBlank'             => [
+                'required' => true,
+                'rule'     => 'notBlank',
+                'last'     => true,
+            ],
+            'numeric'              => [
+                'rule' => ['numeric'],
+                'last' => true,
+            ],
+            'validateEditProgress' => [
+                'allowEmpty' => false,
+                'rule'       => 'validateEditProgress'
             ],
         ],
     ];
@@ -188,13 +227,176 @@ class KeyResult extends AppModel
     function requiredCaseExistUnit($val)
     {
         $val = array_shift($val);
-        if ($this->data['KeyResult']['value_unit'] == self::UNIT_BINARY) {
+        $unitId = Hash::get($this->data, 'KeyResult.value_unit');
+        if (empty($unitId)) {
+            return true;
+        }
+        if ($unitId == self::UNIT_BINARY) {
             return true;
         }
         if ($val === "") {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 作成時進捗バリデーション
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateCreateProgress(array $val): bool
+    {
+        $unitId = array_shift($val);
+        $errMsg = __("Invalid Request.");
+        if ($unitId === "" || is_null($unitId)) {
+            $this->invalidate('value_unit', $errMsg);
+            return false;
+        }
+
+        // 単位が完了/未完了の場合
+        if ($unitId == KeyResult::UNIT_BINARY) {
+            return true;
+        }
+
+        /* 開始値・目標値必須チェック */
+        // 単位が完了/未完了以外であれば必須なのでここでチェックするしかない
+        // 開始値
+        $startVal = Hash::get($this->data, 'KeyResult.start_value');
+        if ($startVal === "" || is_null($startVal)) {
+            $this->invalidate('start_value', __("Input is required."));
+            return false;
+        }
+        // 目標値
+        $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        if ($targetVal === "" || is_null($targetVal)) {
+            $this->invalidate('target_value', __("Input is required."));
+            return false;
+        }
+
+        // 開始値と目標値が同じ値でないか
+        $inputDiffStartEnd = bcsub($targetVal, $startVal, 3);
+        if ($inputDiffStartEnd == 0) {
+            $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 更新時進捗バリデーション
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateEditProgress(array $val): bool
+    {
+        $unitId = array_shift($val);
+        $errMsg = __("Invalid Request.");
+        if ($unitId === "" || is_null($unitId)) {
+            $this->invalidate('value_unit', $errMsg);
+            return false;
+        }
+
+        $krId = Hash::get($this->data, 'KeyResult.id');
+        $kr = $this->getById($krId);
+        if (empty($kr)) {
+            $this->invalidate('value_unit', $errMsg);
+            return false;
+        }
+
+        // 単位が完了/未完了の場合
+        if ($unitId == KeyResult::UNIT_BINARY) {
+            return true;
+        }
+
+        /* 開始値・目標値必須チェック */
+        // 単位が完了/未完了以外であれば必須なのでここでチェックするしかない
+        // 開始値(単位変更なしの場合は開始値が変更出来ないので、元の開始値を使用する
+        if (Hash::check($this->data, 'KeyResult.start_value')) {
+            $startVal = Hash::get($this->data, 'KeyResult.start_value');
+            if ($startVal === "") {
+                $this->invalidate('start_value', __("Input is required."));
+                return true;
+            }
+        } else {
+            $startVal = $kr['start_value'];
+        }
+
+        // 目標値
+        $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        // 目標値は別の空判定バリデーションがある為trueとする
+        if ($targetVal === "" || is_null($targetVal)) {
+            return true;
+        }
+
+        $inputDiffStartEnd = bcsub($targetVal, $startVal, 3);
+        // 開始値と目標値が同じ値でないか
+        if ($inputDiffStartEnd == 0) {
+            $this->invalidate('value_unit', __("You can not change start value and target value to the same value."));
+            return false;
+        }
+
+        $isProgressIncrease = bcsub($kr['target_value'], $kr['start_value'], 3) > 0;
+        if ($unitId == $kr['value_unit']) {
+            // 進捗の値が増加から減少の方向に変更してないか
+            if ($isProgressIncrease && $inputDiffStartEnd < 0) {
+                $this->invalidate('value_unit', __("You can not change the values from increase to decrease."));
+                return false;
+            }
+            // 進捗の値が減少から増加の方向に変更してないか
+            if (!$isProgressIncrease && $inputDiffStartEnd > 0) {
+                $this->invalidate('value_unit', __("You can not change the values from decrease to increase."));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * バリデーション
+     * KR進捗の進捗開始/終了値更新
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function validateProgressCurrent(array $val): bool
+    {
+        $currentVal = array_shift($val);
+        $errMsg = __("Invalid Request.");
+
+        // 単位が完了/未完了の場合
+        $unitId = Hash::get($this->data, 'KeyResult.value_unit');
+        if ($unitId == KeyResult::UNIT_BINARY) {
+            return true;
+        }
+
+        $targetVal = Hash::get($this->data, 'KeyResult.target_value');
+        if (Hash::check($this->data, 'KeyResult.start_value')) {
+            $startVal = Hash::get($this->data, 'KeyResult.start_value');
+        } else {
+            $krId = Hash::get($this->data, 'KeyResult.id');
+            $kr = $this->getById($krId);
+            $startVal = Hash::get($kr,'start_value');
+        }
+
+        $isProgressIncrease = bcsub($targetVal, $startVal, 3) > 0;
+        /* 現在値が開始値と終了値の間か */
+        // 進捗方向：増加
+        if ($isProgressIncrease && $startVal <= $currentVal && $currentVal <= $targetVal) {
+            return true;
+        }
+        // 進捗方向：減少
+        if (!$isProgressIncrease && $startVal >= $currentVal && $currentVal >= $targetVal) {
+            return true;
+        }
+        $this->invalidate('current_value', __("Please input current value between start value and target value."));
+        return false;
     }
 
     /**
@@ -316,6 +518,50 @@ class KeyResult extends AppModel
     }
 
     /**
+     * 未完了KRリスト取得
+     *
+     * @param int $goalId
+     *
+     * @return array
+     */
+    function findIncomplete(int $goalId): array
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goalId,
+                'team_id'   => $this->current_team_id,
+                'completed' => null
+            ],
+            'order'      => [
+                'KeyResult.tkr_flg DESC',
+                'KeyResult.priority DESC',
+                'KeyResult.end_date ASC',
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.KeyResult');
+    }
+
+    /**
+     * 未完了KR数取得
+     *
+     * @param int $goalId
+     *
+     * @return int
+     */
+    function countIncomplete(int $goalId): int
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goalId,
+                'team_id'   => $this->current_team_id,
+                'completed' => null
+            ],
+        ];
+        return $this->find('count', $options);
+    }
+
+    /**
      * ユーザがアクションしたKRのみ抽出
      * Extraction KR with only exist user action
      *
@@ -353,7 +599,12 @@ class KeyResult extends AppModel
         return $res;
     }
 
-    function getTkr($goalId)
+    /**
+     * TKR取得
+     * @param  int $goalId
+     * @return null|array
+     */
+    function getTkr(int $goalId)
     {
         $res = $this->find('first', [
             'conditions' => [
@@ -361,6 +612,9 @@ class KeyResult extends AppModel
                 'tkr_flg' => true,
             ],
         ]);
+        if (!$res) {
+            return null;
+        }
         return $res;
     }
 
@@ -404,40 +658,6 @@ class KeyResult extends AppModel
         return $this->Goal->GoalMember->isCollaborated($goal['Goal']['id']);
     }
 
-    function saveEdit($data)
-    {
-        if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
-            return false;
-        }
-
-        //on/offの場合は現在値0,目標値1をセット
-        if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
-            $data['KeyResult']['start_value'] = 0;
-            $data['KeyResult']['current_value'] = 0;
-            $data['KeyResult']['target_value'] = 1;
-        }
-
-        $this->set($data);
-        $validate_backup = $this->validate;
-        $this->validate = array_merge($this->validate, $this->post_validate);
-        if (!$this->validates()) {
-            return false;
-        }
-        $this->validate = $validate_backup;
-
-        // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($data['KeyResult']['goal_id']);
-
-        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
-        $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
-//TODO 現在値を使わないため、この計算は行わない
-//        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
-//                                                            $data['KeyResult']['target_value'],
-//                                                            $data['KeyResult']['current_value']);
-        return $this->save($data);
-    }
-
     function complete($kr_id)
     {
         $current_kr = $this->findById($kr_id);
@@ -461,7 +681,6 @@ class KeyResult extends AppModel
         unset($current_kr['KeyResult']['modified']);
         //progressを元に戻し、current_valueにstart_valueをsetする
         $current_kr['KeyResult']['progress'] = 0;
-        $current_kr['KeyResult']['current_value'] = $current_kr['KeyResult']['start_value'];
         $this->save($current_kr);
         return true;
     }
@@ -531,16 +750,27 @@ class KeyResult extends AppModel
      *
      * @param      $data
      * @param bool $detachRequired
+     * @param null $goalId
      *
      * @return array|true
      */
-    function validateKrPOST($data, $detachRequired = false)
+    function validateKrPOST($data, $detachRequired = false, $goalId = null)
     {
-        $validationBackup = $this->validate;
+        $validationBackup = $validation = $this->validate;
         $this->validate = am($this->validate, $this->post_validate);
-        if ($detachRequired) {
-            $this->validate = Hash::remove($this->validate, '{s}.{s}.required');
+        if (!empty($goalId)) {
+            $this->validate = am($this->validate, $this->updateValidate);
         }
+        if ($detachRequired) {
+            $validation = Hash::remove($this->validate, '{s}.{s}.required');
+        }
+        // 編集時
+        if (!is_null($goalId)) {
+            $tkr = $this->getTkr($goalId);
+            $data['id'] = Hash::get($tkr, 'KeyResult.id');
+            $validation = Hash::remove($this->validate, '{s}.{s}.on');
+        }
+        $this->validate = $validation;
         $this->set($data);
         if ($this->validates()) {
             $this->validate = $validationBackup;
@@ -559,9 +789,9 @@ class KeyResult extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
 
         // 0件のゴールも配列要素を作り、値を0として返す
@@ -572,7 +802,9 @@ class KeyResult extends AppModel
 
     /**
      * 評価ページ表示用にKR一覧を取得
+     *
      * @param $goalId
+     *
      * @return $krs
      */
     public function getKeyResultsForEvaluation($goalId, $userId)
@@ -588,7 +820,7 @@ class KeyResult extends AppModel
             ],
             'contain'    => [
                 'ActionResult' => [
-                    'conditions' =>[
+                    'conditions' => [
                         'user_id' => $userId
                     ]
                 ]
@@ -597,7 +829,7 @@ class KeyResult extends AppModel
         $res = $this->find('all', $options);
 
         $krs = [];
-        foreach($res as $key => $val) {
+        foreach ($res as $key => $val) {
             $krs[$key] = Hash::extract($val, "KeyResult");
             $krs[$key]['ActionResult'] = Hash::extract($val, "ActionResult");
         }

@@ -25,6 +25,7 @@ class NumberExHelper extends AppHelper
      */
     public function formatHumanReadable($num, $options = [])
     {
+        $num = AppUtil::formatBigFloat($num);
         $options = array_merge(
             [
                 'convert_start' => 0,
@@ -59,4 +60,110 @@ class NumberExHelper extends AppHelper
         return $num;
     }
 
+    /**
+     * 進捗値フォーマット
+     *
+     * @param float $val
+     * @param int   $unit
+     * @param bool  $isEnd
+     *
+     * @return mixed|string
+     */
+    public function formatProgressValue(string $val, int $unit)
+    {
+        $val = AppUtil::formatBigFloat($val);
+        if ($unit == KeyResult::UNIT_BINARY) {
+            return !empty($val) ? __("Complete") : __("Incomplete");
+        }
+
+        $unitName = KeyResult::$UNIT[$unit];
+        if (in_array($unit, KeyResult::$UNIT_HEAD)) {
+            return $unitName.$val;
+        }
+        if (in_array($unit, KeyResult::$UNIT_TAIL)) {
+            return $val.$unitName;
+        }
+
+        return $val;
+    }
+
+    /**
+     * 進捗値短縮フォーマット
+     *
+     * @param float $val
+     * @param int   $unit
+     *
+     * @return mixed|string
+     */
+    public function shortFormatProgressValue(float $val, int $unit)
+    {
+        if ($unit == KeyResult::UNIT_BINARY) {
+            return !empty($val) ? __("Complete") : __("Incomplete");
+        }
+        $fmtVal = $this->formatHumanReadable(round($val));
+        $unitName = KeyResult::$UNIT[$unit];
+        if (in_array($unit, KeyResult::$UNIT_HEAD)) {
+            return $unitName.$fmtVal;
+        }
+        if (in_array($unit, KeyResult::$UNIT_TAIL)) {
+            return $fmtVal.$unitName;
+        }
+
+        return $fmtVal;
+    }
+
+    /**
+     * 進捗率計算
+     *
+     * @param $start
+     * @param $end
+     * @param $current
+     *
+     * @return int
+     */
+    public function calcProgressRate(string $start, string $end, string $current) : int
+    {
+        if ($current == $end) {
+            return 100;
+        }
+        // 分母
+        $denominator = $end - $start;
+        // 分子
+        $numerator = $current - $start;
+        // 小数点は切り捨て
+        $rate = floor($numerator / $denominator * 100);
+        if ($rate == 0 && $numerator > 0) {
+            return 1;
+        }
+        return $rate;
+    }
+
+    /**
+     * 単位付加
+     *
+     * @param string $val
+     * @param int    $unitId
+     *
+     * @return string
+     */
+    public function addUnit(string $val, int $unitId) : string
+    {
+        // 単位を文頭におくか文末に置くか決める
+        $unitName = KeyResult::$UNIT[$unitId];
+        if (in_array($unitId, KeyResult::$UNIT_HEAD)) {
+            return $unitName.$val;
+        }
+        if (in_array($unitId, KeyResult::$UNIT_TAIL)) {
+            return $val.$unitName;
+        }
+        return $val;
+    }
+
+    public function addPlusIfOverLimit(int $number, int $limit)
+    {
+        if ($number > $limit) {
+            return "${limit}+";
+        }
+        return $number;
+    }
 }

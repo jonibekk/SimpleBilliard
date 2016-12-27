@@ -86,23 +86,23 @@ class ActionResult extends AppModel
     public $validate = [
         'photo1'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo2'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo3'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo4'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'photo5'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+            'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'del_flg'       => [
             'boolean' => [
@@ -124,10 +124,140 @@ class ActionResult extends AppModel
             ],
         ],
         'name'          => [
-            'maxLength' => ['rule' => ['maxLength', 10000]],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public $postValidate = [
+        'goal_id'                  => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'rule' => 'notBlank',
+            ],
+        ],
+        'name'                     => [
+            'notBlank'  => ['rule' => 'notBlank', 'required' => true],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+        ],
+        'key_result_id'            => [
+            'numeric'         => [
+                'rule' => ['numeric'],
+            ],
+            'validateExistKr' => [
+                'rule'     => ['validateExistKr'],
+                'required' => true
+            ],
+        ],
+        'key_result_current_value' => [
+            'notBlank'           => [
+                'rule'     => 'notBlank',
+                'required' => true
+            ],
+            'decimal'            => [
+                'rule' => ['decimal'],
+            ],
+            'validateKrProgress' => [
+                'rule' => ['validateKrProgress'],
+            ],
+        ],
+    ];
+
+    /**
+     * アクションに紐付けるKRが存在するか
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function validateExistKr(array $val): bool
+    {
+        $krId = array_shift($val);
+        if (empty($krId)) {
+            return false;
+        }
+        $kr = $this->KeyResult->getById($krId);
+        if (empty($kr)) {
+            return false;
+        }
+        $goalId = $this->data['ActionResult']['goal_id'];
+        if ($kr['goal_id'] != $goalId) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * KR進捗更新チェック
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function validateKrProgress(array $val): bool
+    {
+        $errMsg = __("Invalid Request.");
+        $currentVal = array_shift($val);
+        if ($currentVal === "") {
+            $this->invalidate('key_result_current_value', $errMsg);
+            return false;
+        }
+
+        $krId = Hash::get($this->data, 'ActionResult.key_result_id');
+        $kr = $this->KeyResult->getById($krId);
+        if (empty($kr)) {
+            $this->invalidate('key_result_current_value', $errMsg);
+            return false;
+        }
+
+        // 単位が完了/未完了の場合
+        if ($kr['value_unit'] == KeyResult::UNIT_BINARY) {
+            if (!in_array($currentVal, [0, 1])) {
+                $this->invalidate('key_result_current_value', $errMsg);
+                return false;
+            }
+            return true;
+        }
+
+        // それ以外の単位
+        $isProgressIncrease = ($kr['target_value'] - $kr['start_value']) > 0;
+        // 進捗が変わらない場合は許容
+        $currentDiff = $currentVal - $kr['current_value'];
+        if ($currentDiff == 0) {
+            return true;
+        }
+
+        /* 現在値が減っていないか */
+        if ($isProgressIncrease && $currentDiff < 0) {
+            $this->invalidate('key_result_current_value', __("You can not decrease current value."));
+            return false;
+        }
+        /* 現在値が増えていないか */
+        if (!$isProgressIncrease && $currentDiff > 0) {
+            $this->invalidate('key_result_current_value', __("You can not increase current value."));
+            return false;
+        }
+
+        /* 目標値を超えていないか */
+        if ($isProgressIncrease && $currentVal > $kr['target_value']) {
+            $this->invalidate('key_result_current_value', __("Current value over target value."));
+            return false;
+        }
+        if (!$isProgressIncrease && $currentVal < $kr['target_value']) {
+            $this->invalidate('key_result_current_value', __("Current value over target value."));
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * belongsTo associations
@@ -157,6 +287,13 @@ class ActionResult extends AppModel
             'dependent' => true,
         ],
         'ActionResultFile',
+    ];
+
+    /**
+     * hasOne associations
+     */
+    public $hasOne = [
+        'KrProgressLog',
     ];
 
     /**
@@ -520,7 +657,6 @@ class ActionResult extends AppModel
         return (bool)$this->findWithoutTeamId('all', $options);
     }
 
-
     /**
      * ゴールIDごとの件数取得
      *
@@ -531,9 +667,9 @@ class ActionResult extends AppModel
     public function countEachGoalId($goalIds)
     {
         $ret = $this->find('all', [
-            'fields'=> ['goal_id', 'COUNT(goal_id) as cnt'],
+            'fields'     => ['goal_id', 'COUNT(goal_id) as cnt'],
             'conditions' => ['goal_id' => $goalIds],
-            'group' => ['goal_id'],
+            'group'      => ['goal_id'],
         ]);
         // 0件のゴールも配列要素を作り、値を0として返す
         $defaultCountEachGoalId = array_fill_keys($goalIds, 0);

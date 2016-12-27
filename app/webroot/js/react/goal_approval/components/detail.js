@@ -17,8 +17,11 @@ export default class DetailComponent extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.detail.to_list_page) {
-      // browserHistory.push('/goals/approval/list')
       document.location.href = '/goals/approval/list'
+    }
+
+    if (nextProps.detail.to_top_page) {
+      document.location.href = '/'
     }
   }
 

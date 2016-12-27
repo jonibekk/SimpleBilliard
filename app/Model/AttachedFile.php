@@ -19,6 +19,15 @@ class AttachedFile extends AppModel
     const TYPE_FILE_VIDEO = 1;
     const TYPE_FILE_DOC = 2;
 
+    /**
+     * フロントエンド含めすべての添付ファイル(画像含む)のサイズ上限チェックにこのルールを適用する
+     */
+    const ATTACHABLE_MAX_FILE_SIZE_MB = 25;
+    /**
+     * アップロード可能な画像ファイルの画素数
+     */
+    const ATTACHABLE_MAX_PIXEL = 25000000;//2500万画素
+
     static public $TYPE_FILE = [
         self::TYPE_FILE_IMG   => ['name' => null, 'type' => 'image'],
         self::TYPE_FILE_VIDEO => ['name' => null, 'type' => 'video'],
@@ -71,7 +80,10 @@ class AttachedFile extends AppModel
      */
     public $validate = [
         'attached'   => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 20971520],], //20mb
+            // convert to byte
+            'image_max_size' => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
+            'image_type'     => ['rule' => ['attachmentImageType',],]
+
         ],
         'file_type'  => [
             'numeric' => [
@@ -154,24 +166,6 @@ class AttachedFile extends AppModel
             }
         }
         return $res;
-    }
-
-    /**
-     * ファイルの仮アップロード
-     *
-     * @param array $postData
-     *
-     * @return false|string
-     */
-    public function preUploadFile($postData)
-    {
-        if (!$file_info = Hash::get($postData, 'file')) {
-            return false;
-        }
-        /** @var GlRedis $Redis */
-        $Redis = ClassRegistry::init('GlRedis');
-        $hashed_key = $Redis->savePreUploadFile($file_info, $this->current_team_id, $this->my_uid);
-        return $hashed_key;
     }
 
     /**

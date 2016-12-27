@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-09 09:50+0900\n"
+"PO-Revision-Date: 2016-12-26 17:52+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -215,6 +215,18 @@ msgstr "自己評価を確定しました。"
 msgid "Submitted the evaluation by evaluator."
 msgstr "評価者の評価を確定しました。"
 
+msgid "Internal Server Error."
+msgstr "サーバーエラー"
+
+msgid "Completed a goal."
+msgstr "ゴールを完了にしました。"
+
+msgid "Not exist"
+msgstr "存在しません。"
+
+msgid "You have no permission."
+msgstr "権限がありません。"
+
 msgid "Deleted a goal."
 msgstr "ゴールを削除しました。"
 
@@ -223,9 +235,6 @@ msgstr "コラボしました。"
 
 msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
-
-msgid "You have no permission."
-msgstr "権限がありません。"
 
 msgid "Added a key result."
 msgstr "達成要素を追加しました。"
@@ -239,17 +248,8 @@ msgstr "成功"
 msgid "Invalid Request."
 msgstr "不正なリクエストです。"
 
-msgid "You can't edit achieved KR."
-msgstr "完了済の成果は編集出来ません。"
-
-msgid "Failed to save KR."
-msgstr "達成要素の保存に失敗しました。"
-
-msgid "Updated KR."
-msgstr "達成要素を更新しました。"
-
-msgid "Completed a goal."
-msgstr "ゴールを完了にしました。"
+msgid "Changed leader."
+msgstr "リーダーを変更しました。"
 
 msgid "Completed a key result."
 msgstr "成果を完了にしました。"
@@ -265,6 +265,9 @@ msgstr "成果を削除しました。"
 
 msgid "There is no action."
 msgstr "アクションが存在しません。"
+
+msgid "No exist kr."
+msgstr "KRが存在しません。"
 
 msgid "Deleted an action."
 msgstr "アクションを削除しました。"
@@ -460,9 +463,6 @@ msgstr "コメントしました。"
 
 msgid "This file doesn't exist."
 msgstr "ファイルが存在しません。"
-
-msgid "Failed to upload."
-msgstr "アップロードに失敗しました。"
 
 msgid "Deleted the file."
 msgstr "ファイルを削除しました。"
@@ -802,11 +802,19 @@ msgstr "ログインが必要です。"
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
 
-msgid "Internal Server Error."
-msgstr "サーバーエラー"
+msgid "Error, data conflicted."
+msgstr ""
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
+
+msgid "Please reselect an image."
+msgstr "画像ファイルを選択し直してください。"
+
+msgid "Failed to upload. jpg, png and gif are allowed."
+msgstr ""
+"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
+"ださい。"
 
 msgid "Complete the approval of %d goal(s)."
 msgstr "%d件のゴール認定を完了してください"
@@ -867,6 +875,15 @@ msgstr "APIが見つかりません。"
 
 msgid "CSRF Error!"
 msgstr "CSRFエラーです。"
+
+msgid "You can not decrease current value."
+msgstr "現在値は減らせません。"
+
+msgid "You can not increase current value."
+msgstr "現在値は増やせません。"
+
+msgid "Current value over target value."
+msgstr "現在値が目標値を超えています。"
 
 msgid "Images"
 msgstr "画像"
@@ -934,10 +951,10 @@ msgstr "0 (認定対象外)"
 msgid "More Previous"
 msgstr "もっと前"
 
-msgid "Complete"
+msgid "Achieved"
 msgstr "達成"
 
-msgid "Incomplete"
+msgid "Unachieved"
 msgstr "未達成"
 
 msgid "Creation Date"
@@ -1000,14 +1017,32 @@ msgstr "3(デフォルト)"
 msgid "5(Very high)"
 msgstr "5(とても高い)"
 
+msgid "Input is required."
+msgstr "入力必須項目です。"
+
+msgid "You can not change start value and target value to the same value."
+msgstr "進捗開始値を目標値と同じ値に変更できません。"
+
+msgid "You can not change the values from increase to decrease."
+msgstr "進捗を増加から減少に変更できません。"
+
+msgid "You can not change the values from decrease to increase."
+msgstr "進捗を減少から増加に変更できません。"
+
+msgid "You can not change target value less than current value"
+msgstr "進捗目標値を現在値より少ない値に変更できません。"
+
+msgid "Please input current value between start value and target value."
+msgstr "現在値は開始値と目標値の範囲内で入力してください。"
+
 msgid "There is no data of KR."
 msgstr "達成要素のデータがありません。"
 
+msgid "Failed to save KR."
+msgstr "達成要素の保存に失敗しました。"
+
 msgid "There is no key result."
 msgstr "達成要素が存在しません。"
-
-msgid "Input is required."
-msgstr "入力必須項目です。"
 
 msgid "Label must be at least %d count."
 msgstr "ラベル登録は最大%d個までです。"
@@ -1194,6 +1229,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span> がトップKRを別のKRに変更"
 "しました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has changed the leader "
+"to <span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> がリーダーを <span class="
+"\"notify-card-head-target\">%2$s</span> に変更しました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -1649,11 +1691,6 @@ msgstr "ファイルサイズが上限を超えています。"
 msgid "The Image does not have enough vertical or horizontal size."
 msgstr "画像の幅もしくは高さが足りていません。"
 
-msgid "Failed to upload. jpg, png and gif are allowed."
-msgstr ""
-"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
-"ださい。"
-
 msgid "Some email addresses are incorrect."
 msgstr "メールアドレスが正しくないものがあります。"
 
@@ -1669,6 +1706,15 @@ msgstr "評価期間内で入力してください。"
 msgid "Data is duplicated."
 msgstr ""
 
+msgid "Failed to upload."
+msgstr "アップロードに失敗しました。"
+
+msgid "%sMB is the limit."
+msgstr "%sMBがアップロードできるファイルの上限です。"
+
+msgid "%s pixel is the limit."
+msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
 msgid "Members"
 msgstr "メンバー"
 
@@ -1680,6 +1726,15 @@ msgstr "自己評価をしてください"
 
 msgid "Please evaluate."
 msgstr "評価をしてください"
+
+msgid "You can't change leader in the goal before current term."
+msgstr "今期より前のゴールのリーダーは変更できません。"
+
+msgid "You cant't change leader in the goal during the evaluation period."
+msgstr "評価期間中のゴールのリーダーは変更できません。"
+
+msgid "You can't edit achieved KR."
+msgstr "完了済の成果は編集出来ません。"
 
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
@@ -2087,6 +2142,9 @@ msgstr "組織改善案を共有する"
 msgid "Team has been changed, press ok to reload!"
 msgstr "チームが切り替えられました。「OK」を押して再読み込みしてください。"
 
+msgid "Post"
+msgstr "投稿する"
+
 msgid "Check your email!"
 msgstr "メールをチェックしよう！"
 
@@ -2401,6 +2459,12 @@ msgstr "件"
 msgid "Add by pressing the Enter.(You can search maximum 3 labels)"
 msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 
+msgid "Complete"
+msgstr "完了"
+
+msgid "Incomplete"
+msgstr "未完了"
+
 msgid "Progress"
 msgstr "進捗"
 
@@ -2412,6 +2476,25 @@ msgstr "名前"
 
 msgid "Level of achievement"
 msgstr "達成度"
+
+msgid "Would you like to save?"
+msgstr "保存してよろしいですか？"
+
+msgid "If you change the unit, all progress of KR will be reset."
+msgstr ""
+"※単位を変更すると今までのKRの進捗が全てリセットされますのでご注意下さい。"
+
+msgid "Current"
+msgstr "現在"
+
+msgid "All progress of this KR will be reset, is it really OK?"
+msgstr "このKRの全ての進捗がリセットされますが、本当によろしいですか？"
+
+msgid "Updated KR."
+msgstr "達成要素を更新しました。"
+
+msgid "Circles"
+msgstr "サークル"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -2682,9 +2765,6 @@ msgstr "ファイルを選択"
 msgid "Members in this topic"
 msgstr "会話のメンバー (%s)"
 
-msgid "Circles"
-msgstr "サークル"
-
 msgid "Unjoined"
 msgstr "参加していない"
 
@@ -2834,11 +2914,8 @@ msgstr "投稿"
 msgid "Message"
 msgstr "メッセージ"
 
-msgid "You have no goal."
-msgstr "今期のゴールがありません。"
-
-msgid "View options"
-msgstr "オプションを表示"
+msgid "Save"
+msgstr "保存する"
 
 msgid "To:"
 msgstr "To:"
@@ -2873,20 +2950,14 @@ msgstr "ホームフィードに表示する"
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
 
-msgid "%s people liked this comment."
-msgstr "このコメントに%s人が「いいね！」と言っています。"
-
 msgid "There is no like! yet."
 msgstr "まだ、いいね！と言っている人はいません。"
 
-msgid "%s people read this comment."
-msgstr "このコメントを%s人が読みました。"
+msgid "Read"
+msgstr "既読"
 
 msgid "No one read this comment."
 msgstr "まだ、このコメントを読んだ人はいません。"
-
-msgid "Read"
-msgstr "既読"
 
 msgid "No one read this message."
 msgstr "まだ、このメッセージを読んだ人はいません。"
@@ -2894,23 +2965,11 @@ msgstr "まだ、このメッセージを読んだ人はいません。"
 msgid "Select pictures."
 msgstr "１つ以上の画像を選択してください。"
 
-msgid "Not exist"
-msgstr "存在しません。"
-
-msgid "Edit post"
-msgstr "投稿を編集"
-
 msgid "Delete the action"
 msgstr "アクションを削除"
 
 msgid "Do you really want to delete this action?"
 msgstr "本当にこのアクションを削除しますか？"
-
-msgid "Delete post"
-msgstr "投稿を削除"
-
-msgid "Do you really want to delete this post?"
-msgstr "本当にこの投稿を削除しますか？"
 
 msgid "Comments"
 msgstr "コメント"
@@ -2918,23 +2977,26 @@ msgstr "コメント"
 msgid "(%s)"
 msgstr "(%s)"
 
+msgid "Edit post"
+msgstr "投稿を編集"
+
+msgid "Delete post"
+msgstr "投稿を削除"
+
+msgid "Do you really want to delete this post?"
+msgstr "本当にこの投稿を削除しますか？"
+
 msgid "Team Vision"
 msgstr "チームビジョン"
 
 msgid "Group Vision"
 msgstr "グループビジョン"
 
-msgid "Let's share the actions that you've done today!"
-msgstr "今日やったアクションを共有しよう！"
+msgid "There is no goal that you can take action."
+msgstr "アクションできるゴールがありません。"
 
-msgid "Results"
-msgstr "成果"
-
-msgid "Nothing"
-msgstr "なし"
-
-msgid "Post an action"
-msgstr "アクションを追加する"
+msgid "View options"
+msgstr "オプションを表示"
 
 msgid "Add Key Result"
 msgstr "達成要素を追加"
@@ -2950,6 +3012,12 @@ msgstr "ゴールを削除"
 
 msgid "Do you really want to delete this goal?"
 msgstr "本当にこのゴールを削除しますか？"
+
+msgid "Achieve goal"
+msgstr "ゴールを達成"
+
+msgid "Do you really want to complete this goal?"
+msgstr "このゴールを達成して本当によろしいですか？"
 
 msgid "Edit Top Key Result"
 msgstr "トップKRを編集する"
@@ -2972,8 +3040,8 @@ msgstr "達成要素を削除する"
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこの成果を削除しますか？"
 
-msgid "Clear"
-msgstr "クリア"
+msgid "Post an action"
+msgstr "アクションを追加する"
 
 msgid "Add an image to show the result of your action."
 msgstr "アクションの結果がわかる画像を追加しよう"
@@ -3005,9 +3073,6 @@ msgstr "具体的に絞り込んで書く"
 msgid "eg) Complete making the web site."
 msgstr "例）Webサイトを完成させる"
 
-msgid "Measurement"
-msgstr "程度"
-
 msgid "How much?"
 msgstr "どのくらい？"
 
@@ -3023,6 +3088,15 @@ msgstr "（本日）"
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
 
+msgid "Let's share the actions that you've done today!"
+msgstr "今日やったアクションを共有しよう！"
+
+msgid "Results"
+msgstr "成果"
+
+msgid "Nothing"
+msgstr "なし"
+
 msgid "Update Top Key Result"
 msgstr "トップKRを更新"
 
@@ -3035,6 +3109,29 @@ msgstr "達成要素名"
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
+msgid "Unit,start/target value"
+msgstr "単位 開始値/目標値"
+
+msgid ""
+"Please input start date / end date of KR between start date / end date of "
+"the goal."
+msgstr "開始日/期限はゴールの開始日/期限の間で入力してください"
+
+msgid "Change leader"
+msgstr "リーダーを変更"
+
+msgid "Select the leader name you want to change."
+msgstr "変更したいリーダーの名前を選択してください。"
+
+msgid "Select whether you collaborate or quit this goal."
+msgstr "このゴールにコラボるか抜けるかを選択してください。"
+
+msgid "Save & Collaborate"
+msgstr "保存して、コラボる"
+
+msgid "Save & Quit this goal"
+msgstr "保存して、ゴールメンバーから抜ける"
+
 msgid "Change Top KR"
 msgstr "トップKRを変更"
 
@@ -3043,9 +3140,6 @@ msgstr "トップKR"
 
 msgid "Select Top KR you would like to change."
 msgstr "トップKRとしたいKRを選択してください。"
-
-msgid "Current"
-msgstr "現在"
 
 msgid "Goal Summary"
 msgstr "ゴール概要"
@@ -4792,6 +4886,9 @@ msgstr "email"
 
 msgid "emailIsUnique"
 msgstr "emailUnique"
+
+msgid "validateCreateProgress"
+msgstr ""
 
 msgid "requiredCaseExistUnit"
 msgstr ""

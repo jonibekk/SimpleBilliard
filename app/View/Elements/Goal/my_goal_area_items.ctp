@@ -129,6 +129,22 @@ $kr_count = 0;
                                 </a>
                             </li>
                         <?php endif;?>
+                        <!-- リーダー変更 -->
+                        <?php if ($goal['Goal']['can_change_leader']):?>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1"
+                                   class="modal-ajax-get-exchange-leader"
+                                   href="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_exchange_leader_modal',
+                                       'goal_id'    => $goal['Goal']['id']
+                                   ]) ?>">
+                                    <hr class="dashboard-goals-card-horizontal-line">
+                                    <i class="fa fa-exchange"></i>
+                                    <span class="ml_2px"><?= __("Change leader") ?></span>
+                                </a>
+                            </li>
+                        <?php endif;?>
                         <li role="presentation">
                             <?=
                             $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
@@ -137,6 +153,15 @@ $kr_count = 0;
                                 ['escape' => false], __("Do you really want to delete this goal?")) ?>
                         </li>
                     <?php endif; ?>
+                    <?php if (in_array($goal['Goal']['id'], $canCompleteGoalIds)):?>
+                        <li role="presentation">
+                            <?=
+                            $this->Form->postLink('<i class="fa fa-hand-stop-o"></i><span class="ml_5px">' .
+                                __("Achieve goal") . '</span>',
+                                "/goals/complete/".$goal['Goal']['id'],
+                                ['escape' => false], __("Do you really want to complete this goal?")) ?>
+                        </li>
+                    <?php endif;?>
                 </ul>
             <?php elseif
             ($type == 'collabo'
@@ -171,6 +196,22 @@ $kr_count = 0;
                                 <span class="ml_2px"><?= __("Edit Collabo") ?></span>
                             </a>
                         </li>
+                        <!-- リーダー変更 -->
+                        <?php if ($goal['Goal']['can_change_leader']):?>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1"
+                                   class="modal-ajax-get-exchange-leader"
+                                   href="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_exchange_leader_modal',
+                                       'goal_id'    => $goal['Goal']['id']
+                                   ]) ?>">
+                                    <hr class="dashboard-goals-card-horizontal-line">
+                                    <i class="fa fa-exchange"></i>
+                                    <span class="ml_2px"><?= __("Change leader") ?></span>
+                                </a>
+                            </li>
+                        <?php endif;?>
                     <?php endif; ?>
                 </ul>
             <?php elseif

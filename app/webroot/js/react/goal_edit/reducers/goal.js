@@ -230,6 +230,7 @@ export function initInputData(goal) {
       value_unit: goal.top_key_result.value_unit,
       start_value: goal.top_key_result.start_value,
       target_value: goal.top_key_result.target_value,
+      current_value: goal.top_key_result.current_value,
       description: goal.top_key_result.description,
     },
   }

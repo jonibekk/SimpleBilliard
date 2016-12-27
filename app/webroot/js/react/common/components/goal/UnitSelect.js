@@ -26,9 +26,12 @@ export default class UnitSelect extends React.Component {
     return(
       <div className="relative">
           <div className="goals-create-input-form-unit-box">
-              <select name="value_unit" value={value}
-                      className="form-control goals-create-input-form mod-select-units"
-                      onChange={this.onChange.bind(this)}>
+              <select
+                name="value_unit"
+                value={value}
+                className="form-control goals-create-input-form mod-select-units"
+                onChange={this.onChange.bind(this)}
+              >
                 { unit_options }
               </select>
           </div>
@@ -38,5 +41,5 @@ export default class UnitSelect extends React.Component {
   }
 }
 UnitSelect.propTypes = {
-  units: React.PropTypes.array.isRequired
+  units: React.PropTypes.array.isRequired,
 };

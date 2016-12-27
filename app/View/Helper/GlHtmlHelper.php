@@ -3,11 +3,18 @@ App::uses('AppHelper', 'View/Helper');
 
 /**
  * GlHtmlHelper
- */
+ *
+ * @property mixed NumberEx
+*/
 class GlHtmlHelper extends AppHelper
 {
+    public $helpers = [
+        'NumberEx'
+    ];
+
     /**
      * 戻るボタン
+     *
      * @param $url
      * @param $label
      *
@@ -17,7 +24,7 @@ class GlHtmlHelper extends AppHelper
     {
         $labelTag = "";
         if (!empty($label)) {
-            $labelTag = '<span class="btn-back-text">'.$label.'</span>';
+            $labelTag = '<span class="btn-back-text">' . $label . '</span>';
         }
         $html = <<<HTML
             <div class="col-sm-8 col-sm-offset-2">

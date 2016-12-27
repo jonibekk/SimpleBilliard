@@ -15,11 +15,15 @@ App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
+App::uses('KrChangeLog', 'Model');
+App::uses('KrProgressLog', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
+// TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
+App::uses('NumberExHelper', 'View/Helper');
 
 /**
  * Class GoalService
@@ -171,6 +175,10 @@ class GoalService extends AppService
      */
     function update($userId, $goalId, $requestData)
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var KeyResult $KeyResult */
@@ -179,8 +187,14 @@ class GoalService extends AppService
         $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var KrChangeLog $KrChangeLog */
+        $KrChangeLog = ClassRegistry::init("KrChangeLog");
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init("KrProgressLog");
 
         try {
             // トランザクション開始
@@ -207,10 +221,24 @@ class GoalService extends AppService
             }
 
             // TKR更新
-            $updateTkr = $this->buildUpdateTkrData($goal['top_key_result']['id'], $goalId, $requestData);
+            $tkrId = $goal['top_key_result']['id'];
+            $inputTkrData = Hash::get($requestData, 'key_result');
+            $updateTkr = $KeyResultService->buildUpdateKr($tkrId, $inputTkrData, false);
             if (!$KeyResult->save($updateTkr, false)) {
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
+            }
+
+            // TKRの進捗単位を変更した場合は進捗リセット
+            if ($goal['top_key_result']['value_unit'] != $updateTkr['value_unit']) {
+                if (!$KrProgressLog->deleteByKrId($tkrId)) {
+                    throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $tkrId));
+                }
+            }
+
+            // KR変更ログ保存
+            if (!$KrChangeLog->saveSnapshot($userId, $tkrId, $KrChangeLog::TYPE_MODIFY)) {
+                throw new Exception(sprintf("Failed save kr snapshot. krId:%s", $tkrId));
             }
 
             // ゴールラベル更新
@@ -219,18 +247,27 @@ class GoalService extends AppService
                     , $goalId, var_export($requestData['labels'], true)));
             }
 
-            // コラボレーター更新(再申請のステータスに変更)
-            $updateGoalMember = [
-                'id'                   => $goal['goal_member']['id'],
-                'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
-                'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
-            ];
-            if (Hash::get($requestData, 'priority') !== null) {
-                $updateGoalMember['priority'] = $requestData['priority'];
-            }
-            if (!$GoalMember->save($updateGoalMember, false)) {
-                throw new Exception(sprintf("Failed update goal_member. data:%s"
-                    , var_export($updateGoalMember, true)));
+            // 評価対象者かつ認定対象ゴールの場合のみ実行する処理
+            if ($GoalMemberService->isApprovableByGoalId($goalId, $userId)) {
+                // コラボレーター更新(再申請のステータスに変更)
+                $updateGoalMember = [
+                    'id'                   => $goal['goal_member']['id'],
+                    'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
+                    'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
+                ];
+                if (Hash::get($requestData, 'priority') !== null) {
+                    $updateGoalMember['priority'] = $requestData['priority'];
+                }
+                if (!$GoalMember->save($updateGoalMember, false)) {
+                    throw new Exception(sprintf("Failed update goal_member. data:%s"
+                        , var_export($updateGoalMember, true)));
+                }
+
+                //コーチの認定件数を更新(キャッシュを削除)
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+                if ($coachId) {
+                    Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
+                }
             }
 
             // Redisキャッシュ削除
@@ -356,46 +393,11 @@ class GoalService extends AppService
     }
 
     /**
-     * TKR更新データ作成
-     * ゴールの終了日が存在する場合はそれをTKRの終了日にする
-     *
-     * @param $tkrId
-     * @param $goalId
-     * @param $requestData
-     *
-     * @return array
-     */
-    private function buildUpdateTkrData($tkrId, $goalId, $requestData)
-    {
-        $goalEndDate = Hash::get($requestData, 'end_date');
-        $inputTkrData = Hash::get($requestData, 'key_result');
-        if (empty($inputTkrData)) {
-            return [];
-        }
-
-        $updateData = [
-            'id'           => $tkrId,
-            'name'         => $inputTkrData['name'],
-            'description'  => $inputTkrData['description'],
-            'value_unit'   => $inputTkrData['value_unit'],
-            'start_value'  => $inputTkrData['start_value'],
-            'target_value' => $inputTkrData['target_value'],
-        ];
-        if ($goalEndDate) {
-            /** @var Goal $Goal */
-            $Goal = ClassRegistry::init("Goal");
-            $goalTerm = $Goal->getGoalTermData($goalId);
-            $updateData['end_date'] = AppUtil::getEndDateByTimezone($goalEndDate, $goalTerm['timezone']);
-        }
-        return $updateData;
-    }
-
-    /**
      * ゴール登録・更新のバリデーション
      *
      * @param array        $data
      * @param array        $fields
-     * @param integer|null $goalId
+     * @param int|null $goalId
      *
      * @return array
      */
@@ -435,7 +437,7 @@ class GoalService extends AppService
 
         // TKR バリデーション
         if (empty($fields) || in_array('key_result', $fields)) {
-            $krValidation = $KeyResult->validateKrPOST($data['key_result']);
+            $krValidation = $KeyResult->validateKrPOST($data['key_result'], false, $goalId);
 
             if ($krValidation !== true) {
                 $validationErrors['key_result'] = $this->validationExtract($krValidation);
@@ -456,11 +458,11 @@ class GoalService extends AppService
     /**
      * 対象のゴールが今季以降のゴールか
      *
-     * @param $goalId
+     * @param int $goalId
      *
      * @return bool
      */
-    function isGoalAfterCurrentTerm($goalId)
+    function isGoalAfterCurrentTerm(int $goalId): bool
     {
         $goal = $this->get($goalId);
         if (empty($goal)) {
@@ -476,6 +478,7 @@ class GoalService extends AppService
 
     /**
      * ゴール一覧をビュー用に整形
+     * TODO:引数に依存しすぎている。渡す側は＄goalsにKeyResultやTargetCollaboを含めなきゃいけないことがわからない
      *
      * @param  array $goals [description]
      *
@@ -487,6 +490,8 @@ class GoalService extends AppService
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
 
         foreach ($goals as $key => $goal) {
             // 進捗を計算
@@ -497,12 +502,16 @@ class GoalService extends AppService
             if (!empty($goal['TargetCollabo'])) {
                 $goals[$key]['TargetCollabo']['is_approval_enabled'] = $GoalApprovalService->isApprovable($goal['TargetCollabo']['user_id']);
             }
+            // リーダー変更可能フラグを追加
+            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal, 'Goal.id'));
         }
         return $goals;
     }
 
     /**
      * ゴールの進捗をキーリザルト一覧から取得
+     *
+     * TODO:将来的にゴールIDのみを引数として渡し、そのゴールIDから各KR取得→KR進捗率計算→ゴール進捗率計算の順に処理を行うようにする。またキャッシュ化も必要。
      *
      * @param  array $key_results [description]
      *
@@ -513,10 +522,33 @@ class GoalService extends AppService
         $res = 0;
         $target_progress_total = 0;
         $current_progress_total = 0;
+        $NumberExHelper = new NumberExHelper(new View());
+
+        $errFlg = false;
         foreach ($key_results as $key_result) {
             $target_progress_total += $key_result['priority'] * 100;
-            $current_progress_total += $key_result['priority'] * $key_result['progress'];
+            if (!Hash::check($key_result, 'start_value')
+                || !Hash::check($key_result, 'target_value')
+                || !Hash::check($key_result, 'current_value'))
+            {
+                $errFlg = true;
+                $progress = 0;
+            } else {
+                $progress = $NumberExHelper->calcProgressRate($key_result['start_value'], $key_result['target_value'], $key_result['current_value']);
+            }
+            $current_progress_total += $key_result['priority'] * $progress;
         }
+
+        // 本メソッドを呼ぶ箇所が多いため抜け漏れを検知する為にtrycatchを入れる
+        try {
+            if ($errFlg) {
+                throw new Exception(sprintf("Not found field to calc progress    %s", var_export(compact('key_results'), true)));
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
         if ($target_progress_total != 0) {
             $res = round($current_progress_total / $target_progress_total, 2) * 100;
         }
@@ -638,4 +670,57 @@ class GoalService extends AppService
         }
         return true;
     }
+
+    /**
+     * アクション可能なゴール取得
+     *
+     * @param int $userId
+     *
+     * @return array
+     */
+    function findCanAction(int $userId) : array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        // コラボも含めて自分のゴールリスト取得
+        return $Goal->findCanAction($userId);
+    }
+
+    /**
+     * ゴール完了
+     *
+     * @param $goalId
+     *
+     * @return bool
+     */
+    function complete(int $goalId) : bool
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+
+        try {
+            $Goal->begin();
+
+            // ゴール完了
+            $Goal->complete($goalId);
+            // ゴール完了の投稿
+            if (!$Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $goalId, null)) {
+                throw new Exception("Create goal complete post. goalId:".$goalId);
+            }
+
+            $Goal->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $Goal->rollback();
+            return false;
+        }
+        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        return true;
+
+    }
+
 }
