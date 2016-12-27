@@ -38,7 +38,7 @@
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
-                            'class' => 'modal-label pr_12px'
+                            'class' => 'circle-create-label'
                         ],
                         'wrapInput' => false,
                         'class'     => 'form-control modal_input-design'
@@ -69,7 +69,7 @@
                             "Only members can find the circle and see posts.") . '</span>';
                     ?>
                     <div class="form-group">
-                        <label class="block"><?= __('Privacy') ?></label>
+                        <label class="circle-create-label"><?= __('Privacy') ?></label>
 
                         <div>
                             <span class="font_14px">
@@ -80,7 +80,7 @@
                 <?php endif ?>
 
                 <div class="form-group">
-                    <label class="control-label modal-label"><?= __('Circle Description') ?></label>
+                    <label class="circle-create-label"><?= __('Circle Description') ?></label>
                     <?=
                     $this->Form->input('description',
                         [
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="control-label modal-label"><?= __("Circle Image") ?></label>
+                    <label for="" class="circle-create-label"><?= __("Circle Image") ?></label>
 
                     <div class="ccc">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -290,7 +290,7 @@
                     ]); ?>
                     <?= $this->Form->hidden('id') ?>
                     <div class="form-group">
-                        <label class="control-label modal-label"><?= __('Members') ?></label>
+                        <label class="circle-create-label"><?= __('Members') ?></label>
 
                         <div class="bbb">
                             <?=
