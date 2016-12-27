@@ -51,6 +51,21 @@
                     </a>
                 </li>
             <?php endif;?>
+            <?php if ($goal['Goal']['can_change_leader']):?>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                       class="modal-ajax-get-exchange-leader"
+                       href="<?= $this->Html->url([
+                           'controller' => 'goals',
+                           'action'     => 'ajax_get_exchange_leader_modal',
+                           'goal_id'    => $goal['Goal']['id']
+                       ]) ?>">
+                        <hr class="dashboard-goals-card-horizontal-line">
+                        <i class="fa fa-exchange"></i>
+                        <span class="ml_2px"><?= __("Change leader") ?></span>
+                    </a>
+                </li>
+            <?php endif;?>
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
