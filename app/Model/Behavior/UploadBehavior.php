@@ -592,9 +592,6 @@ class UploadBehavior extends ModelBehavior
     ) {
         $imageTypes = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG];
         $value = array_shift($value);
-        if (!is_array($imageTypes)) {
-            $imageTypes = array($imageTypes);
-        }
         //画像以外はスルー
         if (strpos($value['type'], 'image') === false) {
             return true;
