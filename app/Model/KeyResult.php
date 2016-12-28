@@ -836,4 +836,61 @@ class KeyResult extends AppModel
 
         return $krs;
     }
+
+    /**
+     * フィードページの右カラム用にKR一覧を取得
+     * # 取得条件
+     * - ログインしてるユーザーがゴールメンバーになっているゴールのKR
+     * - 未達成かつKR全体進捗率100%いってないゴールのKR
+     * # ソート条件
+     * - 1.アクションの作成日降順
+     * - 2.KRの重要度降順
+     * @return [type] [description]
+     */
+    public function findForSmallKrColumn()
+    {
+        
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id' => $this->my_uid,
+                'Goal.completed'     => null
+            ],
+            'order' => [
+                'ActionResult.created' => 'desc',
+                'KeyResult.priority'
+            ],
+            'fields' => [
+                'ActionResult.created'
+            ],
+            'group' => ['KeyResult.id'],
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'action_results',
+                    'alias'      => 'ActionResult',
+                    'conditions' => [
+                        'ActionResult.key_result_id = KeyResult.id'
+                    ]
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'conditions' => [
+                        'Goal.id = KeyResult.goal_id'
+                    ]
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

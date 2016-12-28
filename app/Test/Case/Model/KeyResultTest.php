@@ -546,4 +546,43 @@ class KeyResultTest extends GoalousTestCase
         $expectErrMsg = __("Please input current value between start value and target value.");
         $this->assertTrue(in_array($expectErrMsg, $err));
     }
+
+    /**
+     * 右カラムKR一覧取得テスト
+     */
+    function testFindForSmallKrColumn()
+    {
+        $this->setDefault();
+        $this->saveKrForSmallKrColumn([['111111', 2], ['222222', 4], ['333333', 1]]);
+        $res = $this->KeyResult->findForSmallKrColumn();
+        $expected = [
+            [
+                'ActionResult' => ['created' => '333333']
+            ],
+            [
+                'ActionResult' => ['created' => '222222']
+            ],
+            [
+                'ActionResult' => ['created' => '111111']
+            ]
+        ];
+        $this->assertEquals($res);
+    }
+
+    function saveKrForSmallKrColumn($data)
+    {
+        $this->KeyResult->deleteAll(['KeyResult.id >' => 0], false);
+        $this->KeyResult->ActionResult->deleteAll(['ActionResult.id >' => 0], false);
+        foreach($data as $key => $val) {
+            $this->KeyResult->save([
+                'id' => $key,
+                'priority' => $val[1]
+            ], false);
+
+            $this->KeyResult->ActionResult->save([
+                'key_result_id' => $key,
+                'created' => $val[0]
+            ], false);
+        }
+    }
 }
