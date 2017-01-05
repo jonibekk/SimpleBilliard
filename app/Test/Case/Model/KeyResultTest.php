@@ -600,6 +600,9 @@ class KeyResultTest extends GoalousTestCase
         $this->assertEquals($res, $expected);
     }
 
+    /**
+     * KRカラムデータ取得ロジックテスト用にデータを生成
+     */
     function saveKrsForDashboard($data)
     {
         // 既存データ削除
