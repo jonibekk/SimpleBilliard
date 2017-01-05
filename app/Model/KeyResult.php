@@ -44,6 +44,8 @@ class KeyResult extends AppModel
         self::UNIT_PERCENT,
     ];
 
+    const NUMBER_DISPLAYING_RIGHT_COLUMN = 10;
+
     /**
      * 目標値の単位の表示名をセット
      */
@@ -841,31 +843,39 @@ class KeyResult extends AppModel
      * フィードページの右カラム用にKR一覧を取得
      * # 取得条件
      * - ログインしてるユーザーがゴールメンバーになっているゴールのKR
-     * - 未達成かつKR全体進捗率100%いってないゴールのKR
+     * - 今期内ゴールのKR
      * # ソート条件
      * - 1.アクションの作成日降順
      * - 2.KRの重要度降順
-     * @return [type] [description]
+     * @return
      */
-    public function findForSmallKrColumn()
+    public function findInDashboard(int $limit): array
     {
-        
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
         $options = [
             'conditions' => [
                 'GoalMember.user_id' => $this->my_uid,
-                'Goal.completed'     => null
+                'KeyResult.end_date >=' => $currentTerm['start_date'],
+                'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
             'order' => [
                 'ActionResult.created' => 'desc',
-                'KeyResult.priority'
+                'KeyResult.priority' => 'desc'
             ],
             'fields' => [
-                'ActionResult.created'
+                'ActionResult.created',
+                'ActionResult.user_id',
+                'KeyResult.name',
+                'KeyResult.priority',
+                'KeyResult.completed',
+                'Goal.name'
             ],
             'group' => ['KeyResult.id'],
+            'limit' => $limit,
             'joins' => [
                 [
-                    'type'       => 'INNER',
+                    'type'       => 'LEFT',
                     'table'      => 'action_results',
                     'alias'      => 'ActionResult',
                     'conditions' => [
@@ -873,7 +883,7 @@ class KeyResult extends AppModel
                     ]
                 ],
                 [
-                    'type'       => 'LEFT',
+                    'type'       => 'INNER',
                     'table'      => 'goals',
                     'alias'      => 'Goal',
                     'conditions' => [
@@ -881,7 +891,7 @@ class KeyResult extends AppModel
                     ]
                 ],
                 [
-                    'type'       => 'LEFT',
+                    'type'       => 'INNER',
                     'table'      => 'goal_members',
                     'alias'      => 'GoalMember',
                     'conditions' => [
@@ -891,6 +901,9 @@ class KeyResult extends AppModel
             ],
         ];
         $res = $this->find('all', $options);
+        if (!$res) {
+            return [];
+        }
         return $res;
     }
 }

@@ -479,4 +479,26 @@ class KeyResultService extends AppService
         return true;
     }
 
+    /**
+     * トップページ右カラムに表示するKR一覧を取得
+     *
+     * @return array
+     */
+    function findInDashboard(): array
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // キャッシュ検索
+        $resKrs = [];
+        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KR_PROGRESS, true), 'user_data');
+        if ($cachedKrs !== false) {
+            $resKrs = $cachedKrs;
+        } else {
+            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
+            $resKrs = $KeyResult->findInDashboard($limit = $KeyResult::NUMBER_DISPLAYING_RIGHT_COLUMN);
+            Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KR_PROGRESS, true), $resKrs);
+        }
+        return $resKrs;
+    }
 }

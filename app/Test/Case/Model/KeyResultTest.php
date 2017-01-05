@@ -549,40 +549,110 @@ class KeyResultTest extends GoalousTestCase
 
     /**
      * 右カラムKR一覧取得テスト
+     * アクション済みKRのみ取得
      */
-    function testFindForSmallKrColumn()
+    function testFindInDashboardOnlyActioned()
     {
         $this->setDefault();
-        $this->saveKrForSmallKrColumn([['111111', 2], ['222222', 4], ['333333', 1]]);
-        $res = $this->KeyResult->findForSmallKrColumn();
-        $expected = [
-            [
-                'ActionResult' => ['created' => '333333']
-            ],
-            [
-                'ActionResult' => ['created' => '222222']
-            ],
-            [
-                'ActionResult' => ['created' => '111111']
-            ]
-        ];
-        $this->assertEquals($res);
+        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333',  1]]);
+        $res = $this->KeyResult->findInDashboard(10);
+        $res = Hash::extract($res, '{n}.ActionResult.created');
+        $expected = ['333333', '222222', '111111'];
+        $this->assertEquals($res, $expected);
     }
 
-    function saveKrForSmallKrColumn($data)
+    /**
+     * 右カラムKR一覧取得テスト
+     * アクションされてないKRのみ取得
+     */
+    function testFindInDashboardOnlyNotActioned()
     {
+        $this->setDefault();
+        $this->saveKrsForDashboard([[null, 4], [null, 5], [null, 2]]);
+        $res = $this->KeyResult->findInDashboard(10);
+        $res = Hash::extract($res, '{n}.KeyResult.priority');
+        $expected = [5, 4, 2];
+        $this->assertEquals($res, $expected);
+    }
+
+    /**
+     * 右カラムKR一覧取得テスト
+     * 両条件混合
+     */
+    function testFindInDashboardBoth() {
+        $this->setDefault();
+        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333',  1], [null, 4], [null, 5], [null, 2]]);
+        $res = $this->KeyResult->findInDashboard(10);
+        $res = Hash::extract($res, '{n}.KeyResult.priority');
+        $expected = [1, 2, 3, 5, 4, 2];
+        $this->assertEquals($res, $expected);
+    }
+
+    /**
+     * 右カラムKR一覧取得テスト
+     * KRがひとつもない
+     */
+    function testFindInDashboardEmpty() {
+        $this->setDefault();
         $this->KeyResult->deleteAll(['KeyResult.id >' => 0], false);
+        $res = $this->KeyResult->findInDashboard(10);
+        $expected = [];
+        $this->assertEquals($res, $expected);
+    }
+
+    function saveKrsForDashboard($data)
+    {
+        // 既存データ削除
+        $this->KeyResult->deleteAll(['KeyResult.id >' => 0], false);
+        $this->KeyResult->Goal->deleteAll(['Goal.id >' => 0], false);
+        $this->KeyResult->Goal->GoalMember->deleteAll(['GoalMember.id >' => 0], false);
         $this->KeyResult->ActionResult->deleteAll(['ActionResult.id >' => 0], false);
+        $userId = 1;
+
+        // Termデータ保存
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+
         foreach($data as $key => $val) {
-            $this->KeyResult->save([
-                'id' => $key,
-                'priority' => $val[1]
+            $actionCreated = $val[0] ?? null;
+            $priority = $val[1] ?? 3;
+            $modelId = $key + 1;
+
+            // ゴール作成
+            $this->KeyResult->Goal->create();
+            $this->KeyResult->Goal->save([
+                'id' => $modelId,
+                'team_id' => 1
             ], false);
 
-            $this->KeyResult->ActionResult->save([
-                'key_result_id' => $key,
-                'created' => $val[0]
+            // ゴールメンバー作成
+            $this->KeyResult->Goal->GoalMember->create();
+            $this->KeyResult->Goal->GoalMember->save([
+                'user_id' => $userId,
+                'goal_id' => $modelId,
+                'team_id' => 1
             ], false);
+
+            // KR作成
+            $this->KeyResult->create();
+            $this->KeyResult->save([
+                'id' => $modelId,
+                'priority'   => $priority,
+                'goal_id'    => $modelId,
+                'team_id'    => 1,
+                'start_date' => $currentTerm['start_date'],
+                'end_date'   => $currentTerm['end_date'],
+            ], false);
+
+            // アクション作成
+            if ($actionCreated) {
+                $this->KeyResult->ActionResult->create();
+                $this->KeyResult->ActionResult->save([
+                    'key_result_id' => $modelId,
+                    'created' => $actionCreated,
+                    'team_id' => 1
+                ], false);
+            }
         }
     }
 }
