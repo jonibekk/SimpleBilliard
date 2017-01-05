@@ -436,22 +436,6 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
         $this->assertEmpty($err);
-
-        // 目標値が現在値未満の値でないか 進捗方向：増加
-        $updateKr = ['id' => 5, 'start_value' => 0.001, 'target_value' => 0.002];
-        $this->KeyResult->set($updateKr);
-        $this->KeyResult->validates();
-        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
-        $expectErrMsg = __("You can not change target value less than current value");
-        $this->assertTrue(in_array($expectErrMsg, $err));
-
-        // 目標値が現在値未満の値でないか 進捗方向：減少
-        $updateKr = ['id' => 6, 'start_value' => 123456789012345, 'target_value' => 123456789012344.9];
-        $this->KeyResult->set($updateKr);
-        $this->KeyResult->validates();
-        $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
-        $expectErrMsg = __("You can not change target value less than current value");
-        $this->assertTrue(in_array($expectErrMsg, $err));
     }
 
     /**

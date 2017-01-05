@@ -177,7 +177,8 @@ class GoalService extends AppService
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
-
+        /** @var GoalMemberService $GoalMemberService */
+        $GoalMemberService = ClassRegistry::init("GoalMemberService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var KeyResult $KeyResult */
@@ -186,6 +187,8 @@ class GoalService extends AppService
         $GoalLabel = ClassRegistry::init("GoalLabel");
         /** @var ApprovalHistory $ApprovalHistory */
         $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var KrChangeLog $KrChangeLog */
@@ -238,25 +241,33 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Failed save kr snapshot. krId:%s", $tkrId));
             }
 
-
             // ゴールラベル更新
             if (!$GoalLabel->saveLabels($goalId, $requestData['labels'])) {
                 throw new Exception(sprintf("Failed save labels. goalId:%s labels:%s"
                     , $goalId, var_export($requestData['labels'], true)));
             }
 
-            // コラボレーター更新(再申請のステータスに変更)
-            $updateGoalMember = [
-                'id'                   => $goal['goal_member']['id'],
-                'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
-                'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
-            ];
-            if (Hash::get($requestData, 'priority') !== null) {
-                $updateGoalMember['priority'] = $requestData['priority'];
-            }
-            if (!$GoalMember->save($updateGoalMember, false)) {
-                throw new Exception(sprintf("Failed update goal_member. data:%s"
-                    , var_export($updateGoalMember, true)));
+            // 評価対象者かつ認定対象ゴールの場合のみ実行する処理
+            if ($GoalMemberService->isApprovableByGoalId($goalId, $userId)) {
+                // コラボレーター更新(再申請のステータスに変更)
+                $updateGoalMember = [
+                    'id'                   => $goal['goal_member']['id'],
+                    'approval_status'      => GoalMember::APPROVAL_STATUS_REAPPLICATION,
+                    'is_target_evaluation' => GoalMember::IS_NOT_TARGET_EVALUATION
+                ];
+                if (Hash::get($requestData, 'priority') !== null) {
+                    $updateGoalMember['priority'] = $requestData['priority'];
+                }
+                if (!$GoalMember->save($updateGoalMember, false)) {
+                    throw new Exception(sprintf("Failed update goal_member. data:%s"
+                        , var_export($updateGoalMember, true)));
+                }
+
+                //コーチの認定件数を更新(キャッシュを削除)
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+                if ($coachId) {
+                    Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
+                }
             }
 
             // Redisキャッシュ削除
