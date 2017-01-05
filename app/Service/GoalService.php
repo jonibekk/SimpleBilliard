@@ -736,13 +736,17 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function getAllMyGoalProgressLogsForDrawGraph(): array
+    function getAllMyProgressForDrawGraph(): array
     {
-        //キャッシュからデータを取得なければ以下処理
-        ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
-        ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-        ///sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
-        ///キャッシュ
+        $progressLogs = $this->getProgressFromCache();
+        if ($progressLogs !== false) {
+            ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
+            $logs = $this->getProgressFromLog();
+            ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+            ///sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+
+            $this->writeProgressToCache($progressLogs);
+        }
 
         //当日の進捗を計算
 
@@ -750,6 +754,53 @@ class GoalService extends AppService
 
         //グラフ用データに整形
 
+    }
+
+    /**
+     * TODO: 未実装
+     * 前日までのログデータを取得
+     *
+     * @return array
+     */
+    function getProgressFromLog(): array
+    {
+
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $startDate = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $endDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        $myGoalPriorities = $GoalMember->getMyGoalPriorities($startDate, $endDate);
+
+        /** @var GoalProgressDailyLog $GoalProgressDailyLog */
+        $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
+        $data = $GoalProgressDailyLog->findLogs($startDate, $today, array_keys($myGoalPriorities));
+        return $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    function getProgressFromCache()
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG, true), 'user_data');
+    }
+
+    /**
+     * TODO: 未実装
+     *
+     * @param $data
+     */
+    function writeProgressToCache($data)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        //TODO $endOfTheDayに値を代入する
+        Cache::set('duration', $endOfTheDay, 'user_data');//$endOfTheDayはUTC
+        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG, true), $data, 'user_data');
     }
 
 }

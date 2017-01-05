@@ -36,4 +36,19 @@ class GoalProgressDailyLog extends AppModel
     public $belongsTo = [
     ];
 
+    /**
+     * TODO: 未実装
+     * ゴールidを元にログデータを取得
+     *
+     * @param string $start
+     * @param string $end
+     * @param array  $goalIds
+     *
+     * @return array
+     */
+    function findLogs(string $start, string $end, array $goalIds): array
+    {
+
+    }
+
 }
