@@ -14,7 +14,10 @@ class GoalProgressDailyLog extends AppModel
      */
     public $validate = [
         'progress'    => [
-            'numeric' => [
+            'numBetween' => [
+                'rule' => ['numBetween', 0, 100],
+            ],
+            'numeric'    => [
                 'rule' => ['numeric'],
             ],
         ],
@@ -32,4 +35,5 @@ class GoalProgressDailyLog extends AppModel
      */
     public $belongsTo = [
     ];
+
 }
