@@ -135,7 +135,8 @@ class CommentTest extends GoalousTestCase
                 'post_id'    => 1,
                 'body'       => 'test',
                 'site_photo' => [
-                    'type' => 'binary/octet-stream'
+                    'type'     => 'binary/octet-stream',
+                    'tmp_name' => "",
                 ]
             ],
         ];

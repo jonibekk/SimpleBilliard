@@ -392,10 +392,9 @@ class GoalsController extends ApiController
         // セットアップガイドステータス更新
         $this->updateSetupStatusIfNotCompleted();
 
-        //コーチと自分の認定件数を更新(キャッシュを削除)
+        //コーチの未認定件数を更新(キャッシュを削除)
         $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
         if ($coachId) {
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
         }
 

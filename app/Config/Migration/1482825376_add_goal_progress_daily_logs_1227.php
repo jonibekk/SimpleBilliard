@@ -71,6 +71,7 @@ class AddGoalProgressDailyLogs1227 extends CakeMigration
                     ),
                     'indexes'         => array(
                         'PRIMARY' => array('column' => array('id', 'target_date'), 'unique' => 1),
+                        'target_date' => array('column' => 'target_date', 'unique' => 0),
                         'team_id' => array('column' => 'team_id', 'unique' => 0),
                         'goal_id' => array('column' => 'goal_id', 'unique' => 0),
                     ),

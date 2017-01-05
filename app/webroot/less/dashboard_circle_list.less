@@ -66,6 +66,7 @@
 .develop--circle-make {
   font-size: 12px;
   line-height: 16px;
+  margin: 15px 0 30px;
   padding: 6px 0;
 }
 .circle-seek-icon {
@@ -117,6 +118,9 @@
   overflow-y: scroll;
   width: 100%;
   -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 .dashboard-circle-list-footer {
   padding: 4px;
@@ -185,7 +189,7 @@
       display: none;
     }
     .dashboard-circle-unread-point > .circle {
-      background: @subColor3;
+      display: none;
     }
   }
 
