@@ -607,11 +607,12 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Goal->deleteAll(['Goal.id >' => 0], false);
         $this->KeyResult->Goal->GoalMember->deleteAll(['GoalMember.id >' => 0], false);
         $this->KeyResult->ActionResult->deleteAll(['ActionResult.id >' => 0], false);
-        $userId = 1;
 
-        // Termデータ保存
+        // Termデータ作成
         $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+
+        $userId = 1;
 
         foreach($data as $key => $val) {
             $actionCreated = $val[0] ?? null;
