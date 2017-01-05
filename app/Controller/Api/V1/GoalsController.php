@@ -307,37 +307,12 @@ class GoalsController extends ApiController
      *
      * @return CakeResponse
      */
-    function get_progress_logs():CakeResponse
+    function get_progress_logs(): CakeResponse
     {
         $mock = [
-            [
-                'progress'=>10,
-                'dsate'=>'2016-10-1',
-            ],
-            [
-                'progress'=>20,
-                'dsate'=>'2016-10-2',
-            ],
-            [
-                'progress'=>30,
-                'dsate'=>'2016-10-3',
-            ],
-            [
-                'progress'=>40,
-                'dsate'=>'2016-10-4',
-            ],
-            [
-                'progress'=>50,
-                'dsate'=>'2016-10-5',
-            ],
-            [
-                'progress'=>60,
-                'dsate'=>'2016-10-6',
-            ],
-            [
-                'progress'=>70,
-                'dsate'=>'2016-10-7',
-            ],
+            ['sweet_spot_top', 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+            ['data', 0, 10, 10, 20, 30, 40, 50, 50, 55, 60, 65],
+            ['sweet_spot_bottom', 0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60],
         ];
 
         return $this->_getResponseSuccess($mock);
