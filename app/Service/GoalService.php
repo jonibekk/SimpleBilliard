@@ -395,8 +395,8 @@ class GoalService extends AppService
     /**
      * ゴール登録・更新のバリデーション
      *
-     * @param array        $data
-     * @param array        $fields
+     * @param array    $data
+     * @param array    $fields
      * @param int|null $goalId
      *
      * @return array
@@ -503,14 +503,14 @@ class GoalService extends AppService
                 $goals[$key]['TargetCollabo']['is_approval_enabled'] = $GoalApprovalService->isApprovable($goal['TargetCollabo']['user_id']);
             }
             // リーダー変更可能フラグを追加
-            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal, 'Goal.id'));
+            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal,
+                'Goal.id'));
         }
         return $goals;
     }
 
     /**
      * ゴールの進捗をキーリザルト一覧から取得
-     *
      * TODO:将来的にゴールIDのみを引数として渡し、そのゴールIDから各KR取得→KR進捗率計算→ゴール進捗率計算の順に処理を行うようにする。またキャッシュ化も必要。
      *
      * @param  array $key_results [description]
@@ -529,12 +529,13 @@ class GoalService extends AppService
             $target_progress_total += $key_result['priority'] * 100;
             if (!Hash::check($key_result, 'start_value')
                 || !Hash::check($key_result, 'target_value')
-                || !Hash::check($key_result, 'current_value'))
-            {
+                || !Hash::check($key_result, 'current_value')
+            ) {
                 $errFlg = true;
                 $progress = 0;
             } else {
-                $progress = $NumberExHelper->calcProgressRate($key_result['start_value'], $key_result['target_value'], $key_result['current_value']);
+                $progress = $NumberExHelper->calcProgressRate($key_result['start_value'], $key_result['target_value'],
+                    $key_result['current_value']);
             }
             $current_progress_total += $key_result['priority'] * $progress;
         }
@@ -542,7 +543,8 @@ class GoalService extends AppService
         // 本メソッドを呼ぶ箇所が多いため抜け漏れを検知する為にtrycatchを入れる
         try {
             if ($errFlg) {
-                throw new Exception(sprintf("Not found field to calc progress    %s", var_export(compact('key_results'), true)));
+                throw new Exception(sprintf("Not found field to calc progress    %s",
+                    var_export(compact('key_results'), true)));
             }
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
@@ -663,7 +665,6 @@ class GoalService extends AppService
             return false;
         }
 
-
         // リーダーか
         if (!$GoalMemberService->isLeader($goalId, $loginUserId)) {
             return false;
@@ -678,7 +679,7 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function findCanAction(int $userId) : array
+    function findCanAction(int $userId): array
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -693,13 +694,12 @@ class GoalService extends AppService
      *
      * @return bool
      */
-    function complete(int $goalId) : bool
+    function complete(int $goalId): bool
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
-
 
         try {
             $Goal->begin();
@@ -708,7 +708,7 @@ class GoalService extends AppService
             $Goal->complete($goalId);
             // ゴール完了の投稿
             if (!$Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $goalId, null)) {
-                throw new Exception("Create goal complete post. goalId:".$goalId);
+                throw new Exception("Create goal complete post. goalId:" . $goalId);
             }
 
             $Goal->commit();
@@ -720,6 +720,35 @@ class GoalService extends AppService
         }
         Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
+
+    }
+
+    /**
+     * ゴール進捗グラフ作成用データ取得メソッド
+     * //キャッシュからデータを取得なければ以下処理
+     * ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
+     * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+     * ///sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+     * ///ここまでのデータをキャッシュ
+     * //当日の進捗を計算
+     * //DBから取得したデータと当日の進捗をマージ
+     * //グラフ用データに整形
+     *
+     * @return array
+     */
+    function getAllMyGoalProgressLogsForDrawGraph(): array
+    {
+        //キャッシュからデータを取得なければ以下処理
+        ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
+        ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+        ///sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+        ///キャッシュ
+
+        //当日の進捗を計算
+
+        //DBから取得したデータと当日の進捗をマージ
+
+        //グラフ用データに整形
 
     }
 
