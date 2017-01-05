@@ -847,7 +847,7 @@ class KeyResult extends AppModel
      * # ソート条件
      * - 1.アクションの作成日降順
      * - 2.KRの重要度降順
-     * @return
+     * @return array
      */
     public function findInDashboard(int $limit): array
     {
