@@ -42,7 +42,7 @@ class GoalProgressDailyLogTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testBetween()
+    function testProgressValidationNumBetween()
     {
         $this->GoalProgressDailyLog->data = ['GoalProgressDailyLog' => ['progress' => 0]];
         $this->assertTrue($this->GoalProgressDailyLog->validates(['fieldList' => ['progress']]));
