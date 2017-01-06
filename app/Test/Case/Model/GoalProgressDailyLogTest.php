@@ -52,7 +52,6 @@ class GoalProgressDailyLogTest extends GoalousTestCase
 
         $this->GoalProgressDailyLog->data = ['GoalProgressDailyLog' => ['progress' => -1]];
         $this->assertFalse($this->GoalProgressDailyLog->validates(['fieldList' => ['progress']]));
-        debug($this->GoalProgressDailyLog->validationErrors);
 
         $this->GoalProgressDailyLog->data = ['GoalProgressDailyLog' => ['progress' => 101]];
         $this->assertFalse($this->GoalProgressDailyLog->validates(['fieldList' => ['progress']]));
