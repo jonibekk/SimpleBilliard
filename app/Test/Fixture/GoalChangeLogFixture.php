@@ -12,7 +12,7 @@ class GoalChangeLogFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $fields = [
+	public $fields = [
         'id' => ['type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'],
         'team_id' => ['type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'],
         'goal_id' => ['type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールID(belongsToでGoalモデルに関連)'],
@@ -22,6 +22,7 @@ class GoalChangeLogFixture extends CakeTestFixtureEx
         'modified' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true],
         'indexes' => [
             'PRIMARY' => ['column' => ['id', 'target_date'], 'unique' => 1],
+            'goal_id_target_date_unique' => ['column' => ['goal_id', 'target_date'], 'unique' => 1],
             'target_date' => ['column' => 'target_date', 'unique' => 0],
             'team_id' => ['column' => 'team_id', 'unique' => 0],
             'goal_id' => ['column' => 'goal_id', 'unique' => 0]
