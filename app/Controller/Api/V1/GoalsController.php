@@ -569,7 +569,7 @@ class GoalsController extends ApiController
                 ['data', 0, 10, 10, 20, 30, 40, 50, 50, 55, 60, 65],
                 ['sweet_spot_bottom', 0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60],
             ],
-            'krs'       => []
+            'krs'           => []
         ];
         return $this->_getResponseSuccess($res);
     }
