@@ -37,18 +37,27 @@ class GoalProgressDailyLog extends AppModel
     ];
 
     /**
-     * TODO: 未実装
-     * ゴールidを元にログデータを取得
+     * ゴールidと日付範囲を元にログデータを取得
      *
-     * @param string $start
-     * @param string $end
+     * @param string $start Y-m-d
+     * @param string $end   Y-m-d
      * @param array  $goalIds
      *
      * @return array
      */
     function findLogs(string $start, string $end, array $goalIds): array
     {
+        $options = [
+            'conditions' => [
+                'goal_id'                     => $goalIds,
+                'target_date BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'order'      => ['target_date'],
+            'fields'     => ['goal_id', 'target_date']
+        ];
 
+        $ret = $this->find('all', $options);
+        return $ret;
     }
 
 }

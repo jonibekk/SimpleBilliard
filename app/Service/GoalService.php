@@ -49,6 +49,9 @@ class GoalService extends AppService
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
     const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
 
+    /* sweetSpotの比率 */
+    const SWEET_SPOT_RATIO = 60;
+
     /* ゴールキャッシュ */
     private static $cacheList = [];
 
@@ -734,73 +737,135 @@ class GoalService extends AppService
      * //DBから取得したデータと当日の進捗をマージ
      * //グラフ用データに整形
      *
+     * @param string $start Y-m-d
+     * @param string $end   Y-m-d
+     *
      * @return array
      */
-    function getAllMyProgressForDrawGraph(): array
+    function getAllMyProgressForDrawingGraph(string $start, string $end): array
     {
-        $progressLogs = $this->getProgressFromCache();
-        if ($progressLogs !== false) {
-            ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
-            $logs = $this->getProgressFromLog();
-            ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-            ///sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+        $dayBeforeEnd = date('-1 day', strtotime($end));
+        $progressLogs = $this->getProgressFromCache($start, $dayBeforeEnd);
+        if ($progressLogs === false) {
+            //今期の情報取得
+            /** @var EvaluateTerm $EvaluateTerm */
+            $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+            $term = $EvaluateTerm->getCurrentTermData();
 
-            $this->writeProgressToCache($progressLogs);
+            ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分(前日まで))
+            /** @var GoalMember $GoalMember */
+            $GoalMember = ClassRegistry::init('GoalMember');
+            $myGoalPriorities = $GoalMember->getMyGoalPriorities($term['start_date'], $term['end_date']);
+            /** @var GoalProgressDailyLog $GoalProgressDailyLog */
+            $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
+            $logs = $GoalProgressDailyLog->findLogs($start, $dayBeforeEnd, array_keys($myGoalPriorities));
+
+            ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+            $progressLogs = $this->calcAvgGoalProgress($logs, $myGoalPriorities);
+            $this->writeProgressToCache($progressLogs, $start, $dayBeforeEnd);
         }
+        ///sweetSpotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+
+        $sweetSpot = $this->getSweetSpot($start, $end);
 
         //当日の進捗を計算
 
         //DBから取得したデータと当日の進捗をマージ
 
         //グラフ用データに整形
+        $ret = [];
+        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']);
+        $ret[1] = array_merge(['data'], $progressLogs);
+        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']);
 
+        return $ret;
     }
 
     /**
-     * TODO: 未実装
-     * 前日までのログデータを取得
+     * @param array $logs
+     * @param array $myGoalPriorities
      *
      * @return array
      */
-    function getProgressFromLog(): array
+    function calcAvgGoalProgress(array $logs, array $myGoalPriorities): array
     {
 
+    }
+
+    /**
+     * 開始日、終了日の日毎のSweet Spotを返す
+     *
+     * @param string $start Y-m-d
+     * @param string $end   Y-m-d
+     *
+     * @return array
+     */
+    function getSweetSpot(string $start, string $end): array
+    {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $startDate = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $endDate = $EvaluateTerm->getCurrentTermData()['end_date'];
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init('GoalMember');
-        $myGoalPriorities = $GoalMember->getMyGoalPriorities($startDate, $endDate);
+        $term = $EvaluateTerm->getCurrentTermData();
+        $termTotalDays = floor(($term['start_date'] - $term['end_date']) / 60 * 60 * 24);
+        $topStep = (float)$termTotalDays / 100;
+        $bottomStep = (float)$termTotalDays / self::SWEET_SPOT_RATIO;
+        $termStart = date('Y-m-d', $term['start_date']);
+        if ($start <= $termStart) {
+            $startTop = 0;
+            $startBottom = 0;
+        } else {
+            $daysFromTermStart = (strtotime($start) - strtotime($termStart)) / 60 * 60 * 24;
+            $startTop = (float)$daysFromTermStart * $topStep;
+            $startBottom = (float)$daysFromTermStart * $bottomStep;
+        }
 
-        /** @var GoalProgressDailyLog $GoalProgressDailyLog */
-        $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
-        $data = $GoalProgressDailyLog->findLogs($startDate, $today, array_keys($myGoalPriorities));
-        return $data;
+        $sweetSpot = [
+            'top'    => [],
+            'bottom' => [],
+        ];
+
+        $top = $startTop;
+        $bottom = $startBottom;
+        for ($day = $start; $day <= $end; $day = date('+1 day', strtotime($day))) {
+            $sweetSpot['top'][] = $top;
+            $sweetSpot['bottom'][] = $bottom;
+
+            $top += $topStep;
+            $bottom += $bottomStep;
+        }
+
+        return $sweetSpot;
     }
 
     /**
+     * @param string $start Y-m-d
+     * @param string $end   Y-m-d
+     *
      * @return mixed
      */
-    function getProgressFromCache()
+    function getProgressFromCache(string $start, string $end)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG, true), 'user_data');
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . "start:$start:end:$end", true),
+            'user_data');
     }
 
     /**
-     * TODO: 未実装
+     * ゴール進捗をキャッシュに書き出す
+     * 生存期間は当日の終わりまで(UTC)
      *
-     * @param $data
+     * @param        $data
+     * @param string $start Y-m-d
+     * @param string $end   Y-m-d
      */
-    function writeProgressToCache($data)
+    function writeProgressToCache($data, string $start, string $end)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        //TODO $endOfTheDayに値を代入する
-        Cache::set('duration', $endOfTheDay, 'user_data');//$endOfTheDayはUTC
-        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG, true), $data, 'user_data');
+        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
+        Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
+        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . "start:$start:end:$end", true), $data,
+            'user_data');
     }
 
 }
