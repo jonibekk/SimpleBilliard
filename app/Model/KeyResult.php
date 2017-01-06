@@ -44,8 +44,6 @@ class KeyResult extends AppModel
         self::UNIT_PERCENT,
     ];
 
-    const NUMBER_DISPLAYING_RIGHT_COLUMN = 10;
-
     /**
      * 目標値の単位の表示名をセット
      */

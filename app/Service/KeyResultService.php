@@ -17,6 +17,9 @@ class KeyResultService extends AppService
     /* KRキャッシュ */
     private static $cacheList = [];
 
+    /* ダッシュボードに表示するKR数 */
+    const NUMBER_DISPLAYING_IN_DASHBOARD = 10;
+
     /**
      * idによる単体データ取得
      *
@@ -496,7 +499,7 @@ class KeyResultService extends AppService
             $resKrs = $cachedKrs;
         } else {
             // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
-            $resKrs = $KeyResult->findInDashboard($limit = $KeyResult::NUMBER_DISPLAYING_RIGHT_COLUMN);
+            $resKrs = $KeyResult->findInDashboard($limit = self::NUMBER_DISPLAYING_IN_DASHBOARD);
             Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KR_PROGRESS, true), $resKrs);
         }
         return $resKrs;
