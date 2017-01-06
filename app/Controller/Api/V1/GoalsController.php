@@ -551,7 +551,13 @@ class GoalsController extends ApiController
 
     /**
      * トップページ右カラムの初期表示データ取得API
-     *
+     * - APIレスポンス
+     *[
+     *  'data' => [
+     *    'progress_logs' => [],
+     *    'krs'           => []
+     *  ]
+     *]
      * @return CakeResponse
      */
     public function get_kr_column()
