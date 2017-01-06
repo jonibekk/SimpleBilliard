@@ -40,7 +40,7 @@ class GoalProgressDailyLogFixture extends CakeTestFixtureEx
             'null'     => false,
             'default'  => null,
             'unsigned' => false,
-            'comment'  => '0-100の数字'
+            'comment'  => '進捗率%(0-100)'
         ),
         'target_date'     => array(
             'type'    => 'date',
@@ -52,9 +52,10 @@ class GoalProgressDailyLogFixture extends CakeTestFixtureEx
         'created'         => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true),
         'modified'        => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true),
         'indexes'         => array(
-            'PRIMARY' => array('column' => array('id', 'target_date'), 'unique' => 1),
-            'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'goal_id' => array('column' => 'goal_id', 'unique' => 0)
+            'PRIMARY'     => array('column' => array('id', 'target_date'), 'unique' => 1),
+            'target_date' => array('column' => 'target_date', 'unique' => 0),
+            'team_id'     => array('column' => 'team_id', 'unique' => 0),
+            'goal_id'     => array('column' => 'goal_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );

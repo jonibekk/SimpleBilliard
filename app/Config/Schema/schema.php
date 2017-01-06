@@ -633,15 +633,16 @@ class AppSchema extends CakeSchema {
 	);
 
 	public $goal_progress_daily_logs = array(
-		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
 		'goal_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールID(belongsToでGoalモデルに関連)'),
-		'progress' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'comment' => '0-100の数字'),
+		'progress' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'comment' => '進捗率%(0-100)'),
 		'target_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'primary', 'comment' => '対象の日付'),
 		'created' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true),
 		'modified' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true),
 		'indexes' => array(
 			'PRIMARY' => array('column' => array('id', 'target_date'), 'unique' => 1),
+            'target_date' => array('column' => 'target_date', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0)
 		),
