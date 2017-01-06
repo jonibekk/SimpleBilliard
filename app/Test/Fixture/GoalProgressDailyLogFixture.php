@@ -11,54 +11,55 @@ class GoalProgressDailyLogFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $fields = array(
-        'id'              => array(
+    public $fields = [
+        'id'              => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'primary'
-        ),
-        'team_id'         => array(
+        ],
+        'team_id'         => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index',
             'comment'  => 'チームID(belongsToでTeamモデルに関連)'
-        ),
-        'goal_id'         => array(
+        ],
+        'goal_id'         => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index',
             'comment'  => 'ゴールID(belongsToでGoalモデルに関連)'
-        ),
-        'progress'        => array(
+        ],
+        'progress'        => [
             'type'     => 'integer',
             'null'     => false,
             'default'  => null,
             'unsigned' => false,
             'comment'  => '進捗率%(0-100)'
-        ),
-        'target_date'     => array(
+        ],
+        'target_date'     => [
             'type'    => 'date',
             'null'    => false,
             'default' => null,
             'key'     => 'primary',
             'comment' => '対象の日付'
-        ),
-        'created'         => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true),
-        'modified'        => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true),
-        'indexes'         => array(
-            'PRIMARY'     => array('column' => array('id', 'target_date'), 'unique' => 1),
-            'target_date' => array('column' => 'target_date', 'unique' => 0),
-            'team_id'     => array('column' => 'team_id', 'unique' => 0),
-            'goal_id'     => array('column' => 'goal_id', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
-    );
+        ],
+        'created'         => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true],
+        'modified'        => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true],
+        'indexes'         => [
+            'PRIMARY'                    => ['column' => ['id', 'target_date'], 'unique' => 1],
+            'goal_id_target_date_unique' => ['column' => ['goal_id', 'target_date'], 'unique' => 1],
+            'target_date'                => ['column' => 'target_date', 'unique' => 0],
+            'team_id'                    => ['column' => 'team_id', 'unique' => 0],
+            'goal_id'                    => ['column' => 'goal_id', 'unique' => 0]
+        ],
+        'tableParameters' => ['charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB']
+    ];
 
     /**
      * Records
