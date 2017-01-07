@@ -554,8 +554,8 @@ class GoalsController extends ApiController
      * - APIレスポンス
      *{
      *  "data": {
-     *    "progress_graph": {},
-     *    "krs": {}
+     *    "progress_graph": [],
+     *    "krs": []
      *  }
      *}
      * @return CakeResponse

@@ -14,6 +14,6 @@ export default class Graph extends React.Component {
 }
 
 Graph.propTypes = {
-  progress_logs: React.PropTypes.array
+  progress_graph: React.PropTypes.array
 };
-Graph.defaultProps = { progress_logs: [] };
+Graph.defaultProps = { progress_graph: [] };

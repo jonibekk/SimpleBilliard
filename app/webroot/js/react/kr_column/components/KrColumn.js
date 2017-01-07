@@ -8,7 +8,7 @@ export default class KrColumn extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      progress_logs: [],
+      progress_graph: [],
       krs: []
     }
   }
