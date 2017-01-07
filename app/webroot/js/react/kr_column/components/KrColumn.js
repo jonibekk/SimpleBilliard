@@ -18,10 +18,10 @@ export default class KrColumn extends React.Component {
   }
 
   fetchInitData() {
-    return axios.get('/api/v1/goals/kr_column')
+    return axios.get('/api/v1/goals/dashboard')
       .then((response) => {
-        let data = response.data.data
-        this.setState({ progress_logs: data.progress_logs });
+        const data = response.data.data
+        this.setState({ progress_graph: data.progress_graph });
         this.setState({ krs: data.krs });
       })
       .catch((response) => {
@@ -32,7 +32,7 @@ export default class KrColumn extends React.Component {
   render() {
     return (
       <div>
-        <Graph progress_logs={ this.state.progress_logs } />
+        <Graph progress_graph={ this.state.progress_graph } />
         <Krs krs={ this.state.krs } />
       </div>
     )
