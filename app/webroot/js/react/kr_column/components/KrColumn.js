@@ -1,8 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import axios from "axios";
 import Graph from '~/kr_column/components/Graph'
 import Krs from '~/kr_column/components/Krs'
+import { KeyResult } from "~/common/constants/Model";
 
 export default class KrColumn extends React.Component {
   constructor(props) {
@@ -18,14 +18,17 @@ export default class KrColumn extends React.Component {
   }
 
   fetchInitData() {
-    return axios.get('/api/v1/goals/dashboard')
+    return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
       .then((response) => {
+        console.log(response)
         const data = response.data.data
-        this.setState({ progress_graph: data.progress_graph });
-        this.setState({ krs: data.krs });
+        this.setState({ progress_graph: data.progress_graph })
+        this.setState({ krs: data.krs })
       })
       .catch((response) => {
+        /* eslint-disable no-console */
         console.log(response)
+        /* eslint-enable no-console */
       })
   }
 

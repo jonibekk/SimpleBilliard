@@ -217,7 +217,7 @@ define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
 define('CACHE_KEY_LABEL', 'label');
 define('CACHE_KEY_EXPERIMENT', 'experiment');
-define('CACHE_KEY_MY_KR_PROGRESS', 'kr_progress');
+define('CACHE_KEY_MY_KRS_IN_DASHBOARD', 'krs_in_dashboard');
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');
 define('REFERER_STATUS_LOGIN', '?st=in');

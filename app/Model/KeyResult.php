@@ -847,7 +847,7 @@ class KeyResult extends AppModel
      * - 2.KRの重要度降順
      * @return array
      */
-    public function findInDashboard(int $limit): array
+    public function findInDashboard(int $limit, ?int $offset, ?int $goalId = null): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
@@ -867,10 +867,63 @@ class KeyResult extends AppModel
                 'KeyResult.name',
                 'KeyResult.priority',
                 'KeyResult.completed',
-                'Goal.name'
+                'Goal.name',
+                'Goal.id',
+            ],
+            'group'  => ['KeyResult.id'],
+            'limit'  => $limit,
+            'offset' => $offset,
+            'joins'  => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'action_results',
+                    'alias'      => 'ActionResult',
+                    'conditions' => [
+                        'ActionResult.key_result_id = KeyResult.id'
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'conditions' => [
+                        'Goal.id = KeyResult.goal_id'
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+        ];
+
+        // パラメータよりデータ取得条件追加
+        if ($goalId !== null) {
+            $options['conditions']['Goal.id'] = $goalId;
+        }
+
+        $res = $this->find('all', $options);
+        if (!$res) {
+            return [];
+        }
+        return $res;
+    }
+
+    public function countInDashboard(?int $goalId = null): int
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id' => $this->my_uid,
+                'KeyResult.end_date >=' => $currentTerm['start_date'],
+                'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
             'group' => ['KeyResult.id'],
-            'limit' => $limit,
             'joins' => [
                 [
                     'type'       => 'LEFT',
@@ -898,10 +951,13 @@ class KeyResult extends AppModel
                 ],
             ],
         ];
-        $res = $this->find('all', $options);
-        if (!$res) {
-            return [];
+
+        // パラメータよりデータ取得条件追加
+        if ($goalId) {
+            $options['conditions']['Goal.id'] = $goalId;
         }
-        return $res;
+
+        $count = $this->find('count', $options);
+        return $count ?? 0;
     }
 }
