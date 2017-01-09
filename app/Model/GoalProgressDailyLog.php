@@ -53,10 +53,11 @@ class GoalProgressDailyLog extends AppModel
                 'target_date BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => ['target_date'],
-            'fields'     => ['goal_id', 'progress','target_date']
+            'fields'     => ['goal_id', 'progress', 'target_date']
         ];
 
         $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.GoalProgressDailyLog');
         return $ret;
     }
 
