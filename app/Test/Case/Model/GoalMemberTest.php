@@ -445,10 +445,10 @@ class GoalMemberTest extends GoalousTestCase
     function testFindMyGoalPriorities()
     {
         $this->_setDefault();
-        $expected = array(
+        $expected = [
             (int)1 => '3',
             (int)7 => '3'
-        );
+        ];
         $actual = $this->GoalMember->findMyGoalPriorities(0, 100000000000000000);
         $this->assertEquals($expected, $actual);
     }
