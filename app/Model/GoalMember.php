@@ -261,7 +261,7 @@ class GoalMember extends AppModel
      *
      * @return array
      */
-    function getMyGoalPriorities(int $start_date, int $end_date): array
+    function findMyGoalPriorities(int $start_date, int $end_date): array
     {
         $options = [
             'joins'      => [

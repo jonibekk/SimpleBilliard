@@ -259,13 +259,13 @@ class GoalMemberTest extends GoalousTestCase
         ];
         $this->GoalMember->save($data);
         $userData = [
-            'id' => 100,
+            'id'         => 100,
             'active_flg' => true
         ];
         $this->GoalMember->User->save($userData, false);
         $teamMemberData = [
-            'team_id' => 1,
-            'user_id' => 100,
+            'team_id'    => 1,
+            'user_id'    => 100,
             'active_flg' => true
         ];
         $this->GoalMember->User->TeamMember->save($teamMemberData, false);
@@ -439,6 +439,17 @@ class GoalMemberTest extends GoalousTestCase
             (int)4 => '4',
             (int)5 => '5'
         );
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testFindMyGoalPriorities()
+    {
+        $this->_setDefault();
+        $expected = array(
+            (int)1 => '3',
+            (int)7 => '3'
+        );
+        $actual = $this->GoalMember->findMyGoalPriorities(0, 100000000000000000);
         $this->assertEquals($expected, $actual);
     }
 

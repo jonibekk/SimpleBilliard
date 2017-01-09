@@ -755,7 +755,7 @@ class GoalService extends AppService
             ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分(前日まで))
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
-            $myGoalPriorities = $GoalMember->getMyGoalPriorities($term['start_date'], $term['end_date']);
+            $myGoalPriorities = $GoalMember->findMyGoalPriorities($term['start_date'], $term['end_date']);
             /** @var GoalProgressDailyLog $GoalProgressDailyLog */
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
             $logs = $GoalProgressDailyLog->findLogs($start, $dayBeforeEnd, array_keys($myGoalPriorities));
