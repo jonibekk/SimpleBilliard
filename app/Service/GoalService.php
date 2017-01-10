@@ -733,7 +733,7 @@ class GoalService extends AppService
      * 与えられた対象終了日と日数からグラフの開始日、終了日を求める
      * - グラフの開始日、終了日は必ず期内となる
      * - 開始日が期の開始日より前になる場合は開始日は期の開始日と同一となる
-     * - 開始日が期の終了日-30日以内の場合は、終了日は期の終了日と同一となる
+     * - 開始日が期の終了日-$days日以内の場合は、終了日は期の終了日と同一となる
      *
      * @param int $targetEndDate
      * @param int $days
@@ -762,7 +762,7 @@ class GoalService extends AppService
 
         //期の開始日から開始日までの日数
         $daysFromTermStartDateToStartDate = (strtotime("-$days days", $targetEndDate) - $termStartDate) / DAY;
-        //期の開始日から開始日までの日数がマイナスになる場合
+        //期の開始日から開始日までの日数がマイナスになる場合は開始日に期の開始日をセット
         if ($daysFromTermStartDateToStartDate < 0) {
             $ret['start'] = date('Y-m-d', $termStartDate);
             $ret['end'] = date('Y-m-d', $termStartDate + $days * DAY);
@@ -771,7 +771,7 @@ class GoalService extends AppService
 
         //終了日から期の終了日までの残り日数
         $daysFromEndDateToTermEnd = ($termEndDate - strtotime("+$days days", $targetEndDate)) / DAY;
-        //終了日から期の終了日までの残り日数がマイナスの場合
+        //終了日から期の終了日までの残り日数がマイナスの場合は終了日に期の終了日をセット
         if ($daysFromEndDateToTermEnd < 0) {
             $ret['start'] = date('Y-m-d', $termEndDate - $days * DAY);
             $ret['end'] = date('Y-m-d', $termEndDate);
