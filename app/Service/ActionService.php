@@ -145,10 +145,6 @@ class ActionService extends AppService
             $GlRedis->delPreUploadedFile($teamId, $userId, $hash);
         }
 
-        // キャッシュ削除
-        Cache::delete($ActionResult->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        Cache::delete($ActionResult->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
-
         return (int)$newActionId;
 
     }

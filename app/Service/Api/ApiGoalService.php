@@ -211,15 +211,15 @@ class ApiGoalService extends ApiService
         ];
 
         // パラメータ展開
-        list('limit' => $limit, 'offset' => $offset, 'goal_id' => $goalId) = $queryParams;
+        list('limit' => $limit) = $queryParams;
 
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
-        $krs = $KeyResultService->findInDashboardFirstView($limit + 1, $offset);
+        $krs = $KeyResultService->findInDashboardFirstView($limit + 1);
 
         // ページング情報セット
         if (count($krs) > $limit) {
-            $ret['paging'] = $ApiKeyResultService->generatePagingInDashboard($limit, $offset, $goalId);
+            $ret['paging'] = $ApiKeyResultService->generatePagingInDashboard($limit);
             array_pop($krs);
         }
 

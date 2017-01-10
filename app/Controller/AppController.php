@@ -633,67 +633,6 @@ class AppController extends BaseController
         return $team_id;
     }
 
-    public function _setViewValOnRightColumn()
-    {
-        App::import('Service', 'GoalService');
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
-
-        $cached_my_goal_area_vals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        if ($cached_my_goal_area_vals !== false) {
-            //このキャッシュはviewで利用する複数の変数を格納されているのでここで展開する。
-            extract($cached_my_goal_area_vals);
-        } else {
-            //今期、来期のゴールを取得する
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-
-            $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
-                MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
-            $my_goals = $GoalService->processGoals($my_goals);
-            $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
-            $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null,
-                $start_date,
-                $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
-            $collabo_goals = $GoalService->processGoals($collabo_goals);
-            $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
-            $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
-            $my_previous_goals = $GoalService->processGoals($my_previous_goals);
-            $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
-            //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
-            $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
-                $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
-            );
-            $goal_list_for_action_option = [null => __('Select a goal.')] + $current_term_goals_name_list;
-            // アクション可能なゴール数
-            $userId = $this->Auth->user('id');
-            $canActionGoals = $this->Goal->findCanAction($userId);
-            $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
-
-            // 完了アクションが可能なゴールIDリスト
-            $canCompleteGoalIds = Hash::extract(
-                $this->Goal->findCanComplete($userId), '{n}.id'
-            );
-
-
-            $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-            $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
-
-            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
-            Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
-                compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
-                    'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-                    'my_previous_goals_count','isStartedEvaluation', 'canActionGoals', 'canCompleteGoalIds'),
-                'user_data');
-        }
-        //vision
-        $vision = $this->Team->TeamVision->getDisplayVisionRandom();
-        $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
-            'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-            'my_previous_goals_count', 'isStartedEvaluation', 'canActionGoals', 'canCompleteGoalIds'));
-    }
-
     /**
      * @param $id
      */

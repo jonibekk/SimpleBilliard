@@ -38,8 +38,6 @@ class GoalsController extends AppController
         //headerのアイコン下にバーを表示するための判定用変数をviewに渡す
         $current_global_menu = "goal";
         $this->set(compact('current_global_menu'));
-
-        $this->_setViewValOnRightColumn();
     }
 
     public function create($step = null)
@@ -731,7 +729,6 @@ class GoalsController extends AppController
         }
         $this->Goal->commit();
 
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
         $socket_id = Hash::get($this->request->data, 'socket_id');
         $goal = viaIsSet($goal);
@@ -774,7 +771,6 @@ class GoalsController extends AppController
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__("Made a key result uncompleted."));
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -902,7 +898,6 @@ class GoalsController extends AppController
         }
 
         $this->Pnotify->outSuccess(__("Deleted an action."));
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -938,14 +933,13 @@ class GoalsController extends AppController
 
         $goalLeaderUserId = Hash::get($goalMember, 'Goal.user_id');
 
-        // キャッシュ削除
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId),
-            'user_data');
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId),
-            'user_data');
+        // ダッシュボードのKRキャッシュ削除
+        $myUserId = $this->Auth->user('id');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true,
+            $myUserId), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true,
+            $myUserId), 'user_data');
+
         $this->redirect($this->referer());
     }
 
@@ -1291,7 +1285,6 @@ class GoalsController extends AppController
         $krList = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
         $this->set(['kr_list' => $krList, 'key_result_id' => $keyResultId]);
 
-        $this->_setViewValOnRightColumn();
         $this->set('common_form_type', 'action');
         $this->set('common_form_only_tab', 'action');
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1346,7 +1339,6 @@ class GoalsController extends AppController
         // 編集フォーム表示
         $row = $this->Goal->ActionResult->getWithAttachedFiles($ar_id);
         $this->request->data = $row;
-        $this->_setViewValOnRightColumn();
         $this->set('common_form_type', 'action');
         $this->set('common_form_mode', 'edit');
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1509,9 +1501,6 @@ class GoalsController extends AppController
             $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
-
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
 
         // push
         $this->Pnotify->outSuccess(__("Added an action."));

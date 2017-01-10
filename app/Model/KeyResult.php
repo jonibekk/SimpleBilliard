@@ -448,7 +448,6 @@ class KeyResult extends AppModel
         if (!$this->save($data)) {
             throw new RuntimeException(__("Failed to save KR."));
         }
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
     }
 

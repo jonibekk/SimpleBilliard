@@ -66,7 +66,6 @@ class PagesController extends AppController
         // ビュー変数のセット
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
-        $this->_setViewValOnRightColumn();
         // 現在のチーム
         $current_team = $this->Team->getCurrentTeam();
         $this->set('item_created', isset($current_team['Team']['created']) ? $current_team['Team']['created'] : null);

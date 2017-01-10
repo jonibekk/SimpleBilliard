@@ -11,7 +11,7 @@ class ApiKeyResultService extends ApiService
      *
      * @return array
      */
-    public function generatePagingInDashboard(int $limit, ?int $offset, ?int $goalId): array
+    public function generatePagingInDashboard(int $limit, ?int $offset = null, ?int $goalId = null): array
     {
         $newOffset = (int)$offset + $limit;
         $queryParams = array_merge(

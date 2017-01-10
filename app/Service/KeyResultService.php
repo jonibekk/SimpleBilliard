@@ -483,7 +483,7 @@ class KeyResultService extends AppService
      *
      * @return array
      */
-    function findInDashboardFirstView($limit, $offset): array
+    function findInDashboardFirstView($limit): array
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
@@ -495,7 +495,7 @@ class KeyResultService extends AppService
             $resKrs = $cachedKrs;
         } else {
             // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
-            $resKrs = $KeyResult->findInDashboard($limit, $offset);
+            $resKrs = $KeyResult->findInDashboard($limit);
             Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
         }
         return $resKrs;

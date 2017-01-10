@@ -449,8 +449,6 @@ class GoalMember extends AppModel
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $goalMember['GoalMember']['user_id']),
             'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalMember['GoalMember']['user_id']),
-            'user_data');
     }
 
     /**
