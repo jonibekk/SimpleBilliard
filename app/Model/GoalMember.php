@@ -255,12 +255,11 @@ class GoalMember extends AppModel
     /**
      * 自分のゴールのプライオリティを返す
      * 返り値のフォーマットkey:goal_id,value:priorityの配列
-
-*
-*@param int       $startDate
+     *
+     * @param int $startDate
      * @param int $endDate
      *
-*@return array
+     * @return array
      */
     function findMyGoalPriorities(int $startDate, int $endDate): array
     {
