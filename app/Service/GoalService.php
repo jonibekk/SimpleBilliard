@@ -916,8 +916,8 @@ class GoalService extends AppService
         $bottom = (float)$daysFromTermStart * $bottomStep;
 
         for ($day = $start; $day <= $end; $day = date('Y-m-d', strtotime($day) + DAY)) {
-            $sweetSpot['top'][] = $top;
-            $sweetSpot['bottom'][] = $bottom;
+            $sweetSpot['top'][] = round($top,2);
+            $sweetSpot['bottom'][] = round($bottom,2);
 
             $top += $topStep;
             $bottom += $bottomStep;
