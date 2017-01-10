@@ -785,14 +785,11 @@ class GoalService extends AppService
     }
 
     /**
-     * ゴール進捗グラフ作成用データ取得メソッド
-     * //キャッシュからデータを取得なければ以下処理
-     * ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
-     * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-     * ///sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
-     * ///ここまでのデータをキャッシュ
+     * グラフ用のゴール進捗ログデータを取得
+     * //日毎に集計済みのゴール進捗ログを取得
      * //当日の進捗を計算
-     * //DBから取得したデータと当日の進捗をマージ
+     * //sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+     * //ログデータと当日の進捗をマージ
      * //グラフ用データに整形
      *
      * @param string $start Y-m-d
@@ -802,6 +799,69 @@ class GoalService extends AppService
      */
     function getAllMyProgressForDrawingGraph(string $start, string $end): array
     {
+        //日毎に集計済みのゴール進捗ログを取得
+        $progressLogs = $this->findSummarizedGoalProgressesFromLog($start, $end);
+
+        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
+        if (time() >= strtotime($start) && time() <= strtotime($end) + DAY) {
+            $latestTotalGoalProgress = $this->findLatestTotalGoalProgress();
+            array_push($progressLogs, $latestTotalGoalProgress);
+        }
+
+        ///sweetSpotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+        $sweetSpot = $this->getSweetSpot($start, $end);
+
+        //グラフ用データに整形
+        $ret = [];
+        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
+        $ret[1] = array_merge(['data'], $progressLogs);
+        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+
+        return $ret;
+    }
+
+    /**
+     * 最新のトータルのゴール進捗を取得
+     *
+     * @return int
+     */
+    function findLatestTotalGoalProgress(): int
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartDate,
+            $termEndDate);
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        $myGoalIds = array_keys($myGoalPriorities);
+        $goals = $Goal->getGoalAndKr($myGoalIds);
+        foreach ($goals as $key => $goal) {
+            $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
+        }
+        $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
+        $ret = $this->sumGoalProgress($goalProgresses, $myGoalPriorities);
+        return $ret;
+    }
+
+    /**
+     * //キャッシュからデータを取得なければ以下処理
+     * ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
+     * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+     * ///ここまでのデータをキャッシュ
+     *
+     * @param string $start
+     * @param string $end
+     *
+     * @return array
+     */
+    function findSummarizedGoalProgressesFromLog(string $start, string $end): array
+    {
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
@@ -810,8 +870,7 @@ class GoalService extends AppService
         //キャッシュに保存されるデータ
         $progressLogs = $this->getProgressFromCache($start, $end);
         if ($progressLogs === false) {
-
-            ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分(前日まで))
+            ///ログDBから自分の各ゴールの進捗データ取得
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
             $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartDate, $termEndDate);
@@ -819,37 +878,12 @@ class GoalService extends AppService
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
             $goalProgressLogs = $GoalProgressDailyLog->findLogs($start, $end, array_keys($myGoalPriorities));
 
-            ///ゴールの重要度を掛け合わせて日次のゴール進捗の平均を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+            ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
             $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $myGoalPriorities);
+            //キャッシュに保存
             $this->writeProgressToCache($progressLogs, $start, $end);
         }
-        ///sweetSpotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
-        $sweetSpot = $this->getSweetSpot($start, $end);
-
-        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
-        if (time() >= strtotime($start) && time() <= strtotime($end) + DAY) {
-            if (!isset($myGoalPriorities)) {
-                /** @var GoalMember $GoalMember */
-                $GoalMember = ClassRegistry::init('GoalMember');
-                $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartDate,
-                    $termEndDate);
-            }
-            /** @var Goal $Goal */
-            $Goal = ClassRegistry::init('Goal');
-            $goals = $Goal->getGoalAndKr(array_keys($myGoalPriorities));
-            foreach ($goals as $key => $goal) {
-                $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
-            }
-            $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
-            array_push($progressLogs, $this->sumGoalProgress($goalProgresses, $myGoalPriorities));
-        }
-        //グラフ用データに整形
-        $ret = [];
-        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
-        $ret[1] = array_merge(['data'], $progressLogs);
-        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
-
-        return $ret;
+        return $progressLogs;
     }
 
     /**
@@ -888,7 +922,9 @@ class GoalService extends AppService
         $sumPriorities = array_sum($goalPriorities);
         $priorities = [];
         foreach ($goalsProgresses as $goalId => $progress) {
-            $priorities[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
+            if (isset($goalPriorities[$goalId])) {
+                $priorities[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
+            }
         }
         return array_sum($priorities);
     }
