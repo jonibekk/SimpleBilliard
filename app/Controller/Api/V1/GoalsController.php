@@ -574,17 +574,19 @@ class GoalsController extends ApiController
      *    "krs": []
      *  }
      *}
+     *
      * @return CakeResponse
      */
     public function get_dashboard()
     {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        $graphRange = $GoalService->getGraphRange(time());
+        $progressGraph = $GoalService->getAllMyProgressForDrawingGraph($graphRange['start'], $graphRange['end']);
+
         // TODO: これはモックです。API実装の際に上書きしましょう。
         $res = [
-            'progress_graph' => [
-                ['sweet_spot_top', 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-                ['data', 0, 10, 10, 20, 30, 40, 50, 50, 55, 60, 65],
-                ['sweet_spot_bottom', 0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60],
-            ],
+            'progress_graph' => $progressGraph,
             'krs'            => []
         ];
         return $this->_getResponseSuccess($res);

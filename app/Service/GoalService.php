@@ -521,7 +521,7 @@ class GoalService extends AppService
      *
      * @param  array $key_results [description]
      *
-     * @return array $res
+     * @return float|int $res
      */
     function getProgress($key_results)
     {
@@ -812,7 +812,7 @@ class GoalService extends AppService
         $sweetSpot = $this->getSweetSpot($start, $end);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
-        if (time() >= strtotime($start) && time() <= strtotime($end)) {
+        if (time() >= strtotime($start) && time() <= strtotime($end) + DAY) {
             if (!isset($myGoalPriorities)) {
                 /** @var GoalMember $GoalMember */
                 $GoalMember = ClassRegistry::init('GoalMember');
@@ -822,6 +822,9 @@ class GoalService extends AppService
             /** @var Goal $Goal */
             $Goal = ClassRegistry::init('Goal');
             $goals = $Goal->getGoalAndKr(array_keys($myGoalPriorities));
+            foreach ($goals as $key => $goal) {
+                $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
+            }
             $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
             array_push($progressLogs, $this->sumGoalProgress($goalProgresses, $myGoalPriorities));
         }
@@ -935,7 +938,7 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . "start:$start:end:$end", true),
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$start:end:$end", true),
             'user_data');
     }
 
