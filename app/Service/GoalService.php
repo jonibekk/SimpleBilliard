@@ -920,13 +920,13 @@ class GoalService extends AppService
     {
         //summarize goal priorities
         $sumPriorities = array_sum($goalPriorities);
-        $priorities = [];
+        $progresses = [];
         foreach ($goalsProgresses as $goalId => $progress) {
             if (isset($goalPriorities[$goalId])) {
-                $priorities[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
+                $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
             }
         }
-        return array_sum($priorities);
+        return array_sum($progresses);
     }
 
     /**
