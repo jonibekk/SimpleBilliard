@@ -1196,18 +1196,18 @@ class Goal extends AppModel
     /**
      * ゴールと紐付くKRを進捗付きで返す
      *
-     * @param               $goal_ids
-     * @param int|null      $user_id defaultはログインユーザ
+     * @param                $goalIds
+     * @param int|null       $userId defaultはログインユーザ
      *
      * @return array
      */
-    function getGoalAndKr($goal_ids, ?int $user_id = null): array
+    function getGoalAndKr($goalIds, ?int $userId = null): array
     {
-        $user_id = $user_id ?? $this->my_uid;
+        $userId = $userId ?? $this->my_uid;
 
         $options = [
             'conditions' => [
-                'Goal.id'      => $goal_ids,
+                'Goal.id'      => $goalIds,
                 'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
@@ -1224,7 +1224,7 @@ class Goal extends AppModel
                 ],
                 'GoalMember'    => [
                     'conditions' => [
-                        'GoalMember.user_id' => $user_id
+                        'GoalMember.user_id' => $userId
                     ]
                 ],
                 'TargetCollabo' => [
@@ -1236,7 +1236,7 @@ class Goal extends AppModel
                         'TargetCollabo.is_wish_approval',
                         'TargetCollabo.is_target_evaluation'
                     ],
-                    'conditions' => ['TargetCollabo.user_id' => $user_id],
+                    'conditions' => ['TargetCollabo.user_id' => $userId],
                 ],
             ]
         ];

@@ -255,13 +255,14 @@ class GoalMember extends AppModel
     /**
      * 自分のゴールのプライオリティを返す
      * 返り値のフォーマットkey:goal_id,value:priorityの配列
+
+*
+*@param int       $startDate
+     * @param int $endDate
      *
-     * @param int $start_date
-     * @param int $end_date
-     *
-     * @return array
+*@return array
      */
-    function findMyGoalPriorities(int $start_date, int $end_date): array
+    function findMyGoalPriorities(int $startDate, int $endDate): array
     {
         $options = [
             'joins'      => [
@@ -271,8 +272,8 @@ class GoalMember extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'Goal.id = GoalMember.goal_id',
-                        'Goal.end_date >=' => $start_date,
-                        'Goal.end_date <=' => $end_date,
+                        'Goal.end_date >=' => $startDate,
+                        'Goal.end_date <=' => $endDate,
                     ]
                 ]
             ],
