@@ -564,4 +564,30 @@ class GoalsController extends ApiController
 
         return $this->_getResponseSuccess();
     }
+
+    /**
+     * トップページ右カラムの初期表示データ取得API
+     * - APIレスポンス
+     *{
+     *  "data": {
+     *    "progress_graph": [],
+     *    "krs": []
+     *  }
+     *}
+     * @return CakeResponse
+     */
+    public function get_dashboard()
+    {
+        // TODO: これはモックです。API実装の際に上書きしましょう。
+        $res = [
+            'progress_graph' => [
+                ['sweet_spot_top', 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+                ['data', 0, 10, 10, 20, 30, 40, 50, 50, 55, 60, 65],
+                ['sweet_spot_bottom', 0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60],
+            ],
+            'krs'            => []
+        ];
+        return $this->_getResponseSuccess($res);
+    }
+
 }

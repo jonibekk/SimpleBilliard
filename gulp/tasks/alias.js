@@ -7,7 +7,7 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_edit', 'react_goal_approval', 'react_goal_search'], done)
+  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_edit', 'react_goal_approval', 'react_goal_search', 'react_kr_column'], done)
 })
 
 // js app

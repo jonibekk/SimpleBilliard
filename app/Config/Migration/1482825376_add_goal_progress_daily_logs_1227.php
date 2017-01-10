@@ -48,7 +48,7 @@ class AddGoalProgressDailyLogs1227 extends CakeMigration
                         'null'     => false,
                         'default'  => null,
                         'unsigned' => false,
-                        'comment'  => '0-100の数字'
+                        'comment'  => '進捗率%(0-100)'
                     ),
                     'target_date'     => array(
                         'type'    => 'date',
@@ -71,6 +71,7 @@ class AddGoalProgressDailyLogs1227 extends CakeMigration
                     ),
                     'indexes'         => array(
                         'PRIMARY' => array('column' => array('id', 'target_date'), 'unique' => 1),
+                        'goal_id_target_date_unique' => array('column' => array('goal_id', 'target_date'), 'unique' => 1),
                         'target_date' => array('column' => 'target_date', 'unique' => 0),
                         'team_id' => array('column' => 'team_id', 'unique' => 0),
                         'goal_id' => array('column' => 'goal_id', 'unique' => 0),
