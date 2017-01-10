@@ -494,7 +494,7 @@ class KeyResultService extends AppService
         // キャッシュ検索
         $resKrs = [];
         $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KRS_IN_DASHBOARD, true), 'user_data');
-        if ($cachedKrs !== false) {
+        if (false !== false) {
             $resKrs = $cachedKrs;
         } else {
             // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存

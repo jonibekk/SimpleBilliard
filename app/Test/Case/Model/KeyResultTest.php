@@ -556,7 +556,7 @@ class KeyResultTest extends GoalousTestCase
         $this->setDefault();
         $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333',  1]]);
         $res = $this->KeyResult->findInDashboard(10);
-        $res = Hash::extract($res, '{n}.ActionResult.created');
+        $res = Hash::extract($res, '{n}.KeyResult.latest_actioned');
         $expected = ['333333', '222222', '111111'];
         $this->assertEquals($res, $expected);
     }
@@ -640,12 +640,13 @@ class KeyResultTest extends GoalousTestCase
             // KR作成
             $this->KeyResult->create();
             $this->KeyResult->save([
-                'id' => $modelId,
-                'priority'   => $priority,
-                'goal_id'    => $modelId,
-                'team_id'    => 1,
-                'start_date' => $currentTerm['start_date'],
-                'end_date'   => $currentTerm['end_date'],
+                'id'              => $modelId,
+                'priority'        => $priority,
+                'goal_id'         => $modelId,
+                'team_id'         => 1,
+                'start_date'      => $currentTerm['start_date'],
+                'end_date'        => $currentTerm['end_date'],
+                'latest_actioned' => $actionCreated
             ], false);
 
             // アクション作成
@@ -653,8 +654,8 @@ class KeyResultTest extends GoalousTestCase
                 $this->KeyResult->ActionResult->create();
                 $this->KeyResult->ActionResult->save([
                     'key_result_id' => $modelId,
-                    'created' => $actionCreated,
-                    'team_id' => 1
+                    'created'       => $actionCreated,
+                    'team_id'       => 1
                 ], false);
             }
         }

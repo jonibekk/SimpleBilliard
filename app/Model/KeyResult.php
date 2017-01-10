@@ -847,7 +847,7 @@ class KeyResult extends AppModel
      * - 2.KRの重要度降順
      * @return array
      */
-    public function findInDashboard(int $limit, ?int $offset, ?int $goalId = null): array
+    public function findInDashboard(int $limit, ?int $offset = null, ?int $goalId = null): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
@@ -858,38 +858,12 @@ class KeyResult extends AppModel
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
             'order' => [
-                'ActionResult.created' => 'desc',
-                'KeyResult.priority' => 'desc'
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc'
             ],
-            'fields' => [
-                'ActionResult.created',
-                'ActionResult.user_id',
-                'KeyResult.name',
-                'KeyResult.priority',
-                'KeyResult.completed',
-                'Goal.name',
-                'Goal.id',
-            ],
-            'group'  => ['KeyResult.id'],
             'limit'  => $limit,
             'offset' => $offset,
             'joins'  => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'action_results',
-                    'alias'      => 'ActionResult',
-                    'conditions' => [
-                        'ActionResult.key_result_id = KeyResult.id'
-                    ]
-                ],
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'goals',
-                    'alias'      => 'Goal',
-                    'conditions' => [
-                        'Goal.id = KeyResult.goal_id'
-                    ]
-                ],
                 [
                     'type'       => 'INNER',
                     'table'      => 'goal_members',
@@ -899,18 +873,19 @@ class KeyResult extends AppModel
                     ]
                 ],
             ],
+            'contain' => [
+                'Goal',
+                'ActionResult'
+            ]
         ];
 
         // パラメータよりデータ取得条件追加
         if ($goalId !== null) {
-            $options['conditions']['Goal.id'] = $goalId;
+            $options['conditions']['KeyResult.goal_id'] = $goalId;
         }
 
         $res = $this->find('all', $options);
-        if (!$res) {
-            return [];
-        }
-        return $res;
+        return $res ?? [];
     }
 
     public function countInDashboard(?int $goalId = null): int
@@ -923,24 +898,7 @@ class KeyResult extends AppModel
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
-            'group' => ['KeyResult.id'],
             'joins' => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'action_results',
-                    'alias'      => 'ActionResult',
-                    'conditions' => [
-                        'ActionResult.key_result_id = KeyResult.id'
-                    ]
-                ],
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'goals',
-                    'alias'      => 'Goal',
-                    'conditions' => [
-                        'Goal.id = KeyResult.goal_id'
-                    ]
-                ],
                 [
                     'type'       => 'INNER',
                     'table'      => 'goal_members',
