@@ -1190,4 +1190,43 @@ class GoalMember extends AppModel
         return $goalId;
     }
 
+    /**
+     * 全ゴールメンバーのユーザーID一覧を取得
+     *
+     * @param int $goalId
+     *
+     * @return array
+     */
+    function findAllMemberUserIds(int $goalId): array
+    {
+        $options = [
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true
+            ],
+            'fields'     => ['GoalMember.user_id'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id'
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id'
+                    ],
+                ],
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res ?? [];
+    }
 }

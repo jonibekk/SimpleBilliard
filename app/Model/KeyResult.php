@@ -842,6 +842,7 @@ class KeyResult extends AppModel
      * # 取得条件
      * - ログインしてるユーザーがゴールメンバーになっているゴールのKR
      * - 今期内ゴールのKR
+     * - (option)指定ゴールID
      * # ソート条件
      * - 1.アクションの作成日降順
      * - 2.KRの重要度降順
@@ -850,6 +851,8 @@ class KeyResult extends AppModel
     public function findInDashboard(int $limit, ?int $offset = null, ?int $goalId = null): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $now = time();
+        $weekAgoTimestamp = AppUtil::getTimestampByTimezone('-1 week midnight', $currentTerm['timezone']);
 
         $options = [
             'conditions' => [
@@ -875,7 +878,12 @@ class KeyResult extends AppModel
             ],
             'contain' => [
                 'Goal',
-                'ActionResult'
+                'ActionResult' => [
+                    'conditions' => [
+                        'ActionResult.created >=' => $weekAgoTimestamp,
+                        'ActionResult.created <=' => $now
+                    ]
+                ]
             ]
         ];
 
@@ -888,13 +896,18 @@ class KeyResult extends AppModel
         return $res ?? [];
     }
 
-    public function countInDashboard(?int $goalId = null): int
+    /**
+     * 自分のKR(コラボ含む)のカウント
+     *
+     * @return int
+     */
+    public function countMine(): int
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
         $options = [
             'conditions' => [
-                'GoalMember.user_id' => $this->my_uid,
+                'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
@@ -909,11 +922,6 @@ class KeyResult extends AppModel
                 ],
             ],
         ];
-
-        // パラメータよりデータ取得条件追加
-        if ($goalId) {
-            $options['conditions']['Goal.id'] = $goalId;
-        }
 
         $count = $this->find('count', $options);
         return $count ?? 0;

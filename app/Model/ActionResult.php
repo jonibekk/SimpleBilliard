@@ -677,4 +677,24 @@ class ActionResult extends AppModel
         return $ret + $defaultCountEachGoalId;
     }
 
+    /**
+     * KRに紐づく最新のアクションを取得
+     *
+     * @param  int $krId
+     *
+     * @return array|null
+     */
+    public function getLatestAction(int $krId): ?array
+    {
+        $options = [
+            'conditions' => [
+                'key_result_id' => $krId
+            ],
+            'order'      => 'created desc'
+        ];
+
+        $res = $this->find('first', $option);
+        return $res ?? null;
+    }
+
 }

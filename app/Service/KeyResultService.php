@@ -217,10 +217,6 @@ class KeyResultService extends AppService
                 Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
-            // Redisキャッシュ削除
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-
             // トランザクション完了
             $Goal->commit();
 
@@ -466,9 +462,8 @@ class KeyResultService extends AppService
                 Cache::delete($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
-
-            // Redisキャッシュ削除
-            Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+            // ダッシュボードのKRキャッシュ削除
+            $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
 
             // トランザクション完了
             $KeyResult->commit();
@@ -484,6 +479,8 @@ class KeyResultService extends AppService
 
     /**
      * トップページ右カラムに初期表示するKR一覧を取得
+     * - キャッシュが存在する場合はキャッシュを返す
+     *
      * @return array
      */
     function findInDashboardFirstView($limit, $offset): array
@@ -493,14 +490,88 @@ class KeyResultService extends AppService
 
         // キャッシュ検索
         $resKrs = [];
-        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KRS_IN_DASHBOARD, true), 'user_data');
-        if (false !== false) {
+        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        if ($cachedKrs !== false) {
             $resKrs = $cachedKrs;
         } else {
             // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
             $resKrs = $KeyResult->findInDashboard($limit, $offset);
-            Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KRS_IN_DASHBOARD, true), $resKrs);
+            Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
         }
         return $resKrs;
+    }
+
+    /**
+     * トップページ右カラムに初期表示するKR数を取得
+     * - キャッシュが存在する場合はキャッシュを返す
+     *
+     * @return int
+     */
+    function countMine(): int
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // キャッシュ検索
+        $resCount = 0;
+        $cachedCount = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
+        if ($cachedCount !== false) {
+            $resCount = $cachedCount;
+        } else {
+            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
+            $resCount = $KeyResult->countMine();
+            Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), $resCount, 'user_data');
+        }
+        return $resCount;
+    }
+
+    /**
+     * 最新アクション日時を更新
+     * - 存在する中で一番新しいアクションのcreatedをlatest_actionedとして登録
+     * - アクションが存在しなければnullを登録
+     *
+     * @param  $krId
+     *
+     * @return bool
+     */
+    function updateLatestActioned(int $krId): bool
+    {
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        //　最新アクション日時取得
+        $latestAction = $ActionResult->getLatestAction($krId);
+        $latestActioned = $latestAction['ActionResult']['created'] ?? null;
+
+        // KR更新
+        $KeyResult->id = $krId;
+        $saved = $KeyResult->saveField('latest_actioned', $latestActioned);
+
+        return (bool)$saved;
+    }
+
+    /**
+     * 全ゴールメンバーのダッシュボードのキャッシュを削除
+     * - $withCountがtrueの場合はKRカウントキャッシュも削除する
+     *
+     * @param int　$goalId
+     * @param bool $withCount
+     */
+    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true): void
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        $memberUserids = $GoalMember->findAllMemberUserIds($goalId);
+        foreach($memberUserids as $userId) {
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true,
+                $userId), 'user_data');
+            if ($withCount) {
+                Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_KR_COUNT, true,
+                    $userId), 'user_data');
+            }
+        }
     }
 }

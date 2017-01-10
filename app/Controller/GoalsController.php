@@ -177,7 +177,10 @@ class GoalsController extends AppController
         $this->Goal->id = $id;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_GOAL, $id);
         $this->Goal->delete();
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+
+        // ダッシュボードのKRキャッシュ削除
+        $KeyResultService->removeGoalMembersCacheInDashboard($id);
+
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__("Deleted a goal."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -421,10 +424,10 @@ class GoalsController extends AppController
     public function edit_collabo()
     {
         $goalMemberId = Hash::get($this->request->params, 'named.goal_member_id');
+        $myUserId = $this->Auth->user('id');
         $new = $goalMemberId ? false : true;
         $this->request->allowMethod('post', 'put');
-        $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId(
-            $this->Auth->user('id'));
+        $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($myUserId);
 
         if (!isset($this->request->data['GoalMember'])) {
             $this->_editCollaboError();
@@ -436,7 +439,6 @@ class GoalsController extends AppController
         $this->request->data['GoalMember']['is_target_evaluation'] = false;
 
         if (!$this->Goal->GoalMember->edit($this->request->data)) {
-
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
@@ -449,12 +451,11 @@ class GoalsController extends AppController
 
         //success case.
         $this->Pnotify->outSuccess(__("Start to collaborate."));
-        //if new
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        // リーダー変更可能フラグ更新のため、リーダーのキャッシュも削除する
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $goalLeaderUserId), 'user_data');
-        Cache::delete($this->Goal->GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $goalLeaderUserId), 'user_data');
+
+        // ダッシュボードのKRキャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true, $myUserId), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true, $myUserId), 'user_data');
+
         //mixpanel
         if ($new) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalId);
@@ -545,6 +546,7 @@ class GoalsController extends AppController
 
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+
         // TKRを変更
         if (!$KeyResultService->exchangeTkr($krId, $this->Auth->user('id'))) {
             $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
@@ -784,13 +786,13 @@ class GoalsController extends AppController
 
     public function delete_key_result()
     {
-        $kr_id = $this->request->params['named']['key_result_id'];
+        $krId = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($krId)) {
                 throw new RuntimeException(__("You have no permission."));
             }
-            if ($this->Goal->KeyResult->isCompleted($kr_id)) {
+            if ($this->Goal->KeyResult->isCompleted($krId)) {
                 throw new RuntimeException(__("You can't delete achieved KR."));
             }
         } catch (RuntimeException $e) {
@@ -798,21 +800,29 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Goal->KeyResult->id = $kr_id;
+
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        $this->Goal->KeyResult->id = $krId;
         $kr = $this->Goal->KeyResult->read();
+        $goalId = $kr['KeyResult']['goal_id'];
+
         $this->Goal->KeyResult->delete();
         //関連アクションの紐付け解除
-        $this->Goal->ActionResult->releaseKr($kr_id);
+        $this->Goal->ActionResult->releaseKr($krId);
+
+        // ダッシュボードのKRキャッシュ削除
+        $KeyResultService->removeGoalMembersCacheInDashboard($goalId);
 
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $kr['KeyResult']['goal_id'], $kr_id);
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $goalId, $krId);
 
         $this->Pnotify->outSuccess(__("Deleted a key result."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $params_referer = Router::parse($this->referer(null, true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
+        $paramsReferer = Router::parse($this->referer(null, true));
+        if ($paramsReferer['controller'] == 'pages' && $paramsReferer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
         } else {
             return $this->redirect($this->referer());
@@ -829,6 +839,10 @@ class GoalsController extends AppController
     {
         $arId = $this->request->params['named']['action_result_id'];
         $this->request->allowMethod('post', 'delete');
+
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         try {
             $this->Goal->ActionResult->begin();
             $action = $this->Goal->ActionResult->getById($arId);
@@ -859,8 +873,18 @@ class GoalsController extends AppController
                 if (!empty($kr['completed'])) {
                     $updateKr['completed'] = null;
                 }
-                // KR更新
+                // KR進捗更新
                 $this->Goal->KeyResult->save($updateKr, false);
+
+                // KR最新アクション日時更新
+                $updatedLatestActioned = $KeyResultService->updateLatestActioned($krId);
+                if (!$updatedLatestActioned) {
+                    throw new RuntimeException(sprintf("Failed to update latest actioned timestamp to key_results table. data:%s"
+                        , var_export(compact('krId'), true)));
+                }
+
+                // ダッシュボードのKRキャッシュ削除
+                $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
             }
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {

@@ -49,6 +49,8 @@ class ActionService extends AppService
         $AttachedFile = ClassRegistry::init("AttachedFile");
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init("GlRedis");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
         try {
             $ActionResult->begin();
@@ -112,10 +114,11 @@ class ActionService extends AppService
                     , var_export(compact('newActionId', 'fileIds'), false)));
             }
 
-            // KR進捗更新
+            // KR進捗&最新アクション日時更新
             $updateKr = [
-                'id'            => $krId,
-                'current_value' => $krCurrentVal,
+                'id'              => $krId,
+                'current_value'   => $krCurrentVal,
+                'latest_actioned' => $now
             ];
             if ($krCurrentVal == Hash::get($kr, 'target_value')) {
                 $updateKr['completed'] = $now;
@@ -124,6 +127,10 @@ class ActionService extends AppService
                 throw new Exception(sprintf("Failed update kr progress. data:%s"
                     , var_export($updateKr, false)));
             }
+
+            // ダッシュボードのKRキャッシュ削除
+            $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+
             $ActionResult->commit();
         } catch (RuntimeException $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));

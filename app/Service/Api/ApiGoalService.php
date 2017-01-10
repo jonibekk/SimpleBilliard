@@ -193,8 +193,6 @@ class ApiGoalService extends ApiService
 
     public function findDashboardFirstViewResponse($queryParams)
     {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
         /** @var ApiKeyResultService $ApiKeyResultService */
@@ -226,7 +224,7 @@ class ApiGoalService extends ApiService
         }
 
         // カウント数をセット
-        $ret['count'] = $KeyResult->countInDashboard();
+        $ret['count'] = $KeyResultService->countMine();
 
         // KRデータセット
         $ret['data']['krs'] = $krs;
