@@ -749,18 +749,32 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $currentTerm = $EvaluateTerm->getCurrentTermData();
-        $daysFromTermStart = (strtotime("-$days days", $targetEndDate) - $currentTerm['start_date']) / DAY;
-        $daysToTermEnd = ($currentTerm['end_date'] - strtotime("+$days days", $targetEndDate)) / DAY;
-        if ($daysFromTermStart < 0) {
-            //開始日が期の開始日前になる場合
-            $ret['start'] = date('Y-m-d', $currentTerm['start_date']);
-            $ret['end'] = date('Y-m-d', $currentTerm['start_date'] + $days * DAY);
+        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+
+        //$daysが期の日数を超えていたら期の開始日、終了日を返す
+        $termTotalDays = round(($termEndDate + 1 - $termStartDate) / DAY);
+        if ($days > $termTotalDays) {
+            $ret['start'] = date('Y-m-d', $termStartDate);
+            $ret['end'] = date('Y-m-d', $termEndDate);
             return $ret;
-        } elseif ($daysToTermEnd < 0) {
-            //開始日 < 期の終了日-$daysの場合
-            $ret['start'] = date('Y-m-d', $currentTerm['end_date'] - $days * DAY);
-            $ret['end'] = date('Y-m-d', $currentTerm['end_date']);
+        }
+
+        //期の開始日から開始日までの日数
+        $daysFromTermStartDateToStartDate = (strtotime("-$days days", $targetEndDate) - $termStartDate) / DAY;
+        //期の開始日から開始日までの日数がマイナスになる場合
+        if ($daysFromTermStartDateToStartDate < 0) {
+            $ret['start'] = date('Y-m-d', $termStartDate);
+            $ret['end'] = date('Y-m-d', $termStartDate + $days * DAY);
+            return $ret;
+        }
+
+        //終了日から期の終了日までの残り日数
+        $daysFromEndDateToTermEnd = ($termEndDate - strtotime("+$days days", $targetEndDate)) / DAY;
+        //終了日から期の終了日までの残り日数がマイナスの場合
+        if ($daysFromEndDateToTermEnd < 0) {
+            $ret['start'] = date('Y-m-d', $termEndDate - $days * DAY);
+            $ret['end'] = date('Y-m-d', $termEndDate);
             return $ret;
         }
 
@@ -791,7 +805,8 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
         //キャッシュに保存されるデータ
         $progressLogs = $this->getProgressFromCache($start, $end);
         if ($progressLogs === false) {
@@ -799,7 +814,7 @@ class GoalService extends AppService
             ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分(前日まで))
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
-            $myGoalPriorities = $GoalMember->findMyGoalPriorities($currentTerm['start_date'], $currentTerm['end_date']);
+            $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartDate, $termEndDate);
             /** @var GoalProgressDailyLog $GoalProgressDailyLog */
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
             $goalProgressLogs = $GoalProgressDailyLog->findLogs($start, $end, array_keys($myGoalPriorities));
@@ -816,8 +831,8 @@ class GoalService extends AppService
             if (!isset($myGoalPriorities)) {
                 /** @var GoalMember $GoalMember */
                 $GoalMember = ClassRegistry::init('GoalMember');
-                $myGoalPriorities = $GoalMember->findMyGoalPriorities($currentTerm['start_date'],
-                    $currentTerm['end_date']);
+                $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartDate,
+                    $termEndDate);
             }
             /** @var Goal $Goal */
             $Goal = ClassRegistry::init('Goal');
@@ -830,9 +845,9 @@ class GoalService extends AppService
         }
         //グラフ用データに整形
         $ret = [];
-        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']);
+        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
         $ret[1] = array_merge(['data'], $progressLogs);
-        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']);
+        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
 
         return $ret;
     }
@@ -891,16 +906,18 @@ class GoalService extends AppService
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $term = $EvaluateTerm->getCurrentTermData();
-        //期を超えていたら、何もしない
-        if (strtotime($start) < $term['start_date'] || strtotime($end) > $term['end_date']) {
+        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+
+        //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
+        if (strtotime($start) < $termStartDate || strtotime($end) > $termEndDate) {
             return [];
         }
 
-        $termTotalDays = floor(($term['end_date'] - $term['start_date']) / DAY);
-        //sweetspotの上辺の進む高さ
+        $termTotalDays = floor(($termEndDate - $termStartDate) / DAY);
+        //sweetspotの上辺の一日で進む高さ
         $topStep = (float)(100 / $termTotalDays);
-        //sweetspotの下辺の進む高さ
+        //sweetspotの下辺の一日で進む高さ
         $bottomStep = (float)(self::GRAPH_SWEET_SPOT_RATIO / $termTotalDays);
 
         //返り値
@@ -910,14 +927,15 @@ class GoalService extends AppService
         ];
 
         //期の開始日からの日数を算出し、その日数分開始値を進める
-        $termStart = date('Y-m-d', $term['start_date']);
+        $termStart = date('Y-m-d', $termStartDate);
         $daysFromTermStart = (strtotime($start) - strtotime($termStart)) / DAY;
         $top = (float)$daysFromTermStart * $topStep;
         $bottom = (float)$daysFromTermStart * $bottomStep;
 
+        //一日ずつ値を格納
         for ($day = $start; $day <= $end; $day = date('Y-m-d', strtotime($day) + DAY)) {
-            $sweetSpot['top'][] = round($top,2);
-            $sweetSpot['bottom'][] = round($bottom,2);
+            $sweetSpot['top'][] = round($top, 2);
+            $sweetSpot['bottom'][] = round($bottom, 2);
 
             $top += $topStep;
             $bottom += $bottomStep;
