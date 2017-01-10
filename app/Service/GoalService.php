@@ -956,7 +956,7 @@ class GoalService extends AppService
         $Goal = ClassRegistry::init("Goal");
         $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
         Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
-        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . "start:$start:end:$end", true), $data,
+        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$start:end:$end", true), $data,
             'user_data');
     }
 
