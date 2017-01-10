@@ -800,7 +800,7 @@ class AppSchema extends CakeSchema {
 		'priority' => array('type' => 'integer', 'null' => false, 'default' => '3', 'unsigned' => false, 'comment' => '重要度(1〜5)'),
 		'completed' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '完了日'),
 		'action_result_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'アクショントカウント'),
-		'latest_actioned_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '最新アクション日時(unixtime)'),
+		'latest_actioned' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '最新アクション日時(unixtime)'),
 		'tkr_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'TopKeyResult'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
@@ -814,7 +814,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'start_date' => array('column' => 'start_date', 'unique' => 0),
 			'end_date' => array('column' => 'end_date', 'unique' => 0),
-			'latest_actioned_date' => array('column' => 'latest_actioned_date', 'unique' => 0)
+			'latest_actioned' => array('column' => 'latest_actioned', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
