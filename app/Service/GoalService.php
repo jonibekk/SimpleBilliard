@@ -730,11 +730,17 @@ class GoalService extends AppService
     }
 
     /**
+     * 与えられた対象終了日と日数からグラフの開始日、終了日を求める
+     * - グラフの開始日、終了日は必ず期内となる
+     * - 開始日が期の開始日より前になる場合は開始日は期の開始日と同一となる
+     * - 開始日が期の終了日-30日以内の場合は、終了日は期の終了日と同一となる
+     *
+     * @param int $targetEndDate
      * @param int $days
      *
      * @return array ['start'=>'','end'=>'']
      */
-    function getGraphStartEndDate($days = self::GRAPH_DAYS): array
+    function getGraphRange(int $targetEndDate, int $days = self::GRAPH_DAYS): array
     {
         $ret = [
             'start' => "",
@@ -744,8 +750,8 @@ class GoalService extends AppService
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $currentTerm = $EvaluateTerm->getCurrentTermData();
-        $daysFromTermStart = (strtotime("-$days days", time()) - $currentTerm['start_date']) / DAY;
-        $daysToTermEnd = ($currentTerm['end_date'] - strtotime("+$days days", time())) / DAY;
+        $daysFromTermStart = (strtotime("-$days days", $targetEndDate) - $currentTerm['start_date']) / DAY;
+        $daysToTermEnd = ($currentTerm['end_date'] - strtotime("+$days days", $targetEndDate)) / DAY;
         if ($daysFromTermStart < 0) {
             //開始日が期の開始日前になる場合
             $ret['start'] = date('Y-m-d', $currentTerm['start_date']);
@@ -759,8 +765,8 @@ class GoalService extends AppService
         }
 
         //$days前から本日まで
-        $ret['start'] = date('Y-m-d', time() - $days * DAY);
-        $ret['end'] = date('Y-m-d', time());
+        $ret['start'] = date('Y-m-d', $targetEndDate - $days * DAY);
+        $ret['end'] = date('Y-m-d', $targetEndDate);
         return $ret;
     }
 
@@ -888,11 +894,11 @@ class GoalService extends AppService
             return [];
         }
 
-        $termTotalDays = floor(($term['start_date'] - $term['end_date']) / DAY);
+        $termTotalDays = floor(($term['end_date'] - $term['start_date']) / DAY);
         //sweetspotの上辺の進む高さ
-        $topStep = (float)$termTotalDays / 100;
+        $topStep = (float)(100 / $termTotalDays);
         //sweetspotの下辺の進む高さ
-        $bottomStep = (float)$termTotalDays / self::GRAPH_SWEET_SPOT_RATIO;
+        $bottomStep = (float)(self::GRAPH_SWEET_SPOT_RATIO / $termTotalDays);
 
         //返り値
         $sweetSpot = [
@@ -905,7 +911,8 @@ class GoalService extends AppService
         $daysFromTermStart = (strtotime($start) - strtotime($termStart)) / DAY;
         $top = (float)$daysFromTermStart * $topStep;
         $bottom = (float)$daysFromTermStart * $bottomStep;
-        for ($day = $start; $day <= $end; $day = date('+1 day', strtotime($day))) {
+
+        for ($day = $start; $day <= $end; $day = date('Y-m-d', strtotime($day) + DAY)) {
             $sweetSpot['top'][] = $top;
             $sweetSpot['bottom'][] = $bottom;
 
