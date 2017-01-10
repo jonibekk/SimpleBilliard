@@ -66,19 +66,19 @@ class GoalProgressDailyLogTest extends GoalousTestCase
         $this->_setDefaultValues();
         $this->_saveDefaultData();
         $expected = [
-            (int) 0 => [
-                'goal_id' => '1',
-                'progress' => '20',
+            (int)0 => [
+                'goal_id'     => '1',
+                'progress'    => '20',
                 'target_date' => '2016-01-02'
             ],
-            (int) 1 => [
-                'goal_id' => '1',
-                'progress' => '30',
+            (int)1 => [
+                'goal_id'     => '1',
+                'progress'    => '30',
                 'target_date' => '2016-01-03'
             ],
-            (int) 2 => [
-                'goal_id' => '1',
-                'progress' => '40',
+            (int)2 => [
+                'goal_id'     => '1',
+                'progress'    => '40',
                 'target_date' => '2016-01-04'
             ]
         ];
@@ -92,40 +92,39 @@ class GoalProgressDailyLogTest extends GoalousTestCase
         $this->_setDefaultValues();
         $this->_saveDefaultData();
         $expected = [
-            (int) 0 => [
-                'goal_id' => '1',
-                'progress' => '20',
+            (int)0 => [
+                'goal_id'     => '1',
+                'progress'    => '20',
                 'target_date' => '2016-01-02'
             ],
-            (int) 1 => [
-                'goal_id' => '2',
-                'progress' => '20',
+            (int)1 => [
+                'goal_id'     => '2',
+                'progress'    => '20',
                 'target_date' => '2016-01-02'
             ],
-            (int) 2 => [
-                'goal_id' => '1',
-                'progress' => '30',
+            (int)2 => [
+                'goal_id'     => '1',
+                'progress'    => '30',
                 'target_date' => '2016-01-03'
             ],
-            (int) 3 => [
-                'goal_id' => '2',
-                'progress' => '30',
+            (int)3 => [
+                'goal_id'     => '2',
+                'progress'    => '30',
                 'target_date' => '2016-01-03'
             ],
-            (int) 4 => [
-                'goal_id' => '1',
-                'progress' => '40',
+            (int)4 => [
+                'goal_id'     => '1',
+                'progress'    => '40',
                 'target_date' => '2016-01-04'
             ],
-            (int) 5 => [
-                'goal_id' => '2',
-                'progress' => '40',
+            (int)5 => [
+                'goal_id'     => '2',
+                'progress'    => '40',
                 'target_date' => '2016-01-04'
             ]
         ];
-        $actual = $this->GoalProgressDailyLog->findLogs('2016-01-02', '2016-01-04', [1,2]);
-        $this->assertEquals($expected,$actual);
-
+        $actual = $this->GoalProgressDailyLog->findLogs('2016-01-02', '2016-01-04', [1, 2]);
+        $this->assertEquals($expected, $actual);
     }
 
     function _setDefaultValues()

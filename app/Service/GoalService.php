@@ -50,7 +50,10 @@ class GoalService extends AppService
     const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
 
     /* sweetSpotの比率 */
-    const SWEET_SPOT_RATIO = 60;
+    const GRAPH_SWEET_SPOT_RATIO = 60;
+
+    /* グラフに描画する日数 */
+    const GRAPH_DAYS = 30;
 
     /* ゴールキャッシュ */
     private static $cacheList = [];
@@ -727,6 +730,41 @@ class GoalService extends AppService
     }
 
     /**
+     * @param int $days
+     *
+     * @return array ['start'=>'','end'=>'']
+     */
+    function getGraphStartEndDate($days = self::GRAPH_DAYS): array
+    {
+        $ret = [
+            'start' => "",
+            'end'   => "",
+        ];
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        $daysFromTermStart = (strtotime("-$days days", time()) - $currentTerm['start_date']) / DAY;
+        $daysToTermEnd = ($currentTerm['end_date'] - strtotime("+$days days", time())) / DAY;
+        if ($daysFromTermStart < 0) {
+            //開始日が期の開始日前になる場合
+            $ret['start'] = date('Y-m-d', $currentTerm['start_date']);
+            $ret['end'] = date('Y-m-d', $currentTerm['start_date'] + $days * DAY);
+            return $ret;
+        } elseif ($daysToTermEnd < 0) {
+            //開始日 < 期の終了日-$daysの場合
+            $ret['start'] = date('Y-m-d', $currentTerm['end_date'] - $days * DAY);
+            $ret['end'] = date('Y-m-d', $currentTerm['end_date']);
+            return $ret;
+        }
+
+        //$days前から本日まで
+        $ret['start'] = date('Y-m-d', time() - $days * DAY);
+        $ret['end'] = date('Y-m-d', time());
+        return $ret;
+    }
+
+    /**
      * ゴール進捗グラフ作成用データ取得メソッド
      * //キャッシュからデータを取得なければ以下処理
      * ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
@@ -744,34 +782,43 @@ class GoalService extends AppService
      */
     function getAllMyProgressForDrawingGraph(string $start, string $end): array
     {
-        $dayBeforeEnd = date('-1 day', strtotime($end));
-        $progressLogs = $this->getProgressFromCache($start, $dayBeforeEnd);
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        //キャッシュに保存されるデータ
+        $progressLogs = $this->getProgressFromCache($start, $end);
         if ($progressLogs === false) {
-            //今期の情報取得
-            /** @var EvaluateTerm $EvaluateTerm */
-            $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-            $term = $EvaluateTerm->getCurrentTermData();
 
             ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分(前日まで))
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
-            $myGoalPriorities = $GoalMember->findMyGoalPriorities($term['start_date'], $term['end_date']);
+            $myGoalPriorities = $GoalMember->findMyGoalPriorities($currentTerm['start_date'], $currentTerm['end_date']);
             /** @var GoalProgressDailyLog $GoalProgressDailyLog */
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
-            $logs = $GoalProgressDailyLog->findLogs($start, $dayBeforeEnd, array_keys($myGoalPriorities));
+            $goalProgressLogs = $GoalProgressDailyLog->findLogs($start, $end, array_keys($myGoalPriorities));
 
-            ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-            $progressLogs = $this->calcAvgGoalProgress($logs, $myGoalPriorities);
-            $this->writeProgressToCache($progressLogs, $start, $dayBeforeEnd);
+            ///ゴールの重要度を掛け合わせて日次のゴール進捗の平均を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+            $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $myGoalPriorities);
+            $this->writeProgressToCache($progressLogs, $start, $end);
         }
         ///sweetSpotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
-
         $sweetSpot = $this->getSweetSpot($start, $end);
 
-        //当日の進捗を計算
-
-        //DBから取得したデータと当日の進捗をマージ
-
+        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
+        if (time() >= strtotime($start) && time() <= strtotime($end)) {
+            if (!isset($myGoalPriorities)) {
+                /** @var GoalMember $GoalMember */
+                $GoalMember = ClassRegistry::init('GoalMember');
+                $myGoalPriorities = $GoalMember->findMyGoalPriorities($currentTerm['start_date'],
+                    $currentTerm['end_date']);
+            }
+            /** @var Goal $Goal */
+            $Goal = ClassRegistry::init('Goal');
+            $goals = $Goal->getGoalAndKr(array_keys($myGoalPriorities));
+            $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
+            array_push($progressLogs, $this->sumGoalProgress($goalProgresses, $myGoalPriorities));
+        }
         //グラフ用データに整形
         $ret = [];
         $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']);
@@ -782,49 +829,82 @@ class GoalService extends AppService
     }
 
     /**
-     * @param array $logs
-     * @param array $myGoalPriorities
+     * ゴールの重要度を掛け合わせ日次のゴール進捗の合計を返す
      *
-     * @return array
+     * @param array $logs           including: goal_id, progress, target_date
+     * @param array $goalPriorities key:goal_id, value:priorityの配列
+     *
+     * @return array key:date, value:progress
      */
-    function calcAvgGoalProgress(array $logs, array $myGoalPriorities): array
+    function sumDailyGoalProgress(array $logs, array $goalPriorities): array
     {
+        //logsを日付でグルーピングする
+        $logs = Hash::combine($logs, '{n}.goal_id', '{n}.progress', '{n}.target_date');
 
+        $ret = [];
+        //日毎にゴールのプライオリティを掛け合わせる
+        foreach ($logs as $date => $goals) {
+            $ret[] = $this->sumGoalProgress($goals, $goalPriorities);
+        }
+        return $ret;
+    }
+
+    /**
+     * ゴール進捗の合計を取得
+     * 例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75
+     *
+     * @param array $goalsProgresses key:goal_id, value:progress
+     * @param array $goalPriorities  key:goal_id, value:priority
+     *
+     * @return int
+     */
+    function sumGoalProgress(array $goalsProgresses, array $goalPriorities): int
+    {
+        //summarize goal priorities
+        $sumPriorities = array_sum($goalPriorities);
+        $priorities = [];
+        foreach ($goalsProgresses as $goalId => $progress) {
+            $priorities[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
+        }
+        return array_sum($priorities);
     }
 
     /**
      * 開始日、終了日の日毎のSweet Spotを返す
+     * $start, $endが期を跨いだ場合は空の配列を返す
      *
      * @param string $start Y-m-d
      * @param string $end   Y-m-d
      *
-     * @return array
+     * @return array　e.g. [top=>[0,10,20,30...],bottom=>[0,10,20,30...]]
      */
     function getSweetSpot(string $start, string $end): array
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $term = $EvaluateTerm->getCurrentTermData();
-        $termTotalDays = floor(($term['start_date'] - $term['end_date']) / 60 * 60 * 24);
-        $topStep = (float)$termTotalDays / 100;
-        $bottomStep = (float)$termTotalDays / self::SWEET_SPOT_RATIO;
-        $termStart = date('Y-m-d', $term['start_date']);
-        if ($start <= $termStart) {
-            $startTop = 0;
-            $startBottom = 0;
-        } else {
-            $daysFromTermStart = (strtotime($start) - strtotime($termStart)) / 60 * 60 * 24;
-            $startTop = (float)$daysFromTermStart * $topStep;
-            $startBottom = (float)$daysFromTermStart * $bottomStep;
+        //期を超えていたら、何もしない
+        if (strtotime($start) < $term['start_date'] || strtotime($end) > $term['end_date']) {
+            return [];
         }
 
+        $termTotalDays = floor(($term['start_date'] - $term['end_date']) / DAY);
+        //sweetspotの上辺の進む高さ
+        $topStep = (float)$termTotalDays / 100;
+        //sweetspotの下辺の進む高さ
+        $bottomStep = (float)$termTotalDays / self::GRAPH_SWEET_SPOT_RATIO;
+
+        //返り値
         $sweetSpot = [
             'top'    => [],
             'bottom' => [],
         ];
 
-        $top = $startTop;
-        $bottom = $startBottom;
+        //期の開始日からの日数を算出し、その日数分開始値を進める
+        $termStart = date('Y-m-d', $term['start_date']);
+        $daysFromTermStart = (strtotime($start) - strtotime($termStart)) / DAY;
+        $top = (float)$daysFromTermStart * $topStep;
+        $bottom = (float)$daysFromTermStart * $bottomStep;
         for ($day = $start; $day <= $end; $day = date('+1 day', strtotime($day))) {
             $sweetSpot['top'][] = $top;
             $sweetSpot['bottom'][] = $bottom;
@@ -837,6 +917,8 @@ class GoalService extends AppService
     }
 
     /**
+     * 集計済みゴール進捗をキャッシュから取得
+     *
      * @param string $start Y-m-d
      * @param string $end   Y-m-d
      *
@@ -851,14 +933,14 @@ class GoalService extends AppService
     }
 
     /**
-     * ゴール進捗をキャッシュに書き出す
+     * 集計済みゴール進捗をキャッシュに書き出す
      * 生存期間は当日の終わりまで(UTC)
      *
-     * @param        $data
+     * @param array  $data  重要度を掛け合わせたもの
      * @param string $start Y-m-d
      * @param string $end   Y-m-d
      */
-    function writeProgressToCache($data, string $start, string $end)
+    function writeProgressToCache(array $data, string $start, string $end): void
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
