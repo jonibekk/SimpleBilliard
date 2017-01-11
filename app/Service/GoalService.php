@@ -740,7 +740,7 @@ class GoalService extends AppService
      * @param int $targetDays
      * @param int $maxBufferDays
      *
-     * @return array ['start'=>'','end'=>'']
+     * @return array ['graphStartDate'=>string|null,'graphEndDate'=>string|null,'plotDataEndDate'=>string|null]
      * @throws Exception
      */
     function getGraphRange(
@@ -816,9 +816,7 @@ class GoalService extends AppService
         ?string $plotDataEndDate = null,
         bool $withSweetSpot = false
     ): array {
-        if (!$plotDataEndDate) {
-            $plotDataEndDate = $graphEndDate;
-        }
+        $plotDataEndDate = $plotDataEndDate ?? $graphEndDate;
 
         //不正な範囲指定か判定
         if ($graphStartDate >= $graphEndDate
@@ -831,6 +829,7 @@ class GoalService extends AppService
             throw new Exception(__('Graph range is wrong.'));
 
         }
+
         //日毎に集計済みのゴール進捗ログを取得
         $progressLogs = $this->findSummarizedGoalProgressesFromLog($graphStartDate, $plotDataEndDate);
 
