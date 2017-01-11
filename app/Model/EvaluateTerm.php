@@ -296,10 +296,10 @@ class EvaluateTerm extends AppModel
     public function getCurrentTermData(bool $utcMidnight = false): array
     {
         $term = $this->getTermData(self::TYPE_CURRENT);
-        if (!$utcMidnight) {
-            return $term;
+        if ($utcMidnight) {
+            return $this->changeToUtc($term);
         }
-        return $this->changeToUtc($term);
+        return $term;
     }
 
     /**
@@ -310,10 +310,10 @@ class EvaluateTerm extends AppModel
     public function getNextTermData(bool $utcMidnight = false): array
     {
         $term = $this->getTermData(self::TYPE_NEXT);
-        if (!$utcMidnight) {
-            return $term;
+        if ($utcMidnight) {
+            return $this->changeToUtc($term);
         }
-        return $this->changeToUtc($term);
+        return $term;
     }
 
     /**
@@ -324,10 +324,10 @@ class EvaluateTerm extends AppModel
     public function getPreviousTermData(bool $utcMidnight = false): array
     {
         $term = $this->getTermData(self::TYPE_PREVIOUS);
-        if (!$utcMidnight) {
-            return $term;
+        if ($utcMidnight) {
+            return $this->changeToUtc($term);
         }
-        return $this->changeToUtc($term);
+        return $term;
     }
 
     private function changeToUtc(array $term): array
