@@ -96,4 +96,29 @@ class EvaluationService extends AppService
         }
         return $evaluatees;
     }
+
+    /**
+     * 評価期間中かどうか判定
+     * - 頻繁に確認されるフラグなので結果をキャッシュする
+     * @return boolean [description]
+     */
+    function isStarted()
+    {
+        /** @var  EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+
+        $cachedData = Cache::read($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
+        if ($cachedData !== false) {
+            extract($cachedData);
+        } else {
+            $currentTermId = $EvaluateTerm->getCurrentTermId();
+            $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
+
+            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
+            Cache::write($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, compact('isStartedEvaluation'), true),
+                'user_data');
+        }
+
+        return $isStartedEvaluation;
+    }
 }

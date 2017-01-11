@@ -234,10 +234,12 @@ class AppController extends BaseController
                 $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
+                $this->_setStartedEvaluation();
                 $this->_setNotifyCnt();
                 $this->_setSetupGuideStatus();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
+                $this->_setGoalsForTopAction();
                 $this->_setBrowserToSession();
             }
             $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
@@ -631,6 +633,55 @@ class AppController extends BaseController
                 $team_id = $result[$Model->name]['team_id'];
         }
         return $team_id;
+    }
+
+    /**
+     * トップページからアクションするための情報をセット
+     */
+    public function _setGoalsForTopAction()
+    {
+        App::import('Service', 'GoalService');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $cachedActionableGoals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOALS_FOR_TOP_ACTION, true), 'user_data');
+        if ($cachedActionableGoals !== false) {
+            extract($cached_my_goal_area_vals);
+        } else {
+            //今期のゴールを取得する
+            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+
+            //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
+            $currentTermGoalsNameList = $this->Goal->getAllMyGoalNameList(
+                $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
+            );
+            $goal_list_for_action_option = [null => __('Select a goal.')] + $currentTermGoalsNameList;
+
+            // アクション可能なゴール数
+            $userId = $this->Auth->user('id');
+            $canActionGoals = $this->Goal->findCanAction($userId);
+            $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
+
+            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
+            Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOALS_FOR_TOP_ACTION, compact('goal_list_for_action_option', 'canActionGoals'), true),
+                'user_data');
+        }
+        $this->set(compact('goal_list_for_action_option', 'canActionGoals'));
+    }
+
+    /**
+     * 評価期間かどうかのフラグをセット
+     */
+    public function _setStartedEvaluation(): void
+    {
+        App::import('Service', 'EvaluationService');
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
+
+        $isStartedEvaluation = $EvaluationService->isStarted();
+        $this->set(compact('isStartedEvaluation'));
     }
 
     /**
