@@ -81,4 +81,16 @@ class AppUtil
     {
         return ceil(($targetTime - $baseTime) / DAY);
     }
+
+    /**
+     * Y-m-d 形式の日付を返す
+     *
+     * @param int $timestamp
+     *
+     * @return string
+     */
+    static function dateYmd(int $timestamp): string
+    {
+        return date('Y-m-d', $timestamp);
+    }
 }
