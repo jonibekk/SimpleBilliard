@@ -845,9 +845,9 @@ class GoalService extends AppService
     /**
      * 最新のトータルのゴール進捗を取得
      *
-     * @return int
+     * @return float
      */
-    function findLatestTotalGoalProgress(): int
+    function findLatestTotalGoalProgress(): float
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
@@ -930,14 +930,14 @@ class GoalService extends AppService
 
     /**
      * ゴール進捗の合計を取得
-     * 例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75
+     * - 例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75
      *
      * @param array $goalsProgresses key:goal_id, value:progress
      * @param array $goalPriorities  key:goal_id, value:priority
      *
-     * @return int
+     * @return float
      */
-    function sumGoalProgress(array $goalsProgresses, array $goalPriorities): int
+    function sumGoalProgress(array $goalsProgresses, array $goalPriorities): float
     {
         //summarize goal priorities
         $sumPriorities = array_sum($goalPriorities);
@@ -947,7 +947,9 @@ class GoalService extends AppService
                 $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
             }
         }
-        return array_sum($progresses);
+        $sumProgresses = array_sum($progresses);
+        $ret = round($sumProgresses, 2);
+        return $ret;
     }
 
     /**
