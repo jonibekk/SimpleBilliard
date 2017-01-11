@@ -732,25 +732,28 @@ class GoalService extends AppService
     /**
      * 与えられた対象終了日と対象日数からグラフの開始日、終了日を求める
      * - グラフの開始日、終了日は必ず期内となる
-     * - グラフ開始日が期の開始日より前になる場合はグラフ開始日は期の開始日と同一となる
-     * - グラフ開始日が期の終了日-$targetDays日以内の場合は、グラフ終了日は期の終了日と同一となる
+     * - グラフ開始日にバッファ日数を加算した日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
+     * - 指定された終了日が期の終了日に近づいたら、グラフ終了日は期の終了日をセット
+     * - それ以外は$targetDays前から本日までの日付を(バッファ日数を考慮)
      *
      * @param int $targetEndTimestamp
      * @param int $targetDays
-     * @param int $bufferDays
+     * @param int $maxBufferDays
      *
      * @return array ['start'=>'','end'=>'']
+     * @throws Exception
      */
     function getGraphRange(
         int $targetEndTimestamp,
         int $targetDays = self::GRAPH_TARGET_DAYS,
-        int $bufferDays = 0
+        int $maxBufferDays = 0
     ): array {
         //initialize variables
         $targetStartTimestamp = $targetEndTimestamp - $targetDays * DAY;
         $ret = [
-            'start' => "",
-            'end'   => "",
+            'graphStartDate'  => null,
+            'graphEndDate'    => null,
+            'plotDataEndDate' => null,
         ];
 
         //今期の情報取得
@@ -759,54 +762,36 @@ class GoalService extends AppService
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
-        //$targetDaysが期の日数を超えていたら期の開始日、終了日を返す
+        //$targetDaysが期の日数を超えていたらエラー
         $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
         if ($targetDays > $termTotalDays) {
-            $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
-            $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
-            return $ret;
+            $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
+                    __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
+            );
+            throw new Exception(__('Wrong target days.'));
         }
 
-        //グラフの開始日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
-        if ($targetStartTimestamp < $termStartTimestamp) {
+        //グラフ開始日にバッファ日数を加算した日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
+        if ($targetStartTimestamp + ($maxBufferDays * DAY) < $termStartTimestamp) {
             $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
-            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + $targetDays * DAY);
+            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + ($targetDays * DAY));
             return $ret;
         }
 
         //指定された終了日が期の終了日に近づいたら、グラフ終了日は期の終了日をセット
-        //「期の終了日に近づいた」の定義: 指定された終了日に指定日数を加算したものが期の終了日を超えた場合
-        if ($targetEndTimestamp + ($targetDays * DAY) > $termEndTimestamp) {
-            $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - $targetDays * DAY);
+        //「期の終了日に近づいた」の定義: バッファ日数+指定終了日が期の終了日を超える場合
+        if ($targetEndTimestamp + ($maxBufferDays * DAY) > $termEndTimestamp) {
+            $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - ($targetDays * DAY));
             $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
             return $ret;
         }
 
-        //$targetDays前から本日まで
-        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp);
-        $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+        //$targetDays前から本日まで(バッファ日数を考慮)
+        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
+        $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp + ($maxBufferDays * DAY));
+        $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+
         return $ret;
-    }
-
-    /**
-     * TODO: 未実装
-     * バッファの日付を求める
-     * - 指定された終了日が期の開始日に近かった場合は、bufferは0
-     * - 指定された終了日が期の終了日に近かった場合は、bufferは減少する
-     * - それ以外の場合は、$maxBufferDaysを返す
-     *
-     * @param int $targetEndTimestamp
-     * @param int $targetDays
-     * @param int $maxBufferDays
-     *
-     * @return int
-     */
-    function getBufferDays(
-        int $targetEndTimestamp,
-        int $targetDays = self::GRAPH_TARGET_DAYS,
-        int $maxBufferDays = self::GRAPH_MAX_BUFFER_DAYS
-    ): int {
-
     }
 
     /**
@@ -817,28 +802,59 @@ class GoalService extends AppService
      * //ログデータと当日の進捗をマージ
      * //グラフ用データに整形
      *
-     * @param string $startDate Y-m-d
-     * @param string $endDate   Y-m-d
-     * @param int    $bufferDays
+     * @param string      $graphStartDate  Y-m-d形式のグラフ描画開始日
+     * @param string      $graphEndDate    Y-m-d形式のグラフ描画終了日
+     * @param string|null $plotDataEndDate Y-m-d形式のデータプロット終了日
+     * @param bool        $withSweetSpot
      *
      * @return array
+     * @throws Exception
      */
-    function getAllMyProgressForDrawingGraph(string $startDate, string $endDate, int $bufferDays = 0): array
-    {
-        //日毎に集計済みのゴール進捗ログを取得
-        $progressLogs = $this->findSummarizedGoalProgressesFromLog($startDate, $endDate);
-
-        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
-        if (time() >= strtotime($startDate) && time() <= strtotime($endDate) + DAY) {
-            $latestTotalGoalProgress = $this->findLatestTotalGoalProgress();
-            array_push($progressLogs, $latestTotalGoalProgress);
+    function getAllMyProgressForDrawingGraph(
+        string $graphStartDate,
+        string $graphEndDate,
+        ?string $plotDataEndDate = null,
+        bool $withSweetSpot = false
+    ): array {
+        if (!$plotDataEndDate) {
+            $plotDataEndDate = $graphEndDate;
         }
 
-        ///sweetSpotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
-        $sweetSpot = $this->getSweetSpot($startDate, $endDate);
+        //不正な範囲指定か判定
+        if ($graphStartDate >= $graphEndDate
+            || $graphStartDate >= $plotDataEndDate
+            || $plotDataEndDate > $graphEndDate
+        ) {
+            $this->log(sprintf("%s%s [method:%s] Graph range is wrong. graphStartDate:%s, graphEndDate:%s, plotDataEndDate:%s",
+                    __FILE__, __LINE__, __METHOD__, $graphStartDate, $graphEndDate, $plotDataEndDate)
+            );
+            throw new Exception(__('Graph range is wrong.'));
 
-        //グラフ用データに整形
+        }
+        //日毎に集計済みのゴール進捗ログを取得
+        $progressLogs = $this->findSummarizedGoalProgressesFromLog($graphStartDate, $plotDataEndDate);
+
+        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
+        if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
+            $latestTotalGoalProgress = $this->findLatestTotalGoalProgress();
+            if ($latestTotalGoalProgress <> 0) {
+                array_push($progressLogs, $latestTotalGoalProgress);
+            }
+        }
+
+        //sweetSpotを算出
+        if ($withSweetSpot) {
+            $sweetSpot = $this->getSweetSpot($graphStartDate, $graphEndDate);
+        }
+
         $ret = [];
+
+        //データが存在しない場合はキーなしで返す
+        if (empty($progressLogs)) {
+            return $ret;
+        }
+        //グラフ用データに整形
+        /** @noinspection PhpUndefinedVariableInspection */
         $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
         $ret[1] = array_merge(['data'], $progressLogs);
         $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
