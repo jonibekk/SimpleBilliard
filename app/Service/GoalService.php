@@ -762,29 +762,29 @@ class GoalService extends AppService
         //$targetDaysが期の日数を超えていたら期の開始日、終了日を返す
         $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
         if ($targetDays > $termTotalDays) {
-            $ret['start'] = date('Y-m-d', $termStartTimestamp);
-            $ret['end'] = date('Y-m-d', $termEndTimestamp);
+            $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
+            $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
             return $ret;
         }
 
         //グラフの開始日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
         if ($targetStartTimestamp < $termStartTimestamp) {
-            $ret['start'] = date('Y-m-d', $termStartTimestamp);
-            $ret['end'] = date('Y-m-d', $termStartTimestamp + $targetDays * DAY);
+            $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
+            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + $targetDays * DAY);
             return $ret;
         }
 
         //指定された終了日が期の終了日に近づいたら、グラフ終了日は期の終了日をセット
         //「期の終了日に近づいた」の定義: 指定された終了日に指定日数を加算したものが期の終了日を超えた場合
         if ($targetEndTimestamp + ($targetDays * DAY) > $termEndTimestamp) {
-            $ret['start'] = date('Y-m-d', $termEndTimestamp - $targetDays * DAY);
-            $ret['end'] = date('Y-m-d', $termEndTimestamp);
+            $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - $targetDays * DAY);
+            $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
             return $ret;
         }
 
         //$targetDays前から本日まで
-        $ret['start'] = date('Y-m-d', $targetStartTimestamp);
-        $ret['end'] = date('Y-m-d', $targetEndTimestamp);
+        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp);
+        $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
         return $ret;
     }
 
