@@ -463,7 +463,7 @@ class KeyResultService extends AppService
             }
 
             // ダッシュボードのKRキャッシュ削除
-            $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+            $this->removeGoalMembersCacheInDashboard($goalId, false);
 
             // トランザクション完了
             $KeyResult->commit();
