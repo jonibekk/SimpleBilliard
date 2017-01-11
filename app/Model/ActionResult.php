@@ -693,7 +693,7 @@ class ActionResult extends AppModel
             'order'      => 'created desc'
         ];
 
-        $res = $this->find('first', $option);
+        $res = $this->find('first', $options);
         return $res ?? null;
     }
 

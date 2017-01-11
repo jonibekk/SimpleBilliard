@@ -581,7 +581,7 @@ class KeyResultTest extends GoalousTestCase
      */
     function testFindInDashboardBoth() {
         $this->setDefault();
-        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333',  1], [null, 4], [null, 5], [null, 2]]);
+        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1], [null, 4], [null, 5], [null, 2]]);
         $res = $this->KeyResult->findInDashboard(10);
         $res = Hash::extract($res, '{n}.KeyResult.priority');
         $expected = [1, 2, 3, 5, 4, 2];
@@ -598,6 +598,16 @@ class KeyResultTest extends GoalousTestCase
         $res = $this->KeyResult->findInDashboard(10);
         $expected = [];
         $this->assertEquals($res, $expected);
+    }
+
+    /**
+     * 右カラムKR数取得
+     */
+    function testCountMine() {
+        $this->setDefault();
+        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1]]);
+        $res = $this->KeyResult->countMine();
+        $this->assertEquals($res, 3);
     }
 
     /**
