@@ -760,7 +760,7 @@ class GoalService extends AppService
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
         //$targetDaysが期の日数を超えていたら期の開始日、終了日を返す
-        $termTotalDays = AppUtil::getDiffDays($termStartTimestamp, $termEndTimestamp);
+        $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
         if ($targetDays > $termTotalDays) {
             $ret['start'] = date('Y-m-d', $termStartTimestamp);
             $ret['end'] = date('Y-m-d', $termEndTimestamp);
@@ -783,7 +783,7 @@ class GoalService extends AppService
         }
 
         //$targetDays前から本日まで
-        $ret['start'] = date('Y-m-d', $targetEndTimestamp - $targetDays * DAY);
+        $ret['start'] = date('Y-m-d', $targetStartTimestamp);
         $ret['end'] = date('Y-m-d', $targetEndTimestamp);
         return $ret;
     }
@@ -981,7 +981,7 @@ class GoalService extends AppService
             return [];
         }
 
-        $termTotalDays = AppUtil::getDiffDays($termStartTimestamp, $termEndTimestamp);
+        $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
         //sweetspotの上辺の一日で進む高さ
         $topStep = (float)($maxTop / $termTotalDays);
         //sweetspotの下辺の一日で進む高さ
@@ -994,12 +994,12 @@ class GoalService extends AppService
         ];
 
         //期の開始日からの日数を算出し、その日数分開始値を進める
-        $daysFromTermStart = AppUtil::getDiffDays($termStartTimestamp, $startTimestamp);
+        $daysFromTermStart = AppUtil::diffDays($termStartTimestamp, $startTimestamp);
         $top = (float)$daysFromTermStart * $topStep;
         $bottom = (float)$daysFromTermStart * $bottomStep;
 
         //一日ずつ値を格納
-        $graphTotalDays = AppUtil::getDiffDays($startTimestamp, $endTimestamp);
+        $graphTotalDays = AppUtil::diffDays($startTimestamp, $endTimestamp);
         for ($i = 1; $i <= $graphTotalDays; $i++) {
             $sweetSpot['top'][] = round($top, 2);
             $sweetSpot['bottom'][] = round($bottom, 2);

@@ -77,7 +77,7 @@ class AppUtil
      *
      * @return int
      */
-    static function getDiffDays(int $baseTime, int $targetTime): int
+    static function diffDays(int $baseTime, int $targetTime): int
     {
         return ceil(($targetTime - $baseTime) / DAY);
     }

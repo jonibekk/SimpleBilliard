@@ -289,42 +289,42 @@ class EvaluateTerm extends AppModel
     }
 
     /**
-     * @param bool|null $utc
+     * @param bool $utcMidnight
      *
      * @return array
      */
-    public function getCurrentTermData(?bool $utc = false): array
+    public function getCurrentTermData(bool $utcMidnight = false): array
     {
         $term = $this->getTermData(self::TYPE_CURRENT);
-        if (!$utc) {
+        if (!$utcMidnight) {
             return $term;
         }
         return $this->changeToUtc($term);
     }
 
     /**
-     * @param bool|null $utc
+     * @param bool $utcMidnight
      *
      * @return array
      */
-    public function getNextTermData(?bool $utc = false): array
+    public function getNextTermData(bool $utcMidnight = false): array
     {
         $term = $this->getTermData(self::TYPE_NEXT);
-        if (!$utc) {
+        if (!$utcMidnight) {
             return $term;
         }
         return $this->changeToUtc($term);
     }
 
     /**
-     * @param bool|null $utc
+     * @param bool $utcMidnight
      *
      * @return array
      */
-    public function getPreviousTermData(?bool $utc = false): array
+    public function getPreviousTermData(bool $utcMidnight = false): array
     {
         $term = $this->getTermData(self::TYPE_PREVIOUS);
-        if (!$utc) {
+        if (!$utcMidnight) {
             return $term;
         }
         return $this->changeToUtc($term);
