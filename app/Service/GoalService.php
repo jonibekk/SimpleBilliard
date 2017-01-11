@@ -735,52 +735,56 @@ class GoalService extends AppService
      * - グラフ開始日が期の開始日より前になる場合はグラフ開始日は期の開始日と同一となる
      * - グラフ開始日が期の終了日-$targetDays日以内の場合は、グラフ終了日は期の終了日と同一となる
      *
-     * @param int $targetEndTime
+     * @param int $targetEndTimestamp
      * @param int $targetDays
      * @param int $bufferDays
      *
      * @return array ['start'=>'','end'=>'']
      */
-    function getGraphRange(int $targetEndTime, int $targetDays = self::GRAPH_TARGET_DAYS, int $bufferDays = 0): array
-    {
-        $targetStartTime = $targetEndTime - $targetDays * DAY;
-
+    function getGraphRange(
+        int $targetEndTimestamp,
+        int $targetDays = self::GRAPH_TARGET_DAYS,
+        int $bufferDays = 0
+    ): array {
+        //initialize variables
+        $targetStartTimestamp = $targetEndTimestamp - $targetDays * DAY;
         $ret = [
             'start' => "",
             'end'   => "",
         ];
+
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTime = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTime = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
         //$targetDaysが期の日数を超えていたら期の開始日、終了日を返す
-        $termTotalDays = AppUtil::getDiffDays($termStartTime, $termEndTime);
+        $termTotalDays = AppUtil::getDiffDays($termStartTimestamp, $termEndTimestamp);
         if ($targetDays > $termTotalDays) {
-            $ret['start'] = date('Y-m-d', $termStartTime);
-            $ret['end'] = date('Y-m-d', $termEndTime);
+            $ret['start'] = date('Y-m-d', $termStartTimestamp);
+            $ret['end'] = date('Y-m-d', $termEndTimestamp);
             return $ret;
         }
 
         //グラフの開始日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
-        if ($targetStartTime < $termStartTime) {
-            $ret['start'] = date('Y-m-d', $termStartTime);
-            $ret['end'] = date('Y-m-d', $termStartTime + $targetDays * DAY);
+        if ($targetStartTimestamp < $termStartTimestamp) {
+            $ret['start'] = date('Y-m-d', $termStartTimestamp);
+            $ret['end'] = date('Y-m-d', $termStartTimestamp + $targetDays * DAY);
             return $ret;
         }
 
         //指定された終了日が期の終了日に近づいたら、グラフ終了日は期の終了日をセット
         //「期の終了日に近づいた」の定義: 指定された終了日に指定日数を加算したものが期の終了日を超えた場合
-        if ($targetEndTime + ($targetDays * DAY) > $termEndTime) {
-            $ret['start'] = date('Y-m-d', $termEndTime - $targetDays * DAY);
-            $ret['end'] = date('Y-m-d', $termEndTime);
+        if ($targetEndTimestamp + ($targetDays * DAY) > $termEndTimestamp) {
+            $ret['start'] = date('Y-m-d', $termEndTimestamp - $targetDays * DAY);
+            $ret['end'] = date('Y-m-d', $termEndTimestamp);
             return $ret;
         }
 
         //$targetDays前から本日まで
-        $ret['start'] = date('Y-m-d', $targetEndTime - $targetDays * DAY);
-        $ret['end'] = date('Y-m-d', $targetEndTime);
+        $ret['start'] = date('Y-m-d', $targetEndTimestamp - $targetDays * DAY);
+        $ret['end'] = date('Y-m-d', $targetEndTimestamp);
         return $ret;
     }
 
@@ -791,14 +795,14 @@ class GoalService extends AppService
      * - 指定された終了日が期の終了日に近かった場合は、bufferは減少する
      * - それ以外の場合は、$maxBufferDaysを返す
      *
-     * @param int $targetEndTime
+     * @param int $targetEndTimestamp
      * @param int $targetDays
      * @param int $maxBufferDays
      *
      * @return int
      */
     function getBufferDays(
-        int $targetEndTime,
+        int $targetEndTimestamp,
         int $targetDays = self::GRAPH_TARGET_DAYS,
         int $maxBufferDays = self::GRAPH_MAX_BUFFER_DAYS
     ): int {
@@ -851,12 +855,12 @@ class GoalService extends AppService
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTime = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTime = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
-        $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartTime, $termEndTime);
+        $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartTimestamp, $termEndTimestamp);
 
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
@@ -886,15 +890,15 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTime = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTime = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
         //キャッシュに保存されるデータ
         $progressLogs = $this->getProgressFromCache($startDate, $endDate);
         if ($progressLogs === false) {
             ///ログDBから自分の各ゴールの進捗データ取得
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
-            $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartTime, $termEndTime);
+            $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartTimestamp, $termEndTimestamp);
             /** @var GoalProgressDailyLog $GoalProgressDailyLog */
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
             $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($myGoalPriorities));
@@ -947,8 +951,7 @@ class GoalService extends AppService
                 $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
             }
         }
-        $sumProgresses = array_sum($progresses);
-        $ret = round($sumProgresses, 2);
+        $ret = round(array_sum($progresses), 2);
         return $ret;
     }
 
@@ -965,20 +968,20 @@ class GoalService extends AppService
      */
     function getSweetSpot(string $startDate, string $endDate, int $maxTop = 100, int $minTop = 60): array
     {
-        $startTime = strtotime($startDate);
-        $endTime = strtotime($endDate);
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
 
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTime = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTime = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
         //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
-        if ($startTime < $termStartTime || $endTime > $termEndTime) {
+        if ($startTimestamp < $termStartTimestamp || $endTimestamp > $termEndTimestamp) {
             return [];
         }
 
-        $termTotalDays = AppUtil::getDiffDays($termStartTime, $termEndTime);
+        $termTotalDays = AppUtil::getDiffDays($termStartTimestamp, $termEndTimestamp);
         //sweetspotの上辺の一日で進む高さ
         $topStep = (float)($maxTop / $termTotalDays);
         //sweetspotの下辺の一日で進む高さ
@@ -991,12 +994,12 @@ class GoalService extends AppService
         ];
 
         //期の開始日からの日数を算出し、その日数分開始値を進める
-        $daysFromTermStart = AppUtil::getDiffDays($termStartTime, $startTime);
+        $daysFromTermStart = AppUtil::getDiffDays($termStartTimestamp, $startTimestamp);
         $top = (float)$daysFromTermStart * $topStep;
         $bottom = (float)$daysFromTermStart * $bottomStep;
 
         //一日ずつ値を格納
-        $graphTotalDays = AppUtil::getDiffDays($startTime, $endTime);
+        $graphTotalDays = AppUtil::getDiffDays($startTimestamp, $endTimestamp);
         for ($i = 1; $i <= $graphTotalDays; $i++) {
             $sweetSpot['top'][] = round($top, 2);
             $sweetSpot['bottom'][] = round($bottom, 2);
@@ -1011,16 +1014,16 @@ class GoalService extends AppService
     /**
      * 集計済みゴール進捗をキャッシュから取得
      *
-     * @param string $start Y-m-d
-     * @param string $end   Y-m-d
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
      *
      * @return mixed
      */
-    function getProgressFromCache(string $start, string $end)
+    function getProgressFromCache(string $startDate, string $endDate)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$start:end:$end", true),
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true),
             'user_data');
     }
 
@@ -1028,17 +1031,17 @@ class GoalService extends AppService
      * 集計済みゴール進捗をキャッシュに書き出す
      * 生存期間は当日の終わりまで(UTC)
      *
-     * @param array  $data  重要度を掛け合わせたもの
-     * @param string $start Y-m-d
-     * @param string $end   Y-m-d
+     * @param array  $data      重要度を掛け合わせたもの
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
      */
-    function writeProgressToCache(array $data, string $start, string $end): void
+    function writeProgressToCache(array $data, string $startDate, string $endDate): void
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
         Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
-        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$start:end:$end", true), $data,
+        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true), $data,
             'user_data');
     }
 
