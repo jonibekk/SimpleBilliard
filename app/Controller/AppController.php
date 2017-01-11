@@ -234,12 +234,10 @@ class AppController extends BaseController
                 $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
-                $this->_setStartedEvaluation();
                 $this->_setNotifyCnt();
                 $this->_setSetupGuideStatus();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
-                $this->_setGoalsForTopAction();
                 $this->_setBrowserToSession();
             }
             $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
