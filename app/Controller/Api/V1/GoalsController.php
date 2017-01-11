@@ -565,8 +565,12 @@ class GoalsController extends ApiController
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
-        $graphRange = $GoalService->getGraphRange(time());
-        $progressGraph = $GoalService->getAllMyProgressForDrawingGraph($graphRange['start'], $graphRange['end']);
+        $graphRange = $GoalService->getGraphRange(time(), 30, GoalService::GRAPH_MAX_BUFFER_DAYS);
+        $progressGraph = $GoalService->getAllMyProgressForDrawingGraph(
+            $graphRange['start'],
+            $graphRange['end'],
+            GoalService::GRAPH_MAX_BUFFER_DAYS
+        );
 
         // TODO: これはモックです。API実装の際に上書きしましょう。
         $res = [

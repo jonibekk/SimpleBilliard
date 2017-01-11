@@ -49,6 +49,12 @@ class GoalService extends AppService
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
     const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
 
+    /* グラフ設定 */
+    const GRAPH_MAX_BUFFER_DAYS = 10;
+    const GRAPH_TARGET_DAYS = 30;
+    const GRAPH_SWEET_SPOT_MAX_TOP = 100;
+    const GRAPH_SWEET_SPOT_MIN_TOP = 60;
+
     /* ゴールキャッシュ */
     private static $cacheList = [];
 
@@ -731,10 +737,11 @@ class GoalService extends AppService
      *
      * @param int $targetEndTime
      * @param int $targetDays
+     * @param int $bufferDays
      *
      * @return array ['start'=>'','end'=>'']
      */
-    function getGraphRange(int $targetEndTime, int $targetDays = 30): array
+    function getGraphRange(int $targetEndTime, int $targetDays = self::GRAPH_TARGET_DAYS, int $bufferDays = 0): array
     {
         $targetStartTime = $targetEndTime - $targetDays * DAY;
 
@@ -778,6 +785,27 @@ class GoalService extends AppService
     }
 
     /**
+     * TODO: 未実装
+     * バッファの日付を求める
+     * - 指定された終了日が期の開始日に近かった場合は、bufferは0
+     * - 指定された終了日が期の終了日に近かった場合は、bufferは減少する
+     * - それ以外の場合は、$maxBufferDaysを返す
+     *
+     * @param int $targetEndTime
+     * @param int $targetDays
+     * @param int $maxBufferDays
+     *
+     * @return int
+     */
+    function getBufferDays(
+        int $targetEndTime,
+        int $targetDays = self::GRAPH_TARGET_DAYS,
+        int $maxBufferDays = self::GRAPH_MAX_BUFFER_DAYS
+    ): int {
+
+    }
+
+    /**
      * グラフ用のゴール進捗ログデータを取得
      * //日毎に集計済みのゴール進捗ログを取得
      * //当日の進捗を計算
@@ -787,10 +815,11 @@ class GoalService extends AppService
      *
      * @param string $startDate Y-m-d
      * @param string $endDate   Y-m-d
+     * @param int    $bufferDays
      *
      * @return array
      */
-    function getAllMyProgressForDrawingGraph(string $startDate, string $endDate): array
+    function getAllMyProgressForDrawingGraph(string $startDate, string $endDate, int $bufferDays = 0): array
     {
         //日毎に集計済みのゴール進捗ログを取得
         $progressLogs = $this->findSummarizedGoalProgressesFromLog($startDate, $endDate);
