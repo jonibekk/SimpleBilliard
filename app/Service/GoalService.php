@@ -749,8 +749,10 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+        $termStartDate = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $this->log($termStartDate);
+        $this->log($termEndDate);
 
         //$daysが期の日数を超えていたら期の開始日、終了日を返す
         $termTotalDays = round(($termEndDate + 1 - $termStartDate) / DAY);
@@ -829,8 +831,8 @@ class GoalService extends AppService
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+        $termStartDate = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
@@ -865,8 +867,8 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+        $termStartDate = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData(true)['end_date'];
         //キャッシュに保存されるデータ
         $progressLogs = $this->getProgressFromCache($start, $end);
         if ($progressLogs === false) {
@@ -942,8 +944,8 @@ class GoalService extends AppService
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
+        $termStartDate = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
         //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
         if (strtotime($start) < $termStartDate || strtotime($end) > $termEndDate) {
