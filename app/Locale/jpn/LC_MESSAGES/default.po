@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-05 14:52+0900\n"
+"PO-Revision-Date: 2017-01-12 03:46+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1733,6 +1733,12 @@ msgstr "今期より前のゴールのリーダーは変更できません。"
 msgid "You cant't change leader in the goal during the evaluation period."
 msgstr "評価期間中のゴールのリーダーは変更できません。"
 
+msgid "Wrong target days."
+msgstr "指定日数が不正な値です。"
+
+msgid "Graph range is wrong."
+msgstr "グラフの範囲指定が不正です。"
+
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
 
@@ -2788,18 +2794,6 @@ msgstr "ゴール達成のために共有しよう。"
 
 msgid "Make your team better by Goalous."
 msgstr "チーム力を向上させよう。Goalousをさっそく使ってみましょう"
-
-msgid "View detail"
-msgstr "ビジョンを詳しく見る"
-
-msgid "Your goals"
-msgstr "あなたのゴール"
-
-msgid "Create a new goal"
-msgstr "あたらしいゴールをつくる"
-
-msgid "Unevaluated in the previous term"
-msgstr "前期の未評価のあなたのゴール"
 
 msgid "%s members"
 msgstr "%s メンバー"
@@ -4853,3 +4847,15 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
+
+#~ msgid "View detail"
+#~ msgstr "ビジョンを詳しく見る"
+
+#~ msgid "Your goals"
+#~ msgstr "あなたのゴール"
+
+#~ msgid "Create a new goal"
+#~ msgstr "あたらしいゴールをつくる"
+
+#~ msgid "Unevaluated in the previous term"
+#~ msgstr "前期の未評価のあなたのゴール"
