@@ -49,12 +49,6 @@ class GoalService extends AppService
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
     const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
 
-    /* sweetSpotの比率 */
-    const GRAPH_SWEET_SPOT_RATIO = 60;
-
-    /* グラフに描画する日数 */
-    const GRAPH_DAYS = 30;
-
     /* ゴールキャッシュ */
     private static $cacheList = [];
 
@@ -740,7 +734,7 @@ class GoalService extends AppService
      *
      * @return array ['start'=>'','end'=>'']
      */
-    function getGraphRange(int $targetEndTime, int $targetDays = self::GRAPH_DAYS): array
+    function getGraphRange(int $targetEndTime, int $targetDays = 30): array
     {
         $targetStartTime = $targetEndTime - $targetDays * DAY;
 
@@ -933,10 +927,12 @@ class GoalService extends AppService
      *
      * @param string $startDate Y-m-d
      * @param string $endDate   Y-m-d
+     * @param int    $maxTop
+     * @param int    $minTop
      *
-     * @return array　e.g. [top=>[0,10,20,30...],bottom=>[0,10,20,30...]]
+     * @return array 　e.g. [top=>[0,10,20,30...],bottom=>[0,10,20,30...]]
      */
-    function getSweetSpot(string $startDate, string $endDate): array
+    function getSweetSpot(string $startDate, string $endDate, int $maxTop = 100, int $minTop = 60): array
     {
         $startTime = strtotime($startDate);
         $endTime = strtotime($endDate);
@@ -953,9 +949,9 @@ class GoalService extends AppService
 
         $termTotalDays = AppUtil::getDiffDays($termStartTime, $termEndTime);
         //sweetspotの上辺の一日で進む高さ
-        $topStep = (float)(100 / $termTotalDays);
+        $topStep = (float)($maxTop / $termTotalDays);
         //sweetspotの下辺の一日で進む高さ
-        $bottomStep = (float)(self::GRAPH_SWEET_SPOT_RATIO / $termTotalDays);
+        $bottomStep = (float)($minTop / $termTotalDays);
 
         //返り値
         $sweetSpot = [
