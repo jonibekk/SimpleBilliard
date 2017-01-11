@@ -45,7 +45,7 @@ class AppUtil
      *
      * @return string
      */
-    static function formatBigFloat(string $val) : string
+    static function formatBigFloat(string $val): string
     {
         if (!preg_match('/\./', $val)) {
             return $val;
@@ -66,5 +66,19 @@ class AppUtil
         reset($ar);
         list($k) = each($ar);
         return $k !== 0;
+    }
+
+    /**
+     * 日数の差分を求める(小数点以下は切り上げ)
+     * $targetTimeから$baseTimeの差
+     *
+     * @param int $baseTime
+     * @param int $targetTime
+     *
+     * @return int
+     */
+    static function getDiffDays(int $baseTime, int $targetTime): int
+    {
+        return ceil(($targetTime - $baseTime) / DAY);
     }
 }
