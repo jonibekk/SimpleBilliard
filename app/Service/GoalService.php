@@ -270,7 +270,7 @@ class GoalService extends AppService
                 }
 
                 //コーチの認定件数を更新(キャッシュを削除)
-                $coachId = $TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($GoalMember->my_uid);
                 if ($coachId) {
                     Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
