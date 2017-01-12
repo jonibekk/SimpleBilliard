@@ -285,6 +285,17 @@ class EvaluateTermTest extends GoalousTestCase
         $this->assertNotEmpty($this->EvaluateTerm->getCurrentTermData());
     }
 
+    function testGetCurrentTermDataUtcMidnight()
+    {
+        $this->_setDefault();
+        $this->assertEmpty($this->EvaluateTerm->getCurrentTermData());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $utcMidnightTerm = $this->EvaluateTerm->getCurrentTermData(true);
+        $this->assertRegExp('/00:00:00/',date('Y-m-d H:i:s',$utcMidnightTerm['start_date']));
+        $this->assertRegExp('/23:59:59/',date('Y-m-d H:i:s',$utcMidnightTerm['end_date']));
+    }
+
+
     function testGetNextTermData()
     {
         $this->_setDefault();
