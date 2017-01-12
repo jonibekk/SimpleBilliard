@@ -16,9 +16,17 @@ class AppUtil
         return strtotime('+1 day -1 sec', strtotime($endDate)) - $timezone * HOUR;
     }
 
-    static function getDateByTimezone($date, $timezone)
+    /**
+     * timezoneを考慮したtimestampを返す
+     *
+     * @param  str $str
+     * @param  float $timezone
+     *
+     * @return int
+     */
+    static function getTimestampByTimezone(string $dateStr, float $timezone): int
     {
-        return strtotime($date) - $timezone * HOUR;
+        return strtotime($dateStr) - $timezone * HOUR;
     }
 
     /**

@@ -66,7 +66,6 @@ class PostsController extends AppController
         $targetUserId = is_numeric($targetUserId) ? $targetUserId : '';
         $this->set(compact('targetUserId'));
 
-        $this->_setViewValOnRightColumn();
         return $this->render();
     }
 
@@ -336,7 +335,6 @@ class PostsController extends AppController
         }
 
         // 編集フォーム表示
-        $this->_setViewValOnRightColumn();
         $this->set('common_form_type', 'post');
         $this->set('common_form_mode', 'edit');
         $rows = $this->Post->get(1, 1, null, null,
@@ -1049,7 +1047,6 @@ class PostsController extends AppController
     function feed()
     {
         $this->_setCircleCommonVariables();
-        $this->_setViewValOnRightColumn();
 
         try {
             $this->set([
@@ -1079,7 +1076,6 @@ class PostsController extends AppController
     public function attached_file_list()
     {
         $this->_setCircleCommonVariables();
-        $this->_setViewValOnRightColumn();
         $circle_id = Hash::get($this->request->params, "named.circle_id");
         if (!$circle_id) {
             $this->Pnotify->outError(__("Invalid screen transition."));

@@ -212,11 +212,15 @@ define('CACHE_KEY_MY_MEMBER_STATUS', 'my_member_status');
 define('CACHE_KEY_TEAM_ALL_CIRCLE', 'team_all_circle');
 define('CACHE_KEY_TEAM_VISION', 'team_vision');
 define('CACHE_KEY_GROUP_VISION', 'group_vision');
-define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
 define('CACHE_KEY_LABEL', 'label');
 define('CACHE_KEY_EXPERIMENT', 'experiment');
+define('CACHE_KEY_KRS_IN_DASHBOARD', 'krs_in_dashboard');
+define('CACHE_KEY_MY_KR_COUNT', 'my_kr_count');
+define('CACHE_KEY_IS_STARTED_EVALUATION', 'is_started_evaluation');
+define('CACHE_KEY_MY_GOALS_FOR_TOP_ACTION', 'my_goals_for_top_action');
+
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');
 define('REFERER_STATUS_LOGIN', '?st=in');
