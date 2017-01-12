@@ -110,7 +110,6 @@ class EvaluationService extends AppService
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
 
         $cachedData = Cache::read($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
-        $this->log($cachedData);
         if ($cachedData !== false) {
             extract($cachedData);
         } else {
