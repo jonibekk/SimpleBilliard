@@ -220,6 +220,12 @@ class GoalService extends AppService
                     , var_export($updateGoal, true)));
             }
 
+            // 優先度更新
+            $GoalMember->id = $goal['goal_member']['id'];
+            if (!$GoalMember->saveField('priority', $requestData['priority'])) {
+                throw new Exception(sprintf("Failed to update GoalMember priority. goalMemberId:%s priority:%s", $goal['goal_member']['id'], $requestData['priority']));
+            }
+
             // TKR更新
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');
@@ -264,7 +270,7 @@ class GoalService extends AppService
                 }
 
                 //コーチの認定件数を更新(キャッシュを削除)
-                $coachId = $TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($GoalMember->my_uid);
                 if ($coachId) {
                     Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
