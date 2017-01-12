@@ -684,7 +684,7 @@ class ActionResult extends AppModel
      *
      * @return array|null
      */
-    public function getLatestAction(int $krId): ?array
+    public function getLatestAction(int $krId): array
     {
         $options = [
             'conditions' => [
@@ -694,7 +694,7 @@ class ActionResult extends AppModel
         ];
 
         $res = $this->find('first', $options);
-        return $res ?? null;
+        return $res;
     }
 
 }

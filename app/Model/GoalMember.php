@@ -1225,6 +1225,6 @@ class GoalMember extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return $res ?? [];
+        return $res;
     }
 }
