@@ -772,7 +772,7 @@ class GoalService extends AppService
             throw new Exception($validOrErrorMsg);
         }
 
-        //期の開始から日数が浅い場合(以下がその定義)は、グラフ開始日に期の開始日をセット
+        //期の開始から指定グラフ終了日の日数が少ない場合(以下がその定義)は、グラフ開始日に期の開始日をセット
         //期の開始日からグラフ指定終了日までの日数がプロット可能日数の最小を下回る場合
         $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
         $daysMinPlot = $targetDays - $maxBufferDays;
@@ -782,13 +782,15 @@ class GoalService extends AppService
             return $ret;
         }
 
-        //期の終了まで日が迫っている場合(以下がその定義)は、グラフ終了日は期の終了日をセット
-        //期の終了日からバッファ日数を引いた日を指定グラフ終了日が超えた場合
-        $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
-        if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
-            $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
-            $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
-            return $ret;
+        if ($maxBufferDays > 0) {
+            //指定グラフ終了日から期の終了日まで日数が少ない場合(以下がその定義)は、グラフ終了日は期の終了日をセット
+            //指定グラフ終了日が期の終了日からバッファ日数を引いた日を超えた場合
+            $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
+            if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
+                $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
+                $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
+                return $ret;
+            }
         }
 
         //$targetDays前から本日まで(バッファ日数を考慮)
@@ -836,7 +838,7 @@ class GoalService extends AppService
         //指定日数からバッファ日数を引いたものが0以下はありえない
         if ($targetDays - $maxBufferDays <= 0) {
             $this->log(sprintf("%s%s [method:%s] wrong targetDays:%s or maxBufferDays:%s",
-                    __FILE__, __LINE__, __METHOD__, $maxBufferDays)
+                    __FILE__, __LINE__, __METHOD__, $targetDays, $maxBufferDays)
             );
             return __('Wrong target days or buffer days.');
         }
@@ -857,6 +859,34 @@ class GoalService extends AppService
 
         }
 
+        return true;
+    }
+
+    /**
+     * グラフ用ゴール進捗取得時のバリデーション
+     *
+     * @param string $graphStartDate
+     * @param string $graphEndDate
+     * @param string $plotDataEndDate
+     *
+     * @return true|string
+     */
+    function validateGetProgressDrawingGraph(
+        string $graphStartDate,
+        string $graphEndDate,
+        string $plotDataEndDate
+    ) {
+        //不正な範囲指定か判定
+        if ($graphStartDate >= $graphEndDate
+            || $graphStartDate >= $plotDataEndDate
+            || $plotDataEndDate > $graphEndDate
+        ) {
+            $this->log(sprintf("%s%s [method:%s] Graph range is wrong. graphStartDate:%s, graphEndDate:%s, plotDataEndDate:%s",
+                    __FILE__, __LINE__, __METHOD__, $graphStartDate, $graphEndDate, $plotDataEndDate)
+            );
+            return __('Graph range is wrong.');
+
+        }
         return true;
     }
 
@@ -886,16 +916,9 @@ class GoalService extends AppService
     ): array {
         $plotDataEndDate = $plotDataEndDate ?? $graphEndDate;
 
-        //不正な範囲指定か判定
-        if ($graphStartDate >= $graphEndDate
-            || $graphStartDate >= $plotDataEndDate
-            || $plotDataEndDate > $graphEndDate
-        ) {
-            $this->log(sprintf("%s%s [method:%s] Graph range is wrong. graphStartDate:%s, graphEndDate:%s, plotDataEndDate:%s",
-                    __FILE__, __LINE__, __METHOD__, $graphStartDate, $graphEndDate, $plotDataEndDate)
-            );
-            throw new Exception(__('Graph range is wrong.'));
-
+        $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
+        if ($validOrErrorMsg !== true) {
+            throw new Exception($validOrErrorMsg);
         }
 
         //日毎に集計済みのゴール進捗ログを取得
@@ -1061,7 +1084,7 @@ class GoalService extends AppService
         int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
     ): array {
         $startTimestamp = strtotime($startDate);
-        $endTimestamp = strtotime($endDate);
+        $endTimestamp = strtotime($endDate) + DAY - 1;
 
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
@@ -1074,10 +1097,10 @@ class GoalService extends AppService
         }
 
         $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
-        //sweetspotの上辺の一日で進む高さ
-        $topStep = (float)($maxTop / $termTotalDays);
-        //sweetspotの下辺の一日で進む高さ
-        $bottomStep = (float)($maxBottom / $termTotalDays);
+        //sweetspotの上辺の一日で進む高さ(0が含まれるのでその分-1)
+        $topStep = (float)($maxTop / ($termTotalDays - 1));
+        //sweetspotの下辺の一日で進む高さ(0が含まれるのでその分-1)
+        $bottomStep = (float)($maxBottom / ($termTotalDays - 1));
 
         //返り値
         $sweetSpot = [
