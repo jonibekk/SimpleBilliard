@@ -749,7 +749,6 @@ class GoalService extends AppService
         int $maxBufferDays = 0
     ): array {
         //initialize variables
-        $targetStartTimestamp = $targetEndTimestamp - $targetDays * DAY;
         $ret = [
             'graphStartDate'  => null,
             'graphEndDate'    => null,
@@ -762,36 +761,95 @@ class GoalService extends AppService
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
-        //$targetDaysが期の日数を超えていたらエラー
-        $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
-        if ($targetDays > $termTotalDays) {
-            $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
-                    __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
-            );
-            throw new Exception(__('Wrong target days.'));
+        $validOrErrorMsg = $this->graphRangeValidate(
+            $targetEndTimestamp,
+            $targetDays,
+            $maxBufferDays,
+            $termStartTimestamp,
+            $termEndTimestamp
+        );
+        if ($validOrErrorMsg !== true) {
+            throw new Exception($validOrErrorMsg);
         }
 
-        //グラフ開始日にバッファ日数を加算した日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
-        if ($targetStartTimestamp + ($maxBufferDays * DAY) < $termStartTimestamp) {
+        //期の開始から日数が浅い場合(以下がその定義)は、グラフ開始日に期の開始日をセット
+        //期の開始日からグラフ指定終了日までの日数がプロット可能日数の最小を下回る場合
+        $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
+        $daysMinPlot = $targetDays - $maxBufferDays;
+        if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
             $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
-            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + ($targetDays * DAY));
+            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + (($targetDays - 1) * DAY));
             return $ret;
         }
 
-        //指定された終了日が期の終了日に近づいたら、グラフ終了日は期の終了日をセット
-        //「期の終了日に近づいた」の定義: バッファ日数+指定終了日が期の終了日を超える場合
-        if ($targetEndTimestamp + ($maxBufferDays * DAY) > $termEndTimestamp) {
-            $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - ($targetDays * DAY));
+        //期の終了まで日が迫っている場合(以下がその定義)は、グラフ終了日は期の終了日をセット
+        //期の終了日からバッファ日数を引いた日を指定グラフ終了日が超えた場合
+        $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
+        if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
+            $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
             $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
             return $ret;
         }
 
         //$targetDays前から本日まで(バッファ日数を考慮)
+        $targetStartTimestamp = $targetEndTimestamp - (($targetDays - 1) * DAY);
         $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
         $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp + ($maxBufferDays * DAY));
         $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
 
         return $ret;
+    }
+
+    /**
+     * グラフ範囲指定のバリデーション
+     * okならtrue,ngならメッセージを返す
+     *
+     * @param int $targetEndTimestamp
+     * @param int $targetDays
+     * @param int $maxBufferDays
+     * @param int $termStartTimestamp
+     * @param int $termEndTimestamp
+     *
+     * @return true|string
+     */
+    function graphRangeValidate(
+        int $targetEndTimestamp,
+        int $targetDays,
+        int $maxBufferDays,
+        int $termStartTimestamp,
+        int $termEndTimestamp
+    ) {
+        //対象日数が1未満はありえない
+        if ($targetDays < 1) {
+            $this->log(sprintf("%s%s [method:%s] wrong target days. targetDays:%s",
+                    __FILE__, __LINE__, __METHOD__, $targetDays)
+            );
+            return __('Wrong target days.');
+        }
+        //バッファ日数が0未満はありえない
+        if ($maxBufferDays < 0) {
+            $this->log(sprintf("%s%s [method:%s] wrong buffer days. maxBufferDays:%s",
+                    __FILE__, __LINE__, __METHOD__, $maxBufferDays)
+            );
+            return __('Wrong buffer days.');
+        }
+        //指定日数からバッファ日数を引いたものが0以下はありえない
+        if ($targetDays - $maxBufferDays <= 0) {
+            $this->log(sprintf("%s%s [method:%s] wrong targetDays:%s or maxBufferDays:%s",
+                    __FILE__, __LINE__, __METHOD__, $maxBufferDays)
+            );
+            return __('Wrong target days or buffer days.');
+        }
+        //$targetDaysが期の日数を超えていたらエラー
+        $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
+        $this->log($termTotalDays);
+        if ($targetDays > $termTotalDays) {
+            $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
+                    __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
+            );
+            return __('Wrong target days.');
+        }
+        return true;
     }
 
     /**
