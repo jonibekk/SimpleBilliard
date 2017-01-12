@@ -72,15 +72,15 @@ class AppUtil
      * 日数の差分を求める(デフォルトで繰り上げ)
      * $targetTimeから$baseTimeの差
      *
-     * @param int  $baseTime
-     * @param int  $targetTime
+     * @param int  $baseTimestamp
+     * @param int  $targetTimestamp
      * @param bool $roundUp if false, round off
      *
      * @return int
      */
-    static function diffDays(int $baseTime, int $targetTime, bool $roundUp = true): int
+    static function diffDays(int $baseTimestamp, int $targetTimestamp, bool $roundUp = true): int
     {
-        $days = ($targetTime - $baseTime) / DAY;
+        $days = ($targetTimestamp - $baseTimestamp) / DAY;
         if ($roundUp) {
             return ceil($days);
         }
