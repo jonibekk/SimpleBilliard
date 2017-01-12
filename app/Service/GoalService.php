@@ -53,7 +53,7 @@ class GoalService extends AppService
     const GRAPH_MAX_BUFFER_DAYS = 10;
     const GRAPH_TARGET_DAYS = 30;
     const GRAPH_SWEET_SPOT_MAX_TOP = 100;
-    const GRAPH_SWEET_SPOT_MIN_TOP = 60;
+    const GRAPH_SWEET_SPOT_MAX_BOTTOM = 60;
 
     /* ゴールキャッシュ */
     private static $cacheList = [];
@@ -848,6 +848,15 @@ class GoalService extends AppService
             );
             return __('Wrong target days.');
         }
+        //指定グラフ終了日は評価期間内でなければいけない
+        if ($targetEndTimestamp < $termStartTimestamp || $targetEndTimestamp > $termEndTimestamp) {
+            $this->log(sprintf("%s%s [method:%s] target end date(%s) not in evaluate term(%s - %s)",
+                    __FILE__, __LINE__, __METHOD__, $targetEndTimestamp, $termStartTimestamp, $termEndTimestamp)
+            );
+            return __('Target end date should be in evaluate term');
+
+        }
+
         return true;
     }
 
