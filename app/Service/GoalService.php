@@ -191,8 +191,6 @@ class GoalService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalLabel $GoalLabel */
         $GoalLabel = ClassRegistry::init("GoalLabel");
-        /** @var ApprovalHistory $ApprovalHistory */
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMember $GoalMember */
@@ -492,8 +490,6 @@ class GoalService extends AppService
      */
     function processGoals($goals)
     {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         /** @var GoalMemberService $GoalMemberService */
