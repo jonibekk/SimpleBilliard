@@ -481,9 +481,11 @@ class KeyResultService extends AppService
      * トップページ右カラムに初期表示するKR一覧を取得
      * - キャッシュが存在する場合はキャッシュを返す
      *
+     * @param int $limit
+     *
      * @return array
      */
-    function findInDashboardFirstView($limit): array
+    function findInDashboardFirstView(int $limit): array
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
@@ -556,7 +558,7 @@ class KeyResultService extends AppService
      * 全ゴールメンバーのダッシュボードのキャッシュを削除
      * - $withCountがtrueの場合はKRカウントキャッシュも削除する
      *
-     * @param int　$goalId
+     * @param      int 　$goalId
      * @param bool $withCount
      */
     function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true): void
@@ -565,7 +567,7 @@ class KeyResultService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
 
         $memberUserids = $GoalMember->findAllMemberUserIds($goalId);
-        foreach($memberUserids as $userId) {
+        foreach ($memberUserids as $userId) {
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true,
                 $userId), 'user_data');
             if ($withCount) {
