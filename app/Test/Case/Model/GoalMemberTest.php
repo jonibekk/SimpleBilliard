@@ -449,7 +449,7 @@ class GoalMemberTest extends GoalousTestCase
             (int)1 => '3',
             (int)7 => '3'
         ];
-        $actual = $this->GoalMember->findMyGoalPriorities(0, 100000000000000000);
+        $actual = $this->GoalMember->findGoalPriorities(0, 100000000000000000);
         $this->assertEquals($expected, $actual);
     }
 

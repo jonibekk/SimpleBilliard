@@ -571,7 +571,8 @@ class GoalsController extends ApiController
                 GoalService::GRAPH_TARGET_DAYS,
                 GoalService::GRAPH_MAX_BUFFER_DAYS);
 
-            $progressGraph = $GoalService->getAllMyProgressForDrawingGraph(
+            $progressGraph = $GoalService->getAllProgressForDrawingGraph(
+                $this->my_uid,
                 $graphRange['graphStartDate'],
                 $graphRange['graphEndDate'],
                 $graphRange['plotDataEndDate'],

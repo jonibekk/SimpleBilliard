@@ -256,12 +256,13 @@ class GoalMember extends AppModel
      * 自分のゴールのプライオリティを返す
      * 返り値のフォーマットkey:goal_id,value:priorityの配列
      *
+     * @param int $userId
      * @param int $startTimestamp
      * @param int $endTimestamp
      *
      * @return array
      */
-    function findMyGoalPriorities(int $startTimestamp, int $endTimestamp): array
+    function findGoalPriorities(int $userId, int $startTimestamp, int $endTimestamp): array
     {
         $options = [
             'joins'      => [
@@ -277,7 +278,7 @@ class GoalMember extends AppModel
                 ]
             ],
             'conditions' => [
-                'GoalMember.user_id' => $this->my_uid,
+                'GoalMember.user_id' => $userId,
                 'GoalMember.team_id' => $this->current_team_id,
             ],
             'fields'     => [

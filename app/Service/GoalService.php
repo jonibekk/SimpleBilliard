@@ -868,6 +868,7 @@ class GoalService extends AppService
      * //ログデータと当日の進捗をマージ
      * //グラフ用データに整形
      *
+     * @param int         $userId
      * @param string      $graphStartDate  Y-m-d形式のグラフ描画開始日
      * @param string      $graphEndDate    Y-m-d形式のグラフ描画終了日
      * @param string|null $plotDataEndDate Y-m-d形式のデータプロット終了日
@@ -876,7 +877,8 @@ class GoalService extends AppService
      * @return array
      * @throws Exception
      */
-    function getAllMyProgressForDrawingGraph(
+    function getAllProgressForDrawingGraph(
+        int $userId,
         string $graphStartDate,
         string $graphEndDate,
         ?string $plotDataEndDate = null,
@@ -897,11 +899,11 @@ class GoalService extends AppService
         }
 
         //日毎に集計済みのゴール進捗ログを取得
-        $progressLogs = $this->findSummarizedGoalProgressesFromLog($graphStartDate, $plotDataEndDate);
+        $progressLogs = $this->findSummarizedGoalProgressesFromLog($userId, $plotDataEndDate, $graphStartDate);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
         if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
-            $latestTotalGoalProgress = $this->findLatestTotalGoalProgress();
+            $latestTotalGoalProgress = $this->findLatestSummarizedGoalProgress($userId);
             if ($latestTotalGoalProgress <> 0) {
                 array_push($progressLogs, $latestTotalGoalProgress);
             }
@@ -928,12 +930,14 @@ class GoalService extends AppService
     }
 
     /**
-     * 最新のトータルのゴール進捗を取得
+     * 最新のゴール進捗の合計を取得
      * - ゴールの重要度を掛けて合計
+     *
+     * @param int $userId
      *
      * @return float
      */
-    function findLatestTotalGoalProgress(): float
+    function findLatestSummarizedGoalProgress(int $userId): float
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
@@ -942,17 +946,17 @@ class GoalService extends AppService
 
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
-        $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartTimestamp, $termEndTimestamp);
+        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
 
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
-        $myGoalIds = array_keys($myGoalPriorities);
-        $goals = $Goal->getGoalAndKr($myGoalIds);
+        $goalIds = array_keys($goalPriorities);
+        $goals = $Goal->getGoalAndKr($goalIds, $userId);
         foreach ($goals as $key => $goal) {
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
         }
         $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
-        $ret = $this->sumGoalProgress($goalProgresses, $myGoalPriorities);
+        $ret = $this->sumGoalProgress($goalProgresses, $goalPriorities);
         return $ret;
     }
 
@@ -963,12 +967,13 @@ class GoalService extends AppService
      * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
      * ///ここまでのデータをキャッシュ
      *
-     * @param string $startDate
+     * @param int    $userId
      * @param string $endDate
+     * @param string $startDate
      *
      * @return array
      */
-    function findSummarizedGoalProgressesFromLog(string $startDate, string $endDate): array
+    function findSummarizedGoalProgressesFromLog(int $userId, string $endDate, string $startDate): array
     {
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
@@ -976,12 +981,12 @@ class GoalService extends AppService
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
         //キャッシュに保存されるデータ
-        $progressLogs = $this->getProgressFromCache($startDate, $endDate);
+        $progressLogs = $this->getProgressFromCache($userId, $startDate, $endDate);
         if ($progressLogs === false) {
             ///ログDBから自分の各ゴールの進捗データ取得
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
-            $myGoalPriorities = $GoalMember->findMyGoalPriorities($termStartTimestamp, $termEndTimestamp);
+            $myGoalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
             /** @var GoalProgressDailyLog $GoalProgressDailyLog */
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
             $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($myGoalPriorities));
@@ -989,7 +994,7 @@ class GoalService extends AppService
             ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
             $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $myGoalPriorities);
             //キャッシュに保存
-            $this->writeProgressToCache($progressLogs, $startDate, $endDate);
+            $this->writeProgressToCache($userId, $startDate, $endDate, $progressLogs);
         }
         return $progressLogs;
     }
@@ -1045,12 +1050,16 @@ class GoalService extends AppService
      * @param string $startDate Y-m-d
      * @param string $endDate   Y-m-d
      * @param int    $maxTop
-     * @param int    $minTop
+     * @param int    $maxBottom
      *
      * @return array 　e.g. [top=>[0,10,20,30...],bottom=>[0,10,20,30...]]
      */
-    function getSweetSpot(string $startDate, string $endDate, int $maxTop = 100, int $minTop = 60): array
-    {
+    function getSweetSpot(
+        string $startDate,
+        string $endDate,
+        int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
+        int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
+    ): array {
         $startTimestamp = strtotime($startDate);
         $endTimestamp = strtotime($endDate);
 
@@ -1068,7 +1077,7 @@ class GoalService extends AppService
         //sweetspotの上辺の一日で進む高さ
         $topStep = (float)($maxTop / $termTotalDays);
         //sweetspotの下辺の一日で進む高さ
-        $bottomStep = (float)($minTop / $termTotalDays);
+        $bottomStep = (float)($maxBottom / $termTotalDays);
 
         //返り値
         $sweetSpot = [
@@ -1097,16 +1106,18 @@ class GoalService extends AppService
     /**
      * 集計済みゴール進捗をキャッシュから取得
      *
+     * @param int    $userId
      * @param string $startDate Y-m-d
      * @param string $endDate   Y-m-d
      *
      * @return mixed
      */
-    function getProgressFromCache(string $startDate, string $endDate)
+    function getProgressFromCache(int $userId, string $startDate, string $endDate)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true),
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true,
+            $userId),
             'user_data');
     }
 
@@ -1114,17 +1125,19 @@ class GoalService extends AppService
      * 集計済みゴール進捗をキャッシュに書き出す
      * 生存期間は当日の終わりまで(UTC)
      *
-     * @param array  $data      重要度を掛け合わせたもの
+     * @param int    $userId
      * @param string $startDate Y-m-d
      * @param string $endDate   Y-m-d
+     * @param array  $data      重要度を掛け合わせたもの
      */
-    function writeProgressToCache(array $data, string $startDate, string $endDate): void
+    function writeProgressToCache(int $userId, string $startDate, string $endDate, array $data): void
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
         Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
-        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true), $data,
+        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true, $userId),
+            $data,
             'user_data');
     }
 
