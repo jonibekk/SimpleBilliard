@@ -274,9 +274,8 @@ class GoalService extends AppService
                 }
             }
 
-            // Redisキャッシュ削除
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            // ダッシュボードのKRキャッシュ削除
+            $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
 
             // トランザクション完了
             $Goal->commit();
@@ -306,6 +305,8 @@ class GoalService extends AppService
         $Post = ClassRegistry::init("Post");
         /** @var GoalLabel $GoalLabel */
         $GoalLabel = ClassRegistry::init("GoalLabel");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
         try {
             // トランザクション開始
@@ -351,8 +352,8 @@ class GoalService extends AppService
                     , var_export($data, true)));
             }
 
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            // ダッシュボードのKRキャッシュ削除
+            $KeyResultService->removeGoalMembersCacheInDashboard($newGoalId);
 
             $Goal->commit();
         } catch (Exception $e) {
@@ -722,7 +723,6 @@ class GoalService extends AppService
         }
         Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
-
     }
 
     /**
