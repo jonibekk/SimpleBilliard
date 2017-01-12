@@ -842,7 +842,6 @@ class GoalService extends AppService
         }
         //$targetDaysが期の日数を超えていたらエラー
         $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
-        $this->log($termTotalDays);
         if ($targetDays > $termTotalDays) {
             $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
                     __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
