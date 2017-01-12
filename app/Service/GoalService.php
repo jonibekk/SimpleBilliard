@@ -922,7 +922,7 @@ class GoalService extends AppService
         }
 
         //日毎に集計済みのゴール進捗ログを取得
-        $progressLogs = $this->findSummarizedGoalProgressesFromLog($userId, $plotDataEndDate, $graphStartDate);
+        $progressLogs = $this->findSummarizedGoalProgressesFromLog($userId, $graphStartDate, $plotDataEndDate);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
         if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
@@ -991,12 +991,12 @@ class GoalService extends AppService
      * ///ここまでのデータをキャッシュ
      *
      * @param int    $userId
-     * @param string $endDate
      * @param string $startDate
+     * @param string $endDate
      *
      * @return array
      */
-    function findSummarizedGoalProgressesFromLog(int $userId, string $endDate, string $startDate): array
+    function findSummarizedGoalProgressesFromLog(int $userId, string $startDate, string $endDate): array
     {
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
@@ -1139,9 +1139,8 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true,
-            $userId),
-            'user_data');
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate",
+            true, $userId), 'user_data');
     }
 
     /**
@@ -1159,9 +1158,8 @@ class GoalService extends AppService
         $Goal = ClassRegistry::init("Goal");
         $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
         Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
-        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate", true, $userId),
-            $data,
-            'user_data');
+        Cache::write($Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate",
+            true, $userId), $data, 'user_data');
     }
 
 }
