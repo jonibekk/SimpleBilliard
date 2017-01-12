@@ -20,7 +20,6 @@ export default class KrColumn extends React.Component {
   fetchInitData() {
     return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
       .then((response) => {
-        console.log(response)
         const data = response.data.data
         this.setState({ progress_graph: data.progress_graph })
         this.setState({ krs: data.krs })

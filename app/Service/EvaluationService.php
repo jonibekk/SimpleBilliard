@@ -100,7 +100,9 @@ class EvaluationService extends AppService
     /**
      * 評価期間中かどうか判定
      * - 頻繁に確認されるフラグなので結果をキャッシュする
-     * @return boolean [description]
+     * - キャッシュの保持期限は期の終わり
+     *
+     * @return boolean
      */
     function isStarted()
     {
@@ -114,7 +116,10 @@ class EvaluationService extends AppService
             $currentTermId = $EvaluateTerm->getCurrentTermId();
             $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
 
-            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
+            // 結果をキャッシュに保存
+            $currentTerm = $EvaluateTerm->getCurrentTermData();
+            $duration = $currentTerm['end_date'] - REQUEST_TIMESTAMP;
+            Cache::set('duration', $duration, 'user_data');
             Cache::write($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, compact('isStartedEvaluation'), true),
                 'user_data');
         }
