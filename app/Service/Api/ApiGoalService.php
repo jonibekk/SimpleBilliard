@@ -216,6 +216,8 @@ class ApiGoalService extends ApiService
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
         $krs = $KeyResultService->findInDashboardFirstView($limit + 1);
+        $krs = $this->formatResponseData($krs);
+        $krs = $KeyResultService->processKeyResults($krs, 'key_result');
 
         // ページング情報セット
         if (count($krs) > $limit) {

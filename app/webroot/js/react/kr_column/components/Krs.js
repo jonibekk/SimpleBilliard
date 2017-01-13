@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import InfiniteScroll from "redux-infinite-scroll";
 
 export default class Krs extends React.Component {
   constructor(props) {
@@ -18,11 +19,11 @@ export default class Krs extends React.Component {
           </div>
         </div>
         <ul className="dashboard-krs-columns">
-        { [1, 2, 3, 4, 5].map((index) => {
+        { this.props.krs.map((kr) => {
           return (
             <li className="dashboard-krs-column">
               <p className="font_verydark kr-name">
-                会社アカウントでGithubにOSSを一つ公開して、スターを50個もらう
+                { kr.key_result.name }
               </p>
               <div className="krProgress"
                    data-current_value="$60"
@@ -31,14 +32,14 @@ export default class Krs extends React.Component {
               >
                   <div className="krProgress-bar">
                     <span className="krProgress-text">
-                         $20K / $100K
+                         { kr.key_result.current_value_with_unit} / { kr.key_result.target_value_with_unit}
                     </span>
                     <div className="krProgress-barCurrent is-incomplete mod-rate60"></div>
                   </div>
               </div>
               <ul className="dashboard-krs-column-subinfos">
                 <li className="action-count">
-                  <i className="fa fa-check-circle"></i><span>182</span>
+                  <i className="fa fa-check-circle"></i><span className="action-count-num">{ kr.key_result.action_result_count }</span>
                 </li>
                 <li className="action-avators">
                   <a href="">

@@ -119,7 +119,11 @@ class KeyResultService extends AppService
             $tailUnit = $unitName;
         }
 
-        $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
+        $keyResult['start_value_with_unit'] = $headUnit . $keyResult['start_value'] . $tailUnit;
+        $keyResult['target_value_with_unit'] = $headUnit . $keyResult['target_value'] . $tailUnit;
+        $keyResult['current_value_with_unit'] = $headUnit . $keyResult['current_value'] . $tailUnit;
+
+        $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
 
         return $keyResult;
     }
