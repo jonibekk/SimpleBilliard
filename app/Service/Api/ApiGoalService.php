@@ -219,6 +219,12 @@ class ApiGoalService extends ApiService
         // Paging目的で1つ多くデータを取得する
         $krs = $KeyResultService->findInDashboardFirstView($limit + 1);
 
+        //KRが一件もない場合はdataキーを空で返す
+        if (empty($krs)) {
+            $ret['data'] = [];
+            return $ret;
+        }
+
         // ページング情報セット
         if (count($krs) > $limit) {
             $ret['paging'] = $ApiKeyResultService->generatePagingInDashboard($limit);
