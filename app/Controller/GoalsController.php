@@ -1337,6 +1337,7 @@ class GoalsController extends AppController
         }
 
         // 編集フォーム表示
+        $this->_setGoalsForTopAction();
         $row = $this->Goal->ActionResult->getWithAttachedFiles($ar_id);
         $this->request->data = $row;
         $this->set('common_form_type', 'action');

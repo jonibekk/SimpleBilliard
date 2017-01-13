@@ -2,95 +2,70 @@
  * goal_column.less
  */
 
-.goals-column-function-icon {
-  // width: 40px;
-  // height: 40px;
-  // line-height: 40px;
-  // text-align: center;
-  // border-radius: 4px;
-  // border: 1px solid @lightGray;
-  // color: @lightGray;
-  &:hover,
-  &:target,
-  &:active,
-  &:focus {
+ .right-side-container-wrap {
+   position: relative;
+ }
+
+.dashboard-krs {
+  padding: 10px;
+
+  &-header {
+    border-bottom: 1px solid @subColor4;
+    padding: 0 0 5px;
+    display: flex;
+
+    .title {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .goal {
+      margin-left: auto;
+    }
   }
-}
 
-.click-follow-goals-read-more {
-  color: @basicGray;
-}
+  &-column {
+    padding: 10px 0;
+    border-bottom: 1px solid @subColor4;
 
-.click-collabo-goals-read-more {
-  color: @basicGray;
-}
+    .kr-name {
+      font-weight: 700;
+    }
 
-.click-my-goals-read-more {
-  color: @basicGray;
-}
+    .krProgress {
+      line-height: 14px;
+      font-weight: 500;
+    }
 
-
-
-.right-column-vision-title {
-  .line-number-limit-1(@baseGray);
-}
-
-.right-column-vision-objective {
-  .line-number-limit-vision(@whiteColor);
-  max-height: 88px;
-  overflow: hidden;
-}
-
-/*goals-column-teamvision*/
-.goals-column-teamvision-panel-base{
-  background: @whiteColor;
-  clear: both;
-  margin-bottom: 30px;
-  padding: 8px 4px;
-  position: relative;
-  border-radius: 8px;
-  .shadow-default;
-}
-
-.feed-img-teamvision{
-  height: 60px;
-  width: 60px;
-  margin: 5px 10px 10px;
-  border-radius: 4px;
-  border: 1px solid #808080;
-}
-
-.goals-column-teamvision-name {
-  display: block;
-  height: 40px;
-  overflow: hidden;
-}
-
-.vision-more-read {
-  display: block;
-  text-align: left;;
-  margin: 6px 0;
-}
-
-
-.js-right-side-fixed-onbottom {
-  width: 324px;
-  @media screen and (min-width: 1024px){
-    width: 336px;
+    &-subinfos {
+      display: flex;
+      .action-count {
+        color: @veryDark;
+        font-weight: 700;
+      }
+      .action-avators {
+        margin-left: 10px;
+        img {
+          border-radius: 50%;
+          width: 18px;
+          height: 18px;
+          margin: 0 0 0 2px;
+        }
+        .more-counts {
+          font-size: 16px;
+          width: 18px;
+          height: 18px;
+          text-align: center;
+          position: absolute;
+          left: 0;
+          top: 0;
+          background: rgba(180,180,180,.7);
+          border-radius: 50%;
+        }
+      }
+      .action-message {
+        margin-left: 10px;
+      }
+    }
   }
-  position: fixed;
-  bottom: 92px;
-}
-
-.js-right-side-fixed-ontop {
-  width: 324px;
-  @media screen and (min-width: 1024px){
-    width: 336px;
-  }
-  position: fixed;
-  top: 60px;
-}
-
-.right-side-container-wrap {
-  position: relative;
 }
