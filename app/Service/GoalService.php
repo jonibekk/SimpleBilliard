@@ -757,7 +757,7 @@ class GoalService extends AppService
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
-        $validOrErrorMsg = $this->graphRangeValidate(
+        $validOrErrorMsg = $this->validateGraphRange(
             $targetEndTimestamp,
             $targetDays,
             $maxBufferDays,
@@ -810,7 +810,7 @@ class GoalService extends AppService
      *
      * @return true|string
      */
-    function graphRangeValidate(
+    function validateGraphRange(
         int $targetEndTimestamp,
         int $targetDays,
         int $maxBufferDays,
