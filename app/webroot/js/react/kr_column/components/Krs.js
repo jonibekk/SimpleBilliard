@@ -1,6 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import InfiniteScroll from "redux-infinite-scroll";
 
 export default class Krs extends React.Component {
   constructor(props) {
@@ -8,10 +6,14 @@ export default class Krs extends React.Component {
   }
 
   render() {
+    const {krs, kr_count} = this.props
+    if (kr_count == null) {
+      return null
+    }
     return (
       <div className="panel panel-default dashboard-krs">
         <div className="dashboard-krs-header">
-          <div className="title">KRs ({ this.props.kr_count })</div>
+          <div className="title">KRs ({ kr_count })</div>
           <div className="dropdown-toggle goal" data-toggle="dropdown" role="button"
              aria-expanded="false">
             <span>All</span>
@@ -19,7 +21,7 @@ export default class Krs extends React.Component {
           </div>
         </div>
         <ul className="dashboard-krs-columns">
-        { this.props.krs.map((kr) => {
+        { krs.map((kr) => {
           return (
             <li className="dashboard-krs-column">
               <p className="font_verydark kr-name">
@@ -42,18 +44,19 @@ export default class Krs extends React.Component {
                   <i className="fa fa-check-circle"></i><span className="action-count-num">{ kr.key_result.action_result_count }</span>
                 </li>
                 <li className="action-avators">
-                  <a href="">
-                    <img className="lazy" src="/upload/users/1/aa648722a414f4e41607343f945ae4d1_medium.jpeg" />
-                  </a>
-                  <a href="">
-                    <img className="lazy" src="/upload/users/2/cc53004d3fc5af955dc2ba428c022e3e_medium.png" />
-                  </a>
-                  <a href="">
-                    <img className="lazy" src="/upload/attached_files/26/32a64f88923af1ce65cff6f1d16a82cd_small.jpeg" />
-                  </a>
+                  { kr.action_results.map((action) => {
+                    return (
+                      <div>
+                        <a href="">
+                          <img className="lazy" src={ action.user.small_img_url } />
+                        </a>
+                      </div>
+                    )
+                  })}
                 </li>
                 <li>
-                  <p className="action-message"><span className="action-count">333</span> <span>members in 7 days !</span></p>
+                  <p className="action-message"
+                     dangerouslySetInnerHTML={{__html: kr.action_message}}></p>
                 </li>
               </ul>
             </li>
@@ -68,4 +71,4 @@ export default class Krs extends React.Component {
 Krs.propTypes = {
   krs: React.PropTypes.array
 };
-Krs.defaultProps = { krs: [] };
+Krs.defaultProps = { krs: [], kr_count: null };

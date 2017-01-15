@@ -482,30 +482,6 @@ class KeyResultService extends AppService
     }
 
     /**
-     * トップページ右カラムに初期表示するKR一覧を取得
-     * - キャッシュが存在する場合はキャッシュを返す
-     *
-     * @return array
-     */
-    function findInDashboardFirstView($limit): array
-    {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
-
-        // キャッシュ検索
-        $resKrs = [];
-        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
-        if ($cachedKrs !== false) {
-            $resKrs = $cachedKrs;
-        } else {
-            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
-            $resKrs = $KeyResult->findInDashboard($limit);
-            Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
-        }
-        return $resKrs;
-    }
-
-    /**
      * トップページ右カラムに初期表示するKR数を取得
      * - キャッシュが存在する場合はキャッシュを返す
      *
@@ -577,5 +553,26 @@ class KeyResultService extends AppService
                     $userId), 'user_data');
             }
         }
+    }
+
+    function processInDashboard($krs)
+    {
+        foreach($krs as $i => $kr) {
+            $actionCount = count($kr['action_results']);
+            $latestActioned = $kr['latest_actioned'];
+            $completed = $kr['completed'];
+
+            if ($completed) {
+                $message = __('Completed this KR on %s', $completed);
+            } else if ($actionCount > 0) {
+                $message = __('%s members in %d days !', '<span class="font_bold">' . $actionCount . '</span>', 7);
+            } elseif ($latestActioned) {
+                $message = __("Let's take action after %d days !", $latestActioned);
+            } else {
+                $message = __('Take first action to this KR !');
+            }
+            $krs[$i]['action_message'] = $message;
+        }
+        return $krs;
     }
 }

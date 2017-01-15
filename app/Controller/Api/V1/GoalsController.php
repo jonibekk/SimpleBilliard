@@ -607,7 +607,7 @@ class GoalsController extends ApiController
 
         // レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
-        $krs = $KeyResult->findInDashboard($limit + 1, $offset, $goalId);
+        $krs = $ApiKeyResultService->findInDashboard($limit + 1, $offset, $goalId, false);
 
         // ページング情報セット。次回リクエストデータが存在する場合のみ。
         if (count($krs) > $limit) {
