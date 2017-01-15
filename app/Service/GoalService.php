@@ -768,8 +768,8 @@ class GoalService extends AppService
             throw new Exception($validOrErrorMsg);
         }
 
-        //期の開始から指定グラフ終了日の日数が少ない場合(以下がその定義)は、グラフ開始日に期の開始日をセット
-        //期の開始日からグラフ指定終了日までの日数がプロット可能日数の最小を下回る場合
+        //期の開始日から指定グラフ終了日までの日数が少ない場合(以下がその定義)は、グラフ開始日に期の開始日をセット
+        //期の開始日から指定グラフ終了日までの日数が最小プロット可能日数を下回る場合
         $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
