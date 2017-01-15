@@ -57,7 +57,7 @@ class ApiKeyResultService extends ApiService
         }
 
         $resKrs = $this->formatResponseData($resKrs);
-        $resKrs = $KeyResultService->processKeyResults($resKrs, 'key_result');
+        $resKrs = $KeyResultService->processKeyResults($resKrs, 'key_result', '/');
         $resKrs = $KeyResultService->processInDashboard($resKrs);
 
         return $resKrs;

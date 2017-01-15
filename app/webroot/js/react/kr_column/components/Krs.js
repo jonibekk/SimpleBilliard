@@ -22,10 +22,11 @@ export default class Krs extends React.Component {
         </div>
         <ul className="dashboard-krs-columns">
         { krs.map((kr) => {
+          const {key_result, action_results} = kr
           return (
             <li className="dashboard-krs-column">
               <p className="font_verydark kr-name">
-                { kr.key_result.name }
+                { key_result.name }
               </p>
               <div className="krProgress"
                    data-current_value="$60"
@@ -33,18 +34,16 @@ export default class Krs extends React.Component {
                    data-target_value="$100"
               >
                   <div className="krProgress-bar">
-                    <span className="krProgress-text">
-                         { kr.key_result.current_value_with_unit} / { kr.key_result.target_value_with_unit}
-                    </span>
-                    <div className="krProgress-barCurrent is-incomplete mod-rate60"></div>
+                    <span className="krProgress-text">{ key_result.display_in_progress_bar }</span>
+                    <div className={`krProgress-barCurrent is-incomplete mod-rate${key_result.progress_rate}`}></div>
                   </div>
               </div>
               <ul className="dashboard-krs-column-subinfos">
                 <li className="action-count">
-                  <i className="fa fa-check-circle"></i><span className="action-count-num">{ kr.key_result.action_result_count }</span>
+                  <i className="fa fa-check-circle"></i><span className="action-count-num">{ key_result.action_result_count }</span>
                 </li>
                 <li className="action-avators">
-                  { kr.action_results.map((action) => {
+                  { action_results.map((action) => {
                     return (
                       <div>
                         <a href="">
@@ -56,7 +55,7 @@ export default class Krs extends React.Component {
                 </li>
                 <li>
                   <p className="action-message"
-                     dangerouslySetInnerHTML={{__html: kr.action_message}}></p>
+                     dangerouslySetInnerHTML={{__html: key_result.action_message}}></p>
                 </li>
               </ul>
             </li>

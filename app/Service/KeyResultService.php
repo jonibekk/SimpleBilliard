@@ -99,14 +99,19 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
+            $keyResult['display_in_progress_bar'] = __('Incomplete');
+            $keyResult['progress_rate'] = 0;
             return $keyResult;
         }
+
+        $NumberEx = new NumberExHelper(new View());
 
         // 少数の不要な0を取り除く
         // 桁数が多いと指数表記(111E+など)になるため、ここで数字をフォーマットする
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
+        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
 
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
@@ -124,6 +129,7 @@ class KeyResultService extends AppService
         $keyResult['current_value_with_unit'] = $headUnit . $keyResult['current_value'] . $tailUnit;
 
         $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
+        $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
 
         return $keyResult;
     }
@@ -571,7 +577,7 @@ class KeyResultService extends AppService
             } else {
                 $message = __('Take first action to this KR !');
             }
-            $krs[$i]['action_message'] = $message;
+            $krs[$i]['key_result']['action_message'] = $message;
         }
         return $krs;
     }
