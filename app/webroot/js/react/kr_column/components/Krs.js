@@ -10,14 +10,22 @@ export default class Krs extends React.Component {
     if (kr_count == null) {
       return null
     }
+
     return (
       <div className="panel panel-default dashboard-krs">
         <div className="dashboard-krs-header">
           <div className="title">KRs ({ kr_count })</div>
-          <div className="dropdown-toggle goal" data-toggle="dropdown" role="button"
-             aria-expanded="false">
-            <span>All</span>
-            <i className="fa fa-angle-down ml_2px"/>
+          <div role="group" className="pull-right goal-filter">
+            <p className="dropdown-toggle" data-toggle="dropdown" role="button"
+               aria-expanded="false">
+              <span className>All</span>
+              <i className="fa fa-angle-down ml_2px"/>
+            </p>
+            <ul className="dropdown-menu pull-right" role="menu">
+              <li>ゴール1</li>
+              <li>ゴール2</li>
+              <li>ゴール3</li>
+            </ul>
           </div>
         </div>
         <ul className="dashboard-krs-columns">
@@ -28,11 +36,7 @@ export default class Krs extends React.Component {
               <p className="font_verydark kr-name">
                 { key_result.name }
               </p>
-              <div className="krProgress"
-                   data-current_value="$60"
-                   data-start_value="$0"
-                   data-target_value="$100"
-              >
+              <div className="krProgress">
                   <div className="krProgress-bar">
                     <span className="krProgress-text">{ key_result.display_in_progress_bar }</span>
                     <div className={`krProgress-barCurrent is-incomplete mod-rate${key_result.progress_rate}`}></div>
@@ -45,11 +49,9 @@ export default class Krs extends React.Component {
                 <li className="action-avators">
                   { action_results.map((action) => {
                     return (
-                      <div>
-                        <a href="">
-                          <img className="lazy" src={ action.user.small_img_url } />
-                        </a>
-                      </div>
+                      <a href="">
+                        <img className="lazy" src={ action.user.small_img_url } />
+                      </a>
                     )
                   })}
                 </li>

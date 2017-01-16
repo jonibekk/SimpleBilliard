@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
+App::import('Service', 'ActionService');
 App::uses('KeyResult', 'Model');
 App::uses('Goal', 'Model');
 App::uses('GoalMember', 'Model');
@@ -561,24 +562,45 @@ class KeyResultService extends AppService
         }
     }
 
-    function processInDashboard($krs)
+    /**
+     * ダッシュボード表示用にKR一覧を整形
+     *
+     * @param  array $krs
+     */
+    function processInDashboard(array $krs): array
     {
-        foreach($krs as $i => $kr) {
-            $actionCount = count($kr['action_results']);
-            $latestActioned = $kr['latest_actioned'];
-            $completed = $kr['completed'];
+        /** @var ActionService $ActionService */
+        $ActionService = ClassRegistry::init("ActionService");
 
-            if ($completed) {
-                $message = __('Completed this KR on %s', $completed);
-            } else if ($actionCount > 0) {
-                $message = __('%s members in %d days !', '<span class="font_bold">' . $actionCount . '</span>', 7);
-            } elseif ($latestActioned) {
-                $message = __("Let's take action after %d days !", $latestActioned);
-            } else {
-                $message = __('Take first action to this KR !');
-            }
-            $krs[$i]['key_result']['action_message'] = $message;
-        }
+        $krs = Hash::map($krs, '', function ($kr) use ($ActionService) {
+            $kr['action_results'] = $ActionService->groupByUser($kr['action_results']);
+            $kr['key_result']['action_message'] = $this->generateActionMessage($kr);
+
+            return $kr;
+        });
+
         return $krs;
+    }
+
+    /**
+     * アクションを促すメッセージを生成する
+     * @param  $kr
+     * @return string
+     */
+    function generateActionMessage(array $kr): string
+    {
+        $actionCount = count($kr['action_results']);
+        $latestActioned = $kr['key_result']['latest_actioned'];
+        $completed = $kr['key_result']['completed'];
+
+        if ($completed) {
+            return __('Completed this KR on %s', $completed);
+        } else if ($actionCount > 0) {
+            return __('%s members in %d days !', '<span class="font_bold">' . $actionCount . '</span>', 7);
+        } elseif ($latestActioned) {
+            return __("Let's take action after %d days !", $latestActioned);
+        } else {
+            return __('Take first action to this KR !');
+        }
     }
 }

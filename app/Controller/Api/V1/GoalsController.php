@@ -601,9 +601,11 @@ class GoalsController extends ApiController
             'count'  => null
         ];
 
-        // クエリパラメータ取得 & 展開
+        // クエリパラメータ取得
         $queryParams = $this->_extractQueryParamsInDashboard();
-        list('limit' => $limit, 'offset' => $offset, 'goal_id' => $goalId) = $queryParams;
+        $limit = $queryParams['limit'];
+        $offset = $queryParams['offset'];
+        $goalId = $queryParams['goalId'];
 
         // レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する

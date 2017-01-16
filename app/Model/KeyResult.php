@@ -847,7 +847,7 @@ class KeyResult extends AppModel
      * - 2.KRの重要度降順
      * @return array
      */
-    public function findInDashboard(int $limit, int $offset = 0, ?int $goalId = null): array
+    public function findInDashboard(int $limit, int $offset = 0, $goalId = null): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
         $now = time();
@@ -882,6 +882,7 @@ class KeyResult extends AppModel
                         'ActionResult.created >=' => $weekAgoTimestamp,
                         'ActionResult.created <=' => $now
                     ],
+                    'fields' => ['user_id'],
                     'User'
                 ]
             ]
@@ -895,12 +896,9 @@ class KeyResult extends AppModel
         $res = $this->find('all', $options);
 
         // Userのimage情報セット
+        App::uses('UploadHelper', 'View/Helper');
         $upload = new UploadHelper(new View());
         foreach($res as $i => $kr) {
-            if(!isset($kr['ActionResult'])) {
-                $res[$i]['ActionResult'] = [];
-                $kr['ActionResult'] = [];
-            }
             foreach($kr['ActionResult'] as $j => $action) {
                 $res[$i]['ActionResult'][$j]['User']['original_img_url'] = $upload->uploadUrl($action, 'User.photo');
                 $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'large']);
@@ -939,6 +937,6 @@ class KeyResult extends AppModel
         ];
 
         $count = $this->find('count', $options);
-        return $count ?? 0;
+        return $count;
     }
 }

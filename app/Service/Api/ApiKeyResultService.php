@@ -11,7 +11,7 @@ class ApiKeyResultService extends ApiService
      *
      * @return array
      */
-    public function generatePagingInDashboard(int $limit, ?int $offset = null, ?int $goalId = null): array
+    public function generatePagingInDashboard(int $limit, int $offset = 0, $goalId = null): array
     {
         $newOffset = (int)$offset + $limit;
         $queryParams = array_merge(
@@ -32,7 +32,7 @@ class ApiKeyResultService extends ApiService
      *
      * @return array
      */
-    function findInDashboard(int $limit, int $offset = 0, ?int $goalId = null, bool $needCache = true): array
+    function findInDashboard(int $limit, int $offset = 0, $goalId = null, bool $needCache = true): array
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
@@ -53,9 +53,8 @@ class ApiKeyResultService extends ApiService
                 Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
             }
         } else {
-            $resKrs = $KeyResult->findInDashboard($limit, $offset);
+            $resKrs = $KeyResult->findInDashboard($limit, $offset, $goalId);
         }
-
         $resKrs = $this->formatResponseData($resKrs);
         $resKrs = $KeyResultService->processKeyResults($resKrs, 'key_result', '/');
         $resKrs = $KeyResultService->processInDashboard($resKrs);
