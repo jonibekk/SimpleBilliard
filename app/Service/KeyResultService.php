@@ -100,8 +100,8 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
-            $keyResult['display_in_progress_bar'] = __('Incomplete');
-            $keyResult['progress_rate'] = 0;
+            $keyResult['display_in_progress_bar'] = $keyResult['completed'] ? __('Completed') : __('Incomplete');
+            $keyResult['progress_rate'] = $keyResult['completed'] ? 100 : 0;
             return $keyResult;
         }
 
@@ -594,11 +594,11 @@ class KeyResultService extends AppService
         $completed = $kr['key_result']['completed'];
 
         if ($completed) {
-            return __('Completed this KR on %s', $completed);
+            return __('Completed this KR on %s', date('m/d', $completed));
         } else if ($actionCount > 0) {
             return __('%s members in %d days !', '<span class="font_bold">' . $actionCount . '</span>', 7);
         } elseif ($latestActioned) {
-            return __("Let's take action after %d days !", $latestActioned);
+            return __("Let's take action after %d days !", date('m/d', $latestActioned));
         } else {
             return __('Take first action to this KR !');
         }

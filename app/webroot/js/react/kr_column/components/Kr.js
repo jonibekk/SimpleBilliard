@@ -23,7 +23,7 @@ export default class Kr extends React.Component {
             <i className="fa fa-check-circle"></i><span className="action-count-num">{ key_result.action_result_count }</span>
           </li>
           <li className="action-avators">
-            { action_results.map((action) => {
+            { !key_result.completed && action_results.map((action) => {
               return (
                 <a href="">
                   <img className="lazy" src={ action.user.small_img_url } />
