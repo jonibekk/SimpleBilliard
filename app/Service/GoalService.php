@@ -350,9 +350,10 @@ class GoalService extends AppService
 
             // ダッシュボードのKRキャッシュ削除
             $KeyResultService->removeGoalMembersCacheInDashboard($newGoalId);
-
             // アクション可能ゴール一覧キャッシュ削除
             Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+            // ユーザページのマイゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
             $Goal->commit();
         } catch (Exception $e) {
@@ -698,7 +699,10 @@ class GoalService extends AppService
                 throw new Exception("Create goal complete post. goalId:".$goalId);
             }
 
+            // アクション可能ゴール一覧キャッシュ削除
             Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+            // ユーザページのマイゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
             $Goal->commit();
         } catch (Exception $e) {
@@ -730,7 +734,7 @@ class GoalService extends AppService
         $actionableGoals = $Goal->findActionables($Goal->my_uid);
         $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
 
-        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, $actionableGoals, true), 'user_data');
+        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), $actionableGoals, 'user_data');
         return $actionableGoals;
     }
 

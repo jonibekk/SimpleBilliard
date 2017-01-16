@@ -585,6 +585,8 @@ class GoalsController extends ApiController
     {
         /** @var ApiKeyResultService $ApiKeyResultService */
         $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
@@ -605,8 +607,8 @@ class GoalsController extends ApiController
         // クエリパラメータ取得
         $queryParams = $this->_extractQueryParamsInDashboard();
         $limit = $queryParams['limit'];
-        $offset = $queryParams['offset'];
-        $goalId = $queryParams['goalId'];
+        $offset = $queryParams['offset'] ?? 0;
+        $goalId = $queryParams['goal_id'];
 
         // レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
@@ -620,6 +622,8 @@ class GoalsController extends ApiController
         }
 
         $response['data'] = $krs;
+        // カウント数をセット
+        $response['count'] = $KeyResult->countMine($goalId);
 
         return $this->_getResponsePagingSuccess($response);
     }

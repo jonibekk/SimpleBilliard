@@ -861,7 +861,8 @@ class KeyResult extends AppModel
             ],
             'order' => [
                 'KeyResult.latest_actioned' => 'desc',
-                'KeyResult.priority'        => 'desc'
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
             ],
             'limit'  => $limit,
             'offset' => $offset,
@@ -889,7 +890,7 @@ class KeyResult extends AppModel
         ];
 
         // パラメータよりデータ取得条件追加
-        if ($goalId !== null) {
+        if ($goalId) {
             $options['conditions']['KeyResult.goal_id'] = $goalId;
         }
 
@@ -914,7 +915,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    public function countMine(): int
+    public function countMine($goalId = null): int
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
@@ -935,6 +936,11 @@ class KeyResult extends AppModel
                 ],
             ],
         ];
+
+        // パラメータよりデータ取得条件追加
+        if ($goalId) {
+            $options['conditions']['KeyResult.goal_id'] = $goalId;
+        }
 
         $count = $this->find('count', $options);
         return $count;

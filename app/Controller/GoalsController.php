@@ -178,9 +178,10 @@ class GoalsController extends AppController
 
         // ダッシュボードのKRキャッシュ削除
         $KeyResultService->removeGoalMembersCacheInDashboard($id);
-
         // アクション可能ゴール一覧キャッシュ削除
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__("Deleted a goal."));
@@ -458,6 +459,8 @@ class GoalsController extends AppController
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
         // アクション可能ゴール一覧キャッシュ削除
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         //mixpanel
         if ($new) {
@@ -943,6 +946,8 @@ class GoalsController extends AppController
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
         // アクション可能ゴール一覧キャッシュ削除
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         $this->redirect($this->referer());
     }

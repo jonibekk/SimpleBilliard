@@ -346,10 +346,14 @@ class GoalMemberService extends AppService
                 }
 
                 // アクション可能ゴール一覧キャッシュ削除(旧リーダー)
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+                // ユーザページのマイゴール一覧キャッシュ削除(旧リーダー)
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
             }
             // アクション可能ゴール一覧キャッシュ削除(新リーダー)
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true, $newLeaderUserId), 'user_data');
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true, $newLeaderUserId), 'user_data');
+            // ユーザページのマイゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId), 'user_data');
 
             // トランザクション完了
             $GoalMember->commit();
