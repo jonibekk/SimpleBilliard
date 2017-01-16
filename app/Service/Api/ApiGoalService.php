@@ -197,12 +197,15 @@ class ApiGoalService extends ApiService
         $KeyResultService = ClassRegistry::init("KeyResultService");
         /** @var ApiKeyResultService $ApiKeyResultService */
         $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
         // レスポンスデータ定義
         $ret = [
             'data'   => [
                 'progress_graph' => [],
-                'krs'            => []
+                'krs'            => [],
+                'goal'           => []
             ],
             'paging' => [
                 'next' => ''
@@ -222,9 +225,10 @@ class ApiGoalService extends ApiService
 
         // カウント数をセット
         $ret['count'] = $KeyResultService->countMine();
-
         // KRデータセット
         $ret['data']['krs'] = $krs;
+        // Goalデータセット
+        $ret['data']['goals'] = $GoalService->findActionables();
 
         return $ret;
     }

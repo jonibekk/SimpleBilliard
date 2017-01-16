@@ -344,7 +344,12 @@ class GoalMemberService extends AppService
                     $coachId = $TeamMember->getCoachId($quitUserId);
                     Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
+
+                // アクション可能ゴール一覧キャッシュ削除(旧リーダー)
+                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
             }
+            // アクション可能ゴール一覧キャッシュ削除(新リーダー)
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true, $newLeaderUserId), 'user_data');
 
             // トランザクション完了
             $GoalMember->commit();

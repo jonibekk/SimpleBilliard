@@ -351,6 +351,9 @@ class GoalService extends AppService
             // ダッシュボードのKRキャッシュ削除
             $KeyResultService->removeGoalMembersCacheInDashboard($newGoalId);
 
+            // アクション可能ゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+
             $Goal->commit();
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
@@ -664,27 +667,11 @@ class GoalService extends AppService
             return false;
         }
 
-
         // リーダーか
         if (!$GoalMemberService->isLeader($goalId, $loginUserId)) {
             return false;
         }
         return true;
-    }
-
-    /**
-     * アクション可能なゴール取得
-     *
-     * @param int $userId
-     *
-     * @return array
-     */
-    function findCanAction(int $userId) : array
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        // コラボも含めて自分のゴールリスト取得
-        return $Goal->findCanAction($userId);
     }
 
     /**
@@ -711,6 +698,8 @@ class GoalService extends AppService
                 throw new Exception("Create goal complete post. goalId:".$goalId);
             }
 
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+
             $Goal->commit();
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
@@ -718,8 +707,31 @@ class GoalService extends AppService
             $Goal->rollback();
             return false;
         }
-        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
+    }
+
+    /**
+     * アクション可能なゴール一覧を返す
+     * - フィードページで参照されるデータなのでキャッシュを使う
+     *
+     * @return array
+     */
+    function findActionables(): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $cachedActionableGoals = Cache::read($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        if ($cachedActionableGoals !== false) {
+            return $cachedActionableGoals;
+        }
+
+        // キャッシュが存在しない場合はDBにqueryを投げてキャッシュに保存する
+        $actionableGoals = $Goal->findActionables($Goal->my_uid);
+        $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
+
+        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, $actionableGoals, true), 'user_data');
+        return $actionableGoals;
     }
 
 }

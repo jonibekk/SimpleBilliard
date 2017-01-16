@@ -42,7 +42,7 @@ class ApiKeyResultService extends ApiService
         $UserService = ClassRegistry::init("UserService");
 
         $resKrs = [];
-        if ($needCache && false) {
+        if ($needCache) {
             // キャッシュ検索
             $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
             if ($cachedKrs !== false) {
