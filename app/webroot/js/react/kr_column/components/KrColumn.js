@@ -28,11 +28,15 @@ export default class KrColumn extends React.Component {
       .then((response) => {
         const data = response.data.data
         const kr_count = response.data.count
+        const next = response.data.paging.next
         this.setState({ progress_graph: data.progress_graph })
         this.setState({ krs: data.krs })
         this.setState({ goals: data.goals })
         this.setState({ kr_count })
         this.setState({ loading: false })
+        if(next) {
+          this.fetchMoreKrs(next)
+        }
       })
       .catch((response) => {
         /* eslint-disable no-console */
@@ -49,9 +53,32 @@ export default class KrColumn extends React.Component {
       .then((response) => {
         const data = response.data.data
         const kr_count = response.data.count
+        const next = response.data.paging.next
         this.setState({ krs: data })
         this.setState({ kr_count })
         this.setState({ loading: false })
+        if(next) {
+          this.fetchMoreKrs(next)
+        }
+      })
+      .catch((response) => {
+        /* eslint-disable no-console */
+        console.log(response)
+        /* eslint-enable no-console */
+      })
+  }
+
+  fetchMoreKrs(next) {
+    this.setState({ loading: true })
+    return axios.get(next)
+      .then((response) => {
+        const data = response.data.data
+        const next = response.data.paging.next
+        this.setState({ krs: [...this.state.krs, ...data] })
+        this.setState({ loading: false })
+        if(next) {
+          this.fetchMoreKrs(next)
+        }
       })
       .catch((response) => {
         /* eslint-disable no-console */
