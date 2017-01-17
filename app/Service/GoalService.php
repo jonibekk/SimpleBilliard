@@ -1050,11 +1050,18 @@ class GoalService extends AppService
     {
         $currentProgress = 0;
         $ret = [];
-        for ($date = $startDate; $date <= $endDate; $date = date('Y-m-d', strtotime($date))) {
-            if (isset($progresses[$date])) {
-                $currentProgress = $progresses[$date];
+
+        $currentTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+
+        while ($currentTimestamp <= $endTimestamp) {
+            $currentDate = date('Y-m-d', $currentTimestamp);
+            if (isset($progresses[$currentDate])) {
+                $currentProgress = $progresses[$currentDate];
             }
             $ret[] = $currentProgress;
+
+            $currentTimestamp += DAY;
         }
 
         return $ret;
