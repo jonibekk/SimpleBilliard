@@ -912,17 +912,31 @@ class GoalService extends AppService
     ): array {
         $plotDataEndDate = $plotDataEndDate ?? $graphEndDate;
 
+        //パラメータバリデーション
         $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
 
+        //当日がプロット対象に含まれるかどうか？
+        if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
+            $includeTodayInPlotData = true;
+        } else {
+            $includeTodayInPlotData = false;
+        }
+
         //日毎に集計済みのゴール進捗ログを取得
-        $progressLogs = $this->findSummarizedGoalProgressesFromLog($userId, $graphStartDate, $plotDataEndDate);
-        $progressLogs = $this->processProgressesToGraph($graphStartDate, $plotDataEndDate, $progressLogs);
+        $logStartDate = $graphStartDate;
+        if ($includeTodayInPlotData) {
+            $logEndDate = date('Y-m-d', strtotime('-1 day'));//昨日
+        } else {
+            $logEndDate = $plotDataEndDate;
+        }
+        $progressLogs = $this->findSummarizedGoalProgressesFromLog($userId, $logStartDate, $logEndDate);
+        $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
-        if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
+        if ($includeTodayInPlotData) {
             $latestTotalGoalProgress = $this->findLatestSummarizedGoalProgress($userId);
             if ($latestTotalGoalProgress <> 0) {
                 array_push($progressLogs, $latestTotalGoalProgress);
@@ -1025,7 +1039,6 @@ class GoalService extends AppService
      * ゴール進捗をグラフ用に加工
      * - 先頭でログが存在しない日は0をセット
      * - 途中でログが存在しない場合はその直近のprogressをセット
-     * - 当日以降は値をセットしない
      *
      * @param string $startDate
      * @param string $endDate
@@ -1038,10 +1051,6 @@ class GoalService extends AppService
         $currentProgress = 0;
         $ret = [];
         for ($date = $startDate; $date <= $endDate; $date = date('Y-m-d', strtotime($date))) {
-            //当日以降は値をセットしない
-            if ($date == date('Y-m-d')) {
-                break;
-            }
             if (isset($progresses[$date])) {
                 $currentProgress = $progresses[$date];
             }
