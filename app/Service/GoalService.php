@@ -919,6 +919,7 @@ class GoalService extends AppService
 
         //日毎に集計済みのゴール進捗ログを取得
         $progressLogs = $this->findSummarizedGoalProgressesFromLog($userId, $graphStartDate, $plotDataEndDate);
+        $progressLogs = $this->processProgressesToGraph($graphStartDate, $plotDataEndDate, $progressLogs);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
         if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
@@ -1012,10 +1013,42 @@ class GoalService extends AppService
 
             ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
             $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $myGoalPriorities);
+
             //キャッシュに保存
             $this->writeProgressToCache($userId, $startDate, $endDate, $progressLogs);
         }
+
         return $progressLogs;
+    }
+
+    /**
+     * ゴール進捗をグラフ用に加工
+     * - 先頭でログが存在しない日は0をセット
+     * - 途中でログが存在しない場合はその直近のprogressをセット
+     * - 当日以降は値をセットしない
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @param array  $progresses key:date,value:progress
+     *
+     * @return array progressの配列
+     */
+    function processProgressesToGraph(string $startDate, string $endDate, array $progresses): array
+    {
+        $currentProgress = 0;
+        $ret = [];
+        for ($date = $startDate; $date <= $endDate; $date = date('Y-m-d', strtotime($date))) {
+            //当日以降は値をセットしない
+            if ($date == date('Y-m-d')) {
+                break;
+            }
+            if (isset($progresses[$date])) {
+                $currentProgress = $progresses[$date];
+            }
+            $ret[] = $currentProgress;
+        }
+
+        return $ret;
     }
 
     /**
@@ -1034,7 +1067,7 @@ class GoalService extends AppService
         $ret = [];
         //日毎にゴールのプライオリティを掛け合わせる
         foreach ($logs as $date => $goals) {
-            $ret[] = $this->sumGoalProgress($goals, $goalPriorities);
+            $ret[$date] = $this->sumGoalProgress($goals, $goalPriorities);
         }
         return $ret;
     }
