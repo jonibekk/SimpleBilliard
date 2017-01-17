@@ -1193,12 +1193,12 @@ class Goal extends AppModel
     /**
      * ゴールと紐付くKRを進捗付きで返す
      *
-     * @param                $goalIds
-     * @param int|null       $userId defaultはログインユーザ
+     * @param array|int $goalIds
+     * @param int       $userId defaultはログインユーザ
      *
      * @return array
      */
-    function getGoalAndKr($goalIds, ?int $userId = null): array
+    function getGoalAndKr($goalIds, int $userId = null): array
     {
         $userId = $userId ?? $this->my_uid;
 
