@@ -920,14 +920,14 @@ class GoalService extends AppService
 
         //当日がプロット対象に含まれるかどうか？
         if (time() >= strtotime($graphStartDate) && time() <= strtotime($plotDataEndDate) + DAY) {
-            $includeTodayInPlotData = true;
+            $isIncludedTodayInPlotData = true;
         } else {
-            $includeTodayInPlotData = false;
+            $isIncludedTodayInPlotData = false;
         }
 
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
-        if ($includeTodayInPlotData) {
+        if ($isIncludedTodayInPlotData) {
             $logEndDate = date('Y-m-d', strtotime('-1 day'));//昨日
         } else {
             $logEndDate = $plotDataEndDate;
@@ -936,7 +936,7 @@ class GoalService extends AppService
         $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
-        if ($includeTodayInPlotData) {
+        if ($isIncludedTodayInPlotData) {
             $latestTotalGoalProgress = $this->findLatestSummarizedGoalProgress($userId);
             if ($latestTotalGoalProgress <> 0) {
                 array_push($progressLogs, $latestTotalGoalProgress);
