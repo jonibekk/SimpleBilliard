@@ -454,7 +454,7 @@ class EvaluateTermTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->EvaluateTerm->save(['start_date' => 1, 'end_date' => 100, 'team_id' => 1, 'timezone' => 9]);
-        $actual = $this->EvaluateTerm->getTermDataByDatetime(50);
+        $actual = $this->EvaluateTerm->getTermDataByTimeStamp(50);
         $this->assertEquals(1, $actual['start_date']);
         $this->assertEquals(100, $actual['end_date']);
     }
