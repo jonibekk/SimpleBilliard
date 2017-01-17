@@ -757,6 +757,7 @@ class GoalService extends AppService
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
 
+        //バリデーション
         $validOrErrorMsg = $this->validateGraphRange(
             $targetEndTimestamp,
             $targetDays,
@@ -775,6 +776,7 @@ class GoalService extends AppService
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
             $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
             $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + (($targetDays - 1) * DAY));
+            $ret['plotDataEndDate'] = $ret['graphEndDate'];
             return $ret;
         }
 
@@ -785,6 +787,7 @@ class GoalService extends AppService
             if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
                 $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
                 $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
+                $ret['plotDataEndDate'] = $ret['graphEndDate'];
                 return $ret;
             }
         }
@@ -890,15 +893,15 @@ class GoalService extends AppService
      * グラフ用のゴール進捗ログデータを取得
      * //日毎に集計済みのゴール進捗ログを取得
      * //当日の進捗を計算
-     * //sweetspotを算出(max60%で今期の開始日から今期の終了日までのdailyのtopとbottom)
+     * //sweet spotを算出
      * //ログデータと当日の進捗をマージ
      * //グラフ用データに整形
      *
-     * @param int         $userId
-     * @param string      $graphStartDate  Y-m-d形式のグラフ描画開始日
-     * @param string      $graphEndDate    Y-m-d形式のグラフ描画終了日
-     * @param string|null $plotDataEndDate Y-m-d形式のデータプロット終了日
-     * @param bool        $withSweetSpot
+     * @param int    $userId
+     * @param string $graphStartDate  Y-m-d形式のグラフ描画開始日
+     * @param string $graphEndDate    Y-m-d形式のグラフ描画終了日
+     * @param string $plotDataEndDate Y-m-d形式のデータプロット終了日
+     * @param bool   $withSweetSpot
      *
      * @return array
      * @throws Exception
@@ -907,11 +910,9 @@ class GoalService extends AppService
         int $userId,
         string $graphStartDate,
         string $graphEndDate,
-        ?string $plotDataEndDate = null,
+        string $plotDataEndDate,
         bool $withSweetSpot = false
     ): array {
-        $plotDataEndDate = $plotDataEndDate ?? $graphEndDate;
-
         //パラメータバリデーション
         $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
         if ($validOrErrorMsg !== true) {
@@ -928,7 +929,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = date('Y-m-d', strtotime('-1 day'));//昨日
+            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1020,13 +1021,13 @@ class GoalService extends AppService
             ///ログDBから自分の各ゴールの進捗データ取得
             /** @var GoalMember $GoalMember */
             $GoalMember = ClassRegistry::init('GoalMember');
-            $myGoalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
+            $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
             /** @var GoalProgressDailyLog $GoalProgressDailyLog */
             $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
-            $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($myGoalPriorities));
+            $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
 
             ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-            $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $myGoalPriorities);
+            $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $goalPriorities);
 
             //キャッシュに保存
             $this->writeProgressToCache($userId, $startDate, $endDate, $progressLogs);
@@ -1055,7 +1056,7 @@ class GoalService extends AppService
         $endTimestamp = strtotime($endDate);
 
         while ($currentTimestamp <= $endTimestamp) {
-            $currentDate = date('Y-m-d', $currentTimestamp);
+            $currentDate = AppUtil::dateYmd($currentTimestamp);
             if (isset($progresses[$currentDate])) {
                 $currentProgress = $progresses[$currentDate];
             }

@@ -476,7 +476,7 @@ class GoalMemberTest extends GoalousTestCase
         }
     }
 
-    function testFindMyGoalPriorities()
+    function testFindGoalPriorities()
     {
         $this->_setDefault();
         $expected = [
