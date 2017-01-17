@@ -12,6 +12,7 @@ App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'GoalService');
 
 /**
  * Application Controller

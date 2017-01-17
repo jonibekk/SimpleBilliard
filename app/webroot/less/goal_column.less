@@ -13,15 +13,17 @@
     border-bottom: 1px solid @subColor4;
     padding: 0 0 5px;
     display: flex;
-
     .title {
       font-size: 14px;
       font-weight: 400;
     }
-
     .goal-filter {
       margin-left: auto;
       cursor: pointer;
+      max-width: 250px;
+    }
+    .dropdown-menu {
+      max-width: 250px;
     }
   }
 
@@ -29,13 +31,60 @@
     padding: 10px 0;
     border-bottom: 1px solid @subColor4;
 
-    .kr-name {
-      font-weight: 700;
+    &-wrapper {
+      display: flex;
+      .left {
+        width: 80%;
+        .kr-name {
+          font-weight: 700;
+          cursor: pointer;
+          &.is-closed {
+            max-height: 42px;
+            overflow: hidden;
+          }
+        }
+        .krProgress {
+          line-height: 14px;
+          font-weight: 500;
+          cursor: default;
+        }
+      }
+      .right {
+        width: 20%;
+        .action-button {
+          width: 50px;
+          height: 50px;
+          display: block;
+          margin-left: auto;
+          top: 0;
+          border-radius: 50%;
+          padding: 2px;
+          border: dashed 2px @subColor4;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-decoration: none;
+          .fa-check-circle {
+            font-size: 47px;
+            color: @subColor4;
+          }
+          .add-mark {
+            position: absolute;
+            margin: 16px 12px 0;
+            .fa-plus-circle {
+              color: @subColor14;
+              font-size: 20px;
+            }
+          }
+        }
+      }
     }
 
-    .krProgress {
-      line-height: 14px;
-      font-weight: 500;
+    &-footer {
+      .action-link {
+        color: @subColor3;
+        text-decoration: none;
+      }
     }
 
     &-subinfos {

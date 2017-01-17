@@ -1293,10 +1293,10 @@ class GoalsController extends AppController
         $this->request->data['ActionResult']['key_result_id'] = $keyResultId;
         $krList = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
         $this->set(['kr_list' => $krList, 'key_result_id' => $keyResultId]);
-
         $this->set('common_form_type', 'action');
         $this->set('common_form_only_tab', 'action');
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->_setGoalsForTopAction();
         $this->render('edit_action');
     }
 

@@ -27,7 +27,7 @@ export default class Krs extends React.Component {
       <div className="panel panel-default dashboard-krs">
         <div className="dashboard-krs-header">
           <div className="title">KRs { kr_count ? `(${kr_count})` : '' }</div>
-          <div role="group" className="pull-right goal-filter">
+          <div role="group" className="pull-right goal-filter oneline-ellipsis">
             <p className="dropdown-toggle" data-toggle="dropdown" role="button"
                aria-expanded="false">
               <span className>{ this.state.selected_goal }</span>
@@ -46,7 +46,7 @@ export default class Krs extends React.Component {
                 for (let i = 0; i < goal_keys.length; i++) {
                   let goalId = goal_keys[i]
                   goal_elems.push(
-                    <li key={goalId}>
+                    <li key={goalId} className="oneline-ellipsis">
                       <a href="#"
                          onClick={(e) => this.updateGoalFilter(e, goalId)}>
                         {goals[goalId]}
@@ -61,10 +61,11 @@ export default class Krs extends React.Component {
         </div>
         <ul className="dashboard-krs-columns">
           { krs.map((kr) => {
-            const {key_result, action_results} = kr
+            const {key_result, action_results, goal} = kr
             return (
               <Kr key_result={key_result}
-                  action_results={action_results} />
+                  action_results={action_results}
+                  goal={ goal } />
             )
           }) }
         </ul>
@@ -76,6 +77,7 @@ export default class Krs extends React.Component {
 
 Krs.propTypes = {
   krs: React.PropTypes.array,
-  goals: React.PropTypes.array
+  goals: React.PropTypes.array,
+  kr_count: React.PropTypes.number
 };
-Krs.defaultProps = { krs: [], goals: [], kr_count: null };
+Krs.defaultProps = { krs: [], goals: [], kr_count: 0 };

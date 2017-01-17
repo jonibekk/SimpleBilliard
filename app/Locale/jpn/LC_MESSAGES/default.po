@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-05 14:52+0900\n"
+"PO-Revision-Date: 2017-01-17 17:43+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -96,9 +96,6 @@ msgstr "不正なアクセスです。"
 
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
-
-msgid "Select a goal."
-msgstr "ゴールを選択する"
 
 msgid "Created a circle."
 msgstr "サークルを作成しました。"
@@ -1733,8 +1730,23 @@ msgstr "今期より前のゴールのリーダーは変更できません。"
 msgid "You cant't change leader in the goal during the evaluation period."
 msgstr "評価期間中のゴールのリーダーは変更できません。"
 
+msgid "Incomplete"
+msgstr "未完了"
+
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
+
+msgid "Completed this on %s."
+msgstr "%sに完了した"
+
+msgid "%s member(s) actioned recently."
+msgstr "%s人が最近アクションした"
+
+msgid "Take action since %s !"
+msgstr "%s以来のアクションをしよう！"
+
+msgid "Take first action to this !"
+msgstr "最初のアクションをしよう！"
 
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
@@ -2462,9 +2474,6 @@ msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 msgid "Complete"
 msgstr "完了"
 
-msgid "Incomplete"
-msgstr "未完了"
-
 msgid "Progress"
 msgstr "進捗"
 
@@ -2788,18 +2797,6 @@ msgstr "ゴール達成のために共有しよう。"
 
 msgid "Make your team better by Goalous."
 msgstr "チーム力を向上させよう。Goalousをさっそく使ってみましょう"
-
-msgid "View detail"
-msgstr "ビジョンを詳しく見る"
-
-msgid "Your goals"
-msgstr "あなたのゴール"
-
-msgid "Create a new goal"
-msgstr "あたらしいゴールをつくる"
-
-msgid "Unevaluated in the previous term"
-msgstr "前期の未評価のあなたのゴール"
 
 msgid "%s members"
 msgstr "%s メンバー"

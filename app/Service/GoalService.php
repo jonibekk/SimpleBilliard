@@ -264,7 +264,7 @@ class GoalService extends AppService
                 }
 
                 //コーチの認定件数を更新(キャッシュを削除)
-                $coachId = $TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($Goal->my_uid);
                 if ($coachId) {
                     Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
@@ -272,6 +272,10 @@ class GoalService extends AppService
 
             // ダッシュボードのKRキャッシュ削除
             $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+            // アクション可能ゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+            // ユーザページのマイゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
             // トランザクション完了
             $Goal->commit();

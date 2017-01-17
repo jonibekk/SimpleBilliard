@@ -546,7 +546,7 @@ class KeyResultService extends AppService
      * @param int　$goalId
      * @param bool $withCount
      */
-    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true): void
+    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true)
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
@@ -575,7 +575,8 @@ class KeyResultService extends AppService
         $krs = Hash::map($krs, '', function ($kr) use ($ActionService) {
             $kr['action_results'] = $ActionService->groupByUser($kr['action_results']);
             $kr['key_result']['action_message'] = $this->generateActionMessage($kr);
-
+            // 先頭から3番目までのデータを返す
+            $kr['action_results'] = array_slice($kr['action_results'], 0, 3);
             return $kr;
         });
 
@@ -594,13 +595,13 @@ class KeyResultService extends AppService
         $completed = $kr['key_result']['completed'];
 
         if ($completed) {
-            return __('Completed this KR on %s', date('m/d', $completed));
+            return __('Completed this on %s.', date('m/d', $completed));
         } else if ($actionCount > 0) {
-            return __('%s members in %d days !', '<span class="font_bold">' . $actionCount . '</span>', 7);
+            return __('%s member(s) actioned recently.', '<span class="font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
-            return __("Let's take action after %d days !", date('m/d', $latestActioned));
+            return __("Take action since %s !", date('m/d', $latestActioned));
         } else {
-            return __('Take first action to this KR !');
+            return __('Take first action to this !');
         }
     }
 }
