@@ -146,7 +146,7 @@ class GoalServiceTest extends GoalousTestCase
         $expected = [
             'graphStartDate'  => date('Y-m-01'),
             'graphEndDate'    => date('Y-m-10'),
-            'plotDataEndDate' => null
+            'plotDataEndDate' => date('Y-m-10'),
         ];
         //バッファなし
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
@@ -178,7 +178,7 @@ class GoalServiceTest extends GoalousTestCase
         $expected = [
             'graphStartDate'  => date('Y-m-' . (string)(date('t') - 9)),
             'graphEndDate'    => date('Y-m-' . date('t')),
-            'plotDataEndDate' => null
+            'plotDataEndDate' => date('Y-m-' . date('t')),
         ];
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
