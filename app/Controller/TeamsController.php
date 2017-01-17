@@ -1023,7 +1023,6 @@ class TeamsController extends AppController
 
     /**
      * チームビジョンを追加
-
      */
     function add_team_vision()
     {
@@ -2512,6 +2511,10 @@ class TeamsController extends AppController
 
             // まだロードされてないモデル用に一時的に書き換え
             $this->Session->write('current_team_id', $team_id);
+
+            //EvaluateTermのプロパティにログインteamのtermがすでにセットされている(コントローラの共有処理による)のでリセット。
+            $this->Team->EvaluateTerm->resetAllTermProperty();
+
         }
     }
 
