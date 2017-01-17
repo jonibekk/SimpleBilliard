@@ -357,7 +357,7 @@ class Goal extends AppModel
             return true;
         }
         // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
-        $term = $this->Team->EvaluateTerm->getTermDataByDatetime($goal['end_date']);
+        $term = $this->Team->EvaluateTerm->getTermDataByTimeStamp($goal['end_date']);
 
         // UTCでのタイムスタンプ取得
         $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
