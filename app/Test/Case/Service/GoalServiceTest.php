@@ -394,6 +394,52 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertNotEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
     }
 
+    function testProcessProgressesToGraph()
+    {
+        $progresses = [
+            '2017-01-03' => 10,
+            '2017-01-04' => 20,
+            '2017-01-06' => 30,
+            '2017-01-07' => 40,
+        ];
+        $expected = [
+            (int)0 => (int)0,
+            (int)1 => (int)0,
+            (int)2 => (int)10,
+            (int)3 => (int)20,
+            (int)4 => (int)20,
+            (int)5 => (int)30,
+            (int)6 => (int)40,
+            (int)7 => (int)40,
+            (int)8 => (int)40,
+            (int)9 => (int)40
+        ];
+        $actual = $this->GoalService->processProgressesToGraph('2017-01-01', '2017-01-10', $progresses);
+        $this->assertEquals($expected, $actual);
+
+        $progresses = [
+            '2017-01-01' => 10,
+            '2017-01-04' => 20,
+            '2017-01-06' => 30,
+            '2017-01-07' => 40,
+            '2017-01-10' => 60,
+        ];
+        $expected = [
+            (int)0 => (int)10,
+            (int)1 => (int)10,
+            (int)2 => (int)10,
+            (int)3 => (int)20,
+            (int)4 => (int)20,
+            (int)5 => (int)30,
+            (int)6 => (int)40,
+            (int)7 => (int)40,
+            (int)8 => (int)40,
+            (int)9 => (int)60
+        ];
+        $actual = $this->GoalService->processProgressesToGraph('2017-01-01', '2017-01-10', $progresses);
+        $this->assertEquals($expected, $actual);
+    }
+
     //余裕あればやる
     function testGetProgressFromCache()
     {
