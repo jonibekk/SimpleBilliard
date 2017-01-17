@@ -297,7 +297,7 @@ class EvaluateTerm extends AppModel
     {
         $term = $this->getTermData(self::TYPE_CURRENT);
         if ($utcMidnight) {
-            return $this->changeToUtc($term);
+            return $this->changeToUtcMidnight($term);
         }
         return $term;
     }
@@ -311,7 +311,7 @@ class EvaluateTerm extends AppModel
     {
         $term = $this->getTermData(self::TYPE_NEXT);
         if ($utcMidnight) {
-            return $this->changeToUtc($term);
+            return $this->changeToUtcMidnight($term);
         }
         return $term;
     }
@@ -325,12 +325,12 @@ class EvaluateTerm extends AppModel
     {
         $term = $this->getTermData(self::TYPE_PREVIOUS);
         if ($utcMidnight) {
-            return $this->changeToUtc($term);
+            return $this->changeToUtcMidnight($term);
         }
         return $term;
     }
 
-    private function changeToUtc(array $term): array
+    private function changeToUtcMidnight(array $term): array
     {
         $term['start_date'] += $term['timezone'] * HOUR;
         $term['end_date'] += $term['timezone'] * HOUR;
