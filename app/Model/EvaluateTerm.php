@@ -398,6 +398,9 @@ class EvaluateTerm extends AppModel
         }
     }
 
+    /**
+     * 全ての期間のプロパティをリセット
+     */
     function resetAllTermProperty()
     {
         $this->resetTermProperty(self::TYPE_CURRENT);
