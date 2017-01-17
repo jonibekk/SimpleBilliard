@@ -27,11 +27,13 @@ export default class Krs extends React.Component {
       <div className="panel panel-default dashboard-krs">
         <div className="dashboard-krs-header">
           <div className="title">KRs { kr_count ? `(${kr_count})` : '' }</div>
-          <div role="group" className="pull-right goal-filter oneline-ellipsis">
+          <div role="group" className="pull-right goal-filter">
             <p className="dropdown-toggle" data-toggle="dropdown" role="button"
                aria-expanded="false">
-              <span className>{ this.state.selected_goal }</span>
-              <i className="fa fa-angle-down ml_2px"/>
+              <div className="selected-goal oneline-ellipsis">
+                <span>{ this.state.selected_goal }</span>
+              </div>
+              <span className="dropdown-opener"><i className="fa fa-angle-down ml_2px"/></span>
             </p>
             <ul className="dropdown-menu pull-right" role="menu">
               <li>
@@ -46,10 +48,11 @@ export default class Krs extends React.Component {
                 for (let i = 0; i < goal_keys.length; i++) {
                   let goalId = goal_keys[i]
                   goal_elems.push(
-                    <li key={goalId} className="oneline-ellipsis">
+                    <li key={goalId}>
                       <a href="#"
-                         onClick={(e) => this.updateGoalFilter(e, goalId)}>
-                        {goals[goalId]}
+                         onClick={(e) => this.updateGoalFilter(e, goalId)}
+                         className="block oneline-ellipsis">
+                        <span>{goals[goalId]}</span>
                       </a>
                     </li>
                   )

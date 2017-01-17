@@ -8,6 +8,7 @@ App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('NumberExHelper', 'View/Helper');
 
 /**
  * Class KeyResultService
@@ -597,7 +598,7 @@ class KeyResultService extends AppService
         if ($completed) {
             return __('Completed this on %s.', date('m/d', $completed));
         } else if ($actionCount > 0) {
-            return __('%s member(s) actioned recently.', '<span class="font_bold">' . $actionCount . '</span>');
+            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
             return __("Take action since %s !", date('m/d', $latestActioned));
         } else {

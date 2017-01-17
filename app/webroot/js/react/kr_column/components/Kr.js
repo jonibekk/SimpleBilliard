@@ -9,6 +9,9 @@ export default class Kr extends React.Component {
     this.toggleKrOpened = this.toggleKrOpened.bind(this)
   }
 
+  /**
+   * KR詳細情報表示ステータスを切り替える
+   */
   toggleKrOpened() {
     if (this.state.is_opened_kr) {
       this.setState({ is_opened_kr: false })
@@ -26,15 +29,32 @@ export default class Kr extends React.Component {
     return (
       <li className="dashboard-krs-column">
         <div className="dashboard-krs-column-wrapper">
+          {/* KR name & progressBarエリア */}
           <div className="left">
             <p className={`font_verydark kr-name ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`}
                onClick={ this.toggleKrOpened }>
               { key_result.name }
             </p>
-            <div className={`oneline-ellipsis font_12px mt_5px ${!this.state.is_opened_kr && 'none'}`}>
-              <a href={`/goals/view_info/goal_id:${goal.id}`} className="font_verydark"><i className="fa fa-flag-o"></i> <span>{ goal.name }</span></a>
+            <div className={`oneline-ellipsis font_12px mt_4px ${!this.state.is_opened_kr && 'none'}`}>
+              <a href={`/goals/view_info/goal_id:${goal.id}`} className="font_verydark">
+                <i className="fa fa-flag-o"></i>
+                <span>{ goal.name }</span>
+              </a>
             </div>
-            { key_result.description && this.state.is_opened_kr && <p className="font_12px font_verydark mt_5px"><i className="fa fa-sticky-note-o"></i> <span>{ key_result.description }</span></p> }
+            { key_result.description && this.state.is_opened_kr && (() => {
+              return (
+                <div className="font_12px mt_4px">
+                  <p className="font_verydark">
+                    <i className="fa fa-sticky-note-o"></i>
+                    <span>{ key_result.description }</span>
+                  </p>
+                  <a className="close-button disp_blk mt_4px mb_4px"
+                     onClick={ this.toggleKrOpened }>
+                    <i className="fa fa-angle-up" /> { __('Close') }
+                  </a>
+                </div>
+              )
+            })() }
             <div className="krProgress">
               <div className="krProgress-bar">
                 <span className="krProgress-text">{ key_result.display_in_progress_bar }</span>
@@ -42,6 +62,7 @@ export default class Kr extends React.Component {
               </div>
             </div>
           </div>
+          {/* アクションボタンエリア */}
           <div className="right">
             { !is_complete && (() => {
               return (
@@ -61,7 +82,9 @@ export default class Kr extends React.Component {
               <li className="action-count">
                 <i className="fa fa-check-circle"></i><span className="action-count-num">{ key_result.action_result_count }</span>
               </li>
+              <span>・</span>
               <li className="action-avators">
+                {/* 最近アクションしたユーザー画像を表示 */}
                 { !key_result.completed && action_results.map((action) => {
                   return (
                     <img className="lazy" src={ action.user.small_img_url } />
@@ -69,6 +92,7 @@ export default class Kr extends React.Component {
                 })}
               </li>
               <li>
+                {/* 渡ってくるデータにHTMLが含まれているためdangerouslySetInnerHTMLを泣く泣く使っている */}
                 <p className="action-message"
                    dangerouslySetInnerHTML={{__html: key_result.action_message}}></p>
               </li>

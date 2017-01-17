@@ -20,10 +20,18 @@
     .goal-filter {
       margin-left: auto;
       cursor: pointer;
-      max-width: 250px;
+      .selected-goal {
+        display: inline-block;
+        max-width: 250px;
+        vertical-align: top;
+      }
+      .dropdown-opener {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .dropdown-menu {
-      max-width: 250px;
+      max-width: 290px;
     }
   }
 
@@ -44,6 +52,10 @@
             min-height: 20px;
             overflow: hidden;
           }
+        }
+        .close-button {
+          cursor: pointer;
+          color: @subColor14;
         }
         .krProgress {
           line-height: 14px;
@@ -95,15 +107,16 @@
         color: @veryDark;
         font-weight: 700;
         &-num {
-          margin: 0 8px 0 2px;
+          margin: 0 0 0 2px;
         }
       }
       .action-avators {
+        margin: 0 4px 0 0px;
         img {
           border-radius: 50%;
           width: 18px;
           height: 18px;
-          margin: 0 0 0 2px;
+          margin: 0 2px 0 0;
         }
         .more-counts {
           font-size: 16px;
@@ -116,9 +129,6 @@
           background: rgba(180,180,180,.7);
           border-radius: 50%;
         }
-      }
-      .action-message {
-        margin-left: 10px;
       }
     }
   }
