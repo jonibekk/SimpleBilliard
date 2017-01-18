@@ -620,8 +620,27 @@ class GoalsController extends ApiController
             $response['paging'] = $paging;
             array_pop($krs);
         }
-
         $response['data'] = $krs;
+
+
+        if($goalId){
+            //グラフデータのセット
+            /** @var GoalService $GoalService */
+            $GoalService = ClassRegistry::init('GoalService');
+            $graphRange = $GoalService->getGraphRange(
+                time(),
+                GoalService::GRAPH_TARGET_DAYS,
+                GoalService::GRAPH_MAX_BUFFER_DAYS
+            );
+            $progressGraph = $GoalService->getGoalProgressForDrawingGraph(
+                $goalId,
+                $graphRange['graphStartDate'],
+                $graphRange['graphEndDate'],
+                $graphRange['plotDataEndDate'],
+                true
+            );
+            $response['data']['progress_graph'] = $progressGraph;
+        }
 
         return $this->_getResponsePagingSuccess($response);
     }
