@@ -1,14 +1,12 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
-App::import('Service', 'ActionService');
 App::uses('KeyResult', 'Model');
 App::uses('Goal', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
-App::uses('NumberExHelper', 'View/Helper');
 
 /**
  * Class KeyResultService
@@ -101,19 +99,14 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
-            $keyResult['display_in_progress_bar'] = $keyResult['completed'] ? __('Completed') : __('Incomplete');
-            $keyResult['progress_rate'] = $keyResult['completed'] ? 100 : 0;
             return $keyResult;
         }
-
-        $NumberEx = new NumberExHelper(new View());
 
         // 少数の不要な0を取り除く
         // 桁数が多いと指数表記(111E+など)になるため、ここで数字をフォーマットする
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
-        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
 
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
@@ -126,12 +119,7 @@ class KeyResultService extends AppService
             $tailUnit = $unitName;
         }
 
-        $keyResult['start_value_with_unit'] = $headUnit . $keyResult['start_value'] . $tailUnit;
-        $keyResult['target_value_with_unit'] = $headUnit . $keyResult['target_value'] . $tailUnit;
-        $keyResult['current_value_with_unit'] = $headUnit . $keyResult['current_value'] . $tailUnit;
-
-        $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
-        $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
+        $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
 
         return $keyResult;
     }
@@ -490,6 +478,32 @@ class KeyResultService extends AppService
     }
 
     /**
+     * トップページ右カラムに初期表示するKR一覧を取得
+     * - キャッシュが存在する場合はキャッシュを返す
+     *
+     * @param int $limit
+     *
+     * @return array
+     */
+    function findInDashboardFirstView(int $limit): array
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // キャッシュ検索
+        $resKrs = [];
+        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        if ($cachedKrs !== false) {
+            $resKrs = $cachedKrs;
+        } else {
+            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
+            $resKrs = $KeyResult->findInDashboard($limit);
+            Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
+        }
+        return $resKrs;
+    }
+
+    /**
      * トップページ右カラムに初期表示するKR数を取得
      * - キャッシュが存在する場合はキャッシュを返す
      *
@@ -544,65 +558,22 @@ class KeyResultService extends AppService
      * 全ゴールメンバーのダッシュボードのキャッシュを削除
      * - $withCountがtrueの場合はKRカウントキャッシュも削除する
      *
-     * @param int　$goalId
+     * @param      int 　$goalId
      * @param bool $withCount
      */
-    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true)
+    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true): void
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
 
         $memberUserids = $GoalMember->findAllMemberUserIds($goalId);
-        foreach($memberUserids as $userId) {
+        foreach ($memberUserids as $userId) {
             Cache::delete($GoalMember->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true,
                 $userId), 'user_data');
             if ($withCount) {
                 Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_KR_COUNT, true,
                     $userId), 'user_data');
             }
-        }
-    }
-
-    /**
-     * ダッシュボード表示用にKR一覧を整形
-     *
-     * @param  array $krs
-     */
-    function processInDashboard(array $krs): array
-    {
-        /** @var ActionService $ActionService */
-        $ActionService = ClassRegistry::init("ActionService");
-
-        $krs = Hash::map($krs, '', function ($kr) use ($ActionService) {
-            $kr['action_results'] = $ActionService->groupByUser($kr['action_results']);
-            $kr['key_result']['action_message'] = $this->generateActionMessage($kr);
-            // 先頭から3番目までのデータを返す
-            $kr['action_results'] = array_slice($kr['action_results'], 0, 3);
-            return $kr;
-        });
-
-        return $krs;
-    }
-
-    /**
-     * アクションを促すメッセージを生成する
-     * @param  $kr
-     * @return string
-     */
-    function generateActionMessage(array $kr): string
-    {
-        $actionCount = count($kr['action_results']);
-        $latestActioned = $kr['key_result']['latest_actioned'];
-        $completed = $kr['key_result']['completed'];
-
-        if ($completed) {
-            return __('Completed this on %s.', date('m/d', $completed));
-        } else if ($actionCount > 0) {
-            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
-        } elseif ($latestActioned) {
-            return __("Take action since %s !", date('m/d', $latestActioned));
-        } else {
-            return __('Take first action to this !');
         }
     }
 }

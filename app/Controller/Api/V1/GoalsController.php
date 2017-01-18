@@ -560,6 +560,7 @@ class GoalsController extends ApiController
      *    "goals": []
      *  }
      *}
+     *
      * @return CakeResponse
      */
     public function get_dashboard()
@@ -576,8 +577,12 @@ class GoalsController extends ApiController
         }
 
         // レスポンスデータ取得
-        $response = $ApiGoalService->findDashboardFirstViewResponse($queryParams);
-
+        try {
+            $response = $ApiGoalService->findDashboardFirstViewResponse($queryParams);
+        } catch (Exception $e) {
+            $this->_getResponseBadFail($e->getMessage());
+        }
+        /** @noinspection PhpUndefinedVariableInspection */
         return $this->_getResponsePagingSuccess($response);
     }
 

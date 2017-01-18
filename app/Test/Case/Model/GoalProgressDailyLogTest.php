@@ -61,4 +61,143 @@ class GoalProgressDailyLogTest extends GoalousTestCase
 
     }
 
+    function testFindLogsSingleGoal()
+    {
+        $this->_setDefaultValues();
+        $this->_saveDefaultData();
+        $expected = [
+            (int)0 => [
+                'goal_id'     => '1',
+                'progress'    => '20',
+                'target_date' => '2016-01-02'
+            ],
+            (int)1 => [
+                'goal_id'     => '1',
+                'progress'    => '30',
+                'target_date' => '2016-01-03'
+            ],
+            (int)2 => [
+                'goal_id'     => '1',
+                'progress'    => '40',
+                'target_date' => '2016-01-04'
+            ]
+        ];
+        $actual = $this->GoalProgressDailyLog->findLogs('2016-01-02', '2016-01-04', [1]);
+        $this->assertEquals($expected, $actual);
+
+    }
+
+    function testGetLogsMultiGoals()
+    {
+        $this->_setDefaultValues();
+        $this->_saveDefaultData();
+        $expected = [
+            (int)0 => [
+                'goal_id'     => '1',
+                'progress'    => '20',
+                'target_date' => '2016-01-02'
+            ],
+            (int)1 => [
+                'goal_id'     => '2',
+                'progress'    => '20',
+                'target_date' => '2016-01-02'
+            ],
+            (int)2 => [
+                'goal_id'     => '1',
+                'progress'    => '30',
+                'target_date' => '2016-01-03'
+            ],
+            (int)3 => [
+                'goal_id'     => '2',
+                'progress'    => '30',
+                'target_date' => '2016-01-03'
+            ],
+            (int)4 => [
+                'goal_id'     => '1',
+                'progress'    => '40',
+                'target_date' => '2016-01-04'
+            ],
+            (int)5 => [
+                'goal_id'     => '2',
+                'progress'    => '40',
+                'target_date' => '2016-01-04'
+            ]
+        ];
+        $actual = $this->GoalProgressDailyLog->findLogs('2016-01-02', '2016-01-04', [1, 2]);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function _setDefaultValues()
+    {
+        $this->GoalProgressDailyLog->current_team_id = 1;
+        $this->GoalProgressDailyLog->my_uid = 1;
+    }
+
+    function _saveDefaultData()
+    {
+        $data = [
+            [
+                'progress'    => 50,
+                'target_date' => '2016-01-05',
+                'team_id'     => 1,
+                'goal_id'     => 1
+            ],
+            [
+                'progress'    => 40,
+                'target_date' => '2016-01-04',
+                'team_id'     => 1,
+                'goal_id'     => 1
+            ],
+            [
+                'progress'    => 30,
+                'target_date' => '2016-01-03',
+                'team_id'     => 1,
+                'goal_id'     => 1
+            ],
+            [
+                'progress'    => 20,
+                'target_date' => '2016-01-02',
+                'team_id'     => 1,
+                'goal_id'     => 1
+            ],
+            [
+                'progress'    => 10,
+                'target_date' => '2016-01-01',
+                'team_id'     => 1,
+                'goal_id'     => 1
+            ],
+            [
+                'progress'    => 50,
+                'target_date' => '2016-01-05',
+                'team_id'     => 1,
+                'goal_id'     => 2
+            ],
+            [
+                'progress'    => 40,
+                'target_date' => '2016-01-04',
+                'team_id'     => 1,
+                'goal_id'     => 2
+            ],
+            [
+                'progress'    => 30,
+                'target_date' => '2016-01-03',
+                'team_id'     => 1,
+                'goal_id'     => 2
+            ],
+            [
+                'progress'    => 20,
+                'target_date' => '2016-01-02',
+                'team_id'     => 1,
+                'goal_id'     => 2
+            ],
+            [
+                'progress'    => 10,
+                'target_date' => '2016-01-01',
+                'team_id'     => 1,
+                'goal_id'     => 2
+            ],
+        ];
+        $this->GoalProgressDailyLog->saveAll($data);
+    }
+
 }

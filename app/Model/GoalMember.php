@@ -252,6 +252,44 @@ class GoalMember extends AppModel
         return $res;
     }
 
+    /**
+     * 自分のゴールのプライオリティを返す
+     * 返り値のフォーマットkey:goal_id,value:priorityの配列
+     *
+     * @param int $userId
+     * @param int $startTimestamp
+     * @param int $endTimestamp
+     *
+     * @return array
+     */
+    function findGoalPriorities(int $userId, int $startTimestamp, int $endTimestamp): array
+    {
+        $options = [
+            'joins'      => [
+                [
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Goal.id = GoalMember.goal_id',
+                        'Goal.end_date >=' => $startTimestamp,
+                        'Goal.end_date <=' => $endTimestamp,
+                    ]
+                ]
+            ],
+            'conditions' => [
+                'GoalMember.user_id' => $userId,
+                'GoalMember.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'goal_id',
+                'priority',
+            ],
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
+    }
+
     // getting incomplete goal ids for owner, for right side leader goal column
     function getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date)
     {
@@ -601,29 +639,29 @@ class GoalMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'GoalMember.goal_id' => $goal_id,
-                'GoalMember.team_id' => $this->current_team_id,
+                'GoalMember.goal_id'    => $goal_id,
+                'GoalMember.team_id'    => $this->current_team_id,
                 'TeamMember.active_flg' => true,
-                'User.active_flg' => true,
+                'User.active_flg'       => true,
             ],
             'fields'     => [
                 'GoalMember.user_id',
                 'GoalMember.user_id'
             ],
-            'joins' => [
+            'joins'      => [
                 [
-                    'type' => 'LEFT',
-                    'table' => 'team_members',
-                    'alias' => 'TeamMember',
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
                     'conditions' => [
                         'TeamMember.user_id = GoalMember.user_id',
                         'TeamMember.team_id = GoalMember.team_id',
                     ],
                 ],
                 [
-                    'type' => 'LEFT',
-                    'table' => 'users',
-                    'alias' => 'User',
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
                     'conditions' => [
                         'User.id = GoalMember.user_id',
                     ],
@@ -1025,36 +1063,36 @@ class GoalMember extends AppModel
         $GoalMember = ClassRegistry::init('GoalMember');
 
         $options = [
-             'conditions' => [
-                 'GoalMember.goal_id' => $goalId,
-                 'GoalMember.type' => $GoalMember::TYPE_OWNER,
-                 'TeamMember.active_flg' => true,
-                 'User.active_flg' => true,
-             ],
-             'fields' => [
-                 'GoalMember.id',
-                 'User.*',
-             ],
-             'joins' => [
-                 [
-                     'type' => 'LEFT',
-                     'table' => 'team_members',
-                     'alias' => 'TeamMember',
-                     'conditions' => [
-                         'TeamMember.user_id = GoalMember.user_id',
-                         'TeamMember.team_id = GoalMember.team_id',
-                     ],
-                 ],
-                 [
-                     'type' => 'LEFT',
-                     'table' => 'users',
-                     'alias' => 'User',
-                     'conditions' => [
-                         'User.id = GoalMember.user_id',
-                     ],
-                 ],
-             ],
-         ];
+            'conditions' => [
+                'GoalMember.goal_id'    => $goalId,
+                'GoalMember.type'       => $GoalMember::TYPE_OWNER,
+                'TeamMember.active_flg' => true,
+                'User.active_flg'       => true,
+            ],
+            'fields'     => [
+                'GoalMember.id',
+                'User.*',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = GoalMember.user_id',
+                        'TeamMember.team_id = GoalMember.team_id',
+                    ],
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = GoalMember.user_id',
+                    ],
+                ],
+            ],
+        ];
 
         $res = $GoalMember->find('first', $options);
         return $res ?? null;
@@ -1062,7 +1100,9 @@ class GoalMember extends AppModel
 
     /**
      * ゴールメンバーがアクティブかどうか判定
-     * @param  int  $goalMemberId
+     *
+     * @param  int $goalMemberId
+     *
      * @return bool
      */
     function isActiveGoalMember(int $goalMemberId, int $goalId): bool
@@ -1117,7 +1157,8 @@ class GoalMember extends AppModel
     /**
      * アクティブなコラボレーター一覧をリスト形式で返す
      *
-     * @param  int   $goalId
+     * @param  int $goalId
+     *
      * @return array
      */
     function getActiveCollaboratorList(int $goalId): array
@@ -1170,7 +1211,8 @@ class GoalMember extends AppModel
      *
      * @return int|null
      */
-    function getGoalIdById(int $id) {
+    function getGoalIdById(int $id)
+    {
         $options = [
             'conditions' => [
                 'id' => $id

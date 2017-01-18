@@ -170,7 +170,7 @@ class KeyResult extends AppModel
         'current_value' => [
             'numeric'                 => [
                 'rule' => ['numeric'],
-                'last'     => true,
+                'last' => true,
             ],
             'validateProgressCurrent' => [
                 'rule' => ['validateProgressCurrent'],
@@ -221,10 +221,9 @@ class KeyResult extends AppModel
      *
      * @param      $val
      *
-     * @return array|null
-     * @internal param $data
+     * @return bool
      */
-    function requiredCaseExistUnit($val)
+    function requiredCaseExistUnit($val):bool
     {
         $val = array_shift($val);
         $unitId = Hash::get($this->data, 'KeyResult.value_unit');
@@ -368,7 +367,6 @@ class KeyResult extends AppModel
     function validateProgressCurrent(array $val): bool
     {
         $currentVal = array_shift($val);
-        $errMsg = __("Invalid Request.");
 
         // 単位が完了/未完了の場合
         $unitId = Hash::get($this->data, 'KeyResult.value_unit');
@@ -382,7 +380,7 @@ class KeyResult extends AppModel
         } else {
             $krId = Hash::get($this->data, 'KeyResult.id');
             $kr = $this->getById($krId);
-            $startVal = Hash::get($kr,'start_value');
+            $startVal = Hash::get($kr, 'start_value');
         }
 
         $isProgressIncrease = bcsub($targetVal, $startVal, 3) > 0;
@@ -557,6 +555,7 @@ class KeyResult extends AppModel
                 'completed' => null
             ],
         ];
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->find('count', $options);
     }
 
@@ -600,7 +599,9 @@ class KeyResult extends AppModel
 
     /**
      * TKR取得
+     *
      * @param  int $goalId
+     *
      * @return null|array
      */
     function getTkr(int $goalId)
@@ -624,7 +625,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    function getIncompleteKrCount($goal_id)
+    function getIncompleteKrCount($goal_id):int
     {
         $options = [
             'conditions' => [
@@ -633,6 +634,7 @@ class KeyResult extends AppModel
             ],
         ];
         $res = $this->find('count', $options);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $res;
     }
 
@@ -783,7 +785,7 @@ class KeyResult extends AppModel
      *
      * @param $goalIds
      *
-     * @return bool
+     * @return array
      */
     public function countEachGoalId($goalIds)
     {
@@ -845,6 +847,11 @@ class KeyResult extends AppModel
      * # ソート条件
      * - 1.アクションの作成日降順
      * - 2.KRの重要度降順
+     *
+     * @param int      $limit
+     * @param int|null $offset
+     * @param int|null $goalId
+     *
      * @return array
      */
     public function findInDashboard(int $limit, int $offset = 0, $goalId = null): array
@@ -855,18 +862,18 @@ class KeyResult extends AppModel
 
         $options = [
             'conditions' => [
-                'GoalMember.user_id' => $this->my_uid,
+                'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
-            'order' => [
+            'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
                 'KeyResult.priority'        => 'desc',
                 'KeyResult.created'         => 'desc'
             ],
-            'limit'  => $limit,
-            'offset' => $offset,
-            'joins'  => [
+            'limit'      => $limit,
+            'offset'     => $offset,
+            'joins'      => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'goal_members',
@@ -876,7 +883,7 @@ class KeyResult extends AppModel
                     ]
                 ],
             ],
-            'contain' => [
+            'contain'    => [
                 'Goal',
                 'ActionResult' => [
                     'conditions' => [
@@ -925,7 +932,7 @@ class KeyResult extends AppModel
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
             ],
-            'joins' => [
+            'joins'      => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'goal_members',
@@ -943,6 +950,7 @@ class KeyResult extends AppModel
         }
 
         $count = $this->find('count', $options);
-        return $count;
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $count ?? 0;
     }
 }

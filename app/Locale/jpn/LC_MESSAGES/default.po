@@ -1733,6 +1733,21 @@ msgstr "評価期間中のゴールのリーダーは変更できません。"
 msgid "Incomplete"
 msgstr "未完了"
 
+msgid "Wrong target days."
+msgstr "指定日数が不正な値です。"
+
+msgid "Wrong buffer days."
+msgstr "バッファ日数が不正です。"
+
+msgid "Wrong target days or buffer days."
+msgstr "指定日数とバッファ日数が不正です。"
+
+msgid "Target end date should be in evaluate term"
+msgstr "日付指定は評価期間内でなければいけません。"
+
+msgid "Graph range is wrong."
+msgstr "グラフの範囲指定が不正です。"
+
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
 
