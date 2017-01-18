@@ -53,7 +53,7 @@ class AppUtil
      *
      * @return string
      */
-    static function formatBigFloat(string $val) : string
+    static function formatBigFloat(string $val): string
     {
         if (!preg_match('/\./', $val)) {
             return $val;
@@ -74,5 +74,36 @@ class AppUtil
         reset($ar);
         list($k) = each($ar);
         return $k !== 0;
+    }
+
+    /**
+     * 日数の差分を求める(デフォルトで繰り上げ)
+     * $targetTimeから$baseTimeの差
+     *
+     * @param int  $baseTimestamp
+     * @param int  $targetTimestamp
+     * @param bool $roundUp if false, round off
+     *
+     * @return int
+     */
+    static function diffDays(int $baseTimestamp, int $targetTimestamp, bool $roundUp = true): int
+    {
+        $days = ($targetTimestamp - $baseTimestamp) / DAY;
+        if ($roundUp) {
+            return ceil($days);
+        }
+        return round($days);
+    }
+
+    /**
+     * Y-m-d 形式の日付を返す
+     *
+     * @param int $timestamp
+     *
+     * @return string
+     */
+    static function dateYmd(int $timestamp): string
+    {
+        return date('Y-m-d', $timestamp);
     }
 }

@@ -65,7 +65,9 @@ class EvaluateTerm extends AppModel
 
     /**
      * TODO:findAllメソッドに統合
+     *
      * @deprecated
+     *
      * @param bool $order_desc
      *
      * @return array|null
@@ -207,7 +209,7 @@ class EvaluateTerm extends AppModel
      * @param      $type
      * @param bool $with_cache
      *
-     * @return array|null
+     * @return array
      */
     public function getTermData($type, $with_cache = true)
     {
@@ -215,7 +217,7 @@ class EvaluateTerm extends AppModel
         if (!$this->currentTerm) {
             if ($with_cache) {
                 $currentTermFromCache = Cache::read($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
-                if($currentTermFromCache !== false){
+                if ($currentTermFromCache !== false) {
                     $this->currentTerm = $currentTermFromCache;
                 }
             }
@@ -286,19 +288,53 @@ class EvaluateTerm extends AppModel
         return Hash::get($term, 'id');
     }
 
-    public function getCurrentTermData()
+    /**
+     * @param bool $utcMidnight
+     *
+     * @return array
+     */
+    public function getCurrentTermData(bool $utcMidnight = false): array
     {
-        return $this->getTermData(self::TYPE_CURRENT);
+        $term = $this->getTermData(self::TYPE_CURRENT);
+        if ($utcMidnight) {
+            return $this->changeToUtcMidnight($term);
+        }
+        return $term;
     }
 
-    public function getNextTermData()
+    /**
+     * @param bool $utcMidnight
+     *
+     * @return array
+     */
+    public function getNextTermData(bool $utcMidnight = false): array
     {
-        return $this->getTermData(self::TYPE_NEXT);
+        $term = $this->getTermData(self::TYPE_NEXT);
+        if ($utcMidnight) {
+            return $this->changeToUtcMidnight($term);
+        }
+        return $term;
     }
 
-    public function getPreviousTermData()
+    /**
+     * @param bool $utcMidnight
+     *
+     * @return array
+     */
+    public function getPreviousTermData(bool $utcMidnight = false): array
     {
-        return $this->getTermData(self::TYPE_PREVIOUS);
+        $term = $this->getTermData(self::TYPE_PREVIOUS);
+        if ($utcMidnight) {
+            return $this->changeToUtcMidnight($term);
+        }
+        return $term;
+    }
+
+    private function changeToUtcMidnight(array $term): array
+    {
+        $term['start_date'] += $term['timezone'] * HOUR;
+        $term['end_date'] += $term['timezone'] * HOUR;
+        return $term;
     }
 
     public function getCurrentTermId()
@@ -554,7 +590,7 @@ class EvaluateTerm extends AppModel
         }
 
         return date('Y/m/d', $start_date + $this->me['timezone'] * 3600) . ' - ' .
-        date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
+            date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
     }
 
     /**

@@ -96,7 +96,7 @@ class ApiGoalService extends ApiService
         // ゴールラベル
         $goalLabels = $GoalLabel->findByGoalId($goalIds);
         $goalLabelsEachGoalId = [];
-        foreach($goalLabels as $goalLabel) {
+        foreach ($goalLabels as $goalLabel) {
             $goalId = Hash::get($goalLabel, 'GoalLabel.goal_id');
             $goalLabelsEachGoalId[$goalId][] = Hash::get($goalLabel, 'Label');
         }
@@ -118,7 +118,7 @@ class ApiGoalService extends ApiService
                 $goal['can_follow'] = false;
                 continue;
             }
-            if ($goal['completed']){
+            if ($goal['completed']) {
                 $goal['can_follow'] = false;
                 continue;
             }
@@ -197,6 +197,8 @@ class ApiGoalService extends ApiService
         $KeyResultService = ClassRegistry::init("KeyResultService");
         /** @var ApiKeyResultService $ApiKeyResultService */
         $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
         // レスポンスデータ定義
         $ret = [
@@ -207,7 +209,7 @@ class ApiGoalService extends ApiService
             'paging' => [
                 'next' => ''
             ],
-            'count' => 0
+            'count'  => 0
         ];
 
         // パラメータ展開
@@ -216,6 +218,12 @@ class ApiGoalService extends ApiService
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
         $krs = $KeyResultService->findInDashboardFirstView($limit + 1);
+
+        //KRが一件もない場合はdataキーを空で返す
+        if (empty($krs)) {
+            $ret['data'] = [];
+            return $ret;
+        }
 
         // ページング情報セット
         if (count($krs) > $limit) {
@@ -228,6 +236,23 @@ class ApiGoalService extends ApiService
 
         // KRデータセット
         $ret['data']['krs'] = $krs;
+
+        //グラフデータのセット
+        $graphRange = $GoalService->getGraphRange(
+            time(),
+            GoalService::GRAPH_TARGET_DAYS,
+            GoalService::GRAPH_MAX_BUFFER_DAYS
+        );
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+        $progressGraph = $GoalService->getAllProgressForDrawingGraph(
+            $User->my_uid,
+            $graphRange['graphStartDate'],
+            $graphRange['graphEndDate'],
+            $graphRange['plotDataEndDate'],
+            true
+        );
+        $ret['data']['progress_graph'] = $progressGraph;
 
         return $ret;
     }
