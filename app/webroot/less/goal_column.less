@@ -39,6 +39,12 @@
     padding: 10px 0;
     border-bottom: 1px solid @subColor4;
 
+    &-kr-opener {
+      color: @subColor3;
+      &:active,&:visited,&:target {
+        color: @subColor3;
+      }
+    }
     &-wrapper {
       display: flex;
       .left {
@@ -65,6 +71,9 @@
       }
       .right {
         width: 20%;
+        .action-button-wrapper {
+          position: relative;
+        }
         .action-button {
           width: 50px;
           height: 50px;
@@ -82,14 +91,18 @@
             font-size: 47px;
             color: @subColor4;
           }
-          .add-mark {
-            position: absolute;
-            margin: 16px 12px 0;
-            .fa-plus-circle {
-              color: @subColor14;
-              font-size: 20px;
-            }
-          }
+        }
+        .add-mark {
+          position: absolute;
+          bottom:0;
+          right: 0;
+          color: @subColor14;
+          font-size: 20px;
+          background-color: #fff;
+          border-radius: 50%;
+          line-height:18px;
+          width: 18px;
+          text-align: center;
         }
       }
     }

@@ -28,13 +28,13 @@ export default class Krs extends React.Component {
         <div className="dashboard-krs-header">
           <div className="title">KRs { kr_count ? `(${kr_count})` : '' }</div>
           <div role="group" className="pull-right goal-filter">
-            <p className="dropdown-toggle" data-toggle="dropdown" role="button"
+            <div className="dropdown-toggle" data-toggle="dropdown" role="button"
                aria-expanded="false">
               <div className="selected-goal oneline-ellipsis">
                 <span>{ this.state.selected_goal }</span>
               </div>
               <span className="dropdown-opener"><i className="fa fa-angle-down ml_2px"/></span>
-            </p>
+            </div>
             <ul className="dropdown-menu pull-right" role="menu">
               <li>
                 <a href="#"
@@ -63,12 +63,14 @@ export default class Krs extends React.Component {
           </div>
         </div>
         <ul className="dashboard-krs-columns">
-          { krs.map((kr) => {
+          { krs.map((kr, i) => {
             const {key_result, action_results, goal} = kr
             return (
               <Kr key_result={key_result}
                   action_results={action_results}
-                  goal={ goal } />
+                  goal={ goal }
+                  key={i}
+              />
             )
           }) }
         </ul>
@@ -80,7 +82,7 @@ export default class Krs extends React.Component {
 
 Krs.propTypes = {
   krs: React.PropTypes.array,
-  goals: React.PropTypes.array,
+  goals: React.PropTypes.object,
   kr_count: React.PropTypes.number
 };
-Krs.defaultProps = { krs: [], goals: [], kr_count: 0 };
+Krs.defaultProps = { krs: [], goals: {}, kr_count: 0 };
