@@ -580,7 +580,7 @@ class GoalsController extends ApiController
         try {
             $response = $ApiGoalService->findDashboardFirstViewResponse($queryParams);
         } catch (Exception $e) {
-            $this->_getResponseBadFail($e->getMessage());
+            return $this->_getResponseBadFail($e->getMessage());
         }
         /** @noinspection PhpUndefinedVariableInspection */
         return $this->_getResponsePagingSuccess($response);
