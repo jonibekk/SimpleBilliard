@@ -569,15 +569,16 @@ class GoalsController extends ApiController
 
         // クエリパラメータ取得
         $queryParams = $this->_extractQueryParamsInDashboard();
+        list('limit' => $limit) = $queryParams;
 
         // KR取得件数上限チェック
-        if (!$ApiGoalService->checkMaxLimit((int)$this->request->query('limit'))) {
+        if (!$ApiGoalService->checkMaxLimit($limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
 
         // レスポンスデータ取得
         try {
-            $response = $ApiGoalService->findDashboardFirstViewResponse($queryParams);
+            $response = $ApiGoalService->findDashboardFirstViewResponse($limit);
         } catch (Exception $e) {
             $this->_getResponseBadFail($e->getMessage());
         }
@@ -592,8 +593,12 @@ class GoalsController extends ApiController
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
+        // クエリパラメータ取得 & 展開
+        $queryParams = $this->_extractQueryParamsInDashboard();
+        list('limit' => $limit, 'offset' => $offset, 'goal_id' => $goalId) = $queryParams;
+
         // KR取得件数上限チェック
-        if (!$ApiKeyResultService->checkMaxLimit((int)$this->request->query('limit'))) {
+        if (!$ApiKeyResultService->checkMaxLimit($limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
 
@@ -605,10 +610,6 @@ class GoalsController extends ApiController
             ],
             'count'  => null
         ];
-
-        // クエリパラメータ取得 & 展開
-        $queryParams = $this->_extractQueryParamsInDashboard();
-        list('limit' => $limit, 'offset' => $offset, 'goal_id' => $goalId) = $queryParams;
 
         // レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
@@ -634,9 +635,9 @@ class GoalsController extends ApiController
     function _extractQueryParamsInDashboard(): array
     {
         $params = [
-            'limit'   => $this->request->query('limit'),
-            'offset'  => $this->request->query('offset'),
-            'goal_id' => $this->request->query('goal_id'),
+            'limit'   => (int)$this->request->query('limit') ?? 10,
+            'offset'  => (int)$this->request->query('offset') ?? 0,
+            'goal_id' => (int)$this->request->query('goal_id'),
         ];
         return $params;
     }
