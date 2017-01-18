@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
+App::import('Service', 'ActionService');
 App::uses('KeyResult', 'Model');
 App::uses('Goal', 'Model');
 App::uses('GoalMember', 'Model');
