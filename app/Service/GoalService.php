@@ -897,7 +897,7 @@ class GoalService extends AppService
     }
 
     /**
-     * グラフ用のゴール進捗ログデータを取得
+     * グラフ用のユーザの全ゴール進捗ログデータを取得
      * //日毎に集計済みのゴール進捗ログを取得
      * //当日の進捗を計算
      * //sweet spotを算出
@@ -913,7 +913,7 @@ class GoalService extends AppService
      * @return array
      * @throws Exception
      */
-    function getUserProgressForDrawingGraph(
+    function getUserAllGoalProgressForDrawingGraph(
         int $userId,
         string $graphStartDate,
         string $graphEndDate,
@@ -966,8 +966,8 @@ class GoalService extends AppService
     }
 
     /**
-     * グラフ用のゴール進捗ログデータを取得
-     * //日毎に集計済みのゴール進捗ログを取得
+     * グラフ用の単一ゴール進捗ログデータを取得
+     * //ゴール進捗ログを取得
      * //当日の進捗を計算
      * //sweet spotを算出
      * //ログデータと当日の進捗をマージ
