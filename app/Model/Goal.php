@@ -357,7 +357,7 @@ class Goal extends AppModel
             return true;
         }
         // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
-        $term = $this->Team->EvaluateTerm->getTermDataByDatetime($goal['end_date']);
+        $term = $this->Team->EvaluateTerm->getTermDataByTimeStamp($goal['end_date']);
 
         // UTCでのタイムスタンプ取得
         $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
@@ -2062,7 +2062,7 @@ class Goal extends AppModel
      *
      * @param $goal_id
      *
-     * @return bool
+     * @return false|array|null
      */
     public function getGoalTermData($goal_id)
     {
@@ -2070,7 +2070,10 @@ class Goal extends AppModel
         if (!$goal) {
             return false;
         }
-        return ClassRegistry::init('EvaluateTerm')->getTermDataByDatetime($goal['Goal']['end_date']);
+
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        return $EvaluateTerm->getTermDataByTimeStamp($goal['Goal']['end_date']);
     }
 
     public function getRelatedGoals($user_id = null)

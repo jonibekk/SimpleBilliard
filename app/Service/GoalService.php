@@ -224,6 +224,12 @@ class GoalService extends AppService
                     , var_export($updateGoal, true)));
             }
 
+            // 優先度更新
+            $GoalMember->id = $goal['goal_member']['id'];
+            if (!$GoalMember->saveField('priority', $requestData['priority'])) {
+                throw new Exception(sprintf("Failed to update GoalMember priority. goalMemberId:%s priority:%s", $goal['goal_member']['id'], $requestData['priority']));
+            }
+
             // TKR更新
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');
