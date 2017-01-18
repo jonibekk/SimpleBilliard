@@ -1214,4 +1214,27 @@ class GoalService extends AppService
             true, $userId), $data, 'user_data');
     }
 
+    /**
+     * アクション可能なゴール一覧を返す
+     * - フィードページで参照されるデータなのでキャッシュを使う
+     *
+     * @return array
+     */
+    function findActionables(): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $cachedActionableGoals = Cache::read($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        if ($cachedActionableGoals !== false) {
+            return $cachedActionableGoals;
+        }
+
+        // キャッシュが存在しない場合はDBにqueryを投げてキャッシュに保存する
+        $actionableGoals = $Goal->findActionables($Goal->my_uid);
+        $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
+
+        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), $actionableGoals, 'user_data');
+        return $actionableGoals;
+    }
 }

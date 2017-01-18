@@ -99,15 +99,17 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
+            $keyResult['display_in_progress_bar'] = $keyResult['completed'] ? __('Completed') : __('Incomplete');
+            $keyResult['progress_rate'] = $keyResult['completed'] ? 100 : 0;
             return $keyResult;
         }
-
+        $NumberEx = new NumberExHelper(new View());
         // 少数の不要な0を取り除く
         // 桁数が多いと指数表記(111E+など)になるため、ここで数字をフォーマットする
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
-
+        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
@@ -118,12 +120,14 @@ class KeyResultService extends AppService
         if (in_array($keyResult['value_unit'], KeyResult::$UNIT_TAIL)) {
             $tailUnit = $unitName;
         }
-
-        $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
-
+        $keyResult['start_value_with_unit'] = $headUnit . $keyResult['start_value'] . $tailUnit;
+        $keyResult['target_value_with_unit'] = $headUnit . $keyResult['target_value'] . $tailUnit;
+        $keyResult['current_value_with_unit'] = $headUnit . $keyResult['current_value'] . $tailUnit;
+        $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
+        $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
         return $keyResult;
     }
-
+    
     /**
      * 指定したゴールのKRリスト取得
      *
@@ -574,6 +578,49 @@ class KeyResultService extends AppService
                 Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_KR_COUNT, true,
                     $userId), 'user_data');
             }
+        }
+    }
+
+    /**
+     * ダッシュボード表示用にKR一覧を整形
+     *
+     * @param  array $krs
+     */
+    function processInDashboard(array $krs): array
+    {
+        /** @var ActionService $ActionService */
+        $ActionService = ClassRegistry::init("ActionService");
+
+        $krs = Hash::map($krs, '', function ($kr) use ($ActionService) {
+            $kr['action_results'] = $ActionService->groupByUser($kr['action_results']);
+            $kr['key_result']['action_message'] = $this->generateActionMessage($kr);
+            // 先頭から3番目までのデータを返す
+            $kr['action_results'] = array_slice($kr['action_results'], 0, 3);
+            return $kr;
+        });
+
+        return $krs;
+    }
+
+    /**
+     * アクションを促すメッセージを生成する
+     * @param  $kr
+     * @return string
+     */
+    function generateActionMessage(array $kr): string
+    {
+        $actionCount = count($kr['action_results']);
+        $latestActioned = $kr['key_result']['latest_actioned'];
+        $completed = $kr['key_result']['completed'];
+
+        if ($completed) {
+            return __('Completed this on %s.', date('m/d', $completed));
+        } else if ($actionCount > 0) {
+            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
+        } elseif ($latestActioned) {
+            return __("Take action since %s !", date('m/d', $latestActioned));
+        } else {
+            return __('Take first action to this !');
         }
     }
 }
