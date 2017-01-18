@@ -635,9 +635,9 @@ class GoalsController extends ApiController
     function _extractQueryParamsInDashboard(): array
     {
         $params = [
-            'limit'   => (int)$this->request->query('limit') ?? 10,
-            'offset'  => (int)$this->request->query('offset') ?? 0,
-            'goal_id' => (int)$this->request->query('goal_id'),
+            'limit'   => $this->request->query('limit') ?? 10,
+            'offset'  => $this->request->query('offset') ?? 0,
+            'goal_id' => $this->request->query('goal_id'),
         ];
         return $params;
     }
