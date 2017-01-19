@@ -61,7 +61,7 @@ class GoalProgressDailyLogShell extends AppShell
         $this->GoalProgressDailyLog->begin();
         //該当日のデータを削除(ハードデリート)
         //TODO: 現時点では、この処理は行わない。過去のゴール進捗ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
-        $this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
+        //$this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
 
         // 全チームのIDリスト
         $teamIds = array_keys($this->Team->find('list'));
