@@ -6,6 +6,7 @@ App::import('Service', 'GoalService');
  * Console/cake goal_progress_daily_log -d YYYY-MM-DD
  * 説明
  * - 指定日までの最新のKR進捗から各ゴールの進捗を求める。
+ * TODO: 現時点では、過去のゴール進捗ログは書き変えない。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
  *
  * @property Team                 $Team
  * @property Goal                 $Goal
@@ -61,7 +62,9 @@ class GoalProgressDailyLogShell extends AppShell
 
         $this->GoalProgressDailyLog->begin();
         //該当日のデータを削除(ハードデリート)
-        $this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
+        //TODO: 現時点では、この処理は行わない。過去のゴール進捗ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
+        //$this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
+
         // 全チームのIDリスト
         $teamIds = array_keys($this->Team->find('list'));
         $saveData = [];
@@ -88,10 +91,18 @@ class GoalProgressDailyLogShell extends AppShell
             }
         }
         //ログ保存
-        $result = $this->GoalProgressDailyLog->saveAll($saveData);
-        if (!$result) {
+        try{
+            $result = $this->GoalProgressDailyLog->saveAll($saveData);
+            if (!$result) {
+                $this->GoalProgressDailyLog->rollback();
+                $this->log("goal_progress_daily_log shell was failed. target_date:$targetDate.\n");
+                $this->error('failed.');
+            }
+        }catch (PDOException $e){
             $this->GoalProgressDailyLog->rollback();
             $this->log("goal_progress_daily_log shell was failed. target_date:$targetDate.\n");
+            $this->log("PDOException occurred!");
+            $this->log($e->getMessage()."\n");
             $this->error('failed.');
         }
         $this->GoalProgressDailyLog->commit();
