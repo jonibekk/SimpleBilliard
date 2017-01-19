@@ -49,9 +49,6 @@ class GoalProgressDailyLogShell extends AppShell
      */
     public function main()
     {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
-
         // パラメータ
         $targetDate = $this->params['date'];
 
@@ -71,28 +68,12 @@ class GoalProgressDailyLogShell extends AppShell
         $saveData = [];
         //メモリ消費を抑えるためにチーム毎に集計
         foreach ($teamIds as $teamId) {
-            // モデルに current_team_id をセット
-            $this->_setupModels($teamId);
-            // 全ゴールのIDリスト
-            $goalIds = array_keys($this->Goal->find('list'));
-            if (empty($goalIds)) {
-                continue;
-            }
-            // 全ゴールを取得
-            $goals = $this->Goal->getGoalAndKr($goalIds);
-            //保存データの生成
-            foreach ($goals as $goal) {
-                $saveData[] = [
-                    'team_id'     => $teamId,
-                    'goal_id'     => $goal['Goal']['id'],
-                    //各ゴール毎にKRからゴール進捗を求める
-                    'progress'    => $GoalService->getProgress($goal['KeyResult']),
-                    'target_date' => $targetDate,
-                ];
-            }
+            //ゴール毎の進捗ログデータを生成
+            $saveData = array_merge($saveData, $this->_buildSaveData($teamId, $targetDate));
         }
-        //ログ保存
+
         try {
+            //全てのチームのログを一括保存
             $result = $this->GoalProgressDailyLog->saveAll($saveData);
             if (!$result) {
                 //rollback transaction
@@ -118,6 +99,43 @@ class GoalProgressDailyLogShell extends AppShell
 
         $this->log("[Successful] goal_progress_daily_log shell. target_date:$targetDate.\n");
         $this->out('successful!');
+    }
+
+    /**
+     * ゴール毎の進捗ログデータを生成
+     *
+     * @param int    $teamId
+     * @param string $targetDate
+     *
+     * @return array
+     */
+    protected function _buildSaveData(int $teamId, string $targetDate): array
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+
+        // モデルに current_team_id をセット
+        $this->_setupModels($teamId);
+        // 全ゴールのIDリスト
+        $goalIds = array_keys($this->Goal->find('list'));
+        if (empty($goalIds)) {
+            return [];
+        }
+        $saveData = [];
+        // 全ゴールを取得
+        $goals = $this->Goal->getGoalAndKr($goalIds);
+        //保存データの生成
+        foreach ($goals as $goal) {
+            $saveData[] = [
+                'team_id'     => $teamId,
+                'goal_id'     => $goal['Goal']['id'],
+                //各ゴール毎にKRからゴール進捗を求める
+                'progress'    => $GoalService->getProgress($goal['KeyResult']),
+                'target_date' => $targetDate,
+            ];
+        }
+
+        return $saveData;
     }
 
     /**
