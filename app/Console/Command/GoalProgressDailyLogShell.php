@@ -95,12 +95,12 @@ class GoalProgressDailyLogShell extends AppShell
             $result = $this->GoalProgressDailyLog->saveAll($saveData);
             if (!$result) {
                 $this->GoalProgressDailyLog->rollback();
-                $this->log("goal_progress_daily_log shell was failed. target_date:$targetDate.\n");
+                $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate.\n");
                 $this->error('failed.');
             }
         }catch (PDOException $e){
             $this->GoalProgressDailyLog->rollback();
-            $this->log("goal_progress_daily_log shell was failed. target_date:$targetDate.\n");
+            $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate.\n");
             $this->log("PDOException occurred!");
             $this->log($e->getMessage()."\n");
             $this->error('failed.');
@@ -109,6 +109,7 @@ class GoalProgressDailyLogShell extends AppShell
         //キャッシュ削除
         Cache::clear(false, 'team_info');
         Cache::clear(false, 'user_data');
+        $this->log("[Successful] goal_progress_daily_log shell. target_date:$targetDate.\n");
         $this->out('successful!');
     }
 
