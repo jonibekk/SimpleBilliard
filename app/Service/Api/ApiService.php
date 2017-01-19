@@ -17,7 +17,7 @@ class ApiService extends AppService
      *
      * @return bool
      */
-    function checkMaxLimit(int $limit)
+    function checkMaxLimit(int $limit): bool
     {
         return $limit <= self::GET_MAX_LIMIT;
     }
