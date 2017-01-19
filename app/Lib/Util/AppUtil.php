@@ -19,8 +19,8 @@ class AppUtil
     /**
      * timezoneを考慮したtimestampを返す
      *
-     * @param  str $str
-     * @param  float $timezone
+     * @param  string $dateStr
+     * @param  float  $timezone
      *
      * @return int
      */
@@ -105,5 +105,22 @@ class AppUtil
     static function dateYmd(int $timestamp): string
     {
         return date('Y-m-d', $timestamp);
+    }
+
+    /**
+     * 値が指定した範囲に含まれるか？
+     *
+     * @param int $target
+     * @param int $start
+     * @param int $end
+     *
+     * @return bool
+     */
+    static function between(int $target, int $start, int $end): bool
+    {
+        if ($target >= $start && $target <= $end) {
+            return true;
+        }
+        return false;
     }
 }

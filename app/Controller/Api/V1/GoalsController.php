@@ -621,7 +621,6 @@ class GoalsController extends ApiController
             $response['paging'] = $paging;
             array_pop($krs);
         }
-
         $response['data'] = $krs;
 
         return $this->_getResponsePagingSuccess($response);

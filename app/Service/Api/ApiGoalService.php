@@ -247,7 +247,7 @@ class ApiGoalService extends ApiService
         );
         /** @var User $User */
         $User = ClassRegistry::init("User");
-        $progressGraph = $GoalService->getAllProgressForDrawingGraph(
+        $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
             $User->my_uid,
             $graphRange['graphStartDate'],
             $graphRange['graphEndDate'],
