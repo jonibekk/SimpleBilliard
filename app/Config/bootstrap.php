@@ -216,6 +216,7 @@ define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
 define('CACHE_KEY_LABEL', 'label');
 define('CACHE_KEY_EXPERIMENT', 'experiment');
+define('CACHE_KEY_USER_GOAL_PROGRESS_LOG', 'user_goal_progress_log');
 define('CACHE_KEY_GOAL_PROGRESS_LOG', 'goal_progress_log');
 define('CACHE_KEY_KRS_IN_DASHBOARD', 'krs_in_dashboard');
 define('CACHE_KEY_MY_KR_COUNT', 'my_kr_count');
