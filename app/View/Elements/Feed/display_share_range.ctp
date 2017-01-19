@@ -56,7 +56,7 @@
             'goal_id'    => $post['Goal']['id']
         ]) ?>"
            class="ml_8px modal-ajax-get link-dark-gray">
-            <i class="fa fa-flag"></i>
+            <i class="fa fa-flag-o"></i>
             <span><?= $post['Goal']['name'] ?></span>
         </a>
 

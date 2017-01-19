@@ -2194,7 +2194,7 @@ class Goal extends AppModel
      * @return array $res
      * @internal param array $key_results [description]
      */
-    function findCanAction(int $userId): array
+    function findActionables(int $userId): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
         $options = [

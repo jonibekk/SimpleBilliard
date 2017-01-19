@@ -120,8 +120,8 @@ class EvaluationService extends AppService
             $currentTerm = $EvaluateTerm->getCurrentTermData();
             $duration = $currentTerm['end_date'] - REQUEST_TIMESTAMP;
             Cache::set('duration', $duration, 'user_data');
-            Cache::write($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, compact('isStartedEvaluation'), true),
-                'user_data');
+            Cache::write($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true),
+                compact('isStartedEvaluation'), 'user_data');
         }
 
         return $isStartedEvaluation;

@@ -1318,7 +1318,7 @@ class GoalService extends AppService
      * @param string $endDate   Y-m-d
      * @param array  $data      重要度を掛け合わせたもの
      */
-    function writeUserProgressToCache(int $userId, string $startDate, string $endDate, array $data): void
+    function writeUserProgressToCache(int $userId, string $startDate, string $endDate, array $data)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -1329,6 +1329,30 @@ class GoalService extends AppService
     }
 
     /**
+     * アクション可能なゴール一覧を返す
+     * - フィードページで参照されるデータなのでキャッシュを使う
+     *
+     * @return array
+     */
+    function findActionables(): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $cachedActionableGoals = Cache::read($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        if ($cachedActionableGoals !== false) {
+            return $cachedActionableGoals;
+        }
+
+        // キャッシュが存在しない場合はDBにqueryを投げてキャッシュに保存する
+        $actionableGoals = $Goal->findActionables($Goal->my_uid);
+        $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
+
+        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), $actionableGoals, 'user_data');
+        return $actionableGoals;
+    }
+
+    /*
      * 単一のゴール進捗をキャッシュから取得
      *
      * @param int    $goalId
@@ -1366,5 +1390,4 @@ class GoalService extends AppService
             $data,
             'team_info');
     }
-
 }

@@ -12,6 +12,7 @@ App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'GoalService');
 
 /**
  * Application Controller
@@ -638,41 +639,17 @@ class AppController extends BaseController
      */
     public function _setGoalsForTopAction()
     {
-        App::import('Service', 'GoalService');
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $cachedActionableGoals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOALS_FOR_TOP_ACTION, true), 'user_data');
-        if ($cachedActionableGoals !== false) {
-            extract($cached_my_goal_area_vals);
-        } else {
-            //今期のゴールを取得する
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-
-            //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
-            $currentTermGoalsNameList = $this->Goal->getAllMyGoalNameList(
-                $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
-            );
-            $goal_list_for_action_option = [null => __('Select a goal.')] + $currentTermGoalsNameList;
-
-            // アクション可能なゴール数
-            $userId = $this->Auth->user('id');
-            $canActionGoals = $this->Goal->findCanAction($userId);
-            $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
-
-            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
-            Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOALS_FOR_TOP_ACTION, compact('goal_list_for_action_option', 'canActionGoals'), true),
-                'user_data');
-        }
-        $this->set(compact('goal_list_for_action_option', 'canActionGoals'));
+        $canActionGoals = $GoalService->findActionables();
+        $this->set(compact('canActionGoals'));
     }
 
     /**
      * 評価期間かどうかのフラグをセット
      */
-    public function _setStartedEvaluation(): void
+    public function _setStartedEvaluation()
     {
         App::import('Service', 'EvaluationService');
         /** @var EvaluationService $EvaluationService */

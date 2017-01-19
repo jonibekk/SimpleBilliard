@@ -209,7 +209,8 @@ class ApiGoalService extends ApiService
         $ret = [
             'data'   => [
                 'progress_graph' => [],
-                'krs'            => []
+                'krs'            => [],
+                'goal'           => []
             ],
             'paging' => [
                 'next' => ''
@@ -219,7 +220,8 @@ class ApiGoalService extends ApiService
 
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
-        $krs = $KeyResultService->findInDashboardFirstView($limit + 1);
+        // ※キャッシュは1次リリースでは使わない。今後パフォーマンスで問題があれば使用検討
+        $krs = $ApiKeyResultService->findInDashboard($limit + 1);
 
         //KRが一件もない場合はdataキーを空で返す
         if (empty($krs)) {
@@ -235,9 +237,10 @@ class ApiGoalService extends ApiService
 
         // カウント数をセット
         $ret['count'] = $KeyResultService->countMine();
-
         // KRデータセット
         $ret['data']['krs'] = $krs;
+        // Goalデータセット
+        $ret['data']['goals'] = $GoalService->findActionables();
 
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(

@@ -178,6 +178,10 @@ class GoalsController extends AppController
 
         // ダッシュボードのKRキャッシュ削除
         $KeyResultService->removeGoalMembersCacheInDashboard($id);
+        // アクション可能ゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__("Deleted a goal."));
@@ -451,8 +455,12 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__("Start to collaborate."));
 
         // ダッシュボードのKRキャッシュ削除
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true, $myUserId), 'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true, $myUserId), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
+        // アクション可能ゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         //mixpanel
         if ($new) {
@@ -880,7 +888,8 @@ class GoalsController extends AppController
                 }
 
                 // ダッシュボードのKRキャッシュ削除
-                $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+                $kr = $KeyResultService->get($krId);
+                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
             }
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
@@ -934,11 +943,12 @@ class GoalsController extends AppController
         $goalLeaderUserId = Hash::get($goalMember, 'Goal.user_id');
 
         // ダッシュボードのKRキャッシュ削除
-        $myUserId = $this->Auth->user('id');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true,
-            $myUserId), 'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true,
-            $myUserId), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
+        // アクション可能ゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         $this->redirect($this->referer());
     }
@@ -1284,10 +1294,10 @@ class GoalsController extends AppController
         $this->request->data['ActionResult']['key_result_id'] = $keyResultId;
         $krList = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goalId, 'list');
         $this->set(['kr_list' => $krList, 'key_result_id' => $keyResultId]);
-
         $this->set('common_form_type', 'action');
         $this->set('common_form_only_tab', 'action');
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->_setGoalsForTopAction();
         $this->render('edit_action');
     }
 
@@ -1337,6 +1347,7 @@ class GoalsController extends AppController
         }
 
         // 編集フォーム表示
+        $this->_setGoalsForTopAction();
         $row = $this->Goal->ActionResult->getWithAttachedFiles($ar_id);
         $this->request->data = $row;
         $this->set('common_form_type', 'action');
@@ -1556,7 +1567,7 @@ class GoalsController extends AppController
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
         // アクション可能なゴール数
         $userId = $this->Auth->user('id');
-        $canActionGoals = $this->Goal->findCanAction($userId);
+        $canActionGoals = $this->Goal->findActionables($userId);
         $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
         // 完了アクションが可能なゴールIDリスト
         $canCompleteGoalIds = Hash::extract(

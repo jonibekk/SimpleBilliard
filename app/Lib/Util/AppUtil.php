@@ -71,6 +71,11 @@ class AppUtil
      */
     static function isHash(&$ar)
     {
+        // 空の配列はhashとみなさない
+        if(count($ar) === 0) {
+            return false;
+        }
+
         reset($ar);
         list($k) = each($ar);
         return $k !== 0;

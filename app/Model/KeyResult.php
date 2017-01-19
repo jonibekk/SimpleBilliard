@@ -854,7 +854,7 @@ class KeyResult extends AppModel
      *
      * @return array
      */
-    public function findInDashboard(int $limit, ?int $offset = null, ?int $goalId = null): array
+    public function findInDashboard(int $limit, int $offset = 0, $goalId = null): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
         $now = time();
@@ -868,7 +868,8 @@ class KeyResult extends AppModel
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
-                'KeyResult.priority'        => 'desc'
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
             ],
             'limit'      => $limit,
             'offset'     => $offset,
@@ -888,18 +889,32 @@ class KeyResult extends AppModel
                     'conditions' => [
                         'ActionResult.created >=' => $weekAgoTimestamp,
                         'ActionResult.created <=' => $now
-                    ]
+                    ],
+                    'fields' => ['user_id'],
+                    'User'
                 ]
             ]
         ];
 
         // パラメータよりデータ取得条件追加
-        if ($goalId !== null) {
+        if ($goalId) {
             $options['conditions']['KeyResult.goal_id'] = $goalId;
         }
 
         $res = $this->find('all', $options);
-        return $res ?? [];
+
+        // Userのimage情報セット
+        App::uses('UploadHelper', 'View/Helper');
+        $upload = new UploadHelper(new View());
+        foreach($res as $i => $kr) {
+            foreach($kr['ActionResult'] as $j => $action) {
+                $res[$i]['ActionResult'][$j]['User']['original_img_url'] = $upload->uploadUrl($action, 'User.photo');
+                $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'large']);
+                $res[$i]['ActionResult'][$j]['User']['small_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'small']);
+            }
+        }
+
+        return $res;
     }
 
     /**
@@ -907,7 +922,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    public function countMine(): int
+    public function countMine($goalId = null): int
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
 
@@ -928,6 +943,11 @@ class KeyResult extends AppModel
                 ],
             ],
         ];
+
+        // パラメータよりデータ取得条件追加
+        if ($goalId) {
+            $options['conditions']['KeyResult.goal_id'] = $goalId;
+        }
 
         $count = $this->find('count', $options);
         /** @noinspection PhpIncompatibleReturnTypeInspection */
