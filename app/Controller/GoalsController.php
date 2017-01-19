@@ -888,7 +888,8 @@ class GoalsController extends AppController
                 }
 
                 // ダッシュボードのKRキャッシュ削除
-                $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+                $kr = $KeyResultService->get($krId);
+                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
             }
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {

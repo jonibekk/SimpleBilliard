@@ -128,7 +128,7 @@ class KeyResultService extends AppService
         $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
         return $keyResult;
     }
-    
+
     /**
      * 指定したゴールのKRリスト取得
      *
@@ -566,7 +566,7 @@ class KeyResultService extends AppService
      * @param      int 　$goalId
      * @param bool $withCount
      */
-    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true): void
+    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true)
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");

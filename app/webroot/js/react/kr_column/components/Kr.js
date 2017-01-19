@@ -31,7 +31,7 @@ export default class Kr extends React.Component {
         <div className="dashboard-krs-column-wrapper">
           {/* KR name & progressBarエリア */}
           <div className="left">
-            <div className={`flex ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`} onClick={ this.toggleKrOpened }>
+            <div className={`flex mb_2px ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`} onClick={ this.toggleKrOpened }>
               <p className="flex-extend font_verydark kr-name">
                 { key_result.name }
               </p>
@@ -64,7 +64,7 @@ export default class Kr extends React.Component {
             <div className="krProgress">
               <div className="krProgress-bar">
                 <span className="krProgress-text">{ key_result.display_in_progress_bar }</span>
-                <div className={`krProgress-barCurrent ${is_complete ? 'is-complete' : 'is-incomplete'} mod-rate${key_result.progress_rate}`}></div>
+                <div className={`krProgress-barCurrent ${key_result.progress_rate == 100 ? 'is-complete' : 'is-incomplete'} mod-rate${key_result.progress_rate}`}></div>
               </div>
             </div>
           </div>

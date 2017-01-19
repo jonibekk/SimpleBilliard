@@ -215,6 +215,7 @@ class ApiGoalService extends ApiService
 
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
+        // ※キャッシュは1次リリースでは使わない。今後パフォーマンスで問題があれば使用検討
         $krs = $ApiKeyResultService->findInDashboard($queryParams['limit'] + 1);
 
         //KRが一件もない場合はdataキーを空で返す

@@ -649,7 +649,7 @@ class AppController extends BaseController
     /**
      * 評価期間かどうかのフラグをセット
      */
-    public function _setStartedEvaluation(): void
+    public function _setStartedEvaluation()
     {
         App::import('Service', 'EvaluationService');
         /** @var EvaluationService $EvaluationService */

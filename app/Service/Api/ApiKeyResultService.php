@@ -32,7 +32,7 @@ class ApiKeyResultService extends ApiService
      *
      * @return array
      */
-    function findInDashboard(int $limit, int $offset = 0, $goalId = null, bool $needCache = true): array
+    function findInDashboard(int $limit, int $offset = 0, $goalId = null, bool $needCache = false): array
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
@@ -50,7 +50,7 @@ class ApiKeyResultService extends ApiService
             } else {
                 // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
                 $resKrs = $KeyResult->findInDashboard($limit, $offset);
-                Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
+                Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs, 'user_data');
             }
         } else {
             $resKrs = $KeyResult->findInDashboard($limit, $offset, $goalId);

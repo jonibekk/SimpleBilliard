@@ -1204,7 +1204,7 @@ class GoalService extends AppService
      * @param string $endDate   Y-m-d
      * @param array  $data      重要度を掛け合わせたもの
      */
-    function writeProgressToCache(int $userId, string $startDate, string $endDate, array $data): void
+    function writeProgressToCache(int $userId, string $startDate, string $endDate, array $data)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
