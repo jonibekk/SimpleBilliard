@@ -56,7 +56,7 @@ class GoalProgressDailyLogShell extends AppShell
         $targetDate = $this->params['date'];
 
         // validate
-        if (!$this->_targetDateValidation($targetDate)) {
+        if (!$this->_validateTargetDate($targetDate)) {
             $this->error('Invalid parameter', $this->_usageString());
         }
 
@@ -136,7 +136,7 @@ class GoalProgressDailyLogShell extends AppShell
      *
      * @return bool
      */
-    protected function _targetDateValidation(string $date): bool
+    protected function _validateTargetDate(string $date): bool
     {
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
             return false;
