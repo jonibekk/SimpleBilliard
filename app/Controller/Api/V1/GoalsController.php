@@ -34,6 +34,8 @@ class GoalsController extends ApiController
         'Pnotify',
     ];
 
+    const DASHBOARD_KRS_DEFAULT_LIMIT = 10;
+
     /**
      * ゴール(KR除く)のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
@@ -569,9 +571,7 @@ class GoalsController extends ApiController
         $ApiGoalService = ClassRegistry::init("ApiGoalService");
 
         // クエリパラメータ取得
-        $queryParams = $this->_extractQueryParamsInDashboard();
-        list('limit' => $limit) = $queryParams;
-
+        $limit = $this->request->query('limit') ?? self::DASHBOARD_KRS_DEFAULT_LIMIT;
         // KR取得件数上限チェック
         if (!$ApiGoalService->checkMaxLimit($limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
@@ -596,9 +596,10 @@ class GoalsController extends ApiController
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
-        // クエリパラメータ取得 & 展開
-        $queryParams = $this->_extractQueryParamsInDashboard();
-        list('limit' => $limit, 'offset' => $offset, 'goal_id' => $goalId) = $queryParams;
+        // クエリパラメータ取得
+        $limit = $this->request->query('limit') ?? self::DASHBOARD_KRS_DEFAULT_LIMIT;
+        $offset = $this->request->query('offset') ?? 0;
+        $goalId = $this->request->query('goal_id');
 
         // KR取得件数上限チェック
         if (!$ApiKeyResultService->checkMaxLimit($limit)) {
@@ -613,12 +614,6 @@ class GoalsController extends ApiController
             ],
             'count'  => null
         ];
-
-        // クエリパラメータ取得
-        $queryParams = $this->_extractQueryParamsInDashboard();
-        $limit = $queryParams['limit'];
-        $offset = $queryParams['offset'] ?? 0;
-        $goalId = $queryParams['goal_id'];
 
         // レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
@@ -636,20 +631,4 @@ class GoalsController extends ApiController
 
         return $this->_getResponsePagingSuccess($response);
     }
-
-    /**
-     * トップページ右カラムKR一覧のクエリパラメータ取得
-     *
-     * @return array
-     */
-    function _extractQueryParamsInDashboard(): array
-    {
-        $params = [
-            'limit'   => $this->request->query('limit') ?? 10,
-            'offset'  => $this->request->query('offset') ?? 0,
-            'goal_id' => $this->request->query('goal_id'),
-        ];
-        return $params;
-    }
-
 }

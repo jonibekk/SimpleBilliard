@@ -221,7 +221,7 @@ class ApiGoalService extends ApiService
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
         // ※キャッシュは1次リリースでは使わない。今後パフォーマンスで問題があれば使用検討
-        $krs = $ApiKeyResultService->findInDashboard($queryParams['limit'] + 1);
+        $krs = $ApiKeyResultService->findInDashboard($limit + 1);
 
         //KRが一件もない場合はdataキーを空で返す
         if (empty($krs)) {
@@ -230,8 +230,8 @@ class ApiGoalService extends ApiService
         }
 
         // ページング情報セット
-        if (count($krs) > $queryParams['limit']) {
-            $ret['paging'] = $ApiKeyResultService->generatePagingInDashboard($queryParams['limit']);
+        if (count($krs) > $limit) {
+            $ret['paging'] = $ApiKeyResultService->generatePagingInDashboard($limit);
             array_pop($krs);
         }
 
