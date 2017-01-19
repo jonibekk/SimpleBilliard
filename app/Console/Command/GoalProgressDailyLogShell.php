@@ -60,10 +60,11 @@ class GoalProgressDailyLogShell extends AppShell
             $this->error('Invalid parameter', $this->_usageString());
         }
 
+        //start transaction
         $this->GoalProgressDailyLog->begin();
         //該当日のデータを削除(ハードデリート)
         //TODO: 現時点では、この処理は行わない。過去のゴール進捗ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
-        //$this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
+        $this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
 
         // 全チームのIDリスト
         $teamIds = array_keys($this->Team->find('list'));
@@ -91,24 +92,30 @@ class GoalProgressDailyLogShell extends AppShell
             }
         }
         //ログ保存
-        try{
+        try {
             $result = $this->GoalProgressDailyLog->saveAll($saveData);
             if (!$result) {
+                //rollback transaction
                 $this->GoalProgressDailyLog->rollback();
                 $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate.\n");
                 $this->error('failed.');
             }
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
+            //rollback transaction
             $this->GoalProgressDailyLog->rollback();
             $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate.\n");
             $this->log("PDOException occurred!");
-            $this->log($e->getMessage()."\n");
+            $this->log($e->getMessage() . "\n");
             $this->error('failed.');
         }
+        //commit transaction
         $this->GoalProgressDailyLog->commit();
         //キャッシュ削除
-        Cache::clear(false, 'team_info');
-        Cache::clear(false, 'user_data');
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        $GlRedis->deleteKeys('*:' . CACHE_KEY_GOAL_PROGRESS_LOG . ':*');
+        $GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_PROGRESS_LOG . ':*');
+
         $this->log("[Successful] goal_progress_daily_log shell. target_date:$targetDate.\n");
         $this->out('successful!');
     }
