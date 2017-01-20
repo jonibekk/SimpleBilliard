@@ -126,7 +126,7 @@ class GoalProgressDailyLogShell extends AppShell
                 'target_date' => $targetDate,
             ];
         }
-        $ret = $this->GoalProgressDailyLog->saveAllAtOnce($saveData);
+        $ret = $this->GoalProgressDailyLog->bulkInsert($saveData);
 
         return $ret;
     }

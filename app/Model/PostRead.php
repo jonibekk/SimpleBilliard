@@ -69,7 +69,7 @@ class PostRead extends AppModel
         }
         $res = false;
         try {
-            $res = $this->saveAllAtOnce($post_data, true, ['post_id']);
+            $res = $this->bulkInsert($post_data, true, ['post_id']);
         } catch (PDOException $e) {
             // post_id と user_id が重複したデータを登録しようとした場合
             // １件ずつ登録し直して登録可能なものだけ登録する

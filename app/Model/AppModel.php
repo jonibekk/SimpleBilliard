@@ -395,7 +395,7 @@ class AppModel extends Model
      *
      * @return bool
      */
-    public function saveAllAtOnce(array $data, bool $add_date = true, array $update_counter_cache_fields = []): bool
+    public function bulkInsert(array $data, bool $add_date = true, array $update_counter_cache_fields = []): bool
     {
         if (empty($data) || empty($data[0])) {
             return false;
