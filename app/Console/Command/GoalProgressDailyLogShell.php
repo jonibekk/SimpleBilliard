@@ -99,9 +99,9 @@ class GoalProgressDailyLogShell extends AppShell
      * @param int    $teamId
      * @param string $targetDate
      *
-     * @return array
+     * @return bool
      */
-    protected function _saveGoalProgressLogsAsBulk(int $teamId, string $targetDate): array
+    protected function _saveGoalProgressLogsAsBulk(int $teamId, string $targetDate): bool
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
@@ -111,7 +111,7 @@ class GoalProgressDailyLogShell extends AppShell
         // 全ゴールのIDリスト
         $goalIds = array_keys($this->Goal->find('list'));
         if (empty($goalIds)) {
-            return [];
+            return false;
         }
         $saveData = [];
         // 全ゴールを取得
@@ -126,8 +126,9 @@ class GoalProgressDailyLogShell extends AppShell
                 'target_date' => $targetDate,
             ];
         }
+        $ret = $this->GoalProgressDailyLog->saveAllAtOnce($saveData);
 
-        return $saveData;
+        return $ret;
     }
 
     /**
