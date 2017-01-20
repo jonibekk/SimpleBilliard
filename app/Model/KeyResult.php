@@ -170,7 +170,7 @@ class KeyResult extends AppModel
         'current_value' => [
             'numeric'                 => [
                 'rule' => ['numeric'],
-                'last'     => true,
+                'last' => true,
             ],
             'validateProgressCurrent' => [
                 'rule' => ['validateProgressCurrent'],
@@ -221,10 +221,9 @@ class KeyResult extends AppModel
      *
      * @param      $val
      *
-     * @return array|null
-     * @internal param $data
+     * @return bool
      */
-    function requiredCaseExistUnit($val)
+    function requiredCaseExistUnit($val):bool
     {
         $val = array_shift($val);
         $unitId = Hash::get($this->data, 'KeyResult.value_unit');
@@ -368,7 +367,6 @@ class KeyResult extends AppModel
     function validateProgressCurrent(array $val): bool
     {
         $currentVal = array_shift($val);
-        $errMsg = __("Invalid Request.");
 
         // 単位が完了/未完了の場合
         $unitId = Hash::get($this->data, 'KeyResult.value_unit');
@@ -382,7 +380,7 @@ class KeyResult extends AppModel
         } else {
             $krId = Hash::get($this->data, 'KeyResult.id');
             $kr = $this->getById($krId);
-            $startVal = Hash::get($kr,'start_value');
+            $startVal = Hash::get($kr, 'start_value');
         }
 
         $isProgressIncrease = bcsub($targetVal, $startVal, 3) > 0;
@@ -448,7 +446,6 @@ class KeyResult extends AppModel
         if (!$this->save($data)) {
             throw new RuntimeException(__("Failed to save KR."));
         }
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
     }
 
@@ -558,6 +555,7 @@ class KeyResult extends AppModel
                 'completed' => null
             ],
         ];
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->find('count', $options);
     }
 
@@ -601,7 +599,9 @@ class KeyResult extends AppModel
 
     /**
      * TKR取得
+     *
      * @param  int $goalId
+     *
      * @return null|array
      */
     function getTkr(int $goalId)
@@ -625,7 +625,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    function getIncompleteKrCount($goal_id)
+    function getIncompleteKrCount($goal_id):int
     {
         $options = [
             'conditions' => [
@@ -634,6 +634,7 @@ class KeyResult extends AppModel
             ],
         ];
         $res = $this->find('count', $options);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $res;
     }
 
@@ -784,7 +785,7 @@ class KeyResult extends AppModel
      *
      * @param $goalIds
      *
-     * @return bool
+     * @return array
      */
     public function countEachGoalId($goalIds)
     {
@@ -835,5 +836,123 @@ class KeyResult extends AppModel
         }
 
         return $krs;
+    }
+
+    /**
+     * フィードページの右カラム用にKR一覧を取得
+     * # 取得条件
+     * - ログインしてるユーザーがゴールメンバーになっているゴールのKR
+     * - 今期内ゴールのKR
+     * - (option)指定ゴールID
+     * # ソート条件
+     * - 1.アクションの作成日降順
+     * - 2.KRの重要度降順
+     *
+     * @param int      $limit
+     * @param int|null $offset
+     * @param int|null $goalId
+     *
+     * @return array
+     */
+    public function findInDashboard(int $limit, int $offset = 0, $goalId = null): array
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $now = time();
+        $weekAgoTimestamp = AppUtil::getTimestampByTimezone('-1 week midnight', $currentTerm['timezone']);
+
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id'    => $this->my_uid,
+                'KeyResult.end_date >=' => $currentTerm['start_date'],
+                'KeyResult.end_date <=' => $currentTerm['end_date'],
+                'GoalMember.del_flg' => false
+            ],
+            'order'      => [
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
+            ],
+            'limit'      => $limit,
+            'offset'     => $offset,
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+            'contain'    => [
+                'Goal',
+                'ActionResult' => [
+                    'conditions' => [
+                        'ActionResult.created >=' => $weekAgoTimestamp,
+                        'ActionResult.created <=' => $now
+                    ],
+                    'fields' => ['user_id'],
+                    'User'
+                ]
+            ]
+        ];
+
+        // パラメータよりデータ取得条件追加
+        if ($goalId) {
+            $options['conditions']['KeyResult.goal_id'] = $goalId;
+        }
+
+        $res = $this->find('all', $options);
+
+        // Userのimage情報セット
+        App::uses('UploadHelper', 'View/Helper');
+        $upload = new UploadHelper(new View());
+        foreach($res as $i => $kr) {
+            foreach($kr['ActionResult'] as $j => $action) {
+                $res[$i]['ActionResult'][$j]['User']['original_img_url'] = $upload->uploadUrl($action, 'User.photo');
+                $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'large']);
+                $res[$i]['ActionResult'][$j]['User']['small_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'small']);
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * 自分のKR(コラボ含む)のカウント
+     *
+     * @return int
+     */
+    public function countMine($goalId = null): int
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id'    => $this->my_uid,
+                'KeyResult.end_date >=' => $currentTerm['start_date'],
+                'KeyResult.end_date <=' => $currentTerm['end_date'],
+                'GoalMember.del_flg' => false
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+        ];
+
+        // パラメータよりデータ取得条件追加
+        if ($goalId) {
+            $options['conditions']['KeyResult.goal_id'] = $goalId;
+        }
+
+        $count = $this->find('count', $options);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $count ?? 0;
     }
 }

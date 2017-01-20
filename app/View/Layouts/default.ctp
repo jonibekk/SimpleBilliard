@@ -48,7 +48,9 @@ if (!isset($with_header_menu)) {
     <div
         class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
         role="goal_area">
-        <?= $this->element('my_goals_area') ?>
+        <div class="right-side-container" id="jsRightSideContainer">
+            <div id="kr-column"></div>
+        </div>
     </div>
 </div>
 <?= $this->element('common_modules') ?>
@@ -58,6 +60,9 @@ if (!isset($with_header_menu)) {
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
 <?= $this->element('gl_common_js') ?>
+<!-- import react code for kr column -->
+<?= $this->Html->script('vendor/es6/es6-promise.min') ?>
+<?= $this->Html->script('/compiled_assets/js/react_kr_column_app.min') ?>
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->

@@ -147,6 +147,14 @@ const config =  {
     },
     watch_files: [assets_dir + '/js/react/goal_search/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
   },
+  react_kr_column: {
+    src: assets_dir + '/js/react/kr_column/app.js',
+    output: {
+      file_name: 'react_kr_column_app',
+      path: compiled_assets_dir + '/js'
+    },
+    watch_files: [assets_dir + '/js/react/kr_column/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
+  },
   browserify : {
     transform : {
       babelify_options : {

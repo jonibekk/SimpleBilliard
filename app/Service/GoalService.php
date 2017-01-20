@@ -49,6 +49,12 @@ class GoalService extends AppService
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
     const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
 
+    /* グラフ設定 */
+    const GRAPH_MAX_BUFFER_DAYS = 10;
+    const GRAPH_TARGET_DAYS = 30;
+    const GRAPH_SWEET_SPOT_MAX_TOP = 100;
+    const GRAPH_SWEET_SPOT_MAX_BOTTOM = 60;
+
     /* ゴールキャッシュ */
     private static $cacheList = [];
 
@@ -185,8 +191,6 @@ class GoalService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalLabel $GoalLabel */
         $GoalLabel = ClassRegistry::init("GoalLabel");
-        /** @var ApprovalHistory $ApprovalHistory */
-        $ApprovalHistory = ClassRegistry::init("ApprovalHistory");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalMember $GoalMember */
@@ -223,7 +227,8 @@ class GoalService extends AppService
             // 優先度更新
             $GoalMember->id = $goal['goal_member']['id'];
             if (!$GoalMember->saveField('priority', $requestData['priority'])) {
-                throw new Exception(sprintf("Failed to update GoalMember priority. goalMemberId:%s priority:%s", $goal['goal_member']['id'], $requestData['priority']));
+                throw new Exception(sprintf("Failed to update GoalMember priority. goalMemberId:%s priority:%s",
+                    $goal['goal_member']['id'], $requestData['priority']));
             }
 
             // TKR更新
@@ -270,15 +275,14 @@ class GoalService extends AppService
                 }
 
                 //コーチの認定件数を更新(キャッシュを削除)
-                $coachId = $TeamMember->getCoachUserIdByMemberUserId($GoalMember->my_uid);
+                $coachId = $TeamMember->getCoachUserIdByMemberUserId($userId);
                 if ($coachId) {
                     Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
             }
 
-            // Redisキャッシュ削除
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            // ダッシュボードのKRキャッシュ削除
+            $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
 
             // トランザクション完了
             $Goal->commit();
@@ -308,6 +312,8 @@ class GoalService extends AppService
         $Post = ClassRegistry::init("Post");
         /** @var GoalLabel $GoalLabel */
         $GoalLabel = ClassRegistry::init("GoalLabel");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
         try {
             // トランザクション開始
@@ -353,8 +359,8 @@ class GoalService extends AppService
                     , var_export($data, true)));
             }
 
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            // ダッシュボードのKRキャッシュ削除
+            $KeyResultService->removeGoalMembersCacheInDashboard($newGoalId);
 
             $Goal->commit();
         } catch (Exception $e) {
@@ -401,8 +407,8 @@ class GoalService extends AppService
     /**
      * ゴール登録・更新のバリデーション
      *
-     * @param array        $data
-     * @param array        $fields
+     * @param array    $data
+     * @param array    $fields
      * @param int|null $goalId
      *
      * @return array
@@ -492,8 +498,6 @@ class GoalService extends AppService
      */
     function processGoals($goals)
     {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
         /** @var GoalMemberService $GoalMemberService */
@@ -509,19 +513,19 @@ class GoalService extends AppService
                 $goals[$key]['TargetCollabo']['is_approval_enabled'] = $GoalApprovalService->isApprovable($goal['TargetCollabo']['user_id']);
             }
             // リーダー変更可能フラグを追加
-            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal, 'Goal.id'));
+            $goals[$key]['Goal']['can_change_leader'] = $GoalMemberService->canChangeLeader(Hash::get($goal,
+                'Goal.id'));
         }
         return $goals;
     }
 
     /**
      * ゴールの進捗をキーリザルト一覧から取得
-     *
      * TODO:将来的にゴールIDのみを引数として渡し、そのゴールIDから各KR取得→KR進捗率計算→ゴール進捗率計算の順に処理を行うようにする。またキャッシュ化も必要。
      *
      * @param  array $key_results [description]
      *
-     * @return array $res
+     * @return float|int $res
      */
     function getProgress($key_results)
     {
@@ -535,12 +539,13 @@ class GoalService extends AppService
             $target_progress_total += $key_result['priority'] * 100;
             if (!Hash::check($key_result, 'start_value')
                 || !Hash::check($key_result, 'target_value')
-                || !Hash::check($key_result, 'current_value'))
-            {
+                || !Hash::check($key_result, 'current_value')
+            ) {
                 $errFlg = true;
                 $progress = 0;
             } else {
-                $progress = $NumberExHelper->calcProgressRate($key_result['start_value'], $key_result['target_value'], $key_result['current_value']);
+                $progress = $NumberExHelper->calcProgressRate($key_result['start_value'], $key_result['target_value'],
+                    $key_result['current_value']);
             }
             $current_progress_total += $key_result['priority'] * $progress;
         }
@@ -548,7 +553,8 @@ class GoalService extends AppService
         // 本メソッドを呼ぶ箇所が多いため抜け漏れを検知する為にtrycatchを入れる
         try {
             if ($errFlg) {
-                throw new Exception(sprintf("Not found field to calc progress    %s", var_export(compact('key_results'), true)));
+                throw new Exception(sprintf("Not found field to calc progress    %s",
+                    var_export(compact('key_results'), true)));
             }
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
@@ -669,7 +675,6 @@ class GoalService extends AppService
             return false;
         }
 
-
         // リーダーか
         if (!$GoalMemberService->isLeader($goalId, $loginUserId)) {
             return false;
@@ -684,7 +689,7 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function findCanAction(int $userId) : array
+    function findCanAction(int $userId): array
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -699,13 +704,12 @@ class GoalService extends AppService
      *
      * @return bool
      */
-    function complete(int $goalId) : bool
+    function complete(int $goalId): bool
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
-
 
         try {
             $Goal->begin();
@@ -714,7 +718,7 @@ class GoalService extends AppService
             $Goal->complete($goalId);
             // ゴール完了の投稿
             if (!$Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $goalId, null)) {
-                throw new Exception("Create goal complete post. goalId:".$goalId);
+                throw new Exception("Create goal complete post. goalId:" . $goalId);
             }
 
             $Goal->commit();
@@ -726,7 +730,666 @@ class GoalService extends AppService
         }
         Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
-
     }
 
+    /**
+     * 与えられた対象終了日と対象日数からグラフの開始日、終了日を求める
+     * - グラフの開始日、終了日は必ず期内となる
+     * - グラフ開始日にバッファ日数を加算した日が期の開始日以前になる場合は、グラフ開始日に期の開始日をセット
+     * - 指定された終了日が期の終了日に近づいたら、グラフ終了日は期の終了日をセット
+     * - それ以外は$targetDays前から本日までの日付を(バッファ日数を考慮)
+     *
+     * @param int $targetEndTimestamp
+     * @param int $targetDays
+     * @param int $maxBufferDays
+     *
+     * @return array ['graphStartDate'=>string|null,'graphEndDate'=>string|null,'plotDataEndDate'=>string|null]
+     * @throws Exception
+     */
+    function getGraphRange(
+        int $targetEndTimestamp,
+        int $targetDays = self::GRAPH_TARGET_DAYS,
+        int $maxBufferDays = 0
+    ): array {
+        //initialize variables
+        $ret = [
+            'graphStartDate'  => null,
+            'graphEndDate'    => null,
+            'plotDataEndDate' => null,
+        ];
+
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+
+        //バリデーション
+        $validOrErrorMsg = $this->validateGraphRange(
+            $targetEndTimestamp,
+            $targetDays,
+            $maxBufferDays,
+            $termStartTimestamp,
+            $termEndTimestamp
+        );
+        if ($validOrErrorMsg !== true) {
+            throw new Exception($validOrErrorMsg);
+        }
+
+        //期の開始日から指定グラフ終了日までの日数が少ない場合(以下がその定義)は、グラフ開始日に期の開始日をセット
+        //期の開始日から指定グラフ終了日までの日数が最小プロット可能日数を下回る場合
+        $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
+        $daysMinPlot = $targetDays - $maxBufferDays;
+        if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
+            $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
+            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + (($targetDays - 1) * DAY));
+            $ret['plotDataEndDate'] = $ret['graphEndDate'];
+            return $ret;
+        }
+
+        if ($maxBufferDays > 0) {
+            //指定グラフ終了日から期の終了日まで日数が少ない場合(以下がその定義)は、グラフ終了日は期の終了日をセット
+            //指定グラフ終了日が期の終了日からバッファ日数を引いた日を超えた場合
+            $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
+            if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
+                $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
+                $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
+                $ret['plotDataEndDate'] = $ret['graphEndDate'];
+                return $ret;
+            }
+        }
+
+        //$targetDays前から本日まで(バッファ日数を考慮)
+        $targetStartTimestamp = $targetEndTimestamp - (($targetDays - 1) * DAY);
+        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
+        $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp + ($maxBufferDays * DAY));
+        $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+
+        return $ret;
+    }
+
+    /**
+     * グラフ範囲指定のバリデーション
+     * okならtrue,ngならメッセージを返す
+     *
+     * @param int $targetEndTimestamp
+     * @param int $targetDays
+     * @param int $maxBufferDays
+     * @param int $termStartTimestamp
+     * @param int $termEndTimestamp
+     *
+     * @return true|string
+     */
+    function validateGraphRange(
+        int $targetEndTimestamp,
+        int $targetDays,
+        int $maxBufferDays,
+        int $termStartTimestamp,
+        int $termEndTimestamp
+    ) {
+        //対象日数が1未満はありえない
+        if ($targetDays < 1) {
+            $this->log(sprintf("%s%s [method:%s] wrong target days. targetDays:%s",
+                    __FILE__, __LINE__, __METHOD__, $targetDays)
+            );
+            return __('Wrong target days.');
+        }
+        //バッファ日数が0未満はありえない
+        if ($maxBufferDays < 0) {
+            $this->log(sprintf("%s%s [method:%s] wrong buffer days. maxBufferDays:%s",
+                    __FILE__, __LINE__, __METHOD__, $maxBufferDays)
+            );
+            return __('Wrong buffer days.');
+        }
+        //指定日数からバッファ日数を引いたものが0以下はありえない
+        if ($targetDays - $maxBufferDays <= 0) {
+            $this->log(sprintf("%s%s [method:%s] wrong targetDays:%s or maxBufferDays:%s",
+                    __FILE__, __LINE__, __METHOD__, $targetDays, $maxBufferDays)
+            );
+            return __('Wrong target days or buffer days.');
+        }
+        //$targetDaysが期の日数を超えていたらエラー
+        $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
+        if ($targetDays > $termTotalDays) {
+            $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
+                    __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
+            );
+            return __('Wrong target days.');
+        }
+        //指定グラフ終了日は評価期間内でなければいけない
+        if ($targetEndTimestamp < $termStartTimestamp || $targetEndTimestamp > $termEndTimestamp) {
+            $this->log(sprintf("%s%s [method:%s] target end date(%s) not in evaluate term(%s - %s)",
+                    __FILE__, __LINE__, __METHOD__, $targetEndTimestamp, $termStartTimestamp, $termEndTimestamp)
+            );
+            return __('Target end date should be in evaluate term');
+
+        }
+
+        return true;
+    }
+
+    /**
+     * グラフ用ゴール進捗取得時のバリデーション
+     *
+     * @param string $graphStartDate
+     * @param string $graphEndDate
+     * @param string $plotDataEndDate
+     *
+     * @return true|string
+     */
+    function validateGetProgressDrawingGraph(
+        string $graphStartDate,
+        string $graphEndDate,
+        string $plotDataEndDate
+    ) {
+        //不正な範囲指定か判定
+        if ($graphStartDate >= $graphEndDate
+            || $graphStartDate >= $plotDataEndDate
+            || $plotDataEndDate > $graphEndDate
+        ) {
+            $this->log(sprintf("%s%s [method:%s] Graph range is wrong. graphStartDate:%s, graphEndDate:%s, plotDataEndDate:%s",
+                    __FILE__, __LINE__, __METHOD__, $graphStartDate, $graphEndDate, $plotDataEndDate)
+            );
+            return __('Graph range is wrong.');
+
+        }
+        return true;
+    }
+
+    /**
+     * グラフ用のユーザの全ゴール進捗ログデータを取得
+     * //日毎に集計済みのゴール進捗ログを取得
+     * //当日の進捗を計算
+     * //sweet spotを算出
+     * //ログデータと当日の進捗をマージ
+     * //グラフ用データに整形
+     *
+     * @param int    $userId
+     * @param string $graphStartDate  Y-m-d形式のグラフ描画開始日
+     * @param string $graphEndDate    Y-m-d形式のグラフ描画終了日
+     * @param string $plotDataEndDate Y-m-d形式のデータプロット終了日
+     * @param bool   $withSweetSpot
+     *
+     * @return array
+     * @throws Exception
+     */
+    function getUserAllGoalProgressForDrawingGraph(
+        int $userId,
+        string $graphStartDate,
+        string $graphEndDate,
+        string $plotDataEndDate,
+        bool $withSweetSpot = false
+    ): array {
+        //パラメータバリデーション
+        $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
+        if ($validOrErrorMsg !== true) {
+            throw new Exception($validOrErrorMsg);
+        }
+
+        //当日がプロット対象に含まれるかどうか？
+        $isIncludedTodayInPlotData = AppUtil::between(
+            time(),
+            strtotime($graphStartDate),
+            strtotime($plotDataEndDate) + DAY
+        );
+
+        //日毎に集計済みのゴール進捗ログを取得
+        $logStartDate = $graphStartDate;
+        if ($isIncludedTodayInPlotData) {
+            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+        } else {
+            $logEndDate = $plotDataEndDate;
+        }
+        $progressLogs = $this->findSummarizedUserProgressesFromLog($userId, $logStartDate, $logEndDate);
+        $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
+
+        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
+        if ($isIncludedTodayInPlotData) {
+            $latestTotalGoalProgress = $this->findLatestSummarizedGoalProgress($userId);
+            if ($latestTotalGoalProgress <> 0) {
+                array_push($progressLogs, $latestTotalGoalProgress);
+            }
+        }
+
+        //データが存在しない場合は空の配列を返す
+        if (empty($progressLogs)) {
+            return [];
+        }
+
+        //sweetSpotを算出
+        $sweetSpot = $withSweetSpot ? $this->getSweetSpot($graphStartDate, $graphEndDate) : [];
+
+        //グラフ用データに整形
+        $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot);
+
+        return $ret;
+    }
+
+    /**
+     * グラフ用の単一ゴール進捗ログデータを取得
+     * //ゴール進捗ログを取得
+     * //当日の進捗を計算
+     * //sweet spotを算出
+     * //ログデータと当日の進捗をマージ
+     * //グラフ用データに整形
+     *
+     * @param int    $goalId
+     * @param string $graphStartDate  Y-m-d形式のグラフ描画開始日
+     * @param string $graphEndDate    Y-m-d形式のグラフ描画終了日
+     * @param string $plotDataEndDate Y-m-d形式のデータプロット終了日
+     * @param bool   $withSweetSpot
+     *
+     * @return array
+     * @throws Exception
+     */
+    function getGoalProgressForDrawingGraph(
+        int $goalId,
+        string $graphStartDate,
+        string $graphEndDate,
+        string $plotDataEndDate,
+        bool $withSweetSpot = false
+    ): array {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        if (!$Goal->exists($goalId)) {
+            throw new Exception(__('The goal is not exist.'));
+        }
+        //パラメータバリデーション
+        $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
+        if ($validOrErrorMsg !== true) {
+            throw new Exception($validOrErrorMsg);
+        }
+
+        //当日がプロット対象に含まれるかどうか？
+        $isIncludedTodayInPlotData = AppUtil::between(
+            time(),
+            strtotime($graphStartDate),
+            strtotime($plotDataEndDate) + DAY
+        );
+
+        //日毎に集計済みのゴール進捗ログを取得
+        $logStartDate = $graphStartDate;
+        if ($isIncludedTodayInPlotData) {
+            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+        } else {
+            $logEndDate = $plotDataEndDate;
+        }
+        $progressLogs = $this->findGoalProgressFromLog($goalId, $logStartDate, $logEndDate);
+        $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
+
+        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
+        if ($isIncludedTodayInPlotData) {
+            $goal = $Goal->getGoal($goalId);
+            $latestGoalProgress = $this->getProgress($goal['KeyResult']);
+            if ($latestGoalProgress <> 0) {
+                array_push($progressLogs, $latestGoalProgress);
+            }
+        }
+
+        //データが存在しない場合は空の配列を返す
+        if (empty($progressLogs)) {
+            return [];
+        }
+
+        //sweetSpotを算出
+        $sweetSpot = $withSweetSpot ? $this->getSweetSpot($graphStartDate, $graphEndDate) : [];
+
+        //グラフ用データに整形
+        $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot);
+        return $ret;
+    }
+
+    /**
+     * グラフ出力ライブラリ用にデータを整形
+     *
+     * @param array $progressLogs
+     * @param array $sweetSpot
+     *
+     * @return array
+     */
+    function shapeDataForGraph(array $progressLogs, array $sweetSpot): array
+    {
+        /** @noinspection PhpUndefinedVariableInspection */
+        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
+        $ret[1] = array_merge(['data'], $progressLogs);
+        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        return $ret;
+    }
+
+    /**
+     * 最新のゴール進捗の合計を取得
+     * - ゴールの重要度を掛けて合計
+     *
+     * @param int $userId
+     *
+     * @return float
+     */
+    function findLatestSummarizedGoalProgress(int $userId): float
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        $goalIds = array_keys($goalPriorities);
+        $goals = $Goal->getGoalAndKr($goalIds, $userId);
+        foreach ($goals as $key => $goal) {
+            $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
+        }
+        $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
+        $ret = $this->sumGoalProgress($goalProgresses, $goalPriorities);
+        return $ret;
+    }
+
+    /**
+     * 集計済みのユーザのゴール進捗をログから取得
+     * //キャッシュからデータを取得なければ以下処理
+     * ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
+     * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+     * ///ここまでのデータをキャッシュ
+     *
+     * @param int    $userId
+     * @param string $startDate
+     * @param string $endDate
+     *
+     * @return array
+     */
+    function findSummarizedUserProgressesFromLog(int $userId, string $startDate, string $endDate): array
+    {
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        //キャッシュに保存されるデータ
+        $progressLogs = $this->getUserProgressFromCache($userId, $startDate, $endDate);
+        if ($progressLogs === false) {
+            ///ログDBから自分の各ゴールの進捗データ取得
+            /** @var GoalMember $GoalMember */
+            $GoalMember = ClassRegistry::init('GoalMember');
+            $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
+            /** @var GoalProgressDailyLog $GoalProgressDailyLog */
+            $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
+            $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
+
+            ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+            $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $goalPriorities);
+
+            //キャッシュに保存
+            $this->writeUserProgressToCache($userId, $startDate, $endDate, $progressLogs);
+        }
+
+        return $progressLogs;
+    }
+
+    /**
+     * 集計済みの単一ゴール進捗をログから取得
+     * - ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
+     * - キャッシュする
+     *
+     * @param int    $goalId
+     * @param string $startDate
+     * @param string $endDate
+     *
+     * @return array
+     */
+    function findGoalProgressFromLog(int $goalId, string $startDate, string $endDate): array
+    {
+        //キャッシュに保存されるデータ
+        $goalProgressLogs = $this->getGoalProgressFromCache($goalId, $startDate, $endDate);
+        if ($goalProgressLogs === false) {
+            ///ログDBから自分の各ゴールの進捗データ取得
+            /** @var GoalProgressDailyLog $GoalProgressDailyLog */
+            $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
+            $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, [$goalId]);
+            $goalProgressLogs = Hash::combine($goalProgressLogs, '{n}.target_date', '{n}.progress');
+            //キャッシュに保存
+            $this->writeGoalProgressToCache($goalId, $startDate, $endDate, $goalProgressLogs);
+        }
+
+        return $goalProgressLogs;
+    }
+
+    /**
+     * ゴール進捗をグラフ用に加工
+     * - 先頭でログが存在しない日は0をセット
+     * - 途中でログが存在しない場合はその直近のprogressをセット
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @param array  $progresses key:date,value:progress
+     *
+     * @return array progressの配列
+     */
+    function processProgressesToGraph(string $startDate, string $endDate, array $progresses): array
+    {
+        $currentProgress = 0;
+        $ret = [];
+
+        $currentTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+
+        while ($currentTimestamp <= $endTimestamp) {
+            $currentDate = AppUtil::dateYmd($currentTimestamp);
+            if (isset($progresses[$currentDate])) {
+                $currentProgress = $progresses[$currentDate];
+            }
+            $ret[] = (int)$currentProgress;
+
+            $currentTimestamp += DAY;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * ゴールの重要度を掛け合わせ日次のゴール進捗の合計を返す
+     *
+     * @param array $logs           including: goal_id, progress, target_date
+     * @param array $goalPriorities key:goal_id, value:priorityの配列
+     *
+     * @return array key:date, value:progress
+     */
+    function sumDailyGoalProgress(array $logs, array $goalPriorities): array
+    {
+        //logsを日付でグルーピングする
+        $logs = Hash::combine($logs, '{n}.goal_id', '{n}.progress', '{n}.target_date');
+
+        $ret = [];
+        //日毎にゴールのプライオリティを掛け合わせる
+        foreach ($logs as $date => $goals) {
+            $ret[$date] = $this->sumGoalProgress($goals, $goalPriorities);
+        }
+        return $ret;
+    }
+
+    /**
+     * ゴール進捗の合計を取得
+     * - 例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75
+     *
+     * @param array $goalsProgresses key:goal_id, value:progress
+     * @param array $goalPriorities  key:goal_id, value:priority
+     *
+     * @return float
+     */
+    function sumGoalProgress(array $goalsProgresses, array $goalPriorities): float
+    {
+        //summarize goal priorities
+        $sumPriorities = array_sum($goalPriorities);
+        $progresses = [];
+        foreach ($goalsProgresses as $goalId => $progress) {
+            if (isset($goalPriorities[$goalId])) {
+                $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
+            }
+        }
+        $ret = round(array_sum($progresses), 2);
+        return $ret;
+    }
+
+    /**
+     * 開始日、終了日の日毎のSweet Spotを返す
+     * $start, $endが期を跨いだ場合は空の配列を返す
+     *
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
+     * @param int    $maxTop
+     * @param int    $maxBottom
+     *
+     * @return array 　e.g. [top=>[0,10,20,30...],bottom=>[0,10,20,30...]]
+     */
+    function getSweetSpot(
+        string $startDate,
+        string $endDate,
+        int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
+        int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
+    ): array {
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate) + DAY - 1;
+
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+
+        //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
+        if ($startTimestamp < $termStartTimestamp || $endTimestamp > $termEndTimestamp) {
+            return [];
+        }
+
+        $termTotalDays = AppUtil::diffDays($termStartTimestamp, $termEndTimestamp);
+        //sweetspotの上辺の一日で進む高さ(0が含まれるのでその分-1)
+        $topStep = (float)($maxTop / ($termTotalDays - 1));
+        //sweetspotの下辺の一日で進む高さ(0が含まれるのでその分-1)
+        $bottomStep = (float)($maxBottom / ($termTotalDays - 1));
+
+        //返り値
+        $sweetSpot = [
+            'top'    => [],
+            'bottom' => [],
+        ];
+
+        //期の開始日からの日数を算出し、その日数分開始値を進める
+        $daysFromTermStart = AppUtil::diffDays($termStartTimestamp, $startTimestamp);
+        $top = (float)$daysFromTermStart * $topStep;
+        $bottom = (float)$daysFromTermStart * $bottomStep;
+
+        //一日ずつ値を格納
+        $graphTotalDays = AppUtil::diffDays($startTimestamp, $endTimestamp);
+        for ($i = 1; $i <= $graphTotalDays; $i++) {
+            $sweetSpot['top'][] = round($top, 2);
+            $sweetSpot['bottom'][] = round($bottom, 2);
+
+            $top += $topStep;
+            $bottom += $bottomStep;
+        }
+
+        return $sweetSpot;
+    }
+
+    /**
+     * 集計済みユーザのゴール進捗をキャッシュから取得
+     *
+     * @param int    $userId
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
+     *
+     * @return mixed
+     */
+    function getUserProgressFromCache(int $userId, string $startDate, string $endDate)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate",
+            true, $userId), 'user_data');
+    }
+
+    /**
+     * 集計済みのユーザのゴール進捗をキャッシュに書き出す
+     * 生存期間は当日の終わりまで(UTC)
+     *
+     * @param int    $userId
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
+     * @param array  $data      重要度を掛け合わせたもの
+     */
+    function writeUserProgressToCache(int $userId, string $startDate, string $endDate, array $data)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
+        Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
+        Cache::write($Goal->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate",
+            true, $userId), $data, 'user_data');
+    }
+
+    /**
+     * アクション可能なゴール一覧を返す
+     * - フィードページで参照されるデータなのでキャッシュを使う
+     * TODO:findCanActionと重複している
+     *
+     * @return array
+     */
+    function findActionables(): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        // キャッシュは一旦無効とする
+//        $cachedActionableGoals = Cache::read($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+//        if ($cachedActionableGoals !== false) {
+//            return $cachedActionableGoals;
+//        }
+
+        // キャッシュが存在しない場合はDBにqueryを投げてキャッシュに保存する
+        $actionableGoals = $Goal->findActionables($Goal->my_uid);
+        $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
+
+//        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), $actionableGoals, 'user_data');
+        return $actionableGoals;
+    }
+
+    /*
+     * 単一のゴール進捗をキャッシュから取得
+     *
+     * @param int    $goalId
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
+     *
+     * @return mixed
+     */
+    function getGoalProgressFromCache(int $goalId, string $startDate, string $endDate)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        return Cache::read(
+            $Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":goal_id:$goalId:start:$startDate:end:$endDate"),
+            'team_info');
+    }
+
+    /**
+     * 単一のゴール進捗をキャッシュに書き出す
+     * 生存期間は当日の終わりまで(UTC)
+     *
+     * @param int    $goalId
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
+     * @param array  $data      重要度を掛け合わせたもの
+     */
+    function writeGoalProgressToCache(int $goalId, string $startDate, string $endDate, array $data): void
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
+        Cache::set('duration', $remainSecUntilEndOfTheDay, 'team_info');
+        Cache::write(
+            $Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":goal_id:$goalId:start:$startDate:end:$endDate"),
+            $data,
+            'team_info');
+    }
 }

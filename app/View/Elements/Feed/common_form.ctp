@@ -7,7 +7,6 @@
  *
  * @var CodeCompletionView $this
  * @var                    $current_circle
- * @var                    $goal_list_for_action_option
  * @var string             $common_form_type     デフォルトで有効にするフォーム種類 (action, post, message)
  * @var string             $common_form_mode     新規登録 or 編集(edit)
  * @var string             $common_form_only_tab フォームのタブ表示を１つに絞る (action, post, message)
@@ -36,10 +35,6 @@ $only_tab_post =
 // 以下のいずれかの場合に true
 //   1. $common_form_only_tab == 'message' が指定された場合
 $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'message');
-//メッセージ通知からajaxで呼ばれた場合に$goal_list_for_action_optionの変数がセットされなくなるのでその場合の対応
-if (!isset($goal_list_for_action_option)) {
-    $goal_list_for_action_option = [];
-}
 ?>
 <?= $this->App->viewStartComment() ?>
 <div id="ActionFormWrapper">

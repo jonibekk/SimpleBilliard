@@ -188,6 +188,7 @@ class ActionResultFixture extends CakeTestFixtureEx
             'user_id' => '1',
             'team_id' => '1',
             'goal_id' => '1',
+            'key_result_id' => '1',
             'name'    => 'test',
         ],
         [
@@ -195,6 +196,7 @@ class ActionResultFixture extends CakeTestFixtureEx
             'user_id' => '101',
             'team_id' => '1',
             'goal_id' => '1',
+            'key_result_id' => '1',
             'name'    => 'test2',
         ],
         [
@@ -202,6 +204,7 @@ class ActionResultFixture extends CakeTestFixtureEx
             'user_id' => '101',
             'team_id' => '1',
             'goal_id' => '1',
+            'key_result_id' => '1',
             'name'    => 'test3',
         ],
         [
@@ -209,6 +212,7 @@ class ActionResultFixture extends CakeTestFixtureEx
             'user_id' => '102',
             'team_id' => '1',
             'goal_id' => '1',
+            'key_result_id' => '2',
             'name'    => 'test4',
         ],
         [
@@ -216,6 +220,7 @@ class ActionResultFixture extends CakeTestFixtureEx
             'user_id' => '1',
             'team_id' => '1',
             'goal_id' => '6',
+            'key_result_id' => '2',
             'name'    => 'test5',
         ],
     ];
