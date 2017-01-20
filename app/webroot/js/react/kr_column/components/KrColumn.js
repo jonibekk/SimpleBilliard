@@ -1,9 +1,8 @@
 import React from "react";
 import axios from "axios";
-import querystring from "querystring";
-import Graph from '~/kr_column/components/Graph'
-import Krs from '~/kr_column/components/Krs'
-import { KeyResult } from "~/common/constants/Model";
+import Krs from "~/kr_column/components/Krs";
+import {KeyResult} from "~/common/constants/Model";
+import Loading from "~/kr_column/components/Loading";
 
 export default class KrColumn extends React.Component {
   constructor(props) {
@@ -23,18 +22,18 @@ export default class KrColumn extends React.Component {
   }
 
   fetchInitData() {
-    this.setState({ loading: true })
+    this.setState({loading: true})
     return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
       .then((response) => {
         const data = response.data.data
         const kr_count = response.data.count
         const next = response.data.paging.next
-        this.setState({ progress_graph: data.progress_graph })
-        this.setState({ krs: data.krs })
-        this.setState({ goals: data.goals })
-        this.setState({ kr_count })
-        this.setState({ loading: false })
-        if(next) {
+        this.setState({progress_graph: data.progress_graph})
+        this.setState({krs: data.krs})
+        this.setState({goals: data.goals})
+        this.setState({kr_count})
+        this.setState({loading: false})
+        if (next) {
           this.fetchMoreKrs(next)
         }
       })
@@ -46,18 +45,18 @@ export default class KrColumn extends React.Component {
   }
 
   fetchKrsFilteredGoal(goalId) {
-    this.setState({ krs: [] })
-    this.setState({ kr_count: null })
-    this.setState({ loading: true })
+    this.setState({krs: []})
+    this.setState({kr_count: null})
+    this.setState({loading: true})
     return axios.get(`/api/v1/goals/dashboard_krs?limit=${KeyResult.DASHBOARD_LIMIT}&goal_id=${goalId || ''}`)
       .then((response) => {
         const data = response.data.data
         const kr_count = response.data.count
         const next = response.data.paging.next
-        this.setState({ krs: data })
-        this.setState({ kr_count })
-        this.setState({ loading: false })
-        if(next) {
+        this.setState({krs: data})
+        this.setState({kr_count})
+        this.setState({loading: false})
+        if (next) {
           this.fetchMoreKrs(next)
         }
       })
@@ -69,14 +68,14 @@ export default class KrColumn extends React.Component {
   }
 
   fetchMoreKrs(next) {
-    this.setState({ loading: true })
+    this.setState({loading: true})
     return axios.get(next)
       .then((response) => {
         const data = response.data.data
         const next = response.data.paging.next
-        this.setState({ krs: [...this.state.krs, ...data] })
-        this.setState({ loading: false })
-        if(next) {
+        this.setState({krs: [...this.state.krs, ...data]})
+        this.setState({loading: false})
+        if (next) {
           this.fetchMoreKrs(next)
         }
       })
@@ -88,14 +87,28 @@ export default class KrColumn extends React.Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Loading />;
+    }
+
+    if (this.state.kr_count == 0) {
+      return (
+        <a href="/goals/create/step1"
+           className="font_gargoyleGray-brownRed btn-goals-column-plus">
+          <i className="fa fa-plus-circle font_brownRed"></i>
+          {__('Create a goal')}
+        </a>
+      );
+    }
+
     return (
       <div>
-        <Graph progress_graph={ this.state.progress_graph } />
+        {/*<Graph progress_graph={ this.state.progress_graph } />*/}
         <Krs krs={ this.state.krs }
              goals={ this.state.goals}
              kr_count={ this.state.kr_count }
              fetchKrsFilteredGoal={ this.fetchKrsFilteredGoal }
-             loading={ this.state.loading } />
+             loading={ this.state.loading }/>
       </div>
     )
   }

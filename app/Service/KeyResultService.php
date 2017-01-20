@@ -519,17 +519,21 @@ class KeyResultService extends AppService
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
-        // キャッシュ検索
-        $resCount = 0;
-        $cachedCount = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
-        if ($cachedCount !== false) {
-            $resCount = $cachedCount;
-        } else {
-            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
-            $resCount = $KeyResult->countMine();
-            Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), $resCount, 'user_data');
-        }
+        $resCount = $KeyResult->countMine();
         return $resCount;
+
+        // キャッシュ管理がなされてないためコメントアウト
+//        // キャッシュ検索
+//        $resCount = 0;
+//        $cachedCount = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
+//        if ($cachedCount !== false) {
+//            $resCount = $cachedCount;
+//        } else {
+//            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
+//            $resCount = $KeyResult->countMine();
+//            Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), $resCount, 'user_data');
+//        }
+//        return $resCount;
     }
 
     /**

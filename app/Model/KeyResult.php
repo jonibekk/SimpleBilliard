@@ -865,6 +865,7 @@ class KeyResult extends AppModel
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
+                'GoalMember.del_flg' => false
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -931,6 +932,7 @@ class KeyResult extends AppModel
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
+                'GoalMember.del_flg' => false
             ],
             'joins'      => [
                 [
