@@ -184,7 +184,7 @@ class GoalMember extends AppModel
         $res = $this->find('list', $options);
 
         if ($is_default) {
-            //TODO: 一次リリースではキャッシュを利用しない。このキャッシュは問題を含んでいる。詳しくは -> http://bit.ly/2jH27dF
+            //TODO: KRカラム一次リリース時点ではこのキャッシュを利用しない。このキャッシュは問題を含んでいる。詳しくは -> http://bit.ly/2jH27dF
             //Cache::write($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $user_id), $res, 'user_data');
         }
         return $res;
@@ -248,7 +248,7 @@ class GoalMember extends AppModel
         $res = $this->find('list', $options);
 
         if ($is_default) {
-            //TODO: 一次リリースではキャッシュを利用しない。このキャッシュは問題を含んでいる。詳しくは -> http://bit.ly/2jH27dF
+            //TODO: KRカラム一次リリース時点ではこのキャッシュを利用しない。このキャッシュは問題を含んでいる。詳しくは -> http://bit.ly/2jH27dF
             //Cache::write($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $user_id), $res, 'user_data');
         }
         return $res;
