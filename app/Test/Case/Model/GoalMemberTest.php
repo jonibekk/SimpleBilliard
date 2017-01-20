@@ -259,13 +259,13 @@ class GoalMemberTest extends GoalousTestCase
         ];
         $this->GoalMember->save($data);
         $userData = [
-            'id' => 100,
+            'id'         => 100,
             'active_flg' => true
         ];
         $this->GoalMember->User->save($userData, false);
         $teamMemberData = [
-            'team_id' => 1,
-            'user_id' => 100,
+            'team_id'    => 1,
+            'user_id'    => 100,
             'active_flg' => true
         ];
         $this->GoalMember->User->TeamMember->save($teamMemberData, false);
@@ -439,6 +439,51 @@ class GoalMemberTest extends GoalousTestCase
             (int)4 => '4',
             (int)5 => '5'
         );
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testFindAllMemberUserIds()
+    {
+        $this->_setDefault();
+        $this->_saveActiveMembersWithGoal([1,2,3,4,5,6,7,8,9,10]);
+        $res = $this->GoalMember->findAllMemberUserIds(1);
+        $this->assertEqual(array_values($res), [1,2,3,4,5,6,7,8,9,10]);
+    }
+
+    function testFindAllMemberUserIdsEmpty()
+    {
+        $this->_setDefault();
+        $this->_saveActiveMembersWithGoal([]);
+        $res = $this->GoalMember->findAllMemberUserIds(1);
+        $this->assertEqual($res, []);
+    }
+
+    function _saveActiveMembersWithGoal($userIds)
+    {
+        $this->GoalMember->deleteAll(['GoalMember.id >' => 0], false);
+        $this->GoalMember->Goal->deleteAll(['Goal.id >' => 0], false);
+        $this->GoalMember->User->deleteAll(['User.id >' => 0], false);
+        $this->GoalMember->Team->TeamMember->deleteAll(['TeamMember.id >' => 0], false);
+
+        $this->GoalMember->Goal->save(['id' => 1, 'team_id' => 1], false);
+        foreach($userIds as $userId) {
+            $this->GoalMember->Team->TeamMember->create();
+            $this->GoalMember->Team->TeamMember->save(['team_id' => 1, 'user_id' => $userId, 'active_flg' => true], false);
+            $this->GoalMember->User->create();
+            $this->GoalMember->User->save(['id' => $userId, 'team_id' => 1, 'active_flg' => true], false);
+            $this->GoalMember->create();
+            $this->GoalMember->save(['team_id' => 1, 'goal_id' => 1, 'user_id' => $userId], false);
+        }
+    }
+
+    function testFindGoalPriorities()
+    {
+        $this->_setDefault();
+        $expected = [
+            (int)1 => '3',
+            (int)7 => '3'
+        ];
+        $actual = $this->GoalMember->findGoalPriorities(1, 0, 100000000000000000);
         $this->assertEquals($expected, $actual);
     }
 

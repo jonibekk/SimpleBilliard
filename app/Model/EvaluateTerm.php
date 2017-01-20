@@ -65,7 +65,9 @@ class EvaluateTerm extends AppModel
 
     /**
      * TODO:findAllメソッドに統合
+     *
      * @deprecated
+     *
      * @param bool $order_desc
      *
      * @return array|null
@@ -205,23 +207,25 @@ class EvaluateTerm extends AppModel
      * return term data
      *
      * @param      $type
-     * @param bool $with_cache
+     * @param bool $withCache
      *
-     * @return array|null
+     * @return array
      */
-    public function getTermData($type, $with_cache = true)
+    public function getTermData(int $type, bool $withCache = true): array
     {
         $this->_checkType($type);
+
+        //先ずはcurrentを取得。previous, nextの基準になるので
         if (!$this->currentTerm) {
-            if ($with_cache) {
+            if ($withCache) {
                 $currentTermFromCache = Cache::read($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
-                if($currentTermFromCache !== false){
+                if ($currentTermFromCache !== false) {
                     $this->currentTerm = $currentTermFromCache;
                 }
             }
             if (!$this->currentTerm) {
-                $this->currentTerm = $this->getTermDataByDatetime(REQUEST_TIMESTAMP);
-                if ($this->currentTerm && $with_cache) {
+                $this->currentTerm = $this->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
+                if ($this->currentTerm && $withCache) {
                     Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
                 }
@@ -232,7 +236,7 @@ class EvaluateTerm extends AppModel
             if ($this->previousTerm) {
                 return $this->previousTerm;
             }
-            if ($with_cache) {
+            if ($withCache) {
                 $previousTermFromCache = Cache::read($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
                 if ($previousTermFromCache !== false) {
                     $this->previousTerm = $previousTermFromCache;
@@ -240,9 +244,9 @@ class EvaluateTerm extends AppModel
                 }
             }
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
-                $this->previousTerm = $this->getTermDataByDatetime(strtotime("-1 day",
+                $this->previousTerm = $this->getTermDataByTimeStamp(strtotime("-1 day",
                     $this->currentTerm['start_date']));
-                if ($this->previousTerm && $with_cache) {
+                if ($this->previousTerm && $withCache) {
                     Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
@@ -254,7 +258,7 @@ class EvaluateTerm extends AppModel
             if ($this->nextTerm) {
                 return $this->nextTerm;
             }
-            if ($with_cache) {
+            if ($withCache) {
                 $nextTermFromCache = Cache::read($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
                 if ($nextTermFromCache !== false) {
                     $this->nextTerm = $nextTermFromCache;
@@ -262,8 +266,8 @@ class EvaluateTerm extends AppModel
                 }
             }
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
-                $this->nextTerm = $this->getTermDataByDatetime(strtotime("+1 day", $this->currentTerm['end_date']));
-                if ($this->nextTerm && $with_cache) {
+                $this->nextTerm = $this->getTermDataByTimeStamp(strtotime("+1 day", $this->currentTerm['end_date']));
+                if ($this->nextTerm && $withCache) {
                     Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->nextTerm, 'team_info');
                 }
@@ -286,19 +290,53 @@ class EvaluateTerm extends AppModel
         return Hash::get($term, 'id');
     }
 
-    public function getCurrentTermData()
+    /**
+     * @param bool $utcMidnight
+     *
+     * @return array
+     */
+    public function getCurrentTermData(bool $utcMidnight = false): array
     {
-        return $this->getTermData(self::TYPE_CURRENT);
+        $term = $this->getTermData(self::TYPE_CURRENT);
+        if ($utcMidnight) {
+            return $this->changeToUtcMidnight($term);
+        }
+        return $term;
     }
 
-    public function getNextTermData()
+    /**
+     * @param bool $utcMidnight
+     *
+     * @return array
+     */
+    public function getNextTermData(bool $utcMidnight = false): array
     {
-        return $this->getTermData(self::TYPE_NEXT);
+        $term = $this->getTermData(self::TYPE_NEXT);
+        if ($utcMidnight) {
+            return $this->changeToUtcMidnight($term);
+        }
+        return $term;
     }
 
-    public function getPreviousTermData()
+    /**
+     * @param bool $utcMidnight
+     *
+     * @return array
+     */
+    public function getPreviousTermData(bool $utcMidnight = false): array
     {
-        return $this->getTermData(self::TYPE_PREVIOUS);
+        $term = $this->getTermData(self::TYPE_PREVIOUS);
+        if ($utcMidnight) {
+            return $this->changeToUtcMidnight($term);
+        }
+        return $term;
+    }
+
+    private function changeToUtcMidnight(array $term): array
+    {
+        $term['start_date'] += $term['timezone'] * HOUR;
+        $term['end_date'] += $term['timezone'] * HOUR;
+        return $term;
     }
 
     public function getCurrentTermId()
@@ -384,14 +422,24 @@ class EvaluateTerm extends AppModel
     {
         $this->_checkType($type);
         if ($type === self::TYPE_CURRENT) {
-            $this->currentTerm = null;
+            $this->currentTerm = [];
         }
         if ($type === self::TYPE_NEXT) {
-            $this->nextTerm = null;
+            $this->nextTerm = [];
         }
         if ($type === self::TYPE_PREVIOUS) {
-            $this->previousTerm = null;
+            $this->previousTerm = [];
         }
+    }
+
+    /**
+     * 全ての期間のプロパティをリセット
+     */
+    function resetAllTermProperty()
+    {
+        $this->resetTermProperty(self::TYPE_CURRENT);
+        $this->resetTermProperty(self::TYPE_PREVIOUS);
+        $this->resetTermProperty(self::TYPE_NEXT);
     }
 
     /**
@@ -522,17 +570,17 @@ class EvaluateTerm extends AppModel
     /**
      * return term data from datetime
      *
-     * @param int $datetime unixtime
+     * @param int $timeStamp unixtime
      *
      * @return array|null
      */
-    public function getTermDataByDatetime($datetime = REQUEST_TIMESTAMP)
+    public function getTermDataByTimeStamp($timeStamp = REQUEST_TIMESTAMP)
     {
         $options = [
             'conditions' => [
                 'team_id'       => $this->current_team_id,
-                'start_date <=' => $datetime,
-                'end_date >='   => $datetime,
+                'start_date <=' => $timeStamp,
+                'end_date >='   => $timeStamp,
             ]
         ];
         $res = $this->find('first', $options);
@@ -554,7 +602,7 @@ class EvaluateTerm extends AppModel
         }
 
         return date('Y/m/d', $start_date + $this->me['timezone'] * 3600) . ' - ' .
-        date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
+            date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
     }
 
     /**

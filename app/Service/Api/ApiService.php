@@ -13,12 +13,13 @@ class ApiService extends AppService
      * APIデータ取得件数上限チェック
      * サーバーに故意に負担を掛けられるのを防ぐ為
      *
-     * @param $limit
+     * @param int $limit
      *
      * @return bool
      */
-    function checkMaxLimit($limit) {
-        return (int)$limit <= self::GET_MAX_LIMIT;
+    function checkMaxLimit(int $limit): bool
+    {
+        return $limit <= self::GET_MAX_LIMIT;
     }
 
     /**

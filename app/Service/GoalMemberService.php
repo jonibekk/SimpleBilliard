@@ -7,6 +7,7 @@
  */
 
 App::import('Service', 'AppService');
+App::import('Service', 'GoalApprovalService');
 App::uses('GoalMember', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
@@ -343,15 +344,16 @@ class GoalMemberService extends AppService
                     $coachId = $TeamMember->getCoachId($quitUserId);
                     Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
-            }
 
-            // Redisキャッシュ削除
-            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-            // 新しいリーダーのキャッシュも削除する
-            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId),
-                'user_data');
-            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $newLeaderUserId), 'user_data');
+                // アクション可能ゴール一覧キャッシュ削除(旧リーダー)
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+                // ユーザページのマイゴール一覧キャッシュ削除(旧リーダー)
+                Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+            }
+            // アクション可能ゴール一覧キャッシュ削除(新リーダー)
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true, $newLeaderUserId), 'user_data');
+            // ユーザページのマイゴール一覧キャッシュ削除
+            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $newLeaderUserId), 'user_data');
 
             // トランザクション完了
             $GoalMember->commit();
