@@ -6,6 +6,7 @@ App::import('Service', 'GoalService');
  * Console/cake goal_progress_daily_log -d YYYY-MM-DD
  * 説明
  * - 指定日までの最新のKR進捗から各ゴールの進捗を求める。
+ * - デフォルトの指定日は前日
  * TODO: 現時点では、過去のゴール進捗ログは書き変えない。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
  *
  * @property Team                 $Team
@@ -49,7 +50,7 @@ class GoalProgressDailyLogShell extends AppShell
      */
     public function main()
     {
-        // パラメータ
+        // デフォルトの指定日は前日
         $targetDate = $this->params['date'] ?? date('Y-m-d', strtotime('yesterday'));
 
         // validate
