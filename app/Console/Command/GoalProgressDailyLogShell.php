@@ -50,7 +50,7 @@ class GoalProgressDailyLogShell extends AppShell
     public function main()
     {
         // パラメータ
-        $targetDate = $this->params['date'];
+        $targetDate = $this->params['date'] ?? date('Y-m-d', strtotime('yesterday'));
 
         // validate
         if (!$this->_validateTargetDate($targetDate)) {
@@ -65,21 +65,12 @@ class GoalProgressDailyLogShell extends AppShell
 
         // 全チームのIDリスト
         $teamIds = array_keys($this->Team->find('list'));
-        $saveData = [];
-        //メモリ消費を抑えるためにチーム毎に集計
-        foreach ($teamIds as $teamId) {
-            //ゴール毎の進捗ログデータを生成
-            $saveData = array_merge($saveData, $this->_buildSaveData($teamId, $targetDate));
-        }
 
         try {
-            //全てのチームのログを一括保存
-            $result = $this->GoalProgressDailyLog->saveAll($saveData);
-            if (!$result) {
-                //rollback transaction
-                $this->GoalProgressDailyLog->rollback();
-                $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate.\n");
-                $this->error('failed.');
+            //メモリ消費を抑えるためにチーム毎に集計し保存する。
+            foreach ($teamIds as $teamId) {
+                //バルクで保存
+                $this->_saveGoalProgressLogsAsBulk($teamId, $targetDate);
             }
         } catch (PDOException $e) {
             //rollback transaction
@@ -102,14 +93,15 @@ class GoalProgressDailyLogShell extends AppShell
     }
 
     /**
-     * ゴール毎の進捗ログデータを生成
+     * ゴール毎の進捗ログデータをバルクで保存する
+     * TODO:未実装
      *
      * @param int    $teamId
      * @param string $targetDate
      *
      * @return array
      */
-    protected function _buildSaveData(int $teamId, string $targetDate): array
+    protected function _saveGoalProgressLogsAsBulk(int $teamId, string $targetDate): array
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
