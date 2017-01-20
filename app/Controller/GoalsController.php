@@ -177,7 +177,7 @@ class GoalsController extends AppController
         $this->Goal->delete();
 
         // ダッシュボードのKRキャッシュ削除
-        $KeyResultService->removeGoalMembersCacheInDashboard($id);
+//        $KeyResultService->removeGoalMembersCacheInDashboard($id);
         // アクション可能ゴール一覧キャッシュ削除
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
         // ユーザページのマイゴール一覧キャッシュ削除
@@ -888,8 +888,8 @@ class GoalsController extends AppController
                 }
 
                 // ダッシュボードのKRキャッシュ削除
-                $kr = $KeyResultService->get($krId);
-                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
+//                $kr = $KeyResultService->get($krId);
+//                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
             }
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
