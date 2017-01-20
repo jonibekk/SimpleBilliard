@@ -94,7 +94,6 @@ class GoalProgressDailyLogShell extends AppShell
 
     /**
      * ゴール毎の進捗ログデータをバルクで保存する
-     * TODO:未実装
      *
      * @param int    $teamId
      * @param string $targetDate
