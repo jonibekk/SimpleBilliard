@@ -892,6 +892,9 @@ class KeyResult extends AppModel
                         'ActionResult.created <=' => $now
                     ],
                     'fields' => ['user_id'],
+                    'order'  => [
+                        'ActionResult.created' => 'desc'
+                    ],
                     'User'
                 ]
             ]
