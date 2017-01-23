@@ -63,7 +63,7 @@ class AddLatestActionedToKeyResults0110 extends CakeMigration
     public function after($direction)
     {
         if ($direction == 'up') {
-            // KR変更ログのコーチ認定フラグを全てONに更新
+            /* 全KRのアクション最新日時を更新 */
             $ActionResult = ClassRegistry::init('ActionResult');
             // MAX関数をかけたフィールドは結果の配列がおかしくなるのでvirtualFieldを使用して、配列をきれいにする
             // 参考:https://ah-2.com/2012/02/19/cakephp_virtual_fields.html
