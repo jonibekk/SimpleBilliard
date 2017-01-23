@@ -2285,4 +2285,25 @@ class Goal extends AppModel
         return Hash::extract($res, '{n}.Goal');
     }
 
+    /**
+     * 期間で絞って全ゴールのIDを返す
+     *
+     * @param int $fromTimestamp
+     * @param int $toTimestamp
+     *
+     * @return array
+     */
+    function findAllIdsByEndDateTimestamp(int $fromTimestamp, int $toTimestamp): array
+    {
+        $options = [
+            'conditions' => [
+                'end_date >=' => $fromTimestamp,
+                'end_date <=' => $toTimestamp,
+            ],
+            'fields'     => ['id', 'id']
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
+    }
+
 }

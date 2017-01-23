@@ -10,6 +10,7 @@ App::import('Service', 'GoalService');
  * TODO: 現時点では、過去のゴール進捗ログは書き変えない。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
  *
  * @property Team                 $Team
+ * @property EvaluateTerm         $EvaluateTerm
  * @property Goal                 $Goal
  * @property KeyResult            $KeyResult
  * @property KrProgressLog        $KrProgressLog
@@ -20,6 +21,7 @@ class GoalProgressDailyLogShell extends AppShell
 {
     public $uses = array(
         'Team',
+        'EvaluateTerm',
         'Goal',
         'KeyResult',
         'KrProgressLog',
@@ -108,8 +110,13 @@ class GoalProgressDailyLogShell extends AppShell
 
         // モデルに current_team_id をセット
         $this->_setupModels($teamId);
-        // 全ゴールのIDリスト
-        $goalIds = array_keys($this->Goal->find('list'));
+        $targetTerm = $this->EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
+        if (empty($targetTerm)) {
+            //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
+            return false;
+        }
+        // 対象期間の全ゴールのIDリスト
+        $goalIds = $this->Goal->findAllIdsByEndDateTimestamp($targetTerm['start_date'], $targetTerm['end_date']);
         if (empty($goalIds)) {
             return false;
         }
