@@ -39,10 +39,10 @@ var Page = {
       self.submit(this);
       // TODO:submit_flgを用いた処理削除
       // なぜかsubmitが二度呼ばれる問題があるので、やむなく以下処理にする
-      setTimeout(function(){
+      setTimeout(function () {
         self.submit_flg = false;
         return true;
-      },1000);
+      }, 1000);
     });
   },
   submit: function (form) {
@@ -64,7 +64,7 @@ var Page = {
     $(form).find(".changed").removeClass("changed");
 
     var form_data = $(form).serializeArray();
-    var switch_el =  $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
+    var switch_el = $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
     if (switch_el.size() > 0 && !switch_el.prop('checked')) {
       form_data.push({name: "data[ActionResult][key_result_current_value]", value: 0});
     }
@@ -76,7 +76,7 @@ var Page = {
       success: function (data) {
         // 処理中に値が変更されたケースを想定して、入力途中の警告イベントを解除する
         $(window).off('beforeunload');
-        location.href= "/";
+        location.href = "/";
       },
       error: function (res, textStatus, errorThrown) {
         var body = res.responseJSON;
@@ -130,7 +130,14 @@ var Page = {
       if (data.html) {
         $kr_progress.empty().append(data.html);
         $kr_progress.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
-        $kr_progress.find('.js-select-kr:first-child').trigger('click');
+        //key_result_idがcakeのurlパラメータに存在し、かつkrのlistに含まれる場合は選択済みにする
+        var pre_selected_kr_id = cake.request_params.named.key_result_id;
+        var $pre_selected_kr = $kr_progress.find("[data-kr-id='" + pre_selected_kr_id + "']");
+        if ($pre_selected_kr.size()) {
+          $pre_selected_kr.trigger('click');
+        } else {
+          $kr_progress.find('.js-select-kr:first-child').trigger('click');
+        }
       } else {
         $kr_progress.empty();
       }
