@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-17 17:43+0900\n"
+"PO-Revision-Date: 2017-01-23 15:48+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1730,9 +1730,6 @@ msgstr "今期より前のゴールのリーダーは変更できません。"
 msgid "You cant't change leader in the goal during the evaluation period."
 msgstr "評価期間中のゴールのリーダーは変更できません。"
 
-msgid "Incomplete"
-msgstr "未完了"
-
 msgid "Wrong target days."
 msgstr "指定日数が不正な値です。"
 
@@ -1747,6 +1744,12 @@ msgstr "日付指定は評価期間内でなければいけません。"
 
 msgid "Graph range is wrong."
 msgstr "グラフの範囲指定が不正です。"
+
+msgid "The goal is not exist."
+msgstr ""
+
+msgid "Incomplete"
+msgstr "未完了"
 
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
@@ -2516,6 +2519,9 @@ msgstr "このKRの全ての進捗がリセットされますが、本当によ�
 
 msgid "Updated KR."
 msgstr "達成要素を更新しました。"
+
+msgid "All Goals"
+msgstr "すべてのゴール"
 
 msgid "Circles"
 msgstr "サークル"

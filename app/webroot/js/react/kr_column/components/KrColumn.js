@@ -12,6 +12,7 @@ export default class KrColumn extends React.Component {
       krs: [],
       goals: {},
       kr_count: null,
+      loading_init: false,
       loading: false
     }
     this.fetchKrsFilteredGoal = this.fetchKrsFilteredGoal.bind(this)
@@ -22,7 +23,7 @@ export default class KrColumn extends React.Component {
   }
 
   fetchInitData() {
-    this.setState({loading: true})
+    this.setState({loading_init: true})
     return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
       .then((response) => {
         const data = response.data.data
@@ -32,7 +33,7 @@ export default class KrColumn extends React.Component {
         this.setState({krs: data.krs})
         this.setState({goals: data.goals})
         this.setState({kr_count})
-        this.setState({loading: false})
+        this.setState({loading_init: false})
         if (next) {
           this.fetchMoreKrs(next)
         }
@@ -87,7 +88,7 @@ export default class KrColumn extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.state.loading_init) {
       return <Loading />;
     }
 

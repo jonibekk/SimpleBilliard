@@ -6,13 +6,13 @@ export default class Krs extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected_goal: 'All'
+      selected_goal: __('All Goals')
     }
     this.updateGoalFilter = this.updateGoalFilter.bind(this);
   }
 
   updateGoalFilter(e, goalId = null) {
-    const goalName = goalId ? this.props.goals[goalId] : 'All'
+    const goalName = goalId ? this.props.goals[goalId] : __('All Goals')
     this.setState({ selected_goal: goalName})
     this.props.fetchKrsFilteredGoal(goalId)
   }
@@ -39,7 +39,7 @@ export default class Krs extends React.Component {
               <li>
                 <a href="#"
                    onClick={(e) => this.updateGoalFilter(e)}>
-                  All
+                  { __('All Goals') }
                 </a>
               </li>
               {(() => {

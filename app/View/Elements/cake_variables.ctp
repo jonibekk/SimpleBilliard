@@ -549,7 +549,9 @@ App::uses('AttachedFile', 'Model');
             "If you change the unit, all progress of KR will be reset.": "<?= __("If you change the unit, all progress of KR will be reset.") ?>",
             "Current": "<?= __("Current") ?>",
             "All progress of this KR will be reset, is it really OK?": "<?= __("All progress of this KR will be reset, is it really OK?") ?>",
-            "Updated KR.": "<?= __("Updated KR.") ?>"
+            "Updated KR.": "<?= __("Updated KR.") ?>",
+            // kr column
+            "All Goals": "<?= __("All Goals") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
