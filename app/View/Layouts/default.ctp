@@ -61,8 +61,8 @@ if (!isset($with_header_menu)) {
 <!-- END fetch modal -->
 <?= $this->element('gl_common_js') ?>
 <!-- import react code for kr column -->
-<?= $this->Html->script('vendor/es6/es6-promise.min') ?>
-<?= $this->Html->script('/compiled_assets/js/react_kr_column_app.min') ?>
+<?//= $this->Html->script('vendor/es6/es6-promise.min') ?>
+<?//= $this->Html->script('/compiled_assets/js/react_kr_column_app.min') ?>
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->
