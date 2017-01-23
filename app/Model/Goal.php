@@ -2213,7 +2213,8 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.end_date >=' => $currentTerm['start_date'],
                 'Goal.end_date <=' => $currentTerm['end_date'],
-                'Goal.completed'   => null
+                'Goal.completed'   => null,
+                'GoalMember.del_flg'   => false
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
