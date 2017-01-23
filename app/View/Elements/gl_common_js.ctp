@@ -15,6 +15,7 @@
 ?>
 <?= $this->App->viewStartComment()?>
 <?php
+echo $this->Html->script('/js/vendor/es6/es6-promise.min');
 echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
 echo $this->Html->script('/compiled_assets/js/vendors.min');
 echo $this->Html->script('/js/dropzone_setting');
