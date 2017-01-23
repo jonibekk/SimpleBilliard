@@ -3303,7 +3303,7 @@ function evCircleFeed(options) {
   }
 
   //不要な要素を削除
-  $(".panel.panel-default").not(".feed-read-more, .global-form").remove();
+  $("#app-view-elements-feed-posts").empty();
 
   //ローダー表示
   var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
