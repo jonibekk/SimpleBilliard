@@ -401,6 +401,10 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Team->Evaluation->commit();
+
+        // 評価期間判定キャッシュ削除
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
+
         $this->Pnotify->outSuccess(__("Evaluation started."));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
             $this->Team->EvaluateTerm->getCurrentTermId());
@@ -1023,7 +1027,6 @@ class TeamsController extends AppController
 
     /**
      * チームビジョンを追加
-
      */
     function add_team_vision()
     {
@@ -2512,6 +2515,12 @@ class TeamsController extends AppController
 
             // まだロードされてないモデル用に一時的に書き換え
             $this->Session->write('current_team_id', $team_id);
+
+            //EvaluateTermのプロパティにログインteamのtermがすでにセットされている(コントローラの共有処理による)のでリセット。
+            $this->Team->EvaluateTerm->resetAllTermProperty();
+            //期間データが存在しない場合に対応できるようにする
+            $this->_setTerm();
+
         }
     }
 

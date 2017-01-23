@@ -16,9 +16,17 @@ class AppUtil
         return strtotime('+1 day -1 sec', strtotime($endDate)) - $timezone * HOUR;
     }
 
-    static function getDateByTimezone($date, $timezone)
+    /**
+     * timezoneを考慮したtimestampを返す
+     *
+     * @param  string $dateStr
+     * @param  float  $timezone
+     *
+     * @return int
+     */
+    static function getTimestampByTimezone(string $dateStr, float $timezone): int
     {
-        return strtotime($date) - $timezone * HOUR;
+        return strtotime($dateStr) - $timezone * HOUR;
     }
 
     /**
@@ -45,7 +53,7 @@ class AppUtil
      *
      * @return string
      */
-    static function formatBigFloat(string $val) : string
+    static function formatBigFloat(string $val): string
     {
         if (!preg_match('/\./', $val)) {
             return $val;
@@ -63,8 +71,61 @@ class AppUtil
      */
     static function isHash(&$ar)
     {
+        // 空の配列はhashとみなさない
+        if(count($ar) === 0) {
+            return false;
+        }
+
         reset($ar);
         list($k) = each($ar);
         return $k !== 0;
+    }
+
+    /**
+     * 日数の差分を求める(デフォルトで繰り上げ)
+     * $targetTimeから$baseTimeの差
+     *
+     * @param int  $baseTimestamp
+     * @param int  $targetTimestamp
+     * @param bool $roundUp if false, round off
+     *
+     * @return int
+     */
+    static function diffDays(int $baseTimestamp, int $targetTimestamp, bool $roundUp = true): int
+    {
+        $days = ($targetTimestamp - $baseTimestamp) / DAY;
+        if ($roundUp) {
+            return ceil($days);
+        }
+        return round($days);
+    }
+
+    /**
+     * Y-m-d 形式の日付を返す
+     *
+     * @param int $timestamp
+     *
+     * @return string
+     */
+    static function dateYmd(int $timestamp): string
+    {
+        return date('Y-m-d', $timestamp);
+    }
+
+    /**
+     * 値が指定した範囲に含まれるか？
+     *
+     * @param int $target
+     * @param int $start
+     * @param int $end
+     *
+     * @return bool
+     */
+    static function between(int $target, int $start, int $end): bool
+    {
+        if ($target >= $start && $target <= $end) {
+            return true;
+        }
+        return false;
     }
 }

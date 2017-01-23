@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'GoalMemberService');
+App::import('Service', 'ActionService');
 App::uses('KeyResult', 'Model');
 App::uses('Goal', 'Model');
 App::uses('GoalMember', 'Model');
@@ -16,6 +17,9 @@ class KeyResultService extends AppService
 
     /* KRキャッシュ */
     private static $cacheList = [];
+
+    /* ダッシュボードに表示するKR数 */
+    const NUMBER_DISPLAYING_IN_DASHBOARD = 10;
 
     /**
      * idによる単体データ取得
@@ -96,15 +100,17 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
+            $keyResult['display_in_progress_bar'] = $keyResult['completed'] ? __('Completed') : __('Incomplete');
+            $keyResult['progress_rate'] = $keyResult['completed'] ? 100 : 0;
             return $keyResult;
         }
-
+        $NumberEx = new NumberExHelper(new View());
         // 少数の不要な0を取り除く
         // 桁数が多いと指数表記(111E+など)になるため、ここで数字をフォーマットする
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
-
+        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
@@ -115,9 +121,11 @@ class KeyResultService extends AppService
         if (in_array($keyResult['value_unit'], KeyResult::$UNIT_TAIL)) {
             $tailUnit = $unitName;
         }
-
-        $keyResult['display_value'] = "{$headUnit}{$keyResult['start_value']}{$tailUnit} {$symbol} {$headUnit}{$keyResult['target_value']}{$tailUnit}";
-
+        $keyResult['start_value_with_unit'] = $headUnit . $keyResult['start_value'] . $tailUnit;
+        $keyResult['target_value_with_unit'] = $headUnit . $keyResult['target_value'] . $tailUnit;
+        $keyResult['current_value_with_unit'] = $headUnit . $keyResult['current_value'] . $tailUnit;
+        $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
+        $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
         return $keyResult;
     }
 
@@ -213,10 +221,6 @@ class KeyResultService extends AppService
                     Hash::get($kr, 'team_id'));
                 Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
-
-            // Redisキャッシュ削除
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-            Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
             // トランザクション完了
             $Goal->commit();
@@ -463,9 +467,8 @@ class KeyResultService extends AppService
                 Cache::delete($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
             }
 
-
-            // Redisキャッシュ削除
-            Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+            // ダッシュボードのKRキャッシュ削除
+            $this->removeGoalMembersCacheInDashboard($goalId, false);
 
             // トランザクション完了
             $KeyResult->commit();
@@ -479,4 +482,150 @@ class KeyResultService extends AppService
         return true;
     }
 
+    /**
+     * トップページ右カラムに初期表示するKR一覧を取得
+     * - キャッシュが存在する場合はキャッシュを返す
+     *
+     * @param int $limit
+     *
+     * @return array
+     */
+    function findInDashboardFirstView(int $limit): array
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // キャッシュ検索
+        $resKrs = [];
+        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        if ($cachedKrs !== false) {
+            $resKrs = $cachedKrs;
+        } else {
+            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
+            $resKrs = $KeyResult->findInDashboard($limit);
+            Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
+        }
+        return $resKrs;
+    }
+
+    /**
+     * トップページ右カラムに初期表示するKR数を取得
+     * - キャッシュが存在する場合はキャッシュを返す
+     *
+     * @return int
+     */
+    function countMine(): int
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        $resCount = $KeyResult->countMine();
+        return $resCount;
+
+        // キャッシュ管理がなされてないためコメントアウト
+//        // キャッシュ検索
+//        $resCount = 0;
+//        $cachedCount = Cache::read($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
+//        if ($cachedCount !== false) {
+//            $resCount = $cachedCount;
+//        } else {
+//            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
+//            $resCount = $KeyResult->countMine();
+//            Cache::write($KeyResult->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), $resCount, 'user_data');
+//        }
+//        return $resCount;
+    }
+
+    /**
+     * 最新アクション日時を更新
+     * - 存在する中で一番新しいアクションのcreatedをlatest_actionedとして登録
+     * - アクションが存在しなければnullを登録
+     *
+     * @param  $krId
+     *
+     * @return bool
+     */
+    function updateLatestActioned(int $krId): bool
+    {
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        //　最新アクション日時取得
+        $latestAction = $ActionResult->getLatestAction($krId);
+        $latestActioned = $latestAction['ActionResult']['created'] ?? null;
+
+        // KR更新
+        $KeyResult->id = $krId;
+        $saved = $KeyResult->saveField('latest_actioned', $latestActioned);
+
+        return (bool)$saved;
+    }
+
+    /**
+     * 全ゴールメンバーのダッシュボードのキャッシュを削除
+     * - $withCountがtrueの場合はKRカウントキャッシュも削除する
+     *
+     * @param      int 　$goalId
+     * @param bool $withCount
+     */
+    function removeGoalMembersCacheInDashboard(int $goalId, bool $withCount = true)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+
+        $memberUserids = $GoalMember->findAllMemberUserIds($goalId);
+        foreach ($memberUserids as $userId) {
+            Cache::delete($GoalMember->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true,
+                $userId), 'user_data');
+            if ($withCount) {
+                Cache::delete($GoalMember->getCacheKey(CACHE_KEY_MY_KR_COUNT, true,
+                    $userId), 'user_data');
+            }
+        }
+    }
+
+    /**
+     * ダッシュボード表示用にKR一覧を整形
+     *
+     * @param  array $krs
+     */
+    function processInDashboard(array $krs): array
+    {
+        /** @var ActionService $ActionService */
+        $ActionService = ClassRegistry::init("ActionService");
+
+        $krs = Hash::map($krs, '', function ($kr) use ($ActionService) {
+            $kr['action_results'] = $ActionService->groupByUser($kr['action_results']);
+            $kr['key_result']['action_message'] = $this->generateActionMessage($kr);
+            // 先頭から3番目までのデータを返す
+            $kr['action_results'] = array_slice($kr['action_results'], 0, 3);
+            return $kr;
+        });
+
+        return $krs;
+    }
+
+    /**
+     * アクションを促すメッセージを生成する
+     * @param  $kr
+     * @return string
+     */
+    function generateActionMessage(array $kr): string
+    {
+        $actionCount = count($kr['action_results']);
+        $latestActioned = $kr['key_result']['latest_actioned'];
+        $completed = $kr['key_result']['completed'];
+
+        if ($completed) {
+            return __('Completed this on %s.', date('m/d', $completed));
+        } else if ($actionCount > 0) {
+            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
+        } elseif ($latestActioned) {
+            return __("Take action since %s !", date('m/d', $latestActioned));
+        } else {
+            return __('Take first action to this !');
+        }
+    }
 }

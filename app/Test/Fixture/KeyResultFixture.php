@@ -135,6 +135,13 @@ class KeyResultFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'アクショントカウント'
         ),
+        'latest_actioned' => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '最新アクション日時(unixtime)'
+        ),
         'tkr_flg'             => array(
             'type'    => 'boolean',
             'null'    => false,

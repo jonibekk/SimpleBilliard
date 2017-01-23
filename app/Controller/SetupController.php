@@ -300,6 +300,10 @@ class SetupController extends AppController
             throw new RuntimeException(__("You have no permission."));
         }
         $this->request->allowMethod('post');
+
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $file_ids = $this->request->data('file_id');
         try {
             $this->Goal->begin();
@@ -347,8 +351,10 @@ class SetupController extends AppController
         //                            $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+
+        // ダッシュボードのKRキャッシュ削除
+        $KeyResultService->removeGoalMembersCacheInDashboard($goal_id, false);
+
         // push
         $this->Pnotify->outSuccess($msg = __("Added an action."));
         //セットアップガイドステータスの更新

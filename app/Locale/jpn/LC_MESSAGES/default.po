@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-26 17:52+0900\n"
+"PO-Revision-Date: 2017-01-23 15:48+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -96,9 +96,6 @@ msgstr "不正なアクセスです。"
 
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
-
-msgid "Select a goal."
-msgstr "ゴールを選択する"
 
 msgid "Created a circle."
 msgstr "サークルを作成しました。"
@@ -811,11 +808,6 @@ msgstr "データの検証に失敗しました。"
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
 
-msgid "Failed to upload. jpg, png and gif are allowed."
-msgstr ""
-"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
-"ださい。"
-
 msgid "Complete the approval of %d goal(s)."
 msgstr "%d件のゴール認定を完了してください"
 
@@ -1028,9 +1020,6 @@ msgstr "進捗を増加から減少に変更できません。"
 
 msgid "You can not change the values from decrease to increase."
 msgstr "進捗を減少から増加に変更できません。"
-
-msgid "You can not change target value less than current value"
-msgstr "進捗目標値を現在値より少ない値に変更できません。"
 
 msgid "Please input current value between start value and target value."
 msgstr "現在値は開始値と目標値の範囲内で入力してください。"
@@ -1691,6 +1680,11 @@ msgstr "ファイルサイズが上限を超えています。"
 msgid "The Image does not have enough vertical or horizontal size."
 msgstr "画像の幅もしくは高さが足りていません。"
 
+msgid "Failed to upload. jpg, png and gif are allowed."
+msgstr ""
+"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
+"ださい。"
+
 msgid "Some email addresses are incorrect."
 msgstr "メールアドレスが正しくないものがあります。"
 
@@ -1705,6 +1699,9 @@ msgstr "評価期間内で入力してください。"
 
 msgid "Data is duplicated."
 msgstr ""
+
+msgid "Allowed number is between %2$d and %3$d."
+msgstr "許可されている数字は%2$dから%3$dです。"
 
 msgid "Failed to upload."
 msgstr "アップロードに失敗しました。"
@@ -1733,8 +1730,41 @@ msgstr "今期より前のゴールのリーダーは変更できません。"
 msgid "You cant't change leader in the goal during the evaluation period."
 msgstr "評価期間中のゴールのリーダーは変更できません。"
 
+msgid "Wrong target days."
+msgstr "指定日数が不正な値です。"
+
+msgid "Wrong buffer days."
+msgstr "バッファ日数が不正です。"
+
+msgid "Wrong target days or buffer days."
+msgstr "指定日数とバッファ日数が不正です。"
+
+msgid "Target end date should be in evaluate term"
+msgstr "日付指定は評価期間内でなければいけません。"
+
+msgid "Graph range is wrong."
+msgstr "グラフの範囲指定が不正です。"
+
+msgid "The goal is not exist."
+msgstr "このゴールは存在しません。"
+
+msgid "Incomplete"
+msgstr "未完了"
+
 msgid "You can't edit achieved KR."
 msgstr "完了済の成果は編集出来ません。"
+
+msgid "Completed this on %s."
+msgstr "%sに完了した"
+
+msgid "%s member(s) actioned recently."
+msgstr "%s人が最近アクションした"
+
+msgid "Take action since %s !"
+msgstr "%s以来のアクションをしよう！"
+
+msgid "Take first action to this !"
+msgstr "最初のアクションをしよう！"
 
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
@@ -2462,9 +2492,6 @@ msgstr "Enterを押すと追加されます。(最大3個まで検索可能)"
 msgid "Complete"
 msgstr "完了"
 
-msgid "Incomplete"
-msgstr "未完了"
-
 msgid "Progress"
 msgstr "進捗"
 
@@ -2492,6 +2519,9 @@ msgstr "このKRの全ての進捗がリセットされますが、本当によ�
 
 msgid "Updated KR."
 msgstr "達成要素を更新しました。"
+
+msgid "All Goals"
+msgstr "すべてのゴール"
 
 msgid "Circles"
 msgstr "サークル"
@@ -2789,18 +2819,6 @@ msgstr "ゴール達成のために共有しよう。"
 msgid "Make your team better by Goalous."
 msgstr "チーム力を向上させよう。Goalousをさっそく使ってみましょう"
 
-msgid "View detail"
-msgstr "ビジョンを詳しく見る"
-
-msgid "Your goals"
-msgstr "あなたのゴール"
-
-msgid "Create a new goal"
-msgstr "あたらしいゴールをつくる"
-
-msgid "Unevaluated in the previous term"
-msgstr "前期の未評価のあなたのゴール"
-
 msgid "%s members"
 msgstr "%s メンバー"
 
@@ -3007,6 +3025,9 @@ msgstr "ゴールを編集"
 msgid "Change TKR"
 msgstr "TKRを変更"
 
+msgid "Change leader"
+msgstr "リーダーを変更"
+
 msgid "Delete goal"
 msgstr "ゴールを削除"
 
@@ -3116,9 +3137,6 @@ msgid ""
 "Please input start date / end date of KR between start date / end date of "
 "the goal."
 msgstr "開始日/期限はゴールの開始日/期限の間で入力してください"
-
-msgid "Change leader"
-msgstr "リーダーを変更"
 
 msgid "Select the leader name you want to change."
 msgstr "変更したいリーダーの名前を選択してください。"
@@ -4853,75 +4871,3 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
-
-msgid "boolean"
-msgstr "boolean"
-
-msgid "image_max_size"
-msgstr "image_max_size"
-
-msgid "image_type"
-msgstr "image_type"
-
-msgid "numeric"
-msgstr "numeric"
-
-msgid "notBlank"
-msgstr ""
-
-msgid "maxLength"
-msgstr "maxLength"
-
-msgid "Invalid Submission"
-msgstr "Invalid Submission"
-
-msgid "isString"
-msgstr "isString"
-
-msgid "Invalid Status"
-msgstr "Invalid Status"
-
-msgid "email"
-msgstr "email"
-
-msgid "emailIsUnique"
-msgstr "emailUnique"
-
-msgid "validateCreateProgress"
-msgstr ""
-
-msgid "requiredCaseExistUnit"
-msgstr ""
-
-msgid "isUnique"
-msgstr ""
-
-msgid "emailsCheck"
-msgstr "emailCheck"
-
-msgid "isVerifiedEmail"
-msgstr ""
-
-msgid "userNameChar"
-msgstr ""
-
-msgid "rule"
-msgstr "rule"
-
-msgid "allowEmpty"
-msgstr "allowEmpty"
-
-msgid "notBlankCheckbox"
-msgstr "notBlankCheckbox"
-
-msgid "minLength"
-msgstr "minLength"
-
-msgid "passwordCheck"
-msgstr "passwordCheck"
-
-msgid "passwordSameCheck"
-msgstr "passwordSameCheck"
-
-msgid "imageMinWidthHeight"
-msgstr ""

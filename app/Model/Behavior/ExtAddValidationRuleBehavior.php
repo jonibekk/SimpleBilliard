@@ -343,4 +343,22 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         $value = $value[0];
         return preg_match('/' . User::USER_NAME_REGEX . '/', $value);
     }
+
+    function numBetween(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check,
+        $lower = null,
+        $upper = null
+    ) {
+        $check = array_values($check)[0];
+        if (!is_numeric($check)) {
+            return false;
+        }
+        if (isset($lower) && isset($upper)) {
+            return ($check >= $lower && $check <= $upper);
+        }
+        return false;
+    }
+
 }

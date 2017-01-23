@@ -500,4 +500,36 @@ class ActionResultTest extends GoalousTestCase
         $this->assertTrue(in_array($expectErrMsg, $err));
     }
 
+    function testGetLatestAction()
+    {
+        $this->_setDefault();
+        $krId = 1;
+        $this->saveActionsWithKr($krId, [['created' => 1111], ['created' => 3333], ['created' => 1111]]);
+
+        $latestAction = $this->ActionResult->getLatestAction($krId);
+        $this->assertEqual(Hash::get($latestAction, 'ActionResult.created'), 3333);
+    }
+
+    function testGetLatestActionEmpty()
+    {
+        $this->_setDefault();
+        $krId = 1;
+        $this->saveActionsWithKr($krId, []);
+
+        $latestAction = $this->ActionResult->getLatestAction($krId);
+        $this->assertEqual($latestAction, []);
+    }
+
+    function saveActionsWithKr(int $krId, array $actions)
+    {
+        $this->ActionResult->KeyResult->deleteAll(['KeyResult.id >' => 0], false);
+        $this->ActionResult->deleteAll(['ActionResult.id >' => 0], false);
+
+        foreach($actions as $action) {
+            $action = ['team_id' => 1, 'key_result_id' => $krId] + $action;
+            $this->ActionResult->create();
+            $this->ActionResult->save($action, false);
+        }
+    }
+
 }
