@@ -74,7 +74,7 @@ export default class Krs extends React.Component {
             )
           }) }
         </ul>
-        { this.props.loading && <Loading /> }
+        { this.props.loading_krs && <Loading /> }
       </div>
     )
   }
@@ -83,6 +83,7 @@ export default class Krs extends React.Component {
 Krs.propTypes = {
   krs: React.PropTypes.array,
   goals: React.PropTypes.object,
-  kr_count: React.PropTypes.number
+  kr_count: React.PropTypes.number,
+  loading_krs: React.PropTypes.bool
 };
-Krs.defaultProps = { krs: [], goals: {}, kr_count: 0 };
+Krs.defaultProps = { krs: [], goals: {}, kr_count: 0, loading_krs: false };

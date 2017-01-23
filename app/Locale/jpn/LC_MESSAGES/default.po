@@ -1746,7 +1746,7 @@ msgid "Graph range is wrong."
 msgstr "グラフの範囲指定が不正です。"
 
 msgid "The goal is not exist."
-msgstr ""
+msgstr "このゴールは存在しません。"
 
 msgid "Incomplete"
 msgstr "未完了"
