@@ -6,13 +6,13 @@ export default class Krs extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected_goal: 'All'
+      selected_goal: __('All Goals')
     }
     this.updateGoalFilter = this.updateGoalFilter.bind(this);
   }
 
   updateGoalFilter(e, goalId = null) {
-    const goalName = goalId ? this.props.goals[goalId] : 'All'
+    const goalName = goalId ? this.props.goals[goalId] : __('All Goals')
     this.setState({ selected_goal: goalName})
     this.props.fetchKrsFilteredGoal(goalId)
   }
@@ -39,7 +39,7 @@ export default class Krs extends React.Component {
               <li>
                 <a href="#"
                    onClick={(e) => this.updateGoalFilter(e)}>
-                  All
+                  { __('All Goals') }
                 </a>
               </li>
               {(() => {
@@ -74,7 +74,7 @@ export default class Krs extends React.Component {
             )
           }) }
         </ul>
-        { this.props.loading && <Loading /> }
+        { this.props.loading_krs && <Loading /> }
       </div>
     )
   }
@@ -83,6 +83,7 @@ export default class Krs extends React.Component {
 Krs.propTypes = {
   krs: React.PropTypes.array,
   goals: React.PropTypes.object,
-  kr_count: React.PropTypes.number
+  kr_count: React.PropTypes.number,
+  loading_krs: React.PropTypes.bool
 };
-Krs.defaultProps = { krs: [], goals: {}, kr_count: 0 };
+Krs.defaultProps = { krs: [], goals: {}, kr_count: 0, loading_krs: false };

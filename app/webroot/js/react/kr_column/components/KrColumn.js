@@ -12,7 +12,8 @@ export default class KrColumn extends React.Component {
       krs: [],
       goals: {},
       kr_count: null,
-      loading: false
+      loading_init: false,
+      loading_krs: false
     }
     this.fetchKrsFilteredGoal = this.fetchKrsFilteredGoal.bind(this)
   }
@@ -22,7 +23,7 @@ export default class KrColumn extends React.Component {
   }
 
   fetchInitData() {
-    this.setState({loading: true})
+    this.setState({loading_init: true})
     return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
       .then((response) => {
         const data = response.data.data
@@ -32,7 +33,7 @@ export default class KrColumn extends React.Component {
         this.setState({krs: data.krs})
         this.setState({goals: data.goals})
         this.setState({kr_count})
-        this.setState({loading: false})
+        this.setState({loading_init: false})
         if (next) {
           this.fetchMoreKrs(next)
         }
@@ -47,7 +48,7 @@ export default class KrColumn extends React.Component {
   fetchKrsFilteredGoal(goalId) {
     this.setState({krs: []})
     this.setState({kr_count: null})
-    this.setState({loading: true})
+    this.setState({loading_krs: true})
     return axios.get(`/api/v1/goals/dashboard_krs?limit=${KeyResult.DASHBOARD_LIMIT}&goal_id=${goalId || ''}`)
       .then((response) => {
         const data = response.data.data
@@ -55,7 +56,7 @@ export default class KrColumn extends React.Component {
         const next = response.data.paging.next
         this.setState({krs: data})
         this.setState({kr_count})
-        this.setState({loading: false})
+        this.setState({loading_krs: false})
         if (next) {
           this.fetchMoreKrs(next)
         }
@@ -68,13 +69,13 @@ export default class KrColumn extends React.Component {
   }
 
   fetchMoreKrs(next) {
-    this.setState({loading: true})
+    this.setState({loading_krs: true})
     return axios.get(next)
       .then((response) => {
         const data = response.data.data
         const next = response.data.paging.next
         this.setState({krs: [...this.state.krs, ...data]})
-        this.setState({loading: false})
+        this.setState({loading_krs: false})
         if (next) {
           this.fetchMoreKrs(next)
         }
@@ -87,7 +88,7 @@ export default class KrColumn extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.state.loading_init) {
       return <Loading />;
     }
 
@@ -108,7 +109,7 @@ export default class KrColumn extends React.Component {
              goals={ this.state.goals}
              kr_count={ this.state.kr_count }
              fetchKrsFilteredGoal={ this.fetchKrsFilteredGoal }
-             loading={ this.state.loading }/>
+             loading_krs={ this.state.loading_krs }/>
       </div>
     )
   }

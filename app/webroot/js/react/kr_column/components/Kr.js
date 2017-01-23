@@ -27,12 +27,12 @@ export default class Kr extends React.Component {
     }
     const is_complete = key_result.completed
     return (
-      <li className="dashboard-krs-column">
+      <li className="dashboard-krs-column" key={ key_result.id }>
         <div className="dashboard-krs-column-wrapper">
           {/* KR name & progressBarエリア */}
           <div className="left">
-            <div className={`flex mb_2px ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`} onClick={ this.toggleKrOpened }>
-              <p className="flex-extend font_verydark kr-name">
+            <div className="flex mb_2px" onClick={ this.toggleKrOpened }>
+              <p className={`flex-extend font_verydark kr-name ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`}>
                 { key_result.name }
               </p>
               <div>
@@ -93,7 +93,7 @@ export default class Kr extends React.Component {
                 {/* 最近アクションしたユーザー画像を表示 */}
                 { !key_result.completed && action_results.map((action) => {
                   return (
-                    <img className="lazy" src={ action.user.small_img_url } />
+                    <img className="lazy" src={ action.user.small_img_url } key={ action.user.id } />
                   )
                 })}
               </li>
