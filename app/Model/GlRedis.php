@@ -325,6 +325,32 @@ class GlRedis extends AppModel
     }
 
     /**
+     * キーを指定して削除
+     * $targetに"*"は利用できない
+     * $targetの例:
+     *   前方一致: 'hoge*'
+     *   後方一致: '*hoge'
+     *   中間一致: '*hoge*'
+     *
+     * @param string $target
+     *
+     * @return int
+     * @throws Exception
+     */
+    public function deleteKeys(string $target): int
+    {
+        if ($target == '*') {
+            throw new Exception('cannot use "*" for target. if want to delete all key, use method deleteAllData()');
+        }
+        $keys = $this->Db->keys($target);
+        $prefix = $this->Db->config['prefix'];
+        foreach ($keys as $k) {
+            $keys[$k] = str_replace($prefix, "", $k);
+        }
+        return $this->Db->del($keys);
+    }
+
+    /**
      * @param string        $key_type One of $KEY_TYPES
      * @param int           $team_id
      * @param null|int      $user_id
