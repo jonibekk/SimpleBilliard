@@ -8,6 +8,7 @@ App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('NumberExHelper', 'View/Helper');
 
 /**
  * Class KeyResultService
