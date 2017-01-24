@@ -132,7 +132,7 @@ var Page = {
         $kr_progress.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
         //key_result_idがcakeのurlパラメータに存在し、かつkrのlistに含まれる場合は選択済みにする
         var pre_selected_kr_id = cake.request_params.named.key_result_id;
-        var $pre_selected_kr = $kr_progress.find(".js-select-kr [data-kr-id='" + pre_selected_kr_id + "']");
+        var $pre_selected_kr = $kr_progress.find(".js-select-kr[data-kr-id='" + pre_selected_kr_id + "']");
         if ($pre_selected_kr.size()) {
           $pre_selected_kr.trigger('click');
         } else {
