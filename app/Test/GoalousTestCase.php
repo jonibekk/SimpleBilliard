@@ -124,12 +124,19 @@ class GoalousTestCase extends CakeTestCase
         return $data;
     }
 
-    function setupTerm()
+    function setupTerm($teamId = 1)
     {
         //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Team->id = $teamId;
+        $this->Team->saveField('start_term_month', 1);
+        $this->Team->saveField('border_months', 1);
+
+        $this->Team->current_team_id = $teamId;
+        $this->EvaluateTerm->current_team_id = $teamId;
+
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
     }
 
     function setDefaultTeamIdAndUid($uid = 1, $teamId = 1)
