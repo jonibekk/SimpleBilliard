@@ -406,7 +406,6 @@ class AppModel extends Model
             return false;
         }
         $data = Sanitize::clean($data);
-        $valueArray = array();
         if (isset($data[0][$this->name])) {
             $fields = array_keys($data[0][$this->name]);
         } else {
