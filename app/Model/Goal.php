@@ -2301,7 +2301,7 @@ class Goal extends AppModel
                 'end_date >=' => $fromTimestamp,
                 'end_date <=' => $toTimestamp,
             ],
-            'fields'     => ['id', 'id']
+            'fields'     => ['id']
         ];
         $ret = $this->find('list', $options);
         return $ret;
