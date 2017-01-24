@@ -392,7 +392,7 @@ class AppModel extends Model
      * @param array $data
      * @param bool  $addDate
      * @param array $updateCounterCacheFields
-     * @param int   $chunkSize to chunk records of saving data for reducing to use memory at once.
+     * @param int   $chunkSize to chunk records of saving data for reducing query size at once.
      *
      * @return bool
      */
