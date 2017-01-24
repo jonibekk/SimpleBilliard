@@ -385,29 +385,29 @@ class AppModel extends Model
      * bulk insert method.
      * if $add_date is true then, adding save fields that `modified` and `created`.
      * usage about $update_counter_cache_fields:
-     * $update_counter_cache_fields = [
+     * $updateCounterCacheFields = [
      * 'foreign key', 'foreign key'
      * ];
      *
      * @param array $data
-     * @param bool  $add_date
-     * @param array $update_counter_cache_fields
+     * @param bool  $addDate
+     * @param array $updateCounterCacheFields
      *
      * @return bool
      */
-    public function bulkInsert(array $data, bool $add_date = true, array $update_counter_cache_fields = []): bool
+    public function bulkInsert(array $data, bool $addDate = true, array $updateCounterCacheFields = []): bool
     {
         if (empty($data) || empty($data[0])) {
             return false;
         }
         $data = Sanitize::clean($data);
-        $value_array = array();
+        $valueArray = array();
         if (isset($data[0][$this->name])) {
             $fields = array_keys($data[0][$this->name]);
         } else {
             $fields = array_keys($data[0]);
         }
-        if ($add_date) {
+        if ($addDate) {
             $fields[] = 'modified';
             $fields[] = 'created';
 
@@ -423,13 +423,13 @@ class AppModel extends Model
         }
         foreach ($data as $key => $value) {
             $value = isset($value[$this->name]) ? $value[$this->name] : $value;
-            $value_array[] = "('" . implode('\',\'', $value) . "')";
+            $valueArray[] = "('" . implode('\',\'', $value) . "')";
         }
         $sql = "INSERT INTO "
             . $this->table . " (" . implode(', ', $fields) . ") VALUES "
-            . implode(',', $value_array);
+            . implode(',', $valueArray);
         $this->query($sql);
-        foreach ($update_counter_cache_fields as $field) {
+        foreach ($updateCounterCacheFields as $field) {
             foreach ($data as $key => $value) {
                 $value = isset($value[$this->name][$field]) ? $value[$this->name][$field] : $value[$field];
                 $this->updateCounterCache([$field => $value]);
