@@ -392,11 +392,16 @@ class AppModel extends Model
      * @param array $data
      * @param bool  $addDate
      * @param array $updateCounterCacheFields
+     * @param int   $chunkSize to chunk records of saving data for reducing to use memory at once.
      *
      * @return bool
      */
-    public function bulkInsert(array $data, bool $addDate = true, array $updateCounterCacheFields = []): bool
-    {
+    public function bulkInsert(
+        array $data,
+        bool $addDate = true,
+        array $updateCounterCacheFields = [],
+        int $chunkSize = 100
+    ): bool {
         if (empty($data) || empty($data[0])) {
             return false;
         }
@@ -421,18 +426,22 @@ class AppModel extends Model
                 }
             }
         }
-        foreach ($data as $key => $value) {
-            $value = isset($value[$this->name]) ? $value[$this->name] : $value;
-            $valueArray[] = "('" . implode('\',\'', $value) . "')";
-        }
-        $sql = "INSERT INTO "
-            . $this->table . " (" . implode(', ', $fields) . ") VALUES "
-            . implode(',', $valueArray);
-        $this->query($sql);
-        foreach ($updateCounterCacheFields as $field) {
-            foreach ($data as $key => $value) {
-                $value = isset($value[$this->name][$field]) ? $value[$this->name][$field] : $value[$field];
-                $this->updateCounterCache([$field => $value]);
+        $chunkedDatas = array_chunk($data, $chunkSize);
+        foreach ($chunkedDatas as $chunkedData) {
+            $valueArray = [];
+            foreach ($chunkedData as $value) {
+                $value = isset($value[$this->name]) ? $value[$this->name] : $value;
+                $valueArray[] = "('" . implode('\',\'', $value) . "')";
+            }
+            $sql = "INSERT INTO "
+                . $this->table . " (" . implode(', ', $fields) . ") VALUES "
+                . implode(',', $valueArray);
+            $this->query($sql);
+            foreach ($updateCounterCacheFields as $field) {
+                foreach ($chunkedData as $value) {
+                    $value = isset($value[$this->name][$field]) ? $value[$this->name][$field] : $value[$field];
+                    $this->updateCounterCache([$field => $value]);
+                }
             }
         }
         return true;
