@@ -62,12 +62,12 @@ class ApiGoalService extends ApiService
     /**
      * データ拡張
      *
-     * @param $goals
+     * @param array $goals
+     * @param int   $loginUserId
      *
      * @return array
-     * @internal param $params
      */
-    private function extend($goals, $loginUserId)
+    private function extend(array $goals, int $loginUserId): array
     {
         // TODO：AppModel.attachImgUrlをService層に移す
         // 画像URLの取得を行うAppModel.attachImgUrlをService層に移したいが、
@@ -191,7 +191,12 @@ class ApiGoalService extends ApiService
         $data['paging']['next'] = '/api/v1/goals/search?' . http_build_query($queryParams);
     }
 
-    public function findDashboardFirstViewResponse($queryParams)
+    /**
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findDashboardFirstViewResponse(int $limit): array
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
@@ -204,7 +209,8 @@ class ApiGoalService extends ApiService
         $ret = [
             'data'   => [
                 'progress_graph' => [],
-                'krs'            => []
+                'krs'            => [],
+                'goal'           => []
             ],
             'paging' => [
                 'next' => ''
@@ -212,12 +218,10 @@ class ApiGoalService extends ApiService
             'count'  => 0
         ];
 
-        // パラメータ展開
-        list('limit' => $limit) = $queryParams;
-
         // KR一覧レスポンスデータ取得
         // Paging目的で1つ多くデータを取得する
-        $krs = $KeyResultService->findInDashboardFirstView($limit + 1);
+        // ※キャッシュは1次リリースでは使わない。今後パフォーマンスで問題があれば使用検討
+        $krs = $ApiKeyResultService->findInDashboard($limit + 1);
 
         //KRが一件もない場合はdataキーを空で返す
         if (empty($krs)) {
@@ -233,9 +237,10 @@ class ApiGoalService extends ApiService
 
         // カウント数をセット
         $ret['count'] = $KeyResultService->countMine();
-
         // KRデータセット
         $ret['data']['krs'] = $krs;
+        // Goalデータセット
+        $ret['data']['goals'] = $GoalService->findActionables();
 
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(

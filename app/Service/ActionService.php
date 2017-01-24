@@ -148,4 +148,17 @@ class ActionService extends AppService
         return (int)$newActionId;
 
     }
+
+    /**
+     * アクション一覧をユーザーIDでグルーピング
+     *
+     * @param  $actionResults
+     */
+    function groupByUser(array $actions): array
+    {
+        $groupedActions = Hash::combine($actions, '{n}.user_id', '{n}');
+        // 配列key振り直し
+        $groupedActions = array_values($groupedActions);
+        return $groupedActions;
+    }
 }

@@ -2518,6 +2518,8 @@ class TeamsController extends AppController
 
             //EvaluateTermのプロパティにログインteamのtermがすでにセットされている(コントローラの共有処理による)のでリセット。
             $this->Team->EvaluateTerm->resetAllTermProperty();
+            //期間データが存在しない場合に対応できるようにする
+            $this->_setTerm();
 
         }
     }
