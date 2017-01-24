@@ -7,10 +7,7 @@ export const KeyResult = Object.freeze({
   ValueUnit: {
     NONE: 2
   },
-  MAX_LENGTH_VALUE: 15,
-  // TODO: 右カラムトップにグラフが追加され、かつ右カラムだけのスクロールが実装されたら
-  //       KR取得件数を20件->10件に変更する
-  DASHBOARD_LIMIT: 20
+  MAX_LENGTH_VALUE: 15
 })
 
 export const GoalMember = Object.freeze({

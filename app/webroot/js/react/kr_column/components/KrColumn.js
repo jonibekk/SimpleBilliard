@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import Krs from "~/kr_column/components/Krs";
-import {KeyResult} from "~/common/constants/Model";
 import Loading from "~/kr_column/components/Loading";
 
 export default class KrColumn extends React.Component {
@@ -30,7 +29,7 @@ export default class KrColumn extends React.Component {
    * - KR一覧データ
    */
   fetchInitData() {
-    return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
+    return axios.get(`/api/v1/goals/dashboard`)
       .then((response) => {
         const data = response.data.data
         const kr_count = response.data.count
@@ -61,7 +60,7 @@ export default class KrColumn extends React.Component {
       loading_krs: true,
       next_krs_url: ''
     })
-    return axios.get(`/api/v1/goals/dashboard_krs?limit=${KeyResult.DASHBOARD_LIMIT}&goal_id=${goalId || ''}`)
+    return axios.get(`/api/v1/goals/dashboard_krs?goal_id=${goalId || ''}`)
       .then((response) => {
         const krs = response.data.data
         const kr_count = response.data.count
