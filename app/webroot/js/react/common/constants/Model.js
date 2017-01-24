@@ -8,7 +8,7 @@ export const KeyResult = Object.freeze({
     NONE: 2
   },
   MAX_LENGTH_VALUE: 15,
-  DASHBOARD_LIMIT: 10
+  DASHBOARD_LIMIT: 20
 })
 
 export const GoalMember = Object.freeze({
