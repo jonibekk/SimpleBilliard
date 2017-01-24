@@ -10,11 +10,11 @@
   padding: 10px;
 
   &-header {
-    border-bottom: 1px solid @subColor4;
-    padding: 0 0 5px;
+    border-bottom: 1px solid @subColor5;
+    padding: 0 0 10px;
     display: flex;
+    font-size: 14px;
     .title {
-      font-size: 14px;
       font-weight: 400;
     }
     .goal-filter {
@@ -37,10 +37,12 @@
 
   &-column {
     padding: 10px 0;
-    border-bottom: 1px solid @subColor4;
+    border-bottom: 1px solid @subColor5;
 
     &-kr-opener {
-      color: @subColor3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       &:active,&:visited,&:target {
         color: @subColor3;
       }
@@ -48,13 +50,13 @@
     &-wrapper {
       display: flex;
       .left {
-        width: 80%;
+        width: 82%;
         .kr-name {
           font-size: 13px;
           font-weight: bold;
-          cursor: pointer;
+          line-height: 18px;
           &.is-closed {
-            max-height: 38px;
+            max-height: 36px;
             min-height: 20px;
             overflow: hidden;
           }
@@ -70,44 +72,49 @@
         }
       }
       .right {
-        width: 20%;
+        width: 18%;
         .action-button-wrapper {
           position: relative;
         }
         .action-button {
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
           display: block;
           margin-left: auto;
           top: 0;
           border-radius: 50%;
           padding: 2px;
-          border: dashed 2px @subColor4;
+          border: dashed 1px @subColor4;
           display: flex;
           justify-content: center;
           align-items: center;
           text-decoration: none;
           .fa-check-circle {
-            font-size: 47px;
+            font-size: 38px;
             color: @subColor4;
           }
         }
         .add-mark {
           position: absolute;
+          display: block;
           bottom:0;
           right: 0;
-          color: @subColor14;
-          font-size: 20px;
-          background-color: #fff;
           border-radius: 50%;
-          line-height:18px;
           width: 18px;
           text-align: center;
+          .fa {
+            color: #3897f0;
+            font-size: 15px;
+            background-color: #fff;
+            border-radius: 50%;
+            line-height: 12px;
+          }
         }
       }
     }
 
     &-footer {
+      margin-top: 6px;
       .action-link {
         color: @subColor3;
         text-decoration: none;
@@ -130,6 +137,7 @@
           width: 18px;
           height: 18px;
           margin: 0 2px 0 0;
+          vertical-align: top;
         }
         .more-counts {
           font-size: 16px;
