@@ -25,7 +25,10 @@ export default class Kr extends React.Component {
     if (!key_result) {
       return null
     }
+
     const is_complete = key_result.completed
+    const action_post_link = `/goals/add_action/key_result_id:${key_result.id}/goal_id:${goal.id}`
+    const action_list_link = `/goals/view_actions/goal_id:${goal.id}/page_type:list/key_result_id:${key_result.id}`
     return (
       <li className="dashboard-krs-column" key={ key_result.id }>
         <div className="dashboard-krs-column-wrapper">
@@ -73,7 +76,7 @@ export default class Kr extends React.Component {
             { !is_complete && (() => {
               return (
                 <div className="action-button-wrapper">
-                  <a href={`/goals/add_action/key_result_id:${key_result.id}/goal_id:${goal.id}`} className="action-button">
+                  <a href={ action_post_link } className="action-button">
                     <i className="fa fa-check-circle"></i>
                   </a>
                   <i className="fa fa-plus-circle add-mark"></i>
@@ -83,7 +86,8 @@ export default class Kr extends React.Component {
           </div>
         </div>
         <div className="dashboard-krs-column-footer">
-          <a href={`/goals/view_actions/goal_id:${goal.id}/page_type:list/key_result_id:${key_result.id}`} className="action-link">
+          <a href={ (key_result.completed || action_results.length > 0) ? action_list_link : action_post_link }
+             className="action-link">
             <ul className="dashboard-krs-column-subinfos">
               <li className="action-count">
                 <i className="fa fa-check-circle"></i><span className="action-count-num">{ key_result.action_result_count }</span>
