@@ -24,6 +24,10 @@ App::import('Service', 'GoalService');
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
+ * @property EvaluateTerm $EvaluateTerm
+ * @property GoalMember   $GoalMember
+ * @property Team         $Team
+ * @property GoalService  $GoalService
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -60,7 +64,6 @@ class GoalousTestCase extends CakeTestCase
         Cache::clear(false, 'user_data');
     }
 
-
     function createGoal(int $userId, array $data = [], int $termType = EvaluateTerm::TYPE_CURRENT)
     {
         $teamId = 1;
@@ -79,15 +82,15 @@ class GoalousTestCase extends CakeTestCase
     function createGoalMember($data)
     {
         $default = [
-            "goal_id" => 13,
-            "role" => "役割",
-            "description" => "詳細",
-            "priority" => 5,
-            "approval_status" => 0,
+            "goal_id"              => 13,
+            "role"                 => "役割",
+            "description"          => "詳細",
+            "priority"             => 5,
+            "approval_status"      => 0,
             "is_target_evaluation" => false,
-            "user_id" => $this->EvaluateTerm->my_uid,
-            "team_id" => $this->EvaluateTerm->current_team_id,
-            "type" => 0,
+            "user_id"              => $this->EvaluateTerm->my_uid,
+            "team_id"              => $this->EvaluateTerm->current_team_id,
+            "type"                 => 0,
         ];
         $data = am($default, $data);
         $this->GoalMember->clear();
@@ -131,10 +134,13 @@ class GoalousTestCase extends CakeTestCase
 
     function setDefaultTeamIdAndUid($uid = 1, $teamId = 1)
     {
-        $this->Team->current_team_id = $teamId;
-        $this->Team->my_uid = $uid;
-        $this->EvaluateTerm->current_team_id = $teamId;
-        $this->EvaluateTerm->my_uid = $uid;
+        foreach (ClassRegistry::keys() as $k) {
+            $obj = ClassRegistry::getObject($k);
+            if ($obj instanceof AppModel) {
+                $obj->current_team_id = $teamId;
+                $obj->my_uid = $uid;
+            }
+        }
     }
 
     function prepareUploadImages($file_size = 1000)
@@ -175,5 +181,4 @@ class GoalousTestCase extends CakeTestCase
 
         return [$hash_1['id'], $hash_2['id']];
     }
-
 }
