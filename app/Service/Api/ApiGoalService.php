@@ -204,13 +204,15 @@ class ApiGoalService extends ApiService
         $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
 
         // レスポンスデータ定義
         $ret = [
             'data'   => [
                 'progress_graph' => [],
                 'krs'            => [],
-                'goal'           => []
+                'goals'          => []
             ],
             'paging' => [
                 'next' => ''
@@ -240,7 +242,7 @@ class ApiGoalService extends ApiService
         // KRデータセット
         $ret['data']['krs'] = $krs;
         // Goalデータセット
-        $ret['data']['goals'] = $GoalService->findActionables();
+        $ret['data']['goals'] = $Goal->findNameListAsMember($Goal->my_uid);
 
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(

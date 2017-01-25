@@ -2307,4 +2307,41 @@ class Goal extends AppModel
         return $ret;
     }
 
+    /**
+     * 自分が所属するゴール(リーダー or コラボレータ)のゴール名一覧を取得
+     *
+     * @param  int
+     *
+     * @return array
+     */
+    function findNameListAsMember(int $userId): array
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $options = [
+            'conditions' => [
+                'Goal.end_date >='   => $currentTerm['start_date'],
+                'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.team_id'       => $this->current_team_id
+            ],
+            'fields'     => [
+                'id',
+                'name'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.del_flg = 0',
+                        'GoalMember.user_id' => $userId
+                    ],
+                ]
+            ]
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
+    }
+
 }
