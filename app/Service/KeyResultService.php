@@ -8,6 +8,7 @@ App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
+// TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 
 /**
@@ -586,16 +587,19 @@ class KeyResultService extends AppService
      */
     function generateActionMessage(array $kr): string
     {
+        App::import('View', 'Helper/TimeExHelper');
+        $TimeEx = new TimeExHelper(new View());
+
         $actionCount = count($kr['action_results']);
         $latestActioned = $kr['key_result']['latest_actioned'];
         $completed = $kr['key_result']['completed'];
 
         if ($completed) {
-            return __('Completed this on %s.', date('m/d', $completed));
+            return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
         } else if ($actionCount > 0) {
             return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
-            return __("Take action since %s !", date('m/d', $latestActioned));
+            return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
         } else {
             return __('Take first action to this !');
         }
