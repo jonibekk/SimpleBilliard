@@ -90,10 +90,10 @@ export default class Graph extends React.Component {
 
 
             if (!text) {
-              title = 'Current';
               text = "<table class='" + CLASS.tooltip + "'>";
             }
-            name = nameFormat(d[i].name);
+            // name = nameFormat(d[i].name);
+            name = __("Current");
             bgcolor = $$.levelColor ? $$.levelColor(d[i].value) : color(d[i].id);
 
             text += "<tr class='" + CLASS.tooltipName + "-" + d[i].id + "'>";

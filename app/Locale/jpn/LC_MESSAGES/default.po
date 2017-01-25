@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-23 15:48+0900\n"
+"PO-Revision-Date: 2017-01-25 18:26+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2522,6 +2522,15 @@ msgstr "達成要素を更新しました。"
 
 msgid "All Goals"
 msgstr "すべてのゴール"
+
+msgid "PROGRESS"
+msgstr "進捗"
+
+msgid "All goal's total you have."
+msgstr "あなたが持つすべてのゴールの合計"
+
+msgid "Sweet Spot(Drive for it!)"
+msgstr "スイートスポット(ここを目指そう!)"
 
 msgid "Circles"
 msgstr "サークル"

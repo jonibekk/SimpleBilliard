@@ -553,7 +553,8 @@ App::uses('AttachedFile', 'Model');
             // kr column
             "All Goals": "<?= __("All Goals") ?>",
             "PROGRESS": "<?= __("PROGRESS") ?>",
-            "All goal's total you have.": "<?= __("All goal's total you have.") ?>"
+            "All goal's total you have.": "<?= __("All goal's total you have.") ?>",
+            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
