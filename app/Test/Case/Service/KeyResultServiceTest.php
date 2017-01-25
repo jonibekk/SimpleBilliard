@@ -267,46 +267,44 @@ class KeyResultServiceTest extends GoalousTestCase
     function testGenerateActionMessage()
     {
         $this->setDefaultTeamIdAndUid();
+        App::import('View', 'Helper/TimeExHelper');
+        $TimeEx = new TimeExHelper(new View());
+
+        // 完了KR
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = 1485310914, $actions = []);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __('Completed this on %s.', $TimeEx->dateLocalFormat(1485310914));
+        $this->assertEquals($res, $expected);
 
         // 最近アクションがあった未完了KR
-        $kr = [
-            'key_result' => [
-                'latest_actioned' => '1485310914',
-                'completed' => null
-            ],
-            'action_results' => []
-        ];
-        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
-
-        // 最近アクションがあった完了KR
-        $kr = [
-            'key_result' => [
-                'latest_actioned' => '1485310914',
-                'completed' => '1485310914'
-            ],
-            'action_results' => []
-        ];
-        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = null, $actions = [1, 2]);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">2</span>');
+        $this->assertEquals($res, $expected);
 
         // 最近アクションが無い未完了KR
-        $kr = [
-            'key_result' => [
-                'latest_actioned' => null,
-                'completed' => null
-            ],
-            'action_results' => [1, 2]
-        ];
-        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = null, $actions = []);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __("Take action since %s !", $TimeEx->dateLocalFormat(1485310914));
+        $this->assertEquals($res, $expected);
 
         // 一度もアクションが無い未完了KR
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = null, $completed = null, $actions = []);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __('Take first action to this !');
+        $this->assertEquals($res, $expected);
+    }
+
+    private function _getKrForGenerateActionMessage($latestActioned, $completed, $actions)
+    {
         $kr = [
             'key_result' => [
-                'latest_actioned' => null,
-                'completed' => null
+                'latest_actioned' => $latestActioned,
+                'completed' => $completed
             ],
-            'action_results' => []
+            'action_results' => $actions
         ];
-        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+        return $kr;
     }
 
     private function setupTestUpdateLatestActioned()
