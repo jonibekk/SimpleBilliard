@@ -27,13 +27,12 @@ export default class Krs extends React.Component {
       <div className="panel panel-default dashboard-krs">
         <div className="dashboard-krs-header">
           <div className="title">KRs { kr_count ? `(${kr_count})` : '' }</div>
-          <div role="group" className="pull-right goal-filter">
+          <div role="group" className="pull-right goal-filter oneline-ellipsis">
             <div className="dropdown-toggle" data-toggle="dropdown" role="button"
                aria-expanded="false">
               <div className="selected-goal oneline-ellipsis">
                 <span>{ this.state.selected_goal }</span>
               </div>
-              <span className="dropdown-opener"><i className="fa fa-angle-down ml_2px"/></span>
             </div>
             <ul className="dropdown-menu pull-right" role="menu">
               <li>
@@ -60,6 +59,9 @@ export default class Krs extends React.Component {
                 return goal_elems
               })()}
             </ul>
+          </div>
+          <div className="dropdown-opener dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <i className="fa fa-angle-down ml_2px"/>
           </div>
         </div>
         <ul className="dashboard-krs-columns">

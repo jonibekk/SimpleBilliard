@@ -16,22 +16,26 @@
     font-size: 14px;
     .title {
       font-weight: 400;
+      width: 70px;
     }
     .goal-filter {
       margin-left: auto;
       cursor: pointer;
+      flex: 1;
       .selected-goal {
         display: inline-block;
-        max-width: 250px;
         vertical-align: top;
-      }
-      .dropdown-opener {
-        display: inline-block;
-        vertical-align: top;
+        text-align: right;
+        width: 100%;
       }
     }
+    .dropdown-opener {
+      display: inline-block;
+      vertical-align: top;
+      cursor: pointer;
+    }
     .dropdown-menu {
-      max-width: 290px;
+      max-width: 280px;
     }
   }
 
