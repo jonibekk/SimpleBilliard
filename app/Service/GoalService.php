@@ -1204,11 +1204,8 @@ class GoalService extends AppService
         $ret = [];
         //日毎にゴールのプライオリティを掛け合わせる
         foreach ($logs as $date => $goals) {
-            $this->log($goals);
             $ret[$date] = $this->sumGoalProgress($goals, $goalPriorities);
         }
-        $this->log('log');
-        $this->log($ret);
         return $ret;
     }
 
