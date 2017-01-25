@@ -1169,7 +1169,7 @@ class GoalService extends AppService
      */
     function processProgressesToGraph(string $startDate, string $endDate, array $progresses): array
     {
-        $currentProgress = 0;
+        $currentProgress = null;
         $ret = [];
 
         $currentTimestamp = strtotime($startDate);
@@ -1180,7 +1180,7 @@ class GoalService extends AppService
             if (isset($progresses[$currentDate])) {
                 $currentProgress = $progresses[$currentDate];
             }
-            $ret[] = (float)$currentProgress;
+            $ret[] = $currentProgress;
 
             $currentTimestamp += DAY;
         }
