@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Krs from "~/kr_column/components/Krs";
+import Graph from "~/kr_column/components/Graph";
 import {KeyResult} from "~/common/constants/Model";
 import Loading from "~/kr_column/components/Loading";
 
@@ -104,7 +105,7 @@ export default class KrColumn extends React.Component {
 
     return (
       <div>
-        {/*<Graph progress_graph={ this.state.progress_graph } />*/}
+        <Graph progress_graph={ this.state.progress_graph } />
         <Krs krs={ this.state.krs }
              goals={ this.state.goals}
              kr_count={ this.state.kr_count }

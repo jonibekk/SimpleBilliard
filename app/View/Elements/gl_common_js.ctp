@@ -14,6 +14,13 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
+<?= $this->element('cake_variables') ?>
+<?= $this->Html->script('/compiled_assets/js/react_kr_column_app.min');?>
+<?php if (Hash::get($this->request->params, 'controller') === 'goals'
+    && Hash::get($this->request->params, 'action') === 'index'): ?>
+    <?= $this->Html->script('/compiled_assets/js/react_goal_search_app.min') ?>
+<?php endif; ?>
+
 <?php
 echo $this->Html->script('/js/vendor/es6/es6-promise.min');
 echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
@@ -24,7 +31,6 @@ echo $this->Html->script('/compiled_assets/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
-<?= $this->element('cake_variables') ?>
 
 <?= $this->Session->flash('click_event') ?>
 <?php echo $this->Session->flash('pnotify');
