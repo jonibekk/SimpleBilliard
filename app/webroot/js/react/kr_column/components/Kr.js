@@ -34,12 +34,12 @@ export default class Kr extends React.Component {
         <div className="dashboard-krs-column-wrapper">
           {/* KR name & progressBarエリア */}
           <div className="left">
-            <div className="flex mb_2px" onClick={ this.toggleKrOpened }>
+            <div className="flex mb_2px pointer" onClick={ this.toggleKrOpened }>
               <p className={`flex-extend font_verydark kr-name ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`}>
                 { key_result.name }
               </p>
-              <div>
-                <span className="dashboard-krs-column-kr-opener"><i className={`fa ${this.state.is_opened_kr ? "fa-angle-up" : "fa-angle-down"} ml_2px`}/></span>
+              <div className="dashboard-krs-column-kr-opener">
+                <i className={`fa ${this.state.is_opened_kr ? "fa-angle-up" : "fa-angle-down"} ml_2px`}/>
               </div>
             </div>
             <div className={`oneline-ellipsis font_12px mt_4px ${!this.state.is_opened_kr && 'none'}`}>
@@ -79,7 +79,9 @@ export default class Kr extends React.Component {
                   <a href={ action_post_link } className="action-button">
                     <i className="fa fa-check-circle"></i>
                   </a>
-                  <i className="fa fa-plus-circle add-mark"></i>
+                  <a href={ action_post_link } className="add-mark">
+                    <i className="fa fa-plus-circle"></i>
+                  </a>
                 </div>
               )
             })()}
