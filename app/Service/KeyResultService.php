@@ -18,9 +18,6 @@ class KeyResultService extends AppService
     /* KRキャッシュ */
     private static $cacheList = [];
 
-    /* ダッシュボードに表示するKR数 */
-    const NUMBER_DISPLAYING_IN_DASHBOARD = 10;
-
     /**
      * idによる単体データ取得
      *
@@ -480,32 +477,6 @@ class KeyResultService extends AppService
             return false;
         }
         return true;
-    }
-
-    /**
-     * トップページ右カラムに初期表示するKR一覧を取得
-     * - キャッシュが存在する場合はキャッシュを返す
-     *
-     * @param int $limit
-     *
-     * @return array
-     */
-    function findInDashboardFirstView(int $limit): array
-    {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
-
-        // キャッシュ検索
-        $resKrs = [];
-        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
-        if ($cachedKrs !== false) {
-            $resKrs = $cachedKrs;
-        } else {
-            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
-            $resKrs = $KeyResult->findInDashboard($limit);
-            Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
-        }
-        return $resKrs;
     }
 
     /**

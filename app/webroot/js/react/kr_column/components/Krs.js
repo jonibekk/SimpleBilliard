@@ -1,6 +1,7 @@
 import React from "react";
 import Kr from '~/kr_column/components/Kr'
 import Loading from "~/kr_column/components/Loading";
+import InfiniteScroll from "redux-infinite-scroll";
 
 export default class Krs extends React.Component {
   constructor(props) {
@@ -18,10 +19,20 @@ export default class Krs extends React.Component {
   }
 
   render() {
-    const {krs, kr_count, goals} = this.props
+    const {krs, kr_count, goals, loading_krs} = this.props
     if (goals.length === 0) {
       return null
     }
+
+    const render_krs = krs.map((kr, i) => {
+      return (
+        <Kr key_result={kr.key_result}
+            action_results={kr.action_results}
+            goal={kr.goal}
+            key={i}
+        />
+      )
+    })
 
     return (
       <div className="panel panel-default dashboard-krs">
@@ -65,18 +76,15 @@ export default class Krs extends React.Component {
           </div>
         </div>
         <ul className="dashboard-krs-columns">
-          { krs.map((kr, i) => {
-            const {key_result, action_results, goal} = kr
-            return (
-              <Kr key_result={key_result}
-                  action_results={action_results}
-                  goal={ goal }
-                  key={i}
-              />
-            )
-          }) }
+          <InfiniteScroll
+            loadMore={ this.props.fetchMoreKrs.bind(this) }
+            loadingMore={ loading_krs }
+            items={ render_krs }
+            elementIsScrollable={ false }
+            loader=""
+          />
         </ul>
-        { this.props.loading_krs && <Loading /> }
+        { loading_krs && <Loading /> }
       </div>
     )
   }

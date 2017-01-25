@@ -6,6 +6,11 @@ App::import('Service/Api', 'ApiService');
  */
 class ApiKeyResultService extends ApiService
 {
+    /* ダッシュボードに表示するKR数 */
+    // TODO: 右カラムトップにグラフが追加され、かつ右カラムだけのスクロールが実装されたら
+    //       KRデフォルト件数を20件->10件に変更する
+    const DASHBOARD_KRS_DEFAULT_LIMIT = 20;
+
     /**
      * トップページKR一覧APIレスポンスのページングデータを返す
      *
