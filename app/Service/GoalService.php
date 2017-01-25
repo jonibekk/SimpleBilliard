@@ -728,7 +728,6 @@ class GoalService extends AppService
             $Goal->rollback();
             return false;
         }
-        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
     }
 
