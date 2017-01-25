@@ -261,6 +261,54 @@ class KeyResultServiceTest extends GoalousTestCase
         $this->assertEquals($updatedKr2['latest_actioned'], $time2);
     }
 
+    /**
+     * 右カラムに表示するアクションメッセージ
+     */
+    function testGenerateActionMessage()
+    {
+        $this->setDefaultTeamIdAndUid();
+
+        // 最近アクションがあった未完了KR
+        $kr = [
+            'key_result' => [
+                'latest_actioned' => '1485310914',
+                'completed' => null
+            ],
+            'action_results' => []
+        ];
+        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+
+        // 最近アクションがあった完了KR
+        $kr = [
+            'key_result' => [
+                'latest_actioned' => '1485310914',
+                'completed' => '1485310914'
+            ],
+            'action_results' => []
+        ];
+        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+
+        // 最近アクションが無い未完了KR
+        $kr = [
+            'key_result' => [
+                'latest_actioned' => null,
+                'completed' => null
+            ],
+            'action_results' => [1, 2]
+        ];
+        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+
+        // 一度もアクションが無い未完了KR
+        $kr = [
+            'key_result' => [
+                'latest_actioned' => null,
+                'completed' => null
+            ],
+            'action_results' => []
+        ];
+        $this->assertNotEmpty($this->KeyResultService->generateActionMessage($kr));
+    }
+
     private function setupTestUpdateLatestActioned()
     {
         $this->setDefaultTeamIdAndUid();
