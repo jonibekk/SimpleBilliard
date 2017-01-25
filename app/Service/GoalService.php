@@ -1180,7 +1180,7 @@ class GoalService extends AppService
             if (isset($progresses[$currentDate])) {
                 $currentProgress = $progresses[$currentDate];
             }
-            $ret[] = (int)$currentProgress;
+            $ret[] = (float)$currentProgress;
 
             $currentTimestamp += DAY;
         }
@@ -1204,8 +1204,11 @@ class GoalService extends AppService
         $ret = [];
         //日毎にゴールのプライオリティを掛け合わせる
         foreach ($logs as $date => $goals) {
+            $this->log($goals);
             $ret[$date] = $this->sumGoalProgress($goals, $goalPriorities);
         }
+        $this->log('log');
+        $this->log($ret);
         return $ret;
     }
 
