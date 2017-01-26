@@ -79,14 +79,14 @@ export default class Graph extends React.Component {
       tooltip: {
         contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
           /* tooltipデザインカスタマイズ */
-          let $$ = this;
-          let config = $$.config
-          let CLASS = $$.CLASS;
-          let valueFormat = config.tooltip_format_value || defaultValueFormat;
+          const $$ = this;
+          const config = $$.config
+          const CLASS = $$.CLASS;
+          const valueFormat = config.tooltip_format_value || defaultValueFormat;
           const name = __("Current");
+
           // HTML作成
           let el = `<table class="${CLASS.tooltip}">`;
-
           for (let i = 0; i < d.length; i++) {
             if (!(d[i] && (d[i].value || d[i].value === 0))) {
               return "";
@@ -115,17 +115,18 @@ export default class Graph extends React.Component {
   }
 
   componentDidMount() {
-    this.renderChart(this.props.progress_graph);
+    this.renderChart(this.props.progress_graph.data);
   }
 
   render() {
-    if (this.props.progress_graph.length == 0) {
+    const {progress_graph} = this.props;
+    if (Object.keys(progress_graph).length == 0) {
       return null;
     }
     // ニュースフィード・関連ゴールタブ切り替え時にリサイズ&ツールチップ再表示
     if (this.state.flush) {
       this.state.chart.flush();
-      const last_index = this.props.progress_graph[2].length - 2;
+      const last_index = progress_graph.data[2].length - 2;
       this.state.chart.tooltip.show({mouse:[last_index, 50], index: last_index});
     }
 
@@ -138,8 +139,8 @@ export default class Graph extends React.Component {
         </h3>
         <div id="chart"></div>
         <div className="progressGraph-footer">
-          <div className="progressGraph-footer-left"><span>March 1</span></div>
-          <div className="progressGraph-footer-right"><span>March 30</span></div>
+          <div className="progressGraph-footer-left"><span>{progress_graph.start_date}</span></div>
+          <div className="progressGraph-footer-right"><span>{progress_graph.end_date}</span></div>
         </div>
         <div className="progressGraph-legend">
           <span className="progressGraph-legend-mark mod-sweetspot"></span>
@@ -151,6 +152,6 @@ export default class Graph extends React.Component {
 }
 
 Graph.propTypes = {
-  progress_graph: React.PropTypes.array
+  progress_graph: React.PropTypes.object
 };
-Graph.defaultProps = {progress_graph: []};
+Graph.defaultProps = {progress_graph: {}};
