@@ -358,6 +358,9 @@ class Circle extends AppModel
         if ($end_date) {
             $options['conditions']['Circle.created <'] = $end_date;
         }
+        if ($type === 'non-joined') {
+            $options['conditions']['Circle.team_all_flg'] = false;
+        }
         $res = $this->find('all', $options);
         //typeに応じて絞り込み
         switch ($type) {
