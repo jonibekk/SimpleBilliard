@@ -9,7 +9,7 @@ export default class KrColumn extends React.Component {
     this.state = {
       progress_graph: [],
       krs: [],
-      goals: {},
+      goals: [],
       kr_count: null,
       loading_init: true,
       loading_krs: false,
