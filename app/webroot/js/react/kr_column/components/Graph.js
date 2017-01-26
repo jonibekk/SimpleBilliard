@@ -23,6 +23,7 @@ export default class Graph extends React.Component {
     if (data.length == 0) {
       return;
     }
+    // 日毎の進捗データ(data[2])は実際は['data',1,2,3...]という最初の要素が名称となる配列の形になっているため、末尾のインデックスはlength-1ではなく-2となる。
     const last_index = data[2].length - 2;
     const chart = this.generateChart(data);
     chart.tooltip.show({mouse:[last_index, 50], index: last_index});

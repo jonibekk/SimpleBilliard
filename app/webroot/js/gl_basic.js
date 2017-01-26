@@ -232,6 +232,7 @@ $(document).ready(function () {
       //表示切り換え
       $('[role="main"]').addClass('visible-md visible-lg');
       $('[role="goal_area"]').removeClass('visible-md visible-lg');
+      // HACK:reactの進捗グラフをリサイズするため架空要素(表示はしない)のクリックイベントを使用
       $('.js-flush-chart').trigger('click');
     }
     else {
