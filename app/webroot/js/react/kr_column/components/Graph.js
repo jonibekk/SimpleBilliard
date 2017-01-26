@@ -26,7 +26,11 @@ export default class Graph extends React.Component {
     // 日毎の進捗データ(data[2])は実際は['data',1,2,3...]という最初の要素が名称となる配列の形になっているため、末尾のインデックスはlength-1ではなく-2となる。
     const last_index = data[2].length - 2;
     const chart = this.generateChart(data);
-    chart.tooltip.show({mouse:[last_index, 50], index: last_index});
+    // ツールチップのY軸表示位置
+    // TODO:Y軸の位置を現在点そばになるよう修正
+    // Y軸を設定しなかった場合、初期表示時にマウスオーバーした時のように現在点のそばに表示されず、Y軸の一番上に表示されてしまう為、一旦真ん中の位置表示としている。
+    const y = 50;
+    chart.tooltip.show({mouse:[last_index, y], index: last_index});
   }
 
   generateChart (data) {
@@ -53,7 +57,9 @@ export default class Graph extends React.Component {
       },
       point: {
         r: function (d) {
-          return (d.index == last_index && d.id == "data") ? 5 : 0;
+          // 現在日の進捗だけ丸点表示
+          const currentPointSize = 5;
+          return (d.index == last_index && d.id == "data") ? currentPointSize : 0;
         },
         focus: {
           expand: {
@@ -80,9 +86,8 @@ export default class Graph extends React.Component {
       tooltip: {
         contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
           /* tooltipデザインカスタマイズ */
-          const $$ = this;
-          const config = $$.config
-          const CLASS = $$.CLASS;
+          const config = this.config
+          const CLASS = this.CLASS;
           const valueFormat = config.tooltip_format_value || defaultValueFormat;
           const name = __("Current");
 
