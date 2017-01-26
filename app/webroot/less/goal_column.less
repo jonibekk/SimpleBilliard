@@ -158,3 +158,74 @@
     }
   }
 }
+/*===== progress chart =====*/
+#chart {
+  width: 100%;
+  max-height: 200px;
+  .c3-area {
+    opacity: 1;
+  }
+
+  .c3 svg {
+    opacity: 1 !important;
+    width: 350px;
+    @media screen and (min-width: 768px) {
+      width: 200px;
+    }
+  }
+  .c3-area-data3 {
+    opacity: 1 !important;
+  }
+  .c3-line {
+    stroke-width: 3px;
+  }
+  .c3-circle:last-child {
+    stroke-width: 1px;
+    fill: #fff !important;
+    stroke: @subColor14;
+  }
+  border-bottom: 1px solid @subColor4;
+}
+
+.progressGraph-title {
+  font-size: 1.4rem;
+  padding: 0;
+  margin: 0;
+  color: @darkGray;
+  font-weight: 400;
+  &-sub {
+    margin-left: 4px;
+    font-size: 1.1rem;
+    color: @subColor3;
+  }
+}
+
+.progressGraph-footer {
+  display: flex;
+  font-size: 1.1rem;
+  &-left {
+    flex: 1;
+    text-align: left;
+  }
+  &-right {
+    flex: 1;
+    text-align: right;
+  }
+}
+
+.progressGraph-legend {
+  margin: 0;
+  padding: 4px;
+  text-align: right;
+  font-size: 1.1rem;
+  &-mark {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    vertical-align: middle;
+    &.mod-sweetspot {
+      background-color: #d4f2fc;
+    }
+  }
+}
+
