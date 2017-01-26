@@ -162,16 +162,12 @@
 #chart {
   width: 100%;
   max-height: 200px;
+  border-bottom: 1px solid @subColor4;
   .c3-area {
     opacity: 1;
   }
-
   .c3 svg {
     opacity: 1 !important;
-    width: 350px;
-    @media screen and (min-width: 768px) {
-      width: 200px;
-    }
   }
   .c3-area-data3 {
     opacity: 1 !important;
@@ -184,7 +180,6 @@
     fill: #fff !important;
     stroke: @subColor14;
   }
-  border-bottom: 1px solid @subColor4;
 }
 
 .progressGraph-title {
