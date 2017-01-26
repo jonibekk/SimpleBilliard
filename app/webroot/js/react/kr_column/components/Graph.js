@@ -46,7 +46,7 @@ export default class Graph extends React.Component {
           "data": 'line',
         },
         colors: {
-          "sweet_spot_top": '#d4f2fc',
+          "sweet_spot_top": '#e3f6fd',
           "sweet_spot_bottom": '#fff',
           "data": '#4a98ef',
         },
