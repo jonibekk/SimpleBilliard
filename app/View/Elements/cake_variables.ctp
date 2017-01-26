@@ -551,7 +551,10 @@ App::uses('AttachedFile', 'Model');
             "All progress of this KR will be reset, is it really OK?": "<?= __("All progress of this KR will be reset, is it really OK?") ?>",
             "Updated KR.": "<?= __("Updated KR.") ?>",
             // kr column
-            "All Goals": "<?= __("All Goals") ?>"
+            "All Goals": "<?= __("All Goals") ?>",
+            "PROGRESS": "<?= __("PROGRESS") ?>",
+            "All goal's total you have.": "<?= __("All goal's total you have.") ?>",
+            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

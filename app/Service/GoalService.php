@@ -1050,8 +1050,8 @@ class GoalService extends AppService
     {
         /** @noinspection PhpUndefinedVariableInspection */
         $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
-        $ret[1] = array_merge(['data'], $progressLogs);
-        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        $ret[2] = array_merge(['data'], $progressLogs);
         return $ret;
     }
 
