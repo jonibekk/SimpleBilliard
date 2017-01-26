@@ -2314,13 +2314,12 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function findNameListAsMember(int $userId): array
+    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
     {
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
         $options = [
             'conditions' => [
-                'Goal.end_date >='   => $currentTerm['start_date'],
-                'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.end_date >='   => $startDateTime,
+                'Goal.end_date <='   => $endDateTime,
                 'Goal.team_id'       => $this->current_team_id,
                 'GoalMember.user_id' => $userId,
                 'GoalMember.del_flg' => false
@@ -2328,6 +2327,10 @@ class Goal extends AppModel
             'fields'     => [
                 'id',
                 'name'
+            ],
+            'order'      => [
+                'GoalMember.priority DESC',
+                'Goal.completed ASC'
             ],
             'joins'      => [
                 [
@@ -2340,7 +2343,11 @@ class Goal extends AppModel
                 ]
             ]
         ];
-        $ret = $this->find('list', $options);
+        $ret = $this->find('all', $options);
+        if (empty($ret)) {
+            return $ret;
+        }
+        $ret = Hash::extract($ret, '{n}.Goal');
         return $ret;
     }
 

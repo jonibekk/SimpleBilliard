@@ -1401,12 +1401,12 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function findNameListAsMember(int $userId): array
+    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
 
-        $goalNameList = $Goal->findNameListAsMember($userId);
+        $goalNameList = $Goal->findNameListAsMember($userId, $startDateTime, $endDateTime);
         return $goalNameList;
     }
 }

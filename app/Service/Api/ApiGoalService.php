@@ -206,6 +206,8 @@ class ApiGoalService extends ApiService
         $GoalService = ClassRegistry::init("GoalService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         // レスポンスデータ定義
         $ret = [
@@ -242,7 +244,8 @@ class ApiGoalService extends ApiService
         // KRデータセット
         $ret['data']['krs'] = $krs;
         // Goalデータセット
-        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid);
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'], $currentTerm['end_date']);
 
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(

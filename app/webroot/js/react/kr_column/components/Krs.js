@@ -12,9 +12,10 @@ export default class Krs extends React.Component {
     this.updateGoalFilter = this.updateGoalFilter.bind(this);
   }
 
-  updateGoalFilter(e, goalId = null) {
-    const goalName = goalId ? this.props.goals[goalId] : __('All Goals')
-    this.setState({ selected_goal: goalName})
+  updateGoalFilter(e, index = null) {
+    const goalName = index !== null ? this.props.goals[index]['name'] : __('All Goals')
+    const goalId = index !== null ? this.props.goals[index]['id'] : null
+    this.setState({ selected_goal: goalName })
     this.props.fetchKrsFilteredGoal(goalId)
   }
 
@@ -54,15 +55,14 @@ export default class Krs extends React.Component {
               </li>
               {(() => {
                 let goal_elems = []
-                const goal_keys = Object.keys(goals)
-                for (let i = 0; i < goal_keys.length; i++) {
-                  let goalId = goal_keys[i]
+                for (let i = 0; i < goals.length; i++) {
+                  const goalId = goals[i]['id']
                   goal_elems.push(
                     <li key={goalId}>
                       <a href="#"
-                         onClick={(e) => this.updateGoalFilter(e, goalId)}
+                         onClick={(e) => this.updateGoalFilter(e, i)}
                          className="block oneline-ellipsis">
-                        <span>{goals[goalId]}</span>
+                        <span>{goals[i]['name']}</span>
                       </a>
                     </li>
                   )
@@ -92,8 +92,8 @@ export default class Krs extends React.Component {
 
 Krs.propTypes = {
   krs: React.PropTypes.array,
-  goals: React.PropTypes.object,
+  goals: React.PropTypes.array,
   kr_count: React.PropTypes.number,
   loading_krs: React.PropTypes.bool
 };
-Krs.defaultProps = { krs: [], goals: {}, kr_count: 0, loading_krs: false };
+Krs.defaultProps = { krs: [], goals: [], kr_count: 0, loading_krs: false };
