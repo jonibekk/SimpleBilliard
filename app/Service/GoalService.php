@@ -1392,4 +1392,21 @@ class GoalService extends AppService
             $data,
             'team_info');
     }
+
+    /**
+     * ユーザーに紐づくゴール名一覧を返す
+     * - TODO: feedページで呼ばれるメソッドのためキャッシュが必要
+     *
+     * @param  int   $userId
+     *
+     * @return array
+     */
+    function findNameListAsMember(int $userId): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $goalNameList = $Goal->findNameListAsMember($userId);
+        return $goalNameList;
+    }
 }

@@ -2321,7 +2321,9 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.end_date >='   => $currentTerm['start_date'],
                 'Goal.end_date <='   => $currentTerm['end_date'],
-                'Goal.team_id'       => $this->current_team_id
+                'Goal.team_id'       => $this->current_team_id,
+                'GoalMember.user_id' => $userId,
+                'GoalMember.del_flg' => false
             ],
             'fields'     => [
                 'id',
@@ -2333,9 +2335,7 @@ class Goal extends AppModel
                     'table'      => 'goal_members',
                     'alias'      => 'GoalMember',
                     'conditions' => [
-                        'GoalMember.goal_id = Goal.id',
-                        'GoalMember.del_flg = 0',
-                        'GoalMember.user_id' => $userId
+                        'GoalMember.goal_id = Goal.id'
                     ],
                 ]
             ]
