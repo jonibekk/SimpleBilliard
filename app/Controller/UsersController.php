@@ -261,7 +261,10 @@ class UsersController extends AppController
                 throw new RuntimeException(__("The invitation token is incorrect. Check your email again."));
             }
             //トークンが有効かチェック
-            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            $confirmRes = $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            if ($confirmRes !== true) {
+                throw new RuntimeException($confirmRes);
+            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect('/');
@@ -360,8 +363,19 @@ class UsersController extends AppController
         // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
         $this->Session->delete('Message.pnotify');
+
         //チーム参加
-        $this->_joinTeam($this->request->params['named']['invite_token']);
+        // ユーザーがログイン中でかつチームジョインが失敗した場合、
+        // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
+        $loggedInTeamId = $this->Session->read('current_team_id');
+        if (!$this->_joinTeam($this->request->params['named']['invite_token'])) {
+            if ($loggedInTeamId) {
+                $this->_switchTeam($loggedInTeamId);
+            }
+            $this->Pnotify->outError(__("Can't join a team. Please try again later."));
+            return $this->redirect("/");
+        }
+
         //ホーム画面でモーダル表示
         $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
         //top画面に遷移
@@ -756,9 +770,12 @@ class UsersController extends AppController
      */
     public function accept_invite($token)
     {
-        try {
             // Check token available
-            $this->Invite->confirmToken($token);
+            $confirmRes = $this->Invite->confirmToken($token);
+            if ($confirmRes !== true) {
+                $this->Pnotify->outError($confirmRes);
+                return $this->redirect("/");
+            }
 
             // By email
             if (!$this->Invite->isUser($token)) {
@@ -785,18 +802,24 @@ class UsersController extends AppController
 
             // Not allow invite me
             if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
-                throw new RuntimeException(__("This invitation isn't not for you."));
+                $this->Pnotify->outError(__("This invitation isn't not for you."));
+                return $this->redirect("/");
             }
 
-            $team = $this->_joinTeam($token);
+            // ユーザーがログイン中でかつチームジョインが失敗した場合、
+            // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
+            $loggedInTeamId = $this->Auth->user('default_team_id');
+            if (!$this->_joinTeam($token)) {
+                if ($loggedInTeamId) {
+                    $this->_switchTeam($loggedInTeamId);
+                }
+                $this->Pnotify->outError(__("Can't join team. Please try again later."));
+                return $this->redirect("/");
+            }
 
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
             return $this->redirect("/");
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            return $this->redirect("/");
-        }
     }
 
     /**
@@ -1003,39 +1026,81 @@ class UsersController extends AppController
      */
     function _joinTeam($token)
     {
-        //トークン認証
-        $invite = $this->Invite->verify($token, $this->Auth->user('id'));
+        try {
+            $this->TeamMember->begin();
 
-        //チーム参加
-        $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
-        //デフォルトチーム設定
-        $this->User->updateDefaultTeam($invite['Invite']['team_id']);
-        //セッション更新
-        $this->_refreshAuth();
-        //チーム切換え
-        $this->_switchTeam($invite['Invite']['team_id']);
-        // 「チーム全体」サークルに追加
-        // Circle と CircleMember の current_team_id を一時的に変更
-        $tmp = $this->Circle->current_team_id;
-        $this->Circle->current_team_id = $invite['Invite']['team_id'];
-        $this->Circle->CircleMember->current_team_id = $invite['Invite']['team_id'];
-        $teamAllCircle = $this->Circle->getTeamAllCircle();
-        App::import('Service', 'ExperimentService');
-        /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-            $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false, false);
-        } else {
-            $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
+            //トークン認証
+            $confimRes = $this->confirmToken($token);
+            if ($confirmRes !== true) {
+                throw new Exception(sprintf("Failed to confirm token. token:%s"
+                    , var_export($token, true)));
+            }
+
+            $userId = $this->Auth->user('id');
+            $invite = $this->Invite->verify($token, $userId);
+
+            $inviteTeamId = Hash::get($invite, 'Invite.team_id');
+
+            //チーム参加
+            if (!$this->User->TeamMember->add($userId, $inviteTeamId)) {
+                $validationErrors = $ExperimentService->validationExtract($this->User->TeamMember->validationErrors);
+                throw new Exception(sprintf("Failed to confirm token. userId:%s teamId:%s validationErrors:%s"
+                    , $userId, $inviteTeamId, var_export($validationErrors, true)));
+            }
+
+            //デフォルトチーム設定
+            if (!$this->User->updateDefaultTeam($inviteTeamId, false, $userId)) {
+                $validationErrors = $ExperimentService->validationExtract($this->User->validationErrors);
+                throw new Exception(sprintf("Failed to set default team. userId:%s teamId:%s validationErrors:%s"
+                    , $userId, $inviteTeamId, var_export($validationErrors, true)));
+            }
+
+            //セッション更新
+            $this->_refreshAuth();
+
+            //チーム切換え
+            $this->_switchTeam($inviteTeamId);
+
+            // Circle と CircleMember の current_team_id を一時的に変更
+            $currentTeamId = $this->Circle->current_team_id;
+            $this->Circle->current_team_id = $inviteTeamId;
+            $this->Circle->CircleMember->current_team_id = $inviteTeamId;
+            $teamAllCircle = $this->Circle->getTeamAllCircle();
+
+            // 「チーム全体」サークルに追加
+            App::import('Service', 'ExperimentService');
+            /** @var ExperimentService $ExperimentService */
+            $ExperimentService = ClassRegistry::init('ExperimentService');
+            $successJoinedCircle = true;
+            if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
+                $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false, false);
+            } else {
+                $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
+            }
+            if (!$successJoinedCircle) {
+                $validationErrors = $ExperimentService->validationExtract($this->Circle->CircleMember->validationErrors);
+                throw new Exception(sprintf("Failed to join all team circle. userId:%s circleId:%s validationErrors:%s"
+                    , $userId, $teamAllCircle['Circle']['id'], var_export($validationErrors, true)));
+            }
+
+            $this->Circle->current_team_id = $currentTeamId;
+            $this->Circle->CircleMember->current_team_id = $currentTeamId;
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $this->TeamMember->rollback();
+            return false;
         }
 
-        $this->Circle->current_team_id = $tmp;
-        $this->Circle->CircleMember->current_team_id = $tmp;
+        $this->TeamMember->commit();
+
         //cache削除
         Cache::delete($this->Circle->CircleMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
+
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
-        return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
+        return $this->User->TeamMember->Team->findById($inviteTeamId);
+        return true;
     }
 
     public function ajax_get_user_detail($user_id)
