@@ -1,6 +1,7 @@
 import React from "react";
 import Kr from '~/kr_column/components/Kr'
 import Loading from "~/kr_column/components/Loading";
+import InfiniteScroll from "redux-infinite-scroll";
 
 export default class Krs extends React.Component {
   constructor(props) {
@@ -11,29 +12,39 @@ export default class Krs extends React.Component {
     this.updateGoalFilter = this.updateGoalFilter.bind(this);
   }
 
-  updateGoalFilter(e, goalId = null) {
-    const goalName = goalId ? this.props.goals[goalId] : __('All Goals')
-    this.setState({ selected_goal: goalName})
+  updateGoalFilter(e, index = null) {
+    const goalName = index !== null ? this.props.goals[index]['name'] : __('All Goals')
+    const goalId = index !== null ? this.props.goals[index]['id'] : null
+    this.setState({ selected_goal: goalName })
     this.props.fetchKrsFilteredGoal(goalId)
   }
 
   render() {
-    const {krs, kr_count, goals} = this.props
+    const {krs, kr_count, goals, loading_krs} = this.props
     if (goals.length === 0) {
       return null
     }
+
+    const render_krs = krs.map((kr, i) => {
+      return (
+        <Kr key_result={kr.key_result}
+            action_results={kr.action_results}
+            goal={kr.goal}
+            key={i}
+        />
+      )
+    })
 
     return (
       <div className="panel panel-default dashboard-krs">
         <div className="dashboard-krs-header">
           <div className="title">KRs { kr_count ? `(${kr_count})` : '' }</div>
-          <div role="group" className="pull-right goal-filter">
+          <div role="group" className="pull-right goal-filter oneline-ellipsis">
             <div className="dropdown-toggle" data-toggle="dropdown" role="button"
                aria-expanded="false">
               <div className="selected-goal oneline-ellipsis">
                 <span>{ this.state.selected_goal }</span>
               </div>
-              <span className="dropdown-opener"><i className="fa fa-angle-down ml_2px"/></span>
             </div>
             <ul className="dropdown-menu pull-right" role="menu">
               <li>
@@ -44,15 +55,14 @@ export default class Krs extends React.Component {
               </li>
               {(() => {
                 let goal_elems = []
-                const goal_keys = Object.keys(goals)
-                for (let i = 0; i < goal_keys.length; i++) {
-                  let goalId = goal_keys[i]
+                for (let i = 0; i < goals.length; i++) {
+                  const goalId = goals[i]['id']
                   goal_elems.push(
                     <li key={goalId}>
                       <a href="#"
-                         onClick={(e) => this.updateGoalFilter(e, goalId)}
+                         onClick={(e) => this.updateGoalFilter(e, i)}
                          className="block oneline-ellipsis">
-                        <span>{goals[goalId]}</span>
+                        <span>{goals[i]['name']}</span>
                       </a>
                     </li>
                   )
@@ -61,20 +71,20 @@ export default class Krs extends React.Component {
               })()}
             </ul>
           </div>
+          <div className="dropdown-opener dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <i className="fa fa-angle-down ml_2px"/>
+          </div>
         </div>
         <ul className="dashboard-krs-columns">
-          { krs.map((kr, i) => {
-            const {key_result, action_results, goal} = kr
-            return (
-              <Kr key_result={key_result}
-                  action_results={action_results}
-                  goal={ goal }
-                  key={i}
-              />
-            )
-          }) }
+          <InfiniteScroll
+            loadMore={ this.props.fetchMoreKrs.bind(this) }
+            loadingMore={ loading_krs }
+            items={ render_krs }
+            elementIsScrollable={ false }
+            loader=""
+          />
         </ul>
-        { this.props.loading_krs && <Loading /> }
+        { loading_krs && <Loading /> }
       </div>
     )
   }
@@ -82,8 +92,8 @@ export default class Krs extends React.Component {
 
 Krs.propTypes = {
   krs: React.PropTypes.array,
-  goals: React.PropTypes.object,
+  goals: React.PropTypes.array,
   kr_count: React.PropTypes.number,
   loading_krs: React.PropTypes.bool
 };
-Krs.defaultProps = { krs: [], goals: {}, kr_count: 0, loading_krs: false };
+Krs.defaultProps = { krs: [], goals: [], kr_count: 0, loading_krs: false };

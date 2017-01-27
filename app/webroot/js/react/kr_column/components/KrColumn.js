@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import Krs from "~/kr_column/components/Krs";
-import {KeyResult} from "~/common/constants/Model";
 import Loading from "~/kr_column/components/Loading";
 
 export default class KrColumn extends React.Component {
@@ -10,33 +9,39 @@ export default class KrColumn extends React.Component {
     this.state = {
       progress_graph: [],
       krs: [],
-      goals: {},
+      goals: [],
       kr_count: null,
-      loading_init: false,
-      loading_krs: false
+      loading_init: true,
+      loading_krs: false,
+      next_krs_url: ''
     }
     this.fetchKrsFilteredGoal = this.fetchKrsFilteredGoal.bind(this)
+    this.fetchMoreKrs = this.fetchMoreKrs.bind(this)
   }
 
   componentWillMount() {
     this.fetchInitData()
   }
 
+  /**
+   * 右カラム初期表示データ取得
+   * - グラフデータ
+   * - KR一覧データ
+   */
   fetchInitData() {
-    this.setState({loading_init: true})
-    return axios.get(`/api/v1/goals/dashboard?limit=${KeyResult.DASHBOARD_LIMIT}`)
+    return axios.get(`/api/v1/goals/dashboard`)
       .then((response) => {
         const data = response.data.data
         const kr_count = response.data.count
-        const next = response.data.paging.next
-        this.setState({progress_graph: data.progress_graph})
-        this.setState({krs: data.krs})
-        this.setState({goals: data.goals})
-        this.setState({kr_count})
-        this.setState({loading_init: false})
-        if (next) {
-          this.fetchMoreKrs(next)
-        }
+        const next_krs_url = response.data.paging.next
+        this.setState({
+          progress_graph: data.progress_graph,
+          krs: data.krs,
+          goals: data.goals,
+          kr_count,
+          loading_init: false,
+          next_krs_url
+        })
       })
       .catch((response) => {
         /* eslint-disable no-console */
@@ -45,21 +50,27 @@ export default class KrColumn extends React.Component {
       })
   }
 
+  /**
+   * ゴールにフィルタしたKR一覧を取得
+   */
   fetchKrsFilteredGoal(goalId) {
-    this.setState({krs: []})
-    this.setState({kr_count: null})
-    this.setState({loading_krs: true})
-    return axios.get(`/api/v1/goals/dashboard_krs?limit=${KeyResult.DASHBOARD_LIMIT}&goal_id=${goalId || ''}`)
+    this.setState({
+      krs: [],
+      kr_count: null,
+      loading_krs: true,
+      next_krs_url: ''
+    })
+    return axios.get(`/api/v1/goals/dashboard_krs?goal_id=${goalId || ''}`)
       .then((response) => {
-        const data = response.data.data
+        const krs = response.data.data
         const kr_count = response.data.count
-        const next = response.data.paging.next
-        this.setState({krs: data})
-        this.setState({kr_count})
-        this.setState({loading_krs: false})
-        if (next) {
-          this.fetchMoreKrs(next)
-        }
+        const next_krs_url = response.data.paging.next
+        this.setState({
+          krs,
+          kr_count,
+          loading_krs: false,
+          next_krs_url
+        })
       })
       .catch((response) => {
         /* eslint-disable no-console */
@@ -68,17 +79,22 @@ export default class KrColumn extends React.Component {
       })
   }
 
-  fetchMoreKrs(next) {
+  /**
+   * ページングのKRデータ取得
+   */
+  fetchMoreKrs() {
+    const next_krs_url = this.state.next_krs_url
+    if (!next_krs_url) return
     this.setState({loading_krs: true})
-    return axios.get(next)
+    return axios.get(next_krs_url)
       .then((response) => {
-        const data = response.data.data
-        const next = response.data.paging.next
-        this.setState({krs: [...this.state.krs, ...data]})
-        this.setState({loading_krs: false})
-        if (next) {
-          this.fetchMoreKrs(next)
-        }
+        const krs = response.data.data
+        const next_krs_url = response.data.paging.next
+        this.setState({
+          krs: [...this.state.krs, ...krs],
+          loading_krs: false,
+          next_krs_url
+        })
       })
       .catch((response) => {
         /* eslint-disable no-console */
@@ -106,9 +122,10 @@ export default class KrColumn extends React.Component {
       <div>
         {/*<Graph progress_graph={ this.state.progress_graph } />*/}
         <Krs krs={ this.state.krs }
-             goals={ this.state.goals}
+             goals={ this.state.goals }
              kr_count={ this.state.kr_count }
              fetchKrsFilteredGoal={ this.fetchKrsFilteredGoal }
+             fetchMoreKrs={ this.fetchMoreKrs }
              loading_krs={ this.state.loading_krs }/>
       </div>
     )

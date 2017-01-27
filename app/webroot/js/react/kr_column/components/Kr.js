@@ -25,18 +25,21 @@ export default class Kr extends React.Component {
     if (!key_result) {
       return null
     }
+
     const is_complete = key_result.completed
+    const action_post_link = `/goals/add_action/key_result_id:${key_result.id}/goal_id:${goal.id}`
+    const action_list_link = `/goals/view_actions/goal_id:${goal.id}/page_type:list/key_result_id:${key_result.id}`
     return (
       <li className="dashboard-krs-column" key={ key_result.id }>
         <div className="dashboard-krs-column-wrapper">
           {/* KR name & progressBarエリア */}
           <div className="left">
-            <div className="flex mb_2px" onClick={ this.toggleKrOpened }>
+            <div className="flex mb_2px pointer" onClick={ this.toggleKrOpened }>
               <p className={`flex-extend font_verydark kr-name ${this.state.is_opened_kr ? 'is-opened' : 'is-closed'}`}>
                 { key_result.name }
               </p>
-              <div>
-                <span className="dashboard-krs-column-kr-opener"><i className={`fa ${this.state.is_opened_kr ? "fa-angle-up" : "fa-angle-down"} ml_2px`}/></span>
+              <div className="dashboard-krs-column-kr-opener">
+                <i className={`fa ${this.state.is_opened_kr ? "fa-angle-up" : "fa-angle-down"} ml_2px`}/>
               </div>
             </div>
             <div className={`oneline-ellipsis font_12px mt_4px ${!this.state.is_opened_kr && 'none'}`}>
@@ -73,17 +76,20 @@ export default class Kr extends React.Component {
             { !is_complete && (() => {
               return (
                 <div className="action-button-wrapper">
-                  <a href={`/goals/add_action/key_result_id:${key_result.id}/goal_id:${goal.id}`} className="action-button">
+                  <a href={ action_post_link } className="action-button">
                     <i className="fa fa-check-circle"></i>
                   </a>
-                  <i className="fa fa-plus-circle add-mark"></i>
+                  <a href={ action_post_link } className="add-mark">
+                    <i className="fa fa-plus-circle"></i>
+                  </a>
                 </div>
               )
             })()}
           </div>
         </div>
         <div className="dashboard-krs-column-footer">
-          <a href={`/goals/view_actions/goal_id:${goal.id}/page_type:list/key_result_id:${key_result.id}`} className="action-link">
+          <a href={ (key_result.completed || action_results.length > 0) ? action_list_link : action_post_link }
+             className="action-link">
             <ul className="dashboard-krs-column-subinfos">
               <li className="action-count">
                 <i className="fa fa-check-circle"></i><span className="action-count-num">{ key_result.action_result_count }</span>
