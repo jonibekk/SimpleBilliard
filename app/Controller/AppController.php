@@ -323,7 +323,7 @@ class AppController extends BaseController
     {
         $model = $this;
         $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
-        Cache::set('duration', CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
+        Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
         $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
             function () use ($model, $current_term) {
                 $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
