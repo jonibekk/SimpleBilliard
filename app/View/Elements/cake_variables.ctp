@@ -582,10 +582,5 @@ App::uses('AttachedFile', 'Model');
         return text;
     }
 
-    <?php if(isset($mode_view)):?>
-    <?php if($mode_view == MODE_VIEW_TUTORIAL):?>
-    $("#modal_tutorial").modal('show');
-    <?php endif;?>
-    <?php endif;?>
 </script>
 <?= $this->App->viewEndComment() ?>

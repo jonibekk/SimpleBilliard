@@ -13,15 +13,21 @@
  * @var                    $unread_msg_post_ids
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?= $this->element('cake_variables') ?>
-<?= $this->Html->script('/compiled_assets/js/react_kr_column_app.min');?>
-<?php if (Hash::get($this->request->params, 'controller') === 'goals'
-    && Hash::get($this->request->params, 'action') === 'index'): ?>
-    <?= $this->Html->script('/compiled_assets/js/react_goal_search_app.min') ?>
-<?php endif; ?>
 
 <?php
+// 右カラム用js
+if (!empty($display_dashboard)) {
+    echo $this->Html->script('/compiled_assets/js/react_kr_column_app.min');
+}
+// ゴール検索
+if (Hash::get($this->request->params, 'controller') === 'goals'
+    && Hash::get($this->request->params, 'action') === 'index'
+) {
+    echo $this->Html->script('/compiled_assets/js/react_goal_search_app.min');
+}
+
 echo $this->Html->script('/js/vendor/es6/es6-promise.min');
 echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
 echo $this->Html->script('/compiled_assets/js/vendors.min');
@@ -47,4 +53,13 @@ echo $this->Html->script('/compiled_assets/js/ng_app.min');
 <?php elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">Local</p>
 <?php endif; ?>
-<?= $this->App->viewEndComment()?>
+
+<?php if(isset($mode_view) && $mode_view == MODE_VIEW_TUTORIAL):?>
+<script>
+    $(document).ready(function () {
+        $("#modal_tutorial").modal('show');
+    });
+</script>
+<?php endif;?>
+
+<?= $this->App->viewEndComment() ?>
