@@ -1041,8 +1041,10 @@ class GoalService extends AppService
     /**
      * グラフ出力ライブラリ用にデータを整形
      *
-     * @param array $progressLogs
-     * @param array $sweetSpot
+     * @param array  $progressLogs
+     * @param array  $sweetSpot
+     * @param string $graphStartDate
+     * @param string $graphEndDate
      *
      * @return array
      */
@@ -1058,8 +1060,13 @@ class GoalService extends AppService
 
     /**
      * グラフ表示期間内のフォーマットした各日付を取得
+     *
+     * @param string $graphStartDate
+     * @param string $graphEndDate
+     *
+     * @return array
      */
-    function getFormatDatesEachGraphPoint(string $graphStartDate, string $graphEndDate) {
+    function getFormatDatesEachGraphPoint(string $graphStartDate, string $graphEndDate) : array {
         $TimeEx = new TimeExHelper(new View());
 //        ()
 //        $diffDays = (strtotime(date("Y-m-d", $dif)) - strtotime("1970-01-01")) / 86400;
