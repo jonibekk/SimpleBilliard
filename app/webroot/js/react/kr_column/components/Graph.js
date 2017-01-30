@@ -23,13 +23,17 @@ export default class Graph extends React.Component {
     if (data.length == 0) {
       return;
     }
+    const chart = this.generateChart(data);
+    this.showTooltip(data);
+  }
+
+  showTooltip (data) {
+    const {chart} = this.state;
     // 日毎の進捗データ(data[2])は実際は['data',1,2,3...]という最初の要素が名称となる配列の形になっているため、末尾のインデックスはlength-1ではなく-2となる。
     const last_index = data[2].length - 2;
-    const chart = this.generateChart(data);
-    // ツールチップのY軸表示位置
-    // TODO:Y軸の位置を現在点そばになるよう修正
-    // Y軸を設定しなかった場合、初期表示時にマウスオーバーした時のように現在点のそばに表示されず、Y軸の一番上に表示されてしまう為、一旦真ん中の位置表示としている。
-    const y = 50;
+    // ツールチップのY軸表示位置(現在点にかぶらないように少し上にずらす(+5))
+    const y = chart.internal.getYScale("data")(data[2][last_index]) + 5;
+    // ツールチップ表示
     chart.tooltip.show({mouse:[last_index, y], index: last_index});
   }
 
@@ -37,12 +41,14 @@ export default class Graph extends React.Component {
     if (this.state.chart) {
       return this.state.chart;
     }
+    const graphDates = data[3];
     const last_index = data[2].length - 2;
     let chart = c3.generate({
       size: {
         height: 200
       },
       data: {
+        x: 'x',
         columns: data,
         types: {
           "sweet_spot_top": 'area',
@@ -78,6 +84,8 @@ export default class Graph extends React.Component {
       axis: {
         x: {
           show: false,
+          type: 'category',
+          categories: graphDates
         },
         y: {
           show: false
@@ -89,8 +97,7 @@ export default class Graph extends React.Component {
           const config = this.config
           const CLASS = this.CLASS;
           const valueFormat = config.tooltip_format_value || defaultValueFormat;
-          const name = __("Current");
-
+          const nameFormat = config.tooltip_format_title || defaultTitleFormat;
           // HTML作成
           let el = `<table class="${CLASS.tooltip}">`;
           for (let i = 0; i < d.length; i++) {
@@ -101,7 +108,7 @@ export default class Graph extends React.Component {
             if (d[i].id !== 'data') {
               continue;
             }
-
+            const name = nameFormat ? nameFormat(d[i].x) : d[i].x;
             const value = valueFormat(d[i].value, d[i].ratio, d[i].id, d[i].index);
             el += `<tr class="${CLASS.tooltipName}-${d[i].id}">
                     <td class="name">${name}</td>
@@ -132,8 +139,9 @@ export default class Graph extends React.Component {
     // ニュースフィード・関連ゴールタブ切り替え時にリサイズ&ツールチップ再表示
     if (this.state.flush) {
       this.state.chart.flush();
-      const last_index = progress_graph.data[2].length - 2;
-      this.state.chart.tooltip.show({mouse:[last_index, 50], index: last_index});
+      this.showTooltip(progress_graph.data);
+      // HACK:1度目のツールチップ表示ではなぜか正常に動作しないのでリトライする必要がある。原因は要調査
+      this.showTooltip(progress_graph.data);
     }
 
     return (

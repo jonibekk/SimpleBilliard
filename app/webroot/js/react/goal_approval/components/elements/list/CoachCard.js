@@ -37,7 +37,7 @@ export default class CoachCard extends React.Component {
               </div>
 
               <p className="goals-approval-list-item-detail">
-                <i className={`fa ${ is_incomplete ? "fa-angle-right" : "fa-check" }`} ariaHidden="true"></i>
+                <i className={`fa ${ is_incomplete ? "fa-angle-right" : "fa-check" }`} aria-hidden="true"></i>
               </p>
           </Link>
       </li>
