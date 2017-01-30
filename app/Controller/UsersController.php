@@ -244,7 +244,6 @@ class UsersController extends AppController
 
     public function register_with_invite()
     {
-
         $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
         if (!($step === 1 or $step === 2)) {
             $this->Pnotify->outError(__('Invalid access'));
@@ -349,6 +348,9 @@ class UsersController extends AppController
         }
         //言語を保存
         $data['User']['language'] = $this->Lang->getLanguage();
+        //デフォルトチームを設定
+        $data['User']['default_team_id'] = $team['Team']['id'];
+
         // ユーザ本登録
         if (!$this->User->userRegistration($data)) {
             //姓名の並び順をセット
@@ -1029,13 +1031,13 @@ class UsersController extends AppController
     function _joinTeam($token)
     {
         try {
-            $this->TeamMember->begin();
+            $this->User->begin();
 
             //トークン認証
-            $confimRes = $this->confirmToken($token);
+            $confirmRes = $this->Invite->confirmToken($token);
             if ($confirmRes !== true) {
-                throw new Exception(sprintf("Failed to confirm token. token:%s"
-                    , var_export($token, true)));
+                throw new Exception(sprintf("Failed to confirm token. token:%s errorMsg: %s"
+                    , var_export($token, true), $confirmRes));
             }
 
             $userId = $this->Auth->user('id');
@@ -1047,13 +1049,6 @@ class UsersController extends AppController
             if (!$this->User->TeamMember->add($userId, $inviteTeamId)) {
                 $validationErrors = $ExperimentService->validationExtract($this->User->TeamMember->validationErrors);
                 throw new Exception(sprintf("Failed to confirm token. userId:%s teamId:%s validationErrors:%s"
-                    , $userId, $inviteTeamId, var_export($validationErrors, true)));
-            }
-
-            //デフォルトチーム設定
-            if (!$this->User->updateDefaultTeam($inviteTeamId, false, $userId)) {
-                $validationErrors = $ExperimentService->validationExtract($this->User->validationErrors);
-                throw new Exception(sprintf("Failed to set default team. userId:%s teamId:%s validationErrors:%s"
                     , $userId, $inviteTeamId, var_export($validationErrors, true)));
             }
 
@@ -1090,11 +1085,11 @@ class UsersController extends AppController
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
-            $this->TeamMember->rollback();
+            $this->User->rollback();
             return false;
         }
 
-        $this->TeamMember->commit();
+        $this->User->commit();
 
         //cache削除
         Cache::delete($this->Circle->CircleMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
