@@ -8,6 +8,7 @@ App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
+// TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 
 /**
@@ -18,9 +19,6 @@ class KeyResultService extends AppService
 
     /* KRキャッシュ */
     private static $cacheList = [];
-
-    /* ダッシュボードに表示するKR数 */
-    const NUMBER_DISPLAYING_IN_DASHBOARD = 10;
 
     /**
      * idによる単体データ取得
@@ -484,32 +482,6 @@ class KeyResultService extends AppService
     }
 
     /**
-     * トップページ右カラムに初期表示するKR一覧を取得
-     * - キャッシュが存在する場合はキャッシュを返す
-     *
-     * @param int $limit
-     *
-     * @return array
-     */
-    function findInDashboardFirstView(int $limit): array
-    {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
-
-        // キャッシュ検索
-        $resKrs = [];
-        $cachedKrs = Cache::read($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
-        if ($cachedKrs !== false) {
-            $resKrs = $cachedKrs;
-        } else {
-            // キャッシュが存在しない場合はquery投げて結果をキャッシュに保存
-            $resKrs = $KeyResult->findInDashboard($limit);
-            Cache::write($KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), $resKrs);
-        }
-        return $resKrs;
-    }
-
-    /**
      * トップページ右カラムに初期表示するKR数を取得
      * - キャッシュが存在する場合はキャッシュを返す
      *
@@ -615,16 +587,19 @@ class KeyResultService extends AppService
      */
     function generateActionMessage(array $kr): string
     {
+        App::import('View', 'Helper/TimeExHelper');
+        $TimeEx = new TimeExHelper(new View());
+
         $actionCount = count($kr['action_results']);
         $latestActioned = $kr['key_result']['latest_actioned'];
         $completed = $kr['key_result']['completed'];
 
         if ($completed) {
-            return __('Completed this on %s.', date('m/d', $completed));
+            return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
         } else if ($actionCount > 0) {
             return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
-            return __("Take action since %s !", date('m/d', $latestActioned));
+            return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
         } else {
             return __('Take first action to this !');
         }

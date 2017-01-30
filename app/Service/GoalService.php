@@ -1168,7 +1168,7 @@ class GoalService extends AppService
      */
     function processProgressesToGraph(string $startDate, string $endDate, array $progresses): array
     {
-        $currentProgress = 0;
+        $currentProgress = null;
         $ret = [];
 
         $currentTimestamp = strtotime($startDate);
@@ -1179,7 +1179,7 @@ class GoalService extends AppService
             if (isset($progresses[$currentDate])) {
                 $currentProgress = $progresses[$currentDate];
             }
-            $ret[] = (int)$currentProgress;
+            $ret[] = $currentProgress;
 
             $currentTimestamp += DAY;
         }
@@ -1390,5 +1390,22 @@ class GoalService extends AppService
             $Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":goal_id:$goalId:start:$startDate:end:$endDate"),
             $data,
             'team_info');
+    }
+
+    /**
+     * ユーザーに紐づくゴール名一覧を返す
+     * - TODO: feedページで呼ばれるメソッドのためキャッシュが必要
+     *
+     * @param  int   $userId
+     *
+     * @return array
+     */
+    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $goalNameList = $Goal->findNameListAsMember($userId, $startDateTime, $endDateTime);
+        return $goalNameList;
     }
 }

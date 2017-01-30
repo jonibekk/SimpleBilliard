@@ -153,7 +153,7 @@ class PostReadTest extends GoalousTestCase
                 'team_id' => $team_id,
             ]
         ];
-        $this->PostRead->saveAllAtOnce($data);
+        $this->PostRead->bulkInsert($data);
         $after_count = $this->PostRead->find('count');
         $this->assertEquals($before_count + 1, $after_count);
     }
@@ -174,7 +174,7 @@ class PostReadTest extends GoalousTestCase
                 ]
             ]
         ];
-        $this->PostRead->saveAllAtOnce($data);
+        $this->PostRead->bulkInsert($data);
         $after_count = $this->PostRead->find('count');
         $this->assertEquals($before_count + 1, $after_count);
     }
@@ -187,7 +187,7 @@ class PostReadTest extends GoalousTestCase
         $this->PostRead->current_team_id = $team_id;
         $before_count = $this->PostRead->find('count');
         $data = [];
-        $this->PostRead->saveAllAtOnce($data);
+        $this->PostRead->bulkInsert($data);
         $after_count = $this->PostRead->find('count');
         $this->assertEquals($before_count, $after_count);
     }

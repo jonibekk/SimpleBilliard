@@ -34,8 +34,6 @@ class GoalsController extends ApiController
         'Pnotify',
     ];
 
-    const DASHBOARD_KRS_DEFAULT_LIMIT = 10;
-
     /**
      * ゴール(KR除く)のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
@@ -571,7 +569,7 @@ class GoalsController extends ApiController
         $ApiGoalService = ClassRegistry::init("ApiGoalService");
 
         // クエリパラメータ取得
-        $limit = $this->request->query('limit') ?? self::DASHBOARD_KRS_DEFAULT_LIMIT;
+        $limit = $this->request->query('limit') ?? ApiKeyResultService::DASHBOARD_KRS_DEFAULT_LIMIT;
         // KR取得件数上限チェック
         if (!$ApiGoalService->checkMaxLimit($limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
@@ -597,7 +595,7 @@ class GoalsController extends ApiController
         $KeyResult = ClassRegistry::init("KeyResult");
 
         // クエリパラメータ取得
-        $limit = $this->request->query('limit') ?? self::DASHBOARD_KRS_DEFAULT_LIMIT;
+        $limit = $this->request->query('limit') ?? ApiKeyResultService::DASHBOARD_KRS_DEFAULT_LIMIT;
         $offset = $this->request->query('offset') ?? 0;
         $goalId = $this->request->query('goal_id');
 

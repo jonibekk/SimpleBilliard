@@ -2286,4 +2286,69 @@ class Goal extends AppModel
         return Hash::extract($res, '{n}.Goal');
     }
 
+    /**
+     * 期間で絞って全ゴールのIDを返す
+     *
+     * @param int $fromTimestamp
+     * @param int $toTimestamp
+     *
+     * @return array
+     */
+    function findAllIdsByEndDateTimestamp(int $fromTimestamp, int $toTimestamp): array
+    {
+        $options = [
+            'conditions' => [
+                'end_date >=' => $fromTimestamp,
+                'end_date <=' => $toTimestamp,
+            ],
+            'fields'     => ['id']
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
+    }
+
+    /**
+     * 自分が所属するゴール(リーダー or コラボレータ)のゴール名一覧を取得
+     *
+     * @param  int
+     *
+     * @return array
+     */
+    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
+    {
+        $options = [
+            'conditions' => [
+                'Goal.end_date >='   => $startDateTime,
+                'Goal.end_date <='   => $endDateTime,
+                'Goal.team_id'       => $this->current_team_id,
+                'GoalMember.user_id' => $userId,
+                'GoalMember.del_flg' => false
+            ],
+            'fields'     => [
+                'id',
+                'name'
+            ],
+            'order'      => [
+                'GoalMember.priority DESC',
+                'Goal.completed ASC'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id'
+                    ],
+                ]
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        if (empty($ret)) {
+            return $ret;
+        }
+        $ret = Hash::extract($ret, '{n}.Goal');
+        return $ret;
+    }
+
 }
