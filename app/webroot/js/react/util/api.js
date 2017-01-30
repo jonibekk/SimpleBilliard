@@ -22,6 +22,21 @@ export function post(uri, data, options, success_callback, error_callback) {
   return save(uri, data, options, success_callback, error_callback, "post")
 }
 
+export function get(uri, options, success_callback, error_callback) {
+  options = options || {}
+  const base_options = {
+    timeout: 10000,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Cache-Control': 'no-store, private, no-cache, must-revalidate'
+    },
+    dataType: 'json'
+  }
+  options = Object.assign(base_options, options)
+  return axios.get(uri, options)
+    .then(success_callback, error_callback)
+}
+
 export function del(uri, data, options, success_callback, error_callback) {
   return save(uri, data, options, success_callback, error_callback, "delete")
 }
