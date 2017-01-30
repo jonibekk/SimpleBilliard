@@ -367,15 +367,14 @@ class UsersController extends AppController
         $this->Session->delete('Message.pnotify');
 
         //チーム参加
-        // ユーザーがログイン中でかつチームジョインが失敗した場合、
-        // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
-        $loggedInTeamId = $this->Session->read('current_team_id');
         $invitedTeam = $this->_joinTeam($this->request->params['named']['invite_token']);
         if ($invitedTeam === false) {
-            if ($loggedInTeamId) {
-                $this->_switchTeam($loggedInTeamId);
-            }
-            $this->Pnotify->outError(__("Can't join a team. Please try again later."));
+            // HACK: _joinTeamでチーム参加処理に失敗した場合、どのチームにも所属していないユーザーが存在してしまうことになる。
+            //       したがってここでuserとemailレコードを明示的に削除している。
+            //       ただ本来はここですべき処理じゃない。ユーザー登録処理とチームジョイン処理でトランザクションを張るべきである。
+            $this->User->delete($user_id);
+            $this->User->Email->deleteAll(['Email.user_id' => $user_id], $cascade = false);
+            $this->Pnotify->outError(__("Failed to register user. Please try again later."));
             return $this->redirect("/");
         }
 
