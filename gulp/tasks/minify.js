@@ -8,7 +8,7 @@ import config from '../config.js'
 
 gulp.task("js:uglify", () => {
   return gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js')
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
     }))
@@ -18,7 +18,7 @@ gulp.task("js:uglify", () => {
 
 gulp.task("js_vendor:uglify", () => {
   return gulp.src(config.dest + "/js_vendor_cat/" + config.js_vendor.output.file_name + '.js')
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
     }))
@@ -28,7 +28,7 @@ gulp.task("js_vendor:uglify", () => {
 
 gulp.task("js_prerender:uglify", () => {
   return gulp.src(config.dest + "/js_prerender_cat/" + config.js_prerender.output.file_name + '.js')
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
     }))
@@ -62,7 +62,7 @@ gulp.task("angular_app:uglify", () => {
 config.react_apps.map((app_name) => {
   gulp.task(`${app_name}:uglify`, () => {
     return gulp.src(config.dest + `/${app_name}/` + config[app_name].output.file_name + '.js')
-      // .pipe(uglify())
+      .pipe(uglify())
       .pipe(rename({
         suffix: '.min'
       }))
