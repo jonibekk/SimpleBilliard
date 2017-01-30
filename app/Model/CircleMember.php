@@ -315,7 +315,6 @@ class CircleMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        $this->log($res);
         return $res;
     }
 
