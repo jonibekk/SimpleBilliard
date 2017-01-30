@@ -29,25 +29,32 @@ export default class KrColumn extends React.Component {
    * - KR一覧データ
    */
   fetchInitData() {
-    return axios.get(`/api/v1/goals/dashboard`)
-      .then((response) => {
-        const data = response.data.data
-        const kr_count = response.data.count
-        const next_krs_url = response.data.paging.next
-        this.setState({
-          progress_graph: data.progress_graph,
-          krs: data.krs,
-          goals: data.goals,
-          kr_count,
-          loading_init: false,
-          next_krs_url
-        })
+    return axios.get(`/api/v1/goals/dashboard`, {
+      timeout: 10000,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Cache-Control': 'no-store, private, no-cache, must-revalidate'
+      },
+      dataType: 'json'
+    })
+    .then((response) => {
+      const data = response.data.data
+      const kr_count = response.data.count
+      const next_krs_url = response.data.paging.next
+      this.setState({
+        progress_graph: data.progress_graph,
+        krs: data.krs,
+        goals: data.goals,
+        kr_count,
+        loading_init: false,
+        next_krs_url
       })
-      .catch((response) => {
-        /* eslint-disable no-console */
-        console.log(response)
-        /* eslint-enable no-console */
-      })
+    })
+    .catch((response) => {
+      /* eslint-disable no-console */
+      console.log(response)
+      /* eslint-enable no-console */
+    })
   }
 
   /**
@@ -60,23 +67,30 @@ export default class KrColumn extends React.Component {
       loading_krs: true,
       next_krs_url: ''
     })
-    return axios.get(`/api/v1/goals/dashboard_krs?goal_id=${goalId || ''}`)
-      .then((response) => {
-        const krs = response.data.data
-        const kr_count = response.data.count
-        const next_krs_url = response.data.paging.next
-        this.setState({
-          krs,
-          kr_count,
-          loading_krs: false,
-          next_krs_url
-        })
+    return axios.get(`/api/v1/goals/dashboard_krs?goal_id=${goalId || ''}`, {
+      timeout: 10000,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Cache-Control': 'no-store, private, no-cache, must-revalidate'
+      },
+      dataType: 'json'
+    })
+    .then((response) => {
+      const krs = response.data.data
+      const kr_count = response.data.count
+      const next_krs_url = response.data.paging.next
+      this.setState({
+        krs,
+        kr_count,
+        loading_krs: false,
+        next_krs_url
       })
-      .catch((response) => {
-        /* eslint-disable no-console */
-        console.log(response)
-        /* eslint-enable no-console */
-      })
+    })
+    .catch((response) => {
+      /* eslint-disable no-console */
+      console.log(response)
+      /* eslint-enable no-console */
+    })
   }
 
   /**
@@ -86,21 +100,28 @@ export default class KrColumn extends React.Component {
     const next_krs_url = this.state.next_krs_url
     if (!next_krs_url) return
     this.setState({loading_krs: true})
-    return axios.get(next_krs_url)
-      .then((response) => {
-        const krs = response.data.data
-        const next_krs_url = response.data.paging.next
-        this.setState({
-          krs: [...this.state.krs, ...krs],
-          loading_krs: false,
-          next_krs_url
-        })
+    return axios.get(next_krs_url, {
+      timeout: 10000,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Cache-Control': 'no-store, private, no-cache, must-revalidate'
+      },
+      dataType: 'json'
+    })
+    .then((response) => {
+      const krs = response.data.data
+      const next_krs_url = response.data.paging.next
+      this.setState({
+        krs: [...this.state.krs, ...krs],
+        loading_krs: false,
+        next_krs_url
       })
-      .catch((response) => {
-        /* eslint-disable no-console */
-        console.log(response)
-        /* eslint-enable no-console */
-      })
+    })
+    .catch((response) => {
+      /* eslint-disable no-console */
+      console.log(response)
+      /* eslint-enable no-console */
+    })
   }
 
   render() {

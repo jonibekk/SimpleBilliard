@@ -49,9 +49,6 @@ if (!isset($with_header_menu)) {
 <!-- END fetch modal -->
 <?= $this->element('gl_common_js') ?>
 
-<!-- import react code for kr column -->
-<?= $this->Html->script('/compiled_assets/js/react_kr_column_app.min') ?>
-
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->
