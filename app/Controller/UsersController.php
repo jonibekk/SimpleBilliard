@@ -368,7 +368,8 @@ class UsersController extends AppController
         // ユーザーがログイン中でかつチームジョインが失敗した場合、
         // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
         $loggedInTeamId = $this->Session->read('current_team_id');
-        if (!$this->_joinTeam($this->request->params['named']['invite_token'])) {
+        $invitedTeam = $this->_joinTeam($this->request->params['named']['invite_token']);
+        if ($invitedTeam === false) {
             if ($loggedInTeamId) {
                 $this->_switchTeam($loggedInTeamId);
             }
@@ -770,56 +771,57 @@ class UsersController extends AppController
      */
     public function accept_invite($token)
     {
-            // Check token available
-            $confirmRes = $this->Invite->confirmToken($token);
-            if ($confirmRes !== true) {
-                $this->Pnotify->outError($confirmRes);
-                return $this->redirect("/");
-            }
-
-            // By email
-            if (!$this->Invite->isUser($token)) {
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
-                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
-            }
-            //PreRegistered User
-            if ($this->Invite->isUserPreRegistered($token)) {
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL);
-                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
-            }
-
-            // By batch setup
-            if ($this->Invite->isByBatchSetup($token)) {
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV);
-                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
-            }
-
-            if (!$this->Auth->user()) {
-                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-                return $this->redirect(['action' => 'login']);
-            }
-
-            // Not allow invite me
-            if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
-                $this->Pnotify->outError(__("This invitation isn't not for you."));
-                return $this->redirect("/");
-            }
-
-            // ユーザーがログイン中でかつチームジョインが失敗した場合、
-            // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
-            $loggedInTeamId = $this->Auth->user('default_team_id');
-            if (!$this->_joinTeam($token)) {
-                if ($loggedInTeamId) {
-                    $this->_switchTeam($loggedInTeamId);
-                }
-                $this->Pnotify->outError(__("Can't join team. Please try again later."));
-                return $this->redirect("/");
-            }
-
-            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-            $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
+        // Check token available
+        $confirmRes = $this->Invite->confirmToken($token);
+        if ($confirmRes !== true) {
+            $this->Pnotify->outError($confirmRes);
             return $this->redirect("/");
+        }
+
+        // By email
+        if (!$this->Invite->isUser($token)) {
+            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
+            return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
+        }
+        //PreRegistered User
+        if ($this->Invite->isUserPreRegistered($token)) {
+            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL);
+            return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
+        }
+
+        // By batch setup
+        if ($this->Invite->isByBatchSetup($token)) {
+            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV);
+            return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
+        }
+
+        if (!$this->Auth->user()) {
+            $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+            return $this->redirect(['action' => 'login']);
+        }
+
+        // Not allow invite me
+        if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
+            $this->Pnotify->outError(__("This invitation isn't not for you."));
+            return $this->redirect("/");
+        }
+
+        // ユーザーがログイン中でかつチームジョインが失敗した場合、
+        // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
+        $loggedInTeamId = $this->Auth->user('default_team_id');
+        $invitedTeam = $this->_joinTeam($token);
+        if ($invitedTeam === false) {
+            if ($loggedInTeamId) {
+                $this->_switchTeam($loggedInTeamId);
+            }
+            $this->Pnotify->outError(__("Can't join team. Please try again later."));
+            return $this->redirect("/");
+        }
+
+        $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+        $this->Pnotify->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
+        return $this->redirect("/");
     }
 
     /**
@@ -1099,8 +1101,9 @@ class UsersController extends AppController
 
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
-        return $this->User->TeamMember->Team->findById($inviteTeamId);
-        return true;
+
+        $invitedTeam = $this->User->TeamMember->Team->findById($inviteTeamId);
+        return $invitedTeam;
     }
 
     public function ajax_get_user_detail($user_id)
