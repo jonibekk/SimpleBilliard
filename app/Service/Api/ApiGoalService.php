@@ -205,6 +205,10 @@ class ApiGoalService extends ApiService
         $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         $TimeEx = new TimeExHelper(new View());
 
@@ -213,7 +217,7 @@ class ApiGoalService extends ApiService
             'data'   => [
                 'progress_graph' => [],
                 'krs'            => [],
-                'goal'           => []
+                'goals'          => []
             ],
             'paging' => [
                 'next' => ''
@@ -243,7 +247,8 @@ class ApiGoalService extends ApiService
         // KRデータセット
         $ret['data']['krs'] = $krs;
         // Goalデータセット
-        $ret['data']['goals'] = $GoalService->findActionables();
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'], $currentTerm['end_date']);
 
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(
