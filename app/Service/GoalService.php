@@ -17,11 +17,11 @@ App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
-App::import('View', 'Helper/TimeExHelper');
-App::import('View', 'Helper/UploadHelper');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 
@@ -1048,8 +1048,12 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function shapeDataForGraph(array $progressLogs, array $sweetSpot, string $graphStartDate, string $graphEndDate): array
-    {
+    function shapeDataForGraph(
+        array $progressLogs,
+        array $sweetSpot,
+        string $graphStartDate,
+        string $graphEndDate
+    ): array {
         /** @noinspection PhpUndefinedVariableInspection */
         $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
         $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
@@ -1066,7 +1070,8 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function getFormatDatesEachGraphPoint(string $graphStartDate, string $graphEndDate) : array {
+    function getFormatDatesEachGraphPoint(string $graphStartDate, string $graphEndDate): array
+    {
         $TimeEx = new TimeExHelper(new View());
 //        ()
 //        $diffDays = (strtotime(date("Y-m-d", $dif)) - strtotime("1970-01-01")) / 86400;
@@ -1421,7 +1426,7 @@ class GoalService extends AppService
      * ユーザーに紐づくゴール名一覧を返す
      * - TODO: feedページで呼ばれるメソッドのためキャッシュが必要
      *
-     * @param  int   $userId
+     * @param  int $userId
      *
      * @return array
      */
