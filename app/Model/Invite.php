@@ -89,14 +89,13 @@ class Invite extends AppModel
     {
         $invite = $this->getByToken($token);
         if (empty($invite)) {
-            throw new RuntimeException(
-                __("The invitation token is incorrect. Check your email again."));
+            return __("The invitation token is incorrect. Check your email again.");
         }
         if ($invite['Invite']['email_verified']) {
-            throw new RuntimeException(__('This invitation token has already been used.'));
+            return __('This invitation token has already been used.');
         }
         if ($invite['Invite']['email_token_expires'] < REQUEST_TIMESTAMP) {
-            throw new RuntimeException(__('The invitation token is expired.'));
+            return __('The invitation token is expired.');
         }
         return true;
     }
@@ -108,11 +107,9 @@ class Invite extends AppModel
      * @param        $user_id
      *
      * @return array On success it returns the user data record
-     * @throws Exception
      */
     public function verify($token, $user_id)
     {
-        $this->confirmToken($token);
         $invite = $this->getByToken($token);
         $invite['Invite']['email_verified'] = true;
         $invite['Invite']['to_user_id'] = $user_id;
