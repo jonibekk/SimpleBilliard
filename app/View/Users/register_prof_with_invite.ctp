@@ -2,7 +2,7 @@
  * ユーザ登録画面
  *
  * @var CodeCompletionView $this
- * @var                    $last_first
+ * @var                    $lastFirst
  * @var                    $email
  * @var                    $team_name
  */
@@ -53,7 +53,7 @@
             'required'                     => false,
             'value'                        => viaIsSet($first_name)
         ]);
-        if ($last_first) {
+        if ($lastFirst) {
             echo $last_name;
             echo $first_name;
         } else {
