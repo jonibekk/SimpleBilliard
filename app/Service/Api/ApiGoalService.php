@@ -1,5 +1,6 @@
 <?php
 App::import('Service/Api', 'ApiService');
+App::import('View', 'Helper/TimeExHelper');
 
 /**
  * Class AppService
@@ -209,6 +210,8 @@ class ApiGoalService extends ApiService
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
+        $TimeEx = new TimeExHelper(new View());
+
         // レスポンスデータ定義
         $ret = [
             'data'   => [
@@ -262,7 +265,11 @@ class ApiGoalService extends ApiService
             $graphRange['plotDataEndDate'],
             true
         );
-        $ret['data']['progress_graph'] = $progressGraph;
+        $ret['data']['progress_graph'] = [
+            'data' => $progressGraph,
+            'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate'])),
+            'end_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
+        ];
 
         return $ret;
     }

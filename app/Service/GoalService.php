@@ -959,7 +959,7 @@ class GoalService extends AppService
         $sweetSpot = $withSweetSpot ? $this->getSweetSpot($graphStartDate, $graphEndDate) : [];
 
         //グラフ用データに整形
-        $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot);
+        $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot, $graphStartDate, $graphEndDate);
 
         return $ret;
     }
@@ -1034,24 +1034,49 @@ class GoalService extends AppService
         $sweetSpot = $withSweetSpot ? $this->getSweetSpot($graphStartDate, $graphEndDate) : [];
 
         //グラフ用データに整形
-        $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot);
+        $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot, $graphStartDate, $graphEndDate);
         return $ret;
     }
 
     /**
      * グラフ出力ライブラリ用にデータを整形
      *
-     * @param array $progressLogs
-     * @param array $sweetSpot
+     * @param array  $progressLogs
+     * @param array  $sweetSpot
+     * @param string $graphStartDate
+     * @param string $graphEndDate
      *
      * @return array
      */
-    function shapeDataForGraph(array $progressLogs, array $sweetSpot): array
+    function shapeDataForGraph(array $progressLogs, array $sweetSpot, string $graphStartDate, string $graphEndDate): array
     {
         /** @noinspection PhpUndefinedVariableInspection */
         $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
-        $ret[1] = array_merge(['data'], $progressLogs);
-        $ret[2] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        $ret[2] = array_merge(['data'], $progressLogs);
+        $ret[3] = array_merge(['x'], $this->getFormatDatesEachGraphPoint($graphStartDate, $graphEndDate));
+        return $ret;
+    }
+
+    /**
+     * グラフ表示期間内のフォーマットした各日付を取得
+     *
+     * @param string $graphStartDate
+     * @param string $graphEndDate
+     *
+     * @return array
+     */
+    function getFormatDatesEachGraphPoint(string $graphStartDate, string $graphEndDate) : array {
+        $TimeEx = new TimeExHelper(new View());
+//        ()
+//        $diffDays = (strtotime(date("Y-m-d", $dif)) - strtotime("1970-01-01")) / 86400;
+        $ret = [];
+        $timestamp = strtotime($graphStartDate);
+        $graphEndTimestamp = strtotime($graphEndDate);
+        while ($timestamp <= $graphEndTimestamp) {
+            $ret[] = $TimeEx->dateLocalFormat($timestamp);
+            $timestamp = strtotime('+1 day', $timestamp);
+        }
         return $ret;
     }
 
