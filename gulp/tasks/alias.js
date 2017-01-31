@@ -3,13 +3,8 @@ import runSequence from 'run-sequence'
 import config from '../config.js'
 
 gulp.task('build', done => {
-  return runSequence(['apply-prod-environment', 'js', 'css'], done)
+  return runSequence(['js', 'css'], done)
 })
-
-// production用node環境変数セット
-gulp.task('apply-prod-environment', function() {
-  process.env.NODE_ENV = 'production';
-});
 
 gulp.task('js', done => {
   return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_edit', 'react_goal_approval', 'react_goal_search', 'react_kr_column'], done)
