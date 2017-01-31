@@ -242,6 +242,20 @@ class UsersController extends AppController
         return $this->redirect($this->Auth->logout());
     }
 
+    /**
+     * ユーザー登録兼チームジョイン
+     * - このメソッドは未登録ユーザーがチーム招待された場合にだけ呼ばれる
+     * - ここで処理するチーム招待の種類は以下二つ。
+     *  - CSVによる招待(ユーザー仮登録状態)
+     *  - メールによる招待
+     * - この中で呼ばれる_joinTeam()メソッド内でトランザクションを張っている
+     *
+     * TODO: このメソッド中のユーザー登録処理にてトランザクションが張られていないため、
+     *       チームジョインが失敗した際のユーザー情報ロールバック処理をベタ書きしてしまっている。
+     *       ユーザー登録/チーム参加処理のリファクタとトランザクション処理の追加実装が必要。
+     *
+     * @return
+     */
     public function register_with_invite()
     {
         $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
@@ -250,24 +264,31 @@ class UsersController extends AppController
             return $this->redirect('/');
         }
 
-        $profile_template = 'register_prof_with_invite';
-        $password_template = 'register_password_with_invite';
+        $profileTemplate = 'register_prof_with_invite';
+        $passwordTemplate = 'register_password_with_invite';
 
         $this->layout = LAYOUT_ONE_COLUMN;
 
+        // トークンチェック
         try {
+            // トークン存在チェック
             if (!isset($this->request->params['named']['invite_token'])) {
-                throw new RuntimeException(__("The invitation token is incorrect. Check your email again."));
+                throw new Exception(sprintf("The invitation token is not exist. params: %s"
+                    , var_export($this->request->params, true)));
             }
             //トークンが有効かチェック
             $confirmRes = $this->Invite->confirmToken($this->request->params['named']['invite_token']);
             if ($confirmRes !== true) {
-                throw new RuntimeException($confirmRes);
+                throw new Exception(sprintf("The invitation token is not available. confirmMessage: %s"
+                    , var_export($confirmRes, true)));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $this->Pnotify->outError(__("The invitation token is incorrect. Check your email again."));
             return $this->redirect('/');
         }
+
         $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
         $team = $this->Team->findById($invite['Invite']['team_id']);
         $this->set('team_name', $team['Team']['name']);
@@ -282,11 +303,11 @@ class UsersController extends AppController
 
         if (!$this->request->is('post')) {
             if ($step === 2) {
-                return $this->render($password_template);
+                return $this->render($passwordTemplate);
             }
-            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $lastFirst = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
-            return $this->render($profile_template);
+            return $this->render($profileTemplate);
         }
 
         //Sessionに保存してパスワード入力画面に遷移
@@ -306,7 +327,7 @@ class UsersController extends AppController
             } else {
                 //エラーメッセージ
                 $this->Pnotify->outError(__('Failed to save data.'));
-                return $this->render($profile_template);
+                return $this->render($profileTemplate);
             }
         }
         //パスワード入力画面の場合
@@ -321,18 +342,18 @@ class UsersController extends AppController
         $data = Hash::merge($this->Session->read('data'), $this->request->data);
         //batch case
         if ($user) {
-            $user_id = $user['User']['id'];
+            $userId = $user['User']['id'];
 
             // Disabled user email validation
             // Because in batch case, email is already registered
-            $email = $this->User->Email->getNotVerifiedEmail($user_id);
-            $email_from_email_table = Hash::get($email, 'Email.email');
-            $email_from_invite_table = $invite['Invite']['email'];
-            if ($email_from_email_table === $email_from_invite_table) {
+            $email = $this->User->Email->getNotVerifiedEmail($userId);
+            $emailFromEmailTable = Hash::get($email, 'Email.email');
+            $emailFromInviteTable = $invite['Invite']['email'];
+            if ($emailFromEmailTable === $emailFromInviteTable) {
                 unset($this->User->Email->validate['email']);
             }
             // Set user info to register data
-            $data['User']['id'] = $user_id;
+            $data['User']['id'] = $userId;
             $data['User']['no_pass_flg'] = false;
             $data['Email'][0]['Email']['id'] = $email['Email']['id'];
         }
@@ -354,13 +375,13 @@ class UsersController extends AppController
         // ユーザ本登録
         if (!$this->User->userRegistration($data)) {
             //姓名の並び順をセット
-            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $lastFirst = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
-            return $this->render($password_template);
+            return $this->render($passwordTemplate);
         }
         //ログイン
-        $user_id = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $user_id;
-        $this->_autoLogin($user_id, true);
+        $userId = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $userId;
+        $this->_autoLogin($userId, true);
         // flash削除
         // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
@@ -373,8 +394,8 @@ class UsersController extends AppController
             //       したがってここでuserとemailレコードを明示的に削除している。
             //       ただ本来はここですべき処理じゃない。ユーザー登録処理とチームジョイン処理でトランザクションを張るべきである。
             $this->Auth->logout();
-            $this->User->delete($user_id);
-            $this->User->Email->deleteAll(['Email.user_id' => $user_id], $cascade = false);
+            $this->User->delete($userId);
+            $this->User->Email->deleteAll(['Email.user_id' => $userId], $cascade = false);
             $this->Pnotify->outError(__("Failed to register user. Please try again later."));
             return $this->redirect("/");
         }
@@ -766,44 +787,42 @@ class UsersController extends AppController
 
     /**
      * 招待に応じる
-     * 登録済みユーザの場合は、チーム参加でホームへリダイレクト
-     * 未登録ユーザの場合は、個人情報入力ページへ
+     * - 登録済みユーザの場合は、チーム参加でホームへリダイレクト
+     * - 未登録ユーザの場合は、個人情報入力ページ(register_with_invite)へ
+     * - この中で呼ばれる_joinTeam()メソッド内でトランザクションを張っている
+     *
      *
      * @param $token
      */
     public function accept_invite($token)
     {
-        // Check token available
+        // トークンが有効かどうかチェック
         $confirmRes = $this->Invite->confirmToken($token);
         if ($confirmRes !== true) {
             $this->Pnotify->outError($confirmRes);
             return $this->redirect("/");
         }
 
-        // By email
+        // メール招待かつ未登録ユーザーの場合
         if (!$this->Invite->isUser($token)) {
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
             return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
         }
-        //PreRegistered User
-        if ($this->Invite->isUserPreRegistered($token)) {
-            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST_BY_EMAIL);
-            return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
-        }
 
-        // By batch setup
-        if ($this->Invite->isByBatchSetup($token)) {
+        // CSV招待かつ未(仮)登録ユーザー場合
+        if ($this->Invite->isUserPreRegistered($token)) {
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV);
             return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
         }
 
+        // 登録済みユーザーかつ未ログインの場合はログイン画面へ
         if (!$this->Auth->user()) {
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             return $this->redirect(['action' => 'login']);
         }
 
-        // Not allow invite me
+        // トークンが自分用に生成されたもうのかどうかチェック
         if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
             $this->Pnotify->outError(__("This invitation isn't not for you."));
             return $this->redirect("/");
@@ -811,7 +830,7 @@ class UsersController extends AppController
 
         // ユーザーがログイン中でかつチームジョインが失敗した場合、
         // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
-        $loggedInTeamId = $this->Auth->user('default_team_id');
+        $loggedInTeamId = $this->Auth->user('current_team_id');
         $invitedTeam = $this->_joinTeam($token);
         if ($invitedTeam === false) {
             if ($loggedInTeamId) {
@@ -1025,6 +1044,7 @@ class UsersController extends AppController
 
     /**
      * チームに参加
+     * - 一連の処理にトランザクションを使用。
      *
      * @param $token
      */
