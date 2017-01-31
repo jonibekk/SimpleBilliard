@@ -23,6 +23,10 @@ class GoalServiceTest extends GoalousTestCase
     public $fixtures = [
         'app.evaluate_term',
         'app.team',
+        'app.goal',
+        'app.goal_member',
+        'app.goal_progress_daily_log',
+        'app.key_result',
     ];
 
     /**
@@ -292,10 +296,125 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    //余裕があればやる
-    function testGetAllMyProgressForDrawingGraph()
+    /**
+     * グラフデータ取得の基本テスト(期の始め)
+     * 正しい件数で正しいデータが取得できていること
+     * データがない場合
+     */
+    function testUserGraphDataBasicStartTerm()
     {
-        $this->markTestSkipped();
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $termStartTimestamp = $term['start_date'];
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($termStartTimestamp, $targetDays, $maxBufferDays);
+
+        //データ件数のチェック(10日分+項目名1=11)
+        $this->assertCount(11, $ret[0]);//sweet spot top
+        $this->assertCount(11, $ret[1]);//sweet spot bottom
+        $this->assertCount(2, $ret[2]);//data(１日分)
+        $this->assertCount(11, $ret[3]);//x
+        //sweet spotの開始値が0になっていること
+        $this->assertEquals(0, $ret[0][1]);
+        $this->assertEquals(0, $ret[1][1]);
+        //sweet spotの終了値が0以外になっていること
+        $this->assertNotEquals(0, $ret[0][10]);
+        $this->assertNotEquals(0, $ret[1][10]);
+        //dataはnullになっていること
+        $this->assertNull($ret[2][1]);
+    }
+
+    /**
+     * グラフデータ取得の基本テスト(期の真ん中)
+     * 正しい件数で正しいデータが取得できていること
+     * データがない場合
+     */
+    function testUserGraphDataBasicMiddleTerm()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $targetEndTimestamp = $term['start_date'] + 15 * DAY;
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //データ件数のチェック(10日分+項目名1=11)
+        $this->assertCount(11, $ret[0]);//sweet spot top
+        $this->assertCount(11, $ret[1]);//sweet spot bottom
+        $this->assertCount(9, $ret[2]);//data(10日-バッファ2+項目1=9)
+        $this->assertCount(11, $ret[3]);//x
+        //sweet spotの開始値が0以外になっていること
+        $this->assertNotEquals(0, $ret[0][1]);
+        $this->assertNotEquals(0, $ret[1][1]);
+        //sweet spotの終了値が0以外になっていること
+        $this->assertNotEquals(0, $ret[0][10]);
+        $this->assertNotEquals(0, $ret[1][10]);
+        //dataは全てnullになっていること
+        $this->assertNull($ret[2][1]);
+        $this->assertNull($ret[2][8]);
+    }
+
+    /**
+     * グラフデータ取得の基本テスト(期の終わり)
+     * 正しい件数で正しいデータが取得できていること
+     * データがない場合
+     */
+    function testUserGraphDataBasicEndTerm()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $targetEndTimestamp = $term['end_date'];
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //データ件数のチェック(10日分+項目名1=11)
+        $this->assertCount(11, $ret[0]);//sweet spot top
+        $this->assertCount(11, $ret[1]);//sweet spot bottom
+        $this->assertCount(11, $ret[3]);//x
+        //sweet spotの開始値が0以外になっていること
+        $this->assertNotEquals(0, $ret[0][1]);
+        $this->assertNotEquals(0, $ret[1][1]);
+        //sweet spotの終了値が0以外になっていること
+        $this->assertNotEquals(0, $ret[0][10]);
+        $this->assertNotEquals(0, $ret[1][10]);
+        //dataは全てnullになっていること
+        $this->assertNull($ret[2][1]);
+        $this->assertNull($ret[2][9]);
+    }
+
+    /**
+     * テストの為のユーザグラフデータ取得用メソッド
+     *
+     * @param string $targetEndTimestamp
+     * @param int    $targetDays
+     * @param int    $maxBufferDays
+     *
+     * @return array
+     */
+    function _getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays)
+    {
+
+        $graphRange = $this->GoalService->getGraphRange(
+            $targetEndTimestamp,
+            $targetDays,
+            $maxBufferDays
+        );
+        $progressGraph = $this->GoalService->getUserAllGoalProgressForDrawingGraph(
+            1,
+            $graphRange['graphStartDate'],
+            $graphRange['graphEndDate'],
+            $graphRange['plotDataEndDate'],
+            true
+        );
+        return $progressGraph;
     }
 
     //余裕があればやる
