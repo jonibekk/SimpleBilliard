@@ -91,7 +91,6 @@ class GoalProgressDailyLogShell extends AppShell
         $GlRedis->deleteKeys('*:' . CACHE_KEY_GOAL_PROGRESS_LOG . ':*');
         $GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_PROGRESS_LOG . ':*');
 
-        $this->log("[Successful] goal_progress_daily_log shell. target_date:$targetDate");
         $this->out('successful!');
     }
 
