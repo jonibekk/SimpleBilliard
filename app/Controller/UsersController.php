@@ -372,6 +372,7 @@ class UsersController extends AppController
             // HACK: _joinTeamでチーム参加処理に失敗した場合、どのチームにも所属していないユーザーが存在してしまうことになる。
             //       したがってここでuserとemailレコードを明示的に削除している。
             //       ただ本来はここですべき処理じゃない。ユーザー登録処理とチームジョイン処理でトランザクションを張るべきである。
+            $this->Auth->logout();
             $this->User->delete($user_id);
             $this->User->Email->deleteAll(['Email.user_id' => $user_id], $cascade = false);
             $this->Pnotify->outError(__("Failed to register user. Please try again later."));
