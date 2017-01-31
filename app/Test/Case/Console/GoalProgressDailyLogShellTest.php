@@ -86,13 +86,19 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
         $this->setupTerm();
         //進捗100と0で合計50になるはず
         $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
+        //進捗0と0で合計0になるはず
+        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 0]);
+        //進捗100と100で合計100になるはず
+        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 100]);
         $this->GoalProgressDailyLogShell->params['date'] = date('Y-m-d');
         $this->GoalProgressDailyLogShell->main();
         $this->GoalProgressDailyLog->current_team_id = 1;
         $res = $this->GoalProgressDailyLog->findLogs(date('Y-m-d'), date('Y-m-d'), $goalIds);
 
-        $this->assertcount(1, $res);
+        $this->assertcount(3, $res);
         $this->assertEquals(50, $res[0]['progress']);
+        $this->assertEquals(0, $res[1]['progress']);
+        $this->assertEquals(100, $res[2]['progress']);
     }
 
     /**
