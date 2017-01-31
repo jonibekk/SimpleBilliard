@@ -280,6 +280,9 @@ class AppController extends BaseController
         $next_team = $this->Team->EvaluateTerm->getNextTermData();
         if (!$next_team) {
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+            // 期をまたいだらキャッシュ削除
+            Cache::clear(false, 'team_info');
+            Cache::clear(false, 'user_data');
         }
         $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
     }
