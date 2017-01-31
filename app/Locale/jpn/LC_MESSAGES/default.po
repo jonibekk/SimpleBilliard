@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-26 17:52+0900\n"
+"PO-Revision-Date: 2017-01-31 09:54+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -720,6 +720,10 @@ msgstr "ログアウトしました"
 msgid "The invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
+msgid "Failed to register user. Please try again later."
+msgstr ""
+"ユーザー本登録に失敗しました。しばらく時間をおいて再度登録してください。"
+
 msgid "Succeeded to register!"
 msgstr "本登録が完了しました！"
 
@@ -775,6 +779,9 @@ msgstr "パスワードを変更しました。"
 msgid "This invitation isn't not for you."
 msgstr "別のユーザ宛のチーム招待です。"
 
+msgid "Failed to join team. Please try again later."
+msgstr "チーム参加に失敗しました。しばらく時間をおいて再度登録してください。"
+
 msgid "Joined %s."
 msgstr "チーム「%s」に参加しました。"
 
@@ -810,11 +817,6 @@ msgstr "データの検証に失敗しました。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
-
-msgid "Failed to upload. jpg, png and gif are allowed."
-msgstr ""
-"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
-"ださい。"
 
 msgid "Complete the approval of %d goal(s)."
 msgstr "%d件のゴール認定を完了してください"
@@ -1028,9 +1030,6 @@ msgstr "進捗を増加から減少に変更できません。"
 
 msgid "You can not change the values from decrease to increase."
 msgstr "進捗を減少から増加に変更できません。"
-
-msgid "You can not change target value less than current value"
-msgstr "進捗目標値を現在値より少ない値に変更できません。"
 
 msgid "Please input current value between start value and target value."
 msgstr "現在値は開始値と目標値の範囲内で入力してください。"
@@ -1690,6 +1689,11 @@ msgstr "ファイルサイズが上限を超えています。"
 
 msgid "The Image does not have enough vertical or horizontal size."
 msgstr "画像の幅もしくは高さが足りていません。"
+
+msgid "Failed to upload. jpg, png and gif are allowed."
+msgstr ""
+"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
+"ださい。"
 
 msgid "Some email addresses are incorrect."
 msgstr "メールアドレスが正しくないものがあります。"
@@ -3007,6 +3011,9 @@ msgstr "ゴールを編集"
 msgid "Change TKR"
 msgstr "TKRを変更"
 
+msgid "Change leader"
+msgstr "リーダーを変更"
+
 msgid "Delete goal"
 msgstr "ゴールを削除"
 
@@ -3116,9 +3123,6 @@ msgid ""
 "Please input start date / end date of KR between start date / end date of "
 "the goal."
 msgstr "開始日/期限はゴールの開始日/期限の間で入力してください"
-
-msgid "Change leader"
-msgstr "リーダーを変更"
 
 msgid "Select the leader name you want to change."
 msgstr "変更したいリーダーの名前を選択してください。"
@@ -4853,75 +4857,3 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
-
-msgid "boolean"
-msgstr "boolean"
-
-msgid "image_max_size"
-msgstr "image_max_size"
-
-msgid "image_type"
-msgstr "image_type"
-
-msgid "numeric"
-msgstr "numeric"
-
-msgid "notBlank"
-msgstr ""
-
-msgid "maxLength"
-msgstr "maxLength"
-
-msgid "Invalid Submission"
-msgstr "Invalid Submission"
-
-msgid "isString"
-msgstr "isString"
-
-msgid "Invalid Status"
-msgstr "Invalid Status"
-
-msgid "email"
-msgstr "email"
-
-msgid "emailIsUnique"
-msgstr "emailUnique"
-
-msgid "validateCreateProgress"
-msgstr ""
-
-msgid "requiredCaseExistUnit"
-msgstr ""
-
-msgid "isUnique"
-msgstr ""
-
-msgid "emailsCheck"
-msgstr "emailCheck"
-
-msgid "isVerifiedEmail"
-msgstr ""
-
-msgid "userNameChar"
-msgstr ""
-
-msgid "rule"
-msgstr "rule"
-
-msgid "allowEmpty"
-msgstr "allowEmpty"
-
-msgid "notBlankCheckbox"
-msgstr "notBlankCheckbox"
-
-msgid "minLength"
-msgstr "minLength"
-
-msgid "passwordCheck"
-msgstr "passwordCheck"
-
-msgid "passwordSameCheck"
-msgstr "passwordSameCheck"
-
-msgid "imageMinWidthHeight"
-msgstr ""

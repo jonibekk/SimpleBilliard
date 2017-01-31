@@ -817,7 +817,7 @@ class UsersController extends AppController
             if ($loggedInTeamId) {
                 $this->_switchTeam($loggedInTeamId);
             }
-            $this->Pnotify->outError(__("Can't join team. Please try again later."));
+            $this->Pnotify->outError(__("Failed to join team. Please try again later."));
             return $this->redirect("/");
         }
 
