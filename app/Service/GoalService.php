@@ -782,7 +782,7 @@ class GoalService extends AppService
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
             $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
             $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + (($targetDays - 1) * DAY));
-            $ret['plotDataEndDate'] = $ret['graphEndDate'];
+            $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
             return $ret;
         }
 
@@ -883,7 +883,7 @@ class GoalService extends AppService
     ) {
         //不正な範囲指定か判定
         if ($graphStartDate >= $graphEndDate
-            || $graphStartDate >= $plotDataEndDate
+            || $graphStartDate > $plotDataEndDate
             || $plotDataEndDate > $graphEndDate
         ) {
             $this->log(sprintf("%s%s [method:%s] Graph range is wrong. graphStartDate:%s, graphEndDate:%s, plotDataEndDate:%s",
