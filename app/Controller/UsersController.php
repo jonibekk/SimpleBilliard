@@ -306,7 +306,7 @@ class UsersController extends AppController
                 return $this->render($passwordTemplate);
             }
             $lastFirst = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-            $this->set(compact('last_first'));
+            $this->set(compact('lastFirst'));
             return $this->render($profileTemplate);
         }
 
@@ -376,7 +376,7 @@ class UsersController extends AppController
         if (!$this->User->userRegistration($data)) {
             //姓名の並び順をセット
             $lastFirst = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-            $this->set(compact('last_first'));
+            $this->set(compact('lastFirst'));
             return $this->render($passwordTemplate);
         }
         //ログイン
