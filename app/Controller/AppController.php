@@ -32,6 +32,9 @@ App::import('Service', 'GoalService');
  */
 class AppController extends BaseController
 {
+    // アクション件数 キャッシュ有効期限
+    const CACHE_KEY_ACTION_COUNT_EXPIRE = 60 * 60 * 24; // 1日
+
     /**
      * AppControllerを分割した場合、子クラスでComponent,Helper,Modelがマージされないため、
      * 中間Controllerは以下を利用。末端Controllerは通常のCakeの規定通り
@@ -277,6 +280,9 @@ class AppController extends BaseController
         $next_team = $this->Team->EvaluateTerm->getNextTermData();
         if (!$next_team) {
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+            // 期をまたいだらキャッシュ削除
+            Cache::clear(false, 'team_info');
+            Cache::clear(false, 'user_data');
         }
         $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
     }
@@ -320,7 +326,7 @@ class AppController extends BaseController
     {
         $model = $this;
         $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
-        Cache::set('duration', $current_term['end_date'] - REQUEST_TIMESTAMP, 'user_data');
+        Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
         $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
             function () use ($model, $current_term) {
                 $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
