@@ -150,27 +150,31 @@ class GoalServiceTest extends GoalousTestCase
         $expected = [
             'graphStartDate'  => date('Y-m-01'),
             'graphEndDate'    => date('Y-m-10'),
-            'plotDataEndDate' => date('Y-m-10'),
         ];
         //バッファなし
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $expected['plotDataEndDate']=date('Y-m-01');
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $expected['plotDataEndDate']=date('Y-m-10');
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 10 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $expected['plotDataEndDate']=date('Y-m-10');
         $this->assertNotEquals($expected, $actual);
         //バッファあり
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        $expected['plotDataEndDate']=date('Y-m-01');
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 1 * DAY;;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        $expected['plotDataEndDate']=date('Y-m-01');
         $this->assertNotEquals($expected, $actual);
     }
 
