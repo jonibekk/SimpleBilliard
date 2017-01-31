@@ -78,9 +78,9 @@ class GoalProgressDailyLogShell extends AppShell
         } catch (PDOException $e) {
             //rollback transaction
             $this->GoalProgressDailyLog->rollback();
-            $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate.\n");
+            $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate");
             $this->log("PDOException occurred!");
-            $this->log($e->getMessage() . "\n");
+            $this->log($e->getMessage());
             $this->error('failed.');
         }
         //commit transaction
@@ -91,7 +91,7 @@ class GoalProgressDailyLogShell extends AppShell
         $GlRedis->deleteKeys('*:' . CACHE_KEY_GOAL_PROGRESS_LOG . ':*');
         $GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_PROGRESS_LOG . ':*');
 
-        $this->log("[Successful] goal_progress_daily_log shell. target_date:$targetDate.\n");
+        $this->log("[Successful] goal_progress_daily_log shell. target_date:$targetDate");
         $this->out('successful!');
     }
 
