@@ -395,6 +395,18 @@ class GoalServiceTest extends GoalousTestCase
     }
 
     /**
+     * グラフデータ取得でのデータの整合性チェック
+     */
+    function testUserGraphData()
+    {
+        //ゴールの進捗が変わっていない場合のログと当日のデータが等しくなることを確認
+
+
+        //ゴールの進捗が変わった場合のログと当日のデータが変わることを確認
+
+    }
+
+    /**
      * テストの為のユーザグラフデータ取得用メソッド
      *
      * @param string $targetEndTimestamp
