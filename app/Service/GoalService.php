@@ -1129,8 +1129,8 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData()['end_date'];
         //キャッシュに保存されるデータ
         $progressLogs = $this->getUserProgressFromCache($userId, $startDate, $endDate);
         if ($progressLogs === false) {
