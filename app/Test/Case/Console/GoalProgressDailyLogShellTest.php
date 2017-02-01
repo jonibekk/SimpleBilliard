@@ -133,8 +133,9 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
-        $dateToday = date('Y-m-d');
-        $dateYesterday = date('Y-m-d', strtotime('yesterday'));
+        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $dateYesterday = date('Y-m-d', $term['start_date']);
+        $dateToday = date('Y-m-d', $term['start_date'] + DAY);
 
         $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
         $this->GoalProgressDailyLogShell->params['date'] = $dateToday;
