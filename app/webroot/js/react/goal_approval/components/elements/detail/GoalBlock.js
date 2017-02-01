@@ -19,21 +19,29 @@ export default class GoalBlock extends React.Component {
     const displayed_previous = this.state.displayed_previous
     const existsChangeLogs = goal.goal_change_log || goal.kr_change_log
     const view_previous_button = () => {
-      return (
-        <div className="goals-approval-detail-view-previous">
-            <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
-              <i className="fa fa-angle-down" aria-hidden="true"></i>
-              <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
-            </a>
-        </div>
-      )
+      if (!displayed_previous && existsChangeLogs) {
+        return (
+          <div className="goals-approval-detail-view-previous">
+              <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
+                <i className="fa fa-angle-down" aria-hidden="true"></i>
+                <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
+              </a>
+          </div>
+        )
+      } else {
+        return null
+      }
     }
     const previous_goal_card = () => {
-      return (
-        <GoalCard goal={ goal.goal_change_log || goal }
-                  goal_category={ goal.goal_change_log.goal_category || goal.goal_category }
-                  top_key_result={ goal.kr_change_log || goal.top_key_result } />
-      )
+      if (displayed_previous && existsChangeLogs) {
+        return (
+          <GoalCard goal={ goal.goal_change_log || goal }
+                    goal_category={ goal.goal_change_log.goal_category || goal.goal_category }
+                    top_key_result={ goal.kr_change_log || goal.top_key_result } />
+        )
+      } else {
+        return null
+      }
     }
 
     return (
@@ -42,8 +50,8 @@ export default class GoalBlock extends React.Component {
                     goal_category={ goal.goal_category }
                     top_key_result={ goal.top_key_result } />
           { displayed_previous && <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p> }
-          { !displayed_previous && existsChangeLogs && is_leader && view_previous_button() }
-          { displayed_previous && existsChangeLogs && previous_goal_card() }
+          { view_previous_button() }
+          { previous_goal_card() }
       </div>
     )
   }

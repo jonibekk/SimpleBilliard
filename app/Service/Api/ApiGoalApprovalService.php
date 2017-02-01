@@ -16,7 +16,7 @@ class ApiGoalApprovalService extends ApiService
      *
      * @return array
      */
-    public function processGoalApprovalForResponse(array $resByModel, int $myUserId): array
+    public function process(array $resByModel, int $myUserId): array
     {
         /** @var GoalCategory $GoalCategory */
         $GoalCategory = ClassRegistry::init("GoalCategory");
@@ -62,17 +62,17 @@ class ApiGoalApprovalService extends ApiService
 
         // ゴール/TKRの変更前のスナップショットを取得
         $res['goal'] = $this->processChangeLog($res['goal']);
-        if (Hash::get($res, 'goal.tkr_change_log')) {
+        if (Hash::get($res, 'goal.kr_change_log')) {
             // 画像パス追加
             $res['goal']['goal_change_log'] = $Goal->attachImgUrl($res['goal']['goal_change_log'], 'Goal');
             // TKRの整形
-            $res['goal']['tkr_change_log'] = $KeyResultService->processKeyResult($res['goal']['tkr_change_log']);
+            $res['goal']['kr_change_log'] = $KeyResultService->processKeyResult($res['goal']['kr_change_log']);
             // カテゴリ追加
             $category = $GoalCategory->findById($res['goal']['goal_change_log']['goal_category_id'], ['name']);
             $res['goal']['goal_change_log']['goal_category'] = Hash::get($category, 'GoalCategory');
         }
 
-        // マッピング
+        // フロント側の実装を楽にするためにユーザーステータス等を挿入
         $res['is_leader'] = (boolean)$res['type'];
         $res['is_mine'] = $res['user']['id'] == $myUserId;
         $res['type'] = GoalMember::$TYPE[$res['type']];
@@ -93,62 +93,68 @@ class ApiGoalApprovalService extends ApiService
     function processChangeLog($goal)
     {
         // goal
-        $goalDiffCheckPaths = ['name', 'photo_file_name', 'goal_category_id'];
-        $goal['goal_change_log'] = $this->processChangeGoalLog($goal, $goalDiffCheckPaths);
+        $goalId = Hash::get($goal, 'id');
+        $checkColumns = [
+            'name' => Hash::get($goal, 'name'),
+            'photo_file_name' => Hash::get($goal, 'photo_file_name'),
+            'goal_category_id' => Hash::get($goal, 'goal_category_id')
+        ];
+        $goal['goal_change_log'] = $this->extractGoalChangeDiff($goalId, $checkColumns);
 
         // kr
-        $krDiffCheckPaths = ['name', 'start_value', 'target_value', 'value_unit', 'description'];
-        $goal['kr_change_log'] = $this->processChangeKrLog($goal, $krDiffCheckPaths);
+        $tkr = Hash::get($goal, 'top_key_result');
+        $checkColumns = [
+            'name' => Hash::get($tkr, 'name'),
+            'start_value' => Hash::get($tkr, 'start_value'),
+            'target_value' => Hash::get($tkr, 'target_value'),
+            'value_unit' => Hash::get($tkr, 'value_unit'),
+            'description' => Hash::get($tkr, 'description')
+        ];
+        $goal['kr_change_log'] = $this->extractKrChangeDiff($goalId, $checkColumns);
 
         return $goal;
     }
 
-    function processChangeGoalLog($goal, $diffCheckPaths)
+    function extractGoalChangeDiff(int $goalId, array $checkPresentColumns)
     {
         /** @var GoalChangeLog $GoalChangeLog */
         $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
 
-        $goalId = Hash::extract($goal, 'id');
         $goalChangeLog = $GoalChangeLog->findLatestSnapshot($goalId);
         if (!$goalChangeLog) {
             return null;
         }
 
         // 現在のゴールと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $goalChangeDiff = Hash::diff($goal, $goalChangeLog);
-
-        // Calc goal diff
-        foreach ($diffCheckPaths as $path) {
-            if (Hash::get($goalChangeDiff, $path)) {
-                return $goalChangeLog;
+        $diff = [];
+        foreach($checkPresentColumns as $key => $val) {
+            if($goalChangeLog[$key] !== $val) {
+                $diff[$key] = $goalChangeLog[$key];
             }
         }
 
-        return null;
+        return $diff;
     }
 
-    function processChangeKrLog($goal, $diffCheckPaths)
+    function extractKrChangeDiff(int $goalId, array $checkPresentColumns)
     {
         /** @var KrChangeLog $KrChangeLog */
         $KrChangeLog = ClassRegistry::init("KrChangeLog");
 
-        $goalId = Hash::extract($goal, 'id');
         $krChangeLog = $KrChangeLog->getLatestSnapshot($goalId, $KrChangeLog::TYPE_APPROVAL_BY_COACH);
         if (!$krChangeLog) {
             return null;
         }
 
         // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $krChangeDiff = Hash::diff($goal['top_key_result'], $krChangeLog);
-
-        // Calc tkr diff
-        foreach ($diffCheckPaths as $path) {
-            if (Hash::get($krChangeDiff, $path)) {
-                return $krChangeLog;
+        $diff = [];
+        foreach($checkPresentColumns as $key => $val) {
+            if($krChangeLog[$key] !== $val) {
+                $diff[$key] = $krChangeLog[$key];
             }
         }
 
-        return null;
+        return $diff;
     }
 
 }

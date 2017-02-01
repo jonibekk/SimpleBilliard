@@ -47,9 +47,9 @@ class ApiGoalApprovalServiceTest extends GoalousTestCase
         $this->GoalCategory->current_team_id = 1;
     }
 
-    function test_processGoalApprovalForResponse()
+    function test_process()
     {
-        $res = $this->ApiGoalApprovalService->processGoalApprovalForResponse([],1);
+        $res = $this->ApiGoalApprovalService->process([],1);
         $this->assertEmpty($res);
         $this->markTestIncomplete('testClear not implemented.');
     }

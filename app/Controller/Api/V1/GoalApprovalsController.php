@@ -355,8 +355,6 @@ class GoalApprovalsController extends ApiController
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        /** @var ApiGoalApprovalService $ApiGoalApprovalService */
-        $ApiGoalApprovalService = ClassRegistry::init("ApiGoalApprovalService");
 
         $myUserId = $this->Auth->user('id');
         $goalMemberId = $this->request->query('goal_member_id');
@@ -381,8 +379,7 @@ class GoalApprovalsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        $goalMember = $this->Goal->GoalMember->getGoalMemberForApproval($goalMemberId);
-        $res = $ApiGoalApprovalService->processGoalApprovalForResponse($goalMember, $myUserId);
+        $res = $GoalApprovalService->get($goalMemberId, $myUserId);
         return $this->_getResponseSuccess($res);
     }
 
