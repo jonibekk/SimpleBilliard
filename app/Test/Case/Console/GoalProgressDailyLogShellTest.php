@@ -64,10 +64,10 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [10]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [10]);
         //このデータのみログが保存される
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [20]);
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_NEXT, [30]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [20]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [30]);
         $this->GoalProgressDailyLogShell->params['date'] = date('Y-m-d');
         $this->GoalProgressDailyLogShell->main();
         $this->GoalProgressDailyLog->current_team_id = 1;
@@ -85,11 +85,11 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
         //進捗100と0で合計50になるはず
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
         //進捗0と0で合計0になるはず
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 0]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 0]);
         //進捗100と100で合計100になるはず
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 100]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 100]);
         $this->GoalProgressDailyLogShell->params['date'] = date('Y-m-d');
         $this->GoalProgressDailyLogShell->main();
         $this->GoalProgressDailyLog->current_team_id = 1;
@@ -108,7 +108,7 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
         $this->GoalProgressDailyLogShell->params['date'] = date('Y-m-d');
         $this->GoalProgressDailyLogShell->main();
         $this->GoalProgressDailyLog->current_team_id = 1;
@@ -137,7 +137,7 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
         $dateYesterday = date('Y-m-d', $term['start_date']);
         $dateToday = date('Y-m-d', $term['start_date'] + DAY);
 
-        $goalIds[] = $this->_saveGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
+        $goalIds[] = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0]);
         $this->GoalProgressDailyLogShell->params['date'] = $dateToday;
         $this->GoalProgressDailyLogShell->main();
         $this->GoalProgressDailyLogShell->params['date'] = $dateYesterday;
@@ -146,35 +146,5 @@ class GoalProgressDailyLogShellTest extends GoalousTestCase
 
         $res = $this->GoalProgressDailyLog->findLogs($dateYesterday, $dateToday, $goalIds);
         $this->assertcount(2, $res);
-    }
-
-    function _saveGoalKrs($termType, $krProgresses, $teamId = 1, $userId = 1)
-    {
-        $goalData = [
-            'user_id'          => $userId,
-            'team_id'          => $teamId,
-            'name'             => 'ゴール1',
-            'goal_category_id' => 1
-        ];
-        $goalData['end_date'] = $this->EvaluateTerm->getTermData($termType)['end_date'];
-        $this->Goal->create();
-        $this->Goal->save($goalData);
-        $goalId = $this->Goal->getLastInsertID();
-        $krDatas = [];
-        foreach ($krProgresses as $v) {
-            $krDatas[] = [
-                'goal_id'       => $goalId,
-                'team_id'       => $teamId,
-                'user_id'       => $userId,
-                'name'          => 'テストKR',
-                'start_value'   => 0,
-                'target_value'  => 100,
-                'value_unit'    => 0,
-                'current_value' => $v,
-            ];
-        }
-        $this->KeyResult->create();
-        $ret = $this->KeyResult->saveAll($krDatas);
-        return $goalId;
     }
 }
