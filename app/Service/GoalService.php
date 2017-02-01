@@ -950,11 +950,6 @@ class GoalService extends AppService
             }
         }
 
-        //データが存在しない場合は空の配列を返す
-        if (empty($progressLogs)) {
-            return [];
-        }
-
         //sweetSpotを算出
         $sweetSpot = $withSweetSpot ? $this->getSweetSpot($graphStartDate, $graphEndDate) : [];
 
