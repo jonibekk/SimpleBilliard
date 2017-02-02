@@ -279,10 +279,11 @@ class GoalousTestCase extends CakeTestCase
      * @param     $krProgresses
      * @param int $teamId
      * @param int $userId
+     * @param int $goalMemberType
      *
      * @return mixed
      */
-    function createGoalKrs($termType, $krProgresses, $teamId = 1, $userId = 1)
+    function createGoalKrs($termType, $krProgresses, $teamId = 1, $userId = 1, $goalMemberType = GoalMember::TYPE_OWNER)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
@@ -305,7 +306,7 @@ class GoalousTestCase extends CakeTestCase
             'goal_id' => $goalId,
             'user_id' => $userId,
             'team_id' => $teamId,
-            'type'    => GoalMember::TYPE_OWNER,
+            'type'    => $goalMemberType,
         ]);
         $krDatas = [];
         foreach ($krProgresses as $v) {
