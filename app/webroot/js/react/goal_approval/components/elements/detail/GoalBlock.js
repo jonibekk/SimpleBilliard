@@ -16,7 +16,7 @@ export default class GoalBlock extends React.Component {
 
   render() {
     const { goal, goal_change_log, goal_changed_columns, top_key_result, tkr_change_log, tkr_changed_columns, is_leader } = this.props
-    const existsChangeDiff = Object.keys(goal_changed_columns).length > 0 && Object.keys(tkr_changed_columns).length > 0
+    const existsChangeDiff = Object.keys(goal_changed_columns).length > 0 || Object.keys(tkr_changed_columns).length > 0
     const displayed_previous = this.state.displayed_previous
 
     return (
