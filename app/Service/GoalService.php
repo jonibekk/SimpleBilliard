@@ -1244,6 +1244,8 @@ class GoalService extends AppService
      */
     function sumGoalProgress(array $goalsProgresses, array $goalPriorities): float
     {
+        //ゴールの重要度を進捗が存在するゴールでフィルタ
+        $goalPriorities = array_intersect_key($goalPriorities, $goalsProgresses);
         //summarize goal priorities
         $sumPriorities = array_sum($goalPriorities);
         $progresses = [];
