@@ -142,10 +142,6 @@ class ApiGoalApprovalService extends ApiService
      */
     function extractGoalChangeDiffColumns(array $goal, array $goalChangeLog, array $checkColumns): array
     {
-        if (empty($goalChangeLog)) {
-            return [];
-        }
-
         // 現在のゴールと変更ログとの差分を計算。値が違うキーだけ抽出される
         $diff = [];
         foreach($checkColumns as $col) {
@@ -172,10 +168,6 @@ class ApiGoalApprovalService extends ApiService
      */
     function extractTkrChangeDiffColumns(array $tkr, array $tkrChangeLog, array $checkColumns): array
     {
-        if (empty($tkrChangeLog)) {
-            return [];
-        }
-
         // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
         $diff = [];
         foreach($checkColumns as $col) {
