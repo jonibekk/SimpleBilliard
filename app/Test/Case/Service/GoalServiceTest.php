@@ -148,6 +148,10 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertFalse(isset($e));
     }
 
+    /**
+     * グラフ表示期間算出メソッドのテスト
+     * - 指定終了日が期の開始日に近い場合
+     */
     function testGetGraphRangeTargetEndIsNotLongSinceTermStart()
     {
         $this->_setUpGraphDefault();
@@ -159,29 +163,46 @@ class GoalServiceTest extends GoalousTestCase
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-01');
+        //当日が期の開始日と一緒の場合、期の開始日とプロットデータのエンドは一緒になる
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-10');
+        //バッファなしで当日が期の開始日から9日後はプロットデータも9日後になる
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 10 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
-        $expected['plotDataEndDate'] = date('Y-m-10');
-        $this->assertNotEquals($expected, $actual);
+        //バッファなしで、targetDaysが10日で当日が期の開始日から10日後は範囲全体の日付が変わる
+        $this->assertEquals([
+            'graphStartDate'  => date('Y-m-02'),
+            'graphEndDate'    => date('Y-m-11'),
+            'plotDataEndDate' => date('Y-m-11')
+        ], $actual);
+
         //バッファあり
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
+        //バッファありでも$targetEndTimestampが収まる場合は、日付が一緒になる。
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 1 * DAY;;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 1 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
-        $this->assertNotEquals($expected, $actual);
+        //バッファありで、$targetEndTimestampが収まらない場合は日付が変わる。
+        $this->assertNotEquals([
+            'graphStartDate'  => date('Y-m-02'),
+            'graphEndDate'    => date('Y-m-11'),
+            'plotDataEndDate' => date('Y-m-11')
+        ], $actual);
     }
 
+    /**
+     * グラフ表示期間算出メソッドのテスト
+     * - 指定終了日が期の終了日に近い場合
+     */
     function testGetGraphRangeTermEndIsApproachingWithBuffer()
     {
         $this->_setUpGraphDefault();
@@ -195,14 +216,17 @@ class GoalServiceTest extends GoalousTestCase
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 1);
+        //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 8 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        //バッファありで、指定終了日と期の終了日の差分がバッファを超える場合はバッファ考慮される
         $this->assertNotEquals($expected, $actual);
 
         //バッファなし
@@ -213,6 +237,7 @@ class GoalServiceTest extends GoalousTestCase
         ];
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        //期の終了日までのデータ表示
         $this->assertEquals($expected, $actual);
 
         $expected = [
@@ -222,6 +247,7 @@ class GoalServiceTest extends GoalousTestCase
         ];
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 1 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        //期の終了日から１日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
 
         $expected = [
@@ -231,9 +257,14 @@ class GoalServiceTest extends GoalousTestCase
         ];
         $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        //期の終了日から９日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * グラフ表示期間算出メソッドのテスト
+     * - 指定終了日が期の開始日、終了日の両方に近くない場合
+     */
     function testGetGraphRangeNormal()
     {
         $this->_setUpGraphDefault();
