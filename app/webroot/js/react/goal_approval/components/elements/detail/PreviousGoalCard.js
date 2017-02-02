@@ -11,16 +11,14 @@ export default class GoalCard extends React.Component {
       return null
     }
 
-    const goal = this.props.goal
-    const top_key_result = this.props.top_key_result
-    const goal_category = this.props.goal_category
+    const { goal, top_key_result } = this.props
 
     return (
       <div className="goals-approval-detail-goal-card" key={ goal.modified + top_key_result.modified }>
           <div className="goals-approval-detail-table">
               <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
               <div className="goals-approval-detail-goal-card-info">
-                  <p><i className="fa fa-folder-o" aria-hidden="true"></i> { goal_category.name }</p>
+                  <p><i className="fa fa-folder-o" aria-hidden="true"></i> { goal.goal_category.name }</p>
                   <p><a href={`/goals/view_info/goal_id:${goal.id}`} className="goals-approval-detail-goal-card-info-link" target={cake.is_mb_app ? "_self" : "_blank"}>{ goal.name }</a></p>
                   <div className="goals-approval-detail-goal-card-info-tkr">
                       <h2 className="goals-approval-detail-goal-card-info-tkr-title"><i className="fa fa-key" aria-hidden="true"></i> Top Key Result</h2>
@@ -52,7 +50,6 @@ export default class GoalCard extends React.Component {
 
 GoalCard.propTypes = {
   goal: React.PropTypes.object,
-  top_key_result: React.PropTypes.object,
-  goal_category: React.PropTypes.object
+  top_key_result: React.PropTypes.object
 }
-GoalCard.defaultProps = { goal: {}, top_key_result: {}, goal_category: {} };
+GoalCard.defaultProps = { goal: {}, top_key_result: {} };
