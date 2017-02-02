@@ -127,7 +127,6 @@ class GoalServiceTest extends GoalousTestCase
      * ゴールの進捗データの信憑性は可能であればやる
      * メインはグラフの描画範囲の検査
      */
-    //mustでやる
     function testGetGraphRangeTargetDaysOver()
     {
         $this->_setUpGraphDefault();
@@ -138,6 +137,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertTrue(isset($e));
     }
 
+    /**
+     * グラフの日付範囲指定で期間内の場合
+     */
     function testGetGraphRangeTargetDaysNotOver()
     {
         $this->_setUpGraphDefault();
@@ -145,6 +147,7 @@ class GoalServiceTest extends GoalousTestCase
             $this->GoalService->getGraphRange(time(), date('t'));
         } catch (Exception $e) {
         }
+        //例外が返らないこと
         $this->assertFalse(isset($e));
     }
 
@@ -269,59 +272,12 @@ class GoalServiceTest extends GoalousTestCase
     {
         $this->_setUpGraphDefault();
 
-        //バッファなし
         $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 9)),
-            'graphEndDate'    => date('Y-m-' . date('t')),
-            'plotDataEndDate' => date('Y-m-' . date('t'))
+            'graphStartDate'  => date('Y-m-01'),
+            'graphEndDate'    => date('Y-m-10'),
+            'plotDataEndDate' => date('Y-m-07'),
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
-        $this->assertEquals($expected, $actual);
-
-        $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 10)),
-            'graphEndDate'    => date('Y-m-' . (string)(date('t') - 1)),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 1))
-        ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 1 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
-        $this->assertEquals($expected, $actual);
-
-        $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 18)),
-            'graphEndDate'    => date('Y-m-' . (string)(date('t') - 9)),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 9))
-        ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
-        $this->assertEquals($expected, $actual);
-
-        //バッファあり
-        $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 9)),
-            'graphEndDate'    => date('Y-m-' . date('t')),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 1)),
-        ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 1 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 1);
-        $this->assertEquals($expected, $actual);
-
-        $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 9)),
-            'graphEndDate'    => date('Y-m-' . date('t')),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 3)),
-        ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 3 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
-        $this->assertEquals($expected, $actual);
-
-        $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 10)),
-            'graphEndDate'    => date('Y-m-' . (string)(date('t') - 1)),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 4)),
-        ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 4 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 6 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
 
@@ -358,9 +314,9 @@ class GoalServiceTest extends GoalousTestCase
         //sweet spotの開始値が0になっていること
         $this->assertEquals(0, $ret[0][1]);
         $this->assertEquals(0, $ret[1][1]);
-        //sweet spotの終了値が0以外になっていること
-        $this->assertNotEquals(0, $ret[0][10]);
-        $this->assertNotEquals(0, $ret[1][10]);
+        //sweet spotの終了値が前の値より大きいこと
+        $this->assertTrue($ret[0][9] < $ret[0][10]);
+        $this->assertTrue($ret[1][9] < $ret[1][10]);
     }
 
     /**
@@ -387,9 +343,9 @@ class GoalServiceTest extends GoalousTestCase
         //sweet spotの開始値が0以外になっていること
         $this->assertNotEquals(0, $ret[0][1]);
         $this->assertNotEquals(0, $ret[1][1]);
-        //sweet spotの終了値が0以外になっていること
-        $this->assertNotEquals(0, $ret[0][10]);
-        $this->assertNotEquals(0, $ret[1][10]);
+        //sweet spotの終了値が前の値より大きいこと
+        $this->assertTrue($ret[0][9] < $ret[0][10]);
+        $this->assertTrue($ret[1][9] < $ret[1][10]);
         //dataは全てnullになっていること
         $this->assertNull($ret[2][1]);
         $this->assertNull($ret[2][8]);
@@ -418,9 +374,9 @@ class GoalServiceTest extends GoalousTestCase
         //sweet spotの開始値が0以外になっていること
         $this->assertNotEquals(0, $ret[0][1]);
         $this->assertNotEquals(0, $ret[1][1]);
-        //sweet spotの終了値が0以外になっていること
-        $this->assertNotEquals(0, $ret[0][10]);
-        $this->assertNotEquals(0, $ret[1][10]);
+        //sweet spotの終了値が前の値より大きいこと
+        $this->assertTrue($ret[0][9] < $ret[0][10]);
+        $this->assertTrue($ret[1][9] < $ret[1][10]);
         //dataは全てnullになっていること
         $this->assertNull($ret[2][1]);
         $this->assertNull($ret[2][9]);
@@ -429,6 +385,7 @@ class GoalServiceTest extends GoalousTestCase
     /**
      * 今日が今期の開始日
      * - 前期のゴールが含まれないこと
+     * - 来期のゴールが含まれないこと
      * - 今期のゴール追加後に今期のゴールが含まれること
      */
     function testUserGraphNoLogStartTermOnlyToday()
@@ -440,6 +397,7 @@ class GoalServiceTest extends GoalousTestCase
         $now = time();
 
         $this->createGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [50]);
+        $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
         $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
 
@@ -592,7 +550,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->markTestSkipped();
     }
 
-    //mustでやる
+    /**
+     * sweet spotの値の件数チェック
+     */
     function testGetSweetSpotValueCount()
     {
         $this->_setUpGraphDefault();
@@ -620,6 +580,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertcount((int)date('t') - 2, $actual['top']);
     }
 
+    /**
+     * sweet spotの値が正しいこと
+     */
     function testGetSweetSpotValue()
     {
         $this->_setUpGraphDefault();
@@ -641,6 +604,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($actualFullTerm['bottom'][1], $actual['bottom'][0]);
     }
 
+    /**
+     * sweet spotの値取得範囲が期を超えている場合のテスト
+     */
     function testGetSweetSpotInTermOrNot()
     {
         $this->_setUpGraphDefault();
@@ -735,6 +701,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals(1, $this->GoalService->getProgress($krs));
     }
 
+    /**
+     * グラフ表示用の進捗データの生成のテスト
+     */
     function testProcessProgressesToGraph()
     {
         $progresses = [
