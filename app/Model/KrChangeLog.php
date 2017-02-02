@@ -77,7 +77,7 @@ class KrChangeLog extends AppModel
     }
 
     /**
-     * ゴールの最新のスナップショットを取得
+     * KRの最新のスナップショットを取得
      *
      * @param $goalId
      *

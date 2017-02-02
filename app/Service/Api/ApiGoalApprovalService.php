@@ -60,8 +60,11 @@ class ApiGoalApprovalService extends ApiService
         // TKRの整形
         $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
 
-        // ゴール/TKRの変更前のスナップショットを取得
-        $res['goal'] = $this->processChangeLog($res['goal']);
+        // ゴールの変更データを取得
+        $res['goal']['changed_diff'] = $this->extractChangedGoalDiff($res['goal']);
+        // TKRの変更データを取得
+        $res['goal']['top_key_result']['changed_diff'] = $this->extractChangedKrDiff($res['goal']['top_key_result']);
+
         if (Hash::get($res, 'goal.kr_change_log')) {
             // 画像パス追加
             $res['goal']['goal_change_log'] = $Goal->attachImgUrl($res['goal']['goal_change_log'], 'Goal');
@@ -115,7 +118,7 @@ class ApiGoalApprovalService extends ApiService
         return $goal;
     }
 
-    function extractGoalChangeDiff(int $goalId, array $checkPresentColumns)
+    function extractChangedGoalDiff(int $goal, array $goalChangeLog)
     {
         /** @var GoalChangeLog $GoalChangeLog */
         $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
@@ -136,7 +139,7 @@ class ApiGoalApprovalService extends ApiService
         return $diff;
     }
 
-    function extractKrChangeDiff(int $goalId, array $checkPresentColumns)
+    function extractChangedKrDiff(int $goalId, array $checkPresentColumns)
     {
         /** @var KrChangeLog $KrChangeLog */
         $KrChangeLog = ClassRegistry::init("KrChangeLog");
