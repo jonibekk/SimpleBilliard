@@ -62,16 +62,22 @@ class ApiGoalApprovalService extends ApiService
         // TKRの整形
         $ret['top_key_result'] = $KeyResultService->processKeyResult($ret['top_key_result']);
 
-        // ゴールのログ&変更カラムを取得
-        $ret['goal_change_log'] = $GoalChangeLog->findLatestSnapshot($ret['goal']['id']);
-        $ret['goal_changed_columns'] = $this->extractGoalChangeDiffColumns($ret['goal'], $ret['goal_change_log']);
+        // ゴールのログ取得
+        $ret['goal_change_log'] = $GoalChangeLog->getLatestSnapshot($ret['goal']['id']);
 
-        // TKRのログ&変更カラムを取得
-        $tkr_change_log = $KrChangeLog->getLatestSnapshot($ret['goal']['id'], $KrChangeLog::TYPE_APPROVAL_BY_COACH);
-        $ret['tkr_change_log'] = $KeyResultService->processKeyResult($tkr_change_log);
-        $ret['tkr_changed_columns'] = $this->extractTkrChangeDiffColumns($ret['top_key_result'], $ret['tkr_change_log']);
+        // TKRのログ取得
+        $ret['tkr_change_log'] = $KrChangeLog->getLatestSnapshot($ret['goal']['id'], $KrChangeLog::TYPE_APPROVAL_BY_COACH);
 
-        if (Hash::get($ret, 'tkr_change_log')) {
+        if (Hash::get($ret, 'tkr_change_log') && Hash::get($ret, 'goal_change_log')) {
+            // ゴールの変更カラム取得
+            $ret['goal_changed_columns'] = $this->extractGoalChangeDiffColumns(
+                $ret['goal'], $ret['goal_change_log'], ['name', 'goal_category_id']
+            );
+            // tkrの変更カラム取得
+            $ret['tkr_change_log'] = $KeyResultService->processKeyResult($ret['tkr_change_log']);
+            $ret['tkr_changed_columns'] = $this->extractTkrChangeDiffColumns(
+                $ret['top_key_result'], $ret['tkr_change_log'], ['name', 'description', 'display_value']
+            );
             // 画像パス追加
             $ret['goal_change_log'] = $Goal->attachImgUrl($ret['goal_change_log'], 'Goal');
             // TKRの整形
@@ -121,29 +127,62 @@ class ApiGoalApprovalService extends ApiService
         return $goal;
     }
 
-    function extractGoalChangeDiffColumns(array $goal, array $goalChangeLog): array
+    /**
+     * ゴール変更ログと現在のゴールの差分カラムを抽出
+     * - response
+     *  [
+     *    'name' => 'name',
+     *    'start_date' => 'start_date',
+     *    ...
+     *  ]
+     * @param  array $goal
+     * @param  array $goalChangeLog
+     * @param  array $checkColumns
+     * @return array
+     */
+    function extractGoalChangeDiffColumns(array $goal, array $goalChangeLog, array $checkColumns): array
     {
+        if (empty($goalChangeLog)) {
+            return [];
+        }
+
         // 現在のゴールと変更ログとの差分を計算。値が違うキーだけ抽出される
         $diff = [];
-        foreach($goal as $key => $val) {
-            if(empty($goalChangeLog[$key]) || $goalChangeLog[$key] !== $val) {
-                $diff[$key] = $key;
+        foreach($checkColumns as $col) {
+            if ($goalChangeLog[$col] !== $goal[$col]) {
+                $diff[$col] = $col;
             }
         }
 
         return $diff;
     }
 
-    function extractTkrChangeDiffColumns(array $tkr, array $tkrChangeLog): array
+    /**
+     * tkr変更ログと現在のtkrの差分カラムを抽出
+     * - response
+     *  [
+     *    'name' => 'name',
+     *    'start_date' => 'start_date',
+     *    ...
+     *  ]
+     * @param  array $tkr
+     * @param  array $tkrChangeLog
+     * @param  array $checkColumns
+     * @return array
+     */
+    function extractTkrChangeDiffColumns(array $tkr, array $tkrChangeLog, array $checkColumns): array
     {
+        if (empty($tkrChangeLog)) {
+            return [];
+        }
+
         // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
         $diff = [];
-        foreach($tkr as $key => $val) {
-            if(empty($tkrChangeLog[$key]) || $tkrChangeLog[$key] !== $val) {
-                $diff[$key] = $key;
+        foreach($checkColumns as $col) {
+            if ($tkrChangeLog[$col] !== $tkr[$col]) {
+                $diff[$col] = $col;
             }
         }
-        $this->log($diff);
 
         return $diff;
     }

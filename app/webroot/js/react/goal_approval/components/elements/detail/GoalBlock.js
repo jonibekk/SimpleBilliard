@@ -16,7 +16,7 @@ export default class GoalBlock extends React.Component {
 
   render() {
     const { goal, goal_change_log, goal_changed_columns, top_key_result, tkr_change_log, tkr_changed_columns, is_leader } = this.props
-    const existsChangeLogs = goal_change_log && tkr_change_log
+    const existsChangeDiff = Object.keys(goal_changed_columns).length > 0 && Object.keys(tkr_changed_columns).length > 0
     const displayed_previous = this.state.displayed_previous
 
     return (
@@ -34,7 +34,7 @@ export default class GoalBlock extends React.Component {
           }
 
           {/* 「View Previous」ボタン */}
-          { !displayed_previous && existsChangeLogs &&
+          { !displayed_previous && existsChangeDiff &&
             <div className="goals-approval-detail-view-previous">
                 <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
                   <i className="fa fa-angle-down" aria-hidden="true"></i>
@@ -44,7 +44,7 @@ export default class GoalBlock extends React.Component {
           }
 
           {/* 変更前のゴール */}
-          { displayed_previous && existsChangeLogs &&
+          { displayed_previous && existsChangeDiff &&
             <PrevisouGoalCard goal={ goal_change_log }
                               top_key_result={ tkr_change_log } />
           }
@@ -55,6 +55,11 @@ export default class GoalBlock extends React.Component {
 
 GoalBlock.propTypes = {
   goal: React.PropTypes.object,
+  goal_change_log: React.PropTypes.object,
+  goal_changed_columns: React.PropTypes.object,
+  top_key_result: React.PropTypes.object,
+  tkr_change_log: React.PropTypes.object,
+  tkr_changed_columns: React.PropTypes.object,
   is_leader: React.PropTypes.bool
 }
 GoalBlock.defaultProps = { goal: {}, is_leader: true };

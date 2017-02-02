@@ -83,7 +83,7 @@ class KrChangeLog extends AppModel
      *
      * @return array|null
      */
-    function getLatestSnapshot($goalId, $type)
+    function getLatestSnapshot(int $goalId, int $type): array
     {
         $data = $this->find('first', [
             'conditions' => [
@@ -93,12 +93,11 @@ class KrChangeLog extends AppModel
             'order'      => ['id' => 'desc']
         ]);
 
-        $data = Hash::extract($data, 'KrChangeLog');
-
         if (empty($data)) {
-            return null;
+            return $data;
         }
 
+        $data = Hash::extract($data, 'KrChangeLog');
         /** @noinspection PhpUndefinedFunctionInspection */
         return msgpack_unpack(base64_decode($data['data']));
     }
