@@ -96,6 +96,7 @@ class GoalProgressDailyLogShell extends AppShell
 
     /**
      * ゴール毎の進捗ログデータをバルクで保存する
+     * Modelのcurrent_team_idを初期化
      *
      * @param int    $teamId
      * @param string $targetDate
@@ -106,33 +107,9 @@ class GoalProgressDailyLogShell extends AppShell
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
-
         // モデルに current_team_id をセット
         $this->_setupModels($teamId);
-        $targetTerm = $this->EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
-        if (empty($targetTerm)) {
-            //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
-            return false;
-        }
-        // 対象期間の全ゴールのIDリスト
-        $goalIds = $this->Goal->findAllIdsByEndDateTimestamp($targetTerm['start_date'], $targetTerm['end_date']);
-        if (empty($goalIds)) {
-            return false;
-        }
-        $saveData = [];
-        // 全ゴールを取得
-        $goals = $this->Goal->getGoalAndKr($goalIds);
-        //保存データの生成
-        foreach ($goals as $goal) {
-            $saveData[] = [
-                'team_id'     => $teamId,
-                'goal_id'     => $goal['Goal']['id'],
-                //各ゴール毎にKRからゴール進捗を求める
-                'progress'    => $GoalService->getProgress($goal['KeyResult']),
-                'target_date' => $targetDate,
-            ];
-        }
-        $ret = $this->GoalProgressDailyLog->bulkInsert($saveData);
+        $ret = $GoalService->saveGoalProgressLogsAsBulk($teamId, $targetDate);
 
         return $ret;
     }

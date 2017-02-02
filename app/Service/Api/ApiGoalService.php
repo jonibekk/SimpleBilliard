@@ -1,6 +1,6 @@
 <?php
 App::import('Service/Api', 'ApiService');
-App::import('View', 'Helper/TimeExHelper');
+App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Class AppService
@@ -248,7 +248,8 @@ class ApiGoalService extends ApiService
         $ret['data']['krs'] = $krs;
         // Goalデータセット
         $currentTerm = $EvaluateTerm->getCurrentTermData();
-        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'], $currentTerm['end_date']);
+        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'],
+            $currentTerm['end_date']);
 
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(
@@ -266,9 +267,9 @@ class ApiGoalService extends ApiService
             true
         );
         $ret['data']['progress_graph'] = [
-            'data' => $progressGraph,
+            'data'       => $progressGraph,
             'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate'])),
-            'end_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
+            'end_date'   => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
         ];
 
         return $ret;
