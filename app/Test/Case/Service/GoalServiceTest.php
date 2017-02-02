@@ -633,6 +633,77 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertNotEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
     }
 
+    /**
+     * ゴール進捗計算メソッドのKRの重要度によって重み付けして計算しているかのテスト
+     * - ステートレスなメソッドのため、前提となるデータの準備不要
+     */
+    function testGetProgressPriority()
+    {
+        //KRの重要度が同じ場合
+        $krs = [
+            [
+                'priority'      => 1,
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'current_value' => 0,
+            ],
+            [
+                'priority'      => 1,
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'current_value' => 100,
+            ],
+        ];
+        //進捗0と100で50になるはず
+        $this->assertEquals(50, $this->GoalService->getProgress($krs));
+
+        //KRの重要度が違う場合
+        $krs = [
+            [
+                'priority'      => 1,
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'current_value' => 0,
+            ],
+            [
+                'priority'      => 5,
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'current_value' => 100,
+            ],
+        ];
+        //進捗0と100だが、priorityが違うため、50にはならないはず
+        $this->assertNotEquals(50, $this->GoalService->getProgress($krs));
+    }
+
+    /**
+     * ゴール進捗計算メソッドでの閾値テスト
+     */
+    function testGetProgressThreshold()
+    {
+        //進捗率が99.*の場合は結果が99になるはず
+        $krs = [
+            [
+                'priority'      => 1,
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'current_value' => 99.01,
+            ],
+        ];
+        $this->assertEquals(99, $this->GoalService->getProgress($krs));
+
+        //進捗率が0.*の場合は結果が1になるはず
+        $krs = [
+            [
+                'priority'      => 1,
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'current_value' => 0.01,
+            ],
+        ];
+        $this->assertEquals(1, $this->GoalService->getProgress($krs));
+    }
+
     function testProcessProgressesToGraph()
     {
         $progresses = [
