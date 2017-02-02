@@ -166,6 +166,59 @@ class GoalousTestCase extends CakeTestCase
         $term['EvaluateTerm']['start_date'] -= $beforeDays * DAY;
         $term['EvaluateTerm']['end_date'] += $afterDays * DAY;
         $this->EvaluateTerm->save($term);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+
+    }
+
+    /**
+     * 今日を今期の開始日にする
+     *
+     * @param int $teamId
+     * @param int $termDays
+     */
+    function setupCurrentTermStartToday($teamId = 1, $termDays = 30)
+    {
+        //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
+        $this->Team->id = $teamId;
+        $this->Team->saveField('start_term_month', 1);
+        $this->Team->saveField('border_months', 1);
+
+        $this->Team->current_team_id = $teamId;
+        $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
+        $term = $this->EvaluateTerm->findById($evaluateTermId);
+        $today = strtotime(date("Y/m/d 00:00:00")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        $term['EvaluateTerm']['start_date'] = $today;
+        $term['EvaluateTerm']['end_date'] = $today + $termDays * DAY;
+        $this->EvaluateTerm->save($term);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+    }
+
+    /**
+     * 今日を今期の終了日にする
+     *
+     * @param int $teamId
+     * @param int $termDays
+     */
+    function setupCurrentTermEndToday($teamId = 1, $termDays = 30)
+    {
+        //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
+        $this->Team->id = $teamId;
+        $this->Team->saveField('start_term_month', 1);
+        $this->Team->saveField('border_months', 1);
+
+        $this->Team->current_team_id = $teamId;
+        $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
+        $term = $this->EvaluateTerm->findById($evaluateTermId);
+        $today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        $term['EvaluateTerm']['end_date'] = $today;
+        $term['EvaluateTerm']['start_date'] = $today - $termDays * DAY;
+        $this->EvaluateTerm->save($term);
     }
 
     function setDefaultTeamIdAndUid($uid = 1, $teamId = 1)
@@ -270,5 +323,23 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult->create();
         $KeyResult->saveAll($krDatas);
         return $goalId;
+    }
+
+    function createKr($goalId, $teamId, $userId, $progress)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        $kr = [
+            'goal_id'       => $goalId,
+            'team_id'       => $teamId,
+            'user_id'       => $userId,
+            'name'          => 'テストKR',
+            'start_value'   => 0,
+            'target_value'  => 100,
+            'value_unit'    => 0,
+            'current_value' => $progress,
+        ];
+        $KeyResult->create();
+        $KeyResult->save($kr);
     }
 }

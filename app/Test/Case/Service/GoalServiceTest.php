@@ -396,6 +396,92 @@ class GoalServiceTest extends GoalousTestCase
     }
 
     /**
+     * 今日が今期の開始日
+     * - 前期のゴールが含まれないこと
+     * - 今期のゴール追加後に今期のゴールが含まれること
+     */
+    function testUserGraphNoLogStartTermOnlyToday()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupCurrentTermStartToday();
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $now = time();
+
+        $this->createGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [50]);
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
+        //前期のゴールが含まれないこと
+        $this->assertCount(1, $ret[2]);//dataが項目名のみ
+
+        //今期のゴール追加
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
+        $this->assertCount(2, $ret[2]);
+        $this->assertEquals(50, $ret[2][1]);//ゴール進捗が存在すること
+
+        //ゴール進捗を更新
+        $this->createKr($goalId, 1, 1, 0);
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
+        $this->assertNotEquals(50, $ret[2][1]);//ゴール進捗が更新されること
+    }
+
+    /**
+     * 今日が今期の終了日
+     * - データの個数がフルになっていること
+     * - 当日に進捗があった場合に昨日のデータのログと、当日のデータが違っていること
+     */
+    function testUserGraphEndTermToday()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupCurrentTermEndToday();
+        //昨日のログ作成
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        //進捗を更新(KRを追加)
+        $this->createKr($goalId, 1, 1, 100);
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $now = time();
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
+        $this->assertCount(11, $ret[2]);//dataの数が全件分あること
+        $this->assertEquals(50, $ret[2][9]);//一日前のゴール進捗
+        $this->assertEquals(75, $ret[2][10]);//当日のゴール進捗
+    }
+
+    /**
+     * ゴール作成が過去のログ進捗に影響を与えないこと
+     * - 昨日のログがあり、ゴールが追加された場合に過去のログ進捗に影響を与えないこと
+     */
+    function testUserGraphEffectLogs()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupCurrentTermExtendDays();
+        //昨日のログ作成
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $now = time();
+        //1回目のデータ取得
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
+        //新しいゴール追加
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->_clearCache();
+        //2回目のデータ取得
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
+        //ログデータに影響がないこと
+        $this->assertEquals($before[2][7], $after[2][7]);
+        //当日のデータが更新されていること
+        $this->assertNotEquals($before[2][8], $after[2][8]);
+    }
+
+    /**
      * グラフデータ取得でのデータの整合性チェック
      */
     function testUserGraphDataValid()
