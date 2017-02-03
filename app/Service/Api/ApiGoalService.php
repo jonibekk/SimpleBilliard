@@ -251,32 +251,26 @@ class ApiGoalService extends ApiService
         $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'],
             $currentTerm['end_date']);
 
-        /*
-         * TODO: ユーザー進捗ログバッチ先行リリースのため、グラフを一時的に非表示にしている。
-         *       グラフデータ計算ロジックリニューアルのタイミングで有効化する。
-         *       フロント側でも ~/kr_column/components/KrColumn.js で
-         *       データ取得ロジックをコメントアウトしてるので戻すのを忘れないように。
-         */
-        // //グラフデータのセット
-        // $graphRange = $GoalService->getGraphRange(
-        //     time(),
-        //     GoalService::GRAPH_TARGET_DAYS,
-        //     GoalService::GRAPH_MAX_BUFFER_DAYS
-        // );
-        // /** @var User $User */
-        // $User = ClassRegistry::init("User");
-        // $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
-        //     $User->my_uid,
-        //     $graphRange['graphStartDate'],
-        //     $graphRange['graphEndDate'],
-        //     $graphRange['plotDataEndDate'],
-        //     true
-        // );
-        // $ret['data']['progress_graph'] = [
-        //     'data'       => $progressGraph,
-        //     'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate'])),
-        //     'end_date'   => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
-        // ];
+        //グラフデータのセット
+        $graphRange = $GoalService->getGraphRange(
+            time(),
+            GoalService::GRAPH_TARGET_DAYS,
+            GoalService::GRAPH_MAX_BUFFER_DAYS
+        );
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+        $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
+            $User->my_uid,
+            $graphRange['graphStartDate'],
+            $graphRange['graphEndDate'],
+            $graphRange['plotDataEndDate'],
+            true
+        );
+        $ret['data']['progress_graph'] = [
+            'data'       => $progressGraph,
+            'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate'])),
+            'end_date'   => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
+        ];
 
         return $ret;
     }
