@@ -25,8 +25,8 @@ export default class UserCard extends React.Component {
                   { goal_member.goal.leader.user.display_username })
                 </a>
               </p>
-              <p className="goals-approval-detail-info-name">{__("Role")}: { goal_member.role }</p>
-              <p>{ goal_member.description }</p>
+              <p className="goals-approval-detail-info-name">{__("Role")}: { goal_member.goal_member.role }</p>
+              <p>{ goal_member.goal_member.description }</p>
             </div>
           </div>
         </div>

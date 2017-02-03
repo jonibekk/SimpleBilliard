@@ -113,7 +113,7 @@ class ApiGoalApprovalService extends ApiService
         // 現在のゴールと変更ログとの差分を計算。値が違うキーだけ抽出される
         $diff = [];
         foreach($checkColumns as $col) {
-            if ($goalChangeLog[$col] !== $goal[$col]) {
+            if ($goalChangeLog[$col] != $goal[$col]) {
                 $diff[$col] = $col;
             }
         }
@@ -139,7 +139,7 @@ class ApiGoalApprovalService extends ApiService
         // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
         $diff = [];
         foreach($checkColumns as $col) {
-            if ($tkrChangeLog[$col] !== $tkr[$col]) {
+            if ($tkrChangeLog[$col] != $tkr[$col]) {
                 $diff[$col] = $col;
             }
         }
