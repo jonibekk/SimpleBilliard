@@ -109,7 +109,8 @@ class KeyResultService extends AppService
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
-        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
+        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'],
+            $keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
@@ -582,7 +583,9 @@ class KeyResultService extends AppService
 
     /**
      * アクションを促すメッセージを生成する
+     *
      * @param  $kr
+     *
      * @return string
      */
     function generateActionMessage(array $kr): string
@@ -596,12 +599,52 @@ class KeyResultService extends AppService
 
         if ($completed) {
             return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
-        } else if ($actionCount > 0) {
-            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
-        } elseif ($latestActioned) {
-            return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
         } else {
-            return __('Take first action to this !');
+            if ($actionCount > 0) {
+                return __('%s member(s) actioned recently.',
+                    '<span class="font_verydark font_bold">' . $actionCount . '</span>');
+            } elseif ($latestActioned) {
+                return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
+            } else {
+                return __('Take first action to this !');
+            }
         }
+    }
+
+    /**
+     * keyがゴールIDのKRの配列を返す
+     * 返り値の例:
+     * [
+     * (int) goal_id => [
+     * (int) kr_id => [
+     * 'goal_id' => '101',
+     * 'id' => '7',
+     * 'start_value' => '0',
+     * 'target_value' => '100',
+     * 'current_value' => '50',
+     * 'priority' => '3'
+     * ],
+     * (int) kr_id => [
+     * 'goal_id' => '101',
+     * 'id' => '8',
+     * 'start_value' => '0',
+     * 'target_value' => '100',
+     * 'current_value' => '30',
+     * 'priority' => '3'
+     * ],
+     * ],
+     * ];
+     *
+     * @param array $goalIds
+     *
+     * @return array
+     */
+    function findValuesGroupByGoalId($goalIds)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        $ret = $KeyResult->findProgressBaseValues($goalIds);
+        $ret = Hash::combine($ret, '{n}.id', '{n}.goal_id');
+        return $ret;
     }
 }

@@ -223,7 +223,7 @@ class KeyResult extends AppModel
      *
      * @return bool
      */
-    function requiredCaseExistUnit($val):bool
+    function requiredCaseExistUnit($val): bool
     {
         $val = array_shift($val);
         $unitId = Hash::get($this->data, 'KeyResult.value_unit');
@@ -625,7 +625,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    function getIncompleteKrCount($goal_id):int
+    function getIncompleteKrCount($goal_id): int
     {
         $options = [
             'conditions' => [
@@ -865,7 +865,7 @@ class KeyResult extends AppModel
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
-                'GoalMember.del_flg' => false
+                'GoalMember.del_flg'    => false
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -891,8 +891,8 @@ class KeyResult extends AppModel
                         'ActionResult.created >=' => $weekAgoTimestamp,
                         'ActionResult.created <=' => $now
                     ],
-                    'fields' => ['user_id'],
-                    'order'  => [
+                    'fields'     => ['user_id'],
+                    'order'      => [
                         'ActionResult.created' => 'desc'
                     ],
                     'User'
@@ -910,11 +910,13 @@ class KeyResult extends AppModel
         // Userのimage情報セット
         App::uses('UploadHelper', 'View/Helper');
         $upload = new UploadHelper(new View());
-        foreach($res as $i => $kr) {
-            foreach($kr['ActionResult'] as $j => $action) {
+        foreach ($res as $i => $kr) {
+            foreach ($kr['ActionResult'] as $j => $action) {
                 $res[$i]['ActionResult'][$j]['User']['original_img_url'] = $upload->uploadUrl($action, 'User.photo');
-                $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'large']);
-                $res[$i]['ActionResult'][$j]['User']['small_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'small']);
+                $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo',
+                    ['style' => 'large']);
+                $res[$i]['ActionResult'][$j]['User']['small_img_url'] = $upload->uploadUrl($action, 'User.photo',
+                    ['style' => 'small']);
             }
         }
 
@@ -935,7 +937,7 @@ class KeyResult extends AppModel
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
-                'GoalMember.del_flg' => false
+                'GoalMember.del_flg'    => false
             ],
             'joins'      => [
                 [
@@ -957,5 +959,32 @@ class KeyResult extends AppModel
         $count = $this->find('count', $options);
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $count ?? 0;
+    }
+
+    /**
+     * KR進捗算出用のデータ取得
+     * @param array $goalIds
+     *
+     * @return array
+     */
+    function findProgressBaseValues(array $goalIds): array
+    {
+
+        $options = [
+            'conditions' => [
+                'goal_id' => $goalIds,
+            ],
+            'fields'     => [
+                'goal_id',
+                'id',
+                'start_value',
+                'target_value',
+                'current_value',
+                'priority'
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.KeyResult');
+        return $ret;
     }
 }
