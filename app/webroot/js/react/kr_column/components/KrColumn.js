@@ -117,7 +117,13 @@ export default class KrColumn extends React.Component {
 
     return (
       <div>
-        <Graph progress_graph={ this.state.progress_graph } />
+        {/*
+          * TODO: ユーザー進捗ログバッチ先行リリースのため、グラフを一時的に非表示にしている。
+          *       グラフデータ計算ロジックリニューアルのタイミングで有効化する。
+          *       バックエンド側でも $ApiGoalService::findDashboardFirstViewResponse にて
+          *       データ取得ロジックをコメントアウトしてるので戻すとき忘れないように。
+          */}
+        {/* <Graph progress_graph={ this.state.progress_graph } /> */}
         <Krs krs={ this.state.krs }
              goals={ this.state.goals }
              kr_count={ this.state.kr_count }
