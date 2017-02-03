@@ -67,10 +67,14 @@ class GoalousTestCase extends CakeTestCase
     function createGoal(int $userId, array $data = [], int $termType = EvaluateTerm::TYPE_CURRENT)
     {
         $teamId = 1;
-        $this->KeyResult->my_uid = $userId;
-        $this->KeyResult->current_team_id = $teamId;
-        $this->Goal->my_uid = $userId;
-        $this->Goal->current_team_id = $teamId;
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        $KeyResult->my_uid = $userId;
+        $KeyResult->current_team_id = $teamId;
+        $Goal->my_uid = $userId;
+        $Goal->current_team_id = $teamId;
         $this->GoalMember->my_uid = $userId;
         $this->GoalMember->current_team_id = $teamId;
         $this->setDefaultTeamIdAndUid($userId);
@@ -139,6 +143,84 @@ class GoalousTestCase extends CakeTestCase
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
     }
 
+    /**
+     * 今期の日付を拡張して登録する
+     * 当日が期のどこにいるかでテスト結果に影響する場合のため
+     *
+     * @param int $teamId
+     * @param int $beforeDays
+     * @param int $afterDays
+     */
+    function setupCurrentTermExtendDays($teamId = 1, $beforeDays = 30, $afterDays = 30)
+    {
+        //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
+        $this->Team->id = $teamId;
+        $this->Team->saveField('start_term_month', 1);
+        $this->Team->saveField('border_months', 1);
+
+        $this->Team->current_team_id = $teamId;
+        $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
+        $term = $this->EvaluateTerm->findById($evaluateTermId);
+        $term['EvaluateTerm']['start_date'] -= $beforeDays * DAY;
+        $term['EvaluateTerm']['end_date'] += $afterDays * DAY;
+        $this->EvaluateTerm->save($term);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+
+    }
+
+    /**
+     * 今日を今期の開始日にする
+     *
+     * @param int $teamId
+     * @param int $termDays
+     */
+    function setupCurrentTermStartToday($teamId = 1, $termDays = 30)
+    {
+        //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
+        $this->Team->id = $teamId;
+        $this->Team->saveField('start_term_month', 1);
+        $this->Team->saveField('border_months', 1);
+
+        $this->Team->current_team_id = $teamId;
+        $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
+        $term = $this->EvaluateTerm->findById($evaluateTermId);
+        $today = strtotime(date("Y/m/d 00:00:00")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        $term['EvaluateTerm']['start_date'] = $today;
+        $term['EvaluateTerm']['end_date'] = $today + $termDays * DAY;
+        $this->EvaluateTerm->save($term);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+    }
+
+    /**
+     * 今日を今期の終了日にする
+     *
+     * @param int $teamId
+     * @param int $termDays
+     */
+    function setupCurrentTermEndToday($teamId = 1, $termDays = 30)
+    {
+        //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
+        $this->Team->id = $teamId;
+        $this->Team->saveField('start_term_month', 1);
+        $this->Team->saveField('border_months', 1);
+
+        $this->Team->current_team_id = $teamId;
+        $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
+        $term = $this->EvaluateTerm->findById($evaluateTermId);
+        $today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        $term['EvaluateTerm']['end_date'] = $today;
+        $term['EvaluateTerm']['start_date'] = $today - $termDays * DAY;
+        $this->EvaluateTerm->save($term);
+    }
+
     function setDefaultTeamIdAndUid($uid = 1, $teamId = 1)
     {
         foreach (ClassRegistry::keys() as $k) {
@@ -187,5 +269,78 @@ class GoalousTestCase extends CakeTestCase
         $hash_2 = $AttachedFileService->preUploadFile($data);
 
         return [$hash_1['id'], $hash_2['id']];
+    }
+
+    /**
+     * KRのプログレスを指定してゴール作成
+     * プログレスの計算が必要なテストで利用
+     *
+     * @param     $termType
+     * @param     $krProgresses
+     * @param int $teamId
+     * @param int $userId
+     * @param int $goalMemberType
+     *
+     * @return mixed
+     */
+    function createGoalKrs($termType, $krProgresses, $teamId = 1, $userId = 1, $goalMemberType = GoalMember::TYPE_OWNER)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        $goalData = [
+            'user_id'          => $userId,
+            'team_id'          => $teamId,
+            'name'             => 'ゴール1',
+            'goal_category_id' => 1
+        ];
+        $goalData['end_date'] = $this->EvaluateTerm->getTermData($termType)['end_date'];
+        $Goal->create();
+        $Goal->save($goalData);
+        $goalId = $Goal->getLastInsertID();
+        $GoalMember->create();
+        $GoalMember->save([
+            'goal_id' => $goalId,
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'type'    => $goalMemberType,
+        ]);
+        $krDatas = [];
+        foreach ($krProgresses as $v) {
+            $krDatas[] = [
+                'goal_id'       => $goalId,
+                'team_id'       => $teamId,
+                'user_id'       => $userId,
+                'name'          => 'テストKR',
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'value_unit'    => 0,
+                'current_value' => $v,
+            ];
+        }
+        $KeyResult->create();
+        $KeyResult->saveAll($krDatas);
+        return $goalId;
+    }
+
+    function createKr($goalId, $teamId, $userId, $progress)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        $kr = [
+            'goal_id'       => $goalId,
+            'team_id'       => $teamId,
+            'user_id'       => $userId,
+            'name'          => 'テストKR',
+            'start_value'   => 0,
+            'target_value'  => 100,
+            'value_unit'    => 0,
+            'current_value' => $progress,
+        ];
+        $KeyResult->create();
+        $KeyResult->save($kr);
     }
 }

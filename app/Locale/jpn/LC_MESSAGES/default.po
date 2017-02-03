@@ -2530,6 +2530,15 @@ msgstr "達成要素を更新しました。"
 msgid "All Goals"
 msgstr "すべてのゴール"
 
+msgid "PROGRESS"
+msgstr "進捗"
+
+msgid "All goal's total you have."
+msgstr "あなたが持つすべてのゴールの合計"
+
+msgid "Sweet Spot(Drive for it!)"
+msgstr "スイートスポット(ここを目指そう!)"
+
 msgid "Circles"
 msgstr "サークル"
 

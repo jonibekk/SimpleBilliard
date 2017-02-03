@@ -17,8 +17,15 @@ const initialState = {
     key_result: {}
   },
   inputData: {
+    name: "",
+    end_date: "",
+    description: "",
     key_result: {
-      // name:""
+      name: "",
+      start_value: 0,
+      target_value: 100,
+      current_value:"",
+      description: "",
     },
     labels: []
   },
