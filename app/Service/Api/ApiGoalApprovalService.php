@@ -96,38 +96,6 @@ class ApiGoalApprovalService extends ApiService
     }
 
     /**
-     * ゴール編集ログの差分を確認し、差分があればレスポンスにログを追加する
-     *
-     * @param  $goal
-     *
-     * @return $goal
-     */
-    function processChangeLog($goal)
-    {
-        // goal
-        $goalId = Hash::get($goal, 'id');
-        $checkColumns = [
-            'name' => Hash::get($goal, 'name'),
-            'photo_file_name' => Hash::get($goal, 'photo_file_name'),
-            'goal_category_id' => Hash::get($goal, 'goal_category_id')
-        ];
-        $goal['goal_change_log'] = $this->extractGoalChangeDiff($goalId, $checkColumns);
-
-        // kr
-        $tkr = Hash::get($goal, 'top_key_result');
-        $checkColumns = [
-            'name' => Hash::get($tkr, 'name'),
-            'start_value' => Hash::get($tkr, 'start_value'),
-            'target_value' => Hash::get($tkr, 'target_value'),
-            'value_unit' => Hash::get($tkr, 'value_unit'),
-            'description' => Hash::get($tkr, 'description')
-        ];
-        $goal['tkr_change_log'] = $this->extractKrChangeDiff($goalId, $checkColumns);
-
-        return $goal;
-    }
-
-    /**
      * ゴール変更ログと現在のゴールの差分カラムを抽出
      * - response
      *  [

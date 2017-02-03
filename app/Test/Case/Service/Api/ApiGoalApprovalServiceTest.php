@@ -49,23 +49,51 @@ class ApiGoalApprovalServiceTest extends GoalousTestCase
 
     function test_process()
     {
-        $res = $this->ApiGoalApprovalService->process([],1);
-        $this->assertEmpty($res);
         $this->markTestIncomplete('testClear not implemented.');
     }
 
-    function test_processChangeLog()
+    function test_extractGoalChangeDiffColumns_existsDiff()
     {
-        $this->markTestIncomplete('testClear not implemented.');
+        $expected = ['name' => 'name', 'photo_file_name' => 'photo_file_name', 'description' => 'description'];
+        $res = $this->ApiGoalApprovalService->extractGoalChangeDiffColumns(
+            ['name' => 'val1', 'photo_file_name' => 'test1.jpg', 'description' => 'description1'],
+            ['name' => 'val2', 'photo_file_name' => 'test2.jpg', 'description' => 'description2'],
+            ['name', 'photo_file_name', 'description']
+        );
+        $this->assertEquals($res, $expected);
     }
 
-    function test_processChangeGoalLog()
+    function test_extractGoalChangeDiffColumns_notExistsDiff()
     {
-        $this->markTestIncomplete('testClear not implemented.');
+        $expected = [];
+        $res = $this->ApiGoalApprovalService->extractGoalChangeDiffColumns(
+            ['name' => 'val1', 'photo_file_name' => 'test1.jpg', 'description' => 'description1'],
+            ['name' => 'val1', 'photo_file_name' => 'test1.jpg', 'description' => 'description1'],
+            ['name', 'photo_file_name', 'description']
+        );
+        $this->assertEquals($res, $expected);
     }
 
-    function test_processChangeTkrLog()
+    function test_extractTkrChangeDiffColumns_existsDiff()
     {
-        $this->markTestIncomplete('testClear not implemented.');
+        $expected = ['name' => 'name', 'start_value' => 'start_value', 'description' => 'description'];
+        $res = $this->ApiGoalApprovalService->extractTkrChangeDiffColumns(
+            ['name' => 'val1', 'start_value' => '10', 'description' => 'description1'],
+            ['name' => 'val2', 'start_value' => '20', 'description' => 'description2'],
+            ['name', 'start_value', 'description']
+        );
+        $this->assertEquals($res, $expected);
     }
+
+    function test_extractTkrChangeDiffColumns_notExistsDiff()
+    {
+        $expected = [];
+        $res = $this->ApiGoalApprovalService->extractTkrChangeDiffColumns(
+            ['name' => 'val1', 'start_value' => '10', 'description' => 'description1'],
+            ['name' => 'val1', 'start_value' => '10', 'description' => 'description1'],
+            ['name', 'start_value', 'description']
+        );
+        $this->assertEquals($res, $expected);
+    }
+
 }
