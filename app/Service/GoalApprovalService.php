@@ -17,6 +17,19 @@ App::import('Service', 'GoalMemberService');
 
 class GoalApprovalService extends AppService
 {
+
+    function get($goalMemberId, $loginUserId)
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var ApiGoalApprovalService $ApiGoalApprovalService */
+        $ApiGoalApprovalService = ClassRegistry::init("ApiGoalApprovalService");
+
+        $goalMember = $GoalMember->getForApproval($goalMemberId);
+        $res = $ApiGoalApprovalService->process($goalMember, $loginUserId);
+        return $res;
+    }
+
     /**
      * コーチとしての未対応認定件数取得
      *

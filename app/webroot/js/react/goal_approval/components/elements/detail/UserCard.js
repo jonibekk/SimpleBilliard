@@ -11,8 +11,9 @@ export default class UserCard extends React.Component {
     return (
       <div className={`goals-approval-detail-user ${!goal_member.is_leader ? 'mod-bgglay' : '' }`}>
         <div className="goals-approval-detail-table">
-          <img className="goals-approval-detail-image" src={ goal_member.user.small_img_url } alt="" width="32"
-               height="32"/>
+          <a href={`/users/view_goals/user_id:${goal_member.user.id}`} target={cake.is_mb_app ? "_self" : "_blank"}>
+            <img className="goals-approval-detail-image" src={ goal_member.user.small_img_url } alt="" width="32" height="32"/>
+          </a>
           <div className="goals-approval-detail-info">
             <p className="goals-approval-detail-info-name">
               <a href={`/users/view_goals/user_id:${goal_member.user.id}`} className="goals-approval-detail-info-name-link" target={cake.is_mb_app ? "_self" : "_blank"}>
@@ -25,8 +26,8 @@ export default class UserCard extends React.Component {
                   { goal_member.goal.leader.user.display_username })
                 </a>
               </p>
-              <p className="goals-approval-detail-info-name">{__("Role")}: { goal_member.role }</p>
-              <p>{ goal_member.description }</p>
+              <p className="goals-approval-detail-info-name">{__("Role")}: { goal_member.goal_member.role }</p>
+              <p>{ goal_member.goal_member.description }</p>
             </div>
           </div>
         </div>

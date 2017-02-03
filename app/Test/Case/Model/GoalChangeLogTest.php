@@ -54,7 +54,7 @@ class GoalChangeLogTest extends GoalousTestCase
         $this->GoalChangeLog->Goal->id = 1;
         $this->GoalChangeLog->Goal->saveField('name','test2');
         $this->GoalChangeLog->saveSnapshot(1);
-        $snapshot = $this->GoalChangeLog->findLatestSnapshot(1);
+        $snapshot = $this->GoalChangeLog->getLatestSnapshot(1);
         $this->assertNotEmpty($snapshot);
         $this->assertNotEmpty($snapshot);
         $this->assertEquals('test2',$snapshot['name']);
