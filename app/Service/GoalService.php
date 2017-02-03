@@ -939,7 +939,13 @@ class GoalService extends AppService
         } else {
             $logEndDate = $plotDataEndDate;
         }
-        $progressLogs = $this->findSummarizedUserProgressesFromLog($userId, $logStartDate, $logEndDate);
+
+        $goalPriorities = $this->findGoalPriorities($userId);
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init('KeyResultService');
+        $latestKrValues = $KeyResultService->findValuesGroupByGoalId(array_keys($goalPriorities));
+
+        $progressLogs = $this->findSummarizedUserProgressesFromLog($goalPriorities,$latestKrValues, $logStartDate, $logEndDate);
         $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
 
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
@@ -957,6 +963,19 @@ class GoalService extends AppService
         $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot, $graphStartDate, $graphEndDate);
 
         return $ret;
+    }
+
+    function findGoalPriorities($userId)
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termStartTimestamp = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndTimestamp = $EvaluateTerm->getCurrentTermData()['end_date'];
+
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
+        return $goalPriorities;
     }
 
     /**
@@ -1118,33 +1137,26 @@ class GoalService extends AppService
      * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
      * ///ここまでのデータをキャッシュ
      *
-     * @param int    $userId
+     * @param array  $goalPriorities
+     * @param array  $latestKrValues
      * @param string $startDate
      * @param string $endDate
      *
      * @return array
      */
-    function findSummarizedUserProgressesFromLog(int $userId, string $startDate, string $endDate): array
+    function findSummarizedUserProgressesFromLog(array $goalPriorities,array $latestKrValues, string $startDate, string $endDate): array
     {
-        //今期の情報取得
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData()['end_date'];
         //キャッシュに保存されるデータ
         //TODO: キャッシュば別issue(GL-5549)で行う
         //$progressLogs = $this->getUserProgressFromCache($userId, $startDate, $endDate);
         //if ($progressLogs === false) {
         ///ログDBから自分の各ゴールの進捗データ取得
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init('GoalMember');
-        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
-        /** @var GoalProgressDailyLog $GoalProgressDailyLog */
-        $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
-        $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
+        /** @var KrValuesDailyLog $KrValuesDailyLog */
+        $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
+        $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
 
         ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-        $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $goalPriorities);
+        $progressLogs = $this->sumDailyGoalProgress($krValueLogs,$latestKrValues, $goalPriorities);
 
         //キャッシュに保存
         //TODO: キャッシュば別issue(GL-5549)で行う
@@ -1218,20 +1230,23 @@ class GoalService extends AppService
      * ゴールの重要度を掛け合わせ日次のゴール進捗の合計を返す
      *
      * @param array $logs           including: goal_id, progress, target_date
+     * @param array $latestKrValues
      * @param array $goalPriorities key:goal_id, value:priorityの配列
      *
      * @return array key:date, value:progress
      */
-    function sumDailyGoalProgress(array $logs, array $goalPriorities): array
+    function sumDailyGoalProgress(array $logs, array $latestKrValues,array $goalPriorities): array
     {
         //logsを日付でグルーピングする
-        $logs = Hash::combine($logs, '{n}.goal_id', '{n}.progress', '{n}.target_date');
+        $logs = Hash::combine($logs, '{n}.key_result_id', '{n}', '{n}.target_date');
+
+        //$logsのcurrent_valueと$latestKrValuesと$goalPrioritiesを用いて進捗を計算
 
         $ret = [];
-        //日毎にゴールのプライオリティを掛け合わせる
-        foreach ($logs as $date => $goals) {
-            $ret[$date] = $this->sumGoalProgress($goals, $goalPriorities);
-        }
+//        //日毎にゴールのプライオリティを掛け合わせる
+//        foreach ($logs as $date => $goals) {
+//            $ret[$date] = $this->sumGoalProgress($goals, $goalPriorities);
+//        }
         return $ret;
     }
 
