@@ -16,7 +16,9 @@ export default class GoalCard extends React.Component {
     return (
       <div className="goals-approval-detail-goal-card" key={ goal.modified + top_key_result.modified }>
           <div className="goals-approval-detail-table">
-              <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
+              <a href={`/goals/view_info/goal_id:${goal.id}`} target={cake.is_mb_app ? "_self" : "_blank"}>
+                <img className="goals-approval-detail-image" src={ goal.small_img_url } alt="" width="32" height="32" />
+              </a>
               <div className="goals-approval-detail-goal-card-info">
                   <p><i className="fa fa-folder-o" aria-hidden="true"></i> { goal.goal_category.name }</p>
                   <p><a href={`/goals/view_info/goal_id:${goal.id}`} className="goals-approval-detail-goal-card-info-link" target={cake.is_mb_app ? "_self" : "_blank"}>{ goal.name }</a></p>
