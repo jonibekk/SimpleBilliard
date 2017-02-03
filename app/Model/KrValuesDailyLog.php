@@ -39,4 +39,30 @@ class KrValuesDailyLog extends AppModel
             ],
         ],
     ];
+
+    /**
+     * ゴールidと日付範囲を元にログデータを取得
+     *
+     * @param string $startDate Y-m-d
+     * @param string $endDate   Y-m-d
+     * @param array  $goalIds
+     *
+     * @return array
+     */
+    function findLogs(string $startDate, string $endDate, array $goalIds): array
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'                     => $goalIds,
+                'target_date BETWEEN ? AND ?' => [$startDate, $endDate],
+            ],
+            'order'      => ['target_date'],
+            'fields'     => ['goal_id', 'key_result_id', 'current_value']
+        ];
+
+        $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.KrValuesDailyLog');
+        return $ret;
+    }
+
 }
