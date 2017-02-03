@@ -1132,22 +1132,24 @@ class GoalService extends AppService
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData()['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData()['end_date'];
         //キャッシュに保存されるデータ
-        $progressLogs = $this->getUserProgressFromCache($userId, $startDate, $endDate);
-        if ($progressLogs === false) {
-            ///ログDBから自分の各ゴールの進捗データ取得
-            /** @var GoalMember $GoalMember */
-            $GoalMember = ClassRegistry::init('GoalMember');
-            $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
-            /** @var GoalProgressDailyLog $GoalProgressDailyLog */
-            $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
-            $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
+        //TODO: キャッシュば別issue(GL-5549)で行う
+        //$progressLogs = $this->getUserProgressFromCache($userId, $startDate, $endDate);
+        //if ($progressLogs === false) {
+        ///ログDBから自分の各ゴールの進捗データ取得
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
+        /** @var GoalProgressDailyLog $GoalProgressDailyLog */
+        $GoalProgressDailyLog = ClassRegistry::init("GoalProgressDailyLog");
+        $goalProgressLogs = $GoalProgressDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
 
-            ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-            $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $goalPriorities);
+        ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
+        $progressLogs = $this->sumDailyGoalProgress($goalProgressLogs, $goalPriorities);
 
-            //キャッシュに保存
-            $this->writeUserProgressToCache($userId, $startDate, $endDate, $progressLogs);
-        }
+        //キャッシュに保存
+        //TODO: キャッシュば別issue(GL-5549)で行う
+        //$this->writeUserProgressToCache($userId, $startDate, $endDate, $progressLogs);
+        //}
 
         return $progressLogs;
     }
