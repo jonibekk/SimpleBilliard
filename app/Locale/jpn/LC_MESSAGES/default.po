@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-25 18:26+0900\n"
+"PO-Revision-Date: 2017-01-31 09:54+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -717,6 +717,10 @@ msgstr "ログアウトしました"
 msgid "The invitation token is incorrect. Check your email again."
 msgstr "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 
+msgid "Failed to register user. Please try again later."
+msgstr ""
+"ユーザー本登録に失敗しました。しばらく時間をおいて再度登録してください。"
+
 msgid "Succeeded to register!"
 msgstr "本登録が完了しました！"
 
@@ -771,6 +775,9 @@ msgstr "パスワードを変更しました。"
 
 msgid "This invitation isn't not for you."
 msgstr "別のユーザ宛のチーム招待です。"
+
+msgid "Failed to join team. Please try again later."
+msgstr "チーム参加に失敗しました。しばらく時間をおいて再度登録してください。"
 
 msgid "Joined %s."
 msgstr "チーム「%s」に参加しました。"
