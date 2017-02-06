@@ -564,6 +564,8 @@ class KeyResultService extends AppService
      * ダッシュボード表示用にKR一覧を整形
      *
      * @param  array $krs
+     *
+     * @return array
      */
     function processInDashboard(array $krs): array
     {
@@ -599,15 +601,13 @@ class KeyResultService extends AppService
 
         if ($completed) {
             return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
+        } elseif ($actionCount > 0) {
+            return __('%s member(s) actioned recently.',
+                '<span class="font_verydark font_bold">' . $actionCount . '</span>');
+        } elseif ($latestActioned) {
+            return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
         } else {
-            if ($actionCount > 0) {
-                return __('%s member(s) actioned recently.',
-                    '<span class="font_verydark font_bold">' . $actionCount . '</span>');
-            } elseif ($latestActioned) {
-                return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
-            } else {
-                return __('Take first action to this !');
-            }
+            return __('Take first action to this !');
         }
     }
 
@@ -616,35 +616,26 @@ class KeyResultService extends AppService
      * 返り値の例:
      * [
      * (int) goal_id => [
-     * (int) kr_id => [
-     * 'goal_id' => '101',
-     * 'id' => '7',
-     * 'start_value' => '0',
-     * 'target_value' => '100',
-     * 'current_value' => '50',
-     * 'priority' => '3'
+     *   (int) kr_id => [
+     *     'id' => '7','goal_id' => '101','start_value' => '0','target_value' => '100','current_value' => '50','priority' => '3'
+     *   ],
+     *   (int) kr_id => [
+     *     'id' => '8','goal_id' => '101','start_value' => '0','target_value' => '100','current_value' => '30','priority' => '3'
+     *   ],
      * ],
-     * (int) kr_id => [
-     * 'goal_id' => '101',
-     * 'id' => '8',
-     * 'start_value' => '0',
-     * 'target_value' => '100',
-     * 'current_value' => '30',
-     * 'priority' => '3'
-     * ],
-     * ],
+     * (int) goal_id => [...],
      * ];
      *
      * @param array $goalIds
      *
      * @return array
      */
-    function findValuesGroupByGoalId($goalIds)
+    function findValuesGroupByGoalId(array $goalIds): array
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         $ret = $KeyResult->findProgressBaseValues($goalIds);
-        $ret = Hash::combine($ret, '{n}.id', '{n}.goal_id');
+        $ret = Hash::combine($ret, '{n}.id', '{n}', '{n}.goal_id');
         return $ret;
     }
 }

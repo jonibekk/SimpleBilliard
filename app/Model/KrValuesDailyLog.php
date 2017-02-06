@@ -57,7 +57,7 @@ class KrValuesDailyLog extends AppModel
                 'target_date BETWEEN ? AND ?' => [$startDate, $endDate],
             ],
             'order'      => ['target_date'],
-            'fields'     => ['goal_id', 'key_result_id', 'current_value']
+            'fields'     => ['goal_id', 'key_result_id', 'current_value', 'target_date']
         ];
 
         $ret = $this->find('all', $options);

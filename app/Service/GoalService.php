@@ -507,7 +507,7 @@ class GoalService extends AppService
         foreach ($goals as $key => $goal) {
             // 進捗を計算
             if (!empty($goal['KeyResult'])) {
-                $sumPriorities = $this->getSumPriorities($goal['KeyResult']);
+                $sumPriorities = $this->sumPriorities($goal['KeyResult']);
                 $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult'], $sumPriorities);
             }
             // 認定有効フラグを追加
@@ -525,12 +525,12 @@ class GoalService extends AppService
      * ゴールの進捗をキーリザルト一覧から取得
      * TODO:将来的にゴールIDのみを引数として渡し、そのゴールIDから各KR取得→KR進捗率計算→ゴール進捗率計算の順に処理を行うようにする。またキャッシュ化も必要。
      *
-     * @param  array $keyResults    [description]
-     * @param int    $sumPriorities 対象KRの重要度の合計
+     * @param  array $keyResults      [description]
+     * @param int    $sumKrPriorities 対象KRの重要度の合計
      *
-     * @return float|int $res
+     * @return float $res
      */
-    function getProgress(array $keyResults, int $sumPriorities)
+    function getProgress(array $keyResults, int $sumKrPriorities): float
     {
         $goalProgress = 0;
         $NumberExHelper = new NumberExHelper(new View());
@@ -548,7 +548,14 @@ class GoalService extends AppService
                 $progress = $NumberExHelper->calcProgressRate($keyResult['start_value'], $keyResult['target_value'],
                     $keyResult['current_value']);
             }
-            $goalProgress += $progress * $keyResult['priority'] / $sumPriorities;
+            if ($progress > 100) {
+                //目標値を下げた場合に過去の進捗が100を超えるケースがあるので補正
+                $progress = 100;
+            } elseif ($progress < 0) {
+                //開始値を上げた場合に過去の進捗が0を下回るケースがあるので補正(現状あり得ないが将来的にありうるので)
+                $progress = 0;
+            }
+            $goalProgress += $progress * $keyResult['priority'] / $sumKrPriorities;
         }
         $goalProgress = round($goalProgress, 2);
 
@@ -569,13 +576,13 @@ class GoalService extends AppService
     /**
      * KRの重要度の合計を返す
      *
-     * @param array $keyResults
+     * @param array $krs [[priority=>"",..],[priority=>"",..]]
      *
      * @return int
      */
-    function getSumPriorities(array $keyResults): int
+    function sumPriorities(array $krs): int
     {
-        return array_sum(array_column($keyResults, 'priority'));
+        return array_sum(array_column($krs, 'priority'));
     }
 
     /**
@@ -956,8 +963,9 @@ class GoalService extends AppService
         $goalPriorities = $this->findGoalPriorities($userId);
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init('KeyResultService');
+        $goalIds = array_keys($goalPriorities);
         //ゴールごとにグルーピングされたkr一覧[goal_id=>[kr_id=>[],kr_id=>[]]]
-        $latestKrValues = $KeyResultService->findValuesGroupByGoalId(array_keys($goalPriorities));
+        $latestKrValues = $KeyResultService->findValuesGroupByGoalId($goalIds);
 
         $progressLogs = $this->findSummarizedUserProgressesFromLog($goalPriorities, $latestKrValues, $logStartDate,
             $logEndDate);
@@ -1139,7 +1147,7 @@ class GoalService extends AppService
         $goalIds = array_keys($goalPriorities);
         $goals = $Goal->getGoalAndKr($goalIds, $userId);
         foreach ($goals as $key => $goal) {
-            $sumPriorities = $this->getSumPriorities($goal['KeyResult']);
+            $sumPriorities = $this->sumPriorities($goal['KeyResult']);
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult'], $sumPriorities);
         }
         $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
@@ -1174,9 +1182,8 @@ class GoalService extends AppService
         ///ログDBから自分の各ゴールの進捗データ取得
         /** @var KrValuesDailyLog $KrValuesDailyLog */
         $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
-
-        $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, array_keys($goalPriorities));
-
+        $goalIds = array_keys($goalPriorities);
+        $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, $goalIds);
         ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
         $progressLogs = $this->sumDailyGoalProgress($krValueLogs, $latestKrValues, $goalPriorities);
 
@@ -1260,20 +1267,20 @@ class GoalService extends AppService
     /**
      * ゴールの重要度を掛け合わせ日次のゴール進捗の合計を返す
      *
-     * @param array $logs           including: goal_id, progress, target_date
-     * @param array $latestKrValues ゴールごとにグルーピングされたkr一覧[goal_id=>[kr_id=>[],kr_id=>[]]]
+     * @param array $krLogs         including: goal_id,key_result_id, current_value, target_date
+     * @param array $latestKrValues ゴールごとにグルーピングされたkr一覧[goal_id=>[kr_id=>[start_value,],kr_id=>[]]]
      * @param array $goalPriorities key:goal_id, value:priorityの配列
      *
      * @return array key:date, value:progress
      */
-    function sumDailyGoalProgress(array $logs, array $latestKrValues, array $goalPriorities): array
+    function sumDailyGoalProgress(array $krLogs, array $latestKrValues, array $goalPriorities): array
     {
         //logsを日付でグルーピングする
-        $logs = Hash::combine($logs, '{n}.key_result_id', '{n}', '{n}.target_date');
+        $krLogs = Hash::combine($krLogs, '{n}.key_result_id', '{n}', '{n}.target_date');
 
         $goalGroupedLogs = [];
-        foreach ($logs as $date => $krs) {
-            //ゴールでグルーピング [goal_id=>[kr_id=>current_value]]
+        foreach ($krLogs as $date => $krs) {
+            //ゴールでグルーピング [goal_id=>[kr_id=>current_value],]
             $goals = Hash::combine($krs, '{n}.key_result_id', '{n}.current_value', '{n}.goal_id');
             $goalGroupedLogs[$date] = $goals;
         }
@@ -1281,12 +1288,12 @@ class GoalService extends AppService
         //最新のKRデータにログのKR現在値をマージして進捗率を計算
         $logGoalProgresses = [];
         foreach ($goalGroupedLogs as $date => $goals) {
-            foreach ($goals as $goalId => $krs) {
+            foreach ($goals as $goalId => $logKrs) {
                 //ログのゴールが最新データに存在しない場合はスキップ
                 if (!isset($latestKrValues[$goalId])) {
                     continue;
                 }
-                $logGoalProgresses[$date][$goalId] = $this->getGoalProgressWithLog($krs, $latestKrValues[$goalId]);
+                $logGoalProgresses[$date][$goalId] = $this->getProgressWithLog($logKrs, $latestKrValues[$goalId]);
             }
         }
 
@@ -1313,35 +1320,35 @@ class GoalService extends AppService
         //最新のKRデータにログのKR現在値をマージして進捗率を計算
         $ret = [];
         foreach ($logs as $date => $krs) {
-            $ret[$date] = $this->getGoalProgressWithLog($krs, $latestKrValues);
+            $ret[$date] = $this->getProgressWithLog($krs, $latestKrValues);
         }
         return $ret;
     }
 
     /**
-     * ログのKR現在値と最新のKRの重要度、開始値、目標値から進捗を算出
+     * ログのKR現在値と最新のKR(重要度、開始値、目標値)から進捗を算出
      *
-     * @param array $logKrs         [kr_id=>[current_value=>""],kr_id=>[current_value=>""],]
-     * @param array $latestKrValues [kr_id=>[start_value,target_value,current_value,...],kr_id=>[],]
+     * @param array $logKrs    [kr_id=>[current_value=>""],kr_id=>[current_value=>""],]
+     * @param array $latestKrs [kr_id=>[start_value,target_value,current_value,priority,...],kr_id=>[],]
      *
      * @return float
      */
-    function getGoalProgressWithLog(array $logKrs, array $latestKrValues): float
+    function getProgressWithLog(array $logKrs, array $latestKrs): float
     {
-        $recalculatedKrs = [];
+        $rebuildedKrs = [];
         foreach ($logKrs as $krId => $currentValue) {
             //ログのKRが最新データに存在しない場合はスキップ
-            if (!isset($latestKrValues[$krId])) {
+            if (!isset($latestKrs[$krId])) {
                 continue;
             }
             //最新KRデータにログの現在値をマージ
-            $recalculatedKrs[] = array_merge(
-                $latestKrValues[$krId],
+            $rebuildedKrs[] = array_merge(
+                $latestKrs[$krId],
                 ['current_value' => $currentValue]
             );
         }
-        $sumKrPriorities = $this->getSumPriorities($latestKrValues);
-        $ret = $this->getProgress($recalculatedKrs, $sumKrPriorities);
+        $sumLatestKrPriorities = $this->sumPriorities($latestKrs);
+        $ret = $this->getProgress($rebuildedKrs, $sumLatestKrPriorities);
         return $ret;
     }
 
@@ -1349,19 +1356,17 @@ class GoalService extends AppService
      * ゴール進捗の合計を取得
      * - 例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75
      *
-     * @param array $goalsProgresses key:goal_id, value:progress
-     * @param array $goalPriorities  key:goal_id, value:priority
+     * @param array $goalProgresses key:goal_id, value:progress
+     * @param array $goalPriorities key:goal_id, value:priority
      *
      * @return float
      */
-    function sumGoalProgress(array $goalsProgresses, array $goalPriorities): float
+    function sumGoalProgress(array $goalProgresses, array $goalPriorities): float
     {
-        //ゴールの重要度を進捗が存在するゴールでフィルタ
-        $goalPriorities = array_intersect_key($goalPriorities, $goalsProgresses);
         //summarize goal priorities
         $sumPriorities = array_sum($goalPriorities);
         $progresses = [];
-        foreach ($goalsProgresses as $goalId => $progress) {
+        foreach ($goalProgresses as $goalId => $progress) {
             if (isset($goalPriorities[$goalId])) {
                 $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
             }
@@ -1580,7 +1585,7 @@ class GoalService extends AppService
         $goals = $Goal->getGoalAndKr($goalIds);
         //保存データの生成
         foreach ($goals as $goal) {
-            $sumPriorities = $this->getSumPriorities($goal['KeyResult']);
+            $sumPriorities = $this->sumPriorities($goal['KeyResult']);
             $saveData[] = [
                 'team_id'     => $teamId,
                 'goal_id'     => $goal['Goal']['id'],
