@@ -11,12 +11,12 @@ class ApiGoalApprovalService extends ApiService
     /**
      * 認定詳細ページの初期データレスポンスのためにモデルデータをフォーマット
      *
-     * @param  array $resByModel
+     * @param  array $goalMember
      * @param  int   $myUserId
      *
      * @return array
      */
-    public function processGoalApprovalForResponse(array $resByModel, int $myUserId): array
+    public function process(array $goalMember, int $myUserId): array
     {
         /** @var GoalCategory $GoalCategory */
         $GoalCategory = ClassRegistry::init("GoalCategory");
@@ -26,129 +26,125 @@ class ApiGoalApprovalService extends ApiService
         $User = ClassRegistry::init("User");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var GoalChangeLog $GoalChangeLog */
+        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
+        /** @var KrChangeLog $KrChangeLog */
+        $KrChangeLog = ClassRegistry::init("KrChangeLog");
 
         // モデル名整形(大文字->小文字)
-        $goalMember = Hash::get($resByModel, 'GoalMember');
-        if(empty($goalMember)){
-            return [];
-        }
-        $res = $this->formatResponseData($resByModel);
-        $res = Hash::merge($goalMember, $res);
-        unset($res['goal_member']);
+        $ret = $this->formatResponseData($goalMember);
+
+        // フロント側で処理しやすいように、goalとtop_key_resultのデータを同階層にする
+        $ret['top_key_result'] = $ret['goal']['top_key_result'];
+        unset($ret['goal']['top_key_result']);
+
         // TODO: goal -> leader の関係がhasManyのため、leaderのデータを配列で取ってきてしまう。
         //       Modelのアソシエーションを直す必要あり。
-        $res['goal']['leader'] = Hash::extract($res, 'goal.leaders.0');
+        $ret['goal']['leader'] = Hash::extract($ret, 'goal.leaders.0');
 
         // 画像パス追加
-        $res['user'] = $User->attachImgUrl($res['user'], 'User');
-        $res['goal'] = $Goal->attachImgUrl($res['goal'], 'Goal');
+        $ret['user'] = $User->attachImgUrl($ret['user'], 'User');
+        $ret['goal'] = $Goal->attachImgUrl($ret['goal'], 'Goal');
 
         // 認定履歴の文言を追加
         /** @var ApiApprovalHistoryService $ApiApprovalHistoryService */
         $ApiApprovalHistoryService = ClassRegistry::init("ApiApprovalHistoryService");
-        $res['approval_histories'] = $ApiApprovalHistoryService->processApprovalHistories($res['approval_histories']);
-        $historiesCount = count($res['approval_histories']);
-        $res['histories_view_more_text'] = '';
-        if ($historiesCount > 1) {
-            // 画面上に一件デフォルトで履歴を表示するので、
-            // 画面から隠れている履歴は(合計 - 1)件。
-            $res['histories_view_more_text'] = __('View %s comments', $historiesCount - 1);
-        }
-        $res['latest_coach_action_statement'] = $ApiApprovalHistoryService->getLatestCoachActionStatement($res['id'],
+        $ret['approval_histories'] = $ApiApprovalHistoryService->processApprovalHistories($ret['approval_histories']);
+
+        // 画面上に一件デフォルトで履歴を表示するので、
+        // 画面から隠れている履歴は(合計 - 1)件。
+        $historiesCount = count($ret['approval_histories']);
+        $ret['histories_view_more_text'] = ($historiesCount > 1) ? __('View %s comments', $historiesCount - 1) : '';
+
+        $ret['latest_coach_action_statement'] = $ApiApprovalHistoryService->getLatestCoachActionStatement($ret['goal_member']['id'],
             $myUserId);
 
         // TKRの整形
-        $res['goal']['top_key_result'] = $KeyResultService->processKeyResult($res['goal']['top_key_result']);
+        $ret['top_key_result'] = $KeyResultService->processKeyResult($ret['top_key_result']);
 
-        // ゴール/TKRの変更前のスナップショットを取得
-        $res['goal'] = $this->processChangeLog($res['goal']);
-        if (Hash::get($res, 'goal.tkr_change_log')) {
+        // ゴールのログ取得
+        $ret['goal_change_log'] = $GoalChangeLog->getLatestSnapshot($ret['goal']['id']);
+
+        // TKRのログ取得
+        $ret['tkr_change_log'] = $KrChangeLog->getLatestSnapshot($ret['goal']['id'], $KrChangeLog::TYPE_APPROVAL_BY_COACH);
+
+        if (Hash::get($ret, 'tkr_change_log') && Hash::get($ret, 'goal_change_log')) {
+            // ゴールの変更カラム取得
+            $ret['goal_changed_columns'] = $this->extractGoalChangeDiffColumns(
+                $ret['goal'], $ret['goal_change_log'], ['name', 'goal_category_id']
+            );
+            // tkrの変更カラム取得
+            $ret['tkr_change_log'] = $KeyResultService->processKeyResult($ret['tkr_change_log']);
+            $ret['tkr_changed_columns'] = $this->extractTkrChangeDiffColumns(
+                $ret['top_key_result'], $ret['tkr_change_log'], ['name', 'description', 'display_value']
+            );
             // 画像パス追加
-            $res['goal']['goal_change_log'] = $Goal->attachImgUrl($res['goal']['goal_change_log'], 'Goal');
+            $ret['goal_change_log'] = $Goal->attachImgUrl($ret['goal_change_log'], 'Goal');
             // TKRの整形
-            $res['goal']['tkr_change_log'] = $KeyResultService->processKeyResult($res['goal']['tkr_change_log']);
+            $ret['tkr_change_log'] = $KeyResultService->processKeyResult($ret['tkr_change_log']);
             // カテゴリ追加
-            $category = $GoalCategory->findById($res['goal']['goal_change_log']['goal_category_id'], ['name']);
-            $res['goal']['goal_change_log']['goal_category'] = Hash::get($category, 'GoalCategory');
+            $category = $GoalCategory->findById($ret['goal_change_log']['goal_category_id'], ['name']);
+            $ret['goal_change_log']['goal_category'] = Hash::get($category, 'GoalCategory');
         }
 
-        // マッピング
-        $res['is_leader'] = (boolean)$res['type'];
-        $res['is_mine'] = $res['user']['id'] == $myUserId;
-        $res['type'] = GoalMember::$TYPE[$res['type']];
+        // フロント側の実装を楽にするためにユーザーステータス等を挿入
+        $ret['is_leader'] = (boolean)$ret['goal_member']['type'];
+        $ret['is_mine'] = $ret['user']['id'] == $myUserId;
+        $ret['type'] = GoalMember::$TYPE[$ret['goal_member']['type']];
 
-        // 不要な要素の削除
-        unset($res['User'], $res['Goal'], $res['ApprovalHistory'], $res['goal']['GoalCategory'], $res['goal']['Leader'], $res['goal']['TopKeyResult'], $res['goal']['leader']['User']);
-
-        return $res;
+        return $ret;
     }
 
     /**
-     * ゴール編集ログの差分を確認し、差分があればレスポンスにログを追加する
-     *
-     * @param  $goal
-     *
-     * @return $goal
+     * ゴール変更ログと現在のゴールの差分カラムを抽出
+     * - response
+     *  [
+     *    'name' => 'name',
+     *    'start_date' => 'start_date',
+     *    ...
+     *  ]
+     * @param  array $goal
+     * @param  array $goalChangeLog
+     * @param  array $checkColumns
+     * @return array
      */
-    function processChangeLog($goal)
+    function extractGoalChangeDiffColumns(array $goal, array $goalChangeLog, array $checkColumns): array
     {
-        // goal
-        $goalDiffCheckPaths = ['name', 'photo_file_name', 'goal_category_id'];
-        $goal['goal_change_log'] = $this->processChangeGoalLog($goal, $goalDiffCheckPaths);
-
-        // kr
-        $krDiffCheckPaths = ['name', 'start_value', 'target_value', 'value_unit', 'description'];
-        $goal['kr_change_log'] = $this->processChangeKrLog($goal, $krDiffCheckPaths);
-
-        return $goal;
-    }
-
-    function processChangeGoalLog($goal, $diffCheckPaths)
-    {
-        /** @var GoalChangeLog $GoalChangeLog */
-        $GoalChangeLog = ClassRegistry::init("GoalChangeLog");
-
-        $goalId = Hash::extract($goal, 'id');
-        $goalChangeLog = $GoalChangeLog->findLatestSnapshot($goalId);
-        if (!$goalChangeLog) {
-            return null;
-        }
-
         // 現在のゴールと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $goalChangeDiff = Hash::diff($goal, $goalChangeLog);
-
-        // Calc goal diff
-        foreach ($diffCheckPaths as $path) {
-            if (Hash::get($goalChangeDiff, $path)) {
-                return $goalChangeLog;
+        $diff = [];
+        foreach($checkColumns as $col) {
+            if ($goalChangeLog[$col] != $goal[$col]) {
+                $diff[$col] = $col;
             }
         }
 
-        return null;
+        return $diff;
     }
 
-    function processChangeKrLog($goal, $diffCheckPaths)
+    /**
+     * tkr変更ログと現在のtkrの差分カラムを抽出
+     * - response
+     *  [
+     *    'name' => 'name',
+     *    'start_date' => 'start_date',
+     *    ...
+     *  ]
+     * @param  array $tkr
+     * @param  array $tkrChangeLog
+     * @param  array $checkColumns
+     * @return array
+     */
+    function extractTkrChangeDiffColumns(array $tkr, array $tkrChangeLog, array $checkColumns): array
     {
-        /** @var KrChangeLog $KrChangeLog */
-        $KrChangeLog = ClassRegistry::init("KrChangeLog");
-
-        $goalId = Hash::extract($goal, 'id');
-        $krChangeLog = $KrChangeLog->getLatestSnapshot($goalId, $KrChangeLog::TYPE_APPROVAL_BY_COACH);
-        if (!$krChangeLog) {
-            return null;
-        }
-
         // 現在のtkrと変更ログとの差分を計算。値が違うキーだけ抽出される
-        $krChangeDiff = Hash::diff($goal['top_key_result'], $krChangeLog);
-
-        // Calc tkr diff
-        foreach ($diffCheckPaths as $path) {
-            if (Hash::get($krChangeDiff, $path)) {
-                return $krChangeLog;
+        $diff = [];
+        foreach($checkColumns as $col) {
+            if ($tkrChangeLog[$col] != $tkr[$col]) {
+                $diff[$col] = $col;
             }
         }
 
-        return null;
+        return $diff;
     }
 
 }
