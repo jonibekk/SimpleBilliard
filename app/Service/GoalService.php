@@ -1286,20 +1286,7 @@ class GoalService extends AppService
                 if (!isset($latestKrValues[$goalId])) {
                     continue;
                 }
-                $sumKrPriorities = $this->getSumPriorities($krs);
-                $recalculatedKrs = [];
-                foreach ($krs as $krId => $currentValue) {
-                    //ログのKRが最新データに存在しない場合はスキップ
-                    if (!isset($latestKrValues[$goalId][$krId])) {
-                        continue;
-                    }
-                    //最新KRデータにログの現在値をマージ
-                    $recalculatedKrs[] = array_merge(
-                        $latestKrValues[$goalId][$krId],
-                        ['current_value' => $currentValue]
-                    );
-                }
-                $logGoalProgresses[$date][$goalId] = $this->getProgress($recalculatedKrs, $sumKrPriorities);
+                $logGoalProgresses[$date][$goalId] = $this->getGoalProgressWithLog($krs, $latestKrValues[$goalId]);
             }
         }
 
@@ -1311,29 +1298,50 @@ class GoalService extends AppService
         return $ret;
     }
 
-    function getDailyGoalProgress($logs, $latestKrValues)
+    /**
+     * 単一ゴールの日次の進捗を返す
+     *
+     * @param array $logs
+     * @param array $latestKrValues
+     *
+     * @return array
+     */
+    function getDailyGoalProgress(array $logs, array $latestKrValues): array
     {
         //logsを日付でグルーピングする
         $logs = Hash::combine($logs, '{n}.key_result_id', '{n}.current_value', '{n}.target_date');
-        $sumKrPriorities = $this->getSumPriorities($latestKrValues);
-
         //最新のKRデータにログのKR現在値をマージして進捗率を計算
         $ret = [];
         foreach ($logs as $date => $krs) {
-            $recalculatedKrs = [];
-            foreach ($krs as $krId => $currentValue) {
-                //ログのKRが最新データに存在しない場合はスキップ
-                if (!isset($latestKrValues[$krId])) {
-                    continue;
-                }
-                //最新KRデータにログの現在値をマージ
-                $recalculatedKrs[] = array_merge(
-                    $latestKrValues[$krId],
-                    ['current_value' => $currentValue]
-                );
-            }
-            $ret[$date] = $this->getProgress($recalculatedKrs, $sumKrPriorities);
+            $ret[$date] = $this->getGoalProgressWithLog($krs, $latestKrValues);
         }
+        return $ret;
+    }
+
+    /**
+     * ログのKR現在値と最新のKRの重要度、開始値、目標値から進捗を算出
+     *
+     * @param array $logKrs         [kr_id=>[current_value=>""],kr_id=>[current_value=>""],]
+     * @param array $latestKrValues [kr_id=>[start_value,target_value,current_value,...],kr_id=>[],]
+     *
+     * @return float
+     */
+    function getGoalProgressWithLog(array $logKrs, array $latestKrValues): float
+    {
+        $recalculatedKrs = [];
+        foreach ($logKrs as $krId => $currentValue) {
+            //ログのKRが最新データに存在しない場合はスキップ
+            if (!isset($latestKrValues[$krId])) {
+                continue;
+            }
+            //最新KRデータにログの現在値をマージ
+            $recalculatedKrs[] = array_merge(
+                $latestKrValues[$krId],
+                ['current_value' => $currentValue]
+            );
+        }
+        $sumKrPriorities = $this->getSumPriorities($latestKrValues);
+        $ret = $this->getProgress($recalculatedKrs, $sumKrPriorities);
         return $ret;
     }
 
