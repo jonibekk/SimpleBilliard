@@ -961,11 +961,11 @@ class GoalService extends AppService
 
         //ゴール重要度のリスト key:goal_id,value:priority
         $goalPriorities = $this->findGoalPriorities($userId);
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init('KeyResultService');
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
         $goalIds = array_keys($goalPriorities);
         //ゴールごとにグルーピングされたkr一覧[goal_id=>[kr_id=>[],kr_id=>[]]]
-        $latestKrValues = $KeyResultService->findValuesGroupByGoalId($goalIds);
+        $latestKrValues = $KeyResult->findProgressBaseValues($goalIds);
 
         $progressLogs = $this->findSummarizedUserProgressesFromLog($goalPriorities, $latestKrValues, $logStartDate,
             $logEndDate);
@@ -988,7 +988,15 @@ class GoalService extends AppService
         return $ret;
     }
 
-    function findGoalPriorities($userId)
+    /**
+     * ゴール重要度のリストを返す
+     * key:goal_id,value:priority
+     *
+     * @param $userId
+     *
+     * @return array
+     */
+    function findGoalPriorities(int $userId): array
     {
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
@@ -1056,7 +1064,7 @@ class GoalService extends AppService
         //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
         if ($isIncludedTodayInPlotData) {
             $goal = $Goal->getGoal($goalId);
-            $sumPriorities = $goal['KeyResult'];
+            $sumPriorities = $this->sumPriorities($goal['KeyResult']);
             $latestGoalProgress = $this->getProgress($goal['KeyResult'], $sumPriorities);
             if ($latestGoalProgress <> 0) {
                 array_push($progressLogs, $latestGoalProgress);
@@ -1278,6 +1286,9 @@ class GoalService extends AppService
         //logsを日付でグルーピングする
         $krLogs = Hash::combine($krLogs, '{n}.key_result_id', '{n}', '{n}.target_date');
 
+        //最新のKRをゴールでグルーピング[goal_id=>[kr_id=>[...]],]
+        $latestKrValues = Hash::combine($latestKrValues, '{n}.id', '{n}', '{n}.goal_id');
+
         $goalGroupedLogs = [];
         foreach ($krLogs as $date => $krs) {
             //ゴールでグルーピング [goal_id=>[kr_id=>current_value],]
@@ -1317,6 +1328,7 @@ class GoalService extends AppService
     {
         //logsを日付でグルーピングする
         $logs = Hash::combine($logs, '{n}.key_result_id', '{n}.current_value', '{n}.target_date');
+
         //最新のKRデータにログのKR現在値をマージして進捗率を計算
         $ret = [];
         foreach ($logs as $date => $krs) {
@@ -1329,12 +1341,14 @@ class GoalService extends AppService
      * ログのKR現在値と最新のKR(重要度、開始値、目標値)から進捗を算出
      *
      * @param array $logKrs    [kr_id=>[current_value=>""],kr_id=>[current_value=>""],]
-     * @param array $latestKrs [kr_id=>[start_value,target_value,current_value,priority,...],kr_id=>[],]
+     * @param array $latestKrs KRの配列
      *
      * @return float
      */
     function getProgressWithLog(array $logKrs, array $latestKrs): float
     {
+        //最新KRリストのkey_result_idを配列のキーに置き換える
+        $latestKrs = Hash::combine($latestKrs, '{n}.id', '{n}');
         $rebuildedKrs = [];
         foreach ($logKrs as $krId => $currentValue) {
             //ログのKRが最新データに存在しない場合はスキップ

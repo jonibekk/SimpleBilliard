@@ -610,32 +610,4 @@ class KeyResultService extends AppService
             return __('Take first action to this !');
         }
     }
-
-    /**
-     * keyがゴールIDのKRの配列を返す
-     * 返り値の例:
-     * [
-     * (int) goal_id => [
-     *   (int) kr_id => [
-     *     'id' => '7','goal_id' => '101','start_value' => '0','target_value' => '100','current_value' => '50','priority' => '3'
-     *   ],
-     *   (int) kr_id => [
-     *     'id' => '8','goal_id' => '101','start_value' => '0','target_value' => '100','current_value' => '30','priority' => '3'
-     *   ],
-     * ],
-     * (int) goal_id => [...],
-     * ];
-     *
-     * @param array $goalIds
-     *
-     * @return array
-     */
-    function findValuesGroupByGoalId(array $goalIds): array
-    {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
-        $ret = $KeyResult->findProgressBaseValues($goalIds);
-        $ret = Hash::combine($ret, '{n}.id', '{n}', '{n}.goal_id');
-        return $ret;
-    }
 }
