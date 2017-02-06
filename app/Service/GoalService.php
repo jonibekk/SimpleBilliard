@@ -17,6 +17,7 @@ App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
+App::uses('KrValuesDailyLog', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalApprovalService');
@@ -549,7 +550,7 @@ class GoalService extends AppService
             }
             $goalProgress += $progress * $keyResult['priority'] / $sumPriorities;
         }
-        $goalProgress = round($goalProgress, 2) * 100;
+        $goalProgress = round($goalProgress, 2);
 
         // 本メソッドを呼ぶ箇所が多いため抜け漏れを検知する為にtrycatchを入れる
         try {
@@ -1138,7 +1139,8 @@ class GoalService extends AppService
         $goalIds = array_keys($goalPriorities);
         $goals = $Goal->getGoalAndKr($goalIds, $userId);
         foreach ($goals as $key => $goal) {
-            $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult']);
+            $sumPriorities = $this->getSumPriorities($goal['KeyResult']);
+            $goals[$key]['Goal']['progress'] = $this->getProgress($goal['KeyResult'], $sumPriorities);
         }
         $goalProgresses = Hash::combine($goals, '{n}.Goal.id', '{n}.Goal.progress');
         $ret = $this->sumGoalProgress($goalProgresses, $goalPriorities);
@@ -1570,11 +1572,12 @@ class GoalService extends AppService
         $goals = $Goal->getGoalAndKr($goalIds);
         //保存データの生成
         foreach ($goals as $goal) {
+            $sumPriorities = $this->getSumPriorities($goal['KeyResult']);
             $saveData[] = [
                 'team_id'     => $teamId,
                 'goal_id'     => $goal['Goal']['id'],
                 //各ゴール毎にKRからゴール進捗を求める
-                'progress'    => $this->getProgress($goal['KeyResult']),
+                'progress'    => $this->getProgress($goal['KeyResult'], $sumPriorities),
                 'target_date' => $targetDate,
             ];
         }
