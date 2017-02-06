@@ -1347,6 +1347,8 @@ class GoalService extends AppService
         //最新KRリストのkey_result_idを配列のキーに置き換える
         $latestKrs = Hash::combine($latestKrs, '{n}.id', '{n}');
         $rebuildedKrs = [];
+        $sumLatestKrPriorities = $this->sumPriorities($latestKrs);
+
         foreach ($logKrs as $krId => $currentValue) {
             //ログのKRが最新データに存在しない場合はスキップ
             if (!isset($latestKrs[$krId])) {
@@ -1358,7 +1360,6 @@ class GoalService extends AppService
                 ['current_value' => $currentValue]
             );
         }
-        $sumLatestKrPriorities = $this->sumPriorities($latestKrs);
         $ret = $this->getProgress($rebuildedKrs, $sumLatestKrPriorities);
         return $ret;
     }
