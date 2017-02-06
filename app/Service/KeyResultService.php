@@ -604,4 +604,49 @@ class KeyResultService extends AppService
             return __('Take first action to this !');
         }
     }
+
+    /**
+     * ゴール毎の進捗ログデータをバルクで保存する
+     *
+     * @param int    $teamId
+     * @param string $targetDate
+     *
+     * @return bool
+     */
+    function saveGoalProgressLogsAsBulk(int $teamId, string $targetDate): bool
+    {
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        /** @var GoalProgressDailyLog $GoalProgressDailyLog */
+        $GoalProgressDailyLog = ClassRegistry::init('GoalProgressDailyLog');
+
+        $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
+        if (empty($targetTerm)) {
+            //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
+            return false;
+        }
+        // 対象期間の全ゴールのIDリスト
+        $goalIds = $Goal->findAllIdsByEndDateTimestamp($targetTerm['start_date'], $targetTerm['end_date']);
+        if (empty($goalIds)) {
+            return false;
+        }
+        $saveData = [];
+        // 全ゴールを取得
+        $goals = $Goal->getGoalAndKr($goalIds);
+        //保存データの生成
+        foreach ($goals as $goal) {
+            $saveData[] = [
+                'team_id'     => $teamId,
+                'goal_id'     => $goal['Goal']['id'],
+                //各ゴール毎にKRからゴール進捗を求める
+                'progress'    => $this->getProgress($goal['KeyResult']),
+                'target_date' => $targetDate,
+            ];
+        }
+        $ret = $GoalProgressDailyLog->bulkInsert($saveData);
+
+        return $ret;
+    }
 }
