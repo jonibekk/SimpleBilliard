@@ -352,11 +352,11 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult->save($kr);
     }
 
-    function createTeam()
+    function createTeam($startTermMonth = 4, $borderMonths = 6)
     {
         $team = [
-            'start_term_month' => 4,
-            'border_months'    => 6,
+            'start_term_month' => $startTermMonth,
+            'border_months'    => $borderMonths,
             'type'             => 3,
             'name'             => 'Test Team.'
         ];
