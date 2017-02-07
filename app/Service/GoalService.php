@@ -1279,6 +1279,27 @@ class GoalService extends AppService
     }
 
     /**
+     * KR日次ログを日付とゴールでグルーピングする
+     * @param array $krLogs including: goal_id,key_result_id, current_value, target_date
+     *
+     * @return array [goal_id=>[kr_id=>current_value],]
+     */
+    function groupingKrLogsByDateGoal(array $krLogs): array
+    {
+        //logsを日付でグルーピングする
+        $krLogs = Hash::combine($krLogs, '{n}.key_result_id', '{n}', '{n}.target_date');
+
+        $goalGroupedLogs = [];
+        foreach ($krLogs as $date => $krs) {
+            //ゴールでグルーピング [goal_id=>[kr_id=>current_value],]
+            $goals = Hash::combine($krs, '{n}.key_result_id', '{n}.current_value', '{n}.goal_id');
+            $goalGroupedLogs[$date] = $goals;
+        }
+
+        return $goalGroupedLogs;
+    }
+
+    /**
      * ゴールの重要度を掛け合わせ日次のゴール進捗の合計を返す
      *
      * @param array $krLogs         including: goal_id,key_result_id, current_value, target_date
@@ -1289,18 +1310,11 @@ class GoalService extends AppService
      */
     function sumDailyGoalProgress(array $krLogs, array $latestKrValues, array $goalPriorities): array
     {
-        //logsを日付でグルーピングする
-        $krLogs = Hash::combine($krLogs, '{n}.key_result_id', '{n}', '{n}.target_date');
-
         //最新のKRをゴールでグルーピング[goal_id=>[kr_id=>[...]],]
         $latestKrValues = Hash::combine($latestKrValues, '{n}.id', '{n}', '{n}.goal_id');
 
-        $goalGroupedLogs = [];
-        foreach ($krLogs as $date => $krs) {
-            //ゴールでグルーピング [goal_id=>[kr_id=>current_value],]
-            $goals = Hash::combine($krs, '{n}.key_result_id', '{n}.current_value', '{n}.goal_id');
-            $goalGroupedLogs[$date] = $goals;
-        }
+        //KR日次ログを日付とゴールでグルーピングする
+        $goalGroupedLogs = $this->groupingKrLogsByDateGoal($krLogs);
 
         //最新のKRデータにログのKR現在値をマージして進捗率を計算
         $logGoalProgresses = [];
