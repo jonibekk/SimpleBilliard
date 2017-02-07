@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'GoalService');
+App::import('Service', 'KrValuesDailyLogService');
 
 /**
  * GoalServiceTest Class
@@ -9,11 +10,11 @@ App::import('Service', 'GoalService');
  * Date: 2016/12/08
  * Time: 17:50
  *
- * @property GoalService      $GoalService
- * @property Team             $Team
- * @property EvaluateTerm     $EvaluateTerm
- * @property Goal             $Goal
- * @property KrValuesDailyLog $KrValuesDailyLog
+ * @property GoalService             $GoalService
+ * @property Team                    $Team
+ * @property EvaluateTerm            $EvaluateTerm
+ * @property Goal                    $Goal
+ * @property KrValuesDailyLogService $KrValuesDailyLogService
  */
 class GoalServiceTest extends GoalousTestCase
 {
@@ -43,7 +44,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->Team = ClassRegistry::init('Team');
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Goal = ClassRegistry::init('Goal');
-        $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
+        $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
         $this->setDefaultTeamIdAndUid();
     }
 
@@ -399,7 +400,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->createGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [50]);
         $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
         //前期のゴールが含まれないこと
@@ -424,15 +425,12 @@ class GoalServiceTest extends GoalousTestCase
      */
     function testUserGraphEndTermToday()
     {
-        //TODO: こけてるが、このテストケースは別プルリクで対応。
-        $this->markTestSkipped('こけてるが、このテストケースは別プルリクで対応。');
-
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermEndToday();
         //昨日のログ作成
         $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
         //進捗を更新(KRを追加)
         $this->createKr($goalId, 1, 1, 100);
         $targetDays = 10;
@@ -440,7 +438,7 @@ class GoalServiceTest extends GoalousTestCase
         $now = time();
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
         $this->assertCount(11, $ret[2]);//dataの数が全件分あること
-        $this->assertEquals(50, $ret[2][9]);//一日前のゴール進捗
+        $this->assertEquals(25, $ret[2][9]);//一日前のゴール進捗
         $this->assertEquals(75, $ret[2][10]);//当日のゴール進捗
     }
 
@@ -450,15 +448,12 @@ class GoalServiceTest extends GoalousTestCase
      */
     function testUserGraphEffectLogs()
     {
-        //TODO: こけてるが、このテストケースは別プルリクで対応。
-        $this->markTestSkipped('こけてるが、このテストケースは別プルリクで対応。');
-
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermExtendDays();
         //昨日のログ作成
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
 
         $targetDays = 10;
         $maxBufferDays = 2;
@@ -470,8 +465,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->_clearCache();
         //2回目のデータ取得
         $after = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
-        //ログデータに影響がないこと
-        $this->assertEquals($before[2][7], $after[2][7]);
+        //ログデータに影響があること
+        $this->assertNotEquals($before[2][7], $after[2][7]);
         //当日のデータが更新されていること
         $this->assertNotEquals($before[2][8], $after[2][8]);
     }
@@ -481,31 +476,28 @@ class GoalServiceTest extends GoalousTestCase
      */
     function testUserGraphDataValid()
     {
-        //TODO: こけてるが、このテストケースは別プルリクで対応。
-        $this->markTestSkipped('こけてるが、このテストケースは別プルリクで対応。');
-
         //今期を3ヶ月に設定(当月にその前後30日ずつ拡張したものにする)
         $this->setupCurrentTermExtendDays();
         $yesterday = date('Y-m-d', strtotime('yesterday'));
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
 
         $targetDays = 10;
         $maxBufferDays = 2;
         $targetEndTimestamp = time();
 
+        $ret1 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
         //ゴールの進捗が変わっていない場合のログと当日のデータが等しくなることを確認
-        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-        $this->assertEquals($ret[2][8], $ret[2][7]);
-        $this->assertEquals(50, $ret[2][8]);
+        $this->assertEquals($ret1[2][8], $ret1[2][7]);
+        $this->assertEquals(50, $ret1[2][8]);
 
-        //ゴールの進捗が変わった場合のログと当日のデータが変わることを確認
-        //新しいゴールを一つ追加。これにより最新の進捗の合計値は変化する
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
-        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-        $this->assertNotEquals($ret[2][8], $ret[2][7]);
-        $this->assertNotEquals(50, $ret[2][8]);
+        $ret2 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //新しいKRを追加(進捗0)した場合、最新の進捗と、過去の進捗に影響する事を確認
+        $this->assertNotEquals($ret1[2][8], $ret2[2][8]);
+        //最新の進捗と直前の進捗は同じ値になる
+        $this->assertEquals($ret2[2][8], $ret2[2][7]);
     }
 
     /**

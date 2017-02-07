@@ -38,7 +38,6 @@ class KrValuesDailyLogService extends AppService
             return false;
         }
         $krsWithTargetDate = Hash::insert($krs, '{n}.target_date', $targetDate);
-
         $ret = $KrValuesDailyLog->bulkInsert($krsWithTargetDate);
         return $ret;
     }

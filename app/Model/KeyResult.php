@@ -964,15 +964,16 @@ class KeyResult extends AppModel
     /**
      * KR日次バッチ用にKR一覧を取得
      *
-     * @param  int    $teamId
-     * @param  string $targetDate
-     * @param  int    $fromTimestamp
-     * @param  int    $toTimestam
+     * @param  int $teamId
+     * @param  int $fromTimestamp
+     * @param  int $toTimestamp
      *
      * @return array
      */
     public function findAllForSavingDailyLog(int $teamId, int $fromTimestamp, int $toTimestamp): array
     {
+        $backupedVirtualFields = $this->virtualFields;
+        $this->virtualFields = ['key_result_id' => 'KeyResult.id'];
         $options = [
             'conditions' => [
                 'KeyResult.team_id'     => $teamId,
@@ -980,7 +981,7 @@ class KeyResult extends AppModel
                 'KeyResult.end_date <=' => $toTimestamp,
             ],
             'fields'     => [
-                'id as key_result_id',
+                'key_result_id',
                 'team_id',
                 'goal_id',
                 'current_value',
@@ -990,19 +991,20 @@ class KeyResult extends AppModel
             ]
         ];
         $ret = $this->find('all', $options);
+        $this->virtualFields = $backupedVirtualFields;
         $ret = Hash::extract($ret, '{n}.KeyResult');
         return $ret;
     }
 
     /**
      * KR進捗算出用のデータ取得
+     *
      * @param array $goalIds
      *
      * @return array
      */
     function findProgressBaseValues(array $goalIds): array
     {
-
         $options = [
             'conditions' => [
                 'goal_id' => $goalIds,
