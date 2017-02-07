@@ -383,4 +383,9 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->save($team);
         return $this->Team->getLastInsertID();
     }
+
+    function deleteAllTeam()
+    {
+        $this->Team->deleteAll(['id > ' => 0]);
+    }
 }

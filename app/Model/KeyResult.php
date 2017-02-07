@@ -974,6 +974,7 @@ class KeyResult extends AppModel
     {
         $backupedVirtualFields = $this->virtualFields;
         $this->virtualFields = ['key_result_id' => 'KeyResult.id'];
+
         $options = [
             'conditions' => [
                 'KeyResult.team_id'     => $teamId,

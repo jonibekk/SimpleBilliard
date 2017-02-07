@@ -27,18 +27,44 @@ class KrValuesDailyLogService extends AppService
         /** @var KrValuesDailyLog $KrValuesDailyLog */
         $KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
 
-        $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
-        if (empty($targetTerm)) {
-            //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
+        $existingLog = $KrValuesDailyLog->existTeamLog($teamId, $targetDate);
+        if ($existingLog) {
+            $this->log(sprintf("Already exists kr log data. teamId: %s targetDate: %s", $teamId, $targetDate));
+            return true;
+        }
+
+        //start transaction
+        $KrValuesDailyLog->begin();
+
+        try {
+            $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
+            if (empty($targetTerm)) {
+                //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
+                throw new PDOException(sprintf("Term data does not exist. teamId: %s targetDate: %s", $teamId, $targetDate));
+            }
+
+            // 対象期間の全KRリスト取得
+            $krs = $KeyResult->findAllForSavingDailyLog($teamId, $targetTerm['start_date'], $targetTerm['end_date']);
+            if ($krs) {
+                $krsWithTargetDate = Hash::insert($krs, '{n}.target_date', $targetDate);
+                // ログ保存処理実行
+                if (!$KrValuesDailyLog->bulkInsert($krsWithTargetDate)) {
+                    throw new PDOException(sprintf("Failed to save kr log data. teamId: %s targetDate: %s saveData: %s", $teamId, $targetDate, var_export($krsWithTargetDate, true)));
+                }
+            }
+        } catch (PDOException $e) {
+            //rollback transaction
+            $KrValuesDailyLog->rollback();
+            $this->log("PDOException occurred!");
+            $this->log($e->getMessage());
+            if (isset($e->queryString)) {
+                $this->log($e->queryString);
+            }
             return false;
         }
-        // 対象期間の全KRリスト取得
-        $krs = $KeyResult->findAllForSavingDailyLog($teamId, $targetTerm['start_date'], $targetTerm['end_date']);
-        if (empty($krs)) {
-            return false;
-        }
-        $krsWithTargetDate = Hash::insert($krs, '{n}.target_date', $targetDate);
-        $ret = $KrValuesDailyLog->bulkInsert($krsWithTargetDate);
-        return $ret;
+
+        //commit transaction
+        $KrValuesDailyLog->commit();
+        return true;
     }
 }
