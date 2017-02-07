@@ -285,6 +285,13 @@ class GoalousTestCase extends CakeTestCase
      */
     function createGoalKrs($termType, $krProgresses, $teamId = 1, $userId = 1, $goalMemberType = GoalMember::TYPE_OWNER)
     {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+
         $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
         $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
         $goalData = [
@@ -295,11 +302,11 @@ class GoalousTestCase extends CakeTestCase
             'start_date'       => $startDate,
             'end_date'         => $endDate
         ];
-        $this->Goal->create();
-        $this->Goal->save($goalData);
-        $goalId = $this->Goal->getLastInsertID();
-        $this->GoalMember->create();
-        $this->GoalMember->save([
+        $Goal->create();
+        $Goal->save($goalData);
+        $goalId = $Goal->getLastInsertID();
+        $GoalMember->create();
+        $GoalMember->save([
             'goal_id' => $goalId,
             'user_id' => $userId,
             'team_id' => $teamId,
@@ -321,13 +328,16 @@ class GoalousTestCase extends CakeTestCase
             ];
         }
 
-        $this->KeyResult->create();
-        $this->KeyResult->saveAll($krDatas);
+        $KeyResult->create();
+        $KeyResult->saveAll($krDatas);
         return $goalId;
     }
 
     function createKr($goalId, $teamId, $userId, $progress, $endDate = null)
     {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+
         $kr = [
             'goal_id'       => $goalId,
             'team_id'       => $teamId,
@@ -338,8 +348,8 @@ class GoalousTestCase extends CakeTestCase
             'value_unit'    => 0,
             'current_value' => $progress,
         ];
-        $this->KeyResult->create();
-        $this->KeyResult->save($kr);
+        $KeyResult->create();
+        $KeyResult->save($kr);
     }
 
     function createTeam()
