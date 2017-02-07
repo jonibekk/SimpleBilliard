@@ -529,7 +529,8 @@ class GoalService extends AppService
      */
     function calcProgressByOwnedPriorities(array $keyResults): float
     {
-        return $this->calcProgressByOwnedPriorities($keyResults);
+        $sumPriorities = $this->sumPriorities($keyResults);
+        return $this->calcProgressByOtherPriorities($keyResults, $sumPriorities);
     }
 
     /**
@@ -978,7 +979,6 @@ class GoalService extends AppService
 
         //最新のKRの値を取得
         $latestKrValues = $KeyResult->findProgressBaseValues($goalIds);
-
         $progressLogs = $this->findSummarizedUserProgressesFromLog(
             $goalPriorities,
             $latestKrValues,
