@@ -56,8 +56,6 @@ class KrValuesDailyLogShell extends AppShell
             $this->error('Invalid parameter', $this->_usageString());
         }
 
-        //start transaction
-        $this->KrValuesDailyLog->begin();
         // 該当日のデータを削除(ハードデリート)
         // TODO: 現時点では、この処理は行わない。過去のKR値ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
         //       レアケースだが、timezoneの変更によって同日のデータが存在する場合がある。その際に既存データを削除する以下の処理は必要。
@@ -66,46 +64,48 @@ class KrValuesDailyLogShell extends AppShell
         // 全チームのIDリスト
         $teamIds = array_keys($this->Team->find('list'));
 
-        try {
-            //メモリ消費を抑えるためにチーム毎に集計し保存する。
-            foreach ($teamIds as $teamId) {
-                //バルクで保存
-                $this->_saveKrValuesDailyLogsAsBulk($teamId, $targetDate);
-            }
-        } catch (PDOException $e) {
-            //rollback transaction
-            $this->KrValuesDailyLog->rollback();
-            $this->log("[Failed] kr_values_daily_log shell. target_date:$targetDate");
-            $this->log("PDOException occurred!");
-            $this->log($e->getMessage());
-            $this->error('failed.');
-        }
-
-        //commit transaction
-        $this->KrValuesDailyLog->commit();
-
-        $this->out('successful!');
+        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate);;
     }
 
     /**
      * 今期KR一覧の値をバルクで保存する
      * Modelのcurrent_team_idを初期化
+     * - 実行が失敗した場合、一度だけ失敗したチームのみ再実行を走らせる
      *
-     * @param int    $teamId
+     *
+     * @param array  $teamIds
      * @param string $targetDate
      *
      * @return bool
      */
-    protected function _saveKrValuesDailyLogsAsBulk(int $teamId, string $targetDate): bool
+    protected function _saveKrValuesDailyLogsAsBulk(array $teamIds, string $targetDate, bool $isRerunning = false)
     {
         /** @var GoalService $GoalService */
         $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
 
-        // モデルに current_team_id をセット
-        $this->_setupModels($teamId);
-        $ret = $KrValuesDailyLogService->saveAsBulk($teamId, $targetDate);
+        //メモリ消費を抑えるためにチーム毎に集計し保存する。
+        $successCount = 0;
+        $failureTeams = [];
+        foreach ($teamIds as $teamId) {
+            // モデルに current_team_id をセット
+            $this->_setupModels($teamId);
+            //バルクで保存
+            if ($KrValuesDailyLogService->saveAsBulk($teamId, $targetDate)) {
+                $successCount++;
+            } else {
+                $failureTeams[] = $teamId;
+            }
+        }
 
-        return $ret;
+        $this->out(sprintf('Done! success: %d failure: %d', $successCount, count($failureTeams)));
+
+        // 保存に失敗したチームは一度だけ再実行する
+        if (count($failureTeams) > 0 && !$isRerunning) {
+            $this->out(sprintf("Rerun batch for failure teams. teamIds: %s", implode(",", $failureTeams)));
+            $this->_saveKrValuesDailyLogsAsBulk($failureTeams, $targetDate, true);
+        }
+
+        return;
     }
 
     /**

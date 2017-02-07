@@ -971,6 +971,9 @@ class KeyResult extends AppModel
      */
     public function findAllForSavingDailyLog(int $teamId, int $fromTimestamp, int $toTimestamp): array
     {
+        $backupedVirtualFields = $this->virtualFields;
+        $this->virtualFields = ['key_result_id' => 'KeyResult.id'];
+
         $options = [
             'conditions' => [
                 'KeyResult.team_id'     => $teamId,
@@ -978,7 +981,7 @@ class KeyResult extends AppModel
                 'KeyResult.end_date <=' => $toTimestamp,
             ],
             'fields'     => [
-                'id as key_result_id',
+                'key_result_id',
                 'team_id',
                 'goal_id',
                 'current_value',
@@ -989,6 +992,8 @@ class KeyResult extends AppModel
         ];
         $ret = $this->find('all', $options);
         $ret = Hash::extract($ret, '{n}.KeyResult');
+        $this->virtualFields = $backupedVirtualFields;
+
         return $ret;
     }
 }
