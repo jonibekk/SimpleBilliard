@@ -27,10 +27,10 @@ class KrValuesDailyLogService extends AppService
         /** @var KrValuesDailyLog $KrValuesDailyLog */
         $KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
 
-        $existing = $KrValuesDailyLog->existTeamLog($teamId, $targetDate);
-        if ($existing) {
+        $existingLog = $KrValuesDailyLog->existTeamLog($teamId, $targetDate);
+        if ($existingLog) {
             $this->log(sprintf("Already exists kr log data. teamId: %s targetDate: %s", $teamId, $targetDate));
-            return false;
+            return true;
         }
 
         //start transaction

@@ -59,6 +59,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
      */
     function testMainOnlyCurrentTerm()
     {
+        $this->deleteAllTeam();
         $teamId = $this->createTeam();
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
@@ -83,6 +84,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
      */
     function testMainCorrectDate()
     {
+        $this->deleteAllTeam();
         $teamId = $this->createTeam();
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
@@ -109,6 +111,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
      */
     function testMainCorrectDateMulti()
     {
+        $this->deleteAllTeam();
         $teamId = $this->createTeam();
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
