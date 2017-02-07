@@ -1,13 +1,12 @@
 <?php
-App::import('Service', 'GoalService');
+App::import('Service', 'KrValuesDailyLogService');
 
 /**
- * ゴール日次進捗集計用バッチ
- * Console/cake goal_progress_daily_log -d YYYY-MM-DD
+ * KR日次進捗集計用バッチ
+ * Console/cake kr_values_daily_log -d YYYY-MM-DD
  * 説明
  * - 指定日までの最新のKR進捗から各ゴールの進捗を求める。
  * - デフォルトの指定日は前日
- * TODO: 現時点では、過去のゴール進捗ログは書き変えない。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
  *
  * @property Team                 $Team
  * @property EvaluateTerm         $EvaluateTerm
@@ -15,18 +14,15 @@ App::import('Service', 'GoalService');
  * @property KeyResult            $KeyResult
  * @property KrProgressLog        $KrProgressLog
  * @property GoalMember           $GoalMember
- * @property GoalProgressDailyLog $GoalProgressDailyLog
+ * @property KrValuesDailyLog     $KrValuesDailyLog
  */
-class GoalProgressDailyLogShell extends AppShell
+class KrValuesDailyLogShell extends AppShell
 {
     public $uses = array(
         'Team',
         'EvaluateTerm',
-        'Goal',
         'KeyResult',
-        'KrProgressLog',
-        'GoalMember',
-        'GoalProgressDailyLog',
+        'KrValuesDailyLog',
     );
 
     public function startup()
@@ -61,10 +57,11 @@ class GoalProgressDailyLogShell extends AppShell
         }
 
         //start transaction
-        $this->GoalProgressDailyLog->begin();
-        //該当日のデータを削除(ハードデリート)
-        //TODO: 現時点では、この処理は行わない。過去のゴール進捗ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
-        //$this->GoalProgressDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
+        $this->KrValuesDailyLog->begin();
+        // 該当日のデータを削除(ハードデリート)
+        // TODO: 現時点では、この処理は行わない。過去のKR値ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
+        //       レアケースだが、timezoneの変更によって同日のデータが存在する場合がある。その際に既存データを削除する以下の処理は必要。
+        // $this->KrValuesDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
 
         // 全チームのIDリスト
         $teamIds = array_keys($this->Team->find('list'));
@@ -73,29 +70,25 @@ class GoalProgressDailyLogShell extends AppShell
             //メモリ消費を抑えるためにチーム毎に集計し保存する。
             foreach ($teamIds as $teamId) {
                 //バルクで保存
-                $this->_saveGoalProgressLogsAsBulk($teamId, $targetDate);
+                $this->_saveKrValuesDailyLogsAsBulk($teamId, $targetDate);
             }
         } catch (PDOException $e) {
             //rollback transaction
-            $this->GoalProgressDailyLog->rollback();
-            $this->log("[Failed] goal_progress_daily_log shell. target_date:$targetDate");
+            $this->KrValuesDailyLog->rollback();
+            $this->log("[Failed] kr_values_daily_log shell. target_date:$targetDate");
             $this->log("PDOException occurred!");
             $this->log($e->getMessage());
             $this->error('failed.');
         }
+
         //commit transaction
-        $this->GoalProgressDailyLog->commit();
-        //キャッシュ削除
-        /** @var GlRedis $GlRedis */
-        $GlRedis = ClassRegistry::init('GlRedis');
-        $GlRedis->deleteKeys('*:' . CACHE_KEY_GOAL_PROGRESS_LOG . ':*');
-        $GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_PROGRESS_LOG . ':*');
+        $this->KrValuesDailyLog->commit();
 
         $this->out('successful!');
     }
 
     /**
-     * ゴール毎の進捗ログデータをバルクで保存する
+     * 今期KR一覧の値をバルクで保存する
      * Modelのcurrent_team_idを初期化
      *
      * @param int    $teamId
@@ -103,13 +96,14 @@ class GoalProgressDailyLogShell extends AppShell
      *
      * @return bool
      */
-    protected function _saveGoalProgressLogsAsBulk(int $teamId, string $targetDate): bool
+    protected function _saveKrValuesDailyLogsAsBulk(int $teamId, string $targetDate): bool
     {
         /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
+        $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
+
         // モデルに current_team_id をセット
         $this->_setupModels($teamId);
-        $ret = $GoalService->saveGoalProgressLogsAsBulk($teamId, $targetDate);
+        $ret = $KrValuesDailyLogService->saveAsBulk($teamId, $targetDate);
 
         return $ret;
     }

@@ -291,13 +291,17 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult = ClassRegistry::init('KeyResult');
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
+
+        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
+        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
         $goalData = [
             'user_id'          => $userId,
             'team_id'          => $teamId,
             'name'             => 'ゴール1',
-            'goal_category_id' => 1
+            'goal_category_id' => 1,
+            'start_date'       => $startDate,
+            'end_date'         => $endDate
         ];
-        $goalData['end_date'] = $this->EvaluateTerm->getTermData($termType)['end_date'];
         $Goal->create();
         $Goal->save($goalData);
         $goalId = $Goal->getLastInsertID();
@@ -319,17 +323,21 @@ class GoalousTestCase extends CakeTestCase
                 'target_value'  => 100,
                 'value_unit'    => 0,
                 'current_value' => $v,
+                'start_date'    => $startDate,
+                'end_date'      => $endDate
             ];
         }
+
         $KeyResult->create();
         $KeyResult->saveAll($krDatas);
         return $goalId;
     }
 
-    function createKr($goalId, $teamId, $userId, $progress)
+    function createKr($goalId, $teamId, $userId, $progress, $endDate = null)
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
+
         $kr = [
             'goal_id'       => $goalId,
             'team_id'       => $teamId,
@@ -342,5 +350,18 @@ class GoalousTestCase extends CakeTestCase
         ];
         $KeyResult->create();
         $KeyResult->save($kr);
+    }
+
+    function createTeam($startTermMonth = 4, $borderMonths = 6)
+    {
+        $team = [
+            'start_term_month' => $startTermMonth,
+            'border_months'    => $borderMonths,
+            'type'             => 3,
+            'name'             => 'Test Team.'
+        ];
+        $this->Team->create();
+        $this->Team->save($team);
+        return $this->Team->getLastInsertID();
     }
 }
