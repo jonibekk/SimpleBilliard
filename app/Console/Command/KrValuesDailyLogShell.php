@@ -59,8 +59,8 @@ class KrValuesDailyLogShell extends AppShell
         //start transaction
         $this->KrValuesDailyLog->begin();
         // 該当日のデータを削除(ハードデリート)
-        // TODO: 日時バッチで保存するデータをゴールからKRにすることで、↓を考慮する必要がなくなった？あとで検証する。
         // TODO: 現時点では、この処理は行わない。過去のKR値ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
+        //       レアケースだが、timezoneの変更によって同日のデータが存在する場合がある。その際に既存データを削除する以下の処理は必要。
         // $this->KrValuesDailyLog->deleteAll(['GoalProgressDailyLog.target_date' => $targetDate]);
 
         // 全チームのIDリスト
