@@ -806,6 +806,23 @@ class GoalTest extends GoalousTestCase
         }
     }
 
+    function testGetGoalAndKr()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+        //KR３つのゴール追加
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [10, 20, 30]);
+        $goals = $this->Goal->getGoalAndKr([$goalId]);
+        //KR３つあるか？
+        $this->assertCount(3, $goals[0]['KeyResult']);
+
+        //上記のゴールからKR一つ削除
+        $this->Goal->KeyResult->delete($goals[0]['KeyResult'][0]['id']);
+        $goals = $this->Goal->getGoalAndKr([$goalId]);
+        //KR２つになっているか？
+        $this->assertCount(2, $goals[0]['KeyResult']);
+    }
+
     function testGetAllUserGoalProgress()
     {
         $this->Goal->current_team_id = 1;

@@ -32,7 +32,7 @@ export default class CoacheeCard extends React.Component {
                   <p className="goals-approval-list-item-info-goal-attr">{ role }・<span className="mod-status">{ status }</span></p>
               </div>
               <p className="goals-approval-list-item-detail">
-                <i className="fa fa-check" ariaHidden="true"></i>
+                <i className="fa fa-check" aria-hidden="true"></i>
               </p>
           </Link>
       </li>

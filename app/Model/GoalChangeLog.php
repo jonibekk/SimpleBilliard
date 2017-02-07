@@ -70,7 +70,7 @@ class GoalChangeLog extends AppModel
      *
      * @return array|null
      */
-    function findLatestSnapshot($goalId)
+    function getLatestSnapshot(int $goalId): array
     {
         $data = $this->find('first', [
             'conditions' => [
@@ -78,12 +78,12 @@ class GoalChangeLog extends AppModel
             ],
             'order'      => ['id' => 'desc']
         ]);
-        $data = Hash::extract($data, 'GoalChangeLog');
 
         if (empty($data)) {
-            return null;
+            return $data;
         }
 
+        $data = Hash::extract($data, 'GoalChangeLog');
         /** @noinspection PhpUndefinedFunctionInspection */
         return msgpack_unpack(base64_decode($data['data']));
     }

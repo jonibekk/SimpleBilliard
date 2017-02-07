@@ -823,7 +823,7 @@ class GoalMember extends AppModel
         return $this->find('count', $options);
     }
 
-    function getGoalMemberForApproval($goalMemberId)
+    function getForApproval($goalMemberId)
     {
         $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $conditions = [
@@ -874,6 +874,7 @@ class GoalMember extends AppModel
                             'TopKeyResult.name',
                             'TopKeyResult.start_value',
                             'TopKeyResult.target_value',
+                            'TopKeyResult.current_value',
                             'TopKeyResult.value_unit',
                             'TopKeyResult.description'
                         ]

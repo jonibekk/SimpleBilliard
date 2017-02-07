@@ -18,7 +18,15 @@ const initialState = {
     key_result: {}
   },
   inputData: {
-    key_result: {}
+    name: "",
+    end_date: "",
+    description: "",
+    key_result: {
+      name: "",
+      start_value: 0,
+      target_value: 100,
+      description: ""
+    }
   },
   isDisabledSubmit: false,
   can_approve: false
@@ -105,12 +113,12 @@ export default function goal(state = initialState, action) {
         state.inputData = inputData
         return Object.assign({}, state)
       }
-      {
-        inputData = Object.assign({}, inputData, action.data)
-        return Object.assign({}, state, {
-          inputData
-        })
-      }
+    {
+      inputData = Object.assign({}, inputData, action.data)
+      return Object.assign({}, state, {
+        inputData
+      })
+    }
     default:
       return state;
   }

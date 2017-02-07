@@ -130,6 +130,7 @@ class ActionService extends AppService
 
             // ダッシュボードのKRキャッシュ削除
             $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+            Cache::delete($KeyResult->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
 
             $ActionResult->commit();
         } catch (RuntimeException $e) {

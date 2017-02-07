@@ -72,7 +72,7 @@ class TkrChangeLog extends AppModel
      *
      * @return array|null
      */
-    function findLatestSnapshot($goalId)
+    function getLatestSnapshot($goalId)
     {
         $data = $this->find('first', [
             'conditions' => [

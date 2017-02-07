@@ -1,5 +1,6 @@
 <?php
 App::import('Service/Api', 'ApiService');
+App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Class AppService
@@ -209,6 +210,8 @@ class ApiGoalService extends ApiService
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
+        $TimeEx = new TimeExHelper(new View());
+
         // レスポンスデータ定義
         $ret = [
             'data'   => [
@@ -245,24 +248,35 @@ class ApiGoalService extends ApiService
         $ret['data']['krs'] = $krs;
         // Goalデータセット
         $currentTerm = $EvaluateTerm->getCurrentTermData();
-        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'], $currentTerm['end_date']);
+        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'],
+            $currentTerm['end_date']);
 
-        //グラフデータのセット
-        $graphRange = $GoalService->getGraphRange(
-            time(),
-            GoalService::GRAPH_TARGET_DAYS,
-            GoalService::GRAPH_MAX_BUFFER_DAYS
-        );
-        /** @var User $User */
-        $User = ClassRegistry::init("User");
-        $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
-            $User->my_uid,
-            $graphRange['graphStartDate'],
-            $graphRange['graphEndDate'],
-            $graphRange['plotDataEndDate'],
-            true
-        );
-        $ret['data']['progress_graph'] = $progressGraph;
+        /*
+         * TODO: ユーザー進捗ログバッチ先行リリースのため、グラフを一時的に非表示にしている。
+         *       グラフデータ計算ロジックリニューアルのタイミングで有効化する。
+         *       フロント側でも ~/kr_column/components/KrColumn.js で
+         *       データ取得ロジックをコメントアウトしてるので戻すのを忘れないように。
+         */
+        // //グラフデータのセット
+        // $graphRange = $GoalService->getGraphRange(
+        //     time(),
+        //     GoalService::GRAPH_TARGET_DAYS,
+        //     GoalService::GRAPH_MAX_BUFFER_DAYS
+        // );
+        // /** @var User $User */
+        // $User = ClassRegistry::init("User");
+        // $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
+        //     $User->my_uid,
+        //     $graphRange['graphStartDate'],
+        //     $graphRange['graphEndDate'],
+        //     $graphRange['plotDataEndDate'],
+        //     true
+        // );
+        // $ret['data']['progress_graph'] = [
+        //     'data'       => $progressGraph,
+        //     'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate'])),
+        //     'end_date'   => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
+        // ];
 
         return $ret;
     }
