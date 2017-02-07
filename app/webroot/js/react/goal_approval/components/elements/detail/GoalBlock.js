@@ -1,5 +1,6 @@
 import React from 'react'
-import GoalCard from "~/goal_approval/components/elements/detail/GoalCard";
+import PresentGoalCard from "~/goal_approval/components/elements/detail/PresentGoalCard";
+import PrevisouGoalCard from "~/goal_approval/components/elements/detail/PreviousGoalCard";
 
 export default class GoalBlock extends React.Component {
   constructor(props) {
@@ -14,36 +15,39 @@ export default class GoalBlock extends React.Component {
   }
 
   render() {
-    const goal = this.props.goal
-    const is_leader = this.props.is_leader
+    const { goal, goal_change_log, goal_changed_columns, top_key_result, tkr_change_log, tkr_changed_columns, is_leader } = this.props
+    const existsChangeDiff = Object.keys(goal_changed_columns).length > 0 || Object.keys(tkr_changed_columns).length > 0
     const displayed_previous = this.state.displayed_previous
-    const existsChangeLogs = goal.goal_change_log || goal.kr_change_log
-    const view_previous_button = () => {
-      return (
-        <div className="goals-approval-detail-view-previous">
-            <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
-              <i className="fa fa-angle-down" aria-hidden="true"></i>
-              <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
-            </a>
-        </div>
-      )
-    }
-    const previous_goal_card = () => {
-      return (
-        <GoalCard goal={ goal.goal_change_log || goal }
-                  goal_category={ goal.goal_change_log.goal_category || goal.goal_category }
-                  top_key_result={ goal.kr_change_log || goal.top_key_result } />
-      )
-    }
 
     return (
       <div className={ `goals-approval-detail-goal ${is_leader && 'mod-bgglay'}` }>
-          <GoalCard goal={ { id: goal.id, name: goal.name, small_img_url: goal.small_img_url, modified: goal.modified } }
-                    goal_category={ goal.goal_category }
-                    top_key_result={ goal.top_key_result } />
-          { displayed_previous && <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p> }
-          { !displayed_previous && existsChangeLogs && is_leader && view_previous_button() }
-          { displayed_previous && existsChangeLogs && previous_goal_card() }
+
+          {/* 現在のゴール */}
+          <PresentGoalCard goal={ goal }
+                           goal_changed_columns={ goal_changed_columns }
+                           top_key_result={ top_key_result }
+                           tkr_changed_columns={ tkr_changed_columns } />
+
+          {/* 「Previsou goal」ラベル */}
+          { displayed_previous &&
+            <p className="goals-approval-detail-goal-previous-info">{ __('Previous goal') }</p>
+          }
+
+          {/* 「View Previous」ボタン */}
+          { !displayed_previous && existsChangeDiff &&
+            <div className="goals-approval-detail-view-previous">
+                <a className="goals-approval-detail-view-more-comments" onClick={ this.displayPrevious }>
+                  <i className="fa fa-angle-down" aria-hidden="true"></i>
+                  <span className="goals-approval-interactive-link"> { __('View Previous') } </span>
+                </a>
+            </div>
+          }
+
+          {/* 変更前のゴール */}
+          { displayed_previous && existsChangeDiff &&
+            <PrevisouGoalCard goal={ goal_change_log }
+                              top_key_result={ tkr_change_log } />
+          }
       </div>
     )
   }
@@ -51,6 +55,11 @@ export default class GoalBlock extends React.Component {
 
 GoalBlock.propTypes = {
   goal: React.PropTypes.object,
+  goal_change_log: React.PropTypes.object,
+  goal_changed_columns: React.PropTypes.object,
+  top_key_result: React.PropTypes.object,
+  tkr_change_log: React.PropTypes.object,
+  tkr_changed_columns: React.PropTypes.object,
   is_leader: React.PropTypes.bool
 }
 GoalBlock.defaultProps = { goal: {}, is_leader: true };

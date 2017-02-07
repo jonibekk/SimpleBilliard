@@ -1007,41 +1007,6 @@ class TeamMember extends AppModel
                 $this->create();
                 $team_member = $this->save($row_v['TeamMember']);
                 $this->csv_datas[$row_k]['TeamMember'] = $team_member['TeamMember'];
-
-                // チーム全体サークルのCircleMemberに登録
-                $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
-                App::import('Service', 'ExperimentService');
-                /** @var ExperimentService $ExperimentService */
-                $ExperimentService = ClassRegistry::init('ExperimentService');
-                if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-                    $row = [
-                        'circle_id'             => $teamAllCircle['Circle']['id'],
-                        'team_id'               => $this->current_team_id,
-                        'user_id'               => $user['User']['id'],
-                        'show_for_all_feed_flg' => false,
-                        'get_notification_flg'  => false,
-                    ];
-                } else {
-                    $row = [
-                        'circle_id'             => $teamAllCircle['Circle']['id'],
-                        'team_id'               => $this->current_team_id,
-                        'user_id'               => $user['User']['id'],
-                        'show_for_all_feed_flg' => true,
-                        'get_notification_flg'  => true,
-                    ];
-                }
-
-                $circle_member_options = [
-                    'conditions' => [
-                        $row
-                    ]
-                ];
-                // if not already exists then insert into circle members
-                $already_circle_member = $this->Team->Circle->CircleMember->find('first', $circle_member_options);
-                if (empty($already_circle_member)) {
-                    $this->Team->Circle->CircleMember->create();
-                    $this->Team->Circle->CircleMember->save($row);
-                }
             }
         }
 

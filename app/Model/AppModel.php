@@ -435,7 +435,7 @@ class AppModel extends Model
             $sql = "INSERT INTO "
                 . $this->table . " (" . implode(', ', $fields) . ") VALUES "
                 . implode(',', $valueArray);
-            $this->query($sql);
+            $ret = $this->query($sql);
             foreach ($updateCounterCacheFields as $field) {
                 foreach ($chunkedData as $value) {
                     $value = isset($value[$this->name][$field]) ? $value[$this->name][$field] : $value[$field];

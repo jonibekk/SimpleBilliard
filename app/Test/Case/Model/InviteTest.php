@@ -129,24 +129,16 @@ class InviteTest extends GoalousTestCase
     function testConfirmToken()
     {
         $token = "not_found";
-        try {
-            $this->Invite->confirmToken($token);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e), "[異常]tokenデータなし");
-        unset($e);
+        $res = $this->Invite->confirmToken($token);
+        $this->assertTrue($res !== true, "[異常]tokenデータなし");
 
         $id = '1';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
         $this->Invite->saveField('email_verified', true);
         $token = "token_test001";
-        try {
-            $this->Invite->confirmToken($token);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e), "[異常]既に認証済みの古いtoken");
-        unset($e);
+        $res = $this->Invite->confirmToken($token);
+        $this->assertTrue($res !== true, "[異常]既に認証済みの古いtoken");
 
         $id = '1';
         $this->Invite->tokenData = null;
@@ -154,24 +146,16 @@ class InviteTest extends GoalousTestCase
         $this->Invite->saveField('email_verified', false);
         $this->Invite->saveField('email_token_expires', strtotime("-1 day", time()));
         $token = "token_test001";
-        try {
-            $this->Invite->confirmToken($token);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e), "[異常]token期限切れ");
-        unset($e);
+        $res = $this->Invite->confirmToken($token);
+        $this->assertTrue($res !== true, "[異常]token期限切れ");
 
         $id = '1';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
         $this->Invite->saveField('email_token_expires', strtotime("+1 day", time()));
         $token = "token_test001";
-        try {
-            $this->Invite->confirmToken($token);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertFalse(isset($e), "[正常]token確認");
-        unset($e);
+        $res = $this->Invite->confirmToken($token);
+        $this->assertTrue($res, "[正常]token確認");
     }
 
     function testVerify()

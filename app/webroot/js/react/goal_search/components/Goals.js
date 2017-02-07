@@ -115,7 +115,7 @@ export default class Goals extends React.Component {
               <input type="text" className="goal-search-keyword-input" placeholder={__("Search by goal name")}
                      ref="keyword"
                      maxLength="50"
-                     value={props.search_conditions.keyword}
+                     value={props.search_conditions.keyword || ""}
                      onChange={(e) => this.updateKeyword(e)}
               />
               <span onClick={this.searchByKeyword.bind(this)} className="goal-search-keyword-submit fa fa-search"/>
@@ -157,7 +157,7 @@ export default class Goals extends React.Component {
                       let key = search_orders_keys[i]
                       search_orders_el.push(
                         <li key={key}>
-                          <a href="#" search-order={key}
+                          <a href="#"
                              onClick={(e) => this.updateFilter(e, "order", key)}>
                             {search_orders[key]}
                           </a>
