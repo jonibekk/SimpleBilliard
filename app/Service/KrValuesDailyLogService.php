@@ -40,7 +40,7 @@ class KrValuesDailyLogService extends AppService
             $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
             if (empty($targetTerm)) {
                 //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
-                throw new Exception(sprintf("Term data does not exist. teamId: %s targetDate: %s", $teamId, $targetDate));
+                throw new PDOException(sprintf("Term data does not exist. teamId: %s targetDate: %s", $teamId, $targetDate));
             }
 
             // 対象期間の全KRリスト取得
@@ -49,7 +49,7 @@ class KrValuesDailyLogService extends AppService
                 $krsWithTargetDate = Hash::insert($krs, '{n}.target_date', $targetDate);
                 // ログ保存処理実行
                 if (!$KrValuesDailyLog->bulkInsert($krsWithTargetDate)) {
-                    throw new Exception(sprintf("Failed to save kr log data. teamId: %s targetDate: %s saveData: %s", $teamId, $targetDate, var_export($krsWithTargetDate, true)));
+                    throw new PDOException(sprintf("Failed to save kr log data. teamId: %s targetDate: %s saveData: %s", $teamId, $targetDate, var_export($krsWithTargetDate, true)));
                 }
             }
         } catch (PDOException $e) {
@@ -57,7 +57,9 @@ class KrValuesDailyLogService extends AppService
             $KrValuesDailyLog->rollback();
             $this->log("PDOException occurred!");
             $this->log($e->getMessage());
-            $this->log($e->queryString);
+            if (isset($e->queryString)) {
+                $this->log($e->queryString);
+            }
             return false;
         }
 
