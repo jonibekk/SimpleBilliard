@@ -652,8 +652,7 @@ class GoalServiceTest extends GoalousTestCase
             ],
         ];
         //進捗0と100で50になるはず
-        $sumPriorities = $this->GoalService->sumPriorities($krs);
-        $this->assertEquals(50, $this->GoalService->getProgress($krs, $sumPriorities));
+        $this->assertEquals(50, $this->GoalService->calcProgressByOwnedPriorities($krs));
 
         //KRの重要度が違う場合
         $krs = [
@@ -671,8 +670,7 @@ class GoalServiceTest extends GoalousTestCase
             ],
         ];
         //進捗0と100だが、priorityが違うため、50にはならないはず
-        $sumPriorities = $this->GoalService->sumPriorities($krs);
-        $this->assertNotEquals(50, $this->GoalService->getProgress($krs, $sumPriorities));
+        $this->assertNotEquals(50, $this->GoalService->calcProgressByOwnedPriorities($krs));
     }
 
     /**
@@ -689,8 +687,7 @@ class GoalServiceTest extends GoalousTestCase
                 'current_value' => 99.01,
             ],
         ];
-        $sumPriorities = $this->GoalService->sumPriorities($krs);
-        $this->assertEquals(99, $this->GoalService->getProgress($krs, $sumPriorities));
+        $this->assertEquals(99, $this->GoalService->calcProgressByOwnedPriorities($krs));
 
         //進捗率が0.*の場合は結果が1になるはず
         $krs = [
@@ -701,8 +698,7 @@ class GoalServiceTest extends GoalousTestCase
                 'current_value' => 0.01,
             ],
         ];
-        $sumPriorities = $this->GoalService->sumPriorities($krs);
-        $this->assertEquals(1, $this->GoalService->getProgress($krs, $sumPriorities));
+        $this->assertEquals(1, $this->GoalService->calcProgressByOwnedPriorities($krs));
     }
 
     /**

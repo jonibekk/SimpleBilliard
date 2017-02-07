@@ -173,11 +173,7 @@ class EvaluationsController extends AppController
         foreach ($goalList as $goalIndex => $goal) {
             foreach ($goal as $evalKey => $eval) {
                 $keyResults = Hash::get($eval, 'Goal.KeyResult');
-                $sumPriorities = $GoalService->sumPriorities($keyResults);
-                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(
-                    $keyResults,
-                    $sumPriorities
-                );
+                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->calcProgressByOwnedPriorities($keyResults);
             }
         }
 

@@ -1841,8 +1841,7 @@ class GoalsController extends AppController
             return false;
         }
         // 進捗情報を追加
-        $sumPriorities = $GoalService->sumPriorities($goal['KeyResult']);
-        $goal['Goal']['progress'] = $GoalService->getProgress($goal['KeyResult'], $sumPriorities);
+        $goal['Goal']['progress'] = $GoalService->calcProgressByOwnedPriorities($goal['KeyResult']);
         $this->set('goal', $goal);
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);
