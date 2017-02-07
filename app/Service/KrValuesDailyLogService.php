@@ -34,12 +34,12 @@ class KrValuesDailyLogService extends AppService
         }
         // 対象期間の全KRリスト取得
         $krs = $KeyResult->findAllForSavingDailyLog($teamId, $targetTerm['start_date'], $targetTerm['end_date']);
-        $this->log($krs);
         if (empty($krs)) {
             return false;
         }
+        $krsWithTargetDate = Hash::insert($krs, '{n}.target_date', $targetDate);
 
-        $ret = $KrValuesDailyLog->bulkInsert($krs);
+        $ret = $KrValuesDailyLog->bulkInsert($krsWithTargetDate);
         return $ret;
     }
 }

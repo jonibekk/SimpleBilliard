@@ -961,17 +961,21 @@ class KeyResult extends AppModel
 
     /**
      * KR日次バッチ用にKR一覧を取得
-     * @param  int   $fromTimestamp [description]
-     * @param  int   $toTimestamp   [description]
-     * @return array                [description]
+     *
+     * @param  int    $teamId
+     * @param  string $targetDate
+     * @param  int    $fromTimestamp
+     * @param  int    $toTimestam
+     *
+     * @return array
      */
     public function findAllForSavingDailyLog(int $teamId, int $fromTimestamp, int $toTimestamp): array
     {
         $options = [
             'conditions' => [
-                'team_id'     => $teamId,
-                'end_date >=' => $fromTimestamp,
-                'end_date <=' => $toTimestamp,
+                'KeyResult.team_id'     => $teamId,
+                'KeyResult.end_date >=' => $fromTimestamp,
+                'KeyResult.end_date <=' => $toTimestamp,
             ],
             'fields'     => [
                 'id as key_result_id',

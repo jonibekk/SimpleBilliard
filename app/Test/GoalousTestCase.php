@@ -285,24 +285,21 @@ class GoalousTestCase extends CakeTestCase
      */
     function createGoalKrs($termType, $krProgresses, $teamId = 1, $userId = 1, $goalMemberType = GoalMember::TYPE_OWNER)
     {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init('Goal');
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init('KeyResult');
-        /** @var GoalMember $GoalMember */
-        $GoalMember = ClassRegistry::init('GoalMember');
+        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
+        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
         $goalData = [
             'user_id'          => $userId,
             'team_id'          => $teamId,
             'name'             => 'ゴール1',
-            'goal_category_id' => 1
+            'goal_category_id' => 1,
+            'start_date'       => $startDate,
+            'end_date'         => $endDate
         ];
-        $goalData['end_date'] = $this->EvaluateTerm->getTermData($termType)['end_date'];
-        $Goal->create();
-        $Goal->save($goalData);
-        $goalId = $Goal->getLastInsertID();
-        $GoalMember->create();
-        $GoalMember->save([
+        $this->Goal->create();
+        $this->Goal->save($goalData);
+        $goalId = $this->Goal->getLastInsertID();
+        $this->GoalMember->create();
+        $this->GoalMember->save([
             'goal_id' => $goalId,
             'user_id' => $userId,
             'team_id' => $teamId,
@@ -319,17 +316,18 @@ class GoalousTestCase extends CakeTestCase
                 'target_value'  => 100,
                 'value_unit'    => 0,
                 'current_value' => $v,
+                'start_date'    => $startDate,
+                'end_date'      => $endDate
             ];
         }
-        $KeyResult->create();
-        $KeyResult->saveAll($krDatas);
+
+        $this->KeyResult->create();
+        $this->KeyResult->saveAll($krDatas);
         return $goalId;
     }
 
-    function createKr($goalId, $teamId, $userId, $progress)
+    function createKr($goalId, $teamId, $userId, $progress, $endDate = null)
     {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init('KeyResult');
         $kr = [
             'goal_id'       => $goalId,
             'team_id'       => $teamId,
@@ -340,7 +338,20 @@ class GoalousTestCase extends CakeTestCase
             'value_unit'    => 0,
             'current_value' => $progress,
         ];
-        $KeyResult->create();
-        $KeyResult->save($kr);
+        $this->KeyResult->create();
+        $this->KeyResult->save($kr);
+    }
+
+    function createTeam()
+    {
+        $team = [
+            'start_term_month' => 4,
+            'border_months'    => 6,
+            'type'             => 3,
+            'name'             => 'Test Team.'
+        ];
+        $this->Team->create();
+        $this->Team->save($team);
+        return $this->Team->getLastInsertID();
     }
 }

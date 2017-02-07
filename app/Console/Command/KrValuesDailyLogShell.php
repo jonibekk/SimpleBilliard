@@ -21,9 +21,7 @@ class KrValuesDailyLogShell extends AppShell
     public $uses = array(
         'Team',
         'EvaluateTerm',
-        'Goal',
         'KeyResult',
-        'GoalMember',
         'KrValuesDailyLog',
     );
 
