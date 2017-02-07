@@ -39,4 +39,23 @@ class KrValuesDailyLog extends AppModel
             ],
         ],
     ];
+
+    /**
+     * 指定したチームの日次データが存在するか判定
+     * @param  int    $teamId
+     * @param  string $targetDate
+     * @return bool
+     */
+    function existTeamLog(int $teamId, string $targetDate): bool
+    {
+        $options = [
+            'conditions' => [
+                'team_id'     => $teamId,
+                'target_date' => $targetDate
+            ],
+            'fields'     => ['id']
+        ];
+        $ret = $this->find('first', $options);
+        return (bool)$ret;
+    }
 }
