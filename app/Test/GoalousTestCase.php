@@ -333,23 +333,42 @@ class GoalousTestCase extends CakeTestCase
         return $goalId;
     }
 
-    function createKr($goalId, $teamId, $userId, $progress, $endDate = null)
-    {
+    function createKr(
+        $goalId,
+        $teamId,
+        $userId,
+        $currentValue,
+        $startValue = 0,
+        $targetValue = 100,
+        $termType = EvaluateTerm::TYPE_CURRENT
+    ) {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
+        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
+        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
 
         $kr = [
             'goal_id'       => $goalId,
             'team_id'       => $teamId,
             'user_id'       => $userId,
             'name'          => 'テストKR',
-            'start_value'   => 0,
-            'target_value'  => 100,
+            'start_value'   => $startValue,
+            'target_value'  => $targetValue,
             'value_unit'    => 0,
-            'current_value' => $progress,
+            'current_value' => $currentValue,
+            'start_date'    => $startDate,
+            'end_date'      => $endDate
         ];
         $KeyResult->create();
         $KeyResult->save($kr);
+        return $KeyResult->getLastInsertID();
+    }
+
+    function delKr($krId)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        $KeyResult->delete($krId);
     }
 
     function createTeam($startTermMonth = 4, $borderMonths = 6)

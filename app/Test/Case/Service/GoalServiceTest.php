@@ -15,6 +15,7 @@ App::import('Service', 'KrValuesDailyLogService');
  * @property EvaluateTerm            $EvaluateTerm
  * @property Goal                    $Goal
  * @property KrValuesDailyLogService $KrValuesDailyLogService
+ * @property KeyResult               $KeyResult
  */
 class GoalServiceTest extends GoalousTestCase
 {
@@ -28,6 +29,7 @@ class GoalServiceTest extends GoalousTestCase
         'app.team',
         'app.goal',
         'app.goal_member',
+        'app.user',
         'app.kr_values_daily_log',
         'app.key_result',
     ];
@@ -44,6 +46,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->Team = ClassRegistry::init('Team');
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Goal = ClassRegistry::init('Goal');
+        $this->KeyResult = ClassRegistry::init('KeyResult');
         $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
         $this->setDefaultTeamIdAndUid();
     }
@@ -498,6 +501,254 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertNotEquals($ret1[2][8], $ret2[2][8]);
         //最新の進捗と直前の進捗は同じ値になる
         $this->assertEquals($ret2[2][8], $ret2[2][7]);
+    }
+
+    /**
+     * ゴールを追加した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_addGoal()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * ゴールを削除した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_delGoal()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //ゴール削除(進捗100%のゴールを削除。これで進捗は下がるはず)
+        $this->GoalMember->deleteAll(['GoalMember.goal_id' => $goalId2]);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //直前の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * ゴールの重要度を更新した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_changePriority()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //goalId2の重要度を下げる
+        $this->GoalMember->updateAll(['GoalMember.priority' => 1], ['GoalMember.goal_id' => $goalId2]);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * KRを追加した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_addKR()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRを１つ追加
+        $this->createKr($goalId2, 1, 1, 0);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * KRを削除した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_delKR()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        //KRを１つ追加(完了済み)
+        $krId = $this->createKr($goalId1, 1, 1, 100);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRを１つ削除
+        $this->delKr($krId);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * KRの重要度を更新した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_updateKR()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [30]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        //KRを１つ追加
+        $krId = $this->createKr($goalId1, 1, 1, 50);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRの重要度を下げる
+        $this->KeyResult->id = $krId;
+        $this->KeyResult->saveField('priority', 1);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * 過去の進捗が100を超える場合に100に補正される事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_over100()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        //KRを１つ追加(値が大きいがKR自体の進捗は50%)
+        $krId = $this->createKr($goalId1, 1, 1, 1000, 0, 2000);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRの値を下げる
+        $this->KeyResult->id = $krId;
+        $this->KeyResult->saveField('target_value', 100);
+        $this->KeyResult->saveField('current_value', 50);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //実行前の直前の進捗が100ではない事
+        $this->assertNotEquals(100, $before[2][7]);
+        //実行後の直前の進捗が100になる事
+        $this->assertEquals(100, $after[2][7]);
+    }
+
+    /**
+     * 過去の進捗が0を下回る場合に0に補正される事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_under0()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+
+        //KRを１つ追加(KR自体の進捗は50%)
+        $krId = $this->createKr($goalId1, 1, 1, 50);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRの開始値をあげる
+        $this->KeyResult->id = $krId;
+        $this->KeyResult->saveField('start_value', 60);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //実行前の直前の進捗が0ではない事
+        $this->assertNotEquals(0, $before[2][7]);
+        //実行後の直前の進捗が0になる事
+        $this->assertEquals(0, $after[2][7]);
     }
 
     /**
