@@ -958,4 +958,42 @@ class KeyResult extends AppModel
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $count ?? 0;
     }
+
+    /**
+     * KR日次バッチ用にKR一覧を取得
+     *
+     * @param  int    $teamId
+     * @param  string $targetDate
+     * @param  int    $fromTimestamp
+     * @param  int    $toTimestam
+     *
+     * @return array
+     */
+    public function findAllForSavingDailyLog(int $teamId, int $fromTimestamp, int $toTimestamp): array
+    {
+        $backupedVirtualFields = $this->virtualFields;
+        $this->virtualFields = ['key_result_id' => 'KeyResult.id'];
+
+        $options = [
+            'conditions' => [
+                'KeyResult.team_id'     => $teamId,
+                'KeyResult.end_date >=' => $fromTimestamp,
+                'KeyResult.end_date <=' => $toTimestamp,
+            ],
+            'fields'     => [
+                'key_result_id',
+                'team_id',
+                'goal_id',
+                'current_value',
+                'target_value',
+                'start_value',
+                'priority'
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.KeyResult');
+        $this->virtualFields = $backupedVirtualFields;
+
+        return $ret;
+    }
 }
