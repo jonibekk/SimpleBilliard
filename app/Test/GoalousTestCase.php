@@ -340,6 +340,7 @@ class GoalousTestCase extends CakeTestCase
         $currentValue,
         $startValue = 0,
         $targetValue = 100,
+        $priority = 3,
         $termType = EvaluateTerm::TYPE_CURRENT
     ) {
         /** @var KeyResult $KeyResult */
@@ -357,7 +358,8 @@ class GoalousTestCase extends CakeTestCase
             'value_unit'    => 0,
             'current_value' => $currentValue,
             'start_date'    => $startDate,
-            'end_date'      => $endDate
+            'end_date'      => $endDate,
+            'priority'      => $priority,
         ];
         $KeyResult->create();
         $KeyResult->save($kr);

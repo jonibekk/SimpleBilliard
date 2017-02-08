@@ -752,6 +752,33 @@ class GoalServiceTest extends GoalousTestCase
     }
 
     /**
+     * ゴール進捗は小数点第一位まで切り捨てられている事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_decimalNum()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [1]);
+        //ゴール進捗が小数点以下になるようなKRを作成
+        $this->createKr($goalId, 1, 1, 11, 0, 100, 1);
+        $this->createKr($goalId, 1, 1, 99, 0, 100, 5);
+
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        $value = $ret[2][8];
+        $decimalNum = strlen($value) - (strpos($value, '.') + 1);
+        //小数点以下の桁数が1かどうか？
+        $this->assertEquals(1, $decimalNum);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($ret[2][8], $ret[2][7]);
+    }
+
+    /**
      * テストの為のユーザグラフデータ取得用メソッド
      *
      * @param string $targetEndTimestamp
