@@ -521,7 +521,7 @@ class GoalService extends AppService
     }
 
     /**
-     * ゴール進捗をKR一覧から計算して返す(私たKRが持っている重要度を利用)
+     * ゴール進捗をKR一覧から計算して返す(渡したKRが持っている重要度を利用)
      *
      * @param array $keyResults
      *
@@ -1280,6 +1280,7 @@ class GoalService extends AppService
 
     /**
      * KR日次ログを日付とゴールでグルーピングする
+     *
      * @param array $krLogs including: goal_id,key_result_id, current_value, target_date
      *
      * @return array [goal_id=>[kr_id=>current_value],]
@@ -1406,7 +1407,7 @@ class GoalService extends AppService
                 $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
             }
         }
-        $ret = round(array_sum($progresses), 2);
+        $ret = AppUtil::floor(array_sum($progresses),1);
         return $ret;
     }
 
