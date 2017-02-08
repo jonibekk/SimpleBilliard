@@ -980,6 +980,7 @@ class GoalService extends AppService
         //最新のKRの値を取得
         $latestKrValues = $KeyResult->findProgressBaseValues($goalIds);
         $progressLogs = $this->findSummarizedUserProgressesFromLog(
+            $userId,
             $goalPriorities,
             $latestKrValues,
             $logStartDate,
@@ -1173,12 +1174,12 @@ class GoalService extends AppService
     }
 
     /**
-     * 集計済みのユーザのゴール進捗をログから取得
+     * ユーザのゴール進捗をKRログを元に集計
      * //キャッシュからデータを取得なければ以下処理
      * ///ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
      * ///ゴールの重要度を掛け合わせる(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
-     * ///ここまでのデータをキャッシュ
      *
+     * @param int    $userId
      * @param array  $goalPriorities
      * @param array  $latestKrValues
      * @param string $startDate
@@ -1187,33 +1188,31 @@ class GoalService extends AppService
      * @return array
      */
     function findSummarizedUserProgressesFromLog(
+        int $userId,
         array $goalPriorities,
         array $latestKrValues,
         string $startDate,
         string $endDate
     ): array {
-        //キャッシュに保存されるデータ
-        //TODO: キャッシュば別issue(GL-5549)で行う
-        //$progressLogs = $this->getUserProgressFromCache($userId, $startDate, $endDate);
-        //if ($progressLogs === false) {
-        ///ログDBから自分の各ゴールの進捗データ取得
-        /** @var KrValuesDailyLog $KrValuesDailyLog */
-        $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
         $goalIds = array_keys($goalPriorities);
-        $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, $goalIds);
+        $today = date('Y-m-d');
+        ///ログDBからユーザの各ゴールのKR現在値のログを取得
+        /** @var KrValuesDailyLogService $KrValuesDailyLogService */
+        $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
+        $krValueLogs = $KrValuesDailyLogService->getKrValueDailyLogFromCache($userId, $today);
+        if ($krValueLogs === false) {
+            /** @var KrValuesDailyLog $KrValuesDailyLog */
+            $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
+            $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, $goalIds);
+            $KrValuesDailyLogService->writeKrValueDailyLogToCache($userId, $today, $krValueLogs);
+        }
         ///ゴールの重要度を掛け合わせて日次のゴール進捗の合計を計算(例:ゴールA[30%,重要度3],ゴールB[60%,重要度5]なら30*3/8 + 60*5/8 = 48.75 )
         $progressLogs = $this->sumDailyGoalProgress($krValueLogs, $latestKrValues, $goalPriorities);
-
-        //キャッシュに保存
-        //TODO: キャッシュば別issue(GL-5549)で行う
-        //$this->writeUserProgressToCache($userId, $startDate, $endDate, $progressLogs);
-        //}
-
         return $progressLogs;
     }
 
     /**
-     * 集計済みの単一ゴール進捗をログから取得
+     * 単一ゴールの進捗をKRログを元に算出
      * - ログDBから自分の各ゴールの進捗データ取得(今期の開始日以降の過去30日分)
      * - キャッシュする
      *
@@ -1226,23 +1225,18 @@ class GoalService extends AppService
      */
     function findGoalProgressFromLog(int $goalId, array $latestKrValues, string $startDate, string $endDate): array
     {
-        //キャッシュに保存されるデータ
-        //TODO: キャッシュば別issue(GL-5549)で行う
-        //$goalProgressLogs = $this->getGoalProgressFromCache($goalId, $startDate, $endDate);
-        //if ($goalProgressLogs === false) {
-        ///ログDBから自分の各ゴールの進捗データ取得
-        /** @var KrValuesDailyLog $KrValuesDailyLog */
-        $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
-
-        $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, [$goalId]);
+        $today = date('Y-m-d');
+        /** @var KrValuesDailyLogService $KrValuesDailyLogService */
+        $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
+        $krValueLogs = $KrValuesDailyLogService->getGoalKrValueDailyLogFromCache($goalId, $today);
+        if ($krValueLogs === false) {
+            /** @var KrValuesDailyLog $KrValuesDailyLog */
+            $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
+            $krValueLogs = $KrValuesDailyLog->findLogs($startDate, $endDate, [$goalId]);
+            $KrValuesDailyLogService->writeGoalKrValueDailyLogToCache($goalId, $today, $krValueLogs);
+        }
 
         $progressLogs = $this->getDailyGoalProgress($krValueLogs, $latestKrValues);
-
-        //キャッシュに保存
-        //TODO: キャッシュば別issue(GL-5549)で行う
-        //$this->writeGoalProgressToCache($goalId, $startDate, $endDate, $goalProgressLogs);
-        //}
-
         return $progressLogs;
     }
 
@@ -1407,7 +1401,7 @@ class GoalService extends AppService
                 $progresses[] = $progress * $goalPriorities[$goalId] / $sumPriorities;
             }
         }
-        $ret = AppUtil::floor(array_sum($progresses),1);
+        $ret = AppUtil::floor(array_sum($progresses), 1);
         return $ret;
     }
 
@@ -1472,42 +1466,6 @@ class GoalService extends AppService
     }
 
     /**
-     * 集計済みユーザのゴール進捗をキャッシュから取得
-     *
-     * @param int    $userId
-     * @param string $startDate Y-m-d
-     * @param string $endDate   Y-m-d
-     *
-     * @return mixed
-     */
-    function getUserProgressFromCache(int $userId, string $startDate, string $endDate)
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        return Cache::read($Goal->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate",
-            true, $userId), 'user_data');
-    }
-
-    /**
-     * 集計済みのユーザのゴール進捗をキャッシュに書き出す
-     * 生存期間は当日の終わりまで(UTC)
-     *
-     * @param int    $userId
-     * @param string $startDate Y-m-d
-     * @param string $endDate   Y-m-d
-     * @param array  $data      重要度を掛け合わせたもの
-     */
-    function writeUserProgressToCache(int $userId, string $startDate, string $endDate, array $data)
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
-        Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
-        Cache::write($Goal->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":start:$startDate:end:$endDate",
-            true, $userId), $data, 'user_data');
-    }
-
-    /**
      * アクション可能なゴール一覧を返す
      * - フィードページで参照されるデータなのでキャッシュを使う
      * TODO:findCanActionと重複している
@@ -1533,50 +1491,13 @@ class GoalService extends AppService
         return $actionableGoals;
     }
 
-    /*
-     * 単一のゴール進捗をキャッシュから取得
-     *
-     * @param int    $goalId
-     * @param string $startDate Y-m-d
-     * @param string $endDate   Y-m-d
-     *
-     * @return mixed
-     */
-    function getGoalProgressFromCache(int $goalId, string $startDate, string $endDate)
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        return Cache::read(
-            $Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":goal_id:$goalId:start:$startDate:end:$endDate"),
-            'team_info');
-    }
-
-    /**
-     * 単一のゴール進捗をキャッシュに書き出す
-     * 生存期間は当日の終わりまで(UTC)
-     *
-     * @param int    $goalId
-     * @param string $startDate Y-m-d
-     * @param string $endDate   Y-m-d
-     * @param array  $data      重要度を掛け合わせたもの
-     */
-    function writeGoalProgressToCache(int $goalId, string $startDate, string $endDate, array $data): void
-    {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
-        Cache::set('duration', $remainSecUntilEndOfTheDay, 'team_info');
-        Cache::write(
-            $Goal->getCacheKey(CACHE_KEY_GOAL_PROGRESS_LOG . ":goal_id:$goalId:start:$startDate:end:$endDate"),
-            $data,
-            'team_info');
-    }
-
     /**
      * ユーザーに紐づくゴール名一覧を返す
      * - TODO: feedページで呼ばれるメソッドのためキャッシュが必要
      *
      * @param  int $userId
+     * @param int  $startDateTime
+     * @param int  $endDateTime
      *
      * @return array
      */
