@@ -23,6 +23,7 @@ App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
+App::import('Service', 'KrValuesDailyLogService');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 
