@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'GoalService');
+App::import('Service', 'ActionService');
 App::import('Service', 'KrValuesDailyLogService');
 
 /**
@@ -29,6 +30,22 @@ class GoalServiceTest extends GoalousTestCase
         'app.team',
         'app.goal',
         'app.goal_member',
+        'app.goal_label',
+        'app.label',
+        'app.post',
+        'app.key_result',
+        'app.circle',
+        'app.team_member',
+        'app.comment',
+        'app.post_share_user',
+        'app.post_share_circle',
+        'app.post_like',
+        'app.post_read',
+        'app.action_result',
+        'app.follower',
+        'app.attached_file',
+        'app.action_result_file',
+        'app.kr_progress_log',
         'app.user',
         'app.kr_values_daily_log',
         'app.key_result',
@@ -46,6 +63,10 @@ class GoalServiceTest extends GoalousTestCase
         $this->Team = ClassRegistry::init('Team');
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Goal = ClassRegistry::init('Goal');
+        $this->GoalLabel = ClassRegistry::init('GoalLabel');
+        $this->ActionResult = ClassRegistry::init('ActionResult');
+        $this->ActionService = ClassRegistry::init('ActionService');
+        $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
         $this->KeyResult = ClassRegistry::init('KeyResult');
         $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
         $this->setDefaultTeamIdAndUid();
@@ -124,6 +145,66 @@ class GoalServiceTest extends GoalousTestCase
     function test_canExchangeTkr()
     {
         $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    /**
+     * ゴール削除
+     */
+    function test_delete()
+    {
+        /* テストデータ準備 */
+        $goalId = $this->setupTestDelete();
+
+        // ゴール削除
+        $this->GoalService->delete($goalId);
+
+        // ゴール削除できているか
+        $ret = $this->Goal->getById($goalId);
+        $this->assertEmpty($ret);
+
+        // ゴールラベル削除できているか
+        $ret = $this->GoalLabel->findByGoalId($goalId);
+        $this->assertEmpty($ret);
+
+        // ゴールとアクションの紐付けを解除できているか
+        $ret = $this->ActionResult->findByGoalId($goalId);
+        $this->assertEmpty($ret);
+
+        // KR進捗日次ログ削除できているか
+        $ret = $this->KrValuesDailyLog->findByGoalId($goalId);
+        $this->assertEmpty($ret);
+
+        // TODO:キャッシュ削除できているか
+
+    }
+
+    /**
+     * test_delete用テストデータ準備
+     */
+    private function setupTestDelete()
+    {
+        $uid = 1;
+        $teamId = 1;
+        $this->setupTerm();
+        $this->KeyResult->my_uid = $uid;
+        $this->KeyResult->current_team_id = $teamId;
+        $goalId = $this->createGoal($uid);
+        $kr = Hash::get($this->KeyResult->getTkr($goalId), 'KeyResult');
+        $fileIds = $this->prepareUploadImages();
+        // アクション登録
+        $saveAction = [
+            "goal_id" => $goalId,
+            "team_id" => $teamId,
+            "user_id" => $uid,
+            "name" => "ああああ\nいいいいいいい",
+            "key_result_id" => $kr['id'],
+            "key_result_current_value" => $kr['current_value'],
+        ];
+        $this->ActionService->create($saveAction, $fileIds, null);
+        // KR進捗日次ログ保存
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+        return $goalId;
     }
 
     /**

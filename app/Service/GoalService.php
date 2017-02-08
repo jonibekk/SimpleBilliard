@@ -1660,11 +1660,15 @@ class GoalService extends AppService
             $Goal->begin();
 
             // ゴール削除
-            if (!$Goal->delete($goalId)) {
-                throw new Exception(sprintf("Failed delete goal. data:%s", var_export(compact('goalId'), true)));
-            }
+            // TODO:将来的にコメントアウトを外す
+            // コメントアウト理由：deleteメソッドはSoftDeleteBehaviorのbeforeDeleteメソッドが原因で成功失敗に関わらずfalseを返しているため
+//            if (!$Goal->delete($goalId)) {
+//                throw new Exception(sprintf("Failed delete goal. data:%s", var_export(compact('goalId'), true)));
+//            }
+            $Goal->delete($goalId);
+
             // ゴールラベル削除
-            if (!$GoalLabel->deleteAll(['goal_id' => $goalId])) {
+            if (!$GoalLabel->softDeleteAll(['goal_id' => $goalId])) {
                 throw new Exception(sprintf("Failed delete goal_label. data:%s", var_export(compact('goalId'), true)));
             }
             // ゴールとアクションの紐付けを解除
@@ -1672,7 +1676,7 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Failed release action_result. data:%s", var_export(compact('goalId'), true)));
             }
             // KR進捗日次ログ削除
-            if (!$KrValuesDailyLog->deleteAll(['goal_id' => $goalId]))
+            if (!$KrValuesDailyLog->softDeleteAll(['goal_id' => $goalId]))
             {
                 throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('goalId'), true)));
             }
@@ -1684,6 +1688,7 @@ class GoalService extends AppService
             $Goal->rollback();
             return false;
         }
+
         // KR進捗日次ログキャッシュ削除(チーム単位)
         $KrValuesDailyLogService->deleteCache();
         // アクション可能ゴール一覧キャッシュ削除

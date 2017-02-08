@@ -441,7 +441,7 @@ class KeyResultService extends AppService
                 $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
 
                 // KR進捗日次ログ削除
-                if (!$KrValuesDailyLog->deleteAll(['key_result_id' => $krId]))
+                if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId]))
                 {
                     throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('krId'), true)));
                 }
@@ -634,8 +634,6 @@ class KeyResultService extends AppService
      */
     function delete(int $krId): bool
     {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var ActionResult $ActionResult */
@@ -648,36 +646,39 @@ class KeyResultService extends AppService
 
         try {
             // トランザクション開始
-            $Goal->begin();
+            $KeyResult->begin();
 
             // KR削除
-            if (!$KeyResult->delete($krId)) {
-                throw new Exception(sprintf("Failed delete kr. data:%s", var_export(compact('krId'), true)));
-            }
+            // TODO:将来的にコメントアウトを外す
+            // コメントアウト理由：deleteメソッドはSoftDeleteBehaviorのbeforeDeleteメソッドが原因で成功失敗に関わらずfalseを返しているため
+//            if (!$KeyResult->delete($krId)) {
+//                throw new Exception(sprintf("Failed delete kr. data:%s", var_export(compact('krId'), true)));
+//            }
+            $KeyResult->delete($krId);
 
             //関連アクションの紐付け解除
             if (!$ActionResult->releaseKr($krId)) {
                 throw new Exception(sprintf("Failed release action_result. data:%s", var_export(compact('krId'), true)));
             }
             // KR進捗日次ログ削除
-            if (!$KrValuesDailyLog->deleteAll(['key_result_id' => $krId]))
+            if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId]))
             {
                 throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('krId'), true)));
             }
 
-            $Goal->commit();
+            $KeyResult->commit();
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
-            $Goal->rollback();
+            $KeyResult->rollback();
             return false;
         }
         // KR進捗日次ログキャッシュ削除(チーム単位)
         $KrValuesDailyLogService->deleteCache();
         // アクション可能ゴール一覧キャッシュ削除
-        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
         // ユーザページのマイゴール一覧キャッシュ削除
-        Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($KeyResult->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
 
         return true;

@@ -560,4 +560,58 @@ class AppModel extends Model
         return reset($ret);
     }
 
+    /**
+     * 論理削除
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    function softDelete(int $id) : bool
+    {
+        if (empty($id)) {
+            return false;
+        }
+        $this->id = $id;
+        $data = [
+            'del_flg' => true,
+            'deleted' => REQUEST_TIMESTAMP,
+            'modified' => REQUEST_TIMESTAMP,
+        ];
+        $condition = [
+            'id' => $id,
+            'team_id' => $this->current_team_id,
+            'del_flg' => false,
+        ];
+        $ret = $this->updateAll($data, $condition);
+        $this->log($this->getDataSource()->getLog());
+        return !empty($ret);
+    }
+
+    /**
+     * 論理削除
+     *
+     * @param array $condition
+     *
+     * @return array
+     * @internal param $id
+     */
+    function softDeleteAll(array $condition)
+    {
+        if (empty($condition)) {
+            return false;
+        }
+        $condition = am($condition, [
+            'team_id' => $this->current_team_id,
+            'del_flg' => false,
+        ]);
+        $ret = $this->updateAll([
+            'del_flg' => true,
+            'deleted' => REQUEST_TIMESTAMP,
+            'modified' => REQUEST_TIMESTAMP,
+        ], $condition);
+
+        return !empty($ret);
+    }
+
 }
