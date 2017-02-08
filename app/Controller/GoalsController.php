@@ -473,7 +473,7 @@ class GoalsController extends AppController
 
         //コーチへ通知 & 未認定件数キャッシュクリア
         $isOver1Priority = (isset($goalMember['priority']) && $goalMember['priority'] >= '1');
-        if ($coachId && $isOver1Priority && $this->Goal->isPresentTermGoal($goalId) ) {
+        if ($coachId && $isOver1Priority && $this->Goal->isPresentTermGoal($goalId)) {
             if ($new) {
                 //新規の場合
                 $this->_sendNotifyToCoach($goalMemberId, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
@@ -634,7 +634,6 @@ class GoalsController extends AppController
      * - Form値のバリデーション
      * - リーダー交換処理実行
      * - 関係者に通知
-
      */
     public function exchange_leader_by_leader()
     {
@@ -670,7 +669,6 @@ class GoalsController extends AppController
      * - Form値のバリデーション
      * - リーダー交換処理実行
      * - 関係者に通知
-
      */
     public function assign_leader_by_goal_member()
     {
@@ -1843,7 +1841,7 @@ class GoalsController extends AppController
             return false;
         }
         // 進捗情報を追加
-        $goal['Goal']['progress'] = $GoalService->getProgress($goal['KeyResult']);
+        $goal['Goal']['progress'] = $GoalService->calcProgressByOwnedPriorities($goal['KeyResult']);
         $this->set('goal', $goal);
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);

@@ -109,7 +109,8 @@ class KeyResultService extends AppService
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
-        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
+        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'],
+            $keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
@@ -563,6 +564,8 @@ class KeyResultService extends AppService
      * ダッシュボード表示用にKR一覧を整形
      *
      * @param  array $krs
+     *
+     * @return array
      */
     function processInDashboard(array $krs): array
     {
@@ -582,7 +585,9 @@ class KeyResultService extends AppService
 
     /**
      * アクションを促すメッセージを生成する
+     *
      * @param  $kr
+     *
      * @return string
      */
     function generateActionMessage(array $kr): string
@@ -596,8 +601,9 @@ class KeyResultService extends AppService
 
         if ($completed) {
             return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
-        } else if ($actionCount > 0) {
-            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
+        } elseif ($actionCount > 0) {
+            return __('%s member(s) actioned recently.',
+                '<span class="font_verydark font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
             return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
         } else {
