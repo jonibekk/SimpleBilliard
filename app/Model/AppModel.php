@@ -584,7 +584,6 @@ class AppModel extends Model
             'del_flg' => false,
         ];
         $ret = $this->updateAll($data, $condition);
-        $this->log($this->getDataSource()->getLog());
         return !empty($ret);
     }
 
