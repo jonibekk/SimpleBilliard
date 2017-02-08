@@ -4,6 +4,7 @@ App::uses('AppUtil', 'Util');
 App::uses('EvaluateTerm', 'Model');
 App::uses('KeyResult', 'Model');
 App::uses('KrValuesDailyLog', 'Model');
+App::uses('GlRedis', 'Model');
 
 /**
  * Class KrValuesDailyLogService
@@ -40,7 +41,8 @@ class KrValuesDailyLogService extends AppService
             $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
             if (empty($targetTerm)) {
                 //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
-                throw new PDOException(sprintf("Term data does not exist. teamId: %s targetDate: %s", $teamId, $targetDate));
+                throw new PDOException(sprintf("Term data does not exist. teamId: %s targetDate: %s", $teamId,
+                    $targetDate));
             }
 
             // 対象期間の全KRリスト取得
@@ -49,7 +51,8 @@ class KrValuesDailyLogService extends AppService
                 $krsWithTargetDate = Hash::insert($krs, '{n}.target_date', $targetDate);
                 // ログ保存処理実行
                 if (!$KrValuesDailyLog->bulkInsert($krsWithTargetDate)) {
-                    throw new PDOException(sprintf("Failed to save kr log data. teamId: %s targetDate: %s saveData: %s", $teamId, $targetDate, var_export($krsWithTargetDate, true)));
+                    throw new PDOException(sprintf("Failed to save kr log data. teamId: %s targetDate: %s saveData: %s",
+                        $teamId, $targetDate, var_export($krsWithTargetDate, true)));
                 }
             }
         } catch (PDOException $e) {
@@ -66,5 +69,17 @@ class KrValuesDailyLogService extends AppService
         //commit transaction
         $KrValuesDailyLog->commit();
         return true;
+    }
+
+    /**
+     * ゴールに紐づくKR進捗日次ログのDBレコード＆キャッシュ削除
+     */
+    function deleteCache()
+    {
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        // 本来ならlocal:cache_user_data:{KEY}:*の形で指定したいが、なぜか前方一致だと取得できないのでやむなく部分一致にする。
+        $key = '*:cache_user_data:' . $GlRedis->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":" . date('Ymd')) . ':*';
+        return $GlRedis->deleteKeys($key);
     }
 }
