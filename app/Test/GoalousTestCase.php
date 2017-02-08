@@ -49,7 +49,7 @@ class GoalousTestCase extends CakeTestCase
 
     /**
      * tearDown method
-     *z
+     *
      * @return void
      */
     public function tearDown()
@@ -77,20 +77,6 @@ class GoalousTestCase extends CakeTestCase
         $Goal->current_team_id = $teamId;
         $this->GoalMember->my_uid = $userId;
         $this->GoalMember->current_team_id = $teamId;
-        $this->setDefaultTeamIdAndUid($userId);
-
-        $data = $this->buildGoalData($data, $termType);
-        return $this->GoalService->create($userId, $data);
-    }
-
-    function createAction(int $userId, array $data = [], int $termType = EvaluateTerm::TYPE_CURRENT)
-    {
-        $teamId = 1;
-        /** @var KeyResult $KeyResult */
-        $ActionResult = ClassRegistry::init('ActionResult');
-        /** @var Goal $Goal */
-        $ActionResult->my_uid = $userId;
-        $ActionResult->current_team_id = $teamId;
         $this->setDefaultTeamIdAndUid($userId);
 
         $data = $this->buildGoalData($data, $termType);
@@ -141,33 +127,6 @@ class GoalousTestCase extends CakeTestCase
         $data['end_date'] = date('Y-m-d', $termEndTime);
         return $data;
     }
-//
-//    function buildGoalData(array $data, int $termType)
-//    {
-//        //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
-//        $default = [
-//            "name"             => "ゴール",
-//            "goal_category_id" => 1,
-//            "labels"           => [
-//                "0" => "Goalous"
-//            ],
-//            "term_type"        => "current",
-//            "priority"         => 5,
-//            "description"      => "ゴールの詳細\nです",
-//            "is_wish_approval" => true,
-//            "key_result"       => [
-//                "value_unit"   => 0,
-//                "start_value"  => 0,
-//                "target_value" => 100,
-//                "name"         => "TKR1",
-//                "description"  => "TKR詳細\nです",
-//            ],
-//        ];
-//        $data = am($default, $data);
-//        $termEndTime = $this->EvaluateTerm->getTermData($termType)['end_date'];
-//        $data['end_date'] = date('Y-m-d', $termEndTime);
-//        return $data;
-//    }
 
     function setupTerm($teamId = 1)
     {
