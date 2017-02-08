@@ -962,11 +962,38 @@ class KeyResult extends AppModel
     }
 
     /**
+     * KR進捗算出用のデータ取得
+     * @param array $goalIds
+     *
+     * @return array
+     */
+    function findProgressBaseValues(array $goalIds): array
+    {
+
+        $options = [
+            'conditions' => [
+                'goal_id' => $goalIds,
+            ],
+            'fields'     => [
+                'goal_id',
+                'id',
+                'start_value',
+                'target_value',
+                'current_value',
+                'priority'
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.KeyResult');
+        return $ret;
+    }
+
+    /**
      * KR日次バッチ用にKR一覧を取得
      *
      * @param  int $teamId
      * @param  int $fromTimestamp
-     * @param  int $toTimestamp
+     * @param int  $toTimestamp
      *
      * @return array
      */
@@ -992,35 +1019,9 @@ class KeyResult extends AppModel
             ]
         ];
         $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.KeyResult');
         $this->virtualFields = $backupedVirtualFields;
-        $ret = Hash::extract($ret, '{n}.KeyResult');
-        return $ret;
-    }
 
-    /**
-     * KR進捗算出用のデータ取得
-     *
-     * @param array $goalIds
-     *
-     * @return array
-     */
-    function findProgressBaseValues(array $goalIds): array
-    {
-        $options = [
-            'conditions' => [
-                'goal_id' => $goalIds,
-            ],
-            'fields'     => [
-                'goal_id',
-                'id',
-                'start_value',
-                'target_value',
-                'current_value',
-                'priority'
-            ]
-        ];
-        $ret = $this->find('all', $options);
-        $ret = Hash::extract($ret, '{n}.KeyResult');
         return $ret;
     }
 }
