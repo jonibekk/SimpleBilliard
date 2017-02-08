@@ -27,9 +27,18 @@ class KrValuesDailyLogService extends AppService
         /** @var KrValuesDailyLog $KrValuesDailyLog */
         $KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
 
+        // 指定した日付/チームのログが既に存在する場合は処理をスキップする
         $existingLog = $KrValuesDailyLog->existTeamLog($teamId, $targetDate);
         if ($existingLog) {
             $this->log(sprintf("Already exists kr log data. teamId: %s targetDate: %s", $teamId, $targetDate));
+            return true;
+        }
+
+        // Termが存在しない場合は処理をスキップする
+        // チームにTermが存在しないケースはままあるので、ここでログは吐かない。
+        // 例えば長らくチームの誰もログインしていないケース。
+        $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
+        if (empty($targetTerm)) {
             return true;
         }
 
@@ -37,12 +46,6 @@ class KrValuesDailyLogService extends AppService
         $KrValuesDailyLog->begin();
 
         try {
-            $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
-            if (empty($targetTerm)) {
-                //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
-                throw new PDOException(sprintf("Term data does not exist. teamId: %s targetDate: %s", $teamId, $targetDate));
-            }
-
             // 対象期間の全KRリスト取得
             $krs = $KeyResult->findAllForSavingDailyLog($teamId, $targetTerm['start_date'], $targetTerm['end_date']);
             if ($krs) {
