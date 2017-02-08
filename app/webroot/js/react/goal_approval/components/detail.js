@@ -4,6 +4,8 @@ import GoalBlock from "~/goal_approval/components/elements/detail/GoalBlock";
 import UserCard from "~/goal_approval/components/elements/detail/UserCard";
 import CoachFooter from "~/goal_approval/components/elements/detail/CoachFooter";
 import CoacheeFooter from "~/goal_approval/components/elements/detail/CoacheeFooter";
+import {isObject} from "~/util/base.js";
+
 
 export default class DetailComponent extends React.Component {
   constructor(props) {
@@ -31,6 +33,9 @@ export default class DetailComponent extends React.Component {
     }
 
     const detail = this.props.detail
+    const goal_change_log = isObject(detail.goal_member.goal_change_log) ? detail.goal_member.goal_change_log : {};
+    const tkr_change_log = isObject(detail.goal_member.tkr_change_log) ? detail.goal_member.tkr_change_log : {};
+
     const page_title = detail.goal_member.is_mine ? __("Goal details") : __("Set as a target for evaluation?")
     const coachee_footer = (() => {
       return <CoacheeFooter validationErrors={ detail.validationErrors }
@@ -56,10 +61,10 @@ export default class DetailComponent extends React.Component {
               { coach_action && <div className="goals-approval-detail-coach-action">{ coach_action }</div> }
               <UserCard goal_member={ detail.goal_member } />
               <GoalBlock goal={ detail.goal_member.goal }
-                         goal_change_log={ detail.goal_member.goal_change_log || {} }
+                         goal_change_log={ goal_change_log }
                          goal_changed_columns={ detail.goal_member.goal_changed_columns || {} }
                          top_key_result={ detail.goal_member.top_key_result }
-                         tkr_change_log={ detail.goal_member.tkr_change_log || {} }
+                         tkr_change_log={ tkr_change_log }
                          tkr_changed_columns={ detail.goal_member.tkr_changed_columns || {} }
                          is_leader={ detail.goal_member.is_leader } />
               <Comments approval_histories={ detail.goal_member.approval_histories }
