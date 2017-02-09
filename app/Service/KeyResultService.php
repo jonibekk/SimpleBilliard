@@ -600,12 +600,12 @@ class KeyResultService extends AppService
         $completed = $kr['key_result']['completed'];
 
         if ($completed) {
-            return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
+            return __('Completed this on %s.', $TimeEx->formatDateI18n($completed));
         } elseif ($actionCount > 0) {
             return __('%s member(s) actioned recently.',
                 '<span class="font_verydark font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
-            return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
+            return __("Take action since %s !", $TimeEx->formatDateI18n($latestActioned));
         } else {
             return __('Take first action to this !');
         }
