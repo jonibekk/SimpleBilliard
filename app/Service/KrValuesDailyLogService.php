@@ -79,8 +79,13 @@ class KrValuesDailyLogService extends AppService
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
         // 本来ならlocal:cache_user_data:{KEY}:*の形で指定したいが、なぜか前方一致だと取得できないのでやむなく部分一致にする。
-        $key = '*:cache_user_data:' . $GlRedis->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":" . date('Ymd')) . ':*';
-        return $GlRedis->deleteKeys($key);
+        // ユーザーごとのKR進捗ログキャッシュ削除
+        $key = '*:' . $GlRedis->getCacheKey(CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ":" . date('Y-m-d')).':user:*';
+        $GlRedis->deleteKeys($key);
+        
+        // ゴールごとのKR進捗ログキャッシュ削除
+        $key = '*:' . $GlRedis->getCacheKey(CACHE_KEY_GOAL_KR_VALUES_DAILY_LOG . ":*:" . date('Y-m-d'));
+        $GlRedis->deleteKeys($key);
     }
 
     /**
