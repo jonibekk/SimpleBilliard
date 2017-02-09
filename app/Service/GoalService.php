@@ -1147,7 +1147,7 @@ class GoalService extends AppService
         $timestamp = strtotime($graphStartDate);
         $graphEndTimestamp = strtotime($graphEndDate);
         while ($timestamp <= $graphEndTimestamp) {
-            $ret[] = $TimeEx->dateLocalFormat($timestamp);
+            $ret[] = $TimeEx->formatDateI18n($timestamp);
             $timestamp = strtotime('+1 day', $timestamp);
         }
         return $ret;

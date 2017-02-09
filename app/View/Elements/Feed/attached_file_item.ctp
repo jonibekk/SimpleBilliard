@@ -137,7 +137,7 @@ if (!isset($message_page_image)) {
         <div class="font_11px font_lightgray">
             <?php if ($page_type === 'file_list'): ?>
                 <span
-                    title="<?= $this->TimeEx->datetimeLocalFormat(h($data['created'])) ?>"><?= $this->TimeEx->elapsedTime(h($data['created'])) ?></span>
+                    title="<?= $this->TimeEx->formatDatetimeI18n(h($data['created'])) ?>"><?= $this->TimeEx->elapsedTime(h($data['created'])) ?></span>
                 <span class="font_lightgray"> ･ </span>
             <?php endif; ?>
             <span class=""><?= h($data['file_ext']) ?></span>

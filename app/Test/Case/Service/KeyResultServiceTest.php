@@ -271,9 +271,10 @@ class KeyResultServiceTest extends GoalousTestCase
         $TimeEx = new TimeExHelper(new View());
 
         // 完了KR
-        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = 1485310914, $actions = []);
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = 1485310914,
+            $actions = []);
         $res = $this->KeyResultService->generateActionMessage($kr);
-        $expected = __('Completed this on %s.', $TimeEx->dateLocalFormat(1485310914));
+        $expected = __('Completed this on %s.', $TimeEx->formatDateI18n(1485310914));
         $this->assertEquals($res, $expected);
 
         // 最近アクションがあった未完了KR
@@ -285,7 +286,7 @@ class KeyResultServiceTest extends GoalousTestCase
         // 最近アクションが無い未完了KR
         $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = null, $actions = []);
         $res = $this->KeyResultService->generateActionMessage($kr);
-        $expected = __("Take action since %s !", $TimeEx->dateLocalFormat(1485310914));
+        $expected = __("Take action since %s !", $TimeEx->formatDateI18n(1485310914));
         $this->assertEquals($res, $expected);
 
         // 一度もアクションが無い未完了KR
@@ -298,9 +299,9 @@ class KeyResultServiceTest extends GoalousTestCase
     private function _getKrForGenerateActionMessage($latestActioned, $completed, $actions)
     {
         $kr = [
-            'key_result' => [
+            'key_result'     => [
                 'latest_actioned' => $latestActioned,
-                'completed' => $completed
+                'completed'       => $completed
             ],
             'action_results' => $actions
         ];
