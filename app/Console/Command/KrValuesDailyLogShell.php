@@ -97,11 +97,11 @@ class KrValuesDailyLogShell extends AppShell
             }
         }
 
-        $this->out(sprintf('Done! success: %d failure: %d', $successCount, count($failureTeams)));
+        $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount, count($failureTeams)));
 
         // 保存に失敗したチームは一度だけ再実行する
         if (count($failureTeams) > 0 && !$isRerunning) {
-            $this->out(sprintf("Rerun batch for failure teams. teamIds: %s", implode(",", $failureTeams)));
+            $this->log(sprintf("Rerun batch for only failure teams. failureTeamIds: %s", implode(",", $failureTeams)));
             $this->_saveKrValuesDailyLogsAsBulk($failureTeams, $targetDate, true);
         }
 

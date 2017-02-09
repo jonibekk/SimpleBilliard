@@ -53,7 +53,7 @@ if (!isset($top_lang)) {
                         ]); ?>
                     </li>
                     <li class="nav-item" id="h-nav-blog">
-                        <?= $this->Html->link(__('Blog'), 'http://blog.isao.co.jp/',
+                        <?= $this->Html->link(__('Blog'), 'http://blog.goalous.com/',
                             array('target' => '_blank')); ?>
                     </li>
                     <li class="nav-item" id="h-nav-contact">
