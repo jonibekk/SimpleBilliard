@@ -343,11 +343,7 @@ class GlRedis extends AppModel
             throw new Exception('cannot use "*" for target. if want to delete all key, use method deleteAllData()');
         }
         $keys = $this->Db->keys($target);
-        debug('$keys');
-        debug($keys);
         $prefix = $this->Db->config['prefix'];
-        debug('$prefix');
-        debug($prefix);
         foreach ($keys as $k) {
             $keys[$k] = str_replace($prefix, "", $k);
         }
