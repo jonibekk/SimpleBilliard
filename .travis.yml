@@ -79,7 +79,7 @@ before_script:
         'timeout'     => 0,
         'persistent'  => false,
         'unix_socket' => '',
-        'prefix'      => 'test:',
+        'prefix'      => 'local:test:',
     );
 
     public function __construct() {
@@ -87,15 +87,6 @@ before_script:
         \$config = array_merge(\$this->default, \$this->identities[\$db]);
         if (is_array(\$config['database'])) {
           \$config['database'] = \$config['database']['default'];
-        }
-        \$this->default = \$config;
-        //set prefix of redis
-        if (isset(\$this->redis)) {
-            \$this->redis['prefix'] = ENV_NAME . ":";
-        }
-        //set prefix of redis_test
-        if (isset(\$this->redis_test)) {
-            \$this->redis_test['prefix'] = ENV_NAME . ":" . \$this->redis_test['prefix'];
         }
 
     }
