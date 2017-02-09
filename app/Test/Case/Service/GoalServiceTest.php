@@ -795,6 +795,7 @@ class GoalServiceTest extends GoalousTestCase
         $targetEndTimestamp = time();
 
         $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //for debug
         //過去ログを直接書き換えてキャッシュが効いてるかどうかの確認
         $this->KrValuesDailyLog->updateAll(['current_value' => 0], ['KrValuesDailyLog.goal_id' => $goalId]);
         $after1 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
