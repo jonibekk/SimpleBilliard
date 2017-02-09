@@ -18,6 +18,7 @@ App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 
 /**
@@ -28,6 +29,7 @@ App::import('Service', 'GoalService');
  * @property GoalMember   $GoalMember
  * @property Team         $Team
  * @property GoalService  $GoalService
+ * @property GlRedis      $GlRedis
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -39,12 +41,14 @@ class GoalousTestCase extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        Cache::config('team_info', ['prefix' => 'test_cache_team_info:']);
-        Cache::config('user_data', ['prefix' => 'test_cache_user_data:']);
+        Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
+        Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->GoalService = ClassRegistry::init('GoalService');
+        $this->GlRedis = ClassRegistry::init('GlRedis');
+        $this->GlRedis->changeDbSource('redis_test');
     }
 
     /**
@@ -333,23 +337,44 @@ class GoalousTestCase extends CakeTestCase
         return $goalId;
     }
 
-    function createKr($goalId, $teamId, $userId, $progress, $endDate = null)
-    {
+    function createKr(
+        $goalId,
+        $teamId,
+        $userId,
+        $currentValue,
+        $startValue = 0,
+        $targetValue = 100,
+        $priority = 3,
+        $termType = EvaluateTerm::TYPE_CURRENT
+    ) {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
+        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
+        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
 
         $kr = [
             'goal_id'       => $goalId,
             'team_id'       => $teamId,
             'user_id'       => $userId,
             'name'          => 'テストKR',
-            'start_value'   => 0,
-            'target_value'  => 100,
+            'start_value'   => $startValue,
+            'target_value'  => $targetValue,
             'value_unit'    => 0,
-            'current_value' => $progress,
+            'current_value' => $currentValue,
+            'start_date'    => $startDate,
+            'end_date'      => $endDate,
+            'priority'      => $priority,
         ];
         $KeyResult->create();
         $KeyResult->save($kr);
+        return $KeyResult->getLastInsertID();
+    }
+
+    function delKr($krId)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        $KeyResult->delete($krId);
     }
 
     function createTeam($startTermMonth = 4, $borderMonths = 6)

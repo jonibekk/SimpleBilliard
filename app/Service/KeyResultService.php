@@ -109,7 +109,8 @@ class KeyResultService extends AppService
         $keyResult['start_value'] = $this->formatBigFloat($keyResult['start_value']);
         $keyResult['target_value'] = $this->formatBigFloat($keyResult['target_value']);
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
-        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'], $keyResult['current_value']);
+        $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'],
+            $keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
@@ -434,6 +435,20 @@ class KeyResultService extends AppService
                 ) {
                     throw new Exception(sprintf("Failed reset kr progress log. krId:%s", $krId));
                 }
+                /** @var KrValuesDailyLogService $KrValuesDailyLogService */
+                $KrValuesDailyLogService = ClassRegistry::init("KrValuesDailyLogService");
+                /** @var KrValuesDailyLog $KrValuesDailyLog */
+                $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
+
+                // KR進捗日次ログ削除
+                if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId]))
+                {
+                    throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('krId'), true)));
+                }
+
+                // KR進捗日次ログキャッシュ削除(チーム単位)
+                $KrValuesDailyLogService->deleteCache();
+
             }
 
             // KR変更ログ保存
@@ -563,6 +578,8 @@ class KeyResultService extends AppService
      * ダッシュボード表示用にKR一覧を整形
      *
      * @param  array $krs
+     *
+     * @return array
      */
     function processInDashboard(array $krs): array
     {
@@ -582,7 +599,9 @@ class KeyResultService extends AppService
 
     /**
      * アクションを促すメッセージを生成する
+     *
      * @param  $kr
+     *
      * @return string
      */
     function generateActionMessage(array $kr): string
@@ -595,13 +614,74 @@ class KeyResultService extends AppService
         $completed = $kr['key_result']['completed'];
 
         if ($completed) {
-            return __('Completed this on %s.', $TimeEx->dateLocalFormat($completed));
-        } else if ($actionCount > 0) {
-            return __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">' . $actionCount . '</span>');
+            return __('Completed this on %s.', $TimeEx->formatDateI18n($completed));
+        } elseif ($actionCount > 0) {
+            return __('%s member(s) actioned recently.',
+                '<span class="font_verydark font_bold">' . $actionCount . '</span>');
         } elseif ($latestActioned) {
-            return __("Take action since %s !", $TimeEx->dateLocalFormat($latestActioned));
+            return __("Take action since %s !", $TimeEx->formatDateI18n($latestActioned));
         } else {
             return __('Take first action to this !');
         }
     }
+
+    /**
+     * KR削除
+     * TODO:削除ポリシー決定後、削除処理が不足していたら対応
+     *
+     * @param $krId
+     * @return bool
+     */
+    function delete(int $krId): bool
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var KrValuesDailyLogService $KrValuesDailyLogService */
+        $KrValuesDailyLogService = ClassRegistry::init("KrValuesDailyLogService");
+        /** @var KrValuesDailyLog $KrValuesDailyLog */
+        $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
+
+
+        try {
+            // トランザクション開始
+            $KeyResult->begin();
+
+            // KR削除
+            // TODO:将来的にコメントアウトを外す
+            // コメントアウト理由：deleteメソッドはSoftDeleteBehaviorのbeforeDeleteメソッドが原因で成功失敗に関わらずfalseを返しているため
+//            if (!$KeyResult->delete($krId)) {
+//                throw new Exception(sprintf("Failed delete kr. data:%s", var_export(compact('krId'), true)));
+//            }
+            $KeyResult->delete($krId);
+
+            //関連アクションの紐付け解除
+            if (!$ActionResult->releaseKr($krId)) {
+                throw new Exception(sprintf("Failed release action_result. data:%s", var_export(compact('krId'), true)));
+            }
+            // KR進捗日次ログ削除
+            if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId]))
+            {
+                throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('krId'), true)));
+            }
+
+            $KeyResult->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $KeyResult->rollback();
+            return false;
+        }
+        // KR進捗日次ログキャッシュ削除(チーム単位)
+        $KrValuesDailyLogService->deleteCache();
+        // アクション可能ゴール一覧キャッシュ削除
+        Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($KeyResult->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+
+
+        return true;
+    }
+
 }

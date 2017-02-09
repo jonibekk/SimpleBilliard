@@ -72,7 +72,7 @@ class AppUtil
     static function isHash(&$ar)
     {
         // 空の配列はhashとみなさない
-        if(count($ar) === 0) {
+        if (count($ar) === 0) {
             return false;
         }
 
@@ -127,5 +127,19 @@ class AppUtil
             return true;
         }
         return false;
+    }
+
+    /**
+     * 小数点以下の桁数を指定して切り捨てる
+     *
+     * @param float $value
+     * @param int   $numDecimalPlace
+     *
+     * @return float
+     */
+    static function floor(float $value, int $numDecimalPlace = 1): float
+    {
+        $tmpNum = pow(10, $numDecimalPlace);
+        return floor($value * $tmpNum) / $tmpNum;
     }
 }
