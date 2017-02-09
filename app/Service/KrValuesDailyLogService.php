@@ -72,6 +72,7 @@ class KrValuesDailyLogService extends AppService
 
     /**
      * KR日次ログをキャッシュから取得
+     * msgpack利用
      *
      * @param int    $userId
      * @param string $date Y-m-d
@@ -80,12 +81,20 @@ class KrValuesDailyLogService extends AppService
      */
     function getKrValueDailyLogFromCache(int $userId, string $date)
     {
-        return Cache::read($this->getCacheKeyUserGoalKrValuesDailyLog($userId, $date), 'user_data');
+        $data = Cache::read($this->getCacheKeyUserGoalKrValuesDailyLog($userId, $date), 'user_data');
+        if($data === false){
+            return false;
+        }
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data = msgpack_unpack($data);
+
+        return $data;
     }
 
     /**
      * KR日次ログをキャッシュに書き出す
      * 生存期間は当日の終わりまで(UTC)
+     * msgpack利用
      *
      * @param int    $userId
      * @param string $date Y-m-d
@@ -93,6 +102,9 @@ class KrValuesDailyLogService extends AppService
      */
     function writeKrValueDailyLogToCache(int $userId, string $date, array $data)
     {
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data = msgpack_pack($data);
+
         $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
         Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
         $cacheKey = $this->getCacheKeyUserGoalKrValuesDailyLog($userId, $date);
@@ -129,6 +141,7 @@ class KrValuesDailyLogService extends AppService
 
     /**
      * 単一ゴールのKR日次ログをキャッシュから取得
+     * msgpack利用
      *
      * @param int    $goalId
      * @param string $date Y-m-d
@@ -137,12 +150,19 @@ class KrValuesDailyLogService extends AppService
      */
     function getGoalKrValueDailyLogFromCache(int $goalId, string $date)
     {
-        return Cache::read($this->getCacheKeyGoalKrValuesDailyLog($goalId, $date), 'team_info');
+        $data = Cache::read($this->getCacheKeyGoalKrValuesDailyLog($goalId, $date), 'team_info');
+        if($data === false){
+            return false;
+        }
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data = msgpack_unpack($data);
+        return $data;
     }
 
     /**
      * 単一ゴールのKR日次ログをキャッシュに書き出す
      * 生存期間は当日の終わりまで(UTC)
+     * msgpack利用
      *
      * @param int    $goalId
      * @param string $date Y-m-d
@@ -150,6 +170,9 @@ class KrValuesDailyLogService extends AppService
      */
     function writeGoalKrValueDailyLogToCache(int $goalId, string $date, array $data)
     {
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data = msgpack_pack($data);
+
         $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
         Cache::set('duration', $remainSecUntilEndOfTheDay, 'team_info');
         $cacheKey = $this->getCacheKeyGoalKrValuesDailyLog($goalId, $date);
