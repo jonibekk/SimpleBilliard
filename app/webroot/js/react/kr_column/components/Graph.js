@@ -1,6 +1,6 @@
 import React from "react";
-// import c3 from "c3";
-// import "c3/c3.css";
+import c3 from "c3";
+import "c3/c3.css";
 
 export default class Graph extends React.Component {
   constructor(props) {

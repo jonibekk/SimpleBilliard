@@ -332,22 +332,25 @@ class GlRedis extends AppModel
      *   後方一致: '*hoge'
      *   中間一致: '*hoge*'
      *
-     * @param string $target
+     * @param string $pattern
      *
      * @return int
      * @throws Exception
      */
-    public function deleteKeys(string $target): int
+    public function deleteKeys(string $pattern)
     {
-        if ($target == '*') {
+        if ($pattern == '*') {
             throw new Exception('cannot use "*" for target. if want to delete all key, use method deleteAllData()');
         }
-        $keys = $this->Db->keys($target);
+        $keys = $this->Db->keys($pattern);
+        /** @noinspection PhpInternalEntityUsedInspection */
+        $pipe = $this->Db->multi(Redis::PIPELINE);
         $prefix = $this->Db->config['prefix'];
         foreach ($keys as $k) {
-            $keys[$k] = str_replace($prefix, "", $k);
+            $k = str_replace($prefix, "", $k);
+            $pipe->delete($k);
         }
-        return $this->Db->del($keys);
+        $pipe->exec();
     }
 
     /**
