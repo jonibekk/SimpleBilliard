@@ -1555,4 +1555,70 @@ class GoalService extends AppService
 
         return $ret;
     }
+
+    /**
+     * ゴール削除
+     * TODO:削除ポリシー決定後、削除処理が不足していたら対応(KRやアクション等)
+     *
+     * @param $goalId
+     *
+     * @return bool
+     */
+    function delete(int $goalId): bool
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var GoalLabel $GoalLabel */
+        $GoalLabel = ClassRegistry::init("GoalLabel");
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var KrValuesDailyLogService $KrValuesDailyLogService */
+        $KrValuesDailyLogService = ClassRegistry::init("KrValuesDailyLogService");
+        /** @var KrValuesDailyLog $KrValuesDailyLog */
+        $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
+
+        try {
+            // トランザクション開始
+            $Goal->begin();
+
+            // ゴール削除
+            // TODO:将来的にコメントアウトを外す
+            // コメントアウト理由：deleteメソッドはSoftDeleteBehaviorのbeforeDeleteメソッドが原因で成功失敗に関わらずfalseを返しているため
+//            if (!$Goal->delete($goalId)) {
+//                throw new Exception(sprintf("Failed delete goal. data:%s", var_export(compact('goalId'), true)));
+//            }
+            $Goal->delete($goalId);
+
+            // ゴールラベル削除
+            if (!$GoalLabel->softDeleteAll(['goal_id' => $goalId])) {
+                throw new Exception(sprintf("Failed delete goal_label. data:%s", var_export(compact('goalId'), true)));
+            }
+            // ゴールとアクションの紐付けを解除
+            if (!$ActionResult->releaseGoal($goalId)) {
+                throw new Exception(sprintf("Failed release action_result. data:%s", var_export(compact('goalId'), true)));
+            }
+            // KR進捗日次ログ削除
+            if (!$KrValuesDailyLog->softDeleteAll(['goal_id' => $goalId]))
+            {
+                throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('goalId'), true)));
+            }
+
+            $Goal->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $Goal->rollback();
+            return false;
+        }
+
+        // KR進捗日次ログキャッシュ削除(チーム単位)
+        $KrValuesDailyLogService->deleteCache();
+        // アクション可能ゴール一覧キャッシュ削除
+        Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+
+
+        return true;
+    }
 }
