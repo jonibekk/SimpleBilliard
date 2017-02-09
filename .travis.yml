@@ -89,6 +89,15 @@ before_script:
           \$config['database'] = \$config['database']['default'];
         }
         \$this->default = \$config;
+        //set prefix of redis
+        if (isset(\$this->redis)) {
+            \$this->redis['prefix'] = ENV_NAME . ":";
+        }
+        //set prefix of redis_test
+        if (isset(\$this->redis_test)) {
+            \$this->redis_test['prefix'] = ENV_NAME . ":" . \$this->redis_test['prefix'];
+        }
+
     }
     }" > app/Config/database.php
   - mkdir -p build/logs
