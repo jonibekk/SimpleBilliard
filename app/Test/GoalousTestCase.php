@@ -18,6 +18,7 @@ App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 
 /**
@@ -28,6 +29,7 @@ App::import('Service', 'GoalService');
  * @property GoalMember   $GoalMember
  * @property Team         $Team
  * @property GoalService  $GoalService
+ * @property GlRedis      $GlRedis
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -39,12 +41,14 @@ class GoalousTestCase extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        Cache::config('team_info', ['prefix' => 'test_cache_team_info:']);
-        Cache::config('user_data', ['prefix' => 'test_cache_user_data:']);
+        Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
+        Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->GoalService = ClassRegistry::init('GoalService');
+        $this->GlRedis = ClassRegistry::init('GlRedis');
+        $this->GlRedis->changeDbSource('redis_test');
     }
 
     /**
