@@ -583,6 +583,7 @@ class AppModel extends Model
             'team_id' => $this->current_team_id,
             'del_flg' => false,
         ];
+        // saveだと削除済みのレコードも更新してしまうため、updateAllを使用
         $ret = $this->updateAll($data, $condition);
         return !empty($ret);
     }
