@@ -18,6 +18,7 @@ App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 
 /**
@@ -28,6 +29,7 @@ App::import('Service', 'GoalService');
  * @property GoalMember   $GoalMember
  * @property Team         $Team
  * @property GoalService  $GoalService
+ * @property GlRedis      $GlRedis
  */
 class GoalousTestCase extends CakeTestCase
 {

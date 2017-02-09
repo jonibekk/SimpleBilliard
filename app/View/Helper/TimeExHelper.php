@@ -137,16 +137,16 @@ class TimeExHelper extends AppHelper
         elseif ($unixtime > strtotime("-1 year")) {
             //「７月１３日」
             if ($type == 'rough') {
-                $elapsed = $this->dateLocalFormat($unixtime);
+                $elapsed = $this->formatDateI18n($unixtime);
             } //「７月１３日 15:10」
             else {
-                $elapsed = $this->datetimeLocalFormat($unixtime);
+                $elapsed = $this->formatDatetimeI18n($unixtime);
             }
         } //「2013年７月１３日」 else
         else {
-            $elapsed = $this->yearDayLocalFormat($unixtime);
+            $elapsed = $this->formatYearDayI18n($unixtime);
         }
-        $full_time = $this->fullTimeLocalFormat($unixtime);
+        $full_time = $this->formatFullTimeI18n($unixtime);
         return "<span title='{$full_time}'>{$elapsed}</span>";
     }
 
@@ -162,7 +162,7 @@ class TimeExHelper extends AppHelper
         return __("%s hours", $hours);
     }
 
-    public function datetimeLocalFormat($unixtime, $isLocalTime = true)
+    public function formatDatetimeI18n($unixtime, $isLocalTime = true)
     {
         $time = $unixtime;
         if ($isLocalTime) {
@@ -179,7 +179,7 @@ class TimeExHelper extends AppHelper
         return $this->Time->i18nFormat($time, $format);
     }
 
-    public function dateLocalFormat($unixtime, $isLocalTime = true)
+    public function formatDateI18n($unixtime, $isLocalTime = true)
     {
         $time = $unixtime;
         if ($isLocalTime) {
@@ -195,7 +195,7 @@ class TimeExHelper extends AppHelper
         return $this->Time->i18nFormat($time, $format);
     }
 
-    public function yearDayLocalFormat($unixtime, $isLocalTime = true)
+    public function formatYearDayI18n($unixtime, $isLocalTime = true)
     {
         $time = $unixtime;
         if ($isLocalTime) {
@@ -211,7 +211,7 @@ class TimeExHelper extends AppHelper
         return $this->Time->i18nFormat($time, $format);
     }
 
-    public function fullTimeLocalFormat($unixtime, $isLocalTime = true)
+    public function formatFullTimeI18n($unixtime, $isLocalTime = true)
     {
         $time = $unixtime;
         if ($isLocalTime) {

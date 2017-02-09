@@ -17,6 +17,7 @@ App::import('Service', 'KrValuesDailyLogService');
  * @property Goal                    $Goal
  * @property KrValuesDailyLogService $KrValuesDailyLogService
  * @property KeyResult               $KeyResult
+ * @property KrValuesDailyLog        $KrValuesDailyLog
  */
 class GoalServiceTest extends GoalousTestCase
 {
@@ -69,6 +70,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
         $this->KeyResult = ClassRegistry::init('KeyResult');
         $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
+        $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
+
         $this->setDefaultTeamIdAndUid();
     }
 
@@ -412,18 +415,16 @@ class GoalServiceTest extends GoalousTestCase
     function testUserGraphDataBasicMiddleTerm()
     {
         $this->setDefaultTeamIdAndUid();
-        $this->setupTerm();
+        $this->setupCurrentTermExtendDays();
         $targetDays = 10;
         $maxBufferDays = 2;
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
-        $targetEndTimestamp = $term['start_date'] + 15 * DAY;
+        $targetEndTimestamp = time();
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-
         //データ件数のチェック(10日分+項目名1=11)
         $this->assertCount(11, $ret[0]);//sweet spot top
         $this->assertCount(11, $ret[1]);//sweet spot bottom
-        $this->assertCount(9, $ret[2]);//data(10日-バッファ2+項目1=9)
+        $this->assertCount(8, $ret[2]);//data(10日-バッファ2日-1日(当日のデータなし)+項目1個=8)
         $this->assertCount(11, $ret[3]);//x
         //sweet spotの開始値が0以外になっていること
         $this->assertNotEquals(0, $ret[0][1]);
@@ -433,7 +434,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertTrue($ret[1][9] < $ret[1][10]);
         //dataは全てnullになっていること
         $this->assertNull($ret[2][1]);
-        $this->assertNull($ret[2][8]);
+        $this->assertNull($ret[2][7]);
     }
 
     /**
@@ -857,6 +858,34 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals(1, $decimalNum);
         //最新と直前の進捗が同じ値になる事
         $this->assertEquals($ret[2][8], $ret[2][7]);
+    }
+
+    /**
+     * キャッシュが正常に効いているか？
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_cache()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //for debug
+        //過去ログを直接書き換えてキャッシュが効いてるかどうかの確認
+        $this->KrValuesDailyLog->updateAll(['current_value' => 0], ['KrValuesDailyLog.goal_id' => $goalId]);
+        $after1 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //ログ書き換えてもキャッシュが効いてるから過去ログの結果が変わらないこと
+        $this->assertEquals($before[2][7], $after1[2][7]);
+        //過去ログのキャッシュを削除して、結果が変わる事を確認
+        $this->GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ':*');
+        $after2 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        $this->assertNotEquals($before[2][7], $after2[2][7]);
     }
 
     /**

@@ -268,8 +268,8 @@ class ApiGoalService extends ApiService
         );
         $ret['data']['progress_graph'] = [
             'data'       => $progressGraph,
-            'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate']), false),
-            'end_date'   => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate']), false),
+            'start_date' => $TimeEx->formatDateI18n(strtotime($graphRange['graphStartDate']), false),
+            'end_date'   => $TimeEx->formatDateI18n(strtotime($graphRange['graphEndDate']), false),
         ];
 
         return $ret;
