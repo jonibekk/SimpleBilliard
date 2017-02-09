@@ -995,7 +995,6 @@ class GlRedis extends AppModel
             throw new RuntimeException(__("Not allowed to specify."));
         }
         $keys = $this->Db->keys($pattern);
-        debug($keys);
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         $env_name = ENV_NAME . ":";
