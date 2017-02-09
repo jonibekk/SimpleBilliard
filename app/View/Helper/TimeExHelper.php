@@ -162,9 +162,12 @@ class TimeExHelper extends AppHelper
         return __("%s hours", $hours);
     }
 
-    public function datetimeLocalFormat($unixtime)
+    public function datetimeLocalFormat($unixtime, $isLocalTime = true)
     {
-        $local_time = $unixtime + ($this->timeOffset * 60 * 60);
+        $time = $unixtime;
+        if ($isLocalTime) {
+            $time += $this->timeOffset * HOUR;
+        }
 
         switch (Configure::read('Config.language')) {
             case "jpn":
@@ -173,12 +176,15 @@ class TimeExHelper extends AppHelper
             default:
                 $format = "%b %e at %l:%M%P";
         }
-        return $this->Time->i18nFormat($local_time, $format);
+        return $this->Time->i18nFormat($time, $format);
     }
 
-    public function dateLocalFormat($unixtime)
+    public function dateLocalFormat($unixtime, $isLocalTime = true)
     {
-        $local_time = $unixtime + ($this->timeOffset * 60 * 60);
+        $time = $unixtime;
+        if ($isLocalTime) {
+            $time += $this->timeOffset * HOUR;
+        }
         switch (Configure::read('Config.language')) {
             case "jpn":
                 $format = "%b%e日";
@@ -186,12 +192,15 @@ class TimeExHelper extends AppHelper
             default:
                 $format = "%b %e";
         }
-        return $this->Time->i18nFormat($local_time, $format);
+        return $this->Time->i18nFormat($time, $format);
     }
 
-    public function yearDayLocalFormat($unixtime)
+    public function yearDayLocalFormat($unixtime, $isLocalTime = true)
     {
-        $local_time = $unixtime + ($this->timeOffset * 60 * 60);
+        $time = $unixtime;
+        if ($isLocalTime) {
+            $time += $this->timeOffset * HOUR;
+        }
         switch (Configure::read('Config.language')) {
             case "jpn":
                 $format = "%Y年%b%e日";
@@ -199,12 +208,15 @@ class TimeExHelper extends AppHelper
             default:
                 $format = "%b %e %Y";
         }
-        return $this->Time->i18nFormat($local_time, $format);
+        return $this->Time->i18nFormat($time, $format);
     }
 
-    public function fullTimeLocalFormat($unixtime)
+    public function fullTimeLocalFormat($unixtime, $isLocalTime = true)
     {
-        $local_time = $unixtime + ($this->timeOffset * 60 * 60);
+        $time = $unixtime;
+        if ($isLocalTime) {
+            $time += $this->timeOffset * HOUR;
+        }
         switch (Configure::read('Config.language')) {
             case "jpn":
                 $format = "%Y年%b%e日 %H:%M";
@@ -212,7 +224,7 @@ class TimeExHelper extends AppHelper
             default:
                 $format = "%b %e %Y, at %l:%M%P";
         }
-        return $this->Time->i18nFormat($local_time, $format);
+        return $this->Time->i18nFormat($time, $format);
     }
 
     public function getTimezoneText($timezone)

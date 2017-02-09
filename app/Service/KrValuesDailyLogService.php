@@ -82,4 +82,75 @@ class KrValuesDailyLogService extends AppService
         $key = '*:cache_user_data:' . $GlRedis->getCacheKey(CACHE_KEY_USER_GOAL_PROGRESS_LOG . ":" . date('Ymd')) . ':*';
         return $GlRedis->deleteKeys($key);
     }
+
+    /**
+     * KR日次ログをキャッシュから取得
+     *
+     * @param int    $userId
+     * @param string $date Y-m-d
+     *
+     * @return mixed
+     */
+    function getKrValueDailyLogFromCache(int $userId, string $date)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        return Cache::read($Goal->getCacheKey(CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ":" . $date,
+            true, $userId), 'user_data');
+    }
+
+    /**
+     * KR日次ログをキャッシュに書き出す
+     * 生存期間は当日の終わりまで(UTC)
+     *
+     * @param int    $userId
+     * @param string $date Y-m-d
+     * @param array  $data 重要度を掛け合わせたもの
+     */
+    function writeKrValueDailyLogToCache(int $userId, string $date, array $data)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
+        Cache::set('duration', $remainSecUntilEndOfTheDay, 'user_data');
+        Cache::write($Goal->getCacheKey(CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ":" . $date,
+            true, $userId), $data, 'user_data');
+    }
+
+    /**
+     * 単一ゴールのKR日次ログをキャッシュから取得
+     *
+     * @param int    $goalId
+     * @param string $date Y-m-d
+     *
+     * @return mixed
+     */
+    function getGoalKrValueDailyLogFromCache(int $goalId, string $date)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        return Cache::read(
+            $Goal->getCacheKey(CACHE_KEY_GOAL_KR_VALUES_DAILY_LOG . ":goal_id:$goalId:$date"),
+            'team_info');
+    }
+
+    /**
+     * 単一ゴールのKR日次ログをキャッシュに書き出す
+     * 生存期間は当日の終わりまで(UTC)
+     *
+     * @param int    $goalId
+     * @param string $date Y-m-d
+     * @param array  $data
+     */
+    function writeGoalKrValueDailyLogToCache(int $goalId, string $date, array $data)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $remainSecUntilEndOfTheDay = strtotime('tomorrow') - time();
+        Cache::set('duration', $remainSecUntilEndOfTheDay, 'team_info');
+        Cache::write(
+            $Goal->getCacheKey(CACHE_KEY_GOAL_KR_VALUES_DAILY_LOG . ":goal_id:$goalId:$date"),
+            $data,
+            'team_info');
+    }
 }
