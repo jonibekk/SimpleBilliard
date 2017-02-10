@@ -196,11 +196,11 @@ class GoalServiceTest extends GoalousTestCase
         $fileIds = $this->prepareUploadImages();
         // アクション登録
         $saveAction = [
-            "goal_id" => $goalId,
-            "team_id" => $teamId,
-            "user_id" => $uid,
-            "name" => "ああああ\nいいいいいいい",
-            "key_result_id" => $kr['id'],
+            "goal_id"                  => $goalId,
+            "team_id"                  => $teamId,
+            "user_id"                  => $uid,
+            "name"                     => "ああああ\nいいいいいいい",
+            "key_result_id"            => $kr['id'],
             "key_result_current_value" => $kr['current_value'],
         ];
         $this->ActionService->create($saveAction, $fileIds, null);
@@ -384,7 +384,7 @@ class GoalServiceTest extends GoalousTestCase
      * 正しい件数で正しいデータが取得できていること
      * データがない場合
      */
-    function testUserGraphDataBasicStartTerm()
+    function test_getUserAllGoalProgressForDrawingGraph_basicStartTerm()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
@@ -394,7 +394,6 @@ class GoalServiceTest extends GoalousTestCase
         $termStartTimestamp = $term['start_date'];
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($termStartTimestamp, $targetDays, $maxBufferDays);
-
         //データ件数のチェック(10日分+項目名1=11)
         $this->assertCount(11, $ret[0]);//sweet spot top
         $this->assertCount(11, $ret[1]);//sweet spot bottom
@@ -412,7 +411,7 @@ class GoalServiceTest extends GoalousTestCase
      * 正しい件数で正しいデータが取得できていること
      * データがない場合
      */
-    function testUserGraphDataBasicMiddleTerm()
+    function test_getUserAllGoalProgressForDrawingGraph_basicMiddleTerm()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermExtendDays();
@@ -442,7 +441,7 @@ class GoalServiceTest extends GoalousTestCase
      * 正しい件数で正しいデータが取得できていること
      * データがない場合
      */
-    function testUserGraphDataBasicEndTerm()
+    function test_getUserAllGoalProgressForDrawingGraph_basicEndTerm()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
@@ -474,7 +473,7 @@ class GoalServiceTest extends GoalousTestCase
      * - 来期のゴールが含まれないこと
      * - 今期のゴール追加後に今期のゴールが含まれること
      */
-    function testUserGraphNoLogStartTermOnlyToday()
+    function getUserAllGoalProgressForDrawingGraph_noLogStartTermOnlyToday()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermStartToday();
@@ -508,7 +507,7 @@ class GoalServiceTest extends GoalousTestCase
      * - データの個数がフルになっていること
      * - 当日に進捗があった場合に昨日のデータのログと、当日のデータが違っていること
      */
-    function testUserGraphEndTermToday()
+    function test_getUserAllGoalProgressForDrawingGraph_endTermToday()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermEndToday();
@@ -528,10 +527,10 @@ class GoalServiceTest extends GoalousTestCase
     }
 
     /**
-     * ゴール作成が過去のログ進捗に影響を与えないこと
+     * ゴール作成が過去のログ進捗に影響があること
      * - 昨日のログがあり、ゴールが追加された場合に過去のログ進捗に影響を与えないこと
      */
-    function testUserGraphEffectLogs()
+    function test_getUserAllGoalProgressForDrawingGraph_effectLogs()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermExtendDays();
@@ -559,7 +558,7 @@ class GoalServiceTest extends GoalousTestCase
     /**
      * グラフデータ取得でのデータの整合性チェック
      */
-    function testUserGraphDataValid()
+    function test_getUserAllGoalProgressForDrawingGraph_dataValid()
     {
         //今期を3ヶ月に設定(当月にその前後30日ずつ拡張したものにする)
         $this->setupCurrentTermExtendDays();
@@ -886,6 +885,34 @@ class GoalServiceTest extends GoalousTestCase
         $this->GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ':*');
         $after2 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
         $this->assertNotEquals($before[2][7], $after2[2][7]);
+    }
+
+    /**
+     * データの件数が正しい事を確認
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_dataCount()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupCurrentTermExtendDays();
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //データ件数のチェック(10日分+項目名1=11)
+        $this->assertCount(8, $ret[2]);//data(10日-バッファ2日-1日(当日のデータなし)+項目1個=8)
+        //dataは全てnullになっていること
+        $this->assertNull($ret[2][1]);
+        $this->assertNull($ret[2][7]);
+
+        //進捗0のゴールを一つ追加。これで最新の進捗は0になるはず
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        $this->assertCount(9, $ret[2]);//data(10日-バッファ2日+項目1個=9)
+        $this->assertNull($ret[2][1]);
+        //最新の進捗が0になっている
+        $this->assertEquals(0, $ret[2][8]);
+
     }
 
     /**

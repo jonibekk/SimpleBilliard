@@ -989,12 +989,10 @@ class GoalService extends AppService
         );
         $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
 
-        //範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
-        if ($isIncludedTodayInPlotData) {
+        //ゴールが存在し、範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
+        if (!empty($goalIds) && $isIncludedTodayInPlotData) {
             $latestTotalGoalProgress = $this->findLatestSummarizedGoalProgress($latestKrValues, $goalPriorities);
-            if ($latestTotalGoalProgress <> 0) {
-                array_push($progressLogs, $latestTotalGoalProgress);
-            }
+            array_push($progressLogs, $latestTotalGoalProgress);
         }
 
         //sweetSpotを算出
@@ -1595,12 +1593,13 @@ class GoalService extends AppService
             }
             // ゴールとアクションの紐付けを解除
             if (!$ActionResult->releaseGoal($goalId)) {
-                throw new Exception(sprintf("Failed release action_result. data:%s", var_export(compact('goalId'), true)));
+                throw new Exception(sprintf("Failed release action_result. data:%s",
+                    var_export(compact('goalId'), true)));
             }
             // KR進捗日次ログ削除
-            if (!$KrValuesDailyLog->softDeleteAll(['goal_id' => $goalId]))
-            {
-                throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('goalId'), true)));
+            if (!$KrValuesDailyLog->softDeleteAll(['goal_id' => $goalId])) {
+                throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s",
+                    var_export(compact('goalId'), true)));
             }
 
             $Goal->commit();
@@ -1617,7 +1616,6 @@ class GoalService extends AppService
         Cache::delete($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
         // ユーザページのマイゴール一覧キャッシュ削除
         Cache::delete($Goal->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-
 
         return true;
     }

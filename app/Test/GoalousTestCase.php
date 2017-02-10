@@ -219,9 +219,14 @@ class GoalousTestCase extends CakeTestCase
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
         $term = $this->EvaluateTerm->findById($evaluateTermId);
-        $today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、UTC時間にする。正しくは、UTC midnight - timeOffset
+        //$today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        $today = strtotime(date("Y/m/d 23:59:59"));
+
         $term['EvaluateTerm']['end_date'] = $today;
         $term['EvaluateTerm']['start_date'] = $today - $termDays * DAY;
+        //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、timezone設定をUTCに変更。
+        $term['EvaluateTerm']['timezone'] = 0;
         $this->EvaluateTerm->save($term);
     }
 
