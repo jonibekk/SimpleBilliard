@@ -346,7 +346,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function joinCircle($postData, $showForAllFeedFlg = true, $getNotificationFlg = true)
+    function joinCircle(array $postData, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true): bool
     {
         if (!isset($postData['Circle']) || empty($postData['Circle'])) {
             return false;

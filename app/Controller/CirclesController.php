@@ -174,7 +174,7 @@ class CirclesController extends AppController
             $isAddedMember = $this->Circle->addMember($this->request->data);
         }
 
-        // メンバーに通知
+        // サークル参加通知 & レスポンスメッセージ定義
         if ($isAddedMember) {
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                 null, $this->Circle->add_new_member_list);
