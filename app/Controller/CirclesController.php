@@ -266,6 +266,9 @@ class CirclesController extends AppController
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
 
+        $error = false;
+        $msg = '';
+
         // サークル参加/不参加ステータス変更
         if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
             $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data, false, false);
