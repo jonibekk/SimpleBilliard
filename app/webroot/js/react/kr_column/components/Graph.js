@@ -86,10 +86,6 @@ export default class Graph extends React.Component {
           show: false,
           type: 'category',
           categories: graphDates,
-          padding: {
-            left: 1,
-            right: 1,
-          }
         },
         y: {
           show: false
