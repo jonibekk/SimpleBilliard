@@ -210,7 +210,7 @@ class Circle extends AppModel
      *
      * @return bool
      */
-    public function addMember($data)
+    public function addMember(array $data, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true): bool
     {
         // 必須パラメータチェック
         if (!(isset($data['Circle']['id']) && $data['Circle']['id'] &&
@@ -243,8 +243,8 @@ class Circle extends AppModel
                     'circle_id'             => $data['Circle']['id'],
                     'team_id'               => $this->current_team_id,
                     'user_id'               => $user_id,
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
+                    'show_for_all_feed_flg' => $showForAllFeedFlg,
+                    'get_notification_flg'  => $getNotificationFlg,
                 ]
             ];
             $this->add_new_member_list[] = $user_id;

@@ -346,7 +346,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function joinCircle($postData)
+    function joinCircle($postData, $showForAllFeedFlg = true, $getNotificationFlg = true)
     {
         if (!isset($postData['Circle']) || empty($postData['Circle'])) {
             return false;
@@ -405,8 +405,8 @@ class CircleMember extends AppModel
                     'circle_id'             => $circle,
                     'user_id'               => $this->my_uid,
                     'team_id'               => $this->current_team_id,
-                    'show_for_all_feed_flg' => false,
-                    'get_notification_flg'  => false,
+                    'show_for_all_feed_flg' => $showForAllFeedFlg,
+                    'get_notification_flg'  => $getNotificationFlg,
                 ];
             }
             $this->saveAll($data);
