@@ -624,4 +624,31 @@ class EvaluateTerm extends AppModel
         }
         return null;
     }
+
+    /**
+     * 指定したタイムゾーン設定になっているチームのIDのリストを返す
+     *
+     * @param float $timezone
+     * @param int   $targetTimestamp
+     *
+     * @return array
+     */
+    public function findTeamIdByTimezone(float $timezone, int $targetTimestamp): array
+    {
+        $options = [
+            'conditions' => [
+                'start_date <=' => $targetTimestamp,
+                'end_date >='   => $targetTimestamp,
+                'timezone'      => $timezone,
+            ],
+            'fields'     => [
+                'team_id'
+            ]
+        ];
+
+        $ret = $this->findWithoutTeamId('list', $options);
+        // キーの意味を意識させないため、歯抜けのキーの再採番。
+        $ret = array_merge($ret);
+        return $ret;
+    }
 }

@@ -8,13 +8,13 @@ App::import('Service', 'KrValuesDailyLogService');
  * - 指定日までの最新のKR進捗から各ゴールの進捗を求める。
  * - デフォルトの指定日は前日
  *
- * @property Team                 $Team
- * @property EvaluateTerm         $EvaluateTerm
- * @property Goal                 $Goal
- * @property KeyResult            $KeyResult
- * @property KrProgressLog        $KrProgressLog
- * @property GoalMember           $GoalMember
- * @property KrValuesDailyLog     $KrValuesDailyLog
+ * @property Team             $Team
+ * @property EvaluateTerm     $EvaluateTerm
+ * @property Goal             $Goal
+ * @property KeyResult        $KeyResult
+ * @property KrProgressLog    $KrProgressLog
+ * @property GoalMember       $GoalMember
+ * @property KrValuesDailyLog $KrValuesDailyLog
  */
 class KrValuesDailyLogShell extends AppShell
 {
@@ -37,7 +37,8 @@ class KrValuesDailyLogShell extends AppShell
     {
         $parser = parent::getOptionParser();
         $options = [
-            'date' => ['short' => 'd', 'help' => '集計日(YYYY-MM-DD)', 'required' => true,],
+            'date'     => ['short' => 'd', 'help' => '集計日(YYYY-MM-DD)', 'required' => true,],
+            'timezone' => ['short' => 't', 'help' => '対象のチームのタイムゾーン', 'required' => true,],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -51,6 +52,9 @@ class KrValuesDailyLogShell extends AppShell
         // デフォルトの指定日は前日
         $targetDate = $this->params['date'] ?? date('Y-m-d', strtotime('yesterday'));
 
+        // ターゲットのタイムゾーン
+        $targetTimezone = $this->params['timezone'];
+
         // validate
         if (!$this->_validateTargetDate($targetDate)) {
             $this->error('Invalid parameter', $this->_usageString());
@@ -61,8 +65,13 @@ class KrValuesDailyLogShell extends AppShell
         //       レアケースだが、timezoneの変更によって同日のデータが存在する場合がある。その際に既存データを削除する以下の処理は必要。
         // $this->KrValuesDailyLog->deleteAll(['KrValuesDailyLog.target_date' => $targetDate]);
 
-        // 全チームのIDリスト
-        $teamIds = array_keys($this->Team->find('list'));
+        if ($targetTimezone) {
+            // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
+            $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, strtotime($targetDate));
+        } else {
+            // タイムゾーンの指定がない場合は全チームのIDリスト
+            $teamIds = array_keys($this->Team->find('list'));
+        }
 
         $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate);;
     }
@@ -71,7 +80,6 @@ class KrValuesDailyLogShell extends AppShell
      * 今期KR一覧の値をバルクで保存する
      * Modelのcurrent_team_idを初期化
      * - 実行が失敗した場合、一度だけ失敗したチームのみ再実行を走らせる
-     *
      *
      * @param array  $teamIds
      * @param string $targetDate
@@ -97,7 +105,8 @@ class KrValuesDailyLogShell extends AppShell
             }
         }
 
-        $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount, count($failureTeams)));
+        $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount,
+            count($failureTeams)));
 
         // 保存に失敗したチームは一度だけ再実行する
         if (count($failureTeams) > 0 && !$isRerunning) {
