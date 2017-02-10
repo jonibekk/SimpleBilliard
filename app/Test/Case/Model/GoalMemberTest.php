@@ -25,6 +25,7 @@ class GoalMemberTest extends GoalousTestCase
         'app.goal_category',
         'app.approval_history',
         'app.team_member',
+        'app.key_result',
     );
 
     /**
@@ -259,13 +260,13 @@ class GoalMemberTest extends GoalousTestCase
         ];
         $this->GoalMember->save($data);
         $userData = [
-            'id' => 100,
+            'id'         => 100,
             'active_flg' => true
         ];
         $this->GoalMember->User->save($userData, false);
         $teamMemberData = [
-            'team_id' => 1,
-            'user_id' => 100,
+            'team_id'    => 1,
+            'user_id'    => 100,
             'active_flg' => true
         ];
         $this->GoalMember->User->TeamMember->save($teamMemberData, false);
@@ -440,6 +441,67 @@ class GoalMemberTest extends GoalousTestCase
             (int)5 => '5'
         );
         $this->assertEquals($expected, $actual);
+    }
+
+    function testFindAllMemberUserIds()
+    {
+        $this->_setDefault();
+        $this->_saveActiveMembersWithGoal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        $res = $this->GoalMember->findAllMemberUserIds(1);
+        $this->assertEqual(array_values($res), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    }
+
+    function testFindAllMemberUserIdsEmpty()
+    {
+        $this->_setDefault();
+        $this->_saveActiveMembersWithGoal([]);
+        $res = $this->GoalMember->findAllMemberUserIds(1);
+        $this->assertEqual($res, []);
+    }
+
+    function _saveActiveMembersWithGoal($userIds)
+    {
+        $this->GoalMember->deleteAll(['GoalMember.id >' => 0], false);
+        $this->GoalMember->Goal->deleteAll(['Goal.id >' => 0], false);
+        $this->GoalMember->User->deleteAll(['User.id >' => 0], false);
+        $this->GoalMember->Team->TeamMember->deleteAll(['TeamMember.id >' => 0], false);
+
+        $this->GoalMember->Goal->save(['id' => 1, 'team_id' => 1], false);
+        foreach ($userIds as $userId) {
+            $this->GoalMember->Team->TeamMember->create();
+            $this->GoalMember->Team->TeamMember->save(['team_id' => 1, 'user_id' => $userId, 'active_flg' => true],
+                false);
+            $this->GoalMember->User->create();
+            $this->GoalMember->User->save(['id' => $userId, 'team_id' => 1, 'active_flg' => true], false);
+            $this->GoalMember->create();
+            $this->GoalMember->save(['team_id' => 1, 'goal_id' => 1, 'user_id' => $userId], false);
+        }
+    }
+
+    function testFindGoalPriorities()
+    {
+        $this->_setDefault();
+        $expected = [
+            (int)1 => '3',
+            (int)7 => '3'
+        ];
+        $actual = $this->GoalMember->findGoalPriorities(1, 0, 100000000000000000);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * ゴール重要度の取得時にリーダーとコラボの両方が含まれるか？
+     */
+    function testFindGoalPrioritiesContainCollabo()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_OWNER);
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_COLLABORATOR);
+        $term = $this->EvaluateTerm->getCurrentTermData();
+
+        $ret = $this->GoalMember->findGoalPriorities(1, $term['start_date'], $term['end_date']);
+        $this->assertCount(2, $ret);
     }
 
     function _setDefault()

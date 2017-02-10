@@ -71,7 +71,7 @@ class CommentRead extends AppModel
         }
         $res = false;
         try {
-            $res = $this->saveAllAtOnce($comment_data, true, ['comment_id']);
+            $res = $this->bulkInsert($comment_data, true, ['comment_id']);
         } catch (PDOException $e) {
             // comment_id と user_id が重複したデータを登録しようとした場合
             // １件ずつ登録し直して登録可能なものだけ登録する

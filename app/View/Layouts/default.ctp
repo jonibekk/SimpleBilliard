@@ -48,7 +48,9 @@ if (!isset($with_header_menu)) {
     <div
         class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
         role="goal_area">
-        <?= $this->element('my_goals_area') ?>
+        <div class="right-side-container" id="jsRightSideContainer">
+            <div id="kr-column"></div>
+        </div>
     </div>
 </div>
 <?= $this->element('common_modules') ?>
@@ -57,7 +59,8 @@ if (!isset($with_header_menu)) {
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
-<?= $this->element('gl_common_js') ?>
+<?= $this->element('gl_common_js', ['display_dashboard' => true]) ?>
+
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->

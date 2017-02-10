@@ -6,6 +6,7 @@ App::import('Service', 'GoalService');
 App::import('Service', 'FollowService');
 App::import('Service', 'EvaluateTermService');
 App::import('Service/Api', 'ApiGoalService');
+App::import('Service/Api', 'ApiKeyResultService');
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -547,5 +548,85 @@ class GoalsController extends ApiController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goalId);
 
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * トップページ右カラムの初期表示データ取得API
+     * - APIレスポンス
+     *{
+     *  "data": {
+     *    "progress_graph": [],
+     *    "krs": [],
+     *    "goals": []
+     *  }
+     *}
+     *
+     * @return CakeResponse
+     */
+    public function get_dashboard()
+    {
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+
+        // クエリパラメータ取得
+        $limit = $this->request->query('limit') ?? ApiKeyResultService::DASHBOARD_KRS_DEFAULT_LIMIT;
+        // KR取得件数上限チェック
+        if (!$ApiGoalService->checkMaxLimit($limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+
+        // レスポンスデータ取得
+        try {
+            $response = $ApiGoalService->findDashboardFirstViewResponse($limit);
+        } catch (Exception $e) {
+            return $this->_getResponseBadFail($e->getMessage());
+        }
+        /** @noinspection PhpUndefinedVariableInspection */
+        return $this->_getResponsePagingSuccess($response);
+    }
+
+    public function get_dashboard_krs()
+    {
+        /** @var ApiKeyResultService $ApiKeyResultService */
+        $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        // クエリパラメータ取得
+        $limit = $this->request->query('limit') ?? ApiKeyResultService::DASHBOARD_KRS_DEFAULT_LIMIT;
+        $offset = $this->request->query('offset') ?? 0;
+        $goalId = $this->request->query('goal_id');
+
+        // KR取得件数上限チェック
+        if (!$ApiKeyResultService->checkMaxLimit($limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+
+        // レスポンスデータ定義
+        $response = [
+            'data'   => [],
+            'paging' => [
+                'next' => ''
+            ],
+            'count'  => null
+        ];
+
+        // レスポンスデータ取得
+        // Paging目的で1つ多くデータを取得する
+        $krs = $ApiKeyResultService->findInDashboard($limit + 1, $offset, $goalId, false);
+
+        // ページング情報セット。次回リクエストデータが存在する場合のみ。
+        if (count($krs) > $limit) {
+            $paging = $ApiKeyResultService->generatePagingInDashboard($limit, $offset, $goalId);
+            $response['paging'] = $paging;
+            array_pop($krs);
+        }
+        $response['data'] = $krs;
+        // カウント数をセット
+        $response['count'] = $KeyResult->countMine($goalId);
+
+        return $this->_getResponsePagingSuccess($response);
     }
 }

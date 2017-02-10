@@ -157,7 +157,7 @@ export default class Edit extends React.Component {
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description"
                       className="goals-create-input-form mod-textarea"
-                      value={inputData.description}
+                      value={inputData.description || ""}
                       placeholder={__("Optional")}
                       maxLength={MaxLength.Description}
                       onChange={this.onChange}
@@ -216,7 +216,7 @@ export default class Edit extends React.Component {
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description"
                       className="form-control goals-create-input-form mod-textarea"
-                      value={inputData.key_result.description}
+                      value={inputData.key_result.description || ""}
                       placeholder={__("Optional")}
                       maxLength={MaxLength.Description}
                       onChange={(e) => this.onChange(e, "key_result")}

@@ -29,7 +29,7 @@
             ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
             ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
-    <div class="clearfix develop--circle-make mtb_15px">
+    <div class="clearfix develop--circle-make">
         <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"
                                                                                        data-target="#modal_add_circle"><?=
             __(

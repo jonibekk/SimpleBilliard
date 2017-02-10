@@ -549,7 +549,12 @@ App::uses('AttachedFile', 'Model');
             "If you change the unit, all progress of KR will be reset.": "<?= __("If you change the unit, all progress of KR will be reset.") ?>",
             "Current": "<?= __("Current") ?>",
             "All progress of this KR will be reset, is it really OK?": "<?= __("All progress of this KR will be reset, is it really OK?") ?>",
-            "Updated KR.": "<?= __("Updated KR.") ?>"
+            "Updated KR.": "<?= __("Updated KR.") ?>",
+            // kr column
+            "All Goals": "<?= __("All Goals") ?>",
+            "PROGRESS": "<?= __("PROGRESS") ?>",
+            "All goal's total you have.": "<?= __("All goal's total you have.") ?>",
+            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
@@ -577,10 +582,5 @@ App::uses('AttachedFile', 'Model');
         return text;
     }
 
-    <?php if(isset($mode_view)):?>
-    <?php if($mode_view == MODE_VIEW_TUTORIAL):?>
-    $("#modal_tutorial").modal('show');
-    <?php endif;?>
-    <?php endif;?>
 </script>
 <?= $this->App->viewEndComment() ?>

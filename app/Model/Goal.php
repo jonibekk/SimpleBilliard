@@ -431,9 +431,6 @@ class Goal extends AppModel
 
         $isSuccess = $isSuccess && (bool)$this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $newGoalId);
 
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-
         return (bool)$isSuccess;
     }
 
@@ -1193,11 +1190,21 @@ class Goal extends AppModel
         return $goals;
     }
 
-    function getGoalAndKr($goal_ids, $user_id)
+    /**
+     * ゴールと紐付くKRを進捗付きで返す
+     *
+     * @param array|int $goalIds
+     * @param int       $userId defaultはログインユーザ
+     *
+     * @return array
+     */
+    function getGoalAndKr($goalIds, int $userId = null): array
     {
+        $userId = $userId ?? $this->my_uid;
+
         $options = [
             'conditions' => [
-                'Goal.id'      => $goal_ids,
+                'Goal.id'      => $goalIds,
                 'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
@@ -1206,12 +1213,15 @@ class Goal extends AppModel
                         'KeyResult.id',
                         'KeyResult.progress',
                         'KeyResult.priority',
+                        'KeyResult.current_value',
+                        'KeyResult.target_value',
+                        'KeyResult.start_value',
                         'KeyResult.completed',
                     ],
                 ],
                 'GoalMember'    => [
                     'conditions' => [
-                        'GoalMember.user_id' => $user_id
+                        'GoalMember.user_id' => $userId
                     ]
                 ],
                 'TargetCollabo' => [
@@ -1223,7 +1233,7 @@ class Goal extends AppModel
                         'TargetCollabo.is_wish_approval',
                         'TargetCollabo.is_target_evaluation'
                     ],
-                    'conditions' => ['TargetCollabo.user_id' => $user_id],
+                    'conditions' => ['TargetCollabo.user_id' => $userId],
                 ],
             ]
         ];
@@ -2184,7 +2194,7 @@ class Goal extends AppModel
      * @return array $res
      * @internal param array $key_results [description]
      */
-    function findCanAction(int $userId): array
+    function findActionables(int $userId): array
     {
         $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
         $options = [
@@ -2203,7 +2213,8 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.end_date >=' => $currentTerm['start_date'],
                 'Goal.end_date <=' => $currentTerm['end_date'],
-                'Goal.completed'   => null
+                'Goal.completed'   => null,
+                'GoalMember.del_flg'   => false
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
@@ -2273,6 +2284,71 @@ class Goal extends AppModel
         }
 
         return Hash::extract($res, '{n}.Goal');
+    }
+
+    /**
+     * 期間で絞って全ゴールのIDを返す
+     *
+     * @param int $fromTimestamp
+     * @param int $toTimestamp
+     *
+     * @return array
+     */
+    function findAllIdsByEndDateTimestamp(int $fromTimestamp, int $toTimestamp): array
+    {
+        $options = [
+            'conditions' => [
+                'end_date >=' => $fromTimestamp,
+                'end_date <=' => $toTimestamp,
+            ],
+            'fields'     => ['id']
+        ];
+        $ret = $this->find('list', $options);
+        return $ret;
+    }
+
+    /**
+     * 自分が所属するゴール(リーダー or コラボレータ)のゴール名一覧を取得
+     *
+     * @param  int
+     *
+     * @return array
+     */
+    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
+    {
+        $options = [
+            'conditions' => [
+                'Goal.end_date >='   => $startDateTime,
+                'Goal.end_date <='   => $endDateTime,
+                'Goal.team_id'       => $this->current_team_id,
+                'GoalMember.user_id' => $userId,
+                'GoalMember.del_flg' => false
+            ],
+            'fields'     => [
+                'id',
+                'name'
+            ],
+            'order'      => [
+                'GoalMember.priority DESC',
+                'Goal.completed ASC'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id'
+                    ],
+                ]
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        if (empty($ret)) {
+            return $ret;
+        }
+        $ret = Hash::extract($ret, '{n}.Goal');
+        return $ret;
     }
 
 }

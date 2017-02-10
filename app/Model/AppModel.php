@@ -1,6 +1,7 @@
 <?php
 App::uses('Model', 'Model');
 App::uses('Sanitize', 'Utility');
+
 /**
  * Application model for Cake.
  * Add your application-wide methods in the class below, your models
@@ -384,57 +385,65 @@ class AppModel extends Model
      * bulk insert method.
      * if $add_date is true then, adding save fields that `modified` and `created`.
      * usage about $update_counter_cache_fields:
-     * $update_counter_cache_fields = [
+     * $updateCounterCacheFields = [
      * 'foreign key', 'foreign key'
      * ];
      *
-     * @param       $data
-     * @param bool  $add_date
-     * @param array $update_counter_cache_fields
+     * @param array $data
+     * @param bool  $addDate
+     * @param array $updateCounterCacheFields
+     * @param int   $chunkSize to chunk records of saving data for reducing query size at once.
      *
      * @return bool
      */
-    public function saveAllAtOnce($data, $add_date = true, $update_counter_cache_fields = [])
-    {
-        if (count($data) > 0 && !empty($data[0])) {
-            $data = Sanitize::clean($data);
-            $value_array = array();
-            if (isset($data[0][$this->name])) {
-                $fields = array_keys($data[0][$this->name]);
-            } else {
-                $fields = array_keys($data[0]);
-            }
-            if ($add_date) {
-                $fields[] = 'modified';
-                $fields[] = 'created';
+    public function bulkInsert(
+        array $data,
+        bool $addDate = true,
+        array $updateCounterCacheFields = [],
+        int $chunkSize = 100
+    ): bool {
+        if (empty($data) || empty($data[0])) {
+            return false;
+        }
+        $data = Sanitize::clean($data);
+        if (isset($data[0][$this->name])) {
+            $fields = array_keys($data[0][$this->name]);
+        } else {
+            $fields = array_keys($data[0]);
+        }
+        if ($addDate) {
+            $fields[] = 'modified';
+            $fields[] = 'created';
 
-                foreach ($data as $k => $v) {
-                    if (isset($v[$this->name])) {
-                        $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
-                        $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
-                    } else {
-                        $data[$k]['modified'] = REQUEST_TIMESTAMP;
-                        $data[$k]['created'] = REQUEST_TIMESTAMP;
-                    }
+            foreach ($data as $k => $v) {
+                if (isset($v[$this->name])) {
+                    $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
+                    $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
+                } else {
+                    $data[$k]['modified'] = REQUEST_TIMESTAMP;
+                    $data[$k]['created'] = REQUEST_TIMESTAMP;
                 }
             }
-            foreach ($data as $key => $value) {
+        }
+        $chunkedDatas = array_chunk($data, $chunkSize);
+        foreach ($chunkedDatas as $chunkedData) {
+            $valueArray = [];
+            foreach ($chunkedData as $value) {
                 $value = isset($value[$this->name]) ? $value[$this->name] : $value;
-                $value_array[] = "('" . implode('\',\'', $value) . "')";
+                $valueArray[] = "('" . implode('\',\'', $value) . "')";
             }
             $sql = "INSERT INTO "
                 . $this->table . " (" . implode(', ', $fields) . ") VALUES "
-                . implode(',', $value_array);
-            $this->query($sql);
-            foreach ($update_counter_cache_fields as $field) {
-                foreach ($data as $key => $value) {
+                . implode(',', $valueArray);
+            $ret = $this->query($sql);
+            foreach ($updateCounterCacheFields as $field) {
+                foreach ($chunkedData as $value) {
                     $value = isset($value[$this->name][$field]) ? $value[$this->name][$field] : $value[$field];
                     $this->updateCounterCache([$field => $value]);
                 }
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
     /**

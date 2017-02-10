@@ -56,6 +56,11 @@ export default class DetailComponent extends React.Component {
               { coach_action && <div className="goals-approval-detail-coach-action">{ coach_action }</div> }
               <UserCard goal_member={ detail.goal_member } />
               <GoalBlock goal={ detail.goal_member.goal }
+                         goal_change_log={ detail.goal_member.goal_change_log || {} }
+                         goal_changed_columns={ detail.goal_member.goal_changed_columns || {} }
+                         top_key_result={ detail.goal_member.top_key_result }
+                         tkr_change_log={ detail.goal_member.tkr_change_log || {} }
+                         tkr_changed_columns={ detail.goal_member.tkr_changed_columns || {} }
                          is_leader={ detail.goal_member.is_leader } />
               <Comments approval_histories={ detail.goal_member.approval_histories }
                         view_more_text={ detail.goal_member.histories_view_more_text }

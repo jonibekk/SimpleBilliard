@@ -1,5 +1,6 @@
 <?php
 App::import('Service/Api', 'ApiService');
+App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Class AppService
@@ -56,19 +57,18 @@ class ApiGoalService extends ApiService
         // レスポンスデータ拡張
         $ret['data'] = $this->extend($ret['data'], $userId);
 
-
         return $ret;
     }
 
     /**
      * データ拡張
      *
-     * @param $goals
+     * @param array $goals
+     * @param int   $loginUserId
      *
      * @return array
-     * @internal param $params
      */
-    private function extend($goals, $loginUserId)
+    private function extend(array $goals, int $loginUserId): array
     {
         // TODO：AppModel.attachImgUrlをService層に移す
         // 画像URLの取得を行うAppModel.attachImgUrlをService層に移したいが、
@@ -97,7 +97,7 @@ class ApiGoalService extends ApiService
         // ゴールラベル
         $goalLabels = $GoalLabel->findByGoalId($goalIds);
         $goalLabelsEachGoalId = [];
-        foreach($goalLabels as $goalLabel) {
+        foreach ($goalLabels as $goalLabel) {
             $goalId = Hash::get($goalLabel, 'GoalLabel.goal_id');
             $goalLabelsEachGoalId[$goalId][] = Hash::get($goalLabel, 'Label');
         }
@@ -119,7 +119,7 @@ class ApiGoalService extends ApiService
                 $goal['can_follow'] = false;
                 continue;
             }
-            if ($goal['completed']){
+            if ($goal['completed']) {
                 $goal['can_follow'] = false;
                 continue;
             }
@@ -190,5 +190,94 @@ class ApiGoalService extends ApiService
         );
 
         $data['paging']['next'] = '/api/v1/goals/search?' . http_build_query($queryParams);
+    }
+
+    /**
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findDashboardFirstViewResponse(int $limit): array
+    {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var ApiKeyResultService $ApiKeyResultService */
+        $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+
+        $TimeEx = new TimeExHelper(new View());
+
+        // レスポンスデータ定義
+        $ret = [
+            'data'   => [
+                'progress_graph' => [],
+                'krs'            => [],
+                'goals'          => []
+            ],
+            'paging' => [
+                'next' => ''
+            ],
+            'count'  => 0
+        ];
+
+        // KR一覧レスポンスデータ取得
+        // Paging目的で1つ多くデータを取得する
+        // ※キャッシュは1次リリースでは使わない。今後パフォーマンスで問題があれば使用検討
+        $krs = $ApiKeyResultService->findInDashboard($limit + 1);
+
+        //KRが一件もない場合はdataキーを空で返す
+        if (empty($krs)) {
+            $ret['data'] = [];
+            return $ret;
+        }
+
+        // ページング情報セット
+        if (count($krs) > $limit) {
+            $ret['paging'] = $ApiKeyResultService->generatePagingInDashboard($limit);
+            array_pop($krs);
+        }
+
+        // カウント数をセット
+        $ret['count'] = $KeyResultService->countMine();
+        // KRデータセット
+        $ret['data']['krs'] = $krs;
+        // Goalデータセット
+        $currentTerm = $EvaluateTerm->getCurrentTermData();
+        $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'],
+            $currentTerm['end_date']);
+
+        /*
+         * TODO: ユーザー進捗ログバッチ先行リリースのため、グラフを一時的に非表示にしている。
+         *       グラフデータ計算ロジックリニューアルのタイミングで有効化する。
+         *       フロント側でも ~/kr_column/components/KrColumn.js で
+         *       データ取得ロジックをコメントアウトしてるので戻すのを忘れないように。
+         */
+        // //グラフデータのセット
+        // $graphRange = $GoalService->getGraphRange(
+        //     time(),
+        //     GoalService::GRAPH_TARGET_DAYS,
+        //     GoalService::GRAPH_MAX_BUFFER_DAYS
+        // );
+        // /** @var User $User */
+        // $User = ClassRegistry::init("User");
+        // $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
+        //     $User->my_uid,
+        //     $graphRange['graphStartDate'],
+        //     $graphRange['graphEndDate'],
+        //     $graphRange['plotDataEndDate'],
+        //     true
+        // );
+        // $ret['data']['progress_graph'] = [
+        //     'data'       => $progressGraph,
+        //     'start_date' => $TimeEx->dateLocalFormat(strtotime($graphRange['graphStartDate'])),
+        //     'end_date'   => $TimeEx->dateLocalFormat(strtotime($graphRange['graphEndDate'])),
+        // ];
+
+        return $ret;
     }
 }

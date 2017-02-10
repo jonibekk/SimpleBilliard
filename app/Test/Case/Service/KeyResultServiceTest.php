@@ -1,9 +1,12 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'KeyResultService');
+App::import('Service', 'GoalService');
+App::import('Service/Api', 'ApiKeyResultService');
 App::uses('KeyResult', 'Model');
-App::uses('EvaluateTerm', 'Model');
-
+App::uses('Goal', 'Model');
+App::uses('GoalLabel', 'Model');
+App::uses('ActionResult', 'Model');
 
 /**
  * KeyResultServiceTest Class
@@ -29,6 +32,11 @@ class KeyResultServiceTest extends GoalousTestCase
         'app.kr_progress_log',
         'app.goal',
         'app.goal_member',
+        'app.team_member',
+        'app.goal_label',
+        'app.label',
+        'app.post',
+        'app.circle',
         'app.goal_category',
         'app.user',
         'app.team',
@@ -43,8 +51,11 @@ class KeyResultServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->KeyResultService = ClassRegistry::init('KeyResultService');
+        $this->ApiKeyResultService = ClassRegistry::init('ApiKeyResultService');
+        $this->GoalService = ClassRegistry::init('GoalService');
+        $this->Goal = ClassRegistry::init('Goal');
         $this->KeyResult = ClassRegistry::init('KeyResult');
-        $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $this->ActionResult = ClassRegistry::init('ActionResult');
     }
 
     function test_get()
@@ -107,7 +118,7 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_value'   => 10,
             'target_value'  => 100,
             'current_value' => 11,
-            'description' => "This is test."
+            'description'   => "This is test."
         ]);
         $this->assertEmpty($err);
 
@@ -118,7 +129,7 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_value'   => 10,
             'target_value'  => 100,
             'current_value' => 11,
-            'description' => "This is test."
+            'description'   => "This is test."
         ]);
         $this->assertEquals(Hash::get($err, 'status_code'), 400);
         $this->assertNotEmpty(Hash::get($err, 'validation_errors'));
@@ -136,27 +147,27 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_value'   => 10,
             'target_value'  => 100,
             'current_value' => 11,
-            'description' => "This is test.",
-            'start_date' => date('Y/m/d', 10000),
-            'end_date' => date('Y/m/d', 19999),
+            'description'   => "This is test.",
+            'start_date'    => date('Y/m/d', 10000),
+            'end_date'      => date('Y/m/d', 19999),
         ];
         $this->EvaluateTerm->current_team_id = 1;
         $updateKr = $this->KeyResultService->buildUpdateKr(1, $data);
         foreach ($data as $k => $v) {
             if (!in_array($k, ['start_date', 'end_date'])) {
-               $this->assertEquals($updateKr[$k], $v);
+                $this->assertEquals($updateKr[$k], $v);
             } else {
                 $this->assertTrue(Hash::check($updateKr, $k));
             }
         }
 
         $data = [
-            'id'            => '1',
-            'name'          => 'test',
-            'value_unit'    => KeyResult::UNIT_BINARY,
+            'id'          => '1',
+            'name'        => 'test',
+            'value_unit'  => KeyResult::UNIT_BINARY,
             'description' => "This is test.",
-            'start_date' => date('Y/m/d', 10000),
-            'end_date' => date('Y/m/d', 19999),
+            'start_date'  => date('Y/m/d', 10000),
+            'end_date'    => date('Y/m/d', 19999),
         ];
         $this->EvaluateTerm->current_team_id = 1;
         $updateKr = $this->KeyResultService->buildUpdateKr(1, $data);
@@ -178,12 +189,129 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_value'   => 10,
             'target_value'  => 100,
             'current_value' => 11,
-            'description' => "This is test.",
-            'start_date' => date('Y/m/d', 10000),
-            'end_date' => date('Y/m/d', 19999),
+            'description'   => "This is test.",
+            'start_date'    => date('Y/m/d', 10000),
+            'end_date'      => date('Y/m/d', 19999),
         ];
         $this->EvaluateTerm->current_team_id = 1;
         $ret = $this->KeyResultService->update(1, 1, $data);
         $this->assertTrue($ret);
     }
+
+    function testRemoveGoalMembersCacheInDashboard()
+    {
+        $goalId = $this->setupTestRemoveGoalMembersCacheInDashboard();
+
+        $this->KeyResult->my_uid = 1;
+        $this->ApiKeyResultService->findInDashboard(10);
+        $this->KeyResult->my_uid = 2;
+        $this->ApiKeyResultService->findInDashboard(10);
+        $this->KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+
+        /* キャッシュが削除されていること */
+        // メンバー1
+        $this->KeyResult->my_uid = 1;
+        $cache = Cache::read($this->KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        $this->assertEmpty($cache);
+        // メンバー2
+        $this->KeyResult->my_uid = 2;
+        $cache = Cache::read($this->KeyResult->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        $this->assertEmpty($cache);
+    }
+
+    private function setupTestRemoveGoalMembersCacheInDashboard()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+        $uid = 1;
+        $goalId = $this->createGoal($uid);
+        $this->createGoalMember(['user_id' => 2, 'goal_id' => $goalId, 'team_id' => 1]);
+        return $goalId;
+    }
+
+    function testUpdateLatestActioned()
+    {
+        $this->setupTestUpdateLatestActioned();
+
+        $time = time();
+        $this->ActionResult->save([
+            'id'      => 1,
+            'created' => $time
+        ]);
+
+        // KRのアクション最新日時が更新されているか
+        $oldKr = $this->KeyResult->getById(1);
+        $this->KeyResultService->updateLatestActioned(1);
+        $updatedKr = $this->KeyResult->getById(1);
+        $this->assertTrue($oldKr['latest_actioned'] < $updatedKr['latest_actioned']);
+        $this->assertEquals($updatedKr['latest_actioned'], $time);
+
+        $time2 = time() + 1;
+        $this->ActionResult->clear();
+        $this->ActionResult->save([
+            'id'      => 2,
+            'created' => $time2
+        ]);
+
+        // KRのアクション最新日時が更新されているか
+        $this->KeyResult->clear();
+        $this->KeyResultService->updateLatestActioned(1);
+        $updatedKr2 = $this->KeyResult->getById(1);
+        $this->assertTrue($updatedKr['latest_actioned'] < $updatedKr2['latest_actioned']);
+        $this->assertEquals($updatedKr2['latest_actioned'], $time2);
+    }
+
+    /**
+     * 右カラムに表示するアクションメッセージ
+     */
+    function testGenerateActionMessage()
+    {
+        $this->setDefaultTeamIdAndUid();
+        App::import('View', 'Helper/TimeExHelper');
+        $TimeEx = new TimeExHelper(new View());
+
+        // 完了KR
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = 1485310914, $actions = []);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __('Completed this on %s.', $TimeEx->dateLocalFormat(1485310914));
+        $this->assertEquals($res, $expected);
+
+        // 最近アクションがあった未完了KR
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = null, $actions = [1, 2]);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __('%s member(s) actioned recently.', '<span class="font_verydark font_bold">2</span>');
+        $this->assertEquals($res, $expected);
+
+        // 最近アクションが無い未完了KR
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = null, $actions = []);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __("Take action since %s !", $TimeEx->dateLocalFormat(1485310914));
+        $this->assertEquals($res, $expected);
+
+        // 一度もアクションが無い未完了KR
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = null, $completed = null, $actions = []);
+        $res = $this->KeyResultService->generateActionMessage($kr);
+        $expected = __('Take first action to this !');
+        $this->assertEquals($res, $expected);
+    }
+
+    private function _getKrForGenerateActionMessage($latestActioned, $completed, $actions)
+    {
+        $kr = [
+            'key_result' => [
+                'latest_actioned' => $latestActioned,
+                'completed' => $completed
+            ],
+            'action_results' => $actions
+        ];
+        return $kr;
+    }
+
+    private function setupTestUpdateLatestActioned()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->ActionResult->my_uid = 1;
+        $this->ActionResult->current_team_id = 1;
+    }
+
 }

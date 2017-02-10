@@ -232,6 +232,8 @@ $(document).ready(function () {
       //表示切り換え
       $('[role="main"]').addClass('visible-md visible-lg');
       $('[role="goal_area"]').removeClass('visible-md visible-lg');
+      // HACK:reactの進捗グラフをリサイズするため架空要素(表示はしない)のクリックイベントを使用
+      $('.js-flush-chart').trigger('click');
     }
     else {
       //noinspection UnnecessaryReturnStatementJS
@@ -3302,8 +3304,9 @@ function evCircleFeed(options) {
     return false;
   }
 
-  //不要な要素を削除
-  $(".panel.panel-default").not(".feed-read-more, .global-form").remove();
+  // メインカラム内の要素をリセット
+  // FIXME:本来は「$("#app-view-elements-feed-posts").empty();」のようにメインカラム.フィード親要素をemptyにすれば良いだけだがHTMLの作り上そうなっていないので、上記のような処理をせざるをえない。
+  $(".panel.panel-default").not(".feed-read-more, .global-form, .dashboard-krs").remove();
 
   //ローダー表示
   var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
