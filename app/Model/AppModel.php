@@ -560,4 +560,58 @@ class AppModel extends Model
         return reset($ret);
     }
 
+    /**
+     * 論理削除
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    function softDelete(int $id) : bool
+    {
+        if (empty($id)) {
+            return false;
+        }
+        $this->id = $id;
+        $data = [
+            $this->alias . '.' . 'del_flg' => true,
+            $this->alias . '.' . 'deleted' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'modified' => REQUEST_TIMESTAMP,
+        ];
+        $condition = [
+            $this->alias . '.' . 'id' => $id,
+            $this->alias . '.' . 'team_id' => $this->current_team_id,
+            $this->alias . '.' . 'del_flg' => false,
+        ];
+        // saveだと削除済みのレコードも更新してしまうため、updateAllを使用
+        $ret = $this->updateAll($data, $condition);
+        return !empty($ret);
+    }
+
+    /**
+     * 論理削除
+     *
+     * @param array $condition
+     *
+     * @return array
+     * @internal param $id
+     */
+    function softDeleteAll(array $condition)
+    {
+        if (empty($condition)) {
+            return false;
+        }
+        $condition = am($condition, [
+            $this->alias . '.' . 'team_id' => $this->current_team_id,
+            $this->alias . '.' . 'del_flg' => false,
+        ]);
+        $ret = $this->updateAll([
+            $this->alias . '.' . 'del_flg' => true,
+            $this->alias . '.' . 'deleted' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'modified' => REQUEST_TIMESTAMP,
+        ], $condition);
+
+        return !empty($ret);
+    }
+
 }

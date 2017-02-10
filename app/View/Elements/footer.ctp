@@ -17,7 +17,7 @@
 
             <ul class="list-unstyled">
                 <li><?=
-                    $this->Html->link(__('Blog'), 'http://blog.isao.co.jp/tag/goalous/',
+                    $this->Html->link(__('Blog'), 'http://blog.goalous.com/',
                         ['target' => '_blank']) ?></li>
                 <li><?=
                     $this->Html->link(__('Privacy Policy'),

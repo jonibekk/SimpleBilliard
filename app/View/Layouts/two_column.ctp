@@ -47,7 +47,7 @@ if (!isset($with_header_menu)) {
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
-<?= $this->element('gl_common_js', ['display_dashboard' => true]) ?>
+<?= $this->element('gl_common_js') ?>
 
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>

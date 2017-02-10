@@ -66,7 +66,7 @@ class Comments extends React.Component {
 
           {/* 最新のコメント以外すべて */}
           { this.state.display_all_comments ? commets_execpt_latest_comment.map((comment) => {
-            return <Comment comment={ comment } />;
+            return <Comment key={ comment.id } comment={ comment } />;
           }) : null}
 
           {/* 最新のコメント */}
@@ -74,7 +74,7 @@ class Comments extends React.Component {
 
           {/* ページ表示後に投稿されたコメント */}
           { add_comments.map((comment) => {
-            return <Comment comment={ comment } />;
+            return <Comment key={ comment.id } comment={ comment } />;
           })}
 
           {/* コメント投稿ボックス */}

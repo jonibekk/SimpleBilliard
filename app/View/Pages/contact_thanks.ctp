@@ -97,7 +97,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     <div class="details">
                         <h4><?= __('IsaB') ?></h4>
                         <p><?= __('Make your job joyful! ISAO blog') ?></p>
-                        <p><a href="http://blog.isao.co.jp/" target="_blank"><?= __('http://blog.isao.co.jp/') ?></a>
+                        <p><a href="http://blog.goalous.com/" target="_blank"><?= __('http://blog.goalous.com/') ?></a>
                         </p>
                     </div><!--details-->
                 </div><!--//item-inner-->

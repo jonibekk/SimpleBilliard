@@ -107,7 +107,7 @@ class EvaluationsController extends AppController
                 $timezoneSec = $term['timezone'] * 3600;
                 $fmtStartDate = date('Y/m/d', $term['start_date'] + $timezoneSec);
                 $fmtEndDate = date('Y/m/d', $term['end_date'] + $timezoneSec);
-                $termLabels[$term['id']] = $fmtStartDate. " - " .$fmtEndDate;
+                $termLabels[$term['id']] = $fmtStartDate . " - " . $fmtEndDate;
             }
         }
         return $termLabels;
@@ -172,8 +172,8 @@ class EvaluationsController extends AppController
         // set progress
         foreach ($goalList as $goalIndex => $goal) {
             foreach ($goal as $evalKey => $eval) {
-                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->getProgress(Hash::get($eval,
-                    'Goal.KeyResult'));
+                $keyResults = Hash::get($eval, 'Goal.KeyResult');
+                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $GoalService->calcProgressByOwnedPriorities($keyResults);
             }
         }
 

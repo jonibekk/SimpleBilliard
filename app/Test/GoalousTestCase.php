@@ -18,6 +18,7 @@ App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 
 /**
@@ -28,6 +29,7 @@ App::import('Service', 'GoalService');
  * @property GoalMember   $GoalMember
  * @property Team         $Team
  * @property GoalService  $GoalService
+ * @property GlRedis      $GlRedis
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -39,12 +41,14 @@ class GoalousTestCase extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        Cache::config('team_info', ['prefix' => 'test_cache_team_info:']);
-        Cache::config('user_data', ['prefix' => 'test_cache_user_data:']);
+        Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
+        Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->GoalService = ClassRegistry::init('GoalService');
+        $this->GlRedis = ClassRegistry::init('GlRedis');
+        $this->GlRedis->changeDbSource('redis_test');
     }
 
     /**
@@ -215,9 +219,14 @@ class GoalousTestCase extends CakeTestCase
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
         $term = $this->EvaluateTerm->findById($evaluateTermId);
-        $today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、UTC時間にする。正しくは、UTC midnight - timeOffset
+        //$today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
+        $today = strtotime(date("Y/m/d 23:59:59"));
+
         $term['EvaluateTerm']['end_date'] = $today;
         $term['EvaluateTerm']['start_date'] = $today - $termDays * DAY;
+        //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、timezone設定をUTCに変更。
+        $term['EvaluateTerm']['timezone'] = 0;
         $this->EvaluateTerm->save($term);
     }
 
@@ -333,23 +342,44 @@ class GoalousTestCase extends CakeTestCase
         return $goalId;
     }
 
-    function createKr($goalId, $teamId, $userId, $progress, $endDate = null)
-    {
+    function createKr(
+        $goalId,
+        $teamId,
+        $userId,
+        $currentValue,
+        $startValue = 0,
+        $targetValue = 100,
+        $priority = 3,
+        $termType = EvaluateTerm::TYPE_CURRENT
+    ) {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
+        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
+        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
 
         $kr = [
             'goal_id'       => $goalId,
             'team_id'       => $teamId,
             'user_id'       => $userId,
             'name'          => 'テストKR',
-            'start_value'   => 0,
-            'target_value'  => 100,
+            'start_value'   => $startValue,
+            'target_value'  => $targetValue,
             'value_unit'    => 0,
-            'current_value' => $progress,
+            'current_value' => $currentValue,
+            'start_date'    => $startDate,
+            'end_date'      => $endDate,
+            'priority'      => $priority,
         ];
         $KeyResult->create();
         $KeyResult->save($kr);
+        return $KeyResult->getLastInsertID();
+    }
+
+    function delKr($krId)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+        $KeyResult->delete($krId);
     }
 
     function createTeam($startTermMonth = 4, $borderMonths = 6)

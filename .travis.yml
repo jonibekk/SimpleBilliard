@@ -79,7 +79,7 @@ before_script:
         'timeout'     => 0,
         'persistent'  => false,
         'unix_socket' => '',
-        'prefix'      => 'test',
+        'prefix'      => 'local:test:',
     );
 
     public function __construct() {
