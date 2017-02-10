@@ -786,9 +786,16 @@ class GoalsController extends AppController
 
     public function delete_key_result()
     {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         $krId = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
+            $kr = $KeyResultService->get($krId);
+            if (empty($kr)) {
+                throw new RuntimeException(__("No exist kr."));
+            }
             if (!$this->Goal->KeyResult->isPermitted($krId)) {
                 throw new RuntimeException(__("You have no permission."));
             }
@@ -801,14 +808,11 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
         if (!$KeyResultService->delete($krId)) {
             $this->Pnotify->outError(__("An error has occurred."));
             return $this->redirect($this->referer());
         }
 
-        $kr = $KeyResultService->get($krId);
         $goalId = Hash::get($kr, 'goal_id');
         $this->_flashClickEvent("KRsOpen_" . $goalId);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $goalId, $krId);

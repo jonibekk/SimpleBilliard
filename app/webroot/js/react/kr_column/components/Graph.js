@@ -85,7 +85,7 @@ export default class Graph extends React.Component {
         x: {
           show: false,
           type: 'category',
-          categories: graphDates
+          categories: graphDates,
         },
         y: {
           show: false

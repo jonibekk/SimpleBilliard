@@ -574,14 +574,14 @@ class AppModel extends Model
         }
         $this->id = $id;
         $data = [
-            'del_flg' => true,
-            'deleted' => REQUEST_TIMESTAMP,
-            'modified' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'del_flg' => true,
+            $this->alias . '.' . 'deleted' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'modified' => REQUEST_TIMESTAMP,
         ];
         $condition = [
-            'id' => $id,
-            'team_id' => $this->current_team_id,
-            'del_flg' => false,
+            $this->alias . '.' . 'id' => $id,
+            $this->alias . '.' . 'team_id' => $this->current_team_id,
+            $this->alias . '.' . 'del_flg' => false,
         ];
         // saveだと削除済みのレコードも更新してしまうため、updateAllを使用
         $ret = $this->updateAll($data, $condition);
@@ -602,13 +602,13 @@ class AppModel extends Model
             return false;
         }
         $condition = am($condition, [
-            'team_id' => $this->current_team_id,
-            'del_flg' => false,
+            $this->alias . '.' . 'team_id' => $this->current_team_id,
+            $this->alias . '.' . 'del_flg' => false,
         ]);
         $ret = $this->updateAll([
-            'del_flg' => true,
-            'deleted' => REQUEST_TIMESTAMP,
-            'modified' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'del_flg' => true,
+            $this->alias . '.' . 'deleted' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'modified' => REQUEST_TIMESTAMP,
         ], $condition);
 
         return !empty($ret);
