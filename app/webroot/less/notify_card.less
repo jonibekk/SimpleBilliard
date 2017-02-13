@@ -3,18 +3,23 @@
   notify-cardsのスタイル
 */
 .notify-card-link {
-  display: block;
-  padding: 6px 6px 2px;
-  &:hover,
-  &:focus {
-    color: @black;
-    background-color: @hoverRed;
-  }
+  display: flex;
+  padding: 4px 5px;
 
+  // 3カラムの場合でのみhoverの色を変える。
+  // 携帯端末でhover設定はui的にNG.
+  @media screen and (min-width: 992px) {
+    &:hover,
+    &:focus {
+      color: @black;
+      background-color: @hoverRed;
+    }
+  }
 }
-@media screen and (min-width: 768px) {
+
+.notify-page-cards {
   .notify-card-link {
-    padding: 12px 8px 8px;
+    padding: 8px 5px;
   }
 }
 
@@ -23,10 +28,10 @@
 */
 .header-nav-notify-contents {
   margin: 0;
-  padding: 0 17px 0 0;
+  padding: 0;
   max-height: 360px;
   white-space: normal;
-  width: 297px;
+  width: 320px;
   overflow-y: scroll;
   text-overflow: ellipsis;
   box-shadow: none;
@@ -37,20 +42,21 @@
 }
 .notify-card-head {
   font-size: @fontSmall;
-  line-height: 18px;
+  line-height: 16px;
+}
+.notify-card-text-wrapper {
+  line-height: 14px;
 }
 .notify-card-text {
   font-size: @fontSmallest;
   color: @black;
-  line-height: 15px;
-  height: 15px;
 }
 .notify-card-aside {
   .aside-info;
 }
 .notify-card-pic {
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
   margin-right: 8px;
 }
 .notify-all-view-link {
@@ -108,37 +114,35 @@
 //
 
 .notify-card-list {
-    clear: both;
-    overflow:hidden;
-    line-height: 1.4;
+  clear: both;
+  overflow:hidden;
+  line-height: 1.4;
+  .notify-card-link {
     border-top: 1px solid @lightGray;
-    &:first-child{
+  }
+  &:first-child{
+    .notify-card-link {
       border-top: none;
     }
-}
-
-.notify-dropdown-card {
-  width:278px;
-}
-
-.notify-card-pic-box {
-  width: 64px;
-  margin-right: 8px;
-}
-
-.notify-page-card-letters {
-  display: inline-block;
-  width: 72%;
-  @media screen and (min-width: 600px){
-    width: 80%;
   }
 }
 
-.notify-dropdown-card-letters {
-  display: inline-block;
-  width: 190px;
+.notify-dropdown-card {
+  width: 318px;
 }
 
+.notify-card-pic-box {
+  width: 50px;
+  margin-right: 8px;
+}
+
+.notify-dropdown-card-letters {
+  width: 248px;
+}
+
+.notify-page-card-letters {
+  flex: 1;
+}
 
 .notify-line-number {
     margin: 0;
