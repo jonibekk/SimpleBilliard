@@ -189,23 +189,39 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+
+        $error = false;
         $msg = '';
-        if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
-            if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
-                foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
-                    $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circle_id);
-                }
-                $this->updateSetupStatusIfNotCompleted();
-                $msg = __("Join a circle.");
-            } else {
-                $msg = __("Leave a circle.");
-            }
-            $this->Pnotify->outSuccess($msg);
-            $error = false;
+
+        // サークル参加/不参加ステータス変更
+        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
+            $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data, false, false);
         } else {
+            $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data);
+        }
+        if (!$changedJoinedStatus) {
             $msg = __("Failed to change circle belonging status.");
             $error = true;
+            return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
         }
+
+        // サークル参加通知 & レスポンスメッセージ定義
+        $newJoinedCircles = $this->Circle->CircleMember->new_joined_circle_list;
+        if (!empty($newJoinedCircles)) {
+            foreach ($newJoinedCircles as $circleId) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
+            }
+            $this->updateSetupStatusIfNotCompleted();
+            $msg = __("Join a circle.");
+        } else {
+            $msg = __("Leave a circle.");
+        }
+
+        $this->Pnotify->outSuccess($msg);
+        $error = false;
 
         return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
