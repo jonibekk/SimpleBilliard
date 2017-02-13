@@ -153,14 +153,14 @@ class AppUtil
      */
     static function timeOffsetFromUtcMidnight(int $targetTimestamp): float
     {
-        //30 or 0
+        // 30 or 0
         $minute = sprintf("%02s", floor(date('i', $targetTimestamp) / 30) * 30);
         $targetTimestamp = mktime(date('H', $targetTimestamp), $minute);
-        //UTC0:00
+        // UTC0:00
         $baseTimestamp = strtotime('00:00:00');
         $diff = $targetTimestamp - $baseTimestamp;
         $diffHour = $diff / HOUR;
-        //小数点第一位で切り捨て
+        // 小数点第一位で切り捨て
         $ret = AppUtil::floor($diffHour, 1);
         return $ret;
     }
