@@ -142,4 +142,27 @@ class AppUtil
         $tmpNum = pow(10, $numDecimalPlace);
         return floor($value * $tmpNum) / $tmpNum;
     }
+
+    /**
+     * UTC0:00からの時差(30分刻み)を求める。
+     * 1:29なら1.0, 1:30なら1.5, 1:59なら1.5
+     *
+     * @param int $targetTimestamp
+     *
+     * @return float
+     */
+    static function timeOffsetFromUtcMidnight(int $targetTimestamp): float
+    {
+        //30 or 0
+        $minute = sprintf("%02s", floor(date('i', $targetTimestamp) / 30) * 30);
+        $targetTimestamp = mktime(date('H', $targetTimestamp), $minute);
+        //UTC0:00
+        $baseTimestamp = strtotime('00:00:00');
+        $diff = $targetTimestamp - $baseTimestamp;
+        $diffHour = $diff / HOUR;
+        //小数点第一位で切り捨て
+        $ret = AppUtil::floor($diffHour, 1);
+        return $ret;
+    }
+
 }

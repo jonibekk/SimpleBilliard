@@ -46,15 +46,57 @@ class KrValuesDailyLogShell extends AppShell
 
     /**
      * shellのメイン処理
+     * - 日付の指定はタイムゾーンの指定がある場合のみ有効
+     * - タイムゾーンの指定がない場合は、実行日時から対象のタイムゾーンを算出して、対象のチームのみ実行
+     * - 対象タイムゾーンはローカルタイム0:00になるもの
      */
     public function main()
     {
-        // デフォルトの指定日は前日
-        $targetDate = $this->params['date'] ?? date('Y-m-d', strtotime('yesterday'));
-
         // ターゲットのタイムゾーン
-        $targetTimezone = $this->params['timezone'];
+        $targetTimezone = $this->params['timezone'] ?? null;
+        if ($targetTimezone) {
+            // 日付が指定できるのはtimezoneが指定されている場合のみ
+            // デフォルトの指定日は前日
+            $targetDate = $this->params['date'] ?? date('Y-m-d', strtotime('yesterday'));
+            $this->_mainProcess($targetTimezone, $targetDate);
+        } else {
+            $yesterdayDate = date('Y-m-d', strtotime('yesterday'));
+            $todayDate = date('Y-m-d');
+            // UTC0:00と現在日時の時差
+            $timeOffset = AppUtil::timeOffsetFromUtcMidnight(time());
+            if ($timeOffset == 0) {
+                // UTC+0:00 Western Europe Time, London
+                // timezone = 0で実行、ログ対象は前日分
+                $this->_mainProcess(0, $yesterdayDate);
+            } elseif ($timeOffset == 12) {
+                // UTC+12:00(Auckland, Fiji)
+                // timezone = +12で実行、ログ対象は当日分
+                $this->_mainProcess($timeOffset, $todayDate);
+                // UTC-12:00(Eniwetok, Kwajalein)
+                // timezone = -12で実行、ログ対象は前日分
+                $this->_mainProcess(-$timeOffset, $yesterdayDate);
+            } elseif ($timeOffset < 12) {
+                // UTC-11:00(Midway Island) - UTC-1:00(Cape Verde Islands)
+                // timezone = -xxで実行、ログ対象は前日分
+                $this->_mainProcess(-$timeOffset, $yesterdayDate);
+            } else {
+                // $timeOffset > 12
+                // UTC+1:00(Central Europe Time) - UTC+11:00(Solomon Islands)
+                $targetTimezone = 24 - $timeOffset;
+                // ログ対象は当日分
+                $this->_mainProcess($targetTimezone, $todayDate);
+            }
+        }
+    }
 
+    /**
+     * メインの保存処理
+     *
+     * @param float  $targetTimezone
+     * @param string $targetDate
+     */
+    function _mainProcess(float $targetTimezone, string $targetDate)
+    {
         // validate
         if (!$this->_validateTargetDate($targetDate)) {
             $this->error('Invalid parameter', $this->_usageString());
@@ -65,15 +107,10 @@ class KrValuesDailyLogShell extends AppShell
         //       レアケースだが、timezoneの変更によって同日のデータが存在する場合がある。その際に既存データを削除する以下の処理は必要。
         // $this->KrValuesDailyLog->deleteAll(['KrValuesDailyLog.target_date' => $targetDate]);
 
-        if ($targetTimezone) {
-            // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
-            $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, strtotime($targetDate));
-        } else {
-            // タイムゾーンの指定がない場合は全チームのIDリスト
-            $teamIds = array_keys($this->Team->find('list'));
-        }
+        // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
+        $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, strtotime($targetDate));
 
-        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate);;
+        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate);
     }
 
     /**
@@ -83,12 +120,13 @@ class KrValuesDailyLogShell extends AppShell
      *
      * @param array  $teamIds
      * @param string $targetDate
+     * @param bool   $isRerunning
      *
      * @return bool
      */
     protected function _saveKrValuesDailyLogsAsBulk(array $teamIds, string $targetDate, bool $isRerunning = false)
     {
-        /** @var GoalService $GoalService */
+        /** @var KrValuesDailyLogService $KrValuesDailyLogService */
         $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
 
         //メモリ消費を抑えるためにチーム毎に集計し保存する。
