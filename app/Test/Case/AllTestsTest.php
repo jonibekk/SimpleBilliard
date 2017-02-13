@@ -37,6 +37,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service' . DS . 'Api');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Console');
+        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Lib' . DS . 'Util');
         return $suite;
     }
 

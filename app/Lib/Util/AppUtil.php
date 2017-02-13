@@ -153,15 +153,29 @@ class AppUtil
      */
     static function timeOffsetFromUtcMidnight(int $targetTimestamp): float
     {
-        // 30 or 0
-        $minute = sprintf("%02s", floor(date('i', $targetTimestamp) / 30) * 30);
-        $roundedTargetTimestamp = mktime(date('H', $targetTimestamp), $minute);
+        $roundedTargetTimestamp = self::timestampFloorByMin($targetTimestamp);
         // UTC0:00
         $baseTimestamp = strtotime('00:00:00');
         $diff = $roundedTargetTimestamp - $baseTimestamp;
         $diffHour = $diff / HOUR;
         // 小数点第一位で切り捨て
         $ret = self::floor($diffHour, 1);
+        return $ret;
+    }
+
+    /**
+     * 指定分刻みで切り捨てたタイムスタンプを求める
+     * 指定分が30分の場合で、対象の時間が1:29なら1:00, 1:30なら1:30, 1:59なら1:30
+     *
+     * @param int $timestamp
+     * @param int $borderMin
+     *
+     * @return int
+     */
+    static function timestampFloorByMin(int $timestamp, int $borderMin = 30): int
+    {
+        $minute = floor(date('i', $timestamp) / $borderMin) * $borderMin;
+        $ret = strtotime(date("Y-m-d H:$minute:00", $timestamp));
         return $ret;
     }
 
