@@ -27,6 +27,7 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Circle->create();
+        // TODO: このサービスの読み込みもCircleServiceで行う。
         App::import('Service', 'ExperimentService');
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
@@ -254,6 +255,9 @@ class CirclesController extends AppController
 
     /**
      * サークルの 参加/不参加 切り替え
+     * TODO: サークル参加処理はサービス層へ移す。
+     *       他のルートでサークル参加するロジックでも同じような処理を行ってるので、処理を一箇所に集める。
+     *       実験中かどうかの分岐もサービス層で行う。
      *
      * @return CakeResponse
      */
