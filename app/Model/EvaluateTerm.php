@@ -647,7 +647,7 @@ class EvaluateTerm extends AppModel
         ];
 
         $ret = $this->findWithoutTeamId('list', $options);
-        // キーの意味を意識させないため、歯抜けのキーの再採番。
+        // キーに特別な意味を持たせないように、歯抜けのキーを再採番
         $ret = array_merge($ret);
         return $ret;
     }
