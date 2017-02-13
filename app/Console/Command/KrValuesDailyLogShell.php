@@ -58,34 +58,36 @@ class KrValuesDailyLogShell extends AppShell
             // 日付が指定できるのはtimezoneが指定されている場合のみ
             // デフォルトの指定日は前日
             $targetDate = $this->params['date'] ?? date('Y-m-d', strtotime('yesterday'));
-            $this->_mainProcess($targetTimezone, $targetDate);
+            return $this->_mainProcess($targetTimezone, $targetDate);
+        }
+
+        //タイムゾーン指定が無い場合は対象タイムゾーンを自動判定
+        $yesterdayDate = date('Y-m-d', strtotime('yesterday'));
+        $todayDate = date('Y-m-d');
+        // UTC0:00と現在日時の時差(0 - 23)
+        $timeOffsetFromUtcMidnight = AppUtil::timeOffsetFromUtcMidnight(time());
+        //時差によって対象タイムゾーンを自動判定
+        if ($timeOffsetFromUtcMidnight == 0) {
+            // UTC+0:00 Western Europe Time, London
+            // timezone = 0で実行、ログ対象は前日分
+            $this->_mainProcess(0, $yesterdayDate);
+        } elseif ($timeOffsetFromUtcMidnight == 12) {
+            // UTC+12:00(Auckland, Fiji)
+            // timezone = +12で実行、ログ対象は当日分
+            $this->_mainProcess(12, $todayDate);
+            // UTC-12:00(Eniwetok, Kwajalein)
+            // timezone = -12で実行、ログ対象は前日分
+            $this->_mainProcess(-12, $yesterdayDate);
+        } elseif ($timeOffsetFromUtcMidnight < 12) {
+            // UTC-11:00(Midway Island) - UTC-1:00(Cape Verde Islands)
+            // timezone = -xxで実行、ログ対象は前日分
+            $this->_mainProcess(-$timeOffsetFromUtcMidnight, $yesterdayDate);
         } else {
-            $yesterdayDate = date('Y-m-d', strtotime('yesterday'));
-            $todayDate = date('Y-m-d');
-            // UTC0:00と現在日時の時差(0 - 23)
-            $timeOffsetFromUtcMidnight = AppUtil::timeOffsetFromUtcMidnight(time());
-            if ($timeOffsetFromUtcMidnight == 0) {
-                // UTC+0:00 Western Europe Time, London
-                // timezone = 0で実行、ログ対象は前日分
-                $this->_mainProcess(0, $yesterdayDate);
-            } elseif ($timeOffsetFromUtcMidnight == 12) {
-                // UTC+12:00(Auckland, Fiji)
-                // timezone = +12で実行、ログ対象は当日分
-                $this->_mainProcess(12, $todayDate);
-                // UTC-12:00(Eniwetok, Kwajalein)
-                // timezone = -12で実行、ログ対象は前日分
-                $this->_mainProcess(-12, $yesterdayDate);
-            } elseif ($timeOffsetFromUtcMidnight < 12) {
-                // UTC-11:00(Midway Island) - UTC-1:00(Cape Verde Islands)
-                // timezone = -xxで実行、ログ対象は前日分
-                $this->_mainProcess(-$timeOffsetFromUtcMidnight, $yesterdayDate);
-            } else {
-                // $timeOffset > 12
-                // UTC+1:00(Central Europe Time) - UTC+11:00(Solomon Islands)
-                $targetTimezone = 24 - $timeOffsetFromUtcMidnight;
-                // ログ対象は当日分
-                $this->_mainProcess($targetTimezone, $todayDate);
-            }
+            // $timeOffset > 12
+            // UTC+1:00(Central Europe Time) - UTC+11:00(Solomon Islands)
+            $targetTimezone = 24 - $timeOffsetFromUtcMidnight;
+            // ログ対象は当日分
+            $this->_mainProcess($targetTimezone, $todayDate);
         }
     }
 
