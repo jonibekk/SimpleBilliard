@@ -149,16 +149,16 @@ class AppUtil
      *
      * @param int $targetTimestamp
      * @param int $baseTimestamp
-     * @param int $borderMin
+     * @param int $borderMinute
      *
      * @return float
      */
-    static function diffHourFloorByMin(int $targetTimestamp, int $baseTimestamp, int $borderMin = 30): float
+    static function diffHourFloorByMinute(int $targetTimestamp, int $baseTimestamp, int $borderMinute = 30): float
     {
         $baseDate = new DateTime(date('Y-m-d H:i:s', $baseTimestamp));
         $diff = $baseDate->diff(new DateTime(date('Y-m-d H:i:s', $targetTimestamp)));
         //指定分が30の場合、29分なら0, 59分なら30
-        $flooredMinute = floor($diff->i / $borderMin) * $borderMin;
+        $flooredMinute = floor($diff->i / $borderMinute) * $borderMinute;
         //30分なら0.5
         $minuteConvertedToHour = $flooredMinute / 60;
         $diffHour = $diff->h + $minuteConvertedToHour;

@@ -65,7 +65,7 @@ class KrValuesDailyLogShell extends AppShell
         $yesterdayDate = date('Y-m-d', strtotime('yesterday'));
         $todayDate = date('Y-m-d');
         // UTC0:00と現在日時の時差(0 - 23)
-        $difHourFromUtcMidnight = AppUtil::diffHourFloorByMin(time(), strtotime('00:00:00'));
+        $difHourFromUtcMidnight = AppUtil::diffHourFloorByMinute(time(), strtotime('00:00:00'));
         //時差によって対象タイムゾーンを自動判定
         if ($difHourFromUtcMidnight == 0) {
             // UTC+0:00 Western Europe Time, London
