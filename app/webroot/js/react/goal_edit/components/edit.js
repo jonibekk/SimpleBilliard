@@ -9,6 +9,7 @@ import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import CategorySelect from "~/common/components/goal/CategorySelect";
 import LabelInput from "~/common/components/goal/LabelInput";
 import {MaxLength} from "~/common/constants/App";
+import { generateTermRangeFormat } from "~/util/date";
 
 export default class Edit extends React.Component {
   constructor(props) {
@@ -82,9 +83,8 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
-
 
     let progress_reset_warning = null
     const change_unit = goal.top_key_result && inputData.key_result.value_unit != goal.top_key_result.value_unit
@@ -107,6 +107,24 @@ export default class Edit extends React.Component {
       )
     }
 
+    let term_options = []
+    if (Object.keys(terms).length) {
+      term_options.push(
+        <option value="current" key={terms.current.start_date}>
+          { `${__("This Term")} ( ${generateTermRangeFormat(terms.current.start_date, terms.current.end_date)} ) ` }
+        </option>
+      )
+      // 来期 -> 今期 の変更は許可するが、今期 -> 来期の変更は許可しないため、
+      // 今期のゴールの場合は来期の選択肢を出さない
+      if (goal.term_type === 'next') {
+        term_options.push(
+          <option value="next" key={terms.next.start_date}>
+            { `${__("Next Term")} ( ${generateTermRangeFormat(terms.next.start_date, terms.next.end_date)} ) ` }
+          </option>
+        )
+      }
+    }
+
     return (
       <div className="panel panel-default col-sm-8 col-sm-offset-2 goals-create">
         <form className="goals-create-input"
@@ -119,6 +137,7 @@ export default class Edit extends React.Component {
 
             <h2 className="goals-edit-subject"><i className="fa fa-flag"></i> { __("Goal") }</h2>
 
+            {/* ゴール名 */}
             <label className="goals-create-input-label">{__("Goal name")}</label>
             <input name="name"
                    className="form-control goals-create-input-form" type="text"
@@ -129,12 +148,14 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={validationErrors.name}/>
 
+            {/* カテゴリ選択 */}
             <CategorySelect
               onChange={(e) => this.props.updateInputData({goal_category_id: e.target.value})}
               categories={this.props.goal.categories}
               value={inputData.goal_category_id}/>
             <InvalidMessageBox message={validationErrors.goal_category_id}/>
 
+            {/* ラベル */}
             <LabelInput
               suggestions={suggestions}
               keyword={keyword}
@@ -151,9 +172,11 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={validationErrors.labels}/>
 
+            {/* ゴール画像 */}
             <PhotoUpload uploadPhoto={inputData.photo} imgUrl={goal.medium_large_img_url} ref="innerPhoto"/>
             <InvalidMessageBox message={validationErrors.photo}/>
 
+            {/* ゴール詳細 */}
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description"
                       className="goals-create-input-form mod-textarea"
@@ -164,10 +187,22 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={validationErrors.description}/>
 
+            {/* 期 */}
+            <label className="goals-create-input-label">{__("Term")}</label>
+            <select name="term_type" className="form-control goals-create-input-form mod-select"
+                    ref="term_type"
+                    value={ goal.term_type }
+                    onChange={this.handleChange}>
+              { term_options }
+            </select>
+
+            {/* ゴール期限 */}
             <label className="goals-create-input-label">{__("End date")}</label>
             <input className="goals-create-input-form" type="date" name="end_date" onChange={this.onChange}
                    value={inputData.end_date}/>
             <InvalidMessageBox message={validationErrors.end_date}/>
+
+            {/* ゴール重要度 */}
             <label className="goals-create-input-label">{__("Weight")}</label>
             <select className="goals-create-input-form" name="priority" ref="priority"
                     value={inputData.priority} onChange={this.onChange}>
@@ -181,9 +216,12 @@ export default class Edit extends React.Component {
             </select>
             <InvalidMessageBox message={validationErrors.priority}/>
           </section>
+
+          {/* TKR */}
           <section className="goals-edit-tkr">
             <h2 className="goals-edit-subject"><i className="fa fa-key"></i> { __("Top Key Result") }</h2>
 
+            {/* TKR名 */}
             <label className="goals-create-input-label">{__("Top Key Result name")}</label>
             <input name="name" type="text" value={inputData.key_result.name}
                    className="form-control goals-create-input-form goals-create-input-form-tkr-name"
@@ -193,6 +231,7 @@ export default class Edit extends React.Component {
             />
             <InvalidMessageBox message={tkrValidationErrors.name}/>
 
+            {/* 測定単位 */}
             <label className="goals-create-input-label">{__("Measurement type")}</label>
             {progress_reset_warning}
             <div className="goals-create-layout-flex">
@@ -201,6 +240,7 @@ export default class Edit extends React.Component {
                 units={this.props.goal.units}
                 onChange={(e) => this.onChange(e, "key_result")}
               />
+              {/* 測定値 */}
               <ValueStartEndInput
                 inputData={inputData.key_result}
                 kr={goal.top_key_result}
@@ -213,6 +253,7 @@ export default class Edit extends React.Component {
 
             {current_value_input}
 
+            {/* TKR詳細 */}
             <label className="goals-create-input-label">{__("Description")}</label>
             <textarea name="description"
                       className="form-control goals-create-input-form mod-textarea"
