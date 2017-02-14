@@ -388,7 +388,8 @@ class GoalousTestCase extends CakeTestCase
             'start_term_month' => $startTermMonth,
             'border_months'    => $borderMonths,
             'type'             => 3,
-            'name'             => 'Test Team.'
+            'name'             => 'Test Team.',
+            'timezone'         => 9,
         ];
         $this->Team->create();
         $this->Team->save($team);
