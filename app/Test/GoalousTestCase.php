@@ -140,7 +140,11 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->saveField('border_months', 1);
 
         $this->Team->current_team_id = $teamId;
+        $this->Team->current_team = [];
         $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
 
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
@@ -163,7 +167,12 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->saveField('border_months', 1);
 
         $this->Team->current_team_id = $teamId;
+        $this->Team->current_team = [];
         $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
         $term = $this->EvaluateTerm->findById($evaluateTermId);
@@ -172,7 +181,6 @@ class GoalousTestCase extends CakeTestCase
         $this->EvaluateTerm->save($term);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-
     }
 
     /**
@@ -189,7 +197,12 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->saveField('border_months', 1);
 
         $this->Team->current_team_id = $teamId;
+        $this->Team->current_team = [];
         $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
         $term = $this->EvaluateTerm->findById($evaluateTermId);
@@ -215,7 +228,12 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->saveField('border_months', 1);
 
         $this->Team->current_team_id = $teamId;
+        $this->Team->current_team = [];
         $this->EvaluateTerm->current_team_id = $teamId;
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
         $term = $this->EvaluateTerm->findById($evaluateTermId);
@@ -382,15 +400,16 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult->delete($krId);
     }
 
-    function createTeam($startTermMonth = 4, $borderMonths = 6)
+    function createTeam($data = [])
     {
-        $team = [
-            'start_term_month' => $startTermMonth,
-            'border_months'    => $borderMonths,
+        $default = [
+            'start_term_month' => 4,
+            'border_months'    => 6,
             'type'             => 3,
             'name'             => 'Test Team.',
             'timezone'         => 9,
         ];
+        $team = am($default, $data);
         $this->Team->create();
         $this->Team->save($team);
         return $this->Team->getLastInsertID();

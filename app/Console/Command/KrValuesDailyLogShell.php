@@ -65,7 +65,7 @@ class KrValuesDailyLogShell extends AppShell
         //タイムゾーン指定が無い場合は対象タイムゾーンを自動判定
         $yesterdayDate = date('Y-m-d', strtotime('yesterday'));
         $todayDate = date('Y-m-d');
-        //テスト用に現在日時のタイムスタンプをパラメータから取得
+        //テストの場合のみ利用！現在日時のタイムスタンプをパラメータから取得
         $nowTimestamp = $this->params['currentTimestamp'] ?? time();
         $startTodayTimestamp = strtotime('00:00:00');
         // UTC0:00と現在日時の時差(0 - 23)

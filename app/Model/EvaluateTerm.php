@@ -363,9 +363,9 @@ class EvaluateTerm extends AppModel
     public function addTermData($type)
     {
         //キャッシュを削除
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
         $this->_checkType($type);
         $new_start = null;
         $new_end = null;

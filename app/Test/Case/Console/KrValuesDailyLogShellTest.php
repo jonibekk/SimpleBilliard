@@ -144,4 +144,113 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
             ['conditions' => ['target_date' => date('Y-m-d', strtotime('tomorrow'))]]);
         $this->assertcount(2, $res);
     }
+
+    /**
+     * 複数のタイムゾーンでデータが保存されていること
+     */
+    function test_main_allTimezone()
+    {
+        $this->deleteAllTeam();
+
+        $todayDate = date('Y-m-d');
+        $yesterdayDate = date('Y-m-d', strtotime("yesterday"));
+        $expectedValues = [
+            [
+                'timezone'       => "-12",
+                'currentTime'    => "12:00:00",
+                'targetDate'     => $yesterdayDate,
+                'krCurrentValue' => 10,
+            ],
+            [
+                'timezone'       => "-11",
+                'currentTime'    => "11:00:00",
+                'targetDate'     => $yesterdayDate,
+                'krCurrentValue' => 20,
+            ],
+            [
+                'timezone'       => "-3.5",
+                'currentTime'    => "03:30:00",
+                'targetDate'     => $yesterdayDate,
+                'krCurrentValue' => 30,
+            ],
+            [
+                'timezone'       => "0",
+                'currentTime'    => "00:00:00",
+                'targetDate'     => $yesterdayDate,
+                'krCurrentValue' => 40,
+            ],
+            [
+                'timezone'       => "1",
+                'currentTime'    => "23:00:00",
+                'targetDate'     => $todayDate,
+                'krCurrentValue' => 50,
+            ],
+            [
+                'timezone'       => "3.5",
+                'currentTime'    => "20:30:00",
+                'targetDate'     => $todayDate,
+                'krCurrentValue' => 60,
+            ],
+            [
+                'timezone'       => "9",
+                'currentTime'    => "15:00:00",
+                'targetDate'     => $todayDate,
+                'krCurrentValue' => 70,
+            ],
+            [
+                'timezone'       => "11",
+                'currentTime'    => "13:00:00",
+                'targetDate'     => $todayDate,
+                'krCurrentValue' => 80,
+            ],
+            [
+                'timezone'       => "12",
+                'currentTime'    => "12:00:00",
+                'targetDate'     => $todayDate,
+                'krCurrentValue' => 90,
+            ],
+        ];
+        //データの準備
+        foreach ($expectedValues as $k => $v) {
+            $teamId = $this->_saveDatasForTimezoneTest($v['timezone'], $v['krCurrentValue']);
+            //アサーションでチーム毎にチェックするため、teamIdを退避
+            $expectedValues[$k]['teamId'] = $teamId;
+        }
+
+        //重複する時間を除去してバッチ実行(12:00:00が被っているため)
+        $currentTimes = array_unique(Hash::extract($expectedValues, '{n}.currentTime'));
+        foreach ($currentTimes as $currentTime) {
+            $this->setDefaultTeamIdAndUid(null, null);
+            $this->KrValuesDailyLogShell->params['currentTimestamp'] = strtotime($currentTime);
+            $this->KrValuesDailyLogShell->main();
+        }
+
+        //各チーム毎に期待する対象日でデータが保存できているかチェック
+        foreach ($expectedValues as $v) {
+            $data = $this->KrValuesDailyLog->find('all', ['conditions' => ['team_id' => $v['teamId']]]);
+            //事前にKRは一つずつ保存しているのでログデータは１チーム一つずつになるはず
+            $this->assertCount(1, $data);
+            //期待する対象日になっているか？
+            $this->assertEquals($v['targetDate'], $data[0]['KrValuesDailyLog']['target_date']);
+            //KRの値は期待する値になっているか？
+            $this->assertEquals($v['krCurrentValue'], $data[0]['KrValuesDailyLog']['current_value']);
+        }
+    }
+
+    /**
+     * タイムゾーンを指定して、チーム、期間、ゴール１つを作成
+     *
+     * @param $timezone
+     * @param $krCurrentValue
+     *
+     * @return int
+     */
+    function _saveDatasForTimezoneTest($timezone, $krCurrentValue)
+    {
+        $teamId = $this->createTeam(['timezone' => $timezone]);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $this->setupCurrentTermExtendDays($teamId);
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [$krCurrentValue], $teamId);
+        return $teamId;
+    }
 }
