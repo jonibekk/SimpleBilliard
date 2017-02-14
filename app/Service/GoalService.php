@@ -795,7 +795,7 @@ class GoalService extends AppService
         $term = $EvaluateTerm->getCurrentTermData();
         $termStartTimestamp = $term['start_date'];
         $termEndTimestamp = $term['end_date'];
-        $timezone = $term['timezone'];
+        $termTimezone = $term['timezone'];
 
         //バリデーション
         $validOrErrorMsg = $this->validateGraphRange(
@@ -814,9 +814,10 @@ class GoalService extends AppService
         $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
-            $ret['graphStartDate'] = AppUtil::dateYmdLocal($termStartTimestamp, $timezone);
-            $ret['graphEndDate'] = AppUtil::dateYmdLocal($termStartTimestamp + (($targetDays - 1) * DAY), $timezone);
-            $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $timezone);
+            $ret['graphStartDate'] = AppUtil::dateYmdLocal($termStartTimestamp, $termTimezone);
+            $ret['graphEndDate'] = AppUtil::dateYmdLocal($termStartTimestamp + (($targetDays - 1) * DAY),
+                $termTimezone);
+            $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $termTimezone);
             return $ret;
         }
 
@@ -826,8 +827,8 @@ class GoalService extends AppService
             $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
             if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
                 $ret['graphStartDate'] = AppUtil::dateYmdLocal($termEndTimestamp - (($targetDays - 1) * DAY),
-                    $timezone);
-                $ret['graphEndDate'] = AppUtil::dateYmdLocal($termEndTimestamp, $timezone);
+                    $termTimezone);
+                $ret['graphEndDate'] = AppUtil::dateYmdLocal($termEndTimestamp, $termTimezone);
                 $ret['plotDataEndDate'] = $ret['graphEndDate'];
                 return $ret;
             }
@@ -835,9 +836,9 @@ class GoalService extends AppService
 
         //$targetDays前から本日まで(バッファ日数を考慮)
         $targetStartTimestamp = $targetEndTimestamp - (($targetDays - 1) * DAY);
-        $ret['graphStartDate'] = AppUtil::dateYmdLocal($targetStartTimestamp + ($maxBufferDays * DAY), $timezone);
-        $ret['graphEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp + ($maxBufferDays * DAY), $timezone);
-        $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $timezone);
+        $ret['graphStartDate'] = AppUtil::dateYmdLocal($targetStartTimestamp + ($maxBufferDays * DAY), $termTimezone);
+        $ret['graphEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp + ($maxBufferDays * DAY), $termTimezone);
+        $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $termTimezone);
 
         return $ret;
     }
@@ -962,7 +963,7 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $timezone = $EvaluateTerm->getCurrentTermData()['timezone'];
+        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
@@ -974,7 +975,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'), $timezone);
+            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'), $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1069,7 +1070,7 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $timezone = $EvaluateTerm->getCurrentTermData()['timezone'];
+        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
@@ -1081,7 +1082,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'),$timezone);
+            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'), $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1437,10 +1438,10 @@ class GoalService extends AppService
         $term = $EvaluateTerm->getCurrentTermData();
         $termStartTimestamp = $term['start_date'];
         $termEndTimestamp = $term['end_date'];
-        $timezone = $term['timezone'];
+        $termTimezone = $term['timezone'];
         //ローカル時間に変換
-        $startTimestamp = strtotime($startDate) - $timezone * HOUR;
-        $endTimestamp = strtotime($endDate) - ($timezone * HOUR) + DAY - 1;
+        $startTimestamp = strtotime($startDate) - $termTimezone * HOUR;
+        $endTimestamp = strtotime($endDate) - ($termTimezone * HOUR) + DAY - 1;
 
         //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
         if ($startTimestamp < $termStartTimestamp || $endTimestamp > $termEndTimestamp) {
