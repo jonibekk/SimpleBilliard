@@ -251,19 +251,19 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'   => date('Y-m-10'),
         ];
         //バッファなし
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //当日が期の開始日と一緒の場合、期の開始日とプロットデータのエンドは一緒になる
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 9 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-10');
         //バッファなしで当日が期の開始日から9日後はプロットデータも9日後になる
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 10 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 10 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //バッファなしで、targetDaysが10日で当日が期の開始日から10日後は範囲全体の日付が変わる
         $this->assertEquals([
@@ -273,13 +273,13 @@ class GoalServiceTest extends GoalousTestCase
         ], $actual);
 
         //バッファあり
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //バッファありでも$targetEndTimestampが収まる場合は、日付が一緒になる。
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 1 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 1 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //バッファありで、$targetEndTimestampが収まらない場合は日付が変わる。
@@ -305,17 +305,17 @@ class GoalServiceTest extends GoalousTestCase
             'plotDataEndDate' => date('Y-m-' . date('t')),
         ];
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 1);
         //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 8 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 8 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         //バッファありで、指定終了日と期の終了日の差分がバッファを超える場合はバッファ考慮される
         $this->assertNotEquals($expected, $actual);
@@ -326,7 +326,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . date('t')),
             'plotDataEndDate' => date('Y-m-' . date('t'))
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日までのデータ表示
         $this->assertEquals($expected, $actual);
@@ -336,7 +336,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . (string)(date('t') - 1)),
             'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 1))
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 1 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 1 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日から１日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
@@ -346,7 +346,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . (string)(date('t') - 9)),
             'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 9))
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日から９日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
@@ -365,7 +365,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-10'),
             'plotDataEndDate' => date('Y-m-07'),
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 6 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 6 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
 
@@ -374,7 +374,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-11'),
             'plotDataEndDate' => date('Y-m-08'),
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 7 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 7 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
     }
@@ -390,7 +390,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->setupTerm();
         $targetDays = 10;
         $maxBufferDays = 2;
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $term = $this->EvaluateTerm->getCurrentTermData();
         $termStartTimestamp = $term['start_date'];
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($termStartTimestamp, $targetDays, $maxBufferDays);
@@ -447,7 +447,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->setupTerm();
         $targetDays = 10;
         $maxBufferDays = 2;
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $term = $this->EvaluateTerm->getCurrentTermData();
         $targetEndTimestamp = $term['end_date'];
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
@@ -875,7 +875,6 @@ class GoalServiceTest extends GoalousTestCase
         $targetEndTimestamp = time();
 
         $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-        //for debug
         //過去ログを直接書き換えてキャッシュが効いてるかどうかの確認
         $this->KrValuesDailyLog->updateAll(['current_value' => 0], ['KrValuesDailyLog.goal_id' => $goalId]);
         $after1 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
@@ -1122,6 +1121,7 @@ class GoalServiceTest extends GoalousTestCase
      */
     function testProcessProgressesToGraph()
     {
+        $this->setupTerm(1);
         $progresses = [
             '2017-01-03' => 10,
             '2017-01-04' => 20,
