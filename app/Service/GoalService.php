@@ -966,7 +966,7 @@ class GoalService extends AppService
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
-            time() + $timezone * HOUR,
+            time(),
             strtotime($graphStartDate),
             strtotime($plotDataEndDate) + DAY
         );

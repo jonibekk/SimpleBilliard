@@ -1121,7 +1121,6 @@ class GoalServiceTest extends GoalousTestCase
      */
     function testProcessProgressesToGraph()
     {
-        $this->setupTerm(1);
         $progresses = [
             '2017-01-03' => 10,
             '2017-01-04' => 20,
