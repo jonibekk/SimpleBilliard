@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'KrValuesDailyLogService');
+App::uses('AppUtil', 'Util');
 
 /**
  * KR日次進捗集計用バッチ
@@ -107,6 +108,10 @@ class KrValuesDailyLogShell extends AppShell
         if (!$this->_validateTargetDate($targetDate)) {
             $this->error('Invalid parameter', $this->_usageString());
         }
+        if (!$this->_validateTimezone($targetTimezone)) {
+            $timezones = array_keys(AppUtil::getTimezoneList());
+            $this->error('Invalid parameter. Timezone should be in following values.', $timezones);
+        }
 
         // 該当日のデータを削除(ハードデリート)
         // TODO: 現時点では、この処理は行わない。過去のKR値ログは書き換えることができないため。詳しくは、 https://github.com/IsaoCorp/goalous/pull/5486
@@ -194,6 +199,19 @@ class KrValuesDailyLogShell extends AppShell
             return false;
         }
         return true;
+    }
+
+    /**
+     * タイムゾーンの値が正しいかチェック
+     *
+     * @param float $timezone
+     *
+     * @return bool
+     */
+    protected function _validateTimezone(float $timezone): bool
+    {
+        $timezones = array_keys(AppUtil::getTimezoneList());
+        return in_array($timezone, $timezones);
     }
 
 }
