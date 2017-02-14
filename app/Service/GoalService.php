@@ -1066,6 +1066,10 @@ class GoalService extends AppService
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $timezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
@@ -1077,7 +1081,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'),$timezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
