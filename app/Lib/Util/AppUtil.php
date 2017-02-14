@@ -144,39 +144,24 @@ class AppUtil
     }
 
     /**
-     * UTC0:00からの時差(30分刻み)を求める。
-     * 対象の時間が1:29なら1.0, 1:30なら1.5, 1:59なら1.5
+     * 時差の時(指定分刻み)を求める。
+     * 指定分が30分の場合で、時差が1:29なら1.0, 1:30なら1.5, 1:59なら1.5
      *
      * @param int $targetTimestamp
+     * @param int $baseTimestamp
+     * @param int $borderMin
      *
      * @return float
      */
-    static function timeOffsetFromUtcMidnight(int $targetTimestamp): float
+    static function diffHourFloorByMin(int $targetTimestamp, int $baseTimestamp, int $borderMin = 30): float
     {
-        $roundedTargetTimestamp = self::timestampFloorByMin($targetTimestamp);
-        // UTC0:00
-        $baseTimestamp = strtotime('00:00:00');
-        $diff = $roundedTargetTimestamp - $baseTimestamp;
-        $diffHour = $diff / HOUR;
-        // 小数点第一位で切り捨て
-        $ret = self::floor($diffHour, 1);
-        return $ret;
+        $baseDate = new DateTime(date('Y-m-d H:i:s', $baseTimestamp));
+        $diff = $baseDate->diff(new DateTime(date('Y-m-d H:i:s', $targetTimestamp)));
+        //指定分が30の場合、29分なら0, 59分なら30
+        $flooredMinute = floor($diff->i / $borderMin) * $borderMin;
+        //30分なら0.5
+        $minuteConvertedToHour = $flooredMinute / 60;
+        $diffHour = $diff->h + $minuteConvertedToHour;
+        return $diffHour;
     }
-
-    /**
-     * 指定分刻みで切り捨てたタイムスタンプを求める
-     * 指定分が30分の場合で、対象の時間が1:29なら1:00, 1:30なら1:30, 1:59なら1:30
-     *
-     * @param int $timestamp
-     * @param int $borderMin
-     *
-     * @return int
-     */
-    static function timestampFloorByMin(int $timestamp, int $borderMin = 30): int
-    {
-        $minute = floor(date('i', $timestamp) / $borderMin) * $borderMin;
-        $ret = strtotime(date("Y-m-d H:$minute:00", $timestamp));
-        return $ret;
-    }
-
 }

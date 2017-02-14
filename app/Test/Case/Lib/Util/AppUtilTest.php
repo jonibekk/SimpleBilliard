@@ -52,14 +52,18 @@ class AppUtilTest extends GoalousTestCase
         $this->markTestIncomplete();
     }
 
-    function test_timeOffsetFromUtcMidnight()
+    function test_diffHourFloorByMin()
     {
-        $this->assertEquals(0, AppUtil::timeOffsetFromUtcMidnight(strtotime('00:00:00')));
-        $this->assertEquals(0, AppUtil::timeOffsetFromUtcMidnight(strtotime('00:29:59')));
-        $this->assertEquals(0.5, AppUtil::timeOffsetFromUtcMidnight(strtotime('00:30:00')));
-        $this->assertEquals(0.5, AppUtil::timeOffsetFromUtcMidnight(strtotime('00:59:59')));
-        $this->assertEquals(1.5, AppUtil::timeOffsetFromUtcMidnight(strtotime('01:30:00')));
-        $this->assertEquals(23.5, AppUtil::timeOffsetFromUtcMidnight(strtotime('23:59:59')));
+        $baseTime = strtotime('00:00:00');
+        $this->assertEquals(0, AppUtil::diffHourFloorByMin(strtotime('00:00:00'), $baseTime));
+        $this->assertEquals(0, AppUtil::diffHourFloorByMin(strtotime('00:29:59'), $baseTime));
+        $this->assertEquals(0.5, AppUtil::diffHourFloorByMin(strtotime('00:30:00'), $baseTime));
+        $this->assertEquals(0.5, AppUtil::diffHourFloorByMin(strtotime('00:59:59'), $baseTime));
+        $this->assertEquals(1.5, AppUtil::diffHourFloorByMin(strtotime('01:30:00'), $baseTime));
+        $this->assertEquals(23.5, AppUtil::diffHourFloorByMin(strtotime('23:59:59'), $baseTime));
+        $this->assertEquals(0.5, AppUtil::diffHourFloorByMin(strtotime('00:59:00'), strtotime('00:29:00')));
+        $this->assertEquals(0.5, AppUtil::diffHourFloorByMin(strtotime('01:01:00'), strtotime('00:31:00')));
+        $this->assertEquals(0, AppUtil::diffHourFloorByMin(strtotime('01:30:00'), strtotime('01:01:00')));
     }
 
 }
