@@ -145,7 +145,7 @@ export default class Graph extends React.Component {
     }
 
     return (
-      <div className="panel panel-default p_10px">
+      <div className="panel panel-default p_10px js_progress_graph">
         <span className="js-flush-chart hidden" onClick={this.flushChart}></span>
         <h3 className="progressGraph-title">
           {__("PROGRESS")}

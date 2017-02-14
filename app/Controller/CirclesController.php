@@ -27,6 +27,7 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Circle->create();
+        // TODO: このサービスの読み込みもCircleServiceで行う。
         App::import('Service', 'ExperimentService');
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
@@ -163,7 +164,19 @@ class CirclesController extends AppController
             return;
         }
 
-        if ($this->Circle->addMember($this->request->data)) {
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+
+        // サークルにメンバー追加
+        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
+            $isAddedMember = $this->Circle->addMember($this->request->data, false, false);
+        } else {
+            $isAddedMember = $this->Circle->addMember($this->request->data);
+        }
+
+        // サークル参加通知 & レスポンスメッセージ定義
+        if ($isAddedMember) {
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                 null, $this->Circle->add_new_member_list);
             $this->Pnotify->outSuccess(__("Add circle member(s)."));
@@ -242,6 +255,9 @@ class CirclesController extends AppController
 
     /**
      * サークルの 参加/不参加 切り替え
+     * TODO: サークル参加処理はサービス層へ移す。
+     *       他のルートでサークル参加するロジックでも同じような処理を行ってるので、処理を一箇所に集める。
+     *       実験中かどうかの分岐もサービス層で行う。
      *
      * @return CakeResponse
      */
@@ -250,20 +266,36 @@ class CirclesController extends AppController
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        $msg = null;
-        if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
-            if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
-                foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
-                    $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circle_id);
-                }
-                $this->updateSetupStatusIfNotCompleted();
-                $msg = __("Join a circle.");
-            } else {
-                $msg = __("Leave a circle.");
-            }
+        App::import('Service', 'ExperimentService');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+
+        $error = false;
+        $msg = '';
+
+        // サークル参加/不参加ステータス変更
+        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
+            $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data, false, false);
         } else {
-            $msg = __("Failed to change circle belonging status.");
+            $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data);
         }
+        if (!$changedJoinedStatus) {
+            return $this->_ajaxGetResponse(['msg' => __("Failed to change circle belonging status.")]);
+        }
+
+        // サークル参加通知 & レスポンスメッセージ定義
+        $msg = '';
+        $newJoinedCircles = $this->Circle->CircleMember->new_joined_circle_list;
+        if (!empty($newJoinedCircles)) {
+            foreach ($newJoinedCircles as $circleId) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
+            }
+            $this->updateSetupStatusIfNotCompleted();
+            $msg = __("Join a circle.");
+        } else {
+            $msg = __("Leave a circle.");
+        }
+
         return $this->_ajaxGetResponse(['msg' => $msg]);
     }
 

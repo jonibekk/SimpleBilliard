@@ -3306,7 +3306,7 @@ function evCircleFeed(options) {
 
   // メインカラム内の要素をリセット
   // FIXME:本来は「$("#app-view-elements-feed-posts").empty();」のようにメインカラム.フィード親要素をemptyにすれば良いだけだがHTMLの作り上そうなっていないので、上記のような処理をせざるをえない。
-  $(".panel.panel-default").not(".feed-read-more, .global-form, .dashboard-krs").remove();
+  $(".panel.panel-default").not(".feed-read-more, .global-form, .dashboard-krs, .js_progress_graph").remove();
 
   //ローダー表示
   var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');

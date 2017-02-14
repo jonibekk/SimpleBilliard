@@ -71,13 +71,15 @@ switch ($location_type) {
                   ?>
               </span>
             </div>
-            <div class="col col-xxs-12 notify-text notify-line-number notify-card-text" id="CommentTextBody_67">
-                <?php if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?>
-                    <i class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> font_bold"></i>
-                <?php endif; ?>
-                <?= h(json_decode($notification['body'])[0]); ?>
+            <div class="col col-xxs-12 notify-card-text-wrapper">
+                <div class="notify-text notify-line-number notify-card-text" id="CommentTextBody_67">
+                    <?php if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?>
+                        <i class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> font_bold"></i>
+                    <?php endif; ?>
+                    <?= h(json_decode($notification['body'])[0]); ?>
+                </div>
+                <span class="notify-card-aside"><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></span>
             </div>
-            <p class="notify-card-aside"><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></p>
         </div>
     </a>
 </li>
