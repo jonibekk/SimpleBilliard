@@ -37,8 +37,9 @@ class KrValuesDailyLogShell extends AppShell
     {
         $parser = parent::getOptionParser();
         $options = [
-            'date'     => ['short' => 'd', 'help' => '集計日(YYYY-MM-DD)', 'required' => true,],
-            'timezone' => ['short' => 't', 'help' => '対象のチームのタイムゾーン', 'required' => true,],
+            'date'             => ['short' => 'd', 'help' => '集計日(YYYY-MM-DD)', 'required' => false,],
+            'timezone'         => ['short' => 't', 'help' => '対象のチームのタイムゾーン', 'required' => false,],
+            'currentTimestamp' => ['short' => 'c', 'help' => '現在のタイムスタンプ(テスト用途)', 'required' => false,],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -64,8 +65,11 @@ class KrValuesDailyLogShell extends AppShell
         //タイムゾーン指定が無い場合は対象タイムゾーンを自動判定
         $yesterdayDate = date('Y-m-d', strtotime('yesterday'));
         $todayDate = date('Y-m-d');
+        //テスト用に現在日時のタイムスタンプをパラメータから取得
+        $nowTimestamp = $this->params['currentTimestamp'] ?? time();
+        $startTodayTimestamp = strtotime('00:00:00');
         // UTC0:00と現在日時の時差(0 - 23)
-        $difHourFromUtcMidnight = AppUtil::diffHourFloorByMinute(time(), strtotime('00:00:00'));
+        $difHourFromUtcMidnight = AppUtil::diffHourFloorByMinute($nowTimestamp, $startTodayTimestamp);
         //時差によって対象タイムゾーンを自動判定
         if ($difHourFromUtcMidnight == 0) {
             // UTC+0:00 Western Europe Time, London
@@ -97,7 +101,7 @@ class KrValuesDailyLogShell extends AppShell
      * @param float  $targetTimezone
      * @param string $targetDate
      */
-    function _mainProcess(float $targetTimezone, string $targetDate)
+    protected function _mainProcess(float $targetTimezone, string $targetDate)
     {
         // validate
         if (!$this->_validateTargetDate($targetDate)) {
