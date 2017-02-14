@@ -1,10 +1,14 @@
-const assets_dir = './app/webroot'
-const compiled_assets_dir = './app/webroot/compiled_assets'
+const assets_dir = './app/static_src'
+const compiled_assets_dir = './app/webroot'
 const node_modules_dir = './node_modules'
 const config =  {
+  assets_dir,
+  compiled_assets_dir,
+  compiled_js_dir: compiled_assets_dir + '/js',
   dest: assets_dir + '/dest',
   js: {
     src: [
+      assets_dir + '/js/dropzone_setting.js',
       assets_dir + '/js/gl_basic.js',
       assets_dir + '/js/view/**/*.js'
     ],
@@ -99,75 +103,15 @@ const config =  {
       assets_dir + '/js/vendor/angular/**/*.js'
     ]
   },
-  react_setup: {
-    src: assets_dir + '/js/react/setup_guide/app.js',
-    output: {
-      file_name: 'react_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: assets_dir + '/js/react/setup_guide/**/*.js'
-  },
-  react_signup: {
-    src: assets_dir + '/js/react/signup/app.js',
-    output: {
-      file_name: 'react_signup_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: assets_dir + '/js/react/signup/**/*.js'
-  },
-  react_goal_create: {
-    src: assets_dir + '/js/react/goal_create/app.js',
-    output: {
-      file_name: 'react_goal_create_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/react/goal_create/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
-  },
-  react_goal_edit: {
-    src: assets_dir + '/js/react/goal_edit/app.js',
-    output: {
-      file_name: 'react_goal_edit_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/react/goal_edit/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
-  },
-  react_goal_approval: {
-    src: assets_dir + '/js/react/goal_approval/app.js',
-    output: {
-      file_name: 'react_goal_approval_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/react/goal_approval/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
-  },
-  react_goal_search: {
-    src: assets_dir + '/js/react/goal_search/app.js',
-    output: {
-      file_name: 'react_goal_search_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/react/goal_search/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
-  },
-  react_kr_column: {
-    src: assets_dir + '/js/react/kr_column/app.js',
-    output: {
-      file_name: 'react_kr_column_app',
-      path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/react/kr_column/**/*.js', assets_dir + '/js/react/common/**/*.js', assets_dir + '/js/react/util/**/*.js']
-  },
-  browserify : {
-    transform : {
-      babelify_options : {
-        presets: ["es2015", "react"],
-        plugins: [
-          "babel-plugin-transform-object-assign",
-          ["babel-root-import", {
-            "rootPathSuffix": "app/webroot/js/react"
-          }]
-        ]
-      }
-    }
-  },
+  react: [
+    'setup_guide',
+    'signup',
+    'goal_create',
+    'goal_edit',
+    'goal_approval',
+    'goal_search',
+    'kr_column',
+  ],
   css: {
     src: [
       assets_dir + '/css/goalstrap.css',

@@ -1,5 +1,5 @@
 import termReducer from '../../reducers/term'
-import * as types from '../../constants/actionTypes'
+import * as types from '../../constants/ActionTypes'
 import expect from 'expect'
 
 describe('reducer::term', () => {

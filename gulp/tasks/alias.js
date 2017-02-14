@@ -1,13 +1,16 @@
 import gulp from 'gulp'
 import runSequence from 'run-sequence'
 import config from '../config.js'
-
+import webpack from "webpack";
+import webpackProdConfig from "../webpack.config.js";
+import webpackDevConfig from "../webpack.dev.config.js";
+import gutil from 'gulp-util';
 gulp.task('build', done => {
   return runSequence(['js', 'css'], done)
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup', 'react_signup', 'react_goal_create', 'react_goal_edit', 'react_goal_approval', 'react_goal_search', 'react_kr_column'], done)
+  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react'], done)
 })
 
 // js app
@@ -63,17 +66,17 @@ gulp.task('angular_vendor', done => {
   )
 })
 
-// react apps
-config.react_apps.map((app_name) => {
-  gulp.task(app_name, done => {
-    return runSequence(
-      `${app_name}:eslint`,
-      `${app_name}:browserify`,
-      `${app_name}:uglify`,
-      `${app_name}:clean`,
-      done
-    )
-  })
+// react all application
+gulp.task('react', done => {
+  // run webpack
+  const webpackConfig = process.env.NODE_ENV === "production" ? webpackProdConfig : webpackDevConfig;
+  webpack(webpackConfig, function(err, stats) {
+    if(err) throw new gutil.PluginError("webpack:build", err);
+    gutil.log("[react]", stats.toString({
+      colors: true
+    }));
+  });
+  return done;
 })
 
 // css

@@ -56,7 +56,7 @@ export default class Step1Component extends React.Component {
           <input name="name" className="form-control goals-create-input-form" type="text"
                  placeholder={__("eg. Spread Goalous users in the world")} ref="name"
                  maxLength={MaxLength.Name}
-                 onChange={this.handleChange} value={inputData.name}/>
+                 onChange={this.handleChange} value={inputData['aaaaaaaa']}/>
           <InvalidMessageBox message={validationErrors.name}/>
 
           {/*<a href="#" className="goals-create-show-sample">*/}
