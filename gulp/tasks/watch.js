@@ -8,7 +8,7 @@ import browserSync from 'browser-sync';
 import path from "path";
 import proxyMiddleware from 'http-proxy-middleware';
 
-gulp.task('watch', ['css:watch', 'js:watch', 'angular_app:watch', 'react'])
+gulp.task('watch', ['css:watch', 'js:watch', 'angular_app:watch', 'react:watch'])
 
 gulp.task('js:watch', () => {
   const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
