@@ -1,5 +1,5 @@
 import passwordReducer from '../../reducers/password'
-import * as types from '../../constants/actionTypes'
+import * as types from '../../constants/ActionTypes'
 import expect from 'expect'
 
 describe('reducer::password', () => {
