@@ -17,7 +17,7 @@ export default {
   output: {
     path: process.cwd() + "/app/webroot/js",
     publicPath: '/js/',
-    filename: '[name].min.js'
+    filename: '[name]_app.min.js'
   },
   module: {
     loaders: [
