@@ -45,7 +45,7 @@ if (!isset($with_header_menu)) {
 
 <!-- START import react code for setup -->
 <?php if (Hash::get($this->request->params, 'controller') === 'setup'): ?>
-    <?= $this->Html->script('/compiled_assets/js/react_app.min') ?>
+    <?= $this->Html->script('/js/react_setup_guide_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for setup -->
 
@@ -53,7 +53,7 @@ if (!isset($with_header_menu)) {
 <?php if (Hash::get($this->request->params, 'controller') === 'signup' && Hash::get($this->request->params,
         'action') !== 'email'
 ): ?>
-    <?= $this->Html->script('/compiled_assets/js/react_signup_app.min') ?>
+    <?= $this->Html->script('/js/react_signup_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
@@ -61,7 +61,7 @@ if (!isset($with_header_menu)) {
 <?php if (Hash::get($this->request->params, 'controller') === 'goals' && Hash::get($this->request->params,
         'action') === 'create'
 ): ?>
-    <?= $this->Html->script('/compiled_assets/js/react_goal_create_app.min') ?>
+    <?= $this->Html->script('/js/react_goal_create_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
@@ -69,7 +69,7 @@ if (!isset($with_header_menu)) {
 <?php if (Hash::get($this->request->params, 'controller') === 'goals' && Hash::get($this->request->params,
         'action') === 'edit'
 ): ?>
-    <?= $this->Html->script('/compiled_assets/js/react_goal_edit_app.min') ?>
+    <?= $this->Html->script('/js/react_goal_edit_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
@@ -77,7 +77,7 @@ if (!isset($with_header_menu)) {
 <?php if (Hash::get($this->request->params, 'controller') === 'goals' && Hash::get($this->request->params,
         'action') === 'approval'
 ): ?>
-    <?= $this->Html->script('/compiled_assets/js/react_goal_approval_app.min') ?>
+    <?= $this->Html->script('/js/react_goal_approval_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for signup -->
 
