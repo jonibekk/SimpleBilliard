@@ -68,6 +68,8 @@ gulp.task('angular_vendor', done => {
 
 // react all application
 gulp.task('react', done => {
+  //TODO:webpackからeslintを使用
+  
   // run webpack
   const webpackConfig = process.env.NODE_ENV === "production" ? webpackProdConfig : webpackDevConfig;
   webpack(webpackConfig, function(err, stats) {
