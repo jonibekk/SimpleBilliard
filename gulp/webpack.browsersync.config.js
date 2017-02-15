@@ -33,7 +33,6 @@ export default {
         test: /\.js?$/,
         exclude: /node_modules/,
         include: [
-          path.resolve(__dirname, "src"),
           path.join(process.cwd(), config.assets_dir)
         ],
       },
