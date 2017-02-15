@@ -113,6 +113,19 @@ class AppUtil
     }
 
     /**
+     * Y-m-d 形式のローカルの日付を返す
+     *
+     * @param int $timestamp
+     * @param int $timezone
+     *
+     * @return string
+     */
+    static function dateYmdLocal(int $timestamp, int $timezone): string
+    {
+        return self::dateYmd($timestamp + $timezone * HOUR);
+    }
+
+    /**
      * 値が指定した範囲に含まれるか？
      *
      * @param int $target
