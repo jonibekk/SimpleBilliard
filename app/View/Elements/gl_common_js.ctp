@@ -18,7 +18,6 @@
 
 <?php
 // 右カラム用js
-//echo $this->Html->script('/js/vendor/es6/es6-promise.min');
 if (!empty($display_dashboard)) {
     echo $this->Html->script('/js/react_kr_column_app.min');
 }
