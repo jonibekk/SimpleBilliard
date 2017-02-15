@@ -36,8 +36,7 @@ gulp.task('react:watch', () => {
   const proxy = proxyMiddleware('/', {target: 'http://192.168.50.4'});
   browserSync({
     server: {
-      // baseDir: path.join(process.cwd(), config.compiled_assets_dir),
-      baseDir: path.join(process.cwd(), 'app/webroot'),
+      baseDir: path.join(process.cwd(), config.compiled_assets_dir),
       port: 3000,
       middleware: [
         webpackDevMiddleware(bundler, {
