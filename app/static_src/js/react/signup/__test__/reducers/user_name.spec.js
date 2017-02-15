@@ -1,5 +1,5 @@
 import userNameReducer from '../../reducers/user_name'
-import * as types from '../../constants/actionTypes'
+import * as types from '../../constants/ActionTypes'
 import expect from 'expect'
 
 describe('reducer::user_name', () => {
