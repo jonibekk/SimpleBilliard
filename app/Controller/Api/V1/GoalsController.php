@@ -374,6 +374,10 @@ class GoalsController extends ApiController
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         // 403/404チェック
         $errResponse = $this->_validateEditForbiddenOrNotFound($goalId);
@@ -385,6 +389,9 @@ class GoalsController extends ApiController
         if (!empty($_FILES['photo'])) {
             $data['photo'] = $_FILES['photo'];
         }
+
+        // 変更前のゴールを退避
+        $preUpdatedGoal = Hash::get($Goal->findById($goalId), 'Goal');
 
         // バリデーション
         $validateErrors = $this->_validateUpdateGoal($data, $goalId);
@@ -402,11 +409,21 @@ class GoalsController extends ApiController
 
         // コーチへ通知
         // 来期のゴール関係の処理はコーチへ通知しない
+        $preUpdatedTerm = $EvaluateTerm->getTermType($preUpdatedGoal['start_date'], $preUpdatedGoal['end_date']);
         if ($this->Goal->isPresentTermGoal($goalId)) {
-            $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+            if ($preUpdatedTerm === 'next') {
+                $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT);
+            } else {
+                $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
+            }
         }
+
         //コラボレータへの通知
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
+        if ($this->Goal->isPresentTermGoal($goalId) && $preUpdatedTerm === 'next') {
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER, $goalId, null);
+        } else {
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
+        }
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $goalId);
 

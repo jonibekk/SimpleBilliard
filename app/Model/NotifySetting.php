@@ -44,6 +44,8 @@ class NotifySetting extends AppModel
     const TYPE_TKR_EXCHANGED_BY_LEADER = 31;
     const TYPE_EXCHANGED_LEADER = 32;
     const TYPE_MEMBER_CHANGE_KR = 33;
+    const TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER = 34;
+    const TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT = 35;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                 => [
@@ -272,6 +274,20 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_EXCHANGED_LEADER => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
@@ -927,6 +943,23 @@ class NotifySetting extends AppModel
                         h($user_text), h($leaderName));
                 }
                 break;
+            case self::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT:
+            case self::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER:
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed term next to current in <span class="notify-card-head-target">%2$s</span>.',
+                        $user_text,
+                        $goal['Goal']['name']);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has changed term next to current in <span class="notify-card-head-target">%2$s</span>.',
+                        h($user_text),
+                        h($goal['Goal']['name']));
+                }
+                break;
+
+
         }
 
         if ($options['style'] == 'plain') {

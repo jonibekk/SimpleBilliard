@@ -386,19 +386,29 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         $updateData = [
             'id'          => $goalId,
             'name'        => $requestData['name'],
-            'description' => $requestData['description'],
+            'description' => $requestData['description']
         ];
 
         if (!empty($requestData['goal_category_id'])) {
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            $goalTerm = $Goal->getGoalTermData($goalId);
+            // timezoneを加味したend_date設定
+            $goalTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($requestData['end_date']));
             $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
+
+            // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
+            $preUpdatedGoal = Hash::get($Goal->findById($goalId), 'Goal');
+            $preUpdatedGoalTerm = $EvaluateTerm->getTermType($preUpdatedGoal['start_date'], $preUpdatedGoal['end_date']);
+            if ($preUpdatedGoalTerm === 'next' && $requestData['term_type'] === 'current') {
+                $updateData['start_date'] = time();
+            }
         }
         if (!empty($requestData['photo'])) {
             $updateData['photo'] = $requestData['photo'];
