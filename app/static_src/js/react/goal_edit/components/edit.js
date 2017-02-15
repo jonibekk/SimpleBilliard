@@ -79,6 +79,10 @@ export default class Edit extends React.Component {
   }
 
   onChange(e, childKey = "") {
+    // termを変更する場合はゴールのend_dateも同時に更新する
+    if (e.target.name == "term_type") {
+      this.props.updateInputData({end_date: this.props.goal.terms[e.target.value].end_date})
+    }
     this.props.updateInputData({[e.target.name]: e.target.value}, childKey)
   }
 
@@ -191,8 +195,8 @@ export default class Edit extends React.Component {
             <label className="goals-create-input-label">{__("Term")}</label>
             <select name="term_type" className="form-control goals-create-input-form mod-select"
                     ref="term_type"
-                    value={ goal.term_type }
-                    onChange={this.handleChange}>
+                    value={inputData.term_type}
+                    onChange={this.onChange}>
               { term_options }
             </select>
 

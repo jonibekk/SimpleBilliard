@@ -423,15 +423,6 @@ class GoalService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var Label $Label */
         $Label = ClassRegistry::init("Label");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
-
-        // 編集の場合評価期間の選択は無い為、既に登録されているゴールの開始日と終了日から評価期間を割り出し、入力した終了日のバリデーションに利用する
-        if (!empty($goalId) && (empty($fields) || in_array('end_date', $fields))) {
-            $goal = $this->get($goalId);
-            $data['term_type'] = $EvaluateTerm->getTermType(strtotime($goal['start_date']),
-                strtotime($goal['end_date']));
-        }
 
         $goalFields = array_intersect($this->goalValidateFields, $fields);
         $validationErrors = $this->validationExtract(
