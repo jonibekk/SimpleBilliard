@@ -1,7 +1,14 @@
-import gulp from 'gulp'
-import config from '../config.js'
+import gulp from "gulp";
+import config from "../config.js";
+import webpack from "webpack";
+import webpackDebugConfig from "../webpack.browsersync.config.js";
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import browserSync from 'browser-sync';
+import path from "path";
+import proxyMiddleware from 'http-proxy-middleware';
 
-gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch', 'react_goal_create:watch', 'react_goal_edit:watch', 'react_goal_approval:watch', 'react_goal_search:watch', 'react_kr_column:watch'])
+gulp.task('watch', ['css:watch', 'js:watch', 'angular_app:watch', 'react:watch'])
 
 gulp.task('js:watch', () => {
   const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
@@ -23,16 +30,27 @@ gulp.task('angular_app:watch', () => {
   })
 })
 
-config.react_apps.map((app_name) => {
-  gulp.task(`${app_name}:watch`, () => {
-    const  watcher = gulp.watch(config[app_name].watch_files, [app_name])
-
-    watcher.on('change', event => {
-      /* eslint-disable no-console */
-      console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
-      /* eslint-enable no-console */
-    })
-  })
+// reactのみbrowser-syncを試験的導入。hot reloadが可能
+gulp.task('react:watch', () => {
+  const bundler = webpack(webpackDebugConfig);
+  const proxy = proxyMiddleware('/', {target: 'http://192.168.50.4'});
+  browserSync({
+    server: {
+      baseDir: path.join(process.cwd(), config.compiled_assets_dir),
+      port: 3000,
+      middleware: [
+        webpackDevMiddleware(bundler, {
+          publicPath: webpackDebugConfig.output.publicPath,
+          stats: {colors: true},
+          watchOptions: {
+            poll: true
+          }
+        }),
+        webpackHotMiddleware(bundler),
+        proxy,
+      ]
+    },
+  });
 })
 
 gulp.task('css:watch', () => {

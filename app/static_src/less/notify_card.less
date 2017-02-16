@@ -35,6 +35,10 @@
   overflow-y: scroll;
   text-overflow: ellipsis;
   box-shadow: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 .notify-contents {
   width: 80%;

@@ -1,5 +1,5 @@
 import ListReducer from '../../reducers/list'
-import * as types from '../../constants/actionTypes'
+import * as types from '../../constants/ActionTypes'
 import expect from 'expect'
 
 describe('reducer::list', () => {
