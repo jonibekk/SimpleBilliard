@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('AppUtil', 'Util');
 
 /**
  * Teams Controller
@@ -19,7 +20,7 @@ class TeamsController extends AppController
         $border_months_options = $this->Team->getBorderMonthsOptions();
         $start_term_month_options = $this->Team->getMonths();
         //タイムゾーン
-        $timezones = $this->Timezone->getTimezones();
+        $timezones = AppUtil::getTimezoneList();
 
         $this->set(compact('timezones', 'border_months_options', 'start_term_month_options'));
 
@@ -176,7 +177,7 @@ class TeamsController extends AppController
         $next_term_end_date = Hash::get($next_term, 'end_date') - 1;
         $next_term_timezone = Hash::get($next_term, 'timezone');
         //タイムゾーン
-        $timezones = $this->Timezone->getTimezones();
+        $timezones = AppUtil::getTimezoneList();
 
         $this->set(compact(
             'timezones',
