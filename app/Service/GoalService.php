@@ -1082,7 +1082,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'), $termTimezone);
+            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1157,7 +1157,7 @@ class GoalService extends AppService
         $timestamp = strtotime($graphStartDate);
         $graphEndTimestamp = strtotime($graphEndDate);
         while ($timestamp <= $graphEndTimestamp) {
-            $ret[] = $TimeEx->formatDateI18n($timestamp);
+            $ret[] = $TimeEx->formatDateI18n($timestamp, false);
             $timestamp = strtotime('+1 day', $timestamp);
         }
         return $ret;
