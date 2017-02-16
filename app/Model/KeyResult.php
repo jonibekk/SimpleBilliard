@@ -1024,4 +1024,34 @@ class KeyResult extends AppModel
 
         return $ret;
     }
+
+    /**
+     * ゴールに紐づくKRの期を一括でアップデート
+     * - 今期にアップデートする場合は、start_dateを現在日時にする。
+     *  - それ以外は期の始まりに設定
+     * - end_dateはどんな場合でも期の終わりに設定
+     *
+     * @param  int $goalId
+     * @param  string $termAfterUpdate
+     *
+     * @return bool
+     */
+    public function updateTermByGoalId(int $goalId, int $termAfterUpdate): bool
+    {
+        if (!in_array($termAfterUpdate, [EvaluateTerm::TYPE_CURRENT, EvaluateTerm::TYPE_NEXT])) {
+            return false;
+        }
+
+        // 保存データ定義
+        $isCurrent = $termAfterUpdate == EvaluateTerm::TYPE_CURRENT;
+        $termData = $this->Team->EvaluateTerm->getTermData($termAfterUpdate);
+        $startDate = $isCurrent ? time() : $termData['start_date'];
+        $endDate = $termData['end_date'];
+
+        // ゴールに紐づくKRの期を一括アップデート
+        $res = $this->updateAll(['KeyResult.start_date' => $startDate, 'KeyResult.end_date' => $endDate],
+            ['KeyResult.goal_id' => $goalId]);
+        return $res;
+    }
+
 }

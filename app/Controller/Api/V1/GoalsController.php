@@ -409,9 +409,9 @@ class GoalsController extends ApiController
 
         // コーチへ通知
         // 来期のゴール関係の処理はコーチへ通知しない
-        $preUpdatedTerm = $EvaluateTerm->getTermType($preUpdatedGoal['start_date'], $preUpdatedGoal['end_date']);
+        $isNextToCurrentUpdate = $GoalService->isNextToCurrentUpdate($preUpdatedGoal, Hash::get($Goal->findById($goalId), 'Goal'));
         if ($this->Goal->isPresentTermGoal($goalId)) {
-            if ($preUpdatedTerm === 'next') {
+            if ($isNextToCurrentUpdate) {
                 $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT);
             } else {
                 $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
@@ -419,7 +419,7 @@ class GoalsController extends ApiController
         }
 
         //コラボレータへの通知
-        if ($this->Goal->isPresentTermGoal($goalId) && $preUpdatedTerm === 'next') {
+        if ($isNextToCurrentUpdate) {
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER, $goalId, null);
         } else {
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);

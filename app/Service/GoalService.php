@@ -219,6 +219,9 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Not exist goal_member. goalId:%d userId:%d", $goalId, $userId));
             }
 
+            // ゴール変更前のtermType退避
+            $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
             if (!$Goal->save($updateGoal, false)) {
@@ -241,6 +244,16 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
             }
+
+            // KR更新
+            // 来期のゴールを今期に期変更した場合のみ
+            $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
+            if ($preUpdatedTerm == 'next' && $afterUpdatedTerm == 'current') {
+                if (!$KeyResult->updateTermByGoalId($goalId, $EvaluateTerm::TYPE_CURRENT)) {
+                    throw new Exception(sprintf("Failed to update krs. goal_id:%s"
+                        , $goalId));
+                }
+             }
 
             // TKRの進捗単位を変更した場合は進捗リセット
             if ($goal['top_key_result']['value_unit'] != $updateTkr['value_unit']) {
