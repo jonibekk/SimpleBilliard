@@ -248,8 +248,8 @@ class GoalService extends AppService
             // KR更新
             // 来期のゴールを今期に期変更した場合のみ
             $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
-            if ($preUpdatedTerm == 'next' && $afterUpdatedTerm == 'current') {
-                if (!$KeyResult->updateTermByGoalId($goalId, $EvaluateTerm::TYPE_CURRENT)) {
+            if ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT && $afterUpdatedTerm == EvaluateTerm::TERM_TYPE_CURRENT) {
+                if (!$KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT)) {
                     throw new Exception(sprintf("Failed to update krs. goal_id:%s"
                         , $goalId));
                 }
@@ -417,9 +417,9 @@ class GoalService extends AppService
             $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
 
             // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
-            $preUpdatedGoal = Hash::get($Goal->findById($goalId), 'Goal');
-            $preUpdatedGoalTerm = $EvaluateTerm->getTermType($preUpdatedGoal['start_date'], $preUpdatedGoal['end_date']);
-            if ($preUpdatedGoalTerm === 'next' && $requestData['term_type'] === 'current') {
+            $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+            $isNextToCurrentUpdate = ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT) && ($requestData['term_type'] == EvaluateTerm::TERM_TYPE_CURRENT);
+            if ($isNextToCurrentUpdate) {
                 $updateData['start_date'] = time();
             }
         }

@@ -2358,7 +2358,7 @@ class Goal extends AppModel
      */
     function getTermTypeById(int $goalId): string
     {
-        $goal = $this->findById($goalId, ['start_date', 'end_date']);
+        $goal = Hash::get($this->findById($goalId, ['start_date', 'end_date']), 'Goal');
         $term = $this->Team->EvaluateTerm->getTermType($goal['start_date'], $goal['end_date']);
         return $term;
     }

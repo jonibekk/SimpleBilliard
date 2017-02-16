@@ -390,10 +390,16 @@ class GoalsController extends ApiController
             $data['photo'] = $_FILES['photo'];
         }
 
-        // 変更前のゴールを退避
-        $preUpdatedGoal = Hash::get($Goal->findById($goalId), 'Goal');
+        // 変更タイプ
+        $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+        $afterUpdatedTerm = Hash::get($data, 'term_type');
+        $isNextToCurrentUpdate = ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT) && ($afterUpdatedTerm == EvaluateTerm::TERM_TYPE_CURRENT);
 
         // バリデーション
+        // 来期から今期への期変更の場合はKR日付バリデーションはoffにする
+        if ($isNextToCurrentUpdate) {
+            unset($Goal->update_validate['end_date']['checkAfterKrEndDate']);
+        }
         $validateErrors = $this->_validateUpdateGoal($data, $goalId);
         if (!empty($validateErrors)) {
             return $this->_getResponseValidationFail($validateErrors);
@@ -409,7 +415,6 @@ class GoalsController extends ApiController
 
         // コーチへ通知
         // 来期のゴール関係の処理はコーチへ通知しない
-        $isNextToCurrentUpdate = $GoalService->isNextToCurrentUpdate($preUpdatedGoal, Hash::get($Goal->findById($goalId), 'Goal'));
         if ($this->Goal->isPresentTermGoal($goalId)) {
             if ($isNextToCurrentUpdate) {
                 $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT);
