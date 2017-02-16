@@ -971,11 +971,10 @@ class GoalService extends AppService
             strtotime($graphStartDate) - ($termTimezone * HOUR),
             strtotime($plotDataEndDate) - ($termTimezone * HOUR) + DAY
         );
-
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmdLocal(strtotime('yesterday'), $termTimezone);
+            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
