@@ -121,7 +121,7 @@ class KrValuesDailyLogShell extends AppShell
         // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
         $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, strtotime($targetDate));
 
-        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate);
+        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate,$targetTimezone);
     }
 
     /**
@@ -131,12 +131,17 @@ class KrValuesDailyLogShell extends AppShell
      *
      * @param array  $teamIds
      * @param string $targetDate
+     * @param float  $targetTimezone
      * @param bool   $isRerunning
      *
      * @return bool
      */
-    protected function _saveKrValuesDailyLogsAsBulk(array $teamIds, string $targetDate, bool $isRerunning = false)
-    {
+    protected function _saveKrValuesDailyLogsAsBulk(
+        array $teamIds,
+        string $targetDate,
+        float $targetTimezone,
+        bool $isRerunning = false
+    ) {
         /** @var KrValuesDailyLogService $KrValuesDailyLogService */
         $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
 
@@ -154,13 +159,16 @@ class KrValuesDailyLogShell extends AppShell
             }
         }
 
-        $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount,
+        $this->log(sprintf('[targetDate:%s, targetTimezone:%s][success:%d failure:%d] Done kr_values_daily_log shell.',
+            $targetDate,
+            $targetTimezone,
+            $successCount,
             count($failureTeams)));
 
         // 保存に失敗したチームは一度だけ再実行する
         if (count($failureTeams) > 0 && !$isRerunning) {
             $this->log(sprintf("Rerun batch for only failure teams. failureTeamIds: %s", implode(",", $failureTeams)));
-            $this->_saveKrValuesDailyLogsAsBulk($failureTeams, $targetDate, true);
+            $this->_saveKrValuesDailyLogsAsBulk($failureTeams, $targetDate, $targetTimezone, true);
         }
 
         return;
