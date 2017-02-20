@@ -54,9 +54,6 @@ else
   gulp_command = "gulp build"
 end
 
-Chef::Log.logger.info 'gulp command'
-Chef::Log.logger.info gulp_command
-
 bash "run gulp build" do
   user 'deploy'
   group 'www-data'
@@ -65,7 +62,7 @@ bash "run gulp build" do
   export USER='deploy'
   export HOME='/home/deploy'
   cd #{release_path}
-  if ! gulp build; then
+  if ! #{gulp_command}; then
     #{gulp_command}
   fi
   EOS
