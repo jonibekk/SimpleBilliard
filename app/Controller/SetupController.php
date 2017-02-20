@@ -37,10 +37,22 @@ class SetupController extends AppController
         $this->Security->csrfCheck = false;
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->Goal->KeyResult->_setUnitName();
-        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
-        $current_term_start_date_format = date('Y/m/d', $current_term['start_date'] + $current_term['timezone'] * HOUR);
-        $current_term_end_date_format = date('Y/m/d', $current_term['end_date'] + $current_term['timezone'] * HOUR);
         $without_footer = true;
+        // TODO: 将来的にtry catch文削除
+        // GL-5589：原因特定用にエラーログ埋め込み
+        try {
+            $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
+            if (empty($currentTerm)) {
+                throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
+            }
+            $current_term_start_date_format = date('Y/m/d', $current_term['start_date'] + $current_term['timezone'] * HOUR);
+            $current_term_end_date_format = date('Y/m/d', $current_term['end_date'] + $current_term['timezone'] * HOUR);
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $current_term_start_date_format = "";
+            $current_term_end_date_format = "";
+        }
         $this->set(compact('without_footer', 'current_term_start_date_format', 'current_term_end_date_format'));
     }
 
