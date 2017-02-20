@@ -129,6 +129,8 @@ export default class Edit extends React.Component {
       }
     }
 
+    const is_next_to_current = goal.term_type === 'next' && inputData.term_type == 'current'
+
     return (
       <div className="panel panel-default col-sm-8 col-sm-offset-2 goals-create">
         <form className="goals-create-input"
@@ -202,8 +204,13 @@ export default class Edit extends React.Component {
 
             {/* ゴール期限 */}
             <label className="goals-create-input-label">{__("End date")}</label>
-            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.onChange}
-                   value={inputData.end_date}/>
+            { is_next_to_current && <span className="warning">
+                { __("ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。") }
+            </span>}
+            <input className="goals-create-input-form" type="date" name="end_date"
+                   onChange={this.onChange}
+                   value={inputData.end_date}
+                   disabled={ is_next_to_current } />
             <InvalidMessageBox message={validationErrors.end_date}/>
 
             {/* ゴール重要度 */}
