@@ -856,7 +856,19 @@ class KeyResult extends AppModel
      */
     public function findInDashboard(int $limit, int $offset = 0, $goalId = null): array
     {
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        // TODO: 将来的にtry catch文削除
+        // GL-5590で原因特定用にエラーログ埋め込み
+        try {
+            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            if (empty($currentTerm)) {
+                throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return [];
+        }
+
         $now = time();
         $weekAgoTimestamp = AppUtil::getTimestampByTimezone('-1 week midnight', $currentTerm['timezone']);
 
