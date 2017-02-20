@@ -119,9 +119,9 @@ class KrValuesDailyLogShell extends AppShell
         // $this->KrValuesDailyLog->deleteAll(['KrValuesDailyLog.target_date' => $targetDate]);
 
         // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
-        $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, strtotime($targetDate));
+        $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, $targetDate);
 
-        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate);
+        $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate, $targetTimezone);
     }
 
     /**
@@ -131,12 +131,17 @@ class KrValuesDailyLogShell extends AppShell
      *
      * @param array  $teamIds
      * @param string $targetDate
+     * @param float  $targetTimezone
      * @param bool   $isRerunning
      *
      * @return bool
      */
-    protected function _saveKrValuesDailyLogsAsBulk(array $teamIds, string $targetDate, bool $isRerunning = false)
-    {
+    protected function _saveKrValuesDailyLogsAsBulk(
+        array $teamIds,
+        string $targetDate,
+        float $targetTimezone,
+        bool $isRerunning = false
+    ) {
         /** @var KrValuesDailyLogService $KrValuesDailyLogService */
         $KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
 
@@ -157,8 +162,12 @@ class KrValuesDailyLogShell extends AppShell
         //失敗した場合のみログ出力
         //TODO: 成功の場合(Infoレベル)も、slackにチャンネル分けて出力すべき
         if (count($failureTeams) > 0) {
-            $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount,
-                count($failureTeams)));
+            $this->log(sprintf('[targetDate:%s, targetTimezone:%s][success:%d failure:%d] Done kr_values_daily_log shell.',
+                $targetDate,
+                $targetTimezone,
+                $successCount,
+                count($failureTeams))
+            );
 
             // 保存に失敗したチームは一度だけ再実行する
             if (!$isRerunning) {

@@ -628,13 +628,14 @@ class EvaluateTerm extends AppModel
     /**
      * 指定したタイムゾーン設定になっているチームのIDのリストを返す
      *
-     * @param float $timezone
-     * @param int   $targetTimestamp
+     * @param float  $timezone
+     * @param string $targetDate
      *
      * @return array
      */
-    public function findTeamIdByTimezone(float $timezone, int $targetTimestamp): array
+    public function findTeamIdByTimezone(float $timezone, string $targetDate): array
     {
+        $targetTimestamp = strtotime($targetDate) - $timezone * HOUR;
         $options = [
             'conditions' => [
                 'start_date <=' => $targetTimestamp,
