@@ -1,6 +1,12 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 require 'json'
 
+Chef::Log.logger.info "NODE_ENV"
+Chef::Log.logger.info new_resource.environment["NODE_ENV"]
+
+Chef::Log.logger.info "NOT EXISTS"
+Chef::Log.logger.info new_resource.environment["NODE_ENVAAA"]
+
 file "/tmp/node.json" do
   content JSON.pretty_generate(node)
 end
