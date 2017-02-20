@@ -2029,10 +2029,12 @@ class Post extends AppModel
 
     public function isPostedCircleForSetupBy($user_id)
     {
+        $user = $this->User->getById($user_id);
         $options = [
             'conditions' => [
                 'Post.user_id'    => $user_id,
                 'Post.type'       => self::TYPE_NORMAL,
+                'Post.modified >' => $user['created']
             ],
             'fields'     => ['Post.id']
         ];
