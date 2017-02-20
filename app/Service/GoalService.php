@@ -219,6 +219,9 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Not exist goal_member. goalId:%d userId:%d", $goalId, $userId));
             }
 
+            // ゴール変更前のtermType退避
+            $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
             if (!$Goal->save($updateGoal, false)) {
@@ -241,6 +244,16 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
             }
+
+            // KR更新
+            // 来期のゴールを今期に期変更した場合のみ
+            $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
+            if ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT && $afterUpdatedTerm == EvaluateTerm::TERM_TYPE_CURRENT) {
+                if (!$KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT)) {
+                    throw new Exception(sprintf("Failed to update krs. goal_id:%s"
+                        , $goalId));
+                }
+             }
 
             // TKRの進捗単位を変更した場合は進捗リセット
             if ($goal['top_key_result']['value_unit'] != $updateTkr['value_unit']) {
@@ -386,19 +399,29 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         $updateData = [
             'id'          => $goalId,
             'name'        => $requestData['name'],
-            'description' => $requestData['description'],
+            'description' => $requestData['description']
         ];
 
         if (!empty($requestData['goal_category_id'])) {
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            $goalTerm = $Goal->getGoalTermData($goalId);
+            // timezoneを加味したend_date設定
+            $goalTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($requestData['end_date']));
             $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
+
+            // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
+            $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+            $isNextToCurrentUpdate = ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT) && ($requestData['term_type'] == EvaluateTerm::TERM_TYPE_CURRENT);
+            if ($isNextToCurrentUpdate) {
+                $updateData['start_date'] = time();
+            }
         }
         if (!empty($requestData['photo'])) {
             $updateData['photo'] = $requestData['photo'];
@@ -423,15 +446,6 @@ class GoalService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var Label $Label */
         $Label = ClassRegistry::init("Label");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
-
-        // 編集の場合評価期間の選択は無い為、既に登録されているゴールの開始日と終了日から評価期間を割り出し、入力した終了日のバリデーションに利用する
-        if (!empty($goalId) && (empty($fields) || in_array('end_date', $fields))) {
-            $goal = $this->get($goalId);
-            $data['term_type'] = $EvaluateTerm->getTermType(strtotime($goal['start_date']),
-                strtotime($goal['end_date']));
-        }
 
         $goalFields = array_intersect($this->goalValidateFields, $fields);
         $validationErrors = $this->validationExtract(

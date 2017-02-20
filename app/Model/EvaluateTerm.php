@@ -617,6 +617,7 @@ class EvaluateTerm extends AppModel
     {
         $current = $this->getCurrentTermData();
         $next = $this->getNextTermData();
+
         if ($start_date >= $current['start_date'] && $end_date <= $current['end_date']) {
             return "current";
         } elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
