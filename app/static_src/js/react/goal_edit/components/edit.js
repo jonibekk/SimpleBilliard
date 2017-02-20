@@ -195,6 +195,9 @@ export default class Edit extends React.Component {
 
             {/* 期 */}
             <label className="goals-create-input-label">{__("Term")}</label>
+            { is_next_to_current && <span className="warning">
+                { __("If you change the goal term from the next term to this term, the goal and all KRs’ deadlines will be changed to the last day of the current term.") }
+            </span>}
             <select name="term_type" className="form-control goals-create-input-form mod-select"
                     ref="term_type"
                     value={inputData.term_type}
@@ -204,9 +207,6 @@ export default class Edit extends React.Component {
 
             {/* ゴール期限 */}
             <label className="goals-create-input-label">{__("End date")}</label>
-            { is_next_to_current && <span className="warning">
-                { __("ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。") }
-            </span>}
             <input className="goals-create-input-form" type="date" name="end_date"
                    onChange={this.onChange}
                    value={inputData.end_date}

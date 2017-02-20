@@ -550,6 +550,7 @@ App::uses('AttachedFile', 'Model');
             "Current": "<?= __("Current") ?>",
             "All progress of this KR will be reset, is it really OK?": "<?= __("All progress of this KR will be reset, is it really OK?") ?>",
             "Updated KR.": "<?= __("Updated KR.") ?>",
+            "If you change the goal term from the next term to this term, the goal and all KRs’ deadlines will be changed to the last day of the current term.": "<?= __("If you change the goal term from the next term to this term, the goal and all KRs’ deadlines will be changed to the last day of the current term.") ?>",
             // kr column
             "All Goals": "<?= __("All Goals") ?>",
             "PROGRESS": "<?= __("PROGRESS") ?>",

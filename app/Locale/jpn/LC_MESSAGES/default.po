@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-31 09:54+0900\n"
+"PO-Revision-Date: 2017-02-20 13:01+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -133,14 +133,14 @@ msgstr "チーム全体サークルは削除できません。"
 msgid "Deleted a circle."
 msgstr "サークルを削除しました。"
 
+msgid "Failed to change circle belonging status."
+msgstr "サークルの参加設定の保存に失敗しました。"
+
 msgid "Join a circle."
 msgstr "サークルに参加しました。"
 
 msgid "Leave a circle."
 msgstr "サークルから外れました。"
-
-msgid "Failed to change circle belonging status."
-msgstr "サークルの参加設定の保存に失敗しました。"
 
 msgid "One or more members must be assigned as circle administrators."
 msgstr "サークル管理者は最低ひとりは必須です。"
@@ -254,6 +254,9 @@ msgstr "成果を完了にしました。"
 msgid "Made a key result uncompleted."
 msgstr "成果を未完了にしました。"
 
+msgid "No exist kr."
+msgstr "KRが存在しません。"
+
 msgid "You can't delete achieved KR."
 msgstr "完了済の成果は削除出来ません。"
 
@@ -262,9 +265,6 @@ msgstr "成果を削除しました。"
 
 msgid "There is no action."
 msgstr "アクションが存在しません。"
-
-msgid "No exist kr."
-msgstr "KRが存在しません。"
 
 msgid "Deleted an action."
 msgstr "アクションを削除しました。"
@@ -1232,6 +1232,12 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span> がリーダーを <span class="
 "\"notify-card-head-target\">%2$s</span> に変更しました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has changed the term of "
+"<span class=\"notify-card-head-target\">%2$s</span> from the next term to "
+"this term."
+msgstr "<span class="notify-card-head-target">%1$s</span> が <span class="notify-card-head-target">%2$s</span> を来期から今期に変更しました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -2526,6 +2532,11 @@ msgstr "このKRの全ての進捗がリセットされますが、本当によ�
 
 msgid "Updated KR."
 msgstr "達成要素を更新しました。"
+
+msgid ""
+"If you change the goal term from the next term to this term, the goal and "
+"all KRs’ deadlines will be changed to the last day of the current term."
+msgstr "ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。"
 
 msgid "All Goals"
 msgstr "すべてのゴール"
@@ -4352,9 +4363,6 @@ msgstr "IsaB"
 
 msgid "Make your job joyful! ISAO blog"
 msgstr "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
-
-msgid "http://blog.isao.co.jp/"
-msgstr "http://blog.isao.co.jp/"
 
 msgid "facebook page"
 msgstr "facebookページ"

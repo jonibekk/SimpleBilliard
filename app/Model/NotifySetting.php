@@ -948,12 +948,12 @@ class NotifySetting extends AppModel
                 $goal = $this->User->Goal->findById($options['goal_id']);
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has changed term next to current in <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has changed the term of <span class="notify-card-head-target">%2$s</span> from the next term to this term.',
                         $user_text,
                         $goal['Goal']['name']);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has changed term next to current in <span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> has changed the term of <span class="notify-card-head-target">%2$s</span> from the next term to this term.',
                         h($user_text),
                         h($goal['Goal']['name']));
                 }
