@@ -648,8 +648,6 @@ class ActionResult extends AppModel
         $options = [
             'conditions' => [
                 'ActionResult.user_id'    => $user_id,
-                'ActionResult.created >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-                'ActionResult.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
             ],
             'fields'     => ['ActionResult.id']
         ];

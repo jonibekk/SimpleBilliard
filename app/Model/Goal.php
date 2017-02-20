@@ -2093,8 +2093,6 @@ class Goal extends AppModel
         $options = [
             'conditions' => [
                 'Goal.user_id'       => $user_id,
-                'Goal.start_date >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-                'Goal.end_date <='   => $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
             ],
             'fields'     => ['Goal.id']
         ];

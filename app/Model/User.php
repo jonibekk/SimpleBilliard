@@ -28,6 +28,7 @@ App::uses('AppModel', 'Model');
  * @property GoalMember     $GoalMember
  * @property MemberGroup    $MemberGroup
  * @property RecoveryCode   $RecoveryCode
+ * @property Device         $Device
  */
 class User extends AppModel
 {
