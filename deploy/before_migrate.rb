@@ -48,10 +48,10 @@ bash "yarn install" do
   EOS
 end
 
+# gulp buildを環境変数によってproduction指定で実行するようにする。環境変数はOpsWorks側で設定可能。環境変数の設定についてはEnvironment Variablesを参照-> http://amzn.to/2mdJ4pq
+gulp_command = "gulp build"
 if new_resource.environment["NODE_ENV"] == "production" then
   gulp_command = "NODE_ENV=production gulp build"
-else
-  gulp_command = "gulp build"
 end
 
 bash "run gulp build" do
