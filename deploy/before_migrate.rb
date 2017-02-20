@@ -1,12 +1,6 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 require 'json'
 
-Chef::Log.logger.info "NODE_ENV"
-Chef::Log.logger.info new_resource.environment["NODE_ENV"]
-
-Chef::Log.logger.info "NOT EXISTS"
-Chef::Log.logger.info new_resource.environment["NODE_ENVAAA"]
-
 file "/tmp/node.json" do
   content JSON.pretty_generate(node)
 end
@@ -54,6 +48,11 @@ bash "yarn install" do
   EOS
 end
 
+gulp_command = "gulp build"
+if new_resource.environment["NODE_ENV"] == "production" then
+  gulp_command = "NODE_ENV=production gulp build"
+end
+
 bash "run gulp build" do
   user 'deploy'
   group 'www-data'
@@ -63,7 +62,7 @@ bash "run gulp build" do
   export HOME='/home/deploy'
   cd #{release_path}
   if ! gulp build; then
-    gulp build
+    #{gulp_command}
   fi
   EOS
 end
