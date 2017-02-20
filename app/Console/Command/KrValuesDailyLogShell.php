@@ -154,13 +154,18 @@ class KrValuesDailyLogShell extends AppShell
             }
         }
 
-        $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount,
-            count($failureTeams)));
+        //失敗した場合のみログ出力
+        //TODO: 成功の場合(Infoレベル)も、slackにチャンネル分けて出力すべき
+        if (count($failureTeams) > 0) {
+            $this->log(sprintf('[success:%d failure:%d] Done kr_values_daily_log shell.', $successCount,
+                count($failureTeams)));
 
-        // 保存に失敗したチームは一度だけ再実行する
-        if (count($failureTeams) > 0 && !$isRerunning) {
-            $this->log(sprintf("Rerun batch for only failure teams. failureTeamIds: %s", implode(",", $failureTeams)));
-            $this->_saveKrValuesDailyLogsAsBulk($failureTeams, $targetDate, true);
+            // 保存に失敗したチームは一度だけ再実行する
+            if (!$isRerunning) {
+                $this->log(sprintf("Rerun batch for only failure teams. failureTeamIds: %s",
+                    implode(",", $failureTeams)));
+                $this->_saveKrValuesDailyLogsAsBulk($failureTeams, $targetDate, true);
+            }
         }
 
         return;
