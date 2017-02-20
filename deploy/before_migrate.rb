@@ -48,10 +48,14 @@ bash "yarn install" do
   EOS
 end
 
-gulp_command = "gulp build"
 if new_resource.environment["NODE_ENV"] == "production" then
   gulp_command = "NODE_ENV=production gulp build"
+else
+  gulp_command = "gulp build"
 end
+
+Chef::Log.logger.info 'gulp command'
+Chef::Log.logger.info gulp_command
 
 bash "run gulp build" do
   user 'deploy'
