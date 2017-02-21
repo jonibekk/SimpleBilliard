@@ -29,7 +29,8 @@ const initialState = {
     }
   },
   isDisabledSubmit: false,
-  can_approve: false
+  can_approve: false,
+  redirect_to_home: false
 }
 
 export default function goal(state = initialState, action) {
@@ -113,12 +114,16 @@ export default function goal(state = initialState, action) {
         state.inputData = inputData
         return Object.assign({}, state)
       }
-    {
-      inputData = Object.assign({}, inputData, action.data)
+      {
+        inputData = Object.assign({}, inputData, action.data)
+        return Object.assign({}, state, {
+          inputData
+        })
+      }
+    case types.REDIRECT_TO_HOME:
       return Object.assign({}, state, {
-        inputData
+        redirect_to_home: true
       })
-    }
     default:
       return state;
   }
