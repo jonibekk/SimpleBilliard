@@ -6,8 +6,9 @@ import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {KeyResult} from "~/common/constants/Model";
 import {MaxLength} from "~/common/constants/App";
+import BaseComponent from "~/goal_create/components/BaseComponent";
 
-export default class Step4Component extends React.Component {
+export default class Step4Component extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,6 +20,21 @@ export default class Step4Component extends React.Component {
 
   componentWillMount() {
     this.props.fetchInitialData(Page.STEP4)
+  }
+
+  componentDidMount() {
+    super.componentDidMount.apply(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.goal.redirect_to_home) {
+      super.removeBeforeUnloadHandler.apply(this)
+      document.location.href = "/"
+    }
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount.apply(this)
   }
 
   handleSubmit(e) {

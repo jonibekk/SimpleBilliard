@@ -4,12 +4,13 @@ import * as Page from "../constants/Page";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import Vision from "./elements/Vision";
 import {MaxLength} from "~/common/constants/App";
+import BaseComponent from "~/goal_create/components/BaseComponent";
 
-export default class Step1Component extends React.Component {
+export default class Step1Component extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-      visionIdx: 0,
+      visionIdx: 0
     };
     this.handleChange = this.handleChange.bind(this)
     this.handleChangeVision = this.handleChangeVision.bind(this)
@@ -19,10 +20,18 @@ export default class Step1Component extends React.Component {
     this.props.fetchInitialData(Page.STEP1)
   }
 
+  componentDidMount() {
+    super.componentDidMount.apply(this)
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
       browserHistory.push(Page.URL_STEP2)
     }
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount.apply(this)
   }
 
   handleSubmit(e) {
@@ -38,7 +47,7 @@ export default class Step1Component extends React.Component {
     const visions = this.props.goal.visions
     const maxIdx = visions.length - 1
     const visionIdx = (maxIdx == this.state.visionIdx) ? 0 : this.state.visionIdx + 1
-    this.setState({visionIdx: visionIdx})
+    this.setState({ visionIdx })
   }
 
   render() {

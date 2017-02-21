@@ -6,8 +6,9 @@ import PhotoUpload from "~/common/components/goal/PhotoUpload";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {MaxLength} from "~/common/constants/App";
 import { generateTermRangeFormat } from "~/util/date";
+import BaseComponent from "~/goal_create/components/BaseComponent";
 
-export default class Step3Component extends React.Component {
+export default class Step3Component extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,10 +22,18 @@ export default class Step3Component extends React.Component {
     this.props.fetchInitialData(Page.STEP3)
   }
 
+  componentDidMount() {
+    super.componentDidMount.apply(this)
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
       browserHistory.push(Page.URL_STEP4)
     }
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount.apply(this)
   }
 
   getInputDomData() {
