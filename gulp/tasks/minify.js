@@ -1,15 +1,20 @@
-import gulp from 'gulp'
-import cssmin from 'gulp-cssmin'
-import rename from 'gulp-rename'
-import plumber from 'gulp-plumber'
-import uglify from 'gulp-uglify'
-import duration from 'gulp-duration'
-import config from '../config.js'
+import gulp from "gulp";
+import cssmin from "gulp-cssmin";
+import rename from "gulp-rename";
+import plumber from "gulp-plumber";
+import uglify from "gulp-uglify";
+import duration from "gulp-duration";
+import config from "../config.js";
+
+// production環境のみ圧縮する
 
 gulp.task("js:uglify", () => {
-  return gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
+  let obj = gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js');
+  if (process.env.NODE_ENV === "production") {
+    obj = obj.pipe(uglify());
+  }
+
+  return obj.pipe(rename({
       suffix: '.min'
     }))
     .pipe(gulp.dest(config.js.output.path))
@@ -47,35 +52,30 @@ gulp.task("angular_vendor:uglify", () => {
 })
 
 gulp.task("angular_app:uglify", () => {
-  return gulp.src(config.dest + "/angular_app_cat/" + config.angular_app.output.file_name + '.js')
-    .pipe(uglify({options : {
-      beautify : true,
-      mangle   : true
-    }}))
-    .pipe(rename({
+  let obj = gulp.src(config.dest + "/angular_app_cat/" + config.angular_app.output.file_name + '.js');
+  if (process.env.NODE_ENV === "production") {
+    obj = obj.pipe(uglify({
+      options: {
+        beautify: true,
+        mangle: true
+      }
+    }));
+  }
+
+  return obj.pipe(rename({
       suffix: '.min'
     }))
     .pipe(gulp.dest(config.angular_app.output.path))
     .pipe(duration('angular_app:uglify'))
 })
 
-config.react_apps.map((app_name) => {
-  gulp.task(`${app_name}:uglify`, () => {
-    return gulp.src(config.dest + `/${app_name}/` + config[app_name].output.file_name + '.js')
-      .pipe(uglify())
-      .pipe(rename({
-        suffix: '.min'
-      }))
-      .pipe(gulp.dest(config[app_name].output.path))
-      .pipe(duration(`${app_name}:uglify`))
-  })
-})
-
 gulp.task('css:minify', () => {
-  return gulp.src(config.dest + '/css_cat/*.css')
-    .pipe(plumber())
-    .pipe(cssmin())
-    .pipe(rename({
+  let obj = gulp.src(config.dest + '/css_cat/*.css').pipe(plumber());
+  if (process.env.NODE_ENV === "production") {
+    obj = obj.pipe(cssmin());
+  }
+
+  return obj.pipe(rename({
       suffix: '.min'
     }))
     .pipe(gulp.dest(config.css.output.path))
