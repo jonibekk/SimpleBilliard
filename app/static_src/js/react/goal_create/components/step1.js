@@ -1,4 +1,6 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React from 'react'
+/* eslint-enable no-unused-vars */
 import {browserHistory} from "react-router";
 import * as Page from "../constants/Page";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";

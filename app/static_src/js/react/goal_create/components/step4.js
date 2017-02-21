@@ -1,10 +1,11 @@
-import React from "react";
-import {browserHistory, Link} from "react-router";
+/* eslint-disable no-unused-vars */
+import React from 'react'
+/* eslint-enable no-unused-vars */
+import {Link} from "react-router";
 import * as Page from "../constants/Page";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
-import {KeyResult} from "~/common/constants/Model";
 import {MaxLength} from "~/common/constants/App";
 import BaseComponent from "~/goal_create/components/BaseComponent";
 

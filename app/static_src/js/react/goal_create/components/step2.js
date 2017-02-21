@@ -1,4 +1,6 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React from 'react'
+/* eslint-enable no-unused-vars */
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import CategorySelect from "../../common/components/goal/CategorySelect";
@@ -62,7 +64,7 @@ export default class Step2Component extends BaseComponent {
   }
 
   render() {
-    let {suggestions, keyword, inputData, validationErrors} = this.props.goal;
+    const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
