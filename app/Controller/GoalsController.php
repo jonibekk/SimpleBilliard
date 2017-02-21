@@ -43,7 +43,7 @@ class GoalsController extends AppController
     public function create($step = null)
     {
         if ($step !== 'step1') {
-            throw new NotFoundException();
+            return $this->redirect(['step1']);
         }
         $this->layout = LAYOUT_ONE_COLUMN;
 
