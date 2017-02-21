@@ -43,6 +43,12 @@ class UploadBehavior extends ModelBehavior
 
     public function setup(Model $model, $settings = array())
     {
+        //Galaxy S7 edgeなどの一部の端末で撮影した画像が処理できない問題(以下Warning)の対応のため、warningを無視する設定
+        //Warning (2): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
+        //公式にphp7.1からデフォルト設定が"1"になっている。-> http://php.net/manual/en/image.configuration.php
+        //TODO: 後にchefのレシピで対応するようにする
+        ini_set('gd.jpeg_ignore_warning', 1);
+
         $defaults = array(
             'path'                   => ':webroot/upload/:model/:id/:basename_:style.:extension',
             'styles'                 => array(),
