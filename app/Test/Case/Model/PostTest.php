@@ -50,6 +50,7 @@ class PostTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Post = ClassRegistry::init('Post');
+        $this->User = ClassRegistry::init('User');
     }
 
     /**
@@ -1232,6 +1233,12 @@ class PostTest extends GoalousTestCase
         $this->_setDefault();
         $this->_setTerm();
 
+        $this->Post->deleteAll(['Post.user_id' => $this->Post->my_uid], false);
+        $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
+        $this->assertFalse($res);
+
+        $this->User->id = 1;
+        $this->User->save(['created' => $this->start_date - 1]);
         // In case that user posted circle post
         $this->Post->save([
             'id'      => 1,
@@ -1240,6 +1247,7 @@ class PostTest extends GoalousTestCase
             'user_id' => 1,
             'type'    => Post::TYPE_NORMAL,
             'created' => $this->start_date,
+            'modified' => $this->start_date,
         ]);
         $this->Post->PostShareCircle->save([
             'id'        => 1,
@@ -1247,22 +1255,10 @@ class PostTest extends GoalousTestCase
             'circle_id' => 1,
             'team_id'   => 1,
             'created'   => $this->start_date,
+            'modified' => $this->start_date,
         ]);
         $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
         $this->assertTrue($res);
-
-        // In case that user posted notithing
-        $this->Post->deleteAll([
-            'Post.user_id'    => $this->Post->my_uid,
-            'Post.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-            'Post.created <=' => $this->end_date
-        ]);
-        $this->Post->PostShareCircle->deleteAll([
-            'PostShareCircle.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-            'PostShareCircle.created <=' => $this->end_date
-        ]);
-        $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
-        $this->assertFalse($res);
     }
 
     function testGetByActionResultId()

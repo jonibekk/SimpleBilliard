@@ -579,7 +579,8 @@ class KeyResultTest extends GoalousTestCase
      * 右カラムKR一覧取得テスト
      * 両条件混合
      */
-    function testFindInDashboardBoth() {
+    function testFindInDashboardBoth()
+    {
         $this->setDefault();
         $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1], [null, 4], [null, 5], [null, 2]]);
         $res = $this->KeyResult->findInDashboard(10);
@@ -592,7 +593,8 @@ class KeyResultTest extends GoalousTestCase
      * 右カラムKR一覧取得テスト
      * KRがひとつもない
      */
-    function testFindInDashboardEmpty() {
+    function testFindInDashboardEmpty()
+    {
         $this->setDefault();
         $this->KeyResult->deleteAll(['KeyResult.id >' => 0], false);
         $res = $this->KeyResult->findInDashboard(10);
@@ -603,11 +605,45 @@ class KeyResultTest extends GoalousTestCase
     /**
      * 右カラムKR数取得
      */
-    function testCountMine() {
+    function testCountMine()
+    {
         $this->setDefault();
         $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1]]);
         $res = $this->KeyResult->countMine();
         $this->assertEquals($res, 3);
+    }
+
+    function test_updateTermByGoalId_currentToNext()
+    {
+        $this->deleteAllTeam();
+        $teamId = $this->createTeam();
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $this->setupTerm($teamId);
+
+        $nextTerm = $this->KeyResult->Team->EvaluateTerm->getNextTermData();
+
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 10], $teamId);
+        $this->KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_NEXT);
+        $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
+        $this->assertEquals($updatedKr['start_date'], $nextTerm['start_date']);
+        $this->assertEquals($updatedKr['end_date'], $nextTerm['end_date']);
+    }
+
+    function test_updateTermByGoalId_nextToCurrent()
+    {
+        $this->deleteAllTeam();
+        $teamId = $this->createTeam();
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $this->setupTerm($teamId);
+        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [0, 10], $teamId);
+        $this->KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT);
+        $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
+
+        $this->assertTrue($currentTerm['start_date'] < $updatedKr['start_date']);
+        $this->assertTrue($updatedKr['start_date'] < $currentTerm['end_date']);
+        $this->assertEquals($updatedKr['end_date'], $currentTerm['end_date']);
     }
 
     /**
