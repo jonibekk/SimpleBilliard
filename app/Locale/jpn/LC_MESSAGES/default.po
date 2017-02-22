@@ -1447,6 +1447,9 @@ msgstr "誕生月"
 msgid "Birthday"
 msgstr "誕生日"
 
+msgid "Birthday(Optional)"
+msgstr "誕生日(オプション)"
+
 msgid "Group 1"
 msgstr "グループ1"
 
