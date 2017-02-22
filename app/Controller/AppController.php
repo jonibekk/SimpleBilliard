@@ -22,7 +22,6 @@ App::import('Service', 'GoalService');
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent      $Lang
- * @property TimezoneComponent  $Timezone
  * @property CookieComponent    $Cookie
  * @property CsvComponent       $Csv
  * @property PnotifyComponent   $Pnotify
@@ -44,7 +43,6 @@ class AppController extends BaseController
         'Paginator',
         'Lang',
         'Cookie',
-        'Timezone',
         'Pnotify',
         'Ogp',
         'Csv',

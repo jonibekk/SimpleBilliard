@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Post', 'Model');
+App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
 
 /**
@@ -249,7 +250,6 @@ class UsersController extends AppController
      *  - CSVによる招待(ユーザー仮登録状態)
      *  - メールによる招待
      * - この中で呼ばれる_joinTeam()メソッド内でトランザクションを張っている
-     *
      * TODO: このメソッド中のユーザー登録処理にてトランザクションが張られていないため、
      *       チームジョインが失敗した際のユーザー情報ロールバック処理をベタ書きしてしまっている。
      *       ユーザー登録/チーム参加処理のリファクタとトランザクション処理の追加実装が必要。
@@ -362,8 +362,7 @@ class UsersController extends AppController
         //タイムゾーンをセット
         if (isset($data['User']['local_date'])) {
             //ユーザのローカル環境から取得したタイムゾーンをセット
-            $timezone = $this->Timezone->getLocalTimezone($data['User']['local_date']);
-            $data['User']['timezone'] = $timezone;
+            $data['User']['timezone'] = AppUtil::getClientTimezone($data['User']['local_date']);
             //自動タイムゾーン設定フラグをoff
             $data['User']['auto_timezone_flg'] = false;
         }
@@ -693,7 +692,7 @@ class UsersController extends AppController
         //言語選択
         $language_list = $this->Lang->getAvailLangList();
         //タイムゾーン
-        $timezones = $this->Timezone->getTimezones();
+        $timezones = AppUtil::getTimezoneList();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
@@ -790,7 +789,6 @@ class UsersController extends AppController
      * - 登録済みユーザの場合は、チーム参加でホームへリダイレクト
      * - 未登録ユーザの場合は、個人情報入力ページ(register_with_invite)へ
      * - この中で呼ばれる_joinTeam()メソッド内でトランザクションを張っている
-     *
      *
      * @param $token
      */
@@ -1090,7 +1088,8 @@ class UsersController extends AppController
             $ExperimentService = ClassRegistry::init('ExperimentService');
             $successJoinedCircle = true;
             if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-                $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false, false);
+                $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false,
+                    false);
             } else {
                 $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
             }
@@ -1188,7 +1187,7 @@ class UsersController extends AppController
         function show_date($startDate, $endDate, $allTimezone)
         {
             return date('Y/m/d', $startDate + $allTimezone * 3600) . " - " . date('Y/m/d',
-                $endDate + $allTimezone * 3600);
+                    $endDate + $allTimezone * 3600);
         }
 
         $allTerm = $this->Team->EvaluateTerm->getAllTerm();
@@ -1250,17 +1249,17 @@ class UsersController extends AppController
         );
 
         $this->set([
-            'term' => $term,
-            'term_id' => $termId,
-            'term_base_url' => $termBaseUrl,
-            'my_goals_count' => $myGoalsCount,
-            'follow_goals_count' => $followGoalsCount,
-            'page_type' => $pageType,
-            'goals' => $goals,
-            'is_mine' => $isMine,
+            'term'                 => $term,
+            'term_id'              => $termId,
+            'term_base_url'        => $termBaseUrl,
+            'my_goals_count'       => $myGoalsCount,
+            'follow_goals_count'   => $followGoalsCount,
+            'page_type'            => $pageType,
+            'goals'                => $goals,
+            'is_mine'              => $isMine,
             'display_action_count' => $displayActionCount,
-            'my_coaching_users' => $myCoachingUsers,
-            'canCompleteGoalIds' => $canCompleteGoalIds
+            'my_coaching_users'    => $myCoachingUsers,
+            'canCompleteGoalIds'   => $canCompleteGoalIds
         ]);
         return $this->render();
     }
