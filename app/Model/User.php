@@ -257,11 +257,9 @@ class User extends AppModel
             ],
         ],
         'photo'              => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType',],],
-            'notBlank'          => [
-                'rule' => 'notBlank',
-            ],
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'      => ['rule' => ['attachmentImageType',],],
+            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'hometown'           => [
             'maxLength' => ['rule' => ['maxLength', 128]],
