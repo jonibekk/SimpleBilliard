@@ -611,6 +611,16 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
+    public function canProcessImage(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        array $value
+    )
+    {
+        $this->log($value);
+        return false;
+    }
+
     public function attachmentPresence(Model $model, $value)
     {
         $keys = array_keys($value);
