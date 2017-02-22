@@ -1,12 +1,15 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React from 'react'
+/* eslint-enable no-unused-vars */
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import CategorySelect from "../../common/components/goal/CategorySelect";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import * as KeyCode from "../constants/KeyCode";
 import LabelInput from "../../common/components/goal/LabelInput";
+import BaseComponent from "~/goal_create/components/BaseComponent";
 
-export default class Step2Component extends React.Component {
+export default class Step2Component extends BaseComponent {
   constructor(props) {
     super(props);
     this.deleteLabel = this.deleteLabel.bind(this)
@@ -17,10 +20,18 @@ export default class Step2Component extends React.Component {
     this.props.fetchInitialData(Page.STEP2)
   }
 
+  componentDidMount() {
+    super.componentDidMount.apply(this)
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.goal.toNextPage) {
       browserHistory.push(Page.URL_STEP3)
     }
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount.apply(this)
   }
 
   handleSubmit(e) {
@@ -53,7 +64,7 @@ export default class Step2Component extends React.Component {
   }
 
   render() {
-    let {suggestions, keyword, inputData, validationErrors} = this.props.goal;
+    const {suggestions, keyword, inputData, validationErrors} = this.props.goal;
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">

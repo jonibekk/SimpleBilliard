@@ -158,6 +158,7 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER:
             case NotifySetting::TYPE_TKR_EXCHANGED_BY_LEADER:
+            case NotifySetting::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER:
                 $this->_setMyGoalChangedOption($notify_type, $model_id, $user_id, $team_id);
                 break;
             case NotifySetting::TYPE_MEMBER_CHANGE_KR:
@@ -183,6 +184,7 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_COACHEE_CHANGE_GOAL:
             case NotifySetting::TYPE_COACHEE_EXCHANGE_TKR:
+            case NotifySetting::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list, $team_id);
                 break;
             case NotifySetting::TYPE_COACHEE_WITHDRAW_APPROVAL:

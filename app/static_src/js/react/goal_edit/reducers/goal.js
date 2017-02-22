@@ -25,7 +25,7 @@ const initialState = {
       start_value: 0,
       target_value: 100,
       current_value:"",
-      description: "",
+      description: ""
     },
     labels: []
   },
@@ -35,13 +35,6 @@ const initialState = {
 }
 
 export default function goal(state = initialState, action) {
-  /* eslint-disable no-console */
-  console.log("---reducer start---")
-  console.log(action.type)
-  console.log({state})
-  console.log({action})
-  /* eslint-disable no-console */
-
   let inputData = state.inputData
   switch (action.type) {
     case types.INIT:
@@ -111,7 +104,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected: addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
+        suggestionsExcludeSelected: addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels)
       })
 
     case types.ADD_LABEL:
@@ -143,12 +136,11 @@ export default function goal(state = initialState, action) {
         state.inputData = inputData
         return Object.assign({}, state)
       }
-    {
+
       inputData = Object.assign({}, inputData, action.data)
       return Object.assign({}, state, {
         inputData
       })
-    }
     default:
       return state;
   }
@@ -228,18 +220,19 @@ export function initInputData(goal) {
   const inputData = {
     name: goal.name,
     goal_category_id: goal.goal_category_id,
-    labels: labels,
+    labels,
     end_date: goal.end_date,
     description: goal.description,
     priority: goal.goal_member.priority,
+    term_type: goal.term_type,
     key_result: {
       name: goal.top_key_result.name,
       value_unit: goal.top_key_result.value_unit,
       start_value: goal.top_key_result.start_value,
       target_value: goal.top_key_result.target_value,
       current_value: goal.top_key_result.current_value,
-      description: goal.top_key_result.description,
-    },
+      description: goal.top_key_result.description
+    }
   }
   return inputData;
 }

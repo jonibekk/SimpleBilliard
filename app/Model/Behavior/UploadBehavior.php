@@ -27,6 +27,14 @@ class UploadBehavior extends ModelBehavior
     private $toDelete = array();
 
     private $maxWidthSize = false;
+
+    private $supportedImgTypes = [
+        IMAGETYPE_PNG      => ['png'],
+        IMAGETYPE_GIF      => ['gif'],
+        IMAGETYPE_JPEG     => ['jpg', 'jpeg'],
+        IMAGETYPE_JPEG2000 => ['jpg', 'jpeg'],
+    ];
+
     /**
      * aws s3用オブジェクト
      *
@@ -590,15 +598,29 @@ class UploadBehavior extends ModelBehavior
         Model $model,
         array $value
     ) {
-        $imageTypes = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG];
         $value = array_shift($value);
         //画像以外はスルー
         if (strpos($value['type'], 'image') === false) {
             return true;
         }
         if (!empty($value['tmp_name'])) {
+            // MIMEタイプチェック
             $targetImgType = exif_imagetype($value['tmp_name']);
-            if (!in_array($targetImgType, $imageTypes, true)) {
+            if (!isset($this->supportedImgTypes[$targetImgType])) {
+                return false;
+            }
+
+            // 拡張子チェック
+            $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
+            if (!preg_grep("/{$ext}/i", $this->supportedExtensions)) {
+                return false;
+            }
+
+            // 拡張子とMIMEタイプの整合性チェック
+            $allowExtensions = $this->supportedImgTypes[$targetImgType];
+            $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
+            if (!preg_grep("/{$ext}/i", $allowExtensions)) {
+                $model->invalidate('attached', __("File extension and content are different."));
                 return false;
             }
         }

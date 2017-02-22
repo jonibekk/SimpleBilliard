@@ -11,3 +11,4 @@ export const UPDATE_INPUT_DATA = 'UPDATE_INPUT_DATA';
 export const SET_KEYWORD = 'SET_KEYWORD';
 export const ADD_LABEL = 'ADD_LABEL';
 export const DELETE_LABEL = 'DELETE_LABEL';
+export const REDIRECT_TO_HOME = 'REDIRECT_TO_HOME'

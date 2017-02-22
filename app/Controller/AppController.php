@@ -22,7 +22,6 @@ App::import('Service', 'GoalService');
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent      $Lang
- * @property TimezoneComponent  $Timezone
  * @property CookieComponent    $Cookie
  * @property CsvComponent       $Csv
  * @property PnotifyComponent   $Pnotify
@@ -44,7 +43,6 @@ class AppController extends BaseController
         'Paginator',
         'Lang',
         'Cookie',
-        'Timezone',
         'Pnotify',
         'Ogp',
         'Csv',
@@ -158,8 +156,9 @@ class AppController extends BaseController
 
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
-        //ローカルとISAO環境と本番環境以外でbasic認証を有効にする
-        if (!$this->is_mb_app && !(ENV_NAME == "local" || ENV_NAME == "isao" || ENV_NAME == "www")) {
+
+        // Basic認証を特定の条件でかける
+        if ($this->_isBasicAuthRequired()) {
             $this->_setBasicAuth();
         }
         $this->set('my_prof', $this->User->getMyProf());
@@ -491,6 +490,38 @@ class AppController extends BaseController
         $this->response->type('json');
         $this->response->body(json_encode($result, $json_option));
         return $this->response;
+    }
+
+    /**
+     * ベーシック認証が必要か？
+     * - DevicesControllerは除外
+     * - モバイルアプリは除外
+     * - 特定の環境は除外
+     */
+    function _isBasicAuthRequired()
+    {
+        // アプリのデバイストークン追加、取得で用いられるため除外
+        if ($this->request->params['controller'] == 'devices') {
+            return false;
+        }
+
+        // モバイルアプリは除外
+        if ($this->is_mb_app) {
+            return false;
+        }
+
+        $excludeEnvs = [
+            'local',
+            'isao',
+            'www'
+        ];
+
+        // 特定の環境を除外
+        if (in_array(ENV_NAME, $excludeEnvs)) {
+            return false;
+        }
+
+        return true;
     }
 
     function _setBasicAuth()

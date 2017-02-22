@@ -31,7 +31,7 @@ export default {
       },
       {
         test: /\.css$/,
-        loaders: ['css-loader'],
+        loaders: ['style-loader', 'css-loader'],
       },
     ]
   },

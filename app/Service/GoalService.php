@@ -219,6 +219,9 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Not exist goal_member. goalId:%d userId:%d", $goalId, $userId));
             }
 
+            // ゴール変更前のtermType退避
+            $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
             if (!$Goal->save($updateGoal, false)) {
@@ -241,6 +244,16 @@ class GoalService extends AppService
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
             }
+
+            // KR更新
+            // 来期のゴールを今期に期変更した場合のみ
+            $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
+            if ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT && $afterUpdatedTerm == EvaluateTerm::TERM_TYPE_CURRENT) {
+                if (!$KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT)) {
+                    throw new Exception(sprintf("Failed to update krs. goal_id:%s"
+                        , $goalId));
+                }
+             }
 
             // TKRの進捗単位を変更した場合は進捗リセット
             if ($goal['top_key_result']['value_unit'] != $updateTkr['value_unit']) {
@@ -386,19 +399,29 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
 
         $updateData = [
             'id'          => $goalId,
             'name'        => $requestData['name'],
-            'description' => $requestData['description'],
+            'description' => $requestData['description']
         ];
 
         if (!empty($requestData['goal_category_id'])) {
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            $goalTerm = $Goal->getGoalTermData($goalId);
+            // timezoneを加味したend_date設定
+            $goalTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($requestData['end_date']));
             $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
+
+            // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
+            $preUpdatedTerm = $Goal->getTermTypeById($goalId);
+            $isNextToCurrentUpdate = ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT) && ($requestData['term_type'] == EvaluateTerm::TERM_TYPE_CURRENT);
+            if ($isNextToCurrentUpdate) {
+                $updateData['start_date'] = time();
+            }
         }
         if (!empty($requestData['photo'])) {
             $updateData['photo'] = $requestData['photo'];
@@ -423,15 +446,6 @@ class GoalService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var Label $Label */
         $Label = ClassRegistry::init("Label");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
-
-        // 編集の場合評価期間の選択は無い為、既に登録されているゴールの開始日と終了日から評価期間を割り出し、入力した終了日のバリデーションに利用する
-        if (!empty($goalId) && (empty($fields) || in_array('end_date', $fields))) {
-            $goal = $this->get($goalId);
-            $data['term_type'] = $EvaluateTerm->getTermType(strtotime($goal['start_date']),
-                strtotime($goal['end_date']));
-        }
 
         $goalFields = array_intersect($this->goalValidateFields, $fields);
         $validationErrors = $this->validationExtract(
@@ -792,8 +806,10 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $term = $EvaluateTerm->getCurrentTermData();
+        $termStartTimestamp = $term['start_date'];
+        $termEndTimestamp = $term['end_date'];
+        $termTimezone = $term['timezone'];
 
         //バリデーション
         $validOrErrorMsg = $this->validateGraphRange(
@@ -812,9 +828,10 @@ class GoalService extends AppService
         $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
-            $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
-            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + (($targetDays - 1) * DAY));
-            $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+            $ret['graphStartDate'] = AppUtil::dateYmdLocal($termStartTimestamp, $termTimezone);
+            $ret['graphEndDate'] = AppUtil::dateYmdLocal($termStartTimestamp + (($targetDays - 1) * DAY),
+                $termTimezone);
+            $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $termTimezone);
             return $ret;
         }
 
@@ -823,8 +840,9 @@ class GoalService extends AppService
             //指定グラフ終了日が期の終了日からバッファ日数を引いた日を超えた場合
             $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
             if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
-                $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
-                $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
+                $ret['graphStartDate'] = AppUtil::dateYmdLocal($termEndTimestamp - (($targetDays - 1) * DAY),
+                    $termTimezone);
+                $ret['graphEndDate'] = AppUtil::dateYmdLocal($termEndTimestamp, $termTimezone);
                 $ret['plotDataEndDate'] = $ret['graphEndDate'];
                 return $ret;
             }
@@ -832,9 +850,9 @@ class GoalService extends AppService
 
         //$targetDays前から本日まで(バッファ日数を考慮)
         $targetStartTimestamp = $targetEndTimestamp - (($targetDays - 1) * DAY);
-        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
-        $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp + ($maxBufferDays * DAY));
-        $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+        $ret['graphStartDate'] = AppUtil::dateYmdLocal($targetStartTimestamp + ($maxBufferDays * DAY), $termTimezone);
+        $ret['graphEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp + ($maxBufferDays * DAY), $termTimezone);
+        $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $termTimezone);
 
         return $ret;
     }
@@ -956,18 +974,21 @@ class GoalService extends AppService
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
             time(),
-            strtotime($graphStartDate),
-            strtotime($plotDataEndDate) + DAY
+            strtotime($graphStartDate) - ($termTimezone * HOUR),
+            strtotime($plotDataEndDate) - ($termTimezone * HOUR) + DAY
         );
-
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1059,18 +1080,22 @@ class GoalService extends AppService
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
             time(),
-            strtotime($graphStartDate),
-            strtotime($plotDataEndDate) + DAY
+            strtotime($graphStartDate) - ($termTimezone * HOUR),
+            strtotime($plotDataEndDate) - ($termTimezone * HOUR) + DAY
         );
 
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1145,7 +1170,7 @@ class GoalService extends AppService
         $timestamp = strtotime($graphStartDate);
         $graphEndTimestamp = strtotime($graphEndDate);
         while ($timestamp <= $graphEndTimestamp) {
-            $ret[] = $TimeEx->formatDateI18n($timestamp);
+            $ret[] = $TimeEx->formatDateI18n($timestamp, false);
             $timestamp = strtotime('+1 day', $timestamp);
         }
         return $ret;
@@ -1421,13 +1446,15 @@ class GoalService extends AppService
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
         int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
     ): array {
-        $startTimestamp = strtotime($startDate);
-        $endTimestamp = strtotime($endDate) + DAY - 1;
-
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $term = $EvaluateTerm->getCurrentTermData();
+        $termStartTimestamp = $term['start_date'];
+        $termEndTimestamp = $term['end_date'];
+        $termTimezone = $term['timezone'];
+        //ローカル時間に変換
+        $startTimestamp = strtotime($startDate) - $termTimezone * HOUR;
+        $endTimestamp = strtotime($endDate) - ($termTimezone * HOUR) + DAY - 1;
 
         //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
         if ($startTimestamp < $termStartTimestamp || $endTimestamp > $termEndTimestamp) {
