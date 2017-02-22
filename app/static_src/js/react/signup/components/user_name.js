@@ -62,7 +62,7 @@ export default class UserName extends React.Component {
                     <div className="panel-heading signup-itemtitle">{__("Your name")}</div>
                     <div className={(this.props.validate.first_name.invalid) ? 'has-error' : ''}>
                         <input ref="first_name" name="first_name" className="form-control signup_input-design" type="text"
-                               placeholder={ __("first name(eg. John)") }
+                               placeholder={ __("first name (eg. John)") }
                                onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
                     </div>
                     <InvalidMessageBox is_invalid={this.props.validate.first_name.invalid}
@@ -71,7 +71,7 @@ export default class UserName extends React.Component {
                     {/* Last name */}
                     <div className={(this.props.validate.last_name.invalid) ? 'has-error' : ''}>
                         <input ref="last_name" name="last_name" className="form-control signup_input-design"
-                               placeholder={ __("last name(eg. Smith)") } type="text"
+                               placeholder={ __("last name (eg. Smith)") } type="text"
                                onChange={ (e) => this.props.dispatch(_checkValue(e.target)) } />
                     </div>
                     <InvalidMessageBox is_invalid={this.props.validate.last_name.invalid}
