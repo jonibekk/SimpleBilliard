@@ -139,7 +139,7 @@
   display: none;
 }
 .dashboard-circle-unread-point {
-  margin: 3px 3px 0 0;
+  margin: 0 3px 0 0;
   width: 7px;
   .circle {
     background: @keyColor;
@@ -150,7 +150,7 @@
 .dashboard-circle-count-box-wrapper {
   width: 25px;
   height: 16px;
-  margin: 4px 0px 4px 2px;
+  margin: 0 0 0 2px;
 }
 .dashboard-circle-count-box {
   width: 100%;
@@ -170,7 +170,8 @@
 }
 .dashboard-circle-list-row {
   display: flex;
-  justify-content: row;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 32px;
   padding: 4px 24px 4px 2px;
@@ -182,6 +183,11 @@
     color: @veryDark;
     text-decoration: none;
     background: @lightGray;
+    .dashboard-circle-name-box {
+      &::before{
+        background-image: linear-gradient(to right, rgba(210, 212, 213, 0), @lightGray);
+      }
+    }
   }
 
   &.is-read {
@@ -205,19 +211,27 @@
 }
 
 .dashboard-circle-name-box {
-  margin: 4px 0;
-  color: @veryDark;
   overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
   height: 16px;
   vertical-align: middle;
   flex: 1;
+  color: @veryDark;
+  display: block;
+  &::before{
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: linear-gradient(to right, rgba(229, 229, 229, 0), @baseGray);
+    width: 10px;
+    height: 20px;
+  }
+
   @media screen and (min-width: 768px) and (max-width: 991px) {
     width: 78%;
-  }
-  &:hover {&::before {
-      background: @baseLightGray;
-    }
   }
 }
 .dashboard-circle-list-edit-wrap {
