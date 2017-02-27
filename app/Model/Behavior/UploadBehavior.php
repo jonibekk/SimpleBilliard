@@ -860,32 +860,29 @@ class UploadBehavior extends ModelBehavior
     {
         $upload = array_shift($upload);
         $func = 'images' . $axis;
-        if (!empty($upload['tmp_name'])) {
-            $createHandler = null;
-            if ($upload['type'] == 'image/jpeg') {
-                $createHandler = 'imagecreatefromjpeg';
-            } else {
-                if ($upload['type'] == 'image/gif') {
-                    $createHandler = 'imagecreatefromgif';
-                } else {
-                    if ($upload['type'] == 'image/png') {
-                        $createHandler = 'imagecreatefrompng';
-                    } else {
-                        return false;
-                    }
-                }
-            }
+        if (empty($upload['tmp_name'])) {
+            return false;
+        }
 
-            $img = $this->_getImgSource($createHandler, $upload['tmp_name']);
-            if ($img) {
-                switch ($mode) {
-                    case 'min':
-                        return $func($img) >= $value;
-                        break;
-                    case 'max':
-                        return $func($img) <= $value;
-                        break;
-                }
+        if ($upload['type'] == 'image/jpeg') {
+            $createHandler = 'imagecreatefromjpeg';
+        } elseif ($upload['type'] == 'image/gif') {
+            $createHandler = 'imagecreatefromgif';
+        } elseif ($upload['type'] == 'image/png') {
+            $createHandler = 'imagecreatefrompng';
+        } else {
+            return false;
+        }
+
+        $img = $this->_getImgSource($createHandler, $upload['tmp_name']);
+        if ($img) {
+            switch ($mode) {
+                case 'min':
+                    return $func($img) >= $value;
+                    break;
+                case 'max':
+                    return $func($img) <= $value;
+                    break;
             }
         }
         return false;
@@ -899,8 +896,11 @@ class UploadBehavior extends ModelBehavior
      *
      * @return mixed
      */
-    private function _getImgSource(string $handler, string $imgPath)
-    {
+    private
+    function _getImgSource(
+        string $handler,
+        string $imgPath
+    ) {
         // 画像によっては問題ない画像でも以下のNoticeが出力される場合がある為、error出力を一時的にoffにする
         // Notice (8): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
         $backupErrReport = error_reporting();
@@ -910,7 +910,8 @@ class UploadBehavior extends ModelBehavior
         return $src;
     }
 
-    public function phpUploadError(
+    public
+    function phpUploadError(
         /** @noinspection PhpUnusedParameterInspection */
         Model $model,
         $value,
