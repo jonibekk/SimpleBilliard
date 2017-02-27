@@ -257,9 +257,9 @@ class User extends AppModel
             ],
         ],
         'photo'              => [
+            'canProcessImage' => ['rule' => 'canProcessImage',],
             'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'      => ['rule' => ['attachmentImageType',],],
-            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'hometown'           => [
             'maxLength' => ['rule' => ['maxLength', 128]],
@@ -269,10 +269,10 @@ class User extends AppModel
             ],
         ],
         'cover_photo'        => [
+            'canProcessImage'     => ['rule' => 'canProcessImage'],
             'image_max_size'      => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'          => ['rule' => ['attachmentImageType',],],
             'imageMinWidthHeight' => ['rule' => ['minWidthHeight', 672, 378]],
-            'canProcessImage'     => ['rule' => 'canProcessImage'],
         ],
         'comment'            => [
             'maxLength' => ['rule' => ['maxLength', 2000]],

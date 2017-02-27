@@ -399,7 +399,7 @@ class UploadBehavior extends ModelBehavior
             return false;
         }
 
-        $src = $createHandler($destFile);
+        $src = $this->_getImgSource($createHandler, $destFile);
 
         if (!$src) {
             $this->log(sprintf('creating img object was failed.'));
@@ -702,6 +702,10 @@ class UploadBehavior extends ModelBehavior
     ) {
         $value = array_shift($value);
         $imgTmpFilePath = $value['tmp_name'];
+        if (empty($imgTmpFilePath)) {
+            return true;
+        }
+
         $imgMimeType = $this->getImageMimeType($imgTmpFilePath);
         if ($imgMimeType === false) {
             // 許可している画像以外はスルー
@@ -715,12 +719,7 @@ class UploadBehavior extends ModelBehavior
             return true;
         }
 
-        // アップロードされたファイルを直で触ると、この後の処理に影響するのとcookieに影響するので一時的に別ファイルにコピー
-        $validateFilePath = TMP . Security::hash(microtime());
-        copy($imgTmpFilePath, $validateFilePath);
-
-        $src = $createHandler($validateFilePath);
-        unlink($validateFilePath);
+        $src = $this->_getImgSource($createHandler, $imgTmpFilePath);
 
         if (!$src) {
             $this->log(sprintf('canProcessImage validation was failed. uid=%s', $model->my_uid));
@@ -729,6 +728,7 @@ class UploadBehavior extends ModelBehavior
             $this->backupFile($value['name'], $imgTmpFilePath);
             return false;
         }
+
         return true;
 
     }
@@ -876,7 +876,8 @@ class UploadBehavior extends ModelBehavior
                 }
             }
 
-            if ($img = $createHandler($upload['tmp_name'])) {
+            $img = $this->_getImgSource($createHandler, $upload['tmp_name']);
+            if ($img) {
                 switch ($mode) {
                     case 'min':
                         return $func($img) >= $value;
@@ -888,6 +889,25 @@ class UploadBehavior extends ModelBehavior
             }
         }
         return false;
+    }
+
+    /**
+     * 画像のソースを取得する
+     *
+     * @param string $handler
+     * @param string $imgPath
+     *
+     * @return mixed
+     */
+    private function _getImgSource(string $handler, string $imgPath)
+    {
+        // 画像によっては問題ない画像でも以下のNoticeが出力される場合がある為、error出力を一時的にoffにする
+        // Notice (8): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
+        $backupErrReport = error_reporting();
+        error_reporting(0);
+        $src = $handler($imgPath);
+        error_reporting($backupErrReport);
+        return $src;
     }
 
     public function phpUploadError(
@@ -926,7 +946,7 @@ class UploadBehavior extends ModelBehavior
 
         $createHandler = $this->getCreateHandler($imgMimeType);
         $outputHandler = $this->getOutputHandler($imgMimeType);
-        $src = $createHandler($filePath);
+        $src = $this->_getImgSource($createHandler, $filePath);
         if (!$src) {
             $this->log(sprintf('creating img object was failed.'));
             $this->log(Debugger::trace());
