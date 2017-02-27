@@ -155,8 +155,9 @@ class Goal extends AppModel
             ],
         ],
         'photo'            => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType',],]
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'      => ['rule' => ['attachmentImageType',],],
+            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'goal_category_id' => [
             'numeric'  => [
@@ -2092,7 +2093,7 @@ class Goal extends AppModel
     {
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $user_id,
+                'Goal.user_id' => $user_id,
             ],
             'fields'     => ['Goal.id']
         ];
@@ -2209,10 +2210,10 @@ class Goal extends AppModel
                 ]
             ],
             'conditions' => [
-                'Goal.end_date >=' => $currentTerm['start_date'],
-                'Goal.end_date <=' => $currentTerm['end_date'],
-                'Goal.completed'   => null,
-                'GoalMember.del_flg'   => false
+                'Goal.end_date >='   => $currentTerm['start_date'],
+                'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.completed'     => null,
+                'GoalMember.del_flg' => false
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)

@@ -666,6 +666,7 @@ class UploadBehavior extends ModelBehavior
 
     /**
      * 画像の加工処理が可能かどうか？
+     * - アップロードされたテンプファイルに対して操作をすると後の処理に影響するため、一時的に別ファイルに書き出す
      *
      * @param Model $model
      * @param array $value
@@ -692,12 +693,17 @@ class UploadBehavior extends ModelBehavior
             return true;
         }
 
+        // アップロードされたファイルを直で触ると、この後の処理に影響するのとcookieに影響するので一時的に別ファイルにコピー
+        $validateFilePath = TMP . Security::hash(microtime());
+        copy($imgTmpFilePath, $validateFilePath);
         $src = $createHandler($imgTmpFilePath);
+        unlink($validateFilePath);
+
         if (!$src) {
             $this->log(sprintf('canProcessImage validation was failed. uid=%s', $model->my_uid));
             $this->log(Debugger::exportVar($model->data));
             $this->log(sprintf("ImageFileInfo: %s", var_export($value, true)));
-            $this->backupFile($value['tmp_name'], $imgTmpFilePath);
+            $this->backupFile($value['name'], $imgTmpFilePath);
             return false;
         }
         return true;
@@ -717,7 +723,6 @@ class UploadBehavior extends ModelBehavior
         if (!file_exists($backupFileDir)) {
             mkdir($backupFileDir, 0775, true);
         }
-        $fileName = is_array($userFileName) ? $userFileName['name'] : $userFileName;
         $distFilePath = $backupFileDir . '/' . time() . '_' . $userFileName;
         copy($srcFilePath, $distFilePath);
         $this->log(sprintf("BackupFile: %s", $distFilePath));
