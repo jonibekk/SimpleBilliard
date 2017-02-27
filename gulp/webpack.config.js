@@ -29,11 +29,16 @@ export default {
       },
       {
         test: /\.css$/,
-        loaders: ['css-loader'],
+        loaders: ['style-loader', 'css-loader'],
       },
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
     new webpack.ProvidePlugin({
       Promise: 'es6-promise-promise'
     }),

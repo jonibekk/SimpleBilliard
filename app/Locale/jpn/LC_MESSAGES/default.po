@@ -1723,6 +1723,8 @@ msgstr "許可されている数字は%2$dから%3$dです。"
 
 msgid "The image cannot be processed."
 msgstr "この画像は処理できません。"
+msgid "File extension and content are different."
+msgstr "ファイルの拡張子と内容が異なっています。"
 
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"

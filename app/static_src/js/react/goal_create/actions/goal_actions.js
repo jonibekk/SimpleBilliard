@@ -35,7 +35,7 @@ export function toNextPage() {
 export function invalid(error) {
   return {
     type: types.INVALID,
-    error: error
+    error
   }
 }
 
@@ -45,7 +45,7 @@ export function setKeyword(keyword) {
   keyword = typeof(keyword) == "string" ? keyword : "";
   return {
     type: types.SET_KEYWORD,
-    keyword: keyword
+    keyword
   }
 }
 
@@ -53,7 +53,7 @@ export function updateSuggestions(keyword, suggestions) {
   return {
     type: types.REQUEST_SUGGEST,
     suggestions: getSuggestions(keyword, suggestions),
-    keyword: keyword
+    keyword
   }
 }
 export function onSuggestionsFetchRequested(keyword) {
@@ -122,7 +122,7 @@ export function saveGoal() {
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
         // 成功時はリダイレクト
-        document.location.href = "/"
+        dispatch({type: types.REDIRECT_TO_HOME})
       },
       (response) => {
         dispatch(invalid(response.data))

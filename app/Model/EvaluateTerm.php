@@ -363,9 +363,9 @@ class EvaluateTerm extends AppModel
     public function addTermData($type)
     {
         //キャッシュを削除
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
         $this->_checkType($type);
         $new_start = null;
         $new_end = null;
@@ -624,5 +624,33 @@ class EvaluateTerm extends AppModel
             return "next";
         }
         return null;
+    }
+
+    /**
+     * 指定したタイムゾーン設定になっているチームのIDのリストを返す
+     *
+     * @param float  $timezone
+     * @param string $targetDate
+     *
+     * @return array
+     */
+    public function findTeamIdByTimezone(float $timezone, string $targetDate): array
+    {
+        $targetTimestamp = strtotime($targetDate) - $timezone * HOUR;
+        $options = [
+            'conditions' => [
+                'start_date <=' => $targetTimestamp,
+                'end_date >='   => $targetTimestamp,
+                'timezone'      => $timezone,
+            ],
+            'fields'     => [
+                'team_id'
+            ]
+        ];
+
+        $ret = $this->findWithoutTeamId('list', $options);
+        // キーに特別な意味を持たせないように、歯抜けのキーを再採番
+        $ret = array_merge($ret);
+        return $ret;
     }
 }

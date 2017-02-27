@@ -351,11 +351,11 @@ class AppModel extends Model
      * this method is about calling find method without WithTeamIdBehavior.
      *
      * @param string $type
-     * @param array  $query
+     * @param array  $options
      *
      * @return array|null
      */
-    public function findWithoutTeamId($type = 'first', $query = [])
+    public function findWithoutTeamId($type = 'first', $options = [])
     {
         $enable_containable = false;
         $enable_with_team_id = false;
@@ -371,7 +371,7 @@ class AppModel extends Model
         if ($enable_containable) {
             $this->Behaviors->load('ExtContainable', array('with_team_id' => false));
         }
-        $res = $this->find($type, $query);
+        $res = $this->find($type, $options);
         if ($enable_with_team_id) {
             $this->Behaviors->enable('WithTeamId');
         }
@@ -567,19 +567,19 @@ class AppModel extends Model
      *
      * @return bool
      */
-    function softDelete(int $id) : bool
+    function softDelete(int $id): bool
     {
         if (empty($id)) {
             return false;
         }
         $this->id = $id;
         $data = [
-            $this->alias . '.' . 'del_flg' => true,
-            $this->alias . '.' . 'deleted' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'del_flg'  => true,
+            $this->alias . '.' . 'deleted'  => REQUEST_TIMESTAMP,
             $this->alias . '.' . 'modified' => REQUEST_TIMESTAMP,
         ];
         $condition = [
-            $this->alias . '.' . 'id' => $id,
+            $this->alias . '.' . 'id'      => $id,
             $this->alias . '.' . 'team_id' => $this->current_team_id,
             $this->alias . '.' . 'del_flg' => false,
         ];
@@ -606,8 +606,8 @@ class AppModel extends Model
             $this->alias . '.' . 'del_flg' => false,
         ]);
         $ret = $this->updateAll([
-            $this->alias . '.' . 'del_flg' => true,
-            $this->alias . '.' . 'deleted' => REQUEST_TIMESTAMP,
+            $this->alias . '.' . 'del_flg'  => true,
+            $this->alias . '.' . 'deleted'  => REQUEST_TIMESTAMP,
             $this->alias . '.' . 'modified' => REQUEST_TIMESTAMP,
         ], $condition);
 

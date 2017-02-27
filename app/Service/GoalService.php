@@ -806,8 +806,10 @@ class GoalService extends AppService
         //今期の情報取得
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $term = $EvaluateTerm->getCurrentTermData();
+        $termStartTimestamp = $term['start_date'];
+        $termEndTimestamp = $term['end_date'];
+        $termTimezone = $term['timezone'];
 
         //バリデーション
         $validOrErrorMsg = $this->validateGraphRange(
@@ -826,9 +828,10 @@ class GoalService extends AppService
         $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartTimestamp, $targetEndTimestamp);
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
-            $ret['graphStartDate'] = AppUtil::dateYmd($termStartTimestamp);
-            $ret['graphEndDate'] = AppUtil::dateYmd($termStartTimestamp + (($targetDays - 1) * DAY));
-            $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+            $ret['graphStartDate'] = AppUtil::dateYmdLocal($termStartTimestamp, $termTimezone);
+            $ret['graphEndDate'] = AppUtil::dateYmdLocal($termStartTimestamp + (($targetDays - 1) * DAY),
+                $termTimezone);
+            $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $termTimezone);
             return $ret;
         }
 
@@ -837,8 +840,9 @@ class GoalService extends AppService
             //指定グラフ終了日が期の終了日からバッファ日数を引いた日を超えた場合
             $termEndBeforeMaxBufferDaysTimestamp = $termEndTimestamp - $maxBufferDays * DAY;
             if ($targetEndTimestamp > $termEndBeforeMaxBufferDaysTimestamp) {
-                $ret['graphStartDate'] = AppUtil::dateYmd($termEndTimestamp - (($targetDays - 1) * DAY));
-                $ret['graphEndDate'] = AppUtil::dateYmd($termEndTimestamp);
+                $ret['graphStartDate'] = AppUtil::dateYmdLocal($termEndTimestamp - (($targetDays - 1) * DAY),
+                    $termTimezone);
+                $ret['graphEndDate'] = AppUtil::dateYmdLocal($termEndTimestamp, $termTimezone);
                 $ret['plotDataEndDate'] = $ret['graphEndDate'];
                 return $ret;
             }
@@ -846,9 +850,9 @@ class GoalService extends AppService
 
         //$targetDays前から本日まで(バッファ日数を考慮)
         $targetStartTimestamp = $targetEndTimestamp - (($targetDays - 1) * DAY);
-        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
-        $ret['graphEndDate'] = AppUtil::dateYmd($targetEndTimestamp + ($maxBufferDays * DAY));
-        $ret['plotDataEndDate'] = AppUtil::dateYmd($targetEndTimestamp);
+        $ret['graphStartDate'] = AppUtil::dateYmdLocal($targetStartTimestamp + ($maxBufferDays * DAY), $termTimezone);
+        $ret['graphEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp + ($maxBufferDays * DAY), $termTimezone);
+        $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndTimestamp, $termTimezone);
 
         return $ret;
     }
@@ -970,18 +974,21 @@ class GoalService extends AppService
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
             time(),
-            strtotime($graphStartDate),
-            strtotime($plotDataEndDate) + DAY
+            strtotime($graphStartDate) - ($termTimezone * HOUR),
+            strtotime($plotDataEndDate) - ($termTimezone * HOUR) + DAY
         );
-
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1073,18 +1080,22 @@ class GoalService extends AppService
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
+        //今期の情報取得
+        /** @var EvaluateTerm $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
             time(),
-            strtotime($graphStartDate),
-            strtotime($plotDataEndDate) + DAY
+            strtotime($graphStartDate) - ($termTimezone * HOUR),
+            strtotime($plotDataEndDate) - ($termTimezone * HOUR) + DAY
         );
 
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmd(strtotime('yesterday'));
+            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1159,7 +1170,7 @@ class GoalService extends AppService
         $timestamp = strtotime($graphStartDate);
         $graphEndTimestamp = strtotime($graphEndDate);
         while ($timestamp <= $graphEndTimestamp) {
-            $ret[] = $TimeEx->formatDateI18n($timestamp);
+            $ret[] = $TimeEx->formatDateI18n($timestamp, false);
             $timestamp = strtotime('+1 day', $timestamp);
         }
         return $ret;
@@ -1435,13 +1446,15 @@ class GoalService extends AppService
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
         int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
     ): array {
-        $startTimestamp = strtotime($startDate);
-        $endTimestamp = strtotime($endDate) + DAY - 1;
-
         /** @var EvaluateTerm $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $term = $EvaluateTerm->getCurrentTermData();
+        $termStartTimestamp = $term['start_date'];
+        $termEndTimestamp = $term['end_date'];
+        $termTimezone = $term['timezone'];
+        //ローカル時間に変換
+        $startTimestamp = strtotime($startDate) - $termTimezone * HOUR;
+        $endTimestamp = strtotime($endDate) - ($termTimezone * HOUR) + DAY - 1;
 
         //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
         if ($startTimestamp < $termStartTimestamp || $endTimestamp > $termEndTimestamp) {
