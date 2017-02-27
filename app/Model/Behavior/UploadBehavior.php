@@ -718,7 +718,8 @@ class UploadBehavior extends ModelBehavior
         // アップロードされたファイルを直で触ると、この後の処理に影響するのとcookieに影響するので一時的に別ファイルにコピー
         $validateFilePath = TMP . Security::hash(microtime());
         copy($imgTmpFilePath, $validateFilePath);
-        $src = $createHandler($imgTmpFilePath);
+
+        $src = $createHandler($validateFilePath);
         unlink($validateFilePath);
 
         if (!$src) {
@@ -925,7 +926,6 @@ class UploadBehavior extends ModelBehavior
 
         $createHandler = $this->getCreateHandler($imgMimeType);
         $outputHandler = $this->getOutputHandler($imgMimeType);
-
         $src = $createHandler($filePath);
         if (!$src) {
             $this->log(sprintf('creating img object was failed.'));
