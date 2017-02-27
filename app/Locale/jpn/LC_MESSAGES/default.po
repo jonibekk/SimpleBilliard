@@ -2260,11 +2260,11 @@ msgstr "利用規約"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-msgid "eg. Harry"
-msgstr "例) Hiroshi"
+msgid "first name (eg. John)"
+msgstr "名（例. Hiroshi）"
 
-msgid "eg. Armstrong"
-msgstr "例) Suzuki"
+msgid "last name (eg. Smith)"
+msgstr "姓（例. Suzuki）"
 
 msgid "eg. Team Goalous"
 msgstr "例) チームGoalous"
@@ -3977,6 +3977,12 @@ msgstr "名(%s)"
 
 msgid "eg. Bruce"
 msgstr "例) 太郎"
+
+msgid "eg. Armstrong"
+msgstr "例) Suzuki"
+
+msgid "eg. Harry"
+msgstr "例) Hiroshi"
 
 msgid "Hide birth year"
 msgstr "生年を隠す。"
