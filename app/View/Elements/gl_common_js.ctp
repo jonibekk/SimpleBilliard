@@ -21,6 +21,12 @@
 if (!empty($display_dashboard)) {
     echo $this->Html->script('/js/react_kr_column_app.min');
 }
+if (Hash::get($this->request->params, 'controller') === 'goals'
+    && Hash::get($this->request->params, 'action') === 'kr_progress'
+) {
+    echo $this->Html->script('/js/react_kr_column_app.min');
+}
+
 // ゴール検索
 if (Hash::get($this->request->params, 'controller') === 'goals'
     && Hash::get($this->request->params, 'action') === 'index'

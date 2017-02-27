@@ -11,7 +11,6 @@ message_app.controller(
 
     // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
     var input_box_height = 260;
-    var sub_header_height = 40;
 
     var default_message_box_height;
     var $message_box = $('#message_box');
@@ -24,12 +23,7 @@ message_app.controller(
     }
     // onloadの場合
     $scope.$on('$viewContentLoaded', function () {
-      // SP用のサブヘッダが表示されていない場合
-      if ($('#SubHeaderMenu').length == 0 || $('#SubHeaderMenu').is(':hidden')) {
-        resizeMessageBox(window.innerHeight - input_box_height + sub_header_height);
-      } else {
-        resizeMessageBox(window.innerHeight - input_box_height);
-      }
+      resizeMessageBox(window.innerHeight - input_box_height);
       $message_box.animate({scrollTop: window.innerHeight}, 500);
 
       // データ挿入等が全て終わりメッセージボックスの高さがFIXされたタイミングで
