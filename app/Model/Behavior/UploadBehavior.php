@@ -904,12 +904,10 @@ class UploadBehavior extends ModelBehavior
         string $handler,
         string $imgPath
     ) {
-        // 画像によっては問題ない画像でも以下のNoticeが出力される場合がある為、error出力を一時的にoffにする
+        // 画像によっては問題ない画像でも以下のNoticeが出力される場合がある。
         // Notice (8): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
-        $backupErrReport = error_reporting();
-        error_reporting(0);
+        //ローカルでNoticeが邪魔になる場合は、一時的に Configure::write('debug', 0); を推奨。
         $src = $handler($imgPath);
-        error_reporting($backupErrReport);
         return $src;
     }
 
