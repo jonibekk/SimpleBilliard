@@ -386,7 +386,7 @@ class UploadBehavior extends ModelBehavior
 
     private function _resize($srcFile, $destFile, $geometry, $quality = 75, $alpha = false, $type)
     {
-        $imgMimeType = $this->getImageMimeType($srcFile);
+        $imgMimeType = $this->getImageMimeSubType($srcFile);
         if ($imgMimeType === false) {
             return false;
         }
@@ -552,7 +552,7 @@ class UploadBehavior extends ModelBehavior
      *
      * @return bool|string
      */
-    function getImageMimeType(string $filePath)
+    function getImageMimeSubType(string $filePath)
     {
         $imageInfo = getimagesize($filePath);
         if (strpos($imageInfo['mime'], 'jpeg') !== false) {
@@ -710,7 +710,7 @@ class UploadBehavior extends ModelBehavior
             return true;
         }
 
-        $imgMimeType = $this->getImageMimeType($imgTmpFilePath);
+        $imgMimeType = $this->getImageMimeSubType($imgTmpFilePath);
         if ($imgMimeType === false) {
             // 許可している画像以外はスルー
             return true;
@@ -943,7 +943,7 @@ class UploadBehavior extends ModelBehavior
             return true;
         }
 
-        $imgMimeType = $this->getImageMimeType($filePath);
+        $imgMimeType = $this->getImageMimeSubType($filePath);
 
         $createHandler = $this->getCreateHandler($imgMimeType);
         $outputHandler = $this->getOutputHandler($imgMimeType);
