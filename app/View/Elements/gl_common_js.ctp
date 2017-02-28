@@ -18,14 +18,7 @@
 
 <?php
 // 右カラム用js
-// TODO: Should change to not importing this file in mb app and not kr progress page.
-//       But we can change after changing progress link in mb app footer.
 if (!empty($display_dashboard)) {
-    echo $this->Html->script('/js/react_kr_column_app.min');
-}
-if (Hash::get($this->request->params, 'controller') === 'goals'
-    && Hash::get($this->request->params, 'action') === 'kr_progress'
-) {
     echo $this->Html->script('/js/react_kr_column_app.min');
 }
 

@@ -56,6 +56,11 @@ if (!isset($with_header_menu)) {
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
+
+<?php
+// TODO: Should change to not importing this file in mb app.
+//       But we should change after changing progress link in mb app footer.
+?>
 <?= $this->element('gl_common_js', ['display_dashboard' => true]) ?>
 
 <!-- START fetch script -->
