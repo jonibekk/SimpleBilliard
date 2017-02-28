@@ -568,6 +568,8 @@ class UploadBehavior extends ModelBehavior
     }
 
     /**
+     * 画像作成ハンドラのメソッド名を取得
+     *
      * @param string $mimeType
      *
      * @return bool|string
@@ -592,6 +594,8 @@ class UploadBehavior extends ModelBehavior
     }
 
     /**
+     * 画像ファイル出力用ハンドラのメソッド名を取得
+     *
      * @param string $mimeType
      *
      * @return bool|string
@@ -688,7 +692,7 @@ class UploadBehavior extends ModelBehavior
 
     /**
      * 画像の加工処理が可能かどうか？
-     * - アップロードされたテンプファイルに対して操作をすると後の処理に影響するため、一時的に別ファイルに書き出す
+     * バリデーションルール
      *
      * @param Model $model
      * @param array $value
