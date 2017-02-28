@@ -1721,8 +1721,8 @@ msgstr ""
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
 
-msgid "The image cannot be processed."
-msgstr "この画像は処理できません。"
+msgid "The image cannot be processed. The image taken with this device may not be supported."
+msgstr "この画像は処理できません。この端末で撮影された画像はサポートされてない可能性があります。"
 msgid "File extension and content are different."
 msgstr "ファイルの拡張子と内容が異なっています。"
 
