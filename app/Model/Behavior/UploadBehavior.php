@@ -600,6 +600,7 @@ class UploadBehavior extends ModelBehavior
     ) {
         $value = array_shift($value);
         // 一時ファイル名が空の場合
+        // ※ 保存が任意のユーザー画像もバリデーションを通るためtrueで返す必要がある
         if (empty($value['tmp_name'])) {
             return true;
         }
