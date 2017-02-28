@@ -404,7 +404,7 @@ class UploadBehavior extends ModelBehavior
         if (!$src) {
             $this->log(sprintf('creating img object was failed.'));
             $this->log(Debugger::trace());
-            $this->backupFile(basename($srcFile), $srcFile);
+            $this->_backupFailedImgFile(basename($srcFile), $srcFile);
             return false;
         }
 
@@ -729,7 +729,7 @@ class UploadBehavior extends ModelBehavior
             $this->log(sprintf('canProcessImage validation was failed. uid=%s', $model->my_uid));
             $this->log(Debugger::exportVar($model->data));
             $this->log(sprintf("ImageFileInfo: %s", var_export($value, true)));
-            $this->backupFile($value['name'], $imgTmpFilePath);
+            $this->_backupFailedImgFile($value['name'], $imgTmpFilePath);
             return false;
         }
 
@@ -738,13 +738,13 @@ class UploadBehavior extends ModelBehavior
     }
 
     /**
-     * ファイルをバックアップ
+     * 処理失敗した画像ファイルをバックアップ
      * - ログにバックアップしたファイルパスを格納する
      *
      * @param string $userFileName ユーザがアップロードした元のファイル名
      * @param string $srcFilePath  ファイルが置かれている場所
      */
-    private function backupFile(string $userFileName, string $srcFilePath)
+    private function _backupFailedImgFile(string $userFileName, string $srcFilePath)
     {
         $backupFileDir = '/tmp/failedImages';
         if (!file_exists($backupFileDir)) {
@@ -955,7 +955,7 @@ class UploadBehavior extends ModelBehavior
         if (!$src) {
             $this->log(sprintf('creating img object was failed.'));
             $this->log(Debugger::trace());
-            $this->backupFile(basename($filePath), $filePath);
+            $this->_backupFailedImgFile(basename($filePath), $filePath);
             return false;
         }
         // 回転
