@@ -900,8 +900,7 @@ class UploadBehavior extends ModelBehavior
      *
      * @return mixed
      */
-    private
-    function _getImgSource(
+    private function _getImgSource(
         string $handler,
         string $imgPath
     ) {
@@ -914,8 +913,7 @@ class UploadBehavior extends ModelBehavior
         return $src;
     }
 
-    public
-    function phpUploadError(
+    public function phpUploadError(
         /** @noinspection PhpUnusedParameterInspection */
         Model $model,
         $value,
