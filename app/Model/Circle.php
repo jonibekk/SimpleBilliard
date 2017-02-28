@@ -73,11 +73,6 @@ class Circle extends AppModel
                 'rule' => ['notBlank'],
             ],
         ],
-        'description'  => [
-            'isString' => [
-                'rule' => ['isString',],
-            ],
-        ],
         'del_flg'      => [
             'boolean' => [
                 'rule' => ['boolean'],
@@ -94,8 +89,9 @@ class Circle extends AppModel
             ],
         ],
         'photo'        => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType',],]
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'      => ['rule' => ['attachmentImageType',],],
+            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'description'  => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
