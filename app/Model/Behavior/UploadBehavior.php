@@ -879,16 +879,23 @@ class UploadBehavior extends ModelBehavior
         }
 
         $img = $this->_getImgSource($createHandler, $upload['tmp_name']);
-        if ($img) {
-            switch ($mode) {
-                case 'min':
-                    return $func($img) >= $value;
-                    break;
-                case 'max':
-                    return $func($img) <= $value;
-                    break;
-            }
+
+        if (!$img) {
+            $this->log(sprintf('_validateDimension validation was failed.'));
+            $this->log(sprintf("ImageFileInfo: %s", var_export($upload, true)));
+            $this->_backupFailedImgFile($upload['name'], $upload['tmp_name']);
+            return false;
         }
+
+        switch ($mode) {
+            case 'min':
+                return $func($img) >= $value;
+                break;
+            case 'max':
+                return $func($img) <= $value;
+                break;
+        }
+
         return false;
     }
 
