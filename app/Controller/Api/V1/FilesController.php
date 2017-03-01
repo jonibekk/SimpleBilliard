@@ -55,7 +55,7 @@ class FilesController extends ApiController
 
         /** @var AttachedFileService $AttachedFileService */
         $AttachedFileService = ClassRegistry::init('AttachedFileService');
-        $ret = $AttachedFileService->preUploadFile($form, $AttachedFileService::UPLOAD_IMG);
+        $ret = $AttachedFileService->preUploadFile($form, $AttachedFileService::UPLOAD_TYPE_IMG);
         if ($ret['error']) {
             return $this->_getResponseBadFail($ret['msg']);
         }

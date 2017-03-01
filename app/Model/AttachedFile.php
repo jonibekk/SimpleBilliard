@@ -329,7 +329,7 @@ class AttachedFile extends AppModel
                 ],
                 'AttachedFile'              => $file_data
             ];
-            if (!$res = $this->saveAll($save_data)) {
+            if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
             }
 

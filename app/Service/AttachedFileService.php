@@ -16,8 +16,8 @@ App::uses('GlRedis', 'Model');
 class AttachedFileService extends AppService
 {
     // アップロード種別
-    const UPLOAD_ALL = 1;
-    const UPLOAD_IMG = 2;
+    const UPLOAD_TYPE_ALL = 1;
+    const UPLOAD_TYPE_IMG = 2;
 
     // アップロード可能な画像種類
     public $supportedImgTypes = [
@@ -48,7 +48,7 @@ class AttachedFileService extends AppService
      *
      * @return array
      */
-    public function preUploadFile(array $postData, int $type = self::UPLOAD_ALL): array
+    public function preUploadFile(array $postData, int $type = self::UPLOAD_TYPE_ALL): array
     {
         $ret = [
             'error' => false,
@@ -94,7 +94,7 @@ class AttachedFileService extends AppService
      *
      * @return array
      */
-    function preUploadValidation(array $fileInfo, int $type = self::UPLOAD_ALL): array
+    function preUploadValidation(array $fileInfo, int $type = self::UPLOAD_TYPE_ALL): array
     {
         //default return values
         $ret = [
@@ -146,7 +146,7 @@ class AttachedFileService extends AppService
     function shouldValidateImg(array $fileInfo, int $type): bool
     {
         // 画像アップロードの場合
-        if ($type == self::UPLOAD_IMG) {
+        if ($type == self::UPLOAD_TYPE_IMG) {
             return true;
         }
 
