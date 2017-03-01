@@ -21,6 +21,14 @@ class KeyResultTest extends GoalousTestCase
         'app.goal',
         'app.goal_category',
         'app.goal_member',
+        'app.evaluate_term',
+        'app.post_share_circle',
+        'app.circle',
+        'app.post',
+        'app.goal_label',
+        'app.label',
+        'app.team_member',
+        'app.follower',
         'app.user',
         'app.team',
         'app.kr_progress_log',
@@ -59,22 +67,31 @@ class KeyResultTest extends GoalousTestCase
         }
         $this->assertTrue(isset($e));
         unset($e);
+
+        $goalId = $this->createGoal(1);
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+        $goal = $this->Goal->getById($goalId);
+        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+        $startDate = date('Y/m/d', $goal['start_date'] + ($currentTerm['timezone'] * HOUR));
+        $endDate = date('Y/m/d', $goal['end_date'] + ($currentTerm['timezone'] * HOUR));
+        $this->Goal->log(compact('startDate', 'endDate'));
         $data = [
             'KeyResult' => [
                 'value_unit' => 2,
-                'start_date' => '2014/7/7',
-                'end_date'   => '2014/11/7',
+                'start_date' => $startDate,
+                'end_date'   => $endDate,
                 'name'       => 'test',
             ]
         ];
-        $res = $this->KeyResult->add($data, 8);
+        $res = $this->KeyResult->add($data, $goalId);
         $this->assertTrue($res);
 
         $data = [
             'KeyResult' => [
                 'value_unit' => 2,
-                'start_date' => '2014/7/7',
-                'end_date'   => '2014/11/7',
+                'start_date' => $startDate,
+                'end_date'   => $endDate,
                 'name'       => null,
             ]
         ];

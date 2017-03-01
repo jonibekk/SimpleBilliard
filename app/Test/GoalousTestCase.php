@@ -20,6 +20,7 @@ App::uses('EvaluateTerm', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
+App::uses('AppUtil', 'Util');
 
 /**
  * CakeTestCase class

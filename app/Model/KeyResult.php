@@ -151,8 +151,8 @@ class KeyResult extends AppModel
 
     public $post_validate = [
         'start_date' => [
-            'isString' => ['rule' => 'isString'],
-            'dateYmd'  => [
+            'isString'  => ['rule' => 'isString'],
+            'dateYmd'   => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
@@ -192,15 +192,15 @@ class KeyResult extends AppModel
                 'rule'       => 'validateEditProgress'
             ],
         ],
-        'start_date' => [
-            'isString' => ['rule' => 'isString'],
-            'dateYmd'  => [
+        'start_date'    => [
+            'isString'  => ['rule' => 'isString'],
+            'dateYmd'   => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
             'rangeDate' => ['rule' => 'customValidRangeDate'],
         ],
-        'end_date'   => [
+        'end_date'      => [
             'isString' => ['rule' => 'isString'],
             'dateYmd'  => [
                 'rule'       => ['date', 'ymd'],
@@ -265,7 +265,8 @@ class KeyResult extends AppModel
 
         // ゴールの開始・終了日の範囲内か
         if ($startTimeStamp >= $goal['start_date']
-            && $endTimeStamp <= $goal['end_date']) {
+            && $endTimeStamp <= $goal['end_date']
+        ) {
             return true;
         }
 
@@ -1033,6 +1034,7 @@ class KeyResult extends AppModel
 
     /**
      * KR進捗算出用のデータ取得
+     *
      * @param array $goalIds
      *
      * @return array
@@ -1101,7 +1103,7 @@ class KeyResult extends AppModel
      *  - それ以外は期の始まりに設定
      * - end_dateはどんな場合でも期の終わりに設定
      *
-     * @param  int $goalId
+     * @param  int    $goalId
      * @param  string $termAfterUpdate
      *
      * @return bool

@@ -466,7 +466,8 @@ class Goal extends AppModel
     {
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
-            $data['Goal']['start_date'] = time();
+            $currentTermData = $this->Team->EvaluateTerm->getCurrentTermData();
+            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone(date('Y-m-d'), $currentTermData['timezone']);
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
