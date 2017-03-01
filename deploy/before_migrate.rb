@@ -48,6 +48,12 @@ bash "yarn install" do
   EOS
 end
 
+# gulp buildを環境変数によってproduction,developmentを指定で実行するようにする。環境変数はOpsWorks側で設定可能。環境変数の設定についてはEnvironment Variablesを参照-> http://amzn.to/2mdJ4pq
+gulp_command = "gulp build"
+if new_resource.environment["NODE_ENV"] then
+  gulp_command = "NODE_ENV=#{new_resource.environment["NODE_ENV"]} gulp build"
+end
+
 bash "run gulp build" do
   user 'deploy'
   group 'www-data'
@@ -56,8 +62,8 @@ bash "run gulp build" do
   export USER='deploy'
   export HOME='/home/deploy'
   cd #{release_path}
-  if ! gulp build; then
-    gulp build
+  if ! #{gulp_command}; then
+    #{gulp_command}
   fi
   EOS
 end

@@ -223,7 +223,7 @@ class KeyResult extends AppModel
      *
      * @return bool
      */
-    function requiredCaseExistUnit($val):bool
+    function requiredCaseExistUnit($val): bool
     {
         $val = array_shift($val);
         $unitId = Hash::get($this->data, 'KeyResult.value_unit');
@@ -625,7 +625,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    function getIncompleteKrCount($goal_id):int
+    function getIncompleteKrCount($goal_id): int
     {
         $options = [
             'conditions' => [
@@ -856,7 +856,19 @@ class KeyResult extends AppModel
      */
     public function findInDashboard(int $limit, int $offset = 0, $goalId = null): array
     {
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        // TODO: 将来的にtry catch文削除
+        // GL-5590で原因特定用にエラーログ埋め込み
+        try {
+            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            if (empty($currentTerm)) {
+                throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return [];
+        }
+
         $now = time();
         $weekAgoTimestamp = AppUtil::getTimestampByTimezone('-1 week midnight', $currentTerm['timezone']);
 
@@ -865,7 +877,7 @@ class KeyResult extends AppModel
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
-                'GoalMember.del_flg' => false
+                'GoalMember.del_flg'    => false
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -891,8 +903,8 @@ class KeyResult extends AppModel
                         'ActionResult.created >=' => $weekAgoTimestamp,
                         'ActionResult.created <=' => $now
                     ],
-                    'fields' => ['user_id'],
-                    'order'  => [
+                    'fields'     => ['user_id'],
+                    'order'      => [
                         'ActionResult.created' => 'desc'
                     ],
                     'User'
@@ -910,11 +922,13 @@ class KeyResult extends AppModel
         // Userのimage情報セット
         App::uses('UploadHelper', 'View/Helper');
         $upload = new UploadHelper(new View());
-        foreach($res as $i => $kr) {
-            foreach($kr['ActionResult'] as $j => $action) {
+        foreach ($res as $i => $kr) {
+            foreach ($kr['ActionResult'] as $j => $action) {
                 $res[$i]['ActionResult'][$j]['User']['original_img_url'] = $upload->uploadUrl($action, 'User.photo');
-                $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'large']);
-                $res[$i]['ActionResult'][$j]['User']['small_img_url'] = $upload->uploadUrl($action, 'User.photo', ['style' => 'small']);
+                $res[$i]['ActionResult'][$j]['User']['large_img_url'] = $upload->uploadUrl($action, 'User.photo',
+                    ['style' => 'large']);
+                $res[$i]['ActionResult'][$j]['User']['small_img_url'] = $upload->uploadUrl($action, 'User.photo',
+                    ['style' => 'small']);
             }
         }
 
@@ -935,7 +949,7 @@ class KeyResult extends AppModel
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
-                'GoalMember.del_flg' => false
+                'GoalMember.del_flg'    => false
             ],
             'joins'      => [
                 [
@@ -960,12 +974,38 @@ class KeyResult extends AppModel
     }
 
     /**
+     * KR進捗算出用のデータ取得
+     * @param array $goalIds
+     *
+     * @return array
+     */
+    function findProgressBaseValues(array $goalIds): array
+    {
+
+        $options = [
+            'conditions' => [
+                'goal_id' => $goalIds,
+            ],
+            'fields'     => [
+                'goal_id',
+                'id',
+                'start_value',
+                'target_value',
+                'current_value',
+                'priority'
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        $ret = Hash::extract($ret, '{n}.KeyResult');
+        return $ret;
+    }
+
+    /**
      * KR日次バッチ用にKR一覧を取得
      *
-     * @param  int    $teamId
-     * @param  string $targetDate
-     * @param  int    $fromTimestamp
-     * @param  int    $toTimestam
+     * @param  int $teamId
+     * @param  int $fromTimestamp
+     * @param int  $toTimestamp
      *
      * @return array
      */
@@ -996,4 +1036,34 @@ class KeyResult extends AppModel
 
         return $ret;
     }
+
+    /**
+     * ゴールに紐づくKRの期を一括でアップデート
+     * - 今期にアップデートする場合は、start_dateを現在日時にする。
+     *  - それ以外は期の始まりに設定
+     * - end_dateはどんな場合でも期の終わりに設定
+     *
+     * @param  int $goalId
+     * @param  string $termAfterUpdate
+     *
+     * @return bool
+     */
+    public function updateTermByGoalId(int $goalId, int $termAfterUpdate): bool
+    {
+        if (!in_array($termAfterUpdate, [EvaluateTerm::TYPE_CURRENT, EvaluateTerm::TYPE_NEXT])) {
+            return false;
+        }
+
+        // 保存データ定義
+        $isCurrent = $termAfterUpdate == EvaluateTerm::TYPE_CURRENT;
+        $termData = $this->Team->EvaluateTerm->getTermData($termAfterUpdate);
+        $startDate = $isCurrent ? time() : $termData['start_date'];
+        $endDate = $termData['end_date'];
+
+        // ゴールに紐づくKRの期を一括アップデート
+        $res = $this->updateAll(['KeyResult.start_date' => $startDate, 'KeyResult.end_date' => $endDate],
+            ['KeyResult.goal_id' => $goalId]);
+        return $res;
+    }
+
 }

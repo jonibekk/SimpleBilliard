@@ -1241,9 +1241,16 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        $form = Hash::get($this->request->params, 'form');
+        if (empty($form)) {
+            $this->response->statusCode(400);
+            $ret['msg'] = __('Failed to upload.');
+            return $this->_ajaxGetResponse($ret);
+        }
+
         /** @var AttachedFileService $AttachedFileService */
         $AttachedFileService = ClassRegistry::init('AttachedFileService');
-        $ret = $AttachedFileService->preUploadFile($this->request->params['form']);
+        $ret = $AttachedFileService->preUploadFile($form);
         if ($ret['error']) {
             $this->response->statusCode(400);
         }

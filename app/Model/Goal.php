@@ -2093,8 +2093,6 @@ class Goal extends AppModel
         $options = [
             'conditions' => [
                 'Goal.user_id'       => $user_id,
-                'Goal.start_date >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-                'Goal.end_date <='   => $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
             ],
             'fields'     => ['Goal.id']
         ];
@@ -2351,4 +2349,15 @@ class Goal extends AppModel
         return $ret;
     }
 
+    /**
+     * ゴールIDからtermのテキスト情報を取得
+     *
+     * @return string 'current'|'next'
+     */
+    function getTermTypeById(int $goalId): string
+    {
+        $goal = Hash::get($this->findById($goalId, ['start_date', 'end_date']), 'Goal');
+        $term = $this->Team->EvaluateTerm->getTermType($goal['start_date'], $goal['end_date']);
+        return $term;
+    }
 }

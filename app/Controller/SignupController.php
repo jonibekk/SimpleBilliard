@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('AppUtil', 'Util');
 
 /**
  * Signup Controller
@@ -164,7 +165,7 @@ class SignupController extends AppController
 
     public function auth()
     {
-        $timezones = $this->Timezone->getTimezones();
+        $timezones = AppUtil::getTimezoneList();
         $signup_inputed_email = $this->Session->read('data.Email.email');
         $this->set(compact('timezones', 'signup_inputed_email'));
         $this->render('index');
@@ -387,7 +388,7 @@ class SignupController extends AppController
             }
             //preparing data before saving
             $data['User']['language'] = $this->Lang->getLanguage();
-            $data['User']['timezone'] = $this->Timezone->getLocalTimezone($data['User']['local_date']);
+            $data['User']['timezone'] = AppUtil::getClientTimezone($data['User']['local_date']);
             unset($data['User']['local_date']);
             if (isset($data['LocalName'])) {
                 $data['LocalName']['language'] = $this->Lang->getLanguage();

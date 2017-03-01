@@ -2,6 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalService');
+App::import('Service', 'ActionService');
+App::import('Service', 'KrValuesDailyLogService');
 App::import('Service/Api', 'ApiKeyResultService');
 App::uses('KeyResult', 'Model');
 App::uses('Goal', 'Model');
@@ -40,6 +42,10 @@ class KeyResultServiceTest extends GoalousTestCase
         'app.goal_category',
         'app.user',
         'app.team',
+        'app.attached_file',
+        'app.action_result',
+        'app.action_result_file',
+        'app.kr_values_daily_log',
     );
 
     /**
@@ -50,12 +56,15 @@ class KeyResultServiceTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->GoalService = ClassRegistry::init('GoalService');
         $this->KeyResultService = ClassRegistry::init('KeyResultService');
         $this->ApiKeyResultService = ClassRegistry::init('ApiKeyResultService');
-        $this->GoalService = ClassRegistry::init('GoalService');
+        $this->ActionService = ClassRegistry::init('ActionService');
+        $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
+        $this->ActionResult = ClassRegistry::init('ActionResult');
         $this->Goal = ClassRegistry::init('Goal');
         $this->KeyResult = ClassRegistry::init('KeyResult');
-        $this->ActionResult = ClassRegistry::init('ActionResult');
+        $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
     }
 
     function test_get()
@@ -271,9 +280,10 @@ class KeyResultServiceTest extends GoalousTestCase
         $TimeEx = new TimeExHelper(new View());
 
         // 完了KR
-        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = 1485310914, $actions = []);
+        $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = 1485310914,
+            $actions = []);
         $res = $this->KeyResultService->generateActionMessage($kr);
-        $expected = __('Completed this on %s.', $TimeEx->dateLocalFormat(1485310914));
+        $expected = __('Completed this on %s.', $TimeEx->formatDateI18n(1485310914));
         $this->assertEquals($res, $expected);
 
         // 最近アクションがあった未完了KR
@@ -285,7 +295,7 @@ class KeyResultServiceTest extends GoalousTestCase
         // 最近アクションが無い未完了KR
         $kr = $this->_getKrForGenerateActionMessage($latestActioned = 1485310914, $completed = null, $actions = []);
         $res = $this->KeyResultService->generateActionMessage($kr);
-        $expected = __("Take action since %s !", $TimeEx->dateLocalFormat(1485310914));
+        $expected = __("Take action since %s !", $TimeEx->formatDateI18n(1485310914));
         $this->assertEquals($res, $expected);
 
         // 一度もアクションが無い未完了KR
@@ -298,9 +308,9 @@ class KeyResultServiceTest extends GoalousTestCase
     private function _getKrForGenerateActionMessage($latestActioned, $completed, $actions)
     {
         $kr = [
-            'key_result' => [
+            'key_result'     => [
                 'latest_actioned' => $latestActioned,
-                'completed' => $completed
+                'completed'       => $completed
             ],
             'action_results' => $actions
         ];
@@ -312,6 +322,61 @@ class KeyResultServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->ActionResult->my_uid = 1;
         $this->ActionResult->current_team_id = 1;
+    }
+
+    /**
+     * ゴール削除
+     */
+    function test_delete()
+    {
+        /* テストデータ準備 */
+        $krId = $this->setupTestDelete();
+        // KR削除
+        $this->KeyResultService->delete($krId);
+
+        // KR削除できているか
+        $ret = $this->KeyResult->getById($krId);
+        $this->assertEmpty($ret);
+
+        // KRとアクションの紐付けを解除できているか
+        $ret = $this->ActionResult->findByKeyResultId($krId);
+        $this->assertEmpty($ret);
+
+        // KR進捗日次ログ削除できているか
+        $ret = $this->KrValuesDailyLog->findByKeyResultId($krId);
+        $this->assertEmpty($ret);
+
+        // TODO:キャッシュ削除できているか
+
+    }
+
+    /**
+     * test_delete用テストデータ準備
+     */
+    private function setupTestDelete()
+    {
+        $uid = 1;
+        $teamId = 1;
+        $this->setupTerm();
+        $this->KeyResult->my_uid = $uid;
+        $this->KeyResult->current_team_id = $teamId;
+        $goalId = $this->createGoal($uid);
+        $kr = Hash::get($this->KeyResult->getTkr($goalId), 'KeyResult');
+        $fileIds = $this->prepareUploadImages();
+        // アクション登録
+        $saveAction = [
+            "goal_id" => $goalId,
+            "team_id" => $teamId,
+            "user_id" => $uid,
+            "name" => "ああああ\nいいいいいいい",
+            "key_result_id" => $kr['id'],
+            "key_result_current_value" => $kr['current_value'],
+        ];
+        $this->ActionService->create($saveAction, $fileIds, null);
+        // KR進捗日次ログ保存
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+        return $kr['id'];
     }
 
 }

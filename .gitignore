@@ -45,6 +45,6 @@ yarn-error.log
 /app/webroot/js/*.js.map
 # for public compiled assets
 /app/webroot/css/goalous.min.css
-/app/webroot/compiled_assets/*
+/app/webroot/js/*.js
 # for Translation | 翻訳関連
 /app/Locale/**/*.pot

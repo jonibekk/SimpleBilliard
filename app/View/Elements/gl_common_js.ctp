@@ -19,21 +19,19 @@
 <?php
 // 右カラム用js
 if (!empty($display_dashboard)) {
-    echo $this->Html->script('/compiled_assets/js/react_kr_column_app.min');
+    echo $this->Html->script('/js/react_kr_column_app.min');
 }
 // ゴール検索
 if (Hash::get($this->request->params, 'controller') === 'goals'
     && Hash::get($this->request->params, 'action') === 'index'
 ) {
-    echo $this->Html->script('/compiled_assets/js/react_goal_search_app.min');
+    echo $this->Html->script('/js/react_goal_search_app.min');
 }
 
-echo $this->Html->script('/js/vendor/es6/es6-promise.min');
-echo $this->Html->script('/compiled_assets/js/ng_vendors.min');
-echo $this->Html->script('/compiled_assets/js/vendors.min');
-echo $this->Html->script('/js/dropzone_setting');
-echo $this->Html->script('/compiled_assets/js/goalous.min');
-echo $this->Html->script('/compiled_assets/js/ng_app.min');
+echo $this->Html->script('/js/ng_vendors.min');
+echo $this->Html->script('/js/vendors.min');
+echo $this->Html->script('/js/goalous.min');
+echo $this->Html->script('/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->

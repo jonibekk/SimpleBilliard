@@ -1,6 +1,8 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'GoalService');
+App::import('Service', 'ActionService');
+App::import('Service', 'KrValuesDailyLogService');
 
 /**
  * GoalServiceTest Class
@@ -9,11 +11,13 @@ App::import('Service', 'GoalService');
  * Date: 2016/12/08
  * Time: 17:50
  *
- * @property GoalService          $GoalService
- * @property Team                 $Team
- * @property EvaluateTerm         $EvaluateTerm
- * @property Goal                 $Goal
- * @property GoalProgressDailyLog $GoalProgressDailyLog
+ * @property GoalService             $GoalService
+ * @property Team                    $Team
+ * @property EvaluateTerm            $EvaluateTerm
+ * @property Goal                    $Goal
+ * @property KrValuesDailyLogService $KrValuesDailyLogService
+ * @property KeyResult               $KeyResult
+ * @property KrValuesDailyLog        $KrValuesDailyLog
  */
 class GoalServiceTest extends GoalousTestCase
 {
@@ -27,7 +31,24 @@ class GoalServiceTest extends GoalousTestCase
         'app.team',
         'app.goal',
         'app.goal_member',
-        'app.goal_progress_daily_log',
+        'app.goal_label',
+        'app.label',
+        'app.post',
+        'app.key_result',
+        'app.circle',
+        'app.team_member',
+        'app.comment',
+        'app.post_share_user',
+        'app.post_share_circle',
+        'app.post_like',
+        'app.post_read',
+        'app.action_result',
+        'app.follower',
+        'app.attached_file',
+        'app.action_result_file',
+        'app.kr_progress_log',
+        'app.user',
+        'app.kr_values_daily_log',
         'app.key_result',
     ];
 
@@ -43,7 +64,14 @@ class GoalServiceTest extends GoalousTestCase
         $this->Team = ClassRegistry::init('Team');
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Goal = ClassRegistry::init('Goal');
-        $this->GoalProgressDailyLog = ClassRegistry::init('GoalProgressDailyLog');
+        $this->GoalLabel = ClassRegistry::init('GoalLabel');
+        $this->ActionResult = ClassRegistry::init('ActionResult');
+        $this->ActionService = ClassRegistry::init('ActionService');
+        $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
+        $this->KeyResult = ClassRegistry::init('KeyResult');
+        $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
+        $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
+
         $this->setDefaultTeamIdAndUid();
     }
 
@@ -123,6 +151,66 @@ class GoalServiceTest extends GoalousTestCase
     }
 
     /**
+     * ゴール削除
+     */
+    function test_delete()
+    {
+        /* テストデータ準備 */
+        $goalId = $this->setupTestDelete();
+
+        // ゴール削除
+        $this->GoalService->delete($goalId);
+
+        // ゴール削除できているか
+        $ret = $this->Goal->getById($goalId);
+        $this->assertEmpty($ret);
+
+        // ゴールラベル削除できているか
+        $ret = $this->GoalLabel->findByGoalId($goalId);
+        $this->assertEmpty($ret);
+
+        // ゴールとアクションの紐付けを解除できているか
+        $ret = $this->ActionResult->findByGoalId($goalId);
+        $this->assertEmpty($ret);
+
+        // KR進捗日次ログ削除できているか
+        $ret = $this->KrValuesDailyLog->findByGoalId($goalId);
+        $this->assertEmpty($ret);
+
+        // TODO:キャッシュ削除できているか
+
+    }
+
+    /**
+     * test_delete用テストデータ準備
+     */
+    private function setupTestDelete()
+    {
+        $uid = 1;
+        $teamId = 1;
+        $this->setupTerm();
+        $this->KeyResult->my_uid = $uid;
+        $this->KeyResult->current_team_id = $teamId;
+        $goalId = $this->createGoal($uid);
+        $kr = Hash::get($this->KeyResult->getTkr($goalId), 'KeyResult');
+        $fileIds = $this->prepareUploadImages();
+        // アクション登録
+        $saveAction = [
+            "goal_id"                  => $goalId,
+            "team_id"                  => $teamId,
+            "user_id"                  => $uid,
+            "name"                     => "ああああ\nいいいいいいい",
+            "key_result_id"            => $kr['id'],
+            "key_result_current_value" => $kr['current_value'],
+        ];
+        $this->ActionService->create($saveAction, $fileIds, null);
+        // KR進捗日次ログ保存
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+        return $goalId;
+    }
+
+    /**
      * グラフテスト
      * ゴールの進捗データの信憑性は可能であればやる
      * メインはグラフの描画範囲の検査
@@ -163,19 +251,19 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'   => date('Y-m-10'),
         ];
         //バッファなし
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //当日が期の開始日と一緒の場合、期の開始日とプロットデータのエンドは一緒になる
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 9 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-10');
         //バッファなしで当日が期の開始日から9日後はプロットデータも9日後になる
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 10 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 10 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //バッファなしで、targetDaysが10日で当日が期の開始日から10日後は範囲全体の日付が変わる
         $this->assertEquals([
@@ -185,13 +273,13 @@ class GoalServiceTest extends GoalousTestCase
         ], $actual);
 
         //バッファあり
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //バッファありでも$targetEndTimestampが収まる場合は、日付が一緒になる。
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 1 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 1 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //バッファありで、$targetEndTimestampが収まらない場合は日付が変わる。
@@ -217,17 +305,17 @@ class GoalServiceTest extends GoalousTestCase
             'plotDataEndDate' => date('Y-m-' . date('t')),
         ];
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 1);
         //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 8 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 8 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
         //バッファありで、指定終了日と期の終了日の差分がバッファを超える場合はバッファ考慮される
         $this->assertNotEquals($expected, $actual);
@@ -238,7 +326,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . date('t')),
             'plotDataEndDate' => date('Y-m-' . date('t'))
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'];
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日までのデータ表示
         $this->assertEquals($expected, $actual);
@@ -248,7 +336,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . (string)(date('t') - 1)),
             'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 1))
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 1 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 1 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日から１日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
@@ -258,7 +346,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . (string)(date('t') - 9)),
             'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 9))
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['end_date'] - 9 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['end_date'] - 9 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日から９日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
@@ -277,7 +365,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-10'),
             'plotDataEndDate' => date('Y-m-07'),
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 6 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 6 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
 
@@ -286,7 +374,7 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-11'),
             'plotDataEndDate' => date('Y-m-08'),
         ];
-        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData(true)['start_date'] + 7 * DAY;
+        $targetEndTimestamp = $this->EvaluateTerm->getCurrentTermData()['start_date'] + 7 * DAY;
         $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
     }
@@ -296,17 +384,16 @@ class GoalServiceTest extends GoalousTestCase
      * 正しい件数で正しいデータが取得できていること
      * データがない場合
      */
-    function testUserGraphDataBasicStartTerm()
+    function test_getUserAllGoalProgressForDrawingGraph_basicStartTerm()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
         $targetDays = 10;
         $maxBufferDays = 2;
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $term = $this->EvaluateTerm->getCurrentTermData();
         $termStartTimestamp = $term['start_date'];
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($termStartTimestamp, $targetDays, $maxBufferDays);
-
         //データ件数のチェック(10日分+項目名1=11)
         $this->assertCount(11, $ret[0]);//sweet spot top
         $this->assertCount(11, $ret[1]);//sweet spot bottom
@@ -324,22 +411,19 @@ class GoalServiceTest extends GoalousTestCase
      * 正しい件数で正しいデータが取得できていること
      * データがない場合
      */
-    function testUserGraphDataBasicMiddleTerm()
+    function test_getUserAllGoalProgressForDrawingGraph_basicMiddleTerm()
     {
         $this->setDefaultTeamIdAndUid();
-        $this->setupTerm();
+        $this->setupCurrentTermExtendDays();
         $targetDays = 10;
         $maxBufferDays = 2;
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
-        $targetEndTimestamp = $term['start_date'] + 15 * DAY;
+        $targetEndTimestamp = time();
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-
         //データ件数のチェック(10日分+項目名1=11)
         $this->assertCount(11, $ret[0]);//sweet spot top
         $this->assertCount(11, $ret[1]);//sweet spot bottom
-        // TODO: hotfix -> masterの際になぜかこのテストだけこけるので、一旦コメントアウト。要調査。
-        // $this->assertCount(9, $ret[2]);//data(10日-バッファ2+項目1=9)
+        $this->assertCount(8, $ret[2]);//data(10日-バッファ2日-1日(当日のデータなし)+項目1個=8)
         $this->assertCount(11, $ret[3]);//x
         //sweet spotの開始値が0以外になっていること
         $this->assertNotEquals(0, $ret[0][1]);
@@ -349,8 +433,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertTrue($ret[1][9] < $ret[1][10]);
         //dataは全てnullになっていること
         $this->assertNull($ret[2][1]);
-        // TODO: hotfix -> masterの際になぜかこのテストだけこけるので、一旦コメントアウト。要調査。
-        // $this->assertNull($ret[2][8]);
+        $this->assertNull($ret[2][7]);
     }
 
     /**
@@ -358,13 +441,13 @@ class GoalServiceTest extends GoalousTestCase
      * 正しい件数で正しいデータが取得できていること
      * データがない場合
      */
-    function testUserGraphDataBasicEndTerm()
+    function test_getUserAllGoalProgressForDrawingGraph_basicEndTerm()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
         $targetDays = 10;
         $maxBufferDays = 2;
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $term = $this->EvaluateTerm->getCurrentTermData();
         $targetEndTimestamp = $term['end_date'];
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
@@ -391,7 +474,7 @@ class GoalServiceTest extends GoalousTestCase
      * - 来期のゴールが含まれないこと
      * - 今期のゴール追加後に今期のゴールが含まれること
      */
-    function testUserGraphNoLogStartTermOnlyToday()
+    function getUserAllGoalProgressForDrawingGraph_noLogStartTermOnlyToday()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermStartToday();
@@ -402,7 +485,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->createGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [50]);
         $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
         //前期のゴールが含まれないこと
@@ -425,14 +508,14 @@ class GoalServiceTest extends GoalousTestCase
      * - データの個数がフルになっていること
      * - 当日に進捗があった場合に昨日のデータのログと、当日のデータが違っていること
      */
-    function testUserGraphEndTermToday()
+    function test_getUserAllGoalProgressForDrawingGraph_endTermToday()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermEndToday();
         //昨日のログ作成
         $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
         //進捗を更新(KRを追加)
         $this->createKr($goalId, 1, 1, 100);
         $targetDays = 10;
@@ -440,22 +523,22 @@ class GoalServiceTest extends GoalousTestCase
         $now = time();
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
         $this->assertCount(11, $ret[2]);//dataの数が全件分あること
-        $this->assertEquals(50, $ret[2][9]);//一日前のゴール進捗
+        $this->assertEquals(25, $ret[2][9]);//一日前のゴール進捗
         $this->assertEquals(75, $ret[2][10]);//当日のゴール進捗
     }
 
     /**
-     * ゴール作成が過去のログ進捗に影響を与えないこと
+     * ゴール作成が過去のログ進捗に影響があること
      * - 昨日のログがあり、ゴールが追加された場合に過去のログ進捗に影響を与えないこと
      */
-    function testUserGraphEffectLogs()
+    function test_getUserAllGoalProgressForDrawingGraph_effectLogs()
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupCurrentTermExtendDays();
         //昨日のログ作成
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
         $yesterday = date('Y-m-d', strtotime('yesterday'));
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
 
         $targetDays = 10;
         $maxBufferDays = 2;
@@ -467,8 +550,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->_clearCache();
         //2回目のデータ取得
         $after = $this->_getUserAllGoalProgressForDrawingGraph($now, $targetDays, $maxBufferDays);
-        //ログデータに影響がないこと
-        $this->assertEquals($before[2][7], $after[2][7]);
+        //ログデータに影響があること
+        $this->assertNotEquals($before[2][7], $after[2][7]);
         //当日のデータが更新されていること
         $this->assertNotEquals($before[2][8], $after[2][8]);
     }
@@ -476,30 +559,360 @@ class GoalServiceTest extends GoalousTestCase
     /**
      * グラフデータ取得でのデータの整合性チェック
      */
-    function testUserGraphDataValid()
+    function test_getUserAllGoalProgressForDrawingGraph_dataValid()
     {
         //今期を3ヶ月に設定(当月にその前後30日ずつ拡張したものにする)
         $this->setupCurrentTermExtendDays();
         $yesterday = date('Y-m-d', strtotime('yesterday'));
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
-        $this->GoalService->saveGoalProgressLogsAsBulk(1, $yesterday);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
 
         $targetDays = 10;
         $maxBufferDays = 2;
         $targetEndTimestamp = time();
 
+        $ret1 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
         //ゴールの進捗が変わっていない場合のログと当日のデータが等しくなることを確認
-        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-        $this->assertEquals($ret[2][8], $ret[2][7]);
-        $this->assertEquals(50, $ret[2][8]);
+        $this->assertEquals($ret1[2][8], $ret1[2][7]);
+        $this->assertEquals(50, $ret1[2][8]);
 
-        //ゴールの進捗が変わった場合のログと当日のデータが変わることを確認
-        //新しいゴールを一つ追加。これにより最新の進捗の合計値は変化する
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $ret2 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //新しいKRを追加(進捗0)した場合、最新の進捗と、過去の進捗に影響する事を確認
+        $this->assertNotEquals($ret1[2][8], $ret2[2][8]);
+        //最新の進捗と直前の進捗は同じ値になる
+        $this->assertEquals($ret2[2][8], $ret2[2][7]);
+    }
+
+    /**
+     * ゴールを追加した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_addGoal()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * ゴールを削除した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_delGoal()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //ゴール削除(進捗100%のゴールを削除。これで進捗は下がるはず)
+        $this->GoalMember->deleteAll(['GoalMember.goal_id' => $goalId2]);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //直前の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * ゴールの重要度を更新した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_changePriority()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //goalId2の重要度を下げる
+        $this->GoalMember->updateAll(['GoalMember.priority' => 1], ['GoalMember.goal_id' => $goalId2]);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * KRを追加した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_addKR()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRを１つ追加
+        $this->createKr($goalId2, 1, 1, 0);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * KRを削除した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_delKR()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [50]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        //KRを１つ追加(完了済み)
+        $krId = $this->createKr($goalId1, 1, 1, 100);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRを１つ削除
+        $this->delKr($krId);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * KRの重要度を更新した時に過去の進捗に影響する事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_updateKR()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [30]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        //KRを１つ追加
+        $krId = $this->createKr($goalId1, 1, 1, 50);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRの重要度を下げる
+        $this->KeyResult->id = $krId;
+        $this->KeyResult->saveField('priority', 1);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //最新の進捗が下がっている事
+        $this->assertTrue($after[2][8] < $before[2][8]);
+        //過去の進捗が下がっている事
+        $this->assertTrue($after[2][7] < $before[2][7]);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($after[2][8], $after[2][7]);
+    }
+
+    /**
+     * 過去の進捗が100を超える場合に100に補正される事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_over100()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        //KRを１つ追加(値が大きいがKR自体の進捗は50%)
+        $krId = $this->createKr($goalId1, 1, 1, 1000, 0, 2000);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRの値を下げる
+        $this->KeyResult->id = $krId;
+        $this->KeyResult->saveField('target_value', 100);
+        $this->KeyResult->saveField('current_value', 50);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //実行前の直前の進捗が100ではない事
+        $this->assertNotEquals(100, $before[2][7]);
+        //実行後の直前の進捗が100になる事
+        $this->assertEquals(100, $after[2][7]);
+    }
+
+    /**
+     * 過去の進捗が0を下回る場合に0に補正される事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_under0()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId1 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $goalId2 = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+
+        //KRを１つ追加(KR自体の進捗は50%)
+        $krId = $this->createKr($goalId1, 1, 1, 50);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //KRの開始値をあげる
+        $this->KeyResult->id = $krId;
+        $this->KeyResult->saveField('start_value', 60);
+
+        $after = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+
+        //実行前の直前の進捗が0ではない事
+        $this->assertNotEquals(0, $before[2][7]);
+        //実行後の直前の進捗が0になる事
+        $this->assertEquals(0, $after[2][7]);
+    }
+
+    /**
+     * ゴール進捗は小数点第一位まで切り捨てられている事
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_decimalNum()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [1]);
+        //ゴール進捗が小数点以下になるようなKRを作成
+        $this->createKr($goalId, 1, 1, 11, 0, 100, 1);
+        $this->createKr($goalId, 1, 1, 99, 0, 100, 5);
+
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        $value = $ret[2][8];
+        $decimalNum = strlen($value) - (strpos($value, '.') + 1);
+        //小数点以下の桁数が1かどうか？
+        $this->assertEquals(1, $decimalNum);
+        //最新と直前の進捗が同じ値になる事
+        $this->assertEquals($ret[2][8], $ret[2][7]);
+    }
+
+    /**
+     * キャッシュが正常に効いているか？
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_cache()
+    {
+        $this->setupCurrentTermExtendDays();
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
+        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100]);
+        $this->KrValuesDailyLogService->saveAsBulk(1, $yesterday);
+
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $before = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //過去ログを直接書き換えてキャッシュが効いてるかどうかの確認
+        $this->KrValuesDailyLog->updateAll(['current_value' => 0], ['KrValuesDailyLog.goal_id' => $goalId]);
+        $after1 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //ログ書き換えてもキャッシュが効いてるから過去ログの結果が変わらないこと
+        $this->assertEquals($before[2][7], $after1[2][7]);
+        //過去ログのキャッシュを削除して、結果が変わる事を確認
+        $this->GlRedis->deleteKeys('*:' . CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ':*');
+        $after2 = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        $this->assertNotEquals($before[2][7], $after2[2][7]);
+    }
+
+    /**
+     * データの件数が正しい事を確認
+     */
+    function test_getUserAllGoalProgressForDrawingGraph_dataCount()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupCurrentTermExtendDays();
+        $targetDays = 10;
+        $maxBufferDays = 2;
+        $targetEndTimestamp = time();
+
+        $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
+        //データ件数のチェック(10日分+項目名1=11)
+        $this->assertCount(8, $ret[2]);//data(10日-バッファ2日-1日(当日のデータなし)+項目1個=8)
+        //dataは全てnullになっていること
+        $this->assertNull($ret[2][1]);
+        $this->assertNull($ret[2][7]);
+
+        //進捗0のゴールを一つ追加。これで最新の進捗は0になるはず
         $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0]);
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
-        $this->assertNotEquals($ret[2][8], $ret[2][7]);
-        $this->assertNotEquals(50, $ret[2][8]);
+        $this->assertCount(9, $ret[2]);//data(10日-バッファ2日+項目1個=9)
+        $this->assertNull($ret[2][1]);
+        //最新の進捗が0になっている
+        $this->assertEquals(0, $ret[2][8]);
+
     }
 
     /**
@@ -655,7 +1068,7 @@ class GoalServiceTest extends GoalousTestCase
             ],
         ];
         //進捗0と100で50になるはず
-        $this->assertEquals(50, $this->GoalService->getProgress($krs));
+        $this->assertEquals(50, $this->GoalService->calcProgressByOwnedPriorities($krs));
 
         //KRの重要度が違う場合
         $krs = [
@@ -673,7 +1086,7 @@ class GoalServiceTest extends GoalousTestCase
             ],
         ];
         //進捗0と100だが、priorityが違うため、50にはならないはず
-        $this->assertNotEquals(50, $this->GoalService->getProgress($krs));
+        $this->assertNotEquals(50, $this->GoalService->calcProgressByOwnedPriorities($krs));
     }
 
     /**
@@ -690,7 +1103,7 @@ class GoalServiceTest extends GoalousTestCase
                 'current_value' => 99.01,
             ],
         ];
-        $this->assertEquals(99, $this->GoalService->getProgress($krs));
+        $this->assertEquals(99, $this->GoalService->calcProgressByOwnedPriorities($krs));
 
         //進捗率が0.*の場合は結果が1になるはず
         $krs = [
@@ -701,7 +1114,7 @@ class GoalServiceTest extends GoalousTestCase
                 'current_value' => 0.01,
             ],
         ];
-        $this->assertEquals(1, $this->GoalService->getProgress($krs));
+        $this->assertEquals(1, $this->GoalService->calcProgressByOwnedPriorities($krs));
     }
 
     /**
