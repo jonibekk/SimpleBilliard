@@ -28,7 +28,7 @@ class UploadBehavior extends ModelBehavior
 
     private $maxWidthSize = false;
 
-    private $supportedImgTypes = [
+    private $imgExtEachTypes = [
         IMAGETYPE_PNG      => ['png'],
         IMAGETYPE_GIF      => ['gif'],
         IMAGETYPE_JPEG     => ['jpg', 'jpeg'],
@@ -662,30 +662,35 @@ class UploadBehavior extends ModelBehavior
         array $value
     ) {
         $value = array_shift($value);
-        //画像以外はスルー
-        if (strpos($value['type'], 'image') === false) {
+        // 一時ファイル名が空の場合
+        // ※ 保存が任意のユーザー画像もバリデーションを通るためtrueで返す必要がある
+        if (empty($value['tmp_name'])) {
             return true;
         }
-        if (!empty($value['tmp_name'])) {
-            // MIMEタイプチェック
-            $targetImgType = exif_imagetype($value['tmp_name']);
-            if (!isset($this->supportedImgTypes[$targetImgType])) {
-                return false;
-            }
 
-            // 拡張子チェック
-            $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
-            if (!preg_grep("/{$ext}/i", $this->supportedExtensions)) {
-                return false;
-            }
+        // 画像であるか
+        $targetImgType = exif_imagetype($value['tmp_name']);
+        if ($targetImgType === true) {
+            return true;
+        }
 
-            // 拡張子とMIMEタイプの整合性チェック
-            $allowExtensions = $this->supportedImgTypes[$targetImgType];
-            $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
-            if (!preg_grep("/{$ext}/i", $allowExtensions)) {
-                $model->invalidate('attached', __("File extension and content are different."));
-                return false;
-            }
+        // MIMEタイプチェック(JPG,GIF,PNGのみ許可)
+        if (!isset($this->imgExtEachTypes[$targetImgType])) {
+            return false;
+        }
+
+        // 拡張子チェック
+        $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
+        if (!preg_grep("/{$ext}/i", $this->supportedExtensions)) {
+            return false;
+        }
+
+        // 拡張子とMIMEタイプの整合性チェック
+        $allowExtensions = $this->imgExtEachTypes[$targetImgType];
+        $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
+        if (!preg_grep("/{$ext}/i", $allowExtensions)) {
+            $model->invalidate('attached', __("File extension and content are different."));
+            return false;
         }
         return true;
     }
