@@ -118,8 +118,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $this->deleteAllTeam();
         $teamId = $this->createTeam();
         $this->setDefaultTeamIdAndUid(1, $teamId);
-        $this->setupTerm($teamId);
-        $term = $this->EvaluateTerm->getCurrentTermData(true);
+        $this->setupCurrentTermExtendDays($teamId);
         $dateYesterday = date('Y-m-d', strtotime('yesterday'));
         $dateToday = date('Y-m-d');
         $dateTomorrow = date('Y-m-d', strtotime('tomorrow'));
