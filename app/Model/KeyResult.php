@@ -156,6 +156,7 @@ class KeyResult extends AppModel
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
+            'rangeDate' => ['rule' => 'customValidRangeDate'],
         ],
         'end_date'   => [
             'isString' => ['rule' => 'isString'],
@@ -213,6 +214,48 @@ class KeyResult extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
         $this->_setPriorityName();
+    }
+
+    /**
+     * 独自バリデーション
+     * KR開始・終了日範囲チェック
+     *
+     * @param      $val
+     *
+     * @return bool
+     */
+    function customValidRangeDate($val): bool
+    {
+        $startDate = array_shift($val);
+        $endDate = Hash::get($this->data, 'KeyResult.end_date');
+        if (empty($startDate) || empty($endDate)) {
+            return true;
+        }
+
+        // 開始日が終了日を超えてないか
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
+        $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
+        if ($startTimeStamp > $endTimeStamp) {
+            $this->invalidate('start_date', __("Start date has expired."));
+            return false;
+        }
+
+        // ゴール取得
+        $goalId = Hash::get($this->data, 'KeyResult.goal_id');
+        $goal = $this->Goal->getById($goalId);
+        if (empty($goal)) {
+            return true;
+        }
+
+        // ゴールの開始・終了日の範囲内か
+        if ($startTimeStamp >= $goal['start_date']
+            && $endTimeStamp <= $goal['end_date']) {
+            return true;
+        }
+
+        $this->invalidate('start_date', __("Please input start / end date within start / end date of the goal."));
+        return false;
     }
 
     /**

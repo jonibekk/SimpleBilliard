@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-22 14:14+0900\n"
+"PO-Revision-Date: 2017-03-01 11:22+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1019,6 +1019,12 @@ msgstr "3(デフォルト)"
 msgid "5(Very high)"
 msgstr "5(とても高い)"
 
+msgid "Start date has expired."
+msgstr "開始日が期限を過ぎています。"
+
+msgid "Please input start / end date within start / end date of the goal."
+msgstr "開始・終了日はゴールの開始・終了日の範囲内で入力してください。"
+
 msgid "Input is required."
 msgstr "入力必須項目です。"
 
@@ -1861,9 +1867,6 @@ msgstr "スペルを入力してください。"
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
 
-msgid "Start date has expired."
-msgstr "開始日が期限を過ぎています。"
-
 msgid "The limit date must be after start date."
 msgstr "期限は開始日より後である必要があります。"
 
@@ -2544,7 +2547,9 @@ msgstr "達成要素を更新しました。"
 msgid ""
 "If you change the goal term from the next term to this term, the goal and "
 "all KRs’ deadlines will be changed to the last day of the current term."
-msgstr "ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。"
+msgstr ""
+"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
+"更されます。"
 
 msgid "All Goals"
 msgstr "すべてのゴール"
