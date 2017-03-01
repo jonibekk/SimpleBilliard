@@ -53,6 +53,7 @@ message_app.config([
                 templateUrl: "/template/message_detail.html",
                 resolve: {
                     getPostDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+                        $("#SubHeaderMenu").css("top","0px");
                         var request = {
                             method: 'GET',
                             url: cake.url.aj + $stateParams.post_id
@@ -73,3 +74,5 @@ message_app.config([
                 }
             })
     }]);
+
+
