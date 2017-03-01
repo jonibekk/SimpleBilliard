@@ -36,20 +36,21 @@ export function _checkValue(target) {
         return invalid(name, cake.message.validate.signup_user_name_alpha)
       }
       return valid(name)
+    // TODO:アプリ申請のため、一時的に誕生日のバリデーションを無効にする
     case 'birth_year':
-      if (!val) {
-        return invalid(name, cake.message.validate.signup_birth_day_required)
-      }
+      // if (!val) {
+      //   return invalid(name, cake.message.validate.signup_birth_day_required)
+      // }
       return valid(name)
     case 'birth_month':
-      if (!val) {
-        return invalid(name, cake.message.validate.signup_birth_day_required)
-      }
+      // if (!val) {
+      //   return invalid(name, cake.message.validate.signup_birth_day_required)
+      // }
       return valid(name)
     case 'birth_day':
-      if (!val) {
-        return invalid(name, cake.message.validate.signup_birth_day_required)
-      }
+      // if (!val) {
+      //   return invalid(name, cake.message.validate.signup_birth_day_required)
+      // }
       return valid(name)
     case 'privacy_policy':
       if (!target.checked) {
