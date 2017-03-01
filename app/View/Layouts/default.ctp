@@ -29,6 +29,12 @@ if (!isset($with_header_menu)) {
 }
 ?>
 
+<?php // spec: Only other mobile app env, and only feed page, displaying subheader. ?>
+<?php if ($this->request->params['action'] === 'display' && !$is_mb_app) {
+    echo $this->element('header_sp_feeds_alt');
+}
+?>
+
 <div id="container" class="container">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
