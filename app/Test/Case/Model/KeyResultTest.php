@@ -71,11 +71,13 @@ class KeyResultTest extends GoalousTestCase
         $goalId = $this->createGoal(1);
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
+
         $goal = $this->Goal->getById($goalId);
         $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+
         $startDate = date('Y/m/d', $goal['start_date'] + ($currentTerm['timezone'] * HOUR));
         $endDate = date('Y/m/d', $goal['end_date'] + ($currentTerm['timezone'] * HOUR));
-        $this->Goal->log(compact('startDate', 'endDate'));
+
         $data = [
             'KeyResult' => [
                 'value_unit' => 2,
