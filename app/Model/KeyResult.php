@@ -156,7 +156,7 @@ class KeyResult extends AppModel
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
-            'rangeDate' => ['rule' => 'customValidRangeDate'],
+            'rangeDate' => ['rule' => ['customValidRangeDate', false]],
         ],
         'end_date'   => [
             'isString' => ['rule' => 'isString'],
@@ -198,7 +198,7 @@ class KeyResult extends AppModel
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
-            'rangeDate' => ['rule' => 'customValidRangeDate'],
+            'rangeDate' => ['rule' => ['customValidRangeDate', true]],
         ],
         'end_date'      => [
             'isString' => ['rule' => 'isString'],
@@ -236,10 +236,11 @@ class KeyResult extends AppModel
      * KR開始・終了日範囲チェック
      *
      * @param      $val
+     * @param bool $isEdit
      *
      * @return bool
      */
-    function customValidRangeDate($val): bool
+    function customValidRangeDate($val, bool $isEdit = false): bool
     {
         $startDate = array_shift($val);
         $endDate = Hash::get($this->data, 'KeyResult.end_date');
@@ -257,8 +258,19 @@ class KeyResult extends AppModel
         }
 
         // ゴール取得
-        $goalId = Hash::get($this->data, 'KeyResult.goal_id');
-        $goal = $this->Goal->getById($goalId);
+        if ($isEdit) {
+            $krId = Hash::get($this->data, 'KeyResult.id');
+            $kr = $this->getById($krId);
+            if (empty($kr)) {
+                return true;
+            }
+            $goal = $this->Goal->getById($kr['goal_id']);
+
+        } else {
+            $goalId = Hash::get($this->data, 'KeyResult.goal_id');
+            $goal = $this->Goal->getById($goalId);
+        }
+
         if (empty($goal)) {
             return true;
         }
