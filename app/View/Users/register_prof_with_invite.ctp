@@ -2,7 +2,6 @@
  * ユーザ登録画面
  *
  * @var CodeCompletionView $this
- * @var                    $lastFirst
  * @var                    $email
  * @var                    $team_name
  */
@@ -28,9 +27,9 @@
             'id'            => 'UserProf',
         ]); ?>
         <div class="panel-heading signup-itemtitle"><?= __('Your name') ?></div>
-        <?php //姓と名は言語によって表示順を変える
+        <?php
         $last_name = $this->Form->input('last_name', [
-            'placeholder'                  => __("eg. Armstrong"),
+            'placeholder'                  => __("last name (eg. Smith)"),
             "pattern"                      => User::USER_NAME_REGEX,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
@@ -42,7 +41,7 @@
             'value'                        => viaIsSet($last_name)
         ]);
         $first_name = $this->Form->input('first_name', [
-            'placeholder'                  => __("eg. Harry"),
+            'placeholder'                  => __("first name (eg. John)"),
             "pattern"                      => User::USER_NAME_REGEX,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
@@ -53,13 +52,11 @@
             'required'                     => false,
             'value'                        => viaIsSet($first_name)
         ]);
-        if ($lastFirst) {
-            echo $last_name;
-            echo $first_name;
-        } else {
-            echo $first_name;
-            echo $last_name;
-        }
+
+        // This column is required by alphabet.
+        // So, even in japanese, fixed this order.
+        echo $first_name;
+        echo $last_name;
         ?>
 
         <?= $this->Form->input('update_email_flg', [

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-22 14:14+0900\n"
+"PO-Revision-Date: 2017-02-27 14:55+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1458,6 +1458,9 @@ msgstr "誕生月"
 msgid "Birthday"
 msgstr "誕生日"
 
+msgid "Birthday(Optional)"
+msgstr "誕生日(オプション)"
+
 msgid "Group 1"
 msgstr "グループ1"
 
@@ -1721,6 +1724,8 @@ msgstr ""
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
 
+msgid "The image cannot be processed. The image taken with this device may not be supported."
+msgstr "この画像は処理できません。この端末で撮影された画像はサポートされてない可能性があります。"
 msgid "File extension and content are different."
 msgstr "ファイルの拡張子と内容が異なっています。"
 
@@ -2258,11 +2263,11 @@ msgstr "利用規約"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-msgid "eg. Harry"
-msgstr "例) Hiroshi"
+msgid "first name (eg. John)"
+msgstr "名（例. Hiroshi）"
 
-msgid "eg. Armstrong"
-msgstr "例) Suzuki"
+msgid "last name (eg. Smith)"
+msgstr "姓（例. Suzuki）"
 
 msgid "eg. Team Goalous"
 msgstr "例) チームGoalous"
@@ -2541,7 +2546,9 @@ msgstr "達成要素を更新しました。"
 msgid ""
 "If you change the goal term from the next term to this term, the goal and "
 "all KRs’ deadlines will be changed to the last day of the current term."
-msgstr "ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。"
+msgstr ""
+"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
+"更されます。"
 
 msgid "All Goals"
 msgstr "すべてのゴール"
@@ -3973,6 +3980,12 @@ msgstr "名(%s)"
 
 msgid "eg. Bruce"
 msgstr "例) 太郎"
+
+msgid "eg. Armstrong"
+msgstr "例) Suzuki"
+
+msgid "eg. Harry"
+msgstr "例) Hiroshi"
 
 msgid "Hide birth year"
 msgstr "生年を隠す。"

@@ -51,6 +51,12 @@ class UploadBehavior extends ModelBehavior
 
     public function setup(Model $model, $settings = array())
     {
+        //Galaxy S7 edgeなどの一部の端末で撮影した画像が処理できない問題(以下Warning)の対応のため、warningを無視する設定
+        //Warning (2): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
+        //公式にphp7.1からデフォルト設定が"1"になっている。-> http://php.net/manual/en/image.configuration.php
+        //TODO: 後にchefのレシピで対応するようにする
+        ini_set('gd.jpeg_ignore_warning', 1);
+
         $defaults = array(
             'path'                   => ':webroot/upload/:model/:id/:basename_:style.:extension',
             'styles'                 => array(),
@@ -380,10 +386,175 @@ class UploadBehavior extends ModelBehavior
 
     private function _resize($srcFile, $destFile, $geometry, $quality = 75, $alpha = false, $type)
     {
-        $pathinfo = UploadBehavior::_pathinfo($srcFile);
-        // 画像の種類を判別する（ファイルの拡張子と実際の種類が異なる場合があるため）
-        $imageInfo = getimagesize($srcFile);
-        $imageType = $pathinfo['extension'];
+        $imgMimeType = $this->getImageMimeSubType($srcFile);
+        if ($imgMimeType === false) {
+            return false;
+        }
+        copy($srcFile, $destFile);
+        @chmod($destFile, 0777);
+
+        $createHandler = $this->getCreateHandler($imgMimeType);
+        $outputHandler = $this->getOutputHandler($imgMimeType);
+        if (!$createHandler || !$outputHandler) {
+            return false;
+        }
+
+        $src = $this->_getImgSource($createHandler, $destFile);
+
+        if (!$src) {
+            $this->log(sprintf('creating img object was failed.'));
+            $this->log(Debugger::trace());
+            $this->_backupFailedImgFile(basename($srcFile), $srcFile);
+            return false;
+        }
+
+        $srcW = imagesx($src);
+        $srcH = imagesy($src);
+
+        // determine destination dimensions and resize mode from provided geometry
+        if (preg_match('/^\\[[\\d]+x[\\d]+\\]$/', $geometry)) {
+            // resize with banding
+            list($destW, $destH) = explode('x', substr($geometry, 1, strlen($geometry) - 2));
+            $resizeMode = 'band';
+        } elseif (preg_match("/^f\[(\d+)x(\d+)\]$/", $geometry, $match)) {
+            // resize with force
+            $destW = $match[1];
+            $destH = $match[2];
+            $resizeMode = 'force';
+        } elseif (preg_match('/^[\\d]+x[\\d]+$/', $geometry)) {
+            // cropped resize (best fit)
+            list($destW, $destH) = explode('x', $geometry);
+            $resizeMode = 'best';
+        } elseif (preg_match('/^[\\d]+w$/', $geometry)) {
+            // calculate heigh according to aspect ratio
+            $destW = (int)$geometry - 1;
+            $resizeMode = false;
+        } //wの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+        elseif (preg_match('/^[\\d]+W$/', $geometry)) {
+            // calculate heigh according to aspect ratio
+            $destW = (int)$geometry - 1;
+            if ($destW > $srcW) {
+                $destW = $srcW;
+            }
+            $resizeMode = false;
+        } elseif (preg_match('/^[\\d]+h$/', $geometry)) {
+            // calculate width according to aspect ratio
+            $destH = (int)$geometry - 1;
+            $resizeMode = false;
+        } //hの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+        elseif (preg_match('/^[\\d]+H$/', $geometry)) {
+            // calculate width according to aspect ratio
+            $destH = (int)$geometry - 1;
+            if ($destH > $srcH) {
+                $destH = $srcH;
+            }
+            $resizeMode = false;
+        } elseif (preg_match('/^[\\d]+l$/', $geometry)) {
+            // calculate shortest side according to aspect ratio
+            if ($srcW > $srcH) {
+                $destW = (int)$geometry - 1;
+            } else {
+                $destH = (int)$geometry - 1;
+            }
+            $resizeMode = false;
+        } //lの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+        elseif (preg_match('/^[\\d]+L$/', $geometry)) {
+            // calculate shortest side according to aspect ratio
+            if ($srcW > $srcH) {
+                $destW = (int)$geometry - 1;
+                if ($destW > $srcW) {
+                    $destW = $srcW;
+                }
+            } else {
+                $destH = (int)$geometry - 1;
+                if ($destH > $srcH) {
+                    $destH = $srcH;
+                }
+            }
+            $resizeMode = false;
+        }
+
+        if (!isset($destW)) {
+            /** @noinspection PhpUndefinedVariableInspection */
+            $destW = ($destH / $srcH) * $srcW;
+        }
+        if (!isset($destH)) {
+            $destH = ($destW / $srcW) * $srcH;
+        }
+
+        // determine resize dimensions from appropriate resize mode and ratio
+        /** @noinspection PhpUndefinedVariableInspection */
+        if ($resizeMode == 'best') {
+            // "best fit" mode
+            if ($srcW > $srcH) {
+                if ($srcH / $destH > $srcW / $destW) {
+                    $ratio = $destW / $srcW;
+                } else {
+                    $ratio = $destH / $srcH;
+                }
+            } else {
+                if ($srcH / $destH < $srcW / $destW) {
+                    $ratio = $destH / $srcH;
+                } else {
+                    $ratio = $destW / $srcW;
+                }
+            }
+            $resizeW = $srcW * $ratio;
+            $resizeH = $srcH * $ratio;
+        } elseif ($resizeMode == 'band') {
+            // "banding" mode
+            if ($srcW > $srcH) {
+                $ratio = $destW / $srcW;
+            } else {
+                $ratio = $destH / $srcH;
+            }
+            $resizeW = $srcW * $ratio;
+            $resizeH = $srcH * $ratio;
+        } else {
+            // no resize ratio
+            $resizeW = $destW;
+            $resizeH = $destH;
+        }
+
+        $img = imagecreatetruecolor($destW, $destH);
+
+        if ($alpha === true) {
+            switch (strtolower($imgMimeType)) {
+                case 'gif':
+                    $alphaColor = imagecolortransparent($src);
+                    imagefill($img, 0, 0, $alphaColor);
+                    imagecolortransparent($img, $alphaColor);
+                    break;
+                case 'png':
+                    imagealphablending($img, false);
+                    imagesavealpha($img, true);
+                    break;
+                default:
+                    imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
+                    break;
+            }
+        } else {
+            imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
+        }
+        imagecopyresampled($img, $src, ($destW - $resizeW) / 2, ($destH - $resizeH) / 2, 0, 0, $resizeW, $resizeH,
+            $srcW, $srcH);
+        $outputHandler($img, $destFile, $quality);
+
+        $this->s3Upload($destFile, $type);
+
+        return true;
+    }
+
+    /**
+     * 画像の種類を判別する
+     *
+     * @param string $filePath
+     *
+     * @return bool|string
+     */
+    function getImageMimeSubType(string $filePath)
+    {
+        $imageInfo = getimagesize($filePath);
         if (strpos($imageInfo['mime'], 'jpeg') !== false) {
             $imageType = 'jpeg';
         } elseif (strpos($imageInfo['mime'], 'png') !== false) {
@@ -393,168 +564,60 @@ class UploadBehavior extends ModelBehavior
         } else {
             return false;
         }
-        copy($srcFile, $destFile);
-        @chmod($destFile, 0777);
+        return $imageType;
+    }
 
-        $src = null;
-        $createHandler = null;
-        $outputHandler = null;
-        switch (strtolower($imageType)) {
+    /**
+     * 画像作成ハンドラのメソッド名を取得
+     *
+     * @param string $mimeType
+     *
+     * @return bool|string
+     */
+    function getCreateHandler(string $mimeType)
+    {
+        switch (strtolower($mimeType)) {
             case 'gif':
                 $createHandler = 'imagecreatefromgif';
-                $outputHandler = 'imagegif';
                 break;
             case 'jpg':
             case 'jpeg':
                 $createHandler = 'imagecreatefromjpeg';
-                $outputHandler = 'imagejpeg';
                 break;
             case 'png':
                 $createHandler = 'imagecreatefrompng';
-                //pngはjpegに変換
+                break;
+            default:
+                return false;
+        }
+        return $createHandler;
+    }
+
+    /**
+     * 画像ファイル出力用ハンドラのメソッド名を取得
+     *
+     * @param string $mimeType
+     *
+     * @return bool|string
+     */
+    function getOutputHandler(string $mimeType)
+    {
+        switch (strtolower($mimeType)) {
+            case 'gif':
+                $outputHandler = 'imagegif';
+                break;
+            case 'jpg':
+            case 'jpeg':
+                $outputHandler = 'imagejpeg';
+                break;
+            case 'png':
+                //pngはjpegに変換。理由はファイル圧縮のため https://github.com/IsaoCorp/goalous/pull/422
                 $outputHandler = 'imagejpeg';
                 break;
             default:
                 return false;
         }
-        if ($src = $createHandler($destFile)) {
-            $srcW = imagesx($src);
-            $srcH = imagesy($src);
-
-            // determine destination dimensions and resize mode from provided geometry
-            if (preg_match('/^\\[[\\d]+x[\\d]+\\]$/', $geometry)) {
-                // resize with banding
-                list($destW, $destH) = explode('x', substr($geometry, 1, strlen($geometry) - 2));
-                $resizeMode = 'band';
-            } elseif (preg_match("/^f\[(\d+)x(\d+)\]$/", $geometry, $match)) {
-                // resize with force
-                $destW = $match[1];
-                $destH = $match[2];
-                $resizeMode = 'force';
-            } elseif (preg_match('/^[\\d]+x[\\d]+$/', $geometry)) {
-                // cropped resize (best fit)
-                list($destW, $destH) = explode('x', $geometry);
-                $resizeMode = 'best';
-            } elseif (preg_match('/^[\\d]+w$/', $geometry)) {
-                // calculate heigh according to aspect ratio
-                $destW = (int)$geometry - 1;
-                $resizeMode = false;
-            } //wの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
-            elseif (preg_match('/^[\\d]+W$/', $geometry)) {
-                // calculate heigh according to aspect ratio
-                $destW = (int)$geometry - 1;
-                if ($destW > $srcW) {
-                    $destW = $srcW;
-                }
-                $resizeMode = false;
-            } elseif (preg_match('/^[\\d]+h$/', $geometry)) {
-                // calculate width according to aspect ratio
-                $destH = (int)$geometry - 1;
-                $resizeMode = false;
-            } //hの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
-            elseif (preg_match('/^[\\d]+H$/', $geometry)) {
-                // calculate width according to aspect ratio
-                $destH = (int)$geometry - 1;
-                if ($destH > $srcH) {
-                    $destH = $srcH;
-                }
-                $resizeMode = false;
-            } elseif (preg_match('/^[\\d]+l$/', $geometry)) {
-                // calculate shortest side according to aspect ratio
-                if ($srcW > $srcH) {
-                    $destW = (int)$geometry - 1;
-                } else {
-                    $destH = (int)$geometry - 1;
-                }
-                $resizeMode = false;
-            } //lの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
-            elseif (preg_match('/^[\\d]+L$/', $geometry)) {
-                // calculate shortest side according to aspect ratio
-                if ($srcW > $srcH) {
-                    $destW = (int)$geometry - 1;
-                    if ($destW > $srcW) {
-                        $destW = $srcW;
-                    }
-                } else {
-                    $destH = (int)$geometry - 1;
-                    if ($destH > $srcH) {
-                        $destH = $srcH;
-                    }
-                }
-                $resizeMode = false;
-            }
-
-            if (!isset($destW)) {
-                /** @noinspection PhpUndefinedVariableInspection */
-                $destW = ($destH / $srcH) * $srcW;
-            }
-            if (!isset($destH)) {
-                $destH = ($destW / $srcW) * $srcH;
-            }
-
-            // determine resize dimensions from appropriate resize mode and ratio
-            /** @noinspection PhpUndefinedVariableInspection */
-            if ($resizeMode == 'best') {
-                // "best fit" mode
-                if ($srcW > $srcH) {
-                    if ($srcH / $destH > $srcW / $destW) {
-                        $ratio = $destW / $srcW;
-                    } else {
-                        $ratio = $destH / $srcH;
-                    }
-                } else {
-                    if ($srcH / $destH < $srcW / $destW) {
-                        $ratio = $destH / $srcH;
-                    } else {
-                        $ratio = $destW / $srcW;
-                    }
-                }
-                $resizeW = $srcW * $ratio;
-                $resizeH = $srcH * $ratio;
-            } elseif ($resizeMode == 'band') {
-                // "banding" mode
-                if ($srcW > $srcH) {
-                    $ratio = $destW / $srcW;
-                } else {
-                    $ratio = $destH / $srcH;
-                }
-                $resizeW = $srcW * $ratio;
-                $resizeH = $srcH * $ratio;
-            } else {
-                // no resize ratio
-                $resizeW = $destW;
-                $resizeH = $destH;
-            }
-
-            $img = imagecreatetruecolor($destW, $destH);
-
-            if ($alpha === true) {
-                switch (strtolower($imageType)) {
-                    case 'gif':
-                        $alphaColor = imagecolortransparent($src);
-                        imagefill($img, 0, 0, $alphaColor);
-                        imagecolortransparent($img, $alphaColor);
-                        break;
-                    case 'png':
-                        imagealphablending($img, false);
-                        imagesavealpha($img, true);
-                        break;
-                    default:
-                        imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
-                        break;
-                }
-            } else {
-                imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
-            }
-            imagecopyresampled($img, $src, ($destW - $resizeW) / 2, ($destH - $resizeH) / 2, 0, 0, $resizeW, $resizeH,
-                $srcW, $srcH);
-            $outputHandler($img, $destFile, $quality);
-
-            $this->s3Upload($destFile, $type);
-
-            return true;
-        }
-        return false;
+        return $outputHandler;
     }
 
     public function attachmentMinSize(
@@ -630,6 +693,71 @@ class UploadBehavior extends ModelBehavior
             return false;
         }
         return true;
+    }
+
+    /**
+     * 画像の加工処理が可能かどうか？
+     * バリデーションルール
+     *
+     * @param Model $model
+     * @param array $value
+     *
+     * @return bool
+     */
+    public function canProcessImage(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        array $value
+    ) {
+        $value = array_shift($value);
+        $imgTmpFilePath = $value['tmp_name'];
+        if (empty($imgTmpFilePath)) {
+            return true;
+        }
+
+        $imgMimeType = $this->getImageMimeSubType($imgTmpFilePath);
+        if ($imgMimeType === false) {
+            // 許可している画像以外はスルー
+            return true;
+        }
+
+        $createHandler = $this->getCreateHandler($imgMimeType);
+        $outputHandler = $this->getOutputHandler($imgMimeType);
+        if (!$createHandler || !$outputHandler) {
+            // 許可している画像以外はスルー
+            return true;
+        }
+
+        $src = $this->_getImgSource($createHandler, $imgTmpFilePath);
+
+        if (!$src) {
+            $this->log(sprintf('canProcessImage validation was failed. uid=%s', $model->my_uid));
+            $this->log(Debugger::exportVar($model->data));
+            $this->log(sprintf("ImageFileInfo: %s", var_export($value, true)));
+            $this->_backupFailedImgFile($value['name'], $imgTmpFilePath);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /**
+     * 処理失敗した画像ファイルをバックアップ
+     * - ログにバックアップしたファイルパスを格納する
+     *
+     * @param string $userFileName ユーザがアップロードした元のファイル名
+     * @param string $srcFilePath  ファイルが置かれている場所
+     */
+    private function _backupFailedImgFile(string $userFileName, string $srcFilePath)
+    {
+        $backupFileDir = '/tmp/failedImages';
+        if (!file_exists($backupFileDir)) {
+            mkdir($backupFileDir, 0775, true);
+        }
+        $distFilePath = $backupFileDir . '/' . time() . '_' . $userFileName;
+        copy($srcFilePath, $distFilePath);
+        $this->log(sprintf("BackupFile: %s", $distFilePath));
     }
 
     public function attachmentPresence(Model $model, $value)
@@ -741,34 +869,58 @@ class UploadBehavior extends ModelBehavior
     {
         $upload = array_shift($upload);
         $func = 'images' . $axis;
-        if (!empty($upload['tmp_name'])) {
-            $createHandler = null;
-            if ($upload['type'] == 'image/jpeg') {
-                $createHandler = 'imagecreatefromjpeg';
-            } else {
-                if ($upload['type'] == 'image/gif') {
-                    $createHandler = 'imagecreatefromgif';
-                } else {
-                    if ($upload['type'] == 'image/png') {
-                        $createHandler = 'imagecreatefrompng';
-                    } else {
-                        return false;
-                    }
-                }
-            }
-
-            if ($img = $createHandler($upload['tmp_name'])) {
-                switch ($mode) {
-                    case 'min':
-                        return $func($img) >= $value;
-                        break;
-                    case 'max':
-                        return $func($img) <= $value;
-                        break;
-                }
-            }
+        if (empty($upload['tmp_name'])) {
+            return false;
         }
+
+        if ($upload['type'] == 'image/jpeg') {
+            $createHandler = 'imagecreatefromjpeg';
+        } elseif ($upload['type'] == 'image/gif') {
+            $createHandler = 'imagecreatefromgif';
+        } elseif ($upload['type'] == 'image/png') {
+            $createHandler = 'imagecreatefrompng';
+        } else {
+            return false;
+        }
+
+        $img = $this->_getImgSource($createHandler, $upload['tmp_name']);
+
+        if (!$img) {
+            $this->log(sprintf('_validateDimension validation was failed.'));
+            $this->log(sprintf("ImageFileInfo: %s", var_export($upload, true)));
+            $this->_backupFailedImgFile($upload['name'], $upload['tmp_name']);
+            return false;
+        }
+
+        switch ($mode) {
+            case 'min':
+                return $func($img) >= $value;
+                break;
+            case 'max':
+                return $func($img) <= $value;
+                break;
+        }
+
         return false;
+    }
+
+    /**
+     * 画像のソースを取得する
+     *
+     * @param string $handler
+     * @param string $imgPath
+     *
+     * @return mixed
+     */
+    private function _getImgSource(
+        string $handler,
+        string $imgPath
+    ) {
+        // 画像によっては問題ない画像でも以下のNoticeが出力される場合がある。
+        // Notice (8): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
+        //ローカルでNoticeが邪魔になる場合は、一時的に Configure::write('debug', 0); を推奨。
+        $src = $handler($imgPath);
+        return $src;
     }
 
     public function phpUploadError(
@@ -795,44 +947,30 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
-    function saveRotatedFile($file_path)
+    function saveRotatedFile($filePath)
     {
-        $degrees = $this->getDegrees($file_path);
+        $degrees = $this->getDegrees($filePath);
         //回転の必要ない場合は何もしない
         if ($degrees === 0) {
-            return null;
+            return true;
         }
 
-        $src = null;
-        $createHandler = null;
-        $outputHandler = null;
+        $imgMimeType = $this->getImageMimeSubType($filePath);
 
-        $image_type = exif_imagetype($file_path);
-        switch ($image_type) {
-            case IMAGETYPE_GIF:
-                $createHandler = 'imagecreatefromgif';
-                $outputHandler = 'imagegif';
-                break;
-            case IMAGETYPE_JPEG:
-            case IMAGETYPE_JPEG2000:
-                $createHandler = 'imagecreatefromjpeg';
-                $outputHandler = 'imagejpeg';
-                break;
-            case IMAGETYPE_PNG:
-                $createHandler = 'imagecreatefrompng';
-                $outputHandler = 'imagepng';
-                $quality = null;
-                break;
-            default:
-                return false;
+        $createHandler = $this->getCreateHandler($imgMimeType);
+        $outputHandler = $this->getOutputHandler($imgMimeType);
+        $src = $this->_getImgSource($createHandler, $filePath);
+        if (!$src) {
+            $this->log(sprintf('creating img object was failed.'));
+            $this->log(Debugger::trace());
+            $this->_backupFailedImgFile(basename($filePath), $filePath);
+            return false;
         }
-        if ($src = $createHandler($file_path)) {
-            // 回転
-            $rotate = imagerotate($src, $degrees, 0);
-            //保存
-            $outputHandler($rotate, $file_path);
-        }
-        return null;
+        // 回転
+        $rotate = imagerotate($src, $degrees, 0);
+        //保存
+        $outputHandler($rotate, $filePath);
+        return true;
     }
 
     function getDegrees($file_path)

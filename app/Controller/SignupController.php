@@ -44,8 +44,9 @@ class SignupController extends AppController
                 'notBlank' => ['rule' => 'notBlank',],
             ],
             'birth_day'        => [
-                'rule'     => ['date', 'ymd'],
-                'notBlank' => ['rule' => 'notBlank'],
+                // TODO:アプリ申請のため、一時的に誕生日のバリデーションを無効にする
+                //'rule'     => ['date', 'ymd'],
+                //'notBlank' => ['rule' => 'notBlank'],
             ],
             'update_email_flg' => [
                 'boolean' => [

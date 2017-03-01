@@ -104,8 +104,9 @@ class Comment extends AppModel
             'image_type'     => ['rule' => ['attachmentImageType',],]
         ],
         'site_photo'         => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType',],]
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'      => ['rule' => ['attachmentImageType',],],
+            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'body'               => [
             'maxLength' => ['rule' => ['maxLength', 5000]],
