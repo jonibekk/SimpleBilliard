@@ -467,7 +467,8 @@ class Goal extends AppModel
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
             $currentTermData = $this->Team->EvaluateTerm->getCurrentTermData();
-            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone(date('Y-m-d'), $currentTermData['timezone']);
+            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone(date('Y-m-d'),
+                $currentTermData['timezone']);
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
@@ -2093,7 +2094,7 @@ class Goal extends AppModel
     {
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $user_id,
+                'Goal.user_id' => $user_id,
             ],
             'fields'     => ['Goal.id']
         ];
@@ -2210,10 +2211,10 @@ class Goal extends AppModel
                 ]
             ],
             'conditions' => [
-                'Goal.end_date >=' => $currentTerm['start_date'],
-                'Goal.end_date <=' => $currentTerm['end_date'],
-                'Goal.completed'   => null,
-                'GoalMember.del_flg'   => false
+                'Goal.end_date >='   => $currentTerm['start_date'],
+                'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.completed'     => null,
+                'GoalMember.del_flg' => false
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)

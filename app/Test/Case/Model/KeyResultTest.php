@@ -352,9 +352,8 @@ class KeyResultTest extends GoalousTestCase
         $expectErrMsg = __("Input is required.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
-
         // 単位が完了/未完了の場合はチェック不要
-        $updateKr = ['id' => 3, 'value_unit'=> KeyResult::UNIT_BINARY, 'target_value' => 100];
+        $updateKr = ['id' => 3, 'value_unit' => KeyResult::UNIT_BINARY, 'target_value' => 100];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
@@ -435,7 +434,11 @@ class KeyResultTest extends GoalousTestCase
         $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
 
         // 進捗の値が減少から増加の方向に変更してないか
-        $updateKr = ['id' => 2, 'value_unit' => $krs[2]['value_unit'], 'start_value' => -100, 'target_value' => -99.999];
+        $updateKr = ['id'           => 2,
+                     'value_unit'   => $krs[2]['value_unit'],
+                     'start_value'  => -100,
+                     'target_value' => -99.999
+        ];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
@@ -598,7 +601,7 @@ class KeyResultTest extends GoalousTestCase
         $this->assertEmpty($err);
 
         // 開始日がゴール開始日以前
-        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate. ' -1 day'));
+        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate . ' -1 day'));
         $updateKr['end_date'] = $endDate;
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -606,7 +609,7 @@ class KeyResultTest extends GoalousTestCase
         $this->assertEquals($err, $correctErrMsg);
 
         // 開始日がゴール開始日以降
-        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate. ' +1 day'));
+        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate . ' +1 day'));
         $updateKr['end_date'] = $endDate;
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -615,7 +618,7 @@ class KeyResultTest extends GoalousTestCase
 
         // 終了日がゴール終了日以前
         $updateKr['start_date'] = $startDate;
-        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate. ' -1 day'));
+        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate . ' -1 day'));
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
@@ -623,7 +626,7 @@ class KeyResultTest extends GoalousTestCase
 
         // 終了日がゴール終了日以降
         $updateKr['start_date'] = $startDate;
-        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate. ' +1 day'));
+        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate . ' +1 day'));
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
@@ -638,7 +641,7 @@ class KeyResultTest extends GoalousTestCase
     function testFindInDashboardOnlyActioned()
     {
         $this->setDefault();
-        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333',  1]]);
+        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1]]);
         $res = $this->KeyResult->findInDashboard(10);
         $res = Hash::extract($res, '{n}.KeyResult.latest_actioned');
         $expected = ['333333', '222222', '111111'];
@@ -747,7 +750,7 @@ class KeyResultTest extends GoalousTestCase
 
         $userId = 1;
 
-        foreach($data as $key => $val) {
+        foreach ($data as $key => $val) {
             $actionCreated = $val[0] ?? null;
             $priority = $val[1] ?? 3;
             $modelId = $key + 1;
@@ -755,7 +758,7 @@ class KeyResultTest extends GoalousTestCase
             // ゴール作成
             $this->KeyResult->Goal->create();
             $this->KeyResult->Goal->save([
-                'id' => $modelId,
+                'id'      => $modelId,
                 'team_id' => 1
             ], false);
 
