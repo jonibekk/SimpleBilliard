@@ -193,7 +193,7 @@
               if (key == "value_unit") {
                 $modal.find('.js-progress-block').after(errHtml);
               } else {
-                $modal.find('input[name="data[KeyResult]['+key+']"]').after(errHtml);
+                $modal.find('input[name="data[KeyResult]['+key+']"]').parent().after(errHtml);
               }
             }
           }

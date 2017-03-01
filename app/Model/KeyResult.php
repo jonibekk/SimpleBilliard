@@ -192,6 +192,21 @@ class KeyResult extends AppModel
                 'rule'       => 'validateEditProgress'
             ],
         ],
+        'start_date' => [
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+            'rangeDate' => ['rule' => 'customValidRangeDate'],
+        ],
+        'end_date'   => [
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
     ];
 
     /**

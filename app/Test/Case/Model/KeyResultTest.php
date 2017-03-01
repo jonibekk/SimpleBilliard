@@ -35,6 +35,7 @@ class KeyResultTest extends GoalousTestCase
     {
         parent::setUp();
         $this->KeyResult = ClassRegistry::init('KeyResult');
+        $this->Goal = ClassRegistry::init('Goal');
     }
 
     /**
@@ -545,6 +546,70 @@ class KeyResultTest extends GoalousTestCase
         $err = Hash::get($this->KeyResult->validationErrors, 'current_value');
         $expectErrMsg = __("Please input current value between start value and target value.");
         $this->assertTrue(in_array($expectErrMsg, $err));
+    }
+
+    /**
+     * 現在値バリデーション
+     */
+    function test_customValidRangeDate()
+    {
+        $this->setDefault();
+        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->post_validate);
+
+        $startDate = "2017/01/02";
+        $endDate = "2017/03/29";
+        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+        $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
+        $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
+
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+        $this->Goal->id = 1;
+        $this->Goal->save(['start_date' => $startTimeStamp, 'end_date' => $endTimeStamp]);
+
+        $correctErrMsg = __("Please input start / end date within start / end date of the goal.");
+
+        // 開始/終了日がゴールの開始/終了日と同じ
+        $updateKr['goal_id'] = 1;
+        $updateKr['start_date'] = $startDate;
+        $updateKr['end_date'] = $endDate;
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date');
+        $this->assertEmpty($err);
+
+        // 開始日がゴール開始日以前
+        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate. ' -1 day'));
+        $updateKr['end_date'] = $endDate;
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEquals($err, $correctErrMsg);
+
+        // 開始日がゴール開始日以降
+        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate. ' +1 day'));
+        $updateKr['end_date'] = $endDate;
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEmpty($err);
+
+        // 終了日がゴール終了日以前
+        $updateKr['start_date'] = $startDate;
+        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate. ' -1 day'));
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEmpty($err);
+
+        // 終了日がゴール終了日以降
+        $updateKr['start_date'] = $startDate;
+        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate. ' +1 day'));
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEquals($err, $correctErrMsg);
+
     }
 
     /**
