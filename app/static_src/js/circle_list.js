@@ -55,6 +55,7 @@ function evCircleFeed(options) {
   if (!opt.recursive) {
     $("#app-view-elements-feed-posts").html($loader_html);
   }
+  $("#FeedMoreRead").removeClass("hidden");
   // read more 非表示
   $("#FeedMoreReadLink").css("display", "none");
 
