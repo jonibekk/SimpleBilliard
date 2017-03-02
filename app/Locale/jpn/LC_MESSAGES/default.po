@@ -1019,7 +1019,7 @@ msgstr "3(デフォルト)"
 msgid "5(Very high)"
 msgstr "5(とても高い)"
 
-msgid "Start date has expired."
+msgid "Start date has expired goal term."
 msgstr "開始日が期限を過ぎています。"
 
 msgid "Please input start / end date within start / end date of the goal."

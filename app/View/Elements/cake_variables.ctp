@@ -47,7 +47,7 @@ App::uses('AttachedFile', 'Model');
                 b: "<?=__("Please enter text.")?>",
                 c: "<?=__("An error has occurred. Data can not be retrieved.")?>",
                 d: "<?=__("An error has occurred.")?>",
-                e: "<?=__("Start date has expired.")?>",
+                e: "<?=__("Start date has expired goal term.")?>",
                 f: "<?=__("The limit date must be after start date.")?>",
                 g: "<?=__("Failed to comment.")?>",
                 h: "<?=__("This comment was deleted.")?>",

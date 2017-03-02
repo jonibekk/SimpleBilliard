@@ -260,7 +260,7 @@ class KeyResult extends AppModel
         $startDateInt = (int)date('Ymd', strtotime($startDate));
         $endDateInt = (int)date('Ymd', strtotime($endDate));
         if ($startDateInt > $endDateInt) {
-            $this->invalidate('start_date', __("Start date has expired."));
+            $this->invalidate('start_date', __("Start date has expired goal term."));
             return false;
         }
 
