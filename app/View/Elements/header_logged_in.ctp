@@ -28,7 +28,7 @@
                     class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
                     data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
-                <div class="unread-point-on-hamburger js-unread-point-on-hamburger is-read"></div>
+                <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
                 <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
             </button>
             <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px" id="NavbarOffcanvas">
