@@ -65,12 +65,12 @@ if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
     $more_read_text = __("View previous posts ▼");
 }
 
-$showReadMoreLink = false;
-//(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない
+$hideReadMoreLink = true;
+//(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない場合は「もっと読む」ボタンを表示
 if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $item_created < REQUEST_TIMESTAMP - MONTH)) &&
     !Hash::get($this->request->params, 'post_id')
 ) {
-    $showReadMoreLink = true;
+    $hideReadMoreLink = false;
 }
 
 // １件目の投稿の更新時間
@@ -97,7 +97,7 @@ elseif (isset($current_team) && $current_team) {
     }
 }
 ?>
-<div class="panel panel-default feed-read-more <?= $showReadMoreLink ? null : 'hidden' ?>" id="FeedMoreRead">
+<div class="panel panel-default feed-read-more <?= $hideReadMoreLink ? 'hidden' : null ?>" id="FeedMoreRead">
     <div class="panel-body panel-read-more-body">
         <span class="none" id="ShowMoreNoData"><?= __("There is no more post to show.") ?></span>
         <a href="#" class="click-feed-read-more"
