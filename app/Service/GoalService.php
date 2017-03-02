@@ -253,7 +253,7 @@ class GoalService extends AppService
                     throw new Exception(sprintf("Failed to update krs. goal_id:%s"
                         , $goalId));
                 }
-             }
+            }
 
             // TKRの進捗単位を変更した場合は進捗リセット
             if ($goal['top_key_result']['value_unit'] != $updateTkr['value_unit']) {
