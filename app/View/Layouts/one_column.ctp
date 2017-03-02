@@ -41,7 +41,17 @@ if (!isset($with_header_menu)) {
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
-<?= $this->element('gl_common_js') ?>
+
+<?php
+// in one column, import only kr-progress-page
+$display_dashboard = false;
+if (Hash::get($this->request->params, 'controller') === 'goals'
+    && Hash::get($this->request->params, 'action') === 'kr_progress'
+) {
+    $display_dashboard = true;
+}
+echo $this->element('gl_common_js', compact('display_dashboard'));
+?>
 
 <!-- START import react code for setup -->
 <?php if (Hash::get($this->request->params, 'controller') === 'setup'): ?>

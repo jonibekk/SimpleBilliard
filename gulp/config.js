@@ -17,6 +17,7 @@ const config =  {
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
+        assets_dir + '/js/dropzone_setting.js',
         assets_dir + '/js/gl_basic.js',
         assets_dir + '/js/view/**/*.js'
     ],

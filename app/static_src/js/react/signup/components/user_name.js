@@ -86,11 +86,12 @@ export default class UserName extends React.Component {
                     </div>
 
                     {/* Birthday*/}
+                    {/* TODO:アプリ申請のため、一時的にrequiredを外す */}
                     <div className="panel-heading signup-itemtitle">{__("Birthday")}</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
                         <span className={(this.props.validate.birth_year.invalid) ? 'has-error' : ''}>
-                            <select className="form-control inline-fix" ref="birth_year" name="birth_year" required
+                            <select className="form-control inline-fix" ref="birth_year" name="birth_year"
                                     onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                                <option value=""></option>
                                {
@@ -104,7 +105,7 @@ export default class UserName extends React.Component {
 
                         {/* Birthday month */}
                         <span className={(this.props.validate.birth_month.invalid) ? 'has-error' : ''}>
-                            <select className="form-control inline-fix" ref="birth_month" name="birth_month" required
+                            <select className="form-control inline-fix" ref="birth_month" name="birth_month"
                                     onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                                <option value=""></option>
                                <option value="01">{__("Jan")}</option>
@@ -125,7 +126,7 @@ export default class UserName extends React.Component {
 
                         {/* Birthday day */}
                         <span className={(this.props.validate.birth_day.invalid) ? 'has-error' : ''}>
-                        <select className="form-control inline-fix" ref="birth_day" name="birth_day" required
+                        <select className="form-control inline-fix" ref="birth_day" name="birth_day"
                                 onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                            <option value=""></option>
                            {
@@ -161,7 +162,9 @@ export default class UserName extends React.Component {
 
                     {/* Submit button */}
                     { (() => {
-                      const can_submit = this.props.validate.first_name.invalid === false && this.props.validate.last_name.invalid === false && this.props.validate.birth_year.invalid === false && this.props.validate.birth_month.invalid === false && this.props.validate.birth_day.invalid === false && this.props.validate.privacy_policy.invalid === false && !this.props.user_name.checking_user_name
+                      {/* TODO:アプリ申請のため、一時的に誕生日のバリデーションを無効にする */}
+                      {/*const can_submit = this.props.validate.first_name.invalid === false && this.props.validate.last_name.invalid === false && this.props.validate.birth_year.invalid === false && this.props.validate.birth_month.invalid === false && this.props.validate.birth_day.invalid === false && this.props.validate.privacy_policy.invalid === false && !this.props.user_name.checking_user_name*/}
+                      const can_submit = this.props.validate.first_name.invalid === false && this.props.validate.last_name.invalid === false && this.props.validate.privacy_policy.invalid === false && !this.props.user_name.checking_user_name
 
                       if(can_submit) {
                         return <EnabledNextButton />;

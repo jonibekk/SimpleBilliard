@@ -115,19 +115,20 @@ $(function () {
     },
     // ファイルアップロード完了時
     success: function (file, res) {
+      var data = res.data;
       var $preview = $(file.previewTemplate);
       // 処理成功
       // submit するフォームに hidden でファイルID追加
       var $form = $('#' + $uploadFileForm._params.formID);
       $form.append(
         $('<input type=hidden name=data[file_id][]>')
-          .val(res.id)
-          .attr('id', res.id)
+          .val(data.id)
+          .attr('id', data.id)
           .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
 
       // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
-      $preview.data('file_id', res.id);
-      file.file_id = res.id;
+      $preview.data('file_id', data.id);
+      file.file_id = data.id;
 
       // プログレスバー消す
       // 一瞬で消えるのを防止するため１秒待つ
@@ -313,7 +314,7 @@ $(function () {
       //引数errorがオブジェクトかテキストで渡ってくるケースがあるので、エラーメッセージを取り出す。
       var errorMessage = "";
       if (typeof error == 'object') {
-        errorMessage = error.msg;
+        errorMessage = error.message;
       } else if (typeof error == 'string') {
         errorMessage = error;
       }
@@ -645,6 +646,7 @@ $(function () {
     }
   };
   var actionImageDzOptions = {
+    url:"/api/v1/files/upload_image",
     acceptedFiles: "image/*",
     maxFiles: 1,
     previewTemplate: previewTemplateActionImage
@@ -737,6 +739,7 @@ $(function () {
     }
   };
   var actionImage2DzOptions = {
+    url:"/api/v1/files/upload_image",
     acceptedFiles: "image/*",
     previewTemplate: previewTemplateActionImage
   };
