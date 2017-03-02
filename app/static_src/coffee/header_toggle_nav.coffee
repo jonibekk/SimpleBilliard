@@ -10,19 +10,19 @@ headerToggleNav = ->
       $(headerDropdowns).removeClass 'open'
     $('#layer-black').css 'display', 'block'
     $('.toggle-icon').addClass('rotate').removeClass('rotate-reverse').addClass('fa-arrow-right').removeClass 'fa-navicon'
-    $('.unread-point-on-hamburger').addClass('is-open')
+    $('.js-unread-point-on-hamburger').addClass('is-open')
     return
   $('.navbar-offcanvas').on 'hide.bs.offcanvas', ->
     $('#layer-black').css 'display', 'none'
     $('.toggle-icon').removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass 'fa-navicon'
-    $('.unread-point-on-hamburger').removeClass('is-open')
+    $('.js-unread-point-on-hamburger').removeClass('is-open')
     return
   $(headerDropdowns).on 'click', ->
     if $('#NavbarOffcanvas').hasClass 'canvas-slid'
       $('#NavbarOffcanvas').removeClass 'in canvas-slid'
     $('#layer-black').css 'display', 'none'
     $('.toggle-icon').removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass 'fa-navicon'
-    $('.unread-point-on-hamburger').removeClass('is-open')
+    $('.js-unread-point-on-hamburger').removeClass('is-open')
     return
 
 $ ->
