@@ -21,6 +21,14 @@ class KeyResultTest extends GoalousTestCase
         'app.goal',
         'app.goal_category',
         'app.goal_member',
+        'app.evaluate_term',
+        'app.post_share_circle',
+        'app.circle',
+        'app.post',
+        'app.goal_label',
+        'app.label',
+        'app.team_member',
+        'app.follower',
         'app.user',
         'app.team',
         'app.kr_progress_log',
@@ -35,6 +43,7 @@ class KeyResultTest extends GoalousTestCase
     {
         parent::setUp();
         $this->KeyResult = ClassRegistry::init('KeyResult');
+        $this->Goal = ClassRegistry::init('Goal');
     }
 
     /**
@@ -58,22 +67,33 @@ class KeyResultTest extends GoalousTestCase
         }
         $this->assertTrue(isset($e));
         unset($e);
+
+        $goalId = $this->createGoal(1);
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+
+        $goal = $this->Goal->getById($goalId);
+        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+
+        $startDate = date('Y/m/d', $goal['start_date'] + ($currentTerm['timezone'] * HOUR));
+        $endDate = date('Y/m/d', $goal['end_date'] + ($currentTerm['timezone'] * HOUR));
+
         $data = [
             'KeyResult' => [
                 'value_unit' => 2,
-                'start_date' => '2014/7/7',
-                'end_date'   => '2014/11/7',
+                'start_date' => $startDate,
+                'end_date'   => $endDate,
                 'name'       => 'test',
             ]
         ];
-        $res = $this->KeyResult->add($data, 8);
+        $res = $this->KeyResult->add($data, $goalId);
         $this->assertTrue($res);
 
         $data = [
             'KeyResult' => [
                 'value_unit' => 2,
-                'start_date' => '2014/7/7',
-                'end_date'   => '2014/11/7',
+                'start_date' => $startDate,
+                'end_date'   => $endDate,
                 'name'       => null,
             ]
         ];
@@ -332,9 +352,8 @@ class KeyResultTest extends GoalousTestCase
         $expectErrMsg = __("Input is required.");
         $this->assertTrue(in_array($expectErrMsg, $err));
 
-
         // 単位が完了/未完了の場合はチェック不要
-        $updateKr = ['id' => 3, 'value_unit'=> KeyResult::UNIT_BINARY, 'target_value' => 100];
+        $updateKr = ['id' => 3, 'value_unit' => KeyResult::UNIT_BINARY, 'target_value' => 100];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
@@ -415,7 +434,11 @@ class KeyResultTest extends GoalousTestCase
         $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
 
         // 進捗の値が減少から増加の方向に変更してないか
-        $updateKr = ['id' => 2, 'value_unit' => $krs[2]['value_unit'], 'start_value' => -100, 'target_value' => -99.999];
+        $updateKr = ['id'           => 2,
+                     'value_unit'   => $krs[2]['value_unit'],
+                     'start_value'  => -100,
+                     'target_value' => -99.999
+        ];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'value_unit');
@@ -548,13 +571,104 @@ class KeyResultTest extends GoalousTestCase
     }
 
     /**
+     * 現在値バリデーション
+     */
+    function test_customValidRangeDate()
+    {
+        $this->setDefault();
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+
+        $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->post_validate);
+
+        $startDate = "2017/01/02";
+        $endDate = "2017/03/29";
+
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
+        $this->Team->EvaluateTerm->clear();
+        $this->Team->EvaluateTerm->id = $currentTerm['id'];
+        $this->Team->EvaluateTerm->save(['timezone' => 0]);
+        $this->customValidRangeDateThreshold($startDate, $endDate);
+
+        $this->Team->EvaluateTerm->clear();
+        $this->Team->EvaluateTerm->id = $currentTerm['id'];
+        $this->Team->EvaluateTerm->save(['timezone' => -12]);
+        $this->customValidRangeDateThreshold($startDate, $endDate);
+
+        $this->Team->EvaluateTerm->clear();
+        $this->Team->EvaluateTerm->id = $currentTerm['id'];
+        $this->Team->EvaluateTerm->save(['timezone' => +12]);
+        $this->customValidRangeDateThreshold($startDate, $endDate);
+    }
+
+    /**
+     * KR開始/終了日閾値チェック共通
+     *
+     * @param $startDate
+     * @param $endDate
+     */
+    private function customValidRangeDateThreshold(string $startDate, string $endDate)
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
+        $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
+        $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
+
+        $this->Goal->id = 1;
+        $this->Goal->save(['start_date' => $startTimeStamp, 'end_date' => $endTimeStamp]);
+
+        $correctErrMsg = __("Please input start / end date within start / end date of the goal.");
+
+        // 開始/終了日がゴールの開始/終了日と同じ
+        $updateKr['goal_id'] = 1;
+        $updateKr['start_date'] = $startDate;
+        $updateKr['end_date'] = $endDate;
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date');
+        $this->assertEmpty($err);
+
+        // 開始日がゴール開始日以前
+        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate . ' -1 day'));
+        $updateKr['end_date'] = $endDate;
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEquals($err, $correctErrMsg);
+
+        // 開始日がゴール開始日以降
+        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate . ' +1 day'));
+        $updateKr['end_date'] = $endDate;
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEmpty($err);
+
+        // 終了日がゴール終了日以前
+        $updateKr['start_date'] = $startDate;
+        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate . ' -1 day'));
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEmpty($err);
+
+        // 終了日がゴール終了日以降
+        $updateKr['start_date'] = $startDate;
+        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate . ' +1 day'));
+        $this->KeyResult->set($updateKr);
+        $this->KeyResult->validates();
+        $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
+        $this->assertEquals($err, $correctErrMsg);
+    }
+
+    /**
      * 右カラムKR一覧取得テスト
      * アクション済みKRのみ取得
      */
     function testFindInDashboardOnlyActioned()
     {
         $this->setDefault();
-        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333',  1]]);
+        $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1]]);
         $res = $this->KeyResult->findInDashboard(10);
         $res = Hash::extract($res, '{n}.KeyResult.latest_actioned');
         $expected = ['333333', '222222', '111111'];
@@ -663,7 +777,7 @@ class KeyResultTest extends GoalousTestCase
 
         $userId = 1;
 
-        foreach($data as $key => $val) {
+        foreach ($data as $key => $val) {
             $actionCreated = $val[0] ?? null;
             $priority = $val[1] ?? 3;
             $modelId = $key + 1;
@@ -671,7 +785,7 @@ class KeyResultTest extends GoalousTestCase
             // ゴール作成
             $this->KeyResult->Goal->create();
             $this->KeyResult->Goal->save([
-                'id' => $modelId,
+                'id'      => $modelId,
                 'team_id' => 1
             ], false);
 
