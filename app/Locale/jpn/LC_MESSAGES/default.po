@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-22 14:14+0900\n"
+"PO-Revision-Date: 2017-03-02 14:51+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -977,6 +977,9 @@ msgstr "コラボが多い順"
 msgid "Progress rate"
 msgstr "進捗率が高い順"
 
+msgid "Please input end date after start date."
+msgstr "終了日は開始日以降を入力してください。"
+
 msgid "Please input goal end date later than key result end date"
 msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
 
@@ -1018,6 +1021,12 @@ msgstr "3(デフォルト)"
 
 msgid "5(Very high)"
 msgstr "5(とても高い)"
+
+msgid "Start date has expired."
+msgstr "開始日が期限を過ぎています。"
+
+msgid "Please input start / end date within start / end date of the goal."
+msgstr "開始・終了日はゴールの開始・終了日の範囲内で入力してください。"
 
 msgid "Input is required."
 msgstr "入力必須項目です。"
@@ -1458,9 +1467,6 @@ msgstr "誕生月"
 msgid "Birthday"
 msgstr "誕生日"
 
-msgid "Birthday(Optional)"
-msgstr "誕生日(オプション)"
-
 msgid "Group 1"
 msgstr "グループ1"
 
@@ -1861,9 +1867,6 @@ msgstr "スペルを入力してください。"
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
 
-msgid "Start date has expired."
-msgstr "開始日が期限を過ぎています。"
-
 msgid "The limit date must be after start date."
 msgstr "期限は開始日より後である必要があります。"
 
@@ -2252,6 +2255,9 @@ msgstr ""
 msgid "Your name"
 msgstr "お名前"
 
+msgid "Birthday(Optional)"
+msgstr "誕生日(オプション)"
+
 msgid "I agree to %s and %s of Goalous."
 msgstr "Goalousの%sと%sに同意します。"
 
@@ -2544,7 +2550,9 @@ msgstr "達成要素を更新しました。"
 msgid ""
 "If you change the goal term from the next term to this term, the goal and "
 "all KRs’ deadlines will be changed to the last day of the current term."
-msgstr "ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。"
+msgstr ""
+"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
+"更されます。"
 
 msgid "All Goals"
 msgstr "すべてのゴール"
@@ -3434,33 +3442,6 @@ msgstr ""
 
 msgid "Term settings"
 msgstr "期間設定"
-
-msgid "Items for change"
-msgstr "変更適用対象"
-
-msgid "Current term can't be changed during the evaluation period."
-msgstr "評価期間中は今期の変更ができません。"
-
-msgid "Please select the standard start month."
-msgstr "基準となる期の開始月を選択して下さい。"
-
-msgid "Previous term before changed"
-msgstr "現在の前期の期間"
-
-msgid "Current term before changed"
-msgstr "変更前の今期"
-
-msgid "Next term before changed"
-msgstr "変更前の来期"
-
-msgid "Current term after changed"
-msgstr "更新後の今期の期間"
-
-msgid "Next term after changed"
-msgstr "更新後の来期の期間"
-
-msgid "Change term settings"
-msgstr "期間設定を更新"
 
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
@@ -4731,6 +4712,9 @@ msgstr "あなたのメールアドレス"
 msgid " "
 msgstr " "
 
+msgid "Please select the standard start month."
+msgstr "基準となる期の開始月を選択して下さい。"
+
 msgid "Create a group vision."
 msgstr "グループビジョンを作成してください"
 
@@ -4906,3 +4890,27 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
+
+#~ msgid "Items for change"
+#~ msgstr "変更適用対象"
+
+#~ msgid "Current term can't be changed during the evaluation period."
+#~ msgstr "評価期間中は今期の変更ができません。"
+
+#~ msgid "Previous term before changed"
+#~ msgstr "現在の前期の期間"
+
+#~ msgid "Current term before changed"
+#~ msgstr "変更前の今期"
+
+#~ msgid "Next term before changed"
+#~ msgstr "変更前の来期"
+
+#~ msgid "Current term after changed"
+#~ msgstr "更新後の今期の期間"
+
+#~ msgid "Next term after changed"
+#~ msgstr "更新後の来期の期間"
+
+#~ msgid "Change term settings"
+#~ msgstr "期間設定を更新"

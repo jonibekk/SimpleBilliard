@@ -12,8 +12,6 @@
  * @var                    $priority_list
  * @var                    $krPriorityList
  * @var                    $krValueUnitList
- * @var                    $krStartDateFormat
- * @var                    $krEndDateFormat
  * @var                    $limitEndDate
  * @var                    $limitStartDate
  * @var                    $currentKrId
@@ -193,8 +191,8 @@
                             <?=
                             $this->Form->input('KeyResult.end_date',
                                 [
-                                    'value'                        => $krEndDateFormat,
-                                    'default'                      => $krEndDateFormat,
+                                    'value'                        => $limitEndDate,
+                                    'default'                      => $limitEndDate,
                                     'label'                        => false,
                                     'div'                          => false,
                                     'class'                        => "form-control",
@@ -216,7 +214,7 @@
                         <p class="form-control-static"
                            id="KeyResult0StartDateDefault_<?= $goalId ?>">
                                 <span
-                                    class="pull-left"><?= $krStartDateFormat ?>
+                                    class="pull-left"><?= $limitStartDate ?>
                                     <?= __("(Today)") ?>
                                     &nbsp;&nbsp;<a href="#" class="target-show-target-del pull-right"
                                                    show-target-id="KeyResult0StartDateInputWrap_<?= $goalId ?>"
@@ -232,7 +230,8 @@
                             <?=
                             $this->Form->input('KeyResult.start_date',
                                 [
-                                    'value'                        => $krStartDateFormat,
+                                    'default'                      => $limitStartDate,
+                                    'value'                        => $limitStartDate,
                                     'label'                        => false,
                                     'div'                          => false,
                                     'class'                        => "form-control",
