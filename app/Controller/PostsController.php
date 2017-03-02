@@ -420,7 +420,7 @@ class PostsController extends AppController
             $this->set('long_text', false);
         }
 
-        $page_num = $paramNamed['page'] ?? 1;
+        $pageNum = $paramNamed['page'] ?? 1;
 
         //一ヶ月以前を指定された場合
         $monthIndex = Hash::get($paramNamed, 'month_index');
@@ -429,7 +429,7 @@ class PostsController extends AppController
         } else {
             $postRange = ['start' => null, 'end' => null];
         }
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $postRange['start'], $postRange['end'],
+        $posts = $this->Post->get($pageNum, POST_FEED_PAGE_ITEMS_NUMBER, $postRange['start'], $postRange['end'],
             $this->request->params);
         $this->set(compact('posts'));
 
@@ -438,8 +438,8 @@ class PostsController extends AppController
         //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
         //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
         //ここで分岐をする必要がある。
-        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && $notify_id;
-        if ($is_notify_post_permanent_page && !$posts) {
+        $isNotifyPostPermanentPage = isset($this->request->params['post_id']) && $notify_id;
+        if ($isNotifyPostPermanentPage && !$posts) {
             $response = $this->render('Feed/post_not_found');
         } else {
             $response = $this->render("Feed/posts");
@@ -1079,21 +1079,13 @@ class PostsController extends AppController
     {
         $circleId = $this->request->params['circle_id'];
         $this->User->CircleMember->updateUnreadCount($circleId);
-        list($user_status, $circle_member_count) = $this->_setCircleCommonVariables();
+        list($userStatus, $circleMemberCount) = $this->_setCircleCommonVariables();
 
-        $paramNamed = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
         $this->set('long_text', false);
 
-        //一ヶ月以前を指定された場合
-        $monthIndex = Hash::get($paramNamed, 'month_index');
-        if ($monthIndex) {
-            $postRange = $this->_getRangeByMonthIndex($monthIndex);
-        } else {
-            $postRange = ['start' => null, 'end' => null];
-        }
-        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $postRange['start'], $postRange['end'],
+        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
             $this->request->params);
         $this->set(compact('posts'));
         $response = $this->render("Feed/posts");
@@ -1109,9 +1101,9 @@ class PostsController extends AppController
             'html'                => $html,
             'count'               => count($posts),
             'page_item_num'       => POST_FEED_PAGE_ITEMS_NUMBER,
-            'start'               => $postRange['start'] ?? REQUEST_TIMESTAMP - MONTH,
-            'circle_member_count' => $circle_member_count,
-            'user_status'         => $user_status,
+            'start'               => REQUEST_TIMESTAMP - MONTH,
+            'circle_member_count' => $circleMemberCount,
+            'user_status'         => $userStatus,
             'circle_img_url'      => $circleImgUrl,
         );
         if (isset($posts[0]['Post']['modified'])) {
