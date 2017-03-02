@@ -1,3 +1,13 @@
+// Register circle events.
+$(document).on("click", ".js-dashboard-circle-list", evCircleFeed);
+$(document).on("click", ".circle-link", evCircleFeed);
+
+// ハンバーガーメニューのサークル未読点描画
+$(document).ready(function() {
+  updateNotifyOnHamburger();
+});
+
+// サークル投稿リアルタイム通知
 $(document).ready(function () {
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
@@ -37,14 +47,11 @@ $(document).ready(function () {
           $circle.parent().prepend($circle);
         });
       });
-
+      // サークルの未読件数がUIに反映されたら実行
+      updateNotifyOnHamburger();
     });
   }
 });
-
-
-$(document).on("click", ".js-dashboard-circle-list", evCircleFeed);
-$(document).on("click", ".circle-link", evCircleFeed);
 
 // Ajax的なサークルフィード読み込み
 function evCircleFeed(options) {
@@ -87,6 +94,7 @@ function evCircleFeed(options) {
   $obj.children(".js-circle-count-box").html("");
   $obj.children(".circle-count_box").children(".count-value").html("");
   $obj.removeClass('is-unread').addClass('is-read');
+  updateNotifyOnHamburger();
 
   //アドレスバー書き換え
   if (!updateAddressBar(get_url)) {
@@ -227,4 +235,14 @@ function evCircleFeed(options) {
     }
   });
   return false;
+}
+
+function updateNotifyOnHamburger() {
+  var $list_elem = $('.js-dashboard-circle-list.is-hamburger');
+  var existUnreadCircle = $list_elem.hasClass('is-unread');
+  if (existUnreadCircle) {
+    $('.js-unread-point-on-hamburger').removeClass('is-read');
+  } else {
+    $('.js-unread-point-on-hamburger').addClass('is-read');
+  }
 }
