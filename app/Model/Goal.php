@@ -351,12 +351,23 @@ class Goal extends AppModel
             return true;
         }
 
-        if ($termType == EvaluateTerm::TERM_TYPE_CURRENT) {
-            $startDateInt = (int)date('Ymd');
+        $goalId = Hash::get($this->data, 'Goal.id');
+
+        if (empty($goalId)) {
+            if ($termType == EvaluateTerm::TERM_TYPE_CURRENT) {
+                $startDateInt = (int)date('Ymd');
+            } else {
+                $term = $this->Team->EvaluateTerm->getNextTermData();
+                $startDateInt = (int)date('Ymd', $term['start_date'] + ($term['timezone'] * HOUR));
+            }
         } else {
-            $term = $this->Team->EvaluateTerm->getNextTermData();
-            $startDateInt = (int)date('Ymd', $term['start_date'] + ($term['timezone'] * HOUR));
+            $goal = $this->getById($goalId);
+            if (empty($goal)) {
+                return true;
+            }
+            $startDateInt = (int)date('Ymd', $goal['start_date']);
         }
+
         $endDateInt = (int)date('Ymd', strtotime($endDate));
         if ($endDateInt < $startDateInt) {
             $this->invalidate('end_date', __("Please input end date after start date."));
