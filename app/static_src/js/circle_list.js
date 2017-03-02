@@ -19,18 +19,19 @@ function evCircleFeed(options) {
   var $obj = $(this);
   var get_url = $obj.attr('get-url');
   var circle_id = sanitize($obj.attr('circle-id'));
-  var image_url = $obj.attr('image-url');
   // DOMから取得し再度DOMに投入するデータなのでサニタイズを行う
   var title = sanitize($obj.attr('title'));
   var public_flg = sanitize($obj.attr('public-flg'));
   var team_all_flg = sanitize($obj.attr('team-all-flg'));
   var oldest_post_time = sanitize($obj.attr('oldest-post-time'));
-  updateCakeValue(circle_id, title, image_url);
+  // URL生成
+  var url = get_url.replace(/circle_feed/, "ajax_circle_feed");
+  var more_read_url = get_url.replace(/\/circle_feed\//, "\/posts\/ajax_get_feed\/circle_id:");
+
   if ($obj.hasClass('is-hamburger')) {
     //ハンバーガーから来た場合は隠す
     $("#header-slide-menu").click();
   }
-
   //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
   //要素が多すぎるので、おとなしくページリロードする
   //urlにcircle_feedを含まない場合も対象外
@@ -38,33 +39,25 @@ function evCircleFeed(options) {
     window.location.href = get_url;
     return false;
   }
-
   //サークルリストのわきに表示されている未読数リセット
   $obj.children(".js-circle-count-box").html("");
   $obj.children(".circle-count_box").children(".count-value").html("");
   $obj.removeClass('is-unread').addClass('is-read');
-
   //アドレスバー書き換え
   if (!updateAddressBar(get_url)) {
     return false;
   }
-
   // メインカラム内の要素をリセット
   // FIXME:本来は「$("#app-view-elements-feed-posts").empty();」のようにメインカラム.フィード親要素をemptyにすれば良いだけだがHTMLの作り上そうなっていないので、上記のような処理をせざるをえない。
   $(".panel.panel-default").not(".feed-read-more, .global-form, .dashboard-krs, .js_progress_graph").remove();
-
   //ローダー表示
   var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
   if (!opt.recursive) {
     $("#app-view-elements-feed-posts").html($loader_html);
   }
-
-  // URL生成
-  var url = get_url.replace(/circle_feed/, "ajax_circle_feed");
-  var more_read_url = get_url.replace(/\/circle_feed\//, "\/posts\/ajax_get_feed\/circle_id:");
-
   // read more 非表示
   $("#FeedMoreReadLink").css("display", "none");
+
 
   //サークル名が長すぎる場合は切る
   var panel_title = title;
@@ -106,11 +99,6 @@ function evCircleFeed(options) {
   //Post後のリダイレクトURLを設定
   $("#PostRedirectUrl").val(get_url);
 
-  setDefaultTab();
-  initCircleSelect2();
-
-  $('#OpenCircleSettingMenu').empty();
-
   $.ajax({
     type: 'GET',
     url: url,
@@ -118,6 +106,15 @@ function evCircleFeed(options) {
     dataType: 'json',
     success: function (data) {
       var post_time_before = "";
+      var image_url = data.circle_img_url;
+
+      updateCakeValue(circle_id, title, image_url);
+
+      setDefaultTab();
+      initCircleSelect2();
+
+      $('#OpenCircleSettingMenu').empty();
+
       if (!$.isEmptyObject(data.html)) {
         //取得したhtmlをオブジェクト化
         var $posts = $(data.html);
