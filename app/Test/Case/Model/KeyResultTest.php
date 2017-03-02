@@ -576,16 +576,44 @@ class KeyResultTest extends GoalousTestCase
     function test_customValidRangeDate()
     {
         $this->setDefault();
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+
         $this->KeyResult->validate = am($this->KeyResult->validate, $this->KeyResult->post_validate);
 
         $startDate = "2017/01/02";
         $endDate = "2017/03/29";
-        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+
+        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+
+        $this->Team->EvaluateTerm->clear();
+        $this->Team->EvaluateTerm->id = $currentTerm['id'];
+        $this->Team->EvaluateTerm->save(['timezone' => 0]);
+        $this->customValidRangeDateThreshold($startDate, $endDate);
+
+        $this->Team->EvaluateTerm->clear();
+        $this->Team->EvaluateTerm->id = $currentTerm['id'];
+        $this->Team->EvaluateTerm->save(['timezone' => -12]);
+        $this->customValidRangeDateThreshold($startDate, $endDate);
+
+        $this->Team->EvaluateTerm->clear();
+        $this->Team->EvaluateTerm->id = $currentTerm['id'];
+        $this->Team->EvaluateTerm->save(['timezone' => +12]);
+        $this->customValidRangeDateThreshold($startDate, $endDate);
+    }
+
+    /**
+     * KR開始/終了日閾値チェック共通
+     *
+     * @param $startDate
+     * @param $endDate
+     */
+    private function customValidRangeDateThreshold(string $startDate, string $endDate)
+    {
+        $currentTerm = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
         $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
         $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
 
-        $this->Goal->my_uid = 1;
-        $this->Goal->current_team_id = 1;
         $this->Goal->id = 1;
         $this->Goal->save(['start_date' => $startTimeStamp, 'end_date' => $endTimeStamp]);
 
@@ -631,7 +659,6 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
         $this->assertEquals($err, $correctErrMsg);
-
     }
 
     /**

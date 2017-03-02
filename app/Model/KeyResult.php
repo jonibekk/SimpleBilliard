@@ -249,10 +249,17 @@ class KeyResult extends AppModel
         }
 
         // 開始日が終了日を超えてないか
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
-        $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
-        $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
-        if ($startTimeStamp > $endTimeStamp) {
+        // getCurrentTermDataの方が効率は良いがテストが通らないのでDBから直で取得
+        // ※複数のtimezoneで問題ないかのテスト時、getCurrentTermDataだとキャッシュしてしまうので最新のデータが取得できない
+//        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $timezone = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP)['timezone'];
+
+        // FIXME:タイムスタンプで比較すると不具合が生じる為、日付文字列を数値に変換して比較する
+        // 参照:http://54.250.147.97:8080/browse/GL-5622
+        // 入力した日付を数値に変換
+        $startDateInt = (int)date('Ymd', strtotime($startDate));
+        $endDateInt = (int)date('Ymd', strtotime($endDate));
+        if ($startDateInt > $endDateInt) {
             $this->invalidate('start_date', __("Start date has expired."));
             return false;
         }
@@ -276,8 +283,12 @@ class KeyResult extends AppModel
         }
 
         // ゴールの開始・終了日の範囲内か
-        if ($startTimeStamp >= $goal['start_date']
-            && $endTimeStamp <= $goal['end_date']
+        $utcGoalStartTimeStamp = $goal['start_date'] + ($timezone * HOUR);
+        $utcGoalEndTimeStamp = $goal['end_date'] + ($timezone * HOUR);
+        $goalStartDateInt = (int)date('Ymd', $utcGoalStartTimeStamp);
+        $goalEndDateInt = (int)date('Ymd', $utcGoalEndTimeStamp);
+        if ($startDateInt >= $goalStartDateInt
+            && $endDateInt <= $goalEndDateInt
         ) {
             return true;
         }
