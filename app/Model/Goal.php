@@ -195,6 +195,7 @@ class Goal extends AppModel
             ],
             'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
             'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
+            'startEndDate'        => ['rule' => ['customValidStartEndDate']],
         ],
         'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
@@ -217,6 +218,7 @@ class Goal extends AppModel
             ],
             'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
             'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
+            'startEndDate'        => ['rule' => ['customValidStartEndDate']],
         ],
         'term_type' => [
             'inList' => [
@@ -332,6 +334,35 @@ class Goal extends AppModel
         $date = AppUtil::getEndDateByTimezone($date, $goalTerm['timezone']);
 
         return $goalTerm['start_date'] <= $date && $date <= $goalTerm['end_date'];
+    }
+
+    /**
+     * 終了日が開始日以前の日付でないか
+     *
+     * @param  array $val
+     *
+     * @return bool
+     */
+    function customValidStartEndDate($val)
+    {
+        $endDate = array_shift($val);
+        $termType = Hash::get($this->data, 'Goal.term_type');
+        if (empty($endDate) || empty($termType)) {
+            return true;
+        }
+
+        if ($termType == EvaluateTerm::TERM_TYPE_CURRENT) {
+            $startDateInt = (int)date('Ymd');
+        } else {
+            $term = $this->Team->EvaluateTerm->getNextTermData();
+            $startDateInt = (int)date('Ymd', $term['start_date'] + ($term['timezone'] * HOUR));
+        }
+        $endDateInt = (int)date('Ymd', strtotime($endDate));
+        if ($endDateInt < $startDateInt) {
+            $this->invalidate('end_date', __("Please input end date after start date."));
+            return false;
+        }
+        return true;
     }
 
     /**
