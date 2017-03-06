@@ -38,7 +38,7 @@ $(document).ready(function () {
           if (unread_count == "") {
             $unread_box.text(1);
           } else if (Number(unread_count) == 9) {
-            
+
             $unread_box.text("9+");
           } else if (unread_count != "9+") {
             $unread_box.html(Number(unread_count) + 1);
@@ -95,6 +95,7 @@ function evCircleFeed(options) {
   $obj.children(".js-circle-count-box").html("");
   $obj.children(".circle-count_box").children(".count-value").html("");
   $obj.removeClass('is-unread').addClass('is-read');
+  updateNotifyOnHamburger();
   //アドレスバー書き換え
   if (!updateAddressBar(get_url)) {
     return false;
