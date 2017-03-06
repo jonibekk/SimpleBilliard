@@ -3,7 +3,7 @@
   <component name="DBNavigator.Module.ConnectionManager">
     <connections />
   </component>
-  <component name="NewModuleRootManager">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.vagrant" />
       <excludeFolder url="file://$MODULE_DIR$/Plugin/Cakeplus/Test" />
@@ -31,10 +31,11 @@
     <orderEntry type="module-library">
       <library name="PHP Runtime" type="php">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard" />
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/php/lib/php.jar!/stubs/standard" />
         </CLASSES>
+        <JAVADOC />
         <SOURCES>
-          <root url="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard" />
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/php/lib/php.jar!/stubs/standard" />
         </SOURCES>
       </library>
     </orderEntry>

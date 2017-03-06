@@ -290,15 +290,11 @@ class GoalsController extends AppController
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goalId);
 
-        $krStartDateFormat = date('Y/m/d', REQUEST_TIMESTAMP + $goalTerm['timezone'] * HOUR);
-
-        //期限は現在+2週間にする
         //もしそれがゴールの期限を超える場合はゴールの期限にする
         $endDate = strtotime('+2 weeks', REQUEST_TIMESTAMP);
         if ($endDate > $goal['Goal']['end_date']) {
             $endDate = $goal['Goal']['end_date'];
         }
-        $krEndDateFormat = date('Y/m/d', $endDate + $goalTerm['timezone'] * HOUR);
         $limitEndDate = date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR);
         $limitStartDate = date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR);
 
@@ -311,8 +307,6 @@ class GoalsController extends AppController
             'krPriorityList',
             'krValueUnitList',
             'krShortValueUnitList',
-            'krStartDateFormat',
-            'krEndDateFormat',
             'limitEndDate',
             'limitStartDate',
             'currentKrId'
@@ -1898,5 +1892,15 @@ class GoalsController extends AppController
             $res = $this->Goal->getGoalsSelect2($query['term'], $query['page_limit']);
         }
         return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * krのプログレスのみを1カラムで表示
+     * @return
+     */
+    public function kr_progress()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
     }
 }

@@ -24,3 +24,23 @@
   .notify-numbers;
   margin: 4px 0 0 132px;
 }
+
+.hamburger-unread-point {
+  position: absolute;
+  z-index: 10;
+  background-color: @acidRed;
+  padding: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: block;
+  margin: 12px 0 0 12px;
+
+  &.is-read {
+    display: none;
+  }
+
+  &.is-open {
+    display: none;
+  }
+}

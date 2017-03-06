@@ -424,8 +424,6 @@ $(document).ready(function () {
   $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
   $(document).on("click", ".notify-click-target", evNotifyPost);
   $(document).on("click", ".message-click-target", evMessage);
-  $(document).on("click", ".js-dashboard-circle-list", evCircleFeed);
-  $(document).on("click", ".circle-link", evCircleFeed);
   $(document).on("click", ".btn-back-notifications", evNotifications);
   $(document).on("click", ".call-notifications", evNotifications);
   $(document).on("click", ".message-list-panel-card-link", evMessage);
@@ -3759,39 +3757,6 @@ $(document).ready(function () {
     cake.unread_msg_post_ids.push(data.post_id);
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
-
-  // サークル投稿リアルタイム通知設定
-  if ($('.js-dashboard-circle-list-body')[0] !== undefined) {
-    pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
-      var $circle_list = $('.js-dashboard-circle-list-body');
-      var my_joined_circles = data.circle_ids;
-      $.each(my_joined_circles, function (i, circle_id) {
-        // $circlesはdashboardとhamburgerそれぞれのサークルリストを含むインスタンス。
-        var $circles = $circle_list.children('[circle_id=' + circle_id + ']');
-        $circles.each(function (i) {
-          var $circle = $(this);
-          if ($circle === undefined) {
-            return true;
-          }
-
-          // サークル未読数のアップデート
-          var $unread_box = $circle.find('.js-circle-count-box');
-          var unread_count = $unread_box.text().trim();
-          if (unread_count == "") {
-            $unread_box.text(1);
-          } else if (Number(unread_count) == 9) {
-            $unread_box.text("9+");
-          } else if (unread_count != "9+") {
-            $unread_box.html(Number(unread_count) + 1);
-          }
-
-          $circle.find('.js-dashboard-circle-list').removeClass('is-read').addClass('is-unread');
-          $circle.parent().prepend($circle);
-        });
-      });
-
-    });
-  }
 
 });
 

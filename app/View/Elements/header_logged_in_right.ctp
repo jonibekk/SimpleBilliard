@@ -130,8 +130,7 @@
             </a>
         </div>
     </div>
-    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?>" header-function
-    ">
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?>" header-function">
     <a href="#"
        class="btn-function-header"
        data-toggle="dropdown"
