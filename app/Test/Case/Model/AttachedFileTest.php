@@ -356,6 +356,36 @@ class AttachedFileTest extends GoalousTestCase
         $this->assertNull($res);
     }
 
+    /**
+     * MIMEタイプからファイル種別を取得
+     */
+    function test_getFileType()
+    {
+        $res = $this->AttachedFile->getFileType('image/jpeg');
+        $this->assertEquals(AttachedFile::TYPE_FILE_IMG, $res);
+
+        $res = $this->AttachedFile->getFileType('image/gif');
+        $this->assertEquals(AttachedFile::TYPE_FILE_IMG, $res);
+
+        $res = $this->AttachedFile->getFileType('image/png');
+        $this->assertEquals(AttachedFile::TYPE_FILE_IMG, $res);
+
+        $res = $this->AttachedFile->getFileType('image/x-photoshop');
+        $this->assertEquals(AttachedFile::TYPE_FILE_DOC, $res);
+
+        $res = $this->AttachedFile->getFileType('image/bmp');
+        $this->assertEquals(AttachedFile::TYPE_FILE_DOC, $res);
+
+        $res = $this->AttachedFile->getFileType('text/plain');
+        $this->assertEquals(AttachedFile::TYPE_FILE_DOC, $res);
+
+        $res = $this->AttachedFile->getFileType('application/pdf');
+        $this->assertEquals(AttachedFile::TYPE_FILE_DOC, $res);
+
+        $res = $this->AttachedFile->getFileType('video/avi');
+        $this->assertEquals(AttachedFile::TYPE_FILE_VIDEO, $res);
+    }
+
     function testGetCountOfAttachedFilesFalse()
     {
         $res = $this->AttachedFile->getCountOfAttachedFiles(1, 10000);
