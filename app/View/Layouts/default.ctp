@@ -30,7 +30,10 @@ if (!isset($with_header_menu)) {
 ?>
 
 <?php // spec: Only other mobile app env, and only feed page, displaying subheader. ?>
-<?php if (!$is_mb_app && $this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
+<?php
+// TODO:Uncomment this after release native app
+//if (!$is_mb_app && $this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
+if ($this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
     echo $this->element('header_sp_feeds_alt');
 }
 ?>
