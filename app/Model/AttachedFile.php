@@ -81,9 +81,9 @@ class AttachedFile extends AppModel
     public $validate = [
         'attached'   => [
             // convert to byte
-            'image_max_size' => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
-            'image_type'     => ['rule' => ['attachmentImageType',],]
-
+            'canProcessImage' => ['rule' => 'canProcessImage',],
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
+            'image_type'      => ['rule' => ['attachmentImageType',],],
         ],
         'file_type'  => [
             'numeric' => [
@@ -253,7 +253,7 @@ class AttachedFile extends AppModel
                 ],
                 'AttachedFile'              => $file_data
             ];
-            if (!$res = $this->saveAll($save_data)) {
+            if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
             }
         }
@@ -329,7 +329,7 @@ class AttachedFile extends AppModel
                 ],
                 'AttachedFile'              => $file_data
             ];
-            if (!$res = $this->saveAll($save_data)) {
+            if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
             }
 

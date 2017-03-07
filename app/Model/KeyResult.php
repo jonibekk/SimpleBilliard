@@ -151,11 +151,12 @@ class KeyResult extends AppModel
 
     public $post_validate = [
         'start_date' => [
-            'isString' => ['rule' => 'isString'],
-            'dateYmd'  => [
+            'isString'  => ['rule' => 'isString'],
+            'dateYmd'   => [
                 'rule'       => ['date', 'ymd'],
                 'allowEmpty' => true
             ],
+            'rangeDate' => ['rule' => ['customValidRangeDate', false]],
         ],
         'end_date'   => [
             'isString' => ['rule' => 'isString'],
@@ -191,6 +192,21 @@ class KeyResult extends AppModel
                 'rule'       => 'validateEditProgress'
             ],
         ],
+        'start_date'    => [
+            'isString'  => ['rule' => 'isString'],
+            'dateYmd'   => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+            'rangeDate' => ['rule' => ['customValidRangeDate', true]],
+        ],
+        'end_date'      => [
+            'isString' => ['rule' => 'isString'],
+            'dateYmd'  => [
+                'rule'       => ['date', 'ymd'],
+                'allowEmpty' => true
+            ],
+        ],
     ];
 
     /**
@@ -213,6 +229,72 @@ class KeyResult extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
         $this->_setPriorityName();
+    }
+
+    /**
+     * 独自バリデーション
+     * KR開始・終了日範囲チェック
+     *
+     * @param      $val
+     * @param bool $isEdit
+     *
+     * @return bool
+     */
+    function customValidRangeDate($val, bool $isEdit = false): bool
+    {
+        $startDate = array_shift($val);
+        $endDate = Hash::get($this->data, 'KeyResult.end_date');
+        if (empty($startDate) || empty($endDate)) {
+            return true;
+        }
+
+        // 開始日が終了日を超えてないか
+        // getCurrentTermDataの方が効率は良いがテストが通らないのでDBから直で取得
+        // ※複数のtimezoneで問題ないかのテスト時、getCurrentTermDataだとキャッシュしてしまうので最新のデータが取得できない
+//        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $timezone = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP)['timezone'];
+
+        // FIXME:タイムスタンプで比較すると不具合が生じる為、日付文字列を数値に変換して比較する
+        // 参照:http://54.250.147.97:8080/browse/GL-5622
+        // 入力した日付を数値に変換
+        $startDateInt = (int)date('Ymd', strtotime($startDate));
+        $endDateInt = (int)date('Ymd', strtotime($endDate));
+        if ($startDateInt > $endDateInt) {
+            $this->invalidate('start_date', __("Start date has expired."));
+            return false;
+        }
+
+        // ゴール取得
+        if ($isEdit) {
+            $krId = Hash::get($this->data, 'KeyResult.id');
+            $kr = $this->getById($krId);
+            if (empty($kr)) {
+                return true;
+            }
+            $goal = $this->Goal->getById($kr['goal_id']);
+
+        } else {
+            $goalId = Hash::get($this->data, 'KeyResult.goal_id');
+            $goal = $this->Goal->getById($goalId);
+        }
+
+        if (empty($goal)) {
+            return true;
+        }
+
+        // ゴールの開始・終了日の範囲内か
+        $utcGoalStartTimeStamp = $goal['start_date'] + ($timezone * HOUR);
+        $utcGoalEndTimeStamp = $goal['end_date'] + ($timezone * HOUR);
+        $goalStartDateInt = (int)date('Ymd', $utcGoalStartTimeStamp);
+        $goalEndDateInt = (int)date('Ymd', $utcGoalEndTimeStamp);
+        if ($startDateInt >= $goalStartDateInt
+            && $endDateInt <= $goalEndDateInt
+        ) {
+            return true;
+        }
+
+        $this->invalidate('start_date', __("Please input start / end date within start / end date of the goal."));
+        return false;
     }
 
     /**
@@ -975,6 +1057,7 @@ class KeyResult extends AppModel
 
     /**
      * KR進捗算出用のデータ取得
+     *
      * @param array $goalIds
      *
      * @return array
@@ -1043,7 +1126,7 @@ class KeyResult extends AppModel
      *  - それ以外は期の始まりに設定
      * - end_dateはどんな場合でも期の終わりに設定
      *
-     * @param  int $goalId
+     * @param  int    $goalId
      * @param  string $termAfterUpdate
      *
      * @return bool

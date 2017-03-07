@@ -54,14 +54,14 @@
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __("Last Name"),
-                    'placeholder'              => __("eg. Armstrong"),
+                    'placeholder'              => __("last name (eg. Smith)"),
                     "pattern"                  => User::USER_NAME_REGEX,
                     "data-bv-regexp-message"   => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message" => __("Input is required."),
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                    => __("First Name"),
-                    'placeholder'              => __("eg. Harry"),
+                    'placeholder'              => __("first name (eg. John)"),
                     "pattern"                  => User::USER_NAME_REGEX,
                     "data-bv-regexp-message"   => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                     "data-bv-notempty-message" => __("Input is required."),

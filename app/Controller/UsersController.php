@@ -305,8 +305,6 @@ class UsersController extends AppController
             if ($step === 2) {
                 return $this->render($passwordTemplate);
             }
-            $lastFirst = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-            $this->set(compact('lastFirst'));
             return $this->render($profileTemplate);
         }
 
@@ -373,9 +371,6 @@ class UsersController extends AppController
 
         // ユーザ本登録
         if (!$this->User->userRegistration($data)) {
-            //姓名の並び順をセット
-            $lastFirst = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-            $this->set(compact('lastFirst'));
             return $this->render($passwordTemplate);
         }
         //ログイン
@@ -688,7 +683,7 @@ class UsersController extends AppController
         }
         $this->layout = LAYOUT_TWO_COLUMN;
         //姓名の並び順をセット
-        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+        $lastFirst = in_array($me['User']['language'], $this->User->langCodeOfLastFirst);
         //言語選択
         $language_list = $this->Lang->getAvailLangList();
         //タイムゾーン
@@ -718,7 +713,7 @@ class UsersController extends AppController
                 }
             }
         }
-        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
+        $this->set(compact('me', 'is_not_use_local_name', 'lastFirst', 'language_list', 'timezones',
             'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
     }

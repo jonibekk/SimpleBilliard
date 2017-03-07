@@ -155,8 +155,9 @@ class Goal extends AppModel
             ],
         ],
         'photo'            => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType',],]
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'      => ['rule' => ['attachmentImageType',],],
+            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'goal_category_id' => [
             'numeric'  => [
@@ -195,6 +196,7 @@ class Goal extends AppModel
             ],
             'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
             'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
+            'startEndDate'        => ['rule' => ['customValidStartEndDate']],
         ],
         'term_type' => [
             'inList'   => ['rule' => ['inList', ['current', 'next']],],
@@ -217,6 +219,7 @@ class Goal extends AppModel
             ],
             'checkRangeTerm'      => ['rule' => ['checkRangeTerm']],
             'checkAfterKrEndDate' => ['rule' => ['checkAfterKrEndDate']],
+            'startEndDate'        => ['rule' => ['customValidStartEndDate']],
         ],
         'term_type' => [
             'inList' => [
@@ -332,6 +335,46 @@ class Goal extends AppModel
         $date = AppUtil::getEndDateByTimezone($date, $goalTerm['timezone']);
 
         return $goalTerm['start_date'] <= $date && $date <= $goalTerm['end_date'];
+    }
+
+    /**
+     * 終了日が開始日以前の日付でないか
+     *
+     * @param  array $val
+     *
+     * @return bool
+     */
+    function customValidStartEndDate($val)
+    {
+        $endDate = array_shift($val);
+        $termType = Hash::get($this->data, 'Goal.term_type');
+        if (empty($endDate) || empty($termType)) {
+            return true;
+        }
+
+        $goalId = Hash::get($this->data, 'Goal.id');
+
+        if (empty($goalId)) {
+            if ($termType == EvaluateTerm::TERM_TYPE_CURRENT) {
+                $startDateInt = (int)date('Ymd');
+            } else {
+                $term = $this->Team->EvaluateTerm->getNextTermData();
+                $startDateInt = (int)date('Ymd', $term['start_date'] + ($term['timezone'] * HOUR));
+            }
+        } else {
+            $goal = $this->getById($goalId);
+            if (empty($goal)) {
+                return true;
+            }
+            $startDateInt = (int)date('Ymd', $goal['start_date']);
+        }
+
+        $endDateInt = (int)date('Ymd', strtotime($endDate));
+        if ($endDateInt < $startDateInt) {
+            $this->invalidate('end_date', __("Please input end date after start date."));
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -466,7 +509,9 @@ class Goal extends AppModel
     {
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
-            $data['Goal']['start_date'] = time();
+            $currentTermData = $this->Team->EvaluateTerm->getCurrentTermData();
+            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone(date('Y-m-d'),
+                $currentTermData['timezone']);
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
@@ -2092,7 +2137,7 @@ class Goal extends AppModel
     {
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $user_id,
+                'Goal.user_id' => $user_id,
             ],
             'fields'     => ['Goal.id']
         ];
@@ -2209,10 +2254,10 @@ class Goal extends AppModel
                 ]
             ],
             'conditions' => [
-                'Goal.end_date >=' => $currentTerm['start_date'],
-                'Goal.end_date <=' => $currentTerm['end_date'],
-                'Goal.completed'   => null,
-                'GoalMember.del_flg'   => false
+                'Goal.end_date >='   => $currentTerm['start_date'],
+                'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.completed'     => null,
+                'GoalMember.del_flg' => false
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-22 14:14+0900\n"
+"PO-Revision-Date: 2017-03-02 14:51+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -977,6 +977,9 @@ msgstr "コラボが多い順"
 msgid "Progress rate"
 msgstr "進捗率が高い順"
 
+msgid "Please input end date after start date."
+msgstr "終了日は開始日以降を入力してください。"
+
 msgid "Please input goal end date later than key result end date"
 msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
 
@@ -1018,6 +1021,12 @@ msgstr "3(デフォルト)"
 
 msgid "5(Very high)"
 msgstr "5(とても高い)"
+
+msgid "Start date has expired."
+msgstr "開始日が期限を過ぎています。"
+
+msgid "Please input start / end date within start / end date of the goal."
+msgstr "開始・終了日はゴールの開始・終了日の範囲内で入力してください。"
 
 msgid "Input is required."
 msgstr "入力必須項目です。"
@@ -1721,6 +1730,8 @@ msgstr ""
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
 
+msgid "The image cannot be processed. The image taken with this device may not be supported."
+msgstr "この画像は処理できません。この端末で撮影された画像はサポートされてない可能性があります。"
 msgid "File extension and content are different."
 msgstr "ファイルの拡張子と内容が異なっています。"
 
@@ -1857,9 +1868,6 @@ msgstr "スペルを入力してください。"
 
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
-
-msgid "Start date has expired."
-msgstr "開始日が期限を過ぎています。"
 
 msgid "The limit date must be after start date."
 msgstr "期限は開始日より後である必要があります。"
@@ -2249,6 +2257,9 @@ msgstr ""
 msgid "Your name"
 msgstr "お名前"
 
+msgid "Birthday(Optional)"
+msgstr "誕生日(オプション)"
+
 msgid "I agree to %s and %s of Goalous."
 msgstr "Goalousの%sと%sに同意します。"
 
@@ -2258,11 +2269,11 @@ msgstr "利用規約"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-msgid "eg. Harry"
-msgstr "例) Hiroshi"
+msgid "first name (eg. John)"
+msgstr "名（例. Hiroshi）"
 
-msgid "eg. Armstrong"
-msgstr "例) Suzuki"
+msgid "last name (eg. Smith)"
+msgstr "姓（例. Suzuki）"
 
 msgid "eg. Team Goalous"
 msgstr "例) チームGoalous"
@@ -2541,7 +2552,9 @@ msgstr "達成要素を更新しました。"
 msgid ""
 "If you change the goal term from the next term to this term, the goal and "
 "all KRs’ deadlines will be changed to the last day of the current term."
-msgstr "ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変更されます。"
+msgstr ""
+"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
+"更されます。"
 
 msgid "All Goals"
 msgstr "すべてのゴール"
@@ -3432,33 +3445,6 @@ msgstr ""
 msgid "Term settings"
 msgstr "期間設定"
 
-msgid "Items for change"
-msgstr "変更適用対象"
-
-msgid "Current term can't be changed during the evaluation period."
-msgstr "評価期間中は今期の変更ができません。"
-
-msgid "Please select the standard start month."
-msgstr "基準となる期の開始月を選択して下さい。"
-
-msgid "Previous term before changed"
-msgstr "現在の前期の期間"
-
-msgid "Current term before changed"
-msgstr "変更前の今期"
-
-msgid "Next term before changed"
-msgstr "変更前の来期"
-
-msgid "Current term after changed"
-msgstr "更新後の今期の期間"
-
-msgid "Next term after changed"
-msgstr "更新後の来期の期間"
-
-msgid "Change term settings"
-msgstr "期間設定を更新"
-
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
 
@@ -3973,6 +3959,12 @@ msgstr "名(%s)"
 
 msgid "eg. Bruce"
 msgstr "例) 太郎"
+
+msgid "eg. Armstrong"
+msgstr "例) Suzuki"
+
+msgid "eg. Harry"
+msgstr "例) Hiroshi"
 
 msgid "Hide birth year"
 msgstr "生年を隠す。"
@@ -4728,6 +4720,9 @@ msgstr "あなたのメールアドレス"
 msgid " "
 msgstr " "
 
+msgid "Please select the standard start month."
+msgstr "基準となる期の開始月を選択して下さい。"
+
 msgid "Create a group vision."
 msgstr "グループビジョンを作成してください"
 
@@ -4903,3 +4898,27 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
+
+#~ msgid "Items for change"
+#~ msgstr "変更適用対象"
+
+#~ msgid "Current term can't be changed during the evaluation period."
+#~ msgstr "評価期間中は今期の変更ができません。"
+
+#~ msgid "Previous term before changed"
+#~ msgstr "現在の前期の期間"
+
+#~ msgid "Current term before changed"
+#~ msgstr "変更前の今期"
+
+#~ msgid "Next term before changed"
+#~ msgstr "変更前の来期"
+
+#~ msgid "Current term after changed"
+#~ msgstr "更新後の今期の期間"
+
+#~ msgid "Next term after changed"
+#~ msgstr "更新後の来期の期間"
+
+#~ msgid "Change term settings"
+#~ msgstr "期間設定を更新"

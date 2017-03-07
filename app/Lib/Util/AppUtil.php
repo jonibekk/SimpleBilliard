@@ -17,6 +17,32 @@ class AppUtil
     }
 
     /**
+     * timezoneを考慮した開始日のtimestampを返す
+     *
+     * @param  string $dateStr
+     * @param  float  $timezone
+     *
+     * @return int
+     */
+    static function getStartTimestampByTimezone(string $dateStr, float $timezone): int
+    {
+        return self::getTimestampByTimezone($dateStr . " 00:00:00", $timezone);
+    }
+
+    /**
+     * timezoneを考慮した終了日のtimestampを返す
+     *
+     * @param  string $dateStr
+     * @param  float  $timezone
+     *
+     * @return int
+     */
+    static function getEndTimestampByTimezone(string $dateStr, float $timezone): int
+    {
+        return self::getTimestampByTimezone($dateStr . " 23:59:59", $timezone);
+    }
+
+    /**
      * timezoneを考慮したtimestampを返す
      *
      * @param  string $dateStr
