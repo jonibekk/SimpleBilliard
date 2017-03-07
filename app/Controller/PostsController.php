@@ -1227,6 +1227,9 @@ class PostsController extends AppController
     }
 
     /**
+     * TODO:ファイルアップロード用APIをapi/v1に作成した為、リリース後削除
+     * @deprecated
+     *
      * ファイルアップロード
      * JSON レスポンス形式
      * {

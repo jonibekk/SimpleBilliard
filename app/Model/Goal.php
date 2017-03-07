@@ -155,8 +155,9 @@ class Goal extends AppModel
             ],
         ],
         'photo'            => [
-            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'     => ['rule' => ['attachmentImageType',],]
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'      => ['rule' => ['attachmentImageType',],],
+            'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
         'goal_category_id' => [
             'numeric'  => [

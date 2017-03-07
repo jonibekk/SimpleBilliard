@@ -81,9 +81,9 @@ class AttachedFile extends AppModel
     public $validate = [
         'attached'   => [
             // convert to byte
-            'image_max_size' => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
-            'image_type'     => ['rule' => ['attachmentImageType',],]
-
+            'canProcessImage' => ['rule' => 'canProcessImage',],
+            'image_max_size'  => ['rule' => ['attachmentMaxSize', self::ATTACHABLE_MAX_FILE_SIZE_MB * 1024 * 1024],],
+            'image_type'      => ['rule' => ['attachmentImageType',],],
         ],
         'file_type'  => [
             'numeric' => [
@@ -253,7 +253,7 @@ class AttachedFile extends AppModel
                 ],
                 'AttachedFile'              => $file_data
             ];
-            if (!$res = $this->saveAll($save_data)) {
+            if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
             }
         }
@@ -329,7 +329,7 @@ class AttachedFile extends AppModel
                 ],
                 'AttachedFile'              => $file_data
             ];
-            if (!$res = $this->saveAll($save_data)) {
+            if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
             }
 
@@ -355,15 +355,27 @@ class AttachedFile extends AppModel
     function getFileType($type)
     {
         $arr = explode('/', $type);
-        $arr[0];
-
-        foreach (self::$TYPE_FILE as $file_type => $v) {
-            if ($arr[0] == $v['type']) {
-                return $file_type;
-            }
+        if (empty($arr)) {
+            return self::TYPE_FILE_DOC;
         }
 
-        return self::TYPE_FILE_DOC;
+        // 例.image/jpgだったら/の後ろのjpgのみを取得
+        $subType = reset($arr);
+        $fileTypes = array_combine(Hash::extract(self::$TYPE_FILE, '{n}.type'), array_keys(self::$TYPE_FILE));
+        // どのタイプにも当てはまらない場合はドキュメントとして扱う
+        if (!isset($fileTypes[$subType])) {
+            return self::TYPE_FILE_DOC;
+        }
+
+        // 許可されていない画像の場合はドキュメントとして扱う
+        $fileType = $fileTypes[$subType];
+        if ($fileType == self::TYPE_FILE_IMG) {
+            $allowImageTypes = Configure::read("allow_image_types");
+            if (!in_array($type, $allowImageTypes)) {
+                return self::TYPE_FILE_DOC;
+            }
+        }
+        return $fileType;
     }
 
     /**

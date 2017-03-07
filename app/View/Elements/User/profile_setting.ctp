@@ -6,7 +6,7 @@
  * Time: 2:41 PM
  *
  * @var CodeCompletionView $this
- * @var boolean            $last_first
+ * @var boolean            $lastFirst
  * @var string             $language_name
  * @var array              $me
  * @var boolean            $is_not_use_local_name
@@ -66,7 +66,7 @@
             <?php //姓と名は言語によって表示順を変える
             $last_name = $this->Form->input('last_name', [
                 'label'                        => __("Last Name"),
-                'placeholder'                  => __("eg. Armstrong"),
+                'placeholder'                  => __("last name (eg. Smith)"),
                 "pattern"                      => User::USER_NAME_REGEX,
                 "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                 "data-bv-notempty-message"     => __("Input is required."),
@@ -76,7 +76,7 @@
             ]);
             $first_name = $this->Form->input('first_name', [
                 'label'                        => __("First Name"),
-                'placeholder'                  => __("eg. Harry"),
+                'placeholder'                  => __("first name (eg. John)"),
                 "pattern"                      => User::USER_NAME_REGEX,
                 "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
                 "data-bv-notempty-message"     => __("Input is required."),
@@ -84,7 +84,7 @@
                 'data-bv-stringlength-max'     => 128,
                 'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             ]);
-            if ($last_first) {
+            if ($lastFirst) {
                 echo $last_name;
                 echo $first_name;
             } else {

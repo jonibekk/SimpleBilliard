@@ -8,7 +8,7 @@
 <?= $this->App->viewStartComment()?>
 <?=
 $this->Form->create('AttachedFile', [
-    'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
+    'url'   => '/api/v1/files/upload_image',
     'id'    => 'UploadFileForm',
     'type'  => 'file',
     'class' => 'upload-file-form',

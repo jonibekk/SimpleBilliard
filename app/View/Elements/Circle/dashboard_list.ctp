@@ -28,7 +28,7 @@
             <div class="dashboard-circle-unread-point">
                 <div class="circle"></div>
             </div>
-            <p class="dashboard-circle-name-box"
+            <p class="dashboard-circle-name-box <?= $isHamburger ? 'is-hamburger' : '' ?>"
                title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?>
             </p>
             <div class="dashboard-circle-count-box-wrapper">

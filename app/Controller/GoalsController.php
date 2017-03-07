@@ -1893,4 +1893,14 @@ class GoalsController extends AppController
         }
         return $this->_ajaxGetResponse($res);
     }
+
+    /**
+     * krのプログレスのみを1カラムで表示
+     * @return
+     */
+    public function kr_progress()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
 }
