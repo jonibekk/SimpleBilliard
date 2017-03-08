@@ -149,7 +149,7 @@
 
                     <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                         <?=
-                        $this->Form->submit(__($is_edit_mode ? "保存する" : "アクション登録"),
+                        $this->Form->submit(__($is_edit_mode ? "Save" : "Post"),
                             [
                                 'class' => 'btn btn-primary pull-right post-submit-button js-action-submit-button',
                                 'id'    => 'CommonActionSubmit'
