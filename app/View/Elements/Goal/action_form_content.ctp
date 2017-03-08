@@ -148,12 +148,13 @@
                     </a>
 
                     <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
+                        <?php $buttonVal = $is_edit_mode ? __("Save") : __("Post"); ?>
                         <?=
-                        $this->Form->submit(__($is_edit_mode ? "Save" : "Post"),
+                        $this->Form->submit($buttonVal,
                             [
                                 'class' => 'btn btn-primary pull-right post-submit-button js-action-submit-button',
                                 'id'    => 'CommonActionSubmit'
-                            ]) ?>
+                            ]); ?>
                     </div>
                 </div>
             </div>
