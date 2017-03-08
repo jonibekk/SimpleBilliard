@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 /* eslint-enable no-unused-vars */
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
-import { Router, Route, browserHistory } from 'react-router'
+import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import thunk from 'redux-thunk';
 import { createDevTools } from 'redux-devtools'
@@ -44,8 +44,10 @@ export default class Routes extends Component {
       <Provider store={store}>
         <div>
           <Router history={history}>
-            <Route path="/topics" component={TopicContainer} />
-            <Route path="/messages" component={MessageContainer} />
+            <Route path="/topics">
+              <IndexRoute component={TopicContainer} />
+              <Route path=":topic_id" component={MessageContainer} />
+            </Route>
           </Router>
           {/* <DevTools / > */}
         </div>

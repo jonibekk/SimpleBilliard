@@ -106,6 +106,7 @@ Router::connect('/goals/:id/edit',
     ['controller' => 'goals', 'action' => 'edit', '[method' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
+Router::connect('/topics/:topic_id', ['controller' => 'topics', 'action' => 'index']);
 
 /**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している

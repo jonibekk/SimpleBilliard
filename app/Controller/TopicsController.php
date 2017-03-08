@@ -12,9 +12,9 @@ class TopicsController extends AppController
      *
      * @return void
      */
-    public function index()
+    public function index($topicId = null)
     {
-        return $this->render("/Messages/index");
+        return $this->render("index");
     }
 
 }
