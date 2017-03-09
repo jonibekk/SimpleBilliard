@@ -75,7 +75,16 @@ class PostHelper extends AppHelper
         return true;
     }
 
-    function getPostTimeBefore(array $posts, array $currentCircle, array $currentTeam)
+    /**
+     * getting first post time
+     *
+     * @param array $posts
+     * @param array $currentCircle
+     * @param array $currentTeam
+     *
+     * @return null
+     */
+    function getFirstPostTime(array $posts, array $currentCircle, array $currentTeam)
     {
         $firstPost = $posts[0] ?? null;
         // circle_feed ページの場合
@@ -90,6 +99,14 @@ class PostHelper extends AppHelper
         return $postTimeBefore;
     }
 
+    /**
+     * getting time of oldest post
+     *
+     * @param array $currentCircle
+     * @param array $currentTeam
+     *
+     * @return int
+     */
     function getOldestPostTime(array $currentCircle, array $currentTeam): int
     {
         // circle_feed ページの場合
