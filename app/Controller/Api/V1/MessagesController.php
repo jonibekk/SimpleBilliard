@@ -7,7 +7,7 @@ App::uses('ApiController', 'Controller/Api');
 class MessagesController extends ApiController
 {
     /**
-     * Send Like message
+     * Send a message
      * url: POST /api/v1/messages
      *
      * @data integer $topic_id required
@@ -26,7 +26,7 @@ class MessagesController extends ApiController
     }
 
     /**
-     * Send Like message
+     * Send a Like message
      * url: POST /api/v1/messages/like
      *
      * @data integer $topic_id required
