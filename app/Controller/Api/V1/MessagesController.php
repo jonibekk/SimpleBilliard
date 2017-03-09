@@ -15,6 +15,7 @@ class MessagesController extends ApiController
      * @data array $file_ids optional
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Send+message
+     *       TODO: This is mock! We have to implement it!
      */
     function post()
     {
@@ -32,6 +33,7 @@ class MessagesController extends ApiController
      * @data integer $topic_id required
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Send+like+message
+     *       TODO: This is mock! We have to implement it!
      */
     function post_like()
     {

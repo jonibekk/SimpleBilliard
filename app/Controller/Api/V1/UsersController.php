@@ -18,6 +18,7 @@ class UsersController extends ApiController
      * @queryParam array $exclude_user_ids optional
      * @return CakeResponse
      * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Search+users
+     *             TODO: This is mock! We have to implement it!
      */
     function get_search()
     {

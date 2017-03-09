@@ -16,6 +16,7 @@ class TopicsController extends ApiController
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+detail+page
+     * TODO: This is mock! We have to implement it!
      */
     function get_detail(int $topicId)
     {
@@ -98,6 +99,7 @@ class TopicsController extends ApiController
      * @queryParam int $limit optional
      * @return CakeResponse
      * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+message+list
+     *             TODO: This is mock! We have to implement it!
      */
     function get_messages(int $topicId)
     {
@@ -170,6 +172,7 @@ class TopicsController extends ApiController
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+member+list
+     * TODO: This is mock! We have to implement it!
      */
     function get_members(int $topicId)
     {
@@ -275,6 +278,7 @@ HTML;
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Read+member+list
+     * TODO: This is mock! We have to implement it!
      */
     function get_read_members(int $topicId)
     {
@@ -386,6 +390,7 @@ HTML;
      * @queryParam string $keyword optional
      * @return CakeResponse
      * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Search+topics
+     *             TODO: This is mock! We have to implement it!
      */
     function get_search()
     {
@@ -445,6 +450,7 @@ HTML;
      * @data array $file_ids optional
      * @return CakeResponse|null
      * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Create+a+topic
+     *       TODO: This is mock! We have to implement it!
      */
     function post()
     {
@@ -484,6 +490,7 @@ HTML;
      * @data string $title required
      * @return CakeResponse|null
      * @link https://confluence.goalous.com/display/GOAL/%5BPUT%5D+Set+topic+title
+     *       TODO: This is mock! We have to implement it!
      */
     function put(int $topicId)
     {
@@ -499,6 +506,7 @@ HTML;
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BDELETE%5D+Leave+me
+     * TODO: This is mock! We have to implement it!
      */
     function delete_leave_me(int $topicId)
     {
