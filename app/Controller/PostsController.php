@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
+App::import('Service', 'PostService');
 
 /**
  * Posts Controller
@@ -408,8 +409,17 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     * Getting feed data as Html
+     * It's used for infinity scroll. Not initializing.
+     *
+     * @return CakeResponse|null
+     */
     public function ajax_get_feed()
     {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
         $paramNamed = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
@@ -425,7 +435,7 @@ class PostsController extends AppController
         //一ヶ月以前を指定された場合
         $monthIndex = Hash::get($paramNamed, 'month_index');
         if ($monthIndex) {
-            $postRange = $this->_getRangeByMonthIndex($monthIndex);
+            $postRange = $PostService->getRangeByMonthIndex($monthIndex);
         } else {
             $postRange = ['start' => null, 'end' => null];
         }
