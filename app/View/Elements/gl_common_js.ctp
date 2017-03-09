@@ -27,6 +27,11 @@ if (Hash::get($this->request->params, 'controller') === 'goals'
 ) {
     echo $this->Html->script('/js/react_goal_search_app.min');
 }
+// メッセージ
+if (Hash::get($this->request->params, 'controller') === 'topics')
+{
+    echo $this->Html->script('/js/react_message_app.min');
+}
 
 echo $this->Html->script('/js/ng_vendors.min');
 echo $this->Html->script('/js/vendors.min');
