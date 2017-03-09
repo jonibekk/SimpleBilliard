@@ -9,11 +9,11 @@ import thunk from 'redux-thunk';
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
-import createReducer from '../reducers/index'
+import createReducer from '../reducers/config'
 
 // Container読み込み
-import TopicContainer from '~/message/containers/Topic'
-import MessageContainer from '~/message/containers/Message'
+import IndexContainer from '~/message/containers/Index'
+import DetailContainer from '~/message/containers/Detail'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -45,8 +45,8 @@ export default class Routes extends Component {
         <div>
           <Router history={history}>
             <Route path="/topics">
-              <IndexRoute component={TopicContainer} />
-              <Route path=":topic_id" component={MessageContainer} />
+              <IndexRoute component={IndexContainer} />
+              <Route path=":topic_id/detail" component={DetailContainer} />
             </Route>
           </Router>
           {/* <DevTools / > */}

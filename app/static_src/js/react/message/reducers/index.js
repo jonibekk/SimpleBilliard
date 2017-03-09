@@ -1,15 +1,12 @@
-import { combineReducers } from 'redux'
-import { routerReducer } from 'react-router-redux'
-import topic from './topic'
-import message from './message'
+import * as types from '~/message/constants/ActionTypes'
 
-export default function createReducer() {
-  return combineReducers(
-    Object.assign({}, {
-      topic,
-      message
-    }, {
-      routing: routerReducer
-    })
-  )
+const initialState = {
+  topics: []
+}
+
+export default function topic(state = initialState, action) {
+  switch (action.type) {
+    default:
+      return state;
+  }
 }

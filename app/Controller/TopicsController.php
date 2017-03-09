@@ -12,9 +12,19 @@ class TopicsController extends AppController
      *
      * @return void
      */
-    public function index($topicId = null)
+    public function index()
     {
         return $this->render("index");
     }
 
+    /**
+     * Topic detail action
+     *
+     * @return void
+     */
+     public function detail()
+     {
+         $topicId = $this->request->params['topic_id'];
+         return $this->render("index");
+     }
 }
