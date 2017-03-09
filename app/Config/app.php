@@ -16,3 +16,9 @@ $config['label'] = [
         ['id' => 5, 'label' => __('5 (Very high)')],
     ],
 ];
+$config['allow_image_types'] = [
+    'image/png',
+    'image/gif',
+    'image/jpeg',
+];
+

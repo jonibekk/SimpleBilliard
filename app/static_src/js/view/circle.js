@@ -108,6 +108,12 @@ function evCircleFeed(options) {
   if (!opt.recursive) {
     $("#app-view-elements-feed-posts").html($loader_html);
   }
+
+  // TODO: サブヘッダを削除するタイミングでこの処理も必要無くなるので一緒に削除する。
+  if ($("#SubHeaderMenuFeed").exists()) {
+    $("#SubHeaderMenuFeed").click();
+  }
+
   $("#FeedMoreRead").removeClass("hidden");
   // read more 非表示
   $("#FeedMoreReadLink").css("display", "none");
