@@ -75,4 +75,33 @@ class PostHelper extends AppHelper
         return true;
     }
 
+    function getPostTimeBefore(array $posts, array $currentCircle, array $currentTeam)
+    {
+        $firstPost = $posts[0] ?? null;
+        // circle_feed ページの場合
+        if (!empty($currentCircle) && $firstPost) {
+            $postTimeBefore = $firstPost['Post']['modified'];
+        } // ホーム画面の場合
+        elseif (!empty($currentTeam) && $firstPost) {
+            $postTimeBefore = $firstPost['Post']['created'];
+        } else {
+            $postTimeBefore = null;
+        }
+        return $postTimeBefore;
+    }
+
+    function getOldestPostTime(array $currentCircle, array $currentTeam): int
+    {
+        // circle_feed ページの場合
+        if (!empty($currentCircle)) {
+            $oldestPostTime = $currentCircle['Circle']['created'];
+        } // ホーム画面の場合
+        elseif (!empty($currentTeam)) {
+            $oldestPostTime = $currentTeam['Team']['created'];
+        } else {
+            $oldestPostTime = 0;
+        }
+        return $oldestPostTime;
+    }
+
 }

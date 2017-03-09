@@ -7,7 +7,7 @@
  *
  * @var CodeCompletionView    $this
  * @var                       $posts
- * @var                       $current_circle
+ * @var                       $currentCircle
  * @var                       $circle_member_count
  * @var                       $feed_more_read_url
  * @var                       $feed_filter
@@ -19,7 +19,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <?= $this->element('Feed/feed_share_range_filter',
-    compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
+    compact('currentCircle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
@@ -37,7 +37,7 @@ if (!isset($this->request->params['post_id'])) {
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
     <span class="num"></span><?= __(" new posts") ?></a>
 
-<?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
+<?= $this->element('Feed/circle_join_button', compact('currentCircle', 'user_status')) ?>
 <?php
 // 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
 if (isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id'])): ?>
@@ -58,7 +58,6 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
 $next_page_num = 2;
 $month_index = 0;
 $more_read_text = __("More...");
-$oldest_post_time = 0;
 if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
     $next_page_num = 1;
     $month_index = 1;
@@ -77,25 +76,10 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
 // 次回 Ajax リクエスト時はこの投稿の更新時間より前の投稿のみを読み込む
 // （新着投稿による重複表示をふせぐため）
 // ホームフィードでは created、その他では modified を使用する
-$first_post = isset($posts[0]) ? $posts[0] : null;
-$post_time_before = null;
-
-// circle_feed ページの場合
-// サークル作成日以前の投稿は存在しないので読み込まない
-if (isset($current_circle) && $current_circle) {
-    $oldest_post_time = $current_circle['Circle']['created'];
-    if ($first_post) {
-        $post_time_before = $first_post['Post']['modified'];
-    }
-}
-// ホーム画面の場合
-// チーム作成日以前の投稿は存在しないので読み込まない
-elseif (isset($current_team) && $current_team) {
-    $oldest_post_time = $current_team['Team']['created'];
-    if ($first_post) {
-        $post_time_before = $first_post['Post']['created'];
-    }
-}
+$currentCircle = $currentCircle ?? [];
+$currentTeam = $currentTeam ?? [];
+$oldestPostTime = $this->Post->getOldestPostTime($currentCircle, $currentTeam);
+$postTimeBefore = $this->Post->getPostTimeBefore($posts, $currentCircle, $currentTeam);
 ?>
 <div class="panel panel-default feed-read-more <?= $hideReadMoreLink ? 'hidden' : null ?>" id="FeedMoreRead">
     <div class="panel-body panel-read-more-body">
@@ -108,8 +92,8 @@ elseif (isset($current_team) && $current_team) {
            get-url="<?=
            $this->Html->url($feed_more_read_url) ?>"
            id="FeedMoreReadLink"
-           oldest-post-time="<?= $oldest_post_time ?>"
-           post-time-before="<?= $post_time_before ?>"
+           oldest-post-time="<?= $oldestPostTime ?>"
+           post-time-before="<?= $postTimeBefore ?>"
         >
             <?= $more_read_text ?> </a>
     </div>
