@@ -15,6 +15,7 @@ class TopicsController extends ApiController
      * @param int $topicId
      *
      * @return CakeResponse
+     * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+detail+page
      */
     function get_detail(int $topicId)
     {
@@ -93,9 +94,10 @@ class TopicsController extends ApiController
      *
      * @param int $topicId
      *
-     * @queryParam int $cursor
-     * @queryParam int $limit
+     * @queryParam int $cursor optional
+     * @queryParam int $limit optional
      * @return CakeResponse
+     * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+message+list
      */
     function get_messages(int $topicId)
     {
@@ -167,6 +169,7 @@ class TopicsController extends ApiController
      * @param int $topicId
      *
      * @return CakeResponse
+     * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+member+list
      */
     function get_members(int $topicId)
     {
@@ -271,6 +274,7 @@ HTML;
      * @param int $topicId
      *
      * @return CakeResponse
+     * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Read+member+list
      */
     function get_read_members(int $topicId)
     {
@@ -377,10 +381,11 @@ HTML;
      * Search topics
      * url: GET /api/v1/topics/search
      *
-     * @queryParam int $cursor
-     * @queryParam int $limit
-     * @queryParam string $keyword
+     * @queryParam int $cursor optional
+     * @queryParam int $limit optional
+     * @queryParam string $keyword optional
      * @return CakeResponse
+     * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Search+topics
      */
     function get_search()
     {
@@ -439,6 +444,7 @@ HTML;
      * @data string $message required
      * @data array $file_ids optional
      * @return CakeResponse|null
+     * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Create+a+topic
      */
     function post()
     {
@@ -458,6 +464,7 @@ HTML;
      *
      * @data array $user_ids required
      * @return CakeResponse|null
+     * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Add+members
      */
     function post_members(int $topicId)
     {
@@ -476,6 +483,7 @@ HTML;
      *
      * @data string $title required
      * @return CakeResponse|null
+     * @link https://confluence.goalous.com/display/GOAL/%5BPUT%5D+Set+topic+title
      */
     function put(int $topicId)
     {
@@ -490,6 +498,7 @@ HTML;
      * @param int $topicId
      *
      * @return CakeResponse
+     * @link https://confluence.goalous.com/display/GOAL/%5BDELETE%5D+Leave+me
      */
     function delete_leave_me(int $topicId)
     {
