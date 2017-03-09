@@ -111,6 +111,11 @@ function evCircleFeed(options) {
     $("#app-view-elements-feed-posts").html($loader_html);
   }
 
+  // TODO: サブヘッダを削除するタイミングでこの処理も必要無くなるので一緒に削除する。
+  if ($("#SubHeaderMenuFeed").exists()) {
+    $("#SubHeaderMenuFeed").click();
+  }
+
   // URL生成
   var url = get_url.replace(/circle_feed/, "ajax_circle_feed");
   var more_read_url = get_url.replace(/\/circle_feed\//, "\/posts\/ajax_get_feed\/circle_id:");
