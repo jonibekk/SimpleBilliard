@@ -1078,20 +1078,14 @@ class UsersController extends AppController
             $teamAllCircle = $this->Circle->getTeamAllCircle();
 
             // 「チーム全体」サークルに追加
-            App::import('Service', 'ExperimentService');
+            App::import('Service', 'CircleService');
             /** @var ExperimentService $ExperimentService */
-            $ExperimentService = ClassRegistry::init('ExperimentService');
-            $successJoinedCircle = true;
-            if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-                $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id'], false,
-                    false);
-            } else {
-                $successJoinedCircle = $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
-            }
-            if (!$successJoinedCircle) {
+            $CircleService = ClassRegistry::init('CircleService');
+            $circleId = $teamAllCircle['Circle']['id'];
+            if (!$CircleService->join($circleId, $userId)) {
                 $validationErrors = $ExperimentService->validationExtract($this->Circle->CircleMember->validationErrors);
                 throw new Exception(sprintf("Failed to join all team circle. userId:%s circleId:%s validationErrors:%s"
-                    , $userId, $teamAllCircle['Circle']['id'], var_export($validationErrors, true)));
+                    , $userId, $circleId, var_export($validationErrors, true)));
             }
 
             $this->Circle->current_team_id = $currentTeamId;
