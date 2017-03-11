@@ -26,27 +26,41 @@ class CirclesController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        $this->Circle->create();
-        // TODO: このサービスの読み込みもCircleServiceで行う。
-        App::import('Service', 'ExperimentService');
+
+        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-            $addCircleSuccess = $this->Circle->add($this->request->data, false, false);
-        } else {
-            $addCircleSuccess = $this->Circle->add($this->request->data);
+        $CircleService = ClassRegistry::init('CircleService');
+
+        $userId = $this->Auth->user('id');
+        $data = $this->request->data;
+
+        // extract adding member ids
+        $members = explode(",", Hash::get($data, 'Circle.members'));
+        $memberIds = Hash::map($members, '', function ($member) {
+            $memberUserId = str_replace('user_', '', $member);
+            return $memberUserId;
+        });
+        unset($data['Circle']['members']);
+
+        // validation
+        if (!$CircleService->validateCreate($data, $userId, $memberIds)) {
+            $this->Pnotify->outError($validateCreate);
+            return $this->redirect($this->referer());
         }
 
-        if ($addCircleSuccess) {
-            if (!empty($this->Circle->add_new_member_list)) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                    null, $this->Circle->add_new_member_list);
-            }
-            $this->updateSetupStatusIfNotCompleted();
-            $this->Pnotify->outSuccess(__("Created a circle."));
-        } else {
+        // create circle and add members
+        if (!$CircleService->create($data, $userId, $memberIds)) {
             $this->Pnotify->outError(__("Failed to create a circle."));
+            return $this->redirect($this->referer());
         }
+
+        // Notification
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
+            null, $memberIds);
+        $this->Pnotify->outSuccess(__("Created a circle."));
+
+        $this->updateSetupStatusIfNotCompleted();
+
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -144,45 +158,39 @@ class CirclesController extends AppController
     public function add_member()
     {
         $this->request->allowMethod('put');
-        $this->Circle->id = $this->request->params['named']['circle_id'];
-        $before_circle = null;
-        try {
-            if (!$this->Circle->exists()) {
-                throw new RuntimeException(__("This circle does not exist."));
-            }
-            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__("It's only a circle administrator that can change circle settings."));
-            }
-            $before_circle = $this->Circle->read();
-            if ($before_circle['Circle']['team_all_flg']) {
-                throw new RuntimeException(__("You can't change members of the all team circle."));
-            }
-            $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
-            return;
-        }
 
-        App::import('Service', 'ExperimentService');
+        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
+        $CircleService = ClassRegistry::init('CircleService');
 
-        // サークルにメンバー追加
-        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-            $isAddedMember = $this->Circle->addMember($this->request->data, false, false);
-        } else {
-            $isAddedMember = $this->Circle->addMember($this->request->data);
+        $circleId = Hash::get($this->request->data, 'Circle.id');
+        $userId = $this->Auth->user('id');
+
+        // extract adding member ids
+        $members = explode(",", Hash::get($this->request->data, 'Circle.members'));
+        $memberIds = Hash::map($members, '', function ($member) {
+            $memberUserId = str_replace('user_', '', $member);
+            return $memberUserId;
+        });
+
+        // validation
+        $validateAddMember = $CircleService->validateAddMember($circleId, $userId, $memberIds);
+        if (!$validateAddMember) {
+            $this->Pnotify->outError($validateAddMember);
+            return $this->redirect($this->referer());
         }
 
-        // サークル参加通知 & レスポンスメッセージ定義
-        if ($isAddedMember) {
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                null, $this->Circle->add_new_member_list);
-            $this->Pnotify->outSuccess(__("Add circle member(s)."));
-        } else {
+        // add members
+        if (!$CircleService->addMembers($circleId, $memberIds)) {
             $this->Pnotify->outError(__("Failed to add circle member(s.)"));
+            $this->redirect($this->referer());
         }
+
+        // Notification
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
+            null, $memberIds);
+
+        $this->Pnotify->outSuccess(__("Add circle member(s)."));
         $this->redirect($this->referer());
     }
 
@@ -255,9 +263,6 @@ class CirclesController extends AppController
 
     /**
      * サークルの 参加/不参加 切り替え
-     * TODO: サークル参加処理はサービス層へ移す。
-     *       他のルートでサークル参加するロジックでも同じような処理を行ってるので、処理を一箇所に集める。
-     *       実験中かどうかの分岐もサービス層で行う。
      *
      * @return CakeResponse
      */
@@ -266,37 +271,36 @@ class CirclesController extends AppController
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        App::import('Service', 'ExperimentService');
+        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
+        $CircleService = ClassRegistry::init('CircleService');
 
-        $error = false;
-        $msg = '';
+        $toJoin = Hash::get($this->request->data, 'Circle.0.join');
+        $circleId = Hash::get($this->request->data, 'Circle.0.circle_id');
+        $userId = $this->Auth->user('id');
 
-        // サークル参加/不参加ステータス変更
-        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-            $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data, false, false);
-        } else {
-            $changedJoinedStatus = $this->Circle->CircleMember->joinCircle($this->request->data);
+        // Leave circle
+        if (!$toJoin) {
+            $isLeaved = $CircleService->leave($circleId, $userId);
+            if ($isLeaved) {
+                return $this->_ajaxGetResponse(['msg' => __("Leave a circle.")]);
+            } else {
+                return $this->_ajaxGetResponse(['msg' => __("Failed to change circle belonging status.")]);
+            }
         }
-        if (!$changedJoinedStatus) {
+
+        // Join circle
+        $isJoined = $CircleService->join($circleId, $this->Auth->user('id'));
+        if (!$isJoined) {
             return $this->_ajaxGetResponse(['msg' => __("Failed to change circle belonging status.")]);
         }
 
-        // サークル参加通知 & レスポンスメッセージ定義
-        $msg = '';
-        $newJoinedCircles = $this->Circle->CircleMember->new_joined_circle_list;
-        if (!empty($newJoinedCircles)) {
-            foreach ($newJoinedCircles as $circleId) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
-            }
-            $this->updateSetupStatusIfNotCompleted();
-            $msg = __("Join a circle.");
-        } else {
-            $msg = __("Leave a circle.");
-        }
+        $this->updateSetupStatusIfNotCompleted();
 
-        return $this->_ajaxGetResponse(['msg' => $msg]);
+        // Notify to circle member
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
+
+        return $this->_ajaxGetResponse(['msg' => __("Join a circle.")]);
     }
 
     public function ajax_get_circle_members()

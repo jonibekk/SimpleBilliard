@@ -477,7 +477,7 @@ msgid "Joined the circle"
 msgstr "サークルに参加しました。"
 
 msgid "Failed to join the circle."
-msgstr "サークルの参加できませんでした。"
+msgstr "サークルに参加できませんでした。"
 
 msgid "Not allowed to leave this circle."
 msgstr "このサークルから抜けることはできません。"

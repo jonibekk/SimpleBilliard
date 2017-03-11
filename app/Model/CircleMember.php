@@ -302,20 +302,21 @@ class CircleMember extends AppModel
         return $this->find('first', $options);
     }
 
-    function isBelong($circle_id, $user_id = null)
+    function isBelong($circleId, $userId = null): bool
     {
-        if (!$user_id) {
-            $user_id = $this->my_uid;
+        if (!$userId) {
+            $userId = $this->my_uid;
         }
         $options = [
             'conditions' => [
-                'user_id'   => $user_id,
-                'circle_id' => $circle_id,
+                'user_id'   => $userId,
+                'circle_id' => $circleId,
                 'team_id'   => $this->current_team_id,
-            ]
+            ],
+            'fields'     => ['id']
         ];
         $res = $this->find('first', $options);
-        return $res;
+        return (bool)$res;
     }
 
     function incrementUnreadCount($circle_list, $without_me = true)
@@ -346,78 +347,131 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function joinCircle(array $postData, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true): bool
+    // function joinCircle(array $postData, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true): bool
+    // {
+    //     if (!isset($postData['Circle']) || empty($postData['Circle'])) {
+    //         return false;
+    //     }
+    //     //自分の所属しているサークルを取得
+    //     $my_circles = $this->getMyCircle();
+    //
+    //     // チーム全体サークルのIDを確認
+    //     $team_all_circle_id = $this->Circle->getTeamAllCircleId();
+    //
+    //     $un_join_circles = [];
+    //     $join_circles = [];
+    //     foreach ($postData['Circle'] as $val) {
+    //         // チーム全体サークルは変更不可
+    //         if ($val['circle_id'] == $team_all_circle_id) {
+    //             continue;
+    //         }
+    //
+    //         $joined = false;
+    //         foreach ($my_circles as $my_circle) {
+    //             if ($val['circle_id'] == $my_circle['CircleMember']['circle_id']) {
+    //                 $joined = true;
+    //                 break;
+    //             }
+    //         }
+    //         if ($val['join']) {
+    //             // 参加していない公開サークルであれば追加
+    //             if (!$joined && !$this->Circle->isSecret($val['circle_id'])) {
+    //                 $join_circles[] = $val['circle_id'];
+    //             }
+    //         } else {
+    //             //既に参加しているサークルを追加
+    //             if ($joined) {
+    //                 $un_join_circles[] = $val['circle_id'];
+    //             }
+    //         }
+    //     }
+    //     //offのサークルを削除
+    //     if (!empty($un_join_circles)) {
+    //         $conditions = [
+    //             'CircleMember.circle_id' => $un_join_circles,
+    //             'CircleMember.user_id'   => $this->my_uid,
+    //             'CircleMember.team_id'   => $this->current_team_id,
+    //         ];
+    //         $this->deleteAll($conditions);
+    //         foreach ($un_join_circles as $val) {
+    //             $this->updateCounterCache(['circle_id' => $val]);
+    //         }
+    //     }
+    //     //onサークルを追加
+    //     if (!empty($join_circles)) {
+    //         $this->new_joined_circle_list = $join_circles;
+    //         $data = [];
+    //         foreach ($join_circles as $circle) {
+    //             $data[] = [
+    //                 'circle_id'             => $circle,
+    //                 'user_id'               => $this->my_uid,
+    //                 'team_id'               => $this->current_team_id,
+    //                 'show_for_all_feed_flg' => $showForAllFeedFlg,
+    //                 'get_notification_flg'  => $getNotificationFlg,
+    //             ];
+    //         }
+    //         $this->saveAll($data);
+    //         foreach ($join_circles as $val) {
+    //             $this->updateCounterCache(['circle_id' => $val]);
+    //         }
+    //     }
+    //     Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+    //     Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+    //     Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+    //
+    //     return true;
+    // }
+
+    /**
+     * joinCircles
+     *
+     * @param int     $circleId
+     * @param int     $userId
+     * @param boolean $showForAllFeedFlg
+     * @param boolean $getNotificationFlg
+     *
+     * @return mixed
+     */
+    function join(int $circleId, int $userId, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true, bool $isAdmin = false): bool
     {
-        if (!isset($postData['Circle']) || empty($postData['Circle'])) {
+        if (!empty($this->isBelong($circleId, $userId))) {
             return false;
         }
-        //自分の所属しているサークルを取得
-        $my_circles = $this->getMyCircle();
 
-        // チーム全体サークルのIDを確認
-        $team_all_circle_id = $this->Circle->getTeamAllCircleId();
+        $options = [
+            'CircleMember' => [
+                'circle_id'             => $circleId,
+                'team_id'               => $this->current_team_id,
+                'user_id'               => $userId,
+                'admin_flg'             => $isAdmin,
+                'show_for_all_feed_flg' => $showForAllFeedFlg,
+                'get_notification_flg'  => $getNotificationFlg,
+            ]
+        ];
+        $this->create();
+        return (bool)$this->save($options);
+    }
 
-        $un_join_circles = [];
-        $join_circles = [];
-        foreach ($postData['Circle'] as $val) {
-            // チーム全体サークルは変更不可
-            if ($val['circle_id'] == $team_all_circle_id) {
-                continue;
-            }
+    /**
+     * Leave circle
+     * - Delete circle member record
+     * - Update counter cache per circle
+     *
+     * @param  array $circleId
+     * @param  int   $userId
+     *
+     * @return bool
+     */
+    function leave(int $circleId, int $userId) :bool
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circleId,
+            'CircleMember.user_id'   => $userId,
+            'CircleMember.team_id'   => $this->current_team_id,
+        ];
 
-            $joined = false;
-            foreach ($my_circles as $my_circle) {
-                if ($val['circle_id'] == $my_circle['CircleMember']['circle_id']) {
-                    $joined = true;
-                    break;
-                }
-            }
-            if ($val['join']) {
-                // 参加していない公開サークルであれば追加
-                if (!$joined && !$this->Circle->isSecret($val['circle_id'])) {
-                    $join_circles[] = $val['circle_id'];
-                }
-            } else {
-                //既に参加しているサークルを追加
-                if ($joined) {
-                    $un_join_circles[] = $val['circle_id'];
-                }
-            }
-        }
-        //offのサークルを削除
-        if (!empty($un_join_circles)) {
-            $conditions = [
-                'CircleMember.circle_id' => $un_join_circles,
-                'CircleMember.user_id'   => $this->my_uid,
-                'CircleMember.team_id'   => $this->current_team_id,
-            ];
-            $this->deleteAll($conditions);
-            foreach ($un_join_circles as $val) {
-                $this->updateCounterCache(['circle_id' => $val]);
-            }
-        }
-        //onサークルを追加
-        if (!empty($join_circles)) {
-            $this->new_joined_circle_list = $join_circles;
-            $data = [];
-            foreach ($join_circles as $circle) {
-                $data[] = [
-                    'circle_id'             => $circle,
-                    'user_id'               => $this->my_uid,
-                    'team_id'               => $this->current_team_id,
-                    'show_for_all_feed_flg' => $showForAllFeedFlg,
-                    'get_notification_flg'  => $getNotificationFlg,
-                ];
-            }
-            $this->saveAll($data);
-            foreach ($join_circles as $val) {
-                $this->updateCounterCache(['circle_id' => $val]);
-            }
-        }
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
-
+        $this->deleteAll($conditions);
+        $this->updateCounterCache(['circle_id' => $circleId]);
         return true;
     }
 
@@ -460,6 +514,7 @@ class CircleMember extends AppModel
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+
         $this->create();
         return $this->save($options);
     }

@@ -127,54 +127,18 @@ class Circle extends AppModel
     ];
 
     /**
-     * 新規サークル追加(管理者として自分を登録)
+     * Create new circle
      *
      * @param array   $data
-     * @param boolean $show_for_all_feed_flg
-     * @param boolean $get_notification_flg
      *
-     * @return mixed
+     * @return bool
      */
-    function add($data, $show_for_all_feed_flg = true, $get_notification_flg = true)
+    function add(array $data, $userId): bool
     {
-        if (!isset($data['Circle']) || empty($data['Circle'])) {
-            return false;
-        }
-
         $data['Circle']['team_id'] = $this->current_team_id;
-        $data['CircleMember'][0]['team_id'] = $this->current_team_id;
-        $data['CircleMember'][0]['admin_flg'] = true;
-        $data['CircleMember'][0]['user_id'] = $this->my_uid;
-        $data['CircleMember'][0]['show_for_all_feed_flg'] = $show_for_all_feed_flg;
-        $data['CircleMember'][0]['get_notification_flg'] = $get_notification_flg;
-        if (!empty($data['Circle']['members'])) {
-            $members = explode(",", $data['Circle']['members']);
-            foreach ($members as $val) {
-                $val = str_replace('user_', '', $val);;
-                $data['CircleMember'][] = [
-                    'team_id'               => $this->current_team_id,
-                    'user_id'               => $val,
-                    'show_for_all_feed_flg' => $show_for_all_feed_flg,
-                    'get_notification_flg'  => $get_notification_flg,
-                ];
-                $this->add_new_member_list[] = $val;
-                Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $val), 'user_data');
-                Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $val), 'user_data');
-                Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $val), 'user_data');
-            }
-        }
-        //本人のキャッシュも削除
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
-        if ($res = $this->saveAll($data)) {
-            $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
+        $data['Circle']['user_id'] = $userId;
 
-            if (Hash::get($data, 'Circle.public_flg')) {
-                $this->PostShareCircle->Post->createCirclePost($this->getLastInsertID(), $this->my_uid);
-            }
-        }
-        return $res;
+        return (bool)$this->save($data);
     }
 
     /**
@@ -197,63 +161,6 @@ class Circle extends AppModel
             Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_ALL_CIRCLE, false, null));
         }
         return $this->save($data);
-    }
-
-    /**
-     * サークルにメンバーを追加する
-     *
-     * @param $data
-     *
-     * @return bool
-     */
-    public function addMember(array $data, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true): bool
-    {
-        // 必須パラメータチェック
-        if (!(isset($data['Circle']['id']) && $data['Circle']['id'] &&
-            isset($data['Circle']['members']) && $data['Circle']['members'] &&
-            isset($data['Circle']['team_all_flg']))
-        ) {
-            return false;
-        }
-
-        // チーム全体サークルは変更不可
-        if ($data['Circle']['team_all_flg']) {
-            return false;
-        }
-
-        // 管理者を含めたサークルメンバー全員
-        $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id'], true);
-
-        $members = explode(",", $data['Circle']['members']);
-        $new_members = [];
-        foreach ($members as $val) {
-            $user_id = str_replace('user_', '', $val);
-            if (!$user_id) {
-                continue;
-            }
-            if (isset($exists_member_list[$user_id])) {
-                continue;
-            }
-            $new_members[] = [
-                'CircleMember' => [
-                    'circle_id'             => $data['Circle']['id'],
-                    'team_id'               => $this->current_team_id,
-                    'user_id'               => $user_id,
-                    'show_for_all_feed_flg' => $showForAllFeedFlg,
-                    'get_notification_flg'  => $getNotificationFlg,
-                ]
-            ];
-            $this->add_new_member_list[] = $user_id;
-            Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $user_id), 'user_data');
-            Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $user_id), 'user_data');
-            Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $user_id), 'user_data');
-        }
-
-        $res = false;
-        if ($new_members) {
-            $res = $this->CircleMember->saveAll($new_members);
-        }
-        return $res;
     }
 
     /**
