@@ -71,7 +71,7 @@ class CircleService extends AppService
      *
      * @return true|string
      */
-    function validateCreate(array $circle, int $userId,  array $members)
+    function validateCreate(array $circle, int $userId,  array $members = [])
     {
         return true;
     }
@@ -107,6 +107,39 @@ class CircleService extends AppService
         Cache::delete($CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $userId), 'user_data');
         Cache::delete($CircleMember->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $userId), 'user_data');
 
+        return true;
+    }
+
+    /**
+     * Join multiple circles
+     *
+     * @param  array $circleIds
+     * @param  int   $userId
+     *
+     * @return bool
+     */
+    function joinMultiple(array $circleIds, int $userId): bool
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        try {
+            $CircleMember->begin();
+
+            foreach($circleIds as $circleId) {
+                if (!$this->join($circleId, $userId)) {
+                    $this->log(sprintf("Failed to add members to circle. circleId:%d userId:%d", $circleId, $userId));
+                    throw new Exception();
+                }
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $CircleMember->rollback();
+            return false;
+        }
+
+        $CircleMember->commit();
         return true;
     }
 
