@@ -22,8 +22,29 @@ class MessagesController extends ApiController
         $topicId = $this->request->data('topic_id');
         $body = $this->request->data('body');
         $fileIds = $this->request->data('file_ids');
-        $dataMock = ['message_id' => 1234];
-        return $this->_getResponseSuccessSimple($dataMock);
+        $dataMock = [
+            'id'              => 123,
+            'body'            => 'あついなー。',
+            'created'         => 1438585548,
+            'display_created' => '03/09 13:51',
+            'type'            => 1,
+            'user'            => [
+                'id'               => 2,
+                'img_url'          => '/img/no-image.jpg',
+                'display_username' => '佐伯 翔平',
+            ],
+            'attached_files'  => [
+                [
+                    'id'            => 1,
+                    'ext'           => 'jpg',
+                    'type'          => 1,
+                    'download_url'  => '/img/no-image.jpg',
+                    'preview_url'   => '',
+                    'thumbnail_url' => '/img/no-image.jpg',
+                ],
+            ]
+        ];
+        return $this->_getResponseSuccess($dataMock);
     }
 
     /**

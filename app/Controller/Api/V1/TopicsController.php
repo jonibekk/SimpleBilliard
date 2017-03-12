@@ -118,6 +118,16 @@ class TopicsController extends ApiController
                     'id'               => 2,
                     'img_url'          => '/img/no-image.jpg',
                     'display_username' => '佐伯 翔平',
+                ],
+                'attached_files'  => [
+                    [
+                        'id'            => 1,
+                        'ext'           => 'jpg',
+                        'type'          => 1,
+                        'download_url'  => '/img/no-image.jpg',
+                        'preview_url'   => '',
+                        'thumbnail_url' => '/img/no-image.jpg',
+                    ],
                 ]
             ],
             [
