@@ -82,7 +82,7 @@ class TopicsController extends ApiController
                 ],
             ]
         ];
-        $retMock['pagenation'] = [
+        $retMock['paging'] = [
             'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
         ];
 
@@ -168,7 +168,7 @@ class TopicsController extends ApiController
 
             ],
         ];
-        $retMock['pagenation'] = [
+        $retMock['paging'] = [
             'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
         ];
         return $this->_getResponsePagingSuccess($retMock);
@@ -445,7 +445,7 @@ HTML;
             ],
         ];
 
-        $retMock['pagenation'] = [
+        $retMock['paging'] = [
             'next' => "/api/v1/topics/search?cursor=11111&limit=10&keyword=hoge",
         ];
         return $this->_getResponsePagingSuccess($retMock);

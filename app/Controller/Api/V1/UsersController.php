@@ -51,7 +51,7 @@ class UsersController extends ApiController
             ],
         ];
 
-        $retMock['pagenation'] = [
+        $retMock['paging'] = [
             'next' => "/api/v1/users/search?cursor=11111&limit=10&keyword=hoge",
         ];
         return $this->_getResponsePagingSuccess($retMock);
