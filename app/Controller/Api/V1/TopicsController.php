@@ -100,10 +100,16 @@ class TopicsController extends ApiController
 
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
-        $topic = $ApiTopicService->findTopicDetail(1);
-        $this->log($topic);
+        $topicDetail = $ApiTopicService->findTopicDetail($topicId);
+        $ret = [
+            'topic'    => $topicDetail,
+            'messages' => [], //TODO: start to implement in https://jira.goalous.com/browse/GL-5673
+            'paging'   => [
+                'next' => "",
+            ]
+        ];
 
-        return $this->_getResponsePagingSuccess($topic);
+        return $this->_getResponsePagingSuccess($retMock);
     }
 
     /**
