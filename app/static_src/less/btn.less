@@ -386,3 +386,33 @@
     background-color: @serviceColor;
   }
 }
+
+.btnRadiusOnlyIcon {
+  width: 38px;
+  height: 38px;
+  background: none;
+  border-color: @lightGray;
+  color: @trueGray;
+  padding: 4px;
+  margin: 0;
+  cursor: pointer;
+  &:hover, &:target, &:active, &:focus {
+    outline: none;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+  }
+  &.mod-upload {
+    .fa;
+    font-size: 20px;
+    &:before {
+      content: "\f0c6";
+    }
+  }
+  &.mod-like {
+    .fa;
+    font-size: 14px;
+    &:before {
+      content: "\f087";
+    }
+  }
+}
