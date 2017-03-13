@@ -30,4 +30,94 @@ class TopicMember extends AppModel
         'Topic',
         'User',
     ];
+
+    /**
+     * User is topic member?
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function isMember(int $topicId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+                'user_id'  => $userId,
+            ]
+        ];
+        $ret = $this->find('first', $options);
+        return (bool)$ret;
+    }
+
+    /**
+     * Count members
+     *
+     * @param int $topicId
+     *
+     * @return int
+     */
+    function countMember(int $topicId): int
+    {
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+            ]
+        ];
+        $ret = $this->find('count', $options);
+        return (int)$ret;
+    }
+
+    /**
+     * Count read members
+     *
+     * @param int $topicId
+     * @param int $messageId
+     *
+     * @return int
+     */
+    function countReadMember(int $topicId, int $messageId): int
+    {
+        $options = [
+            'conditions' => [
+                'topic_id'             => $topicId,
+                'last_read_message_id' => $messageId,
+            ],
+        ];
+        $ret = $this->find('count', $options);
+        return (int)$ret;
+    }
+
+    /**
+     * Find members
+     * - order by last_message_sent DESC
+     *
+     * @param int $topicId
+     * @param int $limit if 0, unlimited
+     *
+     * @return array
+     */
+    function findMembers(int $topicId, int $limit): array
+    {
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+            ],
+            'fields'     => [
+                'id',
+                'last_read_message_id',
+                'last_message_sent'
+            ],
+            'order'      => ['last_message_sent' => 'DESC'],
+            'contain'    => [
+                'User' => $this->User->profileFields,
+            ]
+        ];
+        if ($limit !== 0) {
+            $options['limit'] = $limit;
+        }
+        $ret = $this->find('all', $options);
+        return (array)$ret;
+    }
 }

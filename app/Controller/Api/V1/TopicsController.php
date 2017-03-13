@@ -1,5 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::import('Service', 'TopicService');
+App::import('Service', 'MessageService');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -86,7 +88,12 @@ class TopicsController extends ApiController
             'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
         ];
 
-        return $this->_getResponsePagingSuccess($retMock);
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
+        $topic = $TopicService->findTopicDetail(1);
+        $this->log($topic);
+
+        return $this->_getResponsePagingSuccess($topic);
     }
 
     /**
