@@ -43,8 +43,8 @@ class CirclesController extends AppController
         unset($data['Circle']['members']);
 
         // validation
-        if (!$CircleService->validateCreate($data, $userId, $memberIds)) {
-            $this->Pnotify->outError($validateCreate);
+        if ($CircleService->validateCreate($data, $userId) !== true) {
+            $this->Pnotify->outError(__("Failed to create a circle."));
             return $this->redirect($this->referer());
         }
 

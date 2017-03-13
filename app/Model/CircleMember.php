@@ -310,8 +310,7 @@ class CircleMember extends AppModel
                 'user_id'   => $userId,
                 'circle_id' => $circleId,
                 'team_id'   => $this->current_team_id,
-            ],
-            'fields'     => ['id']
+            ]
         ];
         $res = $this->find('first', $options);
         return $res;

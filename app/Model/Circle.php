@@ -93,7 +93,8 @@ class Circle extends AppModel
         ],
         'description'  => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
-            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'notBlank'  => ['rule' => 'notBlank', 'required' => true],
         ]
     ];
 

@@ -31,8 +31,7 @@ class CircleService extends AppService
 
             // create circle
             if (!$Circle->add($data, $myUserId)) {
-                $this->log(sprintf("Failed to create a circle. data:%s userId:%d", var_export($data, true), $myUserId));
-                throw new Exception();
+                throw new Exception(sprintf("Failed to create a circle. data:%s userId:%d", var_export($data, true), $myUserId));
             }
             $newCircleId = $Circle->getLastInsertID();
 
@@ -42,8 +41,7 @@ class CircleService extends AppService
                 if (!$userId) continue;
                 $isAdmin = ($userId === $myUserId);
                 if (!$this->join($newCircleId, $userId, $isAdmin)) {
-                    $this->log(sprintf("Failed to add members to circle. circleId:%d userId:%d", $circleId, $userId));
-                    throw new Exception();
+                    throw new Exception(sprintf("Failed to add members to circle. circleId:%d userId:%d", $newCircleId, $userId));
                 }
             }
 
@@ -60,7 +58,6 @@ class CircleService extends AppService
 
         $Circle->commit();
         return true;
-
     }
 
     /**
@@ -71,8 +68,20 @@ class CircleService extends AppService
      *
      * @return true|string
      */
-    function validateCreate(array $circle, int $userId,  array $members = [])
+    function validateCreate(array $circle, int $userId)
     {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init("Circle");
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init("CircleMember");
+
+        // Validate circle
+        $circle['Circle']['user_id'] = $userId;
+        $Circle->set(Hash::get($circle, 'Circle'));
+        if (!$Circle->validates()) {
+            return false;
+        }
+
         return true;
     }
 
