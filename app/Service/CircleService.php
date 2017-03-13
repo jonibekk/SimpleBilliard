@@ -128,8 +128,7 @@ class CircleService extends AppService
 
             foreach($circleIds as $circleId) {
                 if (!$this->join($circleId, $userId)) {
-                    $this->log(sprintf("Failed to add members to circle. circleId:%d userId:%d", $circleId, $userId));
-                    throw new Exception();
+                    throw new Exception(sprintf("Failed to add members to circle. circleId:%d userId:%d", $circleId, $userId));
                 }
             }
         } catch (Exception $e) {
@@ -189,8 +188,7 @@ class CircleService extends AppService
 
             foreach($memberUserIds as $userId) {
                 if (!$this->join($circleId, $userId)) {
-                    $this->log(sprintf("Failed to add members to circle. circleId:%d userId:%d", $circleId, $userId));
-                    throw new Exception();
+                    throw new Exception(sprintf("Failed to add members to circle. circleId:%d userId:%d", $circleId, $userId));
                 }
             }
         } catch (Exception $e) {

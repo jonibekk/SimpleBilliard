@@ -47,8 +47,6 @@ class CircleMember extends AppModel
         'User',
     ];
 
-    public $new_joined_circle_list = [];
-
     public function getMyCircleList($check_hide_status = null)
     {
         if (!is_null($check_hide_status)) {
@@ -348,7 +346,7 @@ class CircleMember extends AppModel
     }
 
     /**
-     * joinCircles
+     * join Circle
      *
      * @param int     $circleId
      * @param int     $userId
@@ -413,35 +411,6 @@ class CircleMember extends AppModel
 
         $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);
         return $res;
-    }
-
-    /**
-     * @param         $circle_id
-     * @param boolean $show_for_all_feed_flg
-     * @param boolean $get_notification_flg
-     *
-     * @return mixed
-     */
-    function joinNewMember($circle_id, $show_for_all_feed_flg = true, $get_notification_flg = true)
-    {
-        if (!empty($this->isBelong($circle_id))) {
-            return false;
-        }
-        $options = [
-            'CircleMember' => [
-                'circle_id'             => $circle_id,
-                'team_id'               => $this->current_team_id,
-                'user_id'               => $this->my_uid,
-                'show_for_all_feed_flg' => $show_for_all_feed_flg,
-                'get_notification_flg'  => $get_notification_flg,
-            ]
-        ];
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
-
-        $this->create();
-        return $this->save($options);
     }
 
     function unjoinMember($circle_id, $user_id = null)

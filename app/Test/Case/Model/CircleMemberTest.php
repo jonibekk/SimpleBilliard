@@ -120,16 +120,6 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
-    public function testJoinNewMemberSuccess()
-    {
-        $circle_id = '18';
-        $this->CircleMember->my_uid = 1;
-        $this->CircleMember->current_team_id = 1;
-
-        $res = $this->CircleMember->joinNewMember($circle_id, true, true);
-        $this->assertTrue(!empty($res));
-    }
-
     public function testUnjoinMember()
     {
         $circle_id = '1';

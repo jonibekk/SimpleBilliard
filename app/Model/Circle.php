@@ -69,9 +69,7 @@ class Circle extends AppModel
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notBlank'  => [
-                'rule' => ['notBlank'],
-            ],
+            'notBlank'  => ['rule' => 'notBlank', 'required' => true],
         ],
         'del_flg'      => [
             'boolean' => [
