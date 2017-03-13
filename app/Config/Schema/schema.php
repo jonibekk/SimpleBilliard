@@ -1298,17 +1298,6 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
-	public $schema_migrations = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
-		'class' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),
-		'type' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'indexes' => array(
-			'PRIMARY' => array('column' => 'id', 'unique' => 1)
-		),
-		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
-	);
-
 	public $send_mail_to_users = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'send_mail_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'メール送信ID(belongsToでSendMailモデルに関連)'),
@@ -1476,7 +1465,8 @@ class AppSchema extends CakeSchema {
 		'topic_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'TopicID(belongsTo Topic Model)'),
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'UserID as Topic Member(belongsTo User Model)'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'TeamID(belongsTo Team Model)'),
-		'last_seen_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'message_id as last seen'),
+		'last_read_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'message_id as last seen'),
+		'last_message_sent' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'It\'s update when member send message.'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
@@ -1486,7 +1476,9 @@ class AppSchema extends CakeSchema {
 			'topic_id' => array('column' => 'topic_id', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
-			'modified' => array('column' => 'modified', 'unique' => 0)
+			'modified' => array('column' => 'modified', 'unique' => 0),
+			'last_read_message_id' => array('column' => 'last_read_message_id', 'unique' => 0),
+			'last_message_sent' => array('column' => 'last_message_sent', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
