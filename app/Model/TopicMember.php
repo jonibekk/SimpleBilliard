@@ -98,7 +98,7 @@ class TopicMember extends AppModel
      *
      * @return array
      */
-    function findMembers(int $topicId, int $limit): array
+    function findMembers(int $topicId, int $limit = 0): array
     {
         $options = [
             'conditions' => [
