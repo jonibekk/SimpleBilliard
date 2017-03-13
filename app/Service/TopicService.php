@@ -35,7 +35,7 @@ class TopicService extends AppService
         $membersCount = $TopicMember->countMember($topicId);
 
         if (!$topic['title']) {
-            $displayTitle = $this->getMemberNameAsString($topicId, 4);
+            $displayTitle = $this->getMemberNamesAsString($topicId, 4);
         } else {
             $displayTitle = $topic['title'];
         }
@@ -63,7 +63,7 @@ class TopicService extends AppService
      *
      * @return string
      */
-    function getMemberNameAsString(int $topicId, int $limit): string
+    function getMemberNamesAsString(int $topicId, int $limit): string
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
