@@ -300,7 +300,7 @@ class CircleMember extends AppModel
         return $this->find('first', $options);
     }
 
-    function isBelong($circleId, $userId = null): bool
+    function isBelong($circleId, $userId = null)
     {
         if (!$userId) {
             $userId = $this->my_uid;
@@ -314,7 +314,7 @@ class CircleMember extends AppModel
             'fields'     => ['id']
         ];
         $res = $this->find('first', $options);
-        return (bool)$res;
+        return $res;
     }
 
     function incrementUnreadCount($circle_list, $without_me = true)

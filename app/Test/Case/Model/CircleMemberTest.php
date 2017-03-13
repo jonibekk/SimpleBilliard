@@ -387,32 +387,10 @@ class CircleMemberTest extends GoalousTestCase
     function testJoinCircle()
     {
         $this->_setDefault(1, 1);
-        $res = $this->CircleMember->joinCircle([]);
-        $this->assertFalse($res);
-        $this->CircleMember->Circle->save([
+        $circle = $this->CircleMember->Circle->save([
             'name' => 'test'
         ]);
-        $postData = [
-            'Circle' => [
-                [
-                    'circle_id' => 3,
-                    'join'      => true
-                ],
-                [
-                    'circle_id' => 2,
-                    'join'      => true
-                ],
-                [
-                    'circle_id' => 1,
-                    'join'      => false
-                ],
-                [
-                    'circle_id' => $this->CircleMember->Circle->getLastInsertID(),
-                    'join'      => true
-                ],
-            ]
-        ];
-        $this->assertTrue($this->CircleMember->joinCircle($postData));
+        $this->assertTrue($this->CircleMember->join($circle['Circle']['id'], 1));
     }
 
     function testCircleStatusToggle()
