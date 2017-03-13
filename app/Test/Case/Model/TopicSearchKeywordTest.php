@@ -41,4 +41,8 @@ class TopicSearchKeywordTest extends GoalousTestCase
         parent::tearDown();
     }
 
+    function test_dummy()
+    {
+    }
+
 }
