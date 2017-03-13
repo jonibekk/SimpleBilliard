@@ -14,6 +14,7 @@ class TopicService extends AppService
      * - read count
      * - members count
      * - can leave topic (member cannot leave the topic if the topic member less than 2)
+     * - display title (if title exists, same of title. otherwise, member names these are ordered by last_message_sent)
      *
      * @param int $topicId
      *
