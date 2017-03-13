@@ -60,7 +60,7 @@ class MessageFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'Message Type(1:Nomal,2:Add member,3:Remove member,4:Change topic name)'
         ],
-        'target_user_ids_if_member_changed' => [
+        'target_user_ids' => [
             'type'    => 'text',
             'null'    => true,
             'default' => null,
