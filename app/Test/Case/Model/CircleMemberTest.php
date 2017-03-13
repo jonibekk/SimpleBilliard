@@ -388,7 +388,8 @@ class CircleMemberTest extends GoalousTestCase
     {
         $this->_setDefault(1, 1);
         $circle = $this->CircleMember->Circle->save([
-            'name' => 'test'
+            'name' => 'test',
+            'description' => 'test'
         ]);
         $this->assertTrue($this->CircleMember->join($circle['Circle']['id'], 1));
     }
@@ -397,7 +398,8 @@ class CircleMemberTest extends GoalousTestCase
     {
         $this->_setDefault(1, 1);
         $circle = $this->CircleMember->Circle->save([
-            'name' => 'test'
+            'name' => 'test',
+            'description' => 'test'
         ]);
         $this->CircleMember->join($circle['Circle']['id'], 1);
         $this->assertFalse($this->CircleMember->join($circle['Circle']['id'], 1));
@@ -407,7 +409,8 @@ class CircleMemberTest extends GoalousTestCase
     {
         $this->_setDefault(1, 1);
         $circle = $this->CircleMember->Circle->save([
-            'name' => 'test'
+            'name' => 'test',
+            'description' => 'test'
         ]);
         $this->CircleMember->join($circle['Circle']['id'], 1);
         $this->assertTrue($this->CircleMember->leave($circle['Circle']['id'], 1));
@@ -496,6 +499,7 @@ class CircleMemberTest extends GoalousTestCase
             [
                 'id'           => 1,
                 'name'         => 'circle1',
+                'description'  => 'test',
                 'public_flg'   => true,
                 'team_id'      => 1,
                 'team_all_flg' => true
@@ -503,6 +507,7 @@ class CircleMemberTest extends GoalousTestCase
             [
                 'id'         => 2,
                 'name'       => 'circle2',
+                'description'  => 'test',
                 'public_flg' => true,
                 'team_id'    => 1
             ],
