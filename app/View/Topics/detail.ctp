@@ -148,7 +148,7 @@
         <form name="" class="">
             <div class="topicDetail-footer-box">
                 <div class="topicDetail-footer-box-left">
-                    <button type="button" class="btn btnRadius mod-upload"/>
+                    <button type="button" class="btn btnRadiusOnlyIcon mod-upload"/>
                 </div>
 <!--                <div class="topicDetail-footer-box-left">-->
 <!--                    <button type="button" class="btn btnRadius topicDetail-footer-btn">-->
@@ -164,7 +164,7 @@
                     </div>
                 </div>
                 <div class="topicDetail-footer-box-right">
-                    <button class="btn btnRadius mod-like" type="button"/>
+                    <button class="btn btnRadiusOnlyIcon mod-like" type="button"/>
                 </div>
 
 
