@@ -69,4 +69,42 @@ class Message extends AppModel
         return (int)$ret;
     }
 
+    /**
+     * Find messages
+     *
+     * @param int      $topicId
+     * @param int|null $cursor
+     * @param int      $limit
+     *
+     * @return array
+     */
+    function findMessages(int $topicId, $cursor, int $limit): array
+    {
+        $options = [
+            'conditions' => [
+                'Message.topic_id' => $topicId,
+            ],
+            'order'      => [
+                'Message.id' => 'DESC'
+            ],
+            'contain'    => [
+                'SenderUser'  => [
+                    'fields' => $this->SenderUser->profileFields
+                ],
+                'MessageFile' => [
+                    'order'        => ['MessageFile.index_num asc'],
+                    'AttachedFile' => []
+                ]
+            ],
+            'limit'      => $limit,
+        ];
+
+        if ($cursor) {
+            $options['conditions']['Message.id <'] = $cursor;
+        }
+
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }

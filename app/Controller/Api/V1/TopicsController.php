@@ -4,6 +4,7 @@ App::uses('TopicMember', 'Model');
 App::import('Service/Api', 'ApiTopicService');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
+App::import('Service/Api', 'ApiMessageService');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -121,6 +122,14 @@ class TopicsController extends ApiController
     {
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
+
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init("ApiMessageService");
+        // checking max limit
+        if (!$ApiMessageService->checkMaxLimit((int)$limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+        $ApiMessageService->findMessages($topicId, $cursor, $limit);
 
         $retMock = [];
         $retMock['data'] = [
