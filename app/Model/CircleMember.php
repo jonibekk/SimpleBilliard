@@ -17,6 +17,12 @@ class CircleMember extends AppModel
      * @var array
      */
     public $validate = [
+        'user_id'     => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => ['rule' => 'notBlank'],
+        ],
         'del_flg'               => [
             'boolean' => [
                 'rule' => ['boolean'],
@@ -288,7 +294,7 @@ class CircleMember extends AppModel
         return ['results' => $user_res];
     }
 
-    function isAdmin($user_id, $circle_id)
+    function isAdmin($user_id, $circle_id): bool
     {
         $options = [
             'conditions' => [
@@ -297,7 +303,7 @@ class CircleMember extends AppModel
                 'admin_flg' => true,
             ]
         ];
-        return $this->find('first', $options);
+        return (bool)$this->find('first', $options);
     }
 
     function isBelong($circleId, $userId = null)

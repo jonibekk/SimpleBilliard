@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Service', 'CircleService');
 
 /**
  * Circles Controller
@@ -27,7 +28,6 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
 
-        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
         $CircleService = ClassRegistry::init('CircleService');
 
@@ -35,14 +35,14 @@ class CirclesController extends AppController
         $data = $this->request->data;
 
         // extract adding member ids
-        $members = explode(",", Hash::get($data, 'Circle.members'));
-        $memberIds = Hash::map($members, '', function ($member) {
-            $memberUserId = str_replace('user_', '', $member);
-            return $memberUserId;
-        });
-        unset($data['Circle']['members']);
+        $memberIds = [];
+        $members = Hash::get($data, 'Circle.members');
+        if ($members) {
+            $memberIds = $CircleService->extractUserIds($members);
+            unset($data['Circle']['members']);
+        }
 
-        // validation
+        // validate circle
         if ($CircleService->validateCreate($data, $userId) !== true) {
             $this->Pnotify->outError(__("Failed to create a circle."));
             return $this->redirect($this->referer());
@@ -159,7 +159,6 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('put');
 
-        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
         $CircleService = ClassRegistry::init('CircleService');
 
@@ -174,9 +173,9 @@ class CirclesController extends AppController
         });
 
         // validation
-        $validateAddMember = $CircleService->validateAddMember($circleId, $userId, $memberIds);
-        if (!$validateAddMember) {
-            $this->Pnotify->outError($validateAddMember);
+        $validateAddMembers = $CircleService->validateAddMembers($circleId, $userId, $memberIds);
+        if (!$validateAddMembers) {
+            $this->Pnotify->outError($validateAddMembers);
             return $this->redirect($this->referer());
         }
 
@@ -190,7 +189,7 @@ class CirclesController extends AppController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);
 
-        $this->Pnotify->outSuccess(__("Add circle member(s)."));
+        $this->Pnotify->outSuccess(__("Added circle member(s)."));
         $this->redirect($this->referer());
     }
 
@@ -271,7 +270,6 @@ class CirclesController extends AppController
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
         $CircleService = ClassRegistry::init('CircleService');
 

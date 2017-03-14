@@ -19,11 +19,13 @@ class CircleServiceTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.team',
+        'app.team_member',
         'app.user',
         'app.circle',
         'app.circle_member',
         'app.post',
-        'app.post_share_circle'
+        'app.post_share_circle',
+        'app.local_name'
     ];
 
     /**
@@ -84,7 +86,10 @@ class CircleServiceTest extends GoalousTestCase
             ]
         ];
 
-        $res = $this->CircleService->create($circle, 1, [2, 3, 4]);
+        $myUserId = $this->createActiveUser(1);
+        $userIds = [$this->createActiveUser(1), $this->createActiveUser(1)];
+
+        $res = $this->CircleService->create($circle, $myUserId, $userIds);
         $this->assertTrue($res);
 
         $insertedCircle = $this->Circle->findByName($circle['Circle']['name']);
@@ -92,7 +97,7 @@ class CircleServiceTest extends GoalousTestCase
 
         // check member
         $memberCount = $this->CircleMember->find('count', ['conditions' => ['circle_id' => $insertedCircle['Circle']['id']]]);
-        $this->assertEquals($memberCount, 4);
+        $this->assertEquals($memberCount, 3);
 
         // check post
         $post = $this->Circle->PostShareCircle->Post->find('first', ['conditions' => ['circle_id' => $insertedCircle['Circle']['id'], 'type' => 7]]);
@@ -109,7 +114,9 @@ class CircleServiceTest extends GoalousTestCase
                 'public_flg' => false
             ]
         ];
-        $res = $this->CircleService->create($circle, 1, [2, 3, 4]);
+        $myUserId = $this->createActiveUser(1);
+        $userIds = [$this->createActiveUser(1), $this->createActiveUser(1)];
+        $res = $this->CircleService->create($circle, $myUserId, $userIds);
         $this->assertTrue($res);
 
         $insertedCircle = $this->Circle->findByName($circle['Circle']['name']);
@@ -130,18 +137,8 @@ class CircleServiceTest extends GoalousTestCase
                 'public_flg' => true
             ]
         ];
-        $res = $this->CircleService->create($circle, 1);
-        $this->assertFalse($res);
-
-        $this->_setModelProperties();
-        $circle = [
-            'Circle' => [
-                'name' => 'test circle',
-                'description' => 'desc',
-                'public_flg' => true
-            ]
-        ];
-        $res = $this->CircleService->create($circle, 1, [1, 2, 3]);
+        $myUserId = $this->createActiveUser(1);
+        $res = $this->CircleService->create($circle, $myUserId);
         $this->assertFalse($res);
     }
 
@@ -156,7 +153,8 @@ class CircleServiceTest extends GoalousTestCase
             ]
         ];
 
-        $res = $this->CircleService->create($circle, 1);
+        $myUserId = $this->createActiveUser(1);
+        $res = $this->CircleService->create($circle, $myUserId);
         $insertedCircle = $this->Circle->findByName($circle['Circle']['name']);
         $circleId = $insertedCircle['Circle']['id'];
 
@@ -194,5 +192,6 @@ class CircleServiceTest extends GoalousTestCase
         $this->Circle->PostShareCircle->current_team_id = $teamId;
         $this->Circle->PostShareCircle->Post->current_team_id = $teamId;
         $this->CircleMember->current_team_id = $teamId;
+        $this->CircleMember->User->current_team_id = $teamId;
     }
 }
