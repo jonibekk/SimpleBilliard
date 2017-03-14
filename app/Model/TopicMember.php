@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
 
 /**
  * TopicMember Model
@@ -60,9 +61,14 @@ class TopicMember extends AppModel
      */
     function countMember(int $topicId): int
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList,
             ]
         ];
         $ret = $this->find('count', $options);
@@ -79,10 +85,14 @@ class TopicMember extends AppModel
      */
     function countReadMember(int $topicId, int $messageId): int
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
         $options = [
             'conditions' => [
                 'topic_id'             => $topicId,
                 'last_read_message_id' => $messageId,
+                'user_id'              => $activeTeamMembersList,
             ],
         ];
         $ret = $this->find('count', $options);
@@ -100,9 +110,14 @@ class TopicMember extends AppModel
      */
     function findMembers(int $topicId, int $limit = 0): array
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList,
             ],
             'fields'     => [
                 'id',
