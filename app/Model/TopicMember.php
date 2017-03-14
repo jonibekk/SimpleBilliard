@@ -125,6 +125,6 @@ class TopicMember extends AppModel
             $options['limit'] = $limit;
         }
         $ret = $this->find('all', $options);
-        return (array)$ret;
+        return $ret;
     }
 }

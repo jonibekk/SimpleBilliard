@@ -65,7 +65,8 @@ class Message extends AppModel
             'order'      => ['id' => 'DESC']
         ];
         $ret = $this->find('first', $options);
-        return (int)Hash::get($ret, 'Message.id');
+        $ret = Hash::get($ret, 'Message.id');
+        return (int)$ret;
     }
 
 }
