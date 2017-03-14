@@ -60,7 +60,7 @@ class TopicMember extends AppModel
      *
      * @return int
      */
-    function countMember(int $topicId,array $activeTeamMembersList): int
+    function countMember(int $topicId, array $activeTeamMembersList): int
     {
         $options = [
             'conditions' => [
@@ -81,7 +81,7 @@ class TopicMember extends AppModel
      *
      * @return int
      */
-    function countReadMember(int $topicId, int $messageId,array $activeTeamMembersList): int
+    function countReadMember(int $topicId, int $messageId, array $activeTeamMembersList): int
     {
         $options = [
             'conditions' => [
@@ -104,7 +104,7 @@ class TopicMember extends AppModel
      *
      * @return array
      */
-    function findMembers(int $topicId,array $activeTeamMembersList, int $limit = 0): array
+    function findMembers(int $topicId, array $activeTeamMembersList, int $limit = 0): array
     {
         $options = [
             'conditions' => [
