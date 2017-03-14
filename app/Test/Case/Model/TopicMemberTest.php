@@ -17,6 +17,7 @@ class TopicMemberTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.topic_member',
+        'app.team_member',
         'app.topic',
         'app.user',
     ];
