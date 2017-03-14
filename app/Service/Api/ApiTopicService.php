@@ -17,11 +17,19 @@ class ApiTopicService extends ApiService
      *
      * @return array
      */
-    function findTopicDetail(int $topicId): array
+    function findTopicDetailInitData(int $topicId): array
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init('TopicService');
-        $ret = $TopicService->findTopicDetail($topicId);
+        $topicDetail = $TopicService->findTopicDetail($topicId);
+
+        $ret = [
+            'topic'    => $topicDetail,
+            'messages' => [], //TODO: start to implement in https://jira.goalous.com/browse/GL-5673
+            'paging'   => [
+                'next' => "",
+            ]
+        ];
         return $ret;
     }
 
