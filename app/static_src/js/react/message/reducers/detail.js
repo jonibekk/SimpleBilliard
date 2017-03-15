@@ -24,6 +24,15 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, action.data, {
         loading: false
       })
+    case ActionTypes.FETCH_MORE_MESSAGES:
+      messages = {
+        data: [...state.messages.data, ...action.messages.data],
+        paging: action.messages.paging,
+      }
+      return Object.assign({}, state, {
+        messages,
+        loading_more: false
+      })
     default:
       return state;
   }

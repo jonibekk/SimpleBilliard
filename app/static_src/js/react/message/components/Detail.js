@@ -6,50 +6,14 @@ import Messages from "./elements/Messages";
 export default class Detail extends React.Component {
   constructor(props) {
     super(props)
-    let items = [];
-    for (var i = 0; i < 40; i++) {
-      items[i] = i;
-    }
-    this.state =  {
-      items,
-      loadingMore: false,
-      hasMore:true
-    };
-    // this.updateFilter = this.updateFilter.bind(this);
-  }
-  _loadMore() {
-    let items = [];
-    for (var i = 40; i < 80; i++) {
-      items[i] = i;
-    }
-    items = [...items, ...this.state.items];
-console.log(items);
-    this.setState({loadingMore: true}, () => {
-      // CB emulates an ajax request
-      this.setState({
-        // items: this.state.numOfItems + 40,
-        items,
-        loadingMore: false,
-        hasMore:false
-      })
-    })
   }
 
   componentWillMount() {
-    console.log({topic_id:this.props.params.topic_id});
     this.props.fetchInitialData(this.props.params.topic_id)
-  }
-  renderMessages(messages) {
-    let uid = this.makeRandomStr()
-    return messages.map((message) => {
-      return (
-        <Message message={message} key={`${uid}-${message.id}`}/>
-      )
-    })
   }
 
   render() {
-    const {topic, messages} = this.props.detail
+    const {topic, messages, loading_more} = this.props.detail
 
 
     return (
@@ -93,14 +57,9 @@ console.log(items);
         </div>
         <div className="topicDetail-body">
           <Messages
-            //messages={messages}
-            messages={this.state.items}
-            loadMore={this._loadMore.bind(this)}
-            hasMore={this.state.hasMore}
-            loadingMore={this.state.loadingMore}
-            showLoader={true}
-            threshold={50}
-            containerHeight={400}
+            messages={messages.data}
+            paging={messages.paging}
+            loading_more={loading_more}
           />
         </div>
         <div className="topicDetail-footer">

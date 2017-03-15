@@ -6,13 +6,29 @@ export function fetchInitialData(topic_id) {
     dispatch({
       type: ActionTypes.LOADING,
     })
-    //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
     return get(`/api/v1/topics/${topic_id}`)
       .then((response) => {
         const data = response.data.data
         dispatch({
           type: ActionTypes.FETCH_INITIAL_DATA,
           data,
+        })
+      })
+      .catch((response) => {
+      })
+  }
+}
+export function fetchMoreMessages(url) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LOADING_MORE,
+    })
+    return get(url)
+      .then((response) => {
+        const messages = response.data
+        dispatch({
+          type: ActionTypes.FETCH_MORE_MESSAGES,
+          messages
         })
       })
       .catch((response) => {

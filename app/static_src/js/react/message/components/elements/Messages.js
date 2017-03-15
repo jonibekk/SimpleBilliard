@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import {topPosition, leftPosition} from './Utilities/DOMPositionUtils';
-export default class Messages extends React.Component {
+import {connect} from "react-redux";
+import * as actions from "~/message/actions/detail";
+import Loading from "./Loading";
+
+class Messages extends React.Component {
 
   constructor(props) {
     super(props);
@@ -23,51 +26,35 @@ export default class Messages extends React.Component {
   }
 
   attachScrollListener() {
-    if (!this.props.hasMore || this.props.loadingMore) return;
+    if (!this.props.paging.next || this.props.loading_more) return;
     let el = this._findElement();
     el.addEventListener('scroll', this.scrollFunction, true);
     el.addEventListener('resize', this.scrollFunction, true);
     this.scrollListener();
   }
 
-  _elScrollListener() {
-    let el = ReactDOM.findDOMNode(this);
-
-    let topScrollPos = el.scrollTop;
-    console.log({topScrollPos});
-    // let totalContainerHeight = el.scrollHeight;
-    // let containerFixedHeight = el.offsetHeight;
-    // let bottomScrollPos = topScrollPos + containerFixedHeight;
-    return topScrollPos;
-
-
-    // let topScrollPos = el.scrollTop;
-    // let totalContainerHeight = el.scrollHeight;
-    // let containerFixedHeight = el.offsetHeight;
-    // let bottomScrollPos = topScrollPos + containerFixedHeight;
-    //
-    // return (totalContainerHeight - bottomScrollPos);
-  }
-
   scrollListener() {
-    // This is to prevent the upcoming logic from toggling a load more before
-    // any data has been passed to the component
     if (this.props.messages.length <= 0) {
       return;
     }
-    let bottomPosition = this._elScrollListener();
 
-
-    if (bottomPosition < Number(this.props.threshold)) {
-      console.log("-----loadMore");
+    let el = this._findElement();
+    let top_scroll_pos = el.scrollTop;
+    const threshold = 100;
+    if (top_scroll_pos < threshold) {
       this.detachScrollListener();
-      this.props.loadMore();
+      this.props.dispatch(
+        actions.fetchMoreMessages(this.props.paging.next)
+      )
     }
   }
 
   moveBottom() {
-    if (this.props.messages.length <= 0) return;
-    let el = ReactDOM.findDOMNode(this);
+    if (this.props.messages.length <= 0) {
+      return;
+    }
+
+    let el = this._findElement();
     el.scrollTop = el.scrollHeight;
   }
 
@@ -77,75 +64,33 @@ export default class Messages extends React.Component {
     el.removeEventListener('resize', this.scrollFunction, true);
   }
 
-  _renderOptions() {
-    let el = [];
-    // this.props.messages.map((goal_member) => {
-    //   if(goal_member.is_mine) {
-    //     return <CoacheeCard goal_member={ goal_member } key={goal_member.id}  />;
-    //   } else {
-    //     return <CoachCard goal_member={ goal_member } key={goal_member.id} />;
-    //   }
-    for (var i=this.props.messages.length-1; i >= 0; i--) {
-      el.push(
-        <div key={`msg_${i}`}>Item #{i}</div>
-      )
-    }
-
-    return el;
-  }
-
   componentWillUnmount() {
     this.detachScrollListener();
   }
 
-  renderLoader() {
-    return this.props.loadingMore ? this.props.loader : null;
-  }
-
   render() {
-    console.log(this.props.messages.length);
     return (
-      <div className="" style={{
-        height: this.props.containerHeight, overflow: 'scroll'
-      }}>
-        {this._renderOptions()}
-        {this.renderLoader()}
+      <div className="topicDetail-messages">
+        {this.props.messages.map((message) => {
+          return (
+            <Message message={message} key={message.id}/>
+          )
+        })}
+        {this.props.loading_more && <Loading/>}
       </div>
     )
   }
 }
 
 Messages.propTypes = {
-  containerHeight: React.PropTypes.oneOfType([
-    React.PropTypes.number,
-    React.PropTypes.string
-  ]),
-  threshold: React.PropTypes.number,
-  hasMore: React.PropTypes.bool,
-  loadingMore: React.PropTypes.bool,
-  loader: React.PropTypes.any,
-  loadMore: React.PropTypes.func.isRequired,
-  messages: React.PropTypes.oneOfType([
-    //ImmutablePropTypes.list,
-    React.PropTypes.array
-  ]),
-  children: React.PropTypes.oneOfType([
-    //ImmutablePropTypes.list,
-    React.PropTypes.array
-  ]),
-  className: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.func
-  ]),
+  loading_more: React.PropTypes.bool,
+  messages: React.PropTypes.array,
+  paging: React.PropTypes.object,
 };
 
 Messages.defaultProps = {
-  className: '',
-  containerHeight: '100%',
-  threshold: 100,
-  hasMore: true,
-  loadingMore: false,
-  loader: <div style={{textAlign: 'center'}}>Loading...</div>,
-  children: [],
+  loading_more: false,
   messages: [],
+  paging: {next:""}
 };
+export default connect()(Messages);
