@@ -4,6 +4,7 @@ App::uses('Topic', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('User', 'Model');
+App::uses('AttachedFile', 'Model');
 
 /**
  * Class MessageService
@@ -39,6 +40,16 @@ class MessageService extends AppService
 
     function extendAttachedFileUrl(array $messages): array
     {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $Upload = new UploadHelper(new View());
+
+        foreach ($messages as &$message) {
+            foreach ($message['MessageFile'] as &$messageFile) {
+
+            }
+        }
+        return $messages;
 
     }
 

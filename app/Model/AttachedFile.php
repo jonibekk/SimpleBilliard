@@ -526,4 +526,9 @@ class AttachedFile extends AppModel
         $upload = new UploadHelper(new View());
         return $upload->attachedFileUrl($file, 'download');
     }
+
+    function getAttachedFileUrls($data, $open_type)
+    {
+
+    }
 }
