@@ -52,7 +52,7 @@ class TopicMemberTest extends GoalousTestCase
     function test_countMember()
     {
         $this->setDefaultTeamIdAndUid();
-        $topicId = $this->_saveTopic([1, 2]);
+        $topicId = $this->saveTopic([1, 2]);
         $actual = $this->TopicMember->countMember($topicId);
         $this->assertEquals(2, $actual);
     }
@@ -65,7 +65,7 @@ class TopicMemberTest extends GoalousTestCase
     function test_findMembers()
     {
         $this->setDefaultTeamIdAndUid();
-        $topicId = $this->_saveTopic([1, 2]);
+        $topicId = $this->saveTopic([1, 2]);
         // normal case
         $actual = $this->TopicMember->findMembers($topicId);
         $this->assertcount(2, $actual);
@@ -77,32 +77,10 @@ class TopicMemberTest extends GoalousTestCase
     function test_isMember()
     {
         $this->setDefaultTeamIdAndUid();
-        $topicId = $this->_saveTopic([1]);
+        $topicId = $this->saveTopic([1]);
         $actual = $this->TopicMember->isMember($topicId, 1);
         $this->assertTrue($actual);
         $actual = $this->TopicMember->isMember($topicId, 2);
         $this->assertFalse($actual);
     }
-
-    function _saveTopic(array $memberUserIds): int
-    {
-        $this->TopicMember->Topic->create();
-        $this->TopicMember->Topic->save([
-            'team_id'         => 1,
-            'creator_user_id' => 1
-        ]);
-        $topicId = $this->TopicMember->Topic->getLastInsertID();
-        $this->TopicMember->create();
-        $topicMemberData = [];
-        foreach ($memberUserIds as $uid) {
-            $topicMemberData[] = [
-                'team_id'  => 1,
-                'topic_id' => $topicId,
-                'user_id'  => $uid
-            ];
-        }
-        $this->TopicMember->saveAll($topicMemberData);
-        return $topicId;
-    }
-
 }
