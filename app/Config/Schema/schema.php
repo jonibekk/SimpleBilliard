@@ -1,4 +1,4 @@
-<?php 
+<?php
 class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
@@ -1517,7 +1517,7 @@ class AppSchema extends CakeSchema {
 		'creator_user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'UserId as topic creator(belongsTo User Model)'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'TeamID(belongsTo Team Model)'),
 		'title' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 254, 'collate' => 'utf8mb4_general_ci', 'comment' => 'topic title', 'charset' => 'utf8mb4'),
-		'latest_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'length' => 11, 'unsigned' => true, 'key' => 'index', 'comment' => 'latest message id associated with topic'),
+		'latest_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'latest message id associated with topic'),
 		'latest_message_datetime' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'latest messaged datetime associated with topic'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),

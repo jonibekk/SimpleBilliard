@@ -46,7 +46,6 @@ class TopicFixture extends CakeTestFixtureEx
         'latest_message_id' => ['type' => 'biginteger',
                                 'null' => true,
                                 'default' => null,
-                                'length' => 11,
                                 'unsigned' => true,
                                 'key' => 'index',
                                 'comment' => 'latest message id associated with topic'
