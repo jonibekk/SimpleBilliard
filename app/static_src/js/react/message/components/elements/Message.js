@@ -1,5 +1,6 @@
 import React from 'react'
 
+// TODO:Dynamic embedding of message information
 export default class Message extends React.Component {
   render() {
     return (

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
+import Message from "~/message/components/elements/Message";
 import Loading from "./Loading";
 
 class Messages extends React.Component {
