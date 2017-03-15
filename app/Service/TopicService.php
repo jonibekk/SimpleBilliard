@@ -27,11 +27,13 @@ class TopicService extends AppService
         $Topic = ClassRegistry::init('Topic');
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        /** @var Message $Message */
-        $Message = ClassRegistry::init('Message');
 
         $topic = $Topic->get($topicId);
-        $readCount = $TopicMember->countReadMember($topicId, $topic['latest_message_id']);
+        $latestMessageId = $topic['latest_message_id'];
+        $readCount = 0;
+        if ($latestMessageId) {
+            $readCount = $TopicMember->countReadMember($topicId, $latestMessageId);
+        }
         $membersCount = $TopicMember->countMember($topicId);
 
         if (!$topic['title']) {
