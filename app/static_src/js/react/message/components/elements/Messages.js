@@ -72,12 +72,12 @@ class Messages extends React.Component {
   render() {
     return (
       <div className="topicDetail-messages">
+        {this.props.loading_more && <Loading/>}
         {this.props.messages.map((message) => {
           return (
             <Message message={message} key={message.id}/>
           )
         })}
-        {this.props.loading_more && <Loading/>}
       </div>
     )
   }
