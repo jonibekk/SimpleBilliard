@@ -1434,6 +1434,11 @@ class PostsController extends AppController
         $this->NotifyBiz->commentPush($socketId, $data);
     }
 
+    /**
+     * Join circle
+     *
+     * @return void
+     */
     public function join_circle()
     {
         if (!$this->_isAvailCircle()) {
@@ -1441,21 +1446,26 @@ class PostsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        App::import('Service', 'ExperimentService');
+        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'],
-                false, false);
-        } else {
-            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id']);
-        }
+        $CircleService = ClassRegistry::init('CircleService');
 
-        if ($circleJoinedSuccess) {
+        $circleId = Hash::get($this->request->params, 'named.circle_id');
+
+        // Join circle
+        $joinedSuccess = $CircleService->join($circleId, $this->Auth->user('id'));
+        if ($joinedSuccess) {
             $this->Pnotify->outSuccess(__("Joined the circle"));
         } else {
             $this->Pnotify->outError(__("Failed to join the circle."));
+            return $this->redirect($this->request->referer());
         }
+
+        $this->updateSetupStatusIfNotCompleted();
+
+        // Notify to circle member
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
+
         return $this->redirect($this->request->referer());
 
     }

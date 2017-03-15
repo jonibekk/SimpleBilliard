@@ -120,16 +120,6 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
-    public function testJoinNewMemberSuccess()
-    {
-        $circle_id = '18';
-        $this->CircleMember->my_uid = 1;
-        $this->CircleMember->current_team_id = 1;
-
-        $res = $this->CircleMember->joinNewMember($circle_id, true, true);
-        $this->assertTrue(!empty($res));
-    }
-
     public function testUnjoinMember()
     {
         $circle_id = '1';
@@ -394,35 +384,36 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertTrue($res);
     }
 
-    function testJoinCircle()
+    function test_join_success()
     {
         $this->_setDefault(1, 1);
-        $res = $this->CircleMember->joinCircle([]);
-        $this->assertFalse($res);
-        $this->CircleMember->Circle->save([
-            'name' => 'test'
+        $circle = $this->CircleMember->Circle->save([
+            'name' => 'test',
+            'description' => 'test'
         ]);
-        $postData = [
-            'Circle' => [
-                [
-                    'circle_id' => 3,
-                    'join'      => true
-                ],
-                [
-                    'circle_id' => 2,
-                    'join'      => true
-                ],
-                [
-                    'circle_id' => 1,
-                    'join'      => false
-                ],
-                [
-                    'circle_id' => $this->CircleMember->Circle->getLastInsertID(),
-                    'join'      => true
-                ],
-            ]
-        ];
-        $this->assertTrue($this->CircleMember->joinCircle($postData));
+        $this->assertTrue($this->CircleMember->join($circle['Circle']['id'], 1));
+    }
+
+    function test_join_alreadyJoined()
+    {
+        $this->_setDefault(1, 1);
+        $circle = $this->CircleMember->Circle->save([
+            'name' => 'test',
+            'description' => 'test'
+        ]);
+        $this->CircleMember->join($circle['Circle']['id'], 1);
+        $this->assertFalse($this->CircleMember->join($circle['Circle']['id'], 1));
+    }
+
+    function test_leave_success()
+    {
+        $this->_setDefault(1, 1);
+        $circle = $this->CircleMember->Circle->save([
+            'name' => 'test',
+            'description' => 'test'
+        ]);
+        $this->CircleMember->join($circle['Circle']['id'], 1);
+        $this->assertTrue($this->CircleMember->leave($circle['Circle']['id'], 1));
     }
 
     function testCircleStatusToggle()
@@ -508,6 +499,7 @@ class CircleMemberTest extends GoalousTestCase
             [
                 'id'           => 1,
                 'name'         => 'circle1',
+                'description'  => 'test',
                 'public_flg'   => true,
                 'team_id'      => 1,
                 'team_all_flg' => true
@@ -515,6 +507,7 @@ class CircleMemberTest extends GoalousTestCase
             [
                 'id'         => 2,
                 'name'       => 'circle2',
+                'description'  => 'test',
                 'public_flg' => true,
                 'team_id'    => 1
             ],
