@@ -29,6 +29,10 @@ class TopicService extends AppService
         $TopicMember = ClassRegistry::init('TopicMember');
 
         $topic = $Topic->get($topicId);
+        if (empty($topic)) {
+            return [];
+        }
+
         $latestMessageId = $topic['latest_message_id'];
         $readCount = 0;
         if ($latestMessageId) {
