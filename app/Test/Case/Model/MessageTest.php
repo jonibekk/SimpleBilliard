@@ -46,9 +46,15 @@ class MessageTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function test_getLatestMessageId()
     {
-
+        $this->setDefaultTeamIdAndUid();
+        $this->Message->save(['topic_id' => 1, 'team_id' => 1, 'sender_user_id' => 1]);
+        $this->Message->create();
+        $this->Message->save(['topic_id' => 1, 'team_id' => 1, 'sender_user_id' => 1]);
+        $expectedId = $this->Message->getLastInsertID();
+        $latestMessageId = $this->Message->getLatestMessageId(1);
+        $this->assertEquals($expectedId, $latestMessageId);
     }
 
 }
