@@ -1592,4 +1592,36 @@ class User extends AppModel
         return $res;
     }
 
+    /**
+     * Check users are active
+     *
+     * @param  array $userIds
+     *
+     * @return bool
+     */
+    function isActiveUsers(array $userIds): bool
+    {
+        $options = [
+            'conditions' => [
+                'User.id'               => $userIds,
+                'User.active_flg'       => true,
+                'TeamMember.team_id'    => $this->current_team_id,
+                'TeamMember.active_flg' => true,
+            ],
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id'
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $this->find('count', $options);
+        return $res === count($userIds);
+    }
+
 }

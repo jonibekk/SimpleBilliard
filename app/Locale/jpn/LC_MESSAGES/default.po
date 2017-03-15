@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-02 14:51+0900\n"
+"PO-Revision-Date: 2017-03-14 16:37+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -97,11 +97,11 @@ msgstr "不正なアクセスです。"
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
 
-msgid "Created a circle."
-msgstr "サークルを作成しました。"
-
 msgid "Failed to create a circle."
 msgstr "サークルの作成に失敗しました。"
+
+msgid "Created a circle."
+msgstr "サークルを作成しました。"
 
 msgid "This circle does not exist."
 msgstr "このサークルは存在しません。"
@@ -115,14 +115,11 @@ msgstr "サークル設定を保存しました。"
 msgid "Failed to save circle settings."
 msgstr "サークル設定の保存に失敗しました。"
 
-msgid "You can't change members of the all team circle."
-msgstr "チーム全体サークルは変更出来ません。"
-
-msgid "Add circle member(s)."
-msgstr "サークルにメンバーを追加する。"
-
 msgid "Failed to add circle member(s.)"
 msgstr "サークルメンバーの追加に失敗しました。"
+
+msgid "Added circle member(s)."
+msgstr "サークルにメンバーを追加しました。"
 
 msgid "It's only a circle administrator that can delete a circle."
 msgstr "サークルの削除ができるのはサークル管理者のみです。"
@@ -133,14 +130,14 @@ msgstr "チーム全体サークルは削除できません。"
 msgid "Deleted a circle."
 msgstr "サークルを削除しました。"
 
+msgid "Leave a circle."
+msgstr "サークルから外れました。"
+
 msgid "Failed to change circle belonging status."
 msgstr "サークルの参加設定の保存に失敗しました。"
 
 msgid "Join a circle."
 msgstr "サークルに参加しました。"
-
-msgid "Leave a circle."
-msgstr "サークルから外れました。"
 
 msgid "One or more members must be assigned as circle administrators."
 msgstr "サークル管理者は最低ひとりは必須です。"
@@ -477,7 +474,7 @@ msgid "Joined the circle"
 msgstr "サークルに参加しました。"
 
 msgid "Failed to join the circle."
-msgstr "サークルの参加できませんでした。"
+msgstr "サークルに参加できませんでした。"
 
 msgid "Not allowed to leave this circle."
 msgstr "このサークルから抜けることはできません。"
@@ -1730,8 +1727,13 @@ msgstr ""
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
 
-msgid "The image cannot be processed. The image taken with this device may not be supported."
-msgstr "この画像は処理できません。この端末で撮影された画像はサポートされてない可能性があります。"
+msgid ""
+"The image cannot be processed. The image taken with this device may not be "
+"supported."
+msgstr ""
+"この画像は処理できません。この端末で撮影された画像はサポートされてない可能性"
+"があります。"
+
 msgid "File extension and content are different."
 msgstr "ファイルの拡張子と内容が異なっています。"
 
@@ -1740,6 +1742,9 @@ msgstr "%sMBがアップロードできるファイルの上限です。"
 
 msgid "%s pixel is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
+msgid "You can't change members of the all team circle."
+msgstr "チーム全体サークルは変更出来ません。"
 
 msgid "Members"
 msgstr "メンバー"
@@ -3960,12 +3965,6 @@ msgstr "名(%s)"
 msgid "eg. Bruce"
 msgstr "例) 太郎"
 
-msgid "eg. Armstrong"
-msgstr "例) Suzuki"
-
-msgid "eg. Harry"
-msgstr "例) Hiroshi"
-
 msgid "Hide birth year"
 msgstr "生年を隠す。"
 
@@ -4808,6 +4807,12 @@ msgstr "パスワード再設定用のURLを送信いたします。"
 
 msgid "Create a new account"
 msgstr "新しいアカウントを作成"
+
+msgid "eg. Armstrong"
+msgstr "例) Suzuki"
+
+msgid "eg. Harry"
+msgstr "例) Hiroshi"
 
 msgid "Terms of Use"
 msgstr "利用規約"

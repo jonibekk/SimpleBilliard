@@ -420,4 +420,14 @@ class GoalousTestCase extends CakeTestCase
     {
         $this->Team->deleteAll(['id > ' => 0]);
     }
+
+    function createActiveUser($teamId)
+    {
+        $this->Team->TeamMember->User->create();
+        $this->Team->TeamMember->User->save(['active_flg' => true], false);
+        $userId = $this->Team->TeamMember->User->getLastInsertId();
+        $this->Team->TeamMember->create();
+        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true], false);
+        return $userId;
+    }
 }

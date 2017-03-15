@@ -3255,36 +3255,6 @@ function evNotifyPost(options) {
   return false;
 }
 
-// サークルフィード用のcake value 更新
-function updateCakeValue(circle_id, title, image_url) {
-  //サークルフィードでは必ずデフォルト投稿タイプはポスト
-  cake.common_form_type = "post";
-
-  cake.data.b = function (element, callback) {
-    var data = [];
-    var current_circle_item = {
-      id: "circle_" + circle_id,
-      text: title,
-      image: image_url
-    };
-
-    data.push(current_circle_item);
-    callback(data);
-  }
-
-  cake.data.select2_secret_circle = function (element, callback) {
-    var data = [];
-    var current_circle_item = {
-      id: "circle_" + circle_id,
-      text: title,
-      image: image_url,
-      locked: true
-    };
-    data.push(current_circle_item);
-    callback(data);
-  }
-}
-
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
   var $obj = $(this);
