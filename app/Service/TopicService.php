@@ -29,17 +29,14 @@ class TopicService extends AppService
         $TopicMember = ClassRegistry::init('TopicMember');
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
 
         $topic = $Topic->get($topicId);
         $latestMessageId = $Message->getLatestMessageId($topicId);
-        $readCount = $TopicMember->countReadMember($topicId, $latestMessageId, $activeTeamMembersList);
-        $membersCount = $TopicMember->countMember($topicId, $activeTeamMembersList);
+        $readCount = $TopicMember->countReadMember($topicId, $latestMessageId);
+        $membersCount = $TopicMember->countMember($topicId);
 
         if (!$topic['title']) {
-            $displayTitle = $this->getMemberNamesAsString($topicId, $activeTeamMembersList, 4);
+            $displayTitle = $this->getMemberNamesAsString($topicId, 10);
         } else {
             $displayTitle = $topic['title'];
         }
@@ -62,17 +59,16 @@ class TopicService extends AppService
     /**
      * Get member names as string.
      *
-     * @param int   $topicId
-     * @param array $activeTeamMembersList
-     * @param int   $limit
+     * @param int $topicId
+     * @param int $limit
      *
      * @return string
      */
-    function getMemberNamesAsString(int $topicId, array $activeTeamMembersList, int $limit): string
+    function getMemberNamesAsString(int $topicId, int $limit): string
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        $members = $TopicMember->findMembers($topicId, $activeTeamMembersList, $limit);
+        $members = $TopicMember->findMembers($topicId, $limit);
         $names = Hash::extract($members, '{n}.User.display_first_name');
         $namesStr = implode(', ', $names);
         return (string)$namesStr;
