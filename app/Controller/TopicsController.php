@@ -25,6 +25,6 @@ class TopicsController extends AppController
      public function detail()
      {
          $topicId = $this->request->params['topic_id'];
-         return $this->render("detail");
+         return $this->render("index");
      }
 }

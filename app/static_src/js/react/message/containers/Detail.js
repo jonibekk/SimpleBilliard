@@ -3,11 +3,14 @@ import * as actions from '~/message/actions/detail'
 import DetailComponent from '~/message/components/Detail'
 
 function mapStateToProps(state) {
-  return { messages: state.messages }
+  return { detail: state.detail}
 }
 
 function mapDispatchToProps(dispatch) {
-  return {}
+  return {
+    fetchInitialData: (topic_id) => dispatch(actions.fetchInitialData(topic_id)),
+    fetchMoreGoals: (url) => dispatch(actions.fetchMoreGoals(url))
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailComponent)
