@@ -68,7 +68,7 @@
         }
         ?>
         <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
-        if (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30)): ?>
+        if (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH): ?>
 
             <div class="panel-body">
                 <?php
