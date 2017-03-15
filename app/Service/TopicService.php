@@ -33,7 +33,7 @@ class TopicService extends AppService
         $TeamMember = ClassRegistry::init('TeamMember');
         $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
 
-        $topic = $Topic->findTopic($topicId);
+        $topic = $Topic->get($topicId);
         $latestMessageId = $Message->getLatestMessageId($topicId);
         $readCount = $TopicMember->countReadMember($topicId, $latestMessageId, $activeTeamMembersList);
         $membersCount = $TopicMember->countMember($topicId, $activeTeamMembersList);
