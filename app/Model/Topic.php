@@ -59,6 +59,7 @@ class Topic extends AppModel
             'fields'     => [
                 'id',
                 'title',
+                'latest_message_id',
             ],
         ];
         $ret = $this->find('first', $options);

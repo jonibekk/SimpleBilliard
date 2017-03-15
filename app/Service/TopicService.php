@@ -31,8 +31,7 @@ class TopicService extends AppService
         $Message = ClassRegistry::init('Message');
 
         $topic = $Topic->get($topicId);
-        $latestMessageId = $Message->getLatestMessageId($topicId);
-        $readCount = $TopicMember->countReadMember($topicId, $latestMessageId);
+        $readCount = $TopicMember->countReadMember($topicId, $topic['latest_message_id']);
         $membersCount = $TopicMember->countMember($topicId);
 
         if (!$topic['title']) {
