@@ -6,6 +6,7 @@ App::uses('GoalousTestCase', 'Test');
  * TopicMember Test Case
  *
  * @property TopicMember $TopicMember
+ * @property TeamMember  $TeamMember
  */
 class TopicMemberTest extends GoalousTestCase
 {
@@ -17,6 +18,7 @@ class TopicMemberTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.topic_member',
+        'app.team',
         'app.team_member',
         'app.topic',
         'app.user',
@@ -32,6 +34,7 @@ class TopicMemberTest extends GoalousTestCase
     {
         parent::setUp();
         $this->TopicMember = ClassRegistry::init('TopicMember');
+        $this->TeamMember = ClassRegistry::init('TeamMember');
     }
 
     /**
@@ -50,10 +53,8 @@ class TopicMemberTest extends GoalousTestCase
     {
         $this->setDefaultTeamIdAndUid();
         $topicId = $this->_saveTopic([1, 2]);
-        $actual = $this->TopicMember->countMember($topicId, [1, 2]);
+        $actual = $this->TopicMember->countMember($topicId);
         $this->assertEquals(2, $actual);
-        $actual = $this->TopicMember->countMember($topicId, [1]);
-        $this->assertEquals(1, $actual);
     }
 
     function test_countReadMember()
@@ -66,13 +67,10 @@ class TopicMemberTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $topicId = $this->_saveTopic([1, 2]);
         // normal case
-        $actual = $this->TopicMember->findMembers($topicId, [1, 2]);
+        $actual = $this->TopicMember->findMembers($topicId);
         $this->assertcount(2, $actual);
         // limit case
-        $actual = $this->TopicMember->findMembers($topicId, [1, 2], 1);
-        $this->assertcount(1, $actual);
-        // there is an inactive user case
-        $actual = $this->TopicMember->findMembers($topicId, [1]);
+        $actual = $this->TopicMember->findMembers($topicId, 1);
         $this->assertcount(1, $actual);
     }
 
