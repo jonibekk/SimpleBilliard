@@ -15,6 +15,18 @@ App::uses('GlRedis', 'Model');
  */
 class AttachedFileService extends AppService
 {
+    // アップロード種別
+    const UPLOAD_TYPE_ALL = 1;
+    const UPLOAD_TYPE_IMG = 2;
+
+    // アップロード可能な画像種類
+    public $supportedImgTypes = [
+        IMAGETYPE_PNG,
+        IMAGETYPE_GIF,
+        IMAGETYPE_JPEG,
+        IMAGETYPE_JPEG2000,
+    ];
+
     /**
      * Redisに添付ファイルの仮アップロード
      * 返り値のフォーマット
@@ -32,10 +44,11 @@ class AttachedFileService extends AppService
      * ];
      *
      * @param array $postData
+     * @param int   $type
      *
      * @return array
      */
-    public function preUploadFile(array $postData): array
+    public function preUploadFile(array $postData, int $type = self::UPLOAD_TYPE_ALL): array
     {
         $ret = [
             'error' => false,
@@ -53,7 +66,7 @@ class AttachedFileService extends AppService
             return $ret;
         }
 
-        $resValidation = $this->preUploadValidation($fileInfo);
+        $resValidation = $this->preUploadValidation($fileInfo, $type);
         //本アップロード時も判定できるように。
         $fileInfo['img_type'] = exif_imagetype($fileInfo['tmp_name']);
 
@@ -77,10 +90,11 @@ class AttachedFileService extends AppService
      * - ファイルの画素数チェック(画像の場合のみ)
      *
      * @param array $fileInfo
+     * @param int   $type
      *
      * @return array
      */
-    function preUploadValidation(array $fileInfo): array
+    function preUploadValidation(array $fileInfo, int $type = self::UPLOAD_TYPE_ALL): array
     {
         //default return values
         $ret = [
@@ -102,7 +116,8 @@ class AttachedFileService extends AppService
             return $ret;
         }
 
-        if (strpos($fileInfo['type'], 'image') !== false) {
+        // 画像バリデーション
+        if ($this->shouldValidateImg($fileInfo, $type)) {
             //ファイルの画素数チェック(画像の場合のみ)
             list($imgWidth, $imgHeight) = getimagesize($fileInfo['tmp_name']);
             if ($imgWidth * $imgHeight > AttachedFile::ATTACHABLE_MAX_PIXEL) {
@@ -118,6 +133,35 @@ class AttachedFileService extends AppService
 
         $ret['error'] = false;
         return $ret;
+    }
+
+    /**
+     * 画像バリデーションを行うかどうか判定
+     *
+     * @param array $fileInfo
+     * @param int   $type
+     *
+     * @return array|bool
+     */
+    function shouldValidateImg(array $fileInfo, int $type): bool
+    {
+        // 画像アップロードの場合
+        if ($type == self::UPLOAD_TYPE_IMG) {
+            return true;
+        }
+
+        /* 添付ファイルアップロードの場合、許可された画像であればバリデーションを行う */
+        $targetImgType = exif_imagetype($fileInfo['tmp_name']);
+        if ($targetImgType === false) {
+            return false;
+        }
+
+        // MIMEタイプチェック(JPG,GIF,PNGのみ許可)
+        if (!isset($this->supportedImgTypes[$targetImgType])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

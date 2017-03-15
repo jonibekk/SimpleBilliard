@@ -124,6 +124,11 @@ export default class Graph extends React.Component {
     // setStateだと以下エラーが発生するため通常の代入
     // Warning: setState(…): Cannot update during an existing state transition
     this.state.chart = chart;
+
+    // remove clip path
+    // fixed bug GL-5633
+    chart.internal.main.select('.' + c3.chart.internal.fn.CLASS.chart).attr('clip-path', null);
+
     return chart;
   }
 

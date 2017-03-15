@@ -4,6 +4,7 @@
  */
 $kr = Hash::get($post, 'ActionResult.KeyResult');
 ?>
+<?= $this->App->viewStartComment() ?>
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
@@ -141,14 +142,14 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     <?php endif; ?>
                 <?php else: ?>
                     <span class="feed-progress-strong">
-                        <?= $currentValue ?>
-                        &nbsp;(
-                        <?php if ($displayChangeValue === '+0'): ?>
-                            </span><?= $displayChangeValue ?><span class="feed-progress-strong">
-                        <?php else: ?>
-                            <span class="feed-progress-change"><?= $displayChangeValue ?></span>
-                        <?php endif; ?>
-                        )&nbsp;
+                    <?= $currentValue ?>
+                    &nbsp;(
+                    <?php if ($displayChangeValue === '+0'): ?>
+                        </span><?= $displayChangeValue ?><span class="feed-progress-strong">
+                    <?php else: ?>
+                        <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                    <?php endif; ?>
+                    )&nbsp;
                     </span>
                     / <?= $targetValue ?>
                 <?php endif; ?>
@@ -156,7 +157,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <?php endif; ?>
     <?php endif; ?>
     <div
-        class="col col-xxs-12 feed-contents post-contents mod-action showmore-action font_14px font_verydark box-align"
+        class="<?= viaIsSet($long_text) ? null : "showmore-action" ?> col col-xxs-12 feed-contents post-contents mod-action font_14px font_verydark box-align"
         id="PostTextBody_<?= $post['Post']['id'] ?>">
         <?php //チェックアイコンはすぐに戻す可能性があるのでコメントアウト ?>
         <!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
@@ -328,3 +329,5 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         </div>
     <?php endif; ?>
 </div>
+<?= $this->App->viewEndComment() ?>
+

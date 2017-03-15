@@ -2,7 +2,6 @@
  * パスワード登録画面
  *
  * @var CodeCompletionView $this
- * @var                    $lastFirst
  * @var                    $email
  */
 ?>

@@ -1730,6 +1730,8 @@ msgstr ""
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
 
+msgid "The image cannot be processed. The image taken with this device may not be supported."
+msgstr "この画像は処理できません。この端末で撮影された画像はサポートされてない可能性があります。"
 msgid "File extension and content are different."
 msgstr "ファイルの拡張子と内容が異なっています。"
 
@@ -2267,11 +2269,11 @@ msgstr "利用規約"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-msgid "eg. Harry"
-msgstr "例) Hiroshi"
+msgid "first name (eg. John)"
+msgstr "名（例. Hiroshi）"
 
-msgid "eg. Armstrong"
-msgstr "例) Suzuki"
+msgid "last name (eg. Smith)"
+msgstr "姓（例. Suzuki）"
 
 msgid "eg. Team Goalous"
 msgstr "例) チームGoalous"
@@ -3957,6 +3959,12 @@ msgstr "名(%s)"
 
 msgid "eg. Bruce"
 msgstr "例) 太郎"
+
+msgid "eg. Armstrong"
+msgstr "例) Suzuki"
+
+msgid "eg. Harry"
+msgstr "例) Hiroshi"
 
 msgid "Hide birth year"
 msgstr "生年を隠す。"
