@@ -42,9 +42,19 @@ class TopicTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    public function testDummy()
+    public function test_get()
     {
+        $this->setDefaultTeamIdAndUid();
+        $this->Topic->save(['creator_user_id' => 1, 'team_id' => 1, 'title' => 'test']);
+        $topicId = $this->Topic->getLastInsertID();
+        $actual = $this->Topic->get($topicId);
+        $expected = [
+            'id'                => $topicId,
+            'title'             => 'test',
+            'latest_message_id' => null
+        ];
 
+        $this->assertEquals($expected, $actual);
     }
 
 }

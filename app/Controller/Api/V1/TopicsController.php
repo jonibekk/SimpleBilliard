@@ -1,5 +1,9 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('TopicMember', 'Model');
+App::import('Service/Api', 'ApiTopicService');
+App::import('Service', 'TopicService');
+App::import('Service', 'MessageService');
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -89,7 +93,19 @@ class TopicsController extends ApiController
             ]
         ];
 
-        return $this->_getResponsePagingSuccess($retMock);
+        //TODO: Work in progress in the following..
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        if (!$TopicMember->isMember($topicId, $this->Auth->user('id'))) {
+            return $this->_getResponseBadFail(__("You cannot access the topic"));
+        }
+
+        /** @var ApiTopicService $ApiTopicService */
+        $ApiTopicService = ClassRegistry::init('ApiTopicService');
+        $ret = $ApiTopicService->findTopicDetailInitData($topicId);
+
+        return $this->_getResponsePagingSuccess($retMock);// TODO: replace to $ret when finished message list API
     }
 
     /**

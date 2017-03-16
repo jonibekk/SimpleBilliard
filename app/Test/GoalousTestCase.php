@@ -430,4 +430,29 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true], false);
         return $userId;
     }
+
+    function saveTopic(array $memberUserIds): int
+    {
+        App::uses('Topic', 'Model');
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+
+        $Topic->create();
+        $Topic->save([
+            'team_id'         => 1,
+            'creator_user_id' => 1
+        ]);
+        $topicId = $Topic->getLastInsertID();
+        $Topic->TopicMember->create();
+        $topicMemberData = [];
+        foreach ($memberUserIds as $uid) {
+            $topicMemberData[] = [
+                'team_id'  => 1,
+                'topic_id' => $topicId,
+                'user_id'  => $uid
+            ];
+        }
+        $Topic->TopicMember->saveAll($topicMemberData);
+        return $topicId;
+    }
 }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-14 16:37+0900\n"
+"PO-Revision-Date: 2017-03-15 12:20+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -841,6 +841,9 @@ msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
+
+msgid "You cannot access the topic"
+msgstr "このトピックにはアクセスできません。"
 
 msgid "Confirmation Code for Goalous: %s"
 msgstr "Goalousの認証コード: %s"
