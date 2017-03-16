@@ -9,22 +9,24 @@ export default class Detail extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchInitialData(this.props.params.topic_id)
+    this.props.fetchInitialData(this.props.params.topic_id);
+  }
+
+  sendLike(e) {
+    this.props.sendLike(this.props.params.topic_id);
   }
 
   render() {
-    const {is_fetched_initial, topic, messages, loading_more} = this.props.detail
-
-
+    const props = this.props.detail;
     return (
       <div className="panel panel-default topicDetail">
-        <TopicHeader topic={topic}/>
+        <TopicHeader topic={props.topic}/>
         <div className="topicDetail-body">
           <Messages
-            messages={messages.data}
-            paging={messages.paging}
-            loading_more={loading_more}
-            is_fetched_initial={is_fetched_initial}
+            messages={props.messages.data}
+            paging={props.messages.paging}
+            loading_more={props.loading_more}
+            is_fetched_initial={props.is_fetched_initial}
           />
         </div>
         <div className="topicDetail-footer">
@@ -37,15 +39,17 @@ export default class Detail extends React.Component {
               <div className="topicDetail-footer-box-center">
                 <textarea className="form-control disable-change-warning" rows={1} placeholder="Reply" cols={30}
                           name="message_body" defaultValue={""}/>
-                <div className="has-error">
-                  <span className="has-error help-block">
-                    We have exceeded the maximum number of characters (5,000).
-                  </span>
-                </div>
+                {props.err_msg &&
+                  <div className="has-error">
+                    <span className="has-error help-block">
+                      {props.err_msg}
+                    </span>
+                  </div>
+                }
               </div>
               <div className="topicDetail-footer-box-right">
-                <button className="btn btnRadiusOnlyIcon mod-like" type="button">
-                </button>
+                <button className="btn btnRadiusOnlyIcon mod-like" type="button" onClick={this.sendLike.bind(this)}
+                        disabled={props.is_saving && "disabled"}/>
               </div>
             </div>
           </form>

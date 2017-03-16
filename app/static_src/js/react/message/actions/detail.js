@@ -35,3 +35,24 @@ export function fetchMoreMessages(url) {
       })
   }
 }
+
+export function sendLike(topic_id) {
+  return (dispatch, getState) => {
+    dispatch({type: ActionTypes.SAVING})
+    const postData = {topic_id};
+    return post("/api/v1/messages/like", postData, null,
+      (response) => {
+        dispatch({
+          type: ActionTypes.SAVE_SUCCESS,
+          data:response.data
+        })
+      },
+      (response) => {
+        dispatch({
+          type: ActionTypes.SAVE_ERROR,
+          data:response.data
+        })
+      }
+    );
+  }
+}
