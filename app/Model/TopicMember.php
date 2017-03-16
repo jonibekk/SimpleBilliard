@@ -78,12 +78,12 @@ class TopicMember extends AppModel
     /**
      * Count read members
      *
-     * @param int $topicId
      * @param int $messageId
      *
      * @return int
+     * @internal param int $topicId
      */
-    function countReadMember(int $topicId, int $messageId): int
+    function countReadMember(int $messageId): int
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -91,7 +91,6 @@ class TopicMember extends AppModel
 
         $options = [
             'conditions' => [
-                'topic_id'             => $topicId,
                 'last_read_message_id' => $messageId,
                 'user_id'              => $activeTeamMembersList,
             ],

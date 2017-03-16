@@ -36,7 +36,7 @@ class TopicService extends AppService
         $latestMessageId = $topic['latest_message_id'];
         $readCount = 0;
         if ($latestMessageId) {
-            $readCount = $TopicMember->countReadMember($topicId, $latestMessageId);
+            $readCount = $TopicMember->countReadMember($latestMessageId);
         }
         $membersCount = $TopicMember->countMember($topicId);
 

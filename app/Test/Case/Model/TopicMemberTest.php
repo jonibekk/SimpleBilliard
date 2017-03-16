@@ -60,10 +60,10 @@ class TopicMemberTest extends GoalousTestCase
     function test_countReadMember()
     {
         $this->setDefaultTeamIdAndUid();
-        $topicId = $this->saveTopic([1, 2]);
+        $this->saveTopic([1, 2]);
 
         // nobody has last_read_message_id, so `readCount` is expected 0
-        $actual = $this->TopicMember->countReadMember($topicId, 1);
+        $actual = $this->TopicMember->countReadMember(1);
         $this->assertEquals(0, $actual);
 
         $this->TopicMember->updateAll(
@@ -71,7 +71,7 @@ class TopicMemberTest extends GoalousTestCase
             ['user_id' => 1]
         );
         // 1 member has last_read_message_id, so `readCount` is expected 1
-        $actual = $this->TopicMember->countReadMember($topicId, 1);
+        $actual = $this->TopicMember->countReadMember(1);
         $this->assertEquals(1, $actual);
 
         $this->TopicMember->updateAll(
@@ -79,7 +79,7 @@ class TopicMemberTest extends GoalousTestCase
             ['user_id' => 2]
         );
         // 2 members have last_read_message_id, so `readCount` is expected 2
-        $actual = $this->TopicMember->countReadMember($topicId, 1);
+        $actual = $this->TopicMember->countReadMember(1);
         $this->assertEquals(2, $actual);
     }
 
