@@ -48,28 +48,6 @@ class Message extends AppModel
     ];
 
     /**
-     * get latest message id
-     *
-     * @param int $topicId
-     *
-     * @return int
-     */
-    public function getLatestMessageId(int $topicId): int
-    {
-        $options = [
-            'conditions' => [
-                'topic_id' => $topicId,
-            ],
-            'fields'     => ['id'],
-            'limit'      => 1,
-            'order'      => ['id' => 'DESC']
-        ];
-        $ret = $this->find('first', $options);
-        $ret = Hash::get($ret, 'Message.id');
-        return (int)$ret;
-    }
-
-    /**
      * Find messages
      *
      * @param int      $topicId

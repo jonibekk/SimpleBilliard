@@ -46,9 +46,8 @@ class MessageTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function test_dummy()
     {
 
     }
-
 }

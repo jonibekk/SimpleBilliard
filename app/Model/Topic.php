@@ -46,19 +46,20 @@ class Topic extends AppModel
     ];
 
     /**
-     * finding topic
+     * get one topic.
      *
      * @param int $topicId
      *
      * @return array
      */
-    public function findTopic(int $topicId): array
+    public function get(int $topicId): array
     {
         $options = [
             'conditions' => ['id' => $topicId],
             'fields'     => [
                 'id',
                 'title',
+                'latest_message_id',
             ],
         ];
         $ret = $this->find('first', $options);

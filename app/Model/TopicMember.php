@@ -55,13 +55,16 @@ class TopicMember extends AppModel
     /**
      * Count members
      *
-     * @param int   $topicId
-     * @param array $activeTeamMembersList
+     * @param int $topicId
      *
      * @return int
      */
-    function countMember(int $topicId, array $activeTeamMembersList): int
+    function countMember(int $topicId): int
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'topic_id' => $topicId,
@@ -75,17 +78,19 @@ class TopicMember extends AppModel
     /**
      * Count read members
      *
-     * @param int   $topicId
-     * @param int   $messageId
-     * @param array $activeTeamMembersList
+     * @param int $messageId
      *
      * @return int
+     * @internal param int $topicId
      */
-    function countReadMember(int $topicId, int $messageId, array $activeTeamMembersList): int
+    function countReadMember(int $messageId): int
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
-                'topic_id'             => $topicId,
                 'last_read_message_id' => $messageId,
                 'user_id'              => $activeTeamMembersList,
             ],
@@ -98,14 +103,17 @@ class TopicMember extends AppModel
      * Find members
      * - order by last_message_sent DESC
      *
-     * @param int   $topicId
-     * @param array $activeTeamMembersList
-     * @param int   $limit if 0, unlimited
+     * @param int $topicId
+     * @param int $limit if 0, unlimited
      *
      * @return array
      */
-    function findMembers(int $topicId, array $activeTeamMembersList, int $limit = 0): array
+    function findMembers(int $topicId, int $limit = 0): array
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'topic_id' => $topicId,
