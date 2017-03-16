@@ -20,6 +20,7 @@ class TopicTest extends GoalousTestCase
         'app.message',
         'app.user',
         'app.team_member',
+        'app.local_name'
     ];
 
     /**

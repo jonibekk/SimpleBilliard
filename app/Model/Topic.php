@@ -105,10 +105,10 @@ class Topic extends AppModel
             'contain'    => [
                 'TopicMember' => [
                     'fields' => [
-                        'id',
-                        'user_id',
-                        'topic_id',
-                        'last_read_message_id'
+                        'TopicMember.id',
+                        'TopicMember.user_id',
+                        'TopicMember.topic_id',
+                        'TopicMember.last_read_message_id'
                     ],
                     'User' => [
                         'fields' => $this->TopicMember->User->profileFields
