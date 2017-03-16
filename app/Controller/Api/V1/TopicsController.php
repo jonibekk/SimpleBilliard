@@ -36,7 +36,7 @@ class TopicsController extends ApiController
                 "can_leave_topic" => true,
             ],
             'messages' => [
-                'data' => [
+                'data'   => [
                     [
                         'id'              => 123,
                         'body'            => 'あついなー。',
@@ -89,7 +89,7 @@ class TopicsController extends ApiController
                 ],
                 'paging' => [
 //                    'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
-                    'next' => "",
+'next' => "",
                 ]
             ]
         ];
@@ -132,7 +132,8 @@ class TopicsController extends ApiController
         if (!$ApiMessageService->checkMaxLimit((int)$limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-        $ApiMessageService->findMessages($topicId, $cursor, $limit);
+        $response = $ApiMessageService->findMessages($topicId, $cursor, $limit);
+        $this->log($response);
 
         $retMock = [];
         $retMock['data'] = [
@@ -199,7 +200,7 @@ class TopicsController extends ApiController
         $retMock['paging'] = [
             'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
         ];
-        return $this->_getResponsePagingSuccess($retMock);
+        return $this->_getResponsePagingSuccess($response);
     }
 
     /**

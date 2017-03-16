@@ -10,6 +10,10 @@ App::uses('AppModel', 'Model');
  */
 class Message extends AppModel
 {
+    const TYPE_NORMAL = 1;
+    const TYPE_ADD_MEMBER = 2;
+    const TYPE_LEAVE = 3;
+    const TYPE_SET_TOPIC_NAME = 4;
 
     /**
      * Validation rules
@@ -62,6 +66,13 @@ class Message extends AppModel
             'conditions' => [
                 'Message.topic_id' => $topicId,
             ],
+            'fields'     => [
+                'id',
+                'body',
+                'type',
+                'target_user_ids',
+                'created'
+            ],
             'order'      => [
                 'Message.id' => 'DESC'
             ],
@@ -70,8 +81,14 @@ class Message extends AppModel
                     'fields' => $this->SenderUser->profileFields
                 ],
                 'MessageFile' => [
+                    'fields'       => [],
                     'order'        => ['MessageFile.index_num asc'],
-                    'AttachedFile' => []
+                    'AttachedFile' => [
+                        'id',
+                        'attached_file_name',
+                        'file_type',
+                        'file_ext'
+                    ]
                 ]
             ],
             'limit'      => $limit,

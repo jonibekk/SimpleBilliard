@@ -527,8 +527,10 @@ class AttachedFile extends AppModel
         return $upload->attachedFileUrl($file, 'download');
     }
 
-    function getAttachedFileUrls($data, $open_type)
+    function getAttachedFileUrls($data)
     {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
 
     }
 }
