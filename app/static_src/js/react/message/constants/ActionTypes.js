@@ -1,1 +1,4 @@
-export const HOGE = "HOGE"
+export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
+export const FETCH_MORE_MESSAGES = 'FETCH_MORE_MESSAGES'
+export const LOADING = 'LOADING'
+export const LOADING_MORE = 'LOADING_MORE'

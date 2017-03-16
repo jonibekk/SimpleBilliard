@@ -35,59 +35,62 @@ class TopicsController extends ApiController
                 "can_leave_topic" => true,
             ],
             'messages' => [
-                [
-                    'id'              => 123,
-                    'body'            => 'あついなー。',
-                    'created'         => 1438585548,
-                    'display_created' => '03/09 13:51',
-                    'type'            => 1,
-                    'user'            => [
-                        'id'               => 2,
-                        'img_url'          => '/img/no-image.jpg',
-                        'display_username' => '佐伯 翔平',
-                    ]
-                ],
-                [
-                    'id'              => 124,
-                    'body'            => 'そうかなー。',
-                    'created'         => 1438585558,
-                    'display_created' => '03/09 13:52',
-                    'type'            => 1,
-                    'user'            => [
-                        'id'               => 4,
-                        'img_url'          => '/img/no-image.jpg',
-                        'display_username' => '吉田 将之',
-                    ]
-                ],
-                [
-                    'id'              => 125,
-                    'body'            => '全然あつくないでしょ。恋でもしてるの？',
-                    'created'         => 1438585568,
-                    'display_created' => '03/09 13:53',
-                    'type'            => 1,
-                    'user'            => [
-                        'id'               => 1,
-                        'img_url'          => '/img/no-image.jpg',
-                        'display_username' => '平形 大樹',
-                    ]
-                ],
-                [
-                    'id'              => 126,
-                    'body'            => '利尻いってこい。涼しいぞ。',
-                    'created'         => 1438585578,
-                    'display_created' => '03/09 13:54',
-                    'type'            => 1,
-                    'user'            => [
-                        'id'               => 3,
-                        'img_url'          => '/img/no-image.jpg',
-                        'display_username' => '菊池 厚平',
+                'data' => [
+                    [
+                        'id'              => 123,
+                        'body'            => 'あついなー。',
+                        'created'         => 1438585548,
+                        'display_created' => '03/09 13:51',
+                        'type'            => 1,
+                        'user'            => [
+                            'id'               => 2,
+                            'img_url'          => '/img/no-image.jpg',
+                            'display_username' => '佐伯 翔平',
+                        ]
                     ],
+                    [
+                        'id'              => 124,
+                        'body'            => 'そうかなー。',
+                        'created'         => 1438585558,
+                        'display_created' => '03/09 13:52',
+                        'type'            => 1,
+                        'user'            => [
+                            'id'               => 4,
+                            'img_url'          => '/img/no-image.jpg',
+                            'display_username' => '吉田 将之',
+                        ]
+                    ],
+                    [
+                        'id'              => 125,
+                        'body'            => '全然あつくないでしょ。恋でもしてるの？',
+                        'created'         => 1438585568,
+                        'display_created' => '03/09 13:53',
+                        'type'            => 1,
+                        'user'            => [
+                            'id'               => 1,
+                            'img_url'          => '/img/no-image.jpg',
+                            'display_username' => '平形 大樹',
+                        ]
+                    ],
+                    [
+                        'id'              => 126,
+                        'body'            => '利尻いってこい。涼しいぞ。',
+                        'created'         => 1438585578,
+                        'display_created' => '03/09 13:54',
+                        'type'            => 1,
+                        'user'            => [
+                            'id'               => 3,
+                            'img_url'          => '/img/no-image.jpg',
+                            'display_username' => '菊池 厚平',
+                        ],
 
+                    ],
                 ],
+                'paging' => [
+//                    'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
+                    'next' => "",
+                ]
             ]
-        ];
-        $retMock['paging'] = [
-            'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
         ];
 
         //TODO: Work in progress in the following..
