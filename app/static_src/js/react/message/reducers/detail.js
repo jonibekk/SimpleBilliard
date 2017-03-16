@@ -21,7 +21,6 @@ export default function detail(state = initialState, action) {
         loading: true
       })
     case ActionTypes.FETCH_INITIAL_DATA:
-  console.log(action.data);
       return Object.assign({}, state, action.data, {
         loading: false,
         is_fetched_initial: true
