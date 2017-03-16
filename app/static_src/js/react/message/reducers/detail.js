@@ -10,6 +10,7 @@ const initialState = {
   },
   loading: false,
   loading_more: false,
+  is_fetched_initial: false
   // TODO:アップロードしたファイルID追加
 }
 
@@ -22,10 +23,11 @@ export default function detail(state = initialState, action) {
     case ActionTypes.FETCH_INITIAL_DATA:
   console.log(action.data);
       return Object.assign({}, state, action.data, {
-        loading: false
+        loading: false,
+        is_fetched_initial: true
       })
     case ActionTypes.FETCH_MORE_MESSAGES:
-      messages = {
+      const messages = {
         data: [...state.messages.data, ...action.messages.data],
         paging: action.messages.paging,
       }

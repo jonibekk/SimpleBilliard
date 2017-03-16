@@ -9,23 +9,29 @@ class Messages extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      scrolled_bottom: false
+    }
     this.scrollFunction = this.scrollListener.bind(this);
-    this.moveBottom = this.moveBottom.bind(this);
+    this.scrollBottom = this.scrollBottom.bind(this);
   }
 
   componentDidMount() {
-    this.moveBottom()
     this.attachScrollListener();
   }
 
   componentDidUpdate() {
     this.attachScrollListener();
+    if (this.props.is_fetched_initial && !this.state.scrolled_bottom) {
+      this.scrollBottom();
+    }
   }
 
   _findElement() {
     return ReactDOM.findDOMNode(this);
   }
 
+  // TODO: componentize
   attachScrollListener() {
     if (!this.props.paging.next || this.props.loading_more) return;
     let el = this._findElement();
@@ -50,13 +56,14 @@ class Messages extends React.Component {
     }
   }
 
-  moveBottom() {
+  scrollBottom() {
     if (this.props.messages.length <= 0) {
       return;
     }
 
     let el = this._findElement();
     el.scrollTop = el.scrollHeight;
+    this.setState({scrolled_bottom: true})
   }
 
   detachScrollListener() {
@@ -87,11 +94,13 @@ Messages.propTypes = {
   loading_more: React.PropTypes.bool,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
+  is_fetched_initial:React.PropTypes.bool
 };
 
 Messages.defaultProps = {
   loading_more: false,
   messages: [],
-  paging: {next:""}
+  paging: {next:""},
+  is_fetched_initial:false
 };
 export default connect()(Messages);

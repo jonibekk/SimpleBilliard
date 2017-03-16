@@ -7,33 +7,28 @@
             <span class="ml_8px"> 中嶋 あいみ</span>
         </div>
         <div class="topicDetail-header-right">
-            <a href="#" class="dropdown">
-                <i class="fa fa-cog topicDetail-header-icon" id="dropdownMenu2" data-toggle="dropdown"
-                   aria-expanded="true">
-                </i>
-            </a>
-
-            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation">
-                    <ul>
-                        <li>
-                            <a href="#" role="menuitem" tabindex="-1">
-                                <i class="fa fa-user-plus "></i>メンバーを追加
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" role="menuitem" tabindex="-1">
-                                <i class="fa fa-edit"></i>トピック名を追加
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" role="menuitem" tabindex="-1">
-                                <i class="fa fa-sign-out"></i>このトピックを残す
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle" id="topicHeaderMenu" data-toggle="dropdown" aria-expanded="true">
+                    <i class="fa fa-cog topicDetail-header-icon"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="topicHeaderMenu">
+                    <li>
+                        <a href="#" role="menuitem" tabindex="-1">
+                            <i class="fa fa-user-plus "></i>メンバーを追加
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" role="menuitem" tabindex="-1">
+                            <i class="fa fa-edit"></i>トピック名を追加
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" role="menuitem" tabindex="-1">
+                            <i class="fa fa-sign-out"></i>このトピックを残す
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -150,13 +145,14 @@
                 <div class="topicDetail-footer-box-left">
                     <button type="button" class="btn btnRadiusOnlyIcon mod-upload"/>
                 </div>
-<!--                <div class="topicDetail-footer-box-left">-->
-<!--                    <button type="button" class="btn btnRadius topicDetail-footer-btn">-->
-<!--                        <i class="fa fa-paperclip post-camera-icon"></i>-->
-<!--                    </button>-->
-<!--                </div>-->
+                <!--                <div class="topicDetail-footer-box-left">-->
+                <!--                    <button type="button" class="btn btnRadius topicDetail-footer-btn">-->
+                <!--                        <i class="fa fa-paperclip post-camera-icon"></i>-->
+                <!--                    </button>-->
+                <!--                </div>-->
                 <div class="topicDetail-footer-box-center">
-                    <textarea class="form-control disable-change-warning" rows="1" placeholder="Reply" cols="30" name="message_body"></textarea>
+                <textarea class="form-control disable-change-warning" rows="1" placeholder="Reply" cols="30"
+                          name="message_body"></textarea>
                     <div class="has-error">
                       <span class="has-error help-block">
                           We have exceeded the maximum number of characters (5,000).

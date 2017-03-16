@@ -83,7 +83,8 @@ class TopicsController extends ApiController
                     ],
                 ],
                 'paging' => [
-                    'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
+//                    'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
+                    'next' => "",
                 ]
             ]
         ];
