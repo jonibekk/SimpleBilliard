@@ -555,7 +555,10 @@ App::uses('AttachedFile', 'Model');
             "All Goals": "<?= __("All Goals") ?>",
             "PROGRESS": "<?= __("PROGRESS") ?>",
             "All goal's total you have.": "<?= __("All goal's total you have.") ?>",
-            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>"
+            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>",
+            "Add member(s)": "<?= __("Add member(s)") ?>",
+            "Set topic name": "<?= __("Set topic name") ?>",
+            "Leave me": "<?= __("Leave me") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
