@@ -56,6 +56,21 @@ class TopicTest extends GoalousTestCase
         $this->assertNotEmpty($this->Topic->findLatest($mainUserId, 0, 10));
     }
 
+    public function test_get()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->Topic->save(['creator_user_id' => 1, 'team_id' => 1, 'title' => 'test']);
+        $topicId = $this->Topic->getLastInsertID();
+        $actual = $this->Topic->get($topicId);
+        $expected = [
+            'id'                => $topicId,
+            'title'             => 'test',
+            'latest_message_id' => null
+        ];
+
+        $this->assertEquals($expected, $actual);
+    }
+
     function _setDefault() {
         $teamId = 1;
         $this->Topic->current_team_id = $teamId;
