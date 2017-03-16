@@ -12,6 +12,24 @@ App::uses('User', 'Model');
  */
 class Topic extends AppModel
 {
+
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
+                    'medium_large' => '96x96',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image-team.jpg',
+                'quality'     => 100,
+            ]
+        ]
+    ];
+
     /**
      * Validation rules
      *
@@ -89,7 +107,8 @@ class Topic extends AppModel
                     'fields' => [
                         'id',
                         'user_id',
-                        'topic_id'
+                        'topic_id',
+                        'last_read_message_id'
                     ],
                     'User' => [
                         'fields' => $this->TopicMember->User->profileFields

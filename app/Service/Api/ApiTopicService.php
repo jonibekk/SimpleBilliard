@@ -19,16 +19,16 @@ class ApiTopicService extends ApiService
      *
      * @return array
      */
-    function process(array $topicsByModel, $userId): array
+    function process(array $topicsByModel, int $userId): array
     {
         $resData = $this->formatResponseData($topicsByModel);
-
         // change data structure and add util property
         $topics = [];
         foreach($resData as $i => $data) {
             $topics[$i] = $data['topic'];
             $topics[$i]['latest_message'] = $data['latest_message'];
-            // add members all count and able to leave me
+            // add util properties
+            $topics[$i]['read_count'] = $this->calcReadCount($data['latest_message'], $data['topic_members']);
             $topics[$i]['members_count'] = count($data['topic_members']);
             $topics[$i]['can_leave_topic'] = $topics[$i]['members_count'] >= 3;
             // set topics user info without mine
@@ -39,9 +39,46 @@ class ApiTopicService extends ApiService
                 }
                 $topics[$i]['users'][] = $member['user'];
             }
+            // set display title
+            $topicTitle =  $data['topic']['title'];
+            $topics[$i]['display_title'] = !empty($topicTitle) ? $topicTitle : $this->getDisplayTitle($topics[$i]['users']);
         }
 
         return $topics;
+    }
+
+    /**
+     * calc read count of latest message
+     *
+     * @param  int   $lastMessageId
+     * @param  array $teamMembers
+     *
+     * @return int
+     */
+    function calcReadCount(array $lastMessage, array $topicMembers): int
+    {
+        $condition = "{n}[last_read_message_id={$lastMessage['id']}][user_id!={$lastMessage['sender_user_id']}]";
+        $readMembers = Hash::extract($topicMembers, $condition);
+        return count($readMembers);
+    }
+
+    /**
+     * generate topic title by users
+     * - only one user, display fullname
+     * - over one user, display only first name separated comma
+     *
+     * @param  array  $users
+     *
+     * @return string
+     */
+    function getDisplayTitle(array $users): string
+    {
+        if (count($users) === 1) {
+            return $users[0]['display_username'];
+        }
+
+        $firstNames = Hash::extract($users, '{n}.display_first_name');
+        return implode(', ', $firstNames);
     }
 
 }
