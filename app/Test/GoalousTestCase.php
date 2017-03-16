@@ -18,6 +18,8 @@ App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
 App::uses('EvaluateTerm', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('Topic', 'Model');
+App::uses('Message', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::uses('AppUtil', 'Util');
@@ -47,6 +49,8 @@ class GoalousTestCase extends CakeTestCase
         $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
+        $this->Topic = ClassRegistry::init('Topic');
+        $this->Message = ClassRegistry::init('Message');
         $this->GoalService = ClassRegistry::init('GoalService');
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->GlRedis->changeDbSource('redis_test');
@@ -430,4 +434,55 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true], false);
         return $userId;
     }
+
+    function createTopicAndMessages($teamid, $userId, $subUserId, $latestMessageDatetime)
+    {
+        // save topic
+        $this->Topic->create();
+        $this->Topic->save([
+            'team_id'         => $teamid,
+            'creator_user_id' => $userId,
+            'title'           => 'Sample title',
+            'latest_message_id' => 1,
+            'latest_message_datetime' => $latestMessageDatetime
+        ], false);
+        $topicId = $this->Topic->getLastInsertId();
+
+        // save topic members
+        $this->Topic->TopicMember->create();
+        $this->Topic->TopicMember->save([
+            'team_id'  => $teamid,
+            'user_id'  => $userId,
+            'topic_id' => $topicId,
+        ], false);
+        $this->Topic->TopicMember->create();
+        $this->Topic->TopicMember->save([
+            'team_id'  => $teamid,
+            'user_id'  => $subUserId,
+            'topic_id' => $topicId,
+        ], false);
+
+        // save messages
+        $this->Message->create();
+        $this->Message->save([
+            'id'       => 1,
+            'team_id'  => $teamid,
+            'sender_user_id' => $userId,
+            'topic_id' => $topicId,
+            'body' => 'message 1',
+            'created' => $latestMessageDatetime - 1
+        ], false);
+        $this->Message->create();
+        $this->Message->save([
+            'id'       => 2,
+            'team_id'  => $teamid,
+            'sender_user_id' => $subUserId,
+            'topic_id' => $topicId,
+            'body' => 'message 2(latest)',
+            'created' => $latestMessageDatetime
+        ], false);
+
+        return $topicId;
+    }
+
 }
