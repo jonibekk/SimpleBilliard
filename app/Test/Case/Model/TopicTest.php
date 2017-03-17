@@ -9,7 +9,6 @@ App::uses('GoalousTestCase', 'Test');
  */
 class TopicTest extends GoalousTestCase
 {
-
     /**
      * Fixtures
      *
@@ -17,6 +16,11 @@ class TopicTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.topic',
+        'app.topic_member',
+        'app.message',
+        'app.user',
+        'app.team_member',
+        'app.local_name'
     ];
 
     /**
@@ -42,6 +46,17 @@ class TopicTest extends GoalousTestCase
         parent::tearDown();
     }
 
+    function test_findLatest()
+    {
+        $this->_setDefault();
+        $teamId = 1;
+        $mainUserId = $this->createActiveUser($teamId);
+        $subUserId = $this->createActiveUser($teamId);
+        $latestMessageDate = 222222;
+        $this->createTopicAndMessages($teamId, $mainUserId, $subUserId, $latestMessageDate);
+        $this->assertNotEmpty($this->Topic->findLatest($mainUserId, 0, 10));
+    }
+
     public function test_get()
     {
         $this->setDefaultTeamIdAndUid();
@@ -57,4 +72,12 @@ class TopicTest extends GoalousTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    function _setDefault() {
+        $teamId = 1;
+        $this->Topic->current_team_id = $teamId;
+        $this->Topic->TopicMember->current_team_id = $teamId;
+        $this->Topic->TopicMember->User->current_team_id = $teamId;
+        $this->Topic->TopicMember->User->TeamMember->current_team_id = $teamId;
+        $this->Topic->TopicMember->User->TeamMember->Team->current_team_id = $teamId;
+    }
 }
