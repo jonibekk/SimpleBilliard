@@ -134,3 +134,35 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.searchBox {
+  width: 100%;
+  border: 1px solid @subColor4;
+  border-collapse: separate;
+  border-radius: 4px;
+  position: relative;
+  &-input {
+    display: block;
+    width: 100%;
+    background-color: @white;
+    border-radius: 4px;
+    box-shadow: none;
+    transition: none;
+    outline: 0;
+    padding: 10px 10px 10px 30px;
+    font-size: 14px;
+    border: 0;
+    line-height: 18px;
+  }
+  &-icon {
+    position: absolute;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .fa {
+      color: @subColor4;
+      font-size: 18px;
+    }
+  }
+}
