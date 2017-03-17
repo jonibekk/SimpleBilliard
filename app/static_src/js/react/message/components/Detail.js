@@ -49,7 +49,7 @@ export default class Detail extends React.Component {
               <div className="topicDetail-footer-box-center">
                 <textarea
                   className="form-control disable-change-warning"
-                  rows={1} cols={30} placeholder="Reply"
+                  rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" defaultValue=""
                   onChange={this.onChangeMessage.bind(this)}
                 />
