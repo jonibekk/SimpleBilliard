@@ -4,6 +4,7 @@ App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
 App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
+App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Class ApiTopicService
@@ -26,12 +27,17 @@ class ApiTopicService extends ApiService
      */
     function process(array $topicsByModel, int $userId): array
     {
+        $TimeEx = new TimeExHelper(new View());
         $resData = $this->formatResponseData($topicsByModel);
         // change data structure and add util property
         $topics = [];
         foreach ($resData as $i => $data) {
             $topics[$i] = $data['topic'];
             $topics[$i]['latest_message'] = $data['latest_message'];
+            // convert created time for human readable
+            $topics[$i]['latest_message']['display_created'] = $TimeEx->elapsedTime(
+                $data['latest_message']['created'], 'normal', false
+            );
             // add util properties
             $topics[$i]['read_count'] = $this->calcReadCount($data['latest_message'], $data['topic_members']);
             $topics[$i]['members_count'] = count($data['topic_members']);
