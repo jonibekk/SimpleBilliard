@@ -1,5 +1,6 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('TopicMember', 'Model');
 
 /**
  * Class MessagesController
@@ -59,6 +60,16 @@ class MessagesController extends ApiController
     function post_like()
     {
         $topicId = $this->request->data('topic_id');
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        if (!$TopicMember->isMember($topicId, $this->Auth->user('id'))) {
+            return $this->_getResponseBadFail(__("You cannot access the topic"));
+        }
+
+        //thumbs up character is bellow
+        $body = "\xF0\x9F\x91\x8D";
+
         $dataMock = ['message_id' => 1234];
         return $this->_getResponseSuccessSimple($dataMock);
     }
