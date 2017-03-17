@@ -2,6 +2,7 @@
 App::import('Service/Api', 'ApiService');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
+App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
 
 /**
@@ -18,7 +19,8 @@ class ApiTopicService extends ApiService
      * - adjust data structure of topic
      * - add util property to per topic
      *
-     * @param  array $dataByModel
+     * @param array $topicsByModel
+     * @param int   $userId
      *
      * @return array
      */
@@ -27,7 +29,7 @@ class ApiTopicService extends ApiService
         $resData = $this->formatResponseData($topicsByModel);
         // change data structure and add util property
         $topics = [];
-        foreach($resData as $i => $data) {
+        foreach ($resData as $i => $data) {
             $topics[$i] = $data['topic'];
             $topics[$i]['latest_message'] = $data['latest_message'];
             // add util properties
@@ -36,14 +38,14 @@ class ApiTopicService extends ApiService
             $topics[$i]['can_leave_topic'] = $topics[$i]['members_count'] >= 3;
             // set topics user info without mine
             $topics[$i]['users'] = [];
-            foreach($data['topic_members'] as $member) {
+            foreach ($data['topic_members'] as $member) {
                 if ($member['user']['id'] == $userId) {
                     continue;
                 }
                 $topics[$i]['users'][] = $member['user'];
             }
             // set display title
-            $topicTitle =  $data['topic']['title'];
+            $topicTitle = $data['topic']['title'];
             $topics[$i]['display_title'] = !empty($topicTitle) ? $topicTitle : $this->getDisplayTitle($topics[$i]['users']);
         }
 
@@ -53,8 +55,8 @@ class ApiTopicService extends ApiService
     /**
      * calc read count of latest message
      *
-     * @param  int   $lastMessageId
-     * @param  array $teamMembers
+     * @param  array $lastMessage
+     * @param  array $topicMembers
      *
      * @return int
      */
@@ -70,7 +72,7 @@ class ApiTopicService extends ApiService
      * - only one user, display fullname
      * - over one user, display only first name separated comma
      *
-     * @param  array  $users
+     * @param  array $users
      *
      * @return string
      */
@@ -97,12 +99,13 @@ class ApiTopicService extends ApiService
         $TopicService = ClassRegistry::init('TopicService');
         $topicDetail = $TopicService->findTopicDetail($topicId);
 
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
+        $messageData = $ApiMessageService->findMessages($topicId);
+
         $ret = [
             'topic'    => $topicDetail,
-            'messages' => [], //TODO: start to implement in https://jira.goalous.com/browse/GL-5673
-            'paging'   => [
-                'next' => "",
-            ]
+            'messages' => $messageData,
         ];
         return $ret;
     }

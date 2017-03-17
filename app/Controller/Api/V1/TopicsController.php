@@ -4,6 +4,7 @@ App::uses('TopicMember', 'Model');
 App::import('Service/Api', 'ApiTopicService');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
+App::import('Service/Api', 'ApiMessageService');
 /** @noinspection PhpUndefinedClassInspection */
 App::uses('Topic', 'Model');
 App::import('Service/Api', 'ApiTopicService');
@@ -77,76 +78,75 @@ class TopicsController extends ApiController
      */
     function get_detail(int $topicId)
     {
-        $retMock = [];
-        $retMock['data'] = [
-            "topic"    => [
-                "id"              => 1,
-                "tilte"           => "", // タイトル変更時に変更前タイトル表示用に利用
-                "display_title"   => "大樹,翔平,厚平,将之", //　表示用タイトル(トピック名が無い場合はメンバー名の羅列にする)
-                "read_count"      => 3,
-                "members_count"   => 4,
-                "can_leave_topic" => true,
-            ],
-            'messages' => [
-                'data' => [
-                    [
-                        'id'              => 123,
-                        'body'            => 'あついなー。',
-                        'created'         => 1438585548,
-                        'display_created' => '03/09 13:51',
-                        'type'            => 1,
-                        'user'            => [
-                            'id'               => 2,
-                            'img_url'          => '/img/no-image.jpg',
-                            'display_username' => '佐伯 翔平',
-                        ]
-                    ],
-                    [
-                        'id'              => 124,
-                        'body'            => 'そうかなー。',
-                        'created'         => 1438585558,
-                        'display_created' => '03/09 13:52',
-                        'type'            => 1,
-                        'user'            => [
-                            'id'               => 4,
-                            'img_url'          => '/img/no-image.jpg',
-                            'display_username' => '吉田 将之',
-                        ]
-                    ],
-                    [
-                        'id'              => 125,
-                        'body'            => '全然あつくないでしょ。恋でもしてるの？',
-                        'created'         => 1438585568,
-                        'display_created' => '03/09 13:53',
-                        'type'            => 1,
-                        'user'            => [
-                            'id'               => 1,
-                            'img_url'          => '/img/no-image.jpg',
-                            'display_username' => '平形 大樹',
-                        ]
-                    ],
-                    [
-                        'id'              => 126,
-                        'body'            => '利尻いってこい。涼しいぞ。',
-                        'created'         => 1438585578,
-                        'display_created' => '03/09 13:54',
-                        'type'            => 1,
-                        'user'            => [
-                            'id'               => 3,
-                            'img_url'          => '/img/no-image.jpg',
-                            'display_username' => '菊池 厚平',
-                        ],
-
-                    ],
-                ],
-                'paging' => [
-//                    'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
-                    'next' => "",
-                ]
-            ]
-        ];
-
-        //TODO: Work in progress in the following..
+//TODO: it will be removed after writing test cases.
+//        $retMock = [];
+//        $retMock['data'] = [
+//            "topic"    => [
+//                "id"              => 1,
+//                "tilte"           => "", // タイトル変更時に変更前タイトル表示用に利用
+//                "display_title"   => "大樹,翔平,厚平,将之", //　表示用タイトル(トピック名が無い場合はメンバー名の羅列にする)
+//                "read_count"      => 3,
+//                "members_count"   => 4,
+//                "can_leave_topic" => true,
+//            ],
+//            'messages' => [
+//                'data'   => [
+//                    [
+//                        'id'              => 123,
+//                        'body'            => 'あついなー。',
+//                        'created'         => 1438585548,
+//                        'display_created' => '03/09 13:51',
+//                        'type'            => 1,
+//                        'user'            => [
+//                            'id'               => 2,
+//                            'medium_img_url'          => '/img/no-image.jpg',
+//                            'display_username' => '佐伯 翔平',
+//                        ]
+//                    ],
+//                    [
+//                        'id'              => 124,
+//                        'body'            => 'そうかなー。',
+//                        'created'         => 1438585558,
+//                        'display_created' => '03/09 13:52',
+//                        'type'            => 1,
+//                        'user'            => [
+//                            'id'               => 4,
+//                            'medium_img_url'          => '/img/no-image.jpg',
+//                            'display_username' => '吉田 将之',
+//                        ]
+//                    ],
+//                    [
+//                        'id'              => 125,
+//                        'body'            => '全然あつくないでしょ。恋でもしてるの？',
+//                        'created'         => 1438585568,
+//                        'display_created' => '03/09 13:53',
+//                        'type'            => 1,
+//                        'user'            => [
+//                            'id'               => 1,
+//                            'medium_img_url'          => '/img/no-image.jpg',
+//                            'display_username' => '平形 大樹',
+//                        ]
+//                    ],
+//                    [
+//                        'id'              => 126,
+//                        'body'            => '利尻いってこい。涼しいぞ。',
+//                        'created'         => 1438585578,
+//                        'display_created' => '03/09 13:54',
+//                        'type'            => 1,
+//                        'user'            => [
+//                            'id'               => 3,
+//                            'medium_img_url'          => '/img/no-image.jpg',
+//                            'display_username' => '菊池 厚平',
+//                        ],
+//
+//                    ],
+//                ],
+//                'paging' => [
+////                    'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
+//'next' => "",
+//                ]
+//            ]
+//        ];
 
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
@@ -158,7 +158,7 @@ class TopicsController extends ApiController
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
         $ret = $ApiTopicService->findTopicDetailInitData($topicId);
 
-        return $this->_getResponsePagingSuccess($retMock);// TODO: replace to $ret when finished message list API
+        return $this->_getResponseSuccess($ret);
     }
 
     /**
@@ -178,72 +178,80 @@ class TopicsController extends ApiController
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
 
-        $retMock = [];
-        $retMock['data'] = [
-            [
-                'id'              => 123,
-                'body'            => 'あついなー。',
-                'created'         => 1438585548,
-                'display_created' => '03/09 13:51',
-                'type'            => 1,
-                'user'            => [
-                    'id'               => 2,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '佐伯 翔平',
-                ],
-                'attached_files'  => [
-                    [
-                        'id'            => 1,
-                        'ext'           => 'jpg',
-                        'type'          => 1,
-                        'download_url'  => '/img/no-image.jpg',
-                        'preview_url'   => '',
-                        'thumbnail_url' => '/img/no-image.jpg',
-                    ],
-                ]
-            ],
-            [
-                'id'              => 124,
-                'body'            => 'そうかなー。',
-                'created'         => 1438585558,
-                'display_created' => '03/09 13:52',
-                'type'            => 1,
-                'user'            => [
-                    'id'               => 4,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '吉田 将之',
-                ]
-            ],
-            [
-                'id'              => 125,
-                'body'            => '全然あつくないでしょ。恋でもしてるの？',
-                'created'         => 1438585568,
-                'display_created' => '03/09 13:53',
-                'type'            => 1,
-                'user'            => [
-                    'id'               => 1,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '平形 大樹',
-                ]
-            ],
-            [
-                'id'              => 126,
-                'body'            => '利尻いってこい。涼しいぞ。',
-                'created'         => 1438585578,
-                'display_created' => '03/09 13:54',
-                'type'            => 1,
-                'user'            => [
-                    'id'               => 3,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '菊池 厚平',
-                ],
-
-            ],
-        ];
-        $retMock['paging'] = [
-            'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
-        ];
-        return $this->_getResponsePagingSuccess($retMock);
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init("ApiMessageService");
+        // checking max limit
+        if (!$ApiMessageService->checkMaxLimit((int)$limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+        $response = $ApiMessageService->findMessages($topicId, $cursor, $limit);
+//TODO: This is for only reference. It should be removed. after writing test cases.
+//        $retMock = [];
+//        $retMock['data'] = [
+//            [
+//                'id'              => 123,
+//                'body'            => 'あついなー。',
+//                'created'         => 1438585548,
+//                'display_created' => '03/09 13:51',
+//                'type'            => 1,
+//                'user'            => [
+//                    'id'               => 2,
+//                    'medium_img_url'          => '/img/no-image.jpg',
+//                    'display_username' => '佐伯 翔平',
+//                ],
+//                'attached_files'  => [
+//                    [
+//                        'id'            => 1,
+//                        'file_ext'           => 'jpg',
+//                        'file_type'          => 1,
+//                        'download_url'  => '/img/no-image.jpg',
+//                        'preview_url'   => '',
+//                        'thumbnail_url' => '/img/no-image.jpg',
+//                    ],
+//                ]
+//            ],
+//            [
+//                'id'              => 124,
+//                'body'            => 'そうかなー。',
+//                'created'         => 1438585558,
+//                'display_created' => '03/09 13:52',
+//                'type'            => 1,
+//                'user'            => [
+//                    'id'               => 4,
+//                    'medium_img_url'          => '/img/no-image.jpg',
+//                    'display_username' => '吉田 将之',
+//                ]
+//            ],
+//            [
+//                'id'              => 125,
+//                'body'            => '全然あつくないでしょ。恋でもしてるの？',
+//                'created'         => 1438585568,
+//                'display_created' => '03/09 13:53',
+//                'type'            => 1,
+//                'user'            => [
+//                    'id'               => 1,
+//                    'medium_img_url'          => '/img/no-image.jpg',
+//                    'display_username' => '平形 大樹',
+//                ]
+//            ],
+//            [
+//                'id'              => 126,
+//                'body'            => '利尻いってこい。涼しいぞ。',
+//                'created'         => 1438585578,
+//                'display_created' => '03/09 13:54',
+//                'type'            => 1,
+//                'user'            => [
+//                    'id'               => 3,
+//                    'medium_img_url'          => '/img/no-image.jpg',
+//                    'display_username' => '菊池 厚平',
+//                ],
+//
+//            ],
+//        ];
+//        $retMock['paging'] = [
+//            'next' => "/api/v1/topics/123/messages?cursor=11111&limit=10",
+//        ];
+        return $this->_getResponsePagingSuccess($response);
     }
 
     /**
