@@ -558,7 +558,8 @@ App::uses('AttachedFile', 'Model');
             "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>",
             "Add member(s)": "<?= __("Add member(s)") ?>",
             "Set topic name": "<?= __("Set topic name") ?>",
-            "Leave me": "<?= __("Leave me") ?>"
+            "Leave me": "<?= __("Leave me") ?>",
+            "Reply": "<?= __("Reply") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

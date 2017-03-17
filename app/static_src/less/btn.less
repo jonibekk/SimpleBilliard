@@ -397,22 +397,32 @@
   margin: 0;
   cursor: pointer;
   &:hover, &:target, &:active, &:focus {
+    text-decoration: none;
     outline: none;
-    border: 1px solid #ccc;
-    background: #f9f9f9;
+    border: 1px solid @subColor4;
+    color: #fff;
+    background-color: @acidRed;
+    border-color: @acidRed;
   }
   &.mod-upload {
     .fa;
-    font-size: 20px;
+    font-size: 2rem;
     &:before {
       content: "\f0c6";
     }
   }
   &.mod-like {
     .fa;
-    font-size: 14px;
+    font-size: 1.4rem;
     &:before {
       content: "\f087";
+    }
+  }
+  &.mod-send {
+    .fa;
+    font-size: 1.4rem;
+    &:before {
+      content: "\f1d9";
     }
   }
 }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-15 12:20+0900\n"
+"PO-Revision-Date: 2017-03-17 11:59+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2576,6 +2576,18 @@ msgstr "あなたが持つすべてのゴールの合計"
 msgid "Sweet Spot(Drive for it!)"
 msgstr "スイートスポット(ここを目指そう!)"
 
+msgid "Add member(s)"
+msgstr "メンバー追加"
+
+msgid "Set topic name"
+msgstr "トピック名を設定"
+
+msgid "Leave me"
+msgstr "トピックを抜ける"
+
+msgid "Reply"
+msgstr "返信する"
+
 msgid "Circles"
 msgstr "サークル"
 
@@ -2795,9 +2807,6 @@ msgstr "基本情報"
 
 msgid "Members list"
 msgstr "メンバー一覧"
-
-msgid "Add member(s)"
-msgstr "メンバー追加"
 
 msgid "Set as Admin"
 msgstr "管理人にする"
