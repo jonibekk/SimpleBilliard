@@ -151,8 +151,8 @@ class TopicsController extends ApiController
                 'attached_files'  => [
                     [
                         'id'            => 1,
-                        'ext'           => 'jpg',
-                        'type'          => 1,
+                        'file_ext'           => 'jpg',
+                        'file_type'          => 1,
                         'download_url'  => '/img/no-image.jpg',
                         'preview_url'   => '',
                         'thumbnail_url' => '/img/no-image.jpg',

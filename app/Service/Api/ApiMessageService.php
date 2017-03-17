@@ -29,31 +29,57 @@ class ApiMessageService extends ApiService
 
         // getting message data
         $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1);
-        // exchange response data
-        $messages = $this->exchangeResponseData($messages);
-        // paging
-        if (count($messages) == $limit + 1) {
-            // exclude that extra record for paging
-            array_shift($messages);
-            $cursor = $messages[0]['id'];
-            $ret['paging']['next'] = "/api/v1/topics/$topicId/messages?cursor=$cursor&limit=$limit";
-        }
+        // converting key names for response data
+        $messages = $this->convertKeyNames($messages);
         $ret['data'] = $messages;
-
+        $ret = $this->setPaging($ret, $topicId, $limit);
         return $ret;
     }
 
-    function exchangeResponseData(array $messages): array
+    /**
+     * Converting key names for response data
+     *
+     * @param array $messages
+     *
+     * @return array
+     */
+    function convertKeyNames(array $messages): array
     {
         foreach ($messages as &$message) {
             $innerMessage = $message['Message'];
             $senderUser = $message['SenderUser'];
             $attachedFiles = Hash::extract($message['MessageFile'], '{n}.AttachedFile');
+
             $message = $innerMessage;
             $message['user'] = $senderUser;
             $message['attached_files'] = $attachedFiles;
         }
         return $messages;
+    }
+
+    /**
+     * Setting paging Information
+     * - $data includes extra record that will be removed.
+     *
+     * @param array $data
+     * @param int   $topicId
+     * @param int   $limit
+     *
+     * @return array
+     */
+    private function setPaging(array $data, int $topicId, int $limit): array
+    {
+        // If next page is not exists, return
+        if (count($data['data']) < $limit + 1) {
+            return $data;
+        }
+        // exclude that extra record for paging
+        array_shift($data);
+        $cursor = $data[0]['id'];
+        $queryParams = am(compact('cursor'), compact('limit'));
+
+        $data['paging']['next'] = "/api/v1/topics/{$topicId}/messages?" . http_build_query($queryParams);
+        return $data;
     }
 
 }
