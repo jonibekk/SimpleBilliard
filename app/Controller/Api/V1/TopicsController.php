@@ -14,16 +14,17 @@ App::import('Service/Api', 'ApiTopicService');
 class TopicsController extends ApiController
 {
     /**
-     * Init data for topic list page
-     * - path '/api/v1/topics/init'
-     * - also used by paging api as default topics
+     * Init and search data for topic list page
+     * - path '/api/v1/topics/search'
+     * - also used as getting init list page data api
      *
      * @queryParam int $limit optional
      * @queryParam int $offset optional
+     * @queryParam int $keyword optional
      *
      * @return CakeResponse
      */
-    function get_init()
+    function get_search()
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init("Topic");
@@ -33,6 +34,7 @@ class TopicsController extends ApiController
         // get query params
         $limit = $this->request->query('limit') ?? ApiTopicService::DEFAULT_TOPICS_NUM;
         $offset = $this->request->query('offset') ?? 0;
+        $keyword = $this->request->query('keyword') ?? '';
         $userId = $this->Auth->user('id');
 
         // check limit param under max
@@ -48,15 +50,15 @@ class TopicsController extends ApiController
             ]
         ];
 
-        $topics = $Topic->findLatest($userId, $offset, $limit + 1);
+        $topics = $Topic->findLatest($userId, $offset, $limit + 1, $keyword);
         $topics = $ApiTopicService->process($topics, $userId);
 
         // Set paging text
         // TODO: should move setting paging to service.
         //       for unifying with other controller logic.
         if (count($topics) > $limit) {
-            $basePath = '/api/v1/topics/init';
-            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset);
+            $basePath = '/api/v1/topics/search';
+            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset, compact('keyword'));
             array_pop($topics);
         }
 
@@ -461,66 +463,6 @@ HTML;
 </div>
 HTML;
         return $this->_getResponseSuccess($retMockData, $retMockHtml);
-    }
-
-    /**
-     * Search topics
-     * url: GET /api/v1/topics/search
-     *
-     * @queryParam int $cursor optional
-     * @queryParam int $limit optional
-     * @queryParam string $keyword optional
-     * @return CakeResponse
-     * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Search+topics
-     *             TODO: This is mock! We have to implement it!
-     */
-    function get_search()
-    {
-        $cursor = $this->request->query('cursor');
-        $limit = $this->request->query('limit');
-        $keyword = $this->request->query('keyword');
-
-        $retMock = [];
-        $retMock['data'] = [
-            "id"              => 1,
-            "tilte"           => "", // タイトル変更時に変更前タイトル表示用に利用
-            "display_title"   => "大樹,翔平,厚平,将之", //　表示用タイトル(トピック名が無い場合はメンバー名の羅列にする)
-            "read_count"      => 3,
-            "members_count"   => 4,
-            "can_leave_topic" => true,
-            "latest_message"  => [
-                'body'            => '今日はいい天気だなー',
-                'created'         => 1438585548,
-                'display_created' => '2017年3月9日',
-            ],
-            "users"           => [
-                [
-                    'id'               => 1,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '平形 大樹',
-                ],
-                [
-                    'id'               => 2,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '佐伯 翔平',
-                ],
-                [
-                    'id'               => 3,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '菊池 厚平',
-                ],
-                [
-                    'id'               => 4,
-                    'img_url'          => '/img/no-image.jpg',
-                    'display_username' => '吉田 将之',
-                ],
-            ],
-        ];
-
-        $retMock['paging'] = [
-            'next' => "/api/v1/topics/search?cursor=11111&limit=10&keyword=hoge",
-        ];
-        return $this->_getResponsePagingSuccess($retMock);
     }
 
     /**

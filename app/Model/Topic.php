@@ -65,15 +65,16 @@ class Topic extends AppModel
     ];
 
     /**
-     * Find latest update topics with latest message
+     * Find latest topics with latest message
      *
-     * @param  int $userId
-     * @param  int $offset
-     * @param  int $limit
+     * @param  int    $userId
+     * @param  int    $offset
+     * @param  int    $limit
+     * @param  string $keyword
      *
      * @return array
      */
-    function findLatest(int $userId, int $offset, int $limit): array
+    function findLatest(int $userId, int $offset, int $limit, string $keyword): array
     {
         $options = [
             'conditions' => [
@@ -100,7 +101,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'LatestMessage.id = Topic.latest_message_id',
                     ],
-                ]
+                ],
             ],
             'contain'    => [
                 'TopicMember' => [
@@ -127,7 +128,20 @@ class Topic extends AppModel
             'limit'      => $limit
         ];
 
-
+        if ($keyword) {
+            $options['conditions']['OR'] = [
+                'Topic.title LIKE' => "%{$keyword}%",
+                'TopicSearchKeyword.keywords LIKE' => "%\\n{$keyword}%"
+            ];
+            $options['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'topic_search_keywords',
+                'alias'      => 'TopicSearchKeyword',
+                'conditions' => [
+                    'TopicSearchKeyword.topic_id = Topic.id',
+                ],
+            ];
+        }
         $res = $this->find('all', $options);
 
         // attach user images
