@@ -99,7 +99,7 @@ class TopicsController extends ApiController
 //                        'type'            => 1,
 //                        'user'            => [
 //                            'id'               => 2,
-//                            'img_url'          => '/img/no-image.jpg',
+//                            'medium_img_url'          => '/img/no-image.jpg',
 //                            'display_username' => '佐伯 翔平',
 //                        ]
 //                    ],
@@ -111,7 +111,7 @@ class TopicsController extends ApiController
 //                        'type'            => 1,
 //                        'user'            => [
 //                            'id'               => 4,
-//                            'img_url'          => '/img/no-image.jpg',
+//                            'medium_img_url'          => '/img/no-image.jpg',
 //                            'display_username' => '吉田 将之',
 //                        ]
 //                    ],
@@ -123,7 +123,7 @@ class TopicsController extends ApiController
 //                        'type'            => 1,
 //                        'user'            => [
 //                            'id'               => 1,
-//                            'img_url'          => '/img/no-image.jpg',
+//                            'medium_img_url'          => '/img/no-image.jpg',
 //                            'display_username' => '平形 大樹',
 //                        ]
 //                    ],
@@ -135,7 +135,7 @@ class TopicsController extends ApiController
 //                        'type'            => 1,
 //                        'user'            => [
 //                            'id'               => 3,
-//                            'img_url'          => '/img/no-image.jpg',
+//                            'medium_img_url'          => '/img/no-image.jpg',
 //                            'display_username' => '菊池 厚平',
 //                        ],
 //
@@ -196,7 +196,7 @@ class TopicsController extends ApiController
 //                'type'            => 1,
 //                'user'            => [
 //                    'id'               => 2,
-//                    'img_url'          => '/img/no-image.jpg',
+//                    'medium_img_url'          => '/img/no-image.jpg',
 //                    'display_username' => '佐伯 翔平',
 //                ],
 //                'attached_files'  => [
@@ -218,7 +218,7 @@ class TopicsController extends ApiController
 //                'type'            => 1,
 //                'user'            => [
 //                    'id'               => 4,
-//                    'img_url'          => '/img/no-image.jpg',
+//                    'medium_img_url'          => '/img/no-image.jpg',
 //                    'display_username' => '吉田 将之',
 //                ]
 //            ],
@@ -230,7 +230,7 @@ class TopicsController extends ApiController
 //                'type'            => 1,
 //                'user'            => [
 //                    'id'               => 1,
-//                    'img_url'          => '/img/no-image.jpg',
+//                    'medium_img_url'          => '/img/no-image.jpg',
 //                    'display_username' => '平形 大樹',
 //                ]
 //            ],
@@ -242,7 +242,7 @@ class TopicsController extends ApiController
 //                'type'            => 1,
 //                'user'            => [
 //                    'id'               => 3,
-//                    'img_url'          => '/img/no-image.jpg',
+//                    'medium_img_url'          => '/img/no-image.jpg',
 //                    'display_username' => '菊池 厚平',
 //                ],
 //
