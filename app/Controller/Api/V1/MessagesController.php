@@ -22,6 +22,12 @@ class MessagesController extends ApiController
         $topicId = $this->request->data('topic_id');
         $body = $this->request->data('body');
         $fileIds = $this->request->data('file_ids');
+
+        $data = $this->request->data;
+        // validation
+        // topic_id is required
+        // if no body then attached files are required.
+
         $dataMock = [
             'id'              => 123,
             'body'            => 'あついなー。',
