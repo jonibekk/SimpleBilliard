@@ -47,7 +47,7 @@ class ApiTopicServiceTest extends GoalousTestCase
         $topicByModel = [
             [
                 'Topic'         => ['id' => 1, 'title' => null],
-                'LatestMessage' => ['id' => 1, 'sender_user_id' => 1],
+                'LatestMessage' => ['id' => 1, 'sender_user_id' => 1, 'created' => '1456811206'],
                 'TopicMember'   => [
                     [
                         'last_read_message_id' => 1,
@@ -84,7 +84,7 @@ class ApiTopicServiceTest extends GoalousTestCase
             [
                 'id'              => 1,
                 'title'           => null,
-                'latest_message'  => ['id' => 1, 'sender_user_id' => 1],
+                'latest_message'  => ['id' => 1, 'sender_user_id' => 1, 'created' => '1456811206', 'display_created' => 'Mar  1 2016'],
                 'members_count'   => 3,
                 'can_leave_topic' => true,
                 'display_title'   => '厚平, 元彦',

@@ -64,16 +64,21 @@ class Topic extends AppModel
         'TopicMember',
     ];
 
+    /* number of displaying user photo in topic list page */
+    const MAX_DISPLAYING_USER_PHOTO = 4;
+
     /**
-     * Find latest update topics with latest message
+     * Find latest topics with latest message
+     * - if keyword set, search from topic_search_keywords
      *
-     * @param  int $userId
-     * @param  int $offset
-     * @param  int $limit
+     * @param  int    $userId
+     * @param  int    $offset
+     * @param  int    $limit
+     * @param  string $keyword
      *
      * @return array
      */
-    function findLatest(int $userId, int $offset, int $limit): array
+    function findLatest(int $userId, int $offset, int $limit, string $keyword = ''): array
     {
         $options = [
             'conditions' => [
@@ -100,7 +105,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'LatestMessage.id = Topic.latest_message_id',
                     ],
-                ]
+                ],
             ],
             'contain'    => [
                 'TopicMember' => [
@@ -128,6 +133,21 @@ class Topic extends AppModel
         ];
 
 
+        // search from topic_search_keywords and topic.title by keyword
+        if ($keyword) {
+            $options['conditions']['OR'] = [
+                'Topic.title LIKE' => "%{$keyword}%",
+                'TopicSearchKeyword.keywords LIKE' => "%\\n{$keyword}%"
+            ];
+            $options['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'topic_search_keywords',
+                'alias'      => 'TopicSearchKeyword',
+                'conditions' => [
+                    'TopicSearchKeyword.topic_id = Topic.id',
+                ],
+            ];
+        }
         $res = $this->find('all', $options);
 
         // attach user images
@@ -135,8 +155,7 @@ class Topic extends AppModel
             foreach($topic['TopicMember'] as $j => $member) {
                 $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User', ['medium_large']);
                 // number of displaying user photo is less than 4.
-                // TODO: change 3 to constant
-                if ($j > 3) {
+                if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;
                 }
              }
