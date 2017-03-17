@@ -11,6 +11,15 @@ class ApiMessageService extends ApiService
 {
     const MESSAGE_DEFAULT_LIMIT = 10;
 
+    /**
+     * Finding messages. It will returns data as API response
+     *
+     * @param int      $topicId
+     * @param int|null $cursor
+     * @param int|null $limit
+     *
+     * @return array
+     */
     function findMessages(int $topicId, $cursor = null, $limit = null): array
     {
         /** @var MessageService $MessageService */
