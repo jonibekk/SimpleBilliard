@@ -11,7 +11,7 @@ class ApiMessageService extends ApiService
 {
     const MESSAGE_DEFAULT_LIMIT = 10;
 
-    function findMessages(int $topicId, $cursor, $limit): array
+    function findMessages(int $topicId, $cursor = null, $limit = null): array
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');

@@ -2,6 +2,7 @@
 App::import('Service/Api', 'ApiService');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
+App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
 
 /**
@@ -23,12 +24,13 @@ class ApiTopicService extends ApiService
         $TopicService = ClassRegistry::init('TopicService');
         $topicDetail = $TopicService->findTopicDetail($topicId);
 
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
+        $messageData = $ApiMessageService->findMessages($topicId);
+
         $ret = [
             'topic'    => $topicDetail,
-            'messages' => [], //TODO: start to implement in https://jira.goalous.com/browse/GL-5673
-            'paging'   => [
-                'next' => "",
-            ]
+            'messages' => $messageData,
         ];
         return $ret;
     }
