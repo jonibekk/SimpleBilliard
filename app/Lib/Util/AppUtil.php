@@ -287,4 +287,17 @@ class AppUtil
         }
         return null;
     }
+
+    /**
+     * filtering by whiteList
+     *
+     * @param array $targetArray
+     * @param array $whiteListKeys e.g. ['id','name'...]
+     *
+     * @return array
+     */
+    static function filterWhiteList(array $targetArray, array $whiteListKeys): array
+    {
+        return array_intersect_key($targetArray, array_flip($whiteListKeys));
+    }
 }

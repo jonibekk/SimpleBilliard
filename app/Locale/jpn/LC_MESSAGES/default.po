@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-17 11:59+0900\n"
+"PO-Revision-Date: 2017-03-17 12:23+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1802,6 +1802,18 @@ msgstr "%s以来のアクションをしよう！"
 
 msgid "Take first action to this !"
 msgstr "最初のアクションをしよう！"
+
+msgid "%s added %s."
+msgstr "%sが%sを追加しました。"
+
+msgid "%s left this topic."
+msgstr "%sがこのトピックから退出しました。"
+
+msgid "%s named this topic : %s."
+msgstr "%sがトピック名を設定しました。: %s"
+
+msgid "%s removed the topic name."
+msgstr "%sがトピック名を削除しました。"
 
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
