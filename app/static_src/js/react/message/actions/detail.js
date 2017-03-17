@@ -36,10 +36,10 @@ export function fetchMoreMessages(url) {
   }
 }
 
-export function sendLike(topic_id) {
+export function sendLike() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.SAVING})
-    const postData = {topic_id};
+    const postData = {topic_id: getState().detail.topic_id};
     return post("/api/v1/messages/like", postData, null,
       (response) => {
         dispatch({
@@ -54,5 +54,40 @@ export function sendLike(topic_id) {
         })
       }
     );
+  }
+}
+export function sendMessage() {
+  return (dispatch, getState) => {
+    dispatch({type: ActionTypes.SAVING})
+    const detail = getState().detail;
+    const postData = Object.assign(detail.input_data, {
+      topic_id: detail.topic_id
+    });
+    return post("/api/v1/messages", postData, null,
+      (response) => {
+        dispatch({
+          type: ActionTypes.SAVE_SUCCESS,
+          data:response.data
+        })
+      },
+      (response) => {
+        dispatch({
+          type: ActionTypes.SAVE_ERROR,
+          data:response.data
+        })
+      }
+    );
+  }
+}
+export function onChangeMessage(val) {
+  return {
+    type: ActionTypes.CHANGE_MESSAGE,
+    message: val
+  }
+}
+export function setResourceId(topic_id) {
+  return {
+    type: ActionTypes.SET_RESOURCE_ID,
+    topic_id
   }
 }

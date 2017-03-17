@@ -8,9 +8,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setResourceId: (topic_id) => dispatch(actions.setResourceId(topic_id)),
     fetchInitialData: (topic_id) => dispatch(actions.fetchInitialData(topic_id)),
     fetchMoreMessages: (url) => dispatch(actions.fetchMoreMessages(url)),
-    sendLike: (topic_id) => dispatch(actions.sendLike(topic_id))
+    sendMessage: () => dispatch(actions.sendMessage()),
+    sendLike: () => dispatch(actions.sendLike()),
+    onChangeMessage: (val) => dispatch(actions.onChangeMessage(val))
   }
 }
 
