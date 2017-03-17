@@ -1,12 +1,69 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('TopicMember', 'Model');
+App::import('Service/Api', 'ApiTopicService');
+App::import('Service', 'TopicService');
+App::import('Service', 'MessageService');
 /** @noinspection PhpUndefinedClassInspection */
+App::uses('Topic', 'Model');
+App::import('Service/Api', 'ApiTopicService');
 
 /**
  * Class TopicsController
  */
 class TopicsController extends ApiController
 {
+    /**
+     * Init data for topic list page
+     * - path '/api/v1/topics/init'
+     * - also used by paging api as default topics
+     *
+     * @queryParam int $limit optional
+     * @queryParam int $offset optional
+     *
+     * @return CakeResponse
+     */
+    function get_init()
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init("Topic");
+        /** @var TopicService $TopicService */
+        $ApiTopicService = ClassRegistry::init("ApiTopicService");
+
+        // get query params
+        $limit = $this->request->query('limit') ?? ApiTopicService::DEFAULT_TOPICS_NUM;
+        $offset = $this->request->query('offset') ?? 0;
+        $userId = $this->Auth->user('id');
+
+        // check limit param under max
+        if (!$ApiTopicService->checkMaxLimit($limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+
+        // define response data
+        $response = [
+            'data'   => [],
+            'paging' => [
+                'next' => ''
+            ]
+        ];
+
+        $topics = $Topic->findLatest($userId, $offset, $limit + 1);
+        $topics = $ApiTopicService->process($topics, $userId);
+
+        // Set paging text
+        // TODO: should move setting paging to service.
+        //       for unifying with other controller logic.
+        if (count($topics) > $limit) {
+            $basePath = '/api/v1/topics/init';
+            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset);
+            array_pop($topics);
+        }
+
+        $response['data'] = $topics;
+
+        return $this->_getResponsePagingSuccess($response);
+    }
 
     /**
      * Get topic detail
@@ -89,7 +146,19 @@ class TopicsController extends ApiController
             ]
         ];
 
-        return $this->_getResponsePagingSuccess($retMock);
+        //TODO: Work in progress in the following..
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        if (!$TopicMember->isMember($topicId, $this->Auth->user('id'))) {
+            return $this->_getResponseBadFail(__("You cannot access the topic"));
+        }
+
+        /** @var ApiTopicService $ApiTopicService */
+        $ApiTopicService = ClassRegistry::init('ApiTopicService');
+        $ret = $ApiTopicService->findTopicDetailInitData($topicId);
+
+        return $this->_getResponsePagingSuccess($retMock);// TODO: replace to $ret when finished message list API
     }
 
     /**

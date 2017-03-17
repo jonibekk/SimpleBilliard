@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
 
 /**
  * TopicMember Model
@@ -30,4 +31,108 @@ class TopicMember extends AppModel
         'Topic',
         'User',
     ];
+
+    /**
+     * User is topic member?
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function isMember(int $topicId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+                'user_id'  => $userId,
+            ]
+        ];
+        $ret = $this->find('first', $options);
+        return (bool)$ret;
+    }
+
+    /**
+     * Count members
+     *
+     * @param int $topicId
+     *
+     * @return int
+     */
+    function countMember(int $topicId): int
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList,
+            ]
+        ];
+        $ret = $this->find('count', $options);
+        return (int)$ret;
+    }
+
+    /**
+     * Count read members
+     *
+     * @param int $messageId
+     *
+     * @return int
+     * @internal param int $topicId
+     */
+    function countReadMember(int $messageId): int
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
+        $options = [
+            'conditions' => [
+                'last_read_message_id' => $messageId,
+                'user_id'              => $activeTeamMembersList,
+            ],
+        ];
+        $ret = $this->find('count', $options);
+        return (int)$ret;
+    }
+
+    /**
+     * Find members
+     * - order by last_message_sent DESC
+     *
+     * @param int $topicId
+     * @param int $limit if 0, unlimited
+     *
+     * @return array
+     */
+    function findMembers(int $topicId, int $limit = 0): array
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList,
+            ],
+            'fields'     => [
+                'id',
+                'last_read_message_id',
+                'last_message_sent'
+            ],
+            'order'      => ['last_message_sent' => 'DESC'],
+            'contain'    => [
+                'User' => $this->User->profileFields,
+            ]
+        ];
+        if ($limit !== 0) {
+            $options['limit'] = $limit;
+        }
+        $ret = $this->find('all', $options);
+        return $ret;
+    }
 }

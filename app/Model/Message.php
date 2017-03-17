@@ -46,5 +46,4 @@ class Message extends AppModel
     public $hasMany = [
         'MessageFile',
     ];
-
 }
