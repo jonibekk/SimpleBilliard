@@ -9,7 +9,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchInitialData: (topic_id) => dispatch(actions.fetchInitialData(topic_id)),
-    fetchMoreMessages: (url) => dispatch(actions.fetchMoreMessages(url))
+    fetchMoreMessages: (url) => dispatch(actions.fetchMoreMessages(url)),
+    sendLike: (topic_id) => dispatch(actions.sendLike(topic_id))
   }
 }
 

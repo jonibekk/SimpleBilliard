@@ -147,8 +147,9 @@ class Topic extends AppModel
         // attach user images
         foreach($res as $i => $topic) {
             foreach($topic['TopicMember'] as $j => $member) {
-                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User');
+                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User', ['medium_large']);
                 // number of displaying user photo is less than 4.
+                // TODO: change 3 to constant
                 if ($j > 3) {
                     break;
                 }

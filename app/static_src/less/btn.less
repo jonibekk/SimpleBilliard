@@ -397,9 +397,12 @@
   margin: 0;
   cursor: pointer;
   &:hover, &:target, &:active, &:focus {
+    text-decoration: none;
     outline: none;
-    border: 1px solid #ccc;
-    background: #f9f9f9;
+    border: 1px solid @subColor4;
+    color: #fff;
+    background-color: @acidRed;
+    border-color: @acidRed;
   }
   &.mod-upload {
     .fa;
