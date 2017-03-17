@@ -64,8 +64,12 @@ class Topic extends AppModel
         'TopicMember',
     ];
 
+    /* number of displaying user photo in topic list page */
+    const MAX_DISPLAYING_USER_PHOTO = 4;
+
     /**
      * Find latest topics with latest message
+     * - if keyword set, search from topic_search_keywords
      *
      * @param  int    $userId
      * @param  int    $offset
@@ -74,7 +78,7 @@ class Topic extends AppModel
      *
      * @return array
      */
-    function findLatest(int $userId, int $offset, int $limit, string $keyword): array
+    function findLatest(int $userId, int $offset, int $limit, string $keyword = ''): array
     {
         $options = [
             'conditions' => [
@@ -128,6 +132,8 @@ class Topic extends AppModel
             'limit'      => $limit
         ];
 
+
+        // search from topic_search_keywords and topic.title by keyword
         if ($keyword) {
             $options['conditions']['OR'] = [
                 'Topic.title LIKE' => "%{$keyword}%",
@@ -149,8 +155,7 @@ class Topic extends AppModel
             foreach($topic['TopicMember'] as $j => $member) {
                 $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User', ['medium_large']);
                 // number of displaying user photo is less than 4.
-                // TODO: change 3 to constant
-                if ($j > 3) {
+                if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;
                 }
              }
