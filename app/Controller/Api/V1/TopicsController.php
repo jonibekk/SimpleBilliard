@@ -52,9 +52,11 @@ class TopicsController extends ApiController
         $topics = $ApiTopicService->process($topics, $userId);
 
         // Set paging text
+        // TODO: should move setting paging to service.
+        //       for unifying with other controller logic.
         if (count($topics) > $limit) {
             $basePath = '/api/v1/topics/init';
-            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset);;
+            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset);
             array_pop($topics);
         }
 

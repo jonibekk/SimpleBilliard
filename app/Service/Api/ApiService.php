@@ -62,11 +62,12 @@ class ApiService extends AppService
     /**
      * Generate paging array
      *
-     * @param  str   $basePath [description]
-     * @param  int   $limit    [description]
-     * @param  int   $offset   [description]
-     * @param  array $others   [description]
-     * @return bool            [description]
+     * @param  str   $basePath
+     * @param  int   $limit
+     * @param  int   $offset
+     * @param  array $others
+     *
+     * @return bool
      */
     function generatePaging(string $basePath, int $limit, int $offset, array $others = []): array
     {

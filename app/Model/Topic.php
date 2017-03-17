@@ -111,7 +111,12 @@ class Topic extends AppModel
                         'TopicMember.last_read_message_id'
                     ],
                     'User' => [
-                        'fields' => $this->TopicMember->User->profileFields
+                        'fields' => $this->TopicMember->User->profileFields,
+                        // 10: realistic upper limit for displaying title connecting user name.
+                        'limit'  => 10
+                    ],
+                    'order' => [
+                        'TopicMember.last_message_sent DESC'
                     ]
                 ]
             ],
@@ -128,8 +133,12 @@ class Topic extends AppModel
         // attach user images
         foreach($res as $i => $topic) {
             foreach($topic['TopicMember'] as $j => $member) {
-                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($member['User'], 'User');
-            }
+                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User');
+                // number of displaying user photo is less than 4.
+                if ($j > 3) {
+                    break;
+                }
+             }
         }
 
         return $res;
