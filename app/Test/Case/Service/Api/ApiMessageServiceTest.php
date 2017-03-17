@@ -7,6 +7,8 @@ App::import('Service/Api', 'ApiTopicService');
  * Class ApiTopicServiceTest
  *
  * @property ApiMessageService $ApiMessageService
+ * @property TeamMember        $TeamMember
+ * @property Message           $Message
  */
 class ApiMessageServiceTest extends GoalousTestCase
 {
@@ -16,7 +18,13 @@ class ApiMessageServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.message'
+        'app.message',
+        'app.user',
+        'app.local_name',
+        'app.message_file',
+        'app.attached_file',
+        'app.team',
+        'app.team_member',
     ];
 
     /**
@@ -28,6 +36,8 @@ class ApiMessageServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->ApiMessageService = ClassRegistry::init('ApiMessageService');
+        $this->TeamMember = ClassRegistry::init('TeamMember');
+        $this->Message = ClassRegistry::init('Message');
     }
 
     /**
@@ -38,6 +48,7 @@ class ApiMessageServiceTest extends GoalousTestCase
     public function tearDown()
     {
         unset($this->ApiMessageService);
+        unset($this->TeamMember);
         parent::tearDown();
     }
 
@@ -49,6 +60,24 @@ class ApiMessageServiceTest extends GoalousTestCase
     function test_findMessages()
     {
         //TODO: it should be written later.
+//        $user1 = $this->createActiveUser(1);
+//        $this->TeamMember->User->save(['id' => $user1, 'first_name' => 'One', 'last_name' => 'test'], false);
+//        $user2 = $this->createActiveUser(1);
+//        $this->TeamMember->User->save(['id' => $user2, 'first_name' => 'Two', 'last_name' => 'test'], false);
+//        $user3 = $this->createActiveUser(1);
+//        $this->TeamMember->User->save(['id' => $user3, 'first_name' => 'Three', 'last_name' => 'test'], false);
+//
+//        $this->ApiMessageService->findMessages(1);
+
+        // TODO: asserting
+        // message body
+        // attached file url
+        // user data
+        // cursor is working
+        // limit is working
+        // reversing record is good
+        // field names are fine
+
     }
 
     function test_setPaging()
