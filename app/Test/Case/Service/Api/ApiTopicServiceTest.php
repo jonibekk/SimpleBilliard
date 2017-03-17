@@ -106,4 +106,19 @@ class ApiTopicServiceTest extends GoalousTestCase
         $res = $this->ApiTopicService->process($topicByModel, $myUserId);
         $this->assertEqual($res, $expected);
     }
+
+    function test_calcReadCount()
+    {
+        //TODO: it should be written later.
+    }
+
+    function test_findTopicDetailInitData()
+    {
+        //TODO: it should be written later.
+    }
+
+    function test_getDisplayTitle()
+    {
+        //TODO: it should be written later.
+    }
 }

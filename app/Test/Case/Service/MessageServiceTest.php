@@ -1,14 +1,17 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('Message', 'Model');
-App::import('Service/Api', 'ApiTopicService');
+App::import('Service', 'TopicService');
 
 /**
- * Class ApiTopicServiceTest
+ * TopicServiceTest Class
+ * Created by PhpStorm.
+ * User: daikihirakata
+ * Date: 2017/3/15
+ * Time: 17:50
  *
- * @property ApiMessageService $ApiMessageService
+ * @property MessageService $MessageService
  */
-class ApiMessageServiceTest extends GoalousTestCase
+class MessageServiceTest extends GoalousTestCase
 {
     /**
      * Fixtures
@@ -16,7 +19,7 @@ class ApiMessageServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.message'
+        'app.message',
     ];
 
     /**
@@ -27,7 +30,7 @@ class ApiMessageServiceTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->ApiMessageService = ClassRegistry::init('ApiMessageService');
+        $this->MessageService = ClassRegistry::init('MessageService');
     }
 
     /**
@@ -37,11 +40,21 @@ class ApiMessageServiceTest extends GoalousTestCase
      */
     public function tearDown()
     {
-        unset($this->ApiMessageService);
+        unset($this->MessageService);
         parent::tearDown();
     }
 
-    function test_convertKeyNames()
+    function test_extendAttachedFileUrl()
+    {
+        //TODO: it should be written later.
+    }
+
+    function test_extendBody()
+    {
+        //TODO: it should be written later.
+    }
+
+    function test_filterFields()
     {
         //TODO: it should be written later.
     }
@@ -51,8 +64,4 @@ class ApiMessageServiceTest extends GoalousTestCase
         //TODO: it should be written later.
     }
 
-    function test_setPaging()
-    {
-        //TODO: it should be written later.
-    }
 }
