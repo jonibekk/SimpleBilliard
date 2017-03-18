@@ -148,12 +148,12 @@
     box-shadow: none;
     transition: none;
     outline: 0;
-    padding: 10px 10px 10px 30px;
+    padding: 8px 8px 8px 30px;
     font-size: 14px;
     border: 0;
     line-height: 18px;
   }
-  &-icon {
+  &-search-icon {
     position: absolute;
     height: 100%;
     width: 30px;
@@ -163,6 +163,47 @@
     .fa {
       color: @subColor4;
       font-size: 18px;
+    }
+  }
+  &-remove-icon {
+    position: absolute;
+    float: left;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    .fa {
+      color: @subColor3;
+      font-size: 18px;
+    }
+  }
+}
+
+.avatorsBox(@size: 60px) {
+  width: @size;
+  height: @size;
+  position: relative;
+  &-one {
+    width: 100%;
+    height: 100%;
+  }
+  &-half {
+    clip: rect(0 @size - (@size / 4) @size @size / 4);
+    margin-left: -(@size / 4);
+    position: absolute;
+    width: @size;
+    height: @size;
+    &.right {
+      margin-left: @size / 4;
+    }
+  }
+  &-quarter {
+    width: 50%;
+    height: 50%;
+    &.right {
+      margin-left: @size / 2;
     }
   }
 }

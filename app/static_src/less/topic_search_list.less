@@ -1,44 +1,39 @@
-.topicList {
+.topicSearchList {
   &-header {
     padding: 10px;
-    .searchBox {
-      margin-bottom: 20px;
-    }
-    &-middle {
-      overflow: hidden;
-      &-label {
-        font-weight: bold;
-        color: @modGray;
-        float: left;
-      }
-      &-add {
+    display: flex;
+    &-cancel {
+      margin-left: 10px;
+      width: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      a {
         color: @darkBlack;
-        float: right;
-        .fa {
-          color: @keyColor;
-        }
       }
     }
   }
   &-item {
-    height: 80px;
+    height: 48px;
     width: 100%;
+    border-bottom: 1px solid @lightGray;
     a {
       height: 100%;
       width: 100%;
       display: flex;
-      padding: 10px;
+      padding: 4px 10px;
       color: @black;
       text-decoration: none;
       &:hover {
         background: @hoverRed;
       }
-      .avatorsBox {
-        .avatorsBox(60px);
-      }
+    }
+    .avatorsBox {
+      .avatorsBox(40px);
     }
     &-main {
-      height: 60px;
+      height: 100%;
       flex: 1;
       min-width: 0;
       margin-left: 10px;
@@ -57,12 +52,10 @@
       }
       &-body {
       }
-      &-footer {
-        color: @lightGray;
-        .is-read {
-          color: @subColor6;
-        }
-      }
+    }
+    &-right {
+      margin-left: 4px;
+      color: @lightGray;
     }
   }
 }

@@ -1,7 +1,8 @@
 import * as types from '~/message/constants/ActionTypes'
 
 const initialState = {
-  topics: []
+  topics: [],
+  topics_searched: []
 }
 
 export default function topic(state = initialState, action) {
