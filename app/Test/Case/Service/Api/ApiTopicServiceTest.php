@@ -47,7 +47,13 @@ class ApiTopicServiceTest extends GoalousTestCase
         $topicByModel = [
             [
                 'Topic'         => ['id' => 1, 'title' => null],
-                'LatestMessage' => ['id' => 1, 'sender_user_id' => 1, 'created' => '1456811206'],
+                'LatestMessage' => [
+                    'id'                  => 1,
+                    'body'                => 'test',
+                    'attached_file_count' => 0,
+                    'sender_user_id'      => 1,
+                    'created'             => '1456811206'
+                ],
                 'TopicMember'   => [
                     [
                         'last_read_message_id' => 1,
@@ -84,7 +90,14 @@ class ApiTopicServiceTest extends GoalousTestCase
             [
                 'id'              => 1,
                 'title'           => null,
-                'latest_message'  => ['id' => 1, 'sender_user_id' => 1, 'created' => '1456811206', 'display_created' => 'Mar  1 2016'],
+                'latest_message'  => [
+                    'id'                  => 1,
+                    'body'                => 'test',
+                    'attached_file_count' => 0,
+                    'sender_user_id'      => 1,
+                    'created'             => '1456811206',
+                    'display_created'     => 'Mar  1 2016'
+                ],
                 'members_count'   => 3,
                 'can_leave_topic' => true,
                 'display_title'   => '厚平, 元彦',
@@ -103,6 +116,14 @@ class ApiTopicServiceTest extends GoalousTestCase
                 ]
             ]
         ];
+        $res = $this->ApiTopicService->process($topicByModel, $myUserId);
+        $this->assertEqual($res, $expected);
+
+        // only attached files
+        $topicByModel[0]['LatestMessage']['body'] = "";
+        $topicByModel[0]['LatestMessage']['attached_file_count'] = 1;
+        $expected[0]['latest_message']['body'] = "Sent file(s).";
+        $expected[0]['latest_message']['attached_file_count'] = 1;
         $res = $this->ApiTopicService->process($topicByModel, $myUserId);
         $this->assertEqual($res, $expected);
     }

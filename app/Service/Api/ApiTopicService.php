@@ -38,6 +38,10 @@ class ApiTopicService extends ApiService
             $topics[$i]['latest_message']['display_created'] = $TimeEx->elapsedTime(
                 $data['latest_message']['created'], 'normal', false
             );
+            // change latest message's body when only attached files.
+            if (!$data['latest_message']['body'] and $data['latest_message']['attached_file_count'] > 0) {
+                $topics[$i]['latest_message']['body'] = __('Sent file(s).');
+            }
             // add util properties
             $topics[$i]['read_count'] = $this->calcReadCount($data['latest_message'], $data['topic_members']);
             $topics[$i]['members_count'] = count($data['topic_members']);
