@@ -22,14 +22,13 @@ class TopicsController extends ApiController
      * @queryParam int $limit optional
      * @queryParam int $offset optional
      * @queryParam int $keyword optional
-     *
      * @return CakeResponse
      */
     function get_search()
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init("Topic");
-        /** @var TopicService $TopicService */
+        /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init("ApiTopicService");
 
         // get query params
