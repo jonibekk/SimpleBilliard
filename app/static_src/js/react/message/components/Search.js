@@ -6,14 +6,12 @@ export default class Search extends React.Component {
       <div className="panel panel-default topicSearchList">
         <div className="topicSearchList-header">
           <div className="searchBox">
-            <div className="searchBox-search-icon">
-              <i className="fa fa-search"></i>
-            </div>
             <div className="searchBox-remove-icon">
               <i className="fa fa-remove"></i>
             </div>
             <input className="searchBox-input"
                    placeholder={__("Search topic")} />
+            <span className="fa fa-search searchBox-button"></span>
           </div>
           <div className="topicSearchList-header-cancel"><a href="">Cancel</a></div>
         </div>
@@ -21,7 +19,9 @@ export default class Search extends React.Component {
           <li className="topicSearchList-item">
             <a href="">
               <div className="avatorsBox">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-one" />
+                <div className="avatorsBox-one">
+                  <img src="/img/sekiguchi.jpeg" />
+                </div>
               </div>
               <div className="topicSearchList-item-main">
                 <div className="topicSearchList-item-main-header">
@@ -43,8 +43,12 @@ export default class Search extends React.Component {
           <li className="topicSearchList-item">
             <a href="">
               <div className="avatorsBox">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-half" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-half right" />
+                <div className="avatorsBox-half">
+                  <img src="/img/toshiki.jpeg" />
+                </div>
+                <div className="avatorsBox-half">
+                  <img src="/img/takahiro.jpg" />
+                </div>
               </div>
               <div className="topicSearchList-item-main">
                 <div className="topicSearchList-item-main-header">
@@ -58,21 +62,27 @@ export default class Search extends React.Component {
                   </div>
                 </div>
                 <div className="topicSearchList-item-main-body oneline-ellipsis">
-                  Keisuke: Hey!!!
+                  Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
                 </div>
               </div>
               <div className="topicSearchList-item-right">
-                Jan 21
+                Mar 17 at 6:47 pm
               </div>
             </a>
           </li>
           <li className="topicSearchList-item">
             <a href="">
-              <div className="avatorsBox">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-half" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter right" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter right" />
+            <div className="avatorsBox">
+              <div className="avatorsBox-half">
+                <img src="/img/toshiki.jpeg" />
               </div>
+              <div className="avatorsBox-quarter">
+                <img src="/img/takahiro.jpg" />
+              </div>
+              <div className="avatorsBox-quarter">
+                <img src="/img/daiki.jpeg" />
+              </div>
+            </div>
               <div className="topicSearchList-item-main">
                 <div className="topicSearchList-item-main-header">
                   <div className="topicSearchList-item-main-header-title oneline-ellipsis">
@@ -98,10 +108,18 @@ export default class Search extends React.Component {
           <li className="topicSearchList-item">
             <a href="">
               <div className="avatorsBox">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
+                <div className="avatorsBox-quarter">
+                  <img src="/img/toshiki.jpeg" />
+                </div>
+                <div className="avatorsBox-quarter">
+                  <img src="/img/takahiro.jpg" />
+                </div>
+                <div className="avatorsBox-quarter">
+                  <img src="/img/daiki.jpeg" />
+                </div>
+                <div className="avatorsBox-quarter">
+                  <img src="/img/masayuki.jpg" />
+                </div>
               </div>
               <div className="topicSearchList-item-main">
                 <div className="topicSearchList-item-main-header">
@@ -116,7 +134,7 @@ export default class Search extends React.Component {
                 </div>
                 <div className="topicSearchList-item-main-body oneline-ellipsis">
                   <span>
-                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
+                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
                   </span>
                 </div>
               </div>
@@ -128,16 +146,24 @@ export default class Search extends React.Component {
           <li className="topicSearchList-item">
             <a href="">
               <div className="avatorsBox">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" className="avatorsBox-quarter" />
+                <div className="avatorsBox-quarter">
+                  <img src="/img/toshiki.jpeg" />
+                </div>
+                <div className="avatorsBox-quarter">
+                  <img src="/img/takahiro.jpg" />
+                </div>
+                <div className="avatorsBox-quarter">
+                  <img src="/img/daiki.jpeg" />
+                </div>
+                <div className="avatorsBox-quarter">
+                  <img src="/img/masayuki.jpg" />
+                </div>
               </div>
               <div className="topicSearchList-item-main">
                 <div className="topicSearchList-item-main-header">
                   <div className="topicSearchList-item-main-header-title oneline-ellipsis">
                     <span>
-                      Toshiki, Takahiro, Daiki, Shohei, Kohei, Masayuki
+                      Toshiki, Takahiro, Daiki, Shohei, Kohei, Masayuki, aaaaaaaaaaaaaaaaaaaaaaaaaaa
                     </span>
                   </div>
                   <div className="topicSearchList-item-main-header-count">
@@ -146,7 +172,7 @@ export default class Search extends React.Component {
                 </div>
                 <div className="topicSearchList-item-main-body oneline-ellipsis">
                   <span>
-                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
+                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
                   </span>
                 </div>
               </div>

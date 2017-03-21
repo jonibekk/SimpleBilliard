@@ -1,4 +1,5 @@
 .topicList {
+  font-size: 12px;
   &-header {
     padding: 10px;
     .searchBox {
@@ -6,6 +7,7 @@
     }
     &-middle {
       overflow: hidden;
+      font-size: 14px;
       &-label {
         font-weight: bold;
         color: @modGray;
@@ -21,7 +23,6 @@
     }
   }
   &-item {
-    height: 80px;
     width: 100%;
     a {
       height: 100%;
@@ -34,11 +35,10 @@
         background: @hoverRed;
       }
       .avatorsBox {
-        .avatorsBox(60px);
+        .avatorsBox(48px);
       }
     }
     &-main {
-      height: 60px;
       flex: 1;
       min-width: 0;
       margin-left: 10px;
@@ -50,7 +50,7 @@
           overflow: hidden;
         }
         &-count {
-          color: @lightGray;
+          color: @black;
           width: auto;
           margin-left: 4px;
         }
@@ -58,7 +58,7 @@
       &-body {
       }
       &-footer {
-        color: @lightGray;
+        color: @subColor3;
         .is-read {
           color: @subColor6;
         }

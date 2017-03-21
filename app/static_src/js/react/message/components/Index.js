@@ -25,6 +25,32 @@ export default class Index extends React.Component {
           <li className="topicList-item">
             <a href="">
               <div className="avatorsBox">
+                <div className="avatorsBox-one">
+                  <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
+                </div>
+              </div>
+              <div className="topicList-item-main">
+                <div className="topicList-item-main-header">
+                  <div className="topicList-item-main-header-title oneline-ellipsis">
+                    <span>
+                      Keisuke Sekiguchi
+                    </span>
+                  </div>
+                  <div className="topicList-item-main-header-count">
+                  </div>
+                </div>
+                <div className="topicList-item-main-body oneline-ellipsis">
+                  Keisuke: Hey!!!
+                </div>
+                <div className="topicList-item-main-footer">
+                  20 min
+                </div>
+              </div>
+            </a>
+          </li>
+          <li className="topicList-item">
+            <a href="">
+              <div className="avatorsBox">
                 <div className="avatorsBox-half">
                   <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
                 </div>

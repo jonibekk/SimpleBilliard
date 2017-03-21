@@ -1,7 +1,14 @@
 .topicSearchList {
+  padding-bottom: 10px;
+  font-size: 12px;
   &-header {
     padding: 10px;
     display: flex;
+    .searchBox {
+      input {
+        padding-left: 8px;
+      }
+    }
     &-cancel {
       margin-left: 10px;
       width: 70px;
@@ -15,14 +22,12 @@
     }
   }
   &-item {
-    height: 48px;
     width: 100%;
-    border-bottom: 1px solid @lightGray;
     a {
       height: 100%;
       width: 100%;
       display: flex;
-      padding: 4px 10px;
+      padding: 0 0 0 10px;
       color: @black;
       text-decoration: none;
       &:hover {
@@ -30,13 +35,17 @@
       }
     }
     .avatorsBox {
+      margin: 2px 0;
       .avatorsBox(40px);
     }
     &-main {
-      height: 100%;
+      height: 44px;
       flex: 1;
       min-width: 0;
       margin-left: 10px;
+      line-height: 18px;
+      border-bottom: 1px solid @subColor4;
+      padding-top: 4px;
       &-header {
         display: flex;
         &-title {
@@ -45,17 +54,23 @@
           overflow: hidden;
         }
         &-count {
-          color: @lightGray;
+          color: @black;
           width: auto;
           margin-left: 4px;
         }
       }
       &-body {
+        color: @subColor3;
       }
     }
     &-right {
-      margin-left: 4px;
-      color: @lightGray;
+      color: @subColor3;
+      font-size: 11px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid @subColor4;
+      padding: 0 6px;
     }
   }
 }
