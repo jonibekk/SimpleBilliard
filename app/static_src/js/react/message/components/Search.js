@@ -5,13 +5,15 @@ export default class Search extends React.Component {
     return (
       <div className="panel panel-default topicSearchList">
         <div className="topicSearchList-header">
-          <div className="searchBox">
-            <div className="searchBox-remove-icon">
-              <i className="fa fa-remove"></i>
+          <div className="topicSearchList-header-searchBox">
+            <div className="searchBox">
+              <div className="searchBox-remove-icon">
+                <i className="fa fa-remove"></i>
+              </div>
+              <input className="searchBox-input"
+                     placeholder={__("Search topic")} />
+              <span className="fa fa-search searchBox-button"></span>
             </div>
-            <input className="searchBox-input"
-                   placeholder={__("Search topic")} />
-            <span className="fa fa-search searchBox-button"></span>
           </div>
           <div className="topicSearchList-header-cancel"><a href="">Cancel</a></div>
         </div>
