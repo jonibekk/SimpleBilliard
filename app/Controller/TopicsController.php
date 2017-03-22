@@ -18,6 +18,16 @@ class TopicsController extends AppController
     }
 
     /**
+     * Search action
+     *
+     * @return void
+     */
+    public function search()
+    {
+        return $this->render("index");
+    }
+
+    /**
      * Topic detail action
      *
      * @return void
