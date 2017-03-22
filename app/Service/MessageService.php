@@ -226,6 +226,7 @@ class MessageService extends AppService
 
     /**
      * Validate a posted message
+     * - remove sender_user_id validation rule, cause that is not included in posted data
      *
      * @param array $data
      *
@@ -235,8 +236,12 @@ class MessageService extends AppService
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
+        $backupValidate = $Message->validate;
+        unset($Message->validate['sender_user_id']);
         $Message->set($data);
-        if ($Message->validates()) {
+        $isValid = $Message->validates();
+        $Message->validate = $backupValidate;
+        if ($isValid) {
             return true;
         }
         // logging errors. Because, this is an irregular case.

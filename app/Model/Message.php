@@ -21,7 +21,7 @@ class Message extends AppModel
      * @var array
      */
     public $validate = [
-        'topic_id' => [
+        'topic_id'       => [
             'numeric'       => ['rule' => ['numeric'],],
             'notBlank'      => [
                 'required' => 'create',
@@ -29,13 +29,20 @@ class Message extends AppModel
             ],
             'isTopicMember' => ['rule' => ['customValidateIsTopicMember'],],
         ],
-        'body'     => [
+        'sender_user_id' => [
+            'numeric'  => ['rule' => ['numeric'],],
+            'notBlank' => [
+                'required' => 'create',
+                'rule'     => 'notBlank',
+            ],
+        ],
+        'body'           => [
             'bodyOrAttachedFileRequired' => ['rule' => ['customValidateBody']],
         ],
-        'type'     => [
+        'type'           => [
             'numeric' => ['rule' => ['numeric'],],
         ],
-        'del_flg'  => [
+        'del_flg'        => [
             'boolean' => ['rule' => ['boolean'],],
         ],
     ];
