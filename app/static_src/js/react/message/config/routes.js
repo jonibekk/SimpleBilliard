@@ -14,6 +14,7 @@ import createReducer from '../reducers/config'
 // Container読み込み
 import IndexContainer from '~/message/containers/Index'
 import DetailContainer from '~/message/containers/Detail'
+import SearchContainer from '~/message/containers/Search'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -46,6 +47,7 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="/topics">
               <IndexRoute component={IndexContainer} />
+              <Route path="search" component={SearchContainer} />
               <Route path=":topic_id/detail" component={DetailContainer} />
             </Route>
           </Router>
