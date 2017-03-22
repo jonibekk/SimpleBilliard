@@ -463,6 +463,39 @@ class AttachedFile extends AppModel
             return true;
         }
 
+        // メッセージへの添付ファイルはトピックメンバーの場合のみ閲覧可能
+        if ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_MESSAGE) {
+            $modelName = self::$TYPE_MODEL[self::TYPE_MODEL_MESSAGE]['intermediateModel'];
+            $row = $this->{$modelName}->find('first', [
+                'conditions' => [
+                    'attached_file_id' => $file['AttachedFile']['id'],
+                ],
+                'joins'      => [
+                    [
+                        'table'      => 'messages',
+                        'alias'      => 'Message',
+                        'type'       => 'INNER',
+                        'conditions' => [
+                            'Message.id = MessageFile.message_id',
+                        ]
+                    ],
+                    [
+                        'table'      => 'topic_members',
+                        'alias'      => 'TopicMember',
+                        'type'       => 'INNER',
+                        'conditions' => [
+                            'Message.topic_id = TopicMember.topic_id',
+                            'TopicMember.user_id' => $this->my_uid,
+                            'TopicMember.team_id' => $this->current_team_id,
+                        ]
+                    ]
+                ],
+            ]);
+            if ($row) {
+                return true;
+            }
+        }
+
         // 投稿とコメントへの添付ファイルの場合、その投稿自体が閲覧可能かを確認する。
         // アクションへのコメントの場合は、だれでも閲覧可能にする
         $post_id = "";
