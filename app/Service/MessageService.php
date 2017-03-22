@@ -259,10 +259,13 @@ class MessageService extends AppService
         $Message = ClassRegistry::init('Message');
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
 
         $Message->begin();
 
         try {
+            // saving message
             $message = $Message->add($data, $userId);
             if ($message === false) {
                 $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
@@ -274,6 +277,18 @@ class MessageService extends AppService
                 throw new Exception($errorMsg);
             }
             $messageId = $Message->getLastInsertID();
+
+            // saving attached files
+            if (Hash::get($data, 'file_ids')) {
+                $attachedFiles = $AttachedFile->saveRelatedFiles($messageId, AttachedFile::TYPE_MODEL_MESSAGE,
+                    $data['file_ids']);
+                if ($attachedFiles === false) {
+                    $errorMsg = sprintf("Failed to save attached files on message. data:%s", var_export($data, true));
+                    throw new Exception($errorMsg);
+                }
+            }
+
+            // updating latest message on the topic
             $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
             if ($updateTopic === false) {
                 $errorMsg = sprintf("Failed to update latest message on the topic. topicId:%s, messageId:%s, validationErrors:%s",

@@ -54,6 +54,7 @@ class AttachedFile extends AppModel
     const TYPE_MODEL_POST = 0;
     const TYPE_MODEL_COMMENT = 1;
     const TYPE_MODEL_ACTION_RESULT = 2;
+    const TYPE_MODEL_MESSAGE = 3;
     static public $TYPE_MODEL = [
         self::TYPE_MODEL_POST          => [
             'intermediateModel' => 'PostFile',
@@ -66,6 +67,10 @@ class AttachedFile extends AppModel
         self::TYPE_MODEL_ACTION_RESULT => [
             'intermediateModel' => 'ActionResultFile',
             'foreign_key'       => 'action_result_id',
+        ],
+        self::TYPE_MODEL_MESSAGE       => [
+            'intermediateModel' => 'MessageFile',
+            'foreign_key'       => 'message_id',
         ],
     ];
     /**

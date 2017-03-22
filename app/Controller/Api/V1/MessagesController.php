@@ -41,13 +41,10 @@ class MessagesController extends ApiController
 
         // tracking by mixpanel
         $this->Mixpanel->trackMessage($postedData['topic_id']);
-        //TODO notification and mixpanel
+        //TODO notification
 //        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
 //        $detail_comment = $this->Post->Comment->getComment($comment_id);
-//        $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment['CommentFile'],
-//            $post_id);
-//        $convert_data = $this->Post->Comment->convertData($detail_comment);
-//
+// for react..
 //        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
 //        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data,
 //            $this->request->data('socket_id'));
