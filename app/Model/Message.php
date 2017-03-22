@@ -201,7 +201,7 @@ class Message extends AppModel
 
     /**
      * Is body valid?
-     * - body is required when no files.
+     * - body on normal message is required when no files.
      *
      * @param array $val
      *
@@ -211,16 +211,29 @@ class Message extends AppModel
     {
         $body = array_shift($val);
 
+        if (!empty($body)) {
+            return true;
+        }
+        $type = Hash::get($this->data, 'Message.type');
+        if ($type === null) {
+            // default type
+            $type = self::TYPE_NORMAL;
+        }
+
+        if ($type != self::TYPE_NORMAL) {
+            return true;
+        }
+
         $fileIds = Hash::get($this->data, 'Message.file_ids');
         if (!empty($fileIds)) {
             // remove empty values.
             $fileIds = array_filter($fileIds, "strlen");
         }
 
-        if (empty($body) && empty($fileIds)) {
-            return false;
+        if (!empty($fileIds)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
 }
