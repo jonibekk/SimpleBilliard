@@ -41,7 +41,7 @@ class MessagesController extends ApiController
 
         // tracking by mixpanel
         $this->Mixpanel->trackMessage($postedData['topic_id']);
-        //TODO notification
+        //TODO notification. It will be implemented on another issue.
 //        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
 //        $detail_comment = $this->Post->Comment->getComment($comment_id);
 // for react..

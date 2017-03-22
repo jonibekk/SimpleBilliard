@@ -151,6 +151,9 @@ class AttachedFile extends AppModel
         'ActionResultFile' => [
             'dependent' => true,
         ],
+        'MessageFile'      => [
+            'dependent' => true,
+        ],
     ];
 
     public function getFileTypeOptions()
