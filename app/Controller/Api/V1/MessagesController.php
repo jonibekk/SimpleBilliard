@@ -1,5 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::import('Service', 'MessageService');
+App::import('Service/Api', 'ApiMessageService');
 
 /**
  * Class MessagesController
@@ -19,32 +21,40 @@ class MessagesController extends ApiController
      */
     function post()
     {
-        $topicId = $this->request->data('topic_id');
-        $body = $this->request->data('body');
-        $fileIds = $this->request->data('file_ids');
-        $dataMock = [
-            'id'              => 123,
-            'body'            => 'あついなー。',
-            'created'         => 1438585548,
-            'display_created' => '03/09 13:51',
-            'type'            => 1,
-            'user'            => [
-                'id'               => 2,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '佐伯 翔平',
-            ],
-            'attached_files'  => [
-                [
-                    'id'            => 1,
-                    'ext'           => 'jpg',
-                    'type'          => 1,
-                    'download_url'  => '/img/no-image.jpg',
-                    'preview_url'   => '',
-                    'thumbnail_url' => '/img/no-image.jpg',
-                ],
-            ]
-        ];
-        return $this->_getResponseSuccess($dataMock);
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init('MessageService');
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
+
+        // filter fields
+        $postedData = AppUtil::filterWhiteList($this->request->data, ['topic_id', 'body', 'file_ids']);
+        // validation
+        $validationResult = $MessageService->validatePostMessage($postedData);
+        if ($validationResult !== true) {
+            return $this->_getResponseValidationFail($validationResult);
+        }
+        // saving datas
+        $messageId = $MessageService->addMessage($postedData, $this->Auth->user('id'));
+        if ($messageId === false) {
+            return $this->_getResponseBadFail(null);
+        }
+
+        // tracking by mixpanel
+        $this->Mixpanel->trackMessage($postedData['topic_id']);
+        //TODO notification and mixpanel
+//        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
+//        $detail_comment = $this->Post->Comment->getComment($comment_id);
+//        $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment['CommentFile'],
+//            $post_id);
+//        $convert_data = $this->Post->Comment->convertData($detail_comment);
+//
+//        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+//        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data,
+//            $this->request->data('socket_id'));
+
+        // find the message as response data
+        $newMessage = $ApiMessageService->getMessage($messageId);
+        return $this->_getResponseSuccess($newMessage);
     }
 
     /**

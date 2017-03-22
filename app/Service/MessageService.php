@@ -59,6 +59,38 @@ class MessageService extends AppService
     }
 
     /**
+     * Getting a message
+     *
+     * @param int $messageId
+     *
+     * @return array
+     */
+    function getMessage(int $messageId): array
+    {
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        $message = $Message->getMessageById($messageId);
+
+        $TimeEx = new TimeExHelper(new View());
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        // build message body
+        $message = $this->extendBody($message);
+        // build display created
+        $message['Message']['display_created'] = $TimeEx->datetimeNoYear($message['Message']['created']);
+        // user image url
+        $message['SenderUser'] = $User->attachImgUrl($message['SenderUser'], 'User', ['medium']);
+        // attached file url
+        if (Hash::get($message, 'MessageFile')) {
+            $message['MessageFile'] = $this->extendAttachedFileUrl($message['MessageFile']);
+        }
+        // filter only necessary fields
+        $message = $this->filterFields($message);
+        return $message;
+    }
+
+    /**
      * Extending message body
      * normal case:
      * - only sanitizing
@@ -190,6 +222,75 @@ class MessageService extends AppService
             $file['AttachedFile'] = AppUtil::filterWhiteList($file['AttachedFile'], $attachedFileFilter);
         }
         return $message;
+    }
+
+    /**
+     * Validate a posted message
+     *
+     * @param array $data
+     *
+     * @return array|true
+     */
+    function validatePostMessage(array $data)
+    {
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        $Message->set($data);
+        if ($Message->validates()) {
+            return true;
+        }
+        return $this->validationExtract($Message->validationErrors);
+    }
+
+    /**
+     * Saving a new message.
+     * - updating latest message on the topic.
+     * - return message id if success. otherwise, return false.
+     *
+     * @param array $data
+     * @param int   $userId
+     *
+     * @return int|false
+     */
+    function addMessage(array $data, int $userId)
+    {
+        $topicId = $data['topic_id'];
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+
+        $Message->begin();
+
+        try {
+            $message = $Message->add($data, $userId);
+            if ($message === false) {
+                $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
+                    $userId,
+                    $topicId,
+                    var_export($data, true),
+                    var_export($Message->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+            $messageId = $Message->getLastInsertID();
+            $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
+            if ($updateTopic === false) {
+                $errorMsg = sprintf("Failed to update latest message on the topic. topicId:%s, messageId:%s, validationErrors:%s",
+                    $topicId,
+                    $messageId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+        } catch (Exception $e) {
+            $this->log($e->getMessage());
+            $Message->rollback();
+            return false;
+        }
+
+        $Message->commit();
+        return $messageId;
     }
 
 }

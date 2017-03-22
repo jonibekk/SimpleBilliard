@@ -21,10 +21,21 @@ class Message extends AppModel
      * @var array
      */
     public $validate = [
-        'type'    => [
+        'topic_id' => [
+            'numeric'       => ['rule' => ['numeric'],],
+            'notBlank'      => [
+                'required' => 'create',
+                'rule'     => 'notBlank',
+            ],
+            'isTopicMember' => ['rule' => ['customValidateIsTopicMember'],],
+        ],
+        'body'     => [
+            'requiredOrAttachedFiles' => ['rule' => ['customValidateBody']],
+        ],
+        'type'     => [
             'numeric' => ['rule' => ['numeric'],],
         ],
-        'del_flg' => [
+        'del_flg'  => [
             'boolean' => ['rule' => ['boolean'],],
         ],
     ];
@@ -100,6 +111,109 @@ class Message extends AppModel
 
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    /**
+     * Find One message
+     *
+     * @param int $id
+     *
+     * @return array
+     */
+    function getMessageById(int $id): array
+    {
+        $options = [
+            'conditions' => [
+                'Message.id' => $id,
+            ],
+            'fields'     => [
+                'id',
+                'body',
+                'type',
+                'target_user_ids',
+                'created'
+            ],
+            'contain'    => [
+                'SenderUser'  => [
+                    'fields' => $this->SenderUser->profileFields
+                ],
+                'MessageFile' => [
+                    'fields'       => [],
+                    'order'        => ['MessageFile.index_num asc'],
+                    'AttachedFile' => [
+                        'id',
+                        'attached_file_name',
+                        'file_type',
+                        'file_ext'
+                    ]
+                ]
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * Add a new message.
+     *
+     * @param array $data
+     * @param int   $userId
+     *
+     * @return mixed
+     */
+    function add(array $data, int $userId)
+    {
+        $data = am($data, [
+            'type'           => self::TYPE_NORMAL,
+            'sender_user_id' => $userId,
+            'team_id'        => $this->current_team_id,
+        ]);
+        $ret = $this->save($data);
+        return $ret;
+    }
+
+    /**
+     * Is topic member?
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateIsTopicMember(array $val): bool
+    {
+        $topicId = array_shift($val);
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        if ($TopicMember->isMember($topicId, $this->my_uid)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Is body valid?
+     * - body is required when no files.
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateBody(array $val): bool
+    {
+        $body = array_shift($val);
+
+        $fileIds = Hash::get($this->data, 'Message.file_ids');
+        if (!empty($fileIds)) {
+            // remove empty values.
+            $fileIds = array_filter($fileIds, "strlen");
+        }
+
+        if (empty($body) && empty($fileIds)) {
+            return false;
+        }
+        return true;
     }
 
 }

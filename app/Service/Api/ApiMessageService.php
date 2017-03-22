@@ -46,6 +46,24 @@ class ApiMessageService extends ApiService
     }
 
     /**
+     * Getting a message as api response data
+     *
+     * @param int $messageId
+     *
+     * @return array
+     */
+    function getMessage(int $messageId): array
+    {
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init('MessageService');
+        // find latest message
+        $message = $MessageService->getMessage($messageId);
+        // converting key names for response data
+        $message = array_pop($this->convertKeyNames([$message]));
+        return $message;
+    }
+
+    /**
      * Converting key names for response data
      *
      * @param array $messages
