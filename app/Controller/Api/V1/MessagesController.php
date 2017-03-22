@@ -17,7 +17,6 @@ class MessagesController extends ApiController
      * @data array $file_ids optional
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Send+message
-     *       TODO: This is mock! We have to implement it!
      */
     function post()
     {
