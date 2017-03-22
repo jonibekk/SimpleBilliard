@@ -132,7 +132,104 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.searchBox {
+  width: 100%;
+  border: 1px solid @subColor4;
+  border-collapse: separate;
+  border-radius: 4px;
+  position: relative;
+  display: table;
+  &-input {
+    display: table-cell;
+    width: 100%;
+    background-color: @white;
+    border-radius: 4px;
+    box-shadow: none;
+    transition: none;
+    outline: 0;
+    padding: 8px 8px 8px 30px;
+    font-size: 14px;
+    border: 0;
+    line-height: 18px;
+  }
+  &-button {
+    display: table-cell;
+    width: 40px;
+    text-align: center;
+    background-color: @keyColor;
+    font-size: 16px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    vertical-align: middle;
+    color: @white;
+  }
+  &-search-icon {
+    position: absolute;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .fa {
+      color: @subColor4;
+      font-size: 18px;
+    }
+  }
+  &-remove-icon {
+    position: absolute;
+    float: left;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    margin-right: 40px;
+    cursor: pointer;
+    .fa {
+      color: @subColor3;
+      font-size: 18px;
+    }
+  }
+}
+.avatorsBox(@size: 60px) {
+  width: @size;
+  height: @size;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  &-one {
+    width: 100%;
+    height: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &-half {
+    width: 50%;
+    height: 100%;
+    img {
+      clip: rect(0 @size - (@size / 4) @size @size / 4);
+      margin-left: -(@size / 4);
+      position: absolute;
+    }
+  }
+  &-quarter {
+    width: 50%;
+    height: 50%;
+    /* can't adapt only last-child of quater by flexbox, so adapt forcely. */
+    &:last-child {
+      position: absolute;
+      margin: 50% 0 0 50%;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+}
 .uploadFileForm {
   display: none;
   &-wrapper {

@@ -27,7 +27,7 @@ junit.xml
 npm-debug.log
 yarn-error.log
 # for Gulp
-/app/webroot/dest
+/app/static_src/dest/
 # for bower
 /bower_components
 # Docs of CSS & JS
@@ -40,9 +40,6 @@ yarn-error.log
 /docs/js
 /docs/local/docs.min.css
 /index.html
-# for dest files of a less and coffee maps
-/app/webroot/css/goalous.css.map
-/app/webroot/js/*.js.map
 # for public compiled assets
 /app/webroot/css/goalous.min.css
 /app/webroot/js/*.js

@@ -57,6 +57,48 @@ class TopicTest extends GoalousTestCase
         $this->assertNotEmpty($this->Topic->findLatest($mainUserId, 0, 10));
     }
 
+    // TODO: must write after connecting front-end
+    function test_findLatest_empty()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    // TODO: must write after connecting front-end
+    function test_findLatest_searchKeyWordInTitle()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    // TODO: must write after connecting front-end
+    function test_findLatest_searchKeyWordMemberName()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    // TODO: must write after connecting front-end
+    function test_findLatest_searchEmpty()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    // TODO: must write after connecting front-end
+    function test_findLatest_topicSortByMessagedDatetime()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    // TODO: must write after connecting front-end
+    function test_findLatest_userSortByMessagedDatetime()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    // TODO: must write after connecting front-end
+    function test_findLatest_membersOver10()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
     public function test_get()
     {
         $this->setDefaultTeamIdAndUid();

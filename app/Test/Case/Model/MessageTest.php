@@ -46,8 +46,8 @@ class MessageTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function test_dummy()
+    function test_findMessages()
     {
-
+        //TODO: it should be written later.
     }
 }

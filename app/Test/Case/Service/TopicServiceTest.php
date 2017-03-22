@@ -43,6 +43,19 @@ class TopicServiceTest extends GoalousTestCase
         $this->Topic = ClassRegistry::init('Topic');
     }
 
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        unset($this->TopicService);
+        unset($this->TeamMember);
+        unset($this->Topic);
+        parent::tearDown();
+    }
+
     function test_findTopicDetail()
     {
         $this->setDefaultTeamIdAndUid();
