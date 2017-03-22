@@ -30,7 +30,7 @@ class Message extends AppModel
             'isTopicMember' => ['rule' => ['customValidateIsTopicMember'],],
         ],
         'body'     => [
-            'requiredOrAttachedFiles' => ['rule' => ['customValidateBody']],
+            'bodyOrAttachedFileRequired' => ['rule' => ['customValidateBody']],
         ],
         'type'     => [
             'numeric' => ['rule' => ['numeric'],],
