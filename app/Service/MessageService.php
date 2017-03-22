@@ -289,9 +289,16 @@ class MessageService extends AppService
                 $attachedFiles = $AttachedFile->saveRelatedFiles($messageId, AttachedFile::TYPE_MODEL_MESSAGE,
                     $data['file_ids']);
                 if ($attachedFiles === false) {
-                    $errorMsg = sprintf("Failed to save attached files on message. data:%s", var_export($data, true));
+                    $errorMsg = sprintf("Failed to save attached files on message. data:%s, validationErrors:%s",
+                        var_export($data, true),
+                        var_export($AttachedFile->validationErrors, true)
+                    );
                     throw new Exception($errorMsg);
                 }
+
+                // updating attached file count
+                $Message->id = $messageId;
+                $Message->saveField('attached_file_count', count($data['file_ids']));
             }
 
             // updating latest message on the topic
