@@ -44,11 +44,7 @@ class MessageService extends AppService
             // build message body
             $message = $this->extendBody($message);
             // build display created
-            $message['Message']['display_created'] = $TimeEx->elapsedTime(
-                $message['Message']['created'],
-                'normal',
-                false
-            );
+            $message['Message']['display_created'] = $TimeEx->datetimeNoYear($message['Message']['created']);
             // user image url
             $message['SenderUser'] = $User->attachImgUrl($message['SenderUser'], 'User', ['medium']);
             // attached file url
