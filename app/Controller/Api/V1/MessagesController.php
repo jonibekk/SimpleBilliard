@@ -25,15 +25,18 @@ class MessagesController extends ApiController
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init('ApiMessageService');
 
+        $userId = $this->Auth->user('id');
+
         // filter fields
         $postedData = AppUtil::filterWhiteList($this->request->data, ['topic_id', 'body', 'file_ids']);
+
         // validation
         $validationResult = $MessageService->validatePostMessage($postedData);
         if ($validationResult !== true) {
             return $this->_getResponseValidationFail($validationResult);
         }
         // saving datas
-        $messageId = $MessageService->addMessage($postedData, $this->Auth->user('id'));
+        $messageId = $MessageService->addMessage($postedData, $userId);
         if ($messageId === false) {
             return $this->_getResponseBadFail(null);
         }

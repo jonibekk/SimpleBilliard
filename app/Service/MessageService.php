@@ -239,6 +239,12 @@ class MessageService extends AppService
         if ($Message->validates()) {
             return true;
         }
+        // logging errors. Because, this is an irregular case.
+        $errorMsg = sprintf("Failed to add a message. data:%s, validationErrors:%s",
+            var_export($data, true),
+            var_export($Message->validationErrors, true)
+        );
+        $this->log($errorMsg);
         return $this->validationExtract($Message->validationErrors);
     }
 
