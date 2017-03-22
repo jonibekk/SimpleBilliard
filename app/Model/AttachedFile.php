@@ -463,7 +463,7 @@ class AttachedFile extends AppModel
             return true;
         }
 
-        // メッセージへの添付ファイルはトピックメンバーの場合のみ閲覧可能
+        // In case of message, only topic member can download a file.
         if ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_MESSAGE) {
             $modelName = self::$TYPE_MODEL[self::TYPE_MODEL_MESSAGE]['intermediateModel'];
             $row = $this->{$modelName}->find('first', [
