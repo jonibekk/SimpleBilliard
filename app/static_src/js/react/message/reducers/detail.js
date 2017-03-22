@@ -13,7 +13,9 @@ const initialState = {
   loading_more: false,
   is_fetched_initial: false,
   is_saving:false,
+  is_uploading:false,
   err_msg:"",
+  files: [],
   input_data: {
     message: "",
     file_ids:[]
@@ -61,6 +63,23 @@ export default function detail(state = initialState, action) {
         is_saving: false
       })
     case ActionTypes.SAVE_ERROR:
+      return Object.assign({}, state, {
+        err_msg: action.error.message,
+        is_saving: false
+      })
+    case ActionTypes.UPLOADING:
+      return Object.assign({}, state, {
+        is_uploading: true
+      })
+    case ActionTypes.UPLOAD_SUCCESS:
+      input_data.file_ids = [...input_data.file_ids, action.file_id];
+      // let files = [...state.files, action.file];
+      return Object.assign({}, state, {
+        input_data,
+        // files,
+        is_saving: false
+      })
+    case ActionTypes.UPLOAD_ERROR:
       return Object.assign({}, state, {
         err_msg: action.error.message,
         is_saving: false

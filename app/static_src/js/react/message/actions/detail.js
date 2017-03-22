@@ -79,6 +79,29 @@ export function sendMessage() {
     );
   }
 }
+export function uploadFiles(files) {
+  return (dispatch, getState) => {
+    dispatch({type: ActionTypes.UPLOADING})
+    const postData = {
+      "file": files[0]
+    };
+    return post("/api/v1/files/upload", postData, null,
+      (response) => {
+        dispatch({
+          type: ActionTypes.UPLOAD_SUCCESS,
+          // file: files[0],
+          file_id : response.data.data.id
+        })
+      },
+      (response) => {
+        dispatch({
+          type: ActionTypes.UPLOAD_ERROR,
+          data:response.data
+        })
+      }
+    );
+  }
+}
 export function onChangeMessage(val) {
   return {
     type: ActionTypes.CHANGE_MESSAGE,

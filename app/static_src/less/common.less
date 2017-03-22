@@ -1,6 +1,5 @@
 /* TODO:今後はcommon.lessにGoalousの共通cssをまとめる */
 
-
 /* form */
 .gl-form {
   padding: 4px 0;
@@ -63,7 +62,7 @@
     position: relative;
     &Current {
       //background-color: @subColor14;
-      .horizontal-gradient(#00a8e6, #407fdf);
+      .horizontal-gradient(@progressBarStart, @progressBarEnd);
       position: absolute;
       top: 0;
       left: 0;
@@ -113,14 +112,14 @@
 }
 
 .warning {
-  font-size:1.2rem;
+  font-size: 1.2rem;
   color: @strongRed
 }
 
 .flex {
   display: flex;
   &-extend {
-    flex:1
+    flex: 1
   }
 }
 
@@ -134,3 +133,112 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.uploadFileForm {
+  display: none;
+  &-wrapper {
+    position: relative;
+  }
+  &.mod-dragOver {
+    position: absolute;
+    color: #029acf;
+    vertical-align: middle;
+    display: block;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    background-color: #fff;
+    opacity: 0.8;
+    border: 5px dashed #029acf;
+    border-radius: 4px;
+    z-index: 99;
+  }
+  &-msg {
+    height: 100%;
+    display: table;
+    text-align: center;
+    width: 100%;
+    &-label {
+      height: 100%;
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 3.6rem;
+    }
+  }
+}
+
+.uploadPreviews {
+  &-item {
+    background-color: #f5f5f5;
+    margin-top: -1px;
+    padding: 7px;
+    border: 1px solid #ccc;
+    &-content {
+      display: flex;
+      &-left {
+      }
+      &-right {
+        flex: 1;
+        overflow: hidden;
+        padding-left: 6px;
+        &-inner {
+          display: flex;
+        }
+      }
+    }
+    &-thumbnail {
+      overflow: hidden;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 40px;
+    }
+    &-filename {
+      color: #231814;
+      font-weight: bold;
+      font-size: 1.4rem;
+      &.is-error {
+        color: #91170a;
+      }
+    }
+    &-filesize {
+      color: #9197a3;
+      font-size: 1.1rem;
+      font-weight: normal;
+      &-strong {
+        font-weight: bold;
+      }
+    }
+    &-delete {
+      color: #9197a3;
+      text-decoration: none;
+      &:hover, &:active, &:focus {
+        color: inherit;
+      }
+    }
+    &-progressBar {
+      /* background-color: #3897f0; */
+      background-color: #00a8e6;
+      .horizontal-gradient(@progressBarStart, @progressBarEnd);
+      height: 4px;
+      -webkit-transition: width 0.6s ease;
+      transition: width 0.6s ease;
+      border-radius: 2px;
+      // 進捗率を0〜99%で表すために.rate-{0〜99}のclassのスタイルを生成
+      @iterations: 100;
+      .rate (@i) when (@i >= 0) {
+        &.mod-rate@{i} {
+          width: ~"@{i}%";
+        }
+        .rate(@i - 1);
+      }
+      .rate (@iterations);
+    }
+    &-error {
+      font-size: 1.3rem;
+      color: #d9230f;
+    }
+  }
+}

@@ -56,7 +56,7 @@ export function save(uri, data, options, success_callback, error_callback, reque
   const post_data = Object.assign({
     'data[_Token][key]': csrf_token_key
   }, data)
-  const form_data = createFormData(post_data, ['photo'])
+  const form_data = createFormData(post_data, ['photo', 'file'])
   const url = getBaseUrl() + uri;
 
   switch (request_method) {

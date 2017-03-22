@@ -15,15 +15,15 @@ import createReducer from '../reducers/config'
 import IndexContainer from '~/message/containers/Index'
 import DetailContainer from '~/message/containers/Detail'
 
-const DevTools = createDevTools(
-  <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
-    <LogMonitor theme="tomorrow" preserveScrollTop={false} />
-  </DockMonitor>
-)
+// const DevTools = createDevTools(
+//   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
+//     <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+//   </DockMonitor>
+// )
 const reducer = createReducer()
 const store = createStore(
   reducer,
-  DevTools.instrument(),
+  // DevTools.instrument(),
   applyMiddleware(thunk)
 )
 const history = syncHistoryWithStore(browserHistory, store)
