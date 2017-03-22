@@ -1,3 +1,4 @@
+/* Default topic list */
 .topicList {
   font-size: 12px;
   &-header {
@@ -24,7 +25,7 @@
   }
   &-item {
     width: 100%;
-    a {
+    &-link {
       height: 100%;
       width: 100%;
       display: flex;
@@ -32,7 +33,9 @@
       color: @black;
       text-decoration: none;
       &:hover {
+        color: @black;
         background: @hoverRed;
+        text-decoration: none;
       }
       .avatorsBox {
         .avatorsBox(48px);
@@ -63,6 +66,90 @@
           color: @subColor6;
         }
       }
+    }
+  }
+}
+
+/* Search result topic list */
+.topicSearchList {
+  padding-bottom: 10px;
+  font-size: 12px;
+  &-header {
+    padding: 10px;
+    display: flex;
+    &-searchBox {
+      flex: 1;
+      .searchBox {
+        input {
+          padding-left: 8px;
+        }
+      }
+    }
+    &-cancel {
+      margin-left: 10px;
+      width: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 14px;
+      &-button {
+        color: @darkBlack;
+      }
+    }
+  }
+  &-item {
+    width: 100%;
+    &-link {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      padding: 0 0 0 10px;
+      color: @black;
+      text-decoration: none;
+      &:hover {
+        color: @black;
+        background: @hoverRed;
+        text-decoration: none;
+      }
+    }
+    .avatorsBox {
+      margin: 2px 0;
+      .avatorsBox(40px);
+    }
+    &-main {
+      height: 44px;
+      flex: 1;
+      min-width: 0;
+      margin-left: 10px;
+      line-height: 18px;
+      border-bottom: 1px solid @subColor4;
+      padding-top: 4px;
+      &-header {
+        display: flex;
+        &-title {
+          min-width: 0;
+          font-weight: 700;
+          overflow: hidden;
+        }
+        &-count {
+          color: @black;
+          width: auto;
+          margin-left: 4px;
+        }
+      }
+      &-body {
+        color: @subColor3;
+      }
+    }
+    &-right {
+      color: @subColor3;
+      font-size: 11px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid @subColor4;
+      padding: 0 6px;
     }
   }
 }

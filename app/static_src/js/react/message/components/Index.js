@@ -23,7 +23,7 @@ export default class Index extends React.Component {
         </div>
         <ul>
           <li className="topicList-item">
-            <a href="">
+            <a href=""  className="topicList-item-link">
               <div className="avatorsBox">
                 <div className="avatorsBox-one">
                   <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
@@ -49,7 +49,7 @@ export default class Index extends React.Component {
             </a>
           </li>
           <li className="topicList-item">
-            <a href="">
+            <a href="" className="topicList-item-link">
               <div className="avatorsBox">
                 <div className="avatorsBox-half">
                   <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
@@ -79,7 +79,7 @@ export default class Index extends React.Component {
             </a>
           </li>
           <li className="topicList-item">
-            <a href="">
+            <a href="" className="topicList-item-link">
             <div className="avatorsBox">
               <div className="avatorsBox-half">
                 <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
@@ -114,7 +114,7 @@ export default class Index extends React.Component {
             </a>
           </li>
           <li className="topicList-item">
-            <a href="">
+            <a href="" className="topicList-item-link">
             <div className="avatorsBox">
               <div className="avatorsBox-quarter">
                 <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
@@ -152,7 +152,7 @@ export default class Index extends React.Component {
             </a>
           </li>
           <li className="topicList-item">
-            <a href="">
+            <a href="" className="topicList-item-link">
             <div className="avatorsBox">
               <div className="avatorsBox-quarter">
                 <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />

@@ -15,11 +15,13 @@ export default class Search extends React.Component {
               <span className="fa fa-search searchBox-button"></span>
             </div>
           </div>
-          <div className="topicSearchList-header-cancel"><a href="">Cancel</a></div>
+          <div className="topicSearchList-header-cancel">
+            <a href="" className="topicSearchList-header-cancel-button">Cancel</a>
+          </div>
         </div>
         <ul>
           <li className="topicSearchList-item">
-            <a href="">
+            <a href="" className="topicSearchList-item-link">
               <div className="avatorsBox">
                 <div className="avatorsBox-one">
                   <img src="/img/sekiguchi.jpeg" />
@@ -43,7 +45,7 @@ export default class Search extends React.Component {
             </a>
           </li>
           <li className="topicSearchList-item">
-            <a href="">
+            <a href="" className="topicSearchList-item-link">
               <div className="avatorsBox">
                 <div className="avatorsBox-half">
                   <img src="/img/toshiki.jpeg" />
@@ -73,7 +75,7 @@ export default class Search extends React.Component {
             </a>
           </li>
           <li className="topicSearchList-item">
-            <a href="">
+            <a href="" className="topicSearchList-item-link">
             <div className="avatorsBox">
               <div className="avatorsBox-half">
                 <img src="/img/toshiki.jpeg" />
@@ -108,7 +110,7 @@ export default class Search extends React.Component {
             </a>
           </li>
           <li className="topicSearchList-item">
-            <a href="">
+            <a href="" className="topicSearchList-item-link">
               <div className="avatorsBox">
                 <div className="avatorsBox-quarter">
                   <img src="/img/toshiki.jpeg" />
@@ -146,7 +148,7 @@ export default class Search extends React.Component {
             </a>
           </li>
           <li className="topicSearchList-item">
-            <a href="">
+            <a href="" className="topicSearchList-item-link">
               <div className="avatorsBox">
                 <div className="avatorsBox-quarter">
                   <img src="/img/toshiki.jpeg" />
