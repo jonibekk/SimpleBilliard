@@ -124,7 +124,7 @@ class MessageService extends AppService
             case Message::TYPE_LEAVE:
                 $outputBody = __('%s left this topic.', $senderName);
                 break;
-            case Message::TYPE_SET_TOPIC_NAME:
+            case Message::TYPE_UPDATE_TOPIC_META:
                 if ($body) {
                     $outputBody = __('%s named this topic : %s.', $senderName, $body);
                 } else {
