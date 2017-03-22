@@ -162,7 +162,7 @@ class Message extends AppModel
      *
      * @return mixed
      */
-    function add(array $data, int $userId)
+    function saveNormal(array $data, int $userId)
     {
         $data = am($data, [
             'type'           => self::TYPE_NORMAL,

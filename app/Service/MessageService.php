@@ -272,7 +272,7 @@ class MessageService extends AppService
 
         try {
             // saving message
-            $message = $Message->add($data, $userId);
+            $message = $Message->saveNormal($data, $userId);
             if ($message === false) {
                 $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
                     $userId,
