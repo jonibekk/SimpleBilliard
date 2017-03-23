@@ -55,12 +55,12 @@ class ApiMessageService extends ApiService
      *
      * @return array
      */
-    function getMessage(int $messageId): array
+    function get(int $messageId): array
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
         // find latest message
-        $message = $MessageService->getMessage($messageId);
+        $message = $MessageService->get($messageId);
         // converting key names for response data
         $message = $this->convertKeyNames($message);
         return $message;

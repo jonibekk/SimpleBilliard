@@ -52,7 +52,7 @@ class MessagesController extends ApiController
 //            $this->request->data('socket_id'));
 
         // find the message as response data
-        $newMessage = $ApiMessageService->getMessage($messageId);
+        $newMessage = $ApiMessageService->get($messageId);
         return $this->_getResponseSuccess($newMessage);
     }
 

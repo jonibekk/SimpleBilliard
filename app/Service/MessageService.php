@@ -65,11 +65,11 @@ class MessageService extends AppService
      *
      * @return array
      */
-    function getMessage(int $messageId): array
+    function get(int $messageId): array
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
-        $message = $Message->getMessageById($messageId);
+        $message = $Message->getOne($messageId);
 
         $TimeEx = new TimeExHelper(new View());
         /** @var User $User */
