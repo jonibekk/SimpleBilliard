@@ -130,7 +130,7 @@ class Message extends AppModel
      *
      * @return array
      */
-    function getOne(int $id): array
+    function get(int $id): array
     {
         $options = [
             'conditions' => [

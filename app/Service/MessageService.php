@@ -69,7 +69,7 @@ class MessageService extends AppService
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
-        $message = $Message->getOne($messageId);
+        $message = $Message->get($messageId);
 
         $TimeEx = new TimeExHelper(new View());
         /** @var User $User */
