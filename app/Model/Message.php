@@ -38,6 +38,8 @@ class Message extends AppModel
             'isTopicMember' => ['rule' => ['customValidateSenderIsBelongTheTopic']]
         ],
         'body'           => [
+            'maxLength'                  => ['rule' => ['maxLength', 5000]],
+            'isString'                   => ['rule' => 'isString', 'message' => 'Invalid Submission'],
             'bodyOrAttachedFileRequired' => ['rule' => ['customValidateBody']],
         ],
         'type'           => [
