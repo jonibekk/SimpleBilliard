@@ -476,7 +476,9 @@ class AttachedFile extends AppModel
                         'alias'      => 'Message',
                         'type'       => 'INNER',
                         'conditions' => [
-                            'Message.id = MessageFile.message_id',
+                            'MessageFile.message_id = Message.id',
+                            'Message.team_id' => $this->current_team_id,
+                            'Message.del_flg' => false,
                         ]
                     ],
                     [
@@ -487,6 +489,7 @@ class AttachedFile extends AppModel
                             'Message.topic_id = TopicMember.topic_id',
                             'TopicMember.user_id' => $this->my_uid,
                             'TopicMember.team_id' => $this->current_team_id,
+                            'TopicMember.del_flg' => false,
                         ]
                     ]
                 ],
