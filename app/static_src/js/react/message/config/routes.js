@@ -16,15 +16,15 @@ import IndexContainer from '~/message/containers/Index'
 import DetailContainer from '~/message/containers/Detail'
 import SearchContainer from '~/message/containers/Search'
 
-// const DevTools = createDevTools(
-//   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
-//     <LogMonitor theme="tomorrow" preserveScrollTop={false} />
-//   </DockMonitor>
-// )
+const DevTools = createDevTools(
+  <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
+    <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+  </DockMonitor>
+)
 const reducer = createReducer()
 const store = createStore(
   reducer,
-  // DevTools.instrument(),
+  DevTools.instrument(),
   applyMiddleware(thunk)
 )
 const history = syncHistoryWithStore(browserHistory, store)
@@ -51,7 +51,7 @@ export default class Routes extends Component {
               <Route path=":topic_id/detail" component={DetailContainer} />
             </Route>
           </Router>
-          {/* <DevTools / > */}
+          {/*<DevTools />*/}
         </div>
       </Provider>
     )
