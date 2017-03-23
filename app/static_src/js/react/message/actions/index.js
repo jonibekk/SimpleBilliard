@@ -8,7 +8,6 @@ export function fetchInitData() {
     })
     return get('/api/v1/topics/search')
       .then((response) => {
-        // const topics = response.data.data
         const topics = response.data.data
         const next_url = response.data.paging.next
         dispatch({
