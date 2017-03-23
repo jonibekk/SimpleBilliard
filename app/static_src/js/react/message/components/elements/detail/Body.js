@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
-import Message from "~/message/components/elements/Message";
-import Loading from "./Loading";
+import Message from "~/message/components/elements/detail/Message";
+import Loading from "~/message/components/elements/detail/Loading";
 
-class Messages extends React.Component {
+class Body extends React.Component {
 
   constructor(props) {
     super(props);
@@ -78,29 +78,31 @@ class Messages extends React.Component {
 
   render() {
     return (
-      <div className="topicDetail-messages">
-        {this.props.loading_more && <Loading/>}
-        {this.props.messages.map((message) => {
-          return (
-            <Message message={message} key={message.id}/>
-          )
-        })}
+      <div className="topicDetail-body">
+        <div className="topicDetail-messages">
+          {this.props.loading_more && <Loading/>}
+          {this.props.messages.map((message) => {
+            return (
+              <Message message={message} key={message.id}/>
+            )
+          })}
+        </div>
       </div>
     )
   }
 }
 
-Messages.propTypes = {
+Body.propTypes = {
   loading_more: React.PropTypes.bool,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
   is_fetched_initial:React.PropTypes.bool
 };
 
-Messages.defaultProps = {
+Body.defaultProps = {
   loading_more: false,
   messages: [],
   paging: {next:""},
   is_fetched_initial:false
 };
-export default connect()(Messages);
+export default connect()(Body);

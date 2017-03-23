@@ -1,7 +1,7 @@
 import React from "react";
 
 // TODO:display member count
-export default class TopicHeader extends React.Component {
+export default class Header extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -48,10 +48,10 @@ export default class TopicHeader extends React.Component {
   }
 }
 
-TopicHeader.propTypes = {
+Header.propTypes = {
   topic: React.PropTypes.object,
 };
 
-TopicHeader.defaultProps = {
+Header.defaultProps = {
   topic: {}
 };
