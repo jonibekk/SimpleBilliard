@@ -7,3 +7,8 @@ export const SAVE_SUCCESS = 'SAVE_SUCCESS'
 export const SAVE_ERROR = 'SAVE_ERROR'
 export const CHANGE_MESSAGE = 'CHANGE_MESSAGE'
 export const SET_RESOURCE_ID = 'SET_RESOURCE_ID'
+
+// topic list page
+export const FETCHING_TOPICS = 'FETCHING_TOPICS'
+export const FETCH_TOPICS = 'FETCH_TOPICS'
+export const FETCH_MORE_TOPICS = 'FETCH_MORE_TOPICS'
