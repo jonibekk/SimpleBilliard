@@ -51,3 +51,19 @@ export function fetchMoreTopics(url) {
       })
   }
 }
+
+export function changeToSearchMode() {
+  return (dispatch) => {
+    dispatch({
+      type: types.CHANGE_TO_SEARCH_MODE
+    })
+  }
+}
+
+export function cancelSearchMode() {
+  return (dispatch) => {
+    dispatch({
+      type: types.CANCEL_SEARCH_MODE
+    })
+  }
+}

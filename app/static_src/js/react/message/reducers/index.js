@@ -4,7 +4,8 @@ const initialState = {
   topics: [],
   topics_searched: [],
   next_url: '',
-  fetching_topics: false
+  fetching_topics: false,
+  is_search_mode: false
 }
 
 export default function topic(state = initialState, action) {
@@ -29,6 +30,14 @@ export default function topic(state = initialState, action) {
       return Object.assign({}, state, {
         topics_searched: action.topics,
         fetching_topics: false
+      })
+    case types.CHANGE_TO_SEARCH_MODE:
+      return Object.assign({}, state, {
+        is_search_mode: true
+      })
+    case types.CANCEL_SEARCH_MODE:
+      return Object.assign({}, state, {
+        is_search_mode: false
       })
     default:
       return state;
