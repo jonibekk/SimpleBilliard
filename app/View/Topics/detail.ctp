@@ -151,17 +151,17 @@
         <!--            </div>-->
         <!--        </div>-->
         <div class="uploadPreviews">
-            <div class="uploadPreviews-item panel">
+            <div class="uploadPreviews-item">
                 <div class="uploadPreviews-item-content mb_2px">
                     <div class="uploadPreviews-item-content-left">
-                        <div class="uploadPreviews-item-thumbnail">
+                        <div class="uploadPreviews-item-thumbnail-wrapper">
                             <i class="fa fa-file-o file-other-icon"></i>
                         </div>
                     </div>
                     <div class="uploadPreviews-item-content-right">
                         <div class="flex">
                             <div class="uploadPreviews-item-filename flex-extend">AzureMachineLearning ハンズオン１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０.pdf</div>
-                            <a href="#" class="uploadPreviews-item-delete ml_2px">
+                            <a href="#" class="uploadPreviews-item-delete">
                                 <i class="fa fa-times"></i>
                             </a>
                         </div>
@@ -173,20 +173,20 @@
                 </div>
                 <div class="uploadPreviews-item-progressBar mod-rate100"></div>
             </div>
-            <div class="uploadPreviews-item panel">
+            <div class="uploadPreviews-item">
                 <div class="uploadPreviews-item-content mb_2px">
                     <div class="uploadPreviews-item-content-left">
-                        <div class="uploadPreviews-item-thumbnail">
-                            <img class="dz-thumb none"
+                        <div class="uploadPreviews-item-thumbnail-wrapper">
+                            <img class="uploadPreviews-item-thumbnail"
                                  alt="1 のコピー.gif"
                                  src="data:image/png;base64,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"
-                                 style="display: inline; transform: rotate(0deg);">
+                                 >
                         </div>
                     </div>
                     <div class="uploadPreviews-item-content-right">
                         <div class="flex">
                             <div class="uploadPreviews-item-filename   is-error flex-extend">AzureMachineLearning ハンズオン１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０.pdf</div>
-                            <a href="#" class="uploadPreviews-item-delete ml_2px">
+                            <a href="#" class="uploadPreviews-item-delete">
                                 <i class="fa fa-times"></i>
                             </a>
                         </div>

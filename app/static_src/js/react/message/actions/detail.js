@@ -1,5 +1,6 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
 import {get, post} from "~/util/api";
+import {FileUpload} from "~/common/constants/App";
 
 export function fetchInitialData(topic_id) {
   return (dispatch) => {
@@ -44,13 +45,13 @@ export function sendLike() {
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_SUCCESS,
-          data:response.data
+          data: response.data
         })
       },
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_ERROR,
-          data:response.data
+          data: response.data
         })
       }
     );
@@ -67,39 +68,99 @@ export function sendMessage() {
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_SUCCESS,
-          data:response.data
+          data: response.data
         })
       },
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_ERROR,
-          data:response.data
+          data: response.data
         })
       }
     );
   }
 }
+export function deleteUploadedFile(file_index) {
+  return {
+    type: ActionTypes.DELETE_UPLOADED_FILE,
+    file_index
+  }
+}
+// TODO:Check upload limit
+// TODO:Test uploading multiple files simultaneously
 export function uploadFiles(files) {
   return (dispatch, getState) => {
-    dispatch({type: ActionTypes.UPLOADING})
-    const postData = {
-      "file": files[0]
-    };
-    return post("/api/v1/files/upload", postData, null,
-      (response) => {
+    let all_files = getState().detail.files;
+
+    dispatch({type: ActionTypes.UPLOAD_START});
+    // Upload file one by one
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+      all_files.push(file);
+      let file_index = all_files.length - 1;
+
+
+      // Add info for display uploading preview
+      file.status = FileUpload.Uploading
+      file.progress_rate = 0
+      file.id = null
+      // Display thumbnail only for image
+      if (file.type.match(/image/)) {
+        let reader = new FileReader();
+        reader.onloadend = () => {
+          file.previewUrl = reader.result;
+          all_files[file_index] = file
+          dispatch({
+            type: ActionTypes.UPLOADING,
+            files: all_files,
+          })
+        }
+        reader.readAsDataURL(file);
+      } else {
+        file.previewUrl = "";
+        all_files[file_index] = file
         dispatch({
-          type: ActionTypes.UPLOAD_SUCCESS,
-          // file: files[0],
-          file_id : response.data.data.id
-        })
-      },
-      (response) => {
-        dispatch({
-          type: ActionTypes.UPLOAD_ERROR,
-          data:response.data
+          type: ActionTypes.UPLOADING,
+          files: all_files,
         })
       }
-    );
+
+      const postData = {
+        file
+      };
+      const options = {
+        // Get upload progress
+        onUploadProgress: function(progress_event) {
+          file.progress_rate = Math.round( (progress_event.loaded * 100) / progress_event.total );
+          all_files[file_index] = file
+          dispatch({
+            type: ActionTypes.UPLOADING,
+            files: all_files,
+          })
+        }
+      };
+      return post("/api/v1/files/upload", postData, options,
+        (response) => {
+          file.status = FileUpload.Success
+          file.id = response.data.data.id
+          all_files[file_index] = file
+          dispatch({
+            type: ActionTypes.UPLOAD_SUCCESS,
+            files: all_files,
+            file_id: file.id
+          })
+        },
+        (response) => {
+          file.status = FileUpload.Error
+          file.err_msg = response.response.data.message
+          all_files[file_index] = file
+          dispatch({
+            type: ActionTypes.UPLOAD_ERROR,
+            files: all_files,
+          })
+        },
+      );
+    }
   }
 }
 export function onChangeMessage(val) {

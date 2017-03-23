@@ -2,16 +2,18 @@ import React from "react";
 import ReactDom from "react-dom";
 import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
-import UploadDropArea from "~/message/components/elements/detail/UploadDropArea";
+import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
+import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 
 
 class Footer extends React.Component {
   constructor(props) {
     super(props)
+    // HACK:Display drop zone when dragging
+    // reference:http://qiita.com/sounisi5011/items/dc4878d3e8b38101cf0b
     this.state = {
       is_drag_over: false,
       is_drag_start: false,
-      files: [],
     }
   }
 
@@ -41,15 +43,6 @@ class Footer extends React.Component {
     this.props.dispatch(
       actions.uploadFiles(files)
     );
-    let file = files[0];
-    let reader = new FileReader();
-    reader.onloadend = () => {
-      file.previewUrl = reader.result;
-      this.setState({
-        files: [...this.state.files, file],
-      });
-    }
-    reader.readAsDataURL(file);
   }
 
   dragEnter(e) {
@@ -93,9 +86,6 @@ class Footer extends React.Component {
   }
 
   render() {
-    const className = this.state.is_drag_over ? 'app-file-selection-area-dragging' : 'app-file-selection-area';
-    console.log(this.state.is_drag_over);
-
     return (
       <div className={`topicDetail-footer ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
            onDrop={this.drop.bind(this)}
@@ -103,7 +93,8 @@ class Footer extends React.Component {
            onDragOver={this.dragOver.bind(this)}
            onDragLeave={this.dragLeave.bind(this)}
       >
-        {this.state.is_drag_over && <UploadDropArea/>}
+        {this.state.is_drag_over && <UploadDropZone/>}
+        <UploadPreview files={this.props.files} />
         <form>
           <div className="topicDetail-footer-box">
             <div className="topicDetail-footer-box-left">
@@ -157,6 +148,7 @@ class Footer extends React.Component {
 Footer.propTypes = {
   message: React.PropTypes.string,
   file_ids: React.PropTypes.array,
+  files: React.PropTypes.array,
   is_saving: React.PropTypes.bool,
   is_uploading: React.PropTypes.bool,
   err_msg: React.PropTypes.string,
@@ -164,6 +156,7 @@ Footer.propTypes = {
 Footer.defaultProps = {
   message: "",
   file_ids: [],
+  files: [],
   is_saving: false,
   is_uploading: false,
   err_msg: "",

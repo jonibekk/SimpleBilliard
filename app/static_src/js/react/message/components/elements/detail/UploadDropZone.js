@@ -1,11 +1,8 @@
 import React from "react";
 
-export default class UploadDropArea extends React.Component {
+export default class UploadDropZone extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      dragging: false
-    }
   }
   render() {
     return (
