@@ -1,5 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('Topic', 'Model');
+App::uses('TopicMember', 'Model');
 App::import('Service', 'MessageService');
 App::import('Service/Api', 'ApiMessageService');
 
@@ -29,6 +31,14 @@ class MessagesController extends ApiController
 
         // filter fields
         $postedData = AppUtil::filterWhiteList($this->request->data, ['topic_id', 'body', 'file_ids']);
+
+        $topicId = $postedData['topic_id'];
+
+        // checking 403 or 404
+        $errResponse = $this->_validateCreateForbiddenOrNotFound($topicId, $userId);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
 
         // validation
         $validationResult = $MessageService->validatePostMessage($postedData);
@@ -70,6 +80,35 @@ class MessagesController extends ApiController
         $topicId = $this->request->data('topic_id');
         $dataMock = ['message_id' => 1234];
         return $this->_getResponseSuccessSimple($dataMock);
+    }
+
+    /**
+     * validation for creating a message
+     * - if not found, it will return 404 response
+     * - if not have permission, it will return 403 response
+     *
+     * @param $topicId
+     * @param $userId
+     *
+     * @return CakeResponse|true
+     */
+    private function _validateCreateForbiddenOrNotFound($topicId, $userId)
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init("Topic");
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init("TopicMember");
+
+        // topic is exists?
+        if ($Topic->exists($topicId)) {
+            return $this->_getResponseNotFound();
+        }
+        // is topic member?
+        $isMember = $TopicMember->isMember($topicId, $userId);
+        if (!$isMember) {
+            return $this->_getResponseForbidden();
+        }
+        return true;
     }
 
 }
