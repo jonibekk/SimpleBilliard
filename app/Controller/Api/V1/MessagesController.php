@@ -51,10 +51,12 @@ class MessagesController extends ApiController
             return $this->_getResponseBadFail(null);
         }
 
+        $topicId = $postedData['topic_id'];
+
         // tracking by mixpanel
-        $this->Mixpanel->trackMessage($postedData['topic_id']);
+        $this->Mixpanel->trackMessage($topicId);
         //TODO notification. It will be implemented on another issue.
-//        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
 //        $detail_comment = $this->Post->Comment->getComment($comment_id);
 // for react..
 //        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
