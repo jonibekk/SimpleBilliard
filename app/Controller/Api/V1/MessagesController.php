@@ -100,7 +100,7 @@ class MessagesController extends ApiController
         $TopicMember = ClassRegistry::init("TopicMember");
 
         // topic is exists?
-        if ($Topic->exists($topicId)) {
+        if (!$Topic->exists($topicId)) {
             return $this->_getResponseNotFound();
         }
         // is topic member?
