@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from "react-router";
+import AvatarsBox from "~/common/components/AvatarsBox";
 
 export default class Topic extends React.Component {
 
@@ -8,28 +9,7 @@ export default class Topic extends React.Component {
     return (
       <li className="topicList-item" key={ topic.id }>
         <Link to={ `/topics/${topic.id}/detail` }  className="topicList-item-link">
-          <div className="avatorsBox">
-            { topic.users.map((user, i) => {
-              let size = ''
-              if (topic.users.length > 3) {
-                size = 'quarter'
-              }
-              if (topic.users.length == 3) {
-                size = (i == 0) ? 'half' : 'quarter'
-              }
-              if (topic.users.length == 2) {
-                size = 'half'
-              }
-              if (topic.users.length == 1) {
-                size = 'one'
-              }
-              return (
-                <div className={`avatorsBox-${size}`} key={ user.id }>
-                  <img src={ user.medium_large_img_url } />
-                </div>
-              )
-            })}
-          </div>
+          <AvatarsBox users={ topic.users } />
           <div className="topicList-item-main">
             <div className="topicList-item-main-header">
               <div className="topicList-item-main-header-title oneline-ellipsis">
@@ -49,7 +29,8 @@ export default class Topic extends React.Component {
                 if ((topic.members_count - 1) == topic.read_count) {
                   return <span><i className="fa fa-check is-read"></i> </span>
                 } else if (topic.members_count == 2) {
-
+                  // if member number is two and no read, display nothing.
+                  return null
                 } else {
                   return <span><i className="fa fa-check"></i> { topic.read_count }・</span>
                 }
