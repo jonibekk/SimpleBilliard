@@ -36,7 +36,7 @@ class MessagesController extends ApiController
             return $this->_getResponseValidationFail($validationResult);
         }
         // saving datas
-        $messageId = $MessageService->addMessage($postedData, $userId);
+        $messageId = $MessageService->add($postedData, $userId);
         if ($messageId === false) {
             return $this->_getResponseBadFail(null);
         }

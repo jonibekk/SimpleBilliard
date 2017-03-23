@@ -124,7 +124,7 @@ class MessageService extends AppService
             case Message::TYPE_LEAVE:
                 $outputBody = __('%s left this topic.', $senderName);
                 break;
-            case Message::TYPE_UPDATE_TOPIC_META:
+            case Message::TYPE_SET_TOPIC_NAME:
                 if ($body) {
                     $outputBody = __('%s named this topic : %s.', $senderName, $body);
                 } else {
@@ -237,6 +237,7 @@ class MessageService extends AppService
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
         $backupValidate = $Message->validate;
+        // remove `sender_user_id`. cause posted data doesn't have it.
         unset($Message->validate['sender_user_id']);
         $Message->set($data);
         $isValid = $Message->validates();
@@ -244,12 +245,6 @@ class MessageService extends AppService
         if ($isValid) {
             return true;
         }
-        // logging errors. Because, this is an irregular case.
-        $errorMsg = sprintf("Failed to add a message. data:%s, validationErrors:%s",
-            var_export($data, true),
-            var_export($Message->validationErrors, true)
-        );
-        $this->log($errorMsg);
         return $this->validationExtract($Message->validationErrors);
     }
 
@@ -263,7 +258,7 @@ class MessageService extends AppService
      *
      * @return int|false
      */
-    function addMessage(array $data, int $userId)
+    function add(array $data, int $userId)
     {
         $topicId = $data['topic_id'];
         /** @var Message $Message */

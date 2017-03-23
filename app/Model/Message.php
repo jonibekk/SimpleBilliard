@@ -13,7 +13,7 @@ class Message extends AppModel
     const TYPE_NORMAL = 1;
     const TYPE_ADD_MEMBER = 2;
     const TYPE_LEAVE = 3;
-    const TYPE_UPDATE_TOPIC_META = 4;
+    const TYPE_SET_TOPIC_NAME = 4;
 
     /**
      * Validation rules
