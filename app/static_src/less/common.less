@@ -267,10 +267,10 @@
 
 .uploadPreviews {
   &-item {
-    background-color: #f5f5f5;
+    background-color: @smokyWhite;
     padding: 6px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid @subColor4;
     margin-bottom: 8px;
     &-content {
       display: flex;
@@ -301,15 +301,15 @@
       transform: rotate(0deg);
     }
     &-filename {
-      color: #231814;
+      color: @veryDark;
       font-weight: bold;
       font-size: 1.3rem;
       &.is-error {
-        color: #91170a;
+        color: @softRed;
       }
     }
     &-filesize {
-      color: #9197a3;
+      color: @subColor10;
       font-size: 1.1rem;
       font-weight: normal;
       &-strong {
@@ -317,7 +317,7 @@
       }
     }
     &-delete {
-      color: #9197a3;
+      color: @subColor10;
       text-decoration: none;
       padding: 0 6px;
       &:hover, &:active, &:focus {
@@ -325,8 +325,7 @@
       }
     }
     &-progressBar {
-      /* background-color: #3897f0; */
-      background-color: #00a8e6;
+      background-color: @progressBarStart;
       .horizontal-gradient(@progressBarStart, @progressBarEnd);
       height: 4px;
       -webkit-transition: width 0.6s ease;
@@ -344,7 +343,7 @@
     }
     &-error {
       font-size: 1.3rem;
-      color: #d9230f;
+      color: @acidRed;
     }
   }
 }
