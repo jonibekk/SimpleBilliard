@@ -30,11 +30,12 @@ class Message extends AppModel
             'isTopicMember' => ['rule' => ['customValidateIsTopicMember'],],
         ],
         'sender_user_id' => [
-            'numeric'  => ['rule' => ['numeric'],],
-            'notBlank' => [
+            'numeric'       => ['rule' => ['numeric'],],
+            'notBlank'      => [
                 'required' => 'create',
                 'rule'     => 'notBlank',
             ],
+            'isTopicMember' => ['rule' => ['customValidateSenderIsBelongTheTopic']]
         ],
         'body'           => [
             'bodyOrAttachedFileRequired' => ['rule' => ['customValidateBody']],
@@ -194,6 +195,27 @@ class Message extends AppModel
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
         if ($TopicMember->isMember($topicId, $this->my_uid)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * sender user id belongs to the topic?
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateSenderIsBelongTheTopic(array $val): bool
+    {
+        $senderUid = array_shift($val);
+
+        $topicId = Hash::get($this->data, 'Message.topic_id');
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        if ($TopicMember->isMember($topicId, $senderUid)) {
             return true;
         }
         return false;
