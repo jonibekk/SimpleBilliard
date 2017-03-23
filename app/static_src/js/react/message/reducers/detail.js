@@ -91,19 +91,10 @@ export default function detail(state = initialState, action) {
         input_data
       })
     case ActionTypes.DELETE_UPLOADED_FILE:
-      let files = [...state.files]
-      if (files[action.file_index]) {
-        const file_id = files[action.file_index].id
-        const input_file_index = input_data.file_ids.indexOf(file_id)
-        if (input_file_index >= 0) {
-            //spliceメソッドで要素を削除
-            input_data.file_ids.splice(input_file_index, 1);
-        }
-        files.splice(action.file_index, 1);
-      }
+      input_data.file_ids = [...action.file_ids]
       return Object.assign({}, state, {
         input_data,
-        files
+        files: [...action.files],
       })
     default:
       return state;

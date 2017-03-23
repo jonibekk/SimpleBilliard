@@ -121,7 +121,7 @@ class Footer extends React.Component {
             </div>
             <div className="topicDetail-footer-box-right">
               {(() => {
-                if (this.props.message || this.props.file_ids.length > 0) {
+                if (this.props.message || this.props.uploaded_file_ids.length > 0) {
                   return (
                     <button type="button"
                             className="btn btnRadiusOnlyIcon mod-send"
@@ -147,7 +147,7 @@ class Footer extends React.Component {
 
 Footer.propTypes = {
   message: React.PropTypes.string,
-  file_ids: React.PropTypes.array,
+  uploaded_file_ids: React.PropTypes.array,
   files: React.PropTypes.array,
   is_saving: React.PropTypes.bool,
   is_uploading: React.PropTypes.bool,
@@ -155,7 +155,7 @@ Footer.propTypes = {
 };
 Footer.defaultProps = {
   message: "",
-  file_ids: [],
+  uploaded_file_ids: [],
   files: [],
   is_saving: false,
   is_uploading: false,

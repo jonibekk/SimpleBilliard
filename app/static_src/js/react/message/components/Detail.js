@@ -28,7 +28,7 @@ export default class Detail extends React.Component {
         />
         <Footer
           message={props.input_data.message}
-          file_ids={props.input_data.file_ids}
+          uploaded_file_ids={props.input_data.file_ids}
           files={props.files}
           err_msg={props.err_msg}
           is_saving={props.is_saving}
