@@ -36,7 +36,7 @@ export default class Message extends React.Component {
         )
       }
     }
-    
+
     return (
       <div className="topicDetail-messages-item">
         <div className="topicDetail-messages-item-left">

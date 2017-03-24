@@ -12,7 +12,6 @@ export default class AttachedFile extends React.Component {
 
     switch (attached_file.file_type) {
       case Model.AttachedFile.IMG:
-      case Model.AttachedFile.VIDEO:
         return (
           <div>
             <a href={attached_file.preview_url}>
@@ -20,6 +19,9 @@ export default class AttachedFile extends React.Component {
             </a>
           </div>
         )
+      case Model.AttachedFile.VIDEO:
+        // Current Not used
+        return null;
       case Model.AttachedFile.DOC:
         return (
           <div>

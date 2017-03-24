@@ -102,14 +102,14 @@ Body.propTypes = {
   loading_more: React.PropTypes.bool,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
-  is_fetched_initial:React.PropTypes.bool
+  is_fetched_initial: React.PropTypes.bool
 };
 
 Body.defaultProps = {
   topic: {},
   loading_more: false,
   messages: [],
-  paging: {next:""},
-  is_fetched_initial:false
+  paging: {next: ""},
+  is_fetched_initial: false
 };
 export default connect()(Body);
