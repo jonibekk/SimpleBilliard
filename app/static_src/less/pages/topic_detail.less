@@ -26,6 +26,7 @@
     -webkit-overflow-scroll: touch;
   }
   &-messages {
+    padding: 4px 0;
     overflow-y: scroll;
     max-height: 475px;
     -ms-overflow-style: none;
@@ -34,7 +35,7 @@
     }
   }
   &-messages-item {
-    padding: 4px 10px;
+    padding: 6px 10px;
     display: flex;
     &-left {
       &-profileImg {
@@ -65,6 +66,9 @@
       }
     }
     &-read {
+      &:hover {
+        text-decoration: none;
+      }
       &.is-on {
         color: #099f3f;
       }
