@@ -22,13 +22,16 @@
     }
   }
   &-body {
-    overflow: auto;
-    max-height: 475px;
+    overflow: hidden;
     -webkit-overflow-scroll: touch;
   }
   &-messages {
-    overflow: scroll;
-    height: 475px;
+    overflow-y: scroll;
+    max-height: 475px;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   &-messages-item {
     padding: 4px 10px;

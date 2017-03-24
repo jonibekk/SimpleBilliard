@@ -1,4 +1,4 @@
-import * as ActionTypes from '~/message/constants/ActionTypes'
+import * as ActionTypes from "~/message/constants/ActionTypes";
 
 const initialState = {
   topic_id: 0,
@@ -12,13 +12,13 @@ const initialState = {
   loading: false,
   loading_more: false,
   is_fetched_initial: false,
-  is_saving:false,
-  err_msg:"",
+  is_saving: false,
+  err_msg: "",
+  files: [],
   input_data: {
     message: "",
-    file_ids:[]
+    file_ids: []
   }
-  // TODO:アップロードしたファイルID追加
 }
 
 export default function detail(state = initialState, action) {
@@ -65,10 +65,36 @@ export default function detail(state = initialState, action) {
         err_msg: action.error.message,
         is_saving: false
       })
+    case ActionTypes.UPLOAD_START:
+      return Object.assign({}, state, {
+        is_saving: true
+      })
+    case ActionTypes.UPLOADING:
+      return Object.assign({}, state, {
+        files: [...action.files]
+      })
+    case ActionTypes.UPLOAD_SUCCESS:
+      input_data.file_ids = [...input_data.file_ids, action.file_id];
+      return Object.assign({}, state, {
+        input_data,
+        files: [...action.files],
+        is_saving: false
+      })
+    case ActionTypes.UPLOAD_ERROR:
+      return Object.assign({}, state, {
+        files: [...action.files],
+        is_saving: false
+      })
     case ActionTypes.CHANGE_MESSAGE:
       input_data.message = action.message;
       return Object.assign({}, state, {
         input_data
+      })
+    case ActionTypes.DELETE_UPLOADED_FILE:
+      input_data.file_ids = [...action.file_ids]
+      return Object.assign({}, state, {
+        input_data,
+        files: [...action.files],
       })
     default:
       return state;
