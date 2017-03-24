@@ -59,6 +59,38 @@ class MessageService extends AppService
     }
 
     /**
+     * Getting a message
+     *
+     * @param int $messageId
+     *
+     * @return array
+     */
+    function get(int $messageId): array
+    {
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        $message = $Message->get($messageId);
+
+        $TimeEx = new TimeExHelper(new View());
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        // build message body
+        $message = $this->extendBody($message);
+        // build display created
+        $message['Message']['display_created'] = $TimeEx->datetimeNoYear($message['Message']['created']);
+        // user image url
+        $message['SenderUser'] = $User->attachImgUrl($message['SenderUser'], 'User', ['medium']);
+        // attached file url
+        if (Hash::get($message, 'MessageFile')) {
+            $message['MessageFile'] = $this->extendAttachedFileUrl($message['MessageFile']);
+        }
+        // filter only necessary fields
+        $message = $this->filterFields($message);
+        return $message;
+    }
+
+    /**
      * Extending message body
      * normal case:
      * - only sanitizing
@@ -178,8 +210,10 @@ class MessageService extends AppService
 
         $attachedFileFilter = [
             'id',
+            'attached_file_name',
             'file_type',
             'file_ext',
+            'file_size',
             'download_url',
             'preview_url',
             'thumbnail_url'
@@ -190,6 +224,103 @@ class MessageService extends AppService
             $file['AttachedFile'] = AppUtil::filterWhiteList($file['AttachedFile'], $attachedFileFilter);
         }
         return $message;
+    }
+
+    /**
+     * Validate a posted message
+     * - remove sender_user_id validation rule, cause that is not included in posted data
+     *
+     * @param array $data
+     *
+     * @return array|true
+     */
+    function validatePostMessage(array $data)
+    {
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        $backupValidate = $Message->validate;
+        // remove `sender_user_id`. cause posted data doesn't have it.
+        unset($Message->validate['sender_user_id']);
+        $Message->set($data);
+        $isValid = $Message->validates();
+        $Message->validate = $backupValidate;
+        if ($isValid) {
+            return true;
+        }
+        return $this->validationExtract($Message->validationErrors);
+    }
+
+    /**
+     * Saving a new message.
+     * - updating latest message on the topic.
+     * - return message id if success. otherwise, return false.
+     *
+     * @param array $data
+     * @param int   $userId
+     *
+     * @return int|false
+     */
+    function add(array $data, int $userId)
+    {
+        $topicId = $data['topic_id'];
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $Message->begin();
+
+        try {
+            // saving message
+            $message = $Message->saveNormal($data, $userId);
+            if ($message === false) {
+                $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
+                    $userId,
+                    $topicId,
+                    var_export($data, true),
+                    var_export($Message->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+            $messageId = $Message->getLastInsertID();
+
+            // saving attached files
+            if (Hash::get($data, 'file_ids')) {
+                $attachedFiles = $AttachedFile->saveRelatedFiles($messageId, AttachedFile::TYPE_MODEL_MESSAGE,
+                    $data['file_ids']);
+                if ($attachedFiles === false) {
+                    $errorMsg = sprintf("Failed to save attached files on message. data:%s, validationErrors:%s",
+                        var_export($data, true),
+                        var_export($AttachedFile->validationErrors, true)
+                    );
+                    throw new Exception($errorMsg);
+                }
+
+                // updating attached file count
+                $Message->id = $messageId;
+                $Message->saveField('attached_file_count', count($data['file_ids']));
+            }
+
+            // updating latest message on the topic
+            $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
+            if ($updateTopic === false) {
+                $errorMsg = sprintf("Failed to update latest message on the topic. topicId:%s, messageId:%s, validationErrors:%s",
+                    $topicId,
+                    $messageId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+        } catch (Exception $e) {
+            $this->log($e->getMessage());
+            $Message->rollback();
+            return false;
+        }
+
+        $Message->commit();
+        return $messageId;
     }
 
 }
