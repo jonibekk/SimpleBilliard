@@ -107,6 +107,7 @@ class Message extends AppModel
                     'AttachedFile' => [
                         'id',
                         'attached_file_name',
+                        'file_size',
                         'file_type',
                         'file_ext'
                     ]
@@ -153,6 +154,7 @@ class Message extends AppModel
                     'AttachedFile' => [
                         'id',
                         'attached_file_name',
+                        'file_size',
                         'file_type',
                         'file_ext'
                     ]

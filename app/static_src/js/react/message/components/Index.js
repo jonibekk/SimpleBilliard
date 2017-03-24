@@ -1,7 +1,35 @@
-import React from 'react'
+import React from "react"
+import Topic from "./elements/Topic"
+import InfiniteScroll from "redux-infinite-scroll"
+import Loading from "~/message/components/elements/LoadingTopics"
 
 export default class Index extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillMount() {
+    this.props.fetchInitData()
+  }
+
+  fetchMoreTopics() {
+    const next_url = this.props.index.next_url
+    if (!next_url) {
+      return
+    }
+
+    this.props.fetchMoreTopics(next_url)
+  }
+
   render() {
+    const { topics, fetching_topics } = this.props.index
+    const render_topics = topics.map((topic) => {
+      return (
+        <Topic topic={ topic }
+               key={ topic.id } />
+      )
+    })
+
     return (
       <div className="panel panel-default topicList">
         <div className="topicList-header">
@@ -22,174 +50,15 @@ export default class Index extends React.Component {
           </div>
         </div>
         <ul>
-          <li className="topicList-item">
-            <a href=""  className="topicList-item-link">
-              <div className="avatorsBox">
-                <div className="avatorsBox-one">
-                  <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-                </div>
-              </div>
-              <div className="topicList-item-main">
-                <div className="topicList-item-main-header">
-                  <div className="topicList-item-main-header-title oneline-ellipsis">
-                    <span>
-                      Keisuke Sekiguchi
-                    </span>
-                  </div>
-                  <div className="topicList-item-main-header-count">
-                  </div>
-                </div>
-                <div className="topicList-item-main-body oneline-ellipsis">
-                  Keisuke: Hey!!!
-                </div>
-                <div className="topicList-item-main-footer">
-                  20 min
-                </div>
-              </div>
-            </a>
-          </li>
-          <li className="topicList-item">
-            <a href="" className="topicList-item-link">
-              <div className="avatorsBox">
-                <div className="avatorsBox-half">
-                  <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-                </div>
-                <div className="avatorsBox-half">
-                  <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-                </div>
-              </div>
-              <div className="topicList-item-main">
-                <div className="topicList-item-main-header">
-                  <div className="topicList-item-main-header-title oneline-ellipsis">
-                    <span>
-                      Toshiki, Takahiro
-                    </span>
-                  </div>
-                  <div className="topicList-item-main-header-count">
-                    (2)
-                  </div>
-                </div>
-                <div className="topicList-item-main-body oneline-ellipsis">
-                  Keisuke: Hey!!!
-                </div>
-                <div className="topicList-item-main-footer">
-                  <i className="fa fa-check"></i> 3・<span>Jan 20 at 14:57</span>
-                </div>
-              </div>
-            </a>
-          </li>
-          <li className="topicList-item">
-            <a href="" className="topicList-item-link">
-            <div className="avatorsBox">
-              <div className="avatorsBox-half">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-            </div>
-              <div className="topicList-item-main">
-                <div className="topicList-item-main-header">
-                  <div className="topicList-item-main-header-title oneline-ellipsis">
-                    <span>
-                      Toshiki, Takahiro, Daiki
-                    </span>
-                  </div>
-                  <div className="topicList-item-main-header-count">
-                    (3)
-                  </div>
-                </div>
-                <div className="topicList-item-main-body oneline-ellipsis">
-                  <span>
-                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
-                  </span>
-                </div>
-                <div className="topicList-item-main-footer">
-                  <i className="fa fa-check is-read"></i>・<span>Jan 20 at 14:57</span>
-                </div>
-              </div>
-            </a>
-          </li>
-          <li className="topicList-item">
-            <a href="" className="topicList-item-link">
-            <div className="avatorsBox">
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-            </div>
-              <div className="topicList-item-main">
-                <div className="topicList-item-main-header">
-                  <div className="topicList-item-main-header-title oneline-ellipsis">
-                    <span>
-                      Toshiki, Takahiro, Daiki, Shohei, Kohei, Masayuki
-                    </span>
-                  </div>
-                  <div className="topicList-item-main-header-count">
-                    (10)
-                  </div>
-                </div>
-                <div className="topicList-item-main-body oneline-ellipsis">
-                  <span>
-                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
-                  </span>
-                </div>
-                <div className="topicList-item-main-footer">
-                  <i className="fa fa-check is-read"></i>・<span>Jan 20 at 14:57</span>
-                </div>
-              </div>
-            </a>
-          </li>
-          <li className="topicList-item">
-            <a href="" className="topicList-item-link">
-            <div className="avatorsBox">
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-              <div className="avatorsBox-quarter">
-                <img src="https://goalous-release2-assets.s3.amazonaws.com/users/30/f51770b538cc65e2aa58301d6d9adc28_medium_large.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489853736&Signature=L6NJwvGpuf26yQGCegj775vnoEs%3D" />
-              </div>
-            </div>
-              <div className="topicList-item-main">
-                <div className="topicList-item-main-header">
-                  <div className="topicList-item-main-header-title oneline-ellipsis">
-                    <span>
-                      Toshiki, Takahiro, Daiki, Shohei, Kohei, Masayuki
-                    </span>
-                  </div>
-                  <div className="topicList-item-main-header-count">
-                    (3000)
-                  </div>
-                </div>
-                <div className="topicList-item-main-body oneline-ellipsis">
-                  <span>
-                    Keisuke: Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!Hey!!!
-                  </span>
-                </div>
-                <div className="topicList-item-main-footer">
-                  <i className="fa fa-check is-read"></i>・<span>Jan 20 at 14:57</span>
-                </div>
-              </div>
-            </a>
-          </li>
+          <InfiniteScroll
+            loadingMore={ fetching_topics }
+            loadMore={ this.fetchMoreTopics.bind(this) }
+            items={ render_topics }
+            elementIsScrollable={ false }
+            loader=""
+          />
         </ul>
+        { fetching_topics && <Loading />}
       </div>
     )
   }
