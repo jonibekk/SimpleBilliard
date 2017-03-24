@@ -28,7 +28,7 @@ class Body extends React.Component {
   }
 
   _findElement() {
-    return ReactDOM.findDOMNode(this);
+    return ReactDOM.findDOMNode(this.refs.messages);
   }
 
   // TODO: componentize
@@ -77,13 +77,18 @@ class Body extends React.Component {
   }
 
   render() {
+    const {topic, messages, loading_more} = this.props
+
     return (
       <div className="topicDetail-body">
-        <div className="topicDetail-messages">
-          {this.props.loading_more && <Loading/>}
-          {this.props.messages.map((message) => {
+        <div className="topicDetail-messages" ref="messages">
+          {loading_more && <Loading/>}
+          {messages.map((message) => {
             return (
-              <Message message={message} key={message.id}/>
+              <Message
+                topic={topic}
+                message={message}
+                key={message.id}/>
             )
           })}
         </div>
@@ -93,16 +98,18 @@ class Body extends React.Component {
 }
 
 Body.propTypes = {
+  topic: React.PropTypes.object,
   loading_more: React.PropTypes.bool,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
-  is_fetched_initial:React.PropTypes.bool
+  is_fetched_initial: React.PropTypes.bool
 };
 
 Body.defaultProps = {
+  topic: {},
   loading_more: false,
   messages: [],
-  paging: {next:""},
-  is_fetched_initial:false
+  paging: {next: ""},
+  is_fetched_initial: false
 };
 export default connect()(Body);

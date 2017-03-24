@@ -21,6 +21,7 @@ export default class Detail extends React.Component {
       <div className="panel panel-default topicDetail">
         <Header topic={props.topic}/>
         <Body
+          topic={props.topic}
           messages={props.messages.data}
           paging={props.messages.paging}
           loading_more={props.loading_more}
