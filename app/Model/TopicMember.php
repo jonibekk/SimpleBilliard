@@ -159,7 +159,7 @@ class TopicMember extends AppModel
                 'topic_id' => $topicId,
                 'user_id'  => $activeTeamMembersList,
             ],
-            'fields'     => ['id'],
+            'fields'     => ['user_id'],
         ];
         if (!empty($excludeUids)) {
             $options['conditions']['NOT']['user_id'] = $excludeUids;

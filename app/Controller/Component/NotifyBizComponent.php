@@ -518,15 +518,14 @@ class NotifyBizComponent extends Component
         $topicId = $message['topic_id'];
         $senderUserId = $message['sender_user_id'];
 
-        //宛先は閲覧可能な全ユーザ(送信者以外)
-        $members = $TopicMember->findMemberIdList($topicId, $senderUserId);
+        // notify to members without sender.
+        $members = $TopicMember->findMemberIdList($topicId, [$senderUserId]);
 
-        //対象ユーザの通知設定確認
+        // notify settings of target members
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_MESSAGE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MESSAGE;
-        //TODO
-//        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'message#', $post['Post']['id']];
+        $this->notify_option['url_data'] = ['controller' => 'topics', 'action' => $topicId, "detail"];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($body) ? json_encode([trim($body)]) : null;
         $this->notify_option['topic_id'] = $topicId;
@@ -1261,7 +1260,7 @@ class NotifyBizComponent extends Component
             $item,
             $this->notify_option['url_data'],
             microtime(true),
-            $this->notify_option['topic_id'],
+            $this->notify_option['topic_id'] ?? null,
             json_encode($this->notify_option['options'])
         );
         $flag_name = $this->NotifySetting->getFlagPrefixByType($this->notify_option['notify_type']) . '_app_flg';
