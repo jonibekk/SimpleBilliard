@@ -210,8 +210,10 @@ class MessageService extends AppService
 
         $attachedFileFilter = [
             'id',
+            'attached_file_name',
             'file_type',
             'file_ext',
+            'file_size',
             'download_url',
             'preview_url',
             'thumbnail_url'
