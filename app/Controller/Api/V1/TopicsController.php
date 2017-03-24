@@ -8,6 +8,7 @@ App::import('Service/Api', 'ApiMessageService');
 /** @noinspection PhpUndefinedClassInspection */
 App::uses('Topic', 'Model');
 App::import('Service/Api', 'ApiTopicService');
+App::uses('AppUtil', 'Util');
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -523,12 +524,39 @@ HTML;
      * @data string $title required
      * @return CakeResponse|null
      * @link https://confluence.goalous.com/display/GOAL/%5BPUT%5D+Set+topic+title
-     *       TODO: This is mock! We have to implement it!
      */
     function put(int $topicId)
     {
-        $title = $this->request->data('title');
-        return $this->_getResponseSuccessSimple();
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init("Topic");
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init("TopicService");
+
+        // Get request data
+        $requestData = $this->request->data ?? [];
+        $requestData['id'] = $topicId;
+        $requestData = AppUtil::filterWhiteList($requestData, ['id','title']);
+
+        // Validation
+        if (!$Topic->validates($requestData)) {
+            $validationErrors = $Topic->_validationExtract($Topic->validationErrors);
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+
+        // Check permission
+        $userId = $this->Auth->user('id');
+        if (!$TopicMember->isMember($topicId, $userId)) {
+            return $this->_getResponseBadFail(__("You cannot access the topic"));
+        }
+
+        // Update
+        $TopicService->update($requestData);
+
+        $topic = $TopicService->findTopicDetail($topicId);
+
+        return $this->_getResponseSuccess(compact('topic'));
     }
 
     /**
