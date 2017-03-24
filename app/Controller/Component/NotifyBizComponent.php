@@ -1,5 +1,8 @@
 <?php
 App::uses('ModelType', 'Model');
+App::uses('Message', 'Model');
+App::uses('TopicMember', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
@@ -130,8 +133,8 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_FEED_POST:
                 $this->_setFeedPostOption($model_id);
                 break;
-            case NotifySetting::TYPE_FEED_MESSAGE:
-                $this->_setFeedMessageOption($model_id, $sub_model_id);
+            case NotifySetting::TYPE_MESSAGE:
+                $this->_setMessageOption($model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
@@ -365,13 +368,13 @@ class NotifyBizComponent extends Component
      *
      * @param $from_user_id
      * @param $flag_name
-     * @param $post_id
+     * @param $topic_id
      */
-    public function msgNotifyPush($from_user_id, $flag_name, $post_id)
+    public function msgNotifyPush($from_user_id, $flag_name, $topic_id)
     {
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $chunk_channels = array_chunk($this->push_channels, 100);
-        $data = compact('from_user_id', 'flag_name', 'post_id');
+        $data = compact('from_user_id', 'flag_name', 'topic_id');
         foreach ($chunk_channels as $channels) {
             $pusher->trigger($channels, 'msg_count', $data);
         }
@@ -497,40 +500,38 @@ class NotifyBizComponent extends Component
     /**
      * 自分が閲覧可能なメッセージがあった場合
      *
-     * @param $post_id
-     *
-     * @throws RuntimeException
+     * @param $messageId
      */
-    private function _setFeedMessageOption($post_id, $comment_id)
+    private function _setMessageOption(int $messageId)
     {
-        $post = $this->Post->findById($post_id);
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
 
-        if (empty($post)) {
+        $message = Hash::extract($Message->getById($messageId), 'Message');
+
+        if (empty($message)) {
+            $this->log("Message doesn't exist. messageId:$messageId");
+            $this->log(Debugger::trace());
             return;
         }
 
-        //基本的にnotifyにはメッセージについたコメントを表示するが、コメントが無ければ最初のメッセージ
-        $body = $post['Post']['body'];
-        if ($comment_id) {
-            $comment = $this->Comment->findById($comment_id);
-            if (!empty($comment_body = $comment['Comment']['body'])) {
-                $body = $comment_body;
-            }
-        }
+        $body = $message['body'];
+        $topicId = $message['topic_id'];
+        $senderUserId = $message['sender_user_id'];
 
-        //宛先は閲覧可能な全ユーザ
-        $members = $this->Post->getShareAllMemberList($post_id);
-        //exclude inactive users
-        $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
+        // notify to members without sender.
+        $members = $TopicMember->findMemberIdList($topicId, [$senderUserId]);
 
-        //対象ユーザの通知設定確認
+        // notify settings of target members
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
-            NotifySetting::TYPE_FEED_MESSAGE);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MESSAGE;
-        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'message#', $post['Post']['id']];
+            NotifySetting::TYPE_MESSAGE);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_MESSAGE;
+        $this->notify_option['url_data'] = ['controller' => 'topics', 'action' => $topicId, "detail"];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($body) ? json_encode([trim($body)]) : null;
-        $this->notify_option['post_id'] = $post_id;
+        $this->notify_option['topic_id'] = $topicId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $members);
 
     }
@@ -1262,12 +1263,12 @@ class NotifyBizComponent extends Component
             $item,
             $this->notify_option['url_data'],
             microtime(true),
-            $this->notify_option['post_id'],
+            $this->notify_option['topic_id'] ?? null,
             json_encode($this->notify_option['options'])
         );
         $flag_name = $this->NotifySetting->getFlagPrefixByType($this->notify_option['notify_type']) . '_app_flg';
-        if ($this->notify_option['notify_type'] == NotifySetting::TYPE_FEED_MESSAGE) {
-            $this->msgNotifyPush($this->notify_option['from_user_id'], $flag_name, $this->notify_option['post_id']);
+        if ($this->notify_option['notify_type'] == NotifySetting::TYPE_MESSAGE) {
+            $this->msgNotifyPush($this->notify_option['from_user_id'], $flag_name, $this->notify_option['topic_id']);
         } else {
             $this->bellPush($this->notify_option['from_user_id'], $flag_name);
         }
