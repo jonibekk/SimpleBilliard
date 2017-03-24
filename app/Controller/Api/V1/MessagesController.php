@@ -55,14 +55,10 @@ class MessagesController extends ApiController
 
         // tracking by mixpanel
         $this->Mixpanel->trackMessage($topicId);
-        //TODO notification. It will be implemented on another issue.
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
-//        $detail_comment = $this->Post->Comment->getComment($comment_id);
-// for react..
-//        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-//        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data,
-//            $this->request->data('socket_id'));
-
+        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
+        $socketId = "test";
+        $this->_execPushMessageEvent($topicId, $socketId);
         // find the message as response data
         $newMessage = $ApiMessageService->get($messageId);
         return $this->_getResponseSuccess($newMessage);
@@ -111,6 +107,22 @@ class MessagesController extends ApiController
             return $this->_getResponseForbidden();
         }
         return true;
+    }
+
+    /**
+     * pushing new message event to topic member.
+     *
+     * @param int    $topicId
+     * @param string $socketId
+     */
+    private function _execPushMessageEvent(int $topicId, string $socketId)
+    {
+        $cmd = " push_message";
+        $cmd .= " -t " . $topicId;
+        $cmd .= " -s " . $socketId;
+        $cmdEnd = " > /dev/null &";
+        $allCmd = AppUtil::baseCmdOfBgJob() . $cmd . $cmdEnd;
+        exec($allCmd);
     }
 
 }

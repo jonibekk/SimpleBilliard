@@ -2,6 +2,7 @@
 App::uses('ModelType', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
