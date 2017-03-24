@@ -9,6 +9,8 @@ App::import('Service/Api', 'ApiMessageService');
 App::uses('Topic', 'Model');
 App::import('Service/Api', 'ApiTopicService');
 
+/** @noinspection PhpUndefinedClassInspection */
+
 /**
  * Class TopicsController
  */
