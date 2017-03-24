@@ -96,4 +96,9 @@ class TopicServiceTest extends GoalousTestCase
         $this->assertEquals('firstname', $actual);
     }
 
+    function test_update()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
 }
