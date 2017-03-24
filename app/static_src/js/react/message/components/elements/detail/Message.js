@@ -1,34 +1,79 @@
-import React from 'react'
+import React from "react";
+import {nl2br} from "~/util/element";
+import AttachedFile from "~/message/components/elements/detail/AttachedFile";
 
-// TODO:Dynamic embedding of message information
+
 export default class Message extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    const {topic, message} = this.props
+    const read_mark_el = () => {
+      if (topic.latest_message_id != message.id) {
+        return null;
+      }
+
+      const is_all_read = (topic.read_count == topic.members_count - 1);
+      if (is_all_read) {
+        return (
+          <div>
+            <a href="#" className="topicDetail-messages-item-read is-on">
+              <i className="fa fa-check"/>
+            </a>
+          </div>
+        )
+      } else {
+        return (
+          <div>
+            <a href="#" className="topicDetail-messages-item-read is-off">
+              <i className="fa fa-check mr_2px"/>
+              {topic.read_count}
+              <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
+            </a>
+          </div>
+        )
+      }
+    }
+
     return (
       <div className="topicDetail-messages-item">
         <div className="topicDetail-messages-item-left">
-          <a href="/users/view_goals/user_id:442" className="topicDetail-messages-item-left-profileImg">
+          <a href={`/users/view_goals/user_id:${message.user.id}`}
+             className="topicDetail-messages-item-left-profileImg">
             <img className="lazy"
-                 src="https://goalous-release2-assets.s3.amazonaws.com/users/441/e6dbe975a33ec9e8141392eecdf2964d_medium.jpeg?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1489042271&Signature=kNwNlW%2Fc70zNIJZ6AEj%2B43AgV6g%3D"/>
+                 src={message.user.medium_img_url}/>
           </a>
         </div>
         <div className="topicDetail-messages-item-right">
           <div className>
             <a href="/users/view_goals/user_id:441" className="topicDetail-messages-item-userName">
-              <span>鳥居 浩行</span>
+              <span>{message.user.display_username}</span>
             </a>
             <span className="topicDetail-messages-item-datetime">
-                  03/08 16:37
-                </span>
+              {message.display_created}
+            </span>
           </div>
           <p className="topicDetail-messages-item-content">
-            高くても良いものを！
+            {message.body === "[like]" ?
+              <i className="fa fa-thumbs-o-up font_brownRed"></i>
+              : nl2br(message.body)
+            }
           </p>
-          <div className>
-            <a href="#" className="topicDetail-messages-item-read is-on">
-              <i className="fa fa-check"/>
-            </a>
-          </div>
+          {message.attached_files.map((attached_file) => {
+            return <AttachedFile attached_file={attached_file}/>
+          })}
+          {read_mark_el()}
         </div>
-      </div>    )
+      </div>
+    )
   }
 }
+Message.propTypes = {
+  message: React.PropTypes.object,
+};
+
+Message.defaultProps = {
+  message: {},
+};
