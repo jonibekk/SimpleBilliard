@@ -536,8 +536,8 @@ HTML;
 
         // Get request data
         $requestData = $this->request->data ?? [];
+        $requestData = AppUtil::filterWhiteList($requestData, ['title']);
         $requestData['id'] = $topicId;
-        $requestData = AppUtil::filterWhiteList($requestData, ['id','title']);
 
         // Validation
         if (!$Topic->validates($requestData)) {
