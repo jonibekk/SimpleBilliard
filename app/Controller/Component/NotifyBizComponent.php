@@ -134,7 +134,7 @@ class NotifyBizComponent extends Component
                 $this->_setFeedPostOption($model_id);
                 break;
             case NotifySetting::TYPE_MESSAGE:
-                $this->_setFeedMessageOption($model_id);
+                $this->_setMessageOption($model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
@@ -502,16 +502,18 @@ class NotifyBizComponent extends Component
      *
      * @param $messageId
      */
-    private function _setFeedMessageOption(int $messageId)
+    private function _setMessageOption(int $messageId)
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
 
-        $message = Hash::extract($Message->findById($messageId), 'Message');
+        $message = Hash::extract($Message->getById($messageId), 'Message');
 
         if (empty($message)) {
+            $this->log("Message doesn't exist. messageId:$messageId");
+            $this->log(Debugger::trace());
             return;
         }
 
