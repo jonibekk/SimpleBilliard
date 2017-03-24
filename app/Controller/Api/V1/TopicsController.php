@@ -552,7 +552,9 @@ HTML;
         }
 
         // Update
-        $TopicService->update($requestData);
+        if (!$TopicService->update($requestData)) {
+            return $this->_getResponseInternalServerError();
+        }
 
         $topic = $TopicService->findTopicDetail($topicId);
 
