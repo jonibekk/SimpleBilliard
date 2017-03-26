@@ -39,6 +39,10 @@ class Topic extends AppModel
         'del_flg' => [
             'boolean' => ['rule' => ['boolean'],],
         ],
+        'title' => [
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notBlank'     => ['rule' => 'notBlank'],
+        ],
     ];
 
     /**

@@ -103,12 +103,13 @@ class TopicMember extends AppModel
      * Find members
      * - order by last_message_sent DESC
      *
-     * @param int $topicId
-     * @param int $limit if 0, unlimited
+     * @param int   $topicId
+     * @param int   $limit if 0, unlimited
+     * @param array $excludeUids
      *
      * @return array
      */
-    function findMembers(int $topicId, int $limit = 0): array
+    function findMembers(int $topicId, int $limit = 0, array $excludeUids = []): array
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -129,10 +130,42 @@ class TopicMember extends AppModel
                 'User' => $this->User->profileFields,
             ]
         ];
+        if (!empty($excludeUids)) {
+            $options['conditions']['NOT']['user_id'] = $excludeUids;
+        }
         if ($limit !== 0) {
             $options['limit'] = $limit;
         }
         $ret = $this->find('all', $options);
         return $ret;
+    }
+
+    /**
+     * finding member id list
+     *
+     * @param int   $topicId
+     * @param array $excludeUids
+     *
+     * @return array
+     */
+    function findMemberIdList(int $topicId, array $excludeUids = []): array
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList,
+            ],
+            'fields'     => ['user_id'],
+        ];
+        if (!empty($excludeUids)) {
+            $options['conditions']['NOT']['user_id'] = $excludeUids;
+        }
+        $ret = $this->find('list', $options);
+        return $ret;
+
     }
 }
