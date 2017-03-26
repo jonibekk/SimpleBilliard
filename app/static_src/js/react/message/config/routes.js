@@ -49,7 +49,7 @@ export default class Routes extends Component {
               <Route path=":topic_id/detail" component={DetailContainer} />
             </Route>
           </Router>
-          {/* <DevTools /> */}
+          <DevTools />
         </div>
       </Provider>
     )

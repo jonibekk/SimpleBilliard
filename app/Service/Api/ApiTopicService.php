@@ -35,6 +35,7 @@ class ApiTopicService extends ApiService
             $topics[$i] = $data['topic'];
             $topics[$i]['latest_message'] = $data['latest_message'];
             // convert created time for human readable
+            $this->log($data['latest_message']['created']);
             $topics[$i]['latest_message']['display_created'] = $TimeEx->elapsedTime(
                 $data['latest_message']['created'], 'normal', false
             );

@@ -1,7 +1,7 @@
 import React from "react"
 import Topic from "./Topic"
 import InfiniteScroll from "redux-infinite-scroll"
-import Loading from "~/message/components/elements/LoadingTopics"
+import Loading from "~/message/components/elements/index/Loading"
 
 export default class TopicList extends React.Component {
   constructor(props) {

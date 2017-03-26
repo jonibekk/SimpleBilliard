@@ -13,7 +13,9 @@ function mapDispatchToProps(dispatch) {
     fetchInitData: () => dispatch(actions.fetchInitData()),
     fetchMoreTopics: (url) => dispatch(actions.fetchMoreTopics(url)),
     changeToSearchMode: () => dispatch(actions.changeToSearchMode()),
-    cancelSearchMode: () => dispatch(actions.cancelSearchMode())
+    cancelSearchMode: () => dispatch(actions.cancelSearchMode()),
+    fetchMoreSearchTopics: (url) => dispatch(actions.fetchMoreSearchTopics(url)),
+    inputSearchKeyword: (keyword) => dispatch(actions.inputSearchKeyword(keyword))
   }
 }
 
