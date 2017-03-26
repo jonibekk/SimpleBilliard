@@ -46,7 +46,7 @@ export default class TopicSearchList extends React.Component {
   }
 
   render() {
-    const { topics, fetching, inputed_keyword, current_searching_keyword } = this.props.data
+    const { topics, fetching, inputed_keyword } = this.props.data
     const render_topics = topics.map((topic) => {
       return (
         <Topic topic={ topic }
@@ -78,7 +78,6 @@ export default class TopicSearchList extends React.Component {
                onClick={ this.props.changeToIndexMode.bind(this) }>{__("Cancel")}</a>
           </div>
         </div>
-        { current_searching_keyword != '' && topics.length == 0 && !fetching && '検索に一致するトピックが見つかりませんでした。' }
         <ul>
           <InfiniteScroll
             loadingMore={ fetching }

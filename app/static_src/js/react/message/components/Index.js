@@ -1,6 +1,6 @@
 import React from "react"
 import TopicList from "./elements/index/TopicList"
-import TopicSearchList from "./elements/search/TopicList"
+import TopicSearchList from "./elements/search/TopicSearchList"
 
 export default class Index extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ export default class Index extends React.Component {
                                fetchMoreSearch={ (url) => this.props.fetchMoreSearch(url) }
                                inputKeyword={ (keyword) => this.props.inputKeyword(keyword) }
                                changeToIndexMode={ this.props.changeToIndexMode }
-                               emptyTopics={ this.props.emptyTopics} />
+                               emptyTopics={ this.props.emptyTopics } />
             )
           }
         })()}

@@ -40,7 +40,8 @@ export default function search(state = initialState, action) {
       return Object.assign({}, state, {
         topics: [],
         inputed_keyword: '',
-        current_searching_keyword: ''
+        current_searching_keyword: '',
+        fetching: false
       })
     default:
       return state;

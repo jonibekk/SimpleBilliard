@@ -1,5 +1,5 @@
-import * as types from "~/message/constants/ActionTypes";
-import { get } from "~/util/api";
+import * as types from "~/message/constants/ActionTypes"
+import { get } from "~/util/api"
 
 export function inputKeyword(keyword) {
   return (dispatch) => {
