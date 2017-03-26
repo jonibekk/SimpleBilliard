@@ -8,22 +8,22 @@ export default class TopicList extends React.Component {
     super(props)
 
     this.onFocusSearchBox = this.onFocusSearchBox.bind(this)
-    this.fetchMoreTopics = this.fetchMoreTopics.bind(this)
+    this.fetchMore = this.fetchMore.bind(this)
   }
 
   componentWillMount() {
-    if(this.props.topics.length == 0) {
+    if(this.props.data.topics.length == 0) {
       this.props.fetchInitData()
     }
   }
 
-  fetchMoreTopics() {
-    const next_url = this.props.next_url
+  fetchMore() {
+    const next_url = this.props.data.next_url
     if (!next_url) {
       return
     }
 
-    this.props.fetchMoreTopics(next_url)
+    this.props.fetchMore(next_url)
   }
 
   onFocusSearchBox() {
@@ -31,7 +31,7 @@ export default class TopicList extends React.Component {
   }
 
   render() {
-    const { topics, fetching_topics } = this.props
+    const { topics, fetching } = this.props.data
     const render_topics = topics.map((topic) => {
       return (
         <Topic topic={ topic }
@@ -61,14 +61,14 @@ export default class TopicList extends React.Component {
         </div>
         <ul>
           <InfiniteScroll
-            loadingMore={ fetching_topics }
-            loadMore={ this.fetchMoreTopics }
+            loadingMore={ fetching }
+            loadMore={ this.fetchMore }
             items={ render_topics }
             elementIsScrollable={ false }
             loader=""
           />
         </ul>
-        { fetching_topics && <Loading />}
+        { fetching && <Loading />}
       </div>
     )
   }

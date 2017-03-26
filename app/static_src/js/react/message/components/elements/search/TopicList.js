@@ -9,27 +9,45 @@ export default class TopicSearchList extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-    ReactDOM.findDOMNode(this.refs.search).focus()
+  componentWillMount() {
+    this.props.emptyTopics()
   }
 
-  fetchMoreSearchTopics() {
-    const next_search_url = this.props.next_search_url
-    if (!next_search_url) {
+  componentDidMount() {
+    this.focusSearchBox()
+  }
+
+  fetchMoreSearch() {
+    const next_url = this.props.data.next_url
+    if (!next_url) {
       return
     }
 
-    this.props.fetchMoreSearchTopics(next_search_url)
+    this.props.fetchMoreSearch(next_url)
   }
 
-  inputSearchKeyword(e) {
+  inputKeyword(e) {
     const keyword = e.target.value
-    this.props.inputSearchKeyword(keyword)
+    this.props.inputKeyword(keyword)
+  }
+
+  focusSearchBox() {
+    ReactDOM.findDOMNode(this.refs.search).focus()
+  }
+
+  onClickRemoveButton() {
+    this.props.emptyTopics()
+    this.focusSearchBox()
+    this.emptySearchBox()
+  }
+
+  emptySearchBox() {
+    ReactDOM.findDOMNode(this.refs.search).value = ''
   }
 
   render() {
-    const { topics_searched, searching_topics, inputed_search_keyword } = this.props
-    const render_topics = topics_searched.map((topic) => {
+    const { topics, fetching, inputed_keyword, current_searching_keyword } = this.props.data
+    const render_topics = topics.map((topic) => {
       return (
         <Topic topic={ topic }
                key={ topic.id } />
@@ -44,38 +62,42 @@ export default class TopicSearchList extends React.Component {
               <div className="searchBox-search-icon">
                 <i className="fa fa-search"></i>
               </div>
-              <div className="searchBox-remove-icon">
+              <div className="searchBox-remove-icon"
+                   onClick={ this.onClickRemoveButton.bind(this) }>
                 <i className="fa fa-remove"></i>
               </div>
               <input className="searchBox-input"
                      placeholder={__("Search topic")}
-                     onChange={ this.inputSearchKeyword.bind(this) }
+                     onChange={ this.inputKeyword.bind(this) }
                      ref="search"
-                     defaultValue={ inputed_search_keyword } />
+                     defaultValue={ inputed_keyword } />
             </div>
           </div>
           <div className="topicSearchList-header-cancel">
             <a className="topicSearchList-header-cancel-button"
-               onClick={ this.props.cancelSearchMode.bind(this) }>{__("Cancel")}</a>
+               onClick={ this.props.changeToIndexMode.bind(this) }>{__("Cancel")}</a>
           </div>
         </div>
+        { current_searching_keyword != '' && topics.length == 0 && !fetching && '検索に一致するトピックが見つかりませんでした。' }
         <ul>
           <InfiniteScroll
-            loadingMore={ searching_topics }
-            loadMore={ this.fetchMoreSearchTopics.bind(this) }
+            loadingMore={ fetching }
+            loadMore={ this.fetchMoreSearch.bind(this) }
             items={ render_topics }
             elementIsScrollable={ false }
             loader=""
           />
         </ul>
-        { searching_topics && <Loading />}
+        { fetching && <Loading />}
       </div>
     )
   }
 }
 
 TopicSearchList.defaultProps = {
-  topics_searched: [],
-  searching_topics: false,
-  inputed_search_keyword:''
+  data: {
+    topics: [],
+    fetching: false,
+    inputed_keyword: ''
+  }
 }
