@@ -14,7 +14,7 @@ App::uses('AppUtil', 'Util');
  */
 class MessageService extends AppService
 {
-    const EMOJI_LIKE = "\xF0\x9F\x91\x8D";
+    const CHAR_EMOJI_LIKE = "\xF0\x9F\x91\x8D";
 
     /**
      * Finding messages.
@@ -337,7 +337,7 @@ class MessageService extends AppService
      */
     function addLike(array $data, int $userId)
     {
-        $data['body'] = self::EMOJI_LIKE;
+        $data['body'] = self::CHAR_EMOJI_LIKE;
         $ret = $this->add($data, $userId);
         return $ret;
     }
