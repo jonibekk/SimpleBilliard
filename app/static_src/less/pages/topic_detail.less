@@ -1,23 +1,68 @@
 .topicDetail {
   &-header {
-    font-weight: bold;
+    display: flex;
+    -webkit-align-items: baseline;
+    align-items: baseline;
     font-size: 1.4rem;
+    font-weight: normal;
     color: @darkBlack;
     background-color: @smokyWhite;
-    padding: 10px 15px;
+    padding: 10px 0px;
     // TODO:角丸は親に設定
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border-bottom: 1px solid #dddddd;
-    display: flex;
     &-left {
+    }
+    &-center {
       flex: 1;
     }
     &-right {
+      &.mod-setTitle {
+        padding: 0 8px;
+      }
     }
     &-icon {
+      padding: 0 12px;
       font-size: 1.8rem;
       color: @subColor10;
+      vertical-align: middle;
+    }
+    &-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    &-setTitle {
+      &-form {
+        width: 100%;
+        height: auto;
+        padding: 4px 8px;
+        font-weight: normal;
+        font-size: 1.4rem;
+      }
+      &-save {
+        color: #ae2f2f;
+        font-size: 1.4rem;
+        font-weight: bold;
+        vertical-align: middle;
+        text-decoration: none;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+      &-close {
+        color: #9197a3;
+        font-size: 1.8rem;
+        vertical-align: middle;
+        padding: 0 4px;
+      }
+
+    }
+    &-membersCnt {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: @subColor3;
+      display: inline-block;
       vertical-align: middle;
     }
   }
@@ -93,7 +138,7 @@
       }
     }
     &-btn {
-      margin:0;
+      margin: 0;
     }
   }
 }
