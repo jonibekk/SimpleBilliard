@@ -65,10 +65,9 @@ export default class TopicList extends React.Component {
             loadMore={ this.fetchMore }
             items={ render_topics }
             elementIsScrollable={ false }
-            loader=""
+            loader={ <Loading /> }
           />
         </ul>
-        { fetching && <Loading />}
       </div>
     )
   }

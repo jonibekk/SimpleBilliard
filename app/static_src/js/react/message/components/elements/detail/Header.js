@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 // TODO:display member count
 export default class Header extends React.Component {
@@ -14,9 +15,9 @@ export default class Header extends React.Component {
     return (
       <div className="topicDetail-header">
         <div className="topicDetail-header-left">
-          <a href="/topics" className>
+          <Link to="/topics" className>
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
-          </a>
+          </Link>
           <span className="ml_8px">{topic.display_title}</span>
         </div>
         <div className="topicDetail-header-right">

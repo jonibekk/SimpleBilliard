@@ -59,8 +59,11 @@ export function changeToSearchMode() {
   }
 }
 
-export function changeToIndexMode() {
+export function cancelSearchMode() {
   return (dispatch) => {
+    dispatch({
+      type: types.INITIALIZE_SEARCH
+    })
     dispatch({
       type: types.CHANGE_TO_INDEX_MODE
     })

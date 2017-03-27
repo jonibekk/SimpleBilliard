@@ -4,7 +4,6 @@ const initialState = {
   topics: [],
   next_url: '',
   fetching: false,
-  inputed_keyword: '',
   current_searching_keyword: ''
 }
 
@@ -36,13 +35,8 @@ export default function search(state = initialState, action) {
         fetching: true,
         topics: []
       })
-    case types.EMPTY_TOPICS:
-      return Object.assign({}, state, {
-        topics: [],
-        inputed_keyword: '',
-        current_searching_keyword: '',
-        fetching: false
-      })
+    case types.INITIALIZE_SEARCH:
+      return Object.assign({}, state, initialState)
     default:
       return state;
   }

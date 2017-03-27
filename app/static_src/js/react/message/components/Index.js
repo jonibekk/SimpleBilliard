@@ -24,7 +24,7 @@ export default class Index extends React.Component {
               <TopicSearchList data={ this.props.search }
                                fetchMoreSearch={ (url) => this.props.fetchMoreSearch(url) }
                                inputKeyword={ (keyword) => this.props.inputKeyword(keyword) }
-                               changeToIndexMode={ this.props.changeToIndexMode }
+                               cancelSearchMode={ this.props.cancelSearchMode }
                                emptyTopics={ this.props.emptyTopics } />
             )
           }

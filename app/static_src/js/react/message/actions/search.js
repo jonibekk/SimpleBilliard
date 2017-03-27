@@ -10,7 +10,7 @@ export function inputKeyword(keyword) {
     const trimmed_keyword = keyword.trim()
     if(trimmed_keyword == '') {
       dispatch({
-        type: types.EMPTY_TOPICS
+        type: types.INITIALIZE_SEARCH
       })
     } else {
       dispatch(search(trimmed_keyword))
@@ -21,7 +21,7 @@ export function inputKeyword(keyword) {
 export function emptyTopics() {
   return (dispatch) => {
     dispatch({
-      type: types.EMPTY_TOPICS
+      type: types.INITIALIZE_SEARCH
     })
   }
 }

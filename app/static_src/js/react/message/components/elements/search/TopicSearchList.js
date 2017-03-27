@@ -9,12 +9,14 @@ export default class TopicSearchList extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-    this.props.emptyTopics()
-  }
-
   componentDidMount() {
     this.focusSearchBox()
+
+    // set keyword in previous searching
+    const keyword = this.props.data.current_searching_keyword
+    if (keyword) {
+      ReactDOM.findDOMNode(this.refs.search).value = keyword
+    }
   }
 
   fetchMoreSearch() {
@@ -46,7 +48,7 @@ export default class TopicSearchList extends React.Component {
   }
 
   render() {
-    const { topics, fetching, inputed_keyword } = this.props.data
+    const { topics, fetching } = this.props.data
     const render_topics = topics.map((topic) => {
       return (
         <Topic topic={ topic }
@@ -69,13 +71,12 @@ export default class TopicSearchList extends React.Component {
               <input className="searchBox-input"
                      placeholder={__("Search topic")}
                      onChange={ this.inputKeyword.bind(this) }
-                     ref="search"
-                     defaultValue={ inputed_keyword } />
+                     ref="search" />
             </div>
           </div>
           <div className="topicSearchList-header-cancel">
             <a className="topicSearchList-header-cancel-button"
-               onClick={ this.props.changeToIndexMode.bind(this) }>{__("Cancel")}</a>
+               onClick={ this.props.cancelSearchMode.bind(this) }>{__("Cancel")}</a>
           </div>
         </div>
         <ul>
@@ -84,10 +85,9 @@ export default class TopicSearchList extends React.Component {
             loadMore={ this.fetchMoreSearch.bind(this) }
             items={ render_topics }
             elementIsScrollable={ false }
-            loader=""
+            loader={ <Loading /> }
           />
         </ul>
-        { fetching && <Loading />}
       </div>
     )
   }
@@ -96,7 +96,6 @@ export default class TopicSearchList extends React.Component {
 TopicSearchList.defaultProps = {
   data: {
     topics: [],
-    fetching: false,
-    inputed_keyword: ''
+    fetching: false
   }
 }
