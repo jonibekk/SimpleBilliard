@@ -39,6 +39,7 @@ class SetupController extends AppController
         $this->Goal->KeyResult->_setUnitName();
         $without_footer = true;
         // TODO: 将来的にtry catch文削除
+        //       isao環境でエラーログが吐かれていないことが確認でき次第削除する
         // GL-5589：原因特定用にエラーログ埋め込み
         try {
             $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
