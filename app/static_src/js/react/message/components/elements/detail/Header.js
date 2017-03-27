@@ -70,6 +70,7 @@ class Header extends React.Component {
           <div className="topicDetail-header-center">
             <input type="text"
                    className="topicDetail-header-setTitle-form form-control"
+                   defaultValue={topic.title}
                    maxLength="128"
                    ref="topic_title"
                    placeholder={__("Input topic title")}
