@@ -4,14 +4,14 @@ import { get } from "~/util/api";
 export function fetchInitData() {
   return (dispatch) => {
     dispatch({
-      type: types.FETCHING_TOPICS
+      type: types.FETCHING
     })
     return get('/api/v1/topics/search')
       .then((response) => {
         const topics = response.data.data
         const next_url = response.data.paging.next
         dispatch({
-          type: types.FETCH_TOPICS,
+          type: types.INITIALIZE,
           data: {
             topics,
             next_url
@@ -26,10 +26,10 @@ export function fetchInitData() {
   }
 }
 
-export function fetchMoreTopics(url) {
+export function fetchMore(url) {
   return (dispatch) => {
     dispatch({
-      type: types.FETCHING_TOPICS
+      type: types.FETCHING
     })
     return get(url)
       .then((response) => {
@@ -48,5 +48,24 @@ export function fetchMoreTopics(url) {
         console.log(response)
         /* eslint-enable no-console */
       })
+  }
+}
+
+export function changeToSearchMode() {
+  return (dispatch) => {
+    dispatch({
+      type: types.CHANGE_TO_SEARCH_MODE
+    })
+  }
+}
+
+export function cancelSearchMode() {
+  return (dispatch) => {
+    dispatch({
+      type: types.INITIALIZE_SEARCH
+    })
+    dispatch({
+      type: types.CHANGE_TO_INDEX_MODE
+    })
   }
 }

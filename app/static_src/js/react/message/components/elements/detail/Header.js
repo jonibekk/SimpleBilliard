@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import * as KeyCode from "~/common/constants/KeyCode";
+import { Link } from "react-router";
 
 class Header extends React.Component {
   constructor(props) {
@@ -106,9 +107,9 @@ class Header extends React.Component {
     return (
       <div className="topicDetail-header">
         <div className="topicDetail-header-left">
-          <a href="/topics" className>
+          <Link to="/topics" className>
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
-          </a>
+          </Link>
         </div>
         <div className="topicDetail-header-center oneline-ellipsis">
           <span className="topicDetail-header-title">{topic.display_title}</span>
