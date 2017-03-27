@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
-import Message from "~/message/components/elements/Message";
-import Loading from "./Loading";
+import Message from "~/message/components/elements/detail/Message";
+import Loading from "~/message/components/elements/detail/Loading";
 
-class Messages extends React.Component {
+class Body extends React.Component {
 
   constructor(props) {
     super(props);
@@ -28,7 +28,7 @@ class Messages extends React.Component {
   }
 
   _findElement() {
-    return ReactDOM.findDOMNode(this);
+    return ReactDOM.findDOMNode(this.refs.messages);
   }
 
   // TODO: componentize
@@ -77,30 +77,39 @@ class Messages extends React.Component {
   }
 
   render() {
+    const {topic, messages, loading_more} = this.props
+
     return (
-      <div className="topicDetail-messages">
-        {this.props.loading_more && <Loading/>}
-        {this.props.messages.map((message) => {
-          return (
-            <Message message={message} key={message.id}/>
-          )
-        })}
+      <div className="topicDetail-body">
+        <div className="topicDetail-messages" ref="messages">
+          {loading_more && <Loading/>}
+          {messages.map((message) => {
+            return (
+              <Message
+                topic={topic}
+                message={message}
+                key={message.id}/>
+            )
+          })}
+        </div>
       </div>
     )
   }
 }
 
-Messages.propTypes = {
+Body.propTypes = {
+  topic: React.PropTypes.object,
   loading_more: React.PropTypes.bool,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
-  is_fetched_initial:React.PropTypes.bool
+  is_fetched_initial: React.PropTypes.bool
 };
 
-Messages.defaultProps = {
+Body.defaultProps = {
+  topic: {},
   loading_more: false,
   messages: [],
-  paging: {next:""},
-  is_fetched_initial:false
+  paging: {next: ""},
+  is_fetched_initial: false
 };
-export default connect()(Messages);
+export default connect()(Body);

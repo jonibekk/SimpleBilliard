@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-17 12:23+0900\n"
+"PO-Revision-Date: 2017-03-22 17:58+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1737,6 +1737,12 @@ msgstr ""
 "この画像は処理できません。この端末で撮影された画像はサポートされてない可能性"
 "があります。"
 
+msgid "You are not a member of the topic."
+msgstr "あなたはこのトピックのメンバーではありません。"
+
+msgid "Body or attached file is required. "
+msgstr "本文か添付ファイルは必須です。"
+
 msgid "File extension and content are different."
 msgstr "ファイルの拡張子と内容が異なっています。"
 
@@ -1832,6 +1838,9 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
+
+msgid "Sent file(s)."
+msgstr "ファイルを送信しました。"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"

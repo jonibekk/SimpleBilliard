@@ -39,31 +39,50 @@ class ApiMessageService extends ApiService
         // getting message data
         $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1);
         // converting key names for response data
-        $messages = $this->convertKeyNames($messages);
+        foreach ($messages as &$message) {
+            $message = $this->convertKeyNames($message);
+        }
+
         $ret['data'] = $messages;
         $ret = $this->setPaging($ret, $topicId, $limit);
         return $ret;
     }
 
     /**
-     * Converting key names for response data
+     * Getting a message as api response data
      *
-     * @param array $messages
+     * @param int $messageId
      *
      * @return array
      */
-    function convertKeyNames(array $messages): array
+    function get(int $messageId): array
     {
-        foreach ($messages as &$message) {
-            $innerMessage = $message['Message'];
-            $senderUser = $message['SenderUser'];
-            $attachedFiles = Hash::extract($message['MessageFile'], '{n}.AttachedFile');
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init('MessageService');
+        // find latest message
+        $message = $MessageService->get($messageId);
+        // converting key names for response data
+        $message = $this->convertKeyNames($message);
+        return $message;
+    }
 
-            $message = $innerMessage;
-            $message['user'] = $senderUser;
-            $message['attached_files'] = $attachedFiles;
-        }
-        return $messages;
+    /**
+     * Converting key names for response data
+     *
+     * @param array $message
+     *
+     * @return array
+     */
+    function convertKeyNames(array $message): array
+    {
+        $innerMessage = $message['Message'];
+        $senderUser = $message['SenderUser'];
+        $attachedFiles = Hash::extract($message['MessageFile'], '{n}.AttachedFile');
+
+        $message = $innerMessage;
+        $message['user'] = $senderUser;
+        $message['attached_files'] = $attachedFiles;
+        return $message;
     }
 
     /**
@@ -83,7 +102,7 @@ class ApiMessageService extends ApiService
             return $data;
         }
         // exclude that extra record for paging
-        array_shift($data);
+        array_shift($data['data']);
         $cursor = $data[0]['id'];
         $queryParams = am(compact('cursor'), compact('limit'));
 

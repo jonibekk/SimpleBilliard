@@ -134,7 +134,7 @@ class NotifySettingTest extends GoalousTestCase
             NotifySetting::TYPE_EVALUATION_DONE_FINAL,
             NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
             NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM,
-            NotifySetting::TYPE_FEED_MESSAGE,
+            NotifySetting::TYPE_MESSAGE,
         ];
         foreach ($types as $type) {
             $title = $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name);
@@ -224,9 +224,9 @@ class NotifySettingTest extends GoalousTestCase
         $item_name = json_encode(['ccc', 'ddd']);
 
         // HTML入り
-        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_MESSAGE, $from_user_names, $count_num,
+        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_MESSAGE, $from_user_names, $count_num,
             $item_name);
-        $plain = $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_MESSAGE, $from_user_names, $count_num,
+        $plain = $this->NotifySetting->getTitle(NotifySetting::TYPE_MESSAGE, $from_user_names, $count_num,
             $item_name, [
                 'style' => 'plain'
             ]);

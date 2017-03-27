@@ -79,4 +79,36 @@ class TopicService extends AppService
         return (string)$namesStr;
     }
 
+    /**
+     * 更新
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    function update(array $data): bool
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init("Topic");
+
+        try {
+            // トランザクション開始
+            $Topic->begin();
+
+            // KR更新
+            if (!$Topic->save($data, false)) {
+                throw new Exception(sprintf("Failed update topic. data:%s", var_export($data, true)));
+            }
+
+            // トランザクション完了
+            $Topic->commit();
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $Topic->rollback();
+            return false;
+        }
+        return true;
+    }
+
 }

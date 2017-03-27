@@ -39,6 +39,10 @@ class Topic extends AppModel
         'del_flg' => [
             'boolean' => ['rule' => ['boolean'],],
         ],
+        'title' => [
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+            'notBlank'     => ['rule' => 'notBlank'],
+        ],
     ];
 
     /**
@@ -82,7 +86,7 @@ class Topic extends AppModel
     {
         $options = [
             'conditions' => [
-                'Topic.team_id' => $this->current_team_id,
+                'Topic.team_id'       => $this->current_team_id,
                 'TopicMember.user_id' => $userId,
             ],
             'fields'     => [
@@ -115,12 +119,12 @@ class Topic extends AppModel
                         'TopicMember.topic_id',
                         'TopicMember.last_read_message_id'
                     ],
-                    'User' => [
+                    'User'   => [
                         'fields' => $this->TopicMember->User->profileFields,
                         // 10: realistic upper limit for displaying title connecting user name.
                         'limit'  => 10
                     ],
-                    'order' => [
+                    'order'  => [
                         'TopicMember.last_message_sent DESC'
                     ]
                 ]
@@ -132,11 +136,10 @@ class Topic extends AppModel
             'limit'      => $limit
         ];
 
-
         // search from topic_search_keywords and topic.title by keyword
         if ($keyword) {
             $options['conditions']['OR'] = [
-                'Topic.title LIKE' => "%{$keyword}%",
+                'Topic.title LIKE'                 => "%{$keyword}%",
                 'TopicSearchKeyword.keywords LIKE' => "%\\n{$keyword}%"
             ];
             $options['joins'][] = [
@@ -151,14 +154,15 @@ class Topic extends AppModel
         $res = $this->find('all', $options);
 
         // attach user images
-        foreach($res as $i => $topic) {
-            foreach($topic['TopicMember'] as $j => $member) {
-                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User', ['medium_large']);
+        foreach ($res as $i => $topic) {
+            foreach ($topic['TopicMember'] as $j => $member) {
+                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User',
+                    ['medium_large']);
                 // number of displaying user photo is less than 4.
                 if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;
                 }
-             }
+            }
         }
 
         return $res;
@@ -184,6 +188,25 @@ class Topic extends AppModel
         $ret = $this->find('first', $options);
         $ret = Hash::extract($ret, 'Topic');
         return (array)$ret;
+    }
+
+    /**
+     * updating latest message
+     *
+     * @param int $topicId
+     * @param int $messageId
+     *
+     * @return mixed
+     */
+    function updateLatestMessage(int $topicId, int $messageId)
+    {
+        $data = [
+            'id'                      => $topicId,
+            'latest_message_id'       => $messageId,
+            'latest_message_datetime' => time()
+        ];
+        $ret = $this->save($data);
+        return $ret;
     }
 
 }

@@ -204,7 +204,7 @@ class PostsController extends AppController
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
-            $notify_type = NotifySetting::TYPE_FEED_MESSAGE;
+            $notify_type = NotifySetting::TYPE_MESSAGE;
         }
         $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
 
@@ -576,7 +576,7 @@ class PostsController extends AppController
             return $this->_ajaxGetResponse([]);
         }
 
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $post_id, $comment_id);
         $detail_comment = $this->Post->Comment->getComment($comment_id);
         $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment['CommentFile'],
             $post_id);
