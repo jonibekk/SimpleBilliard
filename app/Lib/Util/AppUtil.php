@@ -300,4 +300,19 @@ class AppUtil
     {
         return array_intersect_key($targetArray, array_flip($whiteListKeys));
     }
+
+    /**
+     * getting base command of back ground job
+     *
+     * @return string
+     */
+    static function baseCmdOfBgJob(): string
+    {
+        $nohup = "nohup ";
+        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        $cakeCmd = $php . APP . "Console" . DS . "cake.php";
+        $cakeApp = " -app " . APP;
+        $baseCommand = $nohup . $cakeCmd . $cakeApp;
+        return $baseCommand;
+    }
 }
