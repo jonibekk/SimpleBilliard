@@ -51,6 +51,13 @@ export function fetchMoreSearch(url) {
   }
 }
 
+/**
+ * search topics by keyword
+ * - search request by keyword 1 sec later since user input keyword
+ * - if user input other word within 1 sec, not sending request by previous word.
+ *
+ * @param  string keyword
+ */
 export function search(keyword) {
   return (dispatch, getState) => {
     dispatch({
