@@ -4,6 +4,7 @@ import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
 
+// TODO:Display loading during fetching initial data
 export default class Detail extends React.Component {
   constructor(props) {
     super(props);
