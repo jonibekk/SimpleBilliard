@@ -47,6 +47,10 @@ export default function detail(state = initialState, action) {
         messages,
         loading_more: false
       })
+    case ActionTypes.SET_TOPIC:
+      return Object.assign({}, state, {
+        topic: action.topic
+      })
     case ActionTypes.SAVING:
       return Object.assign({}, state, {
         is_saving: true

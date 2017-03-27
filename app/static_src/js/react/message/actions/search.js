@@ -92,3 +92,10 @@ export function search(keyword) {
     }, 1000)
   }
 }
+
+export function setTopic(topic) {
+  return {
+    type: types.SET_TOPIC,
+    topic
+  }
+}

@@ -1,14 +1,18 @@
 import React from 'react'
-import { Link } from "react-router";
-import AvatarsBox from "~/common/components/AvatarsBox";
+import AvatarsBox from "~/common/components/AvatarsBox"
+import { setTopic } from '~/message/actions/search'
+import { Link } from "react-router"
+import { connect } from "react-redux"
 
-export default class Topic extends React.Component {
-
+class Topic extends React.Component {
   render() {
     const topic = this.props.topic
+    const { dispatch } = this.props
     return (
       <li className="topicList-item" key={ topic.id }>
-        <Link to={ `/topics/${topic.id}/detail` }  className="topicList-item-link">
+        <Link to={ `/topics/${topic.id}/detail` }
+              className="topicList-item-link"
+              onClick={ () => dispatch(setTopic(topic)) }>
           <AvatarsBox users={ topic.users } />
           <div className="topicList-item-main">
             <div className="topicList-item-main-header">
@@ -43,3 +47,5 @@ export default class Topic extends React.Component {
     )
   }
 }
+
+export default connect()(Topic);

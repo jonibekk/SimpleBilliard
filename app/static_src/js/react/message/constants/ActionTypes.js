@@ -12,6 +12,7 @@ export const UPLOAD_ERROR = 'UPLOAD_ERROR'
 export const DELETE_UPLOADED_FILE = 'DELETE_UPLOADED_FILE'
 export const CHANGE_MESSAGE = 'CHANGE_MESSAGE'
 export const SET_RESOURCE_ID = 'SET_RESOURCE_ID'
+export const SET_TOPIC = 'SET_TOPIC'
 
 // topic list page
 export const FETCHING = 'FETCHING'
