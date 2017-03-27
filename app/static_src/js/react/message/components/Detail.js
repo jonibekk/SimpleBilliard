@@ -4,6 +4,7 @@ import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
 
+// TODO:Display loading during fetching initial data
 export default class Detail extends React.Component {
   constructor(props) {
     super(props);
@@ -17,9 +18,14 @@ export default class Detail extends React.Component {
 
   render() {
     const props = this.props.detail;
+
     return (
       <div className="panel panel-default topicDetail">
-        <Header topic={props.topic}/>
+        <Header
+          topic={props.topic}
+          topic_title_setting_status={props.topic_title_setting_status}
+          save_topic_title_err_msg={props.save_topic_title_err_msg}
+        />
         <Body
           topic={props.topic}
           messages={props.messages.data}

@@ -22,6 +22,10 @@ export function post(uri, data, options, success_callback, error_callback) {
   return save(uri, data, options, success_callback, error_callback, "post")
 }
 
+export function put(uri, data, options, success_callback, error_callback) {
+  return save(uri, data, options, success_callback, error_callback, "put")
+}
+
 export function get(uri, options, success_callback, error_callback) {
   options = options || {}
   const base_options = {
@@ -65,7 +69,7 @@ export function save(uri, data, options, success_callback, error_callback, reque
         .then(success_callback, error_callback)
 
     case "put":
-      return axios.put(url, form_data, options)
+      return axios.put(url, post_data, options)
         .then(success_callback, error_callback)
 
     case "delete":
