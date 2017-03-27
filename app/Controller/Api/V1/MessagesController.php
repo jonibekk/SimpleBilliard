@@ -93,7 +93,7 @@ class MessagesController extends ApiController
         }
 
         // saving datas
-        $messageId = $MessageService->addLike($postedData, $userId);
+        $messageId = $MessageService->addLike($topicId, $userId);
         if ($messageId === false) {
             return $this->_getResponseBadFail(null);
         }

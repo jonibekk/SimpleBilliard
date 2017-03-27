@@ -330,14 +330,17 @@ class MessageService extends AppService
      * - updating latest message on the topic.
      * - return message id if success. otherwise, return false.
      *
-     * @param array $data
-     * @param int   $userId
+     * @param int $postId
+     * @param int $userId
      *
      * @return false|int
      */
-    function addLike(array $data, int $userId)
+    function addLike(int $postId, int $userId)
     {
-        $data['body'] = self::CHAR_EMOJI_LIKE;
+        $data = [
+            'post_id' => $postId,
+            'body'    => self::CHAR_EMOJI_LIKE,
+        ];
         $ret = $this->add($data, $userId);
         return $ret;
     }
