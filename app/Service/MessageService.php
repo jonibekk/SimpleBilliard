@@ -14,6 +14,8 @@ App::uses('AppUtil', 'Util');
  */
 class MessageService extends AppService
 {
+    const EMOJI_LIKE = "\xF0\x9F\x91\x8D";
+
     /**
      * Finding messages.
      * This is for fetching data and adding extended fields.
@@ -323,4 +325,20 @@ class MessageService extends AppService
         return $messageId;
     }
 
+    /**
+     * Saving a like message.
+     * - updating latest message on the topic.
+     * - return message id if success. otherwise, return false.
+     *
+     * @param array $data
+     * @param int   $userId
+     *
+     * @return false|int
+     */
+    function addLike(array $data, int $userId)
+    {
+        $data['body'] = self::EMOJI_LIKE;
+        $ret = $this->add($data, $userId);
+        return $ret;
+    }
 }
