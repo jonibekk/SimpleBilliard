@@ -4942,30 +4942,3 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
-
-#~ msgid "You cannot leave the topic. Because, Topic members are 3 or less."
-#~ msgstr "あなたはこのトピックを抜けることはできません。トピックメンバーが"
-
-#~ msgid "Items for change"
-#~ msgstr "変更適用対象"
-
-#~ msgid "Current term can't be changed during the evaluation period."
-#~ msgstr "評価期間中は今期の変更ができません。"
-
-#~ msgid "Previous term before changed"
-#~ msgstr "現在の前期の期間"
-
-#~ msgid "Current term before changed"
-#~ msgstr "変更前の今期"
-
-#~ msgid "Next term before changed"
-#~ msgstr "変更前の来期"
-
-#~ msgid "Current term after changed"
-#~ msgstr "更新後の今期の期間"
-
-#~ msgid "Next term after changed"
-#~ msgstr "更新後の来期の期間"
-
-#~ msgid "Change term settings"
-#~ msgstr "期間設定を更新"
