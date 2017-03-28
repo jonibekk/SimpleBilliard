@@ -121,16 +121,6 @@ class TopicService extends AppService
         $TopicMember->begin();
 
         try {
-            $leaveTopic = $TopicMember->leave($topicId, $userId);
-            if ($leaveTopic === false) {
-                throw new Exception(
-                    sprintf("Failed to update topic_members to leave me. topicId:%s, userId:%s, validationErrors:%s"
-                        , $topicId
-                        , $userId
-                        , var_export($TopicMember->validationErrors, true)
-                    )
-                );
-            }
             $saveMessage = $Message->saveLeave($topicId, $userId);
             if ($saveMessage === false) {
                 throw new Exception(
@@ -138,6 +128,16 @@ class TopicService extends AppService
                         , $topicId
                         , $userId
                         , var_export($Message->validationErrors, true)
+                    )
+                );
+            }
+            $leaveTopic = $TopicMember->leave($topicId, $userId);
+            if ($leaveTopic === false) {
+                throw new Exception(
+                    sprintf("Failed to update topic_members to leave me. topicId:%s, userId:%s, validationErrors:%s"
+                        , $topicId
+                        , $userId
+                        , var_export($TopicMember->validationErrors, true)
                     )
                 );
             }
