@@ -163,7 +163,7 @@ class TopicService extends AppService
     }
 
     /**
-     * topic has to have 3 members
+     * topic always has to have over 2 members
      *
      * @param int $topicId
      *
