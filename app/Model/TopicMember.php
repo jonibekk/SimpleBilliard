@@ -188,4 +188,41 @@ class TopicMember extends AppModel
         }
         return $this->bulkInsert($saveData);
     }
+
+    /**
+     * updating last message sent
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function updateLastMessageSentDate(int $topicId, int $userId): bool
+    {
+        $fields = ['TopicMember.last_message_sent' => time()];
+        $conditions = [
+            'TopicMember.topic_id' => $topicId,
+            'TopicMember.user_id'  => $userId,
+        ];
+        $ret = $this->updateAll($fields, $conditions);
+        return (bool)$ret;
+    }
+
+    /**
+     * leave from topic
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function leave(int $topicId, int $userId): bool
+    {
+        $conditions = [
+            'TopicMember.topic_id' => $topicId,
+            'TopicMember.user_id'  => $userId,
+        ];
+        $ret = $this->softDeleteAll($conditions);
+        return (bool)$ret;
+    }
 }
