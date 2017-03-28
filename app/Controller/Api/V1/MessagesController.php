@@ -48,13 +48,11 @@ class MessagesController extends ApiController
         // saving datas
         $messageId = $MessageService->add($postedData, $userId);
         if ($messageId === false) {
-            return $this->_getResponseBadFail(null);
+            return $this->_getResponseInternalServerError();
         }
 
         $topicId = $postedData['topic_id'];
 
-        // tracking by mixpanel
-        $this->Mixpanel->trackMessage($topicId);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
         $socketId = "test";
@@ -95,11 +93,9 @@ class MessagesController extends ApiController
         // saving datas
         $messageId = $MessageService->addLike($topicId, $userId);
         if ($messageId === false) {
-            return $this->_getResponseBadFail(null);
+            return $this->_getResponseInternalServerError();
         }
 
-        // tracking by mixpanel
-        $this->Mixpanel->trackMessage($topicId);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
         $socketId = "test";
