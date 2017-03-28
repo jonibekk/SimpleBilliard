@@ -22,8 +22,16 @@ class PushMessageShell extends AppShell
     {
         $parser = parent::getOptionParser();
         $options = [
-            'topicId'  => ['short' => 't', 'help' => 'topicId', 'required' => true,],
-            'socketId' => ['short' => 's', 'help' => 'socketId', 'required' => false,],
+            'topicId'  => [
+                'short'    => 't',
+                'help'     => 'topicId',
+                'required' => true,
+            ],
+            'socketId' => [
+                'short'    => 's',
+                'help'     => 'socketId. this is for excluding to push to sender. if no socketId, it will not be excluded',
+                'required' => false,
+            ],
         ];
         $parser->addOptions($options);
         return $parser;
