@@ -535,10 +535,9 @@ HTML;
         $TopicService = ClassRegistry::init("TopicService");
 
         // Get request data
-        $requestData = $this->request->data ?? [];
+        $requestData = $this->request->input('json_decode', true) ?? [];
         $requestData = AppUtil::filterWhiteList($requestData, ['title']);
         $requestData['id'] = $topicId;
-
         // Validation
         if (!$Topic->validates($requestData)) {
             $validationErrors = $Topic->_validationExtract($Topic->validationErrors);

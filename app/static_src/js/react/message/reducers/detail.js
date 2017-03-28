@@ -1,4 +1,5 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
+import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 
 const initialState = {
   topic_id: 0,
@@ -13,6 +14,8 @@ const initialState = {
   loading_more: false,
   is_fetched_initial: false,
   is_saving: false,
+  topic_title_setting_status: TopicTitleSettingStatus.NONE,
+  save_topic_title_err_msg: "",
   err_msg: "",
   files: [],
   input_data: {
@@ -70,6 +73,22 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         err_msg: action.error.message,
         is_saving: false
+      })
+    case ActionTypes.CHANGE_TOPIC_TITLE_SETTING_STATUS:
+      return Object.assign({}, state, {
+        save_topic_title_err_msg: "",
+        topic_title_setting_status: action.topic_title_setting_status
+      })
+    case ActionTypes.SAVE_TOPIC_TITLE_SUCCESS:
+      return Object.assign({}, state, {
+        topic: action.topic,
+        save_topic_title_err_msg: "",
+        topic_title_setting_status: action.topic_title_setting_status
+      })
+    case ActionTypes.SAVE_TOPIC_TITLE_ERROR:
+      return Object.assign({}, state, {
+        save_topic_title_err_msg: action.save_topic_title_err_msg,
+        topic_title_setting_status: action.topic_title_setting_status
       })
     case ActionTypes.UPLOAD_START:
       return Object.assign({}, state, {
