@@ -209,3 +209,10 @@ export function setResourceId(topic_id) {
     topic_id
   }
 }
+export function resetStates() {
+  return (dispatch) => {
+    dispatch({
+      type: ActionTypes.RESET_DETAIL_STATES
+    })
+  }
+}

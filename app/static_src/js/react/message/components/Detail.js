@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router";
 import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
@@ -13,6 +12,10 @@ export default class Detail extends React.Component {
     // Set resource ID included in url.
     this.props.setResourceId(this.props.params.topic_id);
     this.props.fetchInitialData(this.props.params.topic_id);
+  }
+
+  componentWillUnmount() {
+    this.props.resetStates();
   }
 
   render() {

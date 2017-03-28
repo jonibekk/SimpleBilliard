@@ -25,6 +25,8 @@ export default function detail(state = initialState, action) {
   let messages = {};
   let input_data = state.input_data
   switch (action.type) {
+    case ActionTypes.RESET_DETAIL_STATES:
+      return Object.assign({}, state, initialState)
     case ActionTypes.SET_RESOURCE_ID:
       return Object.assign({}, state, {
         topic_id: action.topic_id

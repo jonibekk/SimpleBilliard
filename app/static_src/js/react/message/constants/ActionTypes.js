@@ -13,6 +13,7 @@ export const DELETE_UPLOADED_FILE = 'DELETE_UPLOADED_FILE'
 export const CHANGE_MESSAGE = 'CHANGE_MESSAGE'
 export const SET_RESOURCE_ID = 'SET_RESOURCE_ID'
 export const SET_TOPIC = 'SET_TOPIC'
+export const RESET_DETAIL_STATES = 'RESET_DETAIL_STATES'
 
 // topic list page
 export const FETCHING = 'FETCHING'
