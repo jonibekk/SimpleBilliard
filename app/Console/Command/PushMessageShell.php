@@ -23,7 +23,7 @@ class PushMessageShell extends AppShell
         $parser = parent::getOptionParser();
         $options = [
             'topicId'  => ['short' => 't', 'help' => 'topicId', 'required' => true,],
-            'socketId' => ['short' => 's', 'help' => 'socketId', 'required' => true,],
+            'socketId' => ['short' => 's', 'help' => 'socketId', 'required' => false,],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -31,8 +31,8 @@ class PushMessageShell extends AppShell
 
     public function main()
     {
-        $topicId = $this->params['topicId'];
-        $socketId = $this->params['socketId'];
+        $topicId = Hash::get($this->params, 'topicId');
+        $socketId = Hash::get($this->params, 'socketId');
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $topicId, 'new_message', null, $socketId);

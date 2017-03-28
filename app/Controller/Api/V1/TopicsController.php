@@ -572,8 +572,65 @@ HTML;
      */
     function delete_leave_me(int $topicId)
     {
-        $retMock = ['topic_id' => $topicId];
-        return $this->_getResponseSuccessSimple($retMock);
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init('MessageService');
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
+
+        $userId = $this->Auth->user('id');
+
+        // checking 403 or 404
+        $errResponse = $this->_validateForbiddenOrNotFound($topicId, $userId);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
+
+        // validation
+        $validationMsg = $TopicService->validateLeaveMe($topicId);
+        if ($validationMsg !== true) {
+            return $this->_getResponseBadFail($validationMsg);
+        }
+
+        // saving datas
+        $isSuccessToSave = $TopicService->leaveMe($topicId, $userId);
+        if (!$isSuccessToSave) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        // push event
+        $MessageService->execPushMessageEvent($topicId);
+
+        $ret = ['topic_id' => $topicId];
+        return $this->_getResponseSuccessSimple($ret);
+    }
+
+    /**
+     * validation for POST, PUT, UPDATE, DELETE
+     * - if not found, it will return 404 response
+     * - if not have permission, it will return 403 response
+     *
+     * @param $topicId
+     * @param $userId
+     *
+     * @return CakeResponse|true
+     */
+    private function _validateForbiddenOrNotFound($topicId, $userId)
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init("Topic");
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init("TopicMember");
+
+        // topic is exists?
+        if (!$Topic->exists($topicId)) {
+            return $this->_getResponseNotFound();
+        }
+        // is topic member?
+        $isMember = $TopicMember->isMember($topicId, $userId);
+        if (!$isMember) {
+            return $this->_getResponseForbidden();
+        }
+        return true;
     }
 
 }

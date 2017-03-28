@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-22 17:58+0900\n"
+"PO-Revision-Date: 2017-03-28 14:12+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1820,6 +1820,12 @@ msgstr "%sがトピック名を設定しました。: %s"
 
 msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
+
+msgid ""
+"You cannot leave the topic. 3 topic members are required when someone leave."
+msgstr ""
+"あなたはこのトピックから抜けることはできません。抜ける場合はトピックメンバー"
+"が３人以上いる必要があります。"
 
 msgid "This Top Key Result is not clear."
 msgstr "トップKRが明確ではない。"
@@ -4936,6 +4942,9 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
+
+#~ msgid "You cannot leave the topic. Because, Topic members are 3 or less."
+#~ msgstr "あなたはこのトピックを抜けることはできません。トピックメンバーが"
 
 #~ msgid "Items for change"
 #~ msgstr "変更適用対象"

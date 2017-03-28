@@ -323,4 +323,22 @@ class MessageService extends AppService
         return $messageId;
     }
 
+    /**
+     * pushing new message event to topic member.
+     *
+     * @param int         $topicId
+     * @param null|string $socketId for exclude sender to publish
+     */
+    function execPushMessageEvent(int $topicId, $socketId = null)
+    {
+        $cmd = " push_message";
+        $cmd .= " -t " . $topicId;
+        if ($socketId) {
+            $cmd .= " -s " . $socketId;
+        }
+        $cmdEnd = " > /dev/null &";
+        $allCmd = AppUtil::baseCmdOfBgJob() . $cmd . $cmdEnd;
+        exec($allCmd);
+    }
+
 }
