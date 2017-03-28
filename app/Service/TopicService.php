@@ -121,6 +121,7 @@ class TopicService extends AppService
         $TopicMember->begin();
 
         try {
+            // At the first, message should be saved. Cause, validation is failed when leave the topic first.
             $saveMessage = $Message->saveLeave($topicId, $userId);
             if ($saveMessage === false) {
                 throw new Exception(

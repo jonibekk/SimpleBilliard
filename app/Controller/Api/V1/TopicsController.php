@@ -562,7 +562,7 @@ HTML;
 
     /**
      * Leave me from Topic
-     * url: GET /api/v1/topics/{topic_id}/leave_me
+     * url: DELETE /api/v1/topics/{topic_id}/leave_me
      *
      * @param int $topicId
      *
