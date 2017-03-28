@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Topic', 'Model');
+App::uses('User', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('TeamMember', 'Model');
@@ -123,6 +124,8 @@ class TopicService extends AppService
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init("MessageService");
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
 
         // validation message without ignorefields
         // topic_id: haven't created topic data yet
@@ -286,7 +289,7 @@ class TopicService extends AppService
         }
 
         $Topic->commit();
-        return $messageId;
+        return $topicId;
     }
 
 

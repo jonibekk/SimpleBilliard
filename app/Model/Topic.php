@@ -219,7 +219,8 @@ class Topic extends AppModel
     function add(int $userId)
     {
         $data = [
-            'creator_user_id' => $userId
+            'creator_user_id' => $userId,
+            'team_id'         => $this->current_team_id
         ];
 
         if (!$this->save($data)) {

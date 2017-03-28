@@ -489,6 +489,8 @@ HTML;
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init("TopicService");
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init("MessageService");
 
         $userId = $this->Auth->user('id');
 
@@ -503,13 +505,14 @@ HTML;
         }
 
         // create
-        $topicId = $TopicService->create($postedData, $userId);
+        $topicId = $TopicService->create($postedData, $userId, $toUserIds);
         if ($topicId === false) {
             return $this->_getResponseBadFail(null);
         }
 
+        // TODO: フロント実装後に繋ぎこみ実装
         $socketId = "test";
-        $this->_execPushMessageEvent($topicId, $socketId);
+        $MessageService->execPushMessageEvent($topicId, $socketId);
 
         return $this->_getResponseSuccess(['topic_id' => $topicId]);
     }
