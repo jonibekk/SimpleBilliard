@@ -182,7 +182,8 @@ class TopicMember extends AppModel
         foreach ($users as $userId) {
             $saveData[] = [
                 'user_id'  => $userId,
-                'topic_id' => $topicId
+                'topic_id' => $topicId,
+                'team_id'  => $this->current_team_id,
             ];
         }
         return $this->bulkInsert($saveData);

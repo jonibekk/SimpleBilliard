@@ -149,7 +149,7 @@ class TopicService extends AppService
      *
      * @return int|null
      */
-    function create(array $data, $creatorUserId, array $toUserIds)
+    function create(array $data, int $creatorUserId, array $toUserIds)
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
@@ -167,7 +167,7 @@ class TopicService extends AppService
             $topicId = $Topic->add($creatorUserId);
             if (!$topicId) {
                 $errorMsg = sprintf("Failed to create topic. userId:%s, validationErrors:%s",
-                    $userId,
+                    $creatorUserId,
                     var_export($Topic->validationErrors, true)
                 );
                 throw new Exception($errorMsg);
@@ -178,7 +178,7 @@ class TopicService extends AppService
             $savedMembers = $TopicMember->add($topicId, $toUserIds);
             if (!$savedMembers) {
                 $errorMsg = sprintf("Failed to add members to topic. userId:%s, topicId:%s, data:%s validationErrors:%s",
-                    $userId,
+                    $creatorUserId,
                     $topicId,
                     $toUserIds,
                     var_export($TopicMember->validationErrors, true)
@@ -187,10 +187,11 @@ class TopicService extends AppService
             }
 
             // save message
+            $data['topic_id'] = $topicId;
             $message = $Message->saveNormal($data, $creatorUserId);
             if ($message === false) {
                 $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
-                    $userId,
+                    $creatorUserId,
                     $topicId,
                     var_export($data, true),
                     var_export($Message->validationErrors, true)
