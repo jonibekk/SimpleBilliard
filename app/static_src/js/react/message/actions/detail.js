@@ -212,6 +212,14 @@ export function setResourceId(topic_id) {
   }
 }
 
+export function resetStates() {
+  return (dispatch) => {
+    dispatch({
+      type: ActionTypes.RESET_DETAIL_STATES
+    })
+  }
+}
+
 export function saveTopicTitle(title) {
   return (dispatch, getState) => {
     dispatch({
