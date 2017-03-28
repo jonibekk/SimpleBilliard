@@ -568,7 +568,6 @@ HTML;
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BDELETE%5D+Leave+me
-     * TODO: This is mock! We have to implement it!
      */
     function delete_leave_me(int $topicId)
     {
