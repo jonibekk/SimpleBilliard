@@ -111,7 +111,17 @@ class TopicService extends AppService
         return true;
     }
 
-    function leaveMe(int $topicId, int $userId)
+    /**
+     * leaving the topic.
+     * - delete topic_members.
+     * - add message as leave me.
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function leaveMe(int $topicId, int $userId): bool
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init("TopicMember");
