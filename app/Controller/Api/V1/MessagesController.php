@@ -41,7 +41,8 @@ class MessagesController extends ApiController
         }
 
         // validation
-        $validationResult = $MessageService->validatePostMessage($postedData);
+        // remove sender_user_id validation rule, cause that is not included in posted data
+        $validationResult = $MessageService->validatePostMessage($postedData, ['sender_user_id']);
         if ($validationResult !== true) {
             return $this->_getResponseValidationFail($validationResult);
         }

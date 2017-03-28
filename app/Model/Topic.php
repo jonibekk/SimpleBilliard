@@ -209,4 +209,25 @@ class Topic extends AppModel
         return $ret;
     }
 
+    /**
+     * create new topic
+     *
+     * @param  int $userId
+     *
+     * @return int|false
+     */
+    function add(int $userId)
+    {
+        $data = [
+            'creator_user_id' => $userId
+        ];
+
+        if (!$this->save($data)) {
+            return false;
+        }
+
+        $newTopicId = $this->getLastInsertID();
+        return $newTopicId;
+    }
+
 }

@@ -476,24 +476,42 @@ HTML;
     }
 
     /**
-     * Create a topic
+     * Create a topic and first message
      * url: POST /api/v1/topics
      *
      * @data array $user_ids required
      * @data string $message required
      * @data array $file_ids optional
+     *
      * @return CakeResponse|null
-     * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Create+a+topic
-     *       TODO: This is mock! We have to implement it!
      */
     function post()
     {
-        $userIds = $this->request->data('user_ids');
-        $message = $this->request->data('message');
-        $fileIds = $this->request->data('file_ids');
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init("TopicService");
 
-        $retMock = ['topic_id' => 1];
-        return $this->_getResponseSuccessSimple($retMock);
+        $userId = $this->Auth->user('id');
+
+        // filter fields
+        $postedData = AppUtil::filterWhiteList($this->request->data, ['body', 'file_ids']);
+        $toUserIds = Hash::get($this->request->data, ['to_user_ids']);
+
+        // validation
+        $validationResult = $TopicService->validateCreate($postedData, $toUserIds);
+        if ($validationResult !== true) {
+            return $this->_getResponseValidationFail($validationResult);
+        }
+
+        // create
+        $topicId = $TopicService->create($postedData, $userId);
+        if ($topicId === false) {
+            return $this->_getResponseBadFail(null);
+        }
+
+        $socketId = "test";
+        $this->_execPushMessageEvent($topicId, $socketId);
+
+        return $this->_getResponseSuccess(['topic_id' => $topicId]);
     }
 
     /**

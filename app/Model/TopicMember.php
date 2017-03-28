@@ -166,6 +166,25 @@ class TopicMember extends AppModel
         }
         $ret = $this->find('list', $options);
         return $ret;
+    }
 
+    /**
+     * add members to topic
+     *
+     * @param  int   $topicId
+     * @param  array $users
+     *
+     * @return array
+     */
+    function add(int $topicId, array $users): bool
+    {
+        $saveData = [];
+        foreach ($users as $userId) {
+            $saveData[] = [
+                'user_id'  => $userId,
+                'topic_id' => $topicId
+            ];
+        }
+        return $this->bulkInsert($saveData);
     }
 }

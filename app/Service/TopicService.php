@@ -111,4 +111,128 @@ class TopicService extends AppService
         return true;
     }
 
+    /**
+     * Validate create topic
+     *
+     * @param  array  $data
+     * @param  array $toUserIds
+     *
+     * @return array|true
+     */
+    function validateCreate(array $data, array $toUserIds)
+    {
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init("MessageService");
+
+        // validation message without ignorefields
+        // topic_id: haven't created topic data yet
+        // sendoer_user_id: not contain in post data
+        $ignoreFields = ['topic_id', 'sender_user_id'];
+        $messageValidResult = $MessageService->validatePostMessage($data, $ignoreFields);
+        if ($messageValidResult !== true) {
+            return $messageValidResult;
+        }
+
+        // check ToUsers are active
+        if (!$User->isActiveUsers($toUserIds)) {
+            return ['to_user_ids' => __('')];
+        }
+
+        return true;
+    }
+
+    /**
+     * create topic and first message
+     *
+     * @param  array  $data
+     * @param  array  $toUserIds
+     *
+     * @return int|null
+     */
+    function create(array $data, $creatorUserId, array $toUserIds)
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $Topic->begin();
+
+        try {
+            // save topic
+            $topicId = $Topic->add($creatorUserId);
+            if (!$topicId) {
+                $errorMsg = sprintf("Failed to create topic. userId:%s, validationErrors:%s",
+                    $userId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
+            // save tousers
+            $toUserIds[] = $creatorUserId;
+            $savedMembers = $TopicMember->add($topicId, $toUserIds);
+            if (!$savedMembers) {
+                $errorMsg = sprintf("Failed to add members to topic. userId:%s, topicId:%s, data:%s validationErrors:%s",
+                    $userId,
+                    $topicId,
+                    $toUserIds,
+                    var_export($TopicMember->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
+            // save message
+            $message = $Message->saveNormal($data, $creatorUserId);
+            if ($message === false) {
+                $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
+                    $userId,
+                    $topicId,
+                    var_export($data, true),
+                    var_export($Message->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+            $messageId = $Message->getLastInsertID();
+
+            // save attached files
+            if (Hash::get($data, 'file_ids')) {
+                $attachedFiles = $AttachedFile->saveRelatedFiles($messageId, AttachedFile::TYPE_MODEL_MESSAGE,
+                    $data['file_ids']);
+                if ($attachedFiles === false) {
+                    $errorMsg = sprintf("Failed to save attached files on message. data:%s, validationErrors:%s",
+                        var_export($data, true),
+                        var_export($AttachedFile->validationErrors, true)
+                    );
+                    throw new Exception($errorMsg);
+                }
+
+                // update attached file count
+                $Message->id = $messageId;
+                $Message->saveField('attached_file_count', count($data['file_ids']));
+            }
+
+            // update latest message on the topic
+            $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
+            if ($updateTopic === false) {
+                $errorMsg = sprintf("Failed to update latest message on the topic. topicId:%s, messageId:%s, validationErrors:%s",
+                    $topicId,
+                    $messageId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+        } catch (Exception $e) {
+            $this->log($e->getMessage());
+            $Topic->rollback();
+            return false;
+        }
+
+        $Topic->commit();
+        return $messageId;
+    }
 }
