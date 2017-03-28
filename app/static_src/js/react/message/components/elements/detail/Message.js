@@ -38,7 +38,7 @@ export default class Message extends React.Component {
     }
 
     return (
-      <div className="topicDetail-messages-item">
+      <div className="topicDetail-messages-item" key={ message.id }>
         <div className="topicDetail-messages-item-left">
           <a href={`/users/view_goals/user_id:${message.user.id}`}
              className="topicDetail-messages-item-left-profileImg">
