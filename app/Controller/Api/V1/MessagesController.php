@@ -56,7 +56,7 @@ class MessagesController extends ApiController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
         $socketId = "test";
-        $this->_execPushMessageEvent($topicId, $socketId);
+        $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
         $newMessage = $ApiMessageService->get($messageId);
         return $this->_getResponseSuccess($newMessage);
@@ -99,7 +99,7 @@ class MessagesController extends ApiController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
         $socketId = "test";
-        $this->_execPushMessageEvent($topicId, $socketId);
+        $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
         $newMessage = $ApiMessageService->get($messageId);
         return $this->_getResponseSuccess($newMessage);
@@ -133,21 +133,4 @@ class MessagesController extends ApiController
         }
         return true;
     }
-
-    /**
-     * pushing new message event to topic member.
-     *
-     * @param int    $topicId
-     * @param string $socketId
-     */
-    private function _execPushMessageEvent(int $topicId, string $socketId)
-    {
-        $cmd = " push_message";
-        $cmd .= " -t " . $topicId;
-        $cmd .= " -s " . $socketId;
-        $cmdEnd = " > /dev/null &";
-        $allCmd = AppUtil::baseCmdOfBgJob() . $cmd . $cmdEnd;
-        exec($allCmd);
-    }
-
 }
