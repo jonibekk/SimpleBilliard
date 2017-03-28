@@ -187,4 +187,22 @@ class TopicMember extends AppModel
         $ret = $this->updateAll($fields, $conditions);
         return (bool)$ret;
     }
+
+    /**
+     * leave from topic
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function leave(int $topicId, int $userId): bool
+    {
+        $conditions = [
+            'TopicMember.topic_id' => $topicId,
+            'TopicMember.user_id'  => $userId,
+        ];
+        $ret = $this->softDeleteAll($conditions);
+        return (bool)$ret;
+    }
 }

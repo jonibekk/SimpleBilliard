@@ -186,6 +186,26 @@ class Message extends AppModel
     }
 
     /**
+     * Saving leave member
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function saveLeave(int $topicId, int $userId): bool
+    {
+        $data = [
+            'topic_id'       => $topicId,
+            'team_id'        => $this->current_team_id,
+            'sender_user_id' => $userId,
+            'type'           => self::TYPE_LEAVE,
+        ];
+        $ret = $this->save($data);
+        return (bool)$ret;
+    }
+
+    /**
      * Is topic member?
      *
      * @param array $val
