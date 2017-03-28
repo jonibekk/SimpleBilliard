@@ -1,6 +1,7 @@
 # 構築・運用手順書
 
 <hr id="env4foreigner">
+
 ## 海外開発者向け環境構築手順書
 
 **もう使っておりません。**
@@ -28,6 +29,7 @@
 以上。
 
 <hr id="proxy4foreigner">
+
 **もう使ってない**
 ## 海外開発拠点用プロキシサーバ海外開発運用手順書
 ### プロキシサーバへの接続
@@ -129,6 +131,7 @@ refer to http://docs.aws.amazon.com/cli/latest/reference/opsworks/index.html#cli
 
 
 <hr id="maintenance-mode">
+
 ## Maintenance mode
 ### Install AWS CLI
 - Install
@@ -164,6 +167,7 @@ sh etc/server/rm_all_instance_on_layer.sh -l [layer-id]
  
 
 <hr id="db-migration">
+
 ## DB migration
 
 ```php
@@ -376,6 +380,7 @@ vagrant@precise64:/vagrant/app$
 1. 以上。
 
 <hr id="cs-operation">
+
 # CSオペレーション
 ## 概要
 - CLIによって処理を行います。
