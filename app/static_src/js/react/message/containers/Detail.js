@@ -3,7 +3,10 @@ import * as actions from '~/message/actions/detail'
 import DetailComponent from '~/message/components/Detail'
 
 function mapStateToProps(state) {
-  return { detail: state.detail}
+  return {
+    detail: state.detail,
+    file_upload: state.file_upload
+  }
 }
 
 function mapDispatchToProps(dispatch) {

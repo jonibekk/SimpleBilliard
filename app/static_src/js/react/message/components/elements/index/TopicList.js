@@ -2,6 +2,7 @@ import React from "react"
 import Topic from "./Topic"
 import InfiniteScroll from "redux-infinite-scroll"
 import Loading from "~/message/components/elements/index/Loading"
+import {Link} from "react-router";
 
 export default class TopicList extends React.Component {
   constructor(props) {
@@ -54,9 +55,9 @@ export default class TopicList extends React.Component {
             <div className="topicList-header-middle-label">
               {__("TOPICS")}
             </div>
-            <a href="" className="topicList-header-middle-add">
+            <Link to="/topics/create" className="topicList-header-middle-add">
               <i className="fa fa-plus-circle"></i> {__("New Message")}
-            </a>
+            </Link>
           </div>
         </div>
         <ul>

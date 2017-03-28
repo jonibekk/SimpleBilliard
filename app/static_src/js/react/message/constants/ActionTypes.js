@@ -32,3 +32,11 @@ export const FETCH_MORE_SEARCH = 'FETCH_MORE_SEARCH'
 export const INPUT_KEYWORD = 'INPUT_KEYWORD'
 export const SET_SEARCHING_KEYWORD = 'SET_SEARCHING_KEYWORD'
 export const INITIALIZE_SEARCH = 'INITIALIZE_SEARCH'
+
+
+export const TopicCreate = Object.freeze({
+  SAVING: 'TopicCreate/SAVING',
+  SAVE_SUCCESS: 'TopicCreate/SAVE_SUCCESS',
+  SAVE_ERROR: 'TopicCreate/SAVE_ERROR'
+})
+
