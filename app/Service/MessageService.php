@@ -271,6 +271,8 @@ class MessageService extends AppService
         $Topic = ClassRegistry::init('Topic');
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
 
         $Message->begin();
 
@@ -315,6 +317,17 @@ class MessageService extends AppService
                 );
                 throw new Exception($errorMsg);
             }
+
+            // updating last message sent
+            $updateLastSent = $TopicMember->updateLastMessageSentDate($topicId, $userId);
+            if ($updateLastSent === false) {
+                $errorMsg = sprintf("Failed to update last message sent. topicId:%s, userId:%s, validationErrors:%s",
+                    $topicId,
+                    $userId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
         } catch (Exception $e) {
             $this->log($e->getMessage());
             $Message->rollback();
@@ -330,16 +343,16 @@ class MessageService extends AppService
      * - updating latest message on the topic.
      * - return message id if success. otherwise, return false.
      *
-     * @param int $postId
+     * @param int $topicId
      * @param int $userId
      *
      * @return false|int
      */
-    function addLike(int $postId, int $userId)
+    function addLike(int $topicId, int $userId)
     {
         $data = [
-            'post_id' => $postId,
-            'body'    => self::CHAR_EMOJI_LIKE,
+            'topic_id' => $topicId,
+            'body'     => self::CHAR_EMOJI_LIKE,
         ];
         $ret = $this->add($data, $userId);
         return $ret;
