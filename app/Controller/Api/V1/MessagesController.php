@@ -48,17 +48,15 @@ class MessagesController extends ApiController
         // saving datas
         $messageId = $MessageService->add($postedData, $userId);
         if ($messageId === false) {
-            return $this->_getResponseBadFail(null);
+            return $this->_getResponseInternalServerError();
         }
 
         $topicId = $postedData['topic_id'];
 
-        // tracking by mixpanel
-        $this->Mixpanel->trackMessage($topicId);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
         $socketId = "test";
-        $this->_execPushMessageEvent($topicId, $socketId);
+        $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
         $newMessage = $ApiMessageService->get($messageId);
         return $this->_getResponseSuccess($newMessage);
@@ -71,13 +69,40 @@ class MessagesController extends ApiController
      * @data integer $topic_id required
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Send+like+message
-     *       TODO: This is mock! We have to implement it!
      */
     function post_like()
     {
-        $topicId = $this->request->data('topic_id');
-        $dataMock = ['message_id' => 1234];
-        return $this->_getResponseSuccessSimple($dataMock);
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init('MessageService');
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
+
+        $userId = $this->Auth->user('id');
+
+        // filter fields
+        $postedData = AppUtil::filterWhiteList($this->request->data, ['topic_id']);
+
+        $topicId = $postedData['topic_id'];
+
+        // checking 403 or 404
+        $errResponse = $this->_validateCreateForbiddenOrNotFound($topicId, $userId);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
+
+        // saving datas
+        $messageId = $MessageService->addLike($topicId, $userId);
+        if ($messageId === false) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
+        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
+        $socketId = "test";
+        $MessageService->execPushMessageEvent($topicId, $socketId);
+        // find the message as response data
+        $newMessage = $ApiMessageService->get($messageId);
+        return $this->_getResponseSuccess($newMessage);
     }
 
     /**
@@ -108,21 +133,4 @@ class MessagesController extends ApiController
         }
         return true;
     }
-
-    /**
-     * pushing new message event to topic member.
-     *
-     * @param int    $topicId
-     * @param string $socketId
-     */
-    private function _execPushMessageEvent(int $topicId, string $socketId)
-    {
-        $cmd = " push_message";
-        $cmd .= " -t " . $topicId;
-        $cmd .= " -s " . $socketId;
-        $cmdEnd = " > /dev/null &";
-        $allCmd = AppUtil::baseCmdOfBgJob() . $cmd . $cmdEnd;
-        exec($allCmd);
-    }
-
 }

@@ -14,6 +14,8 @@ App::uses('AppUtil', 'Util');
  */
 class MessageService extends AppService
 {
+    const CHAR_EMOJI_LIKE = "\xF0\x9F\x91\x8D";
+
     /**
      * Finding messages.
      * This is for fetching data and adding extended fields.
@@ -269,6 +271,8 @@ class MessageService extends AppService
         $Topic = ClassRegistry::init('Topic');
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
 
         $Message->begin();
 
@@ -313,6 +317,17 @@ class MessageService extends AppService
                 );
                 throw new Exception($errorMsg);
             }
+
+            // updating last message sent
+            $updateLastSent = $TopicMember->updateLastMessageSentDate($topicId, $userId);
+            if ($updateLastSent === false) {
+                $errorMsg = sprintf("Failed to update last message sent. topicId:%s, userId:%s, validationErrors:%s",
+                    $topicId,
+                    $userId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
         } catch (Exception $e) {
             $this->log($e->getMessage());
             $Message->rollback();
@@ -321,6 +336,44 @@ class MessageService extends AppService
 
         $Message->commit();
         return $messageId;
+    }
+
+    /**
+     * Saving a like message.
+     * - updating latest message on the topic.
+     * - return message id if success. otherwise, return false.
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return false|int
+     */
+    function addLike(int $topicId, int $userId)
+    {
+        $data = [
+            'topic_id' => $topicId,
+            'body'     => self::CHAR_EMOJI_LIKE,
+        ];
+        $ret = $this->add($data, $userId);
+        return $ret;
+    }
+
+    /**
+     * pushing new message event to topic member.
+     *
+     * @param int         $topicId
+     * @param null|string $socketId for exclude sender to publish
+     */
+    function execPushMessageEvent(int $topicId, $socketId = null)
+    {
+        $cmd = " push_message";
+        $cmd .= " -t " . $topicId;
+        if ($socketId) {
+            $cmd .= " -s " . $socketId;
+        }
+        $cmdEnd = " > /dev/null &";
+        $allCmd = AppUtil::baseCmdOfBgJob() . $cmd . $cmdEnd;
+        exec($allCmd);
     }
 
 }

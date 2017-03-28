@@ -508,8 +508,7 @@ class NotifyBizComponent extends Component
         $Message = ClassRegistry::init('Message');
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-
-        $message = Hash::extract($Message->getById($messageId), 'Message');
+        $message = $Message->getById($messageId);
 
         if (empty($message)) {
             $this->log("Message doesn't exist. messageId:$messageId");
