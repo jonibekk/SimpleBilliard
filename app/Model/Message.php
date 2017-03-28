@@ -78,10 +78,11 @@ class Message extends AppModel
      * @param int      $topicId
      * @param int|null $cursor
      * @param int      $limit
+     * @param string   $direction "old" or "new"
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit): array
+    function findMessages(int $topicId, $cursor, int $limit, string $direction = "old"): array
     {
         $options = [
             'conditions' => [
@@ -117,7 +118,11 @@ class Message extends AppModel
         ];
 
         if ($cursor) {
-            $options['conditions']['Message.id <'] = $cursor;
+            if ($direction == "old") {
+                $options['conditions']['Message.id <'] = $cursor;
+            } elseif ($direction == "new") {
+                $options['conditions']['Message.id >'] = $cursor;
+            }
         }
 
         $res = $this->find('all', $options);

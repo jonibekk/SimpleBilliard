@@ -173,6 +173,7 @@ class TopicsController extends ApiController
      *
      * @queryParam int $cursor optional
      * @queryParam int $limit optional
+     * @queryParam string $direction optional. "old" or "new" for getting older than cursor or newer
      * @return CakeResponse
      * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+message+list
      *             TODO: This is mock! We have to implement it!
@@ -181,6 +182,7 @@ class TopicsController extends ApiController
     {
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
+        $direction = $this->request->query('direction') ?? "old";
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init("ApiMessageService");
@@ -188,7 +190,7 @@ class TopicsController extends ApiController
         if (!$ApiMessageService->checkMaxLimit((int)$limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-        $response = $ApiMessageService->findMessages($topicId, $cursor, $limit);
+        $response = $ApiMessageService->findMessages($topicId, $cursor, $limit, $direction);
 //TODO: This is for only reference. It should be removed. after writing test cases.
 //        $retMock = [];
 //        $retMock['data'] = [
