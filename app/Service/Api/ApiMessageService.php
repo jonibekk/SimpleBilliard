@@ -14,13 +14,14 @@ class ApiMessageService extends ApiService
     /**
      * Finding messages. It will returns data as API response
      *
-     * @param int      $topicId
-     * @param int|null $cursor
-     * @param int|null $limit
+     * @param int         $topicId
+     * @param int|null    $cursor
+     * @param int|null    $limit
+     * @param string|null $direction "old" or "new"
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor = null, $limit = null): array
+    function findMessages(int $topicId, $cursor = null, $limit = null, $direction = Message::DIRECTION_OLD): array
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
@@ -37,14 +38,17 @@ class ApiMessageService extends ApiService
         ];
 
         // getting message data
-        $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1);
+        $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1, $direction);
         // converting key names for response data
         foreach ($messages as &$message) {
             $message = $this->convertKeyNames($message);
         }
 
         $ret['data'] = $messages;
-        $ret = $this->setPaging($ret, $topicId, $limit);
+
+        if ($direction == Message::DIRECTION_OLD) {
+            $ret = $this->setPaging($ret, $topicId, $limit);
+        }
         return $ret;
     }
 
@@ -103,7 +107,7 @@ class ApiMessageService extends ApiService
         }
         // exclude that extra record for paging
         array_shift($data['data']);
-        $cursor = $data[0]['id'];
+        $cursor = $data['data'][0]['id'];
         $queryParams = am(compact('cursor'), compact('limit'));
 
         $data['paging']['next'] = "/api/v1/topics/{$topicId}/messages?" . http_build_query($queryParams);

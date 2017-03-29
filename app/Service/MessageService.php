@@ -21,17 +21,18 @@ class MessageService extends AppService
      * This is for fetching data and adding extended fields.
      * Cake key names will be not changed. That is ApiMessageService's job.
      *
-     * @param int $topicId
-     * @param     $cursor
-     * @param     $limit
+     * @param int         $topicId
+     * @param             $cursor
+     * @param             $limit
+     * @param string|null $direction older than cursor or newer
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, $limit): array
+    function findMessages(int $topicId, $cursor, $limit, $direction): array
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
-        $messages = $Message->findMessages($topicId, $cursor, $limit);
+        $messages = $Message->findMessages($topicId, $cursor, $limit, $direction);
         // reverse sort messages
         krsort($messages);
         // renumbering keys
