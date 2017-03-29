@@ -14,6 +14,8 @@ class Message extends AppModel
     const TYPE_ADD_MEMBER = 2;
     const TYPE_LEAVE = 3;
     const TYPE_SET_TOPIC_NAME = 4;
+    const DIRECTION_OLD = "old";
+    const DIRECTION_NEW = "new";
 
     /**
      * Validation rules
@@ -82,7 +84,7 @@ class Message extends AppModel
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit, string $direction = "old"): array
+    function findMessages(int $topicId, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
     {
         $options = [
             'conditions' => [
@@ -118,9 +120,9 @@ class Message extends AppModel
         ];
 
         if ($cursor) {
-            if ($direction == "old") {
+            if ($direction == self::DIRECTION_OLD) {
                 $options['conditions']['Message.id <'] = $cursor;
-            } elseif ($direction == "new") {
+            } elseif ($direction == self::DIRECTION_NEW) {
                 $options['conditions']['Message.id >'] = $cursor;
             }
         }

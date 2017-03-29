@@ -21,7 +21,7 @@ class ApiMessageService extends ApiService
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor = null, $limit = null, $direction = "old"): array
+    function findMessages(int $topicId, $cursor = null, $limit = null, $direction = Message::DIRECTION_OLD): array
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
@@ -46,7 +46,7 @@ class ApiMessageService extends ApiService
 
         $ret['data'] = $messages;
 
-        if ($direction == "old") {
+        if ($direction == Message::DIRECTION_OLD) {
             $ret = $this->setPaging($ret, $topicId, $limit);
         }
         return $ret;

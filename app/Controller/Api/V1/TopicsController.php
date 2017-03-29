@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::uses('TopicMember', 'Model');
+App::uses('Message', 'Model');
 App::import('Service/Api', 'ApiTopicService');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
@@ -182,7 +183,7 @@ class TopicsController extends ApiController
     {
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
-        $direction = $this->request->query('direction') ?? "old";
+        $direction = $this->request->query('direction') ?? Message::DIRECTION_OLD;
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init("ApiMessageService");
