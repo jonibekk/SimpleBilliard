@@ -670,6 +670,10 @@ class UsersController extends AppController
                 //セットアップガイドステータスの更新
                 $this->updateSetupStatusIfNotCompleted();
 
+                // update message search keywords by user id
+                // TODO: After implementing 'updateByUserId' must cancel comment out.
+                // $this->User->TopicMember->Topic->TopicSearchKeyword->updateByUserId($this->Auth->user('id'));
+
                 $this->Pnotify->outSuccess(__("Saved user setting."));
                 $this->redirect('/users/settings');
             } else {

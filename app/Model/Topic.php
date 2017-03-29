@@ -68,6 +68,17 @@ class Topic extends AppModel
         'TopicMember',
     ];
 
+    /**
+     * hasOne associations
+     *
+     * @var array
+     */
+    public $hasOne = [
+        'TopicSearchKeyword'
+    ];
+
+
+
     /* number of displaying user photo in topic list page */
     const MAX_DISPLAYING_USER_PHOTO = 4;
 
@@ -139,8 +150,8 @@ class Topic extends AppModel
         // search from topic_search_keywords and topic.title by keyword
         if ($keyword) {
             $options['conditions']['OR'] = [
-                'Topic.title LIKE'                 => "%{$keyword}%",
-                'TopicSearchKeyword.keywords LIKE' => "%\\n{$keyword}%"
+                'Topic.title LIKE'                 => "%{$keyword}",
+                'TopicSearchKeyword.keywords LIKE' => "%\n{$keyword}%"
             ];
             $options['joins'][] = [
                 'type'       => 'LEFT',

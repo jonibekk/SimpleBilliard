@@ -5,6 +5,7 @@ App::uses('User', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('TopicSearchKeyword', 'Model');
 
 /**
  * Class TopicService
@@ -214,6 +215,8 @@ class TopicService extends AppService
         $Message = ClassRegistry::init('Message');
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
 
         $Topic->begin();
 
@@ -282,6 +285,15 @@ class TopicService extends AppService
                 );
                 throw new Exception($errorMsg);
             }
+
+            // create topic search record
+            if (!$TopicSearchKeyword->add($topicId)) {
+                $errorMsg = sprintf("Failed to add search topic record. topicId:%s",
+                    $topicId
+                );
+                throw new Exception($errorMsg);
+            }
+
         } catch (Exception $e) {
             $this->log($e->getMessage());
             $Topic->rollback();
@@ -289,8 +301,10 @@ class TopicService extends AppService
         }
 
         $Topic->commit();
+
         return $topicId;
     }
+
 
 
     /*

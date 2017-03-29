@@ -1,12 +1,13 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('Topic', 'Model');
 App::uses('TopicMember', 'Model');
-App::import('Service/Api', 'ApiTopicService');
+App::uses('TopicSearchKeyword', 'Model');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
+App::import('Service/Api', 'ApiTopicService');
 App::import('Service/Api', 'ApiMessageService');
 /** @noinspection PhpUndefinedClassInspection */
-App::uses('Topic', 'Model');
 App::import('Service/Api', 'ApiTopicService');
 App::uses('AppUtil', 'Util');
 
@@ -33,6 +34,8 @@ class TopicsController extends ApiController
         $Topic = ClassRegistry::init("Topic");
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init("ApiTopicService");
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init("TopicSearchKeyword");
 
         // get query params
         $limit = $this->request->query('limit') ?? ApiTopicService::DEFAULT_TOPICS_NUM;
