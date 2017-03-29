@@ -163,6 +163,59 @@ class TopicService extends AppService
     }
 
     /**
+     * Add members to the topic.
+     * - Add topic_members.
+     * - Add message as add members.
+     *
+     * @param int   $topicId
+     * @param int   $loginUserId
+     * @param array $addUserIds
+     *
+     * @return bool
+     */
+    function addMembers(int $topicId, int $loginUserId, array $addUserIds): bool
+    {
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init("TopicMember");
+        /** @var Message $Message */
+        $Message = ClassRegistry::init("Message");
+
+        $TopicMember->begin();
+
+        try {
+            // Add topic_members
+            if (!$TopicMember->bulkAdd($topicId, $addUserIds)) {
+                throw new Exception(
+                    sprintf("Failed to add topic_members. topicId:%s, addUserIds:%s, validationErrors:%s"
+                        , $topicId
+                        , var_export($addUserIds, true)
+                        , var_export($TopicMember->validationErrors, true)
+                    )
+                );
+            }
+
+            // Add message as add members
+            if (!$Message->saveAddMembers($topicId, $loginUserId, $addUserIds)) {
+                throw new Exception(
+                    sprintf("Failed to save add members message. topicId:%s, loginUserId:%s, addUserIds:%s, validationErrors:%s"
+                        , $topicId
+                        , $loginUserId
+                        , var_export($addUserIds, true)
+                        , var_export($Message->validationErrors, true)
+                    )
+                );
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $TopicMember->rollback();
+            return false;
+        }
+        $TopicMember->commit();
+        return true;
+    }
+
+    /**
      * topic always has to have over 2 members
      *
      * @param int $topicId

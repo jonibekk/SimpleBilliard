@@ -213,6 +213,28 @@ class Message extends AppModel
     }
 
     /**
+     * Saving add member
+     *
+     * @param int   $topicId
+     * @param int   $loginUserId
+     * @param array $addUserIds
+     *
+     * @return bool
+     */
+    function saveAddMembers(int $topicId, int $loginUserId, array $addUserIds): bool
+    {
+        $data = [
+            'topic_id'       => $topicId,
+            'team_id'        => $this->current_team_id,
+            'sender_user_id' => $loginUserId,
+            'type'           => self::TYPE_ADD_MEMBER,
+            'body' => implode(',', $addUserIds)
+        ];
+        $ret = $this->save($data);
+        return (bool)$ret;
+    }
+
+    /**
      * Is topic member?
      *
      * @param array $val
