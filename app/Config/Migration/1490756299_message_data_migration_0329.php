@@ -79,6 +79,8 @@ class MessageDataMigration0329 extends CakeMigration
         $TopicMember = ClassRegistry::init('TopicMember');
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
+        /** @var MessageFile $MessageFile */
+        $MessageFile = ClassRegistry::init('MessageFile');
         /** @var TopicSearchKeyword $TopicSearchKeyword */
         $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
 
@@ -110,9 +112,17 @@ class MessageDataMigration0329 extends CakeMigration
                     'modified'       => $post['modified'],
                     'created'        => $post['created'],
                 ], false);
+                $messageId = $Message->getLastInsertID();
 
                 // 1件目のメッセージの添付ファイル関連データを保存
                 $postFiles = $PostFile->find('all', ['conditions' => ['post_id' => $postId]]);
+                $postFiles = Hash::extract($postFiles, '{n}.PostFile');
+                foreach ($postFiles as &$postFile) {
+                    $postFile['message_id'] = $messageId;
+                    $postFile['topic_id'] = $topicId;
+                    unset($postFile['post_id']);
+                }
+                $MessageFile->saveAll($postFiles, ['validate' => false]);
 
                 // - 作成されたトピックのトピックメンバーをpost_share_usersを元に作成
                 $userIds = $PostShareUser->findWithoutTeamId('list', [
