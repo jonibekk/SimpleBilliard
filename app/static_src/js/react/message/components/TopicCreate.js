@@ -116,7 +116,7 @@ export default class TopicCreate extends React.Component {
           <div className="topicCreateForm-selectTo ">
             <span className="topicCreateForm-selectTo-label">To:</span>
             <input type="hidden" id="select2Member" className="js-changeSelect2Member"
-                   style={{width: '85%'}} ref="select2Member" onClick={this.changeToUserIds.bind(this)}/>
+                   style={{width: '85%'}} ref="select2Member" />
           </div>
           <div className={this.state.is_drag_over && "uploadFileForm-wrapper"}
                onDrop={this.drop.bind(this)}
