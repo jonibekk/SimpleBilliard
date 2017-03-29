@@ -12,8 +12,8 @@ export default function createReducer() {
       detail,
       index,
       search,
-      file_upload,
       topic_create,
+      file_upload,
     }, {
       routing: routerReducer
     })

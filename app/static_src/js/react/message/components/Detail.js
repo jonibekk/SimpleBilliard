@@ -37,7 +37,7 @@ export default class Detail extends React.Component {
           is_fetched_initial={detail.is_fetched_initial}
         />
         <Footer
-          message={detail.input_data.message}
+          body={detail.input_data.body}
           is_saving={detail.is_saving}
           {...file_upload}
         />

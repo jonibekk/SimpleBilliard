@@ -53,9 +53,9 @@ class Footer extends React.Component {
   }
 
   dragOver(e) {
-    this.setState({is_drag_over: true});
     e.stopPropagation();
     e.preventDefault();
+    this.setState({is_drag_over: true});
   }
 
   dragLeave(e) {
@@ -147,14 +147,14 @@ class Footer extends React.Component {
 }
 
 Footer.propTypes = {
-  message: React.PropTypes.string,
+  body: React.PropTypes.string,
   uploaded_file_ids: React.PropTypes.array,
   preview_files: React.PropTypes.array,
   is_uploading: React.PropTypes.bool,
   err_msg: React.PropTypes.string,
 };
 Footer.defaultProps = {
-  message: "",
+  body: "",
   uploaded_file_ids: [],
   preview_files: [],
   is_saving: false,

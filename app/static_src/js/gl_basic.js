@@ -769,6 +769,11 @@ $(document).ready(function () {
     return checkUploadFileExpire('messageDropArea');
   });
 
+  // HACK:To occur to_user_ids change event in react app
+  $(document).on('change', '.js-changeSelect2Member', function (e) {
+    $('.js-triggerUpdateToUserIds').trigger('click');
+  });
+
   // リカバリコード再生成
   $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
     e.preventDefault();

@@ -6,12 +6,12 @@ const initial_state = {
   err_msg: "",
   input_data: {
     body: "",
+    to_user_ids: [],
     file_ids: []
   }
 }
 
 export default function topic_create(state = initial_state, action) {
-  let messages = {};
   let input_data = state.input_data
   switch (action.type) {
     case ActionTypes.TopicCreate.SAVING:
@@ -19,12 +19,7 @@ export default function topic_create(state = initial_state, action) {
         is_saving: true
       })
     case ActionTypes.TopicCreate.SAVE_SUCCESS:
-      messages = {
-        data: [...state.messages.data, action.data],
-        paging: state.messages.paging,
-      }
       return Object.assign({}, state, {
-        messages,
         is_saving: false
       })
     case ActionTypes.TopicCreate.SAVE_ERROR:
@@ -32,16 +27,10 @@ export default function topic_create(state = initial_state, action) {
         err_msg: action.error.message,
         is_saving: false
       })
-    case ActionTypes.CHANGE_MESSAGE:
-      input_data.body = action.body;
+    case ActionTypes.TopicCreate.UPDATE_INPUT_DATA:
+      input_data = Object.assign(input_data, action.input_data);
       return Object.assign({}, state, {
         input_data
-      })
-    case ActionTypes.DELETE_UPLOADED_FILE:
-      input_data.file_ids = [...action.file_ids]
-      return Object.assign({}, state, {
-        input_data,
-        files: [...action.files],
       })
     default:
       return state;

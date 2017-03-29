@@ -6,8 +6,8 @@ import {FileUpload} from "~/common/constants/App";
 export function createTopic() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.TopicCreate.SAVING})
-    const {detail, file_upload} = getState();
-    const postData = Object.assign(detail.input_data, {
+    const {topic_create, file_upload} = getState();
+    const post_data = Object.assign(topic_create.input_data, {
       file_ids: file_upload.uploaded_file_ids
     });
     return post("/api/v1/topics", post_data, null,
@@ -24,5 +24,12 @@ export function createTopic() {
         })
       }
     );
+  }
+}
+
+export function updateInputData(input_data) {
+  return {
+    type: ActionTypes.TopicCreate.UPDATE_INPUT_DATA,
+    input_data
   }
 }

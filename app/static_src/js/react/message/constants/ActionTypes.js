@@ -39,6 +39,7 @@ export const INITIALIZE_SEARCH = 'INITIALIZE_SEARCH'
 export const TopicCreate = Object.freeze({
   SAVING: 'TopicCreate/SAVING',
   SAVE_SUCCESS: 'TopicCreate/SAVE_SUCCESS',
-  SAVE_ERROR: 'TopicCreate/SAVE_ERROR'
+  SAVE_ERROR: 'TopicCreate/SAVE_ERROR',
+  UPDATE_INPUT_DATA: 'TopicCreate/UPDATE_INPUT_DATA'
 })
 
