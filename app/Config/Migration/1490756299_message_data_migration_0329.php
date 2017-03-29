@@ -82,44 +82,74 @@ class MessageDataMigration0329 extends CakeMigration
         /** @var TopicSearchKeyword $TopicSearchKeyword */
         $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
 
-        // transaction start
-        $Post->begin();
         // 対象トピックのIDを全て取得
         $postList = $Post->findWithoutTeamId('list', ['conditions' => ['type' => $Post::TYPE_MESSAGE]]);
 
-        foreach ($postList as $postId) {
-            // - postsテーブルのメッセージタイプのデータを元にトピック作成
-            $post = $Post->getById($postId);
-            $Post->create();
-            $Post->save([
-                'creator_user_id' => $post['user_id'],
-                'team_id'         => $post['team_id'],
-                'modified'        => $post['modified'],
-                'created'         => $post['created'],
-            ]);
+        try {
+            foreach ($postList as $postId) {
+                // with post files
+                $post = $Post->getById($postId);
+                $teamId = $post['team_id'];
+                // - postsテーブルのメッセージタイプのデータを元にトピック作成
+                $Topic->create();
+                $Topic->save([
+                    'creator_user_id' => $post['user_id'],
+                    'team_id'         => $teamId,
+                    'modified'        => $post['modified'],
+                    'created'         => $post['created'],
+                ], false);
+                $topicId = $Topic->getLastInsertID();
 
-            // - 作成されたトピックのトピックメンバーをpost_share_usersを元に作成
-            $userIds = $PostShareUser->findWithoutTeamId('list', [
-                'conditions' => ['post_id' => $postId],
-                'fields'     => ['user_id'],
-            ]);
+                // 1件目のメッセージを保存(旧バージョンはpostsテーブルに１件目のメッセージが保存されている)
+                $Message->create();
+                $Message->save([
+                    'sender_user_id' => $post['user_id'],
+                    'topic_id'       => $topicId,
+                    'body'           => $post['body'],
+                    'team_id'        => $teamId,
+                    'modified'       => $post['modified'],
+                    'created'        => $post['created'],
+                ], false);
 
-            // - 最新メッセージを参照し、そのid,dateをtopicsテーブルlatest_message_id,latest_message_datetimeに反映
+                // 1件目のメッセージの添付ファイル関連データを保存
+                $postFiles = $PostFile->find('all', ['conditions' => ['post_id' => $postId]]);
 
-            // - comment_readsテーブルを参照し、最新メッセージの既読ユーザを特定し、topic_membersテーブルを更新
+                // - 作成されたトピックのトピックメンバーをpost_share_usersを元に作成
+                $userIds = $PostShareUser->findWithoutTeamId('list', [
+                    'conditions' => ['post_id' => $postId],
+                    'fields'     => ['user_id'],
+                ]);
+                $topicMembersData = [];
+                foreach ($userIds as $uid) {
+                    $topicMembersData[] = [
+                        'user_id'  => $uid,
+                        'topic_id' => $topicId,
+                        'team_id'  => $teamId,
+                    ];
+                }
+                $TopicMember->bulkInsert($topicMembersData);
 
-            // - postsテーブルのbodyを1件目のメッセージとし、2件目以降をcommentsテーブルを元にメッセージを生成しmessagesテーブルに保存
+                // - commentsテーブルを元にメッセージを生成しmessagesテーブルに保存([like]は絵文字に置き換える)
 
-            // - post_files, comment_filesテーブルを元にmessage_filesテーブルに挿入する。attached_filesテーブルは変更の必要なし。
+                // - 最新メッセージを参照し、そのid,dateをtopicsテーブルlatest_message_id,latest_message_datetimeに反映
 
-            // - 添付ファイル数をmessagesテーブルに反映
+                // - comment_readsテーブルを参照し、最新メッセージの既読ユーザを特定し、topic_membersテーブルを更新
 
-            // - トピック検索テーブルのレコード生成
+                // - post_files, comment_filesテーブルを元にmessage_filesテーブルに挿入する。attached_filesテーブルは変更の必要なし。
 
+                // - 添付ファイル数をmessagesテーブルに反映
+
+                // - トピック検索テーブルのレコード生成
+
+            }
+
+        } catch (Exception $e) {
+            // transaction rollback
+            CakeLog::error($e->getMessage());
+
+            // if return false, it will be paused to wait input.. So, exit
+            exit(1);
         }
-
-        // transaction commit
-        $Post->commit();
 
         return true;
     }
