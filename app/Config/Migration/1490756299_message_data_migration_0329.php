@@ -62,11 +62,12 @@ class MessageDataMigration0329 extends CakeMigration
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        $Post->cacheQueries = false;
         // 対象トピックのIDを全て取得(タイプがメッセージ)
         $postIds = $Post->findWithoutTeamId('list', ['conditions' => ['type' => $Post::TYPE_MESSAGE]]);
 
         try {
-            foreach ($postIds as $postId) {
+            foreach ($postIds as &$postId) {
                 // トピック作成、1stメッセージ作成、メッセージ添付ファイル保存
                 $topic = $this->createTopicAndFirstMessage($postId);
                 $topicId = $topic['id'];
@@ -82,6 +83,11 @@ class MessageDataMigration0329 extends CakeMigration
                 // comment_readsテーブルを参照し、最新メッセージの既読ユーザを特定し、topic_membersテーブルを更新
                 // commentが一件もない場合は、post_readsテーブルから既読ユーザを特定する。
                 $this->updateReadMembers($topicId, $latestMessage['id'], $postId);
+                unset($topic);
+                unset($topicId);
+                unset($teamId);
+                unset($latestMessage);
+//                debug(memory_get_usage() / 1024 / 1024);
             }
             // トピック検索テーブルのレコード生成
             $this->createTopicSearchKeywords();
@@ -94,6 +100,7 @@ class MessageDataMigration0329 extends CakeMigration
             // if return false, it will be paused to wait input.. So, exit
             exit(1);
         }
+//        debug(memory_get_usage() / 1024 / 1024);
 
         return true;
     }
@@ -109,14 +116,19 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        $Post->cacheQueries = false;
         /** @var PostFile $PostFile */
         $PostFile = ClassRegistry::init('PostFile');
+        $PostFile->cacheQueries = false;
         /** @var PostShareUser $PostShareUser */
         $Topic = ClassRegistry::init('Topic');
+        $Topic->cacheQueries = false;
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
+        $Message->cacheQueries = false;
         /** @var MessageFile $MessageFile */
         $MessageFile = ClassRegistry::init('MessageFile');
+        $MessageFile->cacheQueries = false;
 
         // トピックの元になるpostsデータを取得
         $post = $Post->getById($postId);
@@ -166,8 +178,10 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
+        $PostShareUser->cacheQueries = false;
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
+        $TopicMember->cacheQueries = false;
 
         $postShareUsers = $PostShareUser->findWithoutTeamId('all', [
             'conditions' => ['post_id' => $postId],
@@ -200,16 +214,19 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
+        $Comment->cacheQueries = false;
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
+        $Message->cacheQueries = false;
         /** @var MessageFile $MessageFile */
         $MessageFile = ClassRegistry::init('MessageFile');
+        $MessageFile->cacheQueries = false;
 
         $commentIds = $Comment->findWithoutTeamId('list', [
             'conditions' => ['post_id' => $postId],
             'fields'     => ['id'],
         ]);
-        foreach ($commentIds as $commentId) {
+        foreach ($commentIds as &$commentId) {
             // commentとその添付ファイルからメッセージを作成&保存
             $comment = $Comment->findWithoutTeamId('first', [
                 'conditions' => ['Comment.id' => $commentId],
@@ -238,6 +255,8 @@ class MessageDataMigration0329 extends CakeMigration
                 }
                 $MessageFile->bulkInsert($files);
             }
+            unset($comment);
+            unset($files);
         }
     }
 
@@ -245,6 +264,7 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
+        $Message->cacheQueries = false;
         $latestMessage = $Message->findWithoutTeamId('first', [
             'conditions' => ['topic_id' => $topicId, 'type' => Message::TYPE_NORMAL],
             'order'      => ['id' => 'desc']
@@ -257,6 +277,7 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
+        $Topic->cacheQueries = false;
         $Topic->save([
             'id'                      => $topicId,
             'latest_message_id'       => $message['id'],
@@ -268,12 +289,16 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
+        $Comment->cacheQueries = false;
         /** @var CommentRead $CommentRead */
         $CommentRead = ClassRegistry::init('CommentRead');
+        $CommentRead->cacheQueries = false;
         /** @var  PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
+        $PostRead->cacheQueries = false;
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
+        $TopicMember->cacheQueries = false;
 
         $latestComment = $Comment->findWithoutTeamId('first', [
             'conditions' => ['post_id' => $postId],
@@ -302,6 +327,7 @@ class MessageDataMigration0329 extends CakeMigration
     {
         /** @var TopicSearchKeyword $TopicSearchKeyword */
         $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
+        $TopicSearchKeyword->cacheQueries = false;
         $query = <<<SQL
 INSERT INTO topic_search_keywords (topic_id, team_id, keywords)
 SELECT
