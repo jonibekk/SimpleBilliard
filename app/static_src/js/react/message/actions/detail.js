@@ -85,7 +85,7 @@ export function sendMessage() {
   }
 }
 
-export function onChangeMessage(val) {
+export function inputMessage(val) {
   return {
     type: ActionTypes.CHANGE_MESSAGE,
     body: val

@@ -30,9 +30,9 @@ class Footer extends React.Component {
     );
   }
 
-  onChangeMessage(e) {
+  inputMessage(e) {
     this.props.dispatch(
-      detail.onChangeMessage(e.target.value)
+      detail.inputMessage(e.target.value)
     );
   }
 
@@ -110,7 +110,7 @@ class Footer extends React.Component {
                   className="form-control disable-change-warning"
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" defaultValue=""
-                  onChange={this.onChangeMessage.bind(this)}
+                  onChange={this.inputMessage.bind(this)}
                 />
               {this.props.err_msg &&
               <div className="has-error">

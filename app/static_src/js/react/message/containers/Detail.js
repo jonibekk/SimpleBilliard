@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     fetchMoreMessages: (url) => dispatch(actions.fetchMoreMessages(url)),
     sendMessage: () => dispatch(actions.sendMessage()),
     sendLike: () => dispatch(actions.sendLike()),
-    onChangeMessage: (val) => dispatch(actions.onChangeMessage(val)),
+    inputMessage: (val) => dispatch(actions.inputMessage(val)),
     resetStates: () => dispatch(actions.resetStates())
   }
 }
