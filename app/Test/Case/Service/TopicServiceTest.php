@@ -101,4 +101,9 @@ class TopicServiceTest extends GoalousTestCase
         $this->markTestIncomplete('testClear not implemented.');
     }
 
+    function test_addMembers()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
 }
