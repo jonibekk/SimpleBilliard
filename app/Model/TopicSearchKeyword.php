@@ -37,20 +37,28 @@ class TopicSearchKeyword extends AppModel
 
     /**
      * add keywords record for search
+     * - disabled Trim behaivior while it's saving
+     *  - Because always contain new line code head of $keywords
      *
-     * @param  int $topicId
+     * @param  int    $topicId
+     * @param  string $keywords
      *
      * @return bool
      */
-    function add(int $topicId, $keywords): bool
+    function add(int $topicId, string $keywords): bool
     {
         $data = [
             'team_id'  => $this->current_team_id,
             'topic_id' => $topicId,
             'keywords' => $keywords
         ];
-        $res = (bool)$this->save($data);
-        return $res;
+
+        // Because always contain new line code head of $keywords
+        $this->Behaviors->disable('Trim');
+        $res = $this->save($data);
+        $this->Behaviors->enable('Trim');
+
+        return (bool)$res;
     }
 
     /**
@@ -110,6 +118,8 @@ SQL;
 
     /**
      * update keyword records for search by topic id
+     * - disabled Trim behaivior while it's saving
+     *  - Because always contain new line code head of $keywords
      *
      * @param  int    $topicId
      * @param  string $keywords
@@ -130,6 +140,12 @@ SQL;
             'team_id'  => $this->current_team_id,
             'keywords' => $keywords
         ];
-        return (bool)$this->save($data);
+
+        // Because always contain new line code head of $keywords
+        $this->Behaviors->disable('Trim');
+        $res = $this->save($data);
+        $this->Behaviors->enable('Trim');
+
+        return (bool)$res;
     }
 }
