@@ -167,16 +167,19 @@ class TopicService extends AppService
      * - Add topic_members.
      * - Add message as add members.
      *
-     * @param int   $topicId
-     * @param int   $loginUserId
-     * @param array $addUserIds
+     * @param int    $topicId
+     * @param int    $loginUserId
+     * @param array  $addUserIds
+     * @param string $socketId
      *
      * @return bool
      */
-    function addMembers(int $topicId, int $loginUserId, array $addUserIds): bool
+    function addMembers(int $topicId, int $loginUserId, array $addUserIds, string $socketId): bool
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init("TopicMember");
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init('MessageService');
         /** @var Message $Message */
         $Message = ClassRegistry::init("Message");
 
@@ -205,6 +208,10 @@ class TopicService extends AppService
                     )
                 );
             }
+
+            // Push event using pusher
+            $MessageService->execPushMessageEvent($topicId, $socketId);
+
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());

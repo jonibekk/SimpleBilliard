@@ -522,7 +522,9 @@ HTML;
             return $errResponse;
         }
 
-        if (!$TopicService->addMembers($topicId, $loginUserId, $userIds)) {
+        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
+        $socketId = "test";
+        if (!$TopicService->addMembers($topicId, $loginUserId, $userIds, $socketId)) {
             return $this->_getResponseInternalServerError();
         }
 
