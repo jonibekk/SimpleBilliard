@@ -511,11 +511,88 @@ HTML;
      */
     function post_members(int $topicId)
     {
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
+
+        $loginUserId = $this->Auth->user('id');
         $userIds = $this->request->data('user_ids');
-        $retMock = [
-            'topic_member_ids' => [1, 2, 3, 4]
-        ];
-        return $this->_getResponseSuccessSimple($retMock);
+        // checking 403 or 404
+        $errResponse = $this->_validatePostMembers($topicId, $loginUserId, $userIds);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
+
+        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
+        $socketId = "test";
+        if (!$TopicService->addMembers($topicId, $loginUserId, $userIds, $socketId)) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        $topic = $TopicService->findTopicDetail($topicId);
+        $messages = $ApiMessageService->findMessages($topicId, null, 1);
+        $latestMessage = Hash::extract($messages, 'data.0');
+        return $this->_getResponseSuccess(
+            [
+                'topic'          => $topic,
+                'latest_message' => $latestMessage
+            ]
+        );
+
+    }
+
+    /**
+     * Validate for post_members func
+     * $addUserIds is a request parameter before validation execution, type is not specified.
+     *
+     * @param int $topicId
+     * @param int $loginUserId
+     * @param     $addUserIds
+     *
+     * @return bool|CakeResponse|true
+     */
+    private function _validatePostMembers(int $topicId, int $loginUserId, $addUserIds)
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+
+        // checking 403 or 404
+        $errResponse = $this->_validateForbiddenOrNotFound($topicId, $loginUserId);
+        if ($errResponse !== true) {
+            return $errResponse;
+        }
+
+        // Check not empty and array
+        if (empty($addUserIds) || !is_array($addUserIds)) {
+            return $this->_getResponseBadFail(
+                __("Parameter is invalid.")
+            );
+        }
+        // Check numeric
+        if (!Hash::numeric($addUserIds)) {
+            return $this->_getResponseBadFail(__("Parameter is invalid."));
+        }
+
+        // Check duplicate
+        if (count($addUserIds) !== count(array_unique($addUserIds))) {
+            return $this->_getResponseBadFail(__("Parameter is invalid."));
+        }
+
+        // Check users active
+        if (!$User->isActiveUsers($addUserIds)) {
+            return $this->_getResponseBadFail(__("Parameter is invalid."));
+        }
+
+        // Check can join member
+        $existTopicMemberCount = $TopicMember->find('count',
+            ['conditions' => ['user_id' => $addUserIds, 'topic_id' => $topicId]]);
+        if ($existTopicMemberCount > 0) {
+            return $this->_getResponseBadFail(__("Some users who already joined the topic are included in the specified users. Try again from the start."));
+        }
+        return true;
     }
 
     /**
