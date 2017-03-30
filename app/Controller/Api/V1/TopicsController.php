@@ -513,6 +513,8 @@ HTML;
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init('TopicService');
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
 
         $loginUserId = $this->Auth->user('id');
         $userIds = $this->request->data('user_ids');
@@ -529,13 +531,21 @@ HTML;
         }
 
         $topic = $TopicService->findTopicDetail($topicId);
-        return $this->_getResponseSuccess(compact('topic'));
+        $messages = $ApiMessageService->findMessages($topicId, null, 1);
+        $latestMessage = Hash::extract($messages, 'data.0');
+        return $this->_getResponseSuccess(
+            [
+                'topic'          => $topic,
+                'latest_message' => $latestMessage
+            ]
+        );
+
     }
 
     /**
      * Validate for post_members func
-     *
      * $addUserIds is a request parameter before validation execution, type is not specified.
+     *
      * @param int $topicId
      * @param int $loginUserId
      * @param     $addUserIds

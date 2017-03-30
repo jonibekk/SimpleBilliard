@@ -228,7 +228,7 @@ class Message extends AppModel
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $loginUserId,
             'type'           => self::TYPE_ADD_MEMBER,
-            'body' => implode(',', $addUserIds)
+            'target_user_ids' => implode(',', $addUserIds)
         ];
         $ret = $this->save($data);
         return (bool)$ret;

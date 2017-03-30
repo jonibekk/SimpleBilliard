@@ -208,7 +208,7 @@ class TopicMember extends AppModel
 
 
     /**
-     * leave from topic
+     * Add members to topic
      *
      * @param int $topicId
      * @param array $userIds
