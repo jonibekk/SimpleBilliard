@@ -139,7 +139,7 @@ class TopicService extends AppService
 
         // check ToUsers are active
         if (!$User->isActiveUsers($toUserIds)) {
-            return ['to_user_ids' => __('')];
+            return ['to_user_ids' => __('Invalid users are included in the destination.')];
         }
 
         return true;
@@ -287,7 +287,8 @@ class TopicService extends AppService
             }
 
             // create topic search record
-            if (!$TopicSearchKeyword->add($topicId)) {
+            $keywords = $Topic->fetchSearchKeywords($topicId);
+            if (!$TopicSearchKeyword->add($topicId, $keywords)) {
                 $errorMsg = sprintf("Failed to add search topic record. topicId:%s",
                     $topicId
                 );
@@ -324,4 +325,5 @@ class TopicService extends AppService
         }
         return true;
     }
+
 }

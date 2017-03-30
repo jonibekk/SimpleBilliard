@@ -671,7 +671,7 @@ class UsersController extends AppController
                 $this->updateSetupStatusIfNotCompleted();
 
                 // update message search keywords by user id
-                $this->User->TopicMember->Topic->TopicSearchKeyword->updateByUserId($this->Auth->user('id'));
+                ClassRegistry::init('TopicSearchKeyword')->updateByUserId($this->Auth->user('id'));
 
                 $this->Pnotify->outSuccess(__("Saved user setting."));
                 $this->redirect('/users/settings');

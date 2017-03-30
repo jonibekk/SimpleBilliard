@@ -150,7 +150,7 @@ class Topic extends AppModel
         // search from topic_search_keywords and topic.title by keyword
         if ($keyword) {
             $options['conditions']['OR'] = [
-                'Topic.title LIKE'                 => "%{$keyword}",
+                'Topic.title LIKE'                 => "%{$keyword}%",
                 'TopicSearchKeyword.keywords LIKE' => "%\n{$keyword}%"
             ];
             $options['joins'][] = [
@@ -240,6 +240,70 @@ class Topic extends AppModel
 
         $newTopicId = $this->getLastInsertID();
         return $newTopicId;
+    }
+
+    /**
+     * fetch search topic keywords
+     *
+     * @param  int    $topicId
+     *
+     * @return string
+     */
+    function fetchSearchKeywords(int $topicId): string
+    {
+        $options = [
+            'conditions' => [
+                'Topic.id' => $topicId
+            ],
+            'fields'     => [
+                'User.first_name',
+                'User.last_name',
+                'LocalName.first_name',
+                'LocalName.last_name'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'inner',
+                    'table'      => 'topic_members',
+                    'alias'      => 'TopicMember',
+                    'conditions' => [
+                        'Topic.id = TopicMember.topic_id'
+                    ],
+                ],
+                [
+                    'type'       => 'inner',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'TopicMember.user_id = User.id',
+                        'User.active_flg' => true,
+                    ],
+                ],
+                [
+                    'type'       => 'inner',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TopicMember.team_id = TeamMember.team_id',
+                        'TopicMember.user_id = TeamMember.user_id',
+                        'TeamMember.active_flg' => true
+                    ],
+                ],
+                [
+                    'type'       => 'left',
+                    'table'      => 'local_names',
+                    'alias'      => 'LocalName',
+                    'conditions' => [
+                        'User.id = LocalName.user_id'
+                    ],
+                ],
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        $res = AppUtil::flattenUnique($res);
+        $keywords = "\n" . implode("\n", $res);
+        return $keywords;
     }
 
 }

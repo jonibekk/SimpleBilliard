@@ -37,45 +37,20 @@ class TopicSearchKeyword extends AppModel
 
     /**
      * add keywords record for search
-     * - in super exceptional, writing sql directory
-     *  - For Reducing query cost
-     * - All user name are separated by new line symbol
-     *  - For searching by forward match
      *
      * @param  int $topicId
      *
      * @return bool
      */
-    function add(int $topicId): bool
+    function add(int $topicId, $keywords): bool
     {
-        $query = <<<SQL
-INSERT INTO topic_search_keywords (topic_id, team_id, keywords)
-SELECT
-    t.id as topic_id,
-    t.team_id,
-    CONCAT(
-        '\n',
-        GROUP_CONCAT(DISTINCT(u.last_name) SEPARATOR '\n'),
-        '\n',
-        GROUP_CONCAT(DISTINCT(u.first_name) SEPARATOR '\n'),
-        '\n',
-        GROUP_CONCAT(DISTINCT(ln.last_name) SEPARATOR '\n'),
-        '\n',
-        GROUP_CONCAT(DISTINCT(ln.first_name) SEPARATOR '\n')
-        ) as keywords
-FROM
-    topics t
-INNER JOIN topic_members tm ON
-    t.id = tm.topic_id
-INNER JOIN users u ON
-    tm.user_id = u.id
-LEFT JOIN local_names ln ON
-    u.id = ln.user_id
-WHERE t.id = $topicId
-GROUP BY t.id
-SQL;
-        $this->query($query);
-        return true;
+        $data = [
+            'team_id'  => $this->current_team_id,
+            'topic_id' => $topicId,
+            'keywords' => $keywords
+        ];
+        $res = (bool)$this->save($data);
+        return $res;
     }
 
     /**
@@ -99,25 +74,35 @@ UPDATE topic_search_keywords tsk,
         '\n',
         GROUP_CONCAT(DISTINCT(u.first_name) SEPARATOR '\n'),
         '\n',
-        GROUP_CONCAT(DISTINCT(ln.last_name) SEPARATOR '\n'),
+        ifnull(GROUP_CONCAT(DISTINCT(ln.last_name) SEPARATOR '\n'), ""),
         '\n',
-        GROUP_CONCAT(DISTINCT(ln.first_name) SEPARATOR '\n')
-    ) as keywords
+        ifnull(GROUP_CONCAT(DISTINCT(ln.first_name) SEPARATOR '\n'), "")
+    ) AS keywords
     FROM topics t
-    INNER JOIN topic_members tm ON
-        t.id = tm.topic_id
+    INNER JOIN topic_members tpm ON
+        t.id = tpm.topic_id
+        AND tpm.del_flg = 0
     INNER JOIN users u ON
-        u.id = tm.user_id
+        tpm.user_id = u.id
+        AND u.active_flg = 1
+        AND u.del_flg = 0
+    INNER JOIN team_members tm ON
+        tpm.user_id = tm.user_id
+        AND tpm.team_id = tm.team_id
+        AND tm.active_flg = 1
+        AND tm.del_flg = 0
     LEFT JOIN local_names ln ON
         ln.user_id = u.id
+        AND ln.del_flg = 0
     WHERE t.id in (
-      SELECT tm2.topic_id from topic_members as tm2
-      WHERE tm2.user_id = $userId
+      SELECT tpm2.topic_id from topic_members as tpm2
+      WHERE tpm2.user_id = $userId
     )
     GROUP BY t.id
 ) tsk2
 SET tsk.keywords = tsk2.keywords
 WHERE tsk.topic_id = tsk2.topic_id
+      AND tsk.del_flg = 0
 SQL;
         $this->query($query);
         return true;
@@ -125,43 +110,26 @@ SQL;
 
     /**
      * update keyword records for search by topic id
-     * - update all topics related by user
-     * - in super exceptional, writing sql directory
-     *  - For Reducing query cost
      *
-     * @param  int $userId
+     * @param  int    $topicId
+     * @param  string $keywords
+     *
      * @return bool
      */
-    function updateByTopicId(int $userId): bool
+    function updateByTopicId(int $topicId, string $keywords): bool
     {
-        $query = <<<SQL
-UPDATE topic_search_keywords tsk,
-(SELECT
-    t.id as topic_id,
-    CONCAT(
-        '\n',
-        GROUP_CONCAT(DISTINCT(u.last_name) SEPARATOR '\n'),
-        '\n',
-        GROUP_CONCAT(DISTINCT(u.first_name) SEPARATOR '\n'),
-        '\n',
-        GROUP_CONCAT(DISTINCT(ln.last_name) SEPARATOR '\n'),
-        '\n',
-        GROUP_CONCAT(DISTINCT(ln.first_name) SEPARATOR '\n')
-    ) as keywords
-    FROM topics t
-    INNER JOIN topic_members tm ON
-        t.id = tm.topic_id
-    INNER JOIN users u ON
-        u.id = tm.user_id
-    LEFT JOIN local_names ln ON
-        ln.user_id = u.id
-    WHERE t.id = $topicId
-    GROUP BY t.id
-) tsk2
-SET tsk.keywords = tsk2.keywords
-WHERE tsk.topic_id = tsk2.topic_id
-SQL;
-        $this->query($query);
-        return true;
+        $record = $this->findByTopicId($topicId, ['id']);
+        if (!$record) {
+            $this->log(sprintf("Failed to get topic search keywords by topicId. topicId:%s", $topicId));
+            return false;
+        }
+        $id = Hash::get($record, 'TopicSearchKeyword.id');
+
+        $data = [
+            'id'       => $id,
+            'team_id'  => $this->current_team_id,
+            'keywords' => $keywords
+        ];
+        return (bool)$this->save($data);
     }
 }
