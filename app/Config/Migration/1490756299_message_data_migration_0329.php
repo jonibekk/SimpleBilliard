@@ -85,6 +85,7 @@ class MessageDataMigration0329 extends CakeMigration
                 $this->updateReadMembers($topicId, $latestMessage['id'], $postId);
             }
             // トピック検索テーブルのレコード生成
+            $this->createTopicSearchKeywords();
 
         } catch (Exception $e) {
             // transaction rollback
@@ -294,5 +295,43 @@ class MessageDataMigration0329 extends CakeMigration
             ['TopicMember.last_read_message_id' => $messageId,],
             ['TopicMember.topic_id' => $topicId, 'TopicMember.user_id' => $readUids]
         );
+    }
+
+    function createTopicSearchKeywords()
+    {
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
+        $query = <<<SQL
+INSERT INTO topic_search_keywords (topic_id, team_id, keywords)
+SELECT
+    tp.id as topic_id,
+    tp.team_id,
+    CONCAT(
+        '\n',
+        GROUP_CONCAT(DISTINCT(u.last_name) SEPARATOR '\n'),
+        '\n',
+        GROUP_CONCAT(DISTINCT(u.first_name) SEPARATOR '\n'),
+        '\n',
+        GROUP_CONCAT(DISTINCT(ln.last_name) SEPARATOR '\n'),
+        '\n',
+        GROUP_CONCAT(DISTINCT(ln.first_name) SEPARATOR '\n')
+        ) as keywords
+FROM
+    topics tp
+INNER JOIN topic_members tpm ON
+    tp.id = tpm.topic_id
+-- LEFT JOIN team_members tm ON
+--     tpm.user_id = tm.user_id AND 
+--     tm.active_flg = 1
+INNER JOIN users u ON
+    tpm.user_id = u.id 
+--     AND 
+--     u.active_flg = 1
+LEFT JOIN local_names ln ON
+    u.id = ln.user_id
+GROUP BY tp.id
+SQL;
+        $TopicSearchKeyword->query($query);
+        return true;
     }
 }
