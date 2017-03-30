@@ -71,9 +71,8 @@ class MessageDataMigration0329 extends CakeMigration
                 $topic = $this->createTopicAndFirstMessage($postId);
                 $topicId = $topic['id'];
                 $teamId = $topic['team_id'];
-                $topicCreatorUid = $topic['creator_user_id'];
                 // 作成されたトピックのトピックメンバーをpost_share_usersとトピック作成者を元に作成(post_share_usersにはトピック作成者が含まれていない為)
-                $this->createTopicMembers($postId, $topicId, $topicCreatorUid, $teamId);
+                $this->createTopicMembers($postId, $topic);
                 // commentsテーブルを元にメッセージを生成しmessagesテーブルに保存([like]は絵文字に置き換える)
                 // commentsのデータは大量にある可能性が高いので、メモリ消費を抑える為に1件ずつ処理する
                 $this->createMessages($postId, $topicId, $teamId);
@@ -163,25 +162,27 @@ class MessageDataMigration0329 extends CakeMigration
         return $topic;
     }
 
-    function createTopicMembers($postId, $topicId, $topicCreatorUid, $teamId)
+    function createTopicMembers($postId, $topic)
     {
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
 
-        $userIds = $PostShareUser->findWithoutTeamId('list', [
+        $postShareUsers = $PostShareUser->findWithoutTeamId('all', [
             'conditions' => ['post_id' => $postId],
-            'fields'     => ['user_id'],
+            'fields'     => ['user_id', 'created'],
         ]);
-        array_push($userIds, $topicCreatorUid);
+        $postShareUsers = Hash::extract($postShareUsers, '{n}.PostShareUser');
+        array_unshift($postShareUsers, ['user_id' => $topic['creator_user_id'], 'created' => $topic['created']]);
 
         $topicMembersData = [];
-        foreach ($userIds as $uid) {
+        foreach ($postShareUsers as $postShareUser) {
             $topicMembersData[] = [
-                'user_id'  => $uid,
-                'topic_id' => $topicId,
-                'team_id'  => $teamId,
+                'user_id'  => $postShareUser['user_id'],
+                'topic_id' => $topic['id'],
+                'team_id'  => $topic['team_id'],
+                'created'  => $postShareUser['created'],
             ];
         }
         $TopicMember->bulkInsert($topicMembersData);
