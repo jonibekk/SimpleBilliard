@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDom from "react-dom";
 import {connect} from "react-redux";
-import * as actions from "~/message/actions/detail";
+import * as detail from "~/message/actions/detail";
+import * as file_upload from "~/message/modules/file_upload";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 
@@ -19,19 +20,19 @@ class Footer extends React.Component {
 
   sendLike(e) {
     this.props.dispatch(
-      actions.sendLike()
+      detail.sendLike()
     );
   }
 
   sendMessage(e) {
     this.props.dispatch(
-      actions.sendMessage()
+      detail.sendMessage()
     );
   }
 
-  onChangeMessage(e) {
+  inputMessage(e) {
     this.props.dispatch(
-      actions.onChangeMessage(e.target.value)
+      detail.inputMessage(e.target.value)
     );
   }
 
@@ -41,7 +42,7 @@ class Footer extends React.Component {
     }
 
     this.props.dispatch(
-      actions.uploadFiles(files)
+      file_upload.uploadFiles(files)
     );
   }
 
@@ -52,9 +53,9 @@ class Footer extends React.Component {
   }
 
   dragOver(e) {
-    this.setState({is_drag_over: true});
     e.stopPropagation();
     e.preventDefault();
+    this.setState({is_drag_over: true});
   }
 
   dragLeave(e) {
@@ -94,7 +95,7 @@ class Footer extends React.Component {
            onDragLeave={this.dragLeave.bind(this)}
       >
         {this.state.is_drag_over && <UploadDropZone/>}
-        <UploadPreview files={this.props.files} />
+        <UploadPreview files={this.props.preview_files} />
         <form>
           <div className="topicDetail-footer-box">
             <div className="topicDetail-footer-box-left">
@@ -109,7 +110,7 @@ class Footer extends React.Component {
                   className="form-control disable-change-warning"
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" defaultValue=""
-                  onChange={this.onChangeMessage.bind(this)}
+                  onChange={this.inputMessage.bind(this)}
                 />
               {this.props.err_msg &&
               <div className="has-error">
@@ -146,17 +147,16 @@ class Footer extends React.Component {
 }
 
 Footer.propTypes = {
-  message: React.PropTypes.string,
+  body: React.PropTypes.string,
   uploaded_file_ids: React.PropTypes.array,
-  files: React.PropTypes.array,
-  is_saving: React.PropTypes.bool,
+  preview_files: React.PropTypes.array,
   is_uploading: React.PropTypes.bool,
   err_msg: React.PropTypes.string,
 };
 Footer.defaultProps = {
-  message: "",
+  body: "",
   uploaded_file_ids: [],
-  files: [],
+  preview_files: [],
   is_saving: false,
   is_uploading: false,
   err_msg: "",

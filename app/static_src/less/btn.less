@@ -105,7 +105,7 @@
   text-align: center;
   padding: 2px;
   height: 100px;
-  line-height:100px;
+  line-height: 100px;
 }
 
 .btn-goals-column-plus:hover,
@@ -347,34 +347,34 @@
 }
 
 .btn-back {
-    display: inline-block;
-    border: 1px solid @lightGray;
-    border-radius: 4px;
-    height: auto;
-    min-width: 70px;
-    padding: 5px 10px;
-    text-align: center;
-    background-color: @smokyWhite;
-    margin-bottom: 5px;
-    text-decoration: none;
+  display: inline-block;
+  border: 1px solid @lightGray;
+  border-radius: 4px;
+  height: auto;
+  min-width: 70px;
+  padding: 5px 10px;
+  text-align: center;
+  background-color: @smokyWhite;
+  margin-bottom: 5px;
+  text-decoration: none;
 
-    &-text {
-      color: @darkGray;
-      vertical-align: middle;
-    }
+  &-text {
+    color: @darkGray;
+    vertical-align: middle;
+  }
 
-    .fa {
-      font-size: 18px;
-      color: @subColor10;
-      line-height: 20px;
-      vertical-align: middle;
-      padding-right: 7px;
-    }
+  .fa {
+    font-size: 18px;
+    color: @subColor10;
+    line-height: 20px;
+    vertical-align: middle;
+    padding-right: 7px;
+  }
 }
 
 .btn-back:hover {
-    background-color: @lighterGray;
-    text-decoration: none;
+  background-color: @lighterGray;
+  text-decoration: none;
 }
 
 .btn-fullsize-active {
@@ -390,19 +390,24 @@
 .btnRadiusOnlyIcon {
   width: 38px;
   height: 38px;
-  background: none;
-  border-color: @lightGray;
+  background-color: @smokyWhite;
+  border: 1px solid @lightGray;
   color: @trueGray;
   padding: 4px;
   margin: 0;
   cursor: pointer;
-  &:hover, &:target, &:active, &:focus {
-    text-decoration: none;
-    outline: none;
-    border: 1px solid @subColor4;
-    color: #fff;
+  outline: none;
+  outline-offset: 0;
+  text-decoration: none;
+  &:hover, &:active, &:focus {
     background-color: @acidRed;
-    border-color: @acidRed;
+    border: 1px solid @acidRed;
+    color: #fff;
+  }
+  &:visited {
+    background-color: @smokyWhite;
+    border: 1px solid @lightGray;
+    color: @trueGray;
   }
   &.mod-upload {
     .fa;

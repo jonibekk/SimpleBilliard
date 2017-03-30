@@ -3,7 +3,10 @@ import * as actions from '~/message/actions/detail'
 import DetailComponent from '~/message/components/Detail'
 
 function mapStateToProps(state) {
-  return { detail: state.detail}
+  return {
+    detail: state.detail,
+    file_upload: state.file_upload
+  }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -13,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     fetchMoreMessages: (url) => dispatch(actions.fetchMoreMessages(url)),
     sendMessage: () => dispatch(actions.sendMessage()),
     sendLike: () => dispatch(actions.sendLike()),
-    onChangeMessage: (val) => dispatch(actions.onChangeMessage(val)),
+    inputMessage: (val) => dispatch(actions.inputMessage(val)),
     resetStates: () => dispatch(actions.resetStates())
   }
 }
