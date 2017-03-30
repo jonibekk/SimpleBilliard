@@ -149,3 +149,50 @@
     }
   }
 }
+
+.topicCreateForm {
+  border: 1px solid @subColor4;
+  &-selectTo {
+    padding: 8px;
+    border-bottom: 1px dashed @lightGray;
+    &-label {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    ul {
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+  }
+  &-msgBody {
+    padding: 8px;
+    &-form {
+      height: 50px;
+      width: 100%;
+      overflow: hidden;
+      word-wrap: break-word;
+      resize: none;
+      border: none;
+      outline: none;
+    }
+  }
+  &-footer {
+    overflow: hidden;
+    padding: 8px 10px;
+    border-top: 1px solid @lighterGray;
+    background-color: @smokyWhite;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    &-left {
+      float: left;
+    }
+    &-right {
+      float: right;
+    }
+  }
+}

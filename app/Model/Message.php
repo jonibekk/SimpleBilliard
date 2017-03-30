@@ -14,6 +14,8 @@ class Message extends AppModel
     const TYPE_ADD_MEMBER = 2;
     const TYPE_LEAVE = 3;
     const TYPE_SET_TOPIC_NAME = 4;
+    const DIRECTION_OLD = "old";
+    const DIRECTION_NEW = "new";
 
     /**
      * Validation rules
@@ -78,10 +80,11 @@ class Message extends AppModel
      * @param int      $topicId
      * @param int|null $cursor
      * @param int      $limit
+     * @param string   $direction "old" or "new"
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit): array
+    function findMessages(int $topicId, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
     {
         $options = [
             'conditions' => [
@@ -117,7 +120,11 @@ class Message extends AppModel
         ];
 
         if ($cursor) {
-            $options['conditions']['Message.id <'] = $cursor;
+            if ($direction == self::DIRECTION_OLD) {
+                $options['conditions']['Message.id <'] = $cursor;
+            } elseif ($direction == self::DIRECTION_NEW) {
+                $options['conditions']['Message.id >'] = $cursor;
+            }
         }
 
         $res = $this->find('all', $options);
@@ -200,6 +207,28 @@ class Message extends AppModel
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
             'type'           => self::TYPE_LEAVE,
+        ];
+        $ret = $this->save($data);
+        return (bool)$ret;
+    }
+
+    /**
+     * Saving add member
+     *
+     * @param int   $topicId
+     * @param int   $loginUserId
+     * @param array $addUserIds
+     *
+     * @return bool
+     */
+    function saveAddMembers(int $topicId, int $loginUserId, array $addUserIds): bool
+    {
+        $data = [
+            'topic_id'       => $topicId,
+            'team_id'        => $this->current_team_id,
+            'sender_user_id' => $loginUserId,
+            'type'           => self::TYPE_ADD_MEMBER,
+            'target_user_ids' => implode(',', $addUserIds)
         ];
         $ret = $this->save($data);
         return (bool)$ret;

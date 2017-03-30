@@ -62,9 +62,11 @@ export function sendLike() {
 export function sendMessage() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.SAVING})
-    const detail = getState().detail;
+    const {detail, file_upload} = getState();
+
     const postData = Object.assign(detail.input_data, {
-      topic_id: detail.topic_id
+      topic_id: detail.topic_id,
+      file_ids: file_upload.uploaded_file_ids
     });
     return post("/api/v1/messages", postData, null,
       (response) => {
@@ -82,127 +84,11 @@ export function sendMessage() {
     );
   }
 }
-export function deleteUploadedFile(file_index) {
-  return (dispatch, getState) => {
-    let all_files = getState().detail.files;
-    let uploaded_file_ids = getState().detail.input_data.file_ids;
-    // Delete file from preview files and uploaded files
-    if (all_files[file_index]) {
-      const file_id = all_files[file_index].id;
-      const input_file_index = uploaded_file_ids.indexOf(file_id);
-      if (input_file_index >= 0) {
-        uploaded_file_ids.splice(input_file_index, 1);
-      }
-      all_files.splice(file_index, 1);
-    }
 
-    dispatch({
-      type: ActionTypes.DELETE_UPLOADED_FILE,
-      files: all_files,
-      file_ids: uploaded_file_ids
-    });
-  }
-}
-
-// TODO:Check upload limit
-// TODO:Test uploading multiple files simultaneously
-export function uploadFiles(files) {
-  return (dispatch, getState) => {
-    let all_files = getState().detail.files;
-
-    dispatch({type: ActionTypes.UPLOAD_START});
-    // Upload file one by one
-    for (let i = 0; i < files.length; i++) {
-      let file = files[i];
-      all_files.push(file);
-      let file_index = all_files.length - 1;
-
-      dispatch(uploading(file, file_index, all_files));
-
-      const postData = {
-        file
-      };
-      const options = {
-        // Get upload progress
-        onUploadProgress: function (progress_event) {
-          file.progress_rate = Math.round((progress_event.loaded * 100) / progress_event.total);
-          all_files[file_index] = file
-          dispatch({
-            type: ActionTypes.UPLOADING,
-            files: all_files,
-          })
-        }
-      };
-      // Call api
-      post("/api/v1/files/upload", postData, options,
-        (response) => {
-          dispatch(uploadSuccess(file, file_index, all_files, response))
-        },
-        (response) => {
-          dispatch(uploadError(file, file_index, all_files, response))
-        },
-      );
-    }
-  }
-}
-
-export function uploading(file, file_index, all_files) {
-  // Add info for display uploading preview
-  file.status = FileUpload.Uploading;
-  file.progress_rate = 0;
-  file.id = null;
-  // Display thumbnail only for image
-  if (file.type.match(/image/)) {
-    let reader = new FileReader;
-    reader.onloadend = () => {
-      file.previewUrl = reader.result;
-      all_files[file_index] = file
-      return {
-        type: ActionTypes.UPLOADING,
-        files: all_files,
-      }
-    }
-    reader.readAsDataURL(file);
-    return {
-      type: ActionTypes.UPLOADING,
-      files: all_files,
-    }
-
-  } else {
-    file.previewUrl = "";
-    all_files[file_index] = file
-  }
-  return {
-    type: ActionTypes.UPLOADING,
-    files: all_files,
-  }
-}
-
-export function uploadSuccess(file, file_index, all_files, response) {
-  file.status = FileUpload.Success
-  file.id = response.data.data.id
-  all_files[file_index] = file
-  return {
-    type: ActionTypes.UPLOAD_SUCCESS,
-    files: all_files,
-    file_id: file.id
-  }
-}
-
-export function uploadError(file, file_index, all_files, response) {
-  file.status = FileUpload.Error
-  file.err_msg = response.response.data.message
-  all_files[file_index] = file
-  return {
-    type: ActionTypes.UPLOAD_ERROR,
-    files: all_files,
-  }
-}
-
-export function onChangeMessage(val) {
+export function inputMessage(val) {
   return {
     type: ActionTypes.CHANGE_MESSAGE,
-    message: val
+    body: val
   }
 }
 export function setResourceId(topic_id) {

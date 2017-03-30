@@ -104,4 +104,19 @@ class TopicMemberTest extends GoalousTestCase
         $actual = $this->TopicMember->isMember($topicId, 2);
         $this->assertFalse($actual);
     }
+
+    function test_updateLastMessageSentDate()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    function test_leave()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    function test_bulkAdd()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
 }

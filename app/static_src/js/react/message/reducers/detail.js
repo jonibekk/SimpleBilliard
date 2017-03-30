@@ -17,9 +17,8 @@ const initialState = {
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
   save_topic_title_err_msg: "",
   err_msg: "",
-  files: [],
   input_data: {
-    message: "",
+    body: "",
     file_ids: []
   }
 }
@@ -89,26 +88,6 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         save_topic_title_err_msg: action.save_topic_title_err_msg,
         topic_title_setting_status: action.topic_title_setting_status
-      })
-    case ActionTypes.UPLOAD_START:
-      return Object.assign({}, state, {
-        is_saving: true
-      })
-    case ActionTypes.UPLOADING:
-      return Object.assign({}, state, {
-        files: [...action.files]
-      })
-    case ActionTypes.UPLOAD_SUCCESS:
-      input_data.file_ids = [...input_data.file_ids, action.file_id];
-      return Object.assign({}, state, {
-        input_data,
-        files: [...action.files],
-        is_saving: false
-      })
-    case ActionTypes.UPLOAD_ERROR:
-      return Object.assign({}, state, {
-        files: [...action.files],
-        is_saving: false
       })
     case ActionTypes.CHANGE_MESSAGE:
       input_data.message = action.message;
