@@ -20,29 +20,26 @@ export default class Detail extends React.Component {
   }
 
   render() {
-    const props = this.props.detail;
+    const {detail, file_upload} = this.props;
 
     return (
       <div className="panel panel-default topicDetail">
         <Header
-          topic={props.topic}
-          topic_title_setting_status={props.topic_title_setting_status}
-          save_topic_title_err_msg={props.save_topic_title_err_msg}
+          topic={detail.topic}
+          topic_title_setting_status={detail.topic_title_setting_status}
+          save_topic_title_err_msg={detail.save_topic_title_err_msg}
         />
         <Body
-          topic={props.topic}
-          messages={props.messages.data}
-          paging={props.messages.paging}
-          loading_more={props.loading_more}
-          is_fetched_initial={props.is_fetched_initial}
+          topic={detail.topic}
+          messages={detail.messages.data}
+          paging={detail.messages.paging}
+          loading_more={detail.loading_more}
+          is_fetched_initial={detail.is_fetched_initial}
         />
         <Footer
-          message={props.input_data.message}
-          uploaded_file_ids={props.input_data.file_ids}
-          files={props.files}
-          err_msg={props.err_msg}
-          is_saving={props.is_saving}
-          is_uploading={props.is_uploading}
+          body={detail.input_data.body}
+          is_saving={detail.is_saving}
+          {...file_upload}
         />
       </div>
     )

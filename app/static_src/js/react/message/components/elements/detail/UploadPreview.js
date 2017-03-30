@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import * as actions from "~/message/actions/detail";
+import {deleteUploadedFile} from "~/message/modules/file_upload";
 import {formatFileSize} from "~/util/base.js";
 import {FileUpload} from "~/common/constants/App";
 
@@ -12,7 +12,7 @@ class UploadPreview extends React.Component {
 
   deleteUploadedFile(file_index) {
     this.props.dispatch(
-      actions.deleteUploadedFile(file_index)
+      deleteUploadedFile(file_index)
     );
   }
 

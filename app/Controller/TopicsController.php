@@ -3,7 +3,6 @@ App::uses('AppController', 'Controller');
 
 /**
  * Topics Controller
- *
  */
 class TopicsController extends AppController
 {
@@ -32,9 +31,18 @@ class TopicsController extends AppController
      *
      * @return void
      */
-     public function detail()
-     {
-         $topicId = $this->request->params['topic_id'];
-         return $this->render("index");
-     }
+    public function detail()
+    {
+        $topicId = $this->request->params['topic_id'];
+        return $this->render("index");
+    }
+    /**
+     * Topic detail action
+     *
+     * @return void
+     */
+    public function create()
+    {
+        return $this->render("index");
+    }
 }

@@ -225,4 +225,31 @@ class TopicMember extends AppModel
         $ret = $this->softDeleteAll($conditions);
         return (bool)$ret;
     }
+
+
+    /**
+     * Add members to topic
+     *
+     * @param int $topicId
+     * @param array $userIds
+     *
+     * @return bool
+     * @internal param int $userId
+     */
+    function bulkAdd(int $topicId, array $userIds): bool
+    {
+        $baseData = [
+            'topic_id' => $topicId,
+            'team_id' => $this->current_team_id
+        ];
+        $insertData = [];
+        foreach ($userIds as $userId) {
+            $insertData[] = array_merge($baseData, [
+                'user_id'  => $userId,
+            ]);
+        }
+        $ret = $this->bulkInsert($insertData);
+        return (bool)$ret;
+    }
+
 }

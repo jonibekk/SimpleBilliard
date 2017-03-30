@@ -122,4 +122,9 @@ class TopicServiceTest extends GoalousTestCase
         // $this->assertEqual($topicId, 1);
     }
 
+    function test_addMembers()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
 }
