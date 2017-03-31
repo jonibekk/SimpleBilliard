@@ -196,6 +196,10 @@ class TopicsController extends ApiController
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
         $response = $ApiMessageService->findMessages($topicId, $loginUserId, $cursor, $limit, $direction);
+
+        // updating notification for message
+        $this->NotifyBiz->removeMessageNotification($topicId);
+        $this->NotifyBiz->updateCountNewMessageNotification();
 //TODO: This is for only reference. It should be removed. after writing test cases.
 //        $retMock = [];
 //        $retMock['data'] = [
