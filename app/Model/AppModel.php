@@ -421,11 +421,19 @@ class AppModel extends Model
 
             foreach ($data as $k => $v) {
                 if (isset($v[$this->name])) {
-                    $data[$k][$this->name]['modified'] = $data[$k][$this->name]['modified'] ?? REQUEST_TIMESTAMP;
-                    $data[$k][$this->name]['created'] = $data[$k][$this->name]['created'] ?? REQUEST_TIMESTAMP;
+                    if (empty($data[$k][$this->name]['modified'])) {
+                        $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
+                    }
+                    if (empty($data[$k][$this->name]['created'])) {
+                        $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
+                    }
                 } else {
-                    $data[$k]['modified'] = $data[$k]['modified'] ?? REQUEST_TIMESTAMP;
-                    $data[$k]['created'] = $data[$k]['created'] ?? REQUEST_TIMESTAMP;
+                    if (empty($data[$k]['modified'])) {
+                        $data[$k]['modified'] = REQUEST_TIMESTAMP;
+                    }
+                    if (empty($data[$k]['created'])) {
+                        $data[$k]['created'] = REQUEST_TIMESTAMP;
+                    }
                 }
             }
         }
