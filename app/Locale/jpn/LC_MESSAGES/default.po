@@ -1828,7 +1828,6 @@ msgstr "%sがトピック名を設定しました。: %s"
 msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
 
-msgid "Invalid screen transition."
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
 
