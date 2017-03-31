@@ -366,6 +366,7 @@ FROM
                         AND u.active_flg = 1
                         AND u.del_flg = 0
   LEFT JOIN local_names ln ON u.id = ln.user_id
+                            AND ln.del_flg = 0
 WHERE tp.del_flg = 0
 GROUP BY tp.id
 SQL;
