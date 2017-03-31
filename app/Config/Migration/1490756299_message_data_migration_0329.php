@@ -60,6 +60,8 @@ class MessageDataMigration0329 extends CakeMigration
             return true;
         }
 
+        ini_set('memory_limit', '1024M');
+
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         $Post->cacheQueries = false;
