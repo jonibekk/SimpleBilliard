@@ -334,7 +334,8 @@ class User extends AppModel
         'GoalMember',
         'Evaluator',
         'RecoveryCode',
-        'Device'
+        'Device',
+        'TopicMember'
     ];
 
     /**
