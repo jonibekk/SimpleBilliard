@@ -15,13 +15,15 @@ class ApiMessageService extends ApiService
      * Finding messages. It will returns data as API response
      *
      * @param int         $topicId
+     * @param int         $loginUserId
      * @param int|null    $cursor
      * @param int|null    $limit
      * @param string|null $direction "old" or "new"
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor = null, $limit = null, $direction = Message::DIRECTION_OLD): array
+    function findMessages(int $topicId, int $loginUserId, $cursor = null, $limit = null, $direction = Message::DIRECTION_OLD
+    ): array
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
@@ -45,6 +47,9 @@ class ApiMessageService extends ApiService
         }
 
         $ret['data'] = $messages;
+
+        // update user last read message id
+        $this->updateLastReadMessageId($ret['data'], $topicId, $loginUserId);
 
         if ($direction == Message::DIRECTION_OLD) {
             $ret = $this->setPaging($ret, $topicId, $limit);
@@ -112,6 +117,42 @@ class ApiMessageService extends ApiService
 
         $data['paging']['next'] = "/api/v1/topics/{$topicId}/messages?" . http_build_query($queryParams);
         return $data;
+    }
+
+    /**
+     * update latest read message id
+     *
+     * @param  array  $messages
+     * @param  int    $topicId
+     * @param  int    $loginUserId
+     */
+    function updateLastReadMessageId(array $messages, int $topicId, int $loginUserId)
+    {
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+
+        // fetch latest message id
+        $latestMessageId = $Topic->getLatestMessageId($topicId);
+        if (empty($latestMessageId)) {
+            $this->log(sprintf("Failed to get latest message. topicId: %s loginUserId: %s", $topicId, $loginUserId));
+        }
+
+        // extract latest message by messages
+        $latestMessage = Hash::extract($messages, "{n}[id={$latestMessageId}]");
+        if (empty($latestMessage)) {
+            return;
+        }
+
+        // need not update if latest message is mine
+        if ($latestMessage[0]['user']['id'] == $loginUserId) {
+            return;
+        }
+
+        // update
+        $TopicMember->updateLastReadMessageId($topicId, $latestMessageId, $loginUserId);
+        return;
     }
 
 }

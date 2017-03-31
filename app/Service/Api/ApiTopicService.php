@@ -103,7 +103,7 @@ class ApiTopicService extends ApiService
      *
      * @return array
      */
-    function findTopicDetailInitData(int $topicId): array
+    function findTopicDetailInitData(int $topicId, $loginUserId): array
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init('TopicService');
@@ -111,7 +111,7 @@ class ApiTopicService extends ApiService
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init('ApiMessageService');
-        $messageData = $ApiMessageService->findMessages($topicId);
+        $messageData = $ApiMessageService->findMessages($topicId, $loginUserId);
 
         $ret = [
             'topic'    => $topicDetail,
