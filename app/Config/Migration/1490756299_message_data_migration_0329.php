@@ -191,7 +191,11 @@ class MessageDataMigration0329 extends CakeMigration
             'fields'     => ['user_id', 'created', 'modified'],
         ]);
         $postShareUsers = Hash::extract($postShareUsers, '{n}.PostShareUser');
-        array_unshift($postShareUsers, ['user_id' => $topic['creator_user_id'], 'created' => $topic['created']]);
+        array_unshift($postShareUsers, [
+            'user_id'  => $topic['creator_user_id'],
+            'created'  => $topic['created'],
+            'modified' => $topic['modified'],
+        ]);
 
         $topicMembersData = [];
         foreach ($postShareUsers as $postShareUser) {
@@ -258,6 +262,7 @@ class MessageDataMigration0329 extends CakeMigration
                 foreach ($files as &$file) {
                     $file['message_id'] = $messageId;
                     $file['topic_id'] = $topicId;
+                    unset($file['comment_id']);
                 }
                 $MessageFile->bulkInsert($files);
             }
