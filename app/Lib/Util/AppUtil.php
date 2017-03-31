@@ -315,4 +315,23 @@ class AppUtil
         $baseCommand = $nohup . $cakeCmd . $cakeApp;
         return $baseCommand;
     }
+
+    /**
+     * flatten multi dimentions
+     *  - with being unique
+     *  - with unset empty value
+     *  - with reassign array keys
+     *
+     * @param  array $multiDimentions
+     *
+     * @return array
+     */
+    static function flattenUnique(array $multiDimentions): array
+    {
+        $flattened = Hash::flatten($multiDimentions);
+        $filterd = Hash::filter($flattened);
+        $uniqued = array_unique($filterd);
+        $keyReassigned = array_values($uniqued);
+        return $keyReassigned;
+    }
 }
