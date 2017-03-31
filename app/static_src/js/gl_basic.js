@@ -2994,6 +2994,7 @@ function evMessageList(options) {
 
   var url = cake.url.message_list;
   location.href = url;
+  return false;
 }
 
 
@@ -3675,17 +3676,25 @@ $(document).ready(function () {
     });
   }
   pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
+
     //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
     if (!cake.notify_setting[data.flag_name]) {
       return;
     }
+
+    // if display the topic page, nothing to do
+    let topic_page_url = "/topics/" + data.topic_id + "/detail";
+    if (location.pathname.indexOf(topic_page_url) !== -1) {
+      return;
+    }
+
     if (cake.data.user_id == data.from_user_id) {
       return;
     }
-    if (cake.unread_msg_post_ids.indexOf(data.post_id) >= 0) {
+    if (cake.unread_msg_topic_ids.indexOf(data.post_id) >= 0) {
       return;
     }
-    cake.unread_msg_post_ids.push(data.post_id);
+    cake.unread_msg_topic_ids.push(data.post_id);
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
 

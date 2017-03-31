@@ -33,7 +33,17 @@ class TopicsController extends AppController
      */
     public function detail()
     {
-        $topicId = $this->request->params['topic_id'];
+        $topicId = $this->request->param('topic_id');
+        if(!$topicId){
+            $this->Pnotify->outError(__("Invalid screen transition."));
+            return $this->redirect("/");
+        }
+
+        // updating message notify count.
+        $this->NotifyBiz->removeMessageNotification($topicId);
+        $this->NotifyBiz->updateCountNewMessageNotification();
+        $this->_setNotifyCnt();
+
         return $this->render("index");
     }
     /**
