@@ -122,7 +122,7 @@ class Footer extends React.Component {
             </div>
             <div className="topicDetail-footer-box-right">
               {(() => {
-                if (this.props.message || this.props.uploaded_file_ids.length > 0) {
+                if (this.props.body || this.props.uploaded_file_ids.length > 0) {
                   return (
                     <button type="button"
                             className="btn btnRadiusOnlyIcon mod-send"
