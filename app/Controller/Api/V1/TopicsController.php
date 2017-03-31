@@ -489,7 +489,6 @@ HTML;
      * @data array $user_ids required
      * @data string $message required
      * @data array $file_ids optional
-     *
      * @return CakeResponse|null
      */
     function post()
@@ -512,13 +511,17 @@ HTML;
         }
 
         // create
-        $topicId = $TopicService->create($postedData, $userId, $toUserIds);
-        if ($topicId === false) {
+        $createRes = $TopicService->create($postedData, $userId, $toUserIds);
+        if ($createRes === false) {
             return $this->_getResponseBadFail(null);
         }
+        $topicId = $createRes['topicId'];
+        $messageId = $createRes['messageId'];
+
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
 
         // TODO: フロント実装後に繋ぎこみ実装
-        $socketId = "test";
+        $socketId = null;
         $MessageService->execPushMessageEvent($topicId, $socketId);
 
         return $this->_getResponseSuccess(['topic_id' => $topicId]);
