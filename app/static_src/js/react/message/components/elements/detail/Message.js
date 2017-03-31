@@ -38,7 +38,7 @@ export default class Message extends React.Component {
     }
 
     return (
-      <div className="topicDetail-messages-item" key={ message.id }>
+      <div className="topicDetail-messages-item">
         <div className="topicDetail-messages-item-left">
           <a href={`/users/view_goals/user_id:${message.user.id}`}
              className="topicDetail-messages-item-left-profileImg">
@@ -62,7 +62,11 @@ export default class Message extends React.Component {
             }
           </p>
           {message.attached_files.map((attached_file) => {
-            return <AttachedFile attached_file={attached_file}/>
+            return (
+              <AttachedFile
+                key={attached_file.id}
+                attached_file={attached_file}/>
+            )
           })}
           {read_mark_el()}
         </div>

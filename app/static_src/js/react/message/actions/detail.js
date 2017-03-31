@@ -47,7 +47,7 @@ export function sendLike() {
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_SUCCESS,
-          data: response.data
+          message: response.data.data.message
         })
       },
       (response) => {
@@ -72,7 +72,7 @@ export function sendMessage() {
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_SUCCESS,
-          data: response.data
+          message: response.data.data.message
         })
       },
       (response) => {
