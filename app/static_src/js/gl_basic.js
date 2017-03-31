@@ -2992,82 +2992,8 @@ function evMessageList(options) {
   $(".has-notify-dropdown").removeClass("open");
   $('body').removeClass('notify-dropdown-open');
 
-  var opt = $.extend({
-    recursive: false,
-    loader_id: null
-  }, options);
-
-  //フィード読み込み中はキャンセル
-  if (feed_loading_now) {
-    return false;
-  }
-  feed_loading_now = true;
-
-  //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
-  //要素が多すぎるので、おとなしくページリロードする
   var url = cake.url.message_list;
-  if (!$(".layout-main").exists()) {
-    location.href = url;
-    return false;
-  }
-
-  //アドレスバー書き換え
-  if (!updateAddressBar("/posts/message_list#")) {
-    return false;
-  }
-
-  $('#jsGoTop').click();
-
-  //ローダー表示
-  var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
-  if (!opt.recursive) {
-    $(".layout-main").html($loader_html);
-  }
-
-  // URL生成
-  var url = cake.url.ajax_message_list;
-
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $posts = $(data.html);
-        //notify一覧に戻るhtmlを追加
-        //画像をレイジーロード
-        imageLazyOn($posts);
-        //一旦非表示
-        $posts.fadeOut();
-
-        $(".layout-main").html($posts);
-        activateMessageList();
-        initMemberSelect2();
-
-        //メッセージフォームのvalidateを有効化
-        $('#MessageDisplayForm').bootstrapValidator({
-          live: 'enabled',
-
-          fields: {}
-        });
-      }
-
-      //ローダーを削除
-      $loader_html.remove();
-
-      action_autoload_more = false;
-      autoload_more = false;
-      feed_loading_now = false;
-      do_reload_header_bellList = true;
-    },
-    error: function () {
-      feed_loading_now = false;
-      $loader_html.remove();
-    },
-  });
-  return false;
+  location.href = url;
 }
 
 
