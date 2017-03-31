@@ -328,7 +328,10 @@ class AppUtil
      */
     static function flattenUnique(array $multiDimentions): array
     {
-        $res = array_values(array_unique(Hash::filter(Hash::flatten($multiDimentions))));
-        return $res;
+        $flattened = Hash::flatten($multiDimentions);
+        $filterd = Hash::filter($flattened);
+        $uniqued = array_unique($filterd);
+        $keyReassigned = array_values($uniqued);
+        return $keyReassigned;
     }
 }
