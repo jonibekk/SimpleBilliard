@@ -44,7 +44,7 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.FETCH_MORE_MESSAGES:
       messages = {
-        data: [...state.messages.data, ...action.messages.data],
+        data: [...action.messages.data, ...state.messages.data],
         paging: action.messages.paging,
       }
       return Object.assign({}, state, {
