@@ -223,4 +223,13 @@ class BaseController extends Controller
         );
     }
 
+    /**
+     * @param string $class  __CLASS__
+     * @param string $method __METHOD__
+     */
+    function _logOldRequest(string $class, string $method)
+    {
+        $this->log(sprintf("This is old page. Class: %s::%s referer URL: %s", $class, $method, $this->referer()));
+    }
+
 }
