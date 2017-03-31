@@ -148,7 +148,10 @@ class MessageDataMigration0329 extends CakeMigration
         $topicId = $Topic->getLastInsertID();
 
         // 添付ファイル情報の取得
-        $postFiles = $PostFile->findWithoutTeamId('all', ['conditions' => ['post_id' => $postId]]);
+        $postFiles = $PostFile->findWithoutTeamId('all', [
+            'conditions' => ['post_id' => $postId],
+            'fields'     => ['attached_file_id', 'team_id', 'index_num', 'created', 'modified'],
+        ]);
         $postFiles = Hash::extract($postFiles, '{n}.PostFile');
 
         // 1件目のメッセージを保存(旧バージョンはpostsテーブルに１件目のメッセージが保存されている)
@@ -168,8 +171,6 @@ class MessageDataMigration0329 extends CakeMigration
         foreach ($postFiles as &$postFile) {
             $postFile['message_id'] = $messageId;
             $postFile['topic_id'] = $topicId;
-            unset($postFile['post_id']);
-            unset($postFile['id']);
         }
         $MessageFile->bulkInsert($postFiles);
 
@@ -187,7 +188,7 @@ class MessageDataMigration0329 extends CakeMigration
 
         $postShareUsers = $PostShareUser->findWithoutTeamId('all', [
             'conditions' => ['post_id' => $postId],
-            'fields'     => ['user_id', 'created'],
+            'fields'     => ['user_id', 'created', 'modified'],
         ]);
         $postShareUsers = Hash::extract($postShareUsers, '{n}.PostShareUser');
         array_unshift($postShareUsers, ['user_id' => $topic['creator_user_id'], 'created' => $topic['created']]);
@@ -199,6 +200,7 @@ class MessageDataMigration0329 extends CakeMigration
                 'topic_id' => $topic['id'],
                 'team_id'  => $topic['team_id'],
                 'created'  => $postShareUser['created'],
+                'modified' => $postShareUser['modified'],
             ];
         }
         $TopicMember->bulkInsert($topicMembersData);
@@ -232,7 +234,11 @@ class MessageDataMigration0329 extends CakeMigration
             // commentとその添付ファイルからメッセージを作成&保存
             $comment = $Comment->findWithoutTeamId('first', [
                 'conditions' => ['Comment.id' => $commentId],
-                'contain'    => ['CommentFile']
+                'contain'    => [
+                    'CommentFile' => [
+                        'fields' => ['attached_file_id', 'team_id', 'index_num', 'created', 'modified']
+                    ]
+                ]
             ]);
             $files = Hash::extract($comment, 'CommentFile');
             $comment = Hash::extract($comment, 'Comment');
@@ -252,8 +258,6 @@ class MessageDataMigration0329 extends CakeMigration
                 foreach ($files as &$file) {
                     $file['message_id'] = $messageId;
                     $file['topic_id'] = $topicId;
-                    unset($file['comment_id']);
-                    unset($file['id']);
                 }
                 $MessageFile->bulkInsert($files);
             }
