@@ -3691,10 +3691,10 @@ $(document).ready(function () {
     if (cake.data.user_id == data.from_user_id) {
       return;
     }
-    if (cake.unread_msg_topic_ids.indexOf(data.post_id) >= 0) {
+    if (cake.unread_msg_topic_ids.indexOf(data.topic_id) >= 0) {
       return;
     }
-    cake.unread_msg_topic_ids.push(data.post_id);
+    cake.unread_msg_topic_ids.push(data.topic_id);
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
 
