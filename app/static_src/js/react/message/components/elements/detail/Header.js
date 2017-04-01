@@ -112,7 +112,7 @@ class Header extends React.Component {
           </Link>
         </div>
         <div className="topicDetail-header-center">
-          <a href={`/topics/ajax_get_members_modal/${topic.id}`}
+          <a href={`/topics/ajax_get_members/${topic.id}`}
              className="topicDetail-header-center-link modal-ajax-get">
             <div className="topicDetail-header-title oneline-ellipsis"><span>{topic.display_title}</span></div>
             <div className="topicDetail-header-membersCnt">

@@ -56,7 +56,7 @@ class TopicsController extends AppController
      *
      * @return CakeResponse
      */
-    public function ajax_get_members_modal(int $topicId)
+    public function ajax_get_members(int $topicId)
     {
         $this->_ajaxPreProcess();
 
