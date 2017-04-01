@@ -10,7 +10,6 @@ import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import createReducer from '../reducers/config'
-// import { configurePusher } from 'pusher-redux';
 
 // Container読み込み
 import IndexContainer from '~/message/containers/Index'
@@ -22,14 +21,12 @@ const DevTools = createDevTools(
     <LogMonitor theme="tomorrow" preserveScrollTop={false} />
   </DockMonitor>
 )
-
 const reducer = createReducer()
 const store = createStore(
   reducer,
   DevTools.instrument(),
   applyMiddleware(thunk)
 )
-// configurePusher(store, cake.pusher.key);
 const history = syncHistoryWithStore(browserHistory, store)
 
 export const unlisten = history.listen( () => {
