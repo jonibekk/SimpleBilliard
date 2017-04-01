@@ -1829,6 +1829,8 @@ msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
 
 msgid "Invalid screen transition."
+msgstr "不正な画面遷移です。"
+
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
 
