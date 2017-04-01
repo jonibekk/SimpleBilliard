@@ -111,16 +111,16 @@ class Header extends React.Component {
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
           </Link>
         </div>
-        <div className="topicDetail-header-center oneline-ellipsis">
+        <div className="topicDetail-header-center">
           <a href={`/topics/ajax_get_members_modal/${topic.id}`}
              className="topicDetail-header-center-link modal-ajax-get">
-            <span className="topicDetail-header-title">{topic.display_title}</span>
+            <div className="topicDetail-header-title oneline-ellipsis"><span>{topic.display_title}</span></div>
+            <div className="topicDetail-header-membersCnt">
+              ({topic.members_count})
+            </div>
           </a>
         </div>
         <div className="topicDetail-header-right">
-          <div className="topicDetail-header-membersCnt">
-            ({topic.members_count})
-          </div>
           <div className="dropdown disp_ib">
             <a href="#" className="dropdown-toggle" id="topicHeaderMenu" data-toggle="dropdown" aria-expanded="true">
               <i className="fa fa-cog topicDetail-header-icon"/>
