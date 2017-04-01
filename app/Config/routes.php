@@ -107,6 +107,7 @@ Router::connect('/goals/:id/edit',
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);
+Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'action' => 'add_members']);
 
 /**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している

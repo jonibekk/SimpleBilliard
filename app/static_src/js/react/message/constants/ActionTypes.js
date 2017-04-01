@@ -1,3 +1,5 @@
+//TODO: Grouping each feature
+
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
 export const FETCH_MORE_MESSAGES = 'FETCH_MORE_MESSAGES'
 export const LOADING = 'LOADING'
@@ -45,5 +47,14 @@ export const TopicCreate = Object.freeze({
   SAVE_SUCCESS: 'TopicCreate/SAVE_SUCCESS',
   SAVE_ERROR: 'TopicCreate/SAVE_ERROR',
   UPDATE_INPUT_DATA: 'TopicCreate/UPDATE_INPUT_DATA'
+})
+
+export const TopicAddMembers = Object.freeze({
+  SET_RESOURCE_ID: 'TopicAddMembers/SET_RESOURCE_ID',
+  SAVING: 'TopicAddMembers/SAVING',
+  SAVE_SUCCESS: 'TopicAddMembers/SAVE_SUCCESS',
+  SAVE_ERROR: 'TopicAddMembers/SAVE_ERROR',
+  SELECT_USERS: 'TopicAddMembers/SELECT_USERS',
+  RESET_STATES: 'TopicAddMembers/RESET_STATES',
 })
 

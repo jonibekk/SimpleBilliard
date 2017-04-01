@@ -45,4 +45,15 @@ class TopicsController extends AppController
     {
         return $this->render("index");
     }
+
+    /**
+     * Add topic members
+     *
+     * @return void
+     */
+    public function add_members()
+    {
+        $topicId = $this->request->params['topic_id'];
+        return $this->render("index");
+    }
 }

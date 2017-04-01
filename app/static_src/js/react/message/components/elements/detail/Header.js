@@ -124,9 +124,9 @@ class Header extends React.Component {
             </a>
             <ul className="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="topicHeaderMenu">
               <li>
-                <a href="#" role="menuitem" tabIndex="-1">
+                <Link to={`/topics/${topic.id}/add_members`} role="menuitem" tabIndex="-1">
                   <i className="fa fa-user-plus mr_4px"/>{__("Add member(s)")}
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" role="menuitem" tabIndex="-1"
