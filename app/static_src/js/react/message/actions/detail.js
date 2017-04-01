@@ -35,14 +35,62 @@ export function fetchMoreMessages(url) {
         })
       })
       .catch((response) => {
+        TODO: implement
       })
   }
+}
+
+export function fetchLatestMessages(cursor) {
+  return (dispatch, getState) => {
+    const topic_id = getState().detail.topic_id
+    dispatch({
+      type: ActionTypes.LOADING_LATEST_MESSAGES,
+    })
+    return get(`/api/v1/topics/${topic_id}/messages?direction=new&cursor=${cursor}`)
+      .then((response) => {
+        const messages = uniqueMessages(
+          getState().detail.messages.data,
+          response.data.data
+        );
+        dispatch({
+          type: ActionTypes.FETCH_LATEST_MESSAGES,
+          messages
+        })
+      })
+      .catch((response) => {
+        TODO: implement
+      })
+  }
+}
+
+function uniqueMessages(originMessages, addMessages) {
+  if (addMessages.length == 0) {
+    return originMessages;
+  }
+  if (originMessages.length == 0) {
+    return addMessages;
+  }
+  let messages = [...originMessages, ...addMessages];
+  let uniqueIds = [];
+  // Remove duplicate topic_id element
+  messages = messages.filter(function (msg, i, self) {
+    if (uniqueIds.indexOf(msg.id) >= 0) {
+      return false;
+    }
+    uniqueIds.push(msg.id);
+    return true;
+  });
+  return messages;
 }
 
 export function sendLike() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.SAVING})
-    const postData = {topic_id: getState().detail.topic_id};
+    const detail = getState().detail;
+    const postData = {
+      topic_id: detail.topic_id,
+      socket_id: detail.pusher_info.socket_id
+    };
     return post("/api/v1/messages/like", postData, null,
       (response) => {
         dispatch({
@@ -63,10 +111,10 @@ export function sendMessage() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.SAVING})
     const {detail, file_upload} = getState();
-
     const postData = Object.assign(detail.input_data, {
       topic_id: detail.topic_id,
-      file_ids: file_upload.uploaded_file_ids
+      file_ids: file_upload.uploaded_file_ids,
+      socket_id: detail.pusher_info.socket_id
     });
     return post("/api/v1/messages", postData, null,
       (response) => {
@@ -150,5 +198,12 @@ export function cancelTopicTitleSetting() {
   return {
     type: ActionTypes.CHANGE_TOPIC_TITLE_SETTING_STATUS,
     topic_title_setting_status: TopicTitleSettingStatus.NONE,
+  }
+}
+
+export function setPusherInfo(pusher_info) {
+  return {
+    type: ActionTypes.SET_PUSHER_INFO,
+    pusher_info
   }
 }

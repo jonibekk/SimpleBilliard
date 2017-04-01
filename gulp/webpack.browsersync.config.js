@@ -40,6 +40,10 @@ export default {
         test: /\.css$/,
         loaders: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
     ]
   },
   plugins: [

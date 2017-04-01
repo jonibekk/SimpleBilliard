@@ -9,13 +9,14 @@ export default class Message extends React.Component {
   }
 
   render() {
-    const {topic, message} = this.props
+    const {topic, message, is_last_idx} = this.props
     const read_mark_el = () => {
-      if (topic.latest_message_id != message.id) {
+      if (!is_last_idx) {
         return null;
       }
+      const read_count = (topic.latest_message_id == message.id) ? topic.read_count : 0;
 
-      const is_all_read = (topic.read_count == topic.members_count - 1);
+      const is_all_read = (read_count == topic.members_count - 1);
       if (is_all_read) {
         return (
           <div>
@@ -29,7 +30,7 @@ export default class Message extends React.Component {
           <div>
             <a href="#" className="topicDetail-messages-item-read is-off">
               <i className="fa fa-check mr_2px"/>
-              {topic.read_count}
+              {read_count}
               <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
             </a>
           </div>
@@ -76,8 +77,10 @@ export default class Message extends React.Component {
 }
 Message.propTypes = {
   message: React.PropTypes.object,
+  is_last_idx: React.PropTypes.bool,
 };
 
 Message.defaultProps = {
   message: {},
+  is_last_idx: 0,
 };
