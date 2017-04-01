@@ -60,9 +60,6 @@ class TopicsController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        /** @var ApiTopicService $ApiTopicService */
-        $ApiTopicService = ClassRegistry::init("ApiTopicService");
-
         $users = $this->Topic->TopicMember->findMembers($topicId);
         $this->set(compact('users'));
 
