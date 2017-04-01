@@ -75,7 +75,7 @@ class TopicService extends AppService
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        $members = $TopicMember->findMembers($topicId, $limit);
+        $members = $TopicMember->findSortedBySentMessage($topicId, $limit);
         $names = Hash::extract($members, '{n}.User.display_first_name');
         $namesStr = implode(', ', $names);
         return (string)$namesStr;
