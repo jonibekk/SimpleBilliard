@@ -63,6 +63,12 @@ export function fetchLatestMessages(cursor) {
   }
 }
 
+/**
+ * Avoid to display duplicate message
+ * @param originMessages
+ * @param addMessages
+ * @returns messages
+ */
 function uniqueMessages(originMessages, addMessages) {
   if (addMessages.length == 0) {
     return originMessages;
