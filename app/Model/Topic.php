@@ -306,4 +306,20 @@ class Topic extends AppModel
         return $keywords;
     }
 
+    /**
+     * get latest message id in topic
+     *
+     * @param int $topicId
+     *
+     * @return null|int
+     */
+    function getLatestMessageId(int $topicId)
+    {
+        $topic = $this->getById($topicId, ['latest_message_id']);
+        if (empty($topic)) {
+            return null;
+        }
+        return $topic['latest_message_id'];
+    }
+
 }

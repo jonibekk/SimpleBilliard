@@ -551,12 +551,12 @@ class AppModel extends Model
      *
      * @return array
      */
-    function getById($id)
+    function getById($id, array $fields = [])
     {
         if (empty($id)) {
             return [];
         }
-        $ret = $this->findById($id);
+        $ret = $this->findById($id, $fields);
         return reset($ret);
     }
 
