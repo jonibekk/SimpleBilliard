@@ -29,6 +29,10 @@ class PostsController extends AppController
 
     public function message()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('without_footer', true);
         return $this->render();
@@ -36,6 +40,10 @@ class PostsController extends AppController
 
     public function ajax_message()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
 
         $response = $this->render('/Posts/message');
@@ -49,6 +57,10 @@ class PostsController extends AppController
 
     public function ajax_message_list()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
 
         $response = $this->render('/Posts/message_list');
@@ -62,6 +74,14 @@ class PostsController extends AppController
 
     public function message_list()
     {
+        // モバイルアプリ以外の場合はこのurlへの動線が存在してはいけないので、ログを残す。
+        // モバイルアプリはリリースのタイミングまで動線が残る。
+        if (!$this->is_mb_app) {
+            $this->_logOldRequest(__CLASS__, __METHOD__);
+        }
+        return $this->redirect("/topics/");
+
+        //TODO should be removed.
         // 宛先のユーザー情報取得
         $targetUserId = $this->request->query('userId');
         $targetUserId = is_numeric($targetUserId) ? $targetUserId : '';
@@ -72,6 +92,10 @@ class PostsController extends AppController
 
     public function ajax_get_message_list($page = 1)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
         $result = $this->Post->getMessageList($this->Auth->user('id'),
             PostsController::$message_list_page_count, $page);
@@ -122,6 +146,10 @@ class PostsController extends AppController
      */
     public function add_message()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->_addPost();
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
@@ -133,6 +161,10 @@ class PostsController extends AppController
      */
     public function edit_message_users()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $id = $this->request->data['Post']['post_id'];
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->request->allowMethod('post');
@@ -486,6 +518,10 @@ class PostsController extends AppController
 
     public function ajax_get_message_info($post_id)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $text_ex = new TextExHelper(new View());
         $this->_ajaxPreProcess();
         $room_info = $this->Post->getPostById($post_id);
@@ -549,6 +585,10 @@ class PostsController extends AppController
      */
     public function ajax_get_message($post_id, $limit, $page_num, $start = null)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
         //メッセージを既読に
         $this->Post->Comment->CommentRead->redAllByPostId($post_id);
@@ -566,6 +606,10 @@ class PostsController extends AppController
 
     public function ajax_put_message($post_id)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess('post');
 
         $params['Comment']['post_id'] = $post_id;
@@ -610,6 +654,10 @@ class PostsController extends AppController
 
     public function ajax_put_message_read($post_id, $comment_id)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
         $res = $this->Post->Comment->CommentRead->red([$comment_id]);
         if ($res === true) {

@@ -155,13 +155,16 @@ class TopicsController extends ApiController
 
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        if (!$TopicMember->isMember($topicId, $this->Auth->user('id'))) {
+
+        $loginUserId = $this->Auth->user('id');
+
+        if (!$TopicMember->isMember($topicId, $loginUserId)) {
             return $this->_getResponseBadFail(__("You cannot access the topic"));
         }
 
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
-        $ret = $ApiTopicService->findTopicDetailInitData($topicId);
+        $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId);
 
         return $this->_getResponseSuccess($ret);
     }
@@ -184,6 +187,7 @@ class TopicsController extends ApiController
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
         $direction = $this->request->query('direction') ?? Message::DIRECTION_OLD;
+        $loginUserId = $this->Auth->user('id');
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init("ApiMessageService");
@@ -191,7 +195,7 @@ class TopicsController extends ApiController
         if (!$ApiMessageService->checkMaxLimit((int)$limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-        $response = $ApiMessageService->findMessages($topicId, $cursor, $limit, $direction);
+        $response = $ApiMessageService->findMessages($topicId, $loginUserId, $cursor, $limit, $direction);
 //TODO: This is for only reference. It should be removed. after writing test cases.
 //        $retMock = [];
 //        $retMock['data'] = [
@@ -552,7 +556,7 @@ HTML;
         }
 
         $topic = $TopicService->findTopicDetail($topicId);
-        $messages = $ApiMessageService->findMessages($topicId, null, 1);
+        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, null, 1);
         $latestMessage = Hash::extract($messages, 'data.0');
         return $this->_getResponseSuccess(
             [

@@ -16,10 +16,13 @@
             </select>
         </div>
         <div class="bbb">
-            <input ng-show="name_field_show"
+            <input type="text"
+                   ng-show="name_field_show"
                    ng-model="name_field.search_user_keyword"
                    class="form-control disable-change-warning team-members-list-conditions-input"
-                   placeholder="&#xF002; {{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
+                   placeholder="&#xF002; {{ 'PLACEHOLDER_NAME_FIELD' | translate}}"
+                   autocomplete="off"
+            >
 
             <input ng-show="coach_name_field_show"
                    ng-model="name_field.search_coach_name_keyword"

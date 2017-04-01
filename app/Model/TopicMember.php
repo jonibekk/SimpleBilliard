@@ -210,6 +210,26 @@ class TopicMember extends AppModel
     }
 
     /**
+     * updating last read message id
+     *
+     * @param int $topicId
+     * @param int $messageId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function updateLastReadMessageId(int $topicId, int $messageId, int $userId)
+    {
+        $fields = ['TopicMember.last_read_message_id' => $messageId];
+        $conditions = [
+            'TopicMember.topic_id' => $topicId,
+            'TopicMember.user_id'  => $userId
+        ];
+        $ret = $this->updateAll($fields, $conditions);
+        return (bool)$ret;
+    }
+
+    /**
      * leave from topic
      *
      * @param int $topicId
