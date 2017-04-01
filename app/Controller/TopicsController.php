@@ -34,8 +34,17 @@ class TopicsController extends AppController
     public function detail()
     {
         $topicId = $this->request->param('topic_id');
-        if(!$topicId){
+        if (!$topicId) {
             $this->Pnotify->outError(__("Invalid screen transition."));
+            return $this->redirect("/");
+        }
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        // checking permission
+        $loginUserId = $this->Auth->user('id');
+        if (!$TopicMember->isMember($topicId, $loginUserId)) {
+            $this->Pnotify->outError(__("You cannot access the topic"));
             return $this->redirect("/");
         }
 
@@ -46,6 +55,7 @@ class TopicsController extends AppController
 
         return $this->render("index");
     }
+
     /**
      * Topic detail action
      *

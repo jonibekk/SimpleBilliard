@@ -382,7 +382,7 @@ HTML;
         // create
         $createRes = $TopicService->create($postedData, $userId, $toUserIds);
         if ($createRes === false) {
-            return $this->_getResponseBadFail(null);
+            return $this->_getResponseInternalServerError();
         }
         $topicId = $createRes['topicId'];
         $messageId = $createRes['messageId'];
@@ -390,7 +390,7 @@ HTML;
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
 
         // TODO: フロント実装後に繋ぎこみ実装
-        $socketId = null;
+        $socketId = "test";
         $MessageService->execPushMessageEvent($topicId, $socketId);
 
         return $this->_getResponseSuccess(['topic_id' => $topicId]);
