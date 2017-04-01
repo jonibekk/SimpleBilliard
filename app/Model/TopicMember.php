@@ -166,7 +166,27 @@ class TopicMember extends AppModel
         }
         $ret = $this->find('list', $options);
         return $ret;
+    }
 
+    /**
+     * add members to topic
+     *
+     * @param  int   $topicId
+     * @param  array $users
+     *
+     * @return array
+     */
+    function add(int $topicId, array $users): bool
+    {
+        $saveData = [];
+        foreach ($users as $userId) {
+            $saveData[] = [
+                'user_id'  => $userId,
+                'topic_id' => $topicId,
+                'team_id'  => $this->current_team_id,
+            ];
+        }
+        return $this->bulkInsert($saveData);
     }
 
     /**
@@ -183,6 +203,26 @@ class TopicMember extends AppModel
         $conditions = [
             'TopicMember.topic_id' => $topicId,
             'TopicMember.user_id'  => $userId,
+        ];
+        $ret = $this->updateAll($fields, $conditions);
+        return (bool)$ret;
+    }
+
+    /**
+     * updating last read message id
+     *
+     * @param int $topicId
+     * @param int $messageId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function updateLastReadMessageId(int $topicId, int $messageId, int $userId)
+    {
+        $fields = ['TopicMember.last_read_message_id' => $messageId];
+        $conditions = [
+            'TopicMember.topic_id' => $topicId,
+            'TopicMember.user_id'  => $userId
         ];
         $ret = $this->updateAll($fields, $conditions);
         return (bool)$ret;

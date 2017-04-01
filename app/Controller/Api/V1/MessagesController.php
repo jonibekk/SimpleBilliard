@@ -41,7 +41,8 @@ class MessagesController extends ApiController
         }
 
         // validation
-        $validationResult = $MessageService->validatePostMessage($postedData);
+        // remove sender_user_id validation rule, cause that is not included in posted data
+        $validationResult = $MessageService->validatePostMessage($postedData, ['sender_user_id']);
         if ($validationResult !== true) {
             return $this->_getResponseValidationFail($validationResult);
         }
@@ -58,8 +59,8 @@ class MessagesController extends ApiController
         $socketId = "test";
         $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
-        $newMessage = $ApiMessageService->get($messageId);
-        return $this->_getResponseSuccess($newMessage);
+        $message = $ApiMessageService->get($messageId);
+        return $this->_getResponseSuccess(compact('message'));
     }
 
     /**
@@ -101,8 +102,8 @@ class MessagesController extends ApiController
         $socketId = "test";
         $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
-        $newMessage = $ApiMessageService->get($messageId);
-        return $this->_getResponseSuccess($newMessage);
+        $message = $ApiMessageService->get($messageId);
+        return $this->_getResponseSuccess(compact('message'));
     }
 
     /**

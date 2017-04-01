@@ -68,6 +68,17 @@ class Topic extends AppModel
         'TopicMember',
     ];
 
+    /**
+     * hasOne associations
+     *
+     * @var array
+     */
+    public $hasOne = [
+        'TopicSearchKeyword'
+    ];
+
+
+
     /* number of displaying user photo in topic list page */
     const MAX_DISPLAYING_USER_PHOTO = 4;
 
@@ -140,7 +151,7 @@ class Topic extends AppModel
         if ($keyword) {
             $options['conditions']['OR'] = [
                 'Topic.title LIKE'                 => "%{$keyword}%",
-                'TopicSearchKeyword.keywords LIKE' => "%\\n{$keyword}%"
+                'TopicSearchKeyword.keywords LIKE' => "%\n{$keyword}%"
             ];
             $options['joins'][] = [
                 'type'       => 'LEFT',
@@ -207,6 +218,108 @@ class Topic extends AppModel
         ];
         $ret = $this->save($data);
         return $ret;
+    }
+
+    /**
+     * create new topic
+     *
+     * @param  int $userId
+     *
+     * @return int|false
+     */
+    function add(int $userId)
+    {
+        $data = [
+            'creator_user_id' => $userId,
+            'team_id'         => $this->current_team_id
+        ];
+
+        if (!$this->save($data)) {
+            return false;
+        }
+
+        $newTopicId = $this->getLastInsertID();
+        return $newTopicId;
+    }
+
+    /**
+     * fetch search topic keywords
+     *
+     * @param  int    $topicId
+     *
+     * @return string
+     */
+    function fetchSearchKeywords(int $topicId): string
+    {
+        $options = [
+            'conditions' => [
+                'Topic.id' => $topicId
+            ],
+            'fields'     => [
+                'User.first_name',
+                'User.last_name',
+                'LocalName.first_name',
+                'LocalName.last_name'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'inner',
+                    'table'      => 'topic_members',
+                    'alias'      => 'TopicMember',
+                    'conditions' => [
+                        'Topic.id = TopicMember.topic_id'
+                    ],
+                ],
+                [
+                    'type'       => 'inner',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'TopicMember.user_id = User.id',
+                        'User.active_flg' => true,
+                    ],
+                ],
+                [
+                    'type'       => 'inner',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TopicMember.team_id = TeamMember.team_id',
+                        'TopicMember.user_id = TeamMember.user_id',
+                        'TeamMember.active_flg' => true
+                    ],
+                ],
+                [
+                    'type'       => 'left',
+                    'table'      => 'local_names',
+                    'alias'      => 'LocalName',
+                    'conditions' => [
+                        'User.id = LocalName.user_id'
+                    ],
+                ],
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        $res = AppUtil::flattenUnique($res);
+        $keywords = "\n" . implode("\n", $res);
+        return $keywords;
+    }
+
+    /**
+     * get latest message id in topic
+     *
+     * @param int $topicId
+     *
+     * @return null|int
+     */
+    function getLatestMessageId(int $topicId)
+    {
+        $topic = $this->getById($topicId, ['latest_message_id']);
+        if (empty($topic)) {
+            return null;
+        }
+        return $topic['latest_message_id'];
     }
 
 }

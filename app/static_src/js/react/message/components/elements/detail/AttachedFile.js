@@ -1,5 +1,5 @@
 import React from "react";
-import Model from "~/common/constants/Model";
+import * as Model from "~/common/constants/Model";
 
 // TODO:Refactoring markup after we can upload file and save message.
 export default class AttachedFile extends React.Component {
@@ -10,8 +10,8 @@ export default class AttachedFile extends React.Component {
   render() {
     const {attached_file} = this.props
 
-    switch (attached_file.file_type) {
-      case Model.AttachedFile.IMG:
+    switch (parseInt(attached_file.file_type)) {
+      case Model.AttachedFile.FileType.IMG:
         return (
           <div>
             <a href={attached_file.preview_url}>
@@ -19,10 +19,10 @@ export default class AttachedFile extends React.Component {
             </a>
           </div>
         )
-      case Model.AttachedFile.VIDEO:
+      case Model.AttachedFile.FileType.VIDEO:
         // Current Not used
         return null;
-      case Model.AttachedFile.DOC:
+      case Model.AttachedFile.FileType.DOC:
         return (
           <div>
             <div className="col col-xxs-1 messanger-attached-files-icon">
@@ -63,6 +63,8 @@ export default class AttachedFile extends React.Component {
             </div>
           </div>
         )
+      default:
+        return null;
     }
   }
 }

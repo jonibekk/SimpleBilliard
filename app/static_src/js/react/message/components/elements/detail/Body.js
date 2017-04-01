@@ -17,14 +17,14 @@ class Body extends React.Component {
   }
 
   componentDidMount() {
-    this.attachScrollListener();
+    // this.attachScrollListener();
   }
 
   componentDidUpdate() {
-    this.attachScrollListener();
     if (this.props.is_fetched_initial && !this.state.scrolled_bottom) {
       this.scrollBottom();
     }
+    this.attachScrollListener();
   }
 
   _findElement() {
@@ -33,15 +33,25 @@ class Body extends React.Component {
 
   // TODO: componentize
   attachScrollListener() {
-    if (!this.props.paging.next || this.props.loading_more) return;
+    if (!this.props.is_fetched_initial) {
+      return;
+    }
+    if (!this.state.scrolled_bottom) {
+      return;
+    }
     let el = this._findElement();
     el.addEventListener('scroll', this.scrollFunction, true);
     el.addEventListener('resize', this.scrollFunction, true);
-    this.scrollListener();
   }
 
   scrollListener() {
     if (this.props.messages.length <= 0) {
+      return;
+    }
+    if (!this.props.paging.next) {
+      return;
+    }
+    if (this.props.loading_more) {
       return;
     }
 

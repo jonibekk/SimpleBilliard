@@ -1,9 +1,11 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Topic', 'Model');
+App::uses('User', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('TopicSearchKeyword', 'Model');
 
 /**
  * Class TopicService
@@ -112,6 +114,38 @@ class TopicService extends AppService
     }
 
     /**
+     * Validate create topic
+     *
+     * @param  array  $data
+     * @param  array $toUserIds
+     *
+     * @return array|true
+     */
+    function validateCreate(array $data, array $toUserIds)
+    {
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init("MessageService");
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+
+        // validation message without ignorefields
+        // topic_id: haven't created topic data yet
+        // sendoer_user_id: not contain in post data
+        $ignoreFields = ['topic_id', 'sender_user_id'];
+        $messageValidResult = $MessageService->validatePostMessage($data, $ignoreFields);
+        if ($messageValidResult !== true) {
+            return $messageValidResult;
+        }
+
+        // check ToUsers are active
+        if (!$User->isActiveUsers($toUserIds)) {
+            return ['to_user_ids' => __('Invalid users are included in the destination.')];
+        }
+
+        return true;
+    }
+
+    /**
      * leaving the topic.
      * - delete topic_members.
      * - add message as leave me.
@@ -159,10 +193,122 @@ class TopicService extends AppService
             return false;
         }
         $TopicMember->commit();
+
         return true;
     }
 
     /**
+     * create topic and first message
+     *
+     * @param  array  $data
+     * @param  array  $toUserIds
+     *
+     * @return int|null
+     */
+    function create(array $data, int $creatorUserId, array $toUserIds)
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
+
+        $Topic->begin();
+
+        try {
+            // save topic
+            $topicId = $Topic->add($creatorUserId);
+            if (!$topicId) {
+                $errorMsg = sprintf("Failed to create topic. userId:%s, validationErrors:%s",
+                    $creatorUserId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
+            // save tousers
+            $toUserIds[] = $creatorUserId;
+            $savedMembers = $TopicMember->add($topicId, $toUserIds);
+            if (!$savedMembers) {
+                $errorMsg = sprintf("Failed to add members to topic. userId:%s, topicId:%s, data:%s validationErrors:%s",
+                    $creatorUserId,
+                    $topicId,
+                    $toUserIds,
+                    var_export($TopicMember->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
+            // save message
+            $data['topic_id'] = $topicId;
+            $message = $Message->saveNormal($data, $creatorUserId);
+            if ($message === false) {
+                $errorMsg = sprintf("Failed to add a message. userId:%s, topicId:%s, data:%s, validationErrors:%s",
+                    $creatorUserId,
+                    $topicId,
+                    var_export($data, true),
+                    var_export($Message->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+            $messageId = $Message->getLastInsertID();
+
+            // save attached files
+            if (Hash::get($data, 'file_ids')) {
+                $attachedFiles = $AttachedFile->saveRelatedFiles($messageId, AttachedFile::TYPE_MODEL_MESSAGE,
+                    $data['file_ids']);
+                if ($attachedFiles === false) {
+                    $errorMsg = sprintf("Failed to save attached files on message. data:%s, validationErrors:%s",
+                        var_export($data, true),
+                        var_export($AttachedFile->validationErrors, true)
+                    );
+                    throw new Exception($errorMsg);
+                }
+
+                // update attached file count
+                $Message->id = $messageId;
+                $Message->saveField('attached_file_count', count($data['file_ids']));
+            }
+
+            // update latest message on the topic
+            $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
+            if ($updateTopic === false) {
+                $errorMsg = sprintf("Failed to update latest message on the topic. topicId:%s, messageId:%s, validationErrors:%s",
+                    $topicId,
+                    $messageId,
+                    var_export($Topic->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
+            // create topic search record
+            $keywords = $Topic->fetchSearchKeywords($topicId);
+            if (!$TopicSearchKeyword->add($topicId, $keywords)) {
+                $errorMsg = sprintf("Failed to add search topic record. topicId:%s",
+                    $topicId
+                );
+                throw new Exception($errorMsg);
+            }
+
+        } catch (Exception $e) {
+            $this->log($e->getMessage());
+            $Topic->rollback();
+            return false;
+        }
+
+        $Topic->commit();
+
+        return $topicId;
+    }
+
+
+
+    /*
      * Add members to the topic.
      * - Add topic_members.
      * - Add message as add members.

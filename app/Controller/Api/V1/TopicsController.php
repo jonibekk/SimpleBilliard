@@ -1,17 +1,15 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('Topic', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('Message', 'Model');
-App::import('Service/Api', 'ApiTopicService');
+App::uses('TopicSearchKeyword', 'Model');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
 App::import('Service/Api', 'ApiMessageService');
 /** @noinspection PhpUndefinedClassInspection */
-App::uses('Topic', 'Model');
 App::import('Service/Api', 'ApiTopicService');
 App::uses('AppUtil', 'Util');
-
-/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * Class TopicsController
@@ -34,6 +32,8 @@ class TopicsController extends ApiController
         $Topic = ClassRegistry::init("Topic");
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init("ApiTopicService");
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init("TopicSearchKeyword");
 
         // get query params
         $limit = $this->request->query('limit') ?? ApiTopicService::DEFAULT_TOPICS_NUM;
@@ -155,13 +155,16 @@ class TopicsController extends ApiController
 
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        if (!$TopicMember->isMember($topicId, $this->Auth->user('id'))) {
+
+        $loginUserId = $this->Auth->user('id');
+
+        if (!$TopicMember->isMember($topicId, $loginUserId)) {
             return $this->_getResponseBadFail(__("You cannot access the topic"));
         }
 
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
-        $ret = $ApiTopicService->findTopicDetailInitData($topicId);
+        $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId);
 
         return $this->_getResponseSuccess($ret);
     }
@@ -184,6 +187,7 @@ class TopicsController extends ApiController
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
         $direction = $this->request->query('direction') ?? Message::DIRECTION_OLD;
+        $loginUserId = $this->Auth->user('id');
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init("ApiMessageService");
@@ -191,7 +195,7 @@ class TopicsController extends ApiController
         if (!$ApiMessageService->checkMaxLimit((int)$limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-        $response = $ApiMessageService->findMessages($topicId, $cursor, $limit, $direction);
+        $response = $ApiMessageService->findMessages($topicId, $loginUserId, $cursor, $limit, $direction);
 //TODO: This is for only reference. It should be removed. after writing test cases.
 //        $retMock = [];
 //        $retMock['data'] = [
@@ -479,24 +483,45 @@ HTML;
     }
 
     /**
-     * Create a topic
+     * Create a topic and first message
      * url: POST /api/v1/topics
      *
      * @data array $user_ids required
      * @data string $message required
      * @data array $file_ids optional
+     *
      * @return CakeResponse|null
-     * @link https://confluence.goalous.com/display/GOAL/%5BPOST%5D+Create+a+topic
-     *       TODO: This is mock! We have to implement it!
      */
     function post()
     {
-        $userIds = $this->request->data('user_ids');
-        $message = $this->request->data('message');
-        $fileIds = $this->request->data('file_ids');
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init("TopicService");
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init("MessageService");
 
-        $retMock = ['topic_id' => 1];
-        return $this->_getResponseSuccessSimple($retMock);
+        $userId = $this->Auth->user('id');
+
+        // filter fields
+        $postedData = AppUtil::filterWhiteList($this->request->data, ['body', 'file_ids']);
+        $toUserIds = Hash::get($this->request->data, ['to_user_ids']);
+
+        // validation
+        $validationResult = $TopicService->validateCreate($postedData, $toUserIds);
+        if ($validationResult !== true) {
+            return $this->_getResponseValidationFail($validationResult);
+        }
+
+        // create
+        $topicId = $TopicService->create($postedData, $userId, $toUserIds);
+        if ($topicId === false) {
+            return $this->_getResponseBadFail(null);
+        }
+
+        // TODO: フロント実装後に繋ぎこみ実装
+        $socketId = "test";
+        $MessageService->execPushMessageEvent($topicId, $socketId);
+
+        return $this->_getResponseSuccess(['topic_id' => $topicId]);
     }
 
     /**
@@ -531,7 +556,7 @@ HTML;
         }
 
         $topic = $TopicService->findTopicDetail($topicId);
-        $messages = $ApiMessageService->findMessages($topicId, null, 1);
+        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, null, 1);
         $latestMessage = Hash::extract($messages, 'data.0');
         return $this->_getResponseSuccess(
             [

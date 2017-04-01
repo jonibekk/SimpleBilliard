@@ -231,19 +231,20 @@ class MessageService extends AppService
 
     /**
      * Validate a posted message
-     * - remove sender_user_id validation rule, cause that is not included in posted data
      *
      * @param array $data
      *
      * @return array|true
      */
-    function validatePostMessage(array $data)
+    function validatePostMessage(array $data, $ignoreFields = [])
     {
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
         $backupValidate = $Message->validate;
-        // remove `sender_user_id`. cause posted data doesn't have it.
-        unset($Message->validate['sender_user_id']);
+        // ignore validate fields
+        foreach($ignoreFields as $fieldName) {
+            unset($Message->validate[$fieldName]);
+        }
         $Message->set($data);
         $isValid = $Message->validates();
         $Message->validate = $backupValidate;
