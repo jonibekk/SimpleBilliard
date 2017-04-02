@@ -99,9 +99,9 @@ class Footer extends React.Component {
         <form>
           <div className="topicDetail-footer-box">
             <div className="topicDetail-footer-box-left">
-              <span type="button"
-                    className="btn btnRadiusOnlyIcon mod-upload"
-                    onClick={this.selectFile.bind(this)}
+              <span
+                className="btn btnRadiusOnlyIcon mod-upload"
+                onClick={this.selectFile.bind(this)}
               />
               <input type="file" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
             </div>
@@ -132,7 +132,6 @@ class Footer extends React.Component {
                 } else {
                   return (
                     <span
-                      href="#"
                       className="btn btnRadiusOnlyIcon mod-like"
                       onClick={this.sendLike.bind(this)}
                       disabled={(this.props.is_saving || this.props.is_uploading) && "disabled"}/>
