@@ -201,6 +201,7 @@ class TopicService extends AppService
      * create topic and first message
      *
      * @param  array $data
+     * @param int    $creatorUserId
      * @param  array $toUserIds
      *
      * @return array|false ["topicId"=>int,"messageId"=>int]
@@ -273,6 +274,17 @@ class TopicService extends AppService
                 // update attached file count
                 $Message->id = $messageId;
                 $Message->saveField('attached_file_count', count($data['file_ids']));
+            }
+
+            // update last message sent
+            $updateLastMessageSent = $TopicMember->updateLastMessageSentDate($topicId, $creatorUserId);
+            if($updateLastMessageSent === false){
+                $errorMsg = sprintf("Failed to update last message sent. topicId:%s, creatorUserId:%s, validationErrors:%s",
+                    $topicId,
+                    $creatorUserId,
+                    var_export($TopicMember->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
             }
 
             // update latest message on the topic
