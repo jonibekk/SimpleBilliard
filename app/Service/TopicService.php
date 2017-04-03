@@ -116,7 +116,7 @@ class TopicService extends AppService
     /**
      * Validate create topic
      *
-     * @param  array  $data
+     * @param  array $data
      * @param  array $toUserIds
      *
      * @return array|true
@@ -200,8 +200,9 @@ class TopicService extends AppService
     /**
      * create topic and first message
      *
-     * @param  array  $data
-     * @param  array  $toUserIds
+     * @param  array $data
+     * @param int    $creatorUserId
+     * @param  array $toUserIds
      *
      * @return int|null
      */
@@ -275,6 +276,17 @@ class TopicService extends AppService
                 $Message->saveField('attached_file_count', count($data['file_ids']));
             }
 
+            // update last message sent
+            $updateLastMessageSent = $TopicMember->updateLastMessageSentDate($topicId, $creatorUserId);
+            if($updateLastMessageSent === false){
+                $errorMsg = sprintf("Failed to update last message sent. topicId:%s, creatorUserId:%s, validationErrors:%s",
+                    $topicId,
+                    $messageId,
+                    var_export($TopicMember->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
             // update latest message on the topic
             $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
             if ($updateTopic === false) {
@@ -305,8 +317,6 @@ class TopicService extends AppService
 
         return $topicId;
     }
-
-
 
     /*
      * Add members to the topic.
