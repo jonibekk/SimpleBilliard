@@ -48,7 +48,7 @@ export default class TopicSearchList extends React.Component {
   }
 
   render() {
-    const { topics, fetching } = this.props.data
+    const { topics, fetching, current_searching_keyword } = this.props.data
     const render_topics = topics.map((topic) => {
       return (
         <Topic topic={ topic }
@@ -87,6 +87,12 @@ export default class TopicSearchList extends React.Component {
             elementIsScrollable={ false }
             loader={ <Loading /> }
           />
+          {
+            current_searching_keyword && !fetching && topics.length == 0 &&
+            <div className="topicSearchList-notFound">
+              { __("Topics matching your search were not found") }
+            </div>
+          }
         </ul>
       </div>
     )
