@@ -61,8 +61,18 @@ class TopicsController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init("ApiTopicService");
+
+        $userId = $this->Auth->user('id');
+
+        // permission check
+        if (!$TopicMember->isMember($topicId, $userId)) {
+            // TODO: Response as 403 after moved to /api/v1/topics/members
+            return $this->_ajaxGetResponse(null);
+        }
 
         $red_users = $ApiTopicService->findReadMembers($topicId);
         $model = 'TopicMember';
