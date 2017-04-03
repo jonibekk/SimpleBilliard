@@ -273,6 +273,41 @@ class TopicMember extends AppModel
         return (bool)$ret;
     }
 
+    /**
+     * find read members
+     *
+     * @param  int $latestMessageId
+     *
+     * @return array
+     */
+    function findReadMembers(int $latestMessageId): array
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
+        $options = [
+            'conditions' => [
+                'last_read_message_id' => $latestMessageId,
+                'user_id'              => $activeTeamMembersList
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * find members
+     *
+     * @param  int   $topicId
+     *
+     * @return array
+     */
     function findMembers(int $topicId): array
     {
         /** @var TeamMember $TeamMember */
@@ -293,5 +328,6 @@ class TopicMember extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
 
 }
