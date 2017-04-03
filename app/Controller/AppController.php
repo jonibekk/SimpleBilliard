@@ -713,8 +713,8 @@ class AppController extends BaseController
     {
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
-        $unread_msg_post_ids = $this->NotifyBiz->getUnreadMessagePostIds();
-        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_post_ids'));
+        $unread_msg_topic_ids = $this->NotifyBiz->getUnreadMessagePostIds();
+        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_topic_ids'));
     }
 
     function _getRedirectUrl()

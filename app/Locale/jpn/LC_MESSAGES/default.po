@@ -371,9 +371,6 @@ msgstr "アクションの追加に失敗しました。"
 msgid "Added an action."
 msgstr "アクションを追加しました。"
 
-msgid "Invalid screen transition."
-msgstr "不正な画面遷移です。"
-
 msgid "Japanese"
 msgstr "Japanese"
 
