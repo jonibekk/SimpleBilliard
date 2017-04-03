@@ -89,16 +89,21 @@ class Body extends React.Component {
   render() {
     const {topic, messages, loading_more} = this.props
 
+    const last_idx = messages.length - 1;
+
     return (
       <div className="topicDetail-body">
         <div className="topicDetail-messages" ref="messages">
           {loading_more && <Loading/>}
-          {messages.map((message) => {
+          {messages.map((message, i) => {
+
             return (
               <Message
                 topic={topic}
                 message={message}
-                key={message.id}/>
+                key={message.id}
+                is_last_idx={last_idx == i}
+              />
             )
           })}
         </div>

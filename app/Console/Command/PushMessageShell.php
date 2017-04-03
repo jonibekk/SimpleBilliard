@@ -39,10 +39,26 @@ class PushMessageShell extends AppShell
 
     public function main()
     {
-        $topicId = Hash::get($this->params, 'topicId');
-        $socketId = Hash::get($this->params, 'socketId');
+        try {
+            // Get params
+            $topicId = Hash::get($this->params, 'topicId');
+            $socketId = Hash::get($this->params, 'socketId');
 
-        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('message-channel-' . $topicId, 'new_message', null, $socketId);
+            // Initialize pusher
+            $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+            // Send event
+            $ret = $pusher->trigger('message-channel-' . $topicId, 'new_message', null, $socketId);
+            if ($ret !== true) {
+                throw new Exception(
+                    sprintf("Failed to send event with pusher. error:%s data:%s", __METHOD__
+                        , var_export($ret, true)
+                        , var_export(compact('topicId', 'socketId'), true)
+                    )
+                );
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
     }
 }

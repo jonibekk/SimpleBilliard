@@ -17,7 +17,9 @@ function mapDispatchToProps(dispatch) {
     sendMessage: () => dispatch(actions.sendMessage()),
     sendLike: () => dispatch(actions.sendLike()),
     inputMessage: (val) => dispatch(actions.inputMessage(val)),
-    resetStates: () => dispatch(actions.resetStates())
+    resetStates: () => dispatch(actions.resetStates()),
+    fetchLatestMessages: (cursor) => dispatch(actions.fetchLatestMessages(cursor)),
+    setPusherInfo: (pusher_info) => dispatch(actions.setPusherInfo(pusher_info))
   }
 }
 
