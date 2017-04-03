@@ -3683,7 +3683,7 @@ $(document).ready(function () {
     }
 
     // if display the topic page, nothing to do
-    let topic_page_url = "/topics/" + data.topic_id + "/detail";
+    const topic_page_url = "/topics/" + data.topic_id + "/detail";
     if (location.pathname.indexOf(topic_page_url) !== -1) {
       return;
     }
