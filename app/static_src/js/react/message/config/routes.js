@@ -15,6 +15,7 @@ import createReducer from '../reducers/config'
 import IndexContainer from '~/message/containers/Index'
 import DetailContainer from '~/message/containers/Detail'
 import TopicCreateContainer from '~/message/containers/TopicCreate'
+import TopicMembersAddContainer from '~/message/containers/TopicMembersAdd'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -49,6 +50,7 @@ export default class Routes extends Component {
               <IndexRoute component={IndexContainer} />
               <Route path=":topic_id/detail" component={DetailContainer} />
               <Route path=":create" component={TopicCreateContainer} />
+              <Route path=":topic_id/add_members" component={TopicMembersAddContainer} />
             </Route>
           </Router>
           {/* <DevTools /> */}

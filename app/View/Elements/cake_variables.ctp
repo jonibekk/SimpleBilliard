@@ -560,7 +560,8 @@ App::uses('AttachedFile', 'Model');
             "Set topic name": "<?= __("Set topic name") ?>",
             "Leave me": "<?= __("Leave me") ?>",
             "Reply": "<?= __("Reply") ?>",
-            "Write a message...": "<?= __("Write a message...") ?>"
+            "Write a message...": "<?= __("Write a message...") ?>",
+            "Add": "<?= __("Add") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
