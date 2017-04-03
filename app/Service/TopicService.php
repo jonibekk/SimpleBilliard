@@ -75,7 +75,7 @@ class TopicService extends AppService
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        $members = $TopicMember->findMembers($topicId, $limit);
+        $members = $TopicMember->findSortedBySentMessage($topicId, $limit);
         $names = Hash::extract($members, '{n}.User.display_first_name');
         $namesStr = implode(', ', $names);
         return (string)$namesStr;
@@ -116,7 +116,7 @@ class TopicService extends AppService
     /**
      * Validate create topic
      *
-     * @param  array  $data
+     * @param  array $data
      * @param  array $toUserIds
      *
      * @return array|true
@@ -200,10 +200,11 @@ class TopicService extends AppService
     /**
      * create topic and first message
      *
-     * @param  array  $data
-     * @param  array  $toUserIds
+     * @param  array $data
+     * @param int    $creatorUserId
+     * @param  array $toUserIds
      *
-     * @return int|null
+     * @return array|false ["topicId"=>int,"messageId"=>int]
      */
     function create(array $data, int $creatorUserId, array $toUserIds)
     {
@@ -275,6 +276,17 @@ class TopicService extends AppService
                 $Message->saveField('attached_file_count', count($data['file_ids']));
             }
 
+            // update last message sent
+            $updateLastMessageSent = $TopicMember->updateLastMessageSentDate($topicId, $creatorUserId);
+            if($updateLastMessageSent === false){
+                $errorMsg = sprintf("Failed to update last message sent. topicId:%s, creatorUserId:%s, validationErrors:%s",
+                    $topicId,
+                    $creatorUserId,
+                    var_export($TopicMember->validationErrors, true)
+                );
+                throw new Exception($errorMsg);
+            }
+
             // update latest message on the topic
             $updateTopic = $Topic->updateLatestMessage($topicId, $messageId);
             if ($updateTopic === false) {
@@ -302,11 +314,10 @@ class TopicService extends AppService
         }
 
         $Topic->commit();
+        $ret = compact('topicId', 'messageId');
 
-        return $topicId;
+        return $ret;
     }
-
-
 
     /*
      * Add members to the topic.

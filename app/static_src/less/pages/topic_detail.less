@@ -16,6 +16,12 @@
     }
     &-center {
       flex: 1;
+      overflow: hidden;
+      &-link {
+        cursor: pointer;
+        color: @darkBlack;
+        display: flex;
+      }
     }
     &-right {
       &.mod-setTitle {
@@ -31,6 +37,8 @@
     &-title {
       font-size: 1.4rem;
       font-weight: bold;
+      overflow: hidden;
+      min-width: 0;
     }
     &-setTitle {
       &-form {
@@ -60,10 +68,8 @@
     }
     &-membersCnt {
       font-size: 1.4rem;
-      font-weight: bold;
-      color: @subColor3;
-      display: inline-block;
       vertical-align: middle;
+      margin-left: 4px;
     }
   }
   &-body {

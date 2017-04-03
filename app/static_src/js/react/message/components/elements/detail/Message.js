@@ -20,7 +20,8 @@ export default class Message extends React.Component {
       if (is_all_read) {
         return (
           <div>
-            <a href="#" className="topicDetail-messages-item-read is-on">
+            <a href={`/topics/ajax_get_read_members/${topic.id}`}
+               className="topicDetail-messages-item-read is-on modal-ajax-get">
               <i className="fa fa-check"/>
             </a>
           </div>
@@ -28,7 +29,8 @@ export default class Message extends React.Component {
       } else {
         return (
           <div>
-            <a href="#" className="topicDetail-messages-item-read is-off">
+            <a href={`/topics/ajax_get_read_members/${topic.id}`}
+               className="topicDetail-messages-item-read is-off modal-ajax-get">
               <i className="fa fa-check mr_2px"/>
               {read_count}
               <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
