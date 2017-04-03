@@ -35,6 +35,24 @@ class TopicsController extends AppController
     public function detail()
     {
         $topicId = $this->request->param('topic_id');
+
+        $this->_redirectCaseInvalid($topicId);
+
+        // updating message notify count.
+        $this->NotifyBiz->removeMessageNotification($topicId);
+        $this->NotifyBiz->updateCountNewMessageNotification();
+        $this->_setNotifyCnt();
+
+        return $this->render("index");
+    }
+
+    /**
+     * Redirect if there is no access permission or parameter is invalid.
+     * @param $topicId
+     *
+     * @return \Cake\Network\Response|null
+     */
+    private function _redirectCaseInvalid($topicId) {
         if (!$topicId) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect("/");
@@ -48,13 +66,6 @@ class TopicsController extends AppController
             $this->Pnotify->outError(__("You cannot access the topic"));
             return $this->redirect("/");
         }
-
-        // updating message notify count.
-        $this->NotifyBiz->removeMessageNotification($topicId);
-        $this->NotifyBiz->updateCountNewMessageNotification();
-        $this->_setNotifyCnt();
-
-        return $this->render("index");
     }
 
     /**
@@ -75,6 +86,7 @@ class TopicsController extends AppController
     public function add_members()
     {
         $topicId = $this->request->params['topic_id'];
+        $this->_redirectCaseInvalid($topicId);
         return $this->render("index");
     }
 
