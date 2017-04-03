@@ -12,6 +12,7 @@ const initialState = {
   },
   loading: false,
   loading_more: false,
+  loading_latest: false,
   is_fetched_initial: false,
   is_saving: false,
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
@@ -20,6 +21,11 @@ const initialState = {
   input_data: {
     body: "",
     file_ids: []
+  },
+  pusher_info: {
+    pusher:null,
+    channel:null,
+    socket_id:""
   }
 }
 
@@ -42,6 +48,11 @@ export default function detail(state = initialState, action) {
         loading: false,
         is_fetched_initial: true
       })
+    // Fetch more messages
+    case ActionTypes.LOADING_MORE:
+      return Object.assign({}, state, {
+        loading_more: true
+      })
     case ActionTypes.FETCH_MORE_MESSAGES:
       messages = {
         data: [...action.messages.data, ...state.messages.data],
@@ -51,6 +62,20 @@ export default function detail(state = initialState, action) {
         messages,
         loading_more: false
       })
+    // Fetch latest messages by pusher
+    case ActionTypes.LOADING_LATEST_MESSAGES:
+      return Object.assign({}, state, {
+        loading_latest: true
+      })
+    case ActionTypes.FETCH_LATEST_MESSAGES:
+      messages = {
+        data: action.messages,
+      }
+      return Object.assign({}, state, {
+        messages,
+        loading_latest: false
+      })
+
     case ActionTypes.SET_TOPIC:
       return Object.assign({}, state, {
         topic: action.topic
@@ -97,11 +122,10 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         input_data
       })
-    case ActionTypes.DELETE_UPLOADED_FILE:
-      input_data.file_ids = [...action.file_ids]
+    case ActionTypes.SET_PUSHER_INFO:
+      const pusher_info = Object.assign(state.pusher_info, action.pusher_info);
       return Object.assign({}, state, {
-        input_data,
-        files: [...action.files],
+        pusher_info
       })
     default:
       return state;

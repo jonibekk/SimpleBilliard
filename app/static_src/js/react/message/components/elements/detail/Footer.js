@@ -95,13 +95,13 @@ class Footer extends React.Component {
            onDragLeave={this.dragLeave.bind(this)}
       >
         {this.state.is_drag_over && <UploadDropZone/>}
-        <UploadPreview files={this.props.preview_files} />
+        <UploadPreview files={this.props.preview_files}/>
         <form>
           <div className="topicDetail-footer-box">
             <div className="topicDetail-footer-box-left">
-              <button type="button"
-                      className="btn btnRadiusOnlyIcon mod-upload"
-                      onClick={this.selectFile.bind(this)}
+              <span
+                className="btn btnRadiusOnlyIcon mod-upload"
+                onClick={this.selectFile.bind(this)}
               />
               <input type="file" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
             </div>
@@ -124,17 +124,17 @@ class Footer extends React.Component {
               {(() => {
                 if (this.props.body || this.props.uploaded_file_ids.length > 0) {
                   return (
-                    <button type="button"
-                            className="btn btnRadiusOnlyIcon mod-send"
-                            onClick={this.sendMessage.bind(this)}
-                            disabled={this.props.is_saving && "disabled"}/>
+                    <span
+                      className="btn btnRadiusOnlyIcon mod-send"
+                      onClick={this.sendMessage.bind(this)}
+                      disabled={this.props.is_saving && "disabled"}/>
                   )
                 } else {
                   return (
-                    <button type="button"
-                            className="btn btnRadiusOnlyIcon mod-like"
-                            onClick={this.sendLike.bind(this)}
-                            disabled={(this.props.is_saving || this.props.is_uploading) && "disabled"}/>
+                    <span
+                      className="btn btnRadiusOnlyIcon mod-like"
+                      onClick={this.sendLike.bind(this)}
+                      disabled={(this.props.is_saving || this.props.is_uploading) && "disabled"}/>
                   )
                 }
               })(this)}
