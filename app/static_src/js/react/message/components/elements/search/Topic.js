@@ -16,13 +16,13 @@ class Topic extends React.Component {
           <AvatarsBox users={ topic.users } />
           <div className="topicSearchList-item-main">
             <div className="topicSearchList-item-main-header">
-              <div className="topicSearchList-item-main-header-title">
+              <div className="topicSearchList-item-main-header-title oneline-ellipsis">
                 { topic.display_title }
               </div>
               <div className="topicSearchList-item-main-header-count">
               </div>
             </div>
-            <div className="topicSearchList-item-main-body">
+            <div className="topicSearchList-item-main-body oneline-ellipsis">
               { topic.latest_message.body }
             </div>
           </div>
