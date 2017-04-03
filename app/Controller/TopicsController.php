@@ -60,7 +60,17 @@ class TopicsController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        $users = $this->Topic->TopicMember->findMembers($topicId);
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+        $userId = $this->Auth->user('id');
+
+        // permission check
+        if (!$TopicMember->isMember($topicId, $userId)) {
+            // TODO: Response as 403 after moved to /api/v1/topics/members
+            return $this->_ajaxGetResponse(null);
+        }
+
+        $users = $TopicMember->findMembers($topicId);
         $this->set(compact('users'));
 
         //エレメントの出力を変数に格納する
