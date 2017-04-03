@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
 import Message from "~/message/components/elements/detail/Message";
 import Loading from "~/message/components/elements/detail/Loading";
+import {FetchMoreMessages} from "~/message/constants/Statuses";
 
 class Body extends React.Component {
 
@@ -16,15 +17,33 @@ class Body extends React.Component {
     this.scrollBottom = this.scrollBottom.bind(this);
   }
 
-  componentDidMount() {
-    // this.attachScrollListener();
-  }
-
   componentDidUpdate() {
     if (this.props.is_fetched_initial && !this.state.scrolled_bottom) {
       this.scrollBottom();
     }
+
+    this.scrollToLastPosition();
     this.attachScrollListener();
+  }
+
+  /**
+   * After load old messages, scroll to last position
+   */
+  scrollToLastPosition() {
+    if (this.props.fetch_more_messages_status !== FetchMoreMessages.SUCCESS) {
+      return;
+    }
+    if (!this.props.last_position_message_id) {
+      return;
+    }
+
+    if (this.props.browser_info.name != 'IE') {
+      return;
+    }
+    const node = ReactDOM.findDOMNode(this.refs['message_' + this.props.last_position_message_id]);
+    if (node) {
+      node.scrollIntoView();
+    }
   }
 
   _findElement() {
@@ -51,13 +70,13 @@ class Body extends React.Component {
     if (!this.props.paging.next) {
       return;
     }
-    if (this.props.loading_more) {
+    if (this.props.fetch_more_messages_status == FetchMoreMessages.LOADING) {
       return;
     }
 
     let el = this._findElement();
     let top_scroll_pos = el.scrollTop;
-    const threshold = 100;
+    const threshold = 300;
     if (top_scroll_pos < threshold) {
       this.detachScrollListener();
       this.props.dispatch(
@@ -87,25 +106,31 @@ class Body extends React.Component {
   }
 
   render() {
-    const {topic, messages, loading_more} = this.props
+    const {topic, messages, fetch_more_messages_status} = this.props
 
+    if (messages.length == 0) {
+      return <Loading/>;
+    }
     const last_idx = messages.length - 1;
+
+    const messages_el = messages.map((message, i) => {
+      return (
+        <Message
+          topic={topic}
+          ref={`message_${message.id}`}
+          message={message}
+          key={message.id}
+          is_last_idx={last_idx == i}
+        />
+      )
+    });
+
 
     return (
       <div className="topicDetail-body">
         <div className="topicDetail-messages" ref="messages">
-          {loading_more && <Loading/>}
-          {messages.map((message, i) => {
-
-            return (
-              <Message
-                topic={topic}
-                message={message}
-                key={message.id}
-                is_last_idx={last_idx == i}
-              />
-            )
-          })}
+          {messages_el}
+          {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
         </div>
       </div>
     )
@@ -114,7 +139,7 @@ class Body extends React.Component {
 
 Body.propTypes = {
   topic: React.PropTypes.object,
-  loading_more: React.PropTypes.bool,
+  fetch_more_messages_status: React.PropTypes.number,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
   is_fetched_initial: React.PropTypes.bool
@@ -122,7 +147,7 @@ Body.propTypes = {
 
 Body.defaultProps = {
   topic: {},
-  loading_more: false,
+  fetch_more_messages_status: FetchMoreMessages.NONE,
   messages: [],
   paging: {next: ""},
   is_fetched_initial: false

@@ -19,7 +19,8 @@ function mapDispatchToProps(dispatch) {
     inputMessage: (val) => dispatch(actions.inputMessage(val)),
     resetStates: () => dispatch(actions.resetStates()),
     fetchLatestMessages: (cursor) => dispatch(actions.fetchLatestMessages(cursor)),
-    setPusherInfo: (pusher_info) => dispatch(actions.setPusherInfo(pusher_info))
+    setPusherInfo: (pusher_info) => dispatch(actions.setPusherInfo(pusher_info)),
+    setBrowserInfo: () => dispatch(actions.setBrowserInfo())
   }
 }
 

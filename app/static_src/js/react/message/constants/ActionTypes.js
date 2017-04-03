@@ -41,6 +41,7 @@ export const FETCH_LATEST_MESSAGES = 'FETCH_LATEST_MESSAGES'
 export const LOADING_LATEST_MESSAGES = 'LOADING_LATEST_MESSAGES'
 
 export const SET_PUSHER_INFO = 'SET_PUSHER_INFO'
+export const SET_BROWSER_INFO = 'SET_BROWSER_INFO'
 
 export const TopicCreate = Object.freeze({
   SAVING: 'TopicCreate/SAVING',
