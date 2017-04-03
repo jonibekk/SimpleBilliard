@@ -131,15 +131,24 @@ class ApiTopicServiceTest extends GoalousTestCase
     function test_calcReadCount()
     {
         //TODO: it should be written later.
+        $this->markTestIncomplete('testClear not implemented.');
     }
 
     function test_findTopicDetailInitData()
     {
         //TODO: it should be written later.
+        $this->markTestIncomplete('testClear not implemented.');
     }
 
     function test_getDisplayTitle()
     {
         //TODO: it should be written later.
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    function test_findReadMembers()
+    {
+        //TODO: it should be written later.
+        $this->markTestIncomplete('testClear not implemented.');
     }
 }
