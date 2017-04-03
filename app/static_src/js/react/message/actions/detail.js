@@ -35,7 +35,7 @@ export function fetchMoreMessages(url) {
         })
       })
       .catch((response) => {
-        TODO: implement
+        //TODO: implement
       })
   }
 }
@@ -58,7 +58,7 @@ export function fetchLatestMessages(cursor) {
         })
       })
       .catch((response) => {
-        TODO: implement
+        //TODO: implement
       })
   }
 }
