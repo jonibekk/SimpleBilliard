@@ -55,8 +55,7 @@ class MessagesController extends ApiController
         $topicId = $postedData['topic_id'];
 
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
-        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
-        $socketId = "test";
+        $socketId = $this->request->data('socket_id');
         $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
         $message = $ApiMessageService->get($messageId);
@@ -98,8 +97,7 @@ class MessagesController extends ApiController
         }
 
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
-        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
-        $socketId = "test";
+        $socketId = $this->request->data('socket_id');
         $MessageService->execPushMessageEvent($topicId, $socketId);
         // find the message as response data
         $message = $ApiMessageService->get($messageId);
