@@ -90,6 +90,7 @@ class ApiTopicServiceTest extends GoalousTestCase
             [
                 'id'              => 1,
                 'title'           => null,
+                'is_read'         => true,
                 'latest_message'  => [
                     'id'                  => 1,
                     'body'                => 'test',
