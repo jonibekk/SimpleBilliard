@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('User', 'Model');
 
 /**
  * TopicMember Model
@@ -109,7 +110,7 @@ class TopicMember extends AppModel
      *
      * @return array
      */
-    function findMembers(int $topicId, int $limit = 0, array $excludeUids = []): array
+    function findSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = []): array
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -275,7 +276,7 @@ class TopicMember extends AppModel
     /**
      * find read members
      *
-     * @param  int   $latestMessageId
+     * @param  int $latestMessageId
      *
      * @return array
      */
@@ -299,5 +300,34 @@ class TopicMember extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    /**
+     * find members
+     *
+     * @param  int   $topicId
+     *
+     * @return array
+     */
+    function findMembers(int $topicId): array
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
+        $options = [
+            'conditions' => [
+                'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 
 }
