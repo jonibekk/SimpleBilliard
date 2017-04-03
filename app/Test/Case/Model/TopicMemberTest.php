@@ -83,15 +83,15 @@ class TopicMemberTest extends GoalousTestCase
         $this->assertEquals(2, $actual);
     }
 
-    function test_findMembers()
+    function test_findSortedBySentMessage()
     {
         $this->setDefaultTeamIdAndUid();
         $topicId = $this->saveTopic([1, 2]);
         // normal case
-        $actual = $this->TopicMember->findMembers($topicId);
+        $actual = $this->TopicMember->findSortedBySentMessage($topicId);
         $this->assertcount(2, $actual);
         // limit case
-        $actual = $this->TopicMember->findMembers($topicId, 1);
+        $actual = $this->TopicMember->findSortedBySentMessage($topicId, 1);
         $this->assertcount(1, $actual);
     }
 
@@ -116,6 +116,11 @@ class TopicMemberTest extends GoalousTestCase
     }
 
     function test_bulkAdd()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
+    }
+
+    function test_findMembers()
     {
         $this->markTestIncomplete('testClear not implemented.');
     }
