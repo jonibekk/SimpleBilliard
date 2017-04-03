@@ -281,7 +281,7 @@ class TopicService extends AppService
             if($updateLastMessageSent === false){
                 $errorMsg = sprintf("Failed to update last message sent. topicId:%s, creatorUserId:%s, validationErrors:%s",
                     $topicId,
-                    $messageId,
+                    $creatorUserId,
                     var_export($TopicMember->validationErrors, true)
                 );
                 throw new Exception($errorMsg);
