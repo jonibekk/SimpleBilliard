@@ -11,7 +11,7 @@ class Topic extends React.Component {
     return (
       <li className="topicList-item" key={ topic.id }>
         <Link to={ `/topics/${topic.id}/detail` }
-              className={`topicList-item-link ${topic.is_read ? 'is-read' : ''}`}
+              className={`topicList-item-link ${topic.is_unread ? 'is-unread' : ''}`}
               onClick={ () => dispatch(setTopic(topic)) }>
           <AvatarsBox users={ topic.users } />
           <div className="topicList-item-main">

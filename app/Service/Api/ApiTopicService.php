@@ -48,7 +48,7 @@ class ApiTopicService extends ApiService
             $topics[$i]['can_leave_topic'] = $topics[$i]['members_count'] >= 3;
             $readMembers = Hash::extract($data['topic_members'], "{n}[last_read_message_id={$data['latest_message']['id']}].user_id");
             // set is_read true when topic latest message is mine for frontend
-            $topics[$i]['is_read'] = $data['latest_message']['sender_user_id'] == $userId || in_array($userId, $readMembers);
+            $topics[$i]['is_unread'] = $data['latest_message']['sender_user_id'] != $userId && !in_array($userId, $readMembers);
             // set topics user info without mine
             $topics[$i]['users'] = [];
             foreach ($data['topic_members'] as $member) {
