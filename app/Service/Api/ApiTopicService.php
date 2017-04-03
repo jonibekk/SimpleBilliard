@@ -120,4 +120,23 @@ class ApiTopicService extends ApiService
         return $ret;
     }
 
+    /**
+     * Find read members of latest message
+     *
+     * @param  int   $topicId
+     *
+     * @return array
+     */
+    function findReadMembers(int $topicId): array
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+
+        $latestMessageId = $Topic->getLatestMessageId($topicId);
+        $members = $TopicMember->findReadMembers($latestMessageId);
+        return $members;
+    }
+
 }

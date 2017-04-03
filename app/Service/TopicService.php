@@ -75,7 +75,7 @@ class TopicService extends AppService
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        $members = $TopicMember->findMembers($topicId, $limit);
+        $members = $TopicMember->findSortedBySentMessage($topicId, $limit);
         $names = Hash::extract($members, '{n}.User.display_first_name');
         $namesStr = implode(', ', $names);
         return (string)$namesStr;
@@ -204,7 +204,7 @@ class TopicService extends AppService
      * @param int    $creatorUserId
      * @param  array $toUserIds
      *
-     * @return int|null
+     * @return array|false ["topicId"=>int,"messageId"=>int]
      */
     function create(array $data, int $creatorUserId, array $toUserIds)
     {
@@ -314,8 +314,9 @@ class TopicService extends AppService
         }
 
         $Topic->commit();
+        $ret = compact('topicId', 'messageId');
 
-        return $topicId;
+        return $ret;
     }
 
     /*

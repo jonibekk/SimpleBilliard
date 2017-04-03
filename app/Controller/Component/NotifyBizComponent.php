@@ -1821,20 +1821,20 @@ class NotifyBizComponent extends Component
     /**
      * remove message notification.
      *
-     * @param int $notify_id
+     * @param int $topicId
      *
      * @return bool|void
      */
-    function removeMessageNotification($notify_id)
+    function removeMessageNotification($topicId)
     {
-        if (!$notify_id) {
+        if (!$topicId) {
             // target none.
             return false;
         }
         return $this->GlRedis->deleteMessageNotify(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid,
-            $notify_id
+            $topicId
         );
     }
 
