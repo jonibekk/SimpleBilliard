@@ -116,7 +116,7 @@ class TopicService extends AppService
     /**
      * Validate create topic
      *
-     * @param  array  $data
+     * @param  array $data
      * @param  array $toUserIds
      *
      * @return array|true
@@ -200,10 +200,10 @@ class TopicService extends AppService
     /**
      * create topic and first message
      *
-     * @param  array  $data
-     * @param  array  $toUserIds
+     * @param  array $data
+     * @param  array $toUserIds
      *
-     * @return int|null
+     * @return array|false ["topicId"=>int,"messageId"=>int]
      */
     function create(array $data, int $creatorUserId, array $toUserIds)
     {
@@ -302,11 +302,10 @@ class TopicService extends AppService
         }
 
         $Topic->commit();
+        $ret = compact('topicId', 'messageId');
 
-        return $topicId;
+        return $ret;
     }
-
-
 
     /*
      * Add members to the topic.
