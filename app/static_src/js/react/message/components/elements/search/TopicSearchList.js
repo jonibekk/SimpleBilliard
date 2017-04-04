@@ -79,21 +79,31 @@ export default class TopicSearchList extends React.Component {
                onClick={ this.props.cancelSearchMode.bind(this) }>{__("Cancel")}</a>
           </div>
         </div>
-        <ul>
-          <InfiniteScroll
-            loadingMore={ fetching }
-            loadMore={ this.fetchMoreSearch.bind(this) }
-            items={ render_topics }
-            elementIsScrollable={ false }
-            loader={ <Loading /> }
-          />
-          {
-            current_searching_keyword && !fetching && topics.length == 0 &&
-            <div className="topicSearchList-notFound">
-              { __("No results found") }
-            </div>
-          }
-        </ul>
+        {
+          (() => {
+            if (current_searching_keyword && !fetching && topics.length == 0) {
+              // not results
+              return (
+                <div className="topicSearchList-notFound">
+                  { __("No results found") }
+                </div>
+              )
+            } else {
+              // search results
+              return (
+                <ul>
+                  <InfiniteScroll
+                    loadingMore={ fetching }
+                    loadMore={ this.fetchMoreSearch.bind(this) }
+                    items={ render_topics }
+                    elementIsScrollable={ false }
+                    loader={ <Loading /> }
+                  />
+                </ul>
+              )
+            }
+          })()
+        }
       </div>
     )
   }
