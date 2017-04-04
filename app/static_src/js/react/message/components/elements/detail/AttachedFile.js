@@ -8,14 +8,17 @@ export default class AttachedFile extends React.Component {
   }
 
   render() {
-    const {attached_file} = this.props
+    const {attached_file, message_id} = this.props
 
     switch (parseInt(attached_file.file_type)) {
       case Model.AttachedFile.FileType.IMG:
         return (
           <div>
-            <a href={attached_file.preview_url}>
-              <img src={attached_file.thumbnail_url}/>
+            <a href={ attached_file.preview_url }
+               rel='lightbox'
+               data-lightbox={`MessageLightBox_${message_id}`}>
+              <img className="lazy"
+                   src={ attached_file.thumbnail_url } />
             </a>
           </div>
         )
@@ -24,7 +27,7 @@ export default class AttachedFile extends React.Component {
         return null;
       case Model.AttachedFile.FileType.DOC:
         return (
-          <div>
+          <div className="attachedFile-item">
             <div className="col col-xxs-1 messanger-attached-files-icon">
               <a href={attached_file.preview_url} target="_blank">
                 <div>
@@ -70,8 +73,10 @@ export default class AttachedFile extends React.Component {
 }
 AttachedFile.propTypes = {
   attached_file: React.PropTypes.object,
+  message_id: React.PropTypes.string
 };
 
 AttachedFile.defaultProps = {
   attached_file: {},
+  message_id: "0"
 };
