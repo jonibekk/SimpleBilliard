@@ -49,7 +49,7 @@ class MessageServiceTest extends GoalousTestCase
         //TODO: it should be written later.
     }
 
-    function test_extendBody()
+    function test_creteBody()
     {
         //TODO: it should be written later.
     }

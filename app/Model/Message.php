@@ -94,7 +94,7 @@ class Message extends AppModel
                 'id',
                 'body',
                 'type',
-                'target_user_ids',
+                'meta_data',
                 'created'
             ],
             'order'      => [
@@ -148,7 +148,7 @@ class Message extends AppModel
                 'id',
                 'body',
                 'type',
-                'target_user_ids',
+                'meta_data',
                 'created'
             ],
             'contain'    => [
@@ -207,6 +207,8 @@ class Message extends AppModel
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
             'type'           => self::TYPE_LEAVE,
+            'meta_data'      => json_encode(['target_user_ids' => $userId])
+
         ];
         $ret = $this->save($data);
         return (bool)$ret;
@@ -215,18 +217,20 @@ class Message extends AppModel
     /**
      * Saving set topic title
      *
-     * @param int $topicId
-     * @param int $userId
+     * @param int    $topicId
+     * @param int    $userId
+     * @param string $title
      *
      * @return bool
      */
-    function saveSetTopicTitle(int $topicId, int $userId): bool
+    function saveSetTopicTitle(int $topicId, int $userId, string $title): bool
     {
         $data = [
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
             'type'           => self::TYPE_SET_TOPIC_NAME,
+            'meta_data'      => json_encode(['updated_topic_title' => $title])
         ];
         $ret = $this->save($data);
         return (bool)$ret;
@@ -248,7 +252,7 @@ class Message extends AppModel
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $loginUserId,
             'type'           => self::TYPE_ADD_MEMBER,
-            'target_user_ids' => implode(',', $addUserIds)
+            'meta_data'      => json_encode(['target_user_ids' => $addUserIds])
         ];
         $ret = $this->save($data);
         return (bool)$ret;

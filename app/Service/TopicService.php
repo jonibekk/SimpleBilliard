@@ -107,7 +107,7 @@ class TopicService extends AppService
 
             // If update title, save message
             if (Hash::check($data, 'title')) {
-                $saveMessage = $Message->saveSetTopicTitle($data['id'], $loginUserId);
+                $saveMessage = $Message->saveSetTopicTitle($data['id'], $loginUserId, $data['title']);
                 if ($saveMessage === false) {
                     throw new Exception(
                         sprintf("Failed to save message. topicId:%s, userId:%s, validationErrors:%s"
