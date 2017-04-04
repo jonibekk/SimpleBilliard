@@ -93,7 +93,7 @@ class ApiTopicServiceTest extends GoalousTestCase
                 'is_unread'       => false,
                 'latest_message'  => [
                     'id'                  => 1,
-                    'body'                => 'test',
+                    'body'                => 'You : test',
                     'attached_file_count' => 0,
                     'sender_user_id'      => 1,
                     'created'             => '1456811206',
@@ -123,7 +123,7 @@ class ApiTopicServiceTest extends GoalousTestCase
         // only attached files
         $topicByModel[0]['LatestMessage']['body'] = "";
         $topicByModel[0]['LatestMessage']['attached_file_count'] = 1;
-        $expected[0]['latest_message']['body'] = "Sent file(s).";
+        $expected[0]['latest_message']['body'] = "You : Sent file(s).";
         $expected[0]['latest_message']['attached_file_count'] = 1;
         $res = $this->ApiTopicService->process($topicByModel, $myUserId);
         $this->assertEqual($res, $expected);
