@@ -8,7 +8,8 @@ const initial_state = {
     body: "",
     to_user_ids: [],
     file_ids: []
-  }
+  },
+  redirect: false
 }
 
 export default function topic_create(state = initial_state, action) {
@@ -20,7 +21,8 @@ export default function topic_create(state = initial_state, action) {
       })
     case ActionTypes.TopicCreate.SAVE_SUCCESS:
       return Object.assign({}, state, {
-        is_saving: false
+        is_saving: false,
+        redirect: true
       })
     case ActionTypes.TopicCreate.SAVE_ERROR:
       return Object.assign({}, state, {

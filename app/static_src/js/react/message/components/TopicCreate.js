@@ -17,6 +17,12 @@ export default class TopicCreate extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.topic_create.redirect) {
+      browserHistory.push(`/topics`);
+    }
+  }
+
   componentDidMount() {
     // HACK:To use select2Member
     $(document).ready(function (e) {
@@ -109,6 +115,7 @@ export default class TopicCreate extends React.Component {
       }
       return false;
     }
+
     return (
       <div>
         <div className="panel topicCreateForm">
