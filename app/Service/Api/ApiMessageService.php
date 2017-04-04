@@ -111,8 +111,8 @@ class ApiMessageService extends ApiService
             return $data;
         }
         // exclude that extra record for paging
-        array_shift($data['data']);
-        $cursor = $data['data'][0]['id'];
+        array_pop($data['data']);
+        $cursor = end($data['data'])['id'];
         $queryParams = am(compact('cursor'), compact('limit'));
 
         $data['paging']['next'] = "/api/v1/topics/{$topicId}/messages?" . http_build_query($queryParams);
