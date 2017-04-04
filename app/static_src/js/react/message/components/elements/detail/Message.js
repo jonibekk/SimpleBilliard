@@ -11,12 +11,11 @@ export default class Message extends React.Component {
   render() {
     const {topic, message, is_first_idx} = this.props
     const read_mark_el = () => {
-      if (!is_first_idx) {
+      if (topic.latest_message_id != message.id) {
         return null;
       }
-      const read_count = (topic.latest_message_id == message.id) ? topic.read_count : 0;
 
-      const is_all_read = (read_count == topic.members_count - 1);
+      const is_all_read = (topic.read_count == topic.members_count - 1);
       if (is_all_read) {
         return (
           <div>
@@ -32,7 +31,7 @@ export default class Message extends React.Component {
             <a href={`/topics/ajax_get_read_members/${topic.id}`}
                className="topicDetail-messages-item-read is-off modal-ajax-get">
               <i className="fa fa-check mr_2px"/>
-              {read_count}
+              {topic.read_count}
               <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
             </a>
           </div>
@@ -47,10 +46,8 @@ export default class Message extends React.Component {
           <p className="topicDetail-messages-item-onlyText">
             {nl2br(message.body)}
           </p>
-          {read_mark_el()}
         </div>
       )
-
     }
 
     return (
@@ -91,11 +88,11 @@ export default class Message extends React.Component {
   }
 }
 Message.propTypes = {
+  topic: React.PropTypes.object,
   message: React.PropTypes.object,
-  is_first_idx: React.PropTypes.bool,
 };
 
 Message.defaultProps = {
+  topic: {},
   message: {},
-  is_first_idx: 0,
 };

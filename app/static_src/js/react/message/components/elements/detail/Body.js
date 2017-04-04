@@ -119,7 +119,6 @@ class Body extends React.Component {
           ref={`message_${message.id}`}
           message={message}
           key={message.id}
-          is_first_idx={i == 0}
         />
       )
     });
