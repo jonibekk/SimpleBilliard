@@ -93,6 +93,8 @@ export default function detail(state = initialState, action) {
         data: [action.message, ...state.messages.data],
       }
       let topic = Object.assign({}, state.topic)
+      topic.latest_message_id = action.message.id;
+      topic.read_count = 0;
       return Object.assign({}, state, {
         topic,
         messages,
