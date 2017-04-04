@@ -1,4 +1,5 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
+import * as FileUploadModule from "~/message/modules/file_upload";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
@@ -223,5 +224,10 @@ export function setBrowserInfo() {
   return {
     type: ActionTypes.SET_BROWSER_INFO,
     browser_info: parser.getBrowser()
+  }
+}
+export function resetSaveMessageStatus() {
+  return {
+    type: ActionTypes.RESET_SAVE_MESSAGE_STATUS,
   }
 }

@@ -5,7 +5,7 @@ import * as detail from "~/message/actions/detail";
 import * as file_upload from "~/message/modules/file_upload";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
-
+import {SaveMessageStatus} from "~/message/constants/Statuses";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -17,6 +17,18 @@ class Footer extends React.Component {
       is_drag_start: false,
     }
   }
+
+  componentDidUpdate() {
+    if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
+      this.props.dispatch(
+        file_upload.resetState()
+      );
+      this.props.dispatch(
+        detail.resetSaveMessageStatus()
+      );
+    }
+  }
+
 
   sendLike(e) {
     this.props.dispatch(
@@ -109,7 +121,7 @@ class Footer extends React.Component {
                 <textarea
                   className="form-control disable-change-warning"
                   rows={1} cols={30} placeholder={__("Reply")}
-                  name="message_body" defaultValue=""
+                  name="message_body" value={this.props.body}
                   onChange={this.inputMessage.bind(this)}
                 />
               {this.props.err_msg &&
@@ -127,14 +139,14 @@ class Footer extends React.Component {
                     <span
                       className="btn btnRadiusOnlyIcon mod-send"
                       onClick={this.sendMessage.bind(this)}
-                      disabled={this.props.is_saving && "disabled"}/>
+                      disabled={this.props.save_message_status == SaveMessageStatus.SAVING || this.props.is_uploading && "disabled"}/>
                   )
                 } else {
                   return (
                     <span
                       className="btn btnRadiusOnlyIcon mod-like"
                       onClick={this.sendLike.bind(this)}
-                      disabled={(this.props.is_saving || this.props.is_uploading) && "disabled"}/>
+                      disabled={(this.props.save_message_status == SaveMessageStatus.SAVING || this.props.is_uploading) && "disabled"}/>
                   )
                 }
               })(this)}
@@ -150,6 +162,7 @@ Footer.propTypes = {
   body: React.PropTypes.string,
   uploaded_file_ids: React.PropTypes.array,
   preview_files: React.PropTypes.array,
+  save_message_status: React.PropTypes.number,
   is_uploading: React.PropTypes.bool,
   err_msg: React.PropTypes.string,
 };
@@ -157,7 +170,7 @@ Footer.defaultProps = {
   body: "",
   uploaded_file_ids: [],
   preview_files: [],
-  is_saving: false,
+  save_message_status:SaveMessageStatus.NONE,
   is_uploading: false,
   err_msg: "",
 };
