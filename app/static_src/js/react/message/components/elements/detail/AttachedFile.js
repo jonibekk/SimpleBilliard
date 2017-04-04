@@ -27,7 +27,7 @@ export default class AttachedFile extends React.Component {
         return null;
       case Model.AttachedFile.FileType.DOC:
         return (
-          <div>
+          <div className="AttachedFile-item">
             <div className="col col-xxs-1 messanger-attached-files-icon">
               <a href={attached_file.preview_url} target="_blank">
                 <div>
