@@ -82,31 +82,49 @@ class TopicService extends AppService
     }
 
     /**
-     * 更新
+     * Update topic
      *
      * @param array $data
+     * @param int   $loginUserId
      *
      * @return bool
      */
-    function update(array $data): bool
+    function update(array $data, int $loginUserId): bool
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init("Topic");
+        /** @var Message $Message */
+        $Message = ClassRegistry::init("Message");
 
         try {
-            // トランザクション開始
+            // Begin transaction
             $Topic->begin();
 
-            // KR更新
+            // Update topic
             if (!$Topic->save($data, false)) {
                 throw new Exception(sprintf("Failed update topic. data:%s", var_export($data, true)));
             }
 
-            // トランザクション完了
+            // If update title, save message
+            if (Hash::check($data, 'title')) {
+                $saveMessage = $Message->saveSetTopicTitle($data['id'], $loginUserId, $data['title']);
+                if ($saveMessage === false) {
+                    throw new Exception(
+                        sprintf("Failed to save message. topicId:%s, userId:%s, validationErrors:%s"
+                            , $data['id']
+                            , $loginUserId
+                            , var_export($Message->validationErrors, true)
+                        )
+                    );
+                }
+            }
+
+            // Commit transaction
             $Topic->commit();
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
+            // Rollback transaction
             $Topic->rollback();
             return false;
         }

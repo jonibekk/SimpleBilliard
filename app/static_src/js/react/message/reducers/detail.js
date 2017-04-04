@@ -93,7 +93,8 @@ export default function detail(state = initialState, action) {
         data: [action.message, ...state.messages.data],
       }
       let topic = Object.assign({}, state.topic)
-      topic.latest_message_id = action.message.id
+      topic.latest_message_id = action.message.id;
+      topic.read_count = 0;
       return Object.assign({}, state, {
         topic,
         messages,
@@ -104,14 +105,21 @@ export default function detail(state = initialState, action) {
         err_msg: action.error.message,
         is_saving: false
       })
+
+    /* Set topic title */
     case ActionTypes.CHANGE_TOPIC_TITLE_SETTING_STATUS:
       return Object.assign({}, state, {
         save_topic_title_err_msg: "",
         topic_title_setting_status: action.topic_title_setting_status
       })
     case ActionTypes.SAVE_TOPIC_TITLE_SUCCESS:
+      messages = {
+        paging: state.messages.paging,
+        data: [action.latest_message, ...state.messages.data],
+      }
       return Object.assign({}, state, {
         topic: action.topic,
+        messages,
         save_topic_title_err_msg: "",
         topic_title_setting_status: action.topic_title_setting_status
       })
@@ -120,6 +128,7 @@ export default function detail(state = initialState, action) {
         save_topic_title_err_msg: action.save_topic_title_err_msg,
         topic_title_setting_status: action.topic_title_setting_status
       })
+
     case ActionTypes.CHANGE_MESSAGE:
       input_data.body = action.body;
       return Object.assign({}, state, {

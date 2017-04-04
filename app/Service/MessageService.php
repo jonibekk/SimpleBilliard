@@ -39,9 +39,15 @@ class MessageService extends AppService
         $User = ClassRegistry::init('User');
 
         // extend message data
-        foreach ($messages as &$message) {
+        $ret = [];
+        foreach ($messages as $message) {
             // build message body
-            $message = $this->extendBody($message);
+            $body = $this->createBody($message);
+            if ($body === false) {
+                continue;
+            }
+
+            $message['Message']['body'] = $body;
             // build display created
             $message['Message']['display_created'] = $TimeEx->datetimeNoYear($message['Message']['created']);
             // user image url
@@ -52,9 +58,10 @@ class MessageService extends AppService
             }
             // filter only necessary fields
             $message = $this->filterFields($message);
+            $ret[] = $message;
         }
 
-        return $messages;
+        return $ret;
     }
 
     /**
@@ -75,7 +82,12 @@ class MessageService extends AppService
         $User = ClassRegistry::init('User');
 
         // build message body
-        $message = $this->extendBody($message);
+        $body = $this->createBody($message);
+        if ($body === false) {
+            return [];
+        }
+        $message['Message']['body'] = $body;
+
         // build display created
         $message['Message']['display_created'] = $TimeEx->datetimeNoYear($message['Message']['created']);
         // user image url
@@ -90,7 +102,7 @@ class MessageService extends AppService
     }
 
     /**
-     * Extending message body
+     * Creating message body
      * normal case:
      * - only sanitizing
      * other cases:
@@ -98,43 +110,69 @@ class MessageService extends AppService
      *
      * @param array $message
      *
-     * @return array
+     * @return string|bool
      */
-    function extendBody(array $message): array
+    function createBody(array $message)
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init('UserService');
+        try {
+            /** @var UserService $UserService */
+            $UserService = ClassRegistry::init('UserService');
 
-        $type = $message['Message']['type'];
-        $body = $message['Message']['body'];
-        $targetUids = $message['Message']['target_user_ids'];
-        $senderName = $message['SenderUser']['display_first_name'];
+            $type = $message['Message']['type'];
+            $body = $message['Message']['body'];
+            $meta = empty($message['Message']['meta_data'])
+                ? [] : json_decode($message['Message']['meta_data'], true);
+            $senderName = $message['SenderUser']['display_first_name'];
 
-        switch ($type) {
-            case Message::TYPE_NORMAL:
-                $outputBody = h($body);
-                break;
-            case Message::TYPE_ADD_MEMBER:
-                $uids = explode(',', $targetUids);
-                $delimiter = Configure::read('Config.language') == "jpn" ? "と" : ", ";
-                $addedUserNamesStr = $UserService->getUserNamesAsString($uids, $delimiter);
-                $outputBody = __("%s added %s.", $senderName, $addedUserNamesStr);
-                break;
-            case Message::TYPE_LEAVE:
-                $outputBody = __('%s left this topic.', $senderName);
-                break;
-            case Message::TYPE_SET_TOPIC_NAME:
-                if ($body) {
-                    $outputBody = __('%s named this topic : %s.', $senderName, $body);
-                } else {
-                    $outputBody = __('%s removed the topic name.', $senderName);
-                }
-                break;
-            default:
-                $outputBody = $body;
+            $outputBody = "";
+            switch ($type) {
+                case Message::TYPE_NORMAL:
+                    $outputBody = h($body);
+                    break;
+                case Message::TYPE_ADD_MEMBER:
+                    $uids = Hash::get($meta, 'target_user_ids');
+                    if (empty($uids)) {
+                        break;
+                    }
+
+                    $delimiter = Configure::read('Config.language') == "jpn" ? "と" : ", ";
+                    $addedUserNamesStr = $UserService->getUserNamesAsString($uids, $delimiter);
+                    $outputBody = __("%s added %s.", $senderName, $addedUserNamesStr);
+                    break;
+                case Message::TYPE_LEAVE:
+                    $uids = Hash::get($meta, 'target_user_ids');
+                    if (empty($uids)) {
+                        break;
+                    }
+
+                    $outputBody = __('%s left this topic.', $senderName);
+                    break;
+                case Message::TYPE_SET_TOPIC_NAME:
+                    if (!Hash::check($meta, 'updated_topic_title')) {
+                        break;
+                    }
+
+                    $topicTitle = Hash::get($meta, 'updated_topic_title');
+                    if (!empty($topicTitle)) {
+                        $outputBody = __('%s named this topic : %s.', $senderName, $topicTitle);
+                    } else {
+                        $outputBody = __('%s removed the topic name.', $senderName);
+                    }
+                    break;
+                default:
+                    $outputBody = $body;
+            }
+
+            if ($type != Message::TYPE_NORMAL && empty($outputBody)) {
+                throw new Exception(
+                    sprintf("Failed to create message body. data:%s"
+                        , var_export($message, true)));
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            return false;
         }
-        $message['Message']['body'] = $outputBody;
-        return $message;
+        return $outputBody;
     }
 
     /**
@@ -238,7 +276,7 @@ class MessageService extends AppService
         $Message = ClassRegistry::init('Message');
         $backupValidate = $Message->validate;
         // ignore validate fields
-        foreach($ignoreFields as $fieldName) {
+        foreach ($ignoreFields as $fieldName) {
             unset($Message->validate[$fieldName]);
         }
         $Message->set($data);

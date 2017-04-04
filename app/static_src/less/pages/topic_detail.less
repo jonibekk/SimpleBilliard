@@ -91,6 +91,16 @@
     padding: 6px 10px;
     display: flex;
     flex:none;
+    &.mod-sysInfo {
+      display: block;
+    }
+    &-onlyText {
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: @subColor3;
+      text-align: center;
+      padding: 4px 0;
+    }
     &-left {
       &-profileImg {
         display: block;
@@ -120,6 +130,10 @@
       }
     }
     &-read {
+      font-size: 1.3rem;
+      &-wrapper {
+        text-align: right;
+      }
       &:hover {
         text-decoration: none;
       }
