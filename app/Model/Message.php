@@ -213,6 +213,26 @@ class Message extends AppModel
     }
 
     /**
+     * Saving set topic title
+     *
+     * @param int $topicId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function saveSetTopicTitle(int $topicId, int $userId): bool
+    {
+        $data = [
+            'topic_id'       => $topicId,
+            'team_id'        => $this->current_team_id,
+            'sender_user_id' => $userId,
+            'type'           => self::TYPE_SET_TOPIC_NAME,
+        ];
+        $ret = $this->save($data);
+        return (bool)$ret;
+    }
+
+    /**
      * Saving add member
      *
      * @param int   $topicId

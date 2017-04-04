@@ -110,8 +110,13 @@ export default function detail(state = initialState, action) {
         topic_title_setting_status: action.topic_title_setting_status
       })
     case ActionTypes.SAVE_TOPIC_TITLE_SUCCESS:
+      messages = {
+        paging: state.messages.paging,
+        data: [action.latest_message, ...state.messages.data],
+      }
       return Object.assign({}, state, {
         topic: action.topic,
+        messages,
         save_topic_title_err_msg: "",
         topic_title_setting_status: action.topic_title_setting_status
       })

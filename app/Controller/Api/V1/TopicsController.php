@@ -510,6 +510,8 @@ HTML;
         $TopicMember = ClassRegistry::init('TopicMember');
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init("TopicService");
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init("ApiMessageService");
 
         // Get request data
         $requestData = $this->request->input('json_decode', true) ?? [];
@@ -528,13 +530,19 @@ HTML;
         }
 
         // Update
-        if (!$TopicService->update($requestData)) {
+        if (!$TopicService->update($requestData, $userId)) {
             return $this->_getResponseInternalServerError();
         }
 
         $topic = $TopicService->findTopicDetail($topicId);
-
-        return $this->_getResponseSuccess(compact('topic'));
+        $messages = $ApiMessageService->findMessages($topicId, $userId, null, 1);
+        $latestMessage = Hash::extract($messages, 'data.0');
+        return $this->_getResponseSuccess(
+            [
+                'topic'          => $topic,
+                'latest_message' => $latestMessage
+            ]
+        );
     }
 
     /**
