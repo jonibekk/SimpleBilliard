@@ -68,7 +68,8 @@ export default class Message extends React.Component {
             return (
               <AttachedFile
                 key={attached_file.id}
-                attached_file={attached_file}/>
+                attached_file={attached_file}
+                message_id={message.id}/>
             )
           })}
           {read_mark_el()}
