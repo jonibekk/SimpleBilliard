@@ -27,7 +27,7 @@ export default class AttachedFile extends React.Component {
         return null;
       case Model.AttachedFile.FileType.DOC:
         return (
-          <div className="AttachedFile-item">
+          <div className="attachedFile-item">
             <div className="col col-xxs-1 messanger-attached-files-icon">
               <a href={attached_file.preview_url} target="_blank">
                 <div>
@@ -73,10 +73,10 @@ export default class AttachedFile extends React.Component {
 }
 AttachedFile.propTypes = {
   attached_file: React.PropTypes.object,
-  message_id: React.PropTypes.number
+  message_id: React.PropTypes.string
 };
 
 AttachedFile.defaultProps = {
   attached_file: {},
-  message_id: 0
+  message_id: "0"
 };
