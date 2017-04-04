@@ -51,9 +51,9 @@ export default class Message extends React.Component {
         </div>
         <div className="topicDetail-messages-item-right">
           <div className>
-            <a href="/users/view_goals/user_id:441" className="topicDetail-messages-item-userName">
-              <span>{message.user.display_username}</span>
-            </a>
+            <span className="topicDetail-messages-item-userName">
+              {message.user.display_username}
+            </span>
             <span className="topicDetail-messages-item-datetime">
               {message.display_created}
             </span>
@@ -68,7 +68,8 @@ export default class Message extends React.Component {
             return (
               <AttachedFile
                 key={attached_file.id}
-                attached_file={attached_file}/>
+                attached_file={attached_file}
+                message_id={message.id}/>
             )
           })}
           {read_mark_el()}
