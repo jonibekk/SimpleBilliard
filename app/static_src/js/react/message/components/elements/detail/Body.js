@@ -111,7 +111,6 @@ class Body extends React.Component {
     if (messages.length == 0) {
       return <Loading/>;
     }
-    const last_idx = messages.length - 1;
 
     const messages_el = messages.map((message, i) => {
       return (
@@ -120,7 +119,6 @@ class Body extends React.Component {
           ref={`message_${message.id}`}
           message={message}
           key={message.id}
-          is_last_idx={last_idx == i}
         />
       )
     });

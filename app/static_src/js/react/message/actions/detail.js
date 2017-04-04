@@ -177,6 +177,7 @@ export function saveTopicTitle(title) {
           type: ActionTypes.SAVE_TOPIC_TITLE_SUCCESS,
           topic_title_setting_status: TopicTitleSettingStatus.NONE,
           topic: response.data.data.topic,
+          latest_message: response.data.data.latest_message,
         })
       },
       (response) => {
