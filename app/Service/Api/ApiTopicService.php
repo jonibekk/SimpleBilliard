@@ -42,6 +42,14 @@ class ApiTopicService extends ApiService
             if (!$data['latest_message']['body'] and $data['latest_message']['attached_file_count'] > 0) {
                 $topics[$i]['latest_message']['body'] = __('Sent file(s).');
             }
+            // add last message sent user to head of body
+            $senderUserName = '';
+            if ($data['latest_message']['sender_user_id'] == $userId) {
+                $senderUserName = __("You");
+            } else {
+                $senderUserName = $data['topic_members'][0]['user']['display_first_name'];
+            }
+            $topics[$i]['latest_message']['body'] = "{$senderUserName} : {$topics[$i]['latest_message']['body']}";
             // add util properties
             $topics[$i]['read_count'] = $this->calcReadCount($data['latest_message'], $data['topic_members']);
             $topics[$i]['members_count'] = count($data['topic_members']);
