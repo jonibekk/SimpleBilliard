@@ -58,7 +58,7 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.FETCH_MORE_MESSAGES:
       messages = {
-        data: [...state.messages.data, ...action.messages.data],
+        data: [...action.messages.data, ...state.messages.data],
         paging: action.messages.paging,
       }
       return Object.assign({}, state, {
@@ -90,7 +90,7 @@ export default function detail(state = initialState, action) {
     case ActionTypes.SAVE_SUCCESS:
       messages = {
         paging: state.messages.paging,
-        data: [action.message, ...state.messages.data],
+        data: [...state.messages.data, action.message],
       }
       let topic = Object.assign({}, state.topic)
       topic.latest_message_id = action.message.id;
@@ -116,7 +116,7 @@ export default function detail(state = initialState, action) {
     case ActionTypes.SAVE_TOPIC_TITLE_SUCCESS:
       messages = {
         paging: state.messages.paging,
-        data: [action.latest_message, ...state.messages.data],
+        data: [...state.messages.data, action.latest_message],
       }
       return Object.assign({}, state, {
         topic: action.topic,

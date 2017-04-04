@@ -34,6 +34,7 @@ class MessageService extends AppService
         $Message = ClassRegistry::init('Message');
         $messages = $Message->findMessages($topicId, $cursor, $limit, $direction);
 
+        krsort($messages);
         $TimeEx = new TimeExHelper(new View());
         /** @var User $User */
         $User = ClassRegistry::init('User');

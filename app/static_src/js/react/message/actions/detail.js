@@ -25,7 +25,7 @@ export function fetchInitialData(topic_id) {
 export function fetchMoreMessages(url) {
   return (dispatch, getState) => {
     const messages = getState().detail.messages.data;
-    const last_position_message_id = messages[messages.length - 1].id
+    const last_position_message_id = messages[0].id
     dispatch({
       type: ActionTypes.LOADING_MORE,
       last_position_message_id
@@ -80,7 +80,7 @@ function uniqueMessages(originMessages, addMessages) {
   if (originMessages.length == 0) {
     return addMessages;
   }
-  let messages = [...addMessages, ...originMessages];
+  let messages = [...originMessages, ...addMessages];
   let uniqueIds = [];
   // Remove duplicate topic_id element
   messages = messages.filter(function (msg, i, self) {

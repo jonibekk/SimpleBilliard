@@ -18,7 +18,7 @@ export default class AttachedFile extends React.Component {
                rel='lightbox'
                data-lightbox={`MessageLightBox_${message_id}`}>
               <img className="lazy"
-                   src={ attached_file.thumbnail_url } />
+                   src={ attached_file.thumbnail_url } height={200}/>
             </a>
           </div>
         )

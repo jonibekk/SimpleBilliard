@@ -37,12 +37,12 @@ class Body extends React.Component {
       return;
     }
 
-    if (this.props.browser_info.name != 'IE') {
-      return;
-    }
+    // if (this.props.browser_info.name != 'IE') {
+    //   return;
+    // }
     const node = ReactDOM.findDOMNode(this.refs['message_' + this.props.last_position_message_id]);
     if (node) {
-      node.scrollIntoView();
+      node.scrollIntoView(20);
     }
   }
 
@@ -90,8 +90,14 @@ class Body extends React.Component {
       return;
     }
 
-    let el = this._findElement();
-    el.scrollTop = el.scrollHeight;
+    const latest_message_id = this.props.messages[this.props.messages.length - 1].id
+    const node = ReactDOM.findDOMNode(this.refs['message_' + latest_message_id]);
+    if (node) {
+      node.scrollIntoView();
+    }
+
+    // let el = this._findElement();
+    // el.scrollTop = el.scrollHeight;
     this.setState({scrolled_bottom: true})
   }
 
@@ -127,8 +133,8 @@ class Body extends React.Component {
     return (
       <div className="topicDetail-body">
         <div className="topicDetail-messages" ref="messages">
-          {messages_el}
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
+          {messages_el}
         </div>
       </div>
     )
