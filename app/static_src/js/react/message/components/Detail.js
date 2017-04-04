@@ -14,6 +14,7 @@ export default class Detail extends React.Component {
     // Set resource ID included in url.
     const topic_id = this.props.params.topic_id;
     this.props.setResourceId(topic_id);
+    this.props.setBrowserInfo();
     this.props.fetchInitialData(this.props.params.topic_id);
   }
 
@@ -63,8 +64,10 @@ export default class Detail extends React.Component {
           topic={detail.topic}
           messages={detail.messages.data}
           paging={detail.messages.paging}
-          loading_more={detail.loading_more}
           is_fetched_initial={detail.is_fetched_initial}
+          fetch_more_messages_status={detail.fetch_more_messages_status}
+          last_position_message_id={detail.last_position_message_id}
+          browser_info={detail.browser_info}
         />
         <Footer
           body={detail.input_data.body}

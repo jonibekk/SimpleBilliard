@@ -1,5 +1,5 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
-import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
+import {TopicTitleSettingStatus, FetchMoreMessages} from "~/message/constants/Statuses";
 
 const initialState = {
   topic_id: 0,
@@ -10,11 +10,13 @@ const initialState = {
       next: ""
     }
   },
+  last_position_message_id: 0,
   loading: false,
-  loading_more: false,
+  fetch_more_messages_status: FetchMoreMessages.NONE,
   loading_latest: false,
   is_fetched_initial: false,
   is_saving: false,
+  success_fetch_more: false,
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
   save_topic_title_err_msg: "",
   err_msg: "",
@@ -51,16 +53,17 @@ export default function detail(state = initialState, action) {
     // Fetch more messages
     case ActionTypes.LOADING_MORE:
       return Object.assign({}, state, {
-        loading_more: true
+        fetch_more_messages_status: FetchMoreMessages.LOADING,
+        last_position_message_id: action.last_position_message_id
       })
     case ActionTypes.FETCH_MORE_MESSAGES:
       messages = {
-        data: [...action.messages.data, ...state.messages.data],
+        data: [...state.messages.data, ...action.messages.data],
         paging: action.messages.paging,
       }
       return Object.assign({}, state, {
         messages,
-        loading_more: false
+        fetch_more_messages_status: FetchMoreMessages.SUCCESS,
       })
     // Fetch latest messages by pusher
     case ActionTypes.LOADING_LATEST_MESSAGES:
@@ -86,8 +89,8 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.SAVE_SUCCESS:
       messages = {
-        data: [...state.messages.data, action.message],
         paging: state.messages.paging,
+        data: [action.message, ...state.messages.data],
       }
       let topic = Object.assign({}, state.topic)
       topic.latest_message_id = action.message.id
@@ -126,6 +129,10 @@ export default function detail(state = initialState, action) {
       const pusher_info = Object.assign(state.pusher_info, action.pusher_info);
       return Object.assign({}, state, {
         pusher_info
+      })
+    case ActionTypes.SET_BROWSER_INFO:
+      return Object.assign({}, state, {
+        browser_info: action.browser_info
       })
     default:
       return state;

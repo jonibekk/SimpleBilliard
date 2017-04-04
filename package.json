@@ -19,6 +19,7 @@
     "react-textarea-autosize": "^4.0.5",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "ua-parser-js": "^0.7.12",
     "validator": "^5.5.0"
   },
   "devDependencies": {

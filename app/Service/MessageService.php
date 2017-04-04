@@ -33,10 +33,6 @@ class MessageService extends AppService
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
         $messages = $Message->findMessages($topicId, $cursor, $limit, $direction);
-        // reverse sort messages
-        krsort($messages);
-        // renumbering keys
-        $messages = am($messages);
 
         $TimeEx = new TimeExHelper(new View());
         /** @var User $User */
