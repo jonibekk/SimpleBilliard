@@ -90,7 +90,7 @@ export default class TopicSearchList extends React.Component {
           {
             current_searching_keyword && !fetching && topics.length == 0 &&
             <div className="topicSearchList-notFound">
-              { __("Topics matching your search were not found") }
+              { __("No results found") }
             </div>
           }
         </ul>

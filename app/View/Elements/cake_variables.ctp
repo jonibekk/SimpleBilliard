@@ -563,7 +563,7 @@ App::uses('AttachedFile', 'Model');
             "Write a message...": "<?= __("Write a message...") ?>",
             "Add": "<?= __("Add") ?>",
             // messgae
-            "Topics matching your search were not found": "<?= __("Topics matching your search were not found") ?>"
+            "No results found": "<?= __("No results found") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
