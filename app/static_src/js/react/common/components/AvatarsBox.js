@@ -5,7 +5,9 @@ export default class AvatarsBox extends React.Component {
     super(props);
   }
   render() {
-    const { users } = this.props
+    let { users } = this.props
+    // display less than just 4
+    users = users.slice(0, 4)
     return (
       <div className="avatorsBox">
         { users.map((user, i) => {
