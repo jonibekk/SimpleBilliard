@@ -80,7 +80,7 @@ export default function detail(state = initialState, action) {
         loading_latest: false
       })
 
-    case ActionTypes.SET_TOPIC:
+    case ActionTypes.SET_TOPIC_ON_DETAIL:
       return Object.assign({}, state, {
         topic: action.topic
       })

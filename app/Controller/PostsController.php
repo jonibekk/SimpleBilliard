@@ -30,7 +30,8 @@ class PostsController extends AppController
     public function message()
     {
         $this->_logOldRequest(__CLASS__, __METHOD__);
-        throw new NotFoundException();
+        $this->Pnotify->outInfo(__('Due to using an old URL, you have been redirected to this page.'));
+        return $this->redirect('/topics');
         //TODO should be removed.
 
         $this->layout = LAYOUT_ONE_COLUMN;

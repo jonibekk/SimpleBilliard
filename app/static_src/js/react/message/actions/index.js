@@ -77,3 +77,13 @@ export function setUaInfo() {
     is_mobile_app: isMobileApp()
   }
 }
+
+export function updateTopicListItem(index, data) {
+  return (dispatch) => {
+    dispatch({
+      type: types.UPDATE_TOPIC_LIST_ITEM,
+      index,
+      data
+    })
+  }
+}

@@ -4,6 +4,7 @@ App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
 App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
+App::uses('Topic', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 
 /**
@@ -148,6 +149,23 @@ class ApiTopicService extends ApiService
         $latestMessageId = $Topic->getLatestMessageId($topicId);
         $members = $TopicMember->findReadMembers($latestMessageId);
         return $members;
+    }
+
+    /**
+     * get topic with last message and members
+     *
+     * @param  int   $topicId
+     *
+     * @return array
+     */
+    function get(int $topicId, int $userId)
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+
+        $res = $Topic->getWithLatestMesasge($topicId);
+        $res = $this->process([$res], $userId)[0];
+        return $res;
     }
 
 }
