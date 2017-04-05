@@ -1,7 +1,7 @@
-import React from "react"
-import Topic from "./Topic"
-import InfiniteScroll from "redux-infinite-scroll"
-import Loading from "~/message/components/elements/index/Loading"
+import React from "react";
+import Topic from "./Topic";
+import InfiniteScroll from "redux-infinite-scroll";
+import Loading from "~/message/components/elements/index/Loading";
 import {Link} from "react-router";
 
 export default class TopicList extends React.Component {
@@ -13,7 +13,7 @@ export default class TopicList extends React.Component {
   }
 
   componentWillMount() {
-    if(this.props.data.topics.length == 0) {
+    if (this.props.data.topics.length == 0) {
       this.props.fetchInitData()
     }
   }
@@ -32,16 +32,16 @@ export default class TopicList extends React.Component {
   }
 
   render() {
-    const { topics, fetching } = this.props.data
+    const {topics, fetching, is_mobile_app} = this.props.data
     const render_topics = topics.map((topic) => {
       return (
         <Topic topic={ topic }
-               key={ topic.id } />
+               key={ topic.id }/>
       )
     })
 
     return (
-      <div className="panel panel-default topicList">
+      <div className={`topicList ${!is_mobile_app && "panel panel-default"}`}>
         <div className="topicList-header">
           <div className="searchBox">
             <div className="searchBox-search-icon">
@@ -49,7 +49,7 @@ export default class TopicList extends React.Component {
             </div>
             <input className="searchBox-input"
                    placeholder={__("Search topic")}
-                   onFocus={ this.onFocusSearchBox } />
+                   onFocus={ this.onFocusSearchBox }/>
           </div>
           <div className="topicList-header-middle">
             <div className="topicList-header-middle-label">

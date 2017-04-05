@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import * as KeyCode from "~/common/constants/KeyCode";
-import { Link } from "react-router";
+import {Link} from "react-router";
 
 class Header extends React.Component {
   constructor(props) {
@@ -50,21 +50,22 @@ class Header extends React.Component {
   onKeyDown(e) {
     if (e.keyCode === KeyCode.ESC) {
       this.cancelTopicTitleSetting(e);
-    } else if(e.keyCode === KeyCode.ENTER) {
+    } else if (e.keyCode === KeyCode.ENTER) {
       this.saveTopicTitle(e);
     }
   }
 
   render() {
-    const {topic, topic_title_setting_status, save_topic_title_err_msg} = this.props;
+    const {topic, topic_title_setting_status, save_topic_title_err_msg, is_mobile_app} = this.props;
     if (Object.keys(topic).length == 0) {
       return null;
     }
 
-    if (topic_title_setting_status != TopicTitleSettingStatus.NONE)
-    {
+    const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
+
+    if (topic_title_setting_status != TopicTitleSettingStatus.NONE) {
       return (
-        <div className="topicDetail-header">
+        <div className={`topicDetail-header ${sp_class}`}>
           <div className="topicDetail-header-left">
             <a href="/topics" className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></a>
           </div>
@@ -105,7 +106,7 @@ class Header extends React.Component {
     }
 
     return (
-      <div className="topicDetail-header">
+      <div className={`topicDetail-header ${sp_class}`}>
         <div className="topicDetail-header-left">
           <Link to="/topics" className>
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
@@ -121,23 +122,25 @@ class Header extends React.Component {
           </a>
         </div>
         <div className="topicDetail-header-right">
-          <div className="dropdown disp_ib">
-            <a href="#" className="dropdown-toggle" id="topicHeaderMenu" data-toggle="dropdown" aria-expanded="true">
-              <i className="fa fa-cog topicDetail-header-icon"/>
+          <div className="dropdown">
+            <a href="#" className="topicDetail-header-menuIcon dropdown-toggle" id="topicHeaderMenu" data-toggle="dropdown" aria-expanded="true">
+              <span className="topicDetail-header-menuIcon-inner"></span>
+              <span className="topicDetail-header-menuIcon-inner"></span>
+              <span className="topicDetail-header-menuIcon-inner"></span>
             </a>
             <ul className="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="topicHeaderMenu">
-              <li>
+              <li className="mtb_8px">
                 <Link to={`/topics/${topic.id}/add_members`} role="menuitem" tabIndex="-1">
                   <i className="fa fa-user-plus mr_4px"/>{__("Add member(s)")}
                 </Link>
               </li>
-              <li>
+              <li className="mtb_8px">
                 <a href="#" role="menuitem" tabIndex="-1"
                    onClick={this.startTopicTitleSetting}>
                   <i className="fa fa-edit mr_4px"/>{__("Set topic name")}
                 </a>
               </li>
-              <li>
+              <li className="mtb_8px">
                 <a href="#" role="menuitem" tabIndex="-1">
                   <i className="fa fa-sign-out mr_4px"/>{__("Leave me")}
                 </a>
@@ -154,11 +157,13 @@ Header.propTypes = {
   topic: React.PropTypes.object,
   topic_title_setting_status: React.PropTypes.number,
   save_topic_title_err_msg: React.PropTypes.string,
+  is_mobile_app: React.PropTypes.bool,
 };
 
 Header.defaultProps = {
   topic: {},
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
-  save_topic_title_err_msg: ""
+  save_topic_title_err_msg: "",
+  is_mobile_app: false,
 };
 export default connect()(Header);

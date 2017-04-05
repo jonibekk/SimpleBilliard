@@ -28,7 +28,8 @@ const initialState = {
     pusher: null,
     channel: null,
     socket_id: ""
-  }
+  },
+  is_mobile_app: false
 }
 
 export default function detail(state = initialState, action) {
@@ -140,9 +141,9 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         pusher_info
       })
-    case ActionTypes.SET_BROWSER_INFO:
+    case ActionTypes.SET_UA_INFO:
       return Object.assign({}, state, {
-        browser_info: action.browser_info
+        is_mobile_app: action.is_mobile_app
       })
     case ActionTypes.RESET_SAVE_MESSAGE_STATUS:
       return Object.assign({}, state, {

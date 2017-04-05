@@ -20,7 +20,8 @@ function mapDispatchToProps(dispatch) {
     // search
     inputKeyword: (keyword) => dispatch(search_actions.inputKeyword(keyword)),
     fetchMoreSearch: (url) => dispatch(search_actions.fetchMoreSearch(url)),
-    emptyTopics: () => dispatch(search_actions.emptyTopics())
+    emptyTopics: () => dispatch(search_actions.emptyTopics()),
+    setUaInfo: () => dispatch(index_actions.setUaInfo())
   }
 }
 

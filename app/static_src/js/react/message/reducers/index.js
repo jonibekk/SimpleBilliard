@@ -4,7 +4,8 @@ const initialState = {
   topics: [],
   next_url: '',
   fetching: false,
-  is_search_mode: false
+  is_search_mode: false,
+  is_mobile_app: false
 }
 
 export default function topic(state = initialState, action) {
@@ -32,6 +33,10 @@ export default function topic(state = initialState, action) {
     case types.CHANGE_TO_INDEX_MODE:
       return Object.assign({}, state, {
         is_search_mode: false
+      })
+    case types.SET_UA_INFO:
+      return Object.assign({}, state, {
+        is_mobile_app: action.is_mobile_app
       })
     default:
       return state;

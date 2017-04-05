@@ -1,3 +1,5 @@
+import UaParser from "ua-parser-js";
+
 /**
  * オブジェクトか判定
  * @param val
@@ -31,4 +33,12 @@ export function formatFileSize(size) {
 }
 
 
+/**
+ * Check mobile app
+ * @returns bool
+ */
+export function isMobileApp() {
+  const parser = new UaParser();
+  return parser.getUA().indexOf('Goalous App') >= 0;
+}
 

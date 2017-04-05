@@ -1,8 +1,8 @@
 .topicDetail {
   &-header {
     display: flex;
-    -webkit-align-items: baseline;
-    align-items: baseline;
+    -webkit-align-items: center;
+    align-items: center;
     font-size: 1.4rem;
     font-weight: normal;
     color: @darkBlack;
@@ -12,6 +12,15 @@
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border-bottom: 1px solid @lighterGray;
+    &.mod-sp {
+      border-radius: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 0;
+      border-top: 1px solid @lighterGray;
+    }
     &-left {
     }
     &-center {
@@ -29,7 +38,7 @@
       }
     }
     &-icon {
-      padding: 0 12px;
+      padding: 0 16px;
       font-size: 1.8rem;
       color: @subColor10;
       vertical-align: middle;
@@ -71,10 +80,28 @@
       vertical-align: middle;
       margin-left: 4px;
     }
+
+    &-menuIcon {
+      display: inline-block;
+      padding: 0 12px;
+      vertical-align: middle;
+      &-inner {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color:@subColor3;
+        display: inline-block;
+        vertical-align: middle;
+        & + & {
+          margin-left: 5px;
+        }
+      }
+    }
   }
   &-body {
     overflow: hidden;
     -webkit-overflow-scroll: touch;
+    background-color: #fff;
   }
   &-messages {
     padding: 4px 0;
@@ -83,6 +110,15 @@
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
       display: none;
+    }
+    width: 100%;
+    &.mod-sp {
+      max-height: none;
+      position: fixed;
+      bottom: 52px;
+      position: fixed;
+      top: 93px;
+      background-color: #fff;
     }
   }
   &-messages-item {
@@ -156,7 +192,15 @@
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
     word-wrap: break-word;
+    &.mod-sp {
+      border-radius: 0;
+      position: fixed;
+      bottom: 0px;
+      left: 0;
+      right: 0;
+    }
     &-box {
+
       display: flex;
       &-center {
         flex: 1;
@@ -165,6 +209,13 @@
     }
     &-btn {
       margin: 0;
+    }
+    &-inputBody {
+      max-height: 78px;
+      overflow: hidden;
+      word-wrap: break-word;
+      resize: both;
+      min-height: 38px;
     }
   }
 }

@@ -3,7 +3,7 @@ import * as FileUploadModule from "~/message/modules/file_upload";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
-import UaParser from "ua-parser-js";
+import {isMobileApp} from "~/util/base";
 
 export function fetchInitialData(topic_id) {
   return (dispatch) => {
@@ -225,11 +225,10 @@ export function setPusherInfo(pusher_info) {
   }
 }
 
-export function setBrowserInfo() {
-  const parser = new UaParser();
+export function setUaInfo() {
   return {
-    type: ActionTypes.SET_BROWSER_INFO,
-    browser_info: parser.getBrowser()
+    type: ActionTypes.SET_UA_INFO,
+    is_mobile_app: isMobileApp()
   }
 }
 export function resetSaveMessageStatus() {

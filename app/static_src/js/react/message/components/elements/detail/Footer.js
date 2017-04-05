@@ -6,6 +6,7 @@ import * as file_upload from "~/message/modules/file_upload";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
+import Textarea from "react-textarea-autosize";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -85,10 +86,11 @@ class Footer extends React.Component {
     const files = e.target.files;
     this.uploadFiles(files);
   }
-
   render() {
+    const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
+
     return (
-      <div className={`topicDetail-footer ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
+      <div className={`topicDetail-footer ${sp_class} ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
            onDrop={this.drop.bind(this)}
            onDragEnter={this.dragEnter.bind(this)}
            onDragOver={this.dragOver.bind(this)}
@@ -106,8 +108,8 @@ class Footer extends React.Component {
               <input type="file" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
             </div>
             <div className="topicDetail-footer-box-center">
-                <textarea
-                  className="form-control disable-change-warning"
+                <Textarea
+                  className="topicDetail-footer-inputBody form-control disable-change-warning"
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" value={this.props.body}
                   onChange={this.inputMessage.bind(this)}
@@ -153,6 +155,7 @@ Footer.propTypes = {
   save_message_status: React.PropTypes.number,
   is_uploading: React.PropTypes.bool,
   err_msg: React.PropTypes.string,
+  is_mobile_app: React.PropTypes.bool,
 };
 Footer.defaultProps = {
   body: "",
@@ -161,5 +164,6 @@ Footer.defaultProps = {
   save_message_status:SaveMessageStatus.NONE,
   is_uploading: false,
   err_msg: "",
+  is_mobile_app: false,
 };
 export default connect()(Footer);
