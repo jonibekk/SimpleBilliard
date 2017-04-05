@@ -99,7 +99,7 @@ export default function detail(state = initialState, action) {
         topic,
         messages,
         input_data: {body: "", file_ids: []},
-        save_message_status: SaveMessageStatus.NONE
+        save_message_status: SaveMessageStatus.SUCCESS
       })
     case ActionTypes.SAVE_ERROR:
       return Object.assign({}, state, {
@@ -147,6 +147,10 @@ export default function detail(state = initialState, action) {
     case ActionTypes.RESET_SAVE_MESSAGE_STATUS:
       return Object.assign({}, state, {
         save_message_status: SaveMessageStatus.NONE
+      })
+    case ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS:
+      return Object.assign({}, state, {
+        fetch_more_messages_status: FetchMoreMessages.NONE
       })
     default:
       return state;

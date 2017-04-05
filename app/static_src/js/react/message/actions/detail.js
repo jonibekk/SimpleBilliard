@@ -237,3 +237,8 @@ export function resetSaveMessageStatus() {
     type: ActionTypes.RESET_SAVE_MESSAGE_STATUS,
   }
 }
+export function resetFetchMoreMessagesStatus() {
+  return {
+    type: ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS,
+  }
+}

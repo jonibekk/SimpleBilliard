@@ -9,7 +9,7 @@ App::uses('Message', 'Model');
  */
 class ApiMessageService extends ApiService
 {
-    const MESSAGE_DEFAULT_LIMIT = 10;
+    const MESSAGE_DEFAULT_LIMIT = 20;
 
     /**
      * Finding messages. It will returns data as API response
