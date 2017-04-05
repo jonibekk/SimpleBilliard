@@ -561,7 +561,9 @@ App::uses('AttachedFile', 'Model');
             "Leave me": "<?= __("Leave me") ?>",
             "Reply": "<?= __("Reply") ?>",
             "Write a message...": "<?= __("Write a message...") ?>",
-            "Add": "<?= __("Add") ?>"
+            "Add": "<?= __("Add") ?>",
+            // messgae
+            "No results found": "<?= __("No results found") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
