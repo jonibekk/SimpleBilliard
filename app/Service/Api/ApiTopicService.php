@@ -165,7 +165,6 @@ class ApiTopicService extends ApiService
 
         $res = $Topic->getWithLatestMesasge($topicId);
         $res = $this->process([$res], $userId)[0];
-        $this->log($res);
         return $res;
     }
 
