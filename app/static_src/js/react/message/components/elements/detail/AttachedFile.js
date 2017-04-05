@@ -7,18 +7,39 @@ export default class AttachedFile extends React.Component {
     super(props);
   }
 
+  getImgDimensions(img) {
+    const maxWidth = 300
+    if (img.thumbnail_width <= maxWidth) {
+      return {
+        width: img.thumbnail_width,
+        height: img.thumbnail_height,
+      }
+    }
+    const height = img.thumbnail_height * (maxWidth / img.thumbnail_width);
+    return {
+      width: maxWidth,
+      height
+    }
+  }
+
   render() {
     const {attached_file, message_id} = this.props
 
     switch (parseInt(attached_file.file_type)) {
       case Model.AttachedFile.FileType.IMG:
+        const dimensions = this.getImgDimensions(attached_file);
+
         return (
-          <div>
+          <div className="mb_12px">
             <a href={ attached_file.preview_url }
                rel='lightbox'
                data-lightbox={`MessageLightBox_${message_id}`}>
-              <img className="lazy"
-                   src={ attached_file.thumbnail_url } />
+              <img
+                className="lazy"
+                src={ attached_file.thumbnail_url }
+                width={dimensions.width}
+                height={dimensions.height}
+              />
             </a>
           </div>
         )

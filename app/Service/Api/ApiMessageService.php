@@ -9,7 +9,7 @@ App::uses('Message', 'Model');
  */
 class ApiMessageService extends ApiService
 {
-    const MESSAGE_DEFAULT_LIMIT = 10;
+    const MESSAGE_DEFAULT_LIMIT = 20;
 
     /**
      * Finding messages. It will returns data as API response
@@ -111,8 +111,8 @@ class ApiMessageService extends ApiService
             return $data;
         }
         // exclude that extra record for paging
-        array_pop($data['data']);
-        $cursor = end($data['data'])['id'];
+        array_unshift($data['data']);
+        $cursor = reset($data['data'])['id'];
         $queryParams = am(compact('cursor'), compact('limit'));
 
         $data['paging']['next'] = "/api/v1/topics/{$topicId}/messages?" . http_build_query($queryParams);
