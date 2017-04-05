@@ -49,10 +49,11 @@ export default class TopicSearchList extends React.Component {
 
   render() {
     const { topics, fetching, current_searching_keyword } = this.props.data
-    const render_topics = topics.map((topic) => {
+    const render_topics = topics.map((topic, index) => {
       return (
         <Topic topic={ topic }
-               key={ topic.id } />
+               key={ topic.id }
+               index={ index } />
       )
     })
 

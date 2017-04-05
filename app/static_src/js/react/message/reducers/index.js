@@ -33,6 +33,14 @@ export default function topic(state = initialState, action) {
       return Object.assign({}, state, {
         is_search_mode: false
       })
+    case types.UPDATE_TOPIC_LIST_ITEM:
+      const update_item = Object.assign(state.topics[action.index], action.data)
+      const new_state = state.topics[action.index] = update_item
+      return Object.assign({}, state, new_state)
+    case types.PREPEND_TOPIC:
+      return Object.assign({}, state, {
+        topics: [action.topic, ...state.topics]
+      })
     default:
       return state;
   }
