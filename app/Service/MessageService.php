@@ -128,7 +128,7 @@ class MessageService extends AppService
             $outputBody = "";
             switch ($type) {
                 case Message::TYPE_NORMAL:
-                    $outputBody = h($body);
+                    $outputBody = $body;
                     break;
                 case Message::TYPE_ADD_MEMBER:
                     $uids = Hash::get($meta, 'target_user_ids');
