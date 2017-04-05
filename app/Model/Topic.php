@@ -179,6 +179,68 @@ class Topic extends AppModel
         return $res;
     }
 
+    /**
+     * get a topic with latest message
+     *
+     * @param  int    $topicId [description]
+     *
+     * @return array
+     */
+    public function getWithLatestMesasge(int $topicId)
+    {
+        $options = [
+            'conditions' => [
+                'Topic.id' => $topicId
+            ],
+            'fields'     => [
+                'Topic.*',
+                'LatestMessage.*'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'messages',
+                    'alias'      => 'LatestMessage',
+                    'conditions' => [
+                        'LatestMessage.id = Topic.latest_message_id',
+                    ],
+                ],
+            ],
+            'contain'    => [
+                'TopicMember' => [
+                    'fields' => [
+                        'TopicMember.id',
+                        'TopicMember.user_id',
+                        'TopicMember.topic_id',
+                        'TopicMember.last_read_message_id'
+                    ],
+                    'User'   => [
+                        'fields' => $this->TopicMember->User->profileFields,
+                        // 10: realistic upper limit for displaying title connecting user name.
+                        'limit'  => 10
+                    ],
+                    'order'  => [
+                        'TopicMember.last_message_sent DESC'
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $this->find('first', $options);
+
+        // attach user images
+        foreach ($res['TopicMember'] as $j => $member) {
+            $res['TopicMember'][$j]['User'] = $this->attachImgUrl($res['TopicMember'][$j]['User'], 'User',
+                ['medium_large']);
+            // number of displaying user photo is less than 4.
+            if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
+                break;
+            }
+        }
+
+        return $res;
+    }
+
     /*
      * get one topic.
      *

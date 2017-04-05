@@ -326,7 +326,8 @@ class TopicService extends AppService
             }
 
         } catch (Exception $e) {
-            $this->log($e->getMessage());
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
             $Topic->rollback();
             return false;
         }
