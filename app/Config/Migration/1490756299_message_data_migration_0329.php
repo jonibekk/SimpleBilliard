@@ -369,6 +369,7 @@ FROM
                             AND ln.del_flg = 0
 WHERE tp.del_flg = 0
 GROUP BY tp.id
+ON DUPLICATE KEY UPDATE topic_id = topic_id
 SQL;
         $TopicSearchKeyword->query($query);
         return true;
