@@ -96,14 +96,9 @@ class Body extends React.Component {
       return;
     }
 
-    const latest_message_id = this.props.messages[this.props.messages.length - 1].id
-    const node = ReactDOM.findDOMNode(this.refs['message_' + latest_message_id]);
-    if (node) {
-      node.scrollIntoView();
-    }
+    let el = this._findElement();
+    el.scrollTop = el.scrollHeight;
 
-    // let el = this._findElement();
-    // el.scrollTop = el.scrollHeight;
     this.setState({scrolled_bottom: true})
   }
 
