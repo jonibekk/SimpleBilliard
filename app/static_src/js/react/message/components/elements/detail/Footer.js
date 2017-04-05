@@ -18,18 +18,6 @@ class Footer extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
-      this.props.dispatch(
-        file_upload.resetState()
-      );
-      this.props.dispatch(
-        detail.resetSaveMessageStatus()
-      );
-    }
-  }
-
-
   sendLike(e) {
     this.props.dispatch(
       detail.sendLike()

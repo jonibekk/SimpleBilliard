@@ -132,6 +132,9 @@ export function sendMessage() {
           type: ActionTypes.SAVE_SUCCESS,
           message: response.data.data.message
         })
+        dispatch({
+          type: FileUploadModule.RESET_STATE
+        })
       },
       (response) => {
         dispatch({
@@ -159,10 +162,10 @@ export function setResourceId(topic_id) {
 export function resetStates() {
   return (dispatch) => {
     dispatch({
-      type: FileUploadModule.RESET_STATE
+      type: ActionTypes.RESET_DETAIL_STATES
     })
     dispatch({
-      type: ActionTypes.RESET_DETAIL_STATES
+      type: FileUploadModule.RESET_STATE
     })
   }
 }
