@@ -4,7 +4,8 @@ const initialState = {
   topics: [],
   next_url: '',
   fetching: false,
-  current_searching_keyword: ''
+  current_searching_keyword: '',
+  is_mobile_app: false
 }
 
 export default function search(state = initialState, action) {
@@ -36,7 +37,14 @@ export default function search(state = initialState, action) {
         topics: []
       })
     case types.INITIALIZE_SEARCH:
-      return Object.assign({}, state, initialState)
+      const is_mobile_app = state.is_mobile_app
+      return Object.assign({}, state, initialState, {
+        is_mobile_app
+      })
+    case types.SET_UA_INFO:
+      return Object.assign({}, state, {
+        is_mobile_app: action.is_mobile_app
+      })
     default:
       return state;
   }

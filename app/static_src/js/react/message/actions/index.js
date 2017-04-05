@@ -1,5 +1,6 @@
 import * as types from "~/message/constants/ActionTypes";
 import { get } from "~/util/api";
+import {isMobileApp} from "~/util/base";
 
 export function fetchInitData() {
   return (dispatch) => {
@@ -67,6 +68,13 @@ export function cancelSearchMode() {
     dispatch({
       type: types.CHANGE_TO_INDEX_MODE
     })
+  }
+}
+
+export function setUaInfo() {
+  return {
+    type: types.SET_UA_INFO,
+    is_mobile_app: isMobileApp()
   }
 }
 

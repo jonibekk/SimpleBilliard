@@ -1,8 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import InfiniteScroll from "redux-infinite-scroll"
-import Loading from "~/message/components/elements/index/Loading"
-import Topic from "./Topic"
+import React from "react";
+import ReactDOM from "react-dom";
+import InfiniteScroll from "redux-infinite-scroll";
+import Loading from "~/message/components/elements/index/Loading";
+import Topic from "./Topic";
 
 export default class TopicSearchList extends React.Component {
   constructor(props) {
@@ -48,17 +48,17 @@ export default class TopicSearchList extends React.Component {
   }
 
   render() {
-    const { topics, fetching, current_searching_keyword } = this.props.data
+    const {topics, fetching, current_searching_keyword, is_mobile_app} = this.props.data
     const render_topics = topics.map((topic, index) => {
       return (
         <Topic topic={ topic }
                key={ topic.id }
-               index={ index } />
+               index={ index }/>
       )
     })
 
     return (
-      <div className="panel panel-default topicSearchList">
+      <div className={`topicSearchList ${!is_mobile_app && "panel panel-default"}`}>
         <div className="topicSearchList-header">
           <div className="topicSearchList-header-searchBox">
             <div className="searchBox">
@@ -72,7 +72,7 @@ export default class TopicSearchList extends React.Component {
               <input className="searchBox-input"
                      placeholder={__("Search topic")}
                      onChange={ this.inputKeyword.bind(this) }
-                     ref="search" />
+                     ref="search"/>
             </div>
           </div>
           <div className="topicSearchList-header-cancel">

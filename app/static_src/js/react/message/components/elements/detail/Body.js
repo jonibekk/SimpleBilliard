@@ -113,12 +113,22 @@ class Body extends React.Component {
   }
 
   render() {
-    const {topic, messages, fetch_more_messages_status} = this.props
+    const {topic, messages, fetch_more_messages_status, is_mobile_app} = this.props
 
+    const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
+
+    // Nothing Messages
     if (messages.length == 0) {
-      return <Loading/>;
+      return (
+        <div className="topicDetail-body">
+          <div className={`topicDetail-messages ${sp_class}`} ref="messages">
+            <Loading/>
+          </div>
+        </div>
+      )
     }
 
+    // Exist Messages
     const messages_el = messages.map((message, i) => {
       return (
         <Message
@@ -130,12 +140,11 @@ class Body extends React.Component {
       )
     });
 
-
     return (
       <div className="topicDetail-body">
-        <div className="topicDetail-messages" ref="messages">
-          {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
+        <div className={`topicDetail-messages ${sp_class}`} ref="messages">
           {messages_el}
+          {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
         </div>
       </div>
     )
@@ -147,7 +156,8 @@ Body.propTypes = {
   fetch_more_messages_status: React.PropTypes.number,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
-  is_fetched_initial: React.PropTypes.bool
+  is_fetched_initial: React.PropTypes.bool,
+  is_mobile_app: React.PropTypes.bool,
 };
 
 Body.defaultProps = {
@@ -155,6 +165,7 @@ Body.defaultProps = {
   fetch_more_messages_status: FetchMoreMessages.NONE,
   messages: [],
   paging: {next: ""},
-  is_fetched_initial: false
+  is_fetched_initial: false,
+  is_mobile_app: false,
 };
 export default connect()(Body);
