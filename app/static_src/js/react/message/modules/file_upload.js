@@ -1,12 +1,12 @@
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 
-const UPLOAD_START = 'file_upload/UPLOAD_START'
-const UPLOADING = 'file_upload/UPLOADING'
-const UPLOAD_SUCCESS = 'file_upload/UPLOAD_SUCCESS'
-const UPLOAD_ERROR = 'file_upload/UPLOAD_ERROR'
-const DELETE_UPLOADED_FILE = 'file_upload/DELETE_UPLOADED_FILE'
-const RESET_STATE = 'file_upload/RESET_STATE'
+export const UPLOAD_START = 'file_upload/UPLOAD_START'
+export const UPLOADING = 'file_upload/UPLOADING'
+export const UPLOAD_SUCCESS = 'file_upload/UPLOAD_SUCCESS'
+export const UPLOAD_ERROR = 'file_upload/UPLOAD_ERROR'
+export const DELETE_UPLOADED_FILE = 'file_upload/DELETE_UPLOADED_FILE'
+export const RESET_STATE = 'file_upload/RESET_STATE'
 
 export function deleteUploadedFile(file_index) {
   return (dispatch, getState) => {

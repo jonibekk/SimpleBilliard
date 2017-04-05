@@ -99,7 +99,7 @@ export default function detail(state = initialState, action) {
         topic,
         messages,
         input_data: {body: "", file_ids: []},
-        save_message_status: SaveMessageStatus.SUCCESS
+        save_message_status: SaveMessageStatus.NONE
       })
     case ActionTypes.SAVE_ERROR:
       return Object.assign({}, state, {
