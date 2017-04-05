@@ -33,10 +33,11 @@ export default class TopicList extends React.Component {
 
   render() {
     const { topics, fetching } = this.props.data
-    const render_topics = topics.map((topic) => {
+    const render_topics = topics.map((topic, index) => {
       return (
         <Topic topic={ topic }
-               key={ topic.id } />
+               key={ topic.id }
+               index={ index } />
       )
     })
 

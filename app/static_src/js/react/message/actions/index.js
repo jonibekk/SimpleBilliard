@@ -69,3 +69,18 @@ export function cancelSearchMode() {
     })
   }
 }
+
+export function updateTopicListItem(index, data) {
+  return (dispatch) => {
+    dispatch({
+      type: types.UPDATE_TOPIC_LIST_ITEM,
+      index,
+      data
+    })
+    dispatch({
+      type: types.UPDATE_TOPIC_SEARCH_LIST_ITEM,
+      index,
+      data
+    })
+  }
+}

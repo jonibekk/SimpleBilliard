@@ -93,9 +93,9 @@ export function search(keyword) {
   }
 }
 
-export function setTopic(topic) {
+export function setTopicOnDetail(topic) {
   return {
-    type: types.SET_TOPIC,
+    type: types.SET_TOPIC_ON_DETAIL,
     topic
   }
 }

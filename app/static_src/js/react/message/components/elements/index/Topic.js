@@ -1,18 +1,25 @@
 import React from 'react'
 import AvatarsBox from "~/common/components/AvatarsBox"
-import { setTopic } from '~/message/actions/search'
+import { setTopicOnDetail } from '~/message/actions/search'
+import { updateTopicListItem } from '~/message/actions/index'
 import { Link } from "react-router"
 import { connect } from "react-redux"
 
 class Topic extends React.Component {
+
+  onClickLinkToDetail() {
+    const { dispatch, topic, index } = this.props
+    dispatch(updateTopicListItem(index, { is_unread: false }))
+    dispatch(setTopicOnDetail(topic))
+  }
+
   render() {
     const topic = this.props.topic
-    const { dispatch } = this.props
     return (
       <li className="topicList-item" key={ topic.id }>
         <Link to={ `/topics/${topic.id}/detail` }
               className={`topicList-item-link ${topic.is_unread ? 'is-unread' : ''}`}
-              onClick={ () => dispatch(setTopic(topic)) }>
+              onClick={ this.onClickLinkToDetail.bind(this) }>
           <AvatarsBox users={ topic.users } />
           <div className="topicList-item-main">
             <div className="topicList-item-main-header">
