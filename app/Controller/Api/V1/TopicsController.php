@@ -429,7 +429,7 @@ HTML;
             return $this->_getResponseInternalServerError();
         }
 
-        $topic = $TopicService->findTopicDetail($topicId);
+        $topic = $TopicService->findTopicDetail($topicId, $loginUserId);
         $messages = $ApiMessageService->findMessages($topicId, $loginUserId, null, 1);
         $latestMessage = Hash::extract($messages, 'data.0');
         return $this->_getResponseSuccess(
@@ -536,7 +536,7 @@ HTML;
             return $this->_getResponseInternalServerError();
         }
 
-        $topic = $TopicService->findTopicDetail($topicId);
+        $topic = $TopicService->findTopicDetail($topicId, $userId);
         $messages = $ApiMessageService->findMessages($topicId, $userId, null, 1);
         $latestMessage = Hash::extract($messages, 'data.0');
         return $this->_getResponseSuccess(

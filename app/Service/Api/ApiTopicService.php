@@ -28,6 +28,8 @@ class ApiTopicService extends ApiService
      */
     function process(array $topicsByModel, int $userId): array
     {
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
         $TimeEx = new TimeExHelper(new View());
         $resData = $this->formatResponseData($topicsByModel);
         // change data structure and add util property
@@ -68,7 +70,7 @@ class ApiTopicService extends ApiService
             }
             // set display title
             $topicTitle = $data['topic']['title'];
-            $topics[$i]['display_title'] = !empty($topicTitle) ? $topicTitle : $this->getDisplayTitle($topics[$i]['users']);
+            $topics[$i]['display_title'] = !empty($topicTitle) ? $topicTitle : $TopicService->extractUsersFirstname($topics[$i]['users']);
         }
 
         return $topics;
@@ -90,36 +92,18 @@ class ApiTopicService extends ApiService
     }
 
     /**
-     * generate topic title by users
-     * - only one user, display fullname
-     * - over one user, display only first name separated comma
-     *
-     * @param  array $users
-     *
-     * @return string
-     */
-    function getDisplayTitle(array $users): string
-    {
-        if (count($users) === 1) {
-            return $users[0]['display_username'];
-        }
-
-        $firstNames = Hash::extract($users, '{n}.display_first_name');
-        return implode(', ', $firstNames);
-    }
-
-    /**
      * Find topic detail including latest messages.
      *
      * @param int $topicId
+     * @param int $loginUserId
      *
      * @return array
      */
-    function findTopicDetailInitData(int $topicId, $loginUserId): array
+    function findTopicDetailInitData(int $topicId, int $loginUserId): array
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init('TopicService');
-        $topicDetail = $TopicService->findTopicDetail($topicId);
+        $topicDetail = $TopicService->findTopicDetail($topicId, $loginUserId);
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init('ApiMessageService');

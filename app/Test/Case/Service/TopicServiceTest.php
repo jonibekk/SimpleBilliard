@@ -69,21 +69,21 @@ class TopicServiceTest extends GoalousTestCase
 
         $topicId = $this->saveTopic([$user1, $user2]);
         // no title case
-        $actual = $this->TopicService->findTopicDetail($topicId);
+        $actual = $this->TopicService->findTopicDetail($topicId, $user1);
         $this->assertNull($actual['title']);
-        $this->assertEquals('One, Two', $actual['display_title']);
+        $this->assertEquals('Two Test', $actual['display_title']);
         $this->assertFalse($actual['can_leave_topic']);
 
         // title exists case
         $this->Topic->id = $topicId;
         $this->Topic->saveField('title', 'test');
-        $actual = $this->TopicService->findTopicDetail($topicId);
+        $actual = $this->TopicService->findTopicDetail($topicId, $user1);
         $this->assertEquals('test', $actual['title']);
         $this->assertEquals($actual['title'], $actual['display_title']);
 
         // if 3 members exist, can_leave_topic is true
         $topicId = $this->saveTopic([$user1, $user2, $user3]);
-        $actual = $this->TopicService->findTopicDetail($topicId);
+        $actual = $this->TopicService->findTopicDetail($topicId, $user1);
         $this->assertTrue($actual['can_leave_topic']);
     }
 
@@ -91,10 +91,15 @@ class TopicServiceTest extends GoalousTestCase
     {
         $this->setDefaultTeamIdAndUid();
         $topicId = $this->saveTopic([1, 2]);
-        $actual = $this->TopicService->getMemberNamesAsString($topicId, 2);
-        $this->assertEquals('firstname, firstname', $actual);
-        $actual = $this->TopicService->getMemberNamesAsString($topicId, 1);
-        $this->assertEquals('firstname', $actual);
+        $actual = $this->TopicService->getMemberNamesAsString($topicId, 2, 1);
+        $this->assertEquals('firstname lastname', $actual);
+        $actual = $this->TopicService->getMemberNamesAsString($topicId, 1, 1);
+        $this->assertEquals('firstname lastname', $actual);
+    }
+
+    function test_extractUsersFirstname()
+    {
+        $this->markTestIncomplete('testClear not implemented.');
     }
 
     function test_update()

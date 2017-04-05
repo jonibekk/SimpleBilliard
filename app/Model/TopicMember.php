@@ -110,7 +110,7 @@ class TopicMember extends AppModel
      *
      * @return array
      */
-    function findSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = []): array
+    function findUsersSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = []): array
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -123,8 +123,6 @@ class TopicMember extends AppModel
             ],
             'fields'     => [
                 'id',
-                'last_read_message_id',
-                'last_message_sent'
             ],
             'order'      => ['last_message_sent' => 'DESC'],
             'contain'    => [
@@ -138,6 +136,10 @@ class TopicMember extends AppModel
             $options['limit'] = $limit;
         }
         $ret = $this->find('all', $options);
+        if (!$ret) {
+            return $ret;
+        }
+        $ret = Hash::extract($ret, '{n}.User');
         return $ret;
     }
 
