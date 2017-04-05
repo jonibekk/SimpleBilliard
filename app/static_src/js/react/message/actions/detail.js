@@ -132,6 +132,9 @@ export function sendMessage() {
           type: ActionTypes.SAVE_SUCCESS,
           message: response.data.data.message
         })
+        dispatch({
+          type: FileUploadModule.RESET_STATE
+        })
       },
       (response) => {
         dispatch({
@@ -160,6 +163,9 @@ export function resetStates() {
   return (dispatch) => {
     dispatch({
       type: ActionTypes.RESET_DETAIL_STATES
+    })
+    dispatch({
+      type: FileUploadModule.RESET_STATE
     })
   }
 }
