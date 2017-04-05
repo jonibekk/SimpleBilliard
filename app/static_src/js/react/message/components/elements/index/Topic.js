@@ -6,7 +6,6 @@ import { Link } from "react-router"
 import { connect } from "react-redux"
 
 class Topic extends React.Component {
-
   onClickLinkToDetail() {
     const { dispatch, topic, index } = this.props
     dispatch(updateTopicListItem(index, { is_unread: false }))

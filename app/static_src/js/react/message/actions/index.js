@@ -77,10 +77,5 @@ export function updateTopicListItem(index, data) {
       index,
       data
     })
-    dispatch({
-      type: types.UPDATE_TOPIC_SEARCH_LIST_ITEM,
-      index,
-      data
-    })
   }
 }

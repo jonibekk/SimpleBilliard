@@ -37,13 +37,6 @@ export default function search(state = initialState, action) {
       })
     case types.INITIALIZE_SEARCH:
       return Object.assign({}, state, initialState)
-    case types.UPDATE_TOPIC_SEARCH_LIST_ITEM:
-      if (typeof state.topics[action.index] == "undefined") {
-        return state
-      }
-      const update_item = Object.assign(state.topics[action.index], action.data)
-      const new_state = state.topics[action.index] = update_item
-      return Object.assign({}, state, new_state)
     default:
       return state;
   }

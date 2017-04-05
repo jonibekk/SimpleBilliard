@@ -389,9 +389,8 @@ HTML;
 
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
 
-        // TODO: フロント実装後に繋ぎこみ実装
-        // $socketId = "test";
-        // $MessageService->execPushMessageEvent($topicId, $socketId);
+        // push event
+        $MessageService->execPushMessageEvent($topicId);
 
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init("ApiTopicService");
