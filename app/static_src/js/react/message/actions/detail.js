@@ -159,6 +159,9 @@ export function setResourceId(topic_id) {
 export function resetStates() {
   return (dispatch) => {
     dispatch({
+      type: FileUploadModule.RESET_STATE
+    })
+    dispatch({
       type: ActionTypes.RESET_DETAIL_STATES
     })
   }
