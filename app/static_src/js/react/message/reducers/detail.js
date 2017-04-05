@@ -58,7 +58,7 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.FETCH_MORE_MESSAGES:
       messages = {
-        data: [...state.messages.data, ...action.messages.data],
+        data: [...action.messages.data, ...state.messages.data],
         paging: action.messages.paging,
       }
       return Object.assign({}, state, {
@@ -90,7 +90,7 @@ export default function detail(state = initialState, action) {
     case ActionTypes.SAVE_SUCCESS:
       messages = {
         paging: state.messages.paging,
-        data: [action.message, ...state.messages.data],
+        data: [...state.messages.data, action.message],
       }
       let topic = Object.assign({}, state.topic)
       topic.latest_message_id = action.message.id;
@@ -99,7 +99,7 @@ export default function detail(state = initialState, action) {
         topic,
         messages,
         input_data: {body: "", file_ids: []},
-        save_message_status: SaveMessageStatus.NONE
+        save_message_status: SaveMessageStatus.SUCCESS
       })
     case ActionTypes.SAVE_ERROR:
       return Object.assign({}, state, {
@@ -116,7 +116,7 @@ export default function detail(state = initialState, action) {
     case ActionTypes.SAVE_TOPIC_TITLE_SUCCESS:
       messages = {
         paging: state.messages.paging,
-        data: [action.latest_message, ...state.messages.data],
+        data: [...state.messages.data, action.latest_message],
       }
       return Object.assign({}, state, {
         topic: action.topic,
@@ -147,6 +147,10 @@ export default function detail(state = initialState, action) {
     case ActionTypes.RESET_SAVE_MESSAGE_STATUS:
       return Object.assign({}, state, {
         save_message_status: SaveMessageStatus.NONE
+      })
+    case ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS:
+      return Object.assign({}, state, {
+        fetch_more_messages_status: FetchMoreMessages.NONE
       })
     default:
       return state;

@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
 import Message from "~/message/components/elements/detail/Message";
 import Loading from "~/message/components/elements/detail/Loading";
-import {FetchMoreMessages} from "~/message/constants/Statuses";
+import {FetchMoreMessages, SaveMessageStatus} from "~/message/constants/Statuses";
 
 class Body extends React.Component {
 
@@ -20,6 +20,12 @@ class Body extends React.Component {
   componentDidUpdate() {
     if (this.props.is_fetched_initial && !this.state.scrolled_bottom) {
       this.scrollBottom();
+    }
+    if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
+      this.scrollBottom();
+      this.props.dispatch(
+        actions.resetSaveMessageStatus()
+      )
     }
 
     this.scrollToLastPosition();
@@ -37,12 +43,12 @@ class Body extends React.Component {
       return;
     }
 
-    if (this.props.browser_info.name != 'IE') {
-      return;
-    }
     const node = ReactDOM.findDOMNode(this.refs['message_' + this.props.last_position_message_id]);
     if (node) {
       node.scrollIntoView();
+      this.props.dispatch(
+        actions.resetFetchMoreMessagesStatus()
+      )
     }
   }
 
@@ -92,6 +98,7 @@ class Body extends React.Component {
 
     let el = this._findElement();
     el.scrollTop = el.scrollHeight;
+
     this.setState({scrolled_bottom: true})
   }
 
@@ -127,8 +134,8 @@ class Body extends React.Component {
     return (
       <div className="topicDetail-body">
         <div className="topicDetail-messages" ref="messages">
-          {messages_el}
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
+          {messages_el}
         </div>
       </div>
     )

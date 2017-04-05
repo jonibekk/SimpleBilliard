@@ -34,6 +34,7 @@ class MessageService extends AppService
         $Message = ClassRegistry::init('Message');
         $messages = $Message->findMessages($topicId, $cursor, $limit, $direction);
 
+        krsort($messages);
         $TimeEx = new TimeExHelper(new View());
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -210,6 +211,14 @@ class MessageService extends AppService
                     ['style' => 'small']);
                 $urls['preview_url'] = $Upload->uploadUrl($messageFile, 'AttachedFile.attached',
                     ['style' => 'original']);
+
+                $imgUrl = $urls['thumbnail_url'];
+                if (ENV_NAME === 'local') {
+                    $imgUrl = WWW_ROOT.$urls['thumbnail_url'];
+                }
+                list($imgWidth, $imgHeight) = getimagesize($imgUrl);
+                $urls['thumbnail_width'] = $imgWidth;
+                $urls['thumbnail_height'] = $imgHeight;
             } elseif ($Upload->isCanPreview($messageFile)) {
                 $urls['preview_url'] = $Upload->attachedFileUrl($messageFile);
             }
@@ -253,7 +262,9 @@ class MessageService extends AppService
             'file_size',
             'download_url',
             'preview_url',
-            'thumbnail_url'
+            'thumbnail_url',
+            'thumbnail_width',
+            'thumbnail_height',
         ];
         $message['Message'] = AppUtil::filterWhiteList($message['Message'], $messageFilter);
         $message['SenderUser'] = AppUtil::filterWhiteList($message['SenderUser'], $senderUserFilter);
