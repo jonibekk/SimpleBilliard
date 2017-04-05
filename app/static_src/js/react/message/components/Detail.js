@@ -71,7 +71,7 @@ export default class Detail extends React.Component {
         />
         <Footer
           body={detail.input_data.body}
-          is_saving={detail.is_saving}
+          save_message_status={detail.save_message_status}
           {...file_upload}
         />
       </div>

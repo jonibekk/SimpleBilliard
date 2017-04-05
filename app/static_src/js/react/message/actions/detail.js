@@ -1,4 +1,5 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
+import * as FileUploadModule from "~/message/modules/file_upload";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
@@ -131,6 +132,9 @@ export function sendMessage() {
           type: ActionTypes.SAVE_SUCCESS,
           message: response.data.data.message
         })
+        dispatch({
+          type: FileUploadModule.RESET_STATE
+        })
       },
       (response) => {
         dispatch({
@@ -159,6 +163,9 @@ export function resetStates() {
   return (dispatch) => {
     dispatch({
       type: ActionTypes.RESET_DETAIL_STATES
+    })
+    dispatch({
+      type: FileUploadModule.RESET_STATE
     })
   }
 }
@@ -223,5 +230,10 @@ export function setBrowserInfo() {
   return {
     type: ActionTypes.SET_BROWSER_INFO,
     browser_info: parser.getBrowser()
+  }
+}
+export function resetSaveMessageStatus() {
+  return {
+    type: ActionTypes.RESET_SAVE_MESSAGE_STATUS,
   }
 }

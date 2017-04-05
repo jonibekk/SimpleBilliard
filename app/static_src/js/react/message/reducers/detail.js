@@ -1,5 +1,5 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
-import {TopicTitleSettingStatus, FetchMoreMessages} from "~/message/constants/Statuses";
+import {FetchMoreMessages, TopicTitleSettingStatus, SaveMessageStatus} from "~/message/constants/Statuses";
 
 const initialState = {
   topic_id: 0,
@@ -15,7 +15,7 @@ const initialState = {
   fetch_more_messages_status: FetchMoreMessages.NONE,
   loading_latest: false,
   is_fetched_initial: false,
-  is_saving: false,
+  save_message_status: SaveMessageStatus.NONE,
   success_fetch_more: false,
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
   save_topic_title_err_msg: "",
@@ -25,9 +25,9 @@ const initialState = {
     file_ids: []
   },
   pusher_info: {
-    pusher:null,
-    channel:null,
-    socket_id:""
+    pusher: null,
+    channel: null,
+    socket_id: ""
   }
 }
 
@@ -85,7 +85,7 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.SAVING:
       return Object.assign({}, state, {
-        is_saving: true
+        save_message_status: SaveMessageStatus.SAVING
       })
     case ActionTypes.SAVE_SUCCESS:
       messages = {
@@ -98,12 +98,13 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         topic,
         messages,
-        is_saving: false
+        input_data: {body: "", file_ids: []},
+        save_message_status: SaveMessageStatus.NONE
       })
     case ActionTypes.SAVE_ERROR:
       return Object.assign({}, state, {
         err_msg: action.error.message,
-        is_saving: false
+        save_message_status: SaveMessageStatus.ERROR
       })
 
     /* Set topic title */
@@ -142,6 +143,10 @@ export default function detail(state = initialState, action) {
     case ActionTypes.SET_BROWSER_INFO:
       return Object.assign({}, state, {
         browser_info: action.browser_info
+      })
+    case ActionTypes.RESET_SAVE_MESSAGE_STATUS:
+      return Object.assign({}, state, {
+        save_message_status: SaveMessageStatus.NONE
       })
     default:
       return state;
