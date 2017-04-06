@@ -38,13 +38,11 @@ export default function topic(state = initialState, action) {
       return Object.assign({}, state, {
         is_mobile_app: action.is_mobile_app
       })
-    case types.UPDATE_TOPIC_LIST_ITEM:
-      const update_item = Object.assign(state.topics[action.index], action.data)
-      const new_state = state.topics[action.index] = update_item
-      return Object.assign({}, state, new_state)
-    case types.PREPEND_TOPIC:
+    case types.EMPTY_TOPICS:
       return Object.assign({}, state, {
-        topics: [action.topic, ...state.topics]
+        topics: [],
+        next_url: '',
+        fetching: false
       })
     default:
       return state;

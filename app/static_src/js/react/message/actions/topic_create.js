@@ -13,12 +13,11 @@ export function createTopic() {
     return post("/api/v1/topics", post_data, null,
       (response) => {
         dispatch({
-          type: ActionTypes.PREPEND_TOPIC,
-          topic: response.data.data.topic
-        })
-        dispatch({
           type: ActionTypes.TopicCreate.SAVE_SUCCESS,
           data: response.data
+        })
+        dispatch({
+          type: ActionTypes.EMPTY_TOPICS
         })
       },
       (response) => {

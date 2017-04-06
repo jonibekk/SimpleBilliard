@@ -78,12 +78,10 @@ export function setUaInfo() {
   }
 }
 
-export function updateTopicListItem(index, data) {
+export function emptyTopicList() {
   return (dispatch) => {
     dispatch({
-      type: types.UPDATE_TOPIC_LIST_ITEM,
-      index,
-      data
+      type: types.EMPTY_TOPICS
     })
   }
 }
