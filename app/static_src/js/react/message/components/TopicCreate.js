@@ -3,8 +3,8 @@ import ReactDom from "react-dom";
 import {browserHistory, Link} from "react-router";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
+import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 
-// TODO:Display loading during fetching initial data
 export default class TopicCreate extends React.Component {
 
   constructor(props) {
@@ -154,11 +154,7 @@ export default class TopicCreate extends React.Component {
               <div className="topicCreateForm-footer-right">
                 {(() => {
                   if (topic_create.is_saving) {
-                    return (
-                      <span className="btn btnRadiusOnlyIcon mod-active">
-                        <i className="fa fa-circle-o-notch fa-spin"></i>
-                      </span>
-                    )
+                    return <LoadingButton/>
                   } else {
                     return (
                       <span

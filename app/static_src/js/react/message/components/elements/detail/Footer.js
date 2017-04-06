@@ -5,6 +5,7 @@ import * as detail from "~/message/actions/detail";
 import * as file_upload from "~/message/modules/file_upload";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
+import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import Textarea from "react-textarea-autosize";
 
@@ -125,12 +126,7 @@ class Footer extends React.Component {
             <div className="topicDetail-footer-box-right">
               {(() => {
                 if (this.props.save_message_status == SaveMessageStatus.SAVING) {
-                  return (
-                    <span
-                      className="btn btnRadiusOnlyIcon mod-active">
-                    <i className="fa fa-circle-o-notch fa-spin"></i>
-                  </span>
-                  )
+                  return <LoadingButton/>
                 }
 
                 if (this.props.body || this.props.uploaded_file_ids.length > 0) {
