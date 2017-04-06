@@ -17,6 +17,9 @@ export function fetchInitialData(topic_id) {
           type: ActionTypes.FETCH_INITIAL_DATA,
           data,
         })
+        // this method defined in gl_basic
+        // update header unread badge count
+        updateMessageNotifyCnt()
       })
       .catch((response) => {
       })
