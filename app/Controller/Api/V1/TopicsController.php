@@ -348,8 +348,7 @@ HTML;
             return $errResponse;
         }
 
-        //TODO pusherのsocket_idをフォームで渡してもらう必要がある。これはapiからのつなぎこみ時に行う。
-        $socketId = "test";
+        $socketId = $this->request->data('socket_id');
         if (!$TopicService->addMembers($topicId, $loginUserId, $userIds, $socketId)) {
             return $this->_getResponseInternalServerError();
         }
@@ -442,10 +441,10 @@ HTML;
 
         // Get request data
         $requestData = $this->request->input('json_decode', true) ?? [];
-        $requestData = AppUtil::filterWhiteList($requestData, ['title']);
-        $requestData['id'] = $topicId;
+        $updateData = AppUtil::filterWhiteList($requestData, ['title']);
+        $updateData['id'] = $topicId;
         // Validation
-        if (!$Topic->validates($requestData)) {
+        if (!$Topic->validates($updateData)) {
             $validationErrors = $Topic->_validationExtract($Topic->validationErrors);
             return $this->_getResponseValidationFail($validationErrors);
         }
@@ -457,7 +456,8 @@ HTML;
         }
 
         // Update
-        if (!$TopicService->update($requestData, $userId)) {
+        $socketId = Hash::get($requestData, 'socket_id');
+        if (!$TopicService->update($updateData, $userId, $socketId)) {
             return $this->_getResponseInternalServerError();
         }
 

@@ -159,6 +159,10 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         topic: base_topic
       })
+    case ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS:
+      return Object.assign({}, state, {
+        topic_title_setting_status: TopicTitleSettingStatus.NONE
+      })
     default:
       return state;
   }

@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
 import Message from "~/message/components/elements/detail/Message";
 import Loading from "~/message/components/elements/detail/Loading";
-import {FetchMoreMessages, SaveMessageStatus} from "~/message/constants/Statuses";
+import {FetchMoreMessages, SaveMessageStatus, TopicTitleSettingStatus} from "~/message/constants/Statuses";
 
 class Body extends React.Component {
 
@@ -20,11 +20,15 @@ class Body extends React.Component {
   componentDidUpdate() {
     if (this.props.is_fetched_initial && !this.state.scrolled_bottom) {
       this.scrollBottom();
-    }
-    if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
+    } else if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
       this.scrollBottom();
       this.props.dispatch(
         actions.resetSaveMessageStatus()
+      )
+    } else if (this.props.topic_title_setting_status == TopicTitleSettingStatus.SUCCESS) {
+      this.scrollBottom();
+      this.props.dispatch(
+        actions.resetTopicTitleSettingStatus()
       )
     }
 

@@ -68,6 +68,7 @@ export default class Detail extends React.Component {
           fetch_more_messages_status={detail.fetch_more_messages_status}
           last_position_message_id={detail.last_position_message_id}
           save_message_status={detail.save_message_status}
+          topic_title_setting_status={detail.topic_title_setting_status}
           is_mobile_app={detail.is_mobile_app}
         />
         <Footer
