@@ -41,6 +41,7 @@ class ApiMessageService extends ApiService
 
         // getting message data
         $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1, $direction);
+        $this->log(compact('messages'));
         // converting key names for response data
         foreach ($messages as &$message) {
             $message = $this->convertKeyNames($message);
@@ -111,7 +112,7 @@ class ApiMessageService extends ApiService
             return $data;
         }
         // exclude that extra record for paging
-        array_unshift($data['data']);
+        array_shift($data['data']);
         $cursor = reset($data['data'])['id'];
         $queryParams = am(compact('cursor'), compact('limit'));
 

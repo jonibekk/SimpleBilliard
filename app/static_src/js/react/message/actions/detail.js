@@ -184,12 +184,15 @@ export function saveTopicTitle(title) {
       topic_title_setting_status: TopicTitleSettingStatus.SAVING,
     })
     const topic_id = getState().detail.topic_id;
-    const putData = {title}
+    const putData = {
+      title,
+      socket_id: getState().detail.pusher_info.socket_id
+    };
     return put(`/api/v1/topics/${topic_id}`, putData, null,
       (response) => {
         dispatch({
           type: ActionTypes.SAVE_TOPIC_TITLE_SUCCESS,
-          topic_title_setting_status: TopicTitleSettingStatus.NONE,
+          topic_title_setting_status: TopicTitleSettingStatus.SUCCESS,
           topic: response.data.data.topic,
           latest_message: response.data.data.latest_message,
         })
@@ -246,5 +249,10 @@ export function resetSaveMessageStatus() {
 export function resetFetchMoreMessagesStatus() {
   return {
     type: ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS,
+  }
+}
+export function resetTopicTitleSettingStatus() {
+  return {
+    type: ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS,
   }
 }

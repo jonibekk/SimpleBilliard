@@ -5,6 +5,11 @@ const initial_state = {
   is_saving: false,
   err_msg: "",
   user_ids:[],
+  pusher_info: {
+    pusher: null,
+    channel: null,
+    socket_id: ""
+  },
 }
 
 export default function topic_members_add(state = initial_state, action) {
@@ -33,6 +38,11 @@ export default function topic_members_add(state = initial_state, action) {
       });
     case ActionTypes.TopicAddMembers.RESET_STATES:
       return Object.assign({}, initial_state);
+    case ActionTypes.SET_PUSHER_INFO:
+      const pusher_info = Object.assign(state.pusher_info, action.pusher_info);
+      return Object.assign({}, state, {
+        pusher_info
+      })
     default:
       return state;
   }
