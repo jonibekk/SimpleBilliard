@@ -53,8 +53,8 @@ export function fetchMoreSearch(url) {
 
 /**
  * search topics by keyword
- * - search request by keyword 1 sec later since user input keyword
- * - if user input other word within 1 sec, not sending request by previous word.
+ * - search request by keyword 0.5 sec later since user input keyword
+ * - if user input other word within 0.5 sec, not sending request by previous word.
  *
  * @param  string keyword
  */
@@ -89,7 +89,7 @@ export function search(keyword) {
           console.log(response)
           /* eslint-enable no-console */
         })
-    }, 1000)
+    }, 500)
   }
 }
 

@@ -83,15 +83,15 @@ class TopicMemberTest extends GoalousTestCase
         $this->assertEquals(2, $actual);
     }
 
-    function test_findSortedBySentMessage()
+    function test_findUsersSortedBySentMessage()
     {
         $this->setDefaultTeamIdAndUid();
         $topicId = $this->saveTopic([1, 2]);
         // normal case
-        $actual = $this->TopicMember->findSortedBySentMessage($topicId);
+        $actual = $this->TopicMember->findUsersSortedBySentMessage($topicId);
         $this->assertcount(2, $actual);
         // limit case
-        $actual = $this->TopicMember->findSortedBySentMessage($topicId, 1);
+        $actual = $this->TopicMember->findUsersSortedBySentMessage($topicId, 1);
         $this->assertcount(1, $actual);
     }
 
