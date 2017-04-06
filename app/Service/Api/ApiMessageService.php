@@ -41,7 +41,6 @@ class ApiMessageService extends ApiService
 
         // getting message data
         $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1, $direction);
-        $this->log(compact('messages'));
         // converting key names for response data
         foreach ($messages as &$message) {
             $message = $this->convertKeyNames($message);
