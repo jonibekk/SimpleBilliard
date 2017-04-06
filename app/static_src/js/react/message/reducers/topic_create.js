@@ -9,6 +9,7 @@ const initial_state = {
     to_user_ids: [],
     file_ids: []
   },
+  new_topic_id: "",
   redirect: false
 }
 
@@ -22,7 +23,8 @@ export default function topic_create(state = initial_state, action) {
     case ActionTypes.TopicCreate.SAVE_SUCCESS:
       return Object.assign({}, state, {
         is_saving: false,
-        redirect: true
+        redirect: true,
+        new_topic_id: action.data.data.topic.id
       })
     case ActionTypes.TopicCreate.SAVE_ERROR:
       return Object.assign({}, state, {

@@ -20,7 +20,7 @@ export default class TopicCreate extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.topic_create.redirect) {
-      browserHistory.push(`/topics`);
+      browserHistory.push(`/topics/${nextProps.topic_create.new_topic_id}/detail`);
     }
   }
 
