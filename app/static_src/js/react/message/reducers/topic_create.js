@@ -26,7 +26,7 @@ export default function topic_create(state = initial_state, action) {
       })
     case ActionTypes.TopicCreate.SAVE_ERROR:
       return Object.assign({}, state, {
-        err_msg: action.error.message,
+        err_msg: action.err_msg,
         is_saving: false
       })
     case ActionTypes.TopicCreate.UPDATE_INPUT_DATA:

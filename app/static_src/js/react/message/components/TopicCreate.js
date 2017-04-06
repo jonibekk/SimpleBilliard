@@ -4,6 +4,7 @@ import {browserHistory, Link} from "react-router";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
+import {nl2br} from "~/util/element";
 
 export default class TopicCreate extends React.Component {
 
@@ -125,7 +126,7 @@ export default class TopicCreate extends React.Component {
           <div className="topicCreateForm-selectTo ">
             <span className="topicCreateForm-selectTo-label">To:</span>
             <input type="hidden" id="select2Member" className="js-changeSelect2Member"
-                   style={{width: '85%'}} ref="select2Member" />
+                   style={{width: '85%'}} ref="select2Member"/>
           </div>
           <div className={this.state.is_drag_over && "uploadFileForm-wrapper"}
                onDrop={this.drop.bind(this)}
@@ -151,6 +152,16 @@ export default class TopicCreate extends React.Component {
                 />
                 <input type="file" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
               </div>
+
+              <div className="topicCreateForm-footer-center">
+                {topic_create.err_msg &&
+                <div className="has-error">
+                  <p className="has-error help-block">
+                    {nl2br(topic_create.err_msg)}
+                  </p>
+                </div>
+                }
+              </div>
               <div className="topicCreateForm-footer-right">
                 {(() => {
                   if (topic_create.is_saving) {
@@ -166,13 +177,6 @@ export default class TopicCreate extends React.Component {
                   }
                 })(this)}
               </div>
-              {(topic_create.err_msg) &&
-              <div className="has-error">
-                    <span className="has-error help-block">
-                      {this.props.err_msg}
-                    </span>
-              </div>
-              }
             </div>
           </div>
         </div>

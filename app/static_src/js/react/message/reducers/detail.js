@@ -104,7 +104,7 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.SAVE_ERROR:
       return Object.assign({}, state, {
-        err_msg: action.error.message,
+        err_msg: action.err_msg,
         save_message_status: SaveMessageStatus.ERROR
       })
 
