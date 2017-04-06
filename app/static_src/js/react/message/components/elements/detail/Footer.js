@@ -8,6 +8,7 @@ import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import Textarea from "react-textarea-autosize";
+import {nl2br} from "~/util/element";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -117,9 +118,9 @@ class Footer extends React.Component {
                 />
               {this.props.err_msg &&
               <div className="has-error">
-                    <span className="has-error help-block">
-                      {this.props.err_msg}
-                    </span>
+                <p className="has-error help-block">
+                  {nl2br(this.props.err_msg)}
+                </p>
               </div>
               }
             </div>

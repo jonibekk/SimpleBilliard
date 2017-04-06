@@ -2,6 +2,7 @@ import * as ActionTypes from "~/message/constants/ActionTypes";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import * as FileUploadModule from "~/message/modules/file_upload";
+import {getErrMsg} from "./common";
 
 export function createTopic() {
   return (dispatch, getState) => {
@@ -21,10 +22,11 @@ export function createTopic() {
           data: response.data
         })
       },
-      (response) => {
+      ({response}) => {
+        const err_msg = getErrMsg(response);
         dispatch({
           type: ActionTypes.TopicCreate.SAVE_ERROR,
-          data: response.data
+          err_msg
         })
       }
     );

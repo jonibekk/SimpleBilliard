@@ -24,7 +24,7 @@ export default function topic_members_add(state = initial_state, action) {
       });
     case ActionTypes.TopicAddMembers.SAVE_ERROR:
       return Object.assign({}, state, {
-        err_msg: action.error.message,
+        err_msg: action.err_msg,
         is_saving: false
       });
     case ActionTypes.TopicAddMembers.SELECT_USERS:

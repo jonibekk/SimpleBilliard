@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDom from "react-dom";
 import {browserHistory, Link} from "react-router";
+import {nl2br} from "~/util/element";
 
-// TODO:Fix design
 export default class TopicMembersAdd extends React.Component {
 
   constructor(props) {
@@ -72,13 +72,15 @@ export default class TopicMembersAdd extends React.Component {
                    style={{width: '100%'}} ref="select2Member"/>
           </div>
           <div className="topicMembersAddForm-footer">
-            {(props.err_msg) &&
-            <div className="has-error">
-                <span className="has-error help-block">
-                  {this.props.err_msg}
-                </span>
+            <div className="topicMembersAddForm-footer-left">
+              {(props.err_msg) &&
+              <div className="has-error">
+                <p className="has-error help-block">
+                  {nl2br(props.err_msg)}
+                </p>
+              </div>
+              }
             </div>
-            }
             <div className="topicMembersAddForm-footer-right">
               <button
                 type="button"

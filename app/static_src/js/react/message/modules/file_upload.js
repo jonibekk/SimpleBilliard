@@ -134,7 +134,6 @@ const initial_state = {
   preview_files: [],
   uploaded_file_ids: [],
   is_uploading: false,
-  err_msg: ""
 }
 
 export function file_upload(state = initial_state, action) {

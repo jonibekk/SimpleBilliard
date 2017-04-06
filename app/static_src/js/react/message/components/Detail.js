@@ -75,6 +75,7 @@ export default class Detail extends React.Component {
           body={detail.input_data.body}
           save_message_status={detail.save_message_status}
           is_mobile_app={detail.is_mobile_app}
+          err_msg={detail.err_msg}
           {...file_upload}
         />
       </div>

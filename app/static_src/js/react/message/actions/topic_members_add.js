@@ -1,7 +1,7 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
-
+import {getErrMsg} from "./common";
 
 export function addMembers() {
   return (dispatch, getState) => {
@@ -17,10 +17,11 @@ export function addMembers() {
           data: response.data
         })
       },
-      (response) => {
+      ({response}) => {
+        const err_msg = getErrMsg(response);
         dispatch({
           type: ActionTypes.TopicAddMembers.SAVE_ERROR,
-          data: response.data
+          err_msg
         })
       }
     );

@@ -4,6 +4,7 @@ import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {isMobileApp} from "~/util/base";
+import {getErrMsg} from "./common";
 
 export function fetchInitialData(topic_id) {
   return (dispatch) => {
@@ -112,10 +113,11 @@ export function sendLike() {
           message: response.data.data.message
         })
       },
-      (response) => {
+      ({response}) => {
+        const err_msg = getErrMsg(response);
         dispatch({
           type: ActionTypes.SAVE_ERROR,
-          data: response.data
+          err_msg
         })
       }
     );
@@ -140,10 +142,11 @@ export function sendMessage() {
           type: FileUploadModule.RESET_STATE
         })
       },
-      (response) => {
+      ({response}) => {
+        const err_msg = getErrMsg(response);
         dispatch({
           type: ActionTypes.SAVE_ERROR,
-          data: response.data
+          err_msg
         })
       }
     );
