@@ -96,6 +96,10 @@ class TopicsController extends ApiController
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
         $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId);
 
+        // updating notification for message
+        $this->NotifyBiz->removeMessageNotification($topicId);
+        $this->NotifyBiz->updateCountNewMessageNotification();
+
         return $this->_getResponseSuccess($ret);
     }
 
