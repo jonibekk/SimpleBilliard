@@ -20,10 +20,11 @@ class TopicService extends AppService
      * - display title (if title exists, same of title. otherwise, member names these are ordered by last_message_sent)
      *
      * @param int $topicId
+     * @param int $loginUserId
      *
      * @return array
      */
-    function findTopicDetail(int $topicId): array
+    function findTopicDetail(int $topicId, int $loginUserId): array
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
@@ -43,7 +44,8 @@ class TopicService extends AppService
         $membersCount = $TopicMember->countMember($topicId);
 
         if (!$topic['title']) {
-            $displayTitle = $this->getMemberNamesAsString($topicId, 10);
+
+            $displayTitle = $this->getMemberNamesAsString($topicId, 10, $loginUserId);
         } else {
             $displayTitle = $topic['title'];
         }
@@ -71,14 +73,31 @@ class TopicService extends AppService
      *
      * @return string
      */
-    function getMemberNamesAsString(int $topicId, int $limit): string
+    function getMemberNamesAsString(int $topicId, int $limit, int $userId): string
     {
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
-        $members = $TopicMember->findSortedBySentMessage($topicId, $limit);
-        $names = Hash::extract($members, '{n}.User.display_first_name');
-        $namesStr = implode(', ', $names);
-        return (string)$namesStr;
+        $members = $TopicMember->findUsersSortedBySentMessage($topicId, $limit, [$userId]);
+        return $this->extractUsersFirstname($members);
+    }
+
+    /**
+     * generate topic title by users
+     * - only one user, display fullname
+     * - over one user, display only first name separated comma
+     *
+     * @param  array $users
+     *
+     * @return string
+     */
+    function extractUsersFirstname(array $users): string
+    {
+        if (count($users) === 1) {
+            return $users[0]['display_username'];
+        }
+
+        $firstNames = Hash::extract($users, '{n}.display_first_name');
+        return implode(', ', $firstNames);
     }
 
     /**
