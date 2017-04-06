@@ -23,6 +23,11 @@ export default class TopicCreate extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.resetStates();
+  }
+
+
   componentDidMount() {
     // HACK:To use select2Member
     $(document).ready(function (e) {
@@ -104,9 +109,6 @@ export default class TopicCreate extends React.Component {
     const {topic_create, file_upload} = this.props;
 
     const disableSend = () => {
-      if (topic_create.is_saving) {
-        return true;
-      }
       if (topic_create.input_data.to_user_ids.length == 0) {
         return true;
       }
@@ -143,18 +145,30 @@ export default class TopicCreate extends React.Component {
             </div>
             <div className="topicCreateForm-footer">
               <div className="topicCreateForm-footer-left">
-                <button type="button"
-                        className="btn btnRadiusOnlyIcon mod-upload"
-                        onClick={this.selectFile.bind(this)}
+                <span
+                  className="btn btnRadiusOnlyIcon mod-upload"
+                  onClick={this.selectFile.bind(this)}
                 />
                 <input type="file" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
               </div>
               <div className="topicCreateForm-footer-right">
-                <button type="button"
+                {(() => {
+                  if (topic_create.is_saving) {
+                    return (
+                      <span className="btn btnRadiusOnlyIcon mod-active">
+                        <i className="fa fa-circle-o-notch fa-spin"></i>
+                      </span>
+                    )
+                  } else {
+                    return (
+                      <span
                         className="btn btnRadiusOnlyIcon mod-send"
                         onClick={this.createTopic.bind(this)}
                         disabled={disableSend() && "disabled"}
-                />
+                      />
+                    )
+                  }
+                })(this)}
               </div>
               {(topic_create.err_msg) &&
               <div className="has-error">

@@ -13,6 +13,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     createTopic: () => dispatch(actions.createTopic()),
+    resetStates: () => dispatch(actions.resetStates()),
     uploadFiles: (files) => dispatch(file_upload.uploadFiles(files)),
     updateInputData: (input_data) => dispatch(actions.updateInputData(input_data)),
   }

@@ -124,19 +124,28 @@ class Footer extends React.Component {
             </div>
             <div className="topicDetail-footer-box-right">
               {(() => {
+                if (this.props.save_message_status == SaveMessageStatus.SAVING) {
+                  return (
+                    <span
+                      className="btn btnRadiusOnlyIcon mod-active">
+                    <i className="fa fa-circle-o-notch fa-spin"></i>
+                  </span>
+                  )
+                }
+
                 if (this.props.body || this.props.uploaded_file_ids.length > 0) {
                   return (
                     <span
                       className="btn btnRadiusOnlyIcon mod-send"
                       onClick={this.sendMessage.bind(this)}
-                      disabled={this.props.save_message_status == SaveMessageStatus.SAVING || this.props.is_uploading && "disabled"}/>
+                      disabled={this.props.is_uploading && "disabled"}/>
                   )
                 } else {
                   return (
                     <span
                       className="btn btnRadiusOnlyIcon mod-like"
                       onClick={this.sendLike.bind(this)}
-                      disabled={(this.props.save_message_status == SaveMessageStatus.SAVING || this.props.is_uploading) && "disabled"}/>
+                      disabled={(this.props.is_uploading) && "disabled"}/>
                   )
                 }
               })(this)}
