@@ -1,7 +1,7 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
-
+import * as FileUploadModule from "~/message/modules/file_upload";
 
 export function createTopic() {
   return (dispatch, getState) => {
@@ -35,5 +35,16 @@ export function updateInputData(input_data) {
   return {
     type: ActionTypes.TopicCreate.UPDATE_INPUT_DATA,
     input_data
+  }
+}
+
+export function resetStates() {
+  return (dispatch) => {
+    dispatch({
+      type: ActionTypes.TopicCreate.RESET_STATES
+    })
+    dispatch({
+      type: FileUploadModule.RESET_STATE
+    })
   }
 }

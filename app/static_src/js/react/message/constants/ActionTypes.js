@@ -52,7 +52,8 @@ export const TopicCreate = Object.freeze({
   SAVING: 'TopicCreate/SAVING',
   SAVE_SUCCESS: 'TopicCreate/SAVE_SUCCESS',
   SAVE_ERROR: 'TopicCreate/SAVE_ERROR',
-  UPDATE_INPUT_DATA: 'TopicCreate/UPDATE_INPUT_DATA'
+  UPDATE_INPUT_DATA: 'TopicCreate/UPDATE_INPUT_DATA',
+  RESET_STATES: 'TopicAddMembers/RESET_STATES',
 })
 
 export const TopicAddMembers = Object.freeze({

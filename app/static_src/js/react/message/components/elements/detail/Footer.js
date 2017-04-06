@@ -5,6 +5,7 @@ import * as detail from "~/message/actions/detail";
 import * as file_upload from "~/message/modules/file_upload";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
+import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import Textarea from "react-textarea-autosize";
 
@@ -124,19 +125,23 @@ class Footer extends React.Component {
             </div>
             <div className="topicDetail-footer-box-right">
               {(() => {
+                if (this.props.save_message_status == SaveMessageStatus.SAVING) {
+                  return <LoadingButton/>
+                }
+
                 if (this.props.body || this.props.uploaded_file_ids.length > 0) {
                   return (
                     <span
                       className="btn btnRadiusOnlyIcon mod-send"
                       onClick={this.sendMessage.bind(this)}
-                      disabled={this.props.save_message_status == SaveMessageStatus.SAVING || this.props.is_uploading && "disabled"}/>
+                      disabled={this.props.is_uploading && "disabled"}/>
                   )
                 } else {
                   return (
                     <span
                       className="btn btnRadiusOnlyIcon mod-like"
                       onClick={this.sendLike.bind(this)}
-                      disabled={(this.props.save_message_status == SaveMessageStatus.SAVING || this.props.is_uploading) && "disabled"}/>
+                      disabled={(this.props.is_uploading) && "disabled"}/>
                   )
                 }
               })(this)}

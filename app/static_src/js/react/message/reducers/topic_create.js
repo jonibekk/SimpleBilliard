@@ -34,6 +34,14 @@ export default function topic_create(state = initial_state, action) {
       return Object.assign({}, state, {
         input_data
       })
+    case ActionTypes.TopicCreate.RESET_STATES:
+      return Object.assign({}, initial_state, {
+        input_data: {
+          body: "",
+          to_user_ids:[],
+          file_ids:[]
+        }
+      });
     default:
       return state;
   }
