@@ -1,15 +1,15 @@
 import React from 'react'
 import AvatarsBox from "~/common/components/AvatarsBox"
 import { setTopicOnDetail } from '~/message/actions/search'
-import { updateTopicListItem } from '~/message/actions/index'
+import { emptyTopicList } from '~/message/actions/index'
 import { Link } from "react-router"
 import { connect } from "react-redux"
 
 class Topic extends React.Component {
   onClickLinkToDetail() {
-    const { dispatch, topic, index } = this.props
-    dispatch(updateTopicListItem(index, { is_unread: false }))
+    const { dispatch, topic } = this.props
     dispatch(setTopicOnDetail(topic))
+    dispatch(emptyTopicList())
   }
 
   render() {
