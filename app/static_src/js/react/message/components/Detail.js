@@ -52,7 +52,6 @@ export default class Detail extends React.Component {
 
   render() {
     const {detail, file_upload} = this.props;
-
     return (
       <div className="panel panel-default topicDetail">
         <Header

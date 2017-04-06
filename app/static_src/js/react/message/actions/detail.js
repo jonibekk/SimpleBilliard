@@ -248,3 +248,18 @@ export function resetFetchMoreMessagesStatus() {
     type: ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS,
   }
 }
+
+export function fetchReadCount(topic_id) {
+  return (dispatch) => {
+    return get(`/api/v1/topics/${topic_id}/read_members`)
+      .then((response) => {
+        const read_count = response.data.data.member_count
+        dispatch({
+          type: ActionTypes.UPDATE_READ_COUNT,
+          read_count
+        })
+      })
+      .catch((response) => {
+      })
+  }
+}

@@ -153,6 +153,12 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         fetch_more_messages_status: FetchMoreMessages.NONE
       })
+    case ActionTypes.UPDATE_READ_COUNT:
+      const base_topic = state.topic
+      base_topic.read_count = action.read_count
+      return Object.assign({}, state, {
+        topic: base_topic
+      })
     default:
       return state;
   }
