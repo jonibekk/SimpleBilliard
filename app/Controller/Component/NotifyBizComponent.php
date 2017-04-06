@@ -516,7 +516,16 @@ class NotifyBizComponent extends Component
             return;
         }
 
-        $body = $message['body'];
+        // Customize the body if there are attached files and no body.
+        if (!$message['body'] and $message['attached_file_count'] > 0) {
+            // set language
+            // TODO: This is not good. It should be translated to several member's setting ideally.
+            $this->_setLangByUserId($message['sender_user_id']);
+            $body = __('Sent file(s).');
+        } else {
+            $body = $message['body'];
+        }
+
         $topicId = $message['topic_id'];
         $senderUserId = $message['sender_user_id'];
 
@@ -1370,7 +1379,6 @@ class NotifyBizComponent extends Component
                     unset($device_tokens[$key]);
                 }
             }
-
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
             $from_user_name = Hash::get($from_user, '0.User.display_username');
