@@ -103,17 +103,20 @@ class TopicService extends AppService
     /**
      * Update topic
      *
-     * @param array $data
-     * @param int   $loginUserId
+     * @param array  $data
+     * @param int    $loginUserId
+     * @param string $socketId
      *
      * @return bool
      */
-    function update(array $data, int $loginUserId): bool
+    function update(array $data, int $loginUserId, string $socketId): bool
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init("Topic");
         /** @var Message $Message */
         $Message = ClassRegistry::init("Message");
+        /** @var MessageService $MessageService */
+        $MessageService = ClassRegistry::init("MessageService");
 
         try {
             // Begin transaction
@@ -136,6 +139,8 @@ class TopicService extends AppService
                         )
                     );
                 }
+                // Push event using pusher
+                $MessageService->execPushMessageEvent($data['id'], $socketId);
             }
 
             // Commit transaction

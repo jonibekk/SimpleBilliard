@@ -8,7 +8,8 @@ export function addMembers() {
     dispatch({type: ActionTypes.TopicAddMembers.SAVING})
     const state = getState().topic_members_add;
     const post_data = {
-      user_ids: state.user_ids
+      user_ids: state.user_ids,
+      socket_id: state.pusher_info.socket_id
     };
     return post(`/api/v1/topics/${state.topic_id}/members`, post_data, null,
       (response) => {

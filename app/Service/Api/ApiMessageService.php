@@ -111,7 +111,7 @@ class ApiMessageService extends ApiService
             return $data;
         }
         // exclude that extra record for paging
-        array_unshift($data['data']);
+        array_shift($data['data']);
         $cursor = reset($data['data'])['id'];
         $queryParams = am(compact('cursor'), compact('limit'));
 
