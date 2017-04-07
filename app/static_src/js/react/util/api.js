@@ -32,7 +32,8 @@ export function get(uri, options, success_callback, error_callback) {
     timeout: 10000,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'Cache-Control': 'no-store, private, no-cache, must-revalidate'
+      'Cache-Control': 'no-store, private, no-cache, must-revalidate',
+      'If-Modified-Since': 0
     },
     dataType: 'json'
   }
