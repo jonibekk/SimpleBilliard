@@ -252,107 +252,28 @@ HTML;
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Read+member+list
-     * TODO: This is mock! We have to implement it!
      */
     function get_read_members(int $topicId)
     {
-        $retMockData = [
-            'users'        => [
-                [
-                    'id'                => '1',
-                    "img_url"           => "/img/no-image.jpg",
-                    "display_username"  => "Daiki Hirakata",
-                    "display_read_date" => "Now",
-                    "read_date"         => "1438585548",
-                ],
-                [
-                    'id'                => '2',
-                    "img_url"           => "/img/no-image.jpg",
-                    "display_username"  => "Kohei Kikuchi",
-                    "display_read_date" => "Dec 1st",
-                    "read_date"         => "1438585548",
-                ],
-            ],
-            'member_count' => 2,
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init("TopicMember");
+        /** @var ApiTopicService $ApiTopicService */
+        $ApiTopicService = ClassRegistry::init("ApiTopicService");
+
+        // permission check
+        $loginUserId = $this->Auth->user('id');
+        if (!$TopicMember->isMember($topicId, $loginUserId)) {
+            return $this->_getResponseBadFail(__("You cannot access the topic"));
+        }
+
+        $red_users = $ApiTopicService->findReadMembers($topicId);
+
+        $ret = [
+            'users'        => $red_users,
+            'member_count' => count($red_users),
         ];
-        $retMockHtml = <<<HTML
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
-                    class="close-icon">×</span></button>
-            <h4 class="modal-title">
-                既読 (5)
-            </h4>
-        </div>
-        <div class="modal-body without-footer">
-            <div class="row borderBottom">
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            古山 浩志&nbsp;
-                        </div>
 
-                        <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                            <span title="2017年 2月28日 07:16"> 2月28日 07:16</span></div>
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            平形 大樹 565-&gt;625&nbsp;
-                        </div>
-
-                        <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                            <span title="2017年 2月28日 02:16"> 2月28日 02:16</span></div>
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            西田 昂弘 440点&nbsp;
-                        </div>
-
-                        <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                            <span title="2017年 2月27日 18:39"> 2月27日 18:39</span></div>
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            吉田 将之&nbsp;
-                        </div>
-
-                        <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                            <span title="2017年 2月27日 18:20"> 2月27日 18:20</span></div>
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            佐伯 翔平&nbsp;
-                        </div>
-
-                        <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                            <span title="2017年 2月27日 18:20"> 2月27日 18:20</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-HTML;
-        return $this->_getResponseSuccess($retMockData, $retMockHtml);
+        return $this->_getResponseSuccess($ret);
     }
 
     /**
