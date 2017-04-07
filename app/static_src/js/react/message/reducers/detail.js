@@ -87,9 +87,8 @@ export default function detail(state = initialState, action) {
       messages = {
         data: action.messages
       }
-      const latest_message = action.messages[action.messages.length - 1]
       const updated_topic = Object.assign({}, state.topic, {
-        latest_message_id: latest_message.id
+        latest_message_id: action.latest_message_id
       })
       return Object.assign({}, state, {
         messages,

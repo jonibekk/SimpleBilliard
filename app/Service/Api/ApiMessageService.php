@@ -25,6 +25,8 @@ class ApiMessageService extends ApiService
     function findMessages(int $topicId, int $loginUserId, $cursor = null, $limit = null, $direction = Message::DIRECTION_OLD
     ): array
     {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
 
@@ -35,8 +37,9 @@ class ApiMessageService extends ApiService
 
         // it's default that will be returned
         $ret = [
-            'data'   => [],
-            'paging' => ['next' => null]
+            'data'              => [],
+            'paging'            => ['next' => null],
+            'latest_message_id' => 0
         ];
 
         // getting message data
@@ -47,6 +50,8 @@ class ApiMessageService extends ApiService
         }
 
         $ret['data'] = $messages;
+
+        $ret['latest_message_id'] = $Topic->getLatestMessageId($topicId);
 
         // update user last read message id
         $this->updateLastReadMessageId($ret['data'], $topicId, $loginUserId);

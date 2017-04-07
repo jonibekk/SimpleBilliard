@@ -62,9 +62,11 @@ export function fetchLatestMessages(cursor) {
           getState().detail.messages.data,
           response.data.data
         );
+        const latest_message_id = response.data.latest_message_id
         dispatch({
           type: ActionTypes.FETCH_LATEST_MESSAGES,
-          messages
+          messages,
+          latest_message_id
         })
       })
       .catch((response) => {
