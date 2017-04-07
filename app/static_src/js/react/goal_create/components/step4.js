@@ -7,9 +7,9 @@ import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import UnitSelect from "~/common/components/goal/UnitSelect";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {MaxLength} from "~/common/constants/App";
-import BaseComponent from "~/goal_create/components/BaseComponent";
+import Base from "~/common/components/Base";
 
-export default class Step4Component extends BaseComponent {
+export default class Step4Component extends Base {
   constructor(props) {
     super(props);
     this.state = {

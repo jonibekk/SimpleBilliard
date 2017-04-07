@@ -6,8 +6,9 @@ import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {nl2br} from "~/util/element";
 import {isMobileApp} from "~/util/base";
+import Base from "~/common/components/Base";
 
-export default class TopicCreate extends React.Component {
+export default class TopicCreate extends Base {
 
   constructor(props) {
     super(props)
@@ -26,11 +27,13 @@ export default class TopicCreate extends React.Component {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount.apply(this);
     this.props.resetStates();
   }
 
 
   componentDidMount() {
+    super.componentDidMount.apply(this);
     // HACK:To use select2Member
     $(document).ready(function (e) {
       initMemberSelect2();
