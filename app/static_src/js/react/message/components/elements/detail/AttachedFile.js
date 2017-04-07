@@ -9,7 +9,8 @@ export default class AttachedFile extends React.Component {
   }
 
   getImgDimensions(img) {
-    const maxWidth = 300
+    // TODO: 本来は画像を表示する親要素(<div class="topicDetail-messages-item-right">)の幅によって計算した方が良いが暫定的に対応
+    const maxWidth = window.innerWidth - 120;
     if (img.thumbnail_width <= maxWidth) {
       return {
         width: img.thumbnail_width,
