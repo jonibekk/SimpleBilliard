@@ -15,6 +15,7 @@ export default class Detail extends React.Component {
     const topic_id = this.props.params.topic_id;
     this.props.setResourceId(topic_id);
     this.props.setUaInfo();
+    this.props.initLayout();
     this.props.fetchInitialData(this.props.params.topic_id);
   }
 
@@ -59,6 +60,7 @@ export default class Detail extends React.Component {
           topic_title_setting_status={detail.topic_title_setting_status}
           save_topic_title_err_msg={detail.save_topic_title_err_msg}
           is_mobile_app={detail.is_mobile_app}
+          mobile_app_layout={detail.mobile_app_layout}
         />
         <Body
           topic={detail.topic}
@@ -70,12 +72,14 @@ export default class Detail extends React.Component {
           save_message_status={detail.save_message_status}
           topic_title_setting_status={detail.topic_title_setting_status}
           is_mobile_app={detail.is_mobile_app}
+          mobile_app_layout={detail.mobile_app_layout}
         />
         <Footer
           body={detail.input_data.body}
           save_message_status={detail.save_message_status}
           is_mobile_app={detail.is_mobile_app}
           err_msg={detail.err_msg}
+          mobile_app_layout={detail.mobile_app_layout}
           {...file_upload}
         />
       </div>

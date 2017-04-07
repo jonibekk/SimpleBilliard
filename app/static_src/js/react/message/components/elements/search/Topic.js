@@ -1,15 +1,26 @@
-import React from 'react'
-import AvatarsBox from "~/common/components/AvatarsBox"
-import { setTopicOnDetail } from '~/message/actions/search'
-import { emptyTopicList } from '~/message/actions/index'
-import { Link } from "react-router"
-import { connect } from "react-redux"
+import React from "react";
+import AvatarsBox from "~/common/components/AvatarsBox";
+import {setTopicOnDetail} from "~/message/actions/search";
+import {emptyTopicList} from "~/message/actions/index";
+import {Link} from "react-router";
+import {connect} from "react-redux";
 
 class Topic extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      is_taped_item: false,
+    }
+  }
+
   onClickLinkToDetail() {
-    const { dispatch, topic } = this.props
+    const {dispatch, topic} = this.props
     dispatch(setTopicOnDetail(topic))
     dispatch(emptyTopicList())
+  }
+
+  tapLink(e) {
+    this.setState({is_taped_item: true})
   }
 
   render() {
@@ -17,9 +28,10 @@ class Topic extends React.Component {
     return (
       <li className="topicSearchList-item" key={ topic.id }>
         <Link to={ `/topics/${topic.id}/detail` }
-              className="topicSearchList-item-link"
-              onClick={ this.onClickLinkToDetail.bind(this) }>
-          <AvatarsBox users={ topic.users } />
+              className={`topicSearchList-item-link ${this.state.is_taped_item ? "is-hover" : ""}`}
+              onClick={ this.onClickLinkToDetail.bind(this) }
+              onTouchTap={ this.tapLink.bind(this) }>
+          <AvatarsBox users={ topic.users }/>
           <div className="topicSearchList-item-main">
             <div className="topicSearchList-item-main-header">
               <div className="topicSearchList-item-main-header-title oneline-ellipsis">

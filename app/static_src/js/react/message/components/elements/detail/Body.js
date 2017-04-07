@@ -5,13 +5,15 @@ import * as actions from "~/message/actions/detail";
 import Message from "~/message/components/elements/detail/Message";
 import Loading from "~/message/components/elements/detail/Loading";
 import {FetchMoreMessages, SaveMessageStatus, TopicTitleSettingStatus} from "~/message/constants/Statuses";
+import {isIOSApp} from "~/util/base";
+import {PositionIOSApp} from "~/message/constants/Styles";
 
 class Body extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      scrolled_bottom: false
+      scrolled_bottom: false,
     }
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
@@ -121,11 +123,16 @@ class Body extends React.Component {
 
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
 
+    const body_styles = {
+      top: this.props.mobile_app_layout.body_top,
+      bottom: this.props.mobile_app_layout.body_bottom
+    };
+
     // Nothing Messages
     if (messages.length == 0) {
       return (
         <div className="topicDetail-body">
-          <div className={`topicDetail-messages ${sp_class}`} ref="messages">
+          <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
             <Loading/>
           </div>
         </div>
@@ -146,7 +153,7 @@ class Body extends React.Component {
 
     return (
       <div className="topicDetail-body">
-        <div className={`topicDetail-messages ${sp_class}`} ref="messages">
+        <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
           {messages_el}
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
         </div>

@@ -3,7 +3,8 @@ import * as FileUploadModule from "~/message/modules/file_upload";
 import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
-import {isMobileApp} from "~/util/base";
+import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
+import {isMobileApp, isIOSApp} from "~/util/base";
 import {getErrMsg} from "./common";
 
 export function fetchInitialData(topic_id) {
@@ -270,5 +271,35 @@ export function fetchReadCount(topic_id) {
 export function resetTopicTitleSettingStatus() {
   return {
     type: ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS,
+  }
+}
+
+export function initLayout() {
+  let mobile_app_layout = {}
+  if (isIOSApp()) {
+    mobile_app_layout = {
+      header_top: PositionIOSApp.HEADER_TOP,
+      body_top: PositionIOSApp.BODY_TOP,
+      body_bottom: PositionIOSApp.BODY_BOTTOM,
+      footer_bottom: PositionIOSApp.FOOTER_BOTTOM
+    }
+  } else if (isMobileApp()) {
+    mobile_app_layout = {
+      header_top: PositionMobileApp.HEADER_TOP,
+      body_top: PositionMobileApp.BODY_TOP,
+      body_bottom: PositionMobileApp.BODY_BOTTOM,
+      footer_bottom: PositionMobileApp.FOOTER_BOTTOM
+    }
+  }
+  return {
+    type: ActionTypes.INIT_LAYOUT,
+    mobile_app_layout
+  }
+}
+
+export function changeLayout(mobile_app_layout) {
+  return {
+    type: ActionTypes.CHANGE_LAYOUT,
+    mobile_app_layout
   }
 }

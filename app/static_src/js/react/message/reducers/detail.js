@@ -29,7 +29,13 @@ const initialState = {
     channel: null,
     socket_id: ""
   },
-  is_mobile_app: false
+  is_mobile_app: false,
+  mobile_app_layout: {
+    header_top: null,
+    body_top: null,
+    body_bottom: null,
+    footer_bottom: null,
+  }
 }
 
 export default function detail(state = initialState, action) {
@@ -37,7 +43,13 @@ export default function detail(state = initialState, action) {
   let input_data = state.input_data
   switch (action.type) {
     case ActionTypes.RESET_DETAIL_STATES:
-      return Object.assign({}, state, initialState)
+      input_data = {
+        body:"",
+        file_ids:[]
+      };
+      return Object.assign({}, state, initialState, {
+        input_data
+      })
     case ActionTypes.SET_RESOURCE_ID:
       return Object.assign({}, state, {
         topic_id: action.topic_id
@@ -75,9 +87,14 @@ export default function detail(state = initialState, action) {
       messages = {
         data: action.messages,
       }
+      const latest_message = action.messages[action.message.length - 1]
+      const updated_topic = Object.assign(state.topic, {
+        latest_message_id: latest_message.id
+      })
       return Object.assign({}, state, {
         messages,
-        loading_latest: false
+        loading_latest: false,
+        topic: updated_topic
       })
 
     case ActionTypes.SET_TOPIC_ON_DETAIL:
@@ -162,6 +179,15 @@ export default function detail(state = initialState, action) {
     case ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS:
       return Object.assign({}, state, {
         topic_title_setting_status: TopicTitleSettingStatus.NONE
+      })
+    case ActionTypes.INIT_LAYOUT:
+      return Object.assign({}, state, {
+        mobile_app_layout: action.mobile_app_layout
+      })
+    case ActionTypes.CHANGE_LAYOUT:
+      const mobile_app_layout = Object.assign({}, state.mobile_app_layout, action.mobile_app_layout);
+      return Object.assign({}, state, {
+        mobile_app_layout
       })
     default:
       return state;
