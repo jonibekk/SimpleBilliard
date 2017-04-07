@@ -147,11 +147,11 @@ class Header extends React.Component {
                   <i className="fa fa-edit mr_4px"/>{__("Set topic name")}
                 </a>
               </li>
-              <li className="mtb_8px">
-                <a href="#" role="menuitem" tabIndex="-1">
-                  <i className="fa fa-sign-out mr_4px"/>{__("Leave me")}
-                </a>
-              </li>
+              {/*<li className="mtb_8px">*/}
+                {/*<a href="#" role="menuitem" tabIndex="-1">*/}
+                  {/*<i className="fa fa-sign-out mr_4px"/>{__("Leave me")}*/}
+                {/*</a>*/}
+              {/*</li>*/}
             </ul>
           </div>
         </div>
