@@ -1,11 +1,18 @@
 import React from "react";
+import { connect } from "react-redux"
 import {nl2br} from "~/util/element";
 import AttachedFile from "~/message/components/elements/detail/AttachedFile";
 import * as Model from "~/common/constants/Model";
+import { fetchReadCount } from '~/message/actions/detail'
 
-export default class Message extends React.Component {
+class Message extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  onClickReadCount() {
+    const { topic, dispatch } = this.props
+    dispatch(fetchReadCount(topic.id))
   }
 
   render() {
@@ -29,9 +36,13 @@ export default class Message extends React.Component {
         return (
           <div className="topicDetail-messages-item-read-wrapper">
             <a href={`/topics/ajax_get_read_members/${topic.id}`}
-               className="topicDetail-messages-item-read is-off modal-ajax-get">
+               className="topicDetail-messages-item-read is-off modal-ajax-get"
+               onClick={ this.onClickReadCount.bind(this) }>
               <i className="fa fa-check mr_2px"/>
               {topic.read_count}
+            </a>
+            <a className="topicDetail-messages-item-update"
+               onClick={ this.onClickReadCount.bind(this) }>
               <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
             </a>
           </div>
@@ -110,3 +121,5 @@ Message.defaultProps = {
   topic: {},
   message: {},
 };
+
+export default connect()(Message);

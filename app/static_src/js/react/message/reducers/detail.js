@@ -170,6 +170,11 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         fetch_more_messages_status: FetchMoreMessages.NONE
       })
+    case ActionTypes.UPDATE_READ_COUNT:
+      const new_topic = Object.assign({}, state.topic, {read_count: action.read_count})
+      return Object.assign({}, state, {
+        topic: new_topic
+      })
     case ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS:
       return Object.assign({}, state, {
         topic_title_setting_status: TopicTitleSettingStatus.NONE
