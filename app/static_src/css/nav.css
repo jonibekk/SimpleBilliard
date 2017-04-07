@@ -209,6 +209,10 @@
     z-index: 1030
 }
 
+.navbar-fixed-top.mod-shadow {
+    box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px !important;
+}
+
 .navbar-fixed-top {
     top: 0;
     border-width: 0 0 1px
