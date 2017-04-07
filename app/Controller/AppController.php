@@ -521,6 +521,14 @@ class AppController extends BaseController
             return false;
         }
 
+        // if env variable is not set, return false
+        if (!defined('BASIC_AUTH_ID') || !defined('BASIC_AUTH_PASS')) {
+            return false;
+        }
+        if (!BASIC_AUTH_ID || !BASIC_AUTH_PASS) {
+            return false;
+        }
+
         return true;
     }
 

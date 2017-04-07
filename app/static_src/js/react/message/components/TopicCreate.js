@@ -5,6 +5,7 @@ import UploadDropZone from "~/message/components/elements/detail/UploadDropZone"
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {nl2br} from "~/util/element";
+import {isMobileApp} from "~/util/base";
 
 export default class TopicCreate extends React.Component {
 
@@ -120,7 +121,7 @@ export default class TopicCreate extends React.Component {
     }
 
     return (
-      <div>
+      <div className={isMobileApp() ? "p_10px" : ""}>
         <div className="panel topicCreateForm">
           <span className="hidden js-triggerUpdateToUserIds" onClick={this.changeToUserIds.bind(this)}/>
           <div className="topicCreateForm-selectTo ">

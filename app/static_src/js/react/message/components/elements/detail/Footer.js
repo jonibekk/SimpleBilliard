@@ -165,7 +165,7 @@ class Footer extends React.Component {
                   className="topicDetail-footer-inputBody form-control disable-change-warning"
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" value={this.props.body}
-                  onChange={this.inputMessage.bind(this)}
+                  onInput={this.inputMessage.bind(this)}
                   onFocus={this.focusInputBody.bind(this)}
                   onBlur={this.blurInputBody.bind(this)}
                 />
