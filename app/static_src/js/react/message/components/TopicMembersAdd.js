@@ -3,8 +3,9 @@ import ReactDom from "react-dom";
 import {browserHistory, Link} from "react-router";
 import {nl2br} from "~/util/element";
 import {isMobileApp} from "~/util/base";
+import Base from "~/common/components/Base";
 
-export default class TopicMembersAdd extends React.Component {
+export default class TopicMembersAdd extends Base {
 
   constructor(props) {
     super(props)
@@ -17,6 +18,7 @@ export default class TopicMembersAdd extends React.Component {
   }
 
   componentDidMount() {
+    super.componentDidMount.apply(this);
     // TODO:Remove selected members from suggest
     // HACK:To use select2Member
     $(document).ready(function (e) {
@@ -31,6 +33,7 @@ export default class TopicMembersAdd extends React.Component {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount.apply(this);
     this.props.resetStates();
   }
 

@@ -3,9 +3,9 @@ import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
 import {isMobileApp} from "~/util/base";
+import Base from "~/common/components/Base";
 
-// TODO:Display loading during fetching initial data
-export default class Detail extends React.Component {
+export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
@@ -26,6 +26,7 @@ export default class Detail extends React.Component {
   }
 
   componentDidMount() {
+    super.componentDidMount.apply(this);
     const topic_id = this.props.params.topic_id;
     let {pusher_info} = this.props.detail;
     // HACK:dependencied to window.Pusher(using in gl_basic.js)
@@ -45,6 +46,7 @@ export default class Detail extends React.Component {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount.apply(this);
     if (isMobileApp()) {
       let header = document.getElementById("header");
       header.classList.remove("mod-shadow");
