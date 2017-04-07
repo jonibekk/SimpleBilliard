@@ -53,7 +53,7 @@ export default class Routes extends Component {
               <Route path=":topic_id/add_members" component={TopicMembersAddContainer} />
             </Route>
           </Router>
-          <DevTools />
+          {/* <DevTools /> */}
         </div>
       </Provider>
     )
