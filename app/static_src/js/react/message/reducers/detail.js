@@ -85,10 +85,10 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.FETCH_LATEST_MESSAGES:
       messages = {
-        data: action.messages,
+        data: action.messages
       }
-      const latest_message = action.messages[action.message.length - 1]
-      const updated_topic = Object.assign(state.topic, {
+      const latest_message = action.messages[action.messages.length - 1]
+      const updated_topic = Object.assign({}, state.topic, {
         latest_message_id: latest_message.id
       })
       return Object.assign({}, state, {
@@ -96,7 +96,6 @@ export default function detail(state = initialState, action) {
         loading_latest: false,
         topic: updated_topic
       })
-
     case ActionTypes.SET_TOPIC_ON_DETAIL:
       return Object.assign({}, state, {
         topic: action.topic
