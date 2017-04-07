@@ -16,7 +16,7 @@ class Message extends React.Component {
   }
 
   render() {
-    const {topic, message, is_first_idx} = this.props
+    const {topic, message} = this.props
     const read_mark_el = () => {
       if (topic.latest_message_id != message.id) {
         return null;
@@ -25,7 +25,7 @@ class Message extends React.Component {
       const is_all_read = (topic.read_count == topic.members_count - 1);
       if (is_all_read) {
         return (
-          <div>
+          <div className="topicDetail-messages-item-read-wrapper">
             <a href={`/topics/ajax_get_read_members/${topic.id}`}
                className="topicDetail-messages-item-read is-on modal-ajax-get">
               <i className="fa fa-check"/>
@@ -61,6 +61,26 @@ class Message extends React.Component {
       )
     }
 
+    const attached_files = () => {
+      if (message.attached_files.length == 0) {
+        return null;
+      }
+
+      const files = message.attached_files.map((attached_file) => {
+        return (
+          <AttachedFile
+            key={attached_file.id}
+            attached_file={attached_file}
+            message_id={message.id}/>
+        )
+      })
+      return (
+        <div className="topicDetail-messages-item-attachedFiles">
+          {files}
+        </div>
+      )
+    }
+
     return (
       <div className={`topicDetail-messages-item`}>
         <div className="topicDetail-messages-item-left">
@@ -85,14 +105,7 @@ class Message extends React.Component {
               : nl2br(message.body)
             }
           </p>
-          {message.attached_files.map((attached_file) => {
-            return (
-              <AttachedFile
-                key={attached_file.id}
-                attached_file={attached_file}
-                message_id={message.id}/>
-            )
-          })}
+          {attached_files()}
           {read_mark_el()}
         </div>
       </div>
