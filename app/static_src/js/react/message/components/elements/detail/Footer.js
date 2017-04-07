@@ -139,7 +139,6 @@ class Footer extends React.Component {
     const footer_style = {
       bottom: this.props.mobile_app_layout.footer_bottom
     }
-    console.log(footer_style)
 
     return (
       <div className={`topicDetail-footer ${sp_class} ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
