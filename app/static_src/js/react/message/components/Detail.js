@@ -2,6 +2,7 @@ import React from "react";
 import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
+import {isMobileApp} from "~/util/base";
 
 // TODO:Display loading during fetching initial data
 export default class Detail extends React.Component {
@@ -17,6 +18,11 @@ export default class Detail extends React.Component {
     this.props.setUaInfo();
     this.props.initLayout();
     this.props.fetchInitialData(this.props.params.topic_id);
+
+    if (isMobileApp()) {
+      let header = document.getElementById("header");
+      header.classList.add("mod-shadow");
+    }
   }
 
   componentDidMount() {
@@ -39,6 +45,11 @@ export default class Detail extends React.Component {
   }
 
   componentWillUnmount() {
+    if (isMobileApp()) {
+      let header = document.getElementById("header");
+      header.classList.remove("mod-shadow");
+    }
+
     this.props.resetStates();
     // Unsubscribe
     let {channel} = this.props.detail.pusher_info;
@@ -54,7 +65,7 @@ export default class Detail extends React.Component {
   render() {
     const {detail, file_upload} = this.props;
     return (
-      <div className="panel panel-default topicDetail">
+      <div className={`topicDetail ${isMobileApp() ? "" : "panel panel-default"}`}>
         <Header
           topic={detail.topic}
           topic_title_setting_status={detail.topic_title_setting_status}

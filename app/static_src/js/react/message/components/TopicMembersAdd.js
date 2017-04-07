@@ -2,6 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 import {browserHistory, Link} from "react-router";
 import {nl2br} from "~/util/element";
+import {isMobileApp} from "~/util/base";
 
 export default class TopicMembersAdd extends React.Component {
 
@@ -64,7 +65,7 @@ export default class TopicMembersAdd extends React.Component {
       return false;
     }
     return (
-      <div>
+      <div className={isMobileApp() ? "p_10px" : ""}>
         <div className="panel topicMembersAddForm">
           <span className="hidden js-triggerUpdateToUserIds" onClick={this.selectUsers.bind(this)}/>
           <div className="topicMembersAddForm-selectTo ">

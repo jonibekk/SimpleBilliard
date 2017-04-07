@@ -10,7 +10,7 @@
 if (!isset($with_header_menu)) {
     $with_header_menu = true;
 }
-if ($this->request->params['controller'] === 'topics' && in_array($this->request->params['action'],['index','detail']) && $is_mb_app) {
+if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
     $containerClass = "mod-sp";
     $bodyNoScrollClass = "mod-fixed";
 } else {

@@ -19,7 +19,6 @@
       left: 0;
       right: 0;
       padding: 14px 0;
-      border-top: 1px solid @subColor4;
     }
     &-left {
     }
@@ -186,10 +185,13 @@
         color: @subColor10;
       }
     }
-    .attachedFile {
+    &-attachedFiles {
+      padding: 8px 0;
       &-item {
         overflow: hidden;
-        margin: 5px 0;
+        & + & {
+          margin-top:10px;
+        }
       }
     }
   }
