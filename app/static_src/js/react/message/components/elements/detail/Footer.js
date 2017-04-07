@@ -7,12 +7,15 @@ import UploadDropZone from "~/message/components/elements/detail/UploadDropZone"
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
+import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import Textarea from "react-textarea-autosize";
 import {nl2br} from "~/util/element";
+import {isIOSApp, isMobileApp} from "~/util/base";
 
 class Footer extends React.Component {
   constructor(props) {
     super(props)
+
     // HACK:Display drop zone when dragging
     // reference:http://qiita.com/sounisi5011/items/dc4878d3e8b38101cf0b
     this.state = {
@@ -21,6 +24,15 @@ class Footer extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (!isMobileApp()) {
+      return;
+    }
+    const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+    this.props.dispatch(
+      detail.changeLayout({body_bottom})
+    );
+  }
   sendLike(e) {
     this.props.dispatch(
       detail.sendLike()
@@ -34,8 +46,19 @@ class Footer extends React.Component {
   }
 
   inputMessage(e) {
+
     this.props.dispatch(
       detail.inputMessage(e.target.value)
+    );
+
+    if (!isIOSApp()) {
+      return;
+    }
+    // TODO: Scroll by document height
+    window.scrollTo(0, 1000)
+    const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+    this.props.dispatch(
+      detail.changeLayout({body_bottom})
     );
   }
 
@@ -88,8 +111,35 @@ class Footer extends React.Component {
     const files = e.target.files;
     this.uploadFiles(files);
   }
+
+  focusInputBody(e) {
+    if (isIOSApp()) {
+      this.props.dispatch(
+        detail.changeLayout({
+          body_bottom: PositionMobileApp.BODY_BOTTOM,
+          footer_bottom: PositionMobileApp.FOOTER_BOTTOM,
+        })
+      );
+    }
+  }
+
+  blurInputBody(e) {
+    if (isIOSApp()) {
+      this.props.dispatch(
+        detail.changeLayout({
+          body_bottom: PositionIOSApp.BODY_BOTTOM,
+          footer_bottom: PositionIOSApp.FOOTER_BOTTOM,
+        })
+      );
+    }
+  }
+
   render() {
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
+    const footer_style = {
+      bottom: this.props.mobile_app_layout.footer_bottom
+    }
+    console.log(footer_style)
 
     return (
       <div className={`topicDetail-footer ${sp_class} ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
@@ -97,6 +147,8 @@ class Footer extends React.Component {
            onDragEnter={this.dragEnter.bind(this)}
            onDragOver={this.dragOver.bind(this)}
            onDragLeave={this.dragLeave.bind(this)}
+           style={footer_style}
+           ref="topic_detail_footer"
       >
         {this.state.is_drag_over && <UploadDropZone/>}
         <UploadPreview files={this.props.preview_files}/>
@@ -115,6 +167,8 @@ class Footer extends React.Component {
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" value={this.props.body}
                   onChange={this.inputMessage.bind(this)}
+                  onFocus={this.focusInputBody.bind(this)}
+                  onBlur={this.blurInputBody.bind(this)}
                 />
               {this.props.err_msg &&
               <div className="has-error">
@@ -167,7 +221,7 @@ Footer.defaultProps = {
   body: "",
   uploaded_file_ids: [],
   preview_files: [],
-  save_message_status:SaveMessageStatus.NONE,
+  save_message_status: SaveMessageStatus.NONE,
   is_uploading: false,
   err_msg: "",
   is_mobile_app: false,

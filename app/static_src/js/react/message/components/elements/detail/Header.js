@@ -5,6 +5,8 @@ import * as actions from "~/message/actions/detail";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import * as KeyCode from "~/common/constants/KeyCode";
 import {Link} from "react-router";
+import {isIOSApp} from "~/util/base";
+import {PositionIOSApp} from "~/message/constants/Styles";
 
 class Header extends React.Component {
   constructor(props) {
@@ -63,9 +65,13 @@ class Header extends React.Component {
 
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
 
+    const header_styles = {
+      top: this.props.mobile_app_layout.header_top
+    };
+
     if (topic_title_setting_status != TopicTitleSettingStatus.NONE) {
       return (
-        <div className={`topicDetail-header ${sp_class}`}>
+        <div className={`topicDetail-header ${sp_class}`} style={header_styles}>
           <div className="topicDetail-header-left">
             <a href="/topics" className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></a>
           </div>
@@ -106,7 +112,8 @@ class Header extends React.Component {
     }
 
     return (
-      <div className={`topicDetail-header ${sp_class}`}>
+
+      <div className={`topicDetail-header ${sp_class}`} style={header_styles}>
         <div className="topicDetail-header-left">
           <Link to="/topics" className>
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
