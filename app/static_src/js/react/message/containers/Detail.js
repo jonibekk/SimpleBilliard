@@ -20,7 +20,8 @@ function mapDispatchToProps(dispatch) {
     resetStates: () => dispatch(actions.resetStates()),
     fetchLatestMessages: (cursor) => dispatch(actions.fetchLatestMessages(cursor)),
     setPusherInfo: (pusher_info) => dispatch(actions.setPusherInfo(pusher_info)),
-    setUaInfo: () => dispatch(actions.setUaInfo())
+    setUaInfo: () => dispatch(actions.setUaInfo()),
+    initLayout: () => dispatch(actions.initLayout())
   }
 }
 

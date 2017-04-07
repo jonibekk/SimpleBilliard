@@ -42,3 +42,13 @@ export function isMobileApp() {
   return parser.getUA().indexOf('Goalous App') >= 0;
 }
 
+
+/**
+ * Check iOS app
+ * @returns bool
+ */
+export function isIOSApp() {
+  const parser = new UaParser();
+  return parser.getUA().indexOf('Goalous App iOS') >= 0;
+}
+
