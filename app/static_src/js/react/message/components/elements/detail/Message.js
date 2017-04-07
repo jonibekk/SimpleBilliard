@@ -9,7 +9,7 @@ export default class Message extends React.Component {
   }
 
   render() {
-    const {topic, message, is_first_idx} = this.props
+    const {topic, message} = this.props
     const read_mark_el = () => {
       if (topic.latest_message_id != message.id) {
         return null;
@@ -18,7 +18,7 @@ export default class Message extends React.Component {
       const is_all_read = (topic.read_count == topic.members_count - 1);
       if (is_all_read) {
         return (
-          <div>
+          <div className="topicDetail-messages-item-read-wrapper">
             <a href={`/topics/ajax_get_read_members/${topic.id}`}
                className="topicDetail-messages-item-read is-on modal-ajax-get">
               <i className="fa fa-check"/>
