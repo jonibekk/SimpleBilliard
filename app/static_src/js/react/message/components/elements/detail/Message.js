@@ -50,6 +50,26 @@ export default class Message extends React.Component {
       )
     }
 
+    const attached_files = () => {
+      if (message.attached_files.length == 0) {
+        return null;
+      }
+
+      const files = message.attached_files.map((attached_file) => {
+        return (
+          <AttachedFile
+            key={attached_file.id}
+            attached_file={attached_file}
+            message_id={message.id}/>
+        )
+      })
+      return (
+        <div className="topicDetail-messages-item-attachedFiles">
+          {files}
+        </div>
+      )
+    }
+
     return (
       <div className={`topicDetail-messages-item`}>
         <div className="topicDetail-messages-item-left">
@@ -74,14 +94,7 @@ export default class Message extends React.Component {
               : nl2br(message.body)
             }
           </p>
-          {message.attached_files.map((attached_file) => {
-            return (
-              <AttachedFile
-                key={attached_file.id}
-                attached_file={attached_file}
-                message_id={message.id}/>
-            )
-          })}
+          {attached_files()}
           {read_mark_el()}
         </div>
       </div>

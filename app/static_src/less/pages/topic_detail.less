@@ -178,10 +178,13 @@
         color: @subColor10;
       }
     }
-    .attachedFile {
+    &-attachedFiles {
+      padding: 8px 0;
       &-item {
         overflow: hidden;
-        margin: 5px 0;
+        & + & {
+          margin-top:10px;
+        }
       }
     }
   }

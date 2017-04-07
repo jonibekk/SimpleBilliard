@@ -1,5 +1,6 @@
 import React from "react";
 import * as Model from "~/common/constants/Model";
+import FileTypeIcon from "~/message/components/elements/ui_parts/FileTypeIcon";
 
 // TODO:Refactoring markup after we can upload file and save message.
 export default class AttachedFile extends React.Component {
@@ -47,12 +48,13 @@ export default class AttachedFile extends React.Component {
         // Current Not used
         return null;
       case Model.AttachedFile.FileType.DOC:
+
         return (
-          <div className="attachedFile-item">
+          <div className="topicDetail-messages-item-attachedFiles-item">
             <div className="col col-xxs-1 messanger-attached-files-icon">
               <a href={attached_file.preview_url} target="_blank">
                 <div>
-                  <i className="fa fa-file-excel-o file-excel-icon"></i>
+                  <FileTypeIcon file_ext={attached_file.file_ext} />
                 </div>
               </a>
             </div>
@@ -71,14 +73,14 @@ export default class AttachedFile extends React.Component {
                    target="_blank">
                   <div className="col col-xxs-6 text-center file-btn-wap">
                     <div className="file-btn">
-                      <i className="fa fa-external-link-square"></i>{__("Preview")}
+                      <i className="fa fa-external-link-square mr_4px"></i>{__("Preview")}
                     </div>
                   </div>
                 </a>
                 <a className="link-dark-gray" href={attached_file.download_url}>
                   <div className="col col-xxs-6 text-center file-btn-wap">
                     <div className="file-btn">
-                      <i className="fa fa-download"></i>{__("Download")}
+                      <i className="fa fa-download mr_4px"></i>{__("Download")}
                     </div>
                   </div>
                 </a>
