@@ -25,6 +25,8 @@
                 <div class="row borderBottom">
                     <?php foreach ($red_users as $user): ?>
                         <?=
+                        // TODO: after create 'last_message_read_datetime', replace modified -> last_read_datetime
+                        //       Then key name is different, have to reimplement modal template.
                         $this->element('Feed/read_like_user',
                             ['user' => $user['User'], 'created' => $user[$model]['modified']]) ?>
                     <?php endforeach ?>
