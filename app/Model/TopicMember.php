@@ -233,7 +233,7 @@ class TopicMember extends AppModel
         $conditions = [
             'TopicMember.topic_id' => $topicId,
             'TopicMember.user_id'  => $userId,
-            // need not update if alread read
+            // need not update if already read
             'NOT'                  => [
                 'TopicMember.last_read_message_id' => $messageId,
             ]
@@ -345,4 +345,6 @@ class TopicMember extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+
 }
