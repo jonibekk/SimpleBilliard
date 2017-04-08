@@ -4,7 +4,7 @@
   "description": "Automate the frontend-tasks with Grunt for Goalous",
   "main": "index.js",
   "dependencies": {
-    "axios": "^0.9.1",
+    "axios": "^0.15.3",
     "c3": "^0.4.11",
     "form-data": "^1.0.1",
     "jquery": "^1.11.1",
@@ -13,12 +13,16 @@
     "react-autosuggest": "^8.0.0",
     "react-bootstrap": "^0.28.5",
     "react-dom": "^15.4.2",
+    "react-hotkeys": "^0.9.0",
+    "react-linkify": "^0.2.0",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
     "react-router-redux": "^4.0.7",
+    "react-tap-event-plugin": "^2.0.1",
     "react-textarea-autosize": "^4.0.5",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "ua-parser-js": "^0.7.12",
     "validator": "^5.5.0"
   },
   "devDependencies": {

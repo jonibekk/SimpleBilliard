@@ -26,10 +26,10 @@ switch ($location_type) {
         $card_type_class = null;
 }
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php $status_read = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $status_read ?> <?= h($list_type_class) ?>" data-score="<?= $notification['score'] ?>">
-    <a href="#" get-url="<?= h($notification['url']) ?>" post-id="<?= h($notification['id']) ?>"
+    <a href="<?= h($notification['url']) ?>"
        class="col col-xxs-12 notify-card-link <?php if (isset($is_message_notify) && $is_message_notify): ?>message-click-target<?php else: ?>notify-click-target<?php endif; ?>"
        id="notifyCard">
         <!-- <div class="notify-card-pic-box"> -->
@@ -84,4 +84,4 @@ switch ($location_type) {
     </a>
 </li>
 
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

@@ -43,7 +43,8 @@ gulp.task('react:watch', () => {
           publicPath: webpackDebugConfig.output.publicPath,
           stats: {colors: true},
           watchOptions: {
-            poll: true
+            poll: true,
+            ignored: /node_modules/
           }
         }),
         webpackHotMiddleware(bundler),

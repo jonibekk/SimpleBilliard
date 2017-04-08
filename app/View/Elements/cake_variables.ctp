@@ -169,7 +169,7 @@ App::uses('AttachedFile', 'Model');
             goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",
             upload_file: "/api/v1/files/upload",
             remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>",
-            message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>",
+            message_list: "<?= $this->Html->url(['controller' => 'topics','action'=>'index']) ?>",
             ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
             ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url([
@@ -555,7 +555,15 @@ App::uses('AttachedFile', 'Model');
             "All Goals": "<?= __("All Goals") ?>",
             "PROGRESS": "<?= __("PROGRESS") ?>",
             "All goal's total you have.": "<?= __("All goal's total you have.") ?>",
-            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>"
+            "Sweet Spot(Drive for it!)": "<?= __("Sweet Spot(Drive for it!)") ?>",
+            "Add member(s)": "<?= __("Add member(s)") ?>",
+            "Set topic name": "<?= __("Set topic name") ?>",
+            "Leave me": "<?= __("Leave me") ?>",
+            "Reply": "<?= __("Reply") ?>",
+            "Write a message...": "<?= __("Write a message...") ?>",
+            "Add": "<?= __("Add") ?>",
+            // messgae
+            "No results found": "<?= __("No results found") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
@@ -569,7 +577,7 @@ App::uses('AttachedFile', 'Model');
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting) ? json_encode($notify_setting) : "''" ?>,
-        unread_msg_post_ids: <?=isset($unread_msg_post_ids) ? json_encode($unread_msg_post_ids) : "''"?>,
+        unread_msg_topic_ids: <?=isset($unread_msg_topic_ids) ? json_encode($unread_msg_topic_ids) : "''"?>,
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
         current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
