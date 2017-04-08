@@ -4,7 +4,12 @@ import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
 import Message from "~/message/components/elements/detail/Message";
 import Loading from "~/message/components/elements/detail/Loading";
-import {FetchMoreMessages, SaveMessageStatus, TopicTitleSettingStatus} from "~/message/constants/Statuses";
+import {
+  FetchLatestMessageStatus,
+  FetchMoreMessages,
+  SaveMessageStatus,
+  TopicTitleSettingStatus
+} from "~/message/constants/Statuses";
 import {isIOSApp} from "~/util/base";
 import {PositionIOSApp} from "~/message/constants/Styles";
 
@@ -13,29 +18,58 @@ class Body extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scrolled_bottom: false,
+      init_scrolled_bottom: false,
+      is_scrolled_bottom: false,
     }
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.fetch_latest_messages_status == FetchLatestMessageStatus.SUCCESS) {
+      if (this.isScrolledBottom()) {
+        this.setState({is_scrolled_bottom: true});
+      }
+    }
+  }
+
   componentDidUpdate() {
-    if (this.props.is_fetched_initial && !this.state.scrolled_bottom) {
-      this.scrollBottom();
-    } else if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
-      this.scrollBottom();
+    this.scrollBottom();
+    this.scrollToLastPosition();
+    this.resetStatus();
+    this.attachScrollListener();
+  }
+
+  isScrolledBottom() {
+    let el = this._findElement();
+    if ((el.offsetHeight + el.scrollTop) < el.scrollHeight) {
+      return false;
+    }
+    return true;
+  }
+
+  resetStatus() {
+    if (this.props.save_message_status == SaveMessageStatus.SUCCESS
+      || this.props.save_message_status == SaveMessageStatus.ERROR)
+    {
       this.props.dispatch(
         actions.resetSaveMessageStatus()
       )
-    } else if (this.props.topic_title_setting_status == TopicTitleSettingStatus.SUCCESS) {
-      this.scrollBottom();
+    }
+    if (this.props.topic_title_setting_status == TopicTitleSettingStatus.SUCCESS
+      || this.props.topic_title_setting_status == TopicTitleSettingStatus.ERROR)
+    {
       this.props.dispatch(
         actions.resetTopicTitleSettingStatus()
       )
     }
-
-    this.scrollToLastPosition();
-    this.attachScrollListener();
+    if (this.props.fetch_latest_messages_status == FetchLatestMessageStatus.SUCCESS
+      || this.props.fetch_latest_messages_status == FetchLatestMessageStatus.ERROR)
+    {
+      this.props.dispatch(
+        actions.resetFetchLatestMessagesStatus()
+      )
+    }
   }
 
   /**
@@ -67,7 +101,7 @@ class Body extends React.Component {
     if (!this.props.is_fetched_initial) {
       return;
     }
-    if (!this.state.scrolled_bottom) {
+    if (!this.state.init_scrolled_bottom) {
       return;
     }
     let el = this._findElement();
@@ -97,15 +131,37 @@ class Body extends React.Component {
     }
   }
 
-  scrollBottom() {
+  judgeScrollBottom() {
     if (this.props.messages.length <= 0) {
+      return false;
+    }
+    if (this.props.is_fetched_initial && !this.state.init_scrolled_bottom) {
+      return true;
+    }
+    if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
+      return true;
+    }
+    if (this.props.topic_title_setting_status == TopicTitleSettingStatus.SUCCESS) {
+      return true;
+    }
+    if (this.props.fetch_latest_messages_status == FetchLatestMessageStatus.SUCCESS) {
+      if (this.state.is_scrolled_bottom) {
+        this.setState({is_scrolled_bottom: false});
+        return true;
+      }
+    }
+    return false;
+  }
+
+  scrollBottom() {
+    if (!this.judgeScrollBottom()) {
       return;
     }
 
     let el = this._findElement();
     el.scrollTop = el.scrollHeight;
 
-    this.setState({scrolled_bottom: true})
+    this.setState({init_scrolled_bottom: true})
   }
 
   detachScrollListener() {
@@ -174,6 +230,7 @@ Body.propTypes = {
 Body.defaultProps = {
   topic: {},
   fetch_more_messages_status: FetchMoreMessages.NONE,
+  fetch_latest_messages_status: FetchLatestMessageStatus.NONE,
   messages: [],
   paging: {next: ""},
   is_fetched_initial: false,

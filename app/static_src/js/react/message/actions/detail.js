@@ -254,6 +254,11 @@ export function resetFetchMoreMessagesStatus() {
     type: ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS,
   }
 }
+export function resetFetchLatestMessagesStatus() {
+  return {
+    type: ActionTypes.RESET_FETCH_LATEST_MESSAGES_STATUS,
+  }
+}
 
 export function fetchReadCount(topic_id) {
   return (dispatch) => {

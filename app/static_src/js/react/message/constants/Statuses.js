@@ -21,3 +21,11 @@ export const SaveMessageStatus = Object.freeze({
   ERROR: 3,
 })
 
+
+export const FetchLatestMessageStatus = Object.freeze({
+  NONE: 0,
+  LOADING: 1,
+  SUCCESS: 2,
+  ERROR: 3,
+})
+

@@ -1,5 +1,5 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
-import {FetchMoreMessages, TopicTitleSettingStatus, SaveMessageStatus} from "~/message/constants/Statuses";
+import {FetchMoreMessages, TopicTitleSettingStatus, SaveMessageStatus, FetchLatestMessageStatus} from "~/message/constants/Statuses";
 
 const initialState = {
   topic_id: 0,
@@ -13,7 +13,7 @@ const initialState = {
   last_position_message_id: 0,
   loading: false,
   fetch_more_messages_status: FetchMoreMessages.NONE,
-  loading_latest: false,
+  fetch_latest_messages_status: FetchLatestMessageStatus.NONE,
   is_fetched_initial: false,
   save_message_status: SaveMessageStatus.NONE,
   success_fetch_more: false,
@@ -81,7 +81,7 @@ export default function detail(state = initialState, action) {
     // Fetch latest messages by pusher
     case ActionTypes.LOADING_LATEST_MESSAGES:
       return Object.assign({}, state, {
-        loading_latest: true
+        fetch_latest_messages_status: FetchLatestMessageStatus.LOADING
       })
     case ActionTypes.FETCH_LATEST_MESSAGES:
       messages = {
@@ -92,7 +92,7 @@ export default function detail(state = initialState, action) {
       })
       return Object.assign({}, state, {
         messages,
-        loading_latest: false,
+        fetch_latest_messages_status: FetchLatestMessageStatus.SUCCESS,
         topic: updated_topic
       })
     case ActionTypes.SET_TOPIC_ON_DETAIL:
@@ -167,6 +167,10 @@ export default function detail(state = initialState, action) {
     case ActionTypes.RESET_FETCH_MORE_MESSAGES_STATUS:
       return Object.assign({}, state, {
         fetch_more_messages_status: FetchMoreMessages.NONE
+      })
+    case ActionTypes.RESET_FETCH_LATEST_MESSAGES_STATUS:
+      return Object.assign({}, state, {
+        fetch_latest_messages_status: FetchLatestMessageStatus.SUCCESS
       })
     case ActionTypes.UPDATE_READ_COUNT:
       const new_topic = Object.assign({}, state.topic, {read_count: action.read_count})
