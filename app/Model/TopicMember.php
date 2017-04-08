@@ -225,7 +225,11 @@ class TopicMember extends AppModel
      */
     function updateLastReadMessageId(int $topicId, int $messageId, int $userId)
     {
-        $fields = ['TopicMember.last_read_message_id' => $messageId];
+        $fields = [
+            'TopicMember.last_read_message_id' => $messageId,
+            // なぜかこれを書かないとmodifiedがアップデートされないので明示的に書いてる
+            'TopicMember.modified'             => time()
+        ];
         $conditions = [
             'TopicMember.topic_id' => $topicId,
             'TopicMember.user_id'  => $userId
@@ -300,7 +304,11 @@ class TopicMember extends AppModel
                 'User' => [
                     'fields' => $this->User->profileFields
                 ]
-            ]
+            ],
+            'order'  => [
+                // TODO: after create 'last_message_read_datetime', replace modified -> last_read_datetime
+                'TopicMember.modified DESC'
+            ],
         ];
         $res = $this->find('all', $options);
         return $res;
