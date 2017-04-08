@@ -232,7 +232,11 @@ class TopicMember extends AppModel
         ];
         $conditions = [
             'TopicMember.topic_id' => $topicId,
-            'TopicMember.user_id'  => $userId
+            'TopicMember.user_id'  => $userId,
+            // need not update if alread read
+            'NOT'                  => [
+                'TopicMember.last_read_message_id' => $messageId,
+            ]
         ];
         $ret = $this->updateAll($fields, $conditions);
         return (bool)$ret;
@@ -341,29 +345,4 @@ class TopicMember extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
-
-    /**
-     * get last read message id
-     * @param  int    $topicId
-     * @param  int    $userId
-     * @return null|int
-     */
-    function getLastReadMessageId(int $topicId, int $userId)
-    {
-        $options = [
-            'conditions' => [
-                'topic_id' => $topicId,
-                'user_id'  => $userId
-            ],
-            'fields'     => ['last_read_message_id']
-        ];
-        $res = $this->find('first', $options);
-        if (!$res) {
-            return $res;
-        }
-        $lastReadMessageId = Hash::get($res, 'TopicMember.last_read_message_id');
-        return $lastReadMessageId;
-    }
-
-
 }

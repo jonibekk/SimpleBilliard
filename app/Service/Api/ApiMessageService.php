@@ -163,11 +163,6 @@ class ApiMessageService extends ApiService
             return;
         }
 
-        // need not update if alread read
-        if ($TopicMember->getLastReadMessageId($topicId, $loginUserId) == $latestMessageId) {
-            return;
-        }
-
         // update
         $TopicMember->updateLastReadMessageId($topicId, $latestMessageId, $loginUserId);
         return;
