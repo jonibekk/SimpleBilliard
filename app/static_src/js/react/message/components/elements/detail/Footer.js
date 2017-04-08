@@ -158,7 +158,7 @@ class Footer extends React.Component {
                 className="btn btnRadiusOnlyIcon mod-upload"
                 onClick={this.selectFile.bind(this)}
               />
-              <input type="file" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
+              <input type="file" multiple="multiple" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
             </div>
             <div className="topicDetail-footer-box-center">
                 <Textarea
