@@ -1,9 +1,10 @@
 import React from "react";
-import { connect } from "react-redux"
+import {connect} from "react-redux";
+import Linkfy from "react-linkify";
 import {nl2br} from "~/util/element";
 import AttachedFile from "~/message/components/elements/detail/AttachedFile";
 import * as Model from "~/common/constants/Model";
-import { fetchReadCount } from '~/message/actions/detail'
+import {fetchReadCount} from "~/message/actions/detail";
 
 class Message extends React.Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class Message extends React.Component {
   }
 
   onClickReadCount() {
-    const { topic, dispatch } = this.props
+    const {topic, dispatch} = this.props
     dispatch(fetchReadCount(topic.id))
   }
 
@@ -99,12 +100,9 @@ class Message extends React.Component {
               {message.display_created}
             </span>
           </div>
-          <p className="topicDetail-messages-item-content">
-            {message.body === "[like]" ?
-              <i className="fa fa-thumbs-o-up font_brownRed"></i>
-              : nl2br(message.body)
-            }
-          </p>
+          <Linkfy className="topicDetail-messages-item-content" properties={{target: '_blank'}}>
+            {nl2br(message.body)}
+          </Linkfy>
           {attached_files()}
           {read_mark_el()}
         </div>
