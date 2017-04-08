@@ -11,6 +11,7 @@ import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import Textarea from "react-textarea-autosize";
 import {nl2br} from "~/util/element";
 import {isIOSApp, isMobileApp} from "~/util/base";
+import {HotKeys} from 'react-hotkeys';
 
 class Footer extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class Footer extends React.Component {
       is_drag_over: false,
       is_drag_start: false,
     }
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
@@ -40,9 +42,11 @@ class Footer extends React.Component {
   }
 
   sendMessage(e) {
-    this.props.dispatch(
-      detail.sendMessage()
-    );
+    if (this.props.body || this.props.uploaded_file_ids.length > 0) {
+      this.props.dispatch(
+        detail.sendMessage()
+      );
+    }
   }
 
   inputMessage(e) {
@@ -140,6 +144,13 @@ class Footer extends React.Component {
       bottom: this.props.mobile_app_layout.footer_bottom
     }
 
+    const key_map = {
+      'sendMessage':['command+enter', 'ctrl+enter']
+    };
+    const handlers = {
+      'sendMessage': (e) => this.sendMessage(e),
+    };
+
     return (
       <div className={`topicDetail-footer ${sp_class} ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
            onDrop={this.drop.bind(this)}
@@ -161,6 +172,7 @@ class Footer extends React.Component {
               <input type="file" multiple="multiple" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
             </div>
             <div className="topicDetail-footer-box-center">
+              <HotKeys keyMap={key_map} handlers={handlers}>
                 <Textarea
                   className="topicDetail-footer-inputBody form-control disable-change-warning"
                   rows={1} cols={30} placeholder={__("Reply")}
@@ -169,6 +181,7 @@ class Footer extends React.Component {
                   onFocus={this.focusInputBody.bind(this)}
                   onBlur={this.blurInputBody.bind(this)}
                 />
+              </HotKeys>
               {this.props.err_msg &&
               <div className="has-error">
                 <p className="has-error help-block">
@@ -187,7 +200,7 @@ class Footer extends React.Component {
                   return (
                     <span
                       className="btn btnRadiusOnlyIcon mod-send"
-                      onClick={this.sendMessage.bind(this)}
+                      onClick={this.sendMessage}
                       disabled={this.props.is_uploading && "disabled"}/>
                   )
                 } else {
