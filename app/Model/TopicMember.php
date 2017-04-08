@@ -232,7 +232,11 @@ class TopicMember extends AppModel
         ];
         $conditions = [
             'TopicMember.topic_id' => $topicId,
-            'TopicMember.user_id'  => $userId
+            'TopicMember.user_id'  => $userId,
+            // need not update if already read
+            'NOT'                  => [
+                'TopicMember.last_read_message_id' => $messageId,
+            ]
         ];
         $ret = $this->updateAll($fields, $conditions);
         return (bool)$ret;
