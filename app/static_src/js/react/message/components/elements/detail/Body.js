@@ -39,8 +39,11 @@ class Body extends React.Component {
   }
 
   componentDidUpdate() {
-    this.scrollBottom();
-    this.scrollToLastPosition();
+    if (this.judgeScrollBottom()) {
+      this.scrollBottom();
+    } else {
+      this.scrollToLastPosition();
+    }
     this.resetStatus();
     this.attachScrollListener();
   }
@@ -73,6 +76,13 @@ class Body extends React.Component {
     {
       this.props.dispatch(
         actions.resetFetchLatestMessagesStatus()
+      )
+    }
+    if (this.props.fetch_more_messages_status == FetchMoreMessages.SUCCESS
+      || this.props.fetch_more_messages_status == FetchMoreMessages.ERROR)
+    {
+      this.props.dispatch(
+        actions.resetFetchMoreMessagesStatus()
       )
     }
   }
@@ -125,20 +135,16 @@ class Body extends React.Component {
       return;
     }
 
-    console.log("---scrollListener start---");
     let el = this._findElement();
     let top_scroll_pos = el.scrollTop;
-    console.log("scrollTop:"+el.scrollTop);
     const threshold = 0;
     if (top_scroll_pos <= threshold) {
-      console.log("---fetchMoreMessages---");
       this.detachScrollListener();
       this.props.dispatch(
         actions.fetchMoreMessages(this.props.paging.next)
       )
 
     }
-    console.log("---scrollListener end---");
   }
 
   fetchMore() {
@@ -171,10 +177,6 @@ class Body extends React.Component {
   }
 
   scrollBottom() {
-    if (!this.judgeScrollBottom()) {
-      return;
-    }
-
     let el = this._findElement();
     el.scrollTop = el.scrollHeight;
 
