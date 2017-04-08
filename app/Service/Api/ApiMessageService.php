@@ -27,6 +27,8 @@ class ApiMessageService extends ApiService
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
 
@@ -37,9 +39,10 @@ class ApiMessageService extends ApiService
 
         // it's default that will be returned
         $ret = [
-            'data'              => [],
-            'paging'            => ['next' => null],
-            'latest_message_id' => 0
+            'data'           => [],
+            'paging'         => ['next' => null],
+            // set data only getting new message.
+            'latest_message' => []
         ];
 
         // getting message data
@@ -51,13 +54,18 @@ class ApiMessageService extends ApiService
 
         $ret['data'] = $messages;
 
-        $ret['latest_message_id'] = $Topic->getLatestMessageId($topicId);
-
         // update user last read message id
         $this->updateLastReadMessageId($ret['data'], $topicId, $loginUserId);
 
         if ($direction == Message::DIRECTION_OLD) {
             $ret = $this->setPaging($ret, $topicId, $limit);
+        }
+        // sending latest_message only getting messge
+        // Because need to update latest message info only when getting new message
+        if ($direction == Message::DIRECTION_NEW) {
+            $latestMessageId = $Topic->getLatestMessageId($topicId);
+            $ret['latest_message']['id'] = $latestMessageId;
+            $ret['latest_message']['read_count'] = $TopicMember->countReadMember($latestMessageId);
         }
         return $ret;
     }
