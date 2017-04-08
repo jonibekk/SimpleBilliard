@@ -147,13 +147,6 @@ class Body extends React.Component {
     }
   }
 
-  fetchMore() {
-    this.props.dispatch(
-      actions.fetchMoreMessages(this.props.paging.next)
-    )
-
-  }
-
   judgeScrollBottom() {
     if (this.props.messages.length <= 0) {
       return false;
