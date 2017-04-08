@@ -20,6 +20,7 @@ class Body extends React.Component {
     this.state = {
       init_scrolled_bottom: false,
       is_scrolled_bottom: false,
+      before_scroll_height: 0,
     }
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
@@ -30,6 +31,10 @@ class Body extends React.Component {
       if (this.isScrolledBottom()) {
         this.setState({is_scrolled_bottom: true});
       }
+    }
+    if (nextProps.fetch_more_messages_status== FetchMoreMessages.SUCCESS) {
+      let el = this._findElement();
+      this.setState({before_scroll_height: el.scrollHeight})
     }
   }
 
@@ -82,14 +87,14 @@ class Body extends React.Component {
     if (!this.props.last_position_message_id) {
       return;
     }
-
-    const node = ReactDOM.findDOMNode(this.refs['message_' + this.props.last_position_message_id]);
-    if (node) {
-      node.scrollIntoView();
-      this.props.dispatch(
-        actions.resetFetchMoreMessagesStatus()
-      )
-    }
+    const parent = ReactDOM.findDOMNode(this.refs.parent);
+    // Temporarily stop the inertial scroll to prevent message loading continuously
+    parent.setAttribute('style', '-webkit-overflow-scrolling: auto;')
+    let el = this._findElement();
+    // Scroll last position
+    // 古いメッセージが読み込まれてることをわからせるために、読み込んだ古いメッセージが見えるよう-10pxだけ最後の読み込み位置より上に移動
+    el.scrollTop = el.scrollHeight - this.state.before_scroll_height - 10;
+    parent.setAttribute('style', '-webkit-overflow-scrolling: touch;')
   }
 
   _findElement() {
@@ -106,7 +111,6 @@ class Body extends React.Component {
     }
     let el = this._findElement();
     el.addEventListener('scroll', this.scrollFunction, true);
-    // el.addEventListener('resize', this.scrollFunction, true);
   }
 
   scrollListener(e) {
@@ -121,15 +125,27 @@ class Body extends React.Component {
       return;
     }
 
+    console.log("---scrollListener start---");
     let el = this._findElement();
     let top_scroll_pos = el.scrollTop;
-    const threshold = 300;
-    if (top_scroll_pos < threshold) {
+    console.log("scrollTop:"+el.scrollTop);
+    const threshold = 0;
+    if (top_scroll_pos <= threshold) {
+      console.log("---fetchMoreMessages---");
       this.detachScrollListener();
       this.props.dispatch(
         actions.fetchMoreMessages(this.props.paging.next)
       )
+
     }
+    console.log("---scrollListener end---");
+  }
+
+  fetchMore() {
+    this.props.dispatch(
+      actions.fetchMoreMessages(this.props.paging.next)
+    )
+
   }
 
   judgeScrollBottom() {
@@ -209,10 +225,10 @@ class Body extends React.Component {
     });
 
     return (
-      <div className="topicDetail-body">
+      <div className="topicDetail-body" ref="parent">
         <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
-          {messages_el}
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
+          {messages_el}
         </div>
       </div>
     )
