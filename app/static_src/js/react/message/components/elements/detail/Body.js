@@ -106,10 +106,11 @@ class Body extends React.Component {
     }
     let el = this._findElement();
     el.addEventListener('scroll', this.scrollFunction, true);
-    el.addEventListener('resize', this.scrollFunction, true);
+    // el.addEventListener('resize', this.scrollFunction, true);
   }
 
-  scrollListener() {
+  scrollListener(e) {
+    e.stopPropagation();
     if (this.props.messages.length <= 0) {
       return;
     }
