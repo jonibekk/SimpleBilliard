@@ -46,8 +46,6 @@ export default class AttachedFile extends React.Component {
           </div>
         )
       case Model.AttachedFile.FileType.VIDEO:
-        // Current Not used
-        return null;
       case Model.AttachedFile.FileType.DOC:
 
         return (
