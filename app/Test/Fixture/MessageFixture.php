@@ -13,7 +13,7 @@ class MessageFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = [
-        'id'                                => [
+        'id'                  => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -21,93 +21,90 @@ class MessageFixture extends CakeTestFixtureEx
             'key'      => 'primary',
             'comment'  => 'ID'
         ],
-        'topic_id'                          => [
+        'topic_id'            => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
-            'comment'  => 'topic ID(belongsToでTopicモデルに関連)'
+            'comment'  => 'topic ID(belongsTo Topic Model)'
         ],
-        'sender_user_id'                    => [
-            'type'     => 'biginteger',
-            'null'     => false,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => 'メッセしたユーザID(belongsToでUserモデルに関連)'
-        ],
-        'team_id'                           => [
+        'sender_user_id'      => [
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index',
-            'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+            'comment'  => 'UserID as Sender(belongsTo User Model)'
         ],
-        'body'                              => [
+        'team_id'             => [
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'TeamID(belongsTo Team Model)'
+        ],
+        'body'                => [
             'type'    => 'text',
             'null'    => true,
             'default' => null,
             'collate' => 'utf8mb4_general_ci',
-            'comment' => 'メッセ本文',
+            'comment' => 'Body of message',
             'charset' => 'utf8mb4'
         ],
-        'type'                              => [
+        'type'                => [
             'type'     => 'integer',
             'null'     => false,
             'default'  => '1',
             'length'   => 3,
             'unsigned' => true,
-            'comment'  => 'メッセタイプ(1:Nomal,2:メンバー追加,3:メンバー削除,4:トピック名変更)'
+            'comment'  => 'Message Type(1:Nomal,2:Add member,3:Remove member,4:Change topic name)'
         ],
-        'target_user_ids_if_member_changed' => [
-            'type'    => 'string',
+        'target_user_ids'     => [
+            'type'    => 'text',
             'null'    => true,
             'default' => null,
             'collate' => 'utf8mb4_general_ci',
-            'comment' => '変更したユーザのuser_idをカンマ区切りで指定',
+            'comment' => 'comma spalated list for target users(e.g. 1,2,3) if add or remove members.',
             'charset' => 'utf8mb4'
         ],
-        'del_flg'                           => [
-            'type'    => 'boolean',
-            'null'    => false,
-            'default' => '0',
-            'comment' => '削除フラグ'
-        ],
-        'deleted'                           => [
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'comment'  => '削除した日付時刻'
-        ],
-        'created'                           => [
+        'attached_file_count' => [
             'type'     => 'integer',
             'null'     => false,
             'default'  => '0',
-            'unsigned' => true,
-            'key'      => 'primary',
-            'comment'  => '追加した日付時刻'
+            'unsigned' => true
         ],
-        'modified'                          => [
+        'del_flg'             => [
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0'
+        ],
+        'deleted'             => [
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
+            'unsigned' => true
+        ],
+        'created'             => [
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => null,
             'unsigned' => true,
-            'comment'  => '更新した日付時刻'
+            'key'      => 'primary'
         ],
-        'indexes'                           => [
+        'modified'            => [
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true
+        ],
+        'indexes'             => [
             'PRIMARY' => ['column' => ['id', 'created'], 'unique' => 1],
-            'user_id' => ['column' => 'sender_user_id', 'unique' => 0],
             'team_id' => ['column' => 'team_id', 'unique' => 0],
-            'created' => ['column' => 'created', 'unique' => 0]
+            'created' => ['column' => 'created', 'unique' => 0],
+            'user_id' => ['column' => 'sender_user_id', 'unique' => 0]
         ],
-        'tableParameters'                   => [
-            'charset' => 'utf8mb4',
-            'collate' => 'utf8mb4_general_ci',
-            'engine'  => 'InnoDB'
-        ]
-
+        'tableParameters'     => ['charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB']
     ];
 
     /**

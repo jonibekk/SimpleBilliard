@@ -20,7 +20,7 @@ const config = {
       assets_dir + '/js/dropzone_setting.js',
       assets_dir + '/js/gl_basic.js',
       assets_dir + '/js/view/**/*.js'
-    ],
+    ]
   },
   js_prerender: {
     src: [
@@ -112,6 +112,7 @@ const config = {
     'goal_approval',
     'goal_search',
     'kr_column',
+    'message'
   ],
   css: {
     src: [

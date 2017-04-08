@@ -71,10 +71,8 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 if ($common_form_type == "message"): ?>
                 active
             <?php endif ?>">
-                    <a href="#MessageForm" role="tab" data-toggle="tab"
-                       class="switch-message-anchor click-target-focus"
-                       target-id="s2id_autogen1"><i
-                            class="fa fa-paper-plane-o"></i><?= __("Message") ?></a><span class="switch-arrow"></span>
+                    <a href="/topics" class="switch-message-anchor">
+                        <i class="fa fa-paper-plane-o"></i><?= __("Message") ?></a><span class="switch-arrow"></span>
                 </li>
             </ul>
         </div>
@@ -225,93 +223,6 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <?php $this->Form->unlockField('file_id') ?>
                 <?php $this->Form->unlockField('Post.file_id') ?>
                 <?php $this->Form->unlockField('deleted_file_id') ?>
-
-                <?= $this->Form->end() ?>
-            </div>
-
-            <div class="tab-pane <?php
-            // ファイル上部の宣言部を参照
-            if ($common_form_type == "message"): ?>
-                active
-        <?php else: ?>
-                fade
-        <?php endif ?>" id="MessageForm">
-
-                <?=
-                $this->Form->create('Post', [
-                    'url'           => ['controller' => 'posts', 'action' => 'add_message'],
-                    'inputDefaults' => [
-                        'div'       => 'form-group',
-                        'label'     => false,
-                        'wrapInput' => '',
-                        'class'     => 'form-control',
-                    ],
-                    'id'            => 'MessageDisplayForm',
-                    'type'          => 'file',
-                    'novalidate'    => true,
-                    'class'         => 'form-feed-notify'
-                ]); ?>
-                <div class="post-message-dest panel-body" id="MessageFormShare">
-                    <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
-                        <?= __("To:") ?>
-                        <?=
-                        $this->Form->hidden('share_public', [
-                            'id'    => 'select2Member',
-                            'style' => "width: 85%",
-                            'value' => !empty($targetUserId) ? 'user_' . $targetUserId : ''
-                        ]) ?>
-                        <?php $this->Form->unlockField('Post.share_public') ?>
-                    </div>
-                    <?= $this->Form->hidden('share_range', [
-                        'id'    => 'messageShareRange',
-                        'value' => 'public',
-                    ]) ?>
-                    <?php $this->Form->unlockField('Post.share_range') ?>
-                    <?php $this->Form->unlockField('socket_id') ?>
-                    <?php $this->Form->unlockField('file_id') ?>
-                </div>
-
-                <div id="messageDropArea">
-                    <div class="post-panel-body plr_11px ptb_7px">
-                        <?=
-                        $this->Form->input('body', [
-                            'id'                           => 'CommonMessageBody',
-                            'label'                        => false,
-                            'type'                         => 'textarea',
-                            'wrap'                         => 'soft',
-                            'rows'                         => 1,
-                            'required'                     => true,
-                            'placeholder'                  => __("Write a message..."),
-                            'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                            'target_show_id'               => "MessageFormFooter",
-                            'data-bv-notempty-message'     => __("Input is required."),
-                            'data-bv-stringlength'         => 'true',
-                            'data-bv-stringlength-max'     => 5000,
-                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5000),
-                        ]);
-                        ?>
-                        <div id="messageUploadFilePreviewArea"></div>
-                    </div>
-                    <div class="post-panel-footer">
-                        <div class="font_12px none" id="MessageFormFooter">
-                            <a href="#" class="link-red" id="messageUploadFileButton">
-                                <button type="button" class="btn pull-left photo-up-btn"><i
-                                        class="fa fa-paperclip post-camera-icon"></i>
-                                </button>
-                            </a>
-
-                            <div class="row form-horizontal form-group post-share-range" id="MessageShare">
-                                <?=
-                                $this->Form->submit(__("Send Message"),
-                                    [
-                                        'class'    => 'btn btn-primary pull-right post-submit-button',
-                                        'id'       => 'MessageSubmit',
-                                        'disabled' => 'disabled'
-                                    ]) ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <?= $this->Form->end() ?>
             </div>

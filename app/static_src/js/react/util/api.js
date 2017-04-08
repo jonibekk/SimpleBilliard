@@ -22,13 +22,18 @@ export function post(uri, data, options, success_callback, error_callback) {
   return save(uri, data, options, success_callback, error_callback, "post")
 }
 
+export function put(uri, data, options, success_callback, error_callback) {
+  return save(uri, data, options, success_callback, error_callback, "put")
+}
+
 export function get(uri, options, success_callback, error_callback) {
   options = options || {}
   const base_options = {
     timeout: 10000,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'Cache-Control': 'no-store, private, no-cache, must-revalidate'
+      'Cache-Control': 'no-store, private, no-cache, must-revalidate',
+      'If-Modified-Since': 0
     },
     dataType: 'json'
   }
@@ -56,7 +61,7 @@ export function save(uri, data, options, success_callback, error_callback, reque
   const post_data = Object.assign({
     'data[_Token][key]': csrf_token_key
   }, data)
-  const form_data = createFormData(post_data, ['photo'])
+  const form_data = createFormData(post_data, ['photo', 'file'])
   const url = getBaseUrl() + uri;
 
   switch (request_method) {
@@ -65,7 +70,7 @@ export function save(uri, data, options, success_callback, error_callback, reque
         .then(success_callback, error_callback)
 
     case "put":
-      return axios.put(url, form_data, options)
+      return axios.put(url, post_data, options)
         .then(success_callback, error_callback)
 
     case "delete":

@@ -105,7 +105,7 @@
   text-align: center;
   padding: 2px;
   height: 100px;
-  line-height:100px;
+  line-height: 100px;
 }
 
 .btn-goals-column-plus:hover,
@@ -266,7 +266,6 @@
 .feeds-post-btns {
   display: inline-block;
   height: 48px;
-  padding: 0 4px;
   color: @subColor10;
   font-size: @fontSmall;
   text-decoration: none;
@@ -347,34 +346,34 @@
 }
 
 .btn-back {
-    display: inline-block;
-    border: 1px solid @lightGray;
-    border-radius: 4px;
-    height: auto;
-    min-width: 70px;
-    padding: 5px 10px;
-    text-align: center;
-    background-color: @smokyWhite;
-    margin-bottom: 5px;
-    text-decoration: none;
+  display: inline-block;
+  border: 1px solid @lightGray;
+  border-radius: 4px;
+  height: auto;
+  min-width: 70px;
+  padding: 5px 10px;
+  text-align: center;
+  background-color: @smokyWhite;
+  margin-bottom: 5px;
+  text-decoration: none;
 
-    &-text {
-      color: @darkGray;
-      vertical-align: middle;
-    }
+  &-text {
+    color: @darkGray;
+    vertical-align: middle;
+  }
 
-    .fa {
-      font-size: 18px;
-      color: @subColor10;
-      line-height: 20px;
-      vertical-align: middle;
-      padding-right: 7px;
-    }
+  .fa {
+    font-size: 18px;
+    color: @subColor10;
+    line-height: 20px;
+    vertical-align: middle;
+    padding-right: 7px;
+  }
 }
 
 .btn-back:hover {
-    background-color: @lighterGray;
-    text-decoration: none;
+  background-color: @lighterGray;
+  text-decoration: none;
 }
 
 .btn-fullsize-active {
@@ -384,5 +383,69 @@
   width: 100%;
   &:hover {
     background-color: @serviceColor;
+  }
+}
+
+.btnRadiusOnlyIcon {
+  width: 38px;
+  height: 38px;
+  background-color: @smokyWhite;
+  border: 1px solid @lightGray;
+  color: @trueGray;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  outline-offset: 0;
+  text-decoration: none;
+  &:hover, &:active, &:focus {
+    background-color: @acidRed;
+    border: 1px solid @acidRed;
+    color: #fff;
+  }
+  &:visited {
+    background-color: @smokyWhite;
+    border: 1px solid @lightGray;
+    color: @trueGray;
+  }
+  &.mod-upload {
+    .fa-module;
+    font-size: 2rem;
+    &:before {
+      vertical-align: middle;
+      line-height: 38px;
+      content: "\f0c6";
+    }
+  }
+  &.mod-like {
+    .fa-module;
+    font-size: 1.4rem;
+    &:before {
+      vertical-align: middle;
+      line-height: 38px;
+      content: "\f087";
+    }
+  }
+  &.mod-send {
+    .fa-module;
+    font-size: 1.4rem;
+    background-color: @acidRed;
+    border: 1px solid @acidRed;
+    color: #fff;
+    &:before {
+      vertical-align: middle;
+      line-height: 38px;
+      content: "\f1d9";
+    }
+  }
+  &.mod-active {
+    .fa-module;
+    font-size: 1.4rem;
+    background-color: @acidRed;
+    border: 1px solid @acidRed;
+    color: #fff;
+    .fa-circle-o-notch {
+      line-height:38px;
+    }
   }
 }
