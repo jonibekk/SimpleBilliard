@@ -95,6 +95,10 @@ class Topic extends AppModel
      */
     function findLatest(int $userId, int $offset, int $limit, string $keyword = ''): array
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'Topic.team_id'       => $this->current_team_id,
@@ -130,13 +134,17 @@ class Topic extends AppModel
                         'TopicMember.topic_id',
                         'TopicMember.last_read_message_id'
                     ],
+                    'conditions' => [
+                        'user_id' => $activeTeamMembersList
+                    ],
                     'User'   => [
                         'fields' => $this->TopicMember->User->profileFields,
                         // 10: realistic upper limit for displaying title connecting user name.
                         'limit'  => 10
                     ],
                     'order'  => [
-                        'TopicMember.last_message_sent DESC'
+                        'TopicMember.last_message_sent DESC',
+                        'TopicMember.id DESC',
                     ]
                 ]
             ],
@@ -188,6 +196,10 @@ class Topic extends AppModel
      */
     public function getWithLatestMesasge(int $topicId)
     {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'Topic.id' => $topicId
@@ -208,19 +220,23 @@ class Topic extends AppModel
             ],
             'contain'    => [
                 'TopicMember' => [
-                    'fields' => [
+                    'fields'     => [
                         'TopicMember.id',
                         'TopicMember.user_id',
                         'TopicMember.topic_id',
                         'TopicMember.last_read_message_id'
                     ],
-                    'User'   => [
+                    'conditions' => [
+                        'user_id' => $activeTeamMembersList
+                    ],
+                    'User'       => [
                         'fields' => $this->TopicMember->User->profileFields,
                         // 10: realistic upper limit for displaying title connecting user name.
                         'limit'  => 10
                     ],
-                    'order'  => [
-                        'TopicMember.last_message_sent DESC'
+                    'order'      => [
+                        'TopicMember.last_message_sent DESC',
+                        'TopicMember.id DESC'
                     ]
                 ]
             ]

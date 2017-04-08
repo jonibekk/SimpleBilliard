@@ -118,13 +118,16 @@ class TopicMember extends AppModel
 
         $options = [
             'conditions' => [
-                'topic_id' => $topicId,
-                'user_id'  => $activeTeamMembersList,
+                'TopicMember.topic_id' => $topicId,
+                'TopicMember.user_id'  => $activeTeamMembersList,
             ],
             'fields'     => [
-                'id',
+                'TopicMember.id',
             ],
-            'order'      => ['last_message_sent' => 'DESC'],
+            'order'  => [
+                'TopicMember.last_message_sent DESC',
+                'TopicMember.id DESC',
+            ],
             'contain'    => [
                 'User' => $this->User->profileFields,
             ]

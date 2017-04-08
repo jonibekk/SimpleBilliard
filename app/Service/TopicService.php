@@ -44,7 +44,6 @@ class TopicService extends AppService
         $membersCount = $TopicMember->countMember($topicId);
 
         if (!$topic['title']) {
-
             $displayTitle = $this->getMemberNamesAsString($topicId, 10, $loginUserId);
         } else {
             $displayTitle = $topic['title'];
