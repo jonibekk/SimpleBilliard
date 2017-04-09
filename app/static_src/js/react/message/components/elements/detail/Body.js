@@ -187,7 +187,17 @@ class Body extends React.Component {
 
   onTouchMove(e) {
     if (!this.state.init_scrolled_bottom) {
+      // return;
       e.preventDefault()
+    } else {
+      const el = this._findElement();
+      const parent = ReactDOM.findDOMNode(this.refs.parent);
+      if (((el.offsetHeight + el.scrollTop) >= el.scrollHeight)
+        || el.scrollTop == 0) {
+        parent.setAttribute('style', '-webkit-overflow-scrolling: auto;')
+      } else {
+        parent.setAttribute('style', '-webkit-overflow-scrolling: touch;')
+      }
     }
   }
 
@@ -204,8 +214,7 @@ class Body extends React.Component {
     // Nothing Messages
     if (messages.length == 0) {
       return (
-        <div className="topicDetail-body"
-             onTouchMove={this.onTouchMove}>
+        <div className="topicDetail-body" onTouchMove={this.onTouchMove}>
           <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
             <Loading/>
           </div>
@@ -226,8 +235,7 @@ class Body extends React.Component {
     });
 
     return (
-      <div className="topicDetail-body" ref="parent"
-           onTouchMove={this.onTouchMove}>
+      <div className="topicDetail-body" ref="parent" onTouchMove={this.onTouchMove}>
         <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
           {messages_el}
