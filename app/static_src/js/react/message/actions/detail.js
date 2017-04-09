@@ -4,7 +4,7 @@ import {get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
-import {isMobileApp, isIOSApp} from "~/util/base";
+import {isIOSApp, isMobileApp} from "~/util/base";
 import {getErrMsg} from "./common";
 
 export function fetchInitialData(topic_id) {
@@ -105,15 +105,23 @@ export function sendLike() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.SAVING})
     const detail = getState().detail;
+    const last_index = detail.messages.data.length - 1;
+    const last_message_id = detail.messages.data[last_index].id;
     const postData = {
       topic_id: detail.topic_id,
-      socket_id: detail.pusher_info.socket_id
+      socket_id: detail.pusher_info.socket_id,
+      last_message_id
     };
     return post("/api/v1/messages/like", postData, null,
       (response) => {
+        const messages = uniqueMessages(
+          detail.messages.data,
+          response.data.data.latest_messages
+        );
+
         dispatch({
           type: ActionTypes.SAVE_SUCCESS,
-          message: response.data.data.message
+          messages
         })
       },
       ({response}) => {
@@ -130,16 +138,24 @@ export function sendMessage() {
   return (dispatch, getState) => {
     dispatch({type: ActionTypes.SAVING})
     const {detail, file_upload} = getState();
+    const last_index = detail.messages.data.length - 1;
+    const last_message_id = detail.messages.data[last_index].id;
     const postData = Object.assign(detail.input_data, {
       topic_id: detail.topic_id,
       file_ids: file_upload.uploaded_file_ids,
-      socket_id: detail.pusher_info.socket_id
+      socket_id: detail.pusher_info.socket_id,
+      last_message_id
     });
     return post("/api/v1/messages", postData, null,
       (response) => {
+        const messages = uniqueMessages(
+          detail.messages.data,
+          response.data.data.latest_messages
+        );
+
         dispatch({
           type: ActionTypes.SAVE_SUCCESS,
-          message: response.data.data.message
+          messages
         })
         dispatch({
           type: FileUploadModule.RESET_STATE

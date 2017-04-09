@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-05 17:49+0900\n"
+"PO-Revision-Date: 2017-04-09 15:43+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -863,6 +863,9 @@ msgstr "Goalousの認証コード: %s"
 
 msgid "日本語"
 msgstr "日本語"
+
+msgid "Sent file(s)."
+msgstr "ファイルを送信しました。"
 
 msgid "Parameters were wrong"
 msgstr "不正なパラメータです。"
@@ -1858,9 +1861,6 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
 
-msgid "Sent file(s)."
-msgstr "ファイルを送信しました。"
-
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
 
@@ -2634,6 +2634,12 @@ msgstr "メッセージを書こう"
 msgid "Add"
 msgstr "追加する"
 
+msgid "Input topic title"
+msgstr "トピック名を入力"
+
+msgid "Update"
+msgstr "更新"
+
 msgid "No results found"
 msgstr "一致する結果はありませんでした"
 
@@ -3042,12 +3048,6 @@ msgstr "メッセージ"
 
 msgid "Save"
 msgstr "保存する"
-
-msgid "To:"
-msgstr "To:"
-
-msgid "Send Message"
-msgstr "メッセージする"
 
 msgid " new posts"
 msgstr " 新しい投稿"
@@ -4958,3 +4958,9 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
+
+#~ msgid "To:"
+#~ msgstr "To:"
+
+#~ msgid "Send Message"
+#~ msgstr "メッセージする"

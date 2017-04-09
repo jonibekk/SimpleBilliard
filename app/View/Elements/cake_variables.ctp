@@ -562,6 +562,8 @@ App::uses('AttachedFile', 'Model');
             "Reply": "<?= __("Reply") ?>",
             "Write a message...": "<?= __("Write a message...") ?>",
             "Add": "<?= __("Add") ?>",
+            "Input topic title": "<?= __("Input topic title") ?>",
+            "Update": "<?= __("Update") ?>",
             // messgae
             "No results found": "<?= __("No results found") ?>"
         },
