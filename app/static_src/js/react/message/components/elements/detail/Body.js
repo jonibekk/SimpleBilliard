@@ -45,7 +45,9 @@ class Body extends React.Component {
       this.scrollToLastPosition();
     }
     this.resetStatus();
-    this.attachScrollListener();
+    if (this.state.init_scrolled_bottom) {
+      this.attachScrollListener();
+    }
   }
 
   isScrolledBottom() {
