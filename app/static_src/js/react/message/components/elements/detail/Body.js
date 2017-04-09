@@ -186,18 +186,22 @@ class Body extends React.Component {
   }
 
   onTouchMove(e) {
+    // console.log("--onTouchMove");
     if (!this.state.init_scrolled_bottom) {
-      // return;
       e.preventDefault()
     } else {
-      const el = this._findElement();
-      const parent = ReactDOM.findDOMNode(this.refs.parent);
-      if (((el.offsetHeight + el.scrollTop) >= el.scrollHeight)
-        || el.scrollTop == 0) {
-        parent.setAttribute('style', '-webkit-overflow-scrolling: auto;')
-      } else {
-        parent.setAttribute('style', '-webkit-overflow-scrolling: touch;')
-      }
+      // const el = this._findElement();
+      // const parent = ReactDOM.findDOMNode(this.refs.parent);
+      // console.log("el.offsetHeight:" + el.offsetHeight);
+      // console.log("el.scrollTop:" + el.scrollTop);
+      // console.log("el.scrollHeight:" + el.scrollHeight);
+      //
+      // if (((el.offsetHeight + el.scrollTop) >= el.scrollHeight)
+      //   || el.scrollTop == 0) {
+      //   console.log("--bottom or top");
+      // } else {
+      //   console.log("--middle position");
+      // }
     }
   }
 
