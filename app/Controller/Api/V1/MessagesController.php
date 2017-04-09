@@ -24,8 +24,6 @@ class MessagesController extends ApiController
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
-        /** @var ApiMessageService $ApiMessageService */
-        $ApiMessageService = ClassRegistry::init('ApiMessageService');
 
         $userId = $this->Auth->user('id');
 
@@ -57,9 +55,32 @@ class MessagesController extends ApiController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         $socketId = $this->request->data('socket_id');
         $MessageService->execPushMessageEvent($topicId, $socketId);
+
         // find the message as response data
-        $message = $ApiMessageService->get($messageId);
-        return $this->_getResponseSuccess(compact('message'));
+        $latestMessages = $this->_findLatestMessages($topicId, $messageId);
+        return $this->_getResponseSuccess(['latest_messages' => $latestMessages]);
+    }
+
+    /**
+     * Find Messages for api response
+     * @param int $topicId
+     * @param int $newMessageId
+     *
+     * @return array
+     */
+    private function _findLatestMessages(int $topicId, int $newMessageId) {
+        /** @var ApiMessageService $ApiMessageService */
+        $ApiMessageService = ClassRegistry::init('ApiMessageService');
+
+        $loginUserId = $this->Auth->user('id');
+        $lastMessageId = $this->request->data('last_message_id');
+        if (empty($lastMessageId)) {
+            $message = $ApiMessageService->get($newMessageId);
+            return [$message];
+        }
+        // Get the latest message based on the ID of the last displayed message to prevent the message list from missing teeth
+        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, $lastMessageId, null, Message::DIRECTION_NEW);
+        return $messages['data'];
     }
 
     /**
@@ -74,8 +95,6 @@ class MessagesController extends ApiController
     {
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
-        /** @var ApiMessageService $ApiMessageService */
-        $ApiMessageService = ClassRegistry::init('ApiMessageService');
 
         $userId = $this->Auth->user('id');
 
@@ -99,9 +118,10 @@ class MessagesController extends ApiController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $messageId);
         $socketId = $this->request->data('socket_id');
         $MessageService->execPushMessageEvent($topicId, $socketId);
+
         // find the message as response data
-        $message = $ApiMessageService->get($messageId);
-        return $this->_getResponseSuccess(compact('message'));
+        $latestMessages = $this->_findLatestMessages($topicId, $messageId);
+        return $this->_getResponseSuccess(['latest_messages' => $latestMessages]);
     }
 
     /**

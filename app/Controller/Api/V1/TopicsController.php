@@ -148,101 +148,101 @@ class TopicsController extends ApiController
      * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+member+list
      * TODO: This is mock! We have to implement it!
      */
-    function get_members(int $topicId)
-    {
-        $retMockData = [
-            'users'        => [
-                [
-                    'id'               => '1',
-                    "img_url"          => "https://goalous-release2-assets.s3.amazonaws.com/users/1/843c2194af311ce15624357b5eb85a4a_small.JPG?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1488936809&Signature=NoPa3dWbYu0vZ5kNqIz%2BT%2F003i0%3D",
-                    "display_username" => "Daiki Hirakata",
-                ],
-                [
-                    'id'               => '2',
-                    "img_url"          => "https://goalous-release2-assets.s3.amazonaws.com/users/1/843c2194af311ce15624357b5eb85a4a_small.JPG?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1488936809&Signature=NoPa3dWbYu0vZ5kNqIz%2BT%2F003i0%3D",
-                    "display_username" => "Kohei Kikuchi",
-                ],
-            ],
-            'member_count' => 2,
-        ];
-        $retMockHtml = <<<HTML
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
-                    class="close-icon">×</span></button>
-            <h4 class="modal-title font_18px font_bold">会話のメンバー (6)</h4>
-        </div>
-        <div class="modal-body without-footer">
-            <div class="row borderBottom">
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            西田 昂弘 440点&nbsp;
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            吉田 将之&nbsp;
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            佐伯 翔平&nbsp;
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            古山 浩志&nbsp;
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            平形 大樹 565-&gt;625&nbsp;
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col col-xxs-12 mpTB0">
-                    <img src="/img/no-image.jpg"
-                         class="comment-img" alt="">
-                    <div class="comment-body modal-comment">
-                        <div class="font_12px font_bold modalFeedTextPadding">
-                            平野 愛&nbsp;
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-HTML;
-        return $this->_getResponseSuccess($retMockData, $retMockHtml);
-
-    }
+//    function get_members(int $topicId)
+//    {
+//        $retMockData = [
+//            'users'        => [
+//                [
+//                    'id'               => '1',
+//                    "img_url"          => "https://goalous-release2-assets.s3.amazonaws.com/users/1/843c2194af311ce15624357b5eb85a4a_small.JPG?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1488936809&Signature=NoPa3dWbYu0vZ5kNqIz%2BT%2F003i0%3D",
+//                    "display_username" => "Daiki Hirakata",
+//                ],
+//                [
+//                    'id'               => '2',
+//                    "img_url"          => "https://goalous-release2-assets.s3.amazonaws.com/users/1/843c2194af311ce15624357b5eb85a4a_small.JPG?AWSAccessKeyId=AKIAJHXVNZZEOX3TD5BA&Expires=1488936809&Signature=NoPa3dWbYu0vZ5kNqIz%2BT%2F003i0%3D",
+//                    "display_username" => "Kohei Kikuchi",
+//                ],
+//            ],
+//            'member_count' => 2,
+//        ];
+//        $retMockHtml = <<<HTML
+//<div class="modal-dialog">
+//    <div class="modal-content">
+//        <div class="modal-header">
+//            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
+//                    class="close-icon">×</span></button>
+//            <h4 class="modal-title font_18px font_bold">会話のメンバー (6)</h4>
+//        </div>
+//        <div class="modal-body without-footer">
+//            <div class="row borderBottom">
+//                <div class="col col-xxs-12 mpTB0">
+//                    <img src="/img/no-image.jpg"
+//                         class="comment-img" alt="">
+//                    <div class="comment-body modal-comment">
+//                        <div class="font_12px font_bold modalFeedTextPadding">
+//                            西田 昂弘 440点&nbsp;
+//                        </div>
+//
+//                    </div>
+//                </div>
+//                <div class="col col-xxs-12 mpTB0">
+//                    <img src="/img/no-image.jpg"
+//                         class="comment-img" alt="">
+//                    <div class="comment-body modal-comment">
+//                        <div class="font_12px font_bold modalFeedTextPadding">
+//                            吉田 将之&nbsp;
+//                        </div>
+//
+//                    </div>
+//                </div>
+//                <div class="col col-xxs-12 mpTB0">
+//                    <img src="/img/no-image.jpg"
+//                         class="comment-img" alt="">
+//                    <div class="comment-body modal-comment">
+//                        <div class="font_12px font_bold modalFeedTextPadding">
+//                            佐伯 翔平&nbsp;
+//                        </div>
+//
+//                    </div>
+//                </div>
+//                <div class="col col-xxs-12 mpTB0">
+//                    <img src="/img/no-image.jpg"
+//                         class="comment-img" alt="">
+//                    <div class="comment-body modal-comment">
+//                        <div class="font_12px font_bold modalFeedTextPadding">
+//                            古山 浩志&nbsp;
+//                        </div>
+//
+//                    </div>
+//                </div>
+//                <div class="col col-xxs-12 mpTB0">
+//                    <img src="/img/no-image.jpg"
+//                         class="comment-img" alt="">
+//                    <div class="comment-body modal-comment">
+//                        <div class="font_12px font_bold modalFeedTextPadding">
+//                            平形 大樹 565-&gt;625&nbsp;
+//                        </div>
+//
+//                    </div>
+//                </div>
+//                <div class="col col-xxs-12 mpTB0">
+//                    <img src="/img/no-image.jpg"
+//                         class="comment-img" alt="">
+//                    <div class="comment-body modal-comment">
+//                        <div class="font_12px font_bold modalFeedTextPadding">
+//                            平野 愛&nbsp;
+//                        </div>
+//
+//                    </div>
+//                </div>
+//            </div>
+//        </div>
+//    </div>
+//</div>
+//HTML;
+//        return $this->_getResponseSuccess($retMockData, $retMockHtml);
+//
+//    }
 
     /**
      * Get read member list

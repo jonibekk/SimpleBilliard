@@ -32,7 +32,7 @@ class Body extends React.Component {
         this.setState({is_scrolled_bottom: true});
       }
     }
-    if (nextProps.fetch_more_messages_status== FetchMoreMessages.SUCCESS) {
+    if (nextProps.fetch_more_messages_status == FetchMoreMessages.SUCCESS) {
       let el = this._findElement();
       this.setState({before_scroll_height: el.scrollHeight})
     }
@@ -58,29 +58,25 @@ class Body extends React.Component {
 
   resetStatus() {
     if (this.props.save_message_status == SaveMessageStatus.SUCCESS
-      || this.props.save_message_status == SaveMessageStatus.ERROR)
-    {
+      || this.props.save_message_status == SaveMessageStatus.ERROR) {
       this.props.dispatch(
         actions.resetSaveMessageStatus()
       )
     }
     if (this.props.topic_title_setting_status == TopicTitleSettingStatus.SUCCESS
-      || this.props.topic_title_setting_status == TopicTitleSettingStatus.ERROR)
-    {
+      || this.props.topic_title_setting_status == TopicTitleSettingStatus.ERROR) {
       this.props.dispatch(
         actions.resetTopicTitleSettingStatus()
       )
     }
     if (this.props.fetch_latest_messages_status == FetchLatestMessageStatus.SUCCESS
-      || this.props.fetch_latest_messages_status == FetchLatestMessageStatus.ERROR)
-    {
+      || this.props.fetch_latest_messages_status == FetchLatestMessageStatus.ERROR) {
       this.props.dispatch(
         actions.resetFetchLatestMessagesStatus()
       )
     }
     if (this.props.fetch_more_messages_status == FetchMoreMessages.SUCCESS
-      || this.props.fetch_more_messages_status == FetchMoreMessages.ERROR)
-    {
+      || this.props.fetch_more_messages_status == FetchMoreMessages.ERROR) {
       this.props.dispatch(
         actions.resetFetchMoreMessagesStatus()
       )

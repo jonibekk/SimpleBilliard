@@ -1,5 +1,10 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
-import {FetchMoreMessages, TopicTitleSettingStatus, SaveMessageStatus, FetchLatestMessageStatus} from "~/message/constants/Statuses";
+import {
+  FetchLatestMessageStatus,
+  FetchMoreMessages,
+  SaveMessageStatus,
+  TopicTitleSettingStatus
+} from "~/message/constants/Statuses";
 
 const initialState = {
   topic_id: 0,
@@ -44,8 +49,8 @@ export default function detail(state = initialState, action) {
   switch (action.type) {
     case ActionTypes.RESET_DETAIL_STATES:
       input_data = {
-        body:"",
-        file_ids:[]
+        body: "",
+        file_ids: []
       };
       return Object.assign({}, state, initialState, {
         input_data
@@ -107,10 +112,10 @@ export default function detail(state = initialState, action) {
     case ActionTypes.SAVE_SUCCESS:
       messages = {
         paging: state.messages.paging,
-        data: [...state.messages.data, action.message],
+        data: [...action.messages]
       }
       let topic = Object.assign({}, state.topic)
-      topic.latest_message_id = action.message.id;
+      topic.latest_message_id = action.messages[action.messages.length - 1].id;
       topic.read_count = 0;
       return Object.assign({}, state, {
         topic,
