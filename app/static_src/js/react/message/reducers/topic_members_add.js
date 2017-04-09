@@ -20,6 +20,7 @@ export default function topic_members_add(state = initial_state, action) {
       });
     case ActionTypes.TopicAddMembers.SAVING:
       return Object.assign({}, state, {
+        err_msg: "",
         is_saving: true
       });
     case ActionTypes.TopicAddMembers.SAVE_SUCCESS:

@@ -18,6 +18,7 @@ export default function topic_create(state = initial_state, action) {
   switch (action.type) {
     case ActionTypes.TopicCreate.SAVING:
       return Object.assign({}, state, {
+        err_msg: "",
         is_saving: true
       })
     case ActionTypes.TopicCreate.SAVE_SUCCESS:
