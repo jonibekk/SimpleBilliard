@@ -122,7 +122,7 @@ class Body extends React.Component {
   }
 
   scrollListener(e) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     if (this.props.messages.length <= 0) {
       return;
     }
