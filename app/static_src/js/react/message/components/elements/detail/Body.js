@@ -46,9 +46,9 @@ class Body extends React.Component {
       this.scrollToLastPosition();
     }
     this.resetStatus();
-    // if (this.state.init_scrolled_bottom) {
-    //   this.attachScrollListener();
-    // }
+    if (this.state.init_scrolled_bottom) {
+      this.attachScrollListener();
+    }
   }
 
   isScrolledBottom() {
@@ -186,34 +186,20 @@ class Body extends React.Component {
     this.detachScrollListener();
   }
 
-  onTouchStart(e) {
-    // e.preventDefault();
-    // console.log("--onTouchStart");
-  }
-  onTouchEnd(e) {
-    // e.preventDefault();
-    // console.log("--onTouchEnd");
-
-  }
   onTouchMove(e) {
-    // console.log("--onTouchMove");
     if (!this.state.init_scrolled_bottom) {
       e.preventDefault()
     } else {
-      const el = this._findElement();
-      const parent = ReactDOM.findDOMNode(this.refs.parent);
-      // console.log("el.offsetHeight:" + el.offsetHeight);
-      // console.log("el.scrollTop:" + el.scrollTop);
-      // console.log("el.scrollHeight:" + el.scrollHeight);
-
-      if (((el.offsetHeight + el.scrollTop) >= el.scrollHeight)
-        || el.scrollTop == 0) {
-        // console.log("--bottom or top");
-        this.detachScrollListener();
-      } else {
-        this.attachScrollListener();
-        // console.log("--middle position");
-      }
+      // const el = this._findElement();
+      // const parent = ReactDOM.findDOMNode(this.refs.parent);
+      // if (((el.offsetHeight + el.scrollTop) >= el.scrollHeight)
+      //   || el.scrollTop == 0) {
+      //   // console.log("--bottom or top");
+      //   this.detachScrollListener();
+      // } else {
+      //   this.attachScrollListener();
+      //   // console.log("--middle position");
+      // }
     }
   }
 
@@ -253,10 +239,7 @@ class Body extends React.Component {
     });
 
     return (
-      <div className="topicDetail-body" ref="parent" onTouchMove={this.onTouchMove}
-           onTouchStart={this.onTouchStart.bind(this)}
-           onTouchEnd={this.onTouchStart.bind(this)}
-      >
+      <div className="topicDetail-body" ref="parent" onTouchMove={this.onTouchMove}>
         <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
           {messages_el}
