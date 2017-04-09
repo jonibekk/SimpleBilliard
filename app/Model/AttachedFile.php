@@ -22,7 +22,7 @@ class AttachedFile extends AppModel
     /**
      * フロントエンド含めすべての添付ファイル(画像含む)のサイズ上限チェックにこのルールを適用する
      */
-    const ATTACHABLE_MAX_FILE_SIZE_MB = 25;
+    const ATTACHABLE_MAX_FILE_SIZE_MB = 100;
     /**
      * アップロード可能な画像ファイルの画素数
      */
