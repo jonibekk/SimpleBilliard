@@ -58,4 +58,29 @@ class ApiService extends AppService
         }
         return $ret;
     }
+
+    /**
+     * Generate paging array
+     *
+     * @param  str   $basePath
+     * @param  int   $limit
+     * @param  int   $offset
+     * @param  array $others
+     *
+     * @return bool
+     */
+    function generatePaging(string $basePath, int $limit, int $offset, array $others = []): array
+    {
+        $newOffset = (int)$offset + $limit;
+        $queryParams = array_merge(
+            ['offset'  => $newOffset],
+            compact('limit'),
+            $others
+        );
+
+        $ret = [
+            'next' => "${basePath}?" . http_build_query($queryParams)
+        ];
+        return $ret;
+    }
 }

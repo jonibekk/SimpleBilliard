@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class BaseComponent extends React.Component {
+export default class Base extends React.Component {
   componentDidMount() {
     window.addEventListener("beforeunload", this.onBeforeUnloadHandler)
   }

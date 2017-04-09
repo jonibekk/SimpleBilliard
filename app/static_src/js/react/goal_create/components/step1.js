@@ -6,9 +6,9 @@ import * as Page from "../constants/Page";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import Vision from "./elements/Vision";
 import {MaxLength} from "~/common/constants/App";
-import BaseComponent from "~/goal_create/components/BaseComponent";
+import Base from "~/common/components/Base";
 
-export default class Step1Component extends BaseComponent {
+export default class Step1Component extends Base {
   constructor(props) {
     super(props);
     this.state = {

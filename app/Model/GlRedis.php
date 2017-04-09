@@ -483,7 +483,7 @@ class GlRedis extends AppModel
             // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
             $notify_id = $post_id;
         }
-        if ($type != NotifySetting::TYPE_FEED_MESSAGE) {
+        if ($type != NotifySetting::TYPE_MESSAGE) {
             $url = array_merge($url, ['?' => ['notify_id' => $notify_id]]);
         }
         $data = [
@@ -499,7 +499,7 @@ class GlRedis extends AppModel
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         //save notification
-        if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
+        if ($type == NotifySetting::TYPE_MESSAGE) {
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id), $data);
             $pipe->expire($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id),
                 60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
@@ -513,7 +513,7 @@ class GlRedis extends AppModel
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
-            if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
+            if ($type == NotifySetting::TYPE_MESSAGE) {
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null), $score, $notify_id);
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null, 0), $score,
                     $notify_id);
@@ -532,7 +532,7 @@ class GlRedis extends AppModel
         //メッセージの通知数は1スレッドあたり1だけなのでKEY_TYPE_MESSAGE_USERのレコード数
         //なのでredisに書き込みが終わった後じゃないとカウントできないからここでやる
         foreach ($to_user_ids as $uid) {
-            if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
+            if ($type == NotifySetting::TYPE_MESSAGE) {
                 $this->updateCountOfNewMessageNotification($team_id, $uid, $pipe);
             }
         }

@@ -82,7 +82,7 @@ class CircleTest extends GoalousTestCase
     function testAddEmpty()
     {
         $this->_setDefault();
-        $this->assertFalse($this->Circle->add([], true, true));
+        $this->assertFalse($this->Circle->add([], 1));
     }
 
     public function testAddCircles()
@@ -90,12 +90,12 @@ class CircleTest extends GoalousTestCase
         $this->_setDefault();
         $data = [
             'Circle' => [
-                'name'       => 'test',
-                'public_flg' => true,
-                'members'    => 'user_1,user_2,user_3',
+                'name'        => 'test',
+                'description' => 'description',
+                'public_flg'  => true
             ]
         ];
-        $res = $this->Circle->add($data, true, true);
+        $res = $this->Circle->add($data, 1);
         $this->assertTrue($res);
     }
 
@@ -171,95 +171,23 @@ class CircleTest extends GoalousTestCase
         $data = [
             'Circle' => [
                 'name'         => 'test',
+                'description'  => 'test',
                 'public_flg'   => true,
                 'members'      => 'user_1,user_2,user_3',
                 'team_all_flg' => 1,
             ]
         ];
-        $this->Circle->add($data, true, true);
+        $this->Circle->add($data, 1);
 
         $edit_data = [
             'Circle' => [
-                'id'         => $this->Circle->getLastInsertID(),
-                'name'       => 'test',
-                'public_flg' => true,
+                'id'          => $this->Circle->getLastInsertID(),
+                'name'        => 'test',
+                'description' => 'test',
+                'public_flg'  => true,
             ]
         ];
         $this->assertNotEmpty($this->Circle->edit($edit_data));
-    }
-
-    function testAddMember()
-    {
-        $this->Circle->current_team_id = 1;
-        $this->Circle->CircleMember->current_team_id = 1;
-        $this->Circle->CircleMember->User->TeamMember->current_team_id = 1;
-
-        $circle_id = 1;
-        $member_list = $this->Circle->CircleMember->getMemberList($circle_id);
-        $member_count = count($member_list);
-        $data = [
-            'Circle' => [
-                'id'           => 1,
-                'members'      => 'user_13',
-                'team_all_flg' => false,
-            ]
-        ];
-        $res = $this->Circle->addMember($data);
-        $this->assertTrue($res);
-
-        // メンバーが増えているか確認
-        $new_member_list = $this->Circle->CircleMember->getMemberList($circle_id);
-        $this->assertEquals($member_count + 1, count($new_member_list));
-    }
-
-    function testAddMemberFailed()
-    {
-        $this->Circle->current_team_id = 1;
-        $this->Circle->CircleMember->current_team_id = 1;
-        $this->Circle->CircleMember->User->TeamMember->current_team_id = 1;
-
-        // パラメータ不正
-        $data = [
-            'Circle' => [
-                'id'      => 1,
-                'members' => 'user_13',
-            ]
-        ];
-        $res = $this->Circle->addMember($data);
-        $this->assertFalse($res);
-
-        $data = [
-            'Circle' => [
-                'id'           => 1,
-                'members'      => 'user_',
-                'team_all_flg' => false,
-            ]
-        ];
-        $res = $this->Circle->addMember($data);
-        $this->assertFalse($res);
-
-        // チーム全体サークルはメンバー追加不可
-        $data = [
-            'Circle' => [
-                'id'           => 3,
-                'members'      => 'user_13',
-                'team_all_flg' => true,
-
-            ]
-        ];
-        $res = $this->Circle->addMember($data);
-        $this->assertFalse($res);
-
-        // 重複ユーザー
-        $data = [
-            'Circle' => [
-                'id'           => 1,
-                'members'      => 'user_2',
-                'team_all_flg' => false,
-            ]
-        ];
-        $res = $this->Circle->addMember($data);
-        $this->assertFalse($res);
     }
 
     public function testGetCirclesByKeyword()

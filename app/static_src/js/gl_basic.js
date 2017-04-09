@@ -769,6 +769,11 @@ $(document).ready(function () {
     return checkUploadFileExpire('messageDropArea');
   });
 
+  // HACK:To occur to_user_ids change event in react app
+  $(document).on('change', '.js-changeSelect2Member', function (e) {
+    $('.js-triggerUpdateToUserIds').trigger('click');
+  });
+
   // リカバリコード再生成
   $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
     e.preventDefault();
@@ -2987,81 +2992,8 @@ function evMessageList(options) {
   $(".has-notify-dropdown").removeClass("open");
   $('body').removeClass('notify-dropdown-open');
 
-  var opt = $.extend({
-    recursive: false,
-    loader_id: null
-  }, options);
-
-  //フィード読み込み中はキャンセル
-  if (feed_loading_now) {
-    return false;
-  }
-  feed_loading_now = true;
-
-  //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
-  //要素が多すぎるので、おとなしくページリロードする
   var url = cake.url.message_list;
-  if (!$(".layout-main").exists()) {
-    location.href = url;
-    return false;
-  }
-
-  //アドレスバー書き換え
-  if (!updateAddressBar("/posts/message_list#")) {
-    return false;
-  }
-
-  $('#jsGoTop').click();
-
-  //ローダー表示
-  var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
-  if (!opt.recursive) {
-    $(".layout-main").html($loader_html);
-  }
-
-  // URL生成
-  var url = cake.url.ajax_message_list;
-
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $posts = $(data.html);
-        //notify一覧に戻るhtmlを追加
-        //画像をレイジーロード
-        imageLazyOn($posts);
-        //一旦非表示
-        $posts.fadeOut();
-
-        $(".layout-main").html($posts);
-        activateMessageList();
-        initMemberSelect2();
-
-        //メッセージフォームのvalidateを有効化
-        $('#MessageDisplayForm').bootstrapValidator({
-          live: 'enabled',
-
-          fields: {}
-        });
-      }
-
-      //ローダーを削除
-      $loader_html.remove();
-
-      action_autoload_more = false;
-      autoload_more = false;
-      feed_loading_now = false;
-      do_reload_header_bellList = true;
-    },
-    error: function () {
-      feed_loading_now = false;
-      $loader_html.remove();
-    },
-  });
+  location.href = url;
   return false;
 }
 
@@ -3253,36 +3185,6 @@ function evNotifyPost(options) {
     },
   });
   return false;
-}
-
-// サークルフィード用のcake value 更新
-function updateCakeValue(circle_id, title, image_url) {
-  //サークルフィードでは必ずデフォルト投稿タイプはポスト
-  cake.common_form_type = "post";
-
-  cake.data.b = function (element, callback) {
-    var data = [];
-    var current_circle_item = {
-      id: "circle_" + circle_id,
-      text: title,
-      image: image_url
-    };
-
-    data.push(current_circle_item);
-    callback(data);
-  }
-
-  cake.data.select2_secret_circle = function (element, callback) {
-    var data = [];
-    var current_circle_item = {
-      id: "circle_" + circle_id,
-      text: title,
-      image: image_url,
-      locked: true
-    };
-    data.push(current_circle_item);
-    callback(data);
-  }
 }
 
 // ゴールのフォロワー一覧を取得
@@ -3774,17 +3676,25 @@ $(document).ready(function () {
     });
   }
   pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
+
     //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
     if (!cake.notify_setting[data.flag_name]) {
       return;
     }
+
+    // if display the topic page, nothing to do
+    const topic_page_url = "/topics/" + data.topic_id + "/detail";
+    if (location.pathname.indexOf(topic_page_url) !== -1) {
+      return;
+    }
+
     if (cake.data.user_id == data.from_user_id) {
       return;
     }
-    if (cake.unread_msg_post_ids.indexOf(data.post_id) >= 0) {
+    if (cake.unread_msg_topic_ids.indexOf(data.topic_id) >= 0) {
       return;
     }
-    cake.unread_msg_post_ids.push(data.post_id);
+    cake.unread_msg_topic_ids.push(data.topic_id);
     setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
   });
 

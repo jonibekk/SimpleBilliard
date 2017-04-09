@@ -334,7 +334,8 @@ class User extends AppModel
         'GoalMember',
         'Evaluator',
         'RecoveryCode',
-        'Device'
+        'Device',
+        'TopicMember'
     ];
 
     /**
@@ -1590,6 +1591,56 @@ class User extends AppModel
         ];
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    /**
+     * Check users are active
+     *
+     * @param  array $userIds
+     *
+     * @return bool
+     */
+    function isActiveUsers(array $userIds): bool
+    {
+        $options = [
+            'conditions' => [
+                'User.id'               => $userIds,
+                'User.active_flg'       => true,
+                'TeamMember.team_id'    => $this->current_team_id,
+                'TeamMember.active_flg' => true,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id'
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $this->find('count', $options);
+        return $res === count($userIds);
+    }
+
+    /**
+     * getting user profiles by user id list
+     *
+     * @param array $userIds e.g. [1,2,3]
+     *
+     * @return array
+     */
+    function findProfilesByIds(array $userIds): array
+    {
+        $options = [
+            'conditions' => ['id' => $userIds],
+            'fields'     => $this->profileFields,
+        ];
+        $users = $this->find('all', $options);
+        $ret = Hash::extract($users, '{n}.User');
+        return $ret;
     }
 
 }

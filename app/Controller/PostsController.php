@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
+App::import('Service', 'PostService');
 
 /**
  * Posts Controller
@@ -28,6 +29,11 @@ class PostsController extends AppController
 
     public function message()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        $this->Pnotify->outInfo(__('Due to using an old URL, you have been redirected to this page.'));
+        return $this->redirect('/topics');
+        //TODO should be removed.
+
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('without_footer', true);
         return $this->render();
@@ -35,6 +41,10 @@ class PostsController extends AppController
 
     public function ajax_message()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
 
         $response = $this->render('/Posts/message');
@@ -48,6 +58,10 @@ class PostsController extends AppController
 
     public function ajax_message_list()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
 
         $response = $this->render('/Posts/message_list');
@@ -61,6 +75,14 @@ class PostsController extends AppController
 
     public function message_list()
     {
+        // モバイルアプリ以外の場合はこのurlへの動線が存在してはいけないので、ログを残す。
+        // モバイルアプリはリリースのタイミングまで動線が残る。
+        if (!$this->is_mb_app) {
+            $this->_logOldRequest(__CLASS__, __METHOD__);
+        }
+        return $this->redirect("/topics/");
+
+        //TODO should be removed.
         // 宛先のユーザー情報取得
         $targetUserId = $this->request->query('userId');
         $targetUserId = is_numeric($targetUserId) ? $targetUserId : '';
@@ -71,6 +93,10 @@ class PostsController extends AppController
 
     public function ajax_get_message_list($page = 1)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
         $result = $this->Post->getMessageList($this->Auth->user('id'),
             PostsController::$message_list_page_count, $page);
@@ -121,6 +147,10 @@ class PostsController extends AppController
      */
     public function add_message()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->_addPost();
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
@@ -132,6 +162,10 @@ class PostsController extends AppController
      */
     public function edit_message_users()
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $id = $this->request->data['Post']['post_id'];
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->request->allowMethod('post');
@@ -203,7 +237,7 @@ class PostsController extends AppController
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
-            $notify_type = NotifySetting::TYPE_FEED_MESSAGE;
+            $notify_type = NotifySetting::TYPE_MESSAGE;
         }
         $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
 
@@ -408,9 +442,18 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_feed($view = "Feed/posts", $user_status = null, $circle_member_count = 0)
+    /**
+     * Getting feed data as Html
+     * It's used for infinity scroll. Not initializing.
+     *
+     * @return CakeResponse|null
+     */
+    public function ajax_get_feed()
     {
-        $param_named = $this->request->params['named'];
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $paramNamed = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
         $notify_id = $this->request->query('notify_id');
@@ -420,21 +463,17 @@ class PostsController extends AppController
             $this->set('long_text', false);
         }
 
-        if (isset($param_named['page']) && !empty($param_named['page'])) {
-            $page_num = $param_named['page'];
-        } else {
-            $page_num = 1;
-        }
-        $start = null;
-        $end = null;
+        $pageNum = $paramNamed['page'] ?? 1;
+
         //一ヶ月以前を指定された場合
-        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
-            $end_month_offset = $param_named['month_index'];
-            $start_month_offset = $end_month_offset + 1;
-            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
-            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+        $monthIndex = Hash::get($paramNamed, 'month_index');
+        if ($monthIndex) {
+            $postRange = $PostService->getRangeByMonthIndex($monthIndex);
+        } else {
+            $postRange = ['start' => null, 'end' => null];
         }
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
+        $posts = $this->Post->get($pageNum, POST_FEED_PAGE_ITEMS_NUMBER, $postRange['start'], $postRange['end'],
+            $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -442,21 +481,19 @@ class PostsController extends AppController
         //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
         //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
         //ここで分岐をする必要がある。
-        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && $notify_id;
-        if ($is_notify_post_permanent_page && !$posts) {
+        $isNotifyPostPermanentPage = isset($this->request->params['post_id']) && $notify_id;
+        if ($isNotifyPostPermanentPage && !$posts) {
             $response = $this->render('Feed/post_not_found');
         } else {
-            $response = $this->render($view);
+            $response = $this->render("Feed/posts");
         }
 
         $html = $response->__toString();
         $result = array(
-            'html'                => $html,
-            'count'               => count($posts),
-            'page_item_num'       => POST_FEED_PAGE_ITEMS_NUMBER,
-            'start'               => $start ? $start : REQUEST_TIMESTAMP - MONTH,
-            'circle_member_count' => $circle_member_count,
-            'user_status'         => $user_status,
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'         => $postRange['start'] ?? REQUEST_TIMESTAMP - MONTH,
         );
         if (isset($posts[0]['Post']['modified'])) {
             $result['post_time_before'] = $posts[0]['Post']['modified'];
@@ -465,8 +502,27 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    /**
+     * 月のインデックスからフィードの取得期間を取得
+     *
+     * @param int $monthIndex
+     *
+     * @return array ['start'=>unixtimestamp,'end'=>unixtimestamp]
+     */
+    function _getRangeByMonthIndex(int $monthIndex): array
+    {
+        $start_month_offset = $monthIndex + 1;
+        $ret['end'] = strtotime("-{$monthIndex} months", REQUEST_TIMESTAMP);
+        $ret['start'] = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+        return $ret;
+    }
+
     public function ajax_get_message_info($post_id)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $text_ex = new TextExHelper(new View());
         $this->_ajaxPreProcess();
         $room_info = $this->Post->getPostById($post_id);
@@ -530,6 +586,10 @@ class PostsController extends AppController
      */
     public function ajax_get_message($post_id, $limit, $page_num, $start = null)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
         //メッセージを既読に
         $this->Post->Comment->CommentRead->redAllByPostId($post_id);
@@ -547,6 +607,10 @@ class PostsController extends AppController
 
     public function ajax_put_message($post_id)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess('post');
 
         $params['Comment']['post_id'] = $post_id;
@@ -557,7 +621,7 @@ class PostsController extends AppController
             return $this->_ajaxGetResponse([]);
         }
 
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MESSAGE, $post_id, $comment_id);
         $detail_comment = $this->Post->Comment->getComment($comment_id);
         $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment['CommentFile'],
             $post_id);
@@ -591,6 +655,10 @@ class PostsController extends AppController
 
     public function ajax_put_message_read($post_id, $comment_id)
     {
+        $this->_logOldRequest(__CLASS__, __METHOD__);
+        throw new NotFoundException();
+        //TODO should be removed.
+
         $this->_ajaxPreProcess();
         $res = $this->Post->Comment->CommentRead->red([$comment_id]);
         if ($res === true) {
@@ -1068,9 +1136,40 @@ class PostsController extends AppController
 
     public function ajax_circle_feed()
     {
-        $this->User->CircleMember->updateUnreadCount($this->request->params['circle_id']);
-        list($user_status, $circle_member_count) = $this->_setCircleCommonVariables();
-        $this->ajax_get_feed("Feed/posts", $user_status, $circle_member_count);
+        $circleId = $this->request->params['circle_id'];
+        $this->User->CircleMember->updateUnreadCount($circleId);
+        list($userStatus, $circleMemberCount) = $this->_setCircleCommonVariables();
+
+        $this->_ajaxPreProcess();
+
+        $this->set('long_text', false);
+
+        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
+            $this->request->params);
+        $this->set(compact('posts'));
+        $response = $this->render("Feed/posts");
+        $html = $response->__toString();
+
+        //getting circle image url
+        $circle = $this->Post->Circle->findById($circleId);
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $circleImgUrl = $Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']);
+
+        $result = array(
+            'html'                => $html,
+            'count'               => count($posts),
+            'page_item_num'       => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'               => REQUEST_TIMESTAMP - MONTH,
+            'circle_member_count' => $circleMemberCount,
+            'user_status'         => $userStatus,
+            'circle_img_url'      => $circleImgUrl,
+        );
+        if (isset($posts[0]['Post']['modified'])) {
+            $result['post_time_before'] = $posts[0]['Post']['modified'];
+        }
+
+        return $this->_ajaxGetResponse($result);
     }
 
     public function attached_file_list()
@@ -1228,16 +1327,15 @@ class PostsController extends AppController
 
     /**
      * TODO:ファイルアップロード用APIをapi/v1に作成した為、リリース後削除
-     * @deprecated
      *
-     * ファイルアップロード
-     * JSON レスポンス形式
-     * {
+     * @deprecated
+     *   ファイルアップロード
+     *   JSON レスポンス形式
+     *   {
      *   error: bool,   // エラーが発生した場合に true
      *   msg: string,   // 処理結果を示すメッセージ
      *   id: string,    // ファイルID
-     * }
-     *
+     *   }
      * @return CakeResponse
      */
     public function ajax_upload_file(): CakeResponse
@@ -1385,6 +1483,11 @@ class PostsController extends AppController
         $this->NotifyBiz->commentPush($socketId, $data);
     }
 
+    /**
+     * Join circle
+     *
+     * @return void
+     */
     public function join_circle()
     {
         if (!$this->_isAvailCircle()) {
@@ -1392,21 +1495,26 @@ class PostsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        App::import('Service', 'ExperimentService');
+        App::import('Service', 'CircleService');
         /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
-        if ($ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF)) {
-            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'],
-                false, false);
-        } else {
-            $circleJoinedSuccess = $this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id']);
-        }
+        $CircleService = ClassRegistry::init('CircleService');
 
-        if ($circleJoinedSuccess) {
+        $circleId = Hash::get($this->request->params, 'named.circle_id');
+
+        // Join circle
+        $joinedSuccess = $CircleService->join($circleId, $this->Auth->user('id'));
+        if ($joinedSuccess) {
             $this->Pnotify->outSuccess(__("Joined the circle"));
         } else {
             $this->Pnotify->outError(__("Failed to join the circle."));
+            return $this->redirect($this->request->referer());
         }
+
+        $this->updateSetupStatusIfNotCompleted();
+
+        // Notify to circle member
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
+
         return $this->redirect($this->request->referer());
 
     }
