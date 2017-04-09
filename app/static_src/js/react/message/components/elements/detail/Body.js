@@ -123,8 +123,7 @@ class Body extends React.Component {
   }
 
   scrollListener(e) {
-    // console.log("--scrollListener")
-    // e.stopImmediatePropagation();
+    e.stopPropagation();
     if (this.props.messages.length <= 0) {
       return;
     }
@@ -189,17 +188,6 @@ class Body extends React.Component {
   onTouchMove(e) {
     if (!this.state.init_scrolled_bottom) {
       e.preventDefault()
-    } else {
-      // const el = this._findElement();
-      // const parent = ReactDOM.findDOMNode(this.refs.parent);
-      // if (((el.offsetHeight + el.scrollTop) >= el.scrollHeight)
-      //   || el.scrollTop == 0) {
-      //   // console.log("--bottom or top");
-      //   this.detachScrollListener();
-      // } else {
-      //   this.attachScrollListener();
-      //   // console.log("--middle position");
-      // }
     }
   }
 
