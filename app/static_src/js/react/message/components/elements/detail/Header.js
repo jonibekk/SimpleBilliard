@@ -14,6 +14,7 @@ class Header extends React.Component {
     this.cancelTopicTitleSetting = this.cancelTopicTitleSetting.bind(this)
     this.startTopicTitleSetting = this.startTopicTitleSetting.bind(this)
     this.saveTopicTitle = this.saveTopicTitle.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this)
   }
 
   componentDidUpdate() {
@@ -57,6 +58,10 @@ class Header extends React.Component {
     }
   }
 
+  onTouchMove(e) {
+    e.preventDefault()
+  }
+
   render() {
     const {topic, topic_title_setting_status, save_topic_title_err_msg, is_mobile_app} = this.props;
     if (Object.keys(topic).length == 0) {
@@ -71,7 +76,11 @@ class Header extends React.Component {
 
     if (topic_title_setting_status != TopicTitleSettingStatus.NONE) {
       return (
-        <div className={`topicDetail-header ${sp_class}`} style={header_styles}>
+        <div
+          className={`topicDetail-header ${sp_class}`}
+          style={header_styles}
+          onTouchMove={this.onTouchMove}
+        >
           <div className="topicDetail-header-left">
             <a href="/topics" className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></a>
           </div>
@@ -113,7 +122,11 @@ class Header extends React.Component {
 
     return (
 
-      <div className={`topicDetail-header ${sp_class}`} style={header_styles}>
+      <div
+        className={`topicDetail-header ${sp_class}`}
+        style={header_styles}
+        onTouchMove={this.onTouchMove}
+      >
         <div className="topicDetail-header-left">
           <Link to="/topics" className>
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
@@ -130,7 +143,8 @@ class Header extends React.Component {
         </div>
         <div className="topicDetail-header-right">
           <div className="dropdown">
-            <a href="#" className="topicDetail-header-menuIcon dropdown-toggle" id="topicHeaderMenu" data-toggle="dropdown" aria-expanded="true">
+            <a href="#" className="topicDetail-header-menuIcon dropdown-toggle" id="topicHeaderMenu"
+               data-toggle="dropdown" aria-expanded="true">
               <span className="topicDetail-header-menuIcon-inner"></span>
               <span className="topicDetail-header-menuIcon-inner"></span>
               <span className="topicDetail-header-menuIcon-inner"></span>
@@ -148,9 +162,9 @@ class Header extends React.Component {
                 </a>
               </li>
               {/*<li className="mtb_8px">*/}
-                {/*<a href="#" role="menuitem" tabIndex="-1">*/}
-                  {/*<i className="fa fa-sign-out mr_4px"/>{__("Leave me")}*/}
-                {/*</a>*/}
+              {/*<a href="#" role="menuitem" tabIndex="-1">*/}
+              {/*<i className="fa fa-sign-out mr_4px"/>{__("Leave me")}*/}
+              {/*</a>*/}
               {/*</li>*/}
             </ul>
           </div>

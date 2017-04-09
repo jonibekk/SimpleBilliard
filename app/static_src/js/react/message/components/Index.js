@@ -1,8 +1,6 @@
 import React from "react";
 import TopicList from "./elements/index/TopicList";
 import TopicSearchList from "./elements/search/TopicSearchList";
-import injectTapEventPlugin from "react-tap-event-plugin";
-injectTapEventPlugin();
 
 export default class Index extends React.Component {
   constructor(props) {

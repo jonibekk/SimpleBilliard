@@ -11,7 +11,7 @@ import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import Textarea from "react-textarea-autosize";
 import {nl2br} from "~/util/element";
 import {isIOSApp, isMobileApp} from "~/util/base";
-import {HotKeys} from 'react-hotkeys';
+import {HotKeys} from "react-hotkeys";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class Footer extends React.Component {
       is_drag_start: false,
     }
     this.sendMessage = this.sendMessage.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this)
   }
 
   componentDidMount() {
@@ -35,6 +36,7 @@ class Footer extends React.Component {
       detail.changeLayout({body_bottom})
     );
   }
+
   sendLike(e) {
     this.props.dispatch(
       detail.sendLike()
@@ -138,6 +140,10 @@ class Footer extends React.Component {
     }
   }
 
+  onTouchMove(e) {
+    e.preventDefault()
+  }
+
   render() {
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
     const footer_style = {
@@ -145,20 +151,22 @@ class Footer extends React.Component {
     }
 
     const key_map = {
-      'sendMessage':['command+enter', 'ctrl+enter']
+      'sendMessage': ['command+enter', 'ctrl+enter']
     };
     const handlers = {
       'sendMessage': (e) => this.sendMessage(e),
     };
 
     return (
-      <div className={`topicDetail-footer ${sp_class} ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
-           onDrop={this.drop.bind(this)}
-           onDragEnter={this.dragEnter.bind(this)}
-           onDragOver={this.dragOver.bind(this)}
-           onDragLeave={this.dragLeave.bind(this)}
-           style={footer_style}
-           ref="topic_detail_footer"
+      <div
+        className={`topicDetail-footer ${sp_class} ${this.state.is_drag_over && "uploadFileForm-wrapper"}`}
+        onDrop={this.drop.bind(this)}
+        onDragEnter={this.dragEnter.bind(this)}
+        onDragOver={this.dragOver.bind(this)}
+        onDragLeave={this.dragLeave.bind(this)}
+        onTouchMove={this.onTouchMove}
+        style={footer_style}
+        ref="topic_detail_footer"
       >
         {this.state.is_drag_over && <UploadDropZone/>}
         <UploadPreview files={this.props.preview_files}/>
@@ -169,7 +177,8 @@ class Footer extends React.Component {
                 className="btn btnRadiusOnlyIcon mod-upload"
                 onClick={this.selectFile.bind(this)}
               />
-              <input type="file" multiple="multiple" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
+              <input type="file" multiple="multiple" className="hidden" ref="file"
+                     onChange={this.changeFile.bind(this)}/>
             </div>
             <div className="topicDetail-footer-box-center">
               <HotKeys keyMap={key_map} handlers={handlers}>

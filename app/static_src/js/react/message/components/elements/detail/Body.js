@@ -24,6 +24,7 @@ class Body extends React.Component {
     }
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,7 +46,9 @@ class Body extends React.Component {
       this.scrollToLastPosition();
     }
     this.resetStatus();
-    this.attachScrollListener();
+    if (this.state.init_scrolled_bottom) {
+      this.attachScrollListener();
+    }
   }
 
   isScrolledBottom() {
@@ -182,6 +185,12 @@ class Body extends React.Component {
     this.detachScrollListener();
   }
 
+  onTouchMove(e) {
+    if (!this.state.init_scrolled_bottom) {
+      e.preventDefault()
+    }
+  }
+
   render() {
     const {topic, messages, fetch_more_messages_status, is_mobile_app} = this.props
 
@@ -195,7 +204,9 @@ class Body extends React.Component {
     // Nothing Messages
     if (messages.length == 0) {
       return (
-        <div className="topicDetail-body">
+        <div className="topicDetail-body"
+             onTouchMove={this.onTouchMove}
+             >
           <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
             <Loading/>
           </div>
@@ -216,7 +227,7 @@ class Body extends React.Component {
     });
 
     return (
-      <div className="topicDetail-body" ref="parent">
+      <div className="topicDetail-body" ref="parent" onTouchMove={this.onTouchMove}>
         <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
           {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
           {messages_el}
