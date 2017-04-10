@@ -4351,10 +4351,10 @@ $(document).ready(function () {
         autoload_more = true;
 
         if (network_reachable) {
-          let $FeedMoreReadLink = $('#FeedMoreReadLink');
-          let $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
-          let $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
-          let $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
+          var $FeedMoreReadLink = $('#FeedMoreReadLink');
+          var $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
+          var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
+          var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
 
           if($FeedMoreReadLink.is(':visible')){
             $FeedMoreReadLink.trigger('click');
