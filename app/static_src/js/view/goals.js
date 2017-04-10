@@ -7,8 +7,8 @@ function toggleAccordion(e){
     e.preventDefault();
     $(".goal-detail-more-details-link .fa").toggleClass("active");
     if($(".goal-detail-more-details-info").outerHeight()>1){
-        $(".goal-detail-more-details-info").css("height","0");
+        $(".goal-detail-more-details-info").css("height","0").removeClass("active");
     }else{
-        $(".goal-detail-more-details-info").css("height",function(){return $(this).attr("data-height")});
+        $(".goal-detail-more-details-info").css("height",function(){return $(this).attr("data-height")}).addClass("active");
     }
 }

@@ -18,6 +18,7 @@
                 <?= $this->element('Goal/members') ?>
             </div>
         </div>
+        <?php if (count($members)>10){ ?>
         <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
             <a href="#" class="btn btn-link click-goal-member-more"
                next-page-num="2"
@@ -27,6 +28,7 @@
             >
                 <?= __('View more') ?></a>
         </div>
+        <?php } ?>
     </div>
 </div>
 <?= $this->App->viewEndComment()?>

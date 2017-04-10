@@ -30,9 +30,8 @@
                 'action'     => 'view_goals',
                 'user_id'    => $follower['User']['id']
             ]) ?>"
-               class="link-dark-gray">
+            class="link-dark-gray">
                 <div>
-
                     <?=
                     $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'medium_large'],
                         ['class' => 'goal-detail-follower-avatar'])
@@ -43,8 +42,8 @@
                         </p>
                         <i class="fa-sitemap fa"></i>
                         <span class="goal-detail-follower-group">
-                    <?= h($follower['Group']['name']) ?>
-                </span>
+                            <?= h($follower['Group']['name']) ?>
+                        </span>
                     </div>
                 </div>
             </a>
