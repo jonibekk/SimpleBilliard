@@ -133,17 +133,18 @@
 .goal-detail-tab-group {
   width: 100%;
   float:left;
-  background:transparent;
+  background:#fff;
   position:relative;
-  margin-top:-56px;
   z-index:2;
+  border-top:1px solid @baseGray;
+  border-bottom:1px solid @baseGray;
 }
 
 .goal-detail-tabs {
   display: inline-block;
   text-align:center;
   background-color:#fff;
-  border-bottom:3px solid #fff;
+  border-bottom:4px solid #fff;
   font-size:11px;
   padding:0 1rem;
   .no-underline;
@@ -157,8 +158,8 @@
 }
 
 .goal-details-tab-active{
-  color: @basicPink !important;
-  border-bottom:3px solid @basicPink !important;
+  color: @darkBlack !important;
+  border-bottom:4px solid @basicPink !important;
   padding-bottom: 1px;
 }
 
@@ -193,7 +194,7 @@
 }
 
 .goal-detail-upper-panel {
-  padding: 10px 11px 56px 11px;
+  padding: 10px 11px;
   margin-bottom: 12px;
 }
 
@@ -543,15 +544,42 @@
   padding: 18px 15px;
 }
 
-.goal-detail-member-cards {
-  background: #faf9f7;
+.goal-member-navigation{
+  width:100%;
+  float:left;
+  margin:1rem 0;
+  border-bottom:none !important;
+}
+
+.goal-member-navigation-link{
+  text-align:center;
+}
+
+.goal-member-navigation-link a{
+  text-align:center;
+  padding:.25em 1em;
+  border-bottom:2px solid @white;
+  color: @trueGray;
+}
+
+.goal-member-navigation-link.mod-active a{
+  border-bottom:2px solid @darkBlack;
+  color:@darkBlack;
+}
+
+.goal-detail-member-cards, .goal-detail-follower-cards {
   border-radius: 4px;
 }
 
-.goal-detail-member-card {
-  padding: 8px;
+.goal-detail-member-card, .goal-detail-follower-card {
+  background-color:@baseLightGray;
+  margin:1em 0;
+  padding: 1em;
   min-height: 64px;
+  float:left;
+  width:100%;
 }
+
 
 .goal-detail-member-name {
   font-weight: bold;
@@ -587,17 +615,6 @@
   .goal-detail-panels;
   padding: 18px 15px;
   border-radius: 4px;
-}
-
-.goal-detail-follower-cards {
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.goal-detail-follower-card {
-  padding: 8px;
-  background: #faf9f7;
-  margin: 0 !important;
 }
 
 .goal-detail-follower-avatar {

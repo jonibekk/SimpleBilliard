@@ -163,7 +163,7 @@
 
 </div>
 <div class="goal-detail-tab-group">
-    <a class="col-xxs-2 col-xxs-offset-3 goal-detail-kr-tab <?= $this->request->params['action'] == 'view_krs' ? "goal-details-tab-active" : null ?>"
+    <a class="col-xxs-2 col-xxs-offset-2 goal-detail-kr-tab <?= $this->request->params['action'] == 'view_krs' ? "goal-details-tab-active" : null ?>"
        href="<?= $this->Html->url(
            [
                'controller' => 'goals',
@@ -177,7 +177,7 @@
             <?= h(__('KR')) ?>
         </p>
     </a>
-    <a class="col-xxs-2 goal-detail-action-tab <?= $this->request->params['action'] == 'view_actions' ? "goal-details-tab-active" : null ?>"
+    <a class="col-xxs-2 col-xxs-offset-1 goal-detail-action-tab <?= $this->request->params['action'] == 'view_actions' ? "goal-details-tab-active" : null ?>"
        href="<?= $this->Html->url(
            [
                'controller' => 'goals',
@@ -192,7 +192,7 @@
             <?= h(__('Action')) ?>
         </p>
     </a>
-    <a class="col-xxs-2 goal-detail-member-tab <?= $this->request->params['action'] == 'view_members' ? "goal-details-tab-active" : null ?>"
+    <a class="col-xxs-2 col-xxs-offset-1 goal-detail-member-tab <?= $this->request->params['action'] == 'view_members' ? "goal-details-tab-active" : null ?>"
        href="<?= $this->Html->url(
            [
                'controller' => 'goals',

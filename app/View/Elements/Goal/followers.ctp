@@ -3,6 +3,24 @@
  * @var $followers
  */
 ?>
+<div class="col goal-member-navigation">
+    <div class="goal-member-navigation-link col-xxs-3 col-xxs-offset-3">
+        <a href="<?= $this->Html->url(
+           [
+               'controller' => 'goals',
+               'action'     => 'view_members',
+               'goal_id'    => $goal['Goal']['id'],
+           ]); ?>"><?= h(__('Members')) ?></a>
+    </div>
+    <div class="goal-member-navigation-link mod-active col-xxs-3">
+        <a href="<?= $this->Html->url(
+           [
+               'controller' => 'goals',
+               'action'     => 'view_followers',
+               'goal_id'    => $goal['Goal']['id'],
+           ]); ?>"><?= h(__('Follower')) ?></a>
+    </div>
+</div>
 <?php if ($followers): ?>
     <?= $this->App->viewStartComment() ?>
     <?php foreach ($followers as $follower): ?>
