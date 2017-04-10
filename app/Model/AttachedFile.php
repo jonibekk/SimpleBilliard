@@ -22,7 +22,7 @@ class AttachedFile extends AppModel
     /**
      * フロントエンド含めすべての添付ファイル(画像含む)のサイズ上限チェックにこのルールを適用する
      */
-    const ATTACHABLE_MAX_FILE_SIZE_MB = 25;
+    const ATTACHABLE_MAX_FILE_SIZE_MB = 100;
     /**
      * アップロード可能な画像ファイルの画素数
      */
@@ -54,6 +54,7 @@ class AttachedFile extends AppModel
     const TYPE_MODEL_POST = 0;
     const TYPE_MODEL_COMMENT = 1;
     const TYPE_MODEL_ACTION_RESULT = 2;
+    const TYPE_MODEL_MESSAGE = 3;
     static public $TYPE_MODEL = [
         self::TYPE_MODEL_POST          => [
             'intermediateModel' => 'PostFile',
@@ -66,6 +67,10 @@ class AttachedFile extends AppModel
         self::TYPE_MODEL_ACTION_RESULT => [
             'intermediateModel' => 'ActionResultFile',
             'foreign_key'       => 'action_result_id',
+        ],
+        self::TYPE_MODEL_MESSAGE       => [
+            'intermediateModel' => 'MessageFile',
+            'foreign_key'       => 'message_id',
         ],
     ];
     /**
@@ -144,6 +149,9 @@ class AttachedFile extends AppModel
             'dependent' => true,
         ],
         'ActionResultFile' => [
+            'dependent' => true,
+        ],
+        'MessageFile'      => [
             'dependent' => true,
         ],
     ];
@@ -455,6 +463,42 @@ class AttachedFile extends AppModel
             return true;
         }
 
+        // In case of message, only topic member can download a file.
+        if ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_MESSAGE) {
+            $modelName = self::$TYPE_MODEL[self::TYPE_MODEL_MESSAGE]['intermediateModel'];
+            $row = $this->{$modelName}->find('first', [
+                'conditions' => [
+                    'attached_file_id' => $file['AttachedFile']['id'],
+                ],
+                'joins'      => [
+                    [
+                        'table'      => 'messages',
+                        'alias'      => 'Message',
+                        'type'       => 'INNER',
+                        'conditions' => [
+                            'MessageFile.message_id = Message.id',
+                            'Message.team_id' => $this->current_team_id,
+                            'Message.del_flg' => false,
+                        ]
+                    ],
+                    [
+                        'table'      => 'topic_members',
+                        'alias'      => 'TopicMember',
+                        'type'       => 'INNER',
+                        'conditions' => [
+                            'Message.topic_id = TopicMember.topic_id',
+                            'TopicMember.user_id' => $this->my_uid,
+                            'TopicMember.team_id' => $this->current_team_id,
+                            'TopicMember.del_flg' => false,
+                        ]
+                    ]
+                ],
+            ]);
+            if ($row) {
+                return true;
+            }
+        }
+
         // 投稿とコメントへの添付ファイルの場合、その投稿自体が閲覧可能かを確認する。
         // アクションへのコメントの場合は、だれでも閲覧可能にする
         $post_id = "";
@@ -526,4 +570,5 @@ class AttachedFile extends AppModel
         $upload = new UploadHelper(new View());
         return $upload->attachedFileUrl($file, 'download');
     }
+
 }

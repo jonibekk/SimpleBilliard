@@ -7,9 +7,9 @@ import CategorySelect from "../../common/components/goal/CategorySelect";
 import InvalidMessageBox from "../../common/components/InvalidMessageBox";
 import * as KeyCode from "../constants/KeyCode";
 import LabelInput from "../../common/components/goal/LabelInput";
-import BaseComponent from "~/goal_create/components/BaseComponent";
+import Base from "~/common/components/Base";
 
-export default class Step2Component extends BaseComponent {
+export default class Step2Component extends Base {
   constructor(props) {
     super(props);
     this.deleteLabel = this.deleteLabel.bind(this)

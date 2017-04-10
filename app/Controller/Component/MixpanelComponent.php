@@ -277,9 +277,9 @@ class MixpanelComponent extends CakeObject
         $this->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
     }
 
-    function trackMessage($post_id)
+    function trackMessage($topicId)
     {
-        $this->track(self::TRACK_MESSAGE, ['$post_id' => $post_id]);
+        $this->track(self::TRACK_MESSAGE, ['$topic_id' => $topicId]);
     }
 
     /**

@@ -287,4 +287,51 @@ class AppUtil
         }
         return null;
     }
+
+    /**
+     * filtering by whiteList
+     *
+     * @param array $targetArray
+     * @param array $whiteListKeys e.g. ['id','name'...]
+     *
+     * @return array
+     */
+    static function filterWhiteList(array $targetArray, array $whiteListKeys): array
+    {
+        return array_intersect_key($targetArray, array_flip($whiteListKeys));
+    }
+
+    /**
+     * getting base command of back ground job
+     *
+     * @return string
+     */
+    static function baseCmdOfBgJob(): string
+    {
+        $nohup = "nohup ";
+        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        $cakeCmd = $php . APP . "Console" . DS . "cake.php";
+        $cakeApp = " -app " . APP;
+        $baseCommand = $nohup . $cakeCmd . $cakeApp;
+        return $baseCommand;
+    }
+
+    /**
+     * flatten multi dimentions
+     *  - with being unique
+     *  - with unset empty value
+     *  - with reassign array keys
+     *
+     * @param  array $multiDimentions
+     *
+     * @return array
+     */
+    static function flattenUnique(array $multiDimentions): array
+    {
+        $flattened = Hash::flatten($multiDimentions);
+        $filterd = Hash::filter($flattened);
+        $uniqued = array_unique($filterd);
+        $keyReassigned = array_values($uniqued);
+        return $keyReassigned;
+    }
 }

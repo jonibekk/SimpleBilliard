@@ -113,12 +113,13 @@ class TimeExHelper extends AppHelper
     }
 
     /**
-     * @param $unixtime
-     * @param $type
+     * @param        $unixtime
+     * @param string $type
+     * @param bool   $returnHtml
      *
      * @return string
      */
-    public function elapsedTime($unixtime, $type = 'normal')
+    public function elapsedTime($unixtime, $type = 'normal', $returnHtml = true)
     {
         $elapsed = null;
         // "Just now" | 「たった今」 $date > REQUEST_TIMESTAMP - 60sec
@@ -147,7 +148,13 @@ class TimeExHelper extends AppHelper
             $elapsed = $this->formatYearDayI18n($unixtime);
         }
         $full_time = $this->formatFullTimeI18n($unixtime);
-        return "<span title='{$full_time}'>{$elapsed}</span>";
+
+        if ($returnHtml) {
+            $ret = "<span title='{$full_time}'>{$elapsed}</span>";
+        } else {
+            $ret = $elapsed;
+        }
+        return $ret;
     }
 
     public function elapsedMinutes($unixtime)
