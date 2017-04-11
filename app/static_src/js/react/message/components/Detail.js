@@ -45,6 +45,14 @@ export default class Detail extends Base {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.detail.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0) {
+      this.setState({enabled_leave_page_alert: true})
+    } else {
+      this.setState({enabled_leave_page_alert: false})
+    }
+  }
+
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
     if (isMobileApp()) {
