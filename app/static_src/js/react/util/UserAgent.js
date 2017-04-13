@@ -36,15 +36,15 @@ export default class UserAgent {
 
   /**
    *  Check PC
-   *  @return bool
+   *  @return boolean
    */
   isPc() {
-    return this.getDeviceType() == DEVICE_PC;
+    return this.getDeviceType() === DEVICE_PC;
   }
 
   /**
    * Check mobile app
-   * @returns bool
+   * @returns boolean
    */
   isMobileApp() {
     const ua = this.getUA();
@@ -54,7 +54,7 @@ export default class UserAgent {
 
   /**
    * Check iOS app
-   * @returns bool
+   * @returns boolean
    */
   isIOSApp() {
     const ua = this.getUA();
