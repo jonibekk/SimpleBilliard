@@ -52,3 +52,8 @@ export function isIOSApp() {
   return parser.getUA().indexOf('Goalous App iOS') >= 0;
 }
 
+export function disableAsyncEvents() {
+  $(document).off("click", ".js-dashboard-circle-list");
+  $(document).off("click", ".circle-link");
+  $(document).off("click", ".call-notifications");
+}

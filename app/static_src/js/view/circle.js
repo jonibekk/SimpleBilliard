@@ -38,7 +38,6 @@ $(document).ready(function () {
           if (unread_count == "") {
             $unread_box.text(1);
           } else if (Number(unread_count) == 9) {
-
             $unread_box.text("9+");
           } else if (unread_count != "9+") {
             $unread_box.html(Number(unread_count) + 1);

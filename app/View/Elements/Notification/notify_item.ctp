@@ -30,7 +30,7 @@ switch ($location_type) {
 <?php $status_read = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $status_read ?> <?= h($list_type_class) ?>" data-score="<?= $notification['score'] ?>">
     <a href="<?= h($notification['url']) ?>"
-       class="col col-xxs-12 notify-card-link <?php if (isset($is_message_notify) && $is_message_notify): ?>message-click-target<?php else: ?>notify-click-target<?php endif; ?>"
+       class="col col-xxs-12 notify-card-link"
        id="notifyCard">
         <!-- <div class="notify-card-pic-box"> -->
         <?php if (!empty($user)): ?>
