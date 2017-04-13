@@ -13,6 +13,7 @@ class Header extends React.Component {
     super(props)
     this.cancelTopicTitleSetting = this.cancelTopicTitleSetting.bind(this)
     this.startTopicTitleSetting = this.startTopicTitleSetting.bind(this)
+    this.leaveTopic = this.leaveTopic.bind(this)
     this.saveTopicTitle = this.saveTopicTitle.bind(this)
     this.onTouchMove = this.onTouchMove.bind(this)
   }
@@ -29,6 +30,14 @@ class Header extends React.Component {
     this.props.dispatch(
       actions.startTopicTitleSetting()
     )
+  }
+
+  leaveTopic(e) {
+    if (confirm(__('Are you sure you want to leave this topic?'))) {
+      this.props.dispatch(
+        actions.leaveTopic()
+      )
+    }
   }
 
   cancelTopicTitleSetting(e) {
@@ -161,11 +170,14 @@ class Header extends React.Component {
                   <i className="fa fa-edit mr_4px"/>{__("Set topic name")}
                 </a>
               </li>
-              {/*<li className="mtb_8px">*/}
-              {/*<a href="#" role="menuitem" tabIndex="-1">*/}
-              {/*<i className="fa fa-sign-out mr_4px"/>{__("Leave me")}*/}
-              {/*</a>*/}
-              {/*</li>*/}
+              {topic.members_count > 2 &&
+                <li className="mtb_8px">
+                  <a href="#" role="menuitem" tabIndex="-1"
+                     onClick={this.leaveTopic}>
+                    <i className="fa fa-sign-out mr_4px"/>{__("Leave this topic")}
+                  </a>
+                </li>
+              }
             </ul>
           </div>
         </div>

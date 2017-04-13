@@ -3,7 +3,8 @@ import {
   FetchLatestMessageStatus,
   FetchMoreMessages,
   SaveMessageStatus,
-  TopicTitleSettingStatus
+  TopicTitleSettingStatus,
+  LeaveTopicStatus
 } from "~/message/constants/Statuses";
 
 const initialState = {
@@ -197,6 +198,24 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         mobile_app_layout
       })
+
+    // Leave topic
+    case ActionTypes.LeaveTopic.SAVING:
+      return Object.assign({}, state, {
+        err_msg: "",
+        leave_topic_status: LeaveTopicStatus.SAVING
+      })
+    case ActionTypes.LeaveTopic.SAVE_SUCCESS:
+      return Object.assign({}, state, {
+        leave_topic_status: LeaveTopicStatus.SUCCESS,
+        redirect: true,
+      })
+    case ActionTypes.LeaveTopic.SAVE_ERROR:
+      return Object.assign({}, state, {
+        err_msg: action.err_msg,
+        leave_topic_status: LeaveTopicStatus.ERROR
+      })
+
     default:
       return state;
   }

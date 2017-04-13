@@ -1,6 +1,6 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
 import * as FileUploadModule from "~/message/modules/file_upload";
-import {get, post, put} from "~/util/api";
+import {del, get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
@@ -227,6 +227,29 @@ export function saveTopicTitle(title) {
           type: ActionTypes.SAVE_TOPIC_TITLE_ERROR,
           topic_title_setting_status: TopicTitleSettingStatus.EDITING,
           save_topic_title_err_msg
+        })
+      }
+    );
+  }
+}
+
+export function leaveTopic() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LeaveTopic.SAVING,
+    })
+    const topic_id = getState().detail.topic_id;
+    return del(`/api/v1/topics/${topic_id}/leave_me`, null, null,
+      (response) => {
+        dispatch({
+          type: ActionTypes.LeaveTopic.SAVE_SUCCESS,
+        })
+      },
+      ({response}) => {
+        const err_msg = getErrMsg(response);
+        dispatch({
+          type: ActionTypes.LeaveTopic.SAVE_ERROR,
+          err_msg
         })
       }
     );

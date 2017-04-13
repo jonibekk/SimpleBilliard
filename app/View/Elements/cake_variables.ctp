@@ -565,7 +565,8 @@ App::uses('AttachedFile', 'Model');
             "Input topic title": "<?= __("Input topic title") ?>",
             "Update": "<?= __("Update") ?>",
             // messgae
-            "No results found": "<?= __("No results found") ?>"
+            "No results found": "<?= __("No results found") ?>",
+            "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

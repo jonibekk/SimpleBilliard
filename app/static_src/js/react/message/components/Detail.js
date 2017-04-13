@@ -1,4 +1,5 @@
 import React from "react";
+import {browserHistory} from "react-router";
 import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
@@ -43,6 +44,12 @@ export default class Detail extends Base {
       channel.bind('new_message', self.fetchLatestMessages);
       self.props.setPusherInfo({pusher, channel})
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.detail.redirect) {
+      browserHistory.push("/topics");
+    }
   }
 
   componentWillUnmount() {
