@@ -8,7 +8,7 @@ class AddLastMessageReadDatetime0413 extends CakeMigration
      *
      * @var string
      */
-    public $description = 'add_last_message_read_datetime_0413';
+    public $description = 'add_last_read_message_datetime_0413';
 
     /**
      * Actions to be performed
@@ -19,17 +19,17 @@ class AddLastMessageReadDatetime0413 extends CakeMigration
         'up'   => array(
             'create_field' => array(
                 'topic_members' => array(
-                    'last_message_read_datetime' => array(
+                    'last_read_message_datetime' => array(
                         'type'     => 'integer',
                         'null'     => true,
                         'default'  => null,
                         'unsigned' => true,
                         'key'      => 'index',
                         'comment'  => 'It\'s update when read message.',
-                        'after'    => 'last_message_sent'
+                        'after'    => 'last_read_message_id'
                     ),
                     'indexes'                    => array(
-                        'last_message_read_datetime' => array('column' => 'last_message_read_datetime', 'unique' => 0),
+                        'last_read_message_datetime' => array('column' => 'last_read_message_datetime', 'unique' => 0),
                     ),
                 ),
             ),
@@ -37,8 +37,8 @@ class AddLastMessageReadDatetime0413 extends CakeMigration
         'down' => array(
             'drop_field' => array(
                 'topic_members' => array(
-                    'last_message_read_datetime',
-                    'indexes' => array('last_message_read_datetime')
+                    'last_read_message_datetime',
+                    'indexes' => array('last_read_message_datetime')
                 ),
             ),
         ),
@@ -72,7 +72,7 @@ class AddLastMessageReadDatetime0413 extends CakeMigration
             $TopicMember->cacheQueries = false;
             $TopicMember->unbindModel(['belongsTo' => ['Topic', 'User']]);
             $TopicMember->updateAll(
-                ['TopicMember.last_message_read_datetime' => 'TopicMember.modified']
+                ['TopicMember.last_read_message_datetime' => 'TopicMember.modified']
             );
         }
 
