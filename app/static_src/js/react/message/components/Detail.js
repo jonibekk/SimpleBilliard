@@ -2,9 +2,10 @@ import React from "react";
 import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
+import Base from "~/common/components/Base";
 import {isMobileApp, disableAsyncEvents} from "~/util/base";
 
-export default class Detail extends React.Component {
+export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
@@ -26,7 +27,7 @@ export default class Detail extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.onUnload)
+    super.componentDidMount.apply(this);
     disableAsyncEvents()
 
     const topic_id = this.props.params.topic_id;
@@ -49,15 +50,14 @@ export default class Detail extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.detail.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0) {
-      this.setState({enabled_leave_page_alert: true})
-    } else {
       this.setState({enabled_leave_page_alert: false})
+    } else {
+      this.setState({enabled_leave_page_alert: true})
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.onUnload)
-
+    super.componentDidMount.apply(this);
     if (isMobileApp()) {
       let header = document.getElementById("header");
       header.classList.remove("mod-shadow");
