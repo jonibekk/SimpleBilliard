@@ -24,7 +24,7 @@
            public-flg="<?= $circle['Circle']['public_flg'] ?>"
            team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
            oldest-post-time="<?= $circle['Circle']['created'] ?>"
-           href="#">
+           href="<?= $this->Html->url("/circle_feed/{$circle['Circle']['id']}") ?>">
             <div class="dashboard-circle-unread-point">
                 <div class="circle"></div>
             </div>
