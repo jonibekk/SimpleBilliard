@@ -1,19 +1,31 @@
 import React from "react";
 
 export default class Base extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      enabled_leave_page_alert: true,
+      leave_page_alert_msg: cake.message.notice.a
+    }
+  }
+
+
   componentDidMount() {
-    window.addEventListener("beforeunload", this.onBeforeUnloadHandler)
+    window.addEventListener("beforeunload", this.onBeforeUnloadHandler.bind(this))
   }
 
   componentWillUnmount() {
     this.removeBeforeUnloadHandler()
+    this.state.enabled_leave_page_alert = false
   }
 
   removeBeforeUnloadHandler() {
-    window.removeEventListener("beforeunload", this.onBeforeUnloadHandler)
+    window.removeEventListener("beforeunload", this.onBeforeUnloadHandler.bind(this))
   }
 
   onBeforeUnloadHandler(event) {
-    return event.returnValue = cake.message.notice.a
+    if (this.state.enabled_leave_page_alert) {
+      return event.returnValue = this.state.leave_page_alert_msg
+    }
   }
 }

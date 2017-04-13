@@ -2,8 +2,8 @@ import React from "react";
 import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
-import {isMobileApp} from "~/util/base";
 import Base from "~/common/components/Base";
+import {isMobileApp, disableAsyncEvents} from "~/util/base";
 
 export default class Detail extends Base {
   constructor(props) {
@@ -27,6 +27,10 @@ export default class Detail extends Base {
 
   componentDidMount() {
     super.componentDidMount.apply(this);
+    // enable `routerWillLeave` method
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave.bind(this));
+    disableAsyncEvents()
+
     const topic_id = this.props.params.topic_id;
     let {pusher_info} = this.props.detail;
     // HACK:dependencied to window.Pusher(using in gl_basic.js)
@@ -45,6 +49,14 @@ export default class Detail extends Base {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.detail.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0) {
+      this.setState({enabled_leave_page_alert: false})
+    } else {
+      this.setState({enabled_leave_page_alert: true})
+    }
+  }
+
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
     if (isMobileApp()) {
@@ -56,6 +68,13 @@ export default class Detail extends Base {
     // Unsubscribe
     let {channel} = this.props.detail.pusher_info;
     channel.unbind('new_message', self.fetchLatestMessages);
+  }
+
+  // for SPA page route
+  routerWillLeave(nextLocation) {
+    if (this.state.enabled_leave_page_alert) {
+      return this.state.leave_page_alert_msg
+    }
   }
 
   fetchLatestMessages() {

@@ -55,7 +55,7 @@ export default class AttachedFile extends React.Component {
             <div className="col col-xxs-1 messanger-attached-files-icon">
               <a href={attached_file.preview_url} target="_blank">
                 <div>
-                  <FileTypeIcon file_ext={attached_file.file_ext} />
+                  <FileTypeIcon file_ext={attached_file.file_ext}/>
                 </div>
               </a>
             </div>
@@ -79,13 +79,14 @@ export default class AttachedFile extends React.Component {
                   </div>
                 </a>
                 {ua.isPc() &&
-                  <a className="link-dark-gray" href={attached_file.download_url}>
-                    <div className="col col-xxs-6 text-center file-btn-wap">
-                      <div className="file-btn">
-                        <i className="fa fa-download mr_4px"></i>{__("Download")}
-                      </div>
+                <a className="link-dark-gray"
+                   href={attached_file.download_url} target="_blank">
+                  <div className="col col-xxs-6 text-center file-btn-wap">
+                    <div className="file-btn">
+                      <i className="fa fa-download mr_4px"></i>{__("Download")}
                     </div>
-                  </a>
+                  </div>
+                </a>
                 }
               </div>
 
