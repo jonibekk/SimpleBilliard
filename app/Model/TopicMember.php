@@ -124,7 +124,7 @@ class TopicMember extends AppModel
             'fields'     => [
                 'TopicMember.id',
             ],
-            'order'  => [
+            'order'      => [
                 'TopicMember.last_message_sent DESC',
                 'TopicMember.id DESC',
             ],
@@ -226,9 +226,8 @@ class TopicMember extends AppModel
     function updateLastReadMessageId(int $topicId, int $messageId, int $userId)
     {
         $fields = [
-            'TopicMember.last_read_message_id' => $messageId,
-            // なぜかこれを書かないとmodifiedがアップデートされないので明示的に書いてる
-            'TopicMember.modified'             => time()
+            'TopicMember.last_read_message_id'       => $messageId,
+            'TopicMember.last_read_message_datetime' => time(),
         ];
         $conditions = [
             'TopicMember.topic_id' => $topicId,
@@ -256,11 +255,10 @@ class TopicMember extends AppModel
         return (bool)$ret;
     }
 
-
     /**
      * Add members to topic
      *
-     * @param int $topicId
+     * @param int   $topicId
      * @param array $userIds
      *
      * @return bool
@@ -270,12 +268,12 @@ class TopicMember extends AppModel
     {
         $baseData = [
             'topic_id' => $topicId,
-            'team_id' => $this->current_team_id
+            'team_id'  => $this->current_team_id
         ];
         $insertData = [];
         foreach ($userIds as $userId) {
             $insertData[] = array_merge($baseData, [
-                'user_id'  => $userId,
+                'user_id' => $userId,
             ]);
         }
         $ret = $this->bulkInsert($insertData);
@@ -305,9 +303,8 @@ class TopicMember extends AppModel
                     'fields' => $this->User->profileFields
                 ]
             ],
-            'order'  => [
-                // TODO: after create 'last_message_read_datetime', replace modified -> last_read_datetime
-                'TopicMember.modified DESC'
+            'order'      => [
+                'TopicMember.last_read_message_datetime DESC'
             ],
         ];
         $res = $this->find('all', $options);
@@ -317,7 +314,7 @@ class TopicMember extends AppModel
     /**
      * find members
      *
-     * @param  int   $topicId
+     * @param  int $topicId
      *
      * @return array
      */
@@ -344,8 +341,10 @@ class TopicMember extends AppModel
 
     /**
      * get last read message id
-     * @param  int    $topicId
-     * @param  int    $userId
+     *
+     * @param  int $topicId
+     * @param  int $userId
+     *
      * @return null|int
      */
     function getLastReadMessageId(int $topicId, int $userId)
