@@ -9,7 +9,6 @@ export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
-    this.onUnload = this.onUnload.bind(this)
   }
 
   componentWillMount() {
@@ -28,6 +27,8 @@ export default class Detail extends Base {
 
   componentDidMount() {
     super.componentDidMount.apply(this);
+    // enable `routerWillLeave` method
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave.bind(this));
     disableAsyncEvents()
 
     const topic_id = this.props.params.topic_id;
@@ -57,7 +58,7 @@ export default class Detail extends Base {
   }
 
   componentWillUnmount() {
-    super.componentDidMount.apply(this);
+    super.componentWillUnmount.apply(this);
     if (isMobileApp()) {
       let header = document.getElementById("header");
       header.classList.remove("mod-shadow");
@@ -69,11 +70,10 @@ export default class Detail extends Base {
     channel.unbind('new_message', self.fetchLatestMessages);
   }
 
-  onUnload(event) {
-    const {input_data} = this.props.detail
-    const {uploaded_file_ids} = this.props.file_upload
-    if (input_data.body != '' || uploaded_file_ids.length > 0) {
-      return event.returnValue = cake.message.notice.a
+  // for SPA page route
+  routerWillLeave(nextLocation) {
+    if (this.state.enabled_leave_page_alert) {
+      return this.state.leave_page_alert_msg
     }
   }
 
