@@ -4,7 +4,7 @@ export default class Base extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      enabled_leave_page_alert: false,
+      enabled_leave_page_alert: true,
       leave_page_alert_msg: cake.message.notice.a
     }
   }
