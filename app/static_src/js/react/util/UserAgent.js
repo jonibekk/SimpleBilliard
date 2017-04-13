@@ -46,15 +46,6 @@ export default class UserAgent {
    * Check mobile app
    * @returns bool
    */
-  isMobile() {
-    const ua = this.getUA();
-    return ua.indexOf('Goalous App') >= 0;
-  }
-
-  /**
-   * Check mobile app
-   * @returns bool
-   */
   isMobileApp() {
     const ua = this.getUA();
     return ua.indexOf('Goalous App') >= 0;
