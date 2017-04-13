@@ -76,7 +76,7 @@ export default class AttachedFile extends React.Component {
                     </div>
                   </div>
                 </a>
-                <a className="link-dark-gray" href={attached_file.download_url}>
+                <a className="link-dark-gray" href={attached_file.download_url} target="_blank">
                   <div className="col col-xxs-6 text-center file-btn-wap">
                     <div className="file-btn">
                       <i className="fa fa-download mr_4px"></i>{__("Download")}
