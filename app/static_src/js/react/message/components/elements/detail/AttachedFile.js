@@ -1,5 +1,6 @@
 import React from "react";
 import * as Model from "~/common/constants/Model";
+import UserAgent from "~/util/UserAgent";
 import FileTypeIcon from "~/message/components/elements/ui_parts/FileTypeIcon";
 
 // TODO:Refactoring markup after we can upload file and save message.
@@ -25,6 +26,7 @@ export default class AttachedFile extends React.Component {
   }
 
   render() {
+    const ua = new UserAgent();
     const {attached_file, message_id} = this.props
 
     switch (parseInt(attached_file.file_type)) {
@@ -76,13 +78,15 @@ export default class AttachedFile extends React.Component {
                     </div>
                   </div>
                 </a>
-                <a className="link-dark-gray" href={attached_file.download_url}>
-                  <div className="col col-xxs-6 text-center file-btn-wap">
-                    <div className="file-btn">
-                      <i className="fa fa-download mr_4px"></i>{__("Download")}
+                {ua.isPc() &&
+                  <a className="link-dark-gray" href={attached_file.download_url}>
+                    <div className="col col-xxs-6 text-center file-btn-wap">
+                      <div className="file-btn">
+                        <i className="fa fa-download mr_4px"></i>{__("Download")}
+                      </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                }
               </div>
 
             </div>
