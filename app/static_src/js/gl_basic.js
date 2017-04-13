@@ -1843,7 +1843,6 @@ function setChangeWarningForAllStaticPage() {
       flag = true;
     });
     $(window).on("beforeunload", function () {
-      console.trace();
       if ($(".changed").length != "" && flag == false) {
         return cake.message.notice.a;
       }
