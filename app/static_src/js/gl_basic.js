@@ -4351,10 +4351,23 @@ $(document).ready(function () {
         autoload_more = true;
 
         if (network_reachable) {
-          $('#FeedMoreReadLink').trigger('click');
-          $('#GoalPageFollowerMoreLink').trigger('click');
-          $('#GoalPageMemberMoreLink').trigger('click');
-          $('#GoalPageKeyResultMoreLink').trigger('click');
+          var $FeedMoreReadLink = $('#FeedMoreReadLink');
+          var $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
+          var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
+          var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
+
+          if($FeedMoreReadLink.is(':visible')){
+            $FeedMoreReadLink.trigger('click');
+          }
+          if($GoalPageFollowerMoreLink.is(':visible')){
+            $GoalPageFollowerMoreLink.trigger('click');
+          }
+          if($GoalPageMemberMoreLink.is(':visible')){
+            $GoalPageMemberMoreLink.trigger('click');
+          }
+          if($GoalPageKeyResultMoreLink.is(':visible')){
+            $GoalPageKeyResultMoreLink.trigger('click');
+          }
         } else {
           autoload_more = false;
           return false;
