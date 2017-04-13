@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 import {connect} from "react-redux";
 import * as actions from "~/message/actions/detail";
-import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
+import {LeaveTopicStatus, TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import * as KeyCode from "~/common/constants/KeyCode";
 import {Link} from "react-router";
 import {isIOSApp} from "~/util/base";
@@ -23,6 +23,19 @@ class Header extends React.Component {
       let input = ReactDom.findDOMNode(this.refs.topic_title);
 
       input && input.focus();
+    }
+    if (this.props.leave_topic_status == LeaveTopicStatus.ERROR) {
+      PNotify.removeAll();
+      new PNotify({
+        type: 'error',
+        title: cake.word.error,
+        text: this.props.leave_topic_err_msg,
+        delay: 4000,
+        mouse_reset: false
+      })
+      this.props.dispatch(
+        actions.resetLeaveTopicStatus()
+      )
     }
   }
 
@@ -171,12 +184,12 @@ class Header extends React.Component {
                 </a>
               </li>
               {topic.members_count > 2 &&
-                <li className="mtb_8px">
-                  <a href="#" role="menuitem" tabIndex="-1"
-                     onClick={this.leaveTopic}>
-                    <i className="fa fa-sign-out mr_4px"/>{__("Leave this topic")}
-                  </a>
-                </li>
+              <li className="mtb_8px">
+                <a href="#" role="menuitem" tabIndex="-1"
+                   onClick={this.leaveTopic}>
+                  <i className="fa fa-sign-out mr_4px"/>{__("Leave this topic")}
+                </a>
+              </li>
               }
             </ul>
           </div>
@@ -190,6 +203,8 @@ Header.propTypes = {
   topic: React.PropTypes.object,
   topic_title_setting_status: React.PropTypes.number,
   save_topic_title_err_msg: React.PropTypes.string,
+  leave_topic_status: React.PropTypes.number,
+  leave_topic_err_msg: React.PropTypes.string,
   is_mobile_app: React.PropTypes.bool,
 };
 
@@ -197,6 +212,8 @@ Header.defaultProps = {
   topic: {},
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
   save_topic_title_err_msg: "",
+  leave_topic_status: LeaveTopicStatus.NONE,
+  leave_topic_err_msg: "",
   is_mobile_app: false,
 };
 export default connect()(Header);

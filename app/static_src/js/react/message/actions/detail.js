@@ -299,6 +299,12 @@ export function resetFetchLatestMessagesStatus() {
   }
 }
 
+export function resetLeaveTopicStatus() {
+  return {
+    type: ActionTypes.LeaveTopic.RESET_STATUS,
+  }
+}
+
 export function fetchReadCount(topic_id) {
   return (dispatch) => {
     return get(`/api/v1/topics/${topic_id}/read_members`)

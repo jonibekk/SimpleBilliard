@@ -81,6 +81,8 @@ export default class Detail extends Base {
           save_topic_title_err_msg={detail.save_topic_title_err_msg}
           is_mobile_app={detail.is_mobile_app}
           mobile_app_layout={detail.mobile_app_layout}
+          leave_topic_status={detail.leave_topic_status}
+          leave_topic_err_msg={detail.leave_topic_err_msg}
         />
         <Body
           topic={detail.topic}
