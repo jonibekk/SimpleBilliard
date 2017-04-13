@@ -24,6 +24,7 @@ const initialState = {
   success_fetch_more: false,
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
   save_topic_title_err_msg: "",
+  fetch_read_count: false,
   err_msg: "",
   input_data: {
     body: "",
@@ -179,10 +180,15 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         fetch_latest_messages_status: FetchLatestMessageStatus.SUCCESS
       })
+    case ActionTypes.FETCH_READ_COUNT:
+      return Object.assign({}, state, {
+        fetch_read_count: true
+      })
     case ActionTypes.UPDATE_READ_COUNT:
       const new_topic = Object.assign({}, state.topic, {read_count: action.read_count})
       return Object.assign({}, state, {
-        topic: new_topic
+        topic: new_topic,
+        fetch_read_count: false
       })
     case ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS:
       return Object.assign({}, state, {

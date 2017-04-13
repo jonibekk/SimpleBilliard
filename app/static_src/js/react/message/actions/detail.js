@@ -278,6 +278,9 @@ export function resetFetchLatestMessagesStatus() {
 
 export function fetchReadCount(topic_id) {
   return (dispatch) => {
+    dispatch({
+      type: ActionTypes.FETCH_READ_COUNT
+    })
     return get(`/api/v1/topics/${topic_id}/read_members`)
       .then((response) => {
         const read_count = response.data.data.member_count

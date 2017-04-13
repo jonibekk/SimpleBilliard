@@ -168,6 +168,12 @@
       font-size: 1.3rem;
       &-wrapper {
         text-align: right;
+        position: relative;
+        .loadingImg {
+          position: absolute;
+          right: 0;
+          margin-right: 5px;
+        }
       }
       &:hover {
         text-decoration: none;
@@ -185,6 +191,9 @@
       &:hover {
         text-decoration: none;
         color: @subColor10;
+      }
+      &.loading {
+        visibility: hidden;
       }
     }
     &-attachedFiles {
@@ -214,7 +223,6 @@
       right: 0;
     }
     &-box {
-
       display: flex;
       &-center {
         flex: 1;
