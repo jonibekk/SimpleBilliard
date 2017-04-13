@@ -200,13 +200,13 @@ class Body extends React.Component {
       bottom: this.props.mobile_app_layout.body_bottom
     };
 
-    // Exist Messages
-    const messages_el = () => {
+    // Render messages
+    const renderMessages = () => {
       // Nothing Messages
       if (messages.length == 0) {
         return <Loading/>
       }
-      // Render messages;
+
       return messages.map((message, i) => {
         return (
           <Message
@@ -222,7 +222,7 @@ class Body extends React.Component {
     return (
       <div className={`topicDetail-body ${sp_class}`} ref="messages" onTouchMove={this.onTouchMove} style={body_styles}>
         {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
-        {messages_el()}
+        {renderMessages()}
       </div>
     )
   }
