@@ -72,7 +72,8 @@ class AddLastMessageReadDatetime0413 extends CakeMigration
             $TopicMember->cacheQueries = false;
             $TopicMember->unbindModel(['belongsTo' => ['Topic', 'User']]);
             $TopicMember->updateAll(
-                ['TopicMember.last_read_message_datetime' => 'TopicMember.modified']
+                ['TopicMember.last_read_message_datetime' => 'TopicMember.modified'],
+                ['NOT' => ['TopicMember.last_read_message_id' => null]]
             );
         }
 

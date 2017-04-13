@@ -223,7 +223,7 @@ class TopicMember extends AppModel
      *
      * @return bool
      */
-    function updateLastReadMessageId(int $topicId, int $messageId, int $userId)
+    function updateLastReadMessageIdAndDate(int $topicId, int $messageId, int $userId)
     {
         $fields = [
             'TopicMember.last_read_message_id'       => $messageId,
