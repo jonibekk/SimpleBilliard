@@ -56,7 +56,8 @@ export default function detail(state = initialState, action) {
         file_ids: []
       };
       return Object.assign({}, state, initialState, {
-        input_data
+        input_data,
+        redirect: false
       })
     case ActionTypes.SET_RESOURCE_ID:
       return Object.assign({}, state, {
