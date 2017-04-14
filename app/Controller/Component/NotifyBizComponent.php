@@ -1355,15 +1355,14 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
-        $post_url = null;
+        $postUrl = null;
         if (Hash::get($this->notify_option, 'url')) {
-            $post_url = $this->notify_option['url'];
+            $postUrl = $this->notify_option['url'];
         } else {
-            $post_url = Router::url($this->notify_option['url_data'], true);
+            $postUrl = Router::url($this->notify_option['url_data'], true);
         }
-
         // for switching team when user logged in other team.
-        $post_url .= "?team_id=" . $this->NotifySetting->current_team_id;
+        $postUrl = AppUtil::addQueryParamsToUrl($postUrl, ['team_id' => $this->NotifySetting->current_team_id]);
 
         $sent_device_tokens = [];
 
@@ -1411,7 +1410,7 @@ class NotifyBizComponent extends Component
                 "target":["ios","android"],
                 "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $device_tokens) . '"]}},
                 "message":' . $title . ',
-                "userSettingValue":{"url":"' . $post_url . '"}},
+                "userSettingValue":{"url":"' . $postUrl . '"}},
                 "deliveryExpirationTime":"1 day"
             }';
             $options['http']['content'] = $body;
