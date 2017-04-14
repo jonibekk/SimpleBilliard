@@ -100,24 +100,18 @@
   &-body {
     background-color: #fff;
     -webkit-overflow-scrolling: touch;
-    overflow: hidden;
-  }
-  &-messages {
-    padding: 4px 0;
     overflow-y: scroll;
     overflow-x: hidden;
     max-height: 475px;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    width: 100%;
     &.mod-sp {
       max-height: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       position: fixed;
       bottom: 55px;
       right: 0;
-      left:0;
+      left: 0;
       top: 95px;
       background-color: #fff;
       z-index: -1;
