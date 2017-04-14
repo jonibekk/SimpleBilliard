@@ -103,6 +103,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     max-height: 475px;
+    padding: 5px 0;
     &.mod-sp {
       max-height: none;
       &::-webkit-scrollbar {
@@ -160,11 +161,24 @@
     }
     &-read {
       font-size: 1.3rem;
+      position: relative;
+      vertical-align: middle;
+      &-link {
+        color: @subColor10;
+        &:hover {
+          text-decoration: none;
+          color: @subColor10;
+        }
+        &.is-loading {
+          visibility: hidden;
+        }
+      }
       &-wrapper {
         text-align: right;
-      }
-      &:hover {
-        text-decoration: none;
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 5px;
       }
       &.is-on {
         color: #099f3f;
@@ -174,11 +188,13 @@
       }
     }
     &-update {
-      cursor: pointer;
-      color: @subColor10;
-      &:hover {
-        text-decoration: none;
+      &-link {
+        cursor: pointer;
         color: @subColor10;
+        &:hover {
+          text-decoration: none;
+          color: @subColor10;
+        }
       }
     }
     &-attachedFiles {
@@ -188,6 +204,19 @@
         & + & {
           margin-top:10px;
         }
+      }
+    }
+    .loadingImg {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      height: 12px;
+      width: 12px;
+      margin: auto;
+      img {
+        vertical-align: top;
       }
     }
   }
@@ -208,7 +237,6 @@
       right: 0;
     }
     &-box {
-
       display: flex;
       &-center {
         flex: 1;
