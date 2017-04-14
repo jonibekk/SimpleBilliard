@@ -10,7 +10,7 @@ $(document).ready(function(){
 });
 var goalDetail = {
     setHeadlineSize: function(){
-        var headChar=$(".goal-detail-goal-name-top-section").html().length;;
+        var headChar=$(".goal-detail-goal-name-top-section").html().length;
         if(headChar < 50){
             $(".goal-detail-goal-name-top-section").addClass("mod-largest-text");
         }else if(headChar > 200){
@@ -20,10 +20,11 @@ var goalDetail = {
         }
     },
     setDetailLinkPosition: function(){
-        if($(".goal-detail-avatar-wrap").outerHeight()-$(".goal-detail-avatar").outerHeight()>24){
+        var heightDifference = $(".goal-detail-avatar-wrap").outerHeight()-$(".goal-detail-avatar").outerHeight();
+        if(heightDifference>24){
             $(".goal-detail-more-details-wrap").addClass("mod-raised");
         }else{
-            $(".goal-detail-more-details-wrap").removeClass("mod-raised");
+            $(".goal-detail-more-details-wrap").removeClass("mod-raised").css("margin-top",(-heightDifference+10));
         }
     },
     setDetailsHeight: function(){

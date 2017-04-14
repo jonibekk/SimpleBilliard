@@ -35,12 +35,21 @@
             </div>
             <div class="goal-detail-button-wrap col-sm-9 col-xs-10 col-xxs-9 mt_18px">
                 <?php if ($is_leader): ?>
-                    <?= $this->Html->link(__('Edit a goal'),
-                        '/goals/' . $goal['Goal']['id'] . '/edit',
-                        [
-                            'class' => 'btn-profile-edit'
-                        ])
-                    ?>
+                    <div class="col col-xxs-9 col-xs-10">
+                        <?= $this->Html->link(__('Edit a goal'),
+                            '/goals/' . $goal['Goal']['id'] . '/edit',
+                            [
+                                'class' => 'btn btn-white'
+                            ])
+                        ?>
+                        </div>
+                        <div class="col col-xxs-3 col-xs-2">
+                            <a class="btn btn-white btn-ellipsis dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></a>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#">Delete Goal</a></li>
+                                <li><a href="#">Acheive Goal</a></li>
+                            </ul>
+                        </div>
                 <?php else: ?>
                         <?php $follow_opt = $this->Goal->getFollowOption($goal); ?>
                         <?php $collabo_opt = $this->Goal->getCollaboOption($goal); ?>

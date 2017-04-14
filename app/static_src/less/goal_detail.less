@@ -1,3 +1,16 @@
+.goal-detail {
+  &-label {
+    background-color: @baseGray;
+    color: @keyColor;
+    display: inline;
+    padding: .1em .3em .1em;
+    font-size: 90%;
+  }
+  &-label + &-label {
+    margin-left: 4px;
+  }
+}
+
 .goal-detail-upper-panel {
   padding: 10px 11px;
   position:relative;
@@ -77,13 +90,17 @@
 }
 
 .goal-detail-button-wrap .btn{
-  border-radius: .25em;
   width: 97%;
 }
 
+.goal-detail-button-wrap .btn-ellipsis{
+  padding:8px 1rem;
+}
+
 .goal-detail-button-wrap .btn-profile-edit{
-  border-radius: .25em;
-  width: 50%;
+  margin-top:0;
+  height:auto;
+  padding:8px 2rem; 
 }
 
 .goal-detail-more-details-wrap{
@@ -309,10 +326,6 @@
   border-radius: 50%;
 }
 
-.goal-detail-items {
-  padding-left: 1em;
-}
-
 .goal-detail-item {
   position: relative;
   padding-left: 0.4em;
@@ -324,6 +337,10 @@
     left: -1em;
     top: 0;
   }
+}
+
+.goal-detail-items {
+  padding-left: 1em;
 }
 
 .goal-detail-goal-name-top-section {
@@ -381,52 +398,6 @@
     content: '\f24a';
   }
 }
-
-/**
- * 使わないことになった
- *
-.goal-detail-weight-icon(@bg_color, @rotate_deg) {
-   display: inline-block;
-   background: @bg_color;
-   border-radius: 50%;
-   height: 16px;
-   width: 16px;
-   text-align: center;
-   line-height: 16px;
-   font-size: 12px;
-   transform: rotate(@rotate_deg);
-   color: #f6f5f1;
- }
-
- .goal-detail-weight-5-icon {
-   .goal-detail-weight-icon(@cherryBlossomPink, -90deg);
- }
-
- .goal-detail-weight-4-icon {
-   .goal-detail-weight-icon(@cherryBlossomPink, -45deg);
- }
-
- .goal-detail-weight-3-icon {
-   .goal-detail-weight-icon(@limeGreen, 0);
- }
-
- .goal-detail-weight-2-icon {
-   .goal-detail-weight-icon(@skyBlue, 45deg);
- }
-
- .goal-detail-weight-1-icon {
-   .goal-detail-weight-icon(@skyBlue, 90deg);
- }
-
- .goal-detail-weight-0-icon {
-   display: none;
- }
- *
- */
-
-/**
- * Goal page kr
- */
 
 .goal-detail-kr-panel {
   .goal-detail-panels;
@@ -514,9 +485,6 @@
   padding: 0;
   margin: 8px 0 8px 48px;
   width: 100%;
-}
-
-.goal-detail-action-wrap {
 }
 
 .goal-detail-action-list {
@@ -653,20 +621,6 @@
 
 .goal-detail-member-collab-way {
   .line-number-limit-2(#faf9f7);
-}
-
-.goal-detail {
-  &-label {
-    background-color: @baseGray;
-    color: @keyColor;
-    display: inline;
-    padding: .1em .3em .1em;
-    font-size: 90%;
-    border-radius: .25em;
-  }
-  &-label + &-label {
-    margin-left: 4px;
-  }
 }
 
 .goal-detail-kr-flex {
