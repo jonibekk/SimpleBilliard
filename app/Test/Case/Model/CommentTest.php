@@ -197,41 +197,6 @@ class CommentTest extends GoalousTestCase
 
     }
 
-    function testConvertData()
-    {
-        $post_id = 99;
-        $this->Comment->current_team_id = 1;
-        $data = [
-            'team_id' => 1,
-            'post_id' => $post_id,
-            'body'    => 'comment test.'
-        ];
-        $this->Comment->save($data);
-        $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
-        $this->assertNotEmpty($this->Comment->convertData($res));
-    }
-
-    function testConvertArrayData()
-    {
-        $post_id = 99;
-        $this->Comment->current_team_id = 1;
-        $data = [
-            [
-                'team_id' => 1,
-                'post_id' => $post_id,
-                'body'    => 'comment test 1.'
-            ],
-            [
-                'team_id' => 1,
-                'post_id' => $post_id,
-                'body'    => 'comment test 2.'
-            ]
-        ];
-        $this->Comment->saveAll($data);
-        $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
-        $this->assertNotEmpty($this->Comment->convertData($res));
-    }
-
     function testGetComment()
     {
         // テスト用データ挿入Start

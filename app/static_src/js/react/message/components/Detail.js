@@ -1,4 +1,5 @@
 import React from "react";
+import {browserHistory} from "react-router";
 import Header from "~/message/components/elements/detail/Header";
 import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
@@ -55,6 +56,10 @@ export default class Detail extends Base {
     } else {
       this.setState({enabled_leave_page_alert: true})
     }
+    
+    if (nextProps.detail.redirect) {
+      browserHistory.push("/topics");
+    }
   }
 
   componentWillUnmount() {
@@ -93,6 +98,8 @@ export default class Detail extends Base {
           save_topic_title_err_msg={detail.save_topic_title_err_msg}
           is_mobile_app={detail.is_mobile_app}
           mobile_app_layout={detail.mobile_app_layout}
+          leave_topic_status={detail.leave_topic_status}
+          leave_topic_err_msg={detail.leave_topic_err_msg}
         />
         <Body
           topic={detail.topic}
@@ -106,6 +113,7 @@ export default class Detail extends Base {
           topic_title_setting_status={detail.topic_title_setting_status}
           is_mobile_app={detail.is_mobile_app}
           mobile_app_layout={detail.mobile_app_layout}
+          fetching_read_count={detail.fetching_read_count}
         />
         <Footer
           body={detail.input_data.body}

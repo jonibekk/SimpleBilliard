@@ -96,14 +96,13 @@ class Body extends React.Component {
     if (!this.props.last_position_message_id) {
       return;
     }
-    const parent = ReactDOM.findDOMNode(this.refs.parent);
-    // Temporarily stop the inertial scroll to prevent message loading continuously
-    parent.setAttribute('style', '-webkit-overflow-scrolling: auto;')
     let el = this._findElement();
+    // Temporarily stop the inertial scroll to prevent message loading continuously
+    el.setAttribute('style', '-webkit-overflow-scrolling: auto;')
     // Scroll last position
     // 古いメッセージが読み込まれてることをわからせるために、読み込んだ古いメッセージが見えるよう-10pxだけ最後の読み込み位置より上に移動
     el.scrollTop = el.scrollHeight - this.state.before_scroll_height - 10;
-    parent.setAttribute('style', '-webkit-overflow-scrolling: touch;')
+    el.setAttribute('style', '-webkit-overflow-scrolling: touch;')
   }
 
   _findElement() {
@@ -192,7 +191,7 @@ class Body extends React.Component {
   }
 
   render() {
-    const {topic, messages, fetch_more_messages_status, is_mobile_app} = this.props
+    const {topic, messages, fetch_more_messages_status, is_mobile_app, fetching_read_count} = this.props
 
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
 
@@ -201,37 +200,29 @@ class Body extends React.Component {
       bottom: this.props.mobile_app_layout.body_bottom
     };
 
-    // Nothing Messages
-    if (messages.length == 0) {
-      return (
-        <div className="topicDetail-body"
-             onTouchMove={this.onTouchMove}
-             >
-          <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
-            <Loading/>
-          </div>
-        </div>
-      )
+    // Render messages
+    const renderMessages = () => {
+      // Nothing Messages
+      if (messages.length == 0) {
+        return <Loading/>
+      }
+      return messages.map((message, i) => {
+        return (
+          <Message
+            topic={topic}
+            ref={`message_${message.id}`}
+            message={message}
+            key={message.id}
+            fetching_read_count={fetching_read_count}
+          />
+        )
+      });
     }
 
-    // Exist Messages
-    const messages_el = messages.map((message, i) => {
-      return (
-        <Message
-          topic={topic}
-          ref={`message_${message.id}`}
-          message={message}
-          key={message.id}
-        />
-      )
-    });
-
     return (
-      <div className="topicDetail-body" ref="parent" onTouchMove={this.onTouchMove}>
-        <div className={`topicDetail-messages ${sp_class}`} ref="messages" style={body_styles}>
-          {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
-          {messages_el}
-        </div>
+      <div className={`topicDetail-body ${sp_class}`} ref="messages" onTouchMove={this.onTouchMove} style={body_styles}>
+        {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
+        {renderMessages()}
       </div>
     )
   }
@@ -244,6 +235,7 @@ Body.propTypes = {
   paging: React.PropTypes.object,
   is_fetched_initial: React.PropTypes.bool,
   is_mobile_app: React.PropTypes.bool,
+  fetching_read_count: React.PropTypes.bool
 };
 
 Body.defaultProps = {
@@ -254,5 +246,6 @@ Body.defaultProps = {
   paging: {next: ""},
   is_fetched_initial: false,
   is_mobile_app: false,
+  fetching_read_count: false
 };
 export default connect()(Body);

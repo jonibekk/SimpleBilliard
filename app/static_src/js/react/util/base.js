@@ -34,6 +34,8 @@ export function formatFileSize(size) {
 
 
 /**
+ * TODO: Integrate ~/util/UserAgent.js
+ * @deprecated
  * Check mobile app
  * @returns bool
  */
@@ -44,6 +46,8 @@ export function isMobileApp() {
 
 
 /**
+ * TODO: Integrate ~/util/UserAgent.js
+ * @deprecated
  * Check iOS app
  * @returns bool
  */

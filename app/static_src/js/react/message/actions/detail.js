@@ -1,6 +1,6 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
 import * as FileUploadModule from "~/message/modules/file_upload";
-import {get, post, put} from "~/util/api";
+import {del, get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
@@ -233,6 +233,29 @@ export function saveTopicTitle(title) {
   }
 }
 
+export function leaveTopic() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LeaveTopic.SAVING,
+    })
+    const topic_id = getState().detail.topic_id;
+    return del(`/api/v1/topics/${topic_id}/leave_me`, null, null,
+      (response) => {
+        dispatch({
+          type: ActionTypes.LeaveTopic.SAVE_SUCCESS,
+        })
+      },
+      ({response}) => {
+        const err_msg = getErrMsg(response);
+        dispatch({
+          type: ActionTypes.LeaveTopic.SAVE_ERROR,
+          err_msg
+        })
+      }
+    );
+  }
+}
+
 export function startTopicTitleSetting() {
   return {
     type: ActionTypes.CHANGE_TOPIC_TITLE_SETTING_STATUS,
@@ -276,8 +299,17 @@ export function resetFetchLatestMessagesStatus() {
   }
 }
 
+export function resetLeaveTopicStatus() {
+  return {
+    type: ActionTypes.LeaveTopic.RESET_STATUS,
+  }
+}
+
 export function fetchReadCount(topic_id) {
   return (dispatch) => {
+    dispatch({
+      type: ActionTypes.FETCH_READ_COUNT
+    })
     return get(`/api/v1/topics/${topic_id}/read_members`)
       .then((response) => {
         const read_count = response.data.data.member_count

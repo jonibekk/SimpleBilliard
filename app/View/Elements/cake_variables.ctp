@@ -141,11 +141,6 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            ah: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message'])?>/",
-            ai: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_put_message'])?>/",
-            aj: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message_info'])?>/",
-            ak: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_put_message_read'])?>/",
-            al: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message_list'])?>/",
             am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
@@ -565,7 +560,8 @@ App::uses('AttachedFile', 'Model');
             "Input topic title": "<?= __("Input topic title") ?>",
             "Update": "<?= __("Update") ?>",
             // messgae
-            "No results found": "<?= __("No results found") ?>"
+            "No results found": "<?= __("No results found") ?>",
+            "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
