@@ -141,11 +141,6 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            ah: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message'])?>/",
-            ai: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_put_message'])?>/",
-            aj: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message_info'])?>/",
-            ak: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_put_message_read'])?>/",
-            al: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message_list'])?>/",
             am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
