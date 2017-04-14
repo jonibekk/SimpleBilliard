@@ -69,3 +69,10 @@ export const TopicAddMembers = Object.freeze({
   SELECT_USERS: 'TopicAddMembers/SELECT_USERS',
   RESET_STATES: 'TopicAddMembers/RESET_STATES',
 })
+
+export const LeaveTopic = Object.freeze({
+  SAVING: 'LeaveTopic/SAVING',
+  SAVE_SUCCESS: 'LeaveTopic/SAVE_SUCCESS',
+  SAVE_ERROR: 'LeaveTopic/SAVE_ERROR',
+  RESET_STATUS: 'LeaveTopic/RESET_STATUS',
+})

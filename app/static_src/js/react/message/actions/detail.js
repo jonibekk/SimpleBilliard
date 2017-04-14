@@ -1,6 +1,6 @@
 import * as ActionTypes from "~/message/constants/ActionTypes";
 import * as FileUploadModule from "~/message/modules/file_upload";
-import {get, post, put} from "~/util/api";
+import {del, get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
@@ -233,6 +233,29 @@ export function saveTopicTitle(title) {
   }
 }
 
+export function leaveTopic() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.LeaveTopic.SAVING,
+    })
+    const topic_id = getState().detail.topic_id;
+    return del(`/api/v1/topics/${topic_id}/leave_me`, null, null,
+      (response) => {
+        dispatch({
+          type: ActionTypes.LeaveTopic.SAVE_SUCCESS,
+        })
+      },
+      ({response}) => {
+        const err_msg = getErrMsg(response);
+        dispatch({
+          type: ActionTypes.LeaveTopic.SAVE_ERROR,
+          err_msg
+        })
+      }
+    );
+  }
+}
+
 export function startTopicTitleSetting() {
   return {
     type: ActionTypes.CHANGE_TOPIC_TITLE_SETTING_STATUS,
@@ -273,6 +296,12 @@ export function resetFetchMoreMessagesStatus() {
 export function resetFetchLatestMessagesStatus() {
   return {
     type: ActionTypes.RESET_FETCH_LATEST_MESSAGES_STATUS,
+  }
+}
+
+export function resetLeaveTopicStatus() {
+  return {
+    type: ActionTypes.LeaveTopic.RESET_STATUS,
   }
 }
 
