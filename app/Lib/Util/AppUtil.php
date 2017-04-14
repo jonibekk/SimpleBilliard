@@ -345,9 +345,12 @@ class AppUtil
      */
     static function addQueryParamsToUrl(string $baseUrl, array $params): string
     {
+        // e.g. $parsedUrl has ["scheme"=>"http","host"=>"xxx.co.jp","path"=>"/to/path","query"=>"key1=var1&key2=val2"]
         $parsedUrl = parse_url($baseUrl);
+        // e.g. $parsedQuery will have ["key1"=>"val1","key2"=>"val2"]
         parse_str($parsedUrl['query'], $parsedQuery);
-        $parsedQuery += $params;
+        // merge queries.
+        $parsedQuery = am($parsedQuery, $params);
         $parsedUrl['query'] = http_build_query($parsedQuery);
         return self::unparseUrl($parsedUrl);
     }
