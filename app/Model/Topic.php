@@ -115,7 +115,7 @@ class Topic extends AppModel
                     'alias'      => 'TopicMember',
                     'conditions' => [
                         'TopicMember.topic_id = Topic.id',
-                        'TopicMember.deleted IS NULL'
+                        'TopicMember.del_flg' => false
                     ],
                 ],
                 [
