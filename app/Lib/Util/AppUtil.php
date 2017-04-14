@@ -358,7 +358,7 @@ class AppUtil
     /**
      * unparsing parsed url to string url
      *
-     * @param array $parsedUrl
+     * @param array $parsedUrl parsed by using parse_url()
      *
      * @return string
      */
