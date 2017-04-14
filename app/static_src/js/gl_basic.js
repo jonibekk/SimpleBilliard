@@ -423,10 +423,8 @@ $(document).ready(function () {
   $(document).on("click", ".toggle-follow", evFollowGoal);
   $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
   $(document).on("click", ".notify-click-target", evNotifyPost);
-  $(document).on("click", ".message-click-target", evMessage);
   $(document).on("click", ".btn-back-notifications", evNotifications);
   $(document).on("click", ".call-notifications", evNotifications);
-  $(document).on("click", ".message-list-panel-card-link", evMessage);
   // TODO:delete.進捗グラフリリース時に不要になるので必ず削除
   $(document).on("click", '.js-show-modal-edit-kr', function (e) {
       e.preventDefault();
@@ -2894,97 +2892,6 @@ function updateAddressBar(url) {
       return false;
     }
   }
-}
-
-function activateMessage() {
-  var message_app = $("#message-app");
-  angular.element(message_app).ready(function () {
-    angular.bootstrap(message_app, ['messageApp']);
-  });
-}
-
-function evMessage() {
-  //とりあえずドロップダウンは隠す
-  $("#HeaderDropdownNotify").removeClass("open");
-  $(".header-dropdown-message").removeClass("open");
-  $('body').removeClass('notify-dropdown-open');
-
-  //フィード読み込み中はキャンセル
-  if (feed_loading_now) {
-    return false;
-  }
-  feed_loading_now = true;
-
-  attrUndefinedCheck(this, 'get-url');
-  attrUndefinedCheck(this, 'post-id');
-
-  var $obj = $(this);
-  var get_url = $obj.attr('get-url');
-
-  //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
-  //要素が多すぎるので、おとなしくページリロードする
-  if (!$(".layout-main").exists()) {
-    location.href = get_url;
-    return false;
-  }
-
-  //アドレスバー書き換え
-  var addressbar_url = get_url.replace(/message[#]*/, "message#");
-  if (!updateAddressBar(addressbar_url)) {
-    return false;
-  }
-
-  $('#jsGoTop').click();
-
-  //ローダー表示
-  var $loader_html = $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
-  $(".layout-main").html($loader_html);
-
-  // URL生成
-  var url = get_url.replace(/message/, "ajax_message");
-
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $posts = $(data.html);
-        //notify一覧に戻るhtmlを追加
-        //画像をレイジーロード
-        imageLazyOn($posts);
-        //一旦非表示
-        $posts.fadeOut();
-
-        $(".layout-main").html($posts);
-        activateMessage();
-      }
-
-      //ローダーを削除
-      $loader_html.remove();
-
-      initMessageSelect2();
-
-      action_autoload_more = false;
-      autoload_more = false;
-      feed_loading_now = false;
-      do_reload_header_bellList = true;
-    },
-    error: function () {
-      feed_loading_now = false;
-      $loader_html.remove();
-    },
-  });
-  return false;
-}
-
-function activateMessageList() {
-  var message_list_app = $("#message-list-app");
-  angular.element(message_list_app).ready(function () {
-    angular.bootstrap(message_list_app, ['messageListApp']);
-  });
 }
 
 function evMessageList(options) {

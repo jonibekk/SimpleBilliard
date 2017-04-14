@@ -3,7 +3,8 @@ import {
   FetchLatestMessageStatus,
   FetchMoreMessages,
   SaveMessageStatus,
-  TopicTitleSettingStatus
+  TopicTitleSettingStatus,
+  LeaveTopicStatus
 } from "~/message/constants/Statuses";
 
 const initialState = {
@@ -19,12 +20,14 @@ const initialState = {
   loading: false,
   fetch_more_messages_status: FetchMoreMessages.NONE,
   fetch_latest_messages_status: FetchLatestMessageStatus.NONE,
+  leave_topic_status: LeaveTopicStatus.NONE,
   is_fetched_initial: false,
   save_message_status: SaveMessageStatus.NONE,
   success_fetch_more: false,
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
   save_topic_title_err_msg: "",
   fetch_read_count: false,
+  leave_topic_err_msg: "",
   err_msg: "",
   input_data: {
     body: "",
@@ -54,7 +57,8 @@ export default function detail(state = initialState, action) {
         file_ids: []
       };
       return Object.assign({}, state, initialState, {
-        input_data
+        input_data,
+        redirect: false
       })
     case ActionTypes.SET_RESOURCE_ID:
       return Object.assign({}, state, {
@@ -203,6 +207,29 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         mobile_app_layout
       })
+
+    // Leave topic
+    case ActionTypes.LeaveTopic.SAVING:
+      return Object.assign({}, state, {
+        leave_topic_err_msg: "",
+        leave_topic_status: LeaveTopicStatus.SAVING
+      })
+    case ActionTypes.LeaveTopic.SAVE_SUCCESS:
+      return Object.assign({}, state, {
+        leave_topic_status: LeaveTopicStatus.SUCCESS,
+        redirect: true,
+      })
+    case ActionTypes.LeaveTopic.SAVE_ERROR:
+      return Object.assign({}, state, {
+        leave_topic_err_msg: action.err_msg,
+        leave_topic_status: LeaveTopicStatus.ERROR
+      })
+    case ActionTypes.LeaveTopic.RESET_STATUS:
+      return Object.assign({}, state, {
+        leave_topic_err_msg: "",
+        leave_topic_status: LeaveTopicStatus.NONE
+      })
+
     default:
       return state;
   }
