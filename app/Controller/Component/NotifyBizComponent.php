@@ -1362,6 +1362,9 @@ class NotifyBizComponent extends Component
             $post_url = Router::url($this->notify_option['url_data'], true);
         }
 
+        // for switching team when user logged in other team.
+        $post_url .= "?team_id=" . $this->NotifySetting->current_team_id;
+
         $sent_device_tokens = [];
 
         foreach ($uids as $to_user_id) {
