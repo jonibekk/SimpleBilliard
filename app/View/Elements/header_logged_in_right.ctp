@@ -122,7 +122,7 @@
                ]) ?>">
             </a>
 
-            <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>" get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
                class="call-notifications">
                 <div class="notify-all-view-link">
                     <?= __('See All') ?>

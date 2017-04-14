@@ -10,7 +10,7 @@
  * @var string             $model
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -25,10 +25,9 @@
                 <div class="row borderBottom">
                     <?php foreach ($red_users as $user): ?>
                         <?=
-                        // TODO: after create 'last_message_read_datetime', replace modified -> last_read_datetime
                         //       Then key name is different, have to reimplement modal template.
                         $this->element('Feed/read_like_user',
-                            ['user' => $user['User'], 'created' => $user[$model]['modified']]) ?>
+                            ['user' => $user['User'], 'created' => $user[$model]['last_read_message_datetime']]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
@@ -37,4 +36,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

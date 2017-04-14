@@ -251,6 +251,13 @@ class ApiGoalService extends ApiService
         $ret['data']['goals'] = $GoalService->findNameListAsMember($Goal->my_uid, $currentTerm['start_date'],
             $currentTerm['end_date']);
 
+        // TODO: 後ほどweightが0のゴールはグラフの計算を行わないように実装する必要がある。これはあくまで例外が発生しないための緊急対応。
+        //       ここでは初期データに含まれるゴールすべてのweightが0の場合にグラフの計算をさせないようにしている
+        //       詳しくはここ https://jira.goalous.com/browse/GL-5713
+        if (count($krs) == count(Hash::extract($krs, '{n}.goal_member[priority=0]'))) {
+            return $ret;
+        }
+
         //グラフデータのセット
         $graphRange = $GoalService->getGraphRange(
             time(),

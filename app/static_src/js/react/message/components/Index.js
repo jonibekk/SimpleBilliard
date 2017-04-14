@@ -1,6 +1,7 @@
 import React from "react";
 import TopicList from "./elements/index/TopicList";
 import TopicSearchList from "./elements/search/TopicSearchList";
+import {disableAsyncEvents} from "~/util/base";
 
 export default class Index extends React.Component {
   constructor(props) {
@@ -9,6 +10,10 @@ export default class Index extends React.Component {
 
   componentWillMount() {
     this.props.setUaInfo()
+  }
+
+  componentDidMount() {
+    disableAsyncEvents()
   }
 
   render() {

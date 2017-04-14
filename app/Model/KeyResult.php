@@ -968,6 +968,11 @@ class KeyResult extends AppModel
             ],
             'limit'      => $limit,
             'offset'     => $offset,
+            'fields'     => [
+                'KeyResult.*',
+                'Goal.*',
+                'GoalMember.priority'
+            ],
             'joins'      => [
                 [
                     'type'       => 'INNER',

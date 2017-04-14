@@ -23,6 +23,7 @@ export const UPDATE_READ_COUNT = 'UPDATE_READ_COUNT'
 export const RESET_TOPIC_TITLE_SETTING_STATUS = 'RESET_TOPIC_TITLE_SETTING_STATUS'
 export const INIT_LAYOUT = 'INIT_LAYOUT'
 export const CHANGE_LAYOUT = 'CHANGE_LAYOUT'
+export const FETCH_READ_COUNT = 'FETCH_READ_COUNT'
 
 // topic title setting
 export const CHANGE_TOPIC_TITLE_SETTING_STATUS = 'CHANGE_TOPIC_TITLE_SETTING_STATUS'
@@ -68,4 +69,11 @@ export const TopicAddMembers = Object.freeze({
   SAVE_ERROR: 'TopicAddMembers/SAVE_ERROR',
   SELECT_USERS: 'TopicAddMembers/SELECT_USERS',
   RESET_STATES: 'TopicAddMembers/RESET_STATES',
+})
+
+export const LeaveTopic = Object.freeze({
+  SAVING: 'LeaveTopic/SAVING',
+  SAVE_SUCCESS: 'LeaveTopic/SAVE_SUCCESS',
+  SAVE_ERROR: 'LeaveTopic/SAVE_ERROR',
+  RESET_STATUS: 'LeaveTopic/RESET_STATUS',
 })

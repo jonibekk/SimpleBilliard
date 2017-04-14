@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import Linkfy from "react-linkify";
 import {nl2br} from "~/util/element";
 import AttachedFile from "~/message/components/elements/detail/AttachedFile";
+import Loading from "~/message/components/elements/detail/Loading";
 import * as Model from "~/common/constants/Model";
 import {fetchReadCount} from "~/message/actions/detail";
 
@@ -17,7 +18,7 @@ class Message extends React.Component {
   }
 
   render() {
-    const {topic, message} = this.props
+    const {topic, message, fetching_read_count} = this.props
     const read_mark_el = () => {
       if (topic.latest_message_id != message.id) {
         return null;
@@ -36,16 +37,21 @@ class Message extends React.Component {
       } else {
         return (
           <div className="topicDetail-messages-item-read-wrapper">
-            <a href={`/topics/ajax_get_read_members/${topic.id}`}
-               className="topicDetail-messages-item-read is-off modal-ajax-get"
-               onClick={ this.onClickReadCount.bind(this) }>
-              <i className="fa fa-check mr_2px"/>
-              {topic.read_count}
-            </a>
-            <a className="topicDetail-messages-item-update"
-               onClick={ this.onClickReadCount.bind(this) }>
-              <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
-            </a>
+            <div className="topicDetail-messages-item-read is-off">
+              {fetching_read_count && <Loading size={12} />}
+              <a href={`/topics/ajax_get_read_members/${topic.id}`}
+                 className={`topicDetail-messages-item-read-link modal-ajax-get ${fetching_read_count ? 'is-loading' : ''}`}
+                 onClick={ this.onClickReadCount.bind(this) }>
+                <i className="fa fa-check mr_2px"/>
+                <span className={`topicDetail-messages-item-read-link-number`}>{topic.read_count}</span>
+              </a>
+            </div>
+            <div className="topicDetail-messages-item-update">
+              <a className="topicDetail-messages-item-update-link"
+                 onClick={ this.onClickReadCount.bind(this) }>
+                <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
+              </a>
+            </div>
           </div>
         )
       }
