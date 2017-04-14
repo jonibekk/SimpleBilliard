@@ -18,7 +18,7 @@ class Message extends React.Component {
   }
 
   render() {
-    const {topic, message, fetch_read_count} = this.props
+    const {topic, message, fetching_read_count} = this.props
     const read_mark_el = () => {
       if (topic.latest_message_id != message.id) {
         return null;
@@ -38,9 +38,9 @@ class Message extends React.Component {
         return (
           <div className="topicDetail-messages-item-read-wrapper">
             <div className="topicDetail-messages-item-read is-off">
-              {fetch_read_count && <Loading size={12} />}
+              {fetching_read_count && <Loading size={12} />}
               <a href={`/topics/ajax_get_read_members/${topic.id}`}
-                 className={`topicDetail-messages-item-read-link modal-ajax-get ${fetch_read_count ? 'is-loading' : ''}`}
+                 className={`topicDetail-messages-item-read-link modal-ajax-get ${fetching_read_count ? 'is-loading' : ''}`}
                  onClick={ this.onClickReadCount.bind(this) }>
                 <i className="fa fa-check mr_2px"/>
                 <span className={`topicDetail-messages-item-read-link-number`}>{topic.read_count}</span>

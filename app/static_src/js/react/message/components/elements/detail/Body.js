@@ -191,7 +191,7 @@ class Body extends React.Component {
   }
 
   render() {
-    const {topic, messages, fetch_more_messages_status, is_mobile_app, fetch_read_count} = this.props
+    const {topic, messages, fetch_more_messages_status, is_mobile_app, fetching_read_count} = this.props
 
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
 
@@ -213,7 +213,7 @@ class Body extends React.Component {
             ref={`message_${message.id}`}
             message={message}
             key={message.id}
-            fetch_read_count={fetch_read_count}
+            fetching_read_count={fetching_read_count}
           />
         )
       });
@@ -235,7 +235,7 @@ Body.propTypes = {
   paging: React.PropTypes.object,
   is_fetched_initial: React.PropTypes.bool,
   is_mobile_app: React.PropTypes.bool,
-  fetch_read_count: React.PropTypes.bool
+  fetching_read_count: React.PropTypes.bool
 };
 
 Body.defaultProps = {
@@ -246,6 +246,6 @@ Body.defaultProps = {
   paging: {next: ""},
   is_fetched_initial: false,
   is_mobile_app: false,
-  fetch_read_count: false
+  fetching_read_count: false
 };
 export default connect()(Body);

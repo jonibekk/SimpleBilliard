@@ -113,7 +113,7 @@ export default class Detail extends Base {
           topic_title_setting_status={detail.topic_title_setting_status}
           is_mobile_app={detail.is_mobile_app}
           mobile_app_layout={detail.mobile_app_layout}
-          fetch_read_count={detail.fetch_read_count}
+          fetching_read_count={detail.fetching_read_count}
         />
         <Footer
           body={detail.input_data.body}
