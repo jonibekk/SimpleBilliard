@@ -37,17 +37,21 @@ class Message extends React.Component {
       } else {
         return (
           <div className="topicDetail-messages-item-read-wrapper">
-            { fetch_read_count && <Loading size={14} /> }
-            <a href={`/topics/ajax_get_read_members/${topic.id}`}
-               className="topicDetail-messages-item-read is-off modal-ajax-get"
-               onClick={ this.onClickReadCount.bind(this) }>
-              <i className="fa fa-check mr_2px"/>
-              {topic.read_count}
-            </a>
-            <a className={`topicDetail-messages-item-update ${fetch_read_count ? 'is-loading' : ''}`}
-               onClick={ this.onClickReadCount.bind(this) }>
-              <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
-            </a>
+            <div className="topicDetail-messages-item-read is-off">
+              {fetch_read_count && <Loading size={12} />}
+              <a href={`/topics/ajax_get_read_members/${topic.id}`}
+                 className={`topicDetail-messages-item-read-link modal-ajax-get ${fetch_read_count ? 'is-loading' : ''}`}
+                 onClick={ this.onClickReadCount.bind(this) }>
+                <i className="fa fa-check mr_2px"/>
+                <span className={`topicDetail-messages-item-read-link-number`}>{topic.read_count}</span>
+              </a>
+            </div>
+            <div className="topicDetail-messages-item-update">
+              <a className="topicDetail-messages-item-update-link"
+                 onClick={ this.onClickReadCount.bind(this) }>
+                <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
+              </a>
+            </div>
           </div>
         )
       }
