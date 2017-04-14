@@ -65,18 +65,6 @@ class AddLastMessageReadDatetime0413 extends CakeMigration
      */
     public function after($direction)
     {
-        if ($direction == 'up') {
-            // update all topic_members.
-            /** @var TopicMember $TopicMember */
-            $TopicMember = ClassRegistry::init('TopicMember');
-            $TopicMember->cacheQueries = false;
-            $TopicMember->unbindModel(['belongsTo' => ['Topic', 'User']]);
-            $TopicMember->updateAll(
-                ['TopicMember.last_read_message_datetime' => 'TopicMember.modified'],
-                ['NOT' => ['TopicMember.last_read_message_id' => null]]
-            );
-        }
-
         return true;
     }
 }
