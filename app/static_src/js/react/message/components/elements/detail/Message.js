@@ -44,7 +44,7 @@ class Message extends React.Component {
               <i className="fa fa-check mr_2px"/>
               {topic.read_count}
             </a>
-            <a className={`topicDetail-messages-item-update ${fetch_read_count ? 'loading' : ''}`}
+            <a className={`topicDetail-messages-item-update ${fetch_read_count ? 'is-loading' : ''}`}
                onClick={ this.onClickReadCount.bind(this) }>
               <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
             </a>
