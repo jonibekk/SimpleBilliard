@@ -22,9 +22,13 @@ class ApiMessageService extends ApiService
      *
      * @return array
      */
-    function findMessages(int $topicId, int $loginUserId, $cursor = null, $limit = null, $direction = Message::DIRECTION_OLD
-    ): array
-    {
+    function findMessages(
+        int $topicId,
+        int $loginUserId,
+        $cursor = null,
+        $limit = null,
+        $direction = Message::DIRECTION_OLD
+    ): array {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
         /** @var TopicMember $TopicMember */
@@ -135,9 +139,9 @@ class ApiMessageService extends ApiService
     /**
      * update latest read message id
      *
-     * @param  array  $messages
-     * @param  int    $topicId
-     * @param  int    $loginUserId
+     * @param  array $messages
+     * @param  int   $topicId
+     * @param  int   $loginUserId
      */
     function updateLastReadMessageId(array $messages, int $topicId, int $loginUserId)
     {
@@ -169,7 +173,7 @@ class ApiMessageService extends ApiService
         }
 
         // update
-        $TopicMember->updateLastReadMessageId($topicId, $latestMessageId, $loginUserId);
+        $TopicMember->updateLastReadMessageIdAndDate($topicId, $latestMessageId, $loginUserId);
         return;
     }
 
