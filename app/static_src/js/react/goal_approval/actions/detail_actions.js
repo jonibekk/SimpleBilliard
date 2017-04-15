@@ -33,7 +33,7 @@ export function postSetAsTarget(post_data) {
         dispatch(finishedPostingSetAsTarget())
         dispatch(toListPage())
       },
-      (response) => {
+      ({response}) => {
         dispatch(finishedPostingSetAsTarget())
         // バリデーションエラーならエラー文言表示、他の原因によるものならリストページにリダイレクト
         if (response.data.validation_errors) {
@@ -61,7 +61,7 @@ export function postRemoveFromTarget(post_data) {
         dispatch(finishedPostingRemoveFromTarget())
         dispatch(toListPage())
       },
-      (response) => {
+      ({response}) => {
         dispatch(finishedPostingSetAsTarget())
         // バリデーションエラーならエラー文言表示、他の原因によるものならリストページにリダイレクト
         if (response.data.validation_errors) {
@@ -89,7 +89,7 @@ export function postWithdraw(goal_member_id) {
         dispatch(finishedPostingWithdraw())
         dispatch(toListPage())
       },
-      (response) => {
+      ({response}) => {
         dispatch(finishedPostingWithdraw())
         /* eslint-disable no-console */
         console.log("failed to withdraw");
@@ -114,7 +114,7 @@ export function postComment(postData) {
         dispatch(addComment(response.data.data.approval_history))
         dispatch(updateComment(''))
       },
-      (response) => {
+      ({response}) => {
         dispatch(finishedPostingComment())
         /* eslint-disable no-console */
         console.log("failed to post comment");
