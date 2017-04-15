@@ -55,6 +55,10 @@ class Topic extends AppModel
             'className'  => 'User',
             'foreignKey' => 'creator_user_id',
         ],
+        'LatestMessage' => [
+            'className'  => 'Message',
+            'foreignKey' => 'latest_message_id',
+        ]
     ];
 
     /**
@@ -105,8 +109,7 @@ class Topic extends AppModel
                 'TopicMember.user_id' => $userId,
             ],
             'fields'     => [
-                'Topic.*',
-                'LatestMessage.*'
+                'Topic.*'
             ],
             'joins'      => [
                 [
@@ -117,15 +120,7 @@ class Topic extends AppModel
                         'TopicMember.topic_id = Topic.id',
                         'TopicMember.del_flg' => false
                     ],
-                ],
-                [
-                    'type'       => 'LEFT',
-                    'table'      => 'messages',
-                    'alias'      => 'LatestMessage',
-                    'conditions' => [
-                        'LatestMessage.id = Topic.latest_message_id',
-                    ],
-                ],
+                ]
             ],
             'contain'    => [
                 'TopicMember' => [
@@ -146,6 +141,19 @@ class Topic extends AppModel
                     'order'  => [
                         'TopicMember.last_message_sent DESC',
                         'TopicMember.id DESC',
+                    ]
+                ],
+                'LatestMessage' => [
+                    'fields'     => [
+                        'LatestMessage.id',
+                        'LatestMessage.sender_user_id',
+                        'LatestMessage.body',
+                        'LatestMessage.type',
+                        'LatestMessage.attached_file_count',
+                        'LatestMessage.created',
+                    ],
+                    'SenderUser' => [
+                        'fields' => $this->TopicMember->User->profileFields,
                     ]
                 ]
             ],

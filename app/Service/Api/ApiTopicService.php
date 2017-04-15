@@ -50,7 +50,7 @@ class ApiTopicService extends ApiService
             if ($data['latest_message']['sender_user_id'] == $userId) {
                 $senderUserName = __("You");
             } else {
-                $senderUserName = $data['topic_members'][0]['user']['display_first_name'];
+                $senderUserName = $data['latest_message']['sender_user']['display_first_name'];
             }
             $topics[$i]['latest_message']['body'] = "{$senderUserName} : {$topics[$i]['latest_message']['body']}";
             // add util properties
