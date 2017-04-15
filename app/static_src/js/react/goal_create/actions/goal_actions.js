@@ -16,7 +16,7 @@ export function validateGoal(page, addData) {
         /* eslint-enable no-console */
         dispatch(toNextPage())
       },
-      (response) => {
+      ({response}) => {
         /* eslint-disable no-console */
         console.log("validate failed");
         /* eslint-enable no-console */
@@ -124,7 +124,7 @@ export function saveGoal() {
         // 成功時はリダイレクト
         dispatch({type: types.REDIRECT_TO_HOME})
       },
-      (response) => {
+      ({response}) => {
         dispatch(invalid(response.data))
       }
     );

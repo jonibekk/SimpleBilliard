@@ -176,6 +176,30 @@ textarea {
     overflow: auto
 }
 
+/* placeholder */
+/* bw-simplex.cssに記載している「.form-control::-moz-placeholder」以降のスタイルに一旦合わせる */
+:placeholder-shown{
+    color: #dddddd;
+}
+
+::-webkit-input-placeholder {
+    /* WebKit browsers */
+    color: #dddddd;
+}
+:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #dddddd;
+}
+::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #dddddd;
+}
+:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    color: #dddddd;
+}
+
+
 optgroup {
     font-weight: 700
 }
