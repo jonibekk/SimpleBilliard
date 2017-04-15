@@ -178,10 +178,6 @@ textarea {
 
 /* placeholder */
 /* bw-simplex.cssに記載している「.form-control::-moz-placeholder」以降のスタイルに一旦合わせる */
-:placeholder-shown{
-    color: #dddddd;
-}
-
 ::-webkit-input-placeholder {
     /* WebKit browsers */
     color: #dddddd;
