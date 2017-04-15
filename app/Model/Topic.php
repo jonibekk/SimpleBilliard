@@ -123,7 +123,20 @@ class Topic extends AppModel
                 ]
             ],
             'contain'    => [
-                'TopicMember' => [
+                'LatestMessage' => [
+                    'fields'     => [
+                        'LatestMessage.id',
+                        'LatestMessage.sender_user_id',
+                        'LatestMessage.body',
+                        'LatestMessage.type',
+                        'LatestMessage.attached_file_count',
+                        'LatestMessage.created',
+                    ],
+                    'SenderUser' => [
+                        'fields' => $this->TopicMember->User->profileFields,
+                    ]
+                ],
+                'TopicMember'   => [
                     'fields' => [
                         'TopicMember.id',
                         'TopicMember.user_id',
@@ -143,19 +156,6 @@ class Topic extends AppModel
                         'TopicMember.id DESC',
                     ]
                 ],
-                'LatestMessage' => [
-                    'fields'     => [
-                        'LatestMessage.id',
-                        'LatestMessage.sender_user_id',
-                        'LatestMessage.body',
-                        'LatestMessage.type',
-                        'LatestMessage.attached_file_count',
-                        'LatestMessage.created',
-                    ],
-                    'SenderUser' => [
-                        'fields' => $this->TopicMember->User->profileFields,
-                    ]
-                ]
             ],
             'order'      => [
                 'Topic.latest_message_datetime DESC'

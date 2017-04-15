@@ -54,7 +54,6 @@ class TopicsController extends ApiController
             ]
         ];
 
-
         $topics = $Topic->findLatest($userId, $offset, $limit + 1, $keyword);
         $topics = $ApiTopicService->process($topics, $userId);
 
