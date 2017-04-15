@@ -8,9 +8,9 @@ import PhotoUpload from "~/common/components/goal/PhotoUpload";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {MaxLength} from "~/common/constants/App";
 import { generateTermRangeFormat } from "~/util/date";
-import BaseComponent from "~/goal_create/components/BaseComponent";
+import Base from "~/common/components/Base";
 
-export default class Step3Component extends BaseComponent {
+export default class Step3Component extends Base {
   constructor(props) {
     super(props);
     this.state = {

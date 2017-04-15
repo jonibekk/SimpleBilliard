@@ -10,7 +10,7 @@
  * @var                    $my_member_status
  * @var                    $is_mb_app
  * @var                    $notify_setting
- * @var                    $unread_msg_post_ids
+ * @var                    $unread_msg_topic_ids
  */
 ?>
 <?= $this->App->viewStartComment() ?>
@@ -26,6 +26,11 @@ if (Hash::get($this->request->params, 'controller') === 'goals'
     && Hash::get($this->request->params, 'action') === 'index'
 ) {
     echo $this->Html->script('/js/react_goal_search_app.min');
+}
+// メッセージ
+if (Hash::get($this->request->params, 'controller') === 'topics')
+{
+    echo $this->Html->script('/js/react_message_app.min');
 }
 
 echo $this->Html->script('/js/ng_vendors.min');

@@ -412,16 +412,28 @@ class AppModel extends Model
             $fields = array_keys($data[0]);
         }
         if ($addDate) {
-            $fields[] = 'modified';
-            $fields[] = 'created';
+            if (!in_array('modified', $fields)) {
+                $fields[] = 'modified';
+            }
+            if (!in_array('created', $fields)) {
+                $fields[] = 'created';
+            }
 
             foreach ($data as $k => $v) {
                 if (isset($v[$this->name])) {
-                    $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
-                    $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
+                    if (empty($data[$k][$this->name]['modified'])) {
+                        $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
+                    }
+                    if (empty($data[$k][$this->name]['created'])) {
+                        $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
+                    }
                 } else {
-                    $data[$k]['modified'] = REQUEST_TIMESTAMP;
-                    $data[$k]['created'] = REQUEST_TIMESTAMP;
+                    if (empty($data[$k]['modified'])) {
+                        $data[$k]['modified'] = REQUEST_TIMESTAMP;
+                    }
+                    if (empty($data[$k]['created'])) {
+                        $data[$k]['created'] = REQUEST_TIMESTAMP;
+                    }
                 }
             }
         }
@@ -551,12 +563,12 @@ class AppModel extends Model
      *
      * @return array
      */
-    function getById($id)
+    function getById($id, array $fields = [])
     {
         if (empty($id)) {
             return [];
         }
-        $ret = $this->findById($id);
+        $ret = $this->findById($id, $fields);
         return reset($ret);
     }
 

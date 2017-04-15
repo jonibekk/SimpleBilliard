@@ -287,4 +287,95 @@ class AppUtil
         }
         return null;
     }
+
+    /**
+     * filtering by whiteList
+     *
+     * @param array $targetArray
+     * @param array $whiteListKeys e.g. ['id','name'...]
+     *
+     * @return array
+     */
+    static function filterWhiteList(array $targetArray, array $whiteListKeys): array
+    {
+        return array_intersect_key($targetArray, array_flip($whiteListKeys));
+    }
+
+    /**
+     * getting base command of back ground job
+     *
+     * @return string
+     */
+    static function baseCmdOfBgJob(): string
+    {
+        $nohup = "nohup ";
+        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        $cakeCmd = $php . APP . "Console" . DS . "cake.php";
+        $cakeApp = " -app " . APP;
+        $baseCommand = $nohup . $cakeCmd . $cakeApp;
+        return $baseCommand;
+    }
+
+    /**
+     * flatten multi dimentions
+     *  - with being unique
+     *  - with unset empty value
+     *  - with reassign array keys
+     *
+     * @param  array $multiDimentions
+     *
+     * @return array
+     */
+    static function flattenUnique(array $multiDimentions): array
+    {
+        $flattened = Hash::flatten($multiDimentions);
+        $filterd = Hash::filter($flattened);
+        $uniqued = array_unique($filterd);
+        $keyReassigned = array_values($uniqued);
+        return $keyReassigned;
+    }
+
+    /**
+     * adding query params to url
+     *
+     * @param string $baseUrl
+     * @param array  $params ["key1"=>"val1","key2"=>"val2"]
+     *
+     * @return string
+     */
+    static function addQueryParamsToUrl(string $baseUrl, array $params): string
+    {
+        // e.g. $parsedUrl has ["scheme"=>"http","host"=>"xxx.co.jp","path"=>"/to/path","query"=>"key1=var1&key2=val2"]
+        $parsedUrl = parse_url($baseUrl);
+        // e.g. $parsedQuery will have ["key1"=>"val1","key2"=>"val2"]
+        $parsedQuery = [];
+        if(isset($parsedUrl['query'])){
+            parse_str($parsedUrl['query'], $parsedQuery);
+        }
+        // merge queries.
+        $parsedQuery = am($parsedQuery, $params);
+        $parsedUrl['query'] = http_build_query($parsedQuery);
+        return self::unparseUrl($parsedUrl);
+    }
+
+    /**
+     * unparsing parsed url to string url
+     *
+     * @param array $parsedUrl parsed by using parse_url()
+     *
+     * @return string
+     */
+    static function unparseUrl(array $parsedUrl): string
+    {
+        $scheme = isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] . '://' : '';
+        $host = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
+        $port = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
+        $user = isset($parsedUrl['user']) ? $parsedUrl['user'] : '';
+        $pass = isset($parsedUrl['pass']) ? ':' . $parsedUrl['pass'] : '';
+        $pass = ($user || $pass) ? "$pass@" : '';
+        $path = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+        $query = isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '';
+        $fragment = isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '';
+        return "$scheme$user$pass$host$port$path$query$fragment";
+    }
 }

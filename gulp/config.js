@@ -1,7 +1,7 @@
 const assets_dir = './app/static_src'
 const compiled_assets_dir = './app/webroot'
 const node_modules_dir = './node_modules'
-const config =  {
+const config = {
   assets_dir,
   compiled_assets_dir,
   compiled_js_dir: compiled_assets_dir + '/js',
@@ -17,10 +17,10 @@ const config =  {
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
-        assets_dir + '/js/dropzone_setting.js',
-        assets_dir + '/js/gl_basic.js',
-        assets_dir + '/js/view/**/*.js'
-    ],
+      assets_dir + '/js/dropzone_setting.js',
+      assets_dir + '/js/gl_basic.js',
+      assets_dir + '/js/view/**/*.js'
+    ]
   },
   js_prerender: {
     src: [
@@ -112,6 +112,7 @@ const config =  {
     'goal_approval',
     'goal_search',
     'kr_column',
+    'message'
   ],
   css: {
     src: [
@@ -147,12 +148,12 @@ const config =  {
 
 const react_apps_contain_undefined = Object.keys(config).map((alias_name) => {
   // react以外のkeyはundefinedとして格納される
-  if(alias_name.indexOf('react_') !== -1) {
+  if (alias_name.indexOf('react_') !== -1) {
     return alias_name
   }
 })
 
 config.react_apps = react_apps_contain_undefined.filter((alias_name) => {
-  return typeof alias_name !=='undefined'
+  return typeof alias_name !== 'undefined'
 });
 export default config

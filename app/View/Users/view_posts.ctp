@@ -17,7 +17,7 @@
         <div class="panel-body view-posts-panel">
             <?= $this->element("Feed/posts") ?>
             <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
-            if (count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30)):?>
+            if (count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || $item_created < REQUEST_TIMESTAMP - MONTH):?>
 
                 <?php
                 $next_page_num = 2;

@@ -35,3 +35,16 @@ export const TopKeyResult = Object.freeze({
   IS_IMPORTANT: 1,
   IS_NOT_IMPORTANT: 2
 })
+export const Message = Object.freeze({
+  TYPE_NORMAL: 1,
+  TYPE_ADD_MEMBER: 2,
+  TYPE_REMOVE_MEMBER: 3,
+  TYPE_CHANGE_TOPIC_NAME: 4,
+})
+export const AttachedFile = Object.freeze({
+  FileType: {
+    IMG: 0,
+    VIDEO: 1,
+    DOC: 2
+  }
+})
