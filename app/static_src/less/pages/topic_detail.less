@@ -242,18 +242,19 @@
         flex: 1;
         padding: 0 4px;
       }
+      &-left, &-right {
+        align-self: flex-end;
+      }
     }
     &-btn {
       margin: 0;
     }
     &-inputBody {
-      &.mod-sp {
-        max-height: 78px;
-      }
       overflow: hidden;
       word-wrap: break-word;
       resize: none;
       min-height: 38px;
+      max-height: 158px;
     }
   }
 }
