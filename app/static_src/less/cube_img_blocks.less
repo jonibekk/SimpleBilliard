@@ -11,9 +11,7 @@
   height: 32.1vw;
   margin: 0 -1px;
   overflow: hidden;
-  float: none;
   display: inline-block;
-  vertical-align: middle;
   position: relative;
   &:hover,
   &:target,
@@ -22,7 +20,6 @@
     border-color: @basicPink;
   }
 }
-
 @media @medium {
   .cube-img-column-frame {
     width: 169px;
@@ -37,10 +34,26 @@
   }
 }
 
-.cube-img-blocks-img {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  // object-fit: cover;
-  // なぜかobject-fitが効かなかった。lazyだからか？
+.cube-img-blocks-img{
+  min-width:32.1vw;
+  min-height:32.1vw;
 }
+@media @medium {
+  .cube-img-blocks-img{
+    min-width: 169px;
+    min-height: 169px;
+  }
+}
+
+@media @large {
+  .cube-img-blocks-img{
+    min-width: 225px;
+    min-height: 225px;
+  }
+}
+
+.cube-img-blocks-img.mod-wide{
+  width:auto;
+  height:100%;
+}
+
