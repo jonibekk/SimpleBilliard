@@ -1,9 +1,3 @@
-.cube-img-column {
-  font-size: 0;
-  border-bottom: 1px solid @lightGray;
-  padding: 0 0 2px;
-}
-
 .cube-img-column-frame {
   background: @backgroundColor1;
   border: 2px solid @backgroundColor2;
@@ -34,10 +28,15 @@
   }
 }
 
+.cube-img-column-frame a{
+  width:0;
+}
+
 .cube-img-blocks-img{
   min-width:32.1vw;
   min-height:32.1vw;
 }
+
 @media @medium {
   .cube-img-blocks-img{
     min-width: 169px;
@@ -51,9 +50,3 @@
     min-height: 225px;
   }
 }
-
-.cube-img-blocks-img.mod-wide{
-  width:auto;
-  height:100%;
-}
-

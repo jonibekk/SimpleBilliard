@@ -22,7 +22,6 @@ var Page = {
     $(this.conf.kr_progress).on("click", "input", function (e) {
       e.stopPropagation();
     });
-    
     // フォームサブミット
     $(this.conf.form).submit(function (e) {
       // アクション編集の場合submitさせる
