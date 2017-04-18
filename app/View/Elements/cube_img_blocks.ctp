@@ -11,6 +11,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <?php if (isset($posts) && !empty($posts)): ?>
+    <div class="cube-img-column">
         <?php foreach ($posts as $post): ?>
             <div class="cube-img-column-frame">
                 <a href="<?= $this->Html->url([
@@ -52,5 +53,6 @@
                 </a>
             </div>
         <?php endforeach; ?>
+    </div>
 <?php endif; ?>
 <?= $this->App->viewEndComment() ?>

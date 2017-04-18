@@ -1,12 +1,14 @@
 .cube-img-column-frame {
   background: @backgroundColor1;
   border: 2px solid @backgroundColor2;
-  width: 32.1vw;
-  height: 32.1vw;
-  margin: 0 -1px;
+  border-color:@backgroundColor2;
+  width: 31.8vw;
+  height: 31.8vw;
   overflow: hidden;
-  display: inline-block;
+  display: block;
   position: relative;
+  float:left;
+  transition:border-color .3s ease;
   &:hover,
   &:target,
   &:active,
@@ -16,15 +18,15 @@
 }
 @media @medium {
   .cube-img-column-frame {
-    width: 169px;
-    height: 169px;
+    width: 167px;
+    height: 167px;
   }
 }
 
 @media @large {
   .cube-img-column-frame {
-    width: 225px;
-    height: 225px;
+    width: 223px;
+    height: 223px;
   }
 }
 
@@ -33,8 +35,8 @@
 }
 
 .cube-img-blocks-img{
-  min-width:32.1vw;
-  min-height:32.1vw;
+  min-width:31.8vw;
+  min-height:31.8vw;
 }
 
 @media @medium {
@@ -46,7 +48,7 @@
 
 @media @large {
   .cube-img-blocks-img{
-    min-width: 225px;
-    min-height: 225px;
+    min-width: 223px;
+    min-height: 223px;
   }
 }
