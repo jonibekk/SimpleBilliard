@@ -17,43 +17,36 @@
 <div class="users-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('User/simplex_top_section') ?>
     <div class="users-view-actions-panel">
-        <div class="users-view-actions-panel-term input-group">
-            <span class="users-view-actions-panel-term-icon input-group-addon">
-                <i class="profile-user-action-related-goal-icon fa fa-flag"></i>
-            </span>
-            <?=
-            $this->Form->input('goal_id', [
-                'label'                    => false,
-                'div'                      => false,
-                'required'                 => true,
-                'data-bv-notempty-message' => __('Input is required.'),
-                'class'                    => 'users-view-actions-panel-term-select form-control disable-change-warning',
-                'id'                       => 'SwitchGoalOnMyPage',
-                'options'                  => $goal_select_options,
-                'disabled'                 => ['disable_value1', 'disable_value2'],
-                'default'                  => $goal_id,
-                'redirect-url'             => $goal_base_url,
-                'wrapInput'                => false,
-            ])
-            ?>
+        <div class="view-actions-panel-wrap">
+            <div class="users-view-actions-panel-term input-group">
+                <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="profile-user-action-related-goal-icon fa fa-filter"></i>&nbsp;Goals
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <?php 
+                        foreach ($goal_select_options as $goal_title){ ?>
+                        <li><a href="#"><?php echo $goal_title ?></a></li>  
+                    <?php   }
+                        unset($goal_title);
+                    ?>
+                </ul>
+            </div>
+            <ul class="profile-user-action-view-switch">
+                <li class="profile-user-action-view-switch-img">
+                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                        ['page_type' => 'image'])) ?>">
+                        <i class="fa fa-th-large link-dark-gray"></i>
+                    </a>
+                </li>
+                <li class="profile-user-action-view-switch-feed">
+                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                        ['page_type' => 'list'])) ?>">
+                        <i class="fa fa-reorder link-dark-gray"></i>
+                    </a>
+                </li>
+            </ul>
         </div>
-
-        <ul class="profile-user-action-view-switch">
-            <li class="profile-user-action-view-switch-img">
-                <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                    ['page_type' => 'image'])) ?>">
-                    <i class="fa fa-th-large link-dark-gray"></i>
-                </a>
-            </li>
-            <li class="profile-user-action-view-switch-feed">
-                <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                    ['page_type' => 'list'])) ?>">
-                    <i class="fa fa-reorder link-dark-gray"></i>
-                </a>
-            </li>
-        </ul>
-
-
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>

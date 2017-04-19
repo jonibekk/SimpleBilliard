@@ -3,6 +3,15 @@
  * mixinにはしてない。
  */
 
+ .view-actions-panel-wrap{
+  display:block;
+  padding:1em .5em;
+}
+
+.view-action-panel-wrap .btn{
+  min-width:20em;
+}
+
 .users-view-actions, .goals-view-actions {
   background: @backgroundColor1;
   border: 1px solid @subColor5;
@@ -15,24 +24,7 @@
 }
 
 .users-view-actions-panel-term, .goals-view-actions-panel-term {
-  margin: 0 auto;
-  padding: 10px 0;
-  width: 92vw;
+  float:left;
+  padding:0 0 10px 0;
   border-radius: 4px;
-}
-
-@media @medium {
-  .users-view-actions-panel-term, .goals-view-actions-panel-term {
-    width: 480px;
-  }
-}
-
-@media @large {
-  .users-view-actions-panel-term, .goals-view-actions-panel-term {
-    width: 648px;
-  }
-}
-
-.users-view-actions-panel-term-icon, .goals-view-actions-panel-term-icon {
-  background: @backgroundColor1;
 }
