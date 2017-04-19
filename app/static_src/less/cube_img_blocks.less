@@ -1,21 +1,15 @@
-.cube-img-column {
-  font-size: 0;
-  border-bottom: 1px solid @lightGray;
-  padding: 0 0 2px;
-  float:left;
-  width:100%;
-}
 
 .cube-img-column-frame {
   background: @backgroundColor1;
   border: 2px solid @backgroundColor2;
-  width: 32.1vw;
-  height: 32.1vw;
-  margin: 0 -1px;
+  border-color:@backgroundColor2;
+  width: 31.8vw;
+  height: 31.8vw;
   overflow: hidden;
-  display: inline-block;
-  vertical-align: middle;
+  display: block;
   position: relative;
+  float:left;
+  transition:border-color .3s ease;
   &:hover,
   &:target,
   &:active,
@@ -23,25 +17,39 @@
     border-color: @basicPink;
   }
 }
-
 @media @medium {
   .cube-img-column-frame {
-    width: 169px;
-    height: 169px;
+    width: 167px;
+    height: 167px;
   }
 }
 
 @media @large {
   .cube-img-column-frame {
-    width: 225px;
-    height: 225px;
+    width: 223px;
+    height: 223px;
   }
 }
 
-.cube-img-blocks-img {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  // object-fit: cover;
-  // なぜかobject-fitが効かなかった。lazyだからか？
+.cube-img-column-frame a{
+  width:0;
+}
+
+.cube-img-blocks-img{
+  min-width:31.8vw;
+  min-height:31.8vw;
+}
+
+@media @medium {
+  .cube-img-blocks-img{
+    min-width: 169px;
+    min-height: 169px;
+  }
+}
+
+@media @large {
+  .cube-img-blocks-img{
+    min-width: 223px;
+    min-height: 223px;
+  }
 }
