@@ -104,7 +104,7 @@ class Header extends React.Component {
           onTouchMove={this.onTouchMove}
         >
           <div className="topicDetail-header-left">
-            <a href="/topics" className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></a>
+            <Link to="/topics" className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></Link>
           </div>
           <div className="topicDetail-header-center">
             <input type="text"
