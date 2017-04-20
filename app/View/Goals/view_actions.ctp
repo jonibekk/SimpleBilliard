@@ -18,7 +18,7 @@
 <div class="goals-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('Goal/simplex_top_section') ?>
     <div class="goals-view-actions-panel">
-        <div class="goals-view-actions-panel-term input-group">
+        <div class="goals-view-actions-panel-term goal-detail-panels input-group">
             <span class="input-group-addon profile-user-icons" id="">
                 <i class="profile-user-action-related-goal-icon fa fa-key"></i>
             </span>

@@ -21,7 +21,8 @@
                 <?php endif ?>
             </div>
         </div>
-        <div class="panel-body panel-read-more-body">
+        <?php if (count($followers)>10){ ?>
+        <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
             <a href="#" class="btn-link click-goal-follower-more goal-detail-panel-read-more"
                next-page-num="2"
                id="GoalPageFollowerMoreLink"
@@ -30,6 +31,7 @@
             >
                 <?= __('View more') ?></a>
         </div>
+        <?php } ?>
     </div>
 </div>
 <?= $this->App->viewEndComment() ?>
