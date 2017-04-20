@@ -219,7 +219,7 @@ class MessageService extends AppService
                 list($imgWidth, $imgHeight) = getimagesize($imgUrl);
                 $urls['thumbnail_width'] = $imgWidth;
                 $urls['thumbnail_height'] = $imgHeight;
-            } elseif ($Upload->isCanPreview($messageFile)) {
+            } else {
                 $urls['preview_url'] = $Upload->attachedFileUrl($messageFile);
             }
             $messageFile['AttachedFile'] += $urls;

@@ -177,7 +177,9 @@ class Footer extends React.Component {
                 className="btn btnRadiusOnlyIcon mod-upload"
                 onClick={this.selectFile.bind(this)}
               />
-              <input type="file" multiple="multiple" className="hidden" ref="file"
+              {/* For avoiding ios bug, only in ios app, not setting multiple attr
+                  ref) https://jira.goalous.com/browse/GL-5732 */}
+              <input type="file" multiple={isIOSApp() ? '' : 'multiple'} className="hidden" ref="file"
                      onChange={this.changeFile.bind(this)}/>
             </div>
             <div className="topicDetail-footer-box-center">
