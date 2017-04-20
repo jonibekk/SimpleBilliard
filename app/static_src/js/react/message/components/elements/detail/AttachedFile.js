@@ -60,7 +60,7 @@ export default class AttachedFile extends React.Component {
               </a>
             </div>
             <div className="col col-xxs-10 file-info-wrap">
-              <a href={attached_file.origin_url} target="_blank">
+              <a href={attached_file.preview_url} target="_blank">
                 <span className="font_14px font_bold font_verydark">
                   {attached_file.attached_file_name}
                 </span>

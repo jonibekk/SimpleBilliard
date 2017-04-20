@@ -197,7 +197,6 @@ class MessageService extends AppService
 
             // bellow fields will be added
             $urls = [
-                'origin_url'    => null,
                 'download_url'  => null,
                 'preview_url'   => null,
                 'thumbnail_url' => null,
@@ -205,7 +204,6 @@ class MessageService extends AppService
 
             // download url is common.
             $urls['download_url'] = '/posts/attached_file_download/file_id:' . $messageFile['AttachedFile']['id'];
-            $urls['origin_url'] = $Upload->attachedFileUrl($messageFile);
 
             if ($messageFile['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                 // In case of image, add thumbnail url and preview url
@@ -221,7 +219,7 @@ class MessageService extends AppService
                 list($imgWidth, $imgHeight) = getimagesize($imgUrl);
                 $urls['thumbnail_width'] = $imgWidth;
                 $urls['thumbnail_height'] = $imgHeight;
-            } elseif ($Upload->isCanPreview($messageFile)) {
+            } else {
                 $urls['preview_url'] = $Upload->attachedFileUrl($messageFile);
             }
             $messageFile['AttachedFile'] += $urls;
@@ -262,7 +260,6 @@ class MessageService extends AppService
             'file_type',
             'file_ext',
             'file_size',
-            'origin_url',
             'download_url',
             'preview_url',
             'thumbnail_url',
