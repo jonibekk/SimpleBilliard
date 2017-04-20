@@ -19,10 +19,9 @@
     <div class="users-view-actions-panel">
         <div class="view-actions-panel-wrap">
             <div class="users-view-actions-panel-term input-group">
-                <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <i class="profile-user-action-related-goal-icon fa fa-filter"></i>&nbsp;Goals
-                    <span class="caret"></span>
-                </button>
+                <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <strong>Term:&nbsp;</strong>Current&nbsp;<span class="caret"></span>
+                </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <?php 
                         foreach ($goal_select_options as $goal_title){ ?>

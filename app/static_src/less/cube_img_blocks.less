@@ -1,3 +1,9 @@
+.profile-user-action-contents{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content: space-around;
+  float:left;
+}
 
 .cube-img-column-frame {
   background: @backgroundColor1;
@@ -5,6 +11,7 @@
   border-color:@backgroundColor2;
   width: 31.8vw;
   height: 31.8vw;
+  flex-basis:33.33%;
   overflow: hidden;
   display: block;
   position: relative;
@@ -24,7 +31,7 @@
   }
 }
 
-@media @large {
+@media @large { 
   .cube-img-column-frame {
     width: 223px;
     height: 223px;
