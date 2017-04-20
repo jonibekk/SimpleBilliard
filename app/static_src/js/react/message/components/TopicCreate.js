@@ -5,7 +5,7 @@ import UploadDropZone from "~/message/components/elements/detail/UploadDropZone"
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {nl2br} from "~/util/element";
-import {isMobileApp} from "~/util/base";
+import {isMobileApp, disableAsyncEvents} from "~/util/base";
 import Base from "~/common/components/Base";
 
 export default class TopicCreate extends Base {
@@ -14,13 +14,39 @@ export default class TopicCreate extends Base {
     super(props)
     // HACK:Display drop zone when dragging
     // reference:http://qiita.com/sounisi5011/items/dc4878d3e8b38101cf0b
-    this.state = {
+    this.state = Object.assign({}, this.state, {
       is_drag_over: false,
       is_drag_start: false,
+    })
+  }
+
+  componentDidMount() {
+    super.componentDidMount.apply(this);
+    // HACK: merge componentDidMount in parent Base.js
+    window.addEventListener("beforeunload", this.onBeforeUnloadSelect2Handler.bind(this))
+    // enable `routerWillLeave` method
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave.bind(this));
+    disableAsyncEvents()
+
+    // HACK:To use select2Member
+    $(document).ready(function (e) {
+      initMemberSelect2();
+    });
+  }
+
+  onBeforeUnloadSelect2Handler(event) {
+    if (this.getToUserIdsByDom().length > 0) {
+      return event.returnValue = this.state.leave_page_alert_msg
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.topic_create.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0) {
+      this.setState({enabled_leave_page_alert: false})
+    } else {
+      this.setState({enabled_leave_page_alert: true})
+    }
+
     if (nextProps.topic_create.redirect) {
       browserHistory.push(`/topics/${nextProps.topic_create.new_topic_id}/detail`);
     }
@@ -28,16 +54,14 @@ export default class TopicCreate extends Base {
 
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
+    window.removeEventListener("beforeunload", this.onBeforeUnloadSelect2Handler.bind(this))
     this.props.resetStates();
   }
 
-
-  componentDidMount() {
-    super.componentDidMount.apply(this);
-    // HACK:To use select2Member
-    $(document).ready(function (e) {
-      initMemberSelect2();
-    });
+  routerWillLeave(nextLocation) {
+    if (this.state.enabled_leave_page_alert || this.getToUserIdsByDom().length > 0) {
+      return this.state.leave_page_alert_msg
+    }
   }
 
   createTopic(e) {
@@ -98,7 +122,12 @@ export default class TopicCreate extends Base {
   }
 
   getToUserIdsByDom() {
-    let to_user_ids_str = ReactDom.findDOMNode(this.refs.select2Member).value;
+    const target_input = ReactDom.findDOMNode(this.refs.select2Member);
+    if (!target_input) {
+      return [];
+    }
+
+    let to_user_ids_str = target_input.value;
     if (!to_user_ids_str) {
       return [];
     }
@@ -129,7 +158,7 @@ export default class TopicCreate extends Base {
           <span className="hidden js-triggerUpdateToUserIds" onClick={this.changeToUserIds.bind(this)}/>
           <div className="topicCreateForm-selectTo ">
             <span className="topicCreateForm-selectTo-label">To:</span>
-            <input type="hidden" id="select2Member" className="js-changeSelect2Member"
+            <input type="hidden" id="select2Member" className="js-changeSelect2Member disable-change-warning"
                    style={{width: '85%'}} ref="select2Member"/>
           </div>
           <div className={this.state.is_drag_over && "uploadFileForm-wrapper"}
@@ -141,7 +170,7 @@ export default class TopicCreate extends Base {
             {this.state.is_drag_over && <UploadDropZone/>}
 
             <div className="topicCreateForm-msgBody">
-                <textarea className="topicCreateForm-msgBody-form"
+                <textarea className="topicCreateForm-msgBody-form disable-change-warning"
                           placeholder={__("Write a message...")}
                           defaultValue=""
                           onChange={this.changeMessage.bind(this)}

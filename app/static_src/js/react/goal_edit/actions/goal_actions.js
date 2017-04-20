@@ -109,7 +109,7 @@ export function saveGoal(goalId, addInputData) {
       (response) => {
         dispatch(toNextPage())
       },
-      (response) => {
+      ({response}) => {
         dispatch(invalid(response.data))
       }
     );

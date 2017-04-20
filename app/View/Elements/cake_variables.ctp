@@ -561,6 +561,7 @@ App::uses('AttachedFile', 'Model');
             "Update": "<?= __("Update") ?>",
             // messgae
             "No results found": "<?= __("No results found") ?>",
+            "Leave this topic": "<?= __("Leave this topic") ?>",
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>"
         },
         regex: {
