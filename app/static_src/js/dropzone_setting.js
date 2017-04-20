@@ -433,7 +433,9 @@ $(function () {
     Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
     // maxFiles が 1 の場合、もしくは
     // params.disableMultiple が true の場合 multiple 属性を外す（iphone で「画像選択」と「写真を撮る」を選択出来るようにする）
-    if (Dropzone.instances[0].options.maxFiles == 1 || params.disableMultiple) {
+    // For avoiding ios bug, only in ios app, not setting multiple attr
+    // ref) https://jira.goalous.com/browse/GL-5732
+    if (Dropzone.instances[0].options.maxFiles == 1 || params.disableMultiple || cake.is_mb_app_ios) {
       Dropzone.instances[0].hiddenFileInput.removeAttribute("multiple");
     } else {
       Dropzone.instances[0].hiddenFileInput.setAttribute("multiple", "multiple");
