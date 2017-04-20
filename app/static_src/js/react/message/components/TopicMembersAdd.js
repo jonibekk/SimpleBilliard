@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 import {browserHistory, Link} from "react-router";
 import {nl2br} from "~/util/element";
-import {isMobileApp} from "~/util/base";
+import {isMobileApp, disableAsyncEvents} from "~/util/base";
 import Base from "~/common/components/Base";
 
 export default class TopicMembersAdd extends Base {
@@ -19,11 +19,23 @@ export default class TopicMembersAdd extends Base {
 
   componentDidMount() {
     super.componentDidMount.apply(this);
+    // HACK: merge componentDidMount in parent Base.js
+    window.addEventListener("beforeunload", this.onBeforeUnloadSelect2Handler.bind(this))
+    // enable `routerWillLeave` method
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave.bind(this));
+    disableAsyncEvents()
+
     // TODO:Remove selected members from suggest
     // HACK:To use select2Member
     $(document).ready(function (e) {
       initMemberSelect2();
     });
+  }
+
+  onBeforeUnloadSelect2Handler(event) {
+    if (this.getSelectUserIdsByDom().length > 0) {
+      return event.returnValue = this.state.leave_page_alert_msg
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,7 +46,14 @@ export default class TopicMembersAdd extends Base {
 
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
+    window.removeEventListener("beforeunload", this.onBeforeUnloadSelect2Handler.bind(this))
     this.props.resetStates();
+  }
+
+  routerWillLeave(nextLocation) {
+    if (this.state.enabled_leave_page_alert || this.getSelectUserIdsByDom().length > 0) {
+      return this.state.leave_page_alert_msg
+    }
   }
 
   addMembers(e) {
@@ -47,7 +66,12 @@ export default class TopicMembersAdd extends Base {
   }
 
   getSelectUserIdsByDom() {
-    let user_ids_str = ReactDom.findDOMNode(this.refs.select2Member).value;
+    const target_input = ReactDom.findDOMNode(this.refs.select2Member);
+    if (!target_input) {
+      return [];
+    }
+
+    let user_ids_str = target_input.value;
     if (!user_ids_str) {
       return [];
     }
