@@ -1,9 +1,18 @@
+.cube-img-column{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content: space-around;
+}
+
+
+
 .cube-img-column-frame {
   background: @backgroundColor1;
   border: 2px solid @backgroundColor2;
   border-color:@backgroundColor2;
   width: 31.8vw;
   height: 31.8vw;
+  flex-basis:33.33%;
   overflow: hidden;
   display: block;
   position: relative;
@@ -23,7 +32,7 @@
   }
 }
 
-@media @large {
+@media @large { 
   .cube-img-column-frame {
     width: 223px;
     height: 223px;
