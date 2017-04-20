@@ -16,11 +16,27 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 - Google Docs
 - join.me
 
-#アカウント
+## アカウント
 
 | name | mail addless | pass |
 |:---|:---|:---|
-| Sentry | goalous@isao.co.jp | bAt2AFar |
+| Sentry | bot@isao.co.jp | bAt2AFar |
+
+### Sentry
+Make sure to keep a copy of these codes to recover your account if you lose your authenticator.
+Unused Codes
+```
+4NS7-E5LQ
+VLS4-LAVB
+7RBL-2UVL
+MALQ-2JDC
+UQ6W-IEXM
+MZV5-ANP5
+D5KQ-XUAC
+R4JN-33C2
+UB5M-WZO6
+V7BV-RSAZ
+```
 
 # Cloud Tools For Project
 Goalousプロジェクトで利用しているクラウドツールについて。
