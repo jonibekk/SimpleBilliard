@@ -5,6 +5,7 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 <hr id="tool-list">
 
 ## 採用している開発支援ツール一覧
+- Sentry
 - Mixpanel
 - Waffle
 - NewRelic
@@ -14,6 +15,11 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 - Slack
 - Google Docs
 - join.me
+
+#アカウント
+| name | mail addless | pass |
+|:---|:---|:---|
+| Sentry | goalous@isao.co.jp | bAt2AFar |
 
 # Cloud Tools For Project
 Goalousプロジェクトで利用しているクラウドツールについて。
