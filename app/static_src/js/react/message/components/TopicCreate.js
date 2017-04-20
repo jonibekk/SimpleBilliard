@@ -183,8 +183,8 @@ export default class TopicCreate extends Base {
                   className="btn btnRadiusOnlyIcon mod-upload"
                   onClick={this.selectFile.bind(this)}
                 />
-                // For avoiding ios bug, only in ios app, not setting multiple attr
-                // ref) https://jira.goalous.com/browse/GL-5732
+                {/* For avoiding ios bug, only in ios app, not setting multiple attr
+                    ref) https://jira.goalous.com/browse/GL-5732 */}
                 <input type="file" multiple={isIOSApp() ? '' : 'multiple'} className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
               </div>
 
