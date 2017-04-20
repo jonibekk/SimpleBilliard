@@ -34,6 +34,7 @@ const config = {
   js_vendor: {
     src: [
       node_modules_dir + '/jquery-lazy/jquery.lazy.js',
+      node_modules_dir + '/raven-js/dist/raven.js',
       assets_dir + '/js/vendor/bootstrap.js',
       assets_dir + '/js/vendor/jasny-bootstrap.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
