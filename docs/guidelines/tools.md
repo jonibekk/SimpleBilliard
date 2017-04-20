@@ -17,6 +17,7 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 - join.me
 
 #アカウント
+
 | name | mail addless | pass |
 |:---|:---|:---|
 | Sentry | goalous@isao.co.jp | bAt2AFar |
