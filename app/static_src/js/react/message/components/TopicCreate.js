@@ -5,7 +5,7 @@ import UploadDropZone from "~/message/components/elements/detail/UploadDropZone"
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {nl2br} from "~/util/element";
-import {isMobileApp, disableAsyncEvents} from "~/util/base";
+import {isMobileApp, disableAsyncEvents, isIOSApp} from "~/util/base";
 import Base from "~/common/components/Base";
 
 export default class TopicCreate extends Base {
@@ -183,7 +183,9 @@ export default class TopicCreate extends Base {
                   className="btn btnRadiusOnlyIcon mod-upload"
                   onClick={this.selectFile.bind(this)}
                 />
-                <input type="file" multiple="multiple" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
+                {/* For avoiding ios bug, only in ios app, not setting multiple attr
+                    ref) https://jira.goalous.com/browse/GL-5732 */}
+                <input type="file" multiple={isIOSApp() ? '' : 'multiple'} className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
               </div>
 
               <div className="topicCreateForm-footer-center">
