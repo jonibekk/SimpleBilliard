@@ -685,13 +685,6 @@ class UploadBehavior extends ModelBehavior
             return false;
         }
 
-        // 拡張子とMIMEタイプの整合性チェック
-        $allowExtensions = $this->imgExtEachTypes[$targetImgType];
-        $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
-        if (!preg_grep("/{$ext}/i", $allowExtensions)) {
-            $model->invalidate('attached', __("File extension and content are different."));
-            return false;
-        }
         return true;
     }
 
