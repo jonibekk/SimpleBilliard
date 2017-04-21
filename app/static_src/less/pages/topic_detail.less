@@ -154,7 +154,12 @@
       margin-left: 4px;
     }
     &-content {
-      word-break : break-all;
+      display: block;
+      word-wrap:break-word;
+      // Non standard for webkit
+      // But For Chrome this setting will not work unless this setting
+      word-break: break-word;
+      width: 100%;
       &-link {
         word-break: break-all;
       }
