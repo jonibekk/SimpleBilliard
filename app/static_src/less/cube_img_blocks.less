@@ -11,8 +11,9 @@
   background: @backgroundColor1;
   border: 2px solid @backgroundColor2;
   border-color:@backgroundColor2;
-  width: 31.8vw;
-  height: 31.8vw;
+  width: 33.33%;
+  height: 0px;
+  padding-top:33.33%;
   flex-basis:33.33%;
   overflow: hidden;
   display: block;
@@ -26,39 +27,11 @@
     border-color: @basicPink;
   }
 }
-@media @medium {
-  .cube-img-column-frame {
-    width: 167px;
-    height: 167px;
-  }
-}
-
-@media @large { 
-  .cube-img-column-frame {
-    width: 223px;
-    height: 223px;
-  }
-}
 
 .cube-img-column-frame a{
-  width:0;
-}
-
-.cube-img-blocks-img{
-  min-width:31.8vw;
-  min-height:31.8vw;
-}
-
-@media @medium {
-  .cube-img-blocks-img{
-    min-width: 169px;
-    min-height: 169px;
-  }
-}
-
-@media @large {
-  .cube-img-blocks-img{
-    min-width: 223px;
-    min-height: 223px;
-  }
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0px;
+  left:0px;
 }
