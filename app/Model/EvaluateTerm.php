@@ -586,8 +586,7 @@ class EvaluateTerm extends AppModel
         $res = $this->find('first', $options);
         // TODO: error logging for unexpected creating term data.
         if (empty($res)) {
-            $this->log(sprintf('[%s:%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
-                __CLASS__,
+            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
                 __METHOD__,
                 var_export($options, true),
                 var_export(CakeSession::read(), true),
