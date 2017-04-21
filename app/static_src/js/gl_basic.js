@@ -1,3 +1,11 @@
+// Sentry:js error tracking
+Raven.config(
+  cake.sentry_dsn,
+  {
+    environment: cake.env_name
+  }
+).install();
+
 $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec

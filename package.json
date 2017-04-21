@@ -9,6 +9,7 @@
     "form-data": "^1.0.1",
     "jquery": "^1.11.1",
     "jquery-lazy": "^1.7.3",
+    "raven-js": "^3.14.2",
     "react": "^15.4.2",
     "react-autosuggest": "^8.0.0",
     "react-bootstrap": "^0.28.5",
