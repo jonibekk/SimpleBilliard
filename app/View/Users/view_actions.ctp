@@ -53,6 +53,20 @@
                     ?>
                 </ul>
             </div>
+            <ul class="profile-user-action-view-switch">
+                <li class="profile-user-action-view-switch-img">
+                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                        ['page_type' => 'image'])) ?>">
+                        <i class="fa fa-th-large link-dark-gray"></i>
+                    </a>
+                </li>
+                <li class="profile-user-action-view-switch-feed">
+                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                        ['page_type' => 'list'])) ?>">
+                        <i class="fa fa-reorder link-dark-gray"></i>
+                    </a>
+                </li>
+            </ul>
         </div>
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>

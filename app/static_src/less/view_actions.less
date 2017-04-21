@@ -11,7 +11,7 @@
 }
 
 .view-actions-panel-filter{
-  width:45%;
+  width:40%;
   display: block;
   float:left;
   text-align:center;
@@ -23,19 +23,25 @@
   }
 }
 
-.view-actions-panel-filter:first-of-type{
-  margin-left:2.5%;
-}
-
 @media @medium {
   .view-actions-panel-filter:first-of-type{
-    margin-left:15%;
+    margin-left:9%;
   }
 }
 
 .view-actions-panel-filter .dropdown-menu{
-  max-height:50vh;
+  max-height:17.5em;
   overflow-y:scroll;
+  text-align:left;
+  ::-webkit-scrollbar {
+      display:block;
+  }
+  ::-webkit-scrollbar-thumb {
+      display:block;
+  }
+  ::-webkit-scrollbar-button {
+      display:block;
+  }
 }
 
 @media @xsmall{
@@ -86,6 +92,7 @@
 .users-view-actions-panel, .goals-view-actions-panel {
   background: @backgroundColor2;
   float:left;
+  width:100%;
 }
 
 .users-view-actions-panel-term, .goals-view-actions-panel-term {
