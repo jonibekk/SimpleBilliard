@@ -6,6 +6,7 @@ import Footer from "~/message/components/elements/detail/Footer";
 import Base from "~/common/components/Base";
 import {isMobileApp, disableAsyncEvents} from "~/util/base";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
+import {LeaveTopicStatus} from "~/message/constants/Statuses";
 
 export default class Detail extends Base {
   constructor(props) {
@@ -78,7 +79,7 @@ export default class Detail extends Base {
 
   // for SPA page route
   routerWillLeave(nextLocation) {
-    if (this.state.enabled_leave_page_alert) {
+    if (this.props.detail.leave_topic_status != LeaveTopicStatus.SAVING  && this.state.enabled_leave_page_alert) {
       return this.state.leave_page_alert_msg
     }
   }
