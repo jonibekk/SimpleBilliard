@@ -59,7 +59,7 @@ export default class TopicCreate extends Base {
   }
 
   routerWillLeave(nextLocation) {
-    if (this.state.enabled_leave_page_alert || this.getToUserIdsByDom().length > 0) {
+    if (!this.props.topic_create.is_saving && (this.state.enabled_leave_page_alert || this.getToUserIdsByDom().length > 0)) {
       return this.state.leave_page_alert_msg
     }
   }
