@@ -11,6 +11,7 @@ App::uses('AttachedFile', 'Model');
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
+        sentry_dsn: "<?= SENTRY_DSN ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",

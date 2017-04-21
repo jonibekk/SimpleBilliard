@@ -154,7 +154,12 @@
       margin-left: 4px;
     }
     &-content {
-      word-break : break-all;
+      display: block;
+      word-wrap:break-word;
+      // Non standard for webkit
+      // But For Chrome this setting will not work unless this setting
+      word-break: break-word;
+      width: 100%;
       &-link {
         word-break: break-all;
       }
@@ -242,16 +247,20 @@
         flex: 1;
         padding: 0 4px;
       }
+      &-left, &-right {
+        align-self: flex-end;
+      }
     }
     &-btn {
       margin: 0;
     }
     &-inputBody {
-      max-height: 78px;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: scroll;
       word-wrap: break-word;
-      resize: both;
+      resize: none;
       min-height: 38px;
+      max-height: 158px;
     }
   }
 }
