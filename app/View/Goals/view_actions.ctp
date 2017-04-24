@@ -51,6 +51,12 @@
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                <div class="cube-img-column-frame add-action">
+                    <div class="profile-user-action-contents-add-image">
+                        <span><a href="#">+</a></span>
+                    </div>
+                    <a href="#">Add Action</a>
+                </div>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>
