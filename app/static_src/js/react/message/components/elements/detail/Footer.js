@@ -183,7 +183,7 @@ class Footer extends React.Component {
             <div className="topicDetail-footer-box-center">
               <HotKeys keyMap={key_map} handlers={handlers}>
                 <Textarea
-                  className="topicDetail-footer-inputBody form-control disable-change-warning"
+                  className={`topicDetail-footer-inputBody form-control disable-change-warning ${sp_class}`}
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" value={this.props.body}
                   onInput={this.inputMessage.bind(this)}

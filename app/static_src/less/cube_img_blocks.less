@@ -1,11 +1,9 @@
-.topic-5744-goal-page-continuous-grid{
+.profile-user-action-contents{
   display:flex;
   flex-wrap:wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   float:left;
 }
-
-
 
 .cube-img-column-frame {
   background: @backgroundColor1;
@@ -26,6 +24,80 @@
   &:focus {
     border-color: @basicPink;
   }
+}
+
+.profile-user-action-contents-add-image{
+  width:20vw;
+  height:20vw;
+  display: block;
+  position: relative;
+  float:left;
+  border-radius:50%;
+  background:@white;
+  margin:auto;
+  display:flex;
+  flex-wrap:wrap;
+  box-shadow:0px .05em .05em rgba(0,0,0,0.5);
+  transition:box-shadow .2s, transform .2s;
+  transform:translateY(0);
+}
+
+@media @small{
+  .profile-user-action-contents-add-image{
+    width:100px;
+    height:100px;
+  }
+}
+
+.profile-user-action-contents-add-image span{
+  font-size:5rem;
+  text-align:center;
+  margin:auto;
+  font-weight:100;
+  height: 1em;
+  width: 1em;
+  line-height: .8em;
+}
+
+.profile-user-action-contents-add-image span a, .profile-user-action-contents-add-image span a:hover{
+  text-decoration:none;
+}
+
+.cube-img-column-frame.add-action{
+  background-color:transparent;
+  display:flex;
+  flex-wrap:wrap;
+  padding-top: 0;
+  height: auto;
+}
+
+.cube-img-column-frame.add-action:hover{
+  border-color:@backgroundColor2;
+  cursor:pointer;
+}
+
+.cube-img-column-frame.add-action:hover .profile-user-action-contents-add-image{
+  box-shadow:0px .25em .25em rgba(0,0,0,0.25);
+  transform:translateY(-.1em);
+  cursor: pointer;
+}
+
+.cube-img-column-frame.add-action a{
+  width:100%;
+  text-align:center;
+  color: @darkGray;
+  transition:color .3s ease;
+  height: auto;
+  position: relative;
+  display: block;
+}
+
+.cube-img-column-frame.add-action:hover a{
+  color:@acidRed;
+}
+
+.cube-img-column-frame.add-action a:hover{
+  text-decoration: none;
 }
 
 .cube-img-column-frame a{
@@ -53,4 +125,11 @@
 .cube-img-blocks-img.mod-wider{
   width:auto;
   height:100%;
+}
+
+@media @large {
+  .cube-img-blocks-img{
+    min-width: 223px;
+    min-height: 223px;
+  }
 }

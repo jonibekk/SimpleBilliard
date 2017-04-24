@@ -3,6 +3,85 @@
  * mixinにはしてない。
  */
 
+ .view-actions-panel-wrap{
+  display:block;
+  padding:1em .5em;
+  float:left;
+  width:100%;
+}
+
+.view-actions-panel-filter{
+  width:40%;
+  display: block;
+  float:left;
+  text-align:center;
+}
+
+@media @medium {
+  .view-actions-panel-filter{
+    width:35%;
+  }
+}
+
+@media @medium {
+  .view-actions-panel-filter:first-of-type{
+    margin-left:9%;
+  }
+}
+
+.view-actions-panel-filter .dropdown-menu{
+  max-height:17.5em;
+  overflow-y:scroll;
+  text-align:left;
+  ::-webkit-scrollbar {
+      display:block;
+  }
+  ::-webkit-scrollbar-thumb {
+      display:block;
+  }
+  ::-webkit-scrollbar-button {
+      display:block;
+  }
+}
+
+@media @xsmall{
+  .view-actions-panel-filter .dropdown-menu{
+    width:100%;
+    left:0;
+  }
+}
+
+@media @small{
+  .view-actions-panel-filter .dropdown-menu{
+    width:auto;
+    left:auto;
+  }
+}
+
+.view-actions-panel-filter .dropdown-menu li{
+  width:100%;
+}
+
+.view-actions-panel-filter .dropdown-menu li a{
+  white-space: normal;
+}
+
+.view-actions-panel-filter:last-of-type .dropdown-menu{
+  right:0;
+}
+
+.view-actions-panel-wrap .dropdown-toggle{
+  color:@veryDark;
+}
+
+.view-actions-panel-wrap .dropdown-toggle span{
+  color:@acidRed;
+}
+
+.view-action-panel-wrap .btn{
+  min-width:20em;
+}
+
 .users-view-actions, .goals-view-actions {
   background: @backgroundColor1;
   border: 1px solid @subColor5;
@@ -13,6 +92,7 @@
 .users-view-actions-panel, .goals-view-actions-panel {
   background: @backgroundColor2;
   float:left;
+  width:100%;
 }
 
 .users-view-actions-panel .panel-body, .goals-view-actions-panel .panel-body{
@@ -20,12 +100,6 @@
 }
 
 .users-view-actions-panel-term, .goals-view-actions-panel-term {
-  .goal-detail-panels;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  float:none;
-}
-
-.users-view-actions-panel-term-icon, .goals-view-actions-panel-term-icon {
-  background: @backgroundColor1;
+  float:left;
+  border-radius: 4px;
 }

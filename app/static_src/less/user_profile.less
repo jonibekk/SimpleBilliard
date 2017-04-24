@@ -236,8 +236,8 @@
 
 .profile-user-action-view-switch {
   margin: 0;
-  padding: 1rem 2rem;
   text-align: right;
+  float:right;
 }
 
 .profile-user-action-view-switch-img {
@@ -253,14 +253,23 @@
 
 .profile-user-action-contents {
   padding: 0;
+  width:100%;
 }
 
-.goals-view-actions-panel .panel-body{
+.profile-user-action-contents .panel{
+  width:100%;
+}
+
+.goals-view-actions-panel .panel-body, .users-view-actions-panel .panel-body{
   clear:both;
 }
 
 .profile-goals-card-title-wrapper {
   .line-number-wrap;
+}
+
+.view-actions-panel-filter .dropdown-toggle:hover{
+  cursor:pointer;
 }
 
 .profile-goals-card-title {

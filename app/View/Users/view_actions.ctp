@@ -17,47 +17,67 @@
 <div class="users-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('User/simplex_top_section') ?>
     <div class="users-view-actions-panel">
-        <div class="users-view-actions-panel-term input-group">
-            <span class="users-view-actions-panel-term-icon input-group-addon">
-                <i class="profile-user-action-related-goal-icon fa fa-flag"></i>
-            </span>
-            <?=
-            $this->Form->input('goal_id', [
-                'label'                    => false,
-                'div'                      => false,
-                'required'                 => true,
-                'data-bv-notempty-message' => __('Input is required.'),
-                'class'                    => 'users-view-actions-panel-term-select form-control disable-change-warning',
-                'id'                       => 'SwitchGoalOnMyPage',
-                'options'                  => $goal_select_options,
-                'disabled'                 => ['disable_value1', 'disable_value2'],
-                'default'                  => $goal_id,
-                'redirect-url'             => $goal_base_url,
-                'wrapInput'                => false,
-            ])
-            ?>
+        <div class="view-actions-panel-wrap">
+            <div class="view-actions-panel-filter">
+                <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <strong>Term:&nbsp;</strong>Current&nbsp;<span class="fa fa-angle-double-down"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Current</a></li>
+                    <li><a href="#">June - December 2016</a></li>
+                    <li><a href="#">Jauary - May 2016</a></li>
+                    <li><a href="#">June - December 2015</a></li>
+                    <li><a href="#">Jauary - May 2015</a></li>
+                    <li><a href="#">June - December 2014</a></li>
+                    <li><a href="#">Jauary - May 2014</a></li>
+                    <li><a href="#">June - December 2013</a></li>
+                    <li><a href="#">Jauary - May 2013</a></li>
+                    <li><a href="#">June - December 2012</a></li>
+                    <li><a href="#">Jauary - May 2012</a></li>
+                    <li><a href="#">June - December 2011</a></li>
+                    <li><a href="#">Jauary - May 2011</a></li>
+                    <li><a href="#">June - December 2010</a></li>
+                    <li><a href="#">Jauary - May 2010</a></li>
+                </ul>
+            </div>
+            <div class="view-actions-panel-filter">
+                <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <strong>Goal:&nbsp;</strong>All&nbsp;<span class="fa fa-angle-double-down"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <?php 
+                        foreach ($goal_select_options as $goal_title){ ?>
+                        <li><a href="#"><?php echo $goal_title ?></a></li>  
+                    <?php   }
+                        unset($goal_title);
+                    ?>
+                </ul>
+            </div>
+            <ul class="profile-user-action-view-switch">
+                <li class="profile-user-action-view-switch-img">
+                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                        ['page_type' => 'image'])) ?>">
+                        <i class="fa fa-th-large link-dark-gray"></i>
+                    </a>
+                </li>
+                <li class="profile-user-action-view-switch-feed">
+                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                        ['page_type' => 'list'])) ?>">
+                        <i class="fa fa-reorder link-dark-gray"></i>
+                    </a>
+                </li>
+            </ul>
         </div>
-
-        <ul class="profile-user-action-view-switch">
-            <li class="profile-user-action-view-switch-img">
-                <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                    ['page_type' => 'image'])) ?>">
-                    <i class="fa fa-th-large link-dark-gray"></i>
-                </a>
-            </li>
-            <li class="profile-user-action-view-switch-feed">
-                <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                    ['page_type' => 'list'])) ?>">
-                    <i class="fa fa-reorder link-dark-gray"></i>
-                </a>
-            </li>
-        </ul>
-
-
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                <div class="cube-img-column-frame add-action">
+                    <div class="profile-user-action-contents-add-image">
+                        <span><a href="#">+</a></span>
+                    </div>
+                    <a href="#">Add Action</a>
+                </div>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>

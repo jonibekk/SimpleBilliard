@@ -8,7 +8,10 @@ var Page = {
     input_fields: ["key_result_current_value", 'name', 'key_result_id', 'goal_id']
   },
   submit_flg: false,
-  action_resize:function(){
+  action_resize:function(reset){
+    if(reset){
+      $(".mod-visible").removeClass("mod-visible");
+    }
     $(".cube-img-blocks-img").each(function(i){
         if($(this)[0]["clientWidth"] > $(this)[0]["clientHeight"] && !$(this).hasClass("mod-visible") && $(this)[0]["clientHeight"]!=0){
             $(this).addClass("mod-wider").addClass("mod-visible");
@@ -192,4 +195,7 @@ var Page = {
 };
 jQuery(function ($) {
   Page.init();
+});
+$(window).resize(function(){
+  window.Page.action_resize(true);
 });
