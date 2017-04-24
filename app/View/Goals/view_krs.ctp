@@ -55,6 +55,7 @@
                 <?php endif ?>
             </div>
         </div>
+        <?php if (count($key_results)>10){ ?>
         <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
             <a href="#" class="btn btn-link click-goal-key-result-more"
                next-page-num="2"
@@ -65,6 +66,7 @@
             >
                 <?= __('View more') ?></a>
         </div>
+        <?php } ?>
     </div>
 </div>
 <?= $this->App->viewEndComment() ?>

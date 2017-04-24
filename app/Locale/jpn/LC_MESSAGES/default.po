@@ -3288,7 +3288,7 @@ msgstr ""
 msgid "Add Reference Values"
 msgstr "基準を追加する"
 
-msgid "Edit a goal"
+msgid "Edit goal"
 msgstr "ゴール編集"
 
 msgid "KR"
