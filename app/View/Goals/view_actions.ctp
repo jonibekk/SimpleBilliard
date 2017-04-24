@@ -20,30 +20,8 @@
     <div class="users-view-actions-panel">
         <div class="view-actions-panel-wrap">
             <div class="view-actions-panel-filter">
-                <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <strong>Term:&nbsp;</strong>Current&nbsp;<span class="fa fa-angle-double-down"></span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#">Current</a></li>
-                    <li><a href="#">June - December 2016</a></li>
-                    <li><a href="#">Jauary - May 2016</a></li>
-                    <li><a href="#">June - December 2015</a></li>
-                    <li><a href="#">Jauary - May 2015</a></li>
-                    <li><a href="#">June - December 2014</a></li>
-                    <li><a href="#">Jauary - May 2014</a></li>
-                    <li><a href="#">June - December 2013</a></li>
-                    <li><a href="#">Jauary - May 2013</a></li>
-                    <li><a href="#">June - December 2012</a></li>
-                    <li><a href="#">Jauary - May 2012</a></li>
-                    <li><a href="#">June - December 2011</a></li>
-                    <li><a href="#">Jauary - May 2011</a></li>
-                    <li><a href="#">June - December 2010</a></li>
-                    <li><a href="#">Jauary - May 2010</a></li>
-                </ul>
-            </div>
-            <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <strong>Goal:&nbsp;</strong>All&nbsp;<span class="fa fa-angle-double-down"></span>
+                    <strong>Key Result:&nbsp;</strong>All&nbsp;<span class="fa fa-angle-double-down"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php 
@@ -73,12 +51,6 @@
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                <div class="cube-img-column-frame add-action">
-                    <div class="profile-user-action-contents-add-image">
-                        <span><a href="#">+</a></span>
-                    </div>
-                    <a href="#">Add Action</a>
-                </div>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>

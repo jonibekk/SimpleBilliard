@@ -4,29 +4,19 @@
  */
 
  .view-actions-panel-wrap{
-  display:block;
-  padding:1em .5em;
-  float:left;
+  display:flex;
+  padding:1em;
+  margin:0 auto;
   width:100%;
+  justify-content:space-between;
+  align-items:center;
+  max-width:25em;
 }
 
 .view-actions-panel-filter{
-  width:40%;
   display: block;
   float:left;
   text-align:center;
-}
-
-@media @medium {
-  .view-actions-panel-filter{
-    width:35%;
-  }
-}
-
-@media @medium {
-  .view-actions-panel-filter:first-of-type{
-    margin-left:9%;
-  }
 }
 
 .view-actions-panel-filter .dropdown-menu{
