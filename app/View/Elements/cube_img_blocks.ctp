@@ -20,12 +20,9 @@
                 ]) ?>"
                 <?php if (Hash::get($post, 'ActionResult.ActionResultFile.0.AttachedFile')): ?>
                     <!-- アクション画像がある場合 -->
-                    <?= $this->Html->image('pre-load.svg',
+                    <?= $this->Html->image($this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],"AttachedFile.attached",['style' => 'small']),
                         [
-                            'class'         => 'cube-img-blocks-img lazy',
-                            'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
-                                "AttachedFile.attached",
-                                ['style' => 'small']),
+                            'class'         => 'cube-img-blocks-img',
                         ]
                     );
                     ?>

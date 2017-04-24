@@ -34,4 +34,23 @@
   position:absolute;
   top:0px;
   left:0px;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+}
+
+.cube-img-blocks-img{
+  width:100%;
+  max-width:none;
+  transition:opacity .3s;
+  opacity:0;
+}
+
+.cube-img-blocks-img.mod-visible{
+  opacity:1;
+}
+
+.cube-img-blocks-img.mod-wider{
+  width:auto;
+  height:100%;
 }

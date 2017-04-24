@@ -5,12 +5,6 @@ $(document).on("click", ".circle-link", evCircleFeed);
 // ハンバーガーメニューのサークル未読点描画
 $(document).ready(function() {
   updateNotifyOnHamburger();
-  $(".cube-img-blocks-img").each(function(){
-    console.log($(this).width()+" x "+$(this).height());
-    if($(this).width() > $(this).height()){
-      $(this).addClass("wider");
-    }
-  });
 });
 
 // サークル投稿リアルタイム通知

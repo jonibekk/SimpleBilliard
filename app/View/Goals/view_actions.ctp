@@ -91,6 +91,7 @@
                     <div class="panel-body panel-read-more-body">
                         <span class="none" id="ShowMoreNoData"><?= __("There is no further action.") ?></span>
                         <a href="#" class="click-feed-read-more"
+                            onclick="Page.action_resize()"
                            parent-id="FeedMoreRead"
                            no-data-text-id="ShowMoreNoData"
                            next-page-num="<?= $next_page_num ?>"

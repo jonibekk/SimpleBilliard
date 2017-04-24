@@ -894,7 +894,6 @@ function imageLazyOn($elm_obj) {
     combined: true,
     delay: 100,
     visibleOnly: false,
-    effect: "fadeIn",
     removeAttribute: false,
     onError: function (element) {
       if (element.attr('error-img') != undefined) {

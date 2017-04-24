@@ -10,13 +10,15 @@ $(document).ready(function(){
 });
 var goalDetail = {
     setHeadlineSize: function(){
-        var headChar=$(".goal-detail-goal-name-top-section").html().length;
-        if(headChar < 50){
-            $(".goal-detail-goal-name-top-section").addClass("mod-largest-text");
-        }else if(headChar > 200){
-            $(".goal-detail-goal-name-top-section").addClass("mod-smallest-text");
-        }else{
-            $(".goal-detail-goal-name-top-section").css("font-size",function(){return (((40/headChar))+1.25)+"em"});
+        if($(".goal-detail-goal-name-top-section").html()){
+            var headChar=$(".goal-detail-goal-name-top-section").html().length;
+            if(headChar < 50){
+                $(".goal-detail-goal-name-top-section").addClass("mod-largest-text");
+            }else if(headChar > 200){
+                $(".goal-detail-goal-name-top-section").addClass("mod-smallest-text");
+            }else{
+                $(".goal-detail-goal-name-top-section").css("font-size",function(){return (((40/headChar))+1.25)+"em"});
+            }
         }
     },
     setDetailLinkPosition: function(){
