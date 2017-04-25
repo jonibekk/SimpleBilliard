@@ -52,7 +52,7 @@ export default class TopicMembersAdd extends Base {
   }
 
   routerWillLeave(nextLocation) {
-    if (this.state.enabled_leave_page_alert || this.getSelectUserIdsByDom().length > 0) {
+    if (!this.props.topic_members_add.is_saving && (this.state.enabled_leave_page_alert || this.getSelectUserIdsByDom().length > 0)) {
       return this.state.leave_page_alert_msg
     }
   }
