@@ -2,13 +2,13 @@
 App::uses('AppModel', 'Model');
 
 /**
- * EvaluateTerm Model
+ * Term Model
  *
  * @property Team       $Team
  * @property Evaluation $Evaluation
  * @property Evaluator  $Evaluator
  */
-class EvaluateTerm extends AppModel
+class Term extends AppModel
 {
     const STATUS_EVAL_NOT_STARTED = 0;
     const STATUS_EVAL_IN_PROGRESS = 1;
@@ -86,7 +86,7 @@ class EvaluateTerm extends AppModel
             $options['order']['start_date'] = 'desc';
         }
         $res = $this->find('all', $options);
-        $res = Hash::combine($res, '{n}.EvaluateTerm.id', '{n}.EvaluateTerm');
+        $res = Hash::combine($res, '{n}.Term.id', '{n}.Term');
         return $res;
     }
 
@@ -106,7 +106,7 @@ class EvaluateTerm extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
-        return Hash::extract($res, '{n}.EvaluateTerm');
+        return Hash::extract($res, '{n}.Term');
     }
 
     function changeToInProgress($id)
@@ -593,7 +593,7 @@ class EvaluateTerm extends AppModel
                 Debugger::trace()
             ));
         }
-        $res = Hash::extract($res, 'EvaluateTerm');
+        $res = Hash::extract($res, 'Term');
         return $res;
     }
 
