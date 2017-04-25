@@ -96,14 +96,12 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         if ($direction == 'up') {
             try {
 
-                // KR変更ログのコーチ認定フラグを全てONに更新
                 /** @var EvaluateTerm $EvaluateTerm */
                 $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
                 /** @var Goal $Goal */
                 $Goal = ClassRegistry::init('Goal');
 
                 // Get old terms
-                // 本番でも件数が数百件しかないので全取得
                 $terms = Hash::extract(
                     $EvaluateTerm->find('all'), '{n}.EvaluateTerm'
                 );
