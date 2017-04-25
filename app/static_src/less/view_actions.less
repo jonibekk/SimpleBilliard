@@ -8,7 +8,7 @@
   padding:1em;
   margin:0 auto;
   width:100%;
-  justify-content:flex-start;
+  justify-content:space-between;
   align-items:center;
 }
 
@@ -16,12 +16,19 @@
   display: block;
   float:left;
   text-align:center;
-  margin-right:2em;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.view-actions-panel-filter:first-of-type{
+  margin-right:1em;
 }
 
 .view-actions-panel-filter .dropdown-menu{
   max-height:17.5em;
   overflow-y:scroll;
+  overflow-x:hidden;
+  text-overflow:ellipsis;
   text-align:left;
   ::-webkit-scrollbar {
       display:block;
@@ -70,6 +77,35 @@
 
 .view-action-panel-wrap .btn{
   min-width:20em;
+}
+
+.view-actions-panel-btngroup-wrap{
+  flex-grow:2;
+}
+
+.view-action-panel-filter-btngroup{
+  border:1px solid @slightGray;
+  border-radius:.25em;
+  float:right;
+}
+
+.view-action-panel-filter-button{
+  text-align:center;
+  padding:.3em .6em;
+  float:left;
+}
+
+.view-action-panel-filter-button:first-of-type{
+  border-right:1px solid @slightGray;
+}
+
+.view-action-panel-filter-button, .view-action-panel-filter-button:hover{
+  color:@black;
+  text-decoration: none;
+}
+
+.view-action-panel-filter-button.mod-active i{
+  color:@basicPink;
 }
 
 .users-view-actions, .goals-view-actions {

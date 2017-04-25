@@ -21,7 +21,7 @@
         <div class="view-actions-panel-wrap">
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <strong>Key Result:&nbsp;</strong>All&nbsp;<span class="fa fa-angle-double-down"></span>
+                    Key Result:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-double-down"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php 
@@ -32,20 +32,19 @@
                     ?>
                 </ul>
             </div>
-            <ul class="profile-user-action-view-switch">
-                <li class="profile-user-action-view-switch-img">
-                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+            <div class="view-actions-panel-filter">
+                <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
+                    <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
                         ['page_type' => 'image'])) ?>">
-                        <i class="fa fa-th-large link-dark-gray"></i>
+                       View: <strong>Grid</strong>&nbsp;<i class="fa fa-th-large link-dark-gray"></i>
                     </a>
-                </li>
-                <li class="profile-user-action-view-switch-feed">
-                    <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                    <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
                         ['page_type' => 'list'])) ?>">
-                        <i class="fa fa-reorder link-dark-gray"></i>
+                       View: <strong>List</strong>&nbsp;<i class="fa fa-reorder link-dark-gray"></i>
                     </a>
-                </li>
-            </ul>
+                <?php endif; ?>
+            </div>
         </div>
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
