@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('Post', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
+App::import('Service', 'UserService');
 
 /**
  * Users Controller
@@ -879,15 +880,19 @@ class UsersController extends AppController
     }
 
     /**
-     * select2のユーザ検索
+     * select2のメッセージのおける追加ユーザ検索
      */
-    function ajax_select_only_add_users()
+    function ajax_select_add_members_on_message()
     {
         $this->_ajaxPreProcess();
+
         $query = $this->request->query;
-        $res = [];
-        if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id'], true);
+        $res = ['results' => []];
+        $this->log($query);
+        if (isset($query['topic_id']) && !empty($query['topic_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            /** @var UserService $UserService */
+            $UserService = ClassRegistry::init('UserService');
+            $res['results'] = $UserService->findUsersForAddingOnTopic($query['term'], $query['page_limit'], $query['topic_id'], true);
         }
         return $this->_ajaxGetResponse($res);
     }

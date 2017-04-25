@@ -1019,7 +1019,7 @@ class User extends AppModel
         return false;
     }
 
-    public function getUsersByKeyword($keyword, $limit = 10, $not_me = true)
+    public function getUsersByKeyword($keyword, $limit = 10, $not_me = true, array $excludeUsers = [])
     {
         $user_list = $this->TeamMember->getAllMemberUserIdList();
 
@@ -1049,8 +1049,12 @@ class User extends AppModel
             ]
         ];
         if ($not_me) {
-            $options['conditions']['NOT']['User.id'] = $this->my_uid;
+            $excludeUsers[] = $this->my_uid;
         }
+        if (count($excludeUsers) > 0) {
+            $options['conditions']['NOT']['User.id'] = $excludeUsers;
+        }
+
         $res = $this->find('all', $options);
 
         return $res;

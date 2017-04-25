@@ -2033,7 +2033,6 @@ $(document).ready(function () {
 
 
   initMemberSelect2();
-  initMessageSelect2();
   initCircleSelect2();
 
   $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
@@ -2232,7 +2231,7 @@ $(document).ready(function () {
   }
 });
 
-function initMessageSelect2() {
+function initMessageSelect2(topic_id) {
   //noinspection JSUnusedLocalSymbols post_detail.Post.id
   $('#selectOnlyMember').select2({
     multiple: true,
@@ -2247,7 +2246,7 @@ function initMessageSelect2() {
         return {
           term: term, //search term
           page_limit: 10, // page size
-          post_id: $('#post_messenger').val()
+          topic_id: topic_id
         };
       },
       results: function (data, page) {
