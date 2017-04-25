@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('EvaluateTerm', 'Model');
+App::uses('Term', 'Model');
 App::import('Service', 'EvaluateTermService');
 
 /**
@@ -32,7 +32,7 @@ class EvaluateTermServiceTest extends GoalousTestCase
             'end_date'   => strtotime('2016-12-31 14:59:59'),//UTC
             'timezone'   => '+9'
         ];
-        $actual = $this->EvaluateTermService->processEvaluateTerm($data, EvaluateTerm::TERM_TYPE_CURRENT);
+        $actual = $this->EvaluateTermService->processEvaluateTerm($data, Term::TERM_TYPE_CURRENT);
         $expected = [
             'start_date' => '2016-12-01',
             'end_date'   => '2016-12-31',

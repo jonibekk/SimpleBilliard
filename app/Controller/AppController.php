@@ -268,17 +268,17 @@ class AppController extends BaseController
     {
         $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
         if (!$current_term) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+            $this->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         }
         $this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
 
         $previous_team = $this->Team->EvaluateTerm->getPreviousTermData();
         if (!$previous_team) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+            $this->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
         }
         $next_team = $this->Team->EvaluateTerm->getNextTermData();
         if (!$next_team) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+            $this->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
             // 期をまたいだらキャッシュ削除
             Cache::clear(false, 'team_info');
             Cache::clear(false, 'user_data');

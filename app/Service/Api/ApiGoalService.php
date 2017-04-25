@@ -207,8 +207,8 @@ class ApiGoalService extends ApiService
         $GoalService = ClassRegistry::init("GoalService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
 
         $TimeEx = new TimeExHelper(new View());
 

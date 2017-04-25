@@ -591,9 +591,9 @@ class GoalTest extends GoalousTestCase
         $this->Goal->Team->EvaluateTerm->current_team_id = 1;
         $this->Goal->Team->EvaluateTerm->my_uid = 1;
 
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $this->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
+        $this->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
         $this->current_date = REQUEST_TIMESTAMP;
         $this->start_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'];
         $this->end_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'];
@@ -673,9 +673,9 @@ class GoalTest extends GoalousTestCase
     function testGoalFilterTermNoExistsData()
     {
         $this->setDefault();
-        $current = $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $current = $this->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $this->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
+        $this->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
 
         $search_options = [];
         $search_options['term'] = ['previous'];
@@ -689,7 +689,7 @@ class GoalTest extends GoalousTestCase
     function testGetMyPreviousGoals()
     {
         $this->setDefault();
-        $term = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $term = $this->Goal->Team->EvaluateTerm->getTermData(Term::TYPE_PREVIOUS);
         $goal_data = [
             'user_id'          => 1,
             'team_id'          => 1,
@@ -812,7 +812,7 @@ class GoalTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
         //KR３つのゴール追加
-        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [10, 20, 30]);
+        $goalId = $this->createGoalKrs(Term::TYPE_CURRENT, [10, 20, 30]);
         $goals = $this->Goal->getGoalAndKr([$goalId]);
         //KR３つあるか？
         $this->assertCount(3, $goals[0]['KeyResult']);

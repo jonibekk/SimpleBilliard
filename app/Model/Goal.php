@@ -355,7 +355,7 @@ class Goal extends AppModel
         $goalId = Hash::get($this->data, 'Goal.id');
 
         if (empty($goalId)) {
-            if ($termType == EvaluateTerm::TERM_TYPE_CURRENT) {
+            if ($termType == Term::TERM_TYPE_CURRENT) {
                 $startDateInt = (int)date('Ymd');
             } else {
                 $term = $this->Team->EvaluateTerm->getNextTermData();
@@ -2117,8 +2117,8 @@ class Goal extends AppModel
             return false;
         }
 
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         return $EvaluateTerm->getTermDataByTimeStamp($goal['Goal']['end_date']);
     }
 

@@ -63,7 +63,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testIndexSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
@@ -85,7 +85,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testIndexPreviousTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
             'team_id'           => 1,
@@ -103,7 +103,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testIndexPresentTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $presentTermId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
@@ -138,7 +138,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
@@ -171,7 +171,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $records = [
             [
@@ -207,7 +207,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewNotExistTotal()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
@@ -240,7 +240,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewNotMyTern()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
@@ -273,7 +273,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewIncorrectEvaluateeId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectEvaluateeId = 10;
@@ -307,7 +307,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewIncorrectTermId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectTermId = 10;

@@ -443,9 +443,9 @@ class PostsController extends AppController
         $end = null;
         if (isset($this->request->params['named']['evaluate_term_id'])) {
             $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
-            if (isset($term['EvaluateTerm'])) {
-                $start = $term['EvaluateTerm']['start_date'];
-                $end = $term['EvaluateTerm']['end_date'];
+            if (isset($term['Term'])) {
+                $start = $term['Term']['start_date'];
+                $end = $term['Term']['end_date'];
             }
         }
 
@@ -573,9 +573,9 @@ class PostsController extends AppController
         $end = null;
         if (isset($this->request->params['named']['evaluate_term_id'])) {
             $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
-            if (isset($term['EvaluateTerm'])) {
-                $start = $term['EvaluateTerm']['start_date'];
-                $end = $term['EvaluateTerm']['end_date'];
+            if (isset($term['Term'])) {
+                $start = $term['Term']['start_date'];
+                $end = $term['Term']['end_date'];
             }
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);

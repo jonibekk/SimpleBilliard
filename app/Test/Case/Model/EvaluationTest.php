@@ -110,7 +110,7 @@ class EvaluationTest extends GoalousTestCase
     function testCheckAvailParameterInEvalFormStatusCannotGet()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $evaluateeId = 1;
@@ -124,7 +124,7 @@ class EvaluationTest extends GoalousTestCase
     function testCheckAvailParameterInEvalFormNotStatus()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->Team->EvaluateTerm->changeToInProgress($termId);
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
@@ -139,7 +139,7 @@ class EvaluationTest extends GoalousTestCase
     function testCheckAvailParameterInEvalFormSuccess()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->Team->EvaluateTerm->changeToInProgress($termId);
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
@@ -376,7 +376,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetStatus()
     {
         $this->_setDefault();
-        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $term_id = $this->Evaluation->EvaluateTerm->getLastInsertID();
         $data = [
             'team_id'           => 1,
@@ -398,7 +398,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetEvaluateType()
     {
         $this->_setDefault();
-        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $term_id = $this->Evaluation->EvaluateTerm->getLastInsertID();
         $data = [
             'team_id'           => 1,
@@ -749,9 +749,9 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->EvaluateTerm->deleteAll(['team_id' => 1], false);
-        $this->Evaluation->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
-        $this->Evaluation->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Evaluation->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $this->Evaluation->EvaluateTerm->resetTermProperty(Term::TYPE_CURRENT);
+        $this->Evaluation->EvaluateTerm->resetTermProperty(Term::TYPE_PREVIOUS);
+        $this->Evaluation->EvaluateTerm->resetTermProperty(Term::TYPE_NEXT);
         $res = $this->Evaluation->startEvaluation();
         $this->assertTrue($res);
     }
@@ -811,7 +811,7 @@ class EvaluationTest extends GoalousTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
         $this->Evaluation->getMyTurnCount();
@@ -822,15 +822,15 @@ class EvaluationTest extends GoalousTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
-        $previous = $this->Evaluation->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $previous = $this->Evaluation->EvaluateTerm->getTermData(Term::TYPE_PREVIOUS);
         $this->Evaluation->Team->EvaluateTerm->save([
             'id'         => $previousTermId,
             'start_date' => $previous['start_date'],
             'end_date'   => $previous['end_date']
         ]);
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
         $this->Evaluation->getMyTurnCount();
     }
@@ -897,8 +897,8 @@ class EvaluationTest extends GoalousTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $termId = $this->Evaluation->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_NEXT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $termId = $this->Evaluation->Team->EvaluateTerm->getTermId(Term::TYPE_NEXT);
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
         $this->Evaluation->getIsEditable($termId, null);
     }
@@ -906,7 +906,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetAllStatusesForTeamSettings()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
@@ -914,7 +914,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetIncompleteEvaluatees()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
@@ -922,7 +922,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetIncompleteEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
@@ -930,7 +930,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $res = $this->Evaluation->getEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermId(), 1);
         $this->assertNotEmpty($res);
@@ -939,7 +939,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetEvaluateesByEvaluator()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $evaluatorId = 2;
         $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->EvaluateTerm->getCurrentTermData(),
@@ -949,7 +949,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetIncompleteOneselfEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
@@ -957,7 +957,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetFinalEvaluations()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->EvaluateTerm->getCurrentTermData(), [1, 2, 3]);
         $this->assertTrue(count($res) === 2);
@@ -966,7 +966,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetEvaluateeIdsByTermId()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $excepted = array(
             (int)1 => '1',
@@ -979,7 +979,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetEvaluatorIdsByTermId()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $excepted = array(
             (int)1 => '1',
@@ -993,7 +993,7 @@ class EvaluationTest extends GoalousTestCase
     function testIsThisEvaluateType()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $this->_saveEvaluations();
         $res1 = $this->Evaluation->isThisEvaluateType(1, Evaluation::TYPE_ONESELF);
         $this->assertNotEmpty($res1);
@@ -1300,9 +1300,9 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $this->Evaluation->Goal->GoalMember->current_team_id = 1;
         $this->Evaluation->Goal->GoalMember->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');

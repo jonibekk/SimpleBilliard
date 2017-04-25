@@ -64,9 +64,9 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
 
-        $currentGoalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 10], $teamId);
-        $previousGoalId = $this->createGoalKrs(EvaluateTerm::TYPE_PREVIOUS, [0, 10], $teamId);
-        $nextGoalId = $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [0, 10], $teamId);
+        $currentGoalId = $this->createGoalKrs(Term::TYPE_CURRENT, [0, 10], $teamId);
+        $previousGoalId = $this->createGoalKrs(Term::TYPE_PREVIOUS, [0, 10], $teamId);
+        $nextGoalId = $this->createGoalKrs(Term::TYPE_NEXT, [0, 10], $teamId);
 
         $this->KrValuesDailyLogShell->params['date'] = date('Y-m-d');
         $this->KrValuesDailyLogShell->params['timezone'] = 9;
@@ -90,7 +90,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
 
-        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [10], $teamId);
+        $this->createGoalKrs(Term::TYPE_CURRENT, [10], $teamId);
         $this->KrValuesDailyLogShell->params['date'] = date('Y-m-d');
         $this->KrValuesDailyLogShell->params['timezone'] = 9;
         $this->KrValuesDailyLogShell->main();
@@ -123,7 +123,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $dateToday = date('Y-m-d');
         $dateTomorrow = date('Y-m-d', strtotime('tomorrow'));
 
-        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [100, 0], $teamId);
+        $this->createGoalKrs(Term::TYPE_CURRENT, [100, 0], $teamId);
         $this->KrValuesDailyLogShell->params['timezone'] = 9;
         $this->KrValuesDailyLogShell->params['date'] = $dateToday;
         $this->KrValuesDailyLogShell->main();
@@ -249,7 +249,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $teamId = $this->createTeam(['timezone' => $timezone]);
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupCurrentTermExtendDays($teamId);
-        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [$krCurrentValue], $teamId);
+        $this->createGoalKrs(Term::TYPE_CURRENT, [$krCurrentValue], $teamId);
         return $teamId;
     }
 }

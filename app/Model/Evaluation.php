@@ -7,7 +7,7 @@ App::uses('AppModel', 'Model');
  * @property Team          $Team
  * @property User          $EvaluateeUser
  * @property User          $EvaluatorUser
- * @property EvaluateTerm  $EvaluateTerm
+ * @property Term          $EvaluateTerm
  * @property EvaluateScore $EvaluateScore
  * @property Goal          $Goal
  */
@@ -94,7 +94,7 @@ class Evaluation extends AppModel
             'fields'     => '',
             'order'      => ''
         ],
-        'EvaluateTerm',
+        'Term',
         'EvaluateScore',
         'Goal',
     ];
@@ -477,7 +477,7 @@ class Evaluation extends AppModel
             return false;
         }
         if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+            $this->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
             $term_id = $this->Team->EvaluateTerm->getLastInsertID();
         }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);

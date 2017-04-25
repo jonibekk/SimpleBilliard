@@ -22,7 +22,7 @@ App::uses('AppModel', 'Model');
  * @property Evaluator         $Evaluator
  * @property EvaluationSetting $EvaluationSetting
  * @property Evaluation        $Evaluation
- * @property EvaluateTerm      $EvaluateTerm
+ * @property Term              $EvaluateTerm
  * @property TeamVision        $TeamVision
  * @property GroupVision       $GroupVision
  * @property TeamInsight       $TeamInsight
@@ -174,9 +174,9 @@ class Team extends AppModel
         'TeamMember',
         'Evaluator',
         'Evaluation',
-        'EvaluateTerm',
+        'Term',
         'EvaluationSetting',
-        'EvaluateTerm',
+        'Term',
         'TeamVision',
         'GroupVision',
         'TeamInsight',

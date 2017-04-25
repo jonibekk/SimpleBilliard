@@ -1181,9 +1181,9 @@ class PostTest extends GoalousTestCase
 
     function _setTerm()
     {
-        $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->Post->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $this->Post->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
+        $this->Post->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
         $this->current_date = REQUEST_TIMESTAMP;
         $this->start_date = $this->Post->Team->EvaluateTerm->getCurrentTermData()['start_date'];
         $this->end_date = $this->Post->Team->EvaluateTerm->getCurrentTermData()['end_date'];

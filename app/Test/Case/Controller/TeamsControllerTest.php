@@ -267,7 +267,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
     function testSettingsSuccessNotAvailStartEvalButton()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
-        $Teams->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Teams->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
 
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
@@ -570,7 +570,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
 
-        $Teams->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Teams->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
         $this->testAction('/teams/change_freeze_status/evaluate_term_id:' . $termId, ['method' => 'POST']);
     }

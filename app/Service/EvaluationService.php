@@ -106,8 +106,8 @@ class EvaluationService extends AppService
      */
     function isStarted()
     {
-        /** @var  EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var  Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
 
         $cachedData = Cache::read($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
         if ($cachedData !== false) {

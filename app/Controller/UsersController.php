@@ -1200,8 +1200,8 @@ class UsersController extends AppController
         if (isset($this->request->params['named']['term_id'])) {
             $termId = $this->request->params['named']['term_id'];
             $targetTerm = $this->Team->EvaluateTerm->findById($termId);
-            $startDate = $targetTerm['EvaluateTerm']['start_date'];
-            $endDate = $targetTerm['EvaluateTerm']['end_date'];
+            $startDate = $targetTerm['Term']['start_date'];
+            $endDate = $targetTerm['Term']['end_date'];
         } else {
             $termId = $currentId;
             $startDate = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];

@@ -332,9 +332,9 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Goal->GoalMember->current_team_id = 1;
         $this->KeyResult->Team->EvaluateTerm->current_team_id = 1;
         $this->KeyResult->Team->EvaluateTerm->my_uid = 1;
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
     }
 
     function testValidateEditProgress()
@@ -739,8 +739,8 @@ class KeyResultTest extends GoalousTestCase
 
         $nextTerm = $this->KeyResult->Team->EvaluateTerm->getNextTermData();
 
-        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 10], $teamId);
-        $this->KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_NEXT);
+        $goalId = $this->createGoalKrs(Term::TYPE_CURRENT, [0, 10], $teamId);
+        $this->KeyResult->updateTermByGoalId($goalId, Term::TYPE_NEXT);
         $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
         $this->assertEquals($updatedKr['start_date'], $nextTerm['start_date']);
         $this->assertEquals($updatedKr['end_date'], $nextTerm['end_date']);
@@ -754,8 +754,8 @@ class KeyResultTest extends GoalousTestCase
         $this->setupTerm($teamId);
         $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
 
-        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [0, 10], $teamId);
-        $this->KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT);
+        $goalId = $this->createGoalKrs(Term::TYPE_NEXT, [0, 10], $teamId);
+        $this->KeyResult->updateTermByGoalId($goalId, Term::TYPE_CURRENT);
         $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
 
         $this->assertTrue($currentTerm['start_date'] < $updatedKr['start_date']);
@@ -775,7 +775,7 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->ActionResult->deleteAll(['ActionResult.id >' => 0], false);
 
         // Termデータ作成
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
         $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
 
         $userId = 1;

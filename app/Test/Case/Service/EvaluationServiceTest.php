@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('EvaluateTerm', 'Model');
+App::uses('Term', 'Model');
 App::import('Service', 'EvaluationService');
 
 /**

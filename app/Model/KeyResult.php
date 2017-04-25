@@ -251,7 +251,7 @@ class KeyResult extends AppModel
         // 開始日が終了日を超えてないか
         // getCurrentTermDataの方が効率は良いがテストが通らないのでDBから直で取得
         // ※複数のtimezoneで問題ないかのテスト時、getCurrentTermDataだとキャッシュしてしまうので最新のデータが取得できない
-//        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+//        $timezone = $this->Team->Term->getCurrentTermData()['timezone'];
         $timezone = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP)['timezone'];
 
         // FIXME:タイムスタンプで比較すると不具合が生じる為、日付文字列を数値に変換して比較する
@@ -1138,12 +1138,12 @@ class KeyResult extends AppModel
      */
     public function updateTermByGoalId(int $goalId, int $termAfterUpdate): bool
     {
-        if (!in_array($termAfterUpdate, [EvaluateTerm::TYPE_CURRENT, EvaluateTerm::TYPE_NEXT])) {
+        if (!in_array($termAfterUpdate, [Term::TYPE_CURRENT, Term::TYPE_NEXT])) {
             return false;
         }
 
         // 保存データ定義
-        $isCurrent = $termAfterUpdate == EvaluateTerm::TYPE_CURRENT;
+        $isCurrent = $termAfterUpdate == Term::TYPE_CURRENT;
         $termData = $this->Team->EvaluateTerm->getTermData($termAfterUpdate);
         $startDate = $isCurrent ? time() : $termData['start_date'];
         $endDate = $termData['end_date'];

@@ -693,7 +693,7 @@ class TeamsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
-        if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
+        if ($res['Term']['evaluate_status'] == Term::STATUS_EVAL_FROZEN) {
             $this->Pnotify->outSuccess(__("Evaluation suspended."));
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
                 $this->Team->EvaluateTerm->getCurrentTermId());

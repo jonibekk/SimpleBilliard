@@ -442,7 +442,7 @@ class GoalMember extends AppModel
      */
     function findActive($goalUserId)
     {
-        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
         $conditions = [
             'GoalMember.team_id'          => $this->current_team_id,
             'GoalMember.user_id'          => $goalUserId,
@@ -825,7 +825,7 @@ class GoalMember extends AppModel
 
     function getForApproval($goalMemberId)
     {
-        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
         $conditions = [
             'GoalMember.id'    => $goalMemberId,
             'Goal.end_date >=' => $currentTerm['start_date'],
