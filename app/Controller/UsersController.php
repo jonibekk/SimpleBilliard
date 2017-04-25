@@ -880,7 +880,7 @@ class UsersController extends AppController
     }
 
     /**
-     * select2のメッセージのおける追加ユーザ検索
+     * search users for adding users in message select2
      */
     function ajax_select_add_members_on_message()
     {
@@ -888,7 +888,8 @@ class UsersController extends AppController
 
         $query = $this->request->query;
         $res = ['results' => []];
-        if (isset($query['topic_id']) && !empty($query['topic_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+        $existparameters = !empty($query['topic_id']) && !empty($query['term']) && !empty($query['page_limit']);
+        if ($existparameters) {
             /** @var UserService $UserService */
             $UserService = ClassRegistry::init('UserService');
             $res['results'] = $UserService->findUsersForAddingOnTopic($query['term'], $query['page_limit'], $query['topic_id'], true);
