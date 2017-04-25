@@ -888,7 +888,6 @@ class UsersController extends AppController
 
         $query = $this->request->query;
         $res = ['results' => []];
-        $this->log($query);
         if (isset($query['topic_id']) && !empty($query['topic_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
             /** @var UserService $UserService */
             $UserService = ClassRegistry::init('UserService');
