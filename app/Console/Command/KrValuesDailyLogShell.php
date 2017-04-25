@@ -119,7 +119,7 @@ class KrValuesDailyLogShell extends AppShell
         // $this->KrValuesDailyLog->deleteAll(['KrValuesDailyLog.target_date' => $targetDate]);
 
         // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
-        $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, $targetDate);
+        $teamIds = $this->Term->findTeamIdByTimezone($targetTimezone, $targetDate);
 
         $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate, $targetTimezone);
     }

@@ -386,8 +386,8 @@ class GoalMember extends AppModel
             $conditions['GoalMember.approval_status'] = $approvalStatus;
         }
         if ($term_type !== null) {
-            $conditions['Goal.end_date >='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['start_date'];
-            $conditions['Goal.end_date <='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['end_date'];
+            $conditions['Goal.end_date >='] = $this->Goal->Team->Term->getTermData($term_type)['start_date'];
+            $conditions['Goal.end_date <='] = $this->Goal->Team->Term->getTermData($term_type)['end_date'];
         }
 
         $options = [
@@ -442,7 +442,7 @@ class GoalMember extends AppModel
      */
     function findActive($goalUserId)
     {
-        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
+        $currentTerm = $this->Goal->Team->Term->getTermData(Term::TYPE_CURRENT);
         $conditions = [
             'GoalMember.team_id'          => $this->current_team_id,
             'GoalMember.user_id'          => $goalUserId,
@@ -500,7 +500,7 @@ class GoalMember extends AppModel
      */
     function countUnapprovedGoal($userId)
     {
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $currentTerm = $this->Team->Term->getCurrentTermData();
 
         $options = [
             'fields'     => ['GoalMember.id'],
@@ -825,7 +825,7 @@ class GoalMember extends AppModel
 
     function getForApproval($goalMemberId)
     {
-        $currentTerm = $this->Goal->Team->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
+        $currentTerm = $this->Goal->Team->Term->getTermData(Term::TYPE_CURRENT);
         $conditions = [
             'GoalMember.id'    => $goalMemberId,
             'Goal.end_date >=' => $currentTerm['start_date'],

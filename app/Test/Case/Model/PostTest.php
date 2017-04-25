@@ -1175,19 +1175,19 @@ class PostTest extends GoalousTestCase
         $this->Post->Goal->current_team_id = $team_id;
         $this->Post->Goal->GoalMember->my_uid = $uid;
         $this->Post->Goal->GoalMember->current_team_id = $team_id;
-        $this->Post->Team->EvaluateTerm->current_team_id = $team_id;
-        $this->Post->Team->EvaluateTerm->my_uid = $uid;
+        $this->Post->Team->Term->current_team_id = $team_id;
+        $this->Post->Team->Term->my_uid = $uid;
     }
 
     function _setTerm()
     {
-        $this->Post->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->Post->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->Post->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
+        $this->Post->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Post->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->Post->Team->Term->addTermData(Term::TYPE_NEXT);
         $this->current_date = REQUEST_TIMESTAMP;
-        $this->start_date = $this->Post->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $this->end_date = $this->Post->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        $timezone = $this->Post->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $this->start_date = $this->Post->Team->Term->getCurrentTermData()['start_date'];
+        $this->end_date = $this->Post->Team->Term->getCurrentTermData()['end_date'];
+        $timezone = $this->Post->Team->Term->getCurrentTermData()['timezone'];
         $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
         $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
     }

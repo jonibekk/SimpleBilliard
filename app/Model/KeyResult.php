@@ -252,7 +252,7 @@ class KeyResult extends AppModel
         // getCurrentTermDataの方が効率は良いがテストが通らないのでDBから直で取得
         // ※複数のtimezoneで問題ないかのテスト時、getCurrentTermDataだとキャッシュしてしまうので最新のデータが取得できない
 //        $timezone = $this->Team->Term->getCurrentTermData()['timezone'];
-        $timezone = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP)['timezone'];
+        $timezone = $this->Team->Term->getTermDataByTimeStamp(REQUEST_TIMESTAMP)['timezone'];
 
         // FIXME:タイムスタンプで比較すると不具合が生じる為、日付文字列を数値に変換して比較する
         // 参照:http://54.250.147.97:8080/browse/GL-5622
@@ -941,7 +941,7 @@ class KeyResult extends AppModel
         // TODO: 将来的にtry catch文削除
         // GL-5590で原因特定用にエラーログ埋め込み
         try {
-            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            $currentTerm = $this->Team->Term->getCurrentTermData();
             if (empty($currentTerm)) {
                 throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
             }
@@ -1029,7 +1029,7 @@ class KeyResult extends AppModel
      */
     public function countMine($goalId = null): int
     {
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $currentTerm = $this->Team->Term->getCurrentTermData();
 
         $options = [
             'conditions' => [
@@ -1144,7 +1144,7 @@ class KeyResult extends AppModel
 
         // 保存データ定義
         $isCurrent = $termAfterUpdate == Term::TYPE_CURRENT;
-        $termData = $this->Team->EvaluateTerm->getTermData($termAfterUpdate);
+        $termData = $this->Team->Term->getTermData($termAfterUpdate);
         $startDate = $isCurrent ? time() : $termData['start_date'];
         $endDate = $termData['end_date'];
 

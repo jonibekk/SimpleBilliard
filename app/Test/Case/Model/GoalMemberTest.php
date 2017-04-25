@@ -90,7 +90,7 @@ class GoalMemberTest extends GoalousTestCase
         $this->_setDefault();
         $team_id = 1;
 
-        $current_term = $this->GoalMember->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $current_term = $this->GoalMember->Goal->Team->Term->getCurrentTermData();
 
         $params = [
             'first_name' => 'test',
@@ -498,7 +498,7 @@ class GoalMemberTest extends GoalousTestCase
         $this->setupTerm();
         $this->createGoalKrs(Term::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_OWNER);
         $this->createGoalKrs(Term::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_COLLABORATOR);
-        $term = $this->EvaluateTerm->getCurrentTermData();
+        $term = $this->Term->getCurrentTermData();
 
         $ret = $this->GoalMember->findGoalPriorities(1, $term['start_date'], $term['end_date']);
         $this->assertCount(2, $ret);
@@ -512,12 +512,12 @@ class GoalMemberTest extends GoalousTestCase
         $this->GoalMember->Goal->my_uid = 1;
         $this->GoalMember->Goal->Team->current_team_id = 1;
         $this->GoalMember->Goal->Team->my_uid = 1;
-        $this->GoalMember->Goal->Team->EvaluateTerm->current_team_id = 1;
-        $this->GoalMember->Goal->Team->EvaluateTerm->my_uid = 1;
+        $this->GoalMember->Goal->Team->Term->current_team_id = 1;
+        $this->GoalMember->Goal->Team->Term->my_uid = 1;
 
-        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
+        $this->GoalMember->Goal->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->GoalMember->Goal->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->GoalMember->Goal->Team->Term->addTermData(Term::TYPE_NEXT);
 
     }
 

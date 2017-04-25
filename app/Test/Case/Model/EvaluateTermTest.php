@@ -44,23 +44,23 @@ class EvaluateTermTest extends GoalousTestCase
     function testGetAll()
     {
         $this->_setDefault();
-        $exists = $this->EvaluateTerm->getAllTerm();
+        $exists = $this->Term->getAllTerm();
         $exists_count = count($exists);
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $res = $this->EvaluateTerm->getAllTerm();
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $res = $this->Term->getAllTerm();
         $this->assertCount($exists_count + 3, $res);
     }
 
     function testIsAbleToStartEvaluation()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $res = $this->EvaluateTerm->isAbleToStartEvaluation($this->EvaluateTerm->getCurrentTermId());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $res = $this->Term->isAbleToStartEvaluation($this->Term->getCurrentTermId());
         $this->assertTrue($res);
-        $this->EvaluateTerm->changeToInProgress($this->EvaluateTerm->getCurrentTermId());
-        $res = $this->EvaluateTerm->isAbleToStartEvaluation($this->EvaluateTerm->getCurrentTermId());
+        $this->Term->changeToInProgress($this->Term->getCurrentTermId());
+        $res = $this->Term->isAbleToStartEvaluation($this->Term->getCurrentTermId());
         $this->assertFalse($res);
     }
 
@@ -68,7 +68,7 @@ class EvaluateTermTest extends GoalousTestCase
     {
         $this->_setDefault();
         try {
-            $this->EvaluateTerm->changeFreezeStatus($this->EvaluateTerm->getCurrentTermId());
+            $this->Term->changeFreezeStatus($this->Term->getCurrentTermId());
 
         } catch (RuntimeException $e) {
         }
@@ -79,55 +79,55 @@ class EvaluateTermTest extends GoalousTestCase
     function testGetNewStartEndBeforeAdd()
     {
         $this->_setDefault();
-        $res = $this->EvaluateTerm->getNewStartEndBeforeAdd(1, 1, 9);
+        $res = $this->Term->getNewStartEndBeforeAdd(1, 1, 9);
         $this->assertNotEmpty($res);
     }
 
     function testChangeFreezeStatusCaseFrozen()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $latestTermId = $this->Term->getLastInsertID();
         $frozenData = ['id' => $latestTermId, 'evaluate_status' => Term::STATUS_EVAL_FROZEN];
-        $this->EvaluateTerm->save($frozenData);
+        $this->Term->save($frozenData);
 
-        $this->EvaluateTerm->changeFreezeStatus($latestTermId);
-        $res = $this->EvaluateTerm->findById($latestTermId);
+        $this->Term->changeFreezeStatus($latestTermId);
+        $res = $this->Term->findById($latestTermId);
         $this->assertEquals($res['Term']['evaluate_status'], Term::STATUS_EVAL_IN_PROGRESS);
     }
 
     function testChangeFreezeStatusCaseNotFrozen()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $latestTermId = $this->Term->getLastInsertID();
         $frozenData = ['id' => $latestTermId, 'evaluate_status' => Term::STATUS_EVAL_FROZEN];
-        $this->EvaluateTerm->save($frozenData);
+        $this->Term->save($frozenData);
 
-        $this->EvaluateTerm->changeFreezeStatus($latestTermId);
-        $res = $this->EvaluateTerm->findById($latestTermId);
+        $this->Term->changeFreezeStatus($latestTermId);
+        $res = $this->Term->findById($latestTermId);
         $this->assertEquals($res['Term']['evaluate_status'], Term::STATUS_EVAL_IN_PROGRESS);
     }
 
     function testCheckFrozenEvaluateTermCaseFrozen()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $latestTermId = $this->Term->getLastInsertID();
         $frozenData = ['id' => $latestTermId, 'evaluate_status' => Term::STATUS_EVAL_FROZEN];
-        $this->EvaluateTerm->save($frozenData);
-        $res = $this->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+        $this->Term->save($frozenData);
+        $res = $this->Term->checkFrozenEvaluateTerm($latestTermId);
         $this->assertEquals($res, true);
     }
 
     function testCheckFrozenEvaluateTermCaseNotFrozen()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $latestTermId = $this->Term->getLastInsertID();
         $notFrozenData = ['id' => $latestTermId, 'evaluate_status' => Term::STATUS_EVAL_IN_PROGRESS];
-        $this->EvaluateTerm->save($notFrozenData);
-        $res = $this->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+        $this->Term->save($notFrozenData);
+        $res = $this->Term->checkFrozenEvaluateTerm($latestTermId);
         $this->assertEquals($res, false);
     }
 
@@ -148,149 +148,149 @@ class EvaluateTermTest extends GoalousTestCase
     function testGetTermData()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
 
-        $current_1 = $this->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
+        $current_1 = $this->Term->getTermData(Term::TYPE_CURRENT);
         $this->assertNotEmpty($current_1);
-        $current_2 = $this->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
+        $current_2 = $this->Term->getTermData(Term::TYPE_CURRENT);
         $this->assertNotEmpty($current_2);
-        $next_1 = $this->EvaluateTerm->getTermData(Term::TYPE_NEXT);
+        $next_1 = $this->Term->getTermData(Term::TYPE_NEXT);
         $this->assertNotEmpty($next_1);
-        $next_2 = $this->EvaluateTerm->getTermData(Term::TYPE_NEXT);
+        $next_2 = $this->Term->getTermData(Term::TYPE_NEXT);
         $this->assertNotEmpty($next_2);
-        $this->EvaluateTerm->resetTermProperty(Term::TYPE_NEXT);
-        $next_3 = $this->EvaluateTerm->getTermData(Term::TYPE_NEXT);
+        $this->Term->resetTermProperty(Term::TYPE_NEXT);
+        $next_3 = $this->Term->getTermData(Term::TYPE_NEXT);
         $this->assertNotEmpty($next_3);
-        $this->EvaluateTerm->create();
-        $this->EvaluateTerm->save([
+        $this->Term->create();
+        $this->Term->save([
             'start_date' => $current_2['start_date'] - 2678400,
             'end_date'   => $current_2['start_date'] - 1,
             'team_id'    => 1,
             'timezone'   => 9
         ]);
 
-        $previous1 = $this->EvaluateTerm->getTermData(Term::TYPE_PREVIOUS);
+        $previous1 = $this->Term->getTermData(Term::TYPE_PREVIOUS);
         $this->assertNotEmpty($previous1);
-        $previous2 = $this->EvaluateTerm->getTermData(Term::TYPE_PREVIOUS);
+        $previous2 = $this->Term->getTermData(Term::TYPE_PREVIOUS);
         $this->assertNotEmpty($previous2);
-        $this->EvaluateTerm->resetTermProperty(Term::TYPE_PREVIOUS);
-        $previous3 = $this->EvaluateTerm->getTermData(Term::TYPE_PREVIOUS);
+        $this->Term->resetTermProperty(Term::TYPE_PREVIOUS);
+        $previous3 = $this->Term->getTermData(Term::TYPE_PREVIOUS);
         $this->assertNotEmpty($previous3);
     }
 
     function testGetTermId()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->assertNotNull($this->EvaluateTerm->getTermId(Term::TYPE_CURRENT));
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->assertNotNull($this->Term->getTermId(Term::TYPE_CURRENT));
     }
 
     function testAddTermDataPreviousAlready()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->assertFalse($this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS));
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->assertFalse($this->Term->addTermData(Term::TYPE_PREVIOUS));
     }
 
     function testAddTermDataPreviousNew()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->assertNotEmpty($this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS));
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->assertNotEmpty($this->Term->addTermData(Term::TYPE_PREVIOUS));
     }
 
     function testAddTermDataPreviousNotExistsCurrent()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->deleteAll(['team_id' => 1], false);
-        $this->assertFalse($this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS));
+        $this->Term->deleteAll(['team_id' => 1], false);
+        $this->assertFalse($this->Term->addTermData(Term::TYPE_PREVIOUS));
     }
 
     function testAddTermDataCurrentAlready()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->assertFalse($this->EvaluateTerm->addTermData(Term::TYPE_CURRENT));
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->assertFalse($this->Term->addTermData(Term::TYPE_CURRENT));
     }
 
     function testAddTermDataCurrentNew()
     {
         $this->_setDefault();
-        $this->assertNotEmpty($this->EvaluateTerm->addTermData(Term::TYPE_CURRENT));
+        $this->assertNotEmpty($this->Term->addTermData(Term::TYPE_CURRENT));
     }
 
     function testAddTermDataNextAlready()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $this->assertFalse($this->EvaluateTerm->addTermData(Term::TYPE_NEXT));
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $this->assertFalse($this->Term->addTermData(Term::TYPE_NEXT));
     }
 
     function testAddTermDataNextNew()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->assertNotEmpty($this->EvaluateTerm->addTermData(Term::TYPE_NEXT));
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->assertNotEmpty($this->Term->addTermData(Term::TYPE_NEXT));
     }
 
     function testAddTermDataNextNotExistsCurrent()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->deleteAll(['team_id' => 1], false);
-        $this->assertFalse($this->EvaluateTerm->addTermData(Term::TYPE_NEXT));
+        $this->Term->deleteAll(['team_id' => 1], false);
+        $this->assertFalse($this->Term->addTermData(Term::TYPE_NEXT));
     }
 
     function testGetSaveDataBeforeUpdateFromCurrent()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $res = $this->EvaluateTerm->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $res = $this->Term->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
         $this->assertCount(2, $res);
     }
 
     function testGetSaveDataBeforeUpdateFromNext()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $res = $this->EvaluateTerm->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_NEXT, 1, 1, 9);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $res = $this->Term->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_NEXT, 1, 1, 9);
         $this->assertCount(1, $res);
     }
 
     function testUpdateTermData()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $res = $this->EvaluateTerm->updateTermData(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $res = $this->Term->updateTermData(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
         $this->assertTrue($res);
     }
 
     function testResetTermProperty()
     {
-        $this->EvaluateTerm->resetTermProperty(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->resetTermProperty(Term::TYPE_NEXT);
-        $this->EvaluateTerm->resetTermProperty(Term::TYPE_PREVIOUS);
+        $this->Term->resetTermProperty(Term::TYPE_CURRENT);
+        $this->Term->resetTermProperty(Term::TYPE_NEXT);
+        $this->Term->resetTermProperty(Term::TYPE_PREVIOUS);
     }
 
     function testGetCurrentTermData()
     {
         $this->_setDefault();
-        $this->assertEmpty($this->EvaluateTerm->getCurrentTermData());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->assertNotEmpty($this->EvaluateTerm->getCurrentTermData());
+        $this->assertEmpty($this->Term->getCurrentTermData());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->assertNotEmpty($this->Term->getCurrentTermData());
     }
 
     function testGetCurrentTermDataUtcMidnight()
     {
         $this->_setDefault();
-        $this->assertEmpty($this->EvaluateTerm->getCurrentTermData());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $utcMidnightTerm = $this->EvaluateTerm->getCurrentTermData(true);
+        $this->assertEmpty($this->Term->getCurrentTermData());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $utcMidnightTerm = $this->Term->getCurrentTermData(true);
         $this->assertRegExp('/00:00:00/',date('Y-m-d H:i:s',$utcMidnightTerm['start_date']));
         $this->assertRegExp('/23:59:59/',date('Y-m-d H:i:s',$utcMidnightTerm['end_date']));
     }
@@ -299,45 +299,45 @@ class EvaluateTermTest extends GoalousTestCase
     function testGetNextTermData()
     {
         $this->_setDefault();
-        $this->assertEmpty($this->EvaluateTerm->getNextTermData());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $this->assertNotEmpty($this->EvaluateTerm->getNextTermData());
+        $this->assertEmpty($this->Term->getNextTermData());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $this->assertNotEmpty($this->Term->getNextTermData());
     }
 
     function testGetPreviousTermData()
     {
         $this->_setDefault();
-        $this->assertEmpty($this->EvaluateTerm->getPreviousTermData());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->assertNotEmpty($this->EvaluateTerm->getPreviousTermData());
+        $this->assertEmpty($this->Term->getPreviousTermData());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->assertNotEmpty($this->Term->getPreviousTermData());
     }
 
     function testGetCurrentTermId()
     {
         $this->_setDefault();
-        $this->assertNull($this->EvaluateTerm->getCurrentTermId());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->assertNotNull($this->EvaluateTerm->getCurrentTermId());
+        $this->assertNull($this->Term->getCurrentTermId());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->assertNotNull($this->Term->getCurrentTermId());
     }
 
     function testGetNextTermId()
     {
         $this->_setDefault();
-        $this->assertNull($this->EvaluateTerm->getNextTermId());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_NEXT);
-        $this->assertNotNull($this->EvaluateTerm->getNextTermId());
+        $this->assertNull($this->Term->getNextTermId());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $this->assertNotNull($this->Term->getNextTermId());
     }
 
     function testGetPreviousTermId()
     {
         $this->_setDefault();
-        $this->assertNull($this->EvaluateTerm->getPreviousTermId());
-        $this->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->assertNotNull($this->EvaluateTerm->getPreviousTermId());
+        $this->assertNull($this->Term->getPreviousTermId());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->assertNotNull($this->Term->getPreviousTermId());
     }
 
     function test_getNewStartAndEndDate()
@@ -464,18 +464,18 @@ class EvaluateTermTest extends GoalousTestCase
     function testGetTermByDatetime()
     {
         $this->_setDefault();
-        $this->EvaluateTerm->save(['start_date' => 1, 'end_date' => 100, 'team_id' => 1, 'timezone' => 9]);
-        $actual = $this->EvaluateTerm->getTermDataByTimeStamp(50);
+        $this->Term->save(['start_date' => 1, 'end_date' => 100, 'team_id' => 1, 'timezone' => 9]);
+        $actual = $this->Term->getTermDataByTimeStamp(50);
         $this->assertEquals(1, $actual['start_date']);
         $this->assertEquals(100, $actual['end_date']);
     }
 
     function _setDefault()
     {
-        $this->EvaluateTerm->current_team_id = 1;
-        $this->EvaluateTerm->my_uid = 1;
-        $this->EvaluateTerm->Team->current_team_id = 1;
-        $this->EvaluateTerm->Team->my_uid = 1;
+        $this->Term->current_team_id = 1;
+        $this->Term->my_uid = 1;
+        $this->Term->Team->current_team_id = 1;
+        $this->Term->Team->my_uid = 1;
     }
 
 }

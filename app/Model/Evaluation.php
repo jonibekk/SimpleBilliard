@@ -236,7 +236,7 @@ class Evaluation extends AppModel
             throw new RuntimeException(__("Parameter is invalid."));
         }
 
-        if (!$this->Team->EvaluateTerm->isStartedEvaluation($termId)) {
+        if (!$this->Team->Term->isStartedEvaluation($termId)) {
             throw new RuntimeException(__("You can't evaluate in this period or don't have permission to view."));
         }
 
@@ -476,9 +476,9 @@ class Evaluation extends AppModel
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             return false;
         }
-        if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $this->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-            $term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        if (!$term_id = $this->Team->Term->getCurrentTermId()) {
+            $this->Team->Term->addTermData(Term::TYPE_CURRENT);
+            $term_id = $this->Team->Term->getLastInsertID();
         }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
         $evaluators = [];
@@ -501,7 +501,7 @@ class Evaluation extends AppModel
                     'Evaluation.index_num'        => 0,
                 ]
             );
-            $this->EvaluateTerm->changeToInProgress($term_id);
+            $this->Term->changeToInProgress($term_id);
 
             return (bool)$res;
         }
@@ -688,18 +688,18 @@ class Evaluation extends AppModel
         }
 
         //前期以前のデータは無視する (現状の仕様上その情報に一切アクセスができないため)
-        $previousStartDate = Hash::get($this->Team->EvaluateTerm->getPreviousTermData(), 'start_date');
+        $previousStartDate = Hash::get($this->Team->Term->getPreviousTermData(), 'start_date');
         if ($previousStartDate) {
             $options['conditions']['created >='] = $previousStartDate;
         }
 
         // freeze
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
-        if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId)) {
+        $currentTermId = $this->Team->Term->getCurrentTermId();
+        $previousTermId = $this->Team->Term->getPreviousTermId();
+        if ($this->Team->Term->checkFrozenEvaluateTerm($currentTermId)) {
             $options['conditions']['NOT'][] = ['evaluate_term_id' => $currentTermId];
         }
-        if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId)) {
+        if ($this->Team->Term->checkFrozenEvaluateTerm($previousTermId)) {
             $options['conditions']['NOT'][] = ['evaluate_term_id' => $previousTermId];
         }
         $count = $this->find('count', $options);
@@ -818,7 +818,7 @@ class Evaluation extends AppModel
     function getIsEditable($evaluateTermId, $evaluateeId)
     {
         // check frozen
-        $evalIsFrozen = $this->EvaluateTerm->checkFrozenEvaluateTerm($evaluateTermId);
+        $evalIsFrozen = $this->Term->checkFrozenEvaluateTerm($evaluateTermId);
         if ($evalIsFrozen) {
             return false;
         }

@@ -63,12 +63,12 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testIndexSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 1,
-            'evaluate_term_id'  => $Evaluations->Team->EvaluateTerm->getLastInsertID(),
+            'evaluate_term_id'  => $Evaluations->Team->Term->getLastInsertID(),
             'evaluate_type'     => 0,
             'my_turn_flg'       => true,
             'index_num'         => 0,
@@ -85,13 +85,13 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testIndexPreviousTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 1,
-            'evaluate_term_id'  => $Evaluations->Team->EvaluateTerm->getLastInsertID(),
+            'evaluate_term_id'  => $Evaluations->Team->Term->getLastInsertID(),
             'evaluate_type'     => 0,
             'my_turn_flg'       => true,
             'index_num'         => 0,
@@ -103,8 +103,8 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testIndexPresentTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $presentTermId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $presentTermId = $Evaluations->Team->Term->getLastInsertID();
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
             'team_id'           => 1,
@@ -138,9 +138,9 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
-        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Evaluations->Team->Term->getLastInsertID();
+        $Evaluations->Team->Term->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -171,8 +171,8 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Evaluations->Team->Term->getLastInsertID();
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -207,9 +207,9 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewNotExistTotal()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
-        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Evaluations->Team->Term->getLastInsertID();
+        $Evaluations->Team->Term->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -240,9 +240,9 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewNotMyTern()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
-        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Evaluations->Team->Term->getLastInsertID();
+        $Evaluations->Team->Term->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -273,9 +273,9 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewIncorrectEvaluateeId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
-        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Evaluations->Team->Term->getLastInsertID();
+        $Evaluations->Team->Term->changeToInProgress($termId);
         $incorrectEvaluateeId = 10;
         $records = [
             [
@@ -307,9 +307,9 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     public function testViewIncorrectTermId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
-        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
+        $Evaluations->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Evaluations->Team->Term->getLastInsertID();
+        $Evaluations->Team->Term->changeToInProgress($termId);
         $incorrectTermId = 10;
         $records = [
             [
@@ -518,7 +518,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $term_id = $Evaluations->Evaluation->Term->getLastInsertID();
         $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/evaluate_term_id:{$term_id}",
             ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -529,7 +529,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $term_id = $Evaluations->Evaluation->Term->getLastInsertID();
         $this->testAction("/evaluations/ajax_get_incomplete_evaluators/evaluate_term_id:{$term_id}",
             ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -539,7 +539,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
         $evaluateeId = 1;
-        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $term_id = $Evaluations->Evaluation->Term->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/evaluations/ajax_get_evaluators_status/user_id:{$evaluateeId}/evaluate_term_id:{$term_id}",
@@ -551,7 +551,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
         $evaluatorId = 1;
-        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $term_id = $Evaluations->Evaluation->Term->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/user_id:{$evaluatorId}/evaluate_term_id:{$term_id}",
@@ -563,7 +563,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
     {
         $this->_getEvaluationsCommonMock();
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $term_id = $Evaluations->Evaluation->Term->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/evaluations/ajax_get_incomplete_oneself/evaluate_term_id:{$term_id}", ['method' => 'GET']);
@@ -638,8 +638,8 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $Evaluations->Evaluation->Goal->Post->current_team_id = '1';
         $Evaluations->Evaluation->current_team_id = 1;
         $Evaluations->Evaluation->my_uid = 1;
-        $Evaluations->Team->EvaluateTerm->current_team_id = 1;
-        $Evaluations->Team->EvaluateTerm->my_uid = 1;
+        $Evaluations->Team->Term->current_team_id = 1;
+        $Evaluations->Team->Term->my_uid = 1;
         $Evaluations->Team->current_team_id = 1;
         $Evaluations->Team->my_uid = 1;
 
@@ -653,6 +653,6 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
             'start_date' => $Evaluations->Team->getBeforeTermStartEnd()['start'],
             'end_date'   => $Evaluations->Team->getBeforeTermStartEnd()['end'],
         ];
-        $Evaluations->Team->EvaluateTerm->save($data);
+        $Evaluations->Team->Term->save($data);
     }
 }

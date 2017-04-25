@@ -442,7 +442,7 @@ class PostsController extends AppController
         $start = null;
         $end = null;
         if (isset($this->request->params['named']['evaluate_term_id'])) {
-            $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
+            $term = $this->Team->Term->findById($this->request->params['named']['evaluate_term_id']);
             if (isset($term['Term'])) {
                 $start = $term['Term']['start_date'];
                 $end = $term['Term']['end_date'];
@@ -572,7 +572,7 @@ class PostsController extends AppController
         $start = null;
         $end = null;
         if (isset($this->request->params['named']['evaluate_term_id'])) {
-            $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
+            $term = $this->Team->Term->findById($this->request->params['named']['evaluate_term_id']);
             if (isset($term['Term'])) {
                 $start = $term['Term']['start_date'];
                 $end = $term['Term']['end_date'];

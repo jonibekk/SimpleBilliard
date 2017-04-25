@@ -377,18 +377,18 @@ class Team extends AppModel
         if (!$this->save($post_data)) {
             return false;
         }
-        $current_term_id = $this->EvaluateTerm->getCurrentTermId();
-        $next_term_id = $this->EvaluateTerm->getNextTermId();
+        $current_term_id = $this->Term->getCurrentTermId();
+        $next_term_id = $this->Term->getNextTermId();
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
         if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
-            $this->EvaluateTerm->isStartedEvaluation($current_term_id)
+            $this->Term->isStartedEvaluation($current_term_id)
         ) {
             return false;
         }
 
-        $res = $this->EvaluateTerm->updateTermData(
+        $res = $this->Term->updateTermData(
             $post_data['Team']['change_from'],
             $post_data['Team']['start_term_month'],
             $post_data['Team']['border_months'],

@@ -1057,10 +1057,10 @@ class UserTest extends GoalousTestCase
         $this->User->TeamMember->Team->my_uid = 1;
         $this->User->LocalName->my_uid = 1;
         $this->User->LocalName->current_team_id = 1;
-        $this->User->TeamMember->Team->EvaluateTerm->current_team_id = 1;
-        $this->User->TeamMember->Team->EvaluateTerm->addTermData(Term::TYPE_CURRENT);
-        $this->User->TeamMember->Team->EvaluateTerm->addTermData(Term::TYPE_PREVIOUS);
-        $this->User->TeamMember->Team->EvaluateTerm->addTermData(Term::TYPE_NEXT);
+        $this->User->TeamMember->Team->Term->current_team_id = 1;
+        $this->User->TeamMember->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->User->TeamMember->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->User->TeamMember->Team->Term->addTermData(Term::TYPE_NEXT);
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');

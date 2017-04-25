@@ -201,8 +201,8 @@ class NotificationsControllerTest extends GoalousControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Notifications->Session->expects($this->any())->method('read')
                                ->will($this->returnValueMap([['current_team_id', 1]]));
-        $Notifications->Team->EvaluateTerm->my_uid = 1;
-        $Notifications->Team->EvaluateTerm->current_team_id = 1;
+        $Notifications->Team->Term->my_uid = 1;
+        $Notifications->Team->Term->current_team_id = 1;
 
         return $Notifications;
     }

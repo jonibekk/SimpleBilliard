@@ -264,9 +264,9 @@ class GoalsController extends ApiController
         if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
             /** @var EvaluateTermService $EvaluateTermService */
             $EvaluateTermService = ClassRegistry::init('EvaluateTermService');
-            $current = $this->Team->EvaluateTerm->getTermData(Term::TYPE_CURRENT);
+            $current = $this->Team->Term->getTermData(Term::TYPE_CURRENT);
             $current = $EvaluateTermService->processEvaluateTerm($current, $type = Term::TERM_TYPE_CURRENT);
-            $next = $this->Team->EvaluateTerm->getTermData(Term::TYPE_NEXT);
+            $next = $this->Team->Term->getTermData(Term::TYPE_NEXT);
             $next = $EvaluateTermService->processEvaluateTerm($next, $type = Term::TERM_TYPE_NEXT);
             $res['terms'] = [Term::TERM_TYPE_CURRENT => $current, Term::TERM_TYPE_NEXT => $next];
         }
@@ -281,8 +281,8 @@ class GoalsController extends ApiController
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
             $TimeExHelper = new TimeExHelper(new View());
-            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
-            $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+            $currentTerm = $this->Team->Term->getCurrentTermData();
+            $nextTerm = $this->Team->Term->getNextTermData();
             $res['default_end_dates'] = [
                 Term::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'],
                     $currentTerm['timezone']),
