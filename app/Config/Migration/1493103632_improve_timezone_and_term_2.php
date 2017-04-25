@@ -149,7 +149,15 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         return true;
     }
 
-    private function updateGoalAndKrs($goal, $terms)
+    /**
+     * Update goal and key_results
+     *
+     * @param array $goal
+     * @param array $terms
+     *
+     * @throws Exception
+     */
+    private function updateGoalAndKrs(array $goal, array $terms)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
@@ -207,7 +215,14 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         }
     }
 
-    private function transferTerm($term)
+    /**
+     * Data migration from old evaluate_terms table to new terms table
+     *
+     * @param array $term
+     *
+     * @throws Exception
+     */
+    private function transferTerm(array $term)
     {
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
