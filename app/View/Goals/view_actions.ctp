@@ -18,49 +18,56 @@
 <div class="users-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('Goal/simplex_top_section') ?>
     <div class="users-view-actions-panel">
-        <div class="view-actions-panel-wrap">
-            <div class="view-actions-panel-filter">
-                <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Key Result:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-double-down"></span></strong>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <?php 
-                        foreach ($kr_select_options as $goal_title){ ?>
-                        <li><a href="#"><?php echo $goal_title ?></a></li>  
-                    <?php   }
-                        unset($goal_title);
-                    ?>
-                </ul>
-            </div>
-            <div class="view-actions-panel-btngroup-wrap">
-                <div class="view-action-panel-filter-btngroup">
-                    <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
-                        <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                            ['page_type' => 'image'])) ?>">
-                        <i class="fa fa-th-large link-dark-gray"></i>
-                        </a>
-                        <a class="view-action-panel-filter-button mod-active" href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                            ['page_type' => 'list'])) ?>">
-                        <i class="fa fa-reorder link-dark-gray"></i>
-                        </a>
-                    <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                        <a class="view-action-panel-filter-button mod-active" href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                            ['page_type' => 'image'])) ?>">
-                        <i class="fa fa-th-large link-dark-gray"></i>
-                        </a>
-                        <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                            ['page_type' => 'list'])) ?>">
-                        <i class="fa fa-reorder link-dark-gray"></i>
-                        </a>
-                    <?php endif; ?>
+        <?php if (count($posts) > 0): ?>
+            <div class="view-actions-panel-wrap">
+                <div class="view-actions-panel-filter">
+                    <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Key Result:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-double-down"></span></strong>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <?php 
+                            foreach ($kr_select_options as $goal_title){ ?>
+                            <li><a href="#"><?php echo $goal_title ?></a></li>  
+                        <?php   }
+                            unset($goal_title);
+                        ?>
+                    </ul>
+                </div>
+                <div class="view-actions-panel-btngroup-wrap">
+                    <div class="view-action-panel-filter-btngroup">
+                        <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
+                            <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                                ['page_type' => 'image'])) ?>">
+                            <i class="fa fa-th-large link-dark-gray"></i>
+                            </a>
+                            <a class="view-action-panel-filter-button mod-active" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                                ['page_type' => 'list'])) ?>">
+                            <i class="fa fa-reorder link-dark-gray"></i>
+                            </a>
+                        <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                            <a class="view-action-panel-filter-button mod-active" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                                ['page_type' => 'image'])) ?>">
+                            <i class="fa fa-th-large link-dark-gray"></i>
+                            </a>
+                            <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                                ['page_type' => 'list'])) ?>">
+                            <i class="fa fa-reorder link-dark-gray"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                <div class="cube-img-column-frame add-action">
+                <?php if (count($posts) == 0): ?>
+                    <div class="cube-img-column-frame add-action mod-only">
+                        <h3>You haven't created any actions&hellip; yet.</h3>
+                <?php else: ?>
+                    <div class="cube-img-column-frame add-action">
+                <?php endif; ?>
                     <div class="profile-user-action-contents-add-image">
                         <span><a href="/goals/add_action/">+</a></span>
                     </div>

@@ -17,6 +17,7 @@
 <div class="users-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('User/simplex_top_section') ?>
     <div class="users-view-actions-panel">
+        <?php if (count($posts) > 0): ?>
         <div class="view-actions-panel-wrap">
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -77,6 +78,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <?php
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
         if ($this->request->params['named']['page_type'] == 'image') {
@@ -89,7 +91,7 @@
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
                 <?php if (count($posts) == 0): ?>
                     <div class="cube-img-column-frame add-action mod-only">
-                        <h3>It seems you haven't created any actions&hellip; yet.</h3>
+                        <h3>You haven't created any actions&hellip; yet.</h3>
                 <?php else: ?>
                     <div class="cube-img-column-frame add-action">
                 <?php endif; ?>

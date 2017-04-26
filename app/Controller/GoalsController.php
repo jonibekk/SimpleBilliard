@@ -223,6 +223,7 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse(null);
         }
         $goal = $this->Goal->getGoalMinimum($goal_id);
+        
         $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
         $kr_value_unit_list = KeyResult::$UNIT;
         $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list', 'key_result_id'));
@@ -1706,7 +1707,14 @@ class GoalsController extends AppController
         $members = $this->Goal->GoalMember->getGoalMemberByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
         ]);
+        $goalTerm = $this->Goal->getGoalTermData($goal_id);
         $this->set('members', $members);
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
+        $this->set('goalTerm', $goalTerm);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1747,8 +1755,14 @@ class GoalsController extends AppController
         $this->set('incomplete_kr_count', $incomplete_kr_count);
 
         // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
-        $this->set('goal_term', $goal_term);
+        $goalTerm = $this->Goal->getGoalTermData($goal_id);
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
+        $this->set('goalTerm', $goalTerm);
+        $this->set('goal_term', $goalTerm);
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1789,8 +1803,14 @@ class GoalsController extends AppController
             'goal_id'    => $goal_id,
             'page_type'  => $page_type
         ]);
+        $goalTerm = $this->Goal->getGoalTermData($goal_id);
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
         $this->set('long_text', false);
-        $this->set(compact('key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
+        $this->set(compact('goalTerm','key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
