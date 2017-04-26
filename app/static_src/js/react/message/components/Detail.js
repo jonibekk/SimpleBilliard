@@ -5,6 +5,7 @@ import Body from "~/message/components/elements/detail/Body";
 import Footer from "~/message/components/elements/detail/Footer";
 import Base from "~/common/components/Base";
 import {isMobileApp, disableAsyncEvents} from "~/util/base";
+import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 
 export default class Detail extends Base {
   constructor(props) {
@@ -51,12 +52,12 @@ export default class Detail extends Base {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.detail.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0) {
+    if (nextProps.detail.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0 && nextProps.detail.topic_title_setting_status == TopicTitleSettingStatus.NONE) {
       this.setState({enabled_leave_page_alert: false})
     } else {
       this.setState({enabled_leave_page_alert: true})
     }
-    
+
     if (nextProps.detail.redirect) {
       browserHistory.push("/topics");
     }

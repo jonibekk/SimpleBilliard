@@ -4,11 +4,10 @@ export default class Base extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      enabled_leave_page_alert: true,
+      enabled_leave_page_alert: false,
       leave_page_alert_msg: cake.message.notice.a
     }
   }
-
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.onBeforeUnloadHandler.bind(this))

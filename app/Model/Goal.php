@@ -510,7 +510,8 @@ class Goal extends AppModel
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
             $currentTermData = $this->Team->EvaluateTerm->getCurrentTermData();
-            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone(date('Y-m-d'),
+            $localDate = date('Y-m-d', time() + $currentTermData['timezone'] * HOUR);
+            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone($localDate,
                 $currentTermData['timezone']);
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
@@ -549,10 +550,17 @@ class Goal extends AppModel
             $data['KeyResult'][0]['current_value'] = $data['KeyResult'][0]['start_value'];
         }
 
+        // Set static value when Complete/Incomplete
+        if ($data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY) {
+            $data['KeyResult'][0]['start_value'] = 0;
+            $data['KeyResult'][0]['target_value'] = 1;
+            $data['KeyResult'][0]['current_value'] = 0;
+        }
+
         if (!Hash::get($data, 'KeyResult.0.start_date')) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
         } else {
-            //時間をunixtimeに変換
+            //時間をtimezoneを考慮したunixtimeに変換
             $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
         }
         if (!Hash::get($data, 'KeyResult.0.end_date')) {
