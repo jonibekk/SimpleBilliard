@@ -15,9 +15,15 @@
 .view-actions-panel-filter{
   display: block;
   float:left;
-  text-align:center;
+  text-align:left;
   overflow:hidden;
   text-overflow: ellipsis;
+}
+
+@media @small{
+  .view-actions-panel-filter{
+    flex-basis:31%;
+  }
 }
 
 .view-actions-panel-filter:first-of-type{
@@ -69,6 +75,10 @@
 
 .view-actions-panel-wrap .dropdown-toggle{
   color:@veryDark;
+}
+
+.view-actions-panel-wrap .dropdown-toggle:hover{
+  text-decoration: none;
 }
 
 .view-actions-panel-wrap .dropdown-toggle span{

@@ -77,25 +77,30 @@
                 </div>
             </div>
         </div>
-        <div class="profile-user-action-contents" id="UserPageContents">
-            <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
-                <?= $this->element('Feed/posts') ?>
-            <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                <div class="cube-img-column-frame add-action">
-                    <div class="profile-user-action-contents-add-image">
-                        <span><a href="#">+</a></span>
-                    </div>
-                    <a href="#">Add Action</a>
-                </div>
-                <?= $this->element('cube_img_blocks') ?>
-            <?php endif; ?>
-        </div>
         <?php
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
         if ($this->request->params['named']['page_type'] == 'image') {
             $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
         }
         ?>
+        <div class="profile-user-action-contents" id="UserPageContents">
+            <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
+                <?= $this->element('Feed/posts') ?>
+            <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                <?php if (count($posts) == 0): ?>
+                    <div class="cube-img-column-frame add-action mod-only">
+                        <h3>It seems you haven't created any actions&hellip; yet.</h3>
+                <?php else: ?>
+                    <div class="cube-img-column-frame add-action">
+                <?php endif; ?>
+                    <div class="profile-user-action-contents-add-image">
+                        <span><a href="/goals/add_action/">+</a></span>
+                    </div>
+                    <a href="/goals/add_action/">Add Action</a>
+                </div>
+                <?= $this->element('cube_img_blocks') ?>
+            <?php endif; ?>
+        </div>
         <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
         if (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH): ?>
 

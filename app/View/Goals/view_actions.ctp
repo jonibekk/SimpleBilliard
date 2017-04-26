@@ -32,18 +32,28 @@
                     ?>
                 </ul>
             </div>
-            <div class="view-actions-panel-filter">
-                <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
-                    <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                        ['page_type' => 'image'])) ?>">
-                       View: <strong>Grid</strong>&nbsp;<i class="fa fa-th-large link-dark-gray"></i>
-                    </a>
-                <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                    <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                        ['page_type' => 'list'])) ?>">
-                       View: <strong>List</strong>&nbsp;<i class="fa fa-reorder link-dark-gray"></i>
-                    </a>
-                <?php endif; ?>
+            <div class="view-actions-panel-btngroup-wrap">
+                <div class="view-action-panel-filter-btngroup">
+                    <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
+                        <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                            ['page_type' => 'image'])) ?>">
+                        <i class="fa fa-th-large link-dark-gray"></i>
+                        </a>
+                        <a class="view-action-panel-filter-button mod-active" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                            ['page_type' => 'list'])) ?>">
+                        <i class="fa fa-reorder link-dark-gray"></i>
+                        </a>
+                    <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                        <a class="view-action-panel-filter-button mod-active" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                            ['page_type' => 'image'])) ?>">
+                        <i class="fa fa-th-large link-dark-gray"></i>
+                        </a>
+                        <a class="view-action-panel-filter-button" href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                            ['page_type' => 'list'])) ?>">
+                        <i class="fa fa-reorder link-dark-gray"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
         <div class="profile-user-action-contents" id="UserPageContents">
@@ -52,9 +62,9 @@
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
                 <div class="cube-img-column-frame add-action">
                     <div class="profile-user-action-contents-add-image">
-                        <span><a href="#">+</a></span>
+                        <span><a href="/goals/add_action/">+</a></span>
                     </div>
-                    <a href="#">Add Action</a>
+                    <a href="/goals/add_action/">Add Action</a>
                 </div>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
