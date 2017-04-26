@@ -4,7 +4,7 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'FollowService');
-App::import('Service', 'EvaluateTermService');
+App::import('Service', 'TermService');
 App::import('Service/Api', 'ApiGoalService');
 App::import('Service/Api', 'ApiKeyResultService');
 
@@ -262,8 +262,8 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
-            /** @var EvaluateTermService $EvaluateTermService */
-            $EvaluateTermService = ClassRegistry::init('EvaluateTermService');
+            /** @var TermService $EvaluateTermService */
+            $EvaluateTermService = ClassRegistry::init('TermService');
             $current = $this->Team->Term->getTermData(Term::TYPE_CURRENT);
             $current = $EvaluateTermService->processEvaluateTerm($current, $type = Term::TERM_TYPE_CURRENT);
             $next = $this->Team->Term->getTermData(Term::TYPE_NEXT);
