@@ -117,7 +117,7 @@ export function saveGoal() {
     const postData = getState().goal.inputData
     if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
       postData.key_result.start_value = 0
-      postData.key_result.target_value = 0
+      postData.key_result.target_value = 1
     }
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
