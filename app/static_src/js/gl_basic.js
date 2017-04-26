@@ -469,7 +469,7 @@ $(document).ready(function () {
     }
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
     modalFormCommonBindEvent($modal_elm);
-    var url = $(this).attr('href');
+    var url = $this.data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
