@@ -1770,7 +1770,9 @@ class GoalsController extends AppController
 
     function view_actions()
     {
+        $GoalService = ClassRegistry::init("GoalService");
         $goal_id = Hash::get($this->request->params, "named.goal_id");
+        $goal = $this->Goal->getGoal($goal_id);
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
@@ -1804,11 +1806,19 @@ class GoalsController extends AppController
             'page_type'  => $page_type
         ]);
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
+        $is_leader = false;
+        foreach ($goal['Leader'] as $v) {
+            if ($this->Auth->user('id') == $v['User']['id']) {
+                $is_leader = true;
+                break;
+            }
+        }
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
             'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
             'with_group' => true,
         ]);
         $this->set('followers', $followers);
+        $this->set('is_leader', $is_leader);
         $this->set('long_text', false);
         $this->set(compact('goalTerm','key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
