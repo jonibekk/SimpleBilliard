@@ -1,10 +1,12 @@
 // Sentry:js error tracking
-Raven.config(
-  cake.sentry_dsn,
-  {
-    environment: cake.env_name
-  }
-).install();
+if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop')) {
+  Raven.config(
+    cake.sentry_dsn,
+    {
+      environment: cake.env_name
+    }
+  ).install();
+}
 
 $.ajaxSetup({
   cache: false,
