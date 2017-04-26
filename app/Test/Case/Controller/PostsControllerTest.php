@@ -19,7 +19,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         'app.post_file',
         'app.comment_file',
         'app.goal_category',
-        'app.evaluate_term',
+        'app.term',
         'app.action_result',
         'app.key_result',
 

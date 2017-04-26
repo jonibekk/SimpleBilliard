@@ -27,7 +27,7 @@ class GoalServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.evaluate_term',
+        'app.term',
         'app.team',
         'app.goal',
         'app.goal_member',

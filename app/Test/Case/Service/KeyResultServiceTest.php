@@ -28,7 +28,7 @@ class KeyResultServiceTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.evaluate_term',
+        'app.term',
         'app.key_result',
         'app.kr_change_log',
         'app.kr_progress_log',

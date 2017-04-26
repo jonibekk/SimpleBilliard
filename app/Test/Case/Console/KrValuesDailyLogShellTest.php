@@ -26,7 +26,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.team',
-        'app.evaluate_term',
+        'app.term',
         'app.key_result',
         'app.goal',
         'app.goal_member',

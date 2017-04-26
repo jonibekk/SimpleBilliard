@@ -30,7 +30,7 @@ class UserTest extends GoalousTestCase
         'app.notify_setting',
         'app.member_group',
         'app.device',
-        'app.evaluate_term',
+        'app.term',
         'app.goal',
         'app.action_result',
         'app.post_share_circle',

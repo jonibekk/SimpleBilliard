@@ -6,7 +6,7 @@ App::uses('Term', 'Model');
  *
  * @property Term $Term
  */
-class EvaluateTermTest extends GoalousTestCase
+class TermTest extends GoalousTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class EvaluateTermTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.evaluate_term',
+        'app.term',
         'app.team',
     );
 

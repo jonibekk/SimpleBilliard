@@ -45,7 +45,7 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         'app.member_type',
         'app.evaluator',
         'app.evaluation_setting',
-        'app.evaluate_term',
+        'app.term',
         'app.email',
         'app.notify_setting',
         'app.oauth_token',

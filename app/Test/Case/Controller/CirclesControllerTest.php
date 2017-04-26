@@ -21,7 +21,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         'app.circle',
         'app.team',
         'app.evaluation_setting',
-        'app.evaluate_term',
+        'app.term',
         'app.badge',
         'app.user',
         'app.notify_setting',

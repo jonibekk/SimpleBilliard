@@ -16,12 +16,12 @@ class KeyResultTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.evaluate_term',
+        'app.term',
         'app.key_result',
         'app.goal',
         'app.goal_category',
         'app.goal_member',
-        'app.evaluate_term',
+        'app.term',
         'app.post_share_circle',
         'app.circle',
         'app.post',

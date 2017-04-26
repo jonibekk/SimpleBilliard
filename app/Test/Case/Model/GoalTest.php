@@ -17,7 +17,7 @@ class GoalTest extends GoalousTestCase
     public $fixtures = array(
         'app.action_result',
         'app.evaluation',
-        'app.evaluate_term',
+        'app.term',
         'app.post_share_circle',
         'app.circle',
         'app.post',

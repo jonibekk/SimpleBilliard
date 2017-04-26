@@ -51,7 +51,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         'app.invite',
         'app.send_mail',
         'app.send_mail_to_user',
-        'app.evaluate_term',
+        'app.term',
         'app.team_vision',
         'app.group_vision',
         'app.circle',

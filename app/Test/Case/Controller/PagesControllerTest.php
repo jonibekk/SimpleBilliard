@@ -17,7 +17,7 @@ class PagesControllerTest extends GoalousControllerTestCase
     public $fixtures = array(
         'app.key_result',
         'app.evaluation',
-        'app.evaluate_term',
+        'app.term',
         'app.action_result',
 
         'app.local_name',

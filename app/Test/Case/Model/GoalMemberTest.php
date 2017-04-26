@@ -18,7 +18,7 @@ class GoalMemberTest extends GoalousTestCase
         'app.goal_member',
         'app.follower',
         'app.team',
-        'app.evaluate_term',
+        'app.term',
         'app.user',
         'app.local_name',
         'app.goal',

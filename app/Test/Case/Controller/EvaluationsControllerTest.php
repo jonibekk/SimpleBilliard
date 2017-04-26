@@ -50,7 +50,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         'app.invite',
         'app.send_mail',
         'app.send_mail_to_user',
-        'app.evaluate_term',
+        'app.term',
         'app.evaluate_score',
         'app.key_result',
     ];

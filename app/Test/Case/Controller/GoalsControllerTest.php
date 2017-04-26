@@ -17,7 +17,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
-        'app.evaluate_term',
+        'app.term',
         'app.action_result',
         'app.evaluation_setting',
         'app.evaluation',

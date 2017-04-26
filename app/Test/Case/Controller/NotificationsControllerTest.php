@@ -14,7 +14,7 @@ class NotificationsControllerTest extends GoalousControllerTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.evaluate_term',
+        'app.term',
         'app.user',
         'app.team',
         'app.badge',
