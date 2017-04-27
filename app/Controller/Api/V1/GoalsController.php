@@ -4,7 +4,7 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'FollowService');
-App::import('Service', 'EvaluateTermService');
+App::import('Service', 'TermService');
 App::import('Service/Api', 'ApiGoalService');
 App::import('Service/Api', 'ApiKeyResultService');
 
@@ -262,13 +262,13 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
-            /** @var EvaluateTermService $EvaluateTermService */
-            $EvaluateTermService = ClassRegistry::init('EvaluateTermService');
-            $current = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
-            $current = $EvaluateTermService->processEvaluateTerm($current, $type = EvaluateTerm::TERM_TYPE_CURRENT);
-            $next = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
-            $next = $EvaluateTermService->processEvaluateTerm($next, $type = EvaluateTerm::TERM_TYPE_NEXT);
-            $res['terms'] = [EvaluateTerm::TERM_TYPE_CURRENT => $current, EvaluateTerm::TERM_TYPE_NEXT => $next];
+            /** @var TermService $EvaluateTermService */
+            $EvaluateTermService = ClassRegistry::init('TermService');
+            $current = $this->Team->Term->getTermData(Term::TYPE_CURRENT);
+            $current = $EvaluateTermService->processEvaluateTerm($current, $type = Term::TERM_TYPE_CURRENT);
+            $next = $this->Team->Term->getTermData(Term::TYPE_NEXT);
+            $next = $EvaluateTermService->processEvaluateTerm($next, $type = Term::TERM_TYPE_NEXT);
+            $res['terms'] = [Term::TERM_TYPE_CURRENT => $current, Term::TERM_TYPE_NEXT => $next];
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
@@ -281,12 +281,12 @@ class GoalsController extends ApiController
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
             $TimeExHelper = new TimeExHelper(new View());
-            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
-            $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+            $currentTerm = $this->Team->Term->getCurrentTermData();
+            $nextTerm = $this->Team->Term->getNextTermData();
             $res['default_end_dates'] = [
-                EvaluateTerm::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'],
+                Term::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'],
                     $currentTerm['timezone']),
-                EvaluateTerm::TERM_TYPE_NEXT    => $TimeExHelper->dateFormat($nextTerm['end_date'],
+                Term::TERM_TYPE_NEXT    => $TimeExHelper->dateFormat($nextTerm['end_date'],
                     $nextTerm['timezone']),
             ];
         }
@@ -376,8 +376,8 @@ class GoalsController extends ApiController
         $GoalService = ClassRegistry::init("GoalService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
 
         // 403/404チェック
         $errResponse = $this->_validateEditForbiddenOrNotFound($goalId);
@@ -393,7 +393,7 @@ class GoalsController extends ApiController
         // 変更タイプ
         $preUpdatedTerm = $Goal->getTermTypeById($goalId);
         $afterUpdatedTerm = Hash::get($data, 'term_type');
-        $isNextToCurrentUpdate = ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT) && ($afterUpdatedTerm == EvaluateTerm::TERM_TYPE_CURRENT);
+        $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($afterUpdatedTerm == Term::TERM_TYPE_CURRENT);
 
         // バリデーション
         // 来期から今期への期変更の場合はKR日付バリデーションはoffにする

@@ -29,7 +29,7 @@ class DataUpdateShellTest extends GoalousTestCase
         'app.member_type',
         'app.local_name',
         'app.evaluator',
-        'app.evaluate_term',
+        'app.term',
         'app.evaluate_score',
         'app.evaluation_setting'
     );

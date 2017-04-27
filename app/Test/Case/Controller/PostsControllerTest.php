@@ -19,7 +19,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         'app.post_file',
         'app.comment_file',
         'app.goal_category',
-        'app.evaluate_term',
+        'app.term',
         'app.action_result',
         'app.key_result',
 
@@ -1960,8 +1960,8 @@ class PostsControllerTest extends GoalousControllerTestCase
         $Posts->Post->ActionResult->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->ActionResult->current_team_id = '1';
-        $Posts->Team->EvaluateTerm->my_uid = 1;
-        $Posts->Team->EvaluateTerm->current_team_id = 1;
+        $Posts->Team->Term->my_uid = 1;
+        $Posts->Team->Term->current_team_id = 1;
         $Posts->Team->Circle->current_team_id = 1;
 
         $Posts->Post->current_team_id = 1;

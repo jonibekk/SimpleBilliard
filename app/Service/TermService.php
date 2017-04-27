@@ -2,9 +2,9 @@
 App::import('Service', 'AppService');
 
 /**
- * Class EvaluateTermService
+ * Class TermService
  */
-class EvaluateTermService extends AppService
+class TermService extends AppService
 {
     /**
      * EvaluateTermデータをレスポンス用に整形

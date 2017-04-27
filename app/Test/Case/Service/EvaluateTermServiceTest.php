@@ -1,7 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('EvaluateTerm', 'Model');
-App::import('Service', 'EvaluateTermService');
+App::uses('Term', 'Model');
+App::import('Service', 'TermService');
 
 /**
  * EvaluateTermServiceTest Class
@@ -10,7 +10,7 @@ App::import('Service', 'EvaluateTermService');
  * Date: 2016/12/08
  * Time: 9:10
  *
- * @property EvaluateTermService $EvaluateTermService
+ * @property TermService $EvaluateTermService
  */
 class EvaluateTermServiceTest extends GoalousTestCase
 {
@@ -22,7 +22,7 @@ class EvaluateTermServiceTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->EvaluateTermService = ClassRegistry::init('EvaluateTermService');
+        $this->EvaluateTermService = ClassRegistry::init('TermService');
     }
 
     function testProcessEvaluateTerm()
@@ -32,7 +32,7 @@ class EvaluateTermServiceTest extends GoalousTestCase
             'end_date'   => strtotime('2016-12-31 14:59:59'),//UTC
             'timezone'   => '+9'
         ];
-        $actual = $this->EvaluateTermService->processEvaluateTerm($data, EvaluateTerm::TERM_TYPE_CURRENT);
+        $actual = $this->EvaluateTermService->processEvaluateTerm($data, Term::TERM_TYPE_CURRENT);
         $expected = [
             'start_date' => '2016-12-01',
             'end_date'   => '2016-12-31',

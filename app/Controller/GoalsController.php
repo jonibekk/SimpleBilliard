@@ -611,8 +611,8 @@ class GoalsController extends AppController
         }
         // 評価開始前か
         if ($termType == GoalService::TERM_TYPE_CURRENT) {
-            $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-            $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+            $currentTermId = $this->Team->Term->getCurrentTermId();
+            $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($currentTermId);
             if ($isStartedEvaluation) {
                 return __("Some error occurred. Please try again from the start.");
             }
@@ -1043,7 +1043,7 @@ class GoalsController extends AppController
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
-        $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $current_term = $this->Goal->Team->Term->getCurrentTermData();
         //ゴールが今期の場合はアクション追加可能
         $can_add_action = $goal_term['end_date'] === $current_term['end_date'] ? true : false;
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term',
@@ -1536,8 +1536,8 @@ class GoalsController extends AppController
         }
 
         //今期、来期のゴールを取得する
-        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
 
         if ($type === 'leader') {
             $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
@@ -1553,7 +1553,7 @@ class GoalsController extends AppController
             $goals = [];
         }
         $goals = $GoalService->processGoals($goals);
-        $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $current_term = $this->Goal->Team->Term->getCurrentTermData();
         // アクション可能なゴール数
         $userId = $this->Auth->user('id');
         $canActionGoals = $this->Goal->findActionables($userId);
@@ -1562,8 +1562,8 @@ class GoalsController extends AppController
         $canCompleteGoalIds = Hash::extract(
             $this->Goal->findCanComplete($userId), '{n}.id'
         );
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($currentTermId);
+        $currentTermId = $this->Team->Term->getCurrentTermId();
+        $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($currentTermId);
 
         $this->set(compact('goals', 'type', 'current_term', 'canActionGoals', 'canCompleteGoalIds',
             'isStartedEvaluation'));
@@ -1585,8 +1585,8 @@ class GoalsController extends AppController
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
-        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
-        $next_term = $this->Team->EvaluateTerm->getNextTermData();
+        $current_term = $this->Team->Term->getCurrentTermData();
+        $next_term = $this->Team->Term->getNextTermData();
         $current_term_start_date_format = date('Y/m/d', $current_term['start_date'] + $current_term['timezone'] * HOUR);
         $current_term_end_date_format = date('Y/m/d', $current_term['end_date'] + $current_term['timezone'] * HOUR);
         $next_term_start_date_format = date('Y/m/d', $next_term['start_date'] + $next_term['timezone'] * HOUR);

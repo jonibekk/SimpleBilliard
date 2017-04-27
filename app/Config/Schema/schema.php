@@ -1,4 +1,4 @@
-<?php
+<?php 
 class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
@@ -642,8 +642,10 @@ class AppSchema extends CakeSchema {
 		'evaluate_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価フラグ'),
 		'status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'ステータス(0 = 進行中, 1 = 中断, 2 = 完了)'),
 		'description' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '説明', 'charset' => 'utf8mb4'),
-		'start_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '開始日(unixtime)'),
-		'end_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '終了日(unixtime)'),
+		'start_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '開始日'),
+		'end_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '終了日'),
+		'old_start_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'old_end_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'progress' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '進捗%'),
 		'completed' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true),
 		'action_result_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'アクショントカウント'),
@@ -772,8 +774,10 @@ class AppSchema extends CakeSchema {
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '作成者ID(belongsToでUserモデルに関連)'),
 		'name' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '名前', 'charset' => 'utf8mb4'),
 		'description' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '説明', 'charset' => 'utf8mb4'),
-		'start_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '開始日(unixtime)'),
-		'end_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '終了日(unixtime)'),
+		'start_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '開始日'),
+		'end_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '終了日'),
+		'old_start_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'old_end_date' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'current_value' => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '現在値'),
 		'start_value' => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '開始値'),
 		'target_value' => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '目標値'),
@@ -794,9 +798,9 @@ class AppSchema extends CakeSchema {
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0),
 			'modified' => array('column' => 'modified', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
+			'latest_actioned' => array('column' => 'latest_actioned', 'unique' => 0),
 			'start_date' => array('column' => 'start_date', 'unique' => 0),
-			'end_date' => array('column' => 'end_date', 'unique' => 0),
-			'latest_actioned' => array('column' => 'latest_actioned', 'unique' => 0)
+			'end_date' => array('column' => 'end_date', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
@@ -1299,6 +1303,17 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $schema_migrations = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
+		'class' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),
+		'type' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $send_mail_to_users = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'send_mail_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'メール送信ID(belongsToでSendMailモデルに関連)'),
@@ -1430,13 +1445,32 @@ class AppSchema extends CakeSchema {
 		'domain_name' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => 'ドメイン名', 'charset' => 'utf8mb4'),
 		'start_term_month' => array('type' => 'integer', 'null' => false, 'default' => '4', 'length' => 3, 'unsigned' => true, 'comment' => '期間の開始月(入力可能な値は1〜12)'),
 		'border_months' => array('type' => 'integer', 'null' => false, 'default' => '6', 'length' => 3, 'unsigned' => true, 'comment' => '期間の月数(４半期なら3,半年なら6, 0を認めない)'),
-		'timezone' => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'チームのタイムゾーン'),
+		'timezone' => array('type' => 'float', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'チームのタイムゾーン'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを削除した日付時刻'),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを追加した日付時刻'),
 		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを更新した日付時刻'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
+	public $terms = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID'),
+		'start_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '期開始日'),
+		'end_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '期終了日'),
+		'evaluate_status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '評価ステータス(0 = 評価開始前, 1 = 評価中,2 = 評価凍結中, 3 = 最終評価終了)'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'team_id' => array('column' => 'team_id', 'unique' => 0),
+			'start_date' => array('column' => 'start_date', 'unique' => 0),
+			'end_date' => array('column' => 'end_date', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
@@ -1467,7 +1501,7 @@ class AppSchema extends CakeSchema {
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'UserID as Topic Member(belongsTo User Model)'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'TeamID(belongsTo Team Model)'),
 		'last_read_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'message_id as last read.'),
-        'last_read_message_datetime' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'It\'s update when read message.'),
+		'last_read_message_datetime' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'It\'s update when read message.'),
 		'last_message_sent' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'It\'s update when member send message.'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
@@ -1509,7 +1543,7 @@ class AppSchema extends CakeSchema {
 		'creator_user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'UserId as topic creator(belongsTo User Model)'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'TeamID(belongsTo Team Model)'),
 		'title' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 254, 'collate' => 'utf8mb4_general_ci', 'comment' => 'topic title', 'charset' => 'utf8mb4'),
-		'latest_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'latest message id associated with topic'),
+		'latest_message_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'length' => 11, 'unsigned' => true, 'key' => 'index', 'comment' => 'latest message id associated with topic'),
 		'latest_message_datetime' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'latest messaged datetime associated with topic'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),

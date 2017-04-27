@@ -10,7 +10,7 @@ App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');
 App::uses('KeyResult', 'Model');
-App::uses('EvaluateTerm', 'Model');
+App::uses('Term', 'Model');
 App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
@@ -89,8 +89,8 @@ class GoalService extends AppService
 
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalMemberService $GoalMemberService */
@@ -248,8 +248,8 @@ class GoalService extends AppService
             // KR更新
             // 来期のゴールを今期に期変更した場合のみ
             $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
-            if ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT && $afterUpdatedTerm == EvaluateTerm::TERM_TYPE_CURRENT) {
-                if (!$KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT)) {
+            if ($preUpdatedTerm == Term::TERM_TYPE_NEXT && $afterUpdatedTerm == Term::TERM_TYPE_CURRENT) {
+                if (!$KeyResult->updateTermByGoalId($goalId, Term::TYPE_CURRENT)) {
                     throw new Exception(sprintf("Failed to update krs. goal_id:%s"
                         , $goalId));
                 }
@@ -399,8 +399,8 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
 
         $updateData = [
             'id'          => $goalId,
@@ -418,7 +418,7 @@ class GoalService extends AppService
 
             // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
             $preUpdatedTerm = $Goal->getTermTypeById($goalId);
-            $isNextToCurrentUpdate = ($preUpdatedTerm == EvaluateTerm::TERM_TYPE_NEXT) && ($requestData['term_type'] == EvaluateTerm::TERM_TYPE_CURRENT);
+            $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($requestData['term_type'] == Term::TERM_TYPE_CURRENT);
             if ($isNextToCurrentUpdate) {
                 $updateData['start_date'] = time();
             }
@@ -497,8 +497,8 @@ class GoalService extends AppService
             return false;
         }
 
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
 
         $currentTerm = $EvaluateTerm->getCurrentTermData();
         return strtotime($goal['start_date']) >= $currentTerm['start_date'];
@@ -622,8 +622,8 @@ class GoalService extends AppService
      */
     function extendTermType($goals, $loginUserId)
     {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
@@ -656,8 +656,8 @@ class GoalService extends AppService
      */
     function getTermType($startDate, $currentTerm = null, $nextTerm = null)
     {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
 
         // 評価期間取得
         if (empty($currentTerm)) {
@@ -694,8 +694,8 @@ class GoalService extends AppService
      */
     function canExchangeTkr($goalId, $termType, $loginUserId)
     {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalMemberService $GoalMemberService */
@@ -804,8 +804,8 @@ class GoalService extends AppService
         ];
 
         //今期の情報取得
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         $term = $EvaluateTerm->getCurrentTermData();
         $termStartTimestamp = $term['start_date'];
         $termEndTimestamp = $term['end_date'];
@@ -975,8 +975,8 @@ class GoalService extends AppService
             throw new Exception($validOrErrorMsg);
         }
         //今期の情報取得
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
@@ -1035,8 +1035,8 @@ class GoalService extends AppService
      */
     function findGoalPriorities(int $userId): array
     {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         $termStartTimestamp = $EvaluateTerm->getCurrentTermData()['start_date'];
         $termEndTimestamp = $EvaluateTerm->getCurrentTermData()['end_date'];
 
@@ -1081,8 +1081,8 @@ class GoalService extends AppService
             throw new Exception($validOrErrorMsg);
         }
         //今期の情報取得
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
@@ -1446,8 +1446,8 @@ class GoalService extends AppService
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
         int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
     ): array {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         $term = $EvaluateTerm->getCurrentTermData();
         $termStartTimestamp = $term['start_date'];
         $termEndTimestamp = $term['end_date'];
@@ -1546,8 +1546,8 @@ class GoalService extends AppService
      */
     function saveGoalProgressLogsAsBulk(int $teamId, string $targetDate): bool
     {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
         /** @var GoalProgressDailyLog $GoalProgressDailyLog */
