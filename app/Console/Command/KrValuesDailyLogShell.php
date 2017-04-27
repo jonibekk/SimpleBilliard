@@ -10,7 +10,7 @@ App::uses('AppUtil', 'Util');
  * - デフォルトの指定日は前日
  *
  * @property Team             $Team
- * @property EvaluateTerm     $EvaluateTerm
+ * @property Term             $EvaluateTerm
  * @property Goal             $Goal
  * @property KeyResult        $KeyResult
  * @property KrProgressLog    $KrProgressLog
@@ -21,7 +21,7 @@ class KrValuesDailyLogShell extends AppShell
 {
     public $uses = array(
         'Team',
-        'EvaluateTerm',
+        'Term',
         'KeyResult',
         'KrValuesDailyLog',
     );
@@ -119,7 +119,7 @@ class KrValuesDailyLogShell extends AppShell
         // $this->KrValuesDailyLog->deleteAll(['KrValuesDailyLog.target_date' => $targetDate]);
 
         // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
-        $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, $targetDate);
+        $teamIds = $this->Term->findTeamIdByTimezone($targetTimezone, $targetDate);
 
         $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate, $targetTimezone);
     }

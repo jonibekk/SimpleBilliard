@@ -51,7 +51,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         'app.invite',
         'app.send_mail',
         'app.send_mail_to_user',
-        'app.evaluate_term',
+        'app.term',
         'app.team_vision',
         'app.group_vision',
         'app.circle',
@@ -267,7 +267,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
     function testSettingsSuccessNotAvailStartEvalButton()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
-        $Teams->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $Teams->Team->Term->addTermData(Term::TYPE_CURRENT);
 
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
@@ -570,8 +570,8 @@ class TeamsControllerTest extends GoalousControllerTestCase
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
 
-        $Teams->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
+        $Teams->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $Teams->Team->Term->getLastInsertID();
         $this->testAction('/teams/change_freeze_status/evaluate_term_id:' . $termId, ['method' => 'POST']);
     }
 
@@ -1232,8 +1232,8 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->Team->TeamMember->MemberType->uid = $Teams->Team->TeamMember->MemberType->my_uid = 1;
         $Teams->Team->TeamMember->User->Email->current_team_id = 1;
         $Teams->Team->TeamMember->User->Email->uid = $Teams->Team->TeamMember->User->Email->my_uid = 1;
-        $Teams->Team->EvaluateTerm->current_team_id = 1;
-        $Teams->Team->EvaluateTerm->my_uid = 1;
+        $Teams->Team->Term->current_team_id = 1;
+        $Teams->Team->Term->my_uid = 1;
         $Teams->Team->Evaluator->current_team_id = 1;
         $Teams->Team->Evaluator->my_uid = 1;
         $Teams->Team->EvaluationSetting->current_team_id = 1;

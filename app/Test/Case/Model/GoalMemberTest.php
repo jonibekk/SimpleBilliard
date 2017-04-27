@@ -18,7 +18,7 @@ class GoalMemberTest extends GoalousTestCase
         'app.goal_member',
         'app.follower',
         'app.team',
-        'app.evaluate_term',
+        'app.term',
         'app.user',
         'app.local_name',
         'app.goal',
@@ -90,7 +90,7 @@ class GoalMemberTest extends GoalousTestCase
         $this->_setDefault();
         $team_id = 1;
 
-        $current_term = $this->GoalMember->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $current_term = $this->GoalMember->Goal->Team->Term->getCurrentTermData();
 
         $params = [
             'first_name' => 'test',
@@ -160,7 +160,7 @@ class GoalMemberTest extends GoalousTestCase
 
         // 今期で絞る
         $goal_description = $this->GoalMember->getCollaboGoalDetail($team_id, $user_id, $approval_status, true,
-            EvaluateTerm::TYPE_CURRENT);
+            Term::TYPE_CURRENT);
         $ids = [];
         foreach ($goal_description as $v) {
             $ids[$v['Goal']['id']] = true;
@@ -496,9 +496,9 @@ class GoalMemberTest extends GoalousTestCase
     {
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
-        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_OWNER);
-        $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_COLLABORATOR);
-        $term = $this->EvaluateTerm->getCurrentTermData();
+        $this->createGoalKrs(Term::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_OWNER);
+        $this->createGoalKrs(Term::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_COLLABORATOR);
+        $term = $this->Term->getCurrentTermData();
 
         $ret = $this->GoalMember->findGoalPriorities(1, $term['start_date'], $term['end_date']);
         $this->assertCount(2, $ret);
@@ -512,12 +512,12 @@ class GoalMemberTest extends GoalousTestCase
         $this->GoalMember->Goal->my_uid = 1;
         $this->GoalMember->Goal->Team->current_team_id = 1;
         $this->GoalMember->Goal->Team->my_uid = 1;
-        $this->GoalMember->Goal->Team->EvaluateTerm->current_team_id = 1;
-        $this->GoalMember->Goal->Team->EvaluateTerm->my_uid = 1;
+        $this->GoalMember->Goal->Team->Term->current_team_id = 1;
+        $this->GoalMember->Goal->Team->Term->my_uid = 1;
 
-        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->GoalMember->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->GoalMember->Goal->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->GoalMember->Goal->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->GoalMember->Goal->Team->Term->addTermData(Term::TYPE_NEXT);
 
     }
 

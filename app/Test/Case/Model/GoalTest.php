@@ -17,7 +17,7 @@ class GoalTest extends GoalousTestCase
     public $fixtures = array(
         'app.action_result',
         'app.evaluation',
-        'app.evaluate_term',
+        'app.term',
         'app.post_share_circle',
         'app.circle',
         'app.post',
@@ -412,8 +412,8 @@ class GoalTest extends GoalousTestCase
             [
                 'user_id'          => 1,
                 'team_id'          => 1,
-                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'start_date'       => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
                 'name'             => 'test',
                 'goal_category_id' => 1,
             ]
@@ -442,8 +442,8 @@ class GoalTest extends GoalousTestCase
             [
                 'user_id'          => 1,
                 'team_id'          => 1,
-                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'start_date'       => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
                 'name'             => 'test',
                 'goal_category_id' => 1,
             ]
@@ -469,8 +469,8 @@ class GoalTest extends GoalousTestCase
             [
                 'user_id'          => 2,
                 'team_id'          => 1,
-                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'start_date'       => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
                 'name'             => 'test',
                 'goal_category_id' => 1,
             ]
@@ -481,8 +481,8 @@ class GoalTest extends GoalousTestCase
             [
                 'user_id'          => 2,
                 'team_id'          => 1,
-                'start_date'       => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-                'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'start_date'       => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
+                'end_date'         => $this->Goal->Team->Term->getCurrentTermData()['start_date'],
                 'name'             => 'test1',
                 'goal_category_id' => 1,
             ]
@@ -588,16 +588,16 @@ class GoalTest extends GoalousTestCase
         $this->Goal->Post->current_team_id = 1;
         $this->Goal->Evaluation->current_team_id = 1;
         $this->Goal->Evaluation->my_uid = 1;
-        $this->Goal->Team->EvaluateTerm->current_team_id = 1;
-        $this->Goal->Team->EvaluateTerm->my_uid = 1;
+        $this->Goal->Team->Term->current_team_id = 1;
+        $this->Goal->Team->Term->my_uid = 1;
 
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_NEXT);
         $this->current_date = REQUEST_TIMESTAMP;
-        $this->start_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $this->end_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        $timezone = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $this->start_date = $this->Goal->Team->Term->getCurrentTermData()['start_date'];
+        $this->end_date = $this->Goal->Team->Term->getCurrentTermData()['end_date'];
+        $timezone = $this->Goal->Team->Term->getCurrentTermData()['timezone'];
         $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
         $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
 
@@ -673,9 +673,9 @@ class GoalTest extends GoalousTestCase
     function testGoalFilterTermNoExistsData()
     {
         $this->setDefault();
-        $current = $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $current = $this->Goal->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_NEXT);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_PREVIOUS);
 
         $search_options = [];
         $search_options['term'] = ['previous'];
@@ -689,7 +689,7 @@ class GoalTest extends GoalousTestCase
     function testGetMyPreviousGoals()
     {
         $this->setDefault();
-        $term = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $term = $this->Goal->Team->Term->getTermData(Term::TYPE_PREVIOUS);
         $goal_data = [
             'user_id'          => 1,
             'team_id'          => 1,
@@ -747,7 +747,7 @@ class GoalTest extends GoalousTestCase
             'team_id'          => 1,
             'purpose_id'       => 1,
             'start_date'       => REQUEST_TIMESTAMP,
-            'end_date'         => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+            'end_date'         => $this->Goal->Team->Term->getCurrentTermData()['end_date'],
             'goal_category_id' => 1,
             'name'             => 'test',
         ];
@@ -766,8 +766,8 @@ class GoalTest extends GoalousTestCase
             'user_id'          => 1,
             'team_id'          => 1,
             'purpose_id'       => 1,
-            'start_date'       => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-            'end_date'         => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date'],
+            'start_date'       => $this->Goal->Team->Term->getPreviousTermData()['start_date'],
+            'end_date'         => $this->Goal->Team->Term->getPreviousTermData()['end_date'],
             'goal_category_id' => 1,
             'name'             => 'test',
         ];
@@ -812,7 +812,7 @@ class GoalTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->setupTerm();
         //KR３つのゴール追加
-        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [10, 20, 30]);
+        $goalId = $this->createGoalKrs(Term::TYPE_CURRENT, [10, 20, 30]);
         $goals = $this->Goal->getGoalAndKr([$goalId]);
         //KR３つあるか？
         $this->assertCount(3, $goals[0]['KeyResult']);
@@ -932,7 +932,7 @@ class GoalTest extends GoalousTestCase
     function testGetAllMyGoalNameList()
     {
         $this->setDefault();
-        $term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $term = $this->Goal->Team->Term->getCurrentTermData();
         $this->Goal->create();
         $this->Goal->save(
             [

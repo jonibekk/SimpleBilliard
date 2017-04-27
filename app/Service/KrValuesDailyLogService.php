@@ -1,7 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
-App::uses('EvaluateTerm', 'Model');
+App::uses('Term', 'Model');
 App::uses('KeyResult', 'Model');
 App::uses('KrValuesDailyLog', 'Model');
 App::uses('GlRedis', 'Model');
@@ -21,8 +21,8 @@ class KrValuesDailyLogService extends AppService
      */
     function saveAsBulk(int $teamId, string $targetDate): bool
     {
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init('Term');
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         /** @var KrValuesDailyLog $KrValuesDailyLog */

@@ -29,7 +29,7 @@ class TeamMemberTest extends GoalousTestCase
         'app.team',
         'app.group',
         'app.job_category',
-        'app.evaluate_term',
+        'app.term',
         'app.circle',
         'app.circle_member',
     );
