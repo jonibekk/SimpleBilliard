@@ -137,8 +137,8 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
 
         // Build goal data for update
         $updateGoal = ['id' => $goal['id']];
-        $updateGoal['start_date'] = $this->getDateByLocalTimestamp($goal['old_start_date'], $timezone);
-        $updateGoal['end_date'] = $this->getDateByLocalTimestamp($goal['old_end_date'], $timezone);
+        $updateGoal['start_date'] = $this->getDateByTimestamp($goal['old_start_date'], $timezone);
+        $updateGoal['end_date'] = $this->getDateByTimestamp($goal['old_end_date'], $timezone);
 
         // Update goal
         if (!$Goal->save($updateGoal, false)) {
@@ -155,8 +155,8 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         foreach ($krs as $kr) {
             // Build goal data for update
             $updateKr = ['id' => $kr['id']];
-            $updateKr['start_date'] = $this->getDateByLocalTimestamp($kr['old_start_date'], $timezone);
-            $updateKr['end_date'] = $this->getDateByLocalTimestamp($kr['old_end_date'], $timezone);
+            $updateKr['start_date'] = $this->getDateByTimestamp($kr['old_start_date'], $timezone);
+            $updateKr['end_date'] = $this->getDateByTimestamp($kr['old_end_date'], $timezone);
 
             // Update kr
             if (!$KeyResult->save($updateKr, false)) {
@@ -180,9 +180,9 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
 
-        $term['start_date'] = $this->getDateByLocalTimestamp($term['start_date'], $term['timezone']);
+        $term['start_date'] = $this->getDateByTimestamp($term['start_date'], $term['timezone'], true);
         $monthFirstDate = date('Y-m-d', strtotime('first day of ' . $term['start_date']));
-        $term['end_date'] = $this->getDateByLocalTimestamp($term['end_date'], $term['timezone']);
+        $term['end_date'] = $this->getDateByTimestamp($term['end_date'], $term['timezone'], true);
         $monthLastDate = date('Y-m-d', strtotime('last day of ' . $term['end_date']));
 
         if ($term['start_date'] !== $monthFirstDate || $term['end_date'] !== $monthLastDate) {
@@ -200,13 +200,16 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
 
     /**
      * Get date by local timestamp
+     *
      * @param int   $timestamp
      * @param float $timezone
+     * @param bool  $isAddition
      *
      * @return string
      */
-    private function getDateByLocalTimestamp(int $timestamp, float $timezone)
+    private function getDateByTimestamp(int $timestamp, float $timezone, $isAddition = false)
     {
-        return AppUtil::dateYmd($timestamp - ($timezone * HOUR));
+        $localTime = $isAddition ? $timestamp + ($timezone * HOUR) : $timestamp - ($timezone * HOUR);
+        return AppUtil::dateYmd($localTime);
     }
 }
