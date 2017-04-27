@@ -2,7 +2,6 @@
 
 class ImproveTimezoneAndTerm1 extends CakeMigration
 {
-    private $err_terms = [];
     /**
      * Migration description
      *
