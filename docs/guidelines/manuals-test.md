@@ -3,7 +3,8 @@
 テストに関してのまとめられたマニュアルです。  
 
 <hr id="stress">
-### 負荷試験環境構築手順書
+
+### AWS環境構築手順書 (試験環境含む)
 
 1. AWS management consoleにログイン。
 1. リージョンを`アジア・パシフィック(東京)`に変更。
@@ -116,6 +117,7 @@
 1. 以上
 
 <hr id="selenium">
+
 ### Seleinumを使用したUI自動テスト
 
 #### 開発マシンにSeleniumServerをインストール
@@ -201,6 +203,7 @@ ex)
  - https://phpunit.de/manual/4.8/ja/selenium.html
 
 <hr id="api-gen">
+
 ### PHP Docからドキュメントを生成するapigen
 
 phpdocを元にドキュメントを生成してくれるツールです。
