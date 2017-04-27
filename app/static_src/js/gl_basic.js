@@ -534,7 +534,7 @@ $(document).ready(function () {
     $modal_elm.on('hidden.bs.modal', function (e) {
       $(this).remove();
     });
-    var url = $(this).attr('href');
+    var url = $(this).data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
@@ -1967,7 +1967,7 @@ $(document).ready(function () {
     $modal_elm.on('hidden.bs.modal', function (e) {
       $(this).remove();
     });
-    var url = $(this).attr('href');
+    var url = $(this).data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
