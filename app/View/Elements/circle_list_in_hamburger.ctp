@@ -11,7 +11,7 @@
  * @var                    $is_mb_app
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <p class="circle_heading is-humberger"><?= __("Circles") ?></p>
 <div class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
     <?php if (!empty($my_circles)): ?>
@@ -24,10 +24,11 @@
         <?php endif; ?>
     <?php endif; ?>
     <div class="clearfix develop--circle-seek mtb_15px">
-        <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
-        $this->Html->link(__("View Circles"),
-            ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
-            ['class' => 'modal-ajax-get-public-circles']) ?>
+        <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i>
+        <a href="#"
+           data-url="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal']) ?>"
+           class="modal-ajax-get-public-circles"
+        ><?= __("View Circles") ?></a>
     </div>
     <div class="clearfix develop--circle-make">
         <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"
@@ -36,4 +37,4 @@
                 "Create a circle") ?></a>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

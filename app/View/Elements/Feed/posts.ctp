@@ -15,9 +15,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="post-heading-goal-wrapper pull-left">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'ajax_get_goal_description_modal',
+                                    'action'     => 'view_info',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
+                                   data-url="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_goal_description_modal',
+                                       'goal_id'    => $post['Goal']['id']
+                                   ]) ?>"
                                    class="post-heading-goal
                                     no-line font_verydark modal-ajax-get">
                                     <p class="post-heading-goal-title">
@@ -30,9 +35,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="pull-right">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'ajax_get_goal_description_modal',
+                                    'action'     => 'view_info',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
+                                   data-url="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_goal_description_modal',
+                                       'goal_id'    => $post['Goal']['id']
+                                   ]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
                                     $this->Html->image('pre-load.svg',
@@ -300,11 +310,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </a>
                         </div>
                         <div class="col col-xxs-5 col-xs-4">
-                            <a href="<?= $this->Html->url([
-                                'controller' => 'goals',
-                                'action'     => 'ajax_get_collabo_change_modal',
-                                'goal_id'    => $post['Goal']['id']
-                            ]) ?>"
+                            <a href="#"
+                               data-url="<?= $this->Html->url([
+                                   'controller' => 'goals',
+                                   'action'     => 'ajax_get_collabo_change_modal',
+                                   'goal_id'    => $post['Goal']['id']
+                               ]) ?>"
                                data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
                                class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>">
                                 <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
