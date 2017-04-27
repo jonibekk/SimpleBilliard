@@ -499,7 +499,7 @@ $(document).ready(function () {
   $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
     e.preventDefault();
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    var url = $(this).attr('href');
+    var url = $(this).data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
@@ -3475,7 +3475,7 @@ function getModalFormFromUrl(e) {
     $(this).empty();
   });
 
-  var url = $(this).attr('href');
+  var url = $(this).data('url');
   if (url.indexOf('#') == 0) {
     $(url).modal('open');
   } else {
@@ -4270,16 +4270,16 @@ $(document).ready(function () {
           var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
           var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
 
-          if($FeedMoreReadLink.is(':visible')){
+          if ($FeedMoreReadLink.is(':visible')) {
             $FeedMoreReadLink.trigger('click');
           }
-          if($GoalPageFollowerMoreLink.is(':visible')){
+          if ($GoalPageFollowerMoreLink.is(':visible')) {
             $GoalPageFollowerMoreLink.trigger('click');
           }
-          if($GoalPageMemberMoreLink.is(':visible')){
+          if ($GoalPageMemberMoreLink.is(':visible')) {
             $GoalPageMemberMoreLink.trigger('click');
           }
-          if($GoalPageKeyResultMoreLink.is(':visible')){
+          if ($GoalPageKeyResultMoreLink.is(':visible')) {
             $GoalPageKeyResultMoreLink.trigger('click');
           }
         } else {
