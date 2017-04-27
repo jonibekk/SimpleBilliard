@@ -7,6 +7,7 @@ import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton"
 import {nl2br} from "~/util/element";
 import {isMobileApp, disableAsyncEvents, isIOSApp} from "~/util/base";
 import Base from "~/common/components/Base";
+import Textarea from "react-textarea-autosize";
 
 export default class TopicCreate extends Base {
 
@@ -170,11 +171,11 @@ export default class TopicCreate extends Base {
             {this.state.is_drag_over && <UploadDropZone/>}
 
             <div className="topicCreateForm-msgBody">
-                <textarea className="topicCreateForm-msgBody-form disable-change-warning"
-                          placeholder={__("Write a message...")}
-                          defaultValue=""
-                          onChange={this.changeMessage.bind(this)}
-                />
+              <Textarea className="topicCreateForm-msgBody-form disable-change-warning"
+                        placeholder={__("Write a message...")}
+                        defaultValue=""
+                        onChange={this.changeMessage.bind(this)}
+              />
               <UploadPreview files={file_upload.preview_files}/>
             </div>
             <div className="topicCreateForm-footer">
