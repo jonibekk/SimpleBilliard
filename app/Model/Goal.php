@@ -2048,9 +2048,9 @@ class Goal extends AppModel
         $before_goals = $this->find('list', $before_term_opt);
         $res = [];
         $res += $with_all_opt ? [null => __('All')] : null;
-        $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+        $res += ['disable_value1' => '_separator_'];
         $res += $current_goals;
-        $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+        $res += ['disable_value2' => '_separator_'];
         $res += $before_goals;
         return $res;
     }

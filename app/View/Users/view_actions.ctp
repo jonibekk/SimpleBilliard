@@ -47,10 +47,17 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php 
-                        foreach ($goal_select_options as $goal_title){ ?>
-                        <li><a href="#"><?php echo $goal_title ?></a></li>  
+                        foreach ($goal_select_options as $goalID => $goalName){ ?>
+                            <?php if($goalName == "_separator_"): ?>
+                                <li role="separator" class="divider"></li>
+                            <?php elseif($goalName == "All"): ?>
+                                <li><a href="/users/view_actions/user_id:<?php echo $this->request->params['named']['user_id']?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/"><?php echo $goalName ?></a></li>
+                            <?php else: ?> 
+                                <li><a href="/users/view_actions/user_id:<?php echo $this->request->params['named']['user_id']?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/goal_id:<?php echo $goalID ?>"><?php echo $goalName ?></a></li>
+                            <?php endif; ?> 
                     <?php   }
-                        unset($goal_title);
+                        unset($goalName);
+                        unset($goalID);
                     ?>
                 </ul>
             </div>
