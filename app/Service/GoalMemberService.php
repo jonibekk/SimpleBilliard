@@ -262,7 +262,7 @@ class GoalMemberService extends AppService
                 $GoalMember->set($formData);
                 if (!$GoalMember->validates()) {
                     $this->log(sprintf("[%s]%s", __METHOD__,
-                        sprintf("Failed to change leader not being able to collabo. data:%s",
+                        sprintf("Failed to change leader not being able to collab. data:%s",
                             var_export($formData, true))));
                     return __("Invalid value");
                 }

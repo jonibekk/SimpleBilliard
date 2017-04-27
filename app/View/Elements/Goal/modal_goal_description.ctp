@@ -60,7 +60,7 @@
                             </a>
                         </div>
                         <div>
-                            <a class="btn btn-white bd-circle_22px mt_16px font_verydark collaborate-button modal-ajax-get-collabo <?= h($collabo_opt['class']) ?>"
+                            <a class="btn btn-white bd-circle_22px mt_16px font_verydark collaborate-button modal-ajax-get-collab <?= h($collabo_opt['class']) ?>"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url([

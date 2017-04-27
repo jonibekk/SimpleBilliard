@@ -2833,10 +2833,10 @@ msgstr "管理者(%s)"
 msgid "No one in this circle."
 msgstr "このサークルにはメンバーがいません。"
 
-msgid "Collabo"
+msgid "Collab"
 msgstr "コラボ"
 
-msgid "Edit Collabo"
+msgid "Edit Collab"
 msgstr "コラボを編集"
 
 msgid "eg) Increasing the number of users"

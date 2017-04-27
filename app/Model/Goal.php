@@ -82,7 +82,7 @@ class Goal extends AppModel
                 'action'   => __("Actions number"),
                 'result'   => __("Key results number"),
                 'follow'   => __("Followers number"),
-                'collabo'  => __("Collaborators number"),
+                'collab'  => __("Collaborators number"),
                 'progress' => __("Progress rate")
             ]
         ];
@@ -1211,7 +1211,7 @@ class Goal extends AppModel
         //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
         //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;
-        //exclude collabo goal
+        //exclude collab goal
         foreach ($collabo_goal_ids as $k => $v) {
             unset($goal_ids[$k]);
         }
@@ -1813,7 +1813,7 @@ class Goal extends AppModel
                     ];
                     $options['group'] = ['Goal.id'];
                     break;
-                case 'collabo' :
+                case 'collab' :
                     $options['order'] = ['count_goal_member desc'];
                     $options['fields'][] = 'count(GoalMember.id) as count_goal_member';
                     $options['joins'] = [

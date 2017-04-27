@@ -1542,7 +1542,7 @@ class GoalsController extends AppController
 
         if ($type === 'leader') {
             $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
-        } elseif ($type === 'collabo') {
+        } elseif ($type === 'collab') {
             $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
                 $start_date, $end_date);
         } elseif ($type === 'follow') {

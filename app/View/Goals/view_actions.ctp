@@ -22,7 +22,7 @@
             <div class="view-actions-panel-wrap">
                 <div class="view-actions-panel-filter">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Key Result:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-double-down"></span></strong>
+                        Key Result:&nbsp;<strong>All&nbsp;<i class="fa fa-angle-down ml_2px"></i></strong>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <?php 
@@ -62,17 +62,26 @@
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                <?php if (count($posts) == 0): ?>
+                <?php if (count($posts) == 0 && $is_leader): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>You haven't created any actions&hellip; yet.</h3>
-                <?php else: ?>
-                    <div class="cube-img-column-frame add-action">
-                <?php endif; ?>
-                    <div class="profile-user-action-contents-add-image">
-                        <span><a href="/goals/add_action/">+</a></span>
+                        <div class="profile-user-action-contents-add-image">
+                            <span><a href="/goals/add_action/">+</a></span>
+                        </div>
+                        <a href="/goals/add_action/">Add Action</a>
                     </div>
-                    <a href="/goals/add_action/">Add Action</a>
-                </div>
+                <?php elseif(count($posts) == 0 && !$is_leader): ?>
+                    <div class="cube-img-column-frame add-action mod-only">
+                        <h3>No actions have been created&hellip; yet.</h3>
+                    </div>
+                <?php elseif(count($posts) > 0 && $is_leader): ?>
+                    <div class="cube-img-column-frame add-action">
+                        <div class="profile-user-action-contents-add-image">
+                            <span><a href="/goals/add_action/">+</a></span>
+                        </div>
+                        <a href="/goals/add_action/">Add Action</a>
+                    </div>  
+                <?php endif; ?>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>

@@ -505,7 +505,7 @@ $(document).ready(function () {
   });
 
   //noinspection JSUnresolvedVariable
-  $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+  $(document).on("click", '.modal-ajax-get-collab', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-tkr', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-leader', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable

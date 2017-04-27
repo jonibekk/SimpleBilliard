@@ -1137,7 +1137,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
     {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_my_goals/page:1/type:collabo', ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_my_goals/page:1/type:collab', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

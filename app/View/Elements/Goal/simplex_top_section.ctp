@@ -67,7 +67,7 @@
                             </a>
                         </div>
                         <div class="col col-xxs-6">
-                            <a class="btn btn-white bd-circle_22px modal-ajax-get-collabo collaborate-button p_8px width100_per
+                            <a class="btn btn-white bd-circle_22px modal-ajax-get-collab collaborate-button p_8px width100_per
                             <?= h($collabo_opt['class']) ?>"
                             data-toggle="modal"
                             data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
@@ -76,7 +76,7 @@
                                 'action'     => 'ajax_get_collabo_change_modal',
                                 'goal_id'    => $goal['Goal']['id']
                             ]) ?>">
-                                <span class=""><?= __("Collabo") ?></span>
+                                <span class=""><?= __("Collab") ?></span>
                             </a>
                         </div>
                 <?php endif ?>
