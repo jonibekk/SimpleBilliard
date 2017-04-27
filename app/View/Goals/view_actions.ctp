@@ -62,7 +62,7 @@
             <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                <?php if (count($posts) == 0 && $is_leader): ?>
+                <?php if (count($posts) == 0 && $is_collaborated): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>You haven't created any actions&hellip; yet.</h3>
                         <div class="profile-user-action-contents-add-image">
@@ -70,11 +70,11 @@
                         </div>
                         <a href="/goals/add_action/">Add Action</a>
                     </div>
-                <?php elseif(count($posts) == 0 && !$is_leader): ?>
+                <?php elseif(count($posts) == 0 && !$is_collaborated): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>No actions have been created&hellip; yet.</h3>
                     </div>
-                <?php elseif(count($posts) > 0 && $is_leader): ?>
+                <?php elseif(count($posts) > 0 && $is_collaborated): ?>
                     <div class="cube-img-column-frame add-action">
                         <div class="profile-user-action-contents-add-image">
                             <span><a href="/goals/add_action/">+</a></span>

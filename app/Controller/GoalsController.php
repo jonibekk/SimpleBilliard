@@ -1806,6 +1806,7 @@ class GoalsController extends AppController
             'page_type'  => $page_type
         ]);
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
+        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
         $is_leader = false;
         foreach ($goal['Leader'] as $v) {
             if ($this->Auth->user('id') == $v['User']['id']) {
@@ -1819,6 +1820,7 @@ class GoalsController extends AppController
         ]);
         $this->set('followers', $followers);
         $this->set('is_leader', $is_leader);
+        $this->set('is_collaborated', $is_collaborated);
         $this->set('long_text', false);
         $this->set(compact('goalTerm','key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
