@@ -1821,8 +1821,9 @@ class GoalsController extends AppController
         $this->set('followers', $followers);
         $this->set('is_leader', $is_leader);
         $this->set('is_collaborated', $is_collaborated);
+        $this->set('key_result_id', $key_result_id);
         $this->set('long_text', false);
-        $this->set(compact('goalTerm','key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
+        $this->set(compact('goalTerm', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();

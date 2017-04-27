@@ -800,11 +800,11 @@ class KeyResult extends AppModel
         $res = [];
         $res += $with_all_opt ? [null => __('All')] : null;
         if (!empty($incomplete_krs)) {
-            $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+            $res += ['disable_value1' => '_separator_'];
             $res += $incomplete_krs;
         }
         if (!empty($completed_krs)) {
-            $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+            $res += ['disable_value2' => '_separator_'];
             $res += $completed_krs;
         }
         return $res;
