@@ -97,11 +97,12 @@ $kr_count = 0;
                     ?>
                     <?php if (!empty($goal['Goal'])): ?>
                         <li role="presentation">
-                            <a href="<?= $this->Html->url([
-                                'controller' => 'goals',
-                                'action'     => 'ajax_get_add_key_result_modal',
-                                'goal_id'    => $goal['Goal']['id']
-                            ]) ?>"
+                            <a href="#"
+                               data-url="<?= $this->Html->url([
+                                   'controller' => 'goals',
+                                   'action'     => 'ajax_get_add_key_result_modal',
+                                   'goal_id'    => $goal['Goal']['id']
+                               ]) ?>"
                                class="modal-ajax-get-add-key-result">
                                 <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                         <?= __("Add Key Result") ?></span>
@@ -118,7 +119,8 @@ $kr_count = 0;
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1"
                                    class="modal-ajax-get-exchange-tkr"
-                                   href="<?= $this->Html->url([
+                                   href="#"
+                                   data-url="<?= $this->Html->url([
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_exchange_tkr_modal',
                                        'goal_id'    => $goal['Goal']['id']
@@ -134,7 +136,8 @@ $kr_count = 0;
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1"
                                    class="modal-ajax-get-exchange-leader"
-                                   href="<?= $this->Html->url([
+                                   href="#"
+                                   data-url="<?= $this->Html->url([
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_exchange_leader_modal',
                                        'goal_id'    => $goal['Goal']['id']
@@ -176,11 +179,12 @@ $kr_count = 0;
                     aria-labelledby="dropdownMenu1">
                     <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                         <li role="presentation">
-                            <a href="<?= $this->Html->url([
-                                'controller' => 'goals',
-                                'action'     => 'ajax_get_add_key_result_modal',
-                                'goal_id'    => $goal['Goal']['id']
-                            ]) ?>"
+                            <a href="#"
+                               data-url="<?= $this->Html->url([
+                                   'controller' => 'goals',
+                                   'action'     => 'ajax_get_add_key_result_modal',
+                                   'goal_id'    => $goal['Goal']['id']
+                               ]) ?>"
                                class="modal-ajax-get-add-key-result"
                             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __("Add Key Result") ?></span></a>
@@ -202,7 +206,8 @@ $kr_count = 0;
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1"
                                    class="modal-ajax-get-exchange-leader"
-                                   href="<?= $this->Html->url([
+                                   href="#"
+                                   data-url="<?= $this->Html->url([
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_exchange_leader_modal',
                                        'goal_id'    => $goal['Goal']['id']
@@ -237,11 +242,12 @@ $kr_count = 0;
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url([
-                                    'controller' => 'goals',
-                                    'action'     => 'ajax_get_add_key_result_modal',
-                                    'goal_id'    => $goal['Goal']['id']
-                                ]) ?>"
+                                <a href="#"
+                                   data-url="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_add_key_result_modal',
+                                       'goal_id'    => $goal['Goal']['id']
+                                   ]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                             <?= __("Add Key Result") ?></span>
@@ -290,7 +296,8 @@ $kr_count = 0;
                             <?php endif; ?>
                             <li class="dashboard-goals-card-body-add-kr clearfix">
                                 <a class="dashboard-goals-card-body-add-kr-link modal-ajax-get-add-key-result"
-                                   href="<?= $this->Html->url([
+                                   href="#"
+                                   data-url="<?= $this->Html->url([
                                        'controller' => 'goals',
                                        'action'     => 'ajax_get_add_key_result_modal',
                                        'goal_id'    => $goal['Goal']['id']
