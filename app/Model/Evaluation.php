@@ -476,10 +476,7 @@ class Evaluation extends AppModel
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             return false;
         }
-        if (!$term_id = $this->Team->Term->getCurrentTermId()) {
-            $this->Team->Term->addTermData(Term::TYPE_CURRENT);
-            $term_id = $this->Team->Term->getLastInsertID();
-        }
+        $term_id = $this->Team->Term->getCurrentTermId();
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
         $evaluators = [];
         if ($this->Team->EvaluationSetting->isEnabledEvaluator()) {
