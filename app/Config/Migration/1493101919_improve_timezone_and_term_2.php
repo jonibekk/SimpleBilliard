@@ -2,7 +2,7 @@
 
 class ImproveTimezoneAndTerm2 extends CakeMigration
 {
-
+    private $err_terms = [];
     /**
      * Migration description
      *
@@ -16,60 +16,8 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
      * @var array $migration
      */
     public $migration = array(
-        'up'   => array(
-            'create_field' => array(
-                'goals'       => array(
-                    'start_date' => array(
-                        'type'    => 'date',
-                        'null'    => false,
-                        'default' => null,
-                        'key'     => 'index',
-                        'comment' => '開始日',
-                        'after'   => 'description'
-                    ),
-                    'end_date'   => array(
-                        'type'    => 'date',
-                        'null'    => false,
-                        'default' => null,
-                        'key'     => 'index',
-                        'comment' => '終了日',
-                        'after'   => 'start_date'
-                    ),
-                    'indexes'    => array(
-                        'start_date' => array('column' => 'start_date', 'unique' => 0),
-                        'end_date'   => array('column' => 'end_date', 'unique' => 0),
-                    ),
-                ),
-                'key_results' => array(
-                    'start_date' => array(
-                        'type'    => 'date',
-                        'null'    => false,
-                        'default' => null,
-                        'key'     => 'index',
-                        'comment' => '開始日',
-                        'after'   => 'description'
-                    ),
-                    'end_date'   => array(
-                        'type'    => 'date',
-                        'null'    => false,
-                        'default' => null,
-                        'key'     => 'index',
-                        'comment' => '終了日',
-                        'after'   => 'start_date'
-                    ),
-                    'indexes'    => array(
-                        'start_date' => array('column' => 'start_date', 'unique' => 0),
-                        'end_date'   => array('column' => 'end_date', 'unique' => 0),
-                    ),
-                ),
-            ),
-        ),
-        'down' => array(
-            'drop_field' => array(
-                'goals'       => array('start_date', 'end_date', 'indexes' => array('start_date', 'end_date')),
-                'key_results' => array('start_date', 'end_date', 'indexes' => array('start_date', 'end_date')),
-            ),
-        ),
+        'up'   => array(),
+        'down' => array(),
     );
 
     /**
@@ -135,6 +83,13 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
                     }
                 }
 
+                if (!empty($this->err_terms)) {
+                    CakeLog::error(sprintf(
+                        'Invalid terms. terms:%s',
+                        var_export($this->err_terms, true)
+                    ));
+                }
+
             } catch (Exception $e) {
                 // transaction rollback
                 CakeLog::error($e->getMessage());
@@ -182,8 +137,8 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
 
         // Build goal data for update
         $updateGoal = ['id' => $goal['id']];
-        $updateGoal['start_date'] = $this->getDateByLocalTimestamp($goal['old_start_date'], $timezone);
-        $updateGoal['end_date'] = $this->getDateByLocalTimestamp($goal['old_end_date'], $timezone);
+        $updateGoal['start_date'] = $this->getDateByTimestamp($goal['old_start_date'], $timezone);
+        $updateGoal['end_date'] = $this->getDateByTimestamp($goal['old_end_date'], $timezone);
 
         // Update goal
         if (!$Goal->save($updateGoal, false)) {
@@ -200,8 +155,8 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         foreach ($krs as $kr) {
             // Build goal data for update
             $updateKr = ['id' => $kr['id']];
-            $updateKr['start_date'] = $this->getDateByLocalTimestamp($kr['old_start_date'], $timezone);
-            $updateKr['end_date'] = $this->getDateByLocalTimestamp($kr['old_end_date'], $timezone);
+            $updateKr['start_date'] = $this->getDateByTimestamp($kr['old_start_date'], $timezone);
+            $updateKr['end_date'] = $this->getDateByTimestamp($kr['old_end_date'], $timezone);
 
             // Update kr
             if (!$KeyResult->save($updateKr, false)) {
@@ -225,22 +180,13 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
 
-        $term['start_date'] = $this->getDateByLocalTimestamp($term['start_date'], $term['timezone']);
+        $term['start_date'] = $this->getDateByTimestamp($term['start_date'], $term['timezone'], true);
         $monthFirstDate = date('Y-m-d', strtotime('first day of ' . $term['start_date']));
-        if ($term['start_date'] !== $monthFirstDate) {
-            throw new Exception(sprintf(
-                'Start date of term is invalid. term:%s',
-                var_export($term, true)
-            ));
-        }
-
-        $term['end_date'] = $this->getDateByLocalTimestamp($term['end_date'], $term['timezone']);
+        $term['end_date'] = $this->getDateByTimestamp($term['end_date'], $term['timezone'], true);
         $monthLastDate = date('Y-m-d', strtotime('last day of ' . $term['end_date']));
-        if ($term['end_date'] !== $monthLastDate) {
-            throw new Exception(sprintf(
-                'End date of term is invalid. term:%s',
-                var_export($term, true)
-            ));
+
+        if ($term['start_date'] !== $monthFirstDate || $term['end_date'] !== $monthLastDate) {
+            $this->err_terms[] = $term;
         }
 
         // Insert term to new table
@@ -254,13 +200,16 @@ class ImproveTimezoneAndTerm2 extends CakeMigration
 
     /**
      * Get date by local timestamp
+     *
      * @param int   $timestamp
      * @param float $timezone
+     * @param bool  $isAddition
      *
      * @return string
      */
-    private function getDateByLocalTimestamp(int $timestamp, float $timezone)
+    private function getDateByTimestamp(int $timestamp, float $timezone, $isAddition = false)
     {
-        return AppUtil::dateYmd($timestamp - ($timezone * HOUR));
+        $localTime = $isAddition ? $timestamp + ($timezone * HOUR) : $timestamp - ($timezone * HOUR);
+        return AppUtil::dateYmd($localTime);
     }
 }
