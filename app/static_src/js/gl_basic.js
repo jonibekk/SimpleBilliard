@@ -1954,7 +1954,6 @@ $(document).ready(function () {
     $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
   });
 
-
   initMemberSelect2();
   initCircleSelect2();
 
