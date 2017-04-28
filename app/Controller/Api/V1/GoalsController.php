@@ -607,8 +607,6 @@ class GoalsController extends ApiController
     {
         /** @var ApiKeyResultService $ApiKeyResultService */
         $ApiKeyResultService = ClassRegistry::init("ApiKeyResultService");
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 

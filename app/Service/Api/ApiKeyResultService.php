@@ -14,6 +14,10 @@ class ApiKeyResultService extends ApiService
     /**
      * トップページKR一覧APIレスポンスのページングデータを返す
      *
+     * @param int  $limit
+     * @param int  $offset
+     * @param null $goalId
+     *
      * @return array
      */
     public function generatePagingInDashboard(int $limit, int $offset = 0, $goalId = null): array
