@@ -109,17 +109,17 @@ class AppUtil
 
     /**
      * 日数の差分を求める(デフォルトで繰り上げ)
-     * $targetTimeから$baseTimeの差
+     * $targetDateから$baseDateの差
      *
-     * @param int  $baseTimestamp
-     * @param int  $targetTimestamp
-     * @param bool $roundUp if false, round off
+     * @param string $baseDate
+     * @param string $targetDate
+     * @param bool   $roundUp if false, round off
      *
      * @return int
      */
-    static function diffDays(int $baseTimestamp, int $targetTimestamp, bool $roundUp = true): int
+    static function diffDays(string $baseDate, string $targetDate, bool $roundUp = true): int
     {
-        $days = ($targetTimestamp - $baseTimestamp) / DAY;
+        $days = (strtotime($targetDate) + DAY - strtotime($baseDate)) / DAY;
         if ($roundUp) {
             return ceil($days);
         }
@@ -349,7 +349,7 @@ class AppUtil
         $parsedUrl = parse_url($baseUrl);
         // e.g. $parsedQuery will have ["key1"=>"val1","key2"=>"val2"]
         $parsedQuery = [];
-        if(isset($parsedUrl['query'])){
+        if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $parsedQuery);
         }
         // merge queries.

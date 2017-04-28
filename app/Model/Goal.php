@@ -2349,16 +2349,18 @@ class Goal extends AppModel
     /**
      * 自分が所属するゴール(リーダー or コラボレータ)のゴール名一覧を取得
      *
-     * @param  int
+     * @param int    $userId
+     * @param string $startDate
+     * @param string $endDate
      *
      * @return array
      */
-    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
+    function findNameListAsMember(int $userId, string $startDate, string $endDate): array
     {
         $options = [
             'conditions' => [
-                'Goal.end_date >='   => $startDateTime,
-                'Goal.end_date <='   => $endDateTime,
+                'Goal.end_date >='   => $startDate,
+                'Goal.end_date <='   => $endDate,
                 'Goal.team_id'       => $this->current_team_id,
                 'GoalMember.user_id' => $userId,
                 'GoalMember.del_flg' => false
