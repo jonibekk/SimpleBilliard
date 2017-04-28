@@ -15,19 +15,19 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="users-view-actions col-sm-8 col-sm-offset-2">
+<div class="goal-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('Goal/simplex_top_section') ?>
-    <div class="users-view-actions-panel">
+    <div class="goal-view-actions-panel">
         <div class="view-actions-panel-wrap">
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Key Result:&nbsp;<strong><?php 
+                    KR:&nbsp;<strong><?php 
                         $existKR = isset($this->request->params['named']['key_result_id']);
                         if($existKR):
                             echo $kr_select_options[$this->request->params['named']['key_result_id']]; 
                         else: 
                             echo "All";
-                            endif; ?>&nbsp;<i class="fa fa-angle-down ml_2px"></i></strong>
+                            endif; ?>&nbsp;</strong><span class="fa fa-angle-down ml_2px"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php 

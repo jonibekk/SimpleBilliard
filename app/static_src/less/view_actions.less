@@ -13,7 +13,7 @@
 }
 
 .view-actions-panel-filter{
-  display: block;
+  display: block; 
   float:left;
   text-align:left;
   overflow:hidden;
@@ -21,8 +21,12 @@
 }
 
 @media @small{
-  .view-actions-panel-filter{
+  .user-view-actions .view-actions-panel-filter{
     flex-basis:31%;
+  }
+
+  .goal-view-actions .view-actions-panel-filter{
+    flex-basis:50%;
   }
 }
 
@@ -77,6 +81,13 @@
   color:@veryDark;
 }
 
+.view-actions-panel-wrap .dropdown-toggle{
+  height:1.4em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
 .view-actions-panel-wrap .dropdown-toggle:hover{
   text-decoration: none;
 }
@@ -101,7 +112,7 @@
 
 .view-action-panel-filter-button{
   text-align:center;
-  padding:.3em .6em;
+  padding:.3em 1em;
   float:left;
 }
 
@@ -118,24 +129,24 @@
   color:@basicPink;
 }
 
-.users-view-actions, .goals-view-actions {
+.user-view-actions, .goals-view-actions {
   background: @backgroundColor1;
   border: 1px solid @subColor5;
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
 }
 
-.users-view-actions-panel, .goals-view-actions-panel {
+.user-view-actions-panel, .goal-view-actions-panel {
   background: @backgroundColor2;
   float:left;
   width:100%;
 }
 
-.users-view-actions-panel .panel-body, .goals-view-actions-panel .panel-body{
+.user-view-actions-panel .panel-body, .goal-view-actions-panel .panel-body{
   clear:both;
 }
 
-.users-view-actions-panel-term, .goals-view-actions-panel-term {
+.user-view-actions-panel-term, .goal-view-actions-panel-term {
   float:left;
   border-radius: 4px;
 }

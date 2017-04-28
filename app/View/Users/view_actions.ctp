@@ -14,14 +14,14 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="users-view-actions col-sm-8 col-sm-offset-2">
+<div class="user-view-actions col-sm-8 col-sm-offset-2">
     <?= $this->element('User/simplex_top_section') ?>
-    <div class="users-view-actions-panel">
+    <div class="user-view-actions-panel">
         <?php if (count($posts) > 0): ?>
         <div class="view-actions-panel-wrap">
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Term:&nbsp;<strong>Current&nbsp;<span class="fa fa-angle-double-down"></span></strong>
+                    Term:&nbsp;<strong>Current&nbsp;<spanclass="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a href="#">Current</a></li>
@@ -43,7 +43,7 @@
             </div>
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Goal:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-double-down"></span></strong>
+                    Goal:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php 

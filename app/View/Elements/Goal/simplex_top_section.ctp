@@ -28,12 +28,12 @@
             ?>
         </div>
         <div class="goal-detail-upper-panel-main-flex">
-            <div class="goal-detail-goal-name-wrap col-sm-9 col-xs-10 col-xxs-9">
+            <div class="goal-detail-goal-name-wrap">
                 <h5 class="goal-detail-goal-name-top-section">
                     <?= h($goal['Goal']['name']) ?>
                 </h5>
             </div>
-            <div class="goal-detail-button-wrap col-sm-9 col-xs-10 col-xxs-9 mt_18px">
+            <div class="goal-detail-button-wrap mt_18px">
                 <?php if ($is_leader): ?>
                     <div class="col col-xxs-9 col-xs-10">
                         <?= $this->Html->link(__('Edit a goal'),
