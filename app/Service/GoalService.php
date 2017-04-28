@@ -809,7 +809,6 @@ class GoalService extends AppService
         $term = $EvaluateTerm->getCurrentTermData();
         $termStartDate = $term['start_date'];
         $termEndDate = $term['end_date'];
-        $termTimezone = $term['timezone'];
 
         //バリデーション
         $validOrErrorMsg = $this->validateGraphRange(
@@ -828,31 +827,29 @@ class GoalService extends AppService
         $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartDate, $targetEndDate);
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
-            $ret['graphStartDate'] = AppUtil::dateYmdLocal($termStartDate, $termTimezone);
-            $ret['graphEndDate'] = AppUtil::dateYmdLocal($termStartDate + (($targetDays - 1) * DAY),
-                $termTimezone);
-            $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndDate, $termTimezone);
+            $ret['graphStartDate'] = $termStartDate;
+            $ret['graphEndDate'] = AppUtil::dateYmd(strtotime($termStartDate) + (($targetDays - 1) * DAY));
+            $ret['plotDataEndDate'] = $targetEndDate;
             return $ret;
         }
 
         if ($maxBufferDays > 0) {
             //指定グラフ終了日から期の終了日まで日数が少ない場合(以下がその定義)は、グラフ終了日は期の終了日をセット
             //指定グラフ終了日が期の終了日からバッファ日数を引いた日を超えた場合
-            $termEndBeforeMaxBufferDaysTimestamp = $termEndDate - $maxBufferDays * DAY;
-            if ($targetEndDate > $termEndBeforeMaxBufferDaysTimestamp) {
-                $ret['graphStartDate'] = AppUtil::dateYmdLocal($termEndDate - (($targetDays - 1) * DAY),
-                    $termTimezone);
-                $ret['graphEndDate'] = AppUtil::dateYmdLocal($termEndDate, $termTimezone);
+            $termEndDateBeforeMaxBufferDays = AppUtil::dateYmd(strtotime($termEndDate) - $maxBufferDays * DAY);
+            if ($targetEndDate > $termEndDateBeforeMaxBufferDays) {
+                $ret['graphStartDate'] = AppUtil::dateYmd(strtotime($termEndDate) - (($targetDays - 1) * DAY));
+                $ret['graphEndDate'] = $termEndDate;
                 $ret['plotDataEndDate'] = $ret['graphEndDate'];
                 return $ret;
             }
         }
 
         //$targetDays前から本日まで(バッファ日数を考慮)
-        $targetStartTimestamp = $targetEndDate - (($targetDays - 1) * DAY);
-        $ret['graphStartDate'] = AppUtil::dateYmdLocal($targetStartTimestamp + ($maxBufferDays * DAY), $termTimezone);
-        $ret['graphEndDate'] = AppUtil::dateYmdLocal($targetEndDate + ($maxBufferDays * DAY), $termTimezone);
-        $ret['plotDataEndDate'] = AppUtil::dateYmdLocal($targetEndDate, $termTimezone);
+        $targetStartTimestamp = strtotime($targetEndDate) - (($targetDays - 1) * DAY);
+        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
+        $ret['graphEndDate'] = AppUtil::dateYmd(strtotime($targetEndDate) + ($maxBufferDays * DAY));
+        $ret['plotDataEndDate'] = AppUtil::dateYmd(strtotime($targetEndDate));
 
         return $ret;
     }
@@ -992,7 +989,6 @@ class GoalService extends AppService
         } else {
             $logEndDate = $plotDataEndDate;
         }
-
         //ゴール重要度のリスト key:goal_id,value:priority
         $goalPriorities = $this->findGoalPriorities($userId);
         /** @var KeyResult $KeyResult */
@@ -1009,7 +1005,6 @@ class GoalService extends AppService
             $logEndDate
         );
         $progressLogs = $this->processProgressesToGraph($logStartDate, $logEndDate, $progressLogs);
-
         //ゴールが存在し、範囲に当日が含まれる場合は当日の進捗を取得しログデータとマージ
         if (!empty($goalIds) && $isIncludedTodayInPlotData) {
             $latestTotalGoalProgress = $this->findLatestSummarizedGoalProgress($latestKrValues, $goalPriorities);
@@ -1037,12 +1032,12 @@ class GoalService extends AppService
     {
         /** @var Term $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('Term');
-        $termStartTimestamp = $EvaluateTerm->getCurrentTermData()['start_date'];
-        $termEndTimestamp = $EvaluateTerm->getCurrentTermData()['end_date'];
+        $termStartDate = $EvaluateTerm->getCurrentTermData()['start_date'];
+        $termEndDate = $EvaluateTerm->getCurrentTermData()['end_date'];
 
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
-        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartTimestamp, $termEndTimestamp);
+        $goalPriorities = $GoalMember->findGoalPriorities($userId, $termStartDate, $termEndDate);
         return $goalPriorities;
     }
 

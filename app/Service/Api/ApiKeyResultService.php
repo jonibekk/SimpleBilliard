@@ -20,7 +20,7 @@ class ApiKeyResultService extends ApiService
     {
         $newOffset = (int)$offset + $limit;
         $queryParams = array_merge(
-            ['offset'  => $newOffset],
+            ['offset' => $newOffset],
             ['goal_id' => $goalId],
             compact('limit')
         );
@@ -35,6 +35,11 @@ class ApiKeyResultService extends ApiService
      * トップページ右カラムに表示するKR一覧を取得
      * - キャッシュが必要な場合はキャッシュを扱う
      *
+     * @param int  $limit
+     * @param int  $offset
+     * @param null $goalId
+     * @param bool $needCache
+     *
      * @return array
      */
     function findInDashboard(int $limit, int $offset = 0, $goalId = null, bool $needCache = false): array
@@ -43,9 +48,6 @@ class ApiKeyResultService extends ApiService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init("UserService");
-
         $resKrs = [];
         if ($needCache) {
             // キャッシュ検索

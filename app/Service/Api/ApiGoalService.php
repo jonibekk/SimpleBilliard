@@ -259,9 +259,9 @@ class ApiGoalService extends ApiService
         }
 
         //グラフデータのセット
-        $today = AppUtil::dateYmd(time() + $currentTerm['timezone'] * HOUR);
+        $todayDate = AppUtil::dateYmd(time() + $currentTerm['timezone'] * HOUR);
         $graphRange = $GoalService->getGraphRange(
-            $today,
+            $todayDate,
             GoalService::GRAPH_TARGET_DAYS,
             GoalService::GRAPH_MAX_BUFFER_DAYS
         );
