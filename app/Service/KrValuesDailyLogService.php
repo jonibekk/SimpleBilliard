@@ -38,7 +38,7 @@ class KrValuesDailyLogService extends AppService
         // Termが存在しない場合は処理をスキップする
         // チームにTermが存在しないケースはままあるので、ここでログは吐かない。
         // 例えば長らくチームの誰もログインしていないケース。
-        $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
+        $targetTerm = $EvaluateTerm->getTermDataByDate($targetDate);
         if (empty($targetTerm)) {
             return true;
         }
@@ -82,7 +82,7 @@ class KrValuesDailyLogService extends AppService
         $GlRedis = ClassRegistry::init('GlRedis');
         // 本来ならlocal:cache_user_data:{KEY}:*の形で指定したいが、なぜか前方一致だと取得できないのでやむなく部分一致にする。
         // ユーザーごとのKR進捗ログキャッシュ削除
-        $key = '*:' . $GlRedis->getCacheKey(CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ":" . date('Y-m-d')).':user:*';
+        $key = '*:' . $GlRedis->getCacheKey(CACHE_KEY_USER_GOAL_KR_VALUES_DAILY_LOG . ":" . date('Y-m-d')) . ':user:*';
         $GlRedis->deleteKeys($key);
 
         // ゴールごとのKR進捗ログキャッシュ削除
@@ -102,7 +102,7 @@ class KrValuesDailyLogService extends AppService
     function getKrValueDailyLogFromCache(int $userId, string $date)
     {
         $data = Cache::read($this->getCacheKeyUserGoalKrValuesDailyLog($userId, $date), 'user_data');
-        if($data === false){
+        if ($data === false) {
             return false;
         }
         /** @noinspection PhpUndefinedFunctionInspection */
@@ -171,7 +171,7 @@ class KrValuesDailyLogService extends AppService
     function getGoalKrValueDailyLogFromCache(int $goalId, string $date)
     {
         $data = Cache::read($this->getCacheKeyGoalKrValuesDailyLog($goalId, $date), 'team_info');
-        if($data === false){
+        if ($data === false) {
             return false;
         }
         /** @noinspection PhpUndefinedFunctionInspection */

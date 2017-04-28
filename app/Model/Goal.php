@@ -169,10 +169,10 @@ class Goal extends AppModel
             ],
         ],
         'start_date'       => [
-            'numeric' => ['rule' => ['numeric']]
+            'numeric' => ['rule' => ['date', 'ymd']]
         ],
         'end_date'         => [
-            'numeric' => ['rule' => ['numeric']]
+            'numeric' => ['rule' => ['date', 'ymd']]
         ],
         'start_value'      => [
             'maxLength' => ['rule' => ['maxLength', 15]],
@@ -324,15 +324,14 @@ class Goal extends AppModel
     /**
      * 評価期間内かチェック
      *
-     * @param  string $date
+     * @param  array $date
      *
      * @return bool
      */
-    function checkRangeTerm($date)
+    function checkRangeTerm(array $date)
     {
         $date = array_shift($date);
         $goalTerm = $this->getGoalTermFromPost($this->data);
-        $date = AppUtil::getEndDateByTimezone($date, $goalTerm['timezone']);
 
         return $goalTerm['start_date'] <= $date && $date <= $goalTerm['end_date'];
     }
@@ -400,7 +399,7 @@ class Goal extends AppModel
             return true;
         }
         // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
-        $term = $this->Team->Term->getTermDataByTimeStamp($goal['end_date']);
+        $term = $this->Team->Term->getTermDataByDate($goal['end_date']);
 
         // UTCでのタイムスタンプ取得
         $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
@@ -511,16 +510,12 @@ class Goal extends AppModel
         if ($termType == 'current') {
             $currentTermData = $this->Team->Term->getCurrentTermData();
             $localDate = date('Y-m-d', time() + $currentTermData['timezone'] * HOUR);
-            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone($localDate,
-                $currentTermData['timezone']);
+            $data['Goal']['start_date'] = $localDate;
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
 
-        if (!empty($data['Goal']['end_date'])) {
-            //期限を+1day-1secする
-            $data['Goal']['end_date'] = AppUtil::getEndDateByTimezone($data['Goal']['end_date'], $goalTerm['timezone']);
-        } else {
+        if (empty($data['Goal']['end_date'])) {
             //指定なしの場合は期の終了日
             $data['Goal']['end_date'] = $goalTerm['end_date'];
         }
@@ -2119,7 +2114,7 @@ class Goal extends AppModel
 
         /** @var Term $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('Term');
-        return $EvaluateTerm->getTermDataByTimeStamp($goal['Goal']['end_date']);
+        return $EvaluateTerm->getTermDataByDate($goal['Goal']['end_date']);
     }
 
     public function getRelatedGoals($user_id = null)

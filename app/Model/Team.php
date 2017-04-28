@@ -22,7 +22,7 @@ App::uses('AppModel', 'Model');
  * @property Evaluator         $Evaluator
  * @property EvaluationSetting $EvaluationSetting
  * @property Evaluation        $Evaluation
- * @property Term              $EvaluateTerm
+ * @property Term              $Term
  * @property TeamVision        $TeamVision
  * @property GroupVision       $GroupVision
  * @property TeamInsight       $TeamInsight

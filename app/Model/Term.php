@@ -224,9 +224,9 @@ class Term extends AppModel
                 }
             }
             if (!$this->currentTerm) {
-                $this->currentTerm = $this->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
+                $this->currentTerm = $this->getTermDataByDate(AppUtil::dateYmd(REQUEST_TIMESTAMP));
                 if ($this->currentTerm && $withCache) {
-                    Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
+                    Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
                 }
             }
@@ -244,10 +244,9 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
-                $this->previousTerm = $this->getTermDataByTimeStamp(strtotime("-1 day",
-                    $this->currentTerm['start_date']));
+                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY));
                 if ($this->previousTerm && $withCache) {
-                    Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
+                    Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
             }
@@ -266,9 +265,9 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
-                $this->nextTerm = $this->getTermDataByTimeStamp(strtotime("+1 day", $this->currentTerm['end_date']));
+                $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
                 if ($this->nextTerm && $withCache) {
-                    Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
+                    Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->nextTerm, 'team_info');
                 }
             }
@@ -568,19 +567,21 @@ class Term extends AppModel
     }
 
     /**
-     * return term data from datetime
+     * return term data from date string
      *
-     * @param int $timeStamp unixtime
+     * @param string $date
      *
      * @return array|null
      */
-    public function getTermDataByTimeStamp($timeStamp = REQUEST_TIMESTAMP)
+    public function getTermDataByDate(string $date)
     {
+
+        $timezone = Hash::get($this->Team->getCurrentTeam(), 'Team.timezone');
         $options = [
             'conditions' => [
                 'team_id'       => $this->current_team_id,
-                'start_date <=' => $timeStamp,
-                'end_date >='   => $timeStamp,
+                'start_date <=' => $date,
+                'end_date >='   => $date,
             ]
         ];
         $res = $this->find('first', $options);
@@ -594,6 +595,7 @@ class Term extends AppModel
             ));
         }
         $res = Hash::extract($res, 'Term');
+        $res['timezone'] = $timezone;
         return $res;
     }
 

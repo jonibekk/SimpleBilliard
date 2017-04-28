@@ -4,7 +4,6 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'FollowService');
-App::import('Service', 'TermService');
 App::import('Service/Api', 'ApiGoalService');
 App::import('Service/Api', 'ApiKeyResultService');
 
@@ -262,12 +261,8 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('terms', $dataTypes)) {
-            /** @var TermService $EvaluateTermService */
-            $EvaluateTermService = ClassRegistry::init('TermService');
             $current = $this->Team->Term->getTermData(Term::TYPE_CURRENT);
-            $current = $EvaluateTermService->processEvaluateTerm($current, $type = Term::TERM_TYPE_CURRENT);
             $next = $this->Team->Term->getTermData(Term::TYPE_NEXT);
-            $next = $EvaluateTermService->processEvaluateTerm($next, $type = Term::TERM_TYPE_NEXT);
             $res['terms'] = [Term::TERM_TYPE_CURRENT => $current, Term::TERM_TYPE_NEXT => $next];
         }
 
@@ -425,7 +420,8 @@ class GoalsController extends ApiController
 
         //コラボレータへの通知
         if ($isNextToCurrentUpdate) {
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER, $goalId, null);
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER, $goalId,
+                null);
         } else {
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $goalId, null);
         }

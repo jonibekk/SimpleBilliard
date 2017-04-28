@@ -434,10 +434,11 @@ class KeyResultTest extends GoalousTestCase
         $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
 
         // 進捗の値が減少から増加の方向に変更してないか
-        $updateKr = ['id'           => 2,
-                     'value_unit'   => $krs[2]['value_unit'],
-                     'start_value'  => -100,
-                     'target_value' => -99.999
+        $updateKr = [
+            'id'           => 2,
+            'value_unit'   => $krs[2]['value_unit'],
+            'start_value'  => -100,
+            'target_value' => -99.999
         ];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -610,7 +611,7 @@ class KeyResultTest extends GoalousTestCase
      */
     private function customValidRangeDateThreshold(string $startDate, string $endDate)
     {
-        $currentTerm = $this->Team->Term->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
+        $currentTerm = $this->Team->Term->getTermDataByDate(AppUtil::dateYmd(REQUEST_TIMESTAMP));
         $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
         $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
 

@@ -413,14 +413,14 @@ class GoalService extends AppService
         }
         if (!empty($requestData['end_date'])) {
             // timezoneを加味したend_date設定
-            $goalTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($requestData['end_date']));
-            $updateData['end_date'] = AppUtil::getEndDateByTimezone($requestData['end_date'], $goalTerm['timezone']);
+            $goalTerm = $EvaluateTerm->getTermDataByDate($requestData['end_date']);
+            $updateData['end_date'] = $requestData['end_date'];
 
             // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
             $preUpdatedTerm = $Goal->getTermTypeById($goalId);
             $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($requestData['term_type'] == Term::TERM_TYPE_CURRENT);
             if ($isNextToCurrentUpdate) {
-                $updateData['start_date'] = time();
+                $updateData['start_date'] = AppUtil::dateYmd(time() + $goalTerm['timezone'] * HOUR);
             }
         }
         if (!empty($requestData['photo'])) {
@@ -1553,7 +1553,7 @@ class GoalService extends AppService
         /** @var GoalProgressDailyLog $GoalProgressDailyLog */
         $GoalProgressDailyLog = ClassRegistry::init('GoalProgressDailyLog');
 
-        $targetTerm = $EvaluateTerm->getTermDataByTimeStamp(strtotime($targetDate));
+        $targetTerm = $EvaluateTerm->getTermDataByDate($targetDate);
         if (empty($targetTerm)) {
             //期間データが存在しない場合はログを採らない。期間データがない(ログインしているユーザがいない)なら進捗自体がないということなので。
             return false;

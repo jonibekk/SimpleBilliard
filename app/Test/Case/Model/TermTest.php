@@ -291,10 +291,9 @@ class TermTest extends GoalousTestCase
         $this->assertEmpty($this->Term->getCurrentTermData());
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $utcMidnightTerm = $this->Term->getCurrentTermData(true);
-        $this->assertRegExp('/00:00:00/',date('Y-m-d H:i:s',$utcMidnightTerm['start_date']));
-        $this->assertRegExp('/23:59:59/',date('Y-m-d H:i:s',$utcMidnightTerm['end_date']));
+        $this->assertRegExp('/00:00:00/', date('Y-m-d H:i:s', $utcMidnightTerm['start_date']));
+        $this->assertRegExp('/23:59:59/', date('Y-m-d H:i:s', $utcMidnightTerm['end_date']));
     }
-
 
     function testGetNextTermData()
     {
@@ -461,11 +460,11 @@ class TermTest extends GoalousTestCase
         $this->assertEquals('2017/02/28 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
     }
 
-    function testGetTermByDatetime()
+    function test_getTermDataByDate()
     {
         $this->_setDefault();
-        $this->Term->save(['start_date' => 1, 'end_date' => 100, 'team_id' => 1, 'timezone' => 9]);
-        $actual = $this->Term->getTermDataByTimeStamp(50);
+        $this->Term->save(['start_date' => '2017-01-01', 'end_date' => '2017-03-31', 'team_id' => 1, 'timezone' => 9]);
+        $actual = $this->Term->getTermDataByDate('2017-02-01');
         $this->assertEquals(1, $actual['start_date']);
         $this->assertEquals(100, $actual['end_date']);
     }
