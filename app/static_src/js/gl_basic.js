@@ -1658,16 +1658,6 @@ $(function () {
 });
 
 $(function () {
-  $(".hoverPic").hover(
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_off", "_on"));
-    },
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_on", "_off"));
-    });
-});
-
-$(function () {
   $(".click-show").on("click", function () {
       $("#PostFormPicture").css("display", "block")
     }

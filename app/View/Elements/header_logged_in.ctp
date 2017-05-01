@@ -37,7 +37,7 @@
                         <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                             <div class="ta-sm_c">
-                                <img src="<?= $this->Html->url('/img/logo_off.png') ?>" class="header-logo-img"
+                                <img src="<?= $this->Html->url('/img/logo_on.png') ?>" class="header-logo-img"
                                      alt="Goalous2.0" width="20px" height="20px">
 
                                 <p class="font_11px font_heavyGray header_icon-text hidden-xs js-header-link">
