@@ -117,28 +117,46 @@
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
                 <li class="goal-detail-info-followers">
-                    <?php if ($followers): ?>
-                        <?= $this->App->viewStartComment() ?>
+                    <?php
+                        $follower_view_num = 6;
+                        $iterator = $follower_view_num;
+                        $over_num = count($followers) - $follower_view_num + 1;
+                        ?>
                         <?php foreach ($followers as $follower): ?>
-                                <a href="<?= $this->Html->url([
+                            <?php
+                            if ($iterator == 0 || ($over_num > 1 && $iterator == 1)) {
+                                break;
+                            }
+                            ?>
+                            <?=
+                            $this->Html->link($this->Upload->uploadImage($follower['User'], 'User.photo',
+                                ['style' => 'medium'],
+                                ['class' => 'goal-detail-info-avatar',]),
+                                [
                                     'controller' => 'users',
                                     'action'     => 'view_goals',
                                     'user_id'    => $follower['User']['id']
-                                ]) ?>"
-                                class="link-dark-gray">
-                                    <div>
-                                        <?=
-                                        $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'medium_large'],
-                                            ['class' => 'goal-detail-info-avatar'])
-                                        ?>
-                                    </div>
-                                </a>
+                                ],
+                                ['escape' => false]
+                            )
+                            ?>
+                            <?php $iterator--; ?>
                         <?php endforeach ?>
-                        <?= $this->App->viewEndComment() ?>
-                    <?php endif ?>
-                    <?php if (!$followers): ?>
-                        <?= __('No one is following.') ?>
-                    <?php endif ?>
+                        <?php if ($over_num > 1): ?>
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'goals',
+                                'action'     => 'view_followers',
+                                'goal_id'    => $goal['Goal']['id']
+                            ]) ?>"
+                               class="goal-detail-followers-remaining">
+                                <?= $this->Upload->uploadImage($followers[$follower_view_num - 1]['User'], 'User.photo',
+                                    ['style' => 'medium'],
+                                    ['class' => 'goal-detail-info-avatar',]) ?>
+                                <span class="goal-detail-follower-more-counts">
+                                <i class="fa fa-plus"></i>
+                                    <?= $over_num ?></span>
+                            </a>
+                        <?php endif ?>
                 </li>
             </ul>
         </div>

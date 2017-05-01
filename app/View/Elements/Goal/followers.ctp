@@ -29,6 +29,13 @@
                     </div>
                 </div>
             </a>
+            <?php if($follower['User']['id']==$this->Session->read('Auth.User.id')): ?>
+                <a class="goal-detail-member-edit btn" href="<?= $this->Html->url([
+                    'controller' => 'goals',
+                    'action'     => 'ajax_get_collabo_change_modal',
+                    'goal_id'    => $goal['Goal']['id']
+                ]) ?>">Edit</a>
+            <?php endif ?>  
         </div>
     <?php endforeach ?>
     <?= $this->App->viewEndComment() ?>

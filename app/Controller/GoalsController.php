@@ -1686,7 +1686,9 @@ class GoalsController extends AppController
             'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
             'with_group' => true,
         ]);
+        $goalTerm = $this->Goal->getGoalTermData($goal_id);
         $this->set('followers', $followers);
+        $this->set('goalTerm', $goalTerm);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1824,24 +1826,6 @@ class GoalsController extends AppController
         $this->set('key_result_id', $key_result_id);
         $this->set('long_text', false);
         $this->set(compact('goalTerm', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
-
-        $this->layout = LAYOUT_ONE_COLUMN;
-        return $this->render();
-    }
-
-    function view_info()
-    {
-        $goalId = Hash::get($this->request->params, "named.goal_id");
-        if (!$goalId || !$this->_setGoalPageHeaderInfo($goalId)) {
-            // ゴールが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
-            return $this->redirect($this->referer());
-        }
-        // ゴールが属している評価期間データ
-        $goalTerm = $this->Goal->getGoalTermData($goalId);
-        $goalLabels = Hash::extract($this->Goal->GoalLabel->findByGoalId($goalId), '{n}.Label');
-
-        $this->set(compact('goalTerm', 'goalLabels'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
