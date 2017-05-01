@@ -75,15 +75,13 @@ export default class Kr extends React.Component {
           <div className="right">
             { !is_complete && (() => {
               return (
-                <div className="action-button-wrapper">
-                  <a href={ action_post_link } className="action-button">
-                    <i className="fa fa-check-circle"></i>
-                  </a>
-                  <a href={ action_post_link } className="add-mark">
-                    <i className="fa fa-plus-circle"></i>
-                  </a>
-                </div>
-              )
+                <a href={ action_post_link } label="Add Action">
+                  <div className="dashboard-krs-column-add-action">
+                      <span>+</span>
+                  </div>
+                  <p>Add Action</p>
+                </a>
+              ) 
             })()}
           </div>
         </div>
