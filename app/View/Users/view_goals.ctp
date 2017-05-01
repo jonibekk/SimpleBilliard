@@ -63,7 +63,7 @@
                     <div class="col col-xxs-2 col-xs-2">
                         <a href="<?= $this->Html->url([
                             'controller' => 'goals',
-                            'action'     => 'view_info',
+                            'action'     => 'view_krs',
                             'goal_id'    => $goal['Goal']['id']
                         ]) ?>">
                             <?=
@@ -80,7 +80,7 @@
                         <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
                             <a href="<?= $this->Html->url([
                                 'controller' => 'goals',
-                                'action'     => 'view_info',
+                                'action'     => 'view_krs',
                                 'goal_id'    => $goal['Goal']['id']
                             ]) ?>"
                                class="profile-goals-card-title">

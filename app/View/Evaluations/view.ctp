@@ -255,7 +255,7 @@
                 <div class="col col-xxs-6 col-sm-4">
                     <a href="<?= $this->Html->url([
                         'controller' => 'goals',
-                        'action'     => 'view_info',
+                        'action'     => 'view_krs',
                         'goal_id'    => $goal[0]['Goal']['id']
                     ]) ?>"
                        target="_blank">
@@ -277,7 +277,7 @@
                     <div>
                         <a href="<?= $this->Html->url([
                             'controller' => 'goals',
-                            'action'     => 'view_info',
+                            'action'     => 'view_krs',
                             'goal_id'    => $goal[0]['Goal']['id']
                         ]) ?>"
                            target="_blank">

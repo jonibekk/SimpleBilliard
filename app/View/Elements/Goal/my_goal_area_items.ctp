@@ -67,7 +67,7 @@ $kr_count = 0;
                     <div class="dashboard-goals-card-header-goal-wrap">
                         <a href="<?= $this->Html->url([
                             'controller' => 'goals',
-                            'action'     => 'view_info',
+                            'action'     => 'view_krs',
                             'goal_id'    => $goal['Goal']['id']
                         ]) ?>"
                            class="">

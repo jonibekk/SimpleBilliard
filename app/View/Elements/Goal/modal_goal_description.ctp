@@ -19,7 +19,7 @@
                 <a class=""
                    href="<?= $this->Html->url([
                        'controller' => 'goals',
-                       'action'     => 'view_info',
+                       'action'     => 'view_krs',
                        'goal_id'    => $goal['Goal']['id']
                    ]) ?>">
                     <i class="fa fa-external-link"></i>
@@ -31,7 +31,7 @@
                 <div class="col col-xxs-6">
                     <a href="<?= $this->Html->url([
                         'controller' => 'goals',
-                        'action'     => 'view_info',
+                        'action'     => 'view_krs',
                         'goal_id'    => $goal['Goal']['id']
                     ]) ?>">
                         <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>"
@@ -85,7 +85,7 @@
                         <a class="font_verydark"
                            href="<?= $this->Html->url([
                                'controller' => 'goals',
-                               'action'     => 'view_info',
+                               'action'     => 'view_krs',
                                'goal_id'    => $goal['Goal']['id']
                            ]) ?>">
                             <?= h($goal['Goal']['name']) ?>

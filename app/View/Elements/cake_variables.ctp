@@ -157,7 +157,7 @@ App::uses('AttachedFile', 'Model');
             select2_goals: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_select2_goals'])?>",
             select2_circles: "<?=$this->Html->url(['controller' => 'circles', 'action' => 'ajax_select2_circles'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
-            goal_page: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => '']) ?>",
+            goal_page: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => '']) ?>",
             circle_page: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => '']) ?>/",
             goal_followers: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_followers'])?>",
             goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",

@@ -1810,7 +1810,7 @@ class TeamsController extends AppController
                     $ranking[$goal['Goal']['id']]['Goal'] = $goal['Goal'];
                     $ranking[$goal['Goal']['id']]['url'] = Router::url([
                         'controller' => 'goals',
-                        'action'     => 'view_info',
+                        'action'     => 'view_krs',
                         'goal_id'    => $goal['Goal']['id']
                     ]);
                 }

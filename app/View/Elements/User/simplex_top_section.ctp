@@ -195,11 +195,11 @@
             <?= h(__('Posts')) ?>
         </p>
     </a>
-    <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
+    <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_krs' ? "profile-user-tab-active" : null ?>"
        href="<?= $this->Html->url(
            [
                'controller' => 'users',
-               'action'     => 'view_info',
+               'action'     => 'view_krs',
                'user_id'    => $user['User']['id'],
            ]) ?>">
         <i class="fa fa-info-circle profile-user-tab-icon"></i>
