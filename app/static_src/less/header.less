@@ -64,12 +64,21 @@
   }
 }
 
-.header-profile-icon,
-.js-header-link,
-.header-logo-img,
-.header-function-link {
-  @media screen and (min-width: 1025px) {
+@media screen and (min-width: 1025px) {
+  .header-profile-icon,
+  .js-header-link,
+  .header-logo-img,
+  .header-function-link {
     opacity: 0.54;
+    transition:opacity .3s ease;
+  }
+  .navbar:hover{
+    .header-profile-icon,
+    .js-header-link,
+    .header-logo-img,
+    .header-function-link {
+      opacity:1;
+    }
   }
 }
 

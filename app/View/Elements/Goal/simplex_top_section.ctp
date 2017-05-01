@@ -85,7 +85,7 @@
     </div>
     <div class="goal-detail-upper-panel-detail">
         <div class="goal-detail-more-details-wrap">
-            <a href="#" class="goal-detail-more-details-link js-open-goal-details-info"><span class="fa fa-angle-double-down"></span>&nbsp;<?= h(__('Basic info')) ?></a>
+            <a href="#" class="goal-detail-more-details-link js-open-goal-details-info"><span class="fa fa-info-circle"></span>&nbsp;<?= h(__('View info')) ?></a>
         </div>
         <div class="goal-detail-more-details-info col-xxs-12">
             <ul class="goal-detail-items">

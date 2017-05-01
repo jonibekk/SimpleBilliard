@@ -113,10 +113,21 @@
 }
 
 .goal-detail-more-details-link{
-  color:@basicGray;
+  color: @basicPink;
+  text-transform:capitalize;
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited{
+    text-decoration: none;
+  }
 }
 
 .goal-detail-more-details-link span{
+  color:@basicGray;
+}
+
+.goal-detail-more-details-link:hover span{
   color: @basicPink;
 }
 
@@ -259,15 +270,6 @@
 
 .goal-detail-more-details-link{
   padding:.25em 0;
-}
-
-.goal-detail-more-details-link .fa{
-  transition: transform .3s ease;
-  transform: rotate(0deg);
-}
-
-.goal-detail-more-details-link .fa.active{
-  transform: rotate(180deg);
 }
 
 .goal-detail-more-details-info{

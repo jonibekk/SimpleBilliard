@@ -2854,7 +2854,7 @@ msgstr "本当にコラボレータから抜けますか？"
 msgid "Edit Circle"
 msgstr "サークルを編集"
 
-msgid "Basic info"
+msgid "View info"
 msgstr "基本情報"
 
 msgid "Members list"
