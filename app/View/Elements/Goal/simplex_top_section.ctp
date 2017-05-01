@@ -116,8 +116,28 @@
                     <p><?= __('Description') ?></p>
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
-                <li class="goal-detail-goal-followers">
-                    <?= $this->element('Goal/followers') ?>
+                <li class="goal-detail-info-followers">
+                    <?php if ($followers): ?>
+                        <?= $this->App->viewStartComment() ?>
+                        <?php foreach ($followers as $follower): ?>
+                            <div class="goal-detail-follower-card">
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'users',
+                                    'action'     => 'view_goals',
+                                    'user_id'    => $follower['User']['id']
+                                ]) ?>"
+                                class="link-dark-gray">
+                                    <div>
+                                        <?=
+                                        $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'medium_large'],
+                                            ['class' => 'goal-detail-follower-avatar'])
+                                        ?>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php endforeach ?>
+                        <?= $this->App->viewEndComment() ?>
+                    <?php endif ?>
                     <?php if (!$followers): ?>
                         <?= __('No one is following.') ?>
                     <?php endif ?>
