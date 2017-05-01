@@ -120,7 +120,6 @@
                     <?php if ($followers): ?>
                         <?= $this->App->viewStartComment() ?>
                         <?php foreach ($followers as $follower): ?>
-                            <div class="goal-detail-follower-card">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'users',
                                     'action'     => 'view_goals',
@@ -130,11 +129,10 @@
                                     <div>
                                         <?=
                                         $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'medium_large'],
-                                            ['class' => 'goal-detail-follower-avatar'])
+                                            ['class' => 'goal-detail-info-avatar'])
                                         ?>
                                     </div>
                                 </a>
-                            </div>
                         <?php endforeach ?>
                         <?= $this->App->viewEndComment() ?>
                     <?php endif ?>
