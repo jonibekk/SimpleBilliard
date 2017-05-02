@@ -29,14 +29,15 @@
             <div class="clearfix mt_12px">
                 <h3 class="goal-detail-kr-add-heading pull-left">
                     <i class="fa fa-key"></i>
-                    <?= __('Key Results') ?>(<?= $kr_count?>)
+                    <?= __('Key Results') ?>(<?= $kr_count ?>)
                     <!-- todo 数を追加 -->
                 </h3>
                 <?php $kr_can_edit = ($is_leader || $is_goal_member); ?>
                 <?php if ($kr_can_edit): ?>
                     <div class="pull-right">
                         <a class="modal-ajax-get-add-key-result"
-                           href="<?= $this->Html->url([
+                           href="#"
+                           data-url="<?= $this->Html->url([
                                'controller' => 'goals',
                                'action'     => 'ajax_get_add_key_result_modal',
                                'goal_id'    => $goal['Goal']['id']

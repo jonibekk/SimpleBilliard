@@ -5,8 +5,9 @@ import UploadDropZone from "~/message/components/elements/detail/UploadDropZone"
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
 import {nl2br} from "~/util/element";
-import {isMobileApp} from "~/util/base";
+import {isMobileApp, disableAsyncEvents, isIOSApp} from "~/util/base";
 import Base from "~/common/components/Base";
+import Textarea from "react-textarea-autosize";
 
 export default class TopicCreate extends Base {
 
@@ -14,13 +15,43 @@ export default class TopicCreate extends Base {
     super(props)
     // HACK:Display drop zone when dragging
     // reference:http://qiita.com/sounisi5011/items/dc4878d3e8b38101cf0b
-    this.state = {
+    this.state = Object.assign({}, this.state, {
       is_drag_over: false,
       is_drag_start: false,
+    })
+  }
+
+  componentDidMount() {
+    super.componentDidMount.apply(this);
+    // HACK: merge componentDidMount in parent Base.js
+    window.addEventListener("beforeunload", this.onBeforeUnloadSelect2Handler.bind(this))
+    // enable `routerWillLeave` method
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave.bind(this));
+    disableAsyncEvents()
+
+    // HACK:To use select2Member
+    //      Now, initialize select2 by initMemberSelect2 in gl_basic
+    // Set selectd user
+    const user_id = this.props.location.query.user_id
+    if (user_id) {
+      ReactDom.findDOMNode(this.refs.select2Member).value = `user_${user_id}`
+      this.changeToUserIds()
+    }
+  }
+
+  onBeforeUnloadSelect2Handler(event) {
+    if (this.getToUserIdsByDom().length > 0) {
+      return event.returnValue = this.state.leave_page_alert_msg
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.topic_create.input_data.body == "" && nextProps.file_upload.uploaded_file_ids.length == 0) {
+      this.setState({enabled_leave_page_alert: false})
+    } else {
+      this.setState({enabled_leave_page_alert: true})
+    }
+
     if (nextProps.topic_create.redirect) {
       browserHistory.push(`/topics/${nextProps.topic_create.new_topic_id}/detail`);
     }
@@ -28,16 +59,14 @@ export default class TopicCreate extends Base {
 
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
+    window.removeEventListener("beforeunload", this.onBeforeUnloadSelect2Handler.bind(this))
     this.props.resetStates();
   }
 
-
-  componentDidMount() {
-    super.componentDidMount.apply(this);
-    // HACK:To use select2Member
-    $(document).ready(function (e) {
-      initMemberSelect2();
-    });
+  routerWillLeave(nextLocation) {
+    if (!this.props.topic_create.is_saving && (this.state.enabled_leave_page_alert || this.getToUserIdsByDom().length > 0)) {
+      return this.state.leave_page_alert_msg
+    }
   }
 
   createTopic(e) {
@@ -98,7 +127,12 @@ export default class TopicCreate extends Base {
   }
 
   getToUserIdsByDom() {
-    let to_user_ids_str = ReactDom.findDOMNode(this.refs.select2Member).value;
+    const target_input = ReactDom.findDOMNode(this.refs.select2Member);
+    if (!target_input) {
+      return [];
+    }
+
+    let to_user_ids_str = target_input.value;
     if (!to_user_ids_str) {
       return [];
     }
@@ -129,7 +163,7 @@ export default class TopicCreate extends Base {
           <span className="hidden js-triggerUpdateToUserIds" onClick={this.changeToUserIds.bind(this)}/>
           <div className="topicCreateForm-selectTo ">
             <span className="topicCreateForm-selectTo-label">To:</span>
-            <input type="hidden" id="select2Member" className="js-changeSelect2Member"
+            <input type="hidden" id="select2Member" className="js-changeSelect2Member disable-change-warning"
                    style={{width: '85%'}} ref="select2Member"/>
           </div>
           <div className={this.state.is_drag_over && "uploadFileForm-wrapper"}
@@ -141,11 +175,11 @@ export default class TopicCreate extends Base {
             {this.state.is_drag_over && <UploadDropZone/>}
 
             <div className="topicCreateForm-msgBody">
-                <textarea className="topicCreateForm-msgBody-form"
-                          placeholder={__("Write a message...")}
-                          defaultValue=""
-                          onChange={this.changeMessage.bind(this)}
-                />
+              <Textarea className="topicCreateForm-msgBody-form disable-change-warning"
+                        placeholder={__("Write a message...")}
+                        defaultValue=""
+                        onChange={this.changeMessage.bind(this)}
+              />
               <UploadPreview files={file_upload.preview_files}/>
             </div>
             <div className="topicCreateForm-footer">
@@ -154,7 +188,9 @@ export default class TopicCreate extends Base {
                   className="btn btnRadiusOnlyIcon mod-upload"
                   onClick={this.selectFile.bind(this)}
                 />
-                <input type="file" multiple="multiple" className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
+                {/* For avoiding ios bug, only in ios app, not setting multiple attr
+                    ref) https://jira.goalous.com/browse/GL-5732 */}
+                <input type="file" multiple={isIOSApp() ? '' : 'multiple'} className="hidden" ref="file" onChange={this.changeFile.bind(this)}/>
               </div>
 
               <div className="topicCreateForm-footer-center">
