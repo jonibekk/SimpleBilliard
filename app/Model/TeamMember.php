@@ -2503,4 +2503,37 @@ class TeamMember extends AppModel
         }
         return $teams;
     }
+
+    /**
+     * active admin as team member and user
+     *
+     * @param  int  $userId
+     * @param  int  $teamId
+     * @return bool
+     */
+    public function isActiveAdmin(int $userId, int $teamId): bool
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id'    => $userId,
+                'TeamMember.admin_flg'  => true,
+                'TeamMember.active_flg' => true
+            ],
+            'fields'     => ['TeamMember.id'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = TeamMember.user_id',
+                        'User.active_flg' => true
+                    ],
+                ],
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        return (bool)$res;
+    }
 }
