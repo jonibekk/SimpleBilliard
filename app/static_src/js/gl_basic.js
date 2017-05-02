@@ -1648,11 +1648,9 @@ $(function () {
   });
   $(window).scroll(function () {
     if ($(this).scrollTop() > 10) {
-      $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
-
+      $(".navbar").addClass("mod-box-shadow");
     } else {
-      $(".navbar").css("box-shadow", "none");
-
+      $(".navbar").removeClass("mod-box-shadow");
     }
   });
 });
