@@ -198,7 +198,8 @@ class TermTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Term->addTermData(Term::TYPE_CURRENT);
-        $this->assertNotEmpty($this->Term->addTermData(Term::TYPE_PREVIOUS));
+        $ret = $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->assertNotEmpty($ret);
     }
 
     function testAddTermDataPreviousNotExistsCurrent()
@@ -345,119 +346,118 @@ class TermTest extends GoalousTestCase
         $m->setAccessible(true);
 
         //no team
-        $this->assertNull($m->invoke($this->Term));
+        $this->assertNull($m->invoke($this->Term, ""));
 
         $this->_setDefault();
-        $timezone = 9;
 
         ////期間半年
-        $res = $m->invoke($this->Term, strtotime('2014/1/1'), 1, 6, $timezone);
-        $this->assertEquals('2014/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/06/30 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-01-01', 1, 6);
+        $this->assertEquals('2014-01-01', $res['start']);
+        $this->assertEquals('2014-06-30', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/1/1'), 12, 6, $timezone);
-        $this->assertEquals('2013/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/05/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-01-01', 12, 6);
+        $this->assertEquals('2013-12-01', $res['start']);
+        $this->assertEquals('2014-05-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/12/31'), 1, 6, $timezone);
-        $this->assertEquals('2014/07/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-12-31', 1, 6);
+        $this->assertEquals('2014-07-01', $res['start']);
+        $this->assertEquals('2014-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/12/31'), 12, 6, $timezone);
-        $this->assertEquals('2014/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2015/05/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-12-31', 12, 6);
+        $this->assertEquals('2014-12-01', $res['start']);
+        $this->assertEquals('2015-05-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/01/01'), 1, 6, $timezone);
-        $this->assertEquals('2016/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/06/30 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-01-01', 1, 6);
+        $this->assertEquals('2016-01-01', $res['start']);
+        $this->assertEquals('2016-06-30', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/12/31'), 1, 6, $timezone);
-        $this->assertEquals('2016/07/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-12-31', 1, 6);
+        $this->assertEquals('2016-07-01', $res['start']);
+        $this->assertEquals('2016-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/2/29'), 3, 6, $timezone);
-        $this->assertEquals('2015/09/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/02/29 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-02-29', 3, 6);
+        $this->assertEquals('2015-09-01', $res['start']);
+        $this->assertEquals('2016-02-29', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/2/28'), 3, 6, $timezone);
-        $this->assertEquals('2015/09/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/02/29 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-02-28', 3, 6);
+        $this->assertEquals('2015-09-01', $res['start']);
+        $this->assertEquals('2016-02-29', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/3/1'), 3, 6, $timezone);
-        $this->assertEquals('2016/03/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/08/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-3-1', 3, 6);
+        $this->assertEquals('2016-03-01', $res['start']);
+        $this->assertEquals('2016-08-31', $res['end']);
         ////期間四半期
-        $res = $m->invoke($this->Term, strtotime('2014/1/1'), 1, 3, $timezone);
-        $this->assertEquals('2014/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/03/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-1-1', 1, 3);
+        $this->assertEquals('2014-01-01', $res['start']);
+        $this->assertEquals('2014-03-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/1/1'), 12, 3, $timezone);
-        $this->assertEquals('2013/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/02/28 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-1-1', 12, 3);
+        $this->assertEquals('2013-12-01', $res['start']);
+        $this->assertEquals('2014-02-28', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/12/31'), 1, 3, $timezone);
-        $this->assertEquals('2014/10/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-12-31', 1, 3);
+        $this->assertEquals('2014-10-01', $res['start']);
+        $this->assertEquals('2014-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/12/31'), 12, 3, $timezone);
-        $this->assertEquals('2014/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2015/02/28 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-12-31', 12, 3);
+        $this->assertEquals('2014-12-01', $res['start']);
+        $this->assertEquals('2015-02-28', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/01/01'), 1, 3, $timezone);
-        $this->assertEquals('2016/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/03/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-01-01', 1, 3);
+        $this->assertEquals('2016-01-01', $res['start']);
+        $this->assertEquals('2016-03-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/12/31'), 1, 3, $timezone);
-        $this->assertEquals('2016/10/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-12-31', 1, 3);
+        $this->assertEquals('2016-10-01', $res['start']);
+        $this->assertEquals('2016-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/2/29'), 3, 3, $timezone);
-        $this->assertEquals('2015/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/02/29 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-2-29', 3, 3);
+        $this->assertEquals('2015-12-01', $res['start']);
+        $this->assertEquals('2016-02-29', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/2/28'), 3, 3, $timezone);
-        $this->assertEquals('2015/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/02/29 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-2-28', 3, 3);
+        $this->assertEquals('2015-12-01', $res['start']);
+        $this->assertEquals('2016-02-29', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/3/1'), 3, 3, $timezone);
-        $this->assertEquals('2016/03/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/05/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-3-1', 3, 3);
+        $this->assertEquals('2016-03-01', $res['start']);
+        $this->assertEquals('2016-05-31', $res['end']);
         ////期間１年
-        $res = $m->invoke($this->Term, strtotime('2014/1/1'), 1, 12, $timezone);
-        $this->assertEquals('2014/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-1-1', 1, 12);
+        $this->assertEquals('2014-01-01', $res['start']);
+        $this->assertEquals('2014-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/1/1'), 12, 12, $timezone);
-        $this->assertEquals('2013/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/11/30 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-1-1', 12, 12);
+        $this->assertEquals('2013-12-01', $res['start']);
+        $this->assertEquals('2014-11-30', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/12/31'), 1, 12, $timezone);
-        $this->assertEquals('2014/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2014/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-12-31', 1, 12);
+        $this->assertEquals('2014-01-01', $res['start']);
+        $this->assertEquals('2014-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2014/12/31'), 12, 12, $timezone);
-        $this->assertEquals('2014/12/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2015/11/30 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2014-12-31', 12, 12);
+        $this->assertEquals('2014-12-01', $res['start']);
+        $this->assertEquals('2015-11-30', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/01/01'), 1, 12, $timezone);
-        $this->assertEquals('2016/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-01-01', 1, 12);
+        $this->assertEquals('2016-01-01', $res['start']);
+        $this->assertEquals('2016-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/12/31'), 1, 12, $timezone);
-        $this->assertEquals('2016/01/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/12/31 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-12-31', 1, 12);
+        $this->assertEquals('2016-01-01', $res['start']);
+        $this->assertEquals('2016-12-31', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/2/29'), 3, 12, $timezone);
-        $this->assertEquals('2015/03/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/02/29 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-2-29', 3, 12);
+        $this->assertEquals('2015-03-01', $res['start']);
+        $this->assertEquals('2016-02-29', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/2/28'), 3, 12, $timezone);
-        $this->assertEquals('2015/03/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2016/02/29 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-2-28', 3, 12);
+        $this->assertEquals('2015-03-01', $res['start']);
+        $this->assertEquals('2016-02-29', $res['end']);
 
-        $res = $m->invoke($this->Term, strtotime('2016/3/1'), 3, 12, $timezone);
-        $this->assertEquals('2016/03/01 00:00:00', date('Y/m/d H:i:s', $res['start'] + $timezone * 3600));
-        $this->assertEquals('2017/02/28 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
+        $res = $m->invoke($this->Term, '2016-3-1', 3, 12);
+        $this->assertEquals('2016-03-01', $res['start']);
+        $this->assertEquals('2017-02-28', $res['end']);
     }
 
     function test_getTermDataByDate()

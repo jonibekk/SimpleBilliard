@@ -367,8 +367,8 @@ class Term extends AppModel
         Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
         Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
         $this->_checkType($type);
-        $new_start = null;
-        $new_end = null;
+        $newStart = null;
+        $newEnd = null;
 
         if ($type === self::TYPE_PREVIOUS) {
             if ($this->getTermData(self::TYPE_PREVIOUS, false)) {
@@ -377,8 +377,9 @@ class Term extends AppModel
             if (!$current = $this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
-            $new_start = $this->_getStartEndWithoutExistsData(AppUtil::dateYesterday($current['start_date']))['start'];
-            $new_end = $current['start_date'] - 1;
+            $newStart = $this->_getStartEndWithoutExistsData(AppUtil::dateYesterday($current['start_date']))['start'];
+
+            $newEnd = AppUtil::dateYesterday($current['start_date']);
         }
 
         if ($type === self::TYPE_CURRENT) {
@@ -387,8 +388,8 @@ class Term extends AppModel
             }
             $timezone = $this->Team->getTimezone();
             $new = $this->_getStartEndWithoutExistsData(AppUtil::todayDateYmdLocal($timezone));
-            $new_start = $new['start'];
-            $new_end = $new['end'];
+            $newStart = $new['start'];
+            $newEnd = $new['end'];
         }
 
         if ($type === self::TYPE_NEXT) {
@@ -398,15 +399,14 @@ class Term extends AppModel
             if (!$current = $this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
-            $new_start = $current['end_date'] + 1;
-            $new_end = $this->_getStartEndWithoutExistsData(AppUtil::dateTomorrow($current['end_date']))['end'];
+            $newStart = AppUtil::dateTomorrow($current['end_date']);
+            $newEnd = $this->_getStartEndWithoutExistsData(AppUtil::dateTomorrow($current['end_date']))['end'];
         }
 
         $team = $this->Team->getCurrentTeam();
         $data = [
-            'start_date' => $new_start,
-            'end_date'   => $new_end,
-            'timezone'   => $team['Team']['timezone'],
+            'start_date' => $newStart,
+            'end_date'   => $newEnd,
             'team_id'    => $team['Team']['id'],
         ];
         $this->create();
@@ -532,28 +532,30 @@ class Term extends AppModel
         if (!$borderMonths) {
             $borderMonths = $team['Team']['border_months'];
         }
-        $startDate = date("Y-{$startTermMonth}-01", strtotime($targetDate));
-        $endDate = AppUtil::dateYmd(strtotime($startDate . "+ {$borderMonths} month") - DAY);
+        $startDate = date("Y-m-01", strtotime(date('Y') . "-{$startTermMonth}-01"));
+        $endDate = AppUtil::dateYmd(strtotime($startDate . " +{$borderMonths} month") - DAY);
+        //date型をリフォーマット
+        $targetDate = AppUtil::dateYmd(strtotime($targetDate));
 
         $term = [];
         //指定日時が期間内の場合 in the case of target date include the term
-        if ($startDate <= $targetDate && $endDate > $targetDate) {
+        if ($startDate <= $targetDate && $endDate >= $targetDate) {
             $term['start'] = $startDate;
             $term['end'] = $endDate;
         } //指定日時が開始日より前の場合 in the case of target date is earlier than start date
         elseif ($targetDate < $startDate) {
             while ($targetDate < $startDate) {
-                $startDate = strtotime($startDate . "- {$borderMonths} month");
+                $startDate = AppUtil::dateYmd(strtotime($startDate . " -{$borderMonths} month"));
             }
             $term['start'] = $startDate;
-            $term['end'] = AppUtil::dateYmd(strtotime($startDate . "+ {$borderMonths} month") - DAY);
+            $term['end'] = AppUtil::dateYmd(strtotime($startDate . " +{$borderMonths} month") - DAY);
         } //終了日が指定日時より前の場合 in the case of target date is later than end date
         elseif ($targetDate > $endDate) {
             while ($targetDate > $endDate) {
-                $endDate = AppUtil::dateYmd(strtotime($endDate . "+ {$borderMonths} month"));
+                $endDate = AppUtil::dateYmd(strtotime($endDate . " +{$borderMonths} month"));
             }
             $term['end'] = $endDate;
-            $term['start'] = date("Y-m-01", strtotime($endDate . "- {$borderMonths} month"));;
+            $term['start'] = date("Y-m-01", strtotime($endDate . " -{$borderMonths} month"));
         }
         return $term;
     }
@@ -584,9 +586,10 @@ class Term extends AppModel
                 var_export(CakeSession::read(), true),
                 Debugger::trace()
             ));
+        } else {
+            $res = Hash::extract($res, 'Term');
+            $res['timezone'] = $timezone;
         }
-        $res = Hash::extract($res, 'Term');
-        $res['timezone'] = $timezone;
         return $res;
     }
 

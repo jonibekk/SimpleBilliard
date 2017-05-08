@@ -352,15 +352,13 @@ class TeamsController extends AppController
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
             $res = [
                 'current' => [
-                    'start_date' => date('Y/m/d',
-                        $save_data[$current_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d',
-                        $save_data[$current_id]['end_date'] + $timezone * 3600),
+                    'start_date' => date('Y/m/d', strtotime($save_data[$current_id]['start_date'])),
+                    'end_date'   => date('Y/m/d', strtotime($save_data[$current_id]['end_date'])),
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'start_date' => date('Y/m/d', strtotime($save_data[$next_id]['start_date'])),
+                    'end_date'   => date('Y/m/d', strtotime($save_data[$next_id]['end_date'])),
                     'timezone'   => $timezone,
                 ],
             ];
@@ -373,8 +371,8 @@ class TeamsController extends AppController
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'start_date' => date('Y/m/d', strtotime($save_data[$next_id]['start_date'])),
+                    'end_date'   => date('Y/m/d', strtotime($save_data[$next_id]['end_date'])),
                     'timezone'   => $timezone,
                 ],
             ];
