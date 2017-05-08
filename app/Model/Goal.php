@@ -169,10 +169,14 @@ class Goal extends AppModel
             ],
         ],
         'start_date'       => [
-            'numeric' => ['rule' => ['date', 'ymd']]
+            'dateYmd' => [
+                'rule' => ['date', 'ymd']
+            ]
         ],
         'end_date'         => [
-            'numeric' => ['rule' => ['date', 'ymd']]
+            'dateYmd' => [
+                'rule' => ['date', 'ymd']
+            ]
         ],
         'start_value'      => [
             'maxLength' => ['rule' => ['maxLength', 15]],
