@@ -20,7 +20,6 @@ class TermMigrationShell extends AppShell
     public function startup()
     {
         parent::startup();
-//        $this->_setModelVariable();
     }
 
     public function main()
@@ -334,7 +333,7 @@ class TermMigrationShell extends AppShell
             //終了日がチーム作成日時より後の場合 in the case of target date is later than end date
         } elseif ($teamCreatedDate > $endDate) {
             while ($teamCreatedDate > $endDate) {
-                $endDateTmp = date("Y-m-1", strtotime($endDate));
+                $endDateTmp = date("Y-m-01", strtotime($endDate));
                 $endDate = date('Y-m-t', strtotime($endDateTmp . "+ {$borderMonths} month"));
             }
             $newTerm['start_date'] = $this->getStartDateByEndDate($endDate, $borderMonths);
@@ -367,7 +366,7 @@ class TermMigrationShell extends AppShell
      */
     private function getStartDateByEndDate(string $endDate, int $borderMonths): string
     {
-        return date('Y-m-1', strtotime($endDate . " -" . ($borderMonths - 1) . " month"));
+        return date('Y-m-01', strtotime($endDate . " -" . ($borderMonths - 1) . " month"));
     }
 
     /**

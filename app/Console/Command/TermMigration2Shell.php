@@ -107,8 +107,6 @@ class TermMigration2Shell extends AppShell
                 'Goal.del_flg' => false,
                 'Goal.team_id' => $teamId
             ],
-//            'offset' => 0,
-//            'limit' => 1
         ]);
 
         return Hash::extract($goals, '{n}.Goal');
@@ -126,12 +124,16 @@ class TermMigration2Shell extends AppShell
     {
         try {
             $this->Goal->begin();
+
+            /* Update start_date and end_date of goal */
+
             // Find out which terms belongs to the goal
             $updateGoal = ['id' => $goal['id']];
             $timezone = null;
             $startDate = date('Y-m-d', $goal['old_start_date']);
             $endDate = date('Y-m-d', $goal['old_end_date']);
             $lastIndex = count($terms) - 1;
+            // タイムスタンプがずれているのを前提として期の範囲を開始と終了で1日ずつ拡張した上でゴールがどの期に属しているかを判定
             foreach ($terms as $i => $term) {
                 $termExpandStartDate = AppUtil::dateYmd(strtotime($term['start_date'] . ' -1 day'));
                 $termExpandEndDate = AppUtil::dateYmd(strtotime($term['end_date'] . ' +1 day'));
@@ -170,6 +172,9 @@ class TermMigration2Shell extends AppShell
                     var_export($updateGoal, true)
                 ));
             }
+
+
+            /* Update start_date and end_date of krs */
 
             $krs = Hash::extract(
                 $this->KeyResult->findAllByGoalId($goal['id'], ['id', 'old_start_date', 'old_end_date']),
