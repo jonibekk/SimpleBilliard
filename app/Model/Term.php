@@ -214,6 +214,7 @@ class Term extends AppModel
     public function getTermData(int $type, bool $withCache = true): array
     {
         $this->_checkType($type);
+        $timezone = Hash::get($this->Team->getCurrentTeam(), 'Team.timezone');
 
         //先ずはcurrentを取得。previous, nextの基準になるので
         if (!$this->currentTerm) {
@@ -224,7 +225,7 @@ class Term extends AppModel
                 }
             }
             if (!$this->currentTerm) {
-                $this->currentTerm = $this->getTermDataByDate(AppUtil::dateYmd(REQUEST_TIMESTAMP));
+                $this->currentTerm = $this->getTermDataByDate(AppUtil::dateYmdLocal(REQUEST_TIMESTAMP, $timezone));
                 if ($this->currentTerm && $withCache) {
                     Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
