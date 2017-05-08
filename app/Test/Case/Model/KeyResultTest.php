@@ -611,12 +611,8 @@ class KeyResultTest extends GoalousTestCase
      */
     private function customValidRangeDateThreshold(string $startDate, string $endDate)
     {
-        $currentTerm = $this->Team->Term->getTermDataByDate(AppUtil::dateYmd(REQUEST_TIMESTAMP));
-        $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
-        $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
-
         $this->Goal->id = 1;
-        $this->Goal->save(['start_date' => $startTimeStamp, 'end_date' => $endTimeStamp]);
+        $this->Goal->save(['start_date' => $startDate, 'end_date' => $endDate]);
 
         $correctErrMsg = __("Please input start / end date within start / end date of the goal.");
 

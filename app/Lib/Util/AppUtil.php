@@ -142,6 +142,30 @@ class AppUtil
     }
 
     /**
+     * Y-m-d 形式で対象日の前日の日付を返す
+     *
+     * @param string $targetDate
+     *
+     * @return string
+     */
+    static function dateYesterday(string $targetDate): string
+    {
+        return self::dateYmd(strtotime("$targetDate -1 day"));
+    }
+
+    /**
+     * Y-m-d 形式で対象日の次の日の日付を返す
+     *
+     * @param string $targetDate
+     *
+     * @return string
+     */
+    static function dateTomorrow(string $targetDate): string
+    {
+        return self::dateYmd(strtotime("$targetDate +1 day"));
+    }
+
+    /**
      * Y-m-d 形式のローカルの日付を返す
      *
      * @param int $timestamp
