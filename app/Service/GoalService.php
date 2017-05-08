@@ -1464,7 +1464,7 @@ class GoalService extends AppService
         ];
 
         //期の開始日からの日数を算出し、その日数分開始値を進める
-        $daysFromTermStart = AppUtil::diffDays($termStartDate, $startDate);
+        $daysFromTermStart = AppUtil::diffDays($termStartDate, $startDate) - 1;
         $top = (float)$daysFromTermStart * $topStep;
         $bottom = (float)$daysFromTermStart * $bottomStep;
 

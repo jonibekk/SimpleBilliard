@@ -232,7 +232,8 @@ class GoalServiceTest extends GoalousTestCase
     {
         $this->_setUpGraphDefault();
         try {
-            $this->GoalService->getGraphRange(time(), date('t'));
+            $timezone = $this->Team->getTimezone();
+            $this->GoalService->getGraphRange(AppUtil::todayDateYmdLocal($timezone), date('t'));
         } catch (Exception $e) {
         }
         //例外が返らないこと
@@ -250,21 +251,22 @@ class GoalServiceTest extends GoalousTestCase
             'graphStartDate' => date('Y-m-01'),
             'graphEndDate'   => date('Y-m-10'),
         ];
+        $termStartDate = $this->Term->getCurrentTermData()['start_date'];
         //バッファなし
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'];
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $targetEndDate = $termStartDate;
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //当日が期の開始日と一緒の場合、期の開始日とプロットデータのエンドは一緒になる
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'] + 9 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $targetEndDate = AppUtil::dateYmd(strtotime("{$termStartDate} +9 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         $expected['plotDataEndDate'] = date('Y-m-10');
         //バッファなしで当日が期の開始日から9日後はプロットデータも9日後になる
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'] + 10 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $targetEndDate = AppUtil::dateYmd(strtotime("{$termStartDate} +10 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         //バッファなしで、targetDaysが10日で当日が期の開始日から10日後は範囲全体の日付が変わる
         $this->assertEquals([
             'graphStartDate'  => date('Y-m-02'),
@@ -273,14 +275,14 @@ class GoalServiceTest extends GoalousTestCase
         ], $actual);
 
         //バッファあり
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'];
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        $targetEndDate = $termStartDate;
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //バッファありでも$targetEndTimestampが収まる場合は、日付が一緒になる。
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'] + 1 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        $targetEndDate = AppUtil::dateYmd(strtotime("{$termStartDate} +1 day"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 9);
         $expected['plotDataEndDate'] = date('Y-m-01');
         //バッファありで、$targetEndTimestampが収まらない場合は日付が変わる。
         $this->assertNotEquals([
@@ -305,18 +307,18 @@ class GoalServiceTest extends GoalousTestCase
             'plotDataEndDate' => date('Y-m-' . date('t')),
         ];
 
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['end_date'];
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 1);
+        $targetEndDate = $this->Term->getCurrentTermData()['end_date'];
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 1);
         //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['end_date'] - 8 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['end_date'] . "-8 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 9);
         //バッファありでも期の終了日に近い場合は、バッファ考慮しない
         $this->assertEquals($expected, $actual);
 
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['end_date'] - 9 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 9);
+        $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['end_date'] . "-9 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 9);
         //バッファありで、指定終了日と期の終了日の差分がバッファを超える場合はバッファ考慮される
         $this->assertNotEquals($expected, $actual);
 
@@ -326,8 +328,8 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . date('t')),
             'plotDataEndDate' => date('Y-m-' . date('t'))
         ];
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['end_date'];
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $targetEndDate = $this->Term->getCurrentTermData()['end_date'];
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日までのデータ表示
         $this->assertEquals($expected, $actual);
 
@@ -336,8 +338,8 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . (string)(date('t') - 1)),
             'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 1))
         ];
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['end_date'] - 1 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['end_date'] . "-1 day"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日から１日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
 
@@ -346,8 +348,8 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-' . (string)(date('t') - 9)),
             'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 9))
         ];
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['end_date'] - 9 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 0);
+        $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['end_date'] . "-9 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         //期の終了日から９日前が指定終了日ならそれまでのデータ表示
         $this->assertEquals($expected, $actual);
     }
@@ -365,8 +367,8 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-10'),
             'plotDataEndDate' => date('Y-m-07'),
         ];
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'] + 6 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
+        $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['start_date'] . "+6 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
 
         $expected = [
@@ -374,8 +376,8 @@ class GoalServiceTest extends GoalousTestCase
             'graphEndDate'    => date('Y-m-11'),
             'plotDataEndDate' => date('Y-m-08'),
         ];
-        $targetEndTimestamp = $this->Term->getCurrentTermData()['start_date'] + 7 * DAY;
-        $actual = $this->GoalService->getGraphRange($targetEndTimestamp, $targetDays = 10, $maxBufferDays = 3);
+        $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['start_date'] . "+7 days"));
+        $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
     }
 
@@ -391,7 +393,7 @@ class GoalServiceTest extends GoalousTestCase
         $targetDays = 10;
         $maxBufferDays = 2;
         $term = $this->Term->getCurrentTermData();
-        $termStartTimestamp = $term['start_date'];
+        $termStartTimestamp = strtotime($term['start_date']);
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($termStartTimestamp, $targetDays, $maxBufferDays);
         //データ件数のチェック(10日分+項目名1=11)
@@ -448,7 +450,7 @@ class GoalServiceTest extends GoalousTestCase
         $targetDays = 10;
         $maxBufferDays = 2;
         $term = $this->Term->getCurrentTermData();
-        $targetEndTimestamp = $term['end_date'];
+        $targetEndTimestamp = strtotime($term['end_date']);
 
         $ret = $this->_getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays);
 
@@ -926,9 +928,11 @@ class GoalServiceTest extends GoalousTestCase
      */
     function _getUserAllGoalProgressForDrawingGraph($targetEndTimestamp, $targetDays, $maxBufferDays)
     {
+        $timezone = $this->Team->getTimezone();
+        $targetEndDate = AppUtil::dateYmdLocal($targetEndTimestamp, $timezone);
 
         $graphRange = $this->GoalService->getGraphRange(
-            $targetEndTimestamp,
+            $targetEndDate,
             $targetDays,
             $maxBufferDays
         );
@@ -972,26 +976,25 @@ class GoalServiceTest extends GoalousTestCase
     function testGetSweetSpotValueCount()
     {
         $this->_setUpGraphDefault();
-        $termStartTimestamp = $this->Term->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $this->Term->getCurrentTermData(true)['end_date'];
+        $startDateBase = $this->Term->getCurrentTermData()['start_date'];
+        $endDateBase = $this->Term->getCurrentTermData()['end_date'];
 
-        $startDate = date('Y-m-d', $termStartTimestamp);
-        $endDate = date('Y-m-d', $termEndTimestamp);
+        $startDate = $startDateBase;
+        $endDate = $endDateBase;
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertcount((int)date('t'), $actual['top']);
 
-        $startDate = date('Y-m-d', $termStartTimestamp + DAY);
-        $endDate = date('Y-m-d', $termEndTimestamp);
+        $startDate = AppUtil::dateYmd(strtotime("{$startDateBase} +1 day"));
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertcount((int)date('t') - 1, $actual['top']);
 
-        $startDate = date('Y-m-d', $termStartTimestamp);
-        $endDate = date('Y-m-d', $termEndTimestamp - DAY);
+        $startDate = $startDateBase;
+        $endDate = AppUtil::dateYmd(strtotime("{$endDateBase} -1 day"));
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertcount((int)date('t') - 1, $actual['top']);
 
-        $startDate = date('Y-m-d', $termStartTimestamp + DAY);
-        $endDate = date('Y-m-d', $termEndTimestamp - DAY);
+        $startDate = AppUtil::dateYmd(strtotime("{$startDateBase} +1 day"));
+        $endDate = AppUtil::dateYmd(strtotime("{$endDateBase} -1 day"));
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertcount((int)date('t') - 2, $actual['top']);
     }
@@ -1002,10 +1005,10 @@ class GoalServiceTest extends GoalousTestCase
     function testGetSweetSpotValue()
     {
         $this->_setUpGraphDefault();
-        $termStartTimestamp = $this->Term->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $this->Term->getCurrentTermData(true)['end_date'];
-        $startDate = date('Y-m-d', $termStartTimestamp);
-        $endDate = date('Y-m-d', $termEndTimestamp);
+        $termStartDate = $this->Term->getCurrentTermData()['start_date'];
+        $termEndDate = $this->Term->getCurrentTermData()['end_date'];
+        $startDate = $termStartDate;
+        $endDate = $termEndDate;
         $actualFullTerm = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertEquals(0, $actualFullTerm['top'][0]);
         $this->assertEquals(0, $actualFullTerm['bottom'][0]);
@@ -1013,8 +1016,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals(GoalService::GRAPH_SWEET_SPOT_MAX_TOP, floor($actualFullTerm['top'][$lastKey]));
         $this->assertEquals(GoalService::GRAPH_SWEET_SPOT_MAX_BOTTOM, floor($actualFullTerm['bottom'][$lastKey]));
 
-        $startDate = date('Y-m-d', $termStartTimestamp + DAY);
-        $endDate = date('Y-m-d', $termEndTimestamp);
+        $startDate = AppUtil::dateYmd(strtotime("{$termStartDate} +1 day"));
+        $endDate = $termEndDate;
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertEquals($actualFullTerm['top'][1], $actual['top'][0]);
         $this->assertEquals($actualFullTerm['bottom'][1], $actual['bottom'][0]);
@@ -1026,23 +1029,23 @@ class GoalServiceTest extends GoalousTestCase
     function testGetSweetSpotInTermOrNot()
     {
         $this->_setUpGraphDefault();
-        $termStartTimestamp = $this->Term->getCurrentTermData(true)['start_date'];
-        $termEndTimestamp = $this->Term->getCurrentTermData(true)['end_date'];
+        $termStartDate = $this->Term->getCurrentTermData()['start_date'];
+        $termEndDate = $this->Term->getCurrentTermData()['end_date'];
 
-        $startDate = date('Y-m-d', $termStartTimestamp - DAY);
-        $endDate = date('Y-m-d', $termEndTimestamp);
+        $startDate = AppUtil::dateYmd(strtotime("{$termStartDate} -1 day"));
+        $endDate = $termEndDate;
         $this->assertEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
 
-        $startDate = date('Y-m-d', $termStartTimestamp);
-        $endDate = date('Y-m-d', $termEndTimestamp + DAY);
+        $startDate = $termStartDate;
+        $endDate = AppUtil::dateYmd(strtotime("{$termEndDate} +1 day"));
         $this->assertEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
 
-        $startDate = date('Y-m-d', $termStartTimestamp - DAY);
-        $endDate = date('Y-m-d', $termEndTimestamp + DAY);
+        $startDate = AppUtil::dateYmd(strtotime("{$termStartDate} -1 day"));
+        $endDate = AppUtil::dateYmd(strtotime("{$termEndDate} +1 day"));
         $this->assertEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
 
-        $startDate = date('Y-m-d', $termStartTimestamp);
-        $endDate = date('Y-m-d', $termEndTimestamp);
+        $startDate = $termStartDate;
+        $endDate = $termEndDate;
         $this->assertNotEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
     }
 

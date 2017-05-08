@@ -182,7 +182,7 @@ class GoalousTestCase extends CakeTestCase
         $evaluateTermId = $this->Term->getLastInsertID();
         $term = $this->Term->findById($evaluateTermId);
         $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} -{$beforeDays} days"));
-        $term['Term']['end_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} +{$afterDays} days"));
+        $term['Term']['end_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['end_date']} +{$afterDays} days"));
         $this->Term->save($term);
         $this->Term->addTermData(Term::TYPE_NEXT);
         $this->Term->addTermData(Term::TYPE_PREVIOUS);
@@ -244,10 +244,11 @@ class GoalousTestCase extends CakeTestCase
         $term = $this->Term->findById($evaluateTermId);
         //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、UTC時間にする。正しくは、UTC midnight - timeOffset
         //$today = strtotime(date("Y/m/d 23:59:59")) - $term['Term']['timezone'] * HOUR;
-        $today = strtotime(date("Y/m/d 23:59:59"));
+        $timezone = $this->Team->getTimezone();
+        $today = AppUtil::todayDateYmdLocal($timezone);
 
         $term['Term']['end_date'] = $today;
-        $term['Term']['start_date'] = $today - $termDays * DAY;
+        $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$today} -{$termDays} days"));
         //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、timezone設定をUTCに変更。
         $term['Term']['timezone'] = 0;
         $this->Term->save($term);

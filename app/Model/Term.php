@@ -534,7 +534,9 @@ class Term extends AppModel
                 $endDate = date('Y-m-t', strtotime(date('Y-m-01', strtotime($endDate)) . " +{$borderMonths} month"));
             }
             $term['end'] = $endDate;
-            $term['start'] = date("Y-m-d", strtotime(date('Y-m-01', strtotime($endDate)) . " -{$borderMonths} month"));
+            $term['start'] = AppUtil::dateYmd(
+                strtotime(date('Y-m-01', strtotime($endDate)) . " -{$borderMonths} month +1 month")
+            );
         }
         return $term;
     }
