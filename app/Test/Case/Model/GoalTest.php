@@ -1038,6 +1038,67 @@ class GoalTest extends GoalousTestCase
         $Goal = ClassRegistry::init('Goal');
         $teamId = 1;
         $userId = 1;
+        $startDate = '2016-10-1';
+        $endDate = '2016-03-31';
+        $newNextTermStart = '2017-2-1';
+        $newNextTermEnd = '2017-06-30';
+        $range = 6;
+        $this->saveTerm($teamId, $startDate, $range);
+        $this->setDefaultTeamIdAndUid();
+
+        // create test goals
+        $previousGoalId = $this->createSimpleGoal($previousGoal = [
+            'team_id'    => $teamId,
+            'start_date' => '2016-08-01',
+            'end_date'   => '2016-09-30'
+        ]);
+        $currentGoalId = $this->createSimpleGoal($currentGoal = [
+            'team_id'    => $teamId,
+            'start_date' => '2016-10-1',
+            'end_date'   => '2016-12-31'
+        ]);
+        $currentToNextGoalId = $this->createSimpleGoal($currentToNextGoal = [
+            'team_id'    => $teamId,
+            'start_date' => '2016-12-1',
+            'end_date'   => '2017-03-31'
+        ]);
+        $nextGoalId = $this->createSimpleGoal($nextGoal = [
+            'team_id'    => $teamId,
+            'start_date' => '2017-04-01',
+            'end_date'   => '2017-06-30'
+        ]);
+
+        // update goal term
+        $Goal->updateInCurrentTerm($newNextTermStart,$newNextTermEnd);
+        $currentLastDate = date('Y-m-t', strtotime("{$newNextTermStart} +1 month"));
+
+        // 前期ゴールが変更されていないこと
+        $newPreviousGoal = $Goal->getById($previousGoalId);
+        $this->assertEquals($newPreviousGoal['start_date'], $previousGoal['start_date']);
+        $this->assertEquals($newPreviousGoal['end_date'], $previousGoal['end_date']);
+
+        // 今期ゴールが変更されていないこと
+        $newCurrentGoal = $Goal->getById($currentGoalId);
+        $this->assertEquals($newCurrentGoal['start_date'], $currentGoal['start_date']);
+        $this->assertEquals($newCurrentGoal['end_date'], $currentGoal['end_date']);
+
+        // 今期->来期ゴールのend_dateが今期の最終日に変更されていること
+        $newCurrentTonextGoal = $Goal->getById($currentToNextGoalId);
+        $this->assertEquals($newCurrentTonextGoal['start_date'], $currentToNextGoal['start_date']);
+        $this->assertEquals($newCurrentTonextGoal['end_date'], $currentLastDate);
+
+        // 来期ゴールが変更されていないこと
+        $newNextGoal = $Goal->getById($nextGoalId);
+        $this->assertEquals($newNextGoal['start_date'], $nextGoal['start_date']);
+        $this->assertEquals($newNextGoal['end_date'], $nextGoal['end_date']);
+    }
+
+    function test_updateInNextTerm()
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        $teamId = 1;
+        $userId = 1;
         $startDate = date('Y-m-01', strtotime('-2 month'));
         $range = 6;
         $this->saveTerm($teamId, $startDate, $range);
@@ -1066,7 +1127,7 @@ class GoalTest extends GoalousTestCase
         ]);
 
         // update goal term
-        $Goal->updateInCurrentTerm(
+        $Goal->updateInNextTerm(
             $newNextTermStart = date('Y-m-01', strtotime('+2 month')),
             $newNextTermEnd = date('Y-m-t', strtotime('+6 month'))
         );
