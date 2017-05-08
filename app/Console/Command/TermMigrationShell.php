@@ -209,17 +209,19 @@ class TermMigrationShell extends AppShell
                     // 最後の期の終了日が現在日より前の場合、今期までの期が登録されていないということなので、追加
                     $endDate = $transferTerm['end_date'];
                     $currentDate = AppUtil::dateYmd(time());
+                    $newTermsAfterLast = [];
                     // 今期まで期を追加
                     while ($endDate < $currentDate) {
                         $newTerm = $this->buildNextTermByPrevEndDate($endDate, $team);
-                        $newTerms[] = $newTerm;
+                        $newTermsAfterLast[] = $newTerm;
                         $endDate = $newTerm['end_date'];
                     }
 
                     // 来期を追加
-                    if (!empty($newTerms)) {
+                    if (!empty($newTermsAfterLast)) {
                         // Add next term
-                        $newTerms[] = $this->buildNextTermByPrevEndDate($endDate, $team);
+                        $newTermsAfterLast[] = $this->buildNextTermByPrevEndDate($endDate, $team);
+                        $newTerms = array_merge($newTerms, $newTermsAfterLast);
                     }
                 } elseif (!empty($prevTerm)) {
                     // 歯抜けの期が存在するか
