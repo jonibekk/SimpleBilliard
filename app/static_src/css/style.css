@@ -235,6 +235,9 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 .panel-block {
     padding: 10px;
 }
+.panel-default.mod-notice {
+    border: 1px solid #c92434;
+}
 
 .form-horizontal .form-group {
     margin-right: 0;

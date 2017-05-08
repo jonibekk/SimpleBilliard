@@ -14,6 +14,19 @@ class TeamsController extends AppController
         parent::beforeFilter();
     }
 
+    /**
+     * Basic info page
+     *
+     * @return CakeResponse
+     */
+    function index()
+    {
+        $this->layout = LAYOUT_TWO_COLUMN;
+        $this->set('current_global_menu', 'team');
+        $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
+        $this->set(compact('team'));
+    }
+
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;

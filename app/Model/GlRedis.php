@@ -873,6 +873,7 @@ class GlRedis extends AppModel
         $device = $this->makeDeviceHash($email, $ip_address);
         $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
         $count = $this->Db->incr($key);
+        $this->Db->del($key);
         if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {
             return true;
         }
