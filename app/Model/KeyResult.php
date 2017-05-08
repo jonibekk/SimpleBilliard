@@ -272,7 +272,6 @@ class KeyResult extends AppModel
             $goalId = Hash::get($this->data, 'KeyResult.goal_id');
             $goal = $this->Goal->getById($goalId);
         }
-        debug($goal);
 
         if (empty($goal)) {
             return true;
