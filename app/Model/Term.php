@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Term Model
@@ -291,51 +292,29 @@ class Term extends AppModel
     }
 
     /**
-     * @param bool $utcMidnight
-     *
      * @return array
      */
-    public function getCurrentTermData(bool $utcMidnight = false): array
+    public function getCurrentTermData(): array
     {
         $term = $this->getTermData(self::TYPE_CURRENT);
-        if ($utcMidnight) {
-            return $this->changeToUtcMidnight($term);
-        }
         return $term;
     }
 
     /**
-     * @param bool $utcMidnight
-     *
      * @return array
      */
-    public function getNextTermData(bool $utcMidnight = false): array
+    public function getNextTermData(): array
     {
         $term = $this->getTermData(self::TYPE_NEXT);
-        if ($utcMidnight) {
-            return $this->changeToUtcMidnight($term);
-        }
         return $term;
     }
 
     /**
-     * @param bool $utcMidnight
-     *
      * @return array
      */
-    public function getPreviousTermData(bool $utcMidnight = false): array
+    public function getPreviousTermData(): array
     {
         $term = $this->getTermData(self::TYPE_PREVIOUS);
-        if ($utcMidnight) {
-            return $this->changeToUtcMidnight($term);
-        }
-        return $term;
-    }
-
-    private function changeToUtcMidnight(array $term): array
-    {
-        $term['start_date'] += $term['timezone'] * HOUR;
-        $term['end_date'] += $term['timezone'] * HOUR;
         return $term;
     }
 

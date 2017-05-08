@@ -1,5 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Term', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Term Test Case
@@ -164,10 +165,9 @@ class TermTest extends GoalousTestCase
         $this->assertNotEmpty($next_3);
         $this->Term->create();
         $this->Term->save([
-            'start_date' => $current_2['start_date'] - 2678400,
-            'end_date'   => $current_2['start_date'] - 1,
+            'start_date' => AppUtil::dateYmd(strtotime("{$current_2['start_date']} -31 days")),
+            'end_date'   => AppUtil::dateYmd(strtotime("{$current_2['start_date']} -1 day")),
             'team_id'    => 1,
-            'timezone'   => 9
         ]);
 
         $previous1 = $this->Term->getTermData(Term::TYPE_PREVIOUS);
@@ -284,16 +284,6 @@ class TermTest extends GoalousTestCase
         $this->assertEmpty($this->Term->getCurrentTermData());
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $this->assertNotEmpty($this->Term->getCurrentTermData());
-    }
-
-    function testGetCurrentTermDataUtcMidnight()
-    {
-        $this->_setDefault();
-        $this->assertEmpty($this->Term->getCurrentTermData());
-        $this->Term->addTermData(Term::TYPE_CURRENT);
-        $utcMidnightTerm = $this->Term->getCurrentTermData(true);
-        $this->assertRegExp('/00:00:00/', date('Y-m-d H:i:s', $utcMidnightTerm['start_date']));
-        $this->assertRegExp('/23:59:59/', date('Y-m-d H:i:s', $utcMidnightTerm['end_date']));
     }
 
     function testGetNextTermData()
