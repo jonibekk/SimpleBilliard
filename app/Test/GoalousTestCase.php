@@ -509,4 +509,46 @@ class GoalousTestCase extends CakeTestCase
         $Topic->TopicMember->saveAll($topicMemberData);
         return $topicId;
     }
+
+    function saveTerm(int $teamId, string $startDate, int $range, int $timezone = 9, bool $withNext = true)
+    {
+        App::uses('Term', 'Model');
+        /** @var Topic $Topic */
+        $Term = ClassRegistry::init('Term');
+
+        // 精神衛生のために書く
+        if ($range < 1) {
+            $range = 1;
+        } elseif ($range > 12) {
+            $range = 12;
+        }
+
+        $this->Term->deleteAll(['team_id' => $teamId]);
+        $currentTerm = [
+            'team_id'         => $teamId,
+            'start_date'      => $startDate,
+            'end_date'        => date('Y-m-d', strtotime("{$startDate} + {$range}month yesterday")),
+            'evaluate_status' => 0,
+            'timezone'        => $timezone
+        ];
+        $this->Term->create();
+        $this->Term->save($currentTerm);
+
+        if ($withNext) {
+            $nextStartDate = date('Y-m-d', strtotime("{$startDate} + {$range}month"));
+            $nextTerm = [
+                'team_id'         => $teamId,
+                'start_date'      => $nextStartDate,
+                'end_date'        => date('Y-m-d', strtotime("{$nextStartDate} + {$range}month yesterday")),
+                'evaluate_status' => 0,
+                'timezone'        => $timezone
+            ];
+            $this->Term->create();
+            $this->Term->save($nextTerm);
+        }
+
+        $this->Term->resetAllTermProperty();
+
+        return $currentTerm;
+    }
 }

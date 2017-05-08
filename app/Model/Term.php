@@ -63,6 +63,30 @@ class Term extends AppModel
         'Evaluator',
     ];
 
+    public $update_validate = [
+        'start_month'  => [
+            'notBlank'            => [
+                'required' => 'update',
+                'rule'     => 'notBlank',
+            ],
+            'dateYm'             => [
+                'rule' => ['date', 'ym'],
+            ],
+        ],
+        'term_range' => [
+            'notBlank'            => [
+                'required' => 'update',
+                'rule'     => 'notBlank',
+            ],
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+            'range'   => [
+                'rule' => ['range', 1, 12]
+            ]
+        ]
+    ];
+
     /**
      * TODO:findAllメソッドに統合
      *
@@ -663,5 +687,41 @@ class Term extends AppModel
         // キーに特別な意味を持たせないように、歯抜けのキーを再採番
         $ret = array_merge($ret);
         return $ret;
+    }
+
+    /**
+     * update current term end date
+     *
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    public function updateCurrentTermEndDate(string $endDate): bool
+    {
+        $currentTermId = $this->getCurrentTermId();
+        $this->id = $currentTermId;
+        return (bool)$this->saveField('end_date', $endDate);
+    }
+
+    /**
+     * Update next term start_date and end_date
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    public function updateNextTermDate(string $startDate, string $endDate): bool
+    {
+        $nextTermId = $this->getNextTermId();
+        $this->id = $nextTermId;
+
+        if (!$this->saveField('start_date', $startDate)) {
+            return false;
+        }
+        if (!$this->saveField('end_date', $endDate)) {
+            return false;
+        }
+        return true;
     }
 }

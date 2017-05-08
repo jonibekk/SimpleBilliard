@@ -1154,4 +1154,59 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * update in current term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateInCurrentTerm(string $startDate, string $endDate): bool
+    {
+        $res = $this->updateAll(
+            [
+                'KeyResult.start_date' => $startDate
+            ],
+            [
+                'KeyResult.start_date <' => $startDate,
+                'KeyResult.end_date >='  => $startDate,
+                'KeyResult.end_date <='  => $endDate,
+            ]
+        );
+        return $res;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

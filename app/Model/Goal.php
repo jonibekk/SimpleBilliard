@@ -2403,4 +2403,57 @@ class Goal extends AppModel
         $term = $this->Team->Term->getTermType($goal['start_date'], $goal['end_date']);
         return $term;
     }
+
+    /**
+     * update in current term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateInCurrentTerm(string $startDate, string $endDate): bool
+    {
+        $res = $this->updateAll(
+            [
+                'Goal.start_date' => $startDate
+            ],
+            [
+                'Goal.start_date <' => $startDate,
+                'Goal.end_date >='  => $startDate,
+                'Goal.end_date <='  => $endDate,
+            ]
+        );
+        return $res;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

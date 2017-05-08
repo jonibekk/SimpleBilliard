@@ -469,6 +469,30 @@ class TermTest extends GoalousTestCase
         $this->assertEquals(100, $actual['end_date']);
     }
 
+    function test_updateCurrentTermEndDate()
+    {
+        $this->_setDefault();
+        $this->saveTerm(1, date('Y-m-01', strtotime('-2 month')), 4);
+        $currentTerm = $this->Term->getCurrentTermData();
+        $newEndDate = date('Y-m-d', strtotime("{$currentTerm['end_date']} +1 month"));
+        $this->Term->updateCurrentTermEndDate($newEndDate);
+        $resEndDate = $this->Term->getById($this->Term->getCurrentTermId())['end_date'];
+        $this->assertEquals($resEndDate, $newEndDate);
+    }
+
+    function test_updateNextTermDate()
+    {
+        $this->_setDefault();
+        $this->saveTerm(1, date('Y-m-01', strtotime('-3 month')), 4);
+        $nextTerm = $this->Term->getNextTermData();
+        $newStartDate = date('Y-m-01', strtotime("{$nextTerm['start_date']} +5 month"));
+        $newEndDate = date('Y-m-d', strtotime("{$nextTerm['end_date']} +10 month"));
+        $this->Term->updateNextTermDate($newStartDate, $newEndDate);
+        $res = $this->Term->getById($this->Term->getNextTermId());
+        $this->assertEquals($res['start_date'], $newStartDate);
+        $this->assertEquals($res['end_date'], $newEndDate);
+    }
+
     function _setDefault()
     {
         $this->Term->current_team_id = 1;
