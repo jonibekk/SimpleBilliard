@@ -345,8 +345,7 @@ class TeamsController extends AppController
             $timezone = $this->Team->me['timezone'];
         }
         $this->_ajaxPreProcess();
-        $save_data = $this->Team->Term->getSaveDataBeforeUpdate($option, $start_term_month, $border_months,
-            $timezone);
+        $save_data = $this->Team->Term->getSaveDataBeforeUpdate($option, $start_term_month, $border_months);
         $current_id = $this->Team->Term->getCurrentTermId();
         $next_id = $this->Team->Term->getNextTermId();
         $res = [];

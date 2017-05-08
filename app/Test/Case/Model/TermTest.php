@@ -248,7 +248,7 @@ class TermTest extends GoalousTestCase
         $this->_setDefault();
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $this->Term->addTermData(Term::TYPE_NEXT);
-        $res = $this->Term->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
+        $res = $this->Term->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1);
         $this->assertCount(2, $res);
     }
 
@@ -257,7 +257,7 @@ class TermTest extends GoalousTestCase
         $this->_setDefault();
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $this->Term->addTermData(Term::TYPE_NEXT);
-        $res = $this->Term->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_NEXT, 1, 1, 9);
+        $res = $this->Term->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_NEXT, 1, 1);
         $this->assertCount(1, $res);
     }
 
@@ -266,7 +266,7 @@ class TermTest extends GoalousTestCase
         $this->_setDefault();
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $this->Term->addTermData(Term::TYPE_NEXT);
-        $res = $this->Term->updateTermData(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
+        $res = $this->Term->updateTermData(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1);
         $this->assertTrue($res);
     }
 
@@ -465,8 +465,8 @@ class TermTest extends GoalousTestCase
         $this->_setDefault();
         $this->Term->save(['start_date' => '2017-01-01', 'end_date' => '2017-03-31', 'team_id' => 1, 'timezone' => 9]);
         $actual = $this->Term->getTermDataByDate('2017-02-01');
-        $this->assertEquals(1, $actual['start_date']);
-        $this->assertEquals(100, $actual['end_date']);
+        $this->assertEquals('2017-01-01', $actual['start_date']);
+        $this->assertEquals('2017-03-31', $actual['end_date']);
     }
 
     function _setDefault()
