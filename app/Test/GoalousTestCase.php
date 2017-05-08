@@ -28,7 +28,7 @@ App::uses('AppUtil', 'Util');
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
- * @property Term        $EvaluateTerm
+ * @property Term        $Term
  * @property GoalMember  $GoalMember
  * @property Team        $Team
  * @property GoalService $GoalService
@@ -46,7 +46,7 @@ class GoalousTestCase extends CakeTestCase
         parent::setUp();
         Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
         Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
-        $this->EvaluateTerm = ClassRegistry::init('Term');
+        $this->Term = ClassRegistry::init('Term');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->Topic = ClassRegistry::init('Topic');
@@ -181,8 +181,10 @@ class GoalousTestCase extends CakeTestCase
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $evaluateTermId = $this->Term->getLastInsertID();
         $term = $this->Term->findById($evaluateTermId);
-        $term['Term']['start_date'] -= $beforeDays * DAY;
-        $term['Term']['end_date'] += $afterDays * DAY;
+        debug($term);
+        $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} -{$beforeDays} days"));
+        $term['Term']['end_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} +{$afterDays} days"));
+        debug($term);
         $this->Term->save($term);
         $this->Term->addTermData(Term::TYPE_NEXT);
         $this->Term->addTermData(Term::TYPE_PREVIOUS);
