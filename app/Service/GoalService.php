@@ -823,7 +823,7 @@ class GoalService extends AppService
 
         //期の開始日から指定グラフ終了日までの日数が少ない場合(以下がその定義)は、グラフ開始日に期の開始日をセット
         //期の開始日から指定グラフ終了日までの日数が最小プロット可能日数を下回る場合
-        $daysFromTermStartToTargetEnd = AppUtil::diffDays($termStartDate, $targetEndDate);
+        $daysFromTermStartToTargetEnd = AppUtil::totalDays($termStartDate, $targetEndDate);
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
             $ret['graphStartDate'] = $termStartDate;
@@ -894,7 +894,7 @@ class GoalService extends AppService
             return __('Wrong target days or buffer days.');
         }
         //$targetDaysが期の日数を超えていたらエラー
-        $termTotalDays = AppUtil::diffDays($termStartDate, $termEndDate);
+        $termTotalDays = AppUtil::totalDays($termStartDate, $termEndDate);
         if ($targetDays > $termTotalDays) {
             $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
                     __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
@@ -1451,7 +1451,7 @@ class GoalService extends AppService
             return [];
         }
 
-        $termTotalDays = AppUtil::diffDays($termStartDate, $termEndDate);
+        $termTotalDays = AppUtil::totalDays($termStartDate, $termEndDate);
         //sweetspotの上辺の一日で進む高さ(0が含まれるのでその分-1)
         $topStep = (float)($maxTop / ($termTotalDays - 1));
         //sweetspotの下辺の一日で進む高さ(0が含まれるのでその分-1)
@@ -1464,12 +1464,12 @@ class GoalService extends AppService
         ];
 
         //期の開始日からの日数を算出し、その日数分開始値を進める
-        $daysFromTermStart = AppUtil::diffDays($termStartDate, $startDate) - 1;
+        $daysFromTermStart = AppUtil::diffDays($termStartDate, $startDate);
         $top = (float)$daysFromTermStart * $topStep;
         $bottom = (float)$daysFromTermStart * $bottomStep;
 
         //一日ずつ値を格納
-        $graphTotalDays = AppUtil::diffDays($startDate, $endDate);
+        $graphTotalDays = AppUtil::totalDays($startDate, $endDate);
         for ($i = 1; $i <= $graphTotalDays; $i++) {
             $sweetSpot['top'][] = round($top, 2);
             $sweetSpot['bottom'][] = round($bottom, 2);

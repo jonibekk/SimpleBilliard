@@ -108,7 +108,7 @@ class AppUtil
     }
 
     /**
-     * 日数の差分を求める(デフォルトで繰り上げ) getting different date
+     * トータル日数を求める(デフォルトで繰り上げ) getting different date
      * $targetDateから$baseDateの差
      * - e.g.
      * -- $baseDate = '2017-01-01', $targetDate = '2017-01-01' の場合は、1
@@ -120,9 +120,31 @@ class AppUtil
      *
      * @return int
      */
-    static function diffDays(string $baseDate, string $targetDate, bool $roundUp = true): int
+    static function totalDays(string $baseDate, string $targetDate, bool $roundUp = true): int
     {
         $days = (strtotime($targetDate) + DAY - strtotime($baseDate)) / DAY;
+        if ($roundUp) {
+            return ceil($days);
+        }
+        return round($days);
+    }
+
+    /**
+     * 日数の差分を求める(デフォルトで繰り上げ) getting different date
+     * $targetDateから$baseDateの差
+     * - e.g.
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-01' の場合は、0
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-02' の場合は、1
+     *
+     * @param string $baseDate
+     * @param string $targetDate
+     * @param bool   $roundUp if false, round off
+     *
+     * @return int
+     */
+    static function diffDays(string $baseDate, string $targetDate, bool $roundUp = true): int
+    {
+        $days = (strtotime($targetDate) - strtotime($baseDate)) / DAY;
         if ($roundUp) {
             return ceil($days);
         }
