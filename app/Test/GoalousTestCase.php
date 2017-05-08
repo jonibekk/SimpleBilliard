@@ -132,8 +132,8 @@ class GoalousTestCase extends CakeTestCase
             ],
         ];
         $data = am($default, $data);
-        $termEndTime = $this->Term->getTermData($termType)['end_date'];
-        $data['end_date'] = date('Y-m-d', $termEndTime);
+        $termEndDate = $this->Term->getTermData($termType)['end_date'];
+        $data['end_date'] = $termEndDate;
         return $data;
     }
 
@@ -440,10 +440,10 @@ class GoalousTestCase extends CakeTestCase
         // save topic
         $this->Topic->create();
         $this->Topic->save([
-            'team_id'         => $teamid,
-            'creator_user_id' => $userId,
-            'title'           => 'Sample title',
-            'latest_message_id' => 1,
+            'team_id'                 => $teamid,
+            'creator_user_id'         => $userId,
+            'title'                   => 'Sample title',
+            'latest_message_id'       => 1,
             'latest_message_datetime' => $latestMessageDatetime
         ], false);
         $topicId = $this->Topic->getLastInsertId();
@@ -465,21 +465,21 @@ class GoalousTestCase extends CakeTestCase
         // save messages
         $this->Message->create();
         $this->Message->save([
-            'id'       => 1,
-            'team_id'  => $teamid,
+            'id'             => 1,
+            'team_id'        => $teamid,
             'sender_user_id' => $userId,
-            'topic_id' => $topicId,
-            'body' => 'message 1',
-            'created' => $latestMessageDatetime - 1
+            'topic_id'       => $topicId,
+            'body'           => 'message 1',
+            'created'        => $latestMessageDatetime - 1
         ], false);
         $this->Message->create();
         $this->Message->save([
-            'id'       => 2,
-            'team_id'  => $teamid,
+            'id'             => 2,
+            'team_id'        => $teamid,
             'sender_user_id' => $subUserId,
-            'topic_id' => $topicId,
-            'body' => 'message 2(latest)',
-            'created' => $latestMessageDatetime
+            'topic_id'       => $topicId,
+            'body'           => 'message 2(latest)',
+            'created'        => $latestMessageDatetime
         ], false);
 
         return $topicId;

@@ -2001,8 +2001,8 @@ class Goal extends AppModel
         $end_date = $res['Goal']['end_date'];
 
         $is_present_term_flag = false;
-        if (intval($end_date) >= $this->Team->Term->getCurrentTermData()['start_date']
-            && intval($end_date) <= $this->Team->Term->getCurrentTermData()['end_date']
+        if ($end_date >= $this->Team->Term->getCurrentTermData()['start_date']
+            && $end_date <= $this->Team->Term->getCurrentTermData()['end_date']
         ) {
             $is_present_term_flag = true;
         }
