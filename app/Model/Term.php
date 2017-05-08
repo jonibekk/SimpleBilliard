@@ -531,10 +531,10 @@ class Term extends AppModel
         } //終了日が指定日時より前の場合 in the case of target date is later than end date
         elseif ($targetDate > $endDate) {
             while ($targetDate > $endDate) {
-                $endDate = AppUtil::dateYmd(strtotime($endDate . " +{$borderMonths} month"));
+                $endDate = date('Y-m-t', strtotime(date('Y-m-01', strtotime($endDate)) . " +{$borderMonths} month"));
             }
             $term['end'] = $endDate;
-            $term['start'] = date("Y-m-01", strtotime($endDate . " -{$borderMonths} month"));
+            $term['start'] = date("Y-m-d", strtotime(date('Y-m-01', strtotime($endDate)) . " -{$borderMonths} month"));
         }
         return $term;
     }

@@ -181,10 +181,8 @@ class GoalousTestCase extends CakeTestCase
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $evaluateTermId = $this->Term->getLastInsertID();
         $term = $this->Term->findById($evaluateTermId);
-        debug($term);
         $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} -{$beforeDays} days"));
         $term['Term']['end_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} +{$afterDays} days"));
-        debug($term);
         $this->Term->save($term);
         $this->Term->addTermData(Term::TYPE_NEXT);
         $this->Term->addTermData(Term::TYPE_PREVIOUS);
