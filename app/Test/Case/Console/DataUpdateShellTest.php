@@ -1,4 +1,5 @@
 <?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
@@ -6,6 +7,11 @@ App::uses('Folder', 'Utility');
 App::uses('DataUpdateShell', 'Console/Command');
 App::uses('Evaluation', 'Model');
 
+/**
+ * Class DataUpdateShellTest
+ *
+ * @property Evaluation $Evaluation
+ */
 class DataUpdateShellTest extends GoalousTestCase
 {
     public $DataUpdateShell;
