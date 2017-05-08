@@ -148,7 +148,7 @@ class EvaluationTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
             ]
         );
         $evaluateeId = 1;
@@ -168,7 +168,7 @@ class EvaluationTest extends GoalousTestCase
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                 ],
             ],
             [
@@ -178,7 +178,7 @@ class EvaluationTest extends GoalousTestCase
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                 ],
             ],
             [
@@ -188,7 +188,7 @@ class EvaluationTest extends GoalousTestCase
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                 ],
             ],
         ];
@@ -198,7 +198,7 @@ class EvaluationTest extends GoalousTestCase
             [
                 'conditions' => [
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                     'status'            => Evaluation::TYPE_STATUS_DRAFT
                 ]
             ]
@@ -218,7 +218,7 @@ class EvaluationTest extends GoalousTestCase
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                 ],
             ],
             [
@@ -228,7 +228,7 @@ class EvaluationTest extends GoalousTestCase
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                 ],
             ],
             [
@@ -238,7 +238,7 @@ class EvaluationTest extends GoalousTestCase
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                 ],
             ],
         ];
@@ -249,7 +249,7 @@ class EvaluationTest extends GoalousTestCase
             [
                 'conditions' => [
                     'evaluatee_user_id' => 1,
-                    'term_id'  => 1,
+                    'term_id'           => 1,
                     'status'            => Evaluation::TYPE_STATUS_DONE
                 ]
             ]
@@ -402,7 +402,7 @@ class EvaluationTest extends GoalousTestCase
         $term_id = $this->Evaluation->Term->getLastInsertID();
         $data = [
             'team_id'           => 1,
-            'term_id'  => $term_id,
+            'term_id'           => $term_id,
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 1,
             'evaluate_type'     => 1,
@@ -433,7 +433,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => '1',
                     'evaluatee_user_id' => '1',
                     'evaluator_user_id' => '2',
-                    'term_id'  => null,
+                    'term_id'           => null,
                     'evaluate_type'     => '0',
                     'goal_id'           => null,
                     'comment'           => null,
@@ -467,7 +467,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evaluateTermId,
+                    'term_id'           => $evaluateTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'index_num'         => 0,
@@ -480,7 +480,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evaluateTermId,
+                    'term_id'           => $evaluateTermId,
                     'goal_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
@@ -495,7 +495,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evaluateTermId,
+                    'term_id'           => $evaluateTermId,
                     'goal_id'           => 2,
                     'comment'           => null,
                     'evaluate_score_id' => null,
@@ -509,7 +509,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evaluateTermId,
+                    'term_id'           => $evaluateTermId,
                     'goal_id'           => 3,
                     'comment'           => null,
                     'evaluate_score_id' => null,
@@ -523,7 +523,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evaluateTermId,
+                    'term_id'           => $evaluateTermId,
                     'goal_id'           => 4,
                     'comment'           => null,
                     'evaluate_score_id' => null,
@@ -537,7 +537,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evaluateTermId,
+                    'term_id'           => $evaluateTermId,
                     'goal_id'           => 5,
                     'comment'           => null,
                     'evaluate_score_id' => null,
@@ -745,17 +745,6 @@ class EvaluationTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
-    function testStartEvaluationNotExistsCurrentTerm()
-    {
-        $this->_setDefault();
-        $this->Evaluation->Term->deleteAll(['team_id' => 1], false);
-        $this->Evaluation->Term->resetTermProperty(Term::TYPE_CURRENT);
-        $this->Evaluation->Term->resetTermProperty(Term::TYPE_PREVIOUS);
-        $this->Evaluation->Term->resetTermProperty(Term::TYPE_NEXT);
-        $res = $this->Evaluation->startEvaluation();
-        $this->assertTrue($res);
-    }
-
     function testStartEvaluationTeamMembersAreNotExists()
     {
         $this->_setDefault();
@@ -876,7 +865,7 @@ class EvaluationTest extends GoalousTestCase
 
         $options = [
             'conditions' => [
-                'term_id'  => $this->Evaluation->Term->getCurrentTermData(),
+                'term_id'           => $this->Evaluation->Term->getCurrentTermData(),
                 'evaluatee_user_id' => $evaluatee_user_id
             ],
             'order'      => [
@@ -1013,7 +1002,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1028,7 +1017,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1044,7 +1033,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 3,
@@ -1059,7 +1048,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1074,7 +1063,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1090,7 +1079,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1105,7 +1094,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1120,7 +1109,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1136,7 +1125,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1151,7 +1140,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1166,7 +1155,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1181,7 +1170,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 3,
@@ -1196,7 +1185,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1211,7 +1200,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1226,7 +1215,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1241,7 +1230,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1256,7 +1245,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1271,7 +1260,7 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'term_id'  => $evalTermId,
+                    'term_id'           => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1303,9 +1292,9 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->Term->addTermData(Term::TYPE_CURRENT);
         $this->Evaluation->Team->Term->addTermData(Term::TYPE_PREVIOUS);
         $this->Evaluation->Team->Term->addTermData(Term::TYPE_NEXT);
-        $this->current_date = strtotime('2015/7/1');
-        $this->start_date = strtotime('2015/7/1');
-        $this->end_date = strtotime('2015/10/1');
+        $this->current_date = '2015/7/1';
+        $this->start_date = '2015/7/1';
+        $this->end_date = '2015/10/1';
     }
 
 }
