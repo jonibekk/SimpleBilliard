@@ -92,7 +92,7 @@ class TermService extends AppService
                 throw new Exception(sprintf("Failed to update next term setting. start_date: %s end_date: %s", $newNextStartDate, $newNextEndDate));
             }
 
-            // update goal
+            // update goals
             $currentTerm = $Term->getCurrentTermData();
             $currentStartDate = $currentTerm['start_date'];
             if (!$Goal->updateInCurrentTerm($currentStartDate, $newCurrentEndDate)) {

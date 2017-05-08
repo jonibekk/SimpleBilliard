@@ -2456,9 +2456,10 @@ class Goal extends AppModel
                 'Goal.end_date' => $endDate
             ],
             [
+                'Goal.team_id'       => $this->current_team_id,
                 'Goal.start_date >=' => $startDate,
                 'Goal.start_date <=' => $endDate,
-                'Goal.end_date >'  => $endDate,
+                'Goal.end_date >'    => $endDate,
             ]
         );
         return $res;
@@ -2484,9 +2485,10 @@ class Goal extends AppModel
                 'Goal.end_date' => $endDate
             ],
             [
+                'Goal.team_id'       => $this->current_team_id,
                 'Goal.start_date >=' => $startDate,
                 'Goal.start_date <=' => $endDate,
-                'Goal.end_date >'  => $endDate,
+                'Goal.end_date >'    => $endDate,
             ]
         );
         if (!$res) {
@@ -2500,6 +2502,7 @@ class Goal extends AppModel
                 'Goal.end_date'   => $endDate,
             ],
             [
+                'Goal.team_id'      => $this->current_team_id,
                 'Goal.start_date >' => $endDate
             ]
         );

@@ -92,6 +92,24 @@ class GoalousTestCase extends CakeTestCase
         return $this->GoalService->create($userId, $data);
     }
 
+    function createSimpleGoal(array $data = [], int $termType = Term::TYPE_CURRENT)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+
+        $Goal->my_uid = 1;
+        $Goal->current_team_id = 1;
+        $default = [
+            "name"             => "ゴール",
+            "goal_category_id" => 1,
+            "description"      => "ゴールの詳細\nです"
+        ];
+        $data = am($default, $data);
+        $Goal->create();
+        $Goal->save($data, false);
+        return $Goal->getLastInsertID();
+    }
+
     function createGoalMember($data)
     {
         $default = [
@@ -132,8 +150,8 @@ class GoalousTestCase extends CakeTestCase
             ],
         ];
         $data = am($default, $data);
-        $termEndTime = $this->Term->getTermData($termType)['end_date'];
-        $data['end_date'] = date('Y-m-d', $termEndTime);
+        $termEndDate = $this->Term->getTermData($termType)['end_date'];
+        $data['end_date'] = date('Y-m-d', strtotime($termEndDate));
         return $data;
     }
 
