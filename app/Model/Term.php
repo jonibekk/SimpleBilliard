@@ -238,6 +238,7 @@ class Term extends AppModel
     public function getTermData(int $type, bool $withCache = true): array
     {
         $this->_checkType($type);
+        $timezone = Hash::get($this->Team->getCurrentTeam(), 'Team.timezone');
 
         //先ずはcurrentを取得。previous, nextの基準になるので
         if (!$this->currentTerm) {
@@ -248,7 +249,7 @@ class Term extends AppModel
                 }
             }
             if (!$this->currentTerm) {
-                $this->currentTerm = $this->getTermDataByDate(AppUtil::dateYmd(REQUEST_TIMESTAMP));
+                $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
                     Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
@@ -671,18 +672,27 @@ class Term extends AppModel
      */
     public function findTeamIdByTimezone(float $timezone, string $targetDate): array
     {
-        $targetTimestamp = strtotime($targetDate) - $timezone * HOUR;
         $options = [
             'conditions' => [
-                'start_date <=' => $targetTimestamp,
-                'end_date >='   => $targetTimestamp,
-                'timezone'      => $timezone,
+                'start_date <=' => $targetDate,
+                'end_date >='   => $targetDate,
             ],
             'fields'     => [
                 'team_id'
-            ]
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Team.id = Term.team_id',
+                        'Team.timezone' => $timezone,
+                        'Team.del_flg'  => false,
+                    ]
+                ],
+            ],
         ];
-
         $ret = $this->findWithoutTeamId('list', $options);
         // キーに特別な意味を持たせないように、歯抜けのキーを再採番
         $ret = array_merge($ret);

@@ -412,7 +412,6 @@ class GoalService extends AppService
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            // timezoneを加味したend_date設定
             $goalTerm = $EvaluateTerm->getTermDataByDate($requestData['end_date']);
             $updateData['end_date'] = $requestData['end_date'];
 
@@ -420,7 +419,7 @@ class GoalService extends AppService
             $preUpdatedTerm = $Goal->getTermTypeById($goalId);
             $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($requestData['term_type'] == Term::TERM_TYPE_CURRENT);
             if ($isNextToCurrentUpdate) {
-                $updateData['start_date'] = AppUtil::dateYmd(time() + $goalTerm['timezone'] * HOUR);
+                $updateData['start_date'] = AppUtil::todayDateYmdLocal($goalTerm['timezone']);
             }
         }
         if (!empty($requestData['photo'])) {
@@ -985,7 +984,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
+            $logEndDate = AppUtil::dateYmdLocal(REQUEST_TIMESTAMP - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }
@@ -1090,7 +1089,7 @@ class GoalService extends AppService
         //日毎に集計済みのゴール進捗ログを取得
         $logStartDate = $graphStartDate;
         if ($isIncludedTodayInPlotData) {
-            $logEndDate = AppUtil::dateYmdLocal(time() - DAY, $termTimezone);
+            $logEndDate = AppUtil::dateYmdLocal(REQUEST_TIMESTAMP - DAY, $termTimezone);
         } else {
             $logEndDate = $plotDataEndDate;
         }

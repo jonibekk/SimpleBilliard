@@ -108,8 +108,11 @@ class AppUtil
     }
 
     /**
-     * 日数の差分を求める(デフォルトで繰り上げ)
+     * 日数の差分を求める(デフォルトで繰り上げ) getting different date
      * $targetDateから$baseDateの差
+     * - e.g.
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-01' の場合は、1
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-02' の場合は、2
      *
      * @param string $baseDate
      * @param string $targetDate
@@ -149,6 +152,18 @@ class AppUtil
     static function dateYmdLocal(int $timestamp, int $timezone): string
     {
         return self::dateYmd($timestamp + $timezone * HOUR);
+    }
+
+    /**
+     * 今日のY-m-d 形式のローカルの日付を返す
+     *
+     * @param int $timezone
+     *
+     * @return string
+     */
+    static function todayDateYmdLocal(int $timezone)
+    {
+        return self::dateYmd(REQUEST_TIMESTAMP + $timezone * HOUR);
     }
 
     /**
