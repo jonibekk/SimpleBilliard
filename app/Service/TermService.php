@@ -93,19 +93,29 @@ class TermService extends AppService
             }
 
             // update goal
-            if (!$Goal->updateInCurrentTerm($newCurrentEndDate)) {
-                throw new Exception(sprintf("Failed to update current term goal. current_term_end_date: %s", $newCurrentEndDate));
+            $currentTerm = $Term->getCurrentTermData();
+            $currentStartDate = $currentTerm['start_date'];
+            if (!$Goal->updateInCurrentTerm($currentStartDate, $newCurrentEndDate)) {
+                throw new Exception(sprintf("Failed to update current term goal. current_start_date: %s current_term_end_date: %s", $currentStartDate, $newCurrentEndDate));
             }
             if (!$Goal->updateInNextTerm($newNextStartDate, $newNextEndDate)) {
                 throw new Exception(sprintf("Failed to update next term goal setting. start_date: %s end_date: %s", $newNextStartDate, $newNextEndDate));
             }
 
             // update keyresults
-            if (!$KeyResult->updateInCurrentTerm($newCurrentEndDate)) {
-                throw new Exception(sprintf("Failed to update current term key results. current_term_end_date: %s", $newCurrentEndDate));
+            // current goals
+            $currentGoals = $Goal->findForTermUpdating($currentStartDate, $newCurrentEndDate);
+            foreach($currentGoals as $currentGoal) {
+                if (!$KeyResult->updateInCurrentTerm($currentGoal['goal_id'], $currentGoal['start_date'], $currentGoal['end_date'])) {
+                    throw new Exception(sprintf("Failed to update current term key results. goal_id: %s current_start_date: %s current_term_end_date: %s", $currentGoal['goal_id'], $currentGoal['start_date'], $currentGoal['end_date']));
+                }
             }
-            if (!$KeyResult->updateInNextTerm($newNextStartDate, $newNextEndDate)) {
-                throw new Exception(sprintf("Failed to update key result term setting. start_date: %s end_date: %s", $newNextStartDate, $newNextEndDate));
+            // next goals
+            $nextGoals = $Goal->findForTermUpdating($newNextStartDate, $newNextEndDate);
+            foreach($nextGoals as $nextGoal) {
+                if (!$KeyResult->updateInNextTerm($nextGoal['goal_id'], $nextGoal['start_date'], $nextGoal['end_date'])) {
+                    throw new Exception(sprintf("Failed to update current term key results. goal_id: %s current_start_date: %s current_term_end_date: %s", $nextGoal['goal_id'], $nextGoal['start_date'], $nextGoal['end_date']));
+                }
             }
 
             $Term->commit();
@@ -118,33 +128,4 @@ class TermService extends AppService
 
         return true;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

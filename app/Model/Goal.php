@@ -2409,7 +2409,40 @@ class Goal extends AppModel
     }
 
     /**
+     * find goal list for updating krs term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return array
+     */
+    function findForTermUpdating(string $startDate, string $endDate): array
+    {
+        $options = [
+            'conditions' => [
+                'team_id'       => $this->current_team_id,
+                'start_date >=' => $startDate,
+                'start_date <=' => $endDate,
+                'end_date >='   => $startDate,
+                'end_date <='   => $endDate,
+            ],
+            'fields'     => [
+                'id', 'start_date', 'end_date'
+            ]
+        ];
+
+        $goals = $this->find('all', $options);
+        if (!empty($goals)) {
+            return $goals;
+        }
+
+        return Hash::extract($goals, '{n}.Goal');
+    }
+
+    /**
      * update in current term
+     * - ゴール終了日が今期終了日を超えてる場合
+     *  - ゴール終了日を今期終了日にする
      *
      * @param  string $startDate
      * @param  string $endDate
@@ -2420,44 +2453,60 @@ class Goal extends AppModel
     {
         $res = $this->updateAll(
             [
-                'Goal.start_date' => $startDate
+                'Goal.end_date' => $endDate
             ],
             [
-                'Goal.start_date <' => $startDate,
-                'Goal.end_date >='  => $startDate,
-                'Goal.end_date <='  => $endDate,
+                'Goal.start_date >=' => $startDate,
+                'Goal.start_date <=' => $endDate,
+                'Goal.end_date >'  => $endDate,
             ]
         );
         return $res;
     }
 
+    /**
+     * update goals in next term
+     * - ゴール終了日だけ来期終了日を超えてる場合
+     *  - ゴール終了日を来期終了日にする
+     * - ゴール開始日, 終了日共に来期終了日を超えてる場合
+     *  - ゴール開始日, 終了日を来期開始日, 終了日にする
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateInNextTerm(string $startDate, string $endDate): bool
+    {
+        // ゴール終了日だけ来期終了日を超えてる場合
+        $res = $this->updateAll(
+            [
+                'Goal.end_date' => $endDate
+            ],
+            [
+                'Goal.start_date >=' => $startDate,
+                'Goal.start_date <=' => $endDate,
+                'Goal.end_date >'  => $endDate,
+            ]
+        );
+        if (!$res) {
+            return false;
+        }
 
+        // ゴール開始日, 終了日共に来期終了日を超えてる場合
+        $res = $this->updateAll(
+            [
+                'Goal.start_date' => $startDate,
+                'Goal.end_date'   => $endDate,
+            ],
+            [
+                'Goal.start_date >' => $endDate
+            ]
+        );
+        if (!$res) {
+            return false;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return true;
+    }
 }

@@ -1146,51 +1146,69 @@ class KeyResult extends AppModel
      *
      * @return bool
      */
-    function updateInCurrentTerm(string $startDate, string $endDate): bool
+    function updateInCurrentTerm(int $goalId, string $startDate, string $endDate): bool
     {
         $res = $this->updateAll(
             [
                 'KeyResult.start_date' => $startDate
             ],
             [
-                'KeyResult.start_date <' => $startDate,
-                'KeyResult.end_date >='  => $startDate,
-                'KeyResult.end_date <='  => $endDate,
+                'KeyResult.goal_id'       => $goalId,
+                'KeyResult.start_date >='  => $startDate,
+                'KeyResult.start_date <=' => $endDate,
+                'KeyResult.end_date >'    => $endDate,
             ]
         );
+        if (!$res) {
+            return false;
+        }
         return $res;
     }
 
+    /**
+     * update goals in next term
+     * - ゴール終了日だけ来期終了日を超えてる場合
+     *  - ゴール終了日を来期終了日にする
+     * - ゴール開始日, 終了日共に来期終了日を超えてる場合
+     *  - ゴール開始日, 終了日を来期開始日, 終了日にする
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateInNextTerm(int $goalId, string $startDate, string $endDate): bool
+    {
+        $res = $this->updateAll(
+            [
+                'KeyResult.end_date' => $endDate
+            ],
+            [
+                'KeyResult.goal_id'       => $goalId,
+                'KeyResult.start_date >=' => $startDate,
+                'KeyResult.start_date <=' => $endDate,
+                'KeyResult.end_date >'    => $endDate,
+            ]
+        );
+        if (!$res) {
+            return false;
+        }
 
+        $res = $this->updateAll(
+            [
+                'KeyResult.start_date' => $startDate,
+                'KeyResult.end_date'   => $endDate,
+            ],
+            [
+                'KeyResult.goal_id'      => $goalId,
+                'KeyResult.start_date >' => $endDate
+            ]
+        );
+        if (!$res) {
+            return false;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return true;
+    }
 
 }
