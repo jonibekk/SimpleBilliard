@@ -7,7 +7,7 @@ App::uses('AppModel', 'Model');
  * @property Team          $Team
  * @property User          $EvaluateeUser
  * @property User          $EvaluatorUser
- * @property Term          $EvaluateTerm
+ * @property Term          $Term
  * @property EvaluateScore $EvaluateScore
  * @property Goal          $Goal
  */
