@@ -1075,13 +1075,13 @@ class KeyResult extends AppModel
     /**
      * KR日次バッチ用にKR一覧を取得
      *
-     * @param  int $teamId
-     * @param  int $fromTimestamp
-     * @param int  $toTimestamp
+     * @param  int    $teamId
+     * @param  string $fromDate
+     * @param  string $toDate
      *
      * @return array
      */
-    public function findAllForSavingDailyLog(int $teamId, int $fromTimestamp, int $toTimestamp): array
+    public function findAllForSavingDailyLog(int $teamId, string $fromDate, string $toDate): array
     {
         $backupedVirtualFields = $this->virtualFields;
         $this->virtualFields = ['key_result_id' => 'KeyResult.id'];
@@ -1089,8 +1089,8 @@ class KeyResult extends AppModel
         $options = [
             'conditions' => [
                 'KeyResult.team_id'     => $teamId,
-                'KeyResult.end_date >=' => $fromTimestamp,
-                'KeyResult.end_date <=' => $toTimestamp,
+                'KeyResult.end_date >=' => $fromDate,
+                'KeyResult.end_date <=' => $toDate,
             ],
             'fields'     => [
                 'key_result_id',

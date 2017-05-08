@@ -648,18 +648,27 @@ class Term extends AppModel
      */
     public function findTeamIdByTimezone(float $timezone, string $targetDate): array
     {
-        $targetTimestamp = strtotime($targetDate) - $timezone * HOUR;
         $options = [
             'conditions' => [
-                'start_date <=' => $targetTimestamp,
-                'end_date >='   => $targetTimestamp,
-                'timezone'      => $timezone,
+                'start_date <=' => $targetDate,
+                'end_date >='   => $targetDate,
             ],
             'fields'     => [
                 'team_id'
-            ]
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Team.id = Term.team_id',
+                        'Team.timezone' => $timezone,
+                        'Team.del_flg'  => false,
+                    ]
+                ],
+            ],
         ];
-
         $ret = $this->findWithoutTeamId('list', $options);
         // キーに特別な意味を持たせないように、歯抜けのキーを再採番
         $ret = array_merge($ret);
