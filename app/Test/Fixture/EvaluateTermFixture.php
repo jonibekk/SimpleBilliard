@@ -1,9 +1,9 @@
 <?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
- * TermFixture
+ * EvaluateTermFixture
  */
-class TermFixture extends CakeTestFixtureEx
+class EvaluateTermFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -29,15 +29,17 @@ class TermFixture extends CakeTestFixtureEx
             'comment'  => 'チームID(belongsToでTeamモデルに関連)'
         ),
         'start_date'      => array(
-            'type'     => 'date',
-            'null'     => false,
+            'type'     => 'integer',
+            'null'     => true,
             'default'  => null,
+            'unsigned' => true,
             'comment'  => '評価対象期間の開始日'
         ),
         'end_date'        => array(
-            'type'     => 'date',
-            'null'     => false,
+            'type'     => 'integer',
+            'null'     => true,
             'default'  => null,
+            'unsigned' => true,
             'comment'  => '評価対象期間の終了日'
         ),
         'evaluate_status' => array('type'     => 'integer',
@@ -45,6 +47,12 @@ class TermFixture extends CakeTestFixtureEx
                                    'default'  => '0',
                                    'unsigned' => false,
                                    'comment'  => '評価ステータス(0 = 評価開始前, 1 = 評価中,2 = 評価凍結中, 3 = 最終評価終了)'
+        ),
+        'timezone'        => array('type'     => 'float',
+                                   'null'     => true,
+                                   'default'  => null,
+                                   'unsigned' => false,
+                                   'comment'  => '評価期間のタイムゾーン'
         ),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type'     => 'integer',
@@ -79,6 +87,25 @@ class TermFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = [];
+    public $records = [
+        [
+            'id'         => 1,
+            'team_id'    => 1,
+            'start_date' => 10000,
+            'end_date'   => 19999,
+            'timezone'   => 9,
+            'created'    => 1,
+            'modified'   => 1,
+        ],
+        [
+            'id'         => 2,
+            'team_id'    => 1,
+            'start_date' => 20000,
+            'end_date'   => 29999,
+            'timezone'   => 9,
+            'created'    => 1,
+            'modified'   => 1
+        ],
+    ];
 
 }

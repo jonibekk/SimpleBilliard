@@ -1,5 +1,6 @@
 <?php
 App::uses('AppUtil', 'Util');
+
 /**
  * TermMigrationShell
  *
@@ -12,6 +13,7 @@ class TermMigrationShell extends AppShell
     const EXE_TYPE_TRANSFER = 'transfer';
     const EXE_TYPE_REMAKE = 'remake';
 
+    public $requestTimestamp;
     public $uses = array(
         'Team',
         'Term'
@@ -20,6 +22,7 @@ class TermMigrationShell extends AppShell
     public function startup()
     {
         parent::startup();
+        $this->requestTimestamp = time();
     }
 
     public function main()
@@ -60,7 +63,7 @@ class TermMigrationShell extends AppShell
      * Get execution type
      * 'transfer','remake','all'
      */
-    private function getExeType(): string
+    public function getExeType(): string
     {
         if (empty($this->args[0])) {
             return self::EXE_TYPE_ALL;
@@ -76,7 +79,7 @@ class TermMigrationShell extends AppShell
     /**
      * Find teams with terms
      */
-    private function findTeamsWithTerms(): array
+    public function findTeamsWithTerms(): array
     {
         $teams = $this->Team->find('all', [
             'fields'     => [
@@ -122,7 +125,7 @@ class TermMigrationShell extends AppShell
     /**
      * Find teams not exist terms
      */
-    private function findTeamsNotExistTerms(): array
+    public function findTeamsNotExistTerms(): array
     {
         $teams = $this->Team->find('all', [
             'fields'     => [
@@ -146,9 +149,8 @@ class TermMigrationShell extends AppShell
                     ]
                 ],
             ],
-            'order'      => ['Team.id', 'EvaluateTerm.start_date'],
+            'order'      => ['Team.id'],
         ]);
-
         return Hash::extract($teams, '{n}.Team');
     }
 
@@ -161,7 +163,7 @@ class TermMigrationShell extends AppShell
      * @throws Exception
      * @internal param array $term
      */
-    private function transferTerm(array $team)
+    public function transferTerm(array $team)
     {
         try {
             $this->Term->begin();
@@ -178,18 +180,19 @@ class TermMigrationShell extends AppShell
                 ];
 
                 // 今まで開始日・終了日はUTCタイムスタンプ - (タイムゾーン * 時)が入っていたので、 + (タイムゾーン * 時)した後日付文字列に変換
-                $transferTerm['start_date'] = $this->getDateByTimestamp($term['start_date'], $term['timezone'], true);
-                $monthFirstDate = date('Y-m-d', strtotime('first day of ' . $transferTerm['start_date']));
-                $transferTerm['end_date'] = $this->getDateByTimestamp($term['end_date'], $term['timezone'], true);
-                $monthLastDate = date('Y-m-d', strtotime('last day of ' . $transferTerm['end_date']));
+                $transferTerm['start_date'] = $this->getDateByTimestamp($term['start_date'], $term['timezone']);
+                $transferTerm['end_date'] = $this->getDateByTimestamp($term['end_date'], $term['timezone']);
 
-                // 開始日が月初ではない、または終了日が月末でないかチェック
-                if ($transferTerm['start_date'] !== $monthFirstDate || $transferTerm['end_date'] !== $monthLastDate) {
+                // Validation start_date and end_date
+                $errMsg = $this->validateStartEndDate($transferTerm['start_date'], $transferTerm['end_date'],
+                    $team['border_months']);
+                if (!empty($errMsg)) {
                     throw new Exception(sprintf(
-                        'Failed to save term. data:%s',
-                        var_export(compact('transferTerm', 'monthFirstDate', 'monthLastDate'), true)
+                        $errMsg . ' data:%s',
+                        var_export(compact('transferTerm', 'team'), true)
                     ));
                 }
+
                 $newTerms[] = $transferTerm;
 
                 // 存在する最初の期の場合
@@ -207,20 +210,20 @@ class TermMigrationShell extends AppShell
                 } elseif ($i == $lastIndex) {
                     // 最後の期の終了日が現在日より前の場合、今期までの期が登録されていないということなので、追加
                     $endDate = $transferTerm['end_date'];
-                    $currentDate = AppUtil::dateYmd(time());
-                    $newTermsAfterLast = [];
-                    // 今期まで期を追加
-                    while ($endDate < $currentDate) {
-                        $newTerm = $this->buildNextTermByPrevEndDate($endDate, $team);
-                        $newTermsAfterLast[] = $newTerm;
-                        $endDate = $newTerm['end_date'];
-                    }
+                    $currentDate = AppUtil::dateYmd($this->requestTimestamp);
 
-                    // 来期を追加
-                    if (!empty($newTermsAfterLast)) {
-                        // Add next term
-                        $newTermsAfterLast[] = $this->buildNextTermByPrevEndDate($endDate, $team);
-                        $newTerms = array_merge($newTerms, $newTermsAfterLast);
+                    $ym1 = date('Y-m', strtotime($endDate));
+                    $tmpYm = date('Y-m', strtotime($currentDate));
+                    $ym2 = date('Y-m',
+                        strtotime($tmpYm . ' +' . $team['border_months'] . 'month'));
+                    if ($ym1 < $ym2) {
+                        // 来期まで期を追加
+                        do {
+                            $newTerm = $this->buildNextTermByPrevEndDate($endDate, $team);
+                            $newTerms[] = $newTerm;
+                            $endDate = $newTerm['end_date'];
+                            $ym1 = date('Y-m', strtotime($endDate));
+                        } while ($ym1 < $ym2);
                     }
                 } elseif (!empty($prevTerm)) {
                     // 歯抜けの期が存在するか
@@ -253,6 +256,65 @@ class TermMigrationShell extends AppShell
     }
 
     /**
+     * Validate start_date and end_date of term
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @param int    $borderMonths
+     *
+     * @return string
+     */
+    public function validateStartEndDate(string $startDate, string $endDate, int $borderMonths): string
+    {
+        if (empty($startDate) || empty($endDate)) {
+            return 'Start date or end date is empty.';
+        }
+        // Whether start_date is the first day of the month
+        if (!$this->isMonthFirstDay($startDate)) {
+            return 'Start date is not the first day of the month';
+        }
+        // Whether end_date is the last day of the month
+        if (!$this->isMonthLastDay($endDate)) {
+            return 'End date is not the last day of the month';
+        }
+
+        // Check days during start_date and end_date
+        $endYm = date('Y-m', strtotime($endDate));
+        $correctEndYm = date('Y-m', strtotime($startDate . ' +' . ($borderMonths - 1) . ' month'));
+        if ($endYm !== $correctEndYm) {
+            return 'Invalid days of term.';
+        }
+
+        return '';
+    }
+
+    /**
+     * Whether start_date is the first day of the month
+     *
+     * @param string $date
+     *
+     * @return bool
+     */
+    public function isMonthFirstDay(string $date): bool
+    {
+        $monthFirstDate = date('Y-m-01', strtotime($date));
+        return $date === $monthFirstDate;
+    }
+
+    /**
+     * Whether end_date is the last day of the month
+     *
+     * @param string $date
+     *
+     * @return bool
+     */
+    public function isMonthLastDay(string $date): bool
+    {
+        $monthLastDate = date('Y-m-d', strtotime('last day of ' . $date));
+        return $date === $monthLastDate;
+    }
+
+    /**
      * Remake all terms for team not exist terms
      *
      * @param array $team
@@ -261,7 +323,7 @@ class TermMigrationShell extends AppShell
      * @throws Exception
      * @internal param array $term
      */
-    private function remakeAllTerms(array $team)
+    public function remakeAllTerms(array $team)
     {
         try {
             $this->Term->begin();
@@ -274,7 +336,7 @@ class TermMigrationShell extends AppShell
             $newTerms[] = $firstTerm;
             // 来期までの期を作成
             $startDate = $firstTerm['start_date'];
-            $currentDate = date('Y-m-d');
+            $currentDate = date('Y-m-d', $this->requestTimestamp);
             // 来期までの期を作るためdo while文を使用
             do {
                 $startDate = date('Y-m-d', strtotime($startDate . " +" . $team['border_months'] . " month"));
@@ -283,7 +345,7 @@ class TermMigrationShell extends AppShell
                     'start_date' => $startDate,
                     'end_date'   => $this->getEndDateByStartDate($startDate, $team['border_months'])
                 ];
-            } while ($startDate < $currentDate);
+            } while ($startDate <= $currentDate);
 
             // 期を一括保存
             if (!$this->Term->bulkInsert($newTerms)) {
@@ -307,18 +369,18 @@ class TermMigrationShell extends AppShell
      *
      * @return array
      */
-    private function buildFirstTerm(array $team): array
+    public function buildFirstTerm(array $team): array
     {
         $newTerm = ['team_id' => $team['id']];
         $borderMonths = $team['border_months'];
         $startTermMonth = $team['start_term_month'];
 
         $teamCreatedDate = date('Y-m-d', $team['created']);
-        $startDate = date("Y-" . sprintf('%02d', $startTermMonth) . "-1", strtotime($teamCreatedDate));
+        $startDate = date("Y-" . sprintf('%02d', $startTermMonth) . "-01", strtotime($teamCreatedDate));
         $endDate = $this->getEndDateByStartDate($startDate, $borderMonths);
 
         //チーム作成日時が期間内の場合 in the case of target date include the term
-        if ($startDate <= $teamCreatedDate && $endDate > $teamCreatedDate) {
+        if ($startDate <= $teamCreatedDate && $endDate >= $teamCreatedDate) {
             $newTerm['start_date'] = $startDate;
             $newTerm['end_date'] = $endDate;
 
@@ -331,7 +393,7 @@ class TermMigrationShell extends AppShell
             $newTerm['end_date'] = $this->getEndDateByStartDate($startDate, $borderMonths);
 
             //終了日がチーム作成日時より後の場合 in the case of target date is later than end date
-        } elseif ($teamCreatedDate > $endDate) {
+        } else {
             while ($teamCreatedDate > $endDate) {
                 $endDateTmp = date("Y-m-01", strtotime($endDate));
                 $endDate = date('Y-m-t', strtotime($endDateTmp . "+ {$borderMonths} month"));
@@ -351,7 +413,7 @@ class TermMigrationShell extends AppShell
      *
      * @return string
      */
-    private function getEndDateByStartDate(string $startDate, int $borderMonths): string
+    public function getEndDateByStartDate(string $startDate, int $borderMonths): string
     {
         return date('Y-m-t', strtotime($startDate . " +" . ($borderMonths - 1) . " month"));
     }
@@ -364,7 +426,7 @@ class TermMigrationShell extends AppShell
      *
      * @return string
      */
-    private function getStartDateByEndDate(string $endDate, int $borderMonths): string
+    public function getStartDateByEndDate(string $endDate, int $borderMonths): string
     {
         return date('Y-m-01', strtotime($endDate . " -" . ($borderMonths - 1) . " month"));
     }
@@ -377,7 +439,7 @@ class TermMigrationShell extends AppShell
      *
      * @return array
      */
-    private function buildPrevTermByNextStartDate(string $startDate, array $team): array
+    public function buildPrevTermByNextStartDate(string $startDate, array $team): array
     {
         $newTerm = [
             'team_id'         => $team['id'],
@@ -397,7 +459,7 @@ class TermMigrationShell extends AppShell
      *
      * @return array
      */
-    private function buildNextTermByPrevEndDate(string $endDate, array $team): array
+    public function buildNextTermByPrevEndDate(string $endDate, array $team): array
     {
         $newTerm = [
             'team_id'         => $team['id'],
@@ -420,9 +482,9 @@ class TermMigrationShell extends AppShell
      *
      * @return string
      */
-    private function getDateByTimestamp(int $timestamp, float $timezone, $isAddition = false): string
+    public function getDateByTimestamp(int $timestamp, float $timezone, $isAddition = true): string
     {
-        $localTime = $isAddition ? $timestamp + ($timezone * HOUR) : $timestamp - ($timezone * HOUR);
+        $localTime = $timestamp + ($timezone * HOUR);
         return AppUtil::dateYmd($localTime);
     }
 
