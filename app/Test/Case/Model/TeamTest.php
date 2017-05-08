@@ -255,6 +255,16 @@ class TeamTest extends GoalousTestCase
 
     }
 
+    function test_updateTermSettings()
+    {
+        $teamId = $this->createTeam(['start_term_month' => 4, 'border_months' => 10]);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $this->Team->updateTermSettings(1, 4);
+        $newTeam = $this->Team->getById($teamId);
+        $this->assertEquals($newTeam['start_term_month'], 1);
+        $this->assertEquals($newTeam['border_months'], 4);
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;
