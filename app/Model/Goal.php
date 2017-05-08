@@ -513,7 +513,7 @@ class Goal extends AppModel
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
             $currentTermData = $this->Team->Term->getCurrentTermData();
-            $localTodayDate = AppUtil::dateYmdLocal(REQUEST_TIMESTAMP, $currentTermData['timezone']);
+            $localTodayDate = AppUtil::todayDateYmdLocal($currentTermData['timezone']);
             $data['Goal']['start_date'] = $localTodayDate;
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];

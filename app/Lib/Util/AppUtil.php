@@ -155,6 +155,18 @@ class AppUtil
     }
 
     /**
+     * 今日のY-m-d 形式のローカルの日付を返す
+     *
+     * @param int $timezone
+     *
+     * @return string
+     */
+    static function todayDateYmdLocal(int $timezone)
+    {
+        return self::dateYmd(REQUEST_TIMESTAMP + $timezone * HOUR);
+    }
+
+    /**
      * 値が指定した範囲に含まれるか？
      *
      * @param int $target

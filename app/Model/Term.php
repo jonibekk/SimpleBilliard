@@ -225,7 +225,7 @@ class Term extends AppModel
                 }
             }
             if (!$this->currentTerm) {
-                $this->currentTerm = $this->getTermDataByDate(AppUtil::dateYmdLocal(REQUEST_TIMESTAMP, $timezone));
+                $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
                     Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
