@@ -23,69 +23,34 @@
 <?= $this->App->viewStartComment()?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Term settings") ?></div>
-    <?=
-    $this->Form->create('Team', [
-        'inputDefaults' => [
-            'div'       => 'form-group',
-            'label'     => [
-                'class' => 'col col-sm-3 control-label form-label'
-            ],
-            'wrapInput' => 'col col-sm-6',
-            'class'     => 'form-control addteam_input-design'
-        ],
-        'class'         => 'form-horizontal',
-        'novalidate'    => true,
-        'url'           => ['action' => 'edit_term']
-    ]); ?>
     <div class="panel-body add-team-panel-body form-horizontal">
-        <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __("来期開始月") ?></label>
-            <div class="col col-sm-6">
-                <?=
-                $this->Form->input('start_month', [
-                    'label'     => false,
-                    'type'      => 'select',
-                    'options'   => [
-                        '2107-6' => '2107-6',
-                        '2107-7' => '2107-7',
-                        '2107-8' => '2107-8',
-                        '2107-9' => '2107-9',
-                        '2107-10' => '2107-10',
-                        '2107-11' => '2107-11',
-                        '2107-12' => '2107-12',
-                    ],
-                ])
-                ?>
+        <?php // TODO: システム全体でtimezone, dateデータの持ち方に問題があるため、データの不整合が起きる前に一旦期間設定の変更をできなくしている。 ?>
+        <?php //       本来ここには期間設定のformがあるので、上記対応時にrevertする。 ?>
+        <?php if ($current_term_start_date && $current_term_end_date): ?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __("Current Term") ?></label>
+                <div class="col col-sm-6">
+                    <p class="form-control-static" id="">
+                        <?= $this->TimeEx->date($current_term_start_date, $current_term_timezone) ?>
+                        - <?= $this->TimeEx->date($current_term_end_date, $current_term_timezone) ?>
+                        <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __("評価期間") ?></label>
-            <div class="col col-sm-6">
-                <?=
-                $this->Form->input('range_month', [
-                    'label'     => false,
-                    'type'      => 'select',
-                    'options'   => [
-                        '3' => '3ヶ月',
-                        '4' => '4ヶ月',
-                        '6' => '半年',
-                        '12' => '1年',
-                    ],
-                ])
-                ?>
+        <?php endif; ?>
+        <?php if ($next_term_start_date && $next_term_end_date): ?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __("Next Term") ?></label>
+                <div class="col col-sm-6">
+                    <p class="form-control-static" id="">
+                        <?= $this->TimeEx->date($next_term_start_date, $next_term_timezone) ?>
+                        - <?= $this->TimeEx->date($next_term_end_date, $next_term_timezone) ?>
+                        <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
+                    </p>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
-    <div class="panel-footer">
-        <div class="row">
-            <div class="col-xxs-4 col-sm-offset-3">
-                <?=
-                $this->Form->submit(__("Save"),
-                    ['class' => 'btn btn-primary display-inline', 'div' => false]) ?>
-            </div>
-        </div>
-    </div>
-    <?= $this->Form->end(); ?>
 </div>
 <?php $this->end() ?>
 <?= $this->App->viewEndComment()?>
