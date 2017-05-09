@@ -105,9 +105,10 @@ class GoalMemberTest extends GoalousTestCase
             'name'             => 'test',
             'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
-            'start_date'       => AppUtil::dateYmd(strtotime("{$current_term['end_date']} -2 days")),
-            'end_date'         => AppUtil::dateYmd(strtotime("{$current_term['end_date']} -1 day")),
+            'start_date'       => AppUtil::dateBefore($current_term['end_date'],2),
+            'end_date'         => AppUtil::dateBefore($current_term['end_date'],1),
         ];
+
         $this->GoalMember->Goal->save($params);
         $current_goal_id = $this->GoalMember->Goal->getLastInsertID();
 
@@ -116,10 +117,11 @@ class GoalMemberTest extends GoalousTestCase
             'team_id'          => $team_id,
             'name'             => 'test',
             'photo_file_name'  => 'aa.png',
-            'start_date'       => AppUtil::dateYmd(strtotime("{$current_term['end_date']} +1 days")),
-            'end_date'         => AppUtil::dateYmd(strtotime("{$current_term['end_date']} +2 days")),
+            'start_date'       => AppUtil::dateAfter($current_term['end_date'],1),
+            'end_date'         => AppUtil::dateAfter($current_term['end_date'],2),
             'goal_category_id' => 1,
         ];
+
         $this->GoalMember->Goal->create();
         $this->GoalMember->Goal->save($params);
         $next_goal_id = $this->GoalMember->Goal->getLastInsertID();

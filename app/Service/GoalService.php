@@ -827,7 +827,7 @@ class GoalService extends AppService
         $daysMinPlot = $targetDays - $maxBufferDays;
         if ($daysFromTermStartToTargetEnd < $daysMinPlot) {
             $ret['graphStartDate'] = $termStartDate;
-            $ret['graphEndDate'] = AppUtil::dateYmd(strtotime($termStartDate) + (($targetDays - 1) * DAY));
+            $ret['graphEndDate'] = AppUtil::dateAfter($termStartDate, $targetDays - 1);;
             $ret['plotDataEndDate'] = $targetEndDate;
             return $ret;
         }
@@ -835,9 +835,9 @@ class GoalService extends AppService
         if ($maxBufferDays > 0) {
             //指定グラフ終了日から期の終了日まで日数が少ない場合(以下がその定義)は、グラフ終了日は期の終了日をセット
             //指定グラフ終了日が期の終了日からバッファ日数を引いた日を超えた場合
-            $termEndDateBeforeMaxBufferDays = AppUtil::dateYmd(strtotime($termEndDate) - $maxBufferDays * DAY);
+            $termEndDateBeforeMaxBufferDays = AppUtil::dateBefore($termEndDate, $maxBufferDays);
             if ($targetEndDate > $termEndDateBeforeMaxBufferDays) {
-                $ret['graphStartDate'] = AppUtil::dateYmd(strtotime($termEndDate) - (($targetDays - 1) * DAY));
+                $ret['graphStartDate'] = AppUtil::dateBefore($termEndDate, $targetDays - 1);
                 $ret['graphEndDate'] = $termEndDate;
                 $ret['plotDataEndDate'] = $ret['graphEndDate'];
                 return $ret;
@@ -845,10 +845,10 @@ class GoalService extends AppService
         }
 
         //$targetDays前から本日まで(バッファ日数を考慮)
-        $targetStartTimestamp = strtotime($targetEndDate) - (($targetDays - 1) * DAY);
-        $ret['graphStartDate'] = AppUtil::dateYmd($targetStartTimestamp + ($maxBufferDays * DAY));
-        $ret['graphEndDate'] = AppUtil::dateYmd(strtotime($targetEndDate) + ($maxBufferDays * DAY));
-        $ret['plotDataEndDate'] = AppUtil::dateYmd(strtotime($targetEndDate));
+        $targetStartDate = AppUtil::dateBefore($targetEndDate, $targetDays - 1);
+        $ret['graphStartDate'] = AppUtil::dateAfter($targetStartDate, $maxBufferDays);
+        $ret['graphEndDate'] = AppUtil::dateAfter($targetEndDate, $maxBufferDays);
+        $ret['plotDataEndDate'] = $targetEndDate;
 
         return $ret;
     }
