@@ -188,6 +188,32 @@ class AppUtil
     }
 
     /**
+     * Y-m-d 形式で対象日の○○日後の日付を返す
+     *
+     * @param string $targetDate
+     * @param int    $days
+     *
+     * @return string
+     */
+    static function dateAfterDays(string $targetDate, int $days): string
+    {
+        return self::dateYmd(strtotime("$targetDate +{$days} days"));
+    }
+
+    /**
+     * Y-m-d 形式で対象日の○○日前の日付を返す
+     *
+     * @param string $targetDate
+     * @param int    $days
+     *
+     * @return string
+     */
+    static function dateBeforeDays(string $targetDate, int $days): string
+    {
+        return self::dateYmd(strtotime("$targetDate -{$days} days"));
+    }
+
+    /**
      * Y-m-d 形式のローカルの日付を返す
      *
      * @param int $timestamp
