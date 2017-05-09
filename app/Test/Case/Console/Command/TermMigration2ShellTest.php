@@ -413,6 +413,7 @@ class TermMigration2ShellTest extends GoalousTestCase
                 'timezone' => 9.0
             ]
         ];
+        $team = $addTeam['Team'];
         $this->Team->add($addTeam, $uid);
         $teamId = $this->Team->getLastInsertID();
         $this->Goal->create();
@@ -438,7 +439,7 @@ class TermMigration2ShellTest extends GoalousTestCase
         $this->KeyResult->saveAll($krs, ['validate' => false]);
 
         // Run test method
-        $this->TermMigration2Shell->updateKrs($goal);
+        $this->TermMigration2Shell->updateKrs($goal, $team);
         $krs = Hash::extract($this->KeyResult->findAllByGoalId($goalId), '{n}.KeyResult');
         $this->assertEquals(count($krs), 1);
         $this->assertEquals($krs[0]['start_date'], '2016-01-01');
@@ -458,7 +459,7 @@ class TermMigration2ShellTest extends GoalousTestCase
         $this->KeyResult->saveAll($krs, ['validate' => false]);
 
         // Run test method
-        $this->TermMigration2Shell->updateKrs($goal);
+        $this->TermMigration2Shell->updateKrs($goal, $team);
         $krs = Hash::extract($this->KeyResult->findAllByGoalId($goalId), '{n}.KeyResult');
         $this->assertEquals(count($krs), 1);
         $this->assertEquals($krs[0]['start_date'], '2016-01-01');
@@ -479,7 +480,7 @@ class TermMigration2ShellTest extends GoalousTestCase
         $this->KeyResult->saveAll($krs, ['validate' => false]);
 
         // Run test method
-        $this->TermMigration2Shell->updateKrs($goal);
+        $this->TermMigration2Shell->updateKrs($goal, $team);
         $krs = Hash::extract($this->KeyResult->findAllByGoalId($goalId), '{n}.KeyResult');
         $this->assertEquals(count($krs), 1);
         $this->assertEquals($krs[0]['start_date'], '2016-01-01');
@@ -499,7 +500,7 @@ class TermMigration2ShellTest extends GoalousTestCase
         $this->KeyResult->saveAll($krs, ['validate' => false]);
 
         // Run test method
-        $this->TermMigration2Shell->updateKrs($goal);
+        $this->TermMigration2Shell->updateKrs($goal, $team);
         $krs = Hash::extract($this->KeyResult->findAllByGoalId($goalId), '{n}.KeyResult');
         $this->assertEquals(count($krs), 1);
         $this->assertEquals($krs[0]['start_date'], '2016-03-01');
@@ -539,7 +540,7 @@ class TermMigration2ShellTest extends GoalousTestCase
         $this->KeyResult->saveAll($krs, ['validate' => false]);
 
         // Run test method
-        $this->TermMigration2Shell->updateKrs($goal);
+        $this->TermMigration2Shell->updateKrs($goal, $team);
         $krs = Hash::extract($this->KeyResult->findAllByGoalId($goalId), '{n}.KeyResult');
         $this->assertEquals(count($krs), 2);
         $this->assertEquals($krs[0]['start_date'], '2016-03-01');
