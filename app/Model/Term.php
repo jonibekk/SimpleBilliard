@@ -228,7 +228,6 @@ class Term extends AppModel
             if (!$this->currentTerm) {
                 $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
-                    Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
                 }
             }
@@ -248,7 +247,6 @@ class Term extends AppModel
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
                 $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY));
                 if ($this->previousTerm && $withCache) {
-                    Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
             }
@@ -269,7 +267,6 @@ class Term extends AppModel
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
                 $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
                 if ($this->nextTerm && $withCache) {
-                    Cache::set('duration', strtotime($this->currentTerm['end_date']) - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->nextTerm, 'team_info');
                 }
             }
@@ -559,17 +556,17 @@ class Term extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        // TODO: error logging for unexpected creating term data.
-        if (empty($res)) {
+        if (!empty($res)) {
+            $res = Hash::extract($res, 'Term');
+            $res['timezone'] = $timezone;
+            // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
+        } elseif ($this->useDbConfig != "test") {
             $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
                 __METHOD__,
                 var_export($options, true),
                 var_export(CakeSession::read(), true),
                 Debugger::trace()
             ));
-        } else {
-            $res = Hash::extract($res, 'Term');
-            $res['timezone'] = $timezone;
         }
         return $res;
     }
