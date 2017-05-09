@@ -346,9 +346,6 @@ class KeyResultService extends AppService
      */
     function buildUpdateKr(int $krId, array $requestData, bool $includeStartEndDate = true): array
     {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-
         $kr = $this->get($krId);
         if (empty($kr)) {
             throw new Exception(sprintf("Not exist kr. krId:%d", $krId));
@@ -383,13 +380,10 @@ class KeyResultService extends AppService
             }
         }
 
-        // ゴールが属している評価期間データ
         if ($includeStartEndDate) {
-            $goalTerm = $Goal->getGoalTermData($kr['goal_id']);
             // 開始日・終了日設定
-            $updateKr['start_date'] = strtotime($requestData['start_date']) - $goalTerm['timezone'] * HOUR;
-            $updateKr['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($requestData['end_date'])) - $goalTerm['timezone'] * HOUR;
+            $updateKr['start_date'] = $requestData['start_date'];
+            $updateKr['end_date'] = $requestData['end_date'];
         }
 
         return $updateKr;
@@ -441,9 +435,9 @@ class KeyResultService extends AppService
                 $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
 
                 // KR進捗日次ログ削除
-                if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId]))
-                {
-                    throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('krId'), true)));
+                if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId])) {
+                    throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s",
+                        var_export(compact('krId'), true)));
                 }
 
                 // KR進捗日次ログキャッシュ削除(チーム単位)
@@ -630,6 +624,7 @@ class KeyResultService extends AppService
      * TODO:削除ポリシー決定後、削除処理が不足していたら対応
      *
      * @param $krId
+     *
      * @return bool
      */
     function delete(int $krId): bool
@@ -642,7 +637,6 @@ class KeyResultService extends AppService
         $KrValuesDailyLogService = ClassRegistry::init("KrValuesDailyLogService");
         /** @var KrValuesDailyLog $KrValuesDailyLog */
         $KrValuesDailyLog = ClassRegistry::init("KrValuesDailyLog");
-
 
         try {
             // トランザクション開始
@@ -658,12 +652,13 @@ class KeyResultService extends AppService
 
             //関連アクションの紐付け解除
             if (!$ActionResult->releaseKr($krId)) {
-                throw new Exception(sprintf("Failed release action_result. data:%s", var_export(compact('krId'), true)));
+                throw new Exception(sprintf("Failed release action_result. data:%s",
+                    var_export(compact('krId'), true)));
             }
             // KR進捗日次ログ削除
-            if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId]))
-            {
-                throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s", var_export(compact('krId'), true)));
+            if (!$KrValuesDailyLog->softDeleteAll(['key_result_id' => $krId])) {
+                throw new Exception(sprintf("Failed delete kr_values_daily_log. data:%s",
+                    var_export(compact('krId'), true)));
             }
 
             $KeyResult->commit();
@@ -679,7 +674,6 @@ class KeyResultService extends AppService
         Cache::delete($KeyResult->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
         // ユーザページのマイゴール一覧キャッシュ削除
         Cache::delete($KeyResult->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
-
 
         return true;
     }

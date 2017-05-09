@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Term Model
@@ -214,6 +215,7 @@ class Term extends AppModel
     public function getTermData(int $type, bool $withCache = true): array
     {
         $this->_checkType($type);
+        $timezone = $this->Team->getTimezone();
 
         //先ずはcurrentを取得。previous, nextの基準になるので
         if (!$this->currentTerm) {
@@ -224,9 +226,8 @@ class Term extends AppModel
                 }
             }
             if (!$this->currentTerm) {
-                $this->currentTerm = $this->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
+                $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
-                    Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
                 }
             }
@@ -244,10 +245,8 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
-                $this->previousTerm = $this->getTermDataByTimeStamp(strtotime("-1 day",
-                    $this->currentTerm['start_date']));
+                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY));
                 if ($this->previousTerm && $withCache) {
-                    Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
             }
@@ -266,9 +265,8 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
-                $this->nextTerm = $this->getTermDataByTimeStamp(strtotime("+1 day", $this->currentTerm['end_date']));
+                $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
                 if ($this->nextTerm && $withCache) {
-                    Cache::set('duration', $this->currentTerm['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->nextTerm, 'team_info');
                 }
             }
@@ -291,51 +289,29 @@ class Term extends AppModel
     }
 
     /**
-     * @param bool $utcMidnight
-     *
      * @return array
      */
-    public function getCurrentTermData(bool $utcMidnight = false): array
+    public function getCurrentTermData(): array
     {
         $term = $this->getTermData(self::TYPE_CURRENT);
-        if ($utcMidnight) {
-            return $this->changeToUtcMidnight($term);
-        }
         return $term;
     }
 
     /**
-     * @param bool $utcMidnight
-     *
      * @return array
      */
-    public function getNextTermData(bool $utcMidnight = false): array
+    public function getNextTermData(): array
     {
         $term = $this->getTermData(self::TYPE_NEXT);
-        if ($utcMidnight) {
-            return $this->changeToUtcMidnight($term);
-        }
         return $term;
     }
 
     /**
-     * @param bool $utcMidnight
-     *
      * @return array
      */
-    public function getPreviousTermData(bool $utcMidnight = false): array
+    public function getPreviousTermData(): array
     {
         $term = $this->getTermData(self::TYPE_PREVIOUS);
-        if ($utcMidnight) {
-            return $this->changeToUtcMidnight($term);
-        }
-        return $term;
-    }
-
-    private function changeToUtcMidnight(array $term): array
-    {
-        $term['start_date'] += $term['timezone'] * HOUR;
-        $term['end_date'] += $term['timezone'] * HOUR;
         return $term;
     }
 
@@ -367,8 +343,8 @@ class Term extends AppModel
         Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
         Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
         $this->_checkType($type);
-        $new_start = null;
-        $new_end = null;
+        $newStart = null;
+        $newEnd = null;
 
         if ($type === self::TYPE_PREVIOUS) {
             if ($this->getTermData(self::TYPE_PREVIOUS, false)) {
@@ -377,17 +353,19 @@ class Term extends AppModel
             if (!$current = $this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
-            $new_start = $this->_getStartEndWithoutExistsData(strtotime("-1 day", $current['start_date']))['start'];
-            $new_end = $current['start_date'] - 1;
+            $newStart = $this->_getStartEndWithoutExistsData(AppUtil::dateYesterday($current['start_date']))['start'];
+
+            $newEnd = AppUtil::dateYesterday($current['start_date']);
         }
 
         if ($type === self::TYPE_CURRENT) {
             if ($this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
-            $new = $this->_getStartEndWithoutExistsData();
-            $new_start = $new['start'];
-            $new_end = $new['end'];
+            $timezone = $this->Team->getTimezone();
+            $new = $this->_getStartEndWithoutExistsData(AppUtil::todayDateYmdLocal($timezone));
+            $newStart = $new['start'];
+            $newEnd = $new['end'];
         }
 
         if ($type === self::TYPE_NEXT) {
@@ -397,15 +375,14 @@ class Term extends AppModel
             if (!$current = $this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
-            $new_start = $current['end_date'] + 1;
-            $new_end = $this->_getStartEndWithoutExistsData(strtotime("+1 day", $current['end_date']))['end'];
+            $newStart = AppUtil::dateTomorrow($current['end_date']);
+            $newEnd = $this->_getStartEndWithoutExistsData(AppUtil::dateTomorrow($current['end_date']))['end'];
         }
 
         $team = $this->Team->getCurrentTeam();
         $data = [
-            'start_date' => $new_start,
-            'end_date'   => $new_end,
-            'timezone'   => $team['Team']['timezone'],
+            'start_date' => $newStart,
+            'end_date'   => $newEnd,
             'team_id'    => $team['Team']['id'],
         ];
         $this->create();
@@ -444,56 +421,56 @@ class Term extends AppModel
 
     /**
      * @param $option
-     * @param $start_term_month
-     * @param $border_months
-     * @param $timezone
+     * @param $startTermMonth
+     * @param $borderMonths
      *
      * @return bool|mixed
-     * @throws Exception
      */
-    public function updateTermData($option, $start_term_month, $border_months, $timezone)
+    public function updateTermData($option, $startTermMonth, $borderMonths)
     {
-        $save_data = $this->getSaveDataBeforeUpdate($option, $start_term_month, $border_months, $timezone);
-        $res = $this->saveAll($save_data);
+        $saveData = $this->getSaveDataBeforeUpdate($option, $startTermMonth, $borderMonths);
+        $res = $this->saveAll($saveData);
         return $res;
     }
 
-    public function getSaveDataBeforeUpdate($option, $start_term_month, $border_months, $timezone)
+    public function getSaveDataBeforeUpdate($option, $startTermMonth, $borderMonths)
     {
-        $current_term = $this->getCurrentTermData();
+        $currentTerm = $this->getCurrentTermData();
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
-            $new_current = $this->_getStartEndWithoutExistsData(REQUEST_TIMESTAMP, $start_term_month, $border_months,
-                $timezone);
-            $new_next = $this->_getStartEndWithoutExistsData(strtotime('+1 day', $new_current['end']),
-                $start_term_month,
-                $border_months, $timezone);
+            $timezone = $this->Team->getTimezone();
+            $todayDate = AppUtil::todayDateYmdLocal($timezone);
+            $newCurrent = $this->_getStartEndWithoutExistsData($todayDate, $startTermMonth, $borderMonths);
+            $newNext = $this->_getStartEndWithoutExistsData(
+                AppUtil::dateTomorrow($newCurrent['end']),
+                $startTermMonth,
+                $borderMonths
+            );
             $data = [
                 $this->getCurrentTermId() =>
                     [
                         'id'         => $this->getCurrentTermId(),
-                        'start_date' => $current_term['start_date'],
-                        'end_date'   => $new_current['end'],
-                        'timezone'   => $timezone,
+                        'start_date' => $currentTerm['start_date'],
+                        'end_date'   => $newCurrent['end'],
                     ],
                 $this->getNextTermId()    =>
                     [
                         'id'         => $this->getNextTermId(),
-                        'start_date' => $new_next['start'],
-                        'end_date'   => $new_next['end'],
-                        'timezone'   => $timezone,
+                        'start_date' => $newNext['start'],
+                        'end_date'   => $newNext['end'],
                     ]
             ];
         } else {
-            $new_next = $this->_getStartEndWithoutExistsData(strtotime('+1 day', $current_term['end_date']),
-                $start_term_month,
-                $border_months, $timezone);
+            $newNext = $this->_getStartEndWithoutExistsData(
+                AppUtil::dateTomorrow($currentTerm['end_date']),
+                $startTermMonth,
+                $borderMonths
+            );
             $data = [
                 $this->getNextTermId() =>
                     [
                         'id'         => $this->getNextTermId(),
-                        'start_date' => $current_term['end_date'] + 1,
-                        'end_date'   => $new_next['end'],
-                        'timezone'   => $timezone,
+                        'start_date' => $currentTerm['end_date'] + 1,
+                        'end_date'   => $newNext['end'],
                     ],
             ];
         }
@@ -501,91 +478,89 @@ class Term extends AppModel
         return $data;
     }
 
-    public function getNewStartEndBeforeAdd($start_term_month, $border_months, $timezone)
+    public function getNewStartEndBeforeAdd($startTermMonth, $borderMonths, $timezone)
     {
-        return $this->_getStartEndWithoutExistsData(REQUEST_TIMESTAMP, $start_term_month, $border_months, $timezone);
+        $todayDate = AppUtil::todayDateYmdLocal($timezone);
+        return $this->_getStartEndWithoutExistsData($todayDate, $startTermMonth, $borderMonths);
     }
 
     /**
      * return new start date and end date calculated
      *
-     * @param int  $target_date
-     * @param null $start_term_month
-     * @param null $border_months
-     * @param null $timezone
+     * @param string $targetDate
+     * @param null   $startTermMonth
+     * @param null   $borderMonths
      *
      * @return null|array
      */
     private function _getStartEndWithoutExistsData(
-        $target_date = REQUEST_TIMESTAMP,
-        $start_term_month = null,
-        $border_months = null,
-        $timezone = null
+        string $targetDate,
+        $startTermMonth = null,
+        $borderMonths = null
     ) {
         $team = $this->Team->getCurrentTeam();
-        if (empty($team) && (!$start_term_month || !$border_months || !$timezone)) {
+        if (empty($team) && (!$startTermMonth || !$borderMonths)) {
             return null;
         }
-        if (!$start_term_month) {
-            $start_term_month = $team['Team']['start_term_month'];
+        if (!$startTermMonth) {
+            $startTermMonth = $team['Team']['start_term_month'];
         }
-        if (!$border_months) {
-            $border_months = $team['Team']['border_months'];
+        if (!$borderMonths) {
+            $borderMonths = $team['Team']['border_months'];
         }
-        if (!$timezone) {
-            $timezone = $team['Team']['timezone'];
-        }
-
-        $start_date = strtotime(date("Y-{$start_term_month}-1", $target_date));
-        $start_date_tmp = date("Y-m-1", $start_date);
-        $end_date = strtotime($start_date_tmp . "+ {$border_months} month");
+        $startDate = date("Y-m-01", strtotime(date('Y') . "-{$startTermMonth}-01"));
+        $endDate = AppUtil::dateYmd(strtotime($startDate . " +{$borderMonths} month") - DAY);
+        //date型をリフォーマット
+        $targetDate = AppUtil::dateYmd(strtotime($targetDate));
 
         $term = [];
         //指定日時が期間内の場合 in the case of target date include the term
-        if ($start_date <= $target_date && $end_date > $target_date) {
-            $term['start'] = $start_date - $timezone * 3600;
-            $term['end'] = $end_date - 1 - $timezone * 3600;
+        if ($startDate <= $targetDate && $endDate >= $targetDate) {
+            $term['start'] = $startDate;
+            $term['end'] = $endDate;
         } //指定日時が開始日より前の場合 in the case of target date is earlier than start date
-        elseif ($target_date < $start_date) {
-            while ($target_date < $start_date) {
-                $start_date_tmp = date("Y-m-1", $start_date);
-                $start_date = strtotime($start_date_tmp . "- {$border_months} month");
+        elseif ($targetDate < $startDate) {
+            while ($targetDate < $startDate) {
+                $startDate = AppUtil::dateYmd(strtotime($startDate . " -{$borderMonths} month"));
             }
-            $term['start'] = $start_date - $timezone * 3600;
-            $start_date_tmp = date("Y-m-1", $start_date);
-            $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600 - 1;
+            $term['start'] = $startDate;
+            $term['end'] = AppUtil::dateYmd(strtotime($startDate . " +{$borderMonths} month") - DAY);
         } //終了日が指定日時より前の場合 in the case of target date is later than end date
-        elseif ($target_date > $end_date) {
-            while ($target_date > $end_date) {
-                $end_date_tmp = date("Y-m-1", $end_date);
-                $end_date = strtotime($end_date_tmp . "+ {$border_months} month");
+        elseif ($targetDate > $endDate) {
+            while ($targetDate > $endDate) {
+                $endDate = date('Y-m-t', strtotime(date('Y-m-01', strtotime($endDate)) . " +{$borderMonths} month"));
             }
-            $term['end'] = $end_date - 1 - $timezone * 3600;
-            $end_date_tmp = date("Y-m-1", $end_date);
-            $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $timezone * 3600;
+            $term['end'] = $endDate;
+            $term['start'] = AppUtil::dateYmd(
+                strtotime(date('Y-m-01', strtotime($endDate)) . " -{$borderMonths} month +1 month")
+            );
         }
         return $term;
     }
 
     /**
-     * return term data from datetime
+     * return term data from date string
      *
-     * @param int $timeStamp unixtime
+     * @param string $date
      *
      * @return array|null
      */
-    public function getTermDataByTimeStamp($timeStamp = REQUEST_TIMESTAMP)
+    public function getTermDataByDate(string $date)
     {
+        $timezone = $this->Team->getTimezone();
         $options = [
             'conditions' => [
                 'team_id'       => $this->current_team_id,
-                'start_date <=' => $timeStamp,
-                'end_date >='   => $timeStamp,
+                'start_date <=' => $date,
+                'end_date >='   => $date,
             ]
         ];
         $res = $this->find('first', $options);
-        // TODO: error logging for unexpected creating term data.
-        if (empty($res)) {
+        if (!empty($res)) {
+            $res = Hash::extract($res, 'Term');
+            $res['timezone'] = $timezone;
+            // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
+        } elseif ($this->useDbConfig != "test") {
             $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
                 __METHOD__,
                 var_export($options, true),
@@ -593,11 +568,16 @@ class Term extends AppModel
                 Debugger::trace()
             ));
         }
-        $res = Hash::extract($res, 'Term');
         return $res;
     }
 
-    public function getTermText($start_date, $end_date)
+    /**
+     * @param string $start_date
+     * @param string $end_date
+     *
+     * @return string
+     */
+    public function getTermText(string $start_date, string $end_date): string
     {
         $current = $this->getCurrentTermData();
         $previous = $this->getPreviousTermData();
@@ -609,9 +589,7 @@ class Term extends AppModel
         } elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
             return __('Next Term');
         }
-
-        return date('Y/m/d', $start_date + $this->me['timezone'] * 3600) . ' - ' .
-            date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
+        return date('Y/m/d', strtotime($start_date)) . ' - ' . date('Y/m/d', strtotime($end_date));
     }
 
     /**
@@ -645,18 +623,27 @@ class Term extends AppModel
      */
     public function findTeamIdByTimezone(float $timezone, string $targetDate): array
     {
-        $targetTimestamp = strtotime($targetDate) - $timezone * HOUR;
         $options = [
             'conditions' => [
-                'start_date <=' => $targetTimestamp,
-                'end_date >='   => $targetTimestamp,
-                'timezone'      => $timezone,
+                'start_date <=' => $targetDate,
+                'end_date >='   => $targetDate,
             ],
             'fields'     => [
                 'team_id'
-            ]
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Team.id = Term.team_id',
+                        'Team.timezone' => $timezone,
+                        'Team.del_flg'  => false,
+                    ]
+                ],
+            ],
         ];
-
         $ret = $this->findWithoutTeamId('list', $options);
         // キーに特別な意味を持たせないように、歯抜けのキーを再採番
         $ret = array_merge($ret);

@@ -169,10 +169,14 @@ class Goal extends AppModel
             ],
         ],
         'start_date'       => [
-            'numeric' => ['rule' => ['numeric']]
+            'dateYmd' => [
+                'rule' => ['date', 'ymd']
+            ]
         ],
         'end_date'         => [
-            'numeric' => ['rule' => ['numeric']]
+            'dateYmd' => [
+                'rule' => ['date', 'ymd']
+            ]
         ],
         'start_value'      => [
             'maxLength' => ['rule' => ['maxLength', 15]],
@@ -324,15 +328,14 @@ class Goal extends AppModel
     /**
      * 評価期間内かチェック
      *
-     * @param  string $date
+     * @param  array $date
      *
      * @return bool
      */
-    function checkRangeTerm($date)
+    function checkRangeTerm(array $date)
     {
         $date = array_shift($date);
         $goalTerm = $this->getGoalTermFromPost($this->data);
-        $date = AppUtil::getEndDateByTimezone($date, $goalTerm['timezone']);
 
         return $goalTerm['start_date'] <= $date && $date <= $goalTerm['end_date'];
     }
@@ -400,7 +403,7 @@ class Goal extends AppModel
             return true;
         }
         // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
-        $term = $this->Team->Term->getTermDataByTimeStamp($goal['end_date']);
+        $term = $this->Team->Term->getTermDataByDate($goal['end_date']);
 
         // UTCでのタイムスタンプ取得
         $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
@@ -510,17 +513,13 @@ class Goal extends AppModel
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
             $currentTermData = $this->Team->Term->getCurrentTermData();
-            $localDate = date('Y-m-d', time() + $currentTermData['timezone'] * HOUR);
-            $data['Goal']['start_date'] = AppUtil::getStartTimestampByTimezone($localDate,
-                $currentTermData['timezone']);
+            $localTodayDate = AppUtil::todayDateYmdLocal($currentTermData['timezone']);
+            $data['Goal']['start_date'] = $localTodayDate;
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
 
-        if (!empty($data['Goal']['end_date'])) {
-            //期限を+1day-1secする
-            $data['Goal']['end_date'] = AppUtil::getEndDateByTimezone($data['Goal']['end_date'], $goalTerm['timezone']);
-        } else {
+        if (empty($data['Goal']['end_date'])) {
             //指定なしの場合は期の終了日
             $data['Goal']['end_date'] = $goalTerm['end_date'];
         }
@@ -2002,8 +2001,8 @@ class Goal extends AppModel
         $end_date = $res['Goal']['end_date'];
 
         $is_present_term_flag = false;
-        if (intval($end_date) >= $this->Team->Term->getCurrentTermData()['start_date']
-            && intval($end_date) <= $this->Team->Term->getCurrentTermData()['end_date']
+        if ($end_date >= $this->Team->Term->getCurrentTermData()['start_date']
+            && $end_date <= $this->Team->Term->getCurrentTermData()['end_date']
         ) {
             $is_present_term_flag = true;
         }
@@ -2117,9 +2116,9 @@ class Goal extends AppModel
             return false;
         }
 
-        /** @var Term $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('Term');
-        return $EvaluateTerm->getTermDataByTimeStamp($goal['Goal']['end_date']);
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        return $Term->getTermDataByDate($goal['Goal']['end_date']);
     }
 
     public function getRelatedGoals($user_id = null)
@@ -2354,16 +2353,18 @@ class Goal extends AppModel
     /**
      * 自分が所属するゴール(リーダー or コラボレータ)のゴール名一覧を取得
      *
-     * @param  int
+     * @param int    $userId
+     * @param string $startDate
+     * @param string $endDate
      *
      * @return array
      */
-    function findNameListAsMember(int $userId, int $startDateTime, int $endDateTime): array
+    function findNameListAsMember(int $userId, string $startDate, string $endDate): array
     {
         $options = [
             'conditions' => [
-                'Goal.end_date >='   => $startDateTime,
-                'Goal.end_date <='   => $endDateTime,
+                'Goal.end_date >='   => $startDate,
+                'Goal.end_date <='   => $endDate,
                 'Goal.team_id'       => $this->current_team_id,
                 'GoalMember.user_id' => $userId,
                 'GoalMember.del_flg' => false

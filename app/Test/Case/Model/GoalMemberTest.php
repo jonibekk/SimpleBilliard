@@ -105,10 +105,10 @@ class GoalMemberTest extends GoalousTestCase
             'name'             => 'test',
             'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
-            'start_date'       => $current_term['end_date'] - 20,
-            'end_date'         => $current_term['end_date'] - 10,
-            'goal_category_id' => 1,
+            'start_date'       => AppUtil::dateBefore($current_term['end_date'],2),
+            'end_date'         => AppUtil::dateBefore($current_term['end_date'],1),
         ];
+
         $this->GoalMember->Goal->save($params);
         $current_goal_id = $this->GoalMember->Goal->getLastInsertID();
 
@@ -116,12 +116,12 @@ class GoalMemberTest extends GoalousTestCase
             'user_id'          => $user_id,
             'team_id'          => $team_id,
             'name'             => 'test',
-            'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
-            'start_date'       => $current_term['end_date'] + 10,
-            'end_date'         => $current_term['end_date'] + 20,
+            'start_date'       => AppUtil::dateAfter($current_term['end_date'],1),
+            'end_date'         => AppUtil::dateAfter($current_term['end_date'],2),
             'goal_category_id' => 1,
         ];
+
         $this->GoalMember->Goal->create();
         $this->GoalMember->Goal->save($params);
         $next_goal_id = $this->GoalMember->Goal->getLastInsertID();
@@ -485,7 +485,7 @@ class GoalMemberTest extends GoalousTestCase
             (int)1 => '3',
             (int)7 => '3'
         ];
-        $actual = $this->GoalMember->findGoalPriorities(1, 0, 100000000000000000);
+        $actual = $this->GoalMember->findGoalPriorities(1, '1980-01-01', '2020-01-01');
         $this->assertEquals($expected, $actual);
     }
 

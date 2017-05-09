@@ -266,23 +266,7 @@ class AppController extends BaseController
 
     public function _setTerm()
     {
-        $current_term = $this->Team->Term->getCurrentTermData();
-        if (!$current_term) {
-            $this->Team->Term->addTermData(Term::TYPE_CURRENT);
-        }
         $this->current_term_id = $this->Team->Term->getCurrentTermId();
-
-        $previous_team = $this->Team->Term->getPreviousTermData();
-        if (!$previous_team) {
-            $this->Team->Term->addTermData(Term::TYPE_PREVIOUS);
-        }
-        $next_team = $this->Team->Term->getNextTermData();
-        if (!$next_team) {
-            $this->Team->Term->addTermData(Term::TYPE_NEXT);
-            // 期をまたいだらキャッシュ削除
-            Cache::clear(false, 'team_info');
-            Cache::clear(false, 'user_data');
-        }
         $this->next_term_id = $this->Team->Term->getNextTermId();
     }
 

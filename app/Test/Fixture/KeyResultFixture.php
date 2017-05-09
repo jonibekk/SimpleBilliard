@@ -61,35 +61,21 @@ class KeyResultFixture extends CakeTestFixtureEx
             'charset' => 'utf8mb4'
         ),
         'start_date'          => array(
-            'type'     => 'date',
-            'null'     => false,
-            'default' => '0000-00-00',
-            'key'      => 'index',
-            'comment'  => '開始日'
+            'type'    => 'date',
+            'null'    => false,
+            'default' => null,
+            'key'     => 'index',
+            'comment' => '開始日'
         ),
         'end_date'            => array(
-            'type'     => 'date',
-            'null'     => false,
-            'default' => '0000-00-00',
-            'key'      => 'index',
-            'comment'  => '終了日'
+            'type'    => 'date',
+            'null'    => false,
+            'default' => null,
+            'key'     => 'index',
+            'comment' => '終了日'
         ),
-        'old_start_date'          => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '開始日(unixtime)'
-        ),
-        'old_end_date'            => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '終了日(unixtime)'
-        ),
+        'old_start_date'      => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'old_end_date'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'current_value'       => array(
             'type'     => 'decimal',
             'null'     => false,
@@ -149,11 +135,12 @@ class KeyResultFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'アクショントカウント'
         ),
-        'latest_actioned' => array(
+        'latest_actioned'     => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
+            'key'      => 'index',
             'comment'  => '最新アクション日時(unixtime)'
         ),
         'tkr_flg'             => array(
@@ -186,13 +173,14 @@ class KeyResultFixture extends CakeTestFixtureEx
             'comment'  => '更新した日付時刻'
         ),
         'indexes'             => array(
-            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
-            'team_id'    => array('column' => 'team_id', 'unique' => 0),
-            'goal_id'    => array('column' => 'goal_id', 'unique' => 0),
-            'modified'   => array('column' => 'modified', 'unique' => 0),
-            'user_id'    => array('column' => 'user_id', 'unique' => 0),
-            'start_date' => array('column' => 'start_date', 'unique' => 0),
-            'end_date'   => array('column' => 'end_date', 'unique' => 0)
+            'PRIMARY'         => array('column' => 'id', 'unique' => 1),
+            'team_id'         => array('column' => 'team_id', 'unique' => 0),
+            'goal_id'         => array('column' => 'goal_id', 'unique' => 0),
+            'modified'        => array('column' => 'modified', 'unique' => 0),
+            'user_id'         => array('column' => 'user_id', 'unique' => 0),
+            'latest_actioned' => array('column' => 'latest_actioned', 'unique' => 0),
+            'start_date'      => array('column' => 'start_date', 'unique' => 0),
+            'end_date'        => array('column' => 'end_date', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
@@ -245,7 +233,6 @@ class KeyResultFixture extends CakeTestFixtureEx
             'goal_id'       => '1',
             'user_id'       => '1',
             'name'          => 'Completed key result',
-            'completed'     => '1',
             'value_unit'    => '2',
             'start_value'   => '0',
             'target_value'  => '1',

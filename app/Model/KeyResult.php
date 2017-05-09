@@ -244,22 +244,17 @@ class KeyResult extends AppModel
     {
         $startDate = array_shift($val);
         $endDate = Hash::get($this->data, 'KeyResult.end_date');
+
         if (empty($startDate) || empty($endDate)) {
             return true;
         }
 
-        // 開始日が終了日を超えてないか
-        // getCurrentTermDataの方が効率は良いがテストが通らないのでDBから直で取得
-        // ※複数のtimezoneで問題ないかのテスト時、getCurrentTermDataだとキャッシュしてしまうので最新のデータが取得できない
-//        $timezone = $this->Team->Term->getCurrentTermData()['timezone'];
-        $timezone = $this->Team->Term->getTermDataByTimeStamp(REQUEST_TIMESTAMP)['timezone'];
+        // 比較しやすいようにdate型を利フォーマット
+        $startDate = AppUtil::dateYmd(strtotime($startDate));
+        $endDate = AppUtil::dateYmd(strtotime($endDate));
 
-        // FIXME:タイムスタンプで比較すると不具合が生じる為、日付文字列を数値に変換して比較する
-        // 参照:http://54.250.147.97:8080/browse/GL-5622
-        // 入力した日付を数値に変換
-        $startDateInt = (int)date('Ymd', strtotime($startDate));
-        $endDateInt = (int)date('Ymd', strtotime($endDate));
-        if ($startDateInt > $endDateInt) {
+        // 開始日が終了日を超えてないか
+        if ($startDate > $endDate) {
             $this->invalidate('start_date', __("Start date has expired."));
             return false;
         }
@@ -283,13 +278,7 @@ class KeyResult extends AppModel
         }
 
         // ゴールの開始・終了日の範囲内か
-        $utcGoalStartTimeStamp = $goal['start_date'] + ($timezone * HOUR);
-        $utcGoalEndTimeStamp = $goal['end_date'] + ($timezone * HOUR);
-        $goalStartDateInt = (int)date('Ymd', $utcGoalStartTimeStamp);
-        $goalEndDateInt = (int)date('Ymd', $utcGoalEndTimeStamp);
-        if ($startDateInt >= $goalStartDateInt
-            && $endDateInt <= $goalEndDateInt
-        ) {
+        if ($startDate >= $goal['start_date'] && $endDate <= $goal['end_date']) {
             return true;
         }
 
@@ -512,18 +501,6 @@ class KeyResult extends AppModel
             throw new RuntimeException(__("Failed to save KR."));
         }
         $this->validate = $validate_backup;
-
-        // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
-        //時間をunixtimeに変換
-        if (!empty($data['KeyResult']['start_date'])) {
-            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
-        }
-        //期限を+1day-1secする
-        if (!empty($data['KeyResult']['end_date'])) {
-            $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
-        }
         $this->create();
         if (!$this->save($data)) {
             throw new RuntimeException(__("Failed to save KR."));
@@ -1091,13 +1068,13 @@ class KeyResult extends AppModel
     /**
      * KR日次バッチ用にKR一覧を取得
      *
-     * @param  int $teamId
-     * @param  int $fromTimestamp
-     * @param int  $toTimestamp
+     * @param  int    $teamId
+     * @param  string $fromDate
+     * @param  string $toDate
      *
      * @return array
      */
-    public function findAllForSavingDailyLog(int $teamId, int $fromTimestamp, int $toTimestamp): array
+    public function findAllForSavingDailyLog(int $teamId, string $fromDate, string $toDate): array
     {
         $backupedVirtualFields = $this->virtualFields;
         $this->virtualFields = ['key_result_id' => 'KeyResult.id'];
@@ -1105,8 +1082,8 @@ class KeyResult extends AppModel
         $options = [
             'conditions' => [
                 'KeyResult.team_id'     => $teamId,
-                'KeyResult.end_date >=' => $fromTimestamp,
-                'KeyResult.end_date <=' => $toTimestamp,
+                'KeyResult.end_date >=' => $fromDate,
+                'KeyResult.end_date <=' => $toDate,
             ],
             'fields'     => [
                 'key_result_id',
@@ -1143,13 +1120,14 @@ class KeyResult extends AppModel
         }
 
         // 保存データ定義
+        $timezone = $this->Team->getTimezone();
         $isCurrent = $termAfterUpdate == Term::TYPE_CURRENT;
         $termData = $this->Team->Term->getTermData($termAfterUpdate);
-        $startDate = $isCurrent ? time() : $termData['start_date'];
+        $startDate = $isCurrent ? AppUtil::todayDateYmdLocal($timezone) : $termData['start_date'];
         $endDate = $termData['end_date'];
-
         // ゴールに紐づくKRの期を一括アップデート
-        $res = $this->updateAll(['KeyResult.start_date' => $startDate, 'KeyResult.end_date' => $endDate],
+        // TODO: unittestにおいてsqliteの場合、updateAll()で発行されるクエリ内にアペンドされる変数になぜかデリミタが付かない。。ので、明示的に付ける対応をした。
+        $res = $this->updateAll(['KeyResult.start_date' => "'$startDate'", 'KeyResult.end_date' => "'$endDate'"],
             ['KeyResult.goal_id' => $goalId]);
         return $res;
     }
