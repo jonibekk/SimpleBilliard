@@ -681,7 +681,7 @@ class Term extends AppModel
      *
      * @return bool
      */
-    public function updateCurrentTermEndDate(string $endDate): bool
+    public function updateCurrentRange(string $endDate): bool
     {
         $currentTermId = $this->getCurrentTermId();
         $this->id = $currentTermId;
@@ -696,7 +696,7 @@ class Term extends AppModel
      *
      * @return bool
      */
-    public function updateNextTermDate(string $startDate, string $endDate): bool
+    public function updateNextRange(string $startDate, string $endDate): bool
     {
         $nextTermId = $this->getNextTermId();
         $this->id = $nextTermId;

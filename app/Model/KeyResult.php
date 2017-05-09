@@ -1139,7 +1139,7 @@ class KeyResult extends AppModel
      *
      * @return bool
      */
-    function updateInCurrentTerm(int $goalId, string $startDate, string $endDate): bool
+    function updateCurrentTermRange(int $goalId, string $startDate, string $endDate): bool
     {
         $res = $this->updateAll(
             [
@@ -1170,7 +1170,7 @@ class KeyResult extends AppModel
      *
      * @return bool
      */
-    function updateInNextTerm(int $goalId, string $startDate, string $endDate): bool
+    function updateNextTermRange(int $goalId, string $startDate, string $endDate): bool
     {
         $res = $this->updateAll(
             [

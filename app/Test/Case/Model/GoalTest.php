@@ -1033,7 +1033,7 @@ class GoalTest extends GoalousTestCase
         $this->assertNotEmpty($goals);
     }
 
-    function test_updateInCurrentTerm()
+    function test_updateCurrentTermRange()
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
@@ -1071,7 +1071,7 @@ class GoalTest extends GoalousTestCase
         ]);
 
         // update goal term
-        $Goal->updateInCurrentTerm($newNextTermStart,$newNextTermEnd);
+        $Goal->updateCurrentTermRange($newNextTermStart,$newNextTermEnd);
         $newCurrentLastDate = date('Y-m-t', strtotime("{$newNextTermStart} +1 month"));
 
         // 前期ゴールが変更されていないこと
@@ -1095,7 +1095,7 @@ class GoalTest extends GoalousTestCase
         $this->assertEquals($newNextGoal['end_date'], $nextGoal['end_date']);
     }
 
-    function test_updateInNextTerm()
+    function test_updateNextTermRange()
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
@@ -1140,7 +1140,7 @@ class GoalTest extends GoalousTestCase
         ]);
 
         // update goal term
-        $Goal->updateInNextTerm($newNextTermStart, $newNextTermEnd);
+        $Goal->updateNextTermRange($newNextTermStart, $newNextTermEnd);
 
         // 前期ゴールが変更されていないこと
         $newPreviousGoal = $Goal->getById($previousGoalId);

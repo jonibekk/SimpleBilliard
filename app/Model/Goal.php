@@ -2416,7 +2416,7 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function findForTermUpdating(string $startDate, string $endDate): array
+    function findForTermRangeUpdating(string $startDate, string $endDate): array
     {
         $options = [
             'conditions' => [
@@ -2449,7 +2449,7 @@ class Goal extends AppModel
      *
      * @return bool
      */
-    function updateInCurrentTerm(string $startDate, string $endDate): bool
+    function updateCurrentTermRange(string $startDate, string $endDate): bool
     {
         $res = $this->updateAll(
             [
@@ -2477,7 +2477,7 @@ class Goal extends AppModel
      *
      * @return bool
      */
-    function updateInNextTerm(string $startDate, string $endDate): bool
+    function updateNextTermRange(string $startDate, string $endDate): bool
     {
         // ゴール終了日だけ来期終了日を超えてる場合
         $res = $this->updateAll(
