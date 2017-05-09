@@ -290,13 +290,8 @@ class GoalsController extends AppController
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goalId);
 
-        //もしそれがゴールの期限を超える場合はゴールの期限にする
-        $endDate = strtotime('+2 weeks', REQUEST_TIMESTAMP);
-        if ($endDate > $goal['Goal']['end_date']) {
-            $endDate = $goal['Goal']['end_date'];
-        }
-        $limitEndDate = date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR);
-        $limitStartDate = date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR);
+        $limitEndDate = date('Y/m/d', strtotime($goal['Goal']['end_date']));
+        $limitStartDate = date('Y/m/d', strtotime($goal['Goal']['start_date']));
 
         $this->set(compact(
             'goal',
@@ -1105,10 +1100,10 @@ class GoalsController extends AppController
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
 
-        $kr_start_date_format = date('Y/m/d', $key_result['KeyResult']['start_date'] + $goal_term['timezone'] * HOUR);
-        $kr_end_date_format = date('Y/m/d', $key_result['KeyResult']['end_date'] + $goal_term['timezone'] * HOUR);
-        $limit_end_date = date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
-        $limit_start_date = date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
+        $kr_start_date_format = date('Y/m/d', strtotime($key_result['KeyResult']['start_date']));
+        $kr_end_date_format = date('Y/m/d', strtotime($key_result['KeyResult']['end_date']));
+        $limit_end_date = date('Y/m/d', strtotime($goal['Goal']['end_date']));
+        $limit_start_date = date('Y/m/d', strtotime($goal['Goal']['start_date']));
         $this->set(compact(
             'goal',
             'goal_id',
@@ -1896,6 +1891,7 @@ class GoalsController extends AppController
 
     /**
      * krのプログレスのみを1カラムで表示
+     *
      * @return
      */
     public function kr_progress()

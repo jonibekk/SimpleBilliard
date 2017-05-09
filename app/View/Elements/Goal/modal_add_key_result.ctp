@@ -54,12 +54,13 @@
                 <li>
                     <i class="fa fa-bullseye"></i>
                     <?= h($goal['KeyResult']['target_value']) ?>
-                    (← <?= h($goal['KeyResult']['start_value']) ?>)<?= $krValueUnitList[$goal['KeyResult']['value_unit']] ?>
+                    (← <?= h($goal['KeyResult']['start_value']) ?>
+                    )<?= $krValueUnitList[$goal['KeyResult']['value_unit']] ?>
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR) ?>
-                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR) ?> - )
+                    <?= date('Y/m/d', strtotime($goal['Goal']['end_date'])) ?>
+                    (← <?= date('Y/m/d', strtotime($goal['Goal']['start_date'])) ?> - )
                     <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
                     <?php endif ?>
@@ -108,7 +109,8 @@
                                             'options'             => $krValueUnitList
                                         ]) ?>
                                 </div>
-                                <span class="goals-create-input-form-unit-label js-display-short-unit"><?= $krShortValueUnitList[KeyResult::UNIT_PERCENT] ?></span>
+                                <span
+                                    class="goals-create-input-form-unit-label js-display-short-unit"><?= $krShortValueUnitList[KeyResult::UNIT_PERCENT] ?></span>
                             </div>
                             <div class="goals-create-layout-flex mod-child js-kr-start-end-value">
                                 <?=
@@ -123,31 +125,32 @@
                                         'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).",KeyResult::MAX_LENGTH_VALUE),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).",
+                                            KeyResult::MAX_LENGTH_VALUE),
                                         "data-bv-notempty-message"     => __("Input is required."),
                                         'data-bv-numeric-message'      => __("Please enter a number."),
                                     ]) ?>
 
-                              <span class="goals-create-input-form-tkr-range-symbol">
+                                <span class="goals-create-input-form-tkr-range-symbol">
                                 <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                               </span>
-                              <?=
-                              $this->Form->input('KeyResult.target_value',
-                                  [
-                                      'label'                        => false,
-                                      'wrapInput'                    => 'hhh',
-                                      'type'                         => 'number',
-                                      'step'                         => '0.1',
-                                      'default'                      => 100,
-                                      'required'                     => true,
-                                      'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
-                                      'data-bv-stringlength'         => 'true',
-                                      'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
-                                      'data-bv-stringlength-message' => __(
-                                          "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
-                                      "data-bv-notempty-message"     => __("Input is required."),
-                                      'data-bv-numeric-message'      => __("Please enter a number."),
-                                  ]) ?>
+                                <?=
+                                $this->Form->input('KeyResult.target_value',
+                                    [
+                                        'label'                        => false,
+                                        'wrapInput'                    => 'hhh',
+                                        'type'                         => 'number',
+                                        'step'                         => '0.1',
+                                        'default'                      => 100,
+                                        'required'                     => true,
+                                        'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => KeyResult::MAX_LENGTH_VALUE,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", KeyResult::MAX_LENGTH_VALUE),
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-numeric-message'      => __("Please enter a number."),
+                                    ]) ?>
                             </div>
                         </div>
                     </div>
@@ -276,21 +279,21 @@
     </div>
 </div>
 <script>
-$(function() {
-  var kr_short_value_unit_list = <?= isset($krShortValueUnitList) ? json_encode($krShortValueUnitList
-  ) : "''" ?>;
-  $(document).on('change', '.js-select-value-unit', function() {
-      var selected_unit = $(this).val();
-      $('.js-display-short-unit').html(kr_short_value_unit_list[selected_unit]);
+    $(function () {
+        var kr_short_value_unit_list = <?= isset($krShortValueUnitList) ? json_encode($krShortValueUnitList
+        ) : "''" ?>;
+        $(document).on('change', '.js-select-value-unit', function () {
+            var selected_unit = $(this).val();
+            $('.js-display-short-unit').html(kr_short_value_unit_list[selected_unit]);
 
-      var no_value = '<?= KeyResult::UNIT_BINARY ?>';
-      var start_end_area = $('.js-kr-start-end-value');
-      if (selected_unit == no_value) {
-          start_end_area.hide();
-      } else {
-          start_end_area.show();
-      }
-   });
-});
+            var no_value = '<?= KeyResult::UNIT_BINARY ?>';
+            var start_end_area = $('.js-kr-start-end-value');
+            if (selected_unit == no_value) {
+                start_end_area.hide();
+            } else {
+                start_end_area.show();
+            }
+        });
+    });
 </script>
 <?= $this->App->viewEndComment() ?>

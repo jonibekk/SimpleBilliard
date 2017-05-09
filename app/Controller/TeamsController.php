@@ -134,7 +134,6 @@ class TeamsController extends AppController
         unset($team['Team']['id']);
         $term_start_date = $this->Team->Term->getCurrentTermData()['start_date'];
         $term_end_date = $this->Team->Term->getCurrentTermData()['end_date'];
-        $term_end_date = $term_end_date - 1;
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
@@ -163,18 +162,18 @@ class TeamsController extends AppController
         $current_eval_is_started = $this->Team->Term->isStartedEvaluation($current_term_id);
         $current_term = $this->Team->Term->getCurrentTermData();
         $current_term_start_date = Hash::get($current_term, 'start_date');
-        $current_term_end_date = Hash::get($current_term, 'end_date') - 1;
+        $current_term_end_date = Hash::get($current_term, 'end_date');
         $current_term_timezone = Hash::get($current_term, 'timezone');
 
         $previous_eval_is_frozen = $this->Team->Term->checkFrozenEvaluateTerm($previous_term_id);
         $previous_eval_is_started = $this->Team->Term->isStartedEvaluation($previous_term_id);
         $previous_term = $this->Team->Term->getPreviousTermData();
         $previous_term_start_date = Hash::get($previous_term, 'start_date');
-        $previous_term_end_date = Hash::get($previous_term, 'end_date') - 1;
+        $previous_term_end_date = Hash::get($previous_term, 'end_date');
         $previous_term_timezone = Hash::get($previous_term, 'timezone');
         $next_term = $this->Team->Term->getNextTermData();
         $next_term_start_date = Hash::get($next_term, 'start_date');
-        $next_term_end_date = Hash::get($next_term, 'end_date') - 1;
+        $next_term_end_date = Hash::get($next_term, 'end_date');
         $next_term_timezone = Hash::get($next_term, 'timezone');
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
