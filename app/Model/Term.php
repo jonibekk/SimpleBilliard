@@ -65,7 +65,7 @@ class Term extends AppModel
     ];
 
     public $update_validate = [
-        'start_month'  => [
+        'start_ym'  => [
             'notBlank'            => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
@@ -698,15 +698,12 @@ class Term extends AppModel
      */
     public function updateNextRange(string $startDate, string $endDate): bool
     {
-        $nextTermId = $this->getNextTermId();
-        $this->id = $nextTermId;
+        $saveData = [
+            'id'         => $this->getNextTermId(),
+            'start_date' => $startDate,
+            'end_date'   => $endDate
+        ];
 
-        if (!$this->saveField('start_date', $startDate)) {
-            return false;
-        }
-        if (!$this->saveField('end_date', $endDate)) {
-            return false;
-        }
-        return true;
+        return (bool)$this->save($saveData);
     }
 }

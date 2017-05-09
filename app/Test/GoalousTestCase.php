@@ -529,7 +529,7 @@ class GoalousTestCase extends CakeTestCase
         return $topicId;
     }
 
-    function saveTerm(int $teamId, string $startDate, int $range, int $timezone = 9, bool $withNext = true)
+    function saveTerm(int $teamId, string $startDate, int $range, bool $withNext = true)
     {
         App::uses('Term', 'Model');
         /** @var Topic $Topic */
@@ -547,8 +547,7 @@ class GoalousTestCase extends CakeTestCase
             'team_id'         => $teamId,
             'start_date'      => $startDate,
             'end_date'        => date('Y-m-d', strtotime("{$startDate} + {$range}month yesterday")),
-            'evaluate_status' => 0,
-            'timezone'        => $timezone
+            'evaluate_status' => 0
         ];
         $this->Term->create();
         $this->Term->save($currentTerm);
@@ -559,8 +558,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'         => $teamId,
                 'start_date'      => $nextStartDate,
                 'end_date'        => date('Y-m-d', strtotime("{$nextStartDate} + {$range}month yesterday")),
-                'evaluate_status' => 0,
-                'timezone'        => $timezone
+                'evaluate_status' => 0
             ];
             $this->Term->create();
             $this->Term->save($nextTerm);

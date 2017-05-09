@@ -626,4 +626,103 @@ class AppModel extends Model
         return !empty($ret);
     }
 
+    /**
+     * update end_date within range
+     * - this update only 'end_date' and 'modified' columns
+     * - only updating case of that end_date is over range
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     * @param  array  $additionalConditions
+     *
+     * @return bool
+     */
+    function updatEndWithinRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        $defaultConditions = [
+            "{$this->alias}.team_id"       => $this->current_team_id,
+            "{$this->alias}.start_date >=" => $startDate,
+            "{$this->alias}.start_date <=" => $endDate,
+            "{$this->alias}.end_date >"    => $endDate
+        ];
+        $conditions = am($defaultConditions, $additionalConditions);
+
+        $res = $this->updateAll(
+            [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
+                "{$this->alias}.end_date" => "'$endDate'",
+                "{$this->alias}.modified" => time()
+            ],
+            $conditions
+        );
+        return $res;
+    }
+
+    /**
+     * update start_date, end_date within term range
+     * - this update only 'start_date', 'end_date' and 'modified' columns
+     * - only updating case of that end_date and are over range
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     * @param  array  $additionalConditions
+     *
+     * @return bool
+     */
+    function updateStartEndWithinRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        $defaultConditions = [
+            "{$this->alias}.team_id"      => $this->current_team_id,
+            "{$this->alias}.start_date >" => $endDate
+        ];
+        $conditions = am($defaultConditions, $additionalConditions);
+        $res = $this->updateAll(
+            [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
+                "{$this->alias}.start_date" => "'$startDate'",
+                "{$this->alias}.end_date"   => "'$endDate'",
+                "{$this->alias}.modified"   => time()
+            ],
+            $conditions
+        );
+        return $res;
+    }
+
+    /**
+     * update range in current term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateCurrentTermRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        if(!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * update range in next term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateNextTermRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        if(!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
+            return false;
+        }
+
+        if(!$this->updateStartEndWithinRange($startDate, $endDate, $additionalConditions)) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

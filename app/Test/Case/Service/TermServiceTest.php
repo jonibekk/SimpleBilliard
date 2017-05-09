@@ -34,7 +34,7 @@ class TermServiceTest extends GoalousTestCase
      * validate update
      * - model validation (type checking)
      * - data correct checking
-     * - start_month should be...
+     * - start_ym should be...
      *  - after this month
      *  - before end month of this term
      *
@@ -48,7 +48,7 @@ class TermServiceTest extends GoalousTestCase
 
         // valid case
         $requestData = [
-            'start_month' => date('Y-m', strtotime("+1 month")),
+            'start_ym' => date('Y-m', strtotime("+1 month")),
             'term_range'  => 6
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
@@ -56,7 +56,7 @@ class TermServiceTest extends GoalousTestCase
 
         // from this month
         $requestData = [
-            'start_month' => date('Y-m', time()),
+            'start_ym' => date('Y-m', time()),
             'term_range'  => 6
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
@@ -64,7 +64,7 @@ class TermServiceTest extends GoalousTestCase
 
         // range is too long
         $requestData = [
-            'start_month' => date('Y-m', strtotime("+1 month")),
+            'start_ym' => date('Y-m', strtotime("+1 month")),
             'term_range'  => 13
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
