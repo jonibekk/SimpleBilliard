@@ -1181,7 +1181,7 @@ class KeyResult extends AppModel
     {
         $res = $this->updateAll(
             [
-                'KeyResult.end_date' => $endDate
+                'KeyResult.end_date' => "'$endDate'"
             ],
             [
                 'KeyResult.goal_id'       => $goalId,
@@ -1196,8 +1196,8 @@ class KeyResult extends AppModel
 
         $res = $this->updateAll(
             [
-                'KeyResult.start_date' => $startDate,
-                'KeyResult.end_date'   => $endDate,
+                'KeyResult.start_date' => "'$startDate'",
+                'KeyResult.end_date'   => "'$endDate'",
             ],
             [
                 'KeyResult.goal_id'      => $goalId,

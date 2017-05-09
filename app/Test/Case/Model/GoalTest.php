@@ -1039,12 +1039,13 @@ class GoalTest extends GoalousTestCase
         $teamId = 1;
         $userId = 1;
         $startDate = '2016-10-1';
-        $endDate = '2016-03-31';
-        $newNextTermStart = '2017-2-1';
-        $newNextTermEnd = '2017-06-30';
+        $endDate = '2017-03-31';
         $range = 6;
         $this->saveTerm($teamId, $startDate, $range);
         $this->setDefaultTeamIdAndUid();
+
+        $newNextTermStart = '2017-02-1';
+        $newNextTermEnd = '2017-06-30';
 
         // create test goals
         $previousGoalId = $this->createSimpleGoal($previousGoal = [
@@ -1070,7 +1071,7 @@ class GoalTest extends GoalousTestCase
 
         // update goal term
         $Goal->updateInCurrentTerm($newNextTermStart,$newNextTermEnd);
-        $currentLastDate = date('Y-m-t', strtotime("{$newNextTermStart} +1 month"));
+        $newCurrentLastDate = date('Y-m-t', strtotime("{$newNextTermStart} +1 month"));
 
         // 前期ゴールが変更されていないこと
         $newPreviousGoal = $Goal->getById($previousGoalId);
@@ -1085,7 +1086,7 @@ class GoalTest extends GoalousTestCase
         // 今期->来期ゴールのend_dateが今期の最終日に変更されていること
         $newCurrentTonextGoal = $Goal->getById($currentToNextGoalId);
         $this->assertEquals($newCurrentTonextGoal['start_date'], $currentToNextGoal['start_date']);
-        $this->assertEquals($newCurrentTonextGoal['end_date'], $currentLastDate);
+        $this->assertEquals($newCurrentTonextGoal['end_date'], $newCurrentLastDate);
 
         // 来期ゴールが変更されていないこと
         $newNextGoal = $Goal->getById($nextGoalId);
@@ -1099,39 +1100,46 @@ class GoalTest extends GoalousTestCase
         $Goal = ClassRegistry::init('Goal');
         $teamId = 1;
         $userId = 1;
-        $startDate = date('Y-m-01', strtotime('-2 month'));
+        $startDate = '2016-10-1';
+        $endDate = '2017-03-31';
+        $nextStart = '2017-04-1';
+        $nextEnd = '2017-09-30';
         $range = 6;
         $this->saveTerm($teamId, $startDate, $range);
         $this->setDefaultTeamIdAndUid();
 
+        $newNextTermStart = '2017-01-01';
+        $newNextTermEnd = '2017-05-31';
+
         // create test goals
         $previousGoalId = $this->createSimpleGoal($previousGoal = [
             'team_id'    => $teamId,
-            'start_date' => date('Y-m-01', strtotime('-7 month')),
-            'end_date'   => date('Y-m-t', strtotime('-6 month'))
+            'start_date' => '2016-08-01',
+            'end_date'   => '2016-09-30'
         ]);
         $currentGoalId = $this->createSimpleGoal($currentGoal = [
             'team_id'    => $teamId,
-            'start_date' => date('Y-m-01', strtotime('-1 month')),
-            'end_date'   => date('Y-m-t', strtotime('+1 month'))
-        ]);
-        $currentToNextGoalId = $this->createSimpleGoal($currentToNextGoal = [
-            'team_id'    => $teamId,
-            'start_date' => date('Y-m-01', strtotime('+1 month')),
-            'end_date'   => date('Y-m-t', strtotime('+3 month'))
+            'start_date' => '2016-10-1',
+            'end_date'   => '2016-12-31'
         ]);
         $nextGoalId = $this->createSimpleGoal($nextGoal = [
             'team_id'    => $teamId,
-            'start_date' => date('Y-m-01', strtotime('+3 month')),
-            'end_date'   => date('Y-m-t', strtotime('+5 month'))
+            'start_date' => '2017-04-01',
+            'end_date'   => '2017-04-30'
+        ]);
+        $nextToOverGoalId = $this->createSimpleGoal($nextToOverGoal = [
+            'team_id'    => $teamId,
+            'start_date' => '2017-04-01',
+            'end_date'   => '2017-08-31'
+        ]);
+        $overNextGoalId = $this->createSimpleGoal($overNextGoal = [
+            'team_id'    => $teamId,
+            'start_date' => '2017-06-01',
+            'end_date'   => '2017-08-31'
         ]);
 
         // update goal term
-        $Goal->updateInNextTerm(
-            $newNextTermStart = date('Y-m-01', strtotime('+2 month')),
-            $newNextTermEnd = date('Y-m-t', strtotime('+6 month'))
-        );
-        $currentLastDate = date('Y-m-t', strtotime("{$newNextTermStart} +1 month"));
+        $Goal->updateInNextTerm($newNextTermStart, $newNextTermEnd);
 
         // 前期ゴールが変更されていないこと
         $newPreviousGoal = $Goal->getById($previousGoalId);
@@ -1143,14 +1151,19 @@ class GoalTest extends GoalousTestCase
         $this->assertEquals($newCurrentGoal['start_date'], $currentGoal['start_date']);
         $this->assertEquals($newCurrentGoal['end_date'], $currentGoal['end_date']);
 
-        // 今期->来期ゴールのend_dateが今期の最終日に変更されていること
-        $newCurrentTonextGoal = $Goal->getById($currentToNextGoalId);
-        $this->assertEquals($newCurrentTonextGoal['start_date'], $currentToNextGoal['start_date']);
-        $this->assertEquals($newCurrentTonextGoal['end_date'], $currentLastDate);
-
         // 来期ゴールが変更されていないこと
         $newNextGoal = $Goal->getById($nextGoalId);
         $this->assertEquals($newNextGoal['start_date'], $nextGoal['start_date']);
         $this->assertEquals($newNextGoal['end_date'], $nextGoal['end_date']);
+
+        // 来期->来期超えゴールのend_dateが来期の最終日に変更されていること
+        $newNextToOverGoal = $Goal->getById($nextToOverGoalId);
+        $this->assertEquals($newNextToOverGoal['start_date'], $nextToOverGoal['start_date']);
+        $this->assertEquals($newNextToOverGoal['end_date'], $newNextTermEnd);
+
+        // 来期超えゴールの開始日,終了日が変更されていること
+        $newOverNextGoal = $Goal->getById($overNextGoalId);
+        $this->assertEquals($newOverNextGoal['start_date'], $newNextTermStart);
+        $this->assertEquals($newOverNextGoal['end_date'], $newNextTermEnd);
     }
 }
