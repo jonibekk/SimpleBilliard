@@ -1417,8 +1417,8 @@ class GoalsController extends AppController
                         $record['collabo_type'] = ($c_v['type'] == GoalMember::TYPE_OWNER) ?
                             __("L") : __("C");
                         $record['goal'] = $c_v['Goal']['name'];
-                        $record['end_date'] = date("Y/m/d", strtotime($c_v['Goal']['end_date']));
-                        $record['start_date'] = date("Y/m/d", strtotime($c_v['Goal']['start_date']));
+                        $record['end_date'] = AppUtil::dateYmdReformat($c_v['Goal']['end_date'], "/");
+                        $record['start_date'] = AppUtil::dateYmdReformat($c_v['Goal']['start_date'], "/");
                         $record['description'] = $c_v['Goal']['description'];
                         $record['priority'] = $c_v['priority'];
 
