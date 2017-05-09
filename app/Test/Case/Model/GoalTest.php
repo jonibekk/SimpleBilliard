@@ -31,7 +31,8 @@ class GoalTest extends GoalousTestCase
         'app.team_member',
         'app.local_name',
         'app.goal_category',
-        'app.kr_progress_log'
+        'app.kr_progress_log',
+        'app.label'
     );
 
     /**
@@ -597,9 +598,8 @@ class GoalTest extends GoalousTestCase
         $this->current_date = REQUEST_TIMESTAMP;
         $this->start_date = $this->Goal->Team->Term->getCurrentTermData()['start_date'];
         $this->end_date = $this->Goal->Team->Term->getCurrentTermData()['end_date'];
-        $timezone = $this->Goal->Team->Term->getCurrentTermData()['timezone'];
-        $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
-        $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
+        $this->start_date_format = $this->start_date;
+        $this->end_date_format = $this->end_date;
 
     }
 
@@ -694,8 +694,8 @@ class GoalTest extends GoalousTestCase
             'user_id'          => 1,
             'team_id'          => 1,
             'purpose_id'       => 1,
-            'start_date'       => $term['start_date'] + 1,
-            'end_date'         => $term['end_date'] - 1,
+            'start_date'       => $term['start_date'],
+            'end_date'         => $term['end_date'],
             'goal_category_id' => 1,
             'name'             => 'test',
         ];
@@ -705,8 +705,8 @@ class GoalTest extends GoalousTestCase
             'user_id'          => 2,
             'team_id'          => 1,
             'purpose_id'       => 1,
-            'start_date'       => $term['start_date'] + 1,
-            'end_date'         => $term['end_date'] - 1,
+            'start_date'       => $term['start_date'],
+            'end_date'         => $term['end_date'],
             'goal_category_id' => 1,
             'name'             => 'test',
         ];
@@ -722,8 +722,8 @@ class GoalTest extends GoalousTestCase
             'goal_id'      => $goal_id,
             'team_id'      => 1,
             'user_id'      => 1,
-            'start_date'   => $this->start_date + 1,
-            'end_date'     => $this->end_date - 1,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
             'value_unit'   => 1,
             'start_value'  => 0,
             'target_value' => 100,
@@ -742,11 +742,12 @@ class GoalTest extends GoalousTestCase
     function testIsPresentTermGoalPatternTrue()
     {
         $this->setDefault();
+        $timezone = $this->Team->getTimezone();
         $goal_data = [
             'user_id'          => 1,
             'team_id'          => 1,
             'purpose_id'       => 1,
-            'start_date'       => REQUEST_TIMESTAMP,
+            'start_date'       => AppUtil::todayDateYmdLocal($timezone),
             'end_date'         => $this->Goal->Team->Term->getCurrentTermData()['end_date'],
             'goal_category_id' => 1,
             'name'             => 'test',
@@ -922,9 +923,9 @@ class GoalTest extends GoalousTestCase
     function testGetGoalTermData()
     {
         $this->setDefault();
-
-        $term = $this->Goal->getGoalTermData(8);
-        $this->assertEquals(2, $term['id']);
+        $goalId = $this->createGoal(1);
+        $term = $this->Goal->getGoalTermData($goalId);
+        $this->assertEquals(1, $term['id']);
         $term = $this->Goal->getGoalTermData(999999);
         $this->assertFalse($term);
     }

@@ -244,9 +244,14 @@ class KeyResult extends AppModel
     {
         $startDate = array_shift($val);
         $endDate = Hash::get($this->data, 'KeyResult.end_date');
+
         if (empty($startDate) || empty($endDate)) {
             return true;
         }
+
+        // 比較しやすいようにdate型を利フォーマット
+        $startDate = AppUtil::dateYmd(strtotime($startDate));
+        $endDate = AppUtil::dateYmd(strtotime($endDate));
 
         // 開始日が終了日を超えてないか
         if ($startDate > $endDate) {
@@ -496,18 +501,6 @@ class KeyResult extends AppModel
             throw new RuntimeException(__("Failed to save KR."));
         }
         $this->validate = $validate_backup;
-
-        // ゴールが属している評価期間データ
-        $goal_term = $this->Goal->getGoalTermData($goal_id);
-        //時間をunixtimeに変換
-        if (!empty($data['KeyResult']['start_date'])) {
-            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
-        }
-        //期限を+1day-1secする
-        if (!empty($data['KeyResult']['end_date'])) {
-            $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
-        }
         $this->create();
         if (!$this->save($data)) {
             throw new RuntimeException(__("Failed to save KR."));
@@ -1127,13 +1120,13 @@ class KeyResult extends AppModel
         }
 
         // 保存データ定義
+        $timezone = $this->Team->getTimezone();
         $isCurrent = $termAfterUpdate == Term::TYPE_CURRENT;
         $termData = $this->Team->Term->getTermData($termAfterUpdate);
-        $startDate = $isCurrent ? time() : $termData['start_date'];
+        $startDate = $isCurrent ? AppUtil::todayDateYmdLocal($timezone) : $termData['start_date'];
         $endDate = $termData['end_date'];
-
         // ゴールに紐づくKRの期を一括アップデート
-        $res = $this->updateAll(['KeyResult.start_date' => $startDate, 'KeyResult.end_date' => $endDate],
+        $res = $this->updateAll(['KeyResult.start_date' => "'$startDate'", 'KeyResult.end_date' => "'$endDate'"],
             ['KeyResult.goal_id' => $goalId]);
         return $res;
     }

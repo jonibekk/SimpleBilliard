@@ -390,7 +390,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 2,
-            'evaluate_term_id'  => 1,
+            'term_id'  => 1,
             'comment'           => null,
             'evaluate_score_id' => null,
             'evaluate_type'     => 3,

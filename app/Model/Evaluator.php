@@ -7,7 +7,7 @@ App::uses('AppModel', 'Model');
  * @property User $EvaluateeUser
  * @property User $EvaluatorUser
  * @property Team $Team
- * @property Term $EvaluateTerm
+ * @property Term $Term
  */
 class Evaluator extends AppModel
 {
