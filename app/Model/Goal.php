@@ -2453,7 +2453,8 @@ class Goal extends AppModel
     {
         $res = $this->updateAll(
             [
-                'Goal.end_date' => $endDate
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
+                'Goal.end_date' => "'$endDate'"
             ],
             [
                 'Goal.team_id'       => $this->current_team_id,
@@ -2482,6 +2483,7 @@ class Goal extends AppModel
         // ゴール終了日だけ来期終了日を超えてる場合
         $res = $this->updateAll(
             [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
                 'Goal.end_date' => "'$endDate'"
             ],
             [
@@ -2498,6 +2500,7 @@ class Goal extends AppModel
         // ゴール開始日, 終了日共に来期終了日を超えてる場合
         $res = $this->updateAll(
             [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
                 'Goal.start_date' => "'$startDate'",
                 'Goal.end_date'   => "'$endDate'",
             ],

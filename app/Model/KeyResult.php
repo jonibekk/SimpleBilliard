@@ -1134,6 +1134,8 @@ class KeyResult extends AppModel
 
     /**
      * update in current term
+     * - KR期限がゴール期限を超えてる場合
+     *  - KR期限をゴール期限に合わせる
      *
      * @param  string $startDate
      * @param  string $endDate
@@ -1161,10 +1163,10 @@ class KeyResult extends AppModel
 
     /**
      * update goals in next term
-     * - ゴール終了日だけ来期終了日を超えてる場合
-     *  - ゴール終了日を来期終了日にする
-     * - ゴール開始日, 終了日共に来期終了日を超えてる場合
-     *  - ゴール開始日, 終了日を来期開始日, 終了日にする
+     * - ゴール期限だけ来期期限を超えてる場合
+     *  - ゴール期限を来期期限にする
+     * - ゴール開始日, 期限共に来期期限を超えてる場合
+     *  - ゴール開始日, 期限を来期開始日, 期限にする
      *
      * @param  string $startDate
      * @param  string $endDate
@@ -1173,8 +1175,10 @@ class KeyResult extends AppModel
      */
     function updateNextTermRange(int $goalId, string $startDate, string $endDate): bool
     {
+        // KR期限だけゴール期限を超えてる場合
         $res = $this->updateAll(
             [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
                 'KeyResult.end_date' => "'$endDate'"
             ],
             [
@@ -1188,8 +1192,10 @@ class KeyResult extends AppModel
             return false;
         }
 
+        // KR開始日, 期限共にゴール期限を超えてる場合
         $res = $this->updateAll(
             [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
                 'KeyResult.start_date' => "'$startDate'",
                 'KeyResult.end_date'   => "'$endDate'",
             ],

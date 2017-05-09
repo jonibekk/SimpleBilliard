@@ -114,7 +114,7 @@ class TermService extends AppService
             $nextGoals = $Goal->findForTermRangeUpdating($newNextStartDate, $newNextEndDate);
             foreach($nextGoals as $nextGoal) {
                 if (!$KeyResult->updateNextTermRange($nextGoal['goal_id'], $nextGoal['start_date'], $nextGoal['end_date'])) {
-                    throw new Exception(sprintf("Failed to update current term key results. goal_id: %s current_start_date: %s current_term_end_date: %s", $nextGoal['goal_id'], $nextGoal['start_date'], $nextGoal['end_date']));
+                    throw new Exception(sprintf("Failed to update next term key results. goal_id: %s start_date: %s term_end_date: %s", $nextGoal['goal_id'], $nextGoal['start_date'], $nextGoal['end_date']));
                 }
             }
 
