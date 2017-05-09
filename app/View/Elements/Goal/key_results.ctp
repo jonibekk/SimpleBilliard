@@ -32,7 +32,7 @@
                 </dd>
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-clock-o"></i></dt>
                 <dd class="goal-detail-kr-info-counts-description">
-                    <?= $this->Time->format('Y/m/d', strtotime($kr['KeyResult']['end_date'])) ?>
+                    <?= AppUtil::dateYmdReformat($kr['KeyResult']['end_date'], "/") ?>
                     <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
                     <?php endif ?>
