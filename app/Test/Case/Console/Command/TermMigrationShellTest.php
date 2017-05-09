@@ -83,6 +83,7 @@ class TermMigrationShellTest extends GoalousTestCase
             'created'          => strtotime('2015-12-31 23:59:59'),
             'terms'            => [
                 [
+                    'id' => 1000,
                     'team_id'         => $teamId,
                     'start_date'      => $this->getLocalTimestampByDate('2017-01-01', $timezone),
                     'end_date'        => $this->getLocalTimestampByDate('2017-06-30', $timezone),
@@ -90,6 +91,7 @@ class TermMigrationShellTest extends GoalousTestCase
                     'timezone'        => $timezone
                 ],
                 [
+                    'id' => 1001,
                     'team_id'         => $teamId,
                     'start_date'      => $this->getLocalTimestampByDate('2017-07-01', $timezone),
                     'end_date'        => $this->getLocalTimestampByDate('2017-12-31', $timezone),
@@ -152,6 +154,7 @@ class TermMigrationShellTest extends GoalousTestCase
             'created'          => strtotime('2016-07-01'),
             'terms'            => [
                 [
+                    'id' => 1000,
                     'team_id'         => $teamId,
                     'start_date'      => $this->getLocalTimestampByDate('2016-07-01', $timezone),
                     'end_date'        => $this->getLocalTimestampByDate('2016-09-30', $timezone),
@@ -159,6 +162,7 @@ class TermMigrationShellTest extends GoalousTestCase
                     'timezone'        => $timezone
                 ],
                 [
+                    'id' => 1001,
                     'team_id'         => $teamId,
                     'start_date'      => $this->getLocalTimestampByDate('2016-10-01', $timezone),
                     'end_date'        => $this->getLocalTimestampByDate('2016-12-31', $timezone),

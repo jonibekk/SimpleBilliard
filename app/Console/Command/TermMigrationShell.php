@@ -6,6 +6,7 @@ App::uses('AppUtil', 'Util');
  *
  * @property Term $Term
  * @property Team $Team
+ * @property Evaluation $Evaluation
  */
 class TermMigrationShell extends AppShell
 {
@@ -16,7 +17,8 @@ class TermMigrationShell extends AppShell
     public $requestTimestamp;
     public $uses = array(
         'Team',
-        'Term'
+        'Term',
+        'Evaluation'
     );
 
     public function startup()
@@ -175,6 +177,7 @@ class TermMigrationShell extends AppShell
             foreach ($team['terms'] as $i => $term) {
                 // 存在する期を新しいテーブル保存用にデータを加工
                 $transferTerm = [
+                    'old_id' => $term['id'], // 新しいTermテーブルレコードとのマッピング用(evaluation.evaluate_term_idが古いIDを参照しているので新しいIDに更新する)
                     'team_id'         => $team['id'],
                     'evaluate_status' => $term['evaluate_status']
                 ];
@@ -241,11 +244,19 @@ class TermMigrationShell extends AppShell
             // 順番がばらばらなので開始日昇順で並び替えて一括保存
             $keyStartDate = Hash::extract($newTerms, '{n}.start_date');
             array_multisort($keyStartDate, SORT_ASC, $newTerms);
-            if (!$this->Term->bulkInsert($newTerms)) {
-                throw new Exception(sprintf(
-                    'Failed to transfer terms . data:%s',
-                    var_export(compact('newTerms', 'team'), true)
-                ));
+            foreach($newTerms as $newTerm) {
+                $this->Term->create();
+                if (!$this->Term->save($newTerm, false)) {
+                    throw new Exception(sprintf(
+                        'Failed to transfer terms . data:%s',
+                        var_export(compact('newTerm', 'team'), true)
+                    ));
+                }
+                // Update refer term_id from old evaluate_term_id to new term_id
+                if (!empty($newTerm['old_id'])) {
+                    $newId = $this->Term->getLastInsertID();
+                    $this->Evaluation->updateAll(['term_id' => $newId], ['term_id' => $newTerm['old_id']]);
+                }
             }
 
             $this->Term->commit();
