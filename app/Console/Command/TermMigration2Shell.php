@@ -32,6 +32,7 @@ class TermMigration2Shell extends AppShell
             $termsEachTeamId = $this->findTermsEachTeamId();
             // チームごとに全てのゴール・KRの開始日・終了日を更新
             foreach ($termsEachTeamId as $teamId => $terms) {
+                $team = $this->Team->getById($teamId);
                 // チームの全てのゴール取得
                 $teamAllGoals = $this->findAllGoalsByTeam($teamId);
                 if (empty($teamAllGoals)) {
@@ -41,7 +42,7 @@ class TermMigration2Shell extends AppShell
                 $chunkedGoals = array_chunk($teamAllGoals, 100);
                 foreach ($chunkedGoals as $goals) {
                     foreach ($goals as $goal) {
-                        $this->updateGoalAndKrs($goal, $terms);
+                        $this->updateGoalAndKrs($goal, $terms, $team);
                     }
                 }
             }
@@ -116,10 +117,11 @@ class TermMigration2Shell extends AppShell
      *
      * @param array $goal
      * @param array $terms
+     * @param array $team
      *
      * @throws Exception
      */
-    public function updateGoalAndKrs(array $goal, array $terms)
+    public function updateGoalAndKrs(array $goal, array $terms, array $team)
     {
         try {
             $this->Goal->begin();
@@ -128,7 +130,7 @@ class TermMigration2Shell extends AppShell
             $updateGoal = $this->updateGoal($goal, $terms);
 
             /* Update start_date and end_date of krs */
-            $this->updateKrs($updateGoal);
+            $this->updateKrs($updateGoal, $team);
             $this->Goal->commit();
         } catch (Exception $e) {
             $this->Goal->rollback();
@@ -204,12 +206,12 @@ class TermMigration2Shell extends AppShell
      * Update start_date and end_date of krs
      *
      * @param array $updateGoal
+     * @param array $team
      *
      * @throws Exception
      */
-    public function updateKrs(array $updateGoal)
+    public function updateKrs(array $updateGoal, array $team)
     {
-        $team = $this->Team->getById($updateGoal['team_id']);
         $krs = Hash::extract(
             $this->KeyResult->findAllByGoalId($updateGoal['id'], ['id', 'old_start_date', 'old_end_date']),
             '{n}.KeyResult'
