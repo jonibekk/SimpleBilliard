@@ -345,23 +345,20 @@ class TeamsController extends AppController
             $timezone = $this->Team->me['timezone'];
         }
         $this->_ajaxPreProcess();
-        $save_data = $this->Team->Term->getSaveDataBeforeUpdate($option, $start_term_month, $border_months,
-            $timezone);
+        $save_data = $this->Team->Term->getSaveDataBeforeUpdate($option, $start_term_month, $border_months);
         $current_id = $this->Team->Term->getCurrentTermId();
         $next_id = $this->Team->Term->getNextTermId();
         $res = [];
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
             $res = [
                 'current' => [
-                    'start_date' => date('Y/m/d',
-                        $save_data[$current_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d',
-                        $save_data[$current_id]['end_date'] + $timezone * 3600),
+                    'start_date' => date('Y/m/d', strtotime($save_data[$current_id]['start_date'])),
+                    'end_date'   => date('Y/m/d', strtotime($save_data[$current_id]['end_date'])),
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'start_date' => date('Y/m/d', strtotime($save_data[$next_id]['start_date'])),
+                    'end_date'   => date('Y/m/d', strtotime($save_data[$next_id]['end_date'])),
                     'timezone'   => $timezone,
                 ],
             ];
@@ -374,8 +371,8 @@ class TeamsController extends AppController
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'start_date' => date('Y/m/d', strtotime($save_data[$next_id]['start_date'])),
+                    'end_date'   => date('Y/m/d', strtotime($save_data[$next_id]['end_date'])),
                     'timezone'   => $timezone,
                 ],
             ];

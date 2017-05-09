@@ -22,7 +22,7 @@ App::uses('AppModel', 'Model');
  * @property Evaluator         $Evaluator
  * @property EvaluationSetting $EvaluationSetting
  * @property Evaluation        $Evaluation
- * @property Term              $EvaluateTerm
+ * @property Term              $Term
  * @property TeamVision        $TeamVision
  * @property GroupVision       $GroupVision
  * @property TeamInsight       $TeamInsight
@@ -389,10 +389,8 @@ class Team extends AppModel
         }
 
         $res = $this->Term->updateTermData(
-            $post_data['Team']['change_from'],
-            $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months'],
-            $post_data['Team']['timezone']
+            $post_data['Team']['change_from'], $post_data['Team']['start_term_month'],
+            $post_data['Team']['border_months']
         );
         //キャッシュを削除
         Cache::clear(false, 'team_info');
@@ -413,6 +411,15 @@ class Team extends AppModel
                 }, 'team_info');
         }
         return $this->current_team;
+    }
+
+    /**
+     * getting timezone
+     * @return mixed
+     */
+    function getTimezone()
+    {
+        return Hash::get($this->getCurrentTeam(), 'Team.timezone');
     }
 
     /**

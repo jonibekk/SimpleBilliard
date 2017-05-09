@@ -28,7 +28,7 @@ App::uses('AppUtil', 'Util');
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
- * @property Term        $EvaluateTerm
+ * @property Term        $Term
  * @property GoalMember  $GoalMember
  * @property Team        $Team
  * @property GoalService $GoalService
@@ -46,7 +46,7 @@ class GoalousTestCase extends CakeTestCase
         parent::setUp();
         Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
         Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
-        $this->EvaluateTerm = ClassRegistry::init('Term');
+        $this->Term = ClassRegistry::init('Term');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->Topic = ClassRegistry::init('Topic');
@@ -132,8 +132,8 @@ class GoalousTestCase extends CakeTestCase
             ],
         ];
         $data = am($default, $data);
-        $termEndTime = $this->Term->getTermData($termType)['end_date'];
-        $data['end_date'] = date('Y-m-d', $termEndTime);
+        $termEndDate = $this->Term->getTermData($termType)['end_date'];
+        $data['end_date'] = $termEndDate;
         return $data;
     }
 
@@ -181,8 +181,8 @@ class GoalousTestCase extends CakeTestCase
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $evaluateTermId = $this->Term->getLastInsertID();
         $term = $this->Term->findById($evaluateTermId);
-        $term['Term']['start_date'] -= $beforeDays * DAY;
-        $term['Term']['end_date'] += $afterDays * DAY;
+        $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} -{$beforeDays} days"));
+        $term['Term']['end_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['end_date']} +{$afterDays} days"));
         $this->Term->save($term);
         $this->Term->addTermData(Term::TYPE_NEXT);
         $this->Term->addTermData(Term::TYPE_PREVIOUS);
@@ -244,10 +244,11 @@ class GoalousTestCase extends CakeTestCase
         $term = $this->Term->findById($evaluateTermId);
         //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、UTC時間にする。正しくは、UTC midnight - timeOffset
         //$today = strtotime(date("Y/m/d 23:59:59")) - $term['Term']['timezone'] * HOUR;
-        $today = strtotime(date("Y/m/d 23:59:59"));
+        $timezone = $this->Team->getTimezone();
+        $today = AppUtil::todayDateYmdLocal($timezone);
 
         $term['Term']['end_date'] = $today;
-        $term['Term']['start_date'] = $today - $termDays * DAY;
+        $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$today} -{$termDays} days"));
         //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、timezone設定をUTCに変更。
         $term['Term']['timezone'] = 0;
         $this->Term->save($term);
@@ -440,10 +441,10 @@ class GoalousTestCase extends CakeTestCase
         // save topic
         $this->Topic->create();
         $this->Topic->save([
-            'team_id'         => $teamid,
-            'creator_user_id' => $userId,
-            'title'           => 'Sample title',
-            'latest_message_id' => 1,
+            'team_id'                 => $teamid,
+            'creator_user_id'         => $userId,
+            'title'                   => 'Sample title',
+            'latest_message_id'       => 1,
             'latest_message_datetime' => $latestMessageDatetime
         ], false);
         $topicId = $this->Topic->getLastInsertId();
@@ -465,21 +466,21 @@ class GoalousTestCase extends CakeTestCase
         // save messages
         $this->Message->create();
         $this->Message->save([
-            'id'       => 1,
-            'team_id'  => $teamid,
+            'id'             => 1,
+            'team_id'        => $teamid,
             'sender_user_id' => $userId,
-            'topic_id' => $topicId,
-            'body' => 'message 1',
-            'created' => $latestMessageDatetime - 1
+            'topic_id'       => $topicId,
+            'body'           => 'message 1',
+            'created'        => $latestMessageDatetime - 1
         ], false);
         $this->Message->create();
         $this->Message->save([
-            'id'       => 2,
-            'team_id'  => $teamid,
+            'id'             => 2,
+            'team_id'        => $teamid,
             'sender_user_id' => $subUserId,
-            'topic_id' => $topicId,
-            'body' => 'message 2(latest)',
-            'created' => $latestMessageDatetime
+            'topic_id'       => $topicId,
+            'body'           => 'message 2(latest)',
+            'created'        => $latestMessageDatetime
         ], false);
 
         return $topicId;
