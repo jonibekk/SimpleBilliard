@@ -16,7 +16,7 @@
 
 App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
-App::uses('EvaluateTerm', 'Model');
+App::uses('Term', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Topic', 'Model');
 App::uses('Message', 'Model');
@@ -28,11 +28,11 @@ App::uses('AppUtil', 'Util');
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
- * @property EvaluateTerm $EvaluateTerm
- * @property GoalMember   $GoalMember
- * @property Team         $Team
- * @property GoalService  $GoalService
- * @property GlRedis      $GlRedis
+ * @property Term        $Term
+ * @property GoalMember  $GoalMember
+ * @property Team        $Team
+ * @property GoalService $GoalService
+ * @property GlRedis     $GlRedis
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -46,7 +46,7 @@ class GoalousTestCase extends CakeTestCase
         parent::setUp();
         Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
         Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
-        $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
+        $this->Term = ClassRegistry::init('Term');
         $this->Team = ClassRegistry::init('Team');
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->Topic = ClassRegistry::init('Topic');
@@ -73,7 +73,7 @@ class GoalousTestCase extends CakeTestCase
         Cache::clear(false, 'user_data');
     }
 
-    function createGoal(int $userId, array $data = [], int $termType = EvaluateTerm::TYPE_CURRENT)
+    function createGoal(int $userId, array $data = [], int $termType = Term::TYPE_CURRENT)
     {
         $teamId = 1;
         /** @var KeyResult $KeyResult */
@@ -101,8 +101,8 @@ class GoalousTestCase extends CakeTestCase
             "priority"             => 5,
             "approval_status"      => 0,
             "is_target_evaluation" => false,
-            "user_id"              => $this->EvaluateTerm->my_uid,
-            "team_id"              => $this->EvaluateTerm->current_team_id,
+            "user_id"              => $this->Term->my_uid,
+            "team_id"              => $this->Term->current_team_id,
             "type"                 => 0,
         ];
         $data = am($default, $data);
@@ -132,8 +132,8 @@ class GoalousTestCase extends CakeTestCase
             ],
         ];
         $data = am($default, $data);
-        $termEndTime = $this->EvaluateTerm->getTermData($termType)['end_date'];
-        $data['end_date'] = date('Y-m-d', $termEndTime);
+        $termEndDate = $this->Term->getTermData($termType)['end_date'];
+        $data['end_date'] = $termEndDate;
         return $data;
     }
 
@@ -146,14 +146,14 @@ class GoalousTestCase extends CakeTestCase
 
         $this->Team->current_team_id = $teamId;
         $this->Team->current_team = [];
-        $this->EvaluateTerm->current_team_id = $teamId;
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->current_team_id = $teamId;
+        $this->Term->resetTermProperty(Term::TYPE_CURRENT);
+        $this->Term->resetTermProperty(Term::TYPE_NEXT);
+        $this->Term->resetTermProperty(Term::TYPE_PREVIOUS);
 
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
     }
 
     /**
@@ -173,19 +173,19 @@ class GoalousTestCase extends CakeTestCase
 
         $this->Team->current_team_id = $teamId;
         $this->Team->current_team = [];
-        $this->EvaluateTerm->current_team_id = $teamId;
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->current_team_id = $teamId;
+        $this->Term->resetTermProperty(Term::TYPE_CURRENT);
+        $this->Term->resetTermProperty(Term::TYPE_NEXT);
+        $this->Term->resetTermProperty(Term::TYPE_PREVIOUS);
 
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
-        $term = $this->EvaluateTerm->findById($evaluateTermId);
-        $term['EvaluateTerm']['start_date'] -= $beforeDays * DAY;
-        $term['EvaluateTerm']['end_date'] += $afterDays * DAY;
-        $this->EvaluateTerm->save($term);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $evaluateTermId = $this->Term->getLastInsertID();
+        $term = $this->Term->findById($evaluateTermId);
+        $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['start_date']} -{$beforeDays} days"));
+        $term['Term']['end_date'] = AppUtil::dateYmd(strtotime("{$term['Term']['end_date']} +{$afterDays} days"));
+        $this->Term->save($term);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
     }
 
     /**
@@ -203,20 +203,20 @@ class GoalousTestCase extends CakeTestCase
 
         $this->Team->current_team_id = $teamId;
         $this->Team->current_team = [];
-        $this->EvaluateTerm->current_team_id = $teamId;
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->current_team_id = $teamId;
+        $this->Term->resetTermProperty(Term::TYPE_CURRENT);
+        $this->Term->resetTermProperty(Term::TYPE_NEXT);
+        $this->Term->resetTermProperty(Term::TYPE_PREVIOUS);
 
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
-        $term = $this->EvaluateTerm->findById($evaluateTermId);
-        $today = strtotime(date("Y/m/d 00:00:00")) - $term['EvaluateTerm']['timezone'] * HOUR;
-        $term['EvaluateTerm']['start_date'] = $today;
-        $term['EvaluateTerm']['end_date'] = $today + $termDays * DAY;
-        $this->EvaluateTerm->save($term);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $evaluateTermId = $this->Term->getLastInsertID();
+        $term = $this->Term->findById($evaluateTermId);
+        $today = strtotime(date("Y/m/d 00:00:00")) - $term['Term']['timezone'] * HOUR;
+        $term['Term']['start_date'] = $today;
+        $term['Term']['end_date'] = $today + $termDays * DAY;
+        $this->Term->save($term);
+        $this->Term->addTermData(Term::TYPE_NEXT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
     }
 
     /**
@@ -234,23 +234,24 @@ class GoalousTestCase extends CakeTestCase
 
         $this->Team->current_team_id = $teamId;
         $this->Team->current_team = [];
-        $this->EvaluateTerm->current_team_id = $teamId;
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Term->current_team_id = $teamId;
+        $this->Term->resetTermProperty(Term::TYPE_CURRENT);
+        $this->Term->resetTermProperty(Term::TYPE_NEXT);
+        $this->Term->resetTermProperty(Term::TYPE_PREVIOUS);
 
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $evaluateTermId = $this->EvaluateTerm->getLastInsertID();
-        $term = $this->EvaluateTerm->findById($evaluateTermId);
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $evaluateTermId = $this->Term->getLastInsertID();
+        $term = $this->Term->findById($evaluateTermId);
         //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、UTC時間にする。正しくは、UTC midnight - timeOffset
-        //$today = strtotime(date("Y/m/d 23:59:59")) - $term['EvaluateTerm']['timezone'] * HOUR;
-        $today = strtotime(date("Y/m/d 23:59:59"));
+        //$today = strtotime(date("Y/m/d 23:59:59")) - $term['Term']['timezone'] * HOUR;
+        $timezone = $this->Team->getTimezone();
+        $today = AppUtil::todayDateYmdLocal($timezone);
 
-        $term['EvaluateTerm']['end_date'] = $today;
-        $term['EvaluateTerm']['start_date'] = $today - $termDays * DAY;
+        $term['Term']['end_date'] = $today;
+        $term['Term']['start_date'] = AppUtil::dateYmd(strtotime("{$today} -{$termDays} days"));
         //TODO: 現状、グラフの表示がUTCになっており、チームの期間に準拠していないため、timezone設定をUTCに変更。
-        $term['EvaluateTerm']['timezone'] = 0;
-        $this->EvaluateTerm->save($term);
+        $term['Term']['timezone'] = 0;
+        $this->Term->save($term);
     }
 
     function setDefaultTeamIdAndUid($uid = 1, $teamId = 1)
@@ -324,8 +325,8 @@ class GoalousTestCase extends CakeTestCase
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
 
-        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
-        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
+        $startDate = $this->Term->getTermData($termType)['start_date'];
+        $endDate = $this->Term->getTermData($termType)['end_date'];
         $goalData = [
             'user_id'          => $userId,
             'team_id'          => $teamId,
@@ -373,12 +374,12 @@ class GoalousTestCase extends CakeTestCase
         $startValue = 0,
         $targetValue = 100,
         $priority = 3,
-        $termType = EvaluateTerm::TYPE_CURRENT
+        $termType = Term::TYPE_CURRENT
     ) {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
-        $startDate = $this->EvaluateTerm->getTermData($termType)['start_date'];
-        $endDate = $this->EvaluateTerm->getTermData($termType)['end_date'];
+        $startDate = $this->Term->getTermData($termType)['start_date'];
+        $endDate = $this->Term->getTermData($termType)['end_date'];
 
         $kr = [
             'goal_id'       => $goalId,
@@ -440,10 +441,10 @@ class GoalousTestCase extends CakeTestCase
         // save topic
         $this->Topic->create();
         $this->Topic->save([
-            'team_id'         => $teamid,
-            'creator_user_id' => $userId,
-            'title'           => 'Sample title',
-            'latest_message_id' => 1,
+            'team_id'                 => $teamid,
+            'creator_user_id'         => $userId,
+            'title'                   => 'Sample title',
+            'latest_message_id'       => 1,
             'latest_message_datetime' => $latestMessageDatetime
         ], false);
         $topicId = $this->Topic->getLastInsertId();
@@ -465,21 +466,21 @@ class GoalousTestCase extends CakeTestCase
         // save messages
         $this->Message->create();
         $this->Message->save([
-            'id'       => 1,
-            'team_id'  => $teamid,
+            'id'             => 1,
+            'team_id'        => $teamid,
             'sender_user_id' => $userId,
-            'topic_id' => $topicId,
-            'body' => 'message 1',
-            'created' => $latestMessageDatetime - 1
+            'topic_id'       => $topicId,
+            'body'           => 'message 1',
+            'created'        => $latestMessageDatetime - 1
         ], false);
         $this->Message->create();
         $this->Message->save([
-            'id'       => 2,
-            'team_id'  => $teamid,
+            'id'             => 2,
+            'team_id'        => $teamid,
             'sender_user_id' => $subUserId,
-            'topic_id' => $topicId,
-            'body' => 'message 2(latest)',
-            'created' => $latestMessageDatetime
+            'topic_id'       => $topicId,
+            'body'           => 'message 2(latest)',
+            'created'        => $latestMessageDatetime
         ], false);
 
         return $topicId;

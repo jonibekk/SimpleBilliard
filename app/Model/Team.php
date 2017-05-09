@@ -22,7 +22,7 @@ App::uses('AppModel', 'Model');
  * @property Evaluator         $Evaluator
  * @property EvaluationSetting $EvaluationSetting
  * @property Evaluation        $Evaluation
- * @property EvaluateTerm      $EvaluateTerm
+ * @property Term              $Term
  * @property TeamVision        $TeamVision
  * @property GroupVision       $GroupVision
  * @property TeamInsight       $TeamInsight
@@ -174,9 +174,9 @@ class Team extends AppModel
         'TeamMember',
         'Evaluator',
         'Evaluation',
-        'EvaluateTerm',
+        'Term',
         'EvaluationSetting',
-        'EvaluateTerm',
+        'Term',
         'TeamVision',
         'GroupVision',
         'TeamInsight',
@@ -377,22 +377,20 @@ class Team extends AppModel
         if (!$this->save($post_data)) {
             return false;
         }
-        $current_term_id = $this->EvaluateTerm->getCurrentTermId();
-        $next_term_id = $this->EvaluateTerm->getNextTermId();
+        $current_term_id = $this->Term->getCurrentTermId();
+        $next_term_id = $this->Term->getNextTermId();
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
         if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
-            $this->EvaluateTerm->isStartedEvaluation($current_term_id)
+            $this->Term->isStartedEvaluation($current_term_id)
         ) {
             return false;
         }
 
-        $res = $this->EvaluateTerm->updateTermData(
-            $post_data['Team']['change_from'],
-            $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months'],
-            $post_data['Team']['timezone']
+        $res = $this->Term->updateTermData(
+            $post_data['Team']['change_from'], $post_data['Team']['start_term_month'],
+            $post_data['Team']['border_months']
         );
         //キャッシュを削除
         Cache::clear(false, 'team_info');
@@ -413,6 +411,15 @@ class Team extends AppModel
                 }, 'team_info');
         }
         return $this->current_team;
+    }
+
+    /**
+     * getting timezone
+     * @return mixed
+     */
+    function getTimezone()
+    {
+        return Hash::get($this->getCurrentTeam(), 'Team.timezone');
     }
 
     /**

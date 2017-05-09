@@ -42,7 +42,7 @@ class SetupController extends AppController
         //       isao環境でエラーログが吐かれていないことが確認でき次第削除する
         // GL-5589：原因特定用にエラーログ埋め込み
         try {
-            $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+            $currentTerm = $this->Team->Term->getCurrentTermData();
             if (empty($currentTerm)) {
                 throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
             }

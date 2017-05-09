@@ -16,12 +16,12 @@ class KeyResultTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.evaluate_term',
+        'app.term',
         'app.key_result',
         'app.goal',
         'app.goal_category',
         'app.goal_member',
-        'app.evaluate_term',
+        'app.term',
         'app.post_share_circle',
         'app.circle',
         'app.post',
@@ -73,10 +73,9 @@ class KeyResultTest extends GoalousTestCase
         $this->Goal->current_team_id = 1;
 
         $goal = $this->Goal->getById($goalId);
-        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
 
-        $startDate = date('Y/m/d', $goal['start_date'] + ($currentTerm['timezone'] * HOUR));
-        $endDate = date('Y/m/d', $goal['end_date'] + ($currentTerm['timezone'] * HOUR));
+        $startDate = date('Y/m/d', strtotime($goal['start_date']));
+        $endDate = date('Y/m/d', strtotime($goal['end_date']));
 
         $data = [
             'KeyResult' => [
@@ -138,8 +137,8 @@ class KeyResultTest extends GoalousTestCase
             'user_id'          => 1,
             'team_id'          => 1,
             'name'             => 'test',
-            'start_date'       => time(),
-            'end_date'         => time(),
+            'start_date'       => AppUtil::dateYmd(REQUEST_TIMESTAMP),
+            'end_date'         => AppUtil::dateYmd(REQUEST_TIMESTAMP),
             'goal_category_id' => 1,
 
         ];
@@ -158,8 +157,8 @@ class KeyResultTest extends GoalousTestCase
             'team_id'      => 1,
             'name'         => 'test',
             'goal_id'      => $goal_id,
-            'start_date'   => time(),
-            'end_date'     => time(),
+            'start_date'   => AppUtil::dateYmd(REQUEST_TIMESTAMP),
+            'end_date'     => AppUtil::dateYmd(REQUEST_TIMESTAMP),
             'value_unit'   => 1,
             'start_value'  => 0,
             'target_value' => 100,
@@ -178,8 +177,8 @@ class KeyResultTest extends GoalousTestCase
             'team_id'      => 1,
             'goal_id'      => 9999999,
             'name'         => 'test',
-            'start_date'   => time(),
-            'end_date'     => time(),
+            'start_date'   => AppUtil::dateYmd(REQUEST_TIMESTAMP),
+            'end_date'     => AppUtil::dateYmd(REQUEST_TIMESTAMP),
             'value_unit'   => 1,
             'start_value'  => 0,
             'target_value' => 100,
@@ -330,11 +329,11 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->Team->current_team_id = 1;
         $this->KeyResult->Goal->GoalMember->my_uid = 1;
         $this->KeyResult->Goal->GoalMember->current_team_id = 1;
-        $this->KeyResult->Team->EvaluateTerm->current_team_id = 1;
-        $this->KeyResult->Team->EvaluateTerm->my_uid = 1;
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->KeyResult->Team->Term->current_team_id = 1;
+        $this->KeyResult->Team->Term->my_uid = 1;
+        $this->KeyResult->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->KeyResult->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->KeyResult->Team->Term->addTermData(Term::TYPE_NEXT);
     }
 
     function testValidateEditProgress()
@@ -434,10 +433,11 @@ class KeyResultTest extends GoalousTestCase
         $this->assertTrue(empty($err) || !in_array($expectErrMsg, $err));
 
         // 進捗の値が減少から増加の方向に変更してないか
-        $updateKr = ['id'           => 2,
-                     'value_unit'   => $krs[2]['value_unit'],
-                     'start_value'  => -100,
-                     'target_value' => -99.999
+        $updateKr = [
+            'id'           => 2,
+            'value_unit'   => $krs[2]['value_unit'],
+            'start_value'  => -100,
+            'target_value' => -99.999
         ];
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -584,21 +584,21 @@ class KeyResultTest extends GoalousTestCase
         $startDate = "2017/01/02";
         $endDate = "2017/03/29";
 
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $currentTerm = $this->Team->Term->getCurrentTermData();
 
-        $this->Team->EvaluateTerm->clear();
-        $this->Team->EvaluateTerm->id = $currentTerm['id'];
-        $this->Team->EvaluateTerm->save(['timezone' => 0]);
+        $this->Team->Term->clear();
+        $this->Team->Term->id = $currentTerm['id'];
+        $this->Team->Term->save(['timezone' => 0]);
         $this->customValidRangeDateThreshold($startDate, $endDate);
 
-        $this->Team->EvaluateTerm->clear();
-        $this->Team->EvaluateTerm->id = $currentTerm['id'];
-        $this->Team->EvaluateTerm->save(['timezone' => -12]);
+        $this->Team->Term->clear();
+        $this->Team->Term->id = $currentTerm['id'];
+        $this->Team->Term->save(['timezone' => -12]);
         $this->customValidRangeDateThreshold($startDate, $endDate);
 
-        $this->Team->EvaluateTerm->clear();
-        $this->Team->EvaluateTerm->id = $currentTerm['id'];
-        $this->Team->EvaluateTerm->save(['timezone' => +12]);
+        $this->Team->Term->clear();
+        $this->Team->Term->id = $currentTerm['id'];
+        $this->Team->Term->save(['timezone' => +12]);
         $this->customValidRangeDateThreshold($startDate, $endDate);
     }
 
@@ -610,12 +610,11 @@ class KeyResultTest extends GoalousTestCase
      */
     private function customValidRangeDateThreshold(string $startDate, string $endDate)
     {
-        $currentTerm = $this->Team->EvaluateTerm->getTermDataByTimeStamp(REQUEST_TIMESTAMP);
-        $startTimeStamp = AppUtil::getStartTimestampByTimezone($startDate, $currentTerm['timezone']);
-        $endTimeStamp = AppUtil::getEndTimestampByTimezone($endDate, $currentTerm['timezone']);
-
         $this->Goal->id = 1;
-        $this->Goal->save(['start_date' => $startTimeStamp, 'end_date' => $endTimeStamp]);
+        $this->Goal->save([
+            'start_date' => AppUtil::dateYmd(strtotime($startDate)),
+            'end_date'   => AppUtil::dateYmd(strtotime($endDate))
+        ]);
 
         $correctErrMsg = __("Please input start / end date within start / end date of the goal.");
 
@@ -737,10 +736,10 @@ class KeyResultTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
 
-        $nextTerm = $this->KeyResult->Team->EvaluateTerm->getNextTermData();
+        $nextTerm = $this->KeyResult->Team->Term->getNextTermData();
 
-        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_CURRENT, [0, 10], $teamId);
-        $this->KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_NEXT);
+        $goalId = $this->createGoalKrs(Term::TYPE_CURRENT, [0, 10], $teamId);
+        $this->KeyResult->updateTermByGoalId($goalId, Term::TYPE_NEXT);
         $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
         $this->assertEquals($updatedKr['start_date'], $nextTerm['start_date']);
         $this->assertEquals($updatedKr['end_date'], $nextTerm['end_date']);
@@ -752,10 +751,10 @@ class KeyResultTest extends GoalousTestCase
         $teamId = $this->createTeam();
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->setupTerm($teamId);
-        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+        $currentTerm = $this->KeyResult->Team->Term->getCurrentTermData();
 
-        $goalId = $this->createGoalKrs(EvaluateTerm::TYPE_NEXT, [0, 10], $teamId);
-        $this->KeyResult->updateTermByGoalId($goalId, EvaluateTerm::TYPE_CURRENT);
+        $goalId = $this->createGoalKrs(Term::TYPE_NEXT, [0, 10], $teamId);
+        $this->KeyResult->updateTermByGoalId($goalId, Term::TYPE_CURRENT);
         $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
 
         $this->assertTrue($currentTerm['start_date'] < $updatedKr['start_date']);
@@ -775,8 +774,8 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->ActionResult->deleteAll(['ActionResult.id >' => 0], false);
 
         // Termデータ作成
-        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $currentTerm = $this->KeyResult->Team->EvaluateTerm->getCurrentTermData();
+        $this->KeyResult->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $currentTerm = $this->KeyResult->Team->Term->getCurrentTermData();
 
         $userId = 1;
 
