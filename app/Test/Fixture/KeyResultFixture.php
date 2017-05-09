@@ -61,6 +61,20 @@ class KeyResultFixture extends CakeTestFixtureEx
             'charset' => 'utf8mb4'
         ),
         'start_date'          => array(
+            'type'     => 'date',
+            'null'     => false,
+            'default' => '0000-00-00',
+            'key'      => 'index',
+            'comment'  => '開始日'
+        ),
+        'end_date'            => array(
+            'type'     => 'date',
+            'null'     => false,
+            'default' => '0000-00-00',
+            'key'      => 'index',
+            'comment'  => '終了日'
+        ),
+        'old_start_date'          => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
@@ -68,7 +82,7 @@ class KeyResultFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => '開始日(unixtime)'
         ),
-        'end_date'            => array(
+        'old_end_date'            => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,

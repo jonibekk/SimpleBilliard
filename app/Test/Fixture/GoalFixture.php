@@ -76,6 +76,18 @@ class GoalFixture extends CakeTestFixtureEx
             'charset' => 'utf8mb4'
         ),
         'start_date'          => array(
+            'type'     => 'date',
+            'null'     => false,
+            'key'      => 'index',
+            'comment'  => '開始日'
+        ),
+        'end_date'            => array(
+            'type'     => 'date',
+            'null'     => false,
+            'key'      => 'index',
+            'comment'  => '終了日'
+        ),
+        'old_start_date'          => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
@@ -83,7 +95,7 @@ class GoalFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => '開始日(unixtime)'
         ),
-        'end_date'            => array(
+        'old_end_date'            => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
@@ -158,8 +170,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '2',
@@ -167,8 +179,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール2',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '3',
@@ -176,8 +188,8 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール3',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '4',
@@ -185,24 +197,24 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'ゴール4',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '5',
             'user_id' => '14',
 
             'team_id' => '1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '6',
             'user_id' => '1',
 
             'team_id' => '1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '7',
@@ -210,30 +222,29 @@ class GoalFixture extends CakeTestFixtureEx
             'team_id' => '1',
 
             'name' => 'その他ゴール1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '8',
             'user_id' => '1',
             'team_id' => '1',
-
-            'start_date' => '25000',
-            'end_date'   => '28000',
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '9',
             'user_id' => '2',
             'team_id' => '1',
-
-            'start_date' => '15000',
-            'end_date'   => '18000',
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
         [
             'id'      => '100',
             'user_id' => '100',
             'team_id' => '1',
-
+            'start_date' => '2017-01-01',
+            'end_date'   => '2017-03-31',
         ],
     ];
 
