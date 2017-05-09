@@ -1,13 +1,15 @@
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php foreach ($circles as $circle): ?>
     <?php $isUnread = ($circle['CircleMember']['unread_count'] > 0); ?>
-        <div class="dashboard-circle-list-row-wrap circle-layout <?= $isHamburger ? 'circleListMore' : '' ?>" circle_id="<?= $circle['Circle']['id'] ?>">
+    <div class="dashboard-circle-list-row-wrap circle-layout <?= $isHamburger ? 'circleListMore' : '' ?>"
+         circle_id="<?= $circle['Circle']['id'] ?>">
         <?php if ($circle['CircleMember']['admin_flg']): ?>
-            <a href="<?= $this->Html->url([
-                'controller' => 'circles',
-                'action'     => 'ajax_get_edit_modal',
-                'circle_id'  => $circle['Circle']['id']
-            ]) ?>"
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller' => 'circles',
+                   'action'     => 'ajax_get_edit_modal',
+                   'circle_id'  => $circle['Circle']['id']
+               ]) ?>"
                class="dashboard-circle-list-edit-wrap modal-ajax-get-circle-edit">
                 <i class="fa fa-cog dashboard-circle-list-edit"></i>
             </a>
@@ -44,4 +46,4 @@
         </a>
     </div>
 <?php endforeach ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

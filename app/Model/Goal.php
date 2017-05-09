@@ -549,6 +549,13 @@ class Goal extends AppModel
             $data['KeyResult'][0]['current_value'] = $data['KeyResult'][0]['start_value'];
         }
 
+        // Set static value when Complete/Incomplete
+        if ($data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY) {
+            $data['KeyResult'][0]['start_value'] = 0;
+            $data['KeyResult'][0]['target_value'] = 1;
+            $data['KeyResult'][0]['current_value'] = 0;
+        }
+
         if (!Hash::get($data, 'KeyResult.0.start_date')) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
         } else {

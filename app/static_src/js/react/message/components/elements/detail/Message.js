@@ -28,7 +28,8 @@ class Message extends React.Component {
       if (is_all_read) {
         return (
           <div className="topicDetail-messages-item-read-wrapper">
-            <a href={`/topics/ajax_get_read_members/${topic.id}`}
+            <a href="#"
+               data-url={`/topics/ajax_get_read_members/${topic.id}`}
                className="topicDetail-messages-item-read is-on modal-ajax-get">
               <i className="fa fa-check"/>
             </a>
@@ -38,8 +39,9 @@ class Message extends React.Component {
         return (
           <div className="topicDetail-messages-item-read-wrapper">
             <div className="topicDetail-messages-item-read is-off">
-              {fetching_read_count && <Loading size={12} />}
-              <a href={`/topics/ajax_get_read_members/${topic.id}`}
+              {fetching_read_count && <Loading size={12}/>}
+              <a href="#"
+                 data-url={`/topics/ajax_get_read_members/${topic.id}`}
                  className={`topicDetail-messages-item-read-link modal-ajax-get ${fetching_read_count ? 'is-loading' : ''}`}
                  onClick={ this.onClickReadCount.bind(this) }>
                 <i className="fa fa-check mr_2px"/>

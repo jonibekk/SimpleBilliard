@@ -220,7 +220,7 @@ class Body extends React.Component {
     }
 
     return (
-      <div className={`topicDetail-body ${sp_class}`} ref="messages" onTouchMove={this.onTouchMove} style={body_styles}>
+      <div className={`topicDetail-body ${sp_class} ${isIOSApp() ? 'mod-ios-app' : ''}`} ref="messages" onTouchMove={this.onTouchMove} style={body_styles}>
         {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
         {renderMessages()}
       </div>

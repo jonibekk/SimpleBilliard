@@ -68,19 +68,20 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
   - [PHP Libraries](docs/guidelines/plugins_libraries.md#php-plugins)
 
 - [構築・運用手順書（マニュアル）](docs/guidelines/manuals.md)
-  - [海外開発拠点用プロキシサーバ運用手順書](docs/guidelines/manuals.md#env4foreigner)
-  - [海外開発者向け環境構築手順書](docs/guidelines/manuals.md#proxy4foreigner)
+  - [AWS環境構築手順書](docs/guidelines/manuals-test.md#stress-test#stress)
   - [AWSオペレーション](docs/guidelines/manuals.md#aws-operation)
   - [DB接続](docs/guidelines/manuals.md#db-connection)
   - [DBマイグレーション](docs/guidelines/manuals.md#db-migration)
   - [GitHubとWaffleの運用](docs/guidelines/manuals.md#github-waffle)
   - [CSオペレーション](docs/guidelines/manuals.md#cs-operation)
   - [メンテナンスモード](docs/guidelines/manuals.md#maintenance-mode)
+  - [海外開発拠点用プロキシサーバ運用手順書](docs/guidelines/manuals.md#env4foreigner)
+  - [海外開発者向け環境構築手順書](docs/guidelines/manuals.md#proxy4foreigner)
 
 - [翻訳手順書](docs/guidelines/translation.md)
 
 - [テスト手順書（マニュアル）](docs/guidelines/manuals-test.md)
-  - [負荷試験環境構築手順書](docs/guidelines/manuals-test.md#stress-test#stress)
+  - [試験環境構築手順書](docs/guidelines/manuals-test.md#stress-test#stress)
   - [Seleniumを使用したUI自動テスト](docs/guidelines/manuals-test.md#selenium)
   - [PHP Docからドキュメントを生成するapigen](docs/guidelines/manuals-test.md#api-gen)
 

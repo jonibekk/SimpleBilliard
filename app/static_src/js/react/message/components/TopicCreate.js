@@ -7,6 +7,7 @@ import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton"
 import {nl2br} from "~/util/element";
 import {isMobileApp, disableAsyncEvents, isIOSApp} from "~/util/base";
 import Base from "~/common/components/Base";
+import Textarea from "react-textarea-autosize";
 
 export default class TopicCreate extends Base {
 
@@ -29,9 +30,13 @@ export default class TopicCreate extends Base {
     disableAsyncEvents()
 
     // HACK:To use select2Member
-    $(document).ready(function (e) {
-      initMemberSelect2();
-    });
+    //      Now, initialize select2 by initMemberSelect2 in gl_basic
+    // Set selectd user
+    const user_id = this.props.location.query.user_id
+    if (user_id) {
+      ReactDom.findDOMNode(this.refs.select2Member).value = `user_${user_id}`
+      this.changeToUserIds()
+    }
   }
 
   onBeforeUnloadSelect2Handler(event) {
@@ -59,7 +64,7 @@ export default class TopicCreate extends Base {
   }
 
   routerWillLeave(nextLocation) {
-    if (this.state.enabled_leave_page_alert || this.getToUserIdsByDom().length > 0) {
+    if (!this.props.topic_create.is_saving && (this.state.enabled_leave_page_alert || this.getToUserIdsByDom().length > 0)) {
       return this.state.leave_page_alert_msg
     }
   }
@@ -170,11 +175,11 @@ export default class TopicCreate extends Base {
             {this.state.is_drag_over && <UploadDropZone/>}
 
             <div className="topicCreateForm-msgBody">
-                <textarea className="topicCreateForm-msgBody-form disable-change-warning"
-                          placeholder={__("Write a message...")}
-                          defaultValue=""
-                          onChange={this.changeMessage.bind(this)}
-                />
+              <Textarea className="topicCreateForm-msgBody-form disable-change-warning"
+                        placeholder={__("Write a message...")}
+                        defaultValue=""
+                        onChange={this.changeMessage.bind(this)}
+              />
               <UploadPreview files={file_upload.preview_files}/>
             </div>
             <div className="topicCreateForm-footer">
