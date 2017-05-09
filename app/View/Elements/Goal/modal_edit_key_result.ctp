@@ -33,8 +33,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', strtotime($goal['Goal']['end_date'])) ?>
-                    (← <?= date('Y/m/d', strtotime($goal['Goal']['start_date'])) ?> - )
+                    <?= AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/") ?>
+                    (← <?= AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/") ?> - )
                     <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
                     <?php endif ?>

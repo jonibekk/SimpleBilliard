@@ -290,8 +290,8 @@ class GoalsController extends AppController
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goalId);
 
-        $limitEndDate = date('Y/m/d', strtotime($goal['Goal']['end_date']));
-        $limitStartDate = date('Y/m/d', strtotime($goal['Goal']['start_date']));
+        $limitEndDate = AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/");
+        $limitStartDate = AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/");
 
         $this->set(compact(
             'goal',
@@ -1100,10 +1100,10 @@ class GoalsController extends AppController
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
 
-        $kr_start_date_format = date('Y/m/d', strtotime($key_result['KeyResult']['start_date']));
-        $kr_end_date_format = date('Y/m/d', strtotime($key_result['KeyResult']['end_date']));
-        $limit_end_date = date('Y/m/d', strtotime($goal['Goal']['end_date']));
-        $limit_start_date = date('Y/m/d', strtotime($goal['Goal']['start_date']));
+        $kr_start_date_format = AppUtil::dateYmdReformat($key_result['KeyResult']['start_date'], "/");
+        $kr_end_date_format = AppUtil::dateYmdReformat($key_result['KeyResult']['end_date'], "/");
+        $limit_end_date = AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/");
+        $limit_start_date = AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/");
         $this->set(compact(
             'goal',
             'goal_id',
@@ -1581,18 +1581,18 @@ class GoalsController extends AppController
         $kr_value_unit_list = KeyResult::$UNIT;
         $current_term = $this->Team->Term->getCurrentTermData();
         $next_term = $this->Team->Term->getNextTermData();
-        $current_term_start_date_format = date('Y/m/d', strtotime($current_term['start_date']));
-        $current_term_end_date_format = date('Y/m/d', strtotime($current_term['end_date']));
-        $next_term_start_date_format = date('Y/m/d', strtotime($next_term['start_date']));
-        $next_term_end_date_format = date('Y/m/d', strtotime($next_term['end_date']));
+        $current_term_start_date_format = AppUtil::dateYmdReformat($current_term['start_date'], "/");
+        $current_term_end_date_format = AppUtil::dateYmdReformat($current_term['end_date'], "/");
+        $next_term_start_date_format = AppUtil::dateYmdReformat($next_term['start_date'], "/");
+        $next_term_end_date_format = AppUtil::dateYmdReformat($next_term['end_date'], "/");
         $today_format = date('Y/m/d', REQUEST_TIMESTAMP + $current_term['timezone'] * HOUR);
         $is_next_term_goal = false;
 
         // ゴール編集時
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
             // ゴールが属している評価期間データ
-            $goal_start_date_format = date('Y/m/d', strtotime($this->request->data['Goal']['start_date']));
-            $goal_end_date_format = date('Y/m/d', strtotime($this->request->data['Goal']['end_date']));
+            $goal_start_date_format = AppUtil::dateYmdReformat($this->request->data['Goal']['start_date'], "/");
+            $goal_end_date_format = AppUtil::dateYmdReformat($this->request->data['Goal']['end_date'], "/");
 
             // ゴールが来期のものかチェック
             if ($next_term['start_date'] <= $this->request->data['Goal']['end_date'] &&

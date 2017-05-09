@@ -46,8 +46,8 @@ class SetupController extends AppController
             if (empty($currentTerm)) {
                 throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
             }
-            $current_term_start_date_format = date('Y/m/d', strtotime($currentTerm['start_date']));
-            $current_term_end_date_format = date('Y/m/d', strtotime($currentTerm['end_date']));
+            $current_term_start_date_format = AppUtil::dateYmdReformat($currentTerm['start_date'], "/");
+            $current_term_end_date_format = AppUtil::dateYmdReformat($currentTerm['end_date'], "/");
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());

@@ -59,8 +59,8 @@
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', strtotime($goal['Goal']['end_date'])) ?>
-                    (← <?= date('Y/m/d', strtotime($goal['Goal']['start_date'])) ?> - )
+                    <?= AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/") ?>
+                    (← <?= AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/") ?> - )
                     <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
                     <?php endif ?>

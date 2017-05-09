@@ -351,13 +351,13 @@ class TeamsController extends AppController
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
             $res = [
                 'current' => [
-                    'start_date' => date('Y/m/d', strtotime($save_data[$current_id]['start_date'])),
-                    'end_date'   => date('Y/m/d', strtotime($save_data[$current_id]['end_date'])),
+                    'start_date' => AppUtil::dateYmdReformat($save_data[$current_id]['start_date'], "/"),
+                    'end_date'   => AppUtil::dateYmdReformat($save_data[$current_id]['end_date'], "/"),
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', strtotime($save_data[$next_id]['start_date'])),
-                    'end_date'   => date('Y/m/d', strtotime($save_data[$next_id]['end_date'])),
+                    'start_date' => AppUtil::dateYmdReformat($save_data[$next_id]['start_date'], "/"),
+                    'end_date'   => AppUtil::dateYmdReformat($save_data[$next_id]['end_date'], "/"),
                     'timezone'   => $timezone,
                 ],
             ];
@@ -370,8 +370,8 @@ class TeamsController extends AppController
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', strtotime($save_data[$next_id]['start_date'])),
-                    'end_date'   => date('Y/m/d', strtotime($save_data[$next_id]['end_date'])),
+                    'start_date' => AppUtil::dateYmdReformat($save_data[$next_id]['start_date'], "/"),
+                    'end_date'   => AppUtil::dateYmdReformat($save_data[$next_id]['end_date'], "/"),
                     'timezone'   => $timezone,
                 ],
             ];
