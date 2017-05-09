@@ -1146,7 +1146,8 @@ class KeyResult extends AppModel
     {
         $res = $this->updateAll(
             [
-                'KeyResult.start_date' => $startDate
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
+                'KeyResult.start_date' => "'$startDate'"
             ],
             [
                 'KeyResult.goal_id'       => $goalId,
