@@ -195,7 +195,7 @@ class AppUtil
      *
      * @return string
      */
-    static function dateAfterDays(string $targetDate, int $days): string
+    static function dateAfter(string $targetDate, int $days): string
     {
         return self::dateYmd(strtotime("$targetDate +{$days} days"));
     }
@@ -208,7 +208,7 @@ class AppUtil
      *
      * @return string
      */
-    static function dateBeforeDays(string $targetDate, int $days): string
+    static function dateBefore(string $targetDate, int $days): string
     {
         return self::dateYmd(strtotime("$targetDate -{$days} days"));
     }
