@@ -23,8 +23,29 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_TWO_COLUMN;
         $this->set('current_global_menu', 'team');
+
         $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
-        $this->set(compact('team'));
+
+        // Get current term info
+        $currentTerm = $this->Team->Term->getCurrentTermData();
+        $currentTermStartDate = Hash::get($currentTerm, 'start_date');
+        $currentTermEndDate = Hash::get($currentTerm, 'end_date');
+        $currentTermTimezone = Hash::get($currentTerm, 'timezone');
+
+        // Get next term info
+        $nextTerm = $this->Team->Term->getNextTermData();
+        $nextTermStartDate = Hash::get($nextTerm, 'start_date');
+        $nextTermEndDate = Hash::get($nextTerm, 'end_date');
+        $nextTermTimezone = Hash::get($nextTerm, 'timezone');
+        $this->set([
+            'team' => $team,
+            'current_term_start_date' => $currentTermStartDate,
+            'current_term_end_date' => $currentTermEndDate,
+            'current_term_timezone' => $currentTermTimezone,
+            'next_term_start_date' => $nextTermStartDate,
+            'next_term_end_date' => $nextTermEndDate,
+            'next_term_timezone' => $nextTermTimezone,
+        ]);
     }
 
     public function add()
