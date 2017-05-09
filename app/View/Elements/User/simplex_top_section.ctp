@@ -79,7 +79,7 @@
                     <i class="fa fa-pencil mr_5px"></i><span><?= __('Edit Profile') ?></span>
                 </a>
             <?php else: ?>
-                <a href="/posts/message_list?userId=<?= $user['User']['id'] ?>" class="btn-pink-radius">
+                <a href="/topics/create?user_id=<?= $user['User']['id'] ?>" class="btn-pink-radius">
                     <i class="fa fa-paper-plane-o mr_5px"></i><span><?= __('Message') ?></span>
                 </a>
             <?php endif; ?>

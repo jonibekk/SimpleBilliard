@@ -27,8 +27,9 @@ export default class TopicMembersAdd extends Base {
 
     // TODO:Remove selected members from suggest
     // HACK:To use select2Member
+    const topic_id = this.props.params.topic_id;
     $(document).ready(function (e) {
-      initMemberSelect2();
+      initMessageSelect2(topic_id);
     });
   }
 
@@ -51,7 +52,7 @@ export default class TopicMembersAdd extends Base {
   }
 
   routerWillLeave(nextLocation) {
-    if (this.state.enabled_leave_page_alert || this.getSelectUserIdsByDom().length > 0) {
+    if (!this.props.topic_members_add.is_saving && (this.state.enabled_leave_page_alert || this.getSelectUserIdsByDom().length > 0)) {
       return this.state.leave_page_alert_msg
     }
   }
@@ -96,7 +97,7 @@ export default class TopicMembersAdd extends Base {
         <div className="panel topicMembersAddForm">
           <span className="hidden js-triggerUpdateToUserIds" onClick={this.selectUsers.bind(this)}/>
           <div className="topicMembersAddForm-selectTo ">
-            <input type="hidden" id="select2Member" className="js-changeSelect2Member"
+            <input type="hidden" id="selectOnlyMember" className="js-changeSelect2Member"
                    style={{width: '100%'}} ref="select2Member"/>
           </div>
           <div className="topicMembersAddForm-footer">

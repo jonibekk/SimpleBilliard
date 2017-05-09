@@ -145,7 +145,7 @@ App::uses('AttachedFile', 'Model');
             am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
-                'action'     => 'ajax_select_only_add_users'
+                'action'     => 'ajax_select_add_members_on_message'
             ])?>",
             select2_secret_circle: "<?=$this->Html->url([
                 'controller' => 'users',
