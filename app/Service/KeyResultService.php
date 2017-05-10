@@ -677,5 +677,4 @@ class KeyResultService extends AppService
 
         return true;
     }
-
 }

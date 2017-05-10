@@ -1132,4 +1132,99 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * update start_date if start_date is under goal range
+     *
+     * @param  string $currentTermStartDate
+     * @return bool
+     */
+    public function updateStartWithinGoalRange(string $currentTermStartDate): bool
+    {
+        $now = time();
+        $teamId = $this->current_team_id;
+        $query = <<<SQL
+UPDATE
+    key_results kr
+    JOIN
+        goals g
+    ON
+        kr.goal_id = g.id
+        kr.team_id = $teamId
+        AND g.start_date >= $currentTermStartDate
+        AND kr.start_date < g.start_date
+        AND kr.end_date >= g.start_date
+        AND kr.end_date <= g.end_date
+SET
+    kr.start_date = g.start_date,
+    kr.modified = $now
+SQL;
+        try {
+            $res = $this->query($query);
+        }catch(PDOException $e){
+            $this->log($e->queryString);    //エラーの詳細を調べる場合、コメントアウトを外す
+        }
+        return true;
+    }
+
+    /**
+     * update end_date if end_date is over goal range
+     *
+     * @param  string $currentTermStartDate
+     * @return bool
+     */
+    public function updateEndWithinGoalRange(string $currentTermStartDate): bool
+    {
+        $now = time();
+        $teamId = $this->current_team_id;
+        $query = <<<SQL
+UPDATE
+    key_results kr
+    INNER JOIN
+        goals g
+    ON
+        kr.goal_id = g.id
+        AND g.start_date >= $currentTermStartDate
+        AND kr.start_date >= g.start_date
+        AND kr.start_date <= g.end_date
+        AND kr.end_date > g.end_date
+SET
+    kr.end_date = g.end_date,
+    kr.modified = $now
+WHERE
+    kr.team_id = $teamId
+SQL;
+        $res = $this->query($query);
+        return $res;
+    }
+
+    /**
+     * update start and end date if they are not in goal range
+     *
+     * @param  string $currentTermStartDate
+     * @return bool
+     */
+    public function updateStartEndWithinGoalRange(string $currentTermStartDate): bool
+    {
+        $now = time();
+        $teamId = $this->current_team_id;
+        $query = <<<SQL
+UPDATE
+    key_results kr
+    INNER JOIN
+        goals g
+    ON
+        kr.goal_id = g.id
+        AND g.start_date >= $currentTermStartDate
+        AND kr.start_date NOT BETWEEN g.start_date AND g.end_date
+        AND kr.end_date NOT BETWEEN g.start_date AND g.end_date
+SET
+    kr.start_date = g.start_date,
+    kr.end_date = g.end_date,
+    kr.modified = $now
+WHERE
+    kr.team_id = $teamId
+SQL;
+        $res = $this->query($query);
+        return $res;
+    }
 }

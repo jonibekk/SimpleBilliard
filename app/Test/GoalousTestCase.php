@@ -568,4 +568,19 @@ class GoalousTestCase extends CakeTestCase
 
         return $currentTerm;
     }
+
+    function createSimpleKr(array $data = [])
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+
+        $default = [
+            "name"             => "KR Name",
+            "description"      => "KR description"
+        ];
+        $data = am($default, $data);
+        $KeyResult->create();
+        $KeyResult->save($data, false);
+        return $KeyResult->getLastInsertID();
+    }
 }

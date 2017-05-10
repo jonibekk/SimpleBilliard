@@ -66,8 +66,6 @@ class TermService extends AppService
         $Term = ClassRegistry::init("Term");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
 
         try {
             $Term->begin();
@@ -94,8 +92,7 @@ class TermService extends AppService
 
             // update goals
             // current goals
-            $currentTerm = $Term->getCurrentTermData();
-            $currentStartDate = $currentTerm['start_date'];
+            $currentStartDate = $Term->getCurrentTermData()['start_date'];
             if (!$Goal->updateCurrentTermRange($currentStartDate, $newCurrentEndDate)) {
                 throw new Exception(sprintf("Failed to update current term goal. current_start_date: %s current_term_end_date: %s", $currentStartDate, $newCurrentEndDate));
             }
@@ -105,27 +102,8 @@ class TermService extends AppService
             }
 
             // update keyresults
-            // current goals
-            $currentGoals = $Goal->findForTermRangeUpdating($currentStartDate, $newCurrentEndDate);
-            foreach($currentGoals as $currentGoal) {
-                if (!$KeyResult->updateCurrentTermRange(
-                    $currentGoal['start_date'],
-                    $currentGoal['end_date'],
-                    ['goal_id' => $currentGoal['goal_id']])
-                ) {
-                    throw new Exception(sprintf("Failed to update current term key results. goal_id: %s current_start_date: %s current_term_end_date: %s", $currentGoal['goal_id'], $currentGoal['start_date'], $currentGoal['end_date']));
-                }
-            }
-            // next goals
-            $nextGoals = $Goal->findForTermRangeUpdating($newNextStartDate, $newNextEndDate);
-            foreach($nextGoals as $nextGoal) {
-                if (!$KeyResult->updateNextTermRange(
-                    $nextGoals['start_date'],
-                    $nextGoals['end_date'],
-                    ['goal_id' => $nextGoals['goal_id']])
-                ) {
-                    throw new Exception(sprintf("Failed to update next term key results. goal_id: %s start_date: %s term_end_date: %s", $nextGoal['goal_id'], $nextGoal['start_date'], $nextGoal['end_date']));
-                }
+            if (!$this->updateKrsRangeWithinGoalRange($currentStartDate)) {
+                throw new Exception(sprintf("Failed to update key results range setting curret_start_date: %s", $currentStartDate));
             }
 
             $Term->commit();
@@ -136,6 +114,32 @@ class TermService extends AppService
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * update current and next range within its goal range
+     * - targets of updating
+     *   - 1. krs only end_date is in its goal range
+     *   - 2. krs only start_date is in its goal range
+     *   - 3. krs start_date and end_date are out of its goal range
+     *
+     * @return bool
+     */
+    public function updateKrsRangeWithinGoalRange(string $currentTermStartDate): bool
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        if (!$KeyResult->updateStartWithinGoalRange($currentTermStartDate)) {
+            return false;
+        }
+        if (!$KeyResult->updateEndWithinGoalRange($currentTermStartDate)) {
+            return false;
+        }
+        if (!$KeyResult->updateStartEndWithinGoalRange($currentTermStartDate)) {
+            return false;
+        }
         return true;
     }
 }
