@@ -480,4 +480,44 @@ class Team extends AppModel
         return $ret;
     }
 
+    /**
+     * 期間データを持たないチームのIDを取得
+     *
+     * @param float $timezone
+     * @param int   $timestamp
+     *
+     * @return array
+     */
+    public function findIdsNotHaveTerm(float $timezone, int $timestamp): array
+    {
+        $targetDate = AppUtil::dateYmdLocal($timestamp, $timezone);
+        $options = [
+            'conditions' => [
+                'Team.timezone' => $timezone,
+                'Term.id'       => null,
+            ],
+            'fields'     => [
+                'id'
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'terms',
+                    'alias'      => 'Term',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Team.id = Term.team_id',
+                        'Term.start_date <=' => $targetDate,
+                        'Term.end_date >='   => $targetDate,
+                        'Term.del_flg'       => false,
+                    ]
+                ],
+            ],
+        ];
+        $ret = $this->findWithoutTeamId('list', $options);
+        // キーに特別な意味を持たせないように、歯抜けのキーを再採番
+        $ret = array_merge($ret);
+        return $ret;
+
+    }
+
 }
