@@ -2,7 +2,7 @@
 App::uses('AppUtil', 'Util');
 
 /**
- * KR日次進捗集計用バッチ
+ * 期間データ生成バッチ用shell
  * Console/cake create_term
  * 説明
  * - 期間データを生成する処理
