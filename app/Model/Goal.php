@@ -2458,7 +2458,7 @@ class Goal extends AppModel
             "Goal.start_date <=" => $endDate,
             "Goal.end_date >"    => $endDate
         ];
-        $conditions = am($defaultConditions, $additionalConditions);
+        $conditions = $defaultConditions + $additionalConditions;
 
         $res = $this->updateAll(
             [
@@ -2488,7 +2488,7 @@ class Goal extends AppModel
             "Goal.team_id"      => $this->current_team_id,
             "Goal.start_date >" => $endDate
         ];
-        $conditions = am($defaultConditions, $additionalConditions);
+        $conditions = $defaultConditions + $additionalConditions;
         $res = $this->updateAll(
             [
                 // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。

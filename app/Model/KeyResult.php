@@ -1145,11 +1145,12 @@ class KeyResult extends AppModel
         $query = <<<SQL
 UPDATE
     key_results kr
-    JOIN
+    INNER JOIN
         goals g
     ON
         kr.goal_id = g.id
-        kr.team_id = $teamId
+        AND g.team_id = $teamId
+        AND g.del_flg = 0
         AND g.start_date >= $currentTermStartDate
         AND kr.start_date < g.start_date
         AND kr.end_date >= g.start_date
@@ -1157,12 +1158,10 @@ UPDATE
 SET
     kr.start_date = g.start_date,
     kr.modified = $now
+WHERE
+    kr.del_flg = 0
 SQL;
-        try {
-            $res = $this->query($query);
-        }catch(PDOException $e){
-            $this->log($e->queryString);    //エラーの詳細を調べる場合、コメントアウトを外す
-        }
+        $res = $this->query($query);
         return true;
     }
 
@@ -1183,6 +1182,8 @@ UPDATE
         goals g
     ON
         kr.goal_id = g.id
+        AND g.team_id = $teamId
+        AND g.del_flg = 0
         AND g.start_date >= $currentTermStartDate
         AND kr.start_date >= g.start_date
         AND kr.start_date <= g.end_date
@@ -1191,7 +1192,7 @@ SET
     kr.end_date = g.end_date,
     kr.modified = $now
 WHERE
-    kr.team_id = $teamId
+    kr.del_flg = 0
 SQL;
         $res = $this->query($query);
         return $res;
@@ -1214,6 +1215,8 @@ UPDATE
         goals g
     ON
         kr.goal_id = g.id
+        AND g.team_id = $teamId
+        AND g.del_flg = 0
         AND g.start_date >= $currentTermStartDate
         AND kr.start_date NOT BETWEEN g.start_date AND g.end_date
         AND kr.end_date NOT BETWEEN g.start_date AND g.end_date
@@ -1222,7 +1225,7 @@ SET
     kr.end_date = g.end_date,
     kr.modified = $now
 WHERE
-    kr.team_id = $teamId
+    kr.del_flg = 0
 SQL;
         $res = $this->query($query);
         return $res;
