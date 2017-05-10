@@ -362,7 +362,7 @@ class Goal extends AppModel
                 $startDateInt = (int)date('Ymd');
             } else {
                 $term = $this->Team->Term->getNextTermData();
-                $startDateInt = (int)date('Ymd', $term['start_date'] + ($term['timezone'] * HOUR));
+                $startDateInt = (int)date('Ymd', $term['start_date']);
             }
         } else {
             $goal = $this->getById($goalId);
@@ -402,19 +402,13 @@ class Goal extends AppModel
         if (empty($keyResults)) {
             return true;
         }
-        // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
-        $term = $this->Team->Term->getTermDataByDate($goal['end_date']);
-
-        // UTCでのタイムスタンプ取得
-        $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
-
         // 該当ゴールの評価期間取得
         foreach ($keyResults as $kr) {
             //tkrのend_dateはゴールのend_dateと等しくなるため、チェックの必要はなし
             if ($kr['tkr_flg']) {
                 continue;
             }
-            if ($timeStamp < $kr['end_date']) {
+            if ($date < $kr['end_date']) {
                 $this->invalidate('end_date', __("Please input goal end date later than key result end date"));
                 return false;
             }
@@ -512,9 +506,7 @@ class Goal extends AppModel
     {
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
-            $currentTermData = $this->Team->Term->getCurrentTermData();
-            $localTodayDate = AppUtil::todayDateYmdLocal($currentTermData['timezone']);
-            $data['Goal']['start_date'] = $localTodayDate;
+            $data['Goal']['start_date'] = date('Y-m-d');
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
@@ -558,16 +550,9 @@ class Goal extends AppModel
 
         if (!Hash::get($data, 'KeyResult.0.start_date')) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
-        } else {
-            //時間をtimezoneを考慮したunixtimeに変換
-            $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
         }
         if (!Hash::get($data, 'KeyResult.0.end_date')) {
             $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
-        } else {
-            //期限を+1day-1secする
-            $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['KeyResult'][0]['end_date'])) - $goal_term['timezone'] * HOUR;
         }
         return $data;
     }

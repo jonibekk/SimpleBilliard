@@ -239,7 +239,7 @@ class GoalService extends AppService
             // TKR更新
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');
-            $updateTkr = $KeyResultService->buildUpdateKr($tkrId, $inputTkrData, false);
+            $updateTkr = $KeyResultService->buildUpdateKr($tkrId, $inputTkrData);
             if (!$KeyResult->save($updateTkr, false)) {
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
@@ -253,6 +253,8 @@ class GoalService extends AppService
                     throw new Exception(sprintf("Failed to update krs. goal_id:%s"
                         , $goalId));
                 }
+            } else {
+                // TODO:翔平が実装する、KR終了日がゴール終了日を超えている場合ゴール終了日に合わせる処理を後で追加
             }
 
             // TKRの進捗単位を変更した場合は進捗リセット
@@ -412,14 +414,13 @@ class GoalService extends AppService
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            $goalTerm = $EvaluateTerm->getTermDataByDate($requestData['end_date']);
             $updateData['end_date'] = $requestData['end_date'];
 
             // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
             $preUpdatedTerm = $Goal->getTermTypeById($goalId);
             $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($requestData['term_type'] == Term::TERM_TYPE_CURRENT);
             if ($isNextToCurrentUpdate) {
-                $updateData['start_date'] = AppUtil::todayDateYmdLocal($goalTerm['timezone']);
+                $updateData['start_date'] = date('Y-m-d');
             }
         }
         if (!empty($requestData['photo'])) {
@@ -500,7 +501,7 @@ class GoalService extends AppService
         $EvaluateTerm = ClassRegistry::init("Term");
 
         $currentTerm = $EvaluateTerm->getCurrentTermData();
-        return strtotime($goal['start_date']) >= $currentTerm['start_date'];
+        return $goal['start_date'] >= $currentTerm['start_date'];
     }
 
     /**

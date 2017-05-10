@@ -1120,10 +1120,9 @@ class KeyResult extends AppModel
         }
 
         // 保存データ定義
-        $timezone = $this->Team->getTimezone();
         $isCurrent = $termAfterUpdate == Term::TYPE_CURRENT;
         $termData = $this->Team->Term->getTermData($termAfterUpdate);
-        $startDate = $isCurrent ? AppUtil::todayDateYmdLocal($timezone) : $termData['start_date'];
+        $startDate = $isCurrent ? date('Y-m-d') : $termData['start_date'];
         $endDate = $termData['end_date'];
         // ゴールに紐づくKRの期を一括アップデート
         // TODO: unittestにおいてsqliteの場合、updateAll()で発行されるクエリ内にアペンドされる変数になぜかデリミタが付かない。。ので、明示的に付ける対応をした。
