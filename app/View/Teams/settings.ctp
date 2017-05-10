@@ -35,6 +35,9 @@ $this->set('hidden_sidebar_xxs', true);
 <div id="basic_setting">
     <?= $this->element('Team/edit_basic_setting') ?>
 </div>
+<div>
+    <?= $this->element('Team/edit_timezone_setting') ?>
+</div>
 <div id="term_setting">
     <?= $this->element('Team/edit_term_setting') ?>
 </div>

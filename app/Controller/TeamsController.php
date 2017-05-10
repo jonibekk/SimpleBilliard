@@ -66,6 +66,40 @@ class TeamsController extends AppController
     }
 
     /**
+     * Update timezone
+     * @return \Cake\Network\Response|null
+     */
+    public function edit_timezone()
+    {
+        $this->request->allowMethod('post');
+        // チーム管理者かチェック
+        // TODO:とりあえずチェック処理は他に合わせる(delete_teamメソッド等)が将来的にリファクタをする
+        try {
+            $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
+        $saveData = [
+            'id' => $this->current_team_id,
+            'timezone' => Hash::get($this->request->data, 'Team.timezone')
+        ];
+        $team = $this->Team->getById($this->current_team_id);
+        // Update timezone
+        if ($this->Team->save($saveData)) {
+            $this->Pnotify->outSuccess(__("Changed timezone setting."));
+        } else {
+            $this->Pnotify->outError(__("Failed to change timezone setting."));
+        }
+        // Save before change timezone to redis for notice team members
+        Cache::set('duration', WEEK * 2, 'team_info');
+        Cache::write($this->Team->getCacheKey(CACHE_KEY_BEFORE_CHANGE_TIMEZONE), $team['timezone'], 'team_info');
+
+        return $this->redirect($this->referer());
+    }
+
+    /**
      * チームを削除する
      */
     public function delete_team()
