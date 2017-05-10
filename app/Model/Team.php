@@ -415,6 +415,7 @@ class Team extends AppModel
 
     /**
      * getting timezone
+     *
      * @return mixed
      */
     function getTimezone()
@@ -455,4 +456,28 @@ class Team extends AppModel
         $row = $this->findById($team_id);
         return $row ? false : true;
     }
+
+    /**
+     * 指定したタイムゾーン設定になっているチームのIDのリストを返す
+     *
+     * @param float $timezone
+     *
+     * @return array
+     */
+    public function findIdsByTimezone(float $timezone): array
+    {
+        $options = [
+            'conditions' => [
+                'timezone' => $timezone,
+            ],
+            'fields'     => [
+                'id'
+            ],
+        ];
+        $ret = $this->findWithoutTeamId('list', $options);
+        // キーに特別な意味を持たせないように、歯抜けのキーを再採番
+        $ret = array_merge($ret);
+        return $ret;
+    }
+
 }
