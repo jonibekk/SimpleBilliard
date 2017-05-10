@@ -86,7 +86,7 @@ class CreateTermShell extends AppShell
      *
      * @internal param string $targetDate
      */
-    protected function _mainProcess(float $targetTimezone)
+    protected function _mainProcess($targetTimezone)
     {
         // validate
         if (!$this->_validateTimezone($targetTimezone)) {
@@ -143,7 +143,7 @@ class CreateTermShell extends AppShell
      *
      * @return bool
      */
-    protected function _validateTimezone(float $timezone): bool
+    protected function _validateTimezone($timezone): bool
     {
         $timezones = array_keys(AppUtil::getTimezoneList());
         return in_array($timezone, $timezones);
