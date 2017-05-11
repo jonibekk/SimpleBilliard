@@ -3,7 +3,7 @@ App::uses('AppUtil', 'Util');
 
 /**
  * The shell for creating next term
- * Console/cake create_term
+ * Console/cake create_next_term
  * Description
  * - As normally, it's executed by cron job.
  * - You can execute it manually if cron job is failed.
@@ -14,7 +14,7 @@ App::uses('AppUtil', 'Util');
  * @property Team $Team
  * @property Term $Term
  */
-class CreateTermShell extends AppShell
+class CreateNextTermsShell extends AppShell
 {
     public $uses = [
         'Team',
