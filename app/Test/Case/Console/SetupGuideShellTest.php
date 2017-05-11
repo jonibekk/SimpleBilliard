@@ -61,7 +61,7 @@ class SetupGuideShellTest extends GoalousTestCase
 
     public function testIsNotifyDay()
     {
-        $created = strtotime(date('Y/m/d', strtotime('-10 day')));
+        $created = strtotime(AppUtil::dateYmdReformat('-10 day', "/"));
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'created' => $created],
             $exec_delete_all = true);
         $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);

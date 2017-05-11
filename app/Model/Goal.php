@@ -362,14 +362,14 @@ class Goal extends AppModel
                 $startDateInt = (int)date('Ymd');
             } else {
                 $term = $this->Team->Term->getNextTermData();
-                $startDateInt = (int)date('Ymd', $term['start_date']);
+                $startDateInt = (int)date('Ymd', strtotime($term['start_date']));
             }
         } else {
             $goal = $this->getById($goalId);
             if (empty($goal)) {
                 return true;
             }
-            $startDateInt = (int)date('Ymd', $goal['start_date']);
+            $startDateInt = (int)date('Ymd', strtotime($goal['start_date']));
         }
 
         $endDateInt = (int)date('Ymd', strtotime($endDate));
@@ -2398,5 +2398,135 @@ class Goal extends AppModel
         $goal = Hash::get($this->findById($goalId, ['start_date', 'end_date']), 'Goal');
         $term = $this->Team->Term->getTermType($goal['start_date'], $goal['end_date']);
         return $term;
+    }
+
+    /**
+     * find goal list for updating krs term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return array
+     */
+    function findForTermRangeUpdating(string $startDate, string $endDate): array
+    {
+        $options = [
+            'conditions' => [
+                'team_id'       => $this->current_team_id,
+                'start_date >=' => $startDate,
+                'start_date <=' => $endDate,
+                'end_date >='   => $startDate,
+                'end_date <='   => $endDate,
+            ],
+            'fields'     => [
+                'id', 'start_date', 'end_date'
+            ]
+        ];
+
+        $goals = $this->find('all', $options);
+        if (!empty($goals)) {
+            return $goals;
+        }
+
+        return Hash::extract($goals, '{n}.Goal');
+    }
+
+    /**
+     * update end_date within range
+     * - this update only 'end_date' and 'modified' columns
+     * - only updating case of that end_date is over range
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     * @param  array  $additionalConditions
+     *
+     * @return bool
+     */
+    function updatEndWithinRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        $defaultConditions = [
+            "Goal.team_id"       => $this->current_team_id,
+            "Goal.start_date >=" => $startDate,
+            "Goal.start_date <=" => $endDate,
+            "Goal.end_date >"    => $endDate
+        ];
+        $conditions = $defaultConditions + $additionalConditions;
+
+        $res = $this->updateAll(
+            [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
+                "Goal.end_date" => "'$endDate'",
+                "Goal.modified" => time()
+            ],
+            $conditions
+        );
+        return $res;
+    }
+
+    /**
+     * update start_date, end_date within term range
+     * - this update only 'start_date', 'end_date' and 'modified' columns
+     * - only updating case of that end_date and are over range
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     * @param  array  $additionalConditions
+     *
+     * @return bool
+     */
+    function updateStartEndWithinRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        $defaultConditions = [
+            "Goal.team_id"      => $this->current_team_id,
+            "Goal.start_date >" => $endDate
+        ];
+        $conditions = $defaultConditions + $additionalConditions;
+        $res = $this->updateAll(
+            [
+                // TODO: SQLiteの場合にデミリタが認識されない?ことへの暫定対応。要調査。
+                "Goal.start_date" => "'$startDate'",
+                "Goal.end_date"   => "'$endDate'",
+                "Goal.modified"   => time()
+            ],
+            $conditions
+        );
+        return $res;
+    }
+
+    /**
+     * update range in current term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateCurrentTermRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        if(!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * update range in next term
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    function updateNextTermRange(string $startDate, string $endDate, array $additionalConditions = []): bool
+    {
+        if(!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
+            return false;
+        }
+
+        if(!$this->updateStartEndWithinRange($startDate, $endDate, $additionalConditions)) {
+            return false;
+        }
+
+        return true;
     }
 }

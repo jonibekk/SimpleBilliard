@@ -120,10 +120,6 @@ class GoalService extends AppService
             $data['term_type'] = 'current';
         }
 
-        // 日付フォーマット
-        $data['start_date'] = $TimeExHelper->dateFormat($data['start_date'], $currentTerm['timezone']);
-        $data['end_date'] = $TimeExHelper->dateFormat($data['end_date'], $currentTerm['timezone']);
-
         // 認定可能フラグ追加
         $data['is_approvable'] = false;
         $goalLeaderId = $GoalMember->getGoalLeaderId($id);

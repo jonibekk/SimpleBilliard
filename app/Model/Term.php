@@ -64,6 +64,30 @@ class Term extends AppModel
         'Evaluator',
     ];
 
+    public $update_validate = [
+        'start_ym'  => [
+            'notBlank'            => [
+                'required' => 'update',
+                'rule'     => 'notBlank',
+            ],
+            'dateYm'             => [
+                'rule' => ['date', 'ym'],
+            ],
+        ],
+        'term_range' => [
+            'notBlank'            => [
+                'required' => 'update',
+                'rule'     => 'notBlank',
+            ],
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+            'range'   => [
+                'rule' => ['range', 1, 12]
+            ]
+        ]
+    ];
+
     /**
      * TODO:findAllメソッドに統合
      *
@@ -589,7 +613,7 @@ class Term extends AppModel
         } elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
             return __('Next Term');
         }
-        return date('Y/m/d', strtotime($start_date)) . ' - ' . date('Y/m/d', strtotime($end_date));
+        return AppUtil::dateYmdReformat($start_date, "/") . ' - ' . AppUtil::dateYmdReformat($end_date, "/");
     }
 
     /**
@@ -648,5 +672,38 @@ class Term extends AppModel
         // キーに特別な意味を持たせないように、歯抜けのキーを再採番
         $ret = array_merge($ret);
         return $ret;
+    }
+
+    /**
+     * update current term end date
+     *
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    public function updateCurrentRange(string $endDate): bool
+    {
+        $currentTermId = $this->getCurrentTermId();
+        $this->id = $currentTermId;
+        return (bool)$this->saveField('end_date', $endDate);
+    }
+
+    /**
+     * Update next term start_date and end_date
+     *
+     * @param  string $startDate
+     * @param  string $endDate
+     *
+     * @return bool
+     */
+    public function updateNextRange(string $startDate, string $endDate): bool
+    {
+        $saveData = [
+            'id'         => $this->getNextTermId(),
+            'start_date' => $startDate,
+            'end_date'   => $endDate
+        ];
+
+        return (bool)$this->save($saveData);
     }
 }

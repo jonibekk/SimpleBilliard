@@ -455,4 +455,24 @@ class Team extends AppModel
         $row = $this->findById($team_id);
         return $row ? false : true;
     }
+
+    /**
+     * update part of term settings
+     *
+     * @param  int  $startTermMonth
+     * @param  int  $borderMonth
+     *
+     * @return bool
+     */
+    function updateTermSettings(int $startTermMonth, int $borderMonth): bool
+    {
+        $this->id = $this->current_team_id;
+        if (!$this->saveField('start_term_month', $startTermMonth)) {
+            return false;
+        }
+        if (!$this->saveField('border_months', $borderMonth)) {
+            return false;
+        }
+        return true;
+    }
 }
