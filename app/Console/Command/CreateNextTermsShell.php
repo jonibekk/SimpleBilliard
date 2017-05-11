@@ -132,9 +132,9 @@ class CreateNextTermsShell extends AppShell
     protected function _deleteTermCaches()
     {
         // deleting caches
-        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
-        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
-        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_CURRENT, false, null, false), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_NEXT, false, null, false), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_PREVIOUS, false, null, false), 'team_info');
     }
 
     /**
