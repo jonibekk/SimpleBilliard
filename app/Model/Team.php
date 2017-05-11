@@ -483,14 +483,13 @@ class Team extends AppModel
     /**
      * 期間データを持たないチームのIDを取得
      *
-     * @param float $timezone
-     * @param int   $timestamp
+     * @param float  $timezone
+     * @param string $targetDate
      *
      * @return array
      */
-    public function findIdsNotHaveTerm(float $timezone, int $timestamp): array
+    public function findIdsNotHaveTerm(float $timezone, string $targetDate): array
     {
-        $targetDate = AppUtil::dateYmdLocal($timestamp, $timezone);
         $options = [
             'conditions' => [
                 'Team.timezone' => $timezone,
@@ -523,14 +522,13 @@ class Team extends AppModel
     /**
      * 今期の期間データを持ち且つ来期データを持たないチームのIDと期の終了日を取得
      *
-     * @param float $timezone
-     * @param int   $timestamp
+     * @param float  $timezone
+     * @param string $targetDate
      *
-     * @return array [team_id => end_date,]
+     * @return array [['team_id'=>'','border_months'=>'','end_date'=>'']]
      */
-    public function findAllTermEndDatesNextTermNotExists(float $timezone, int $timestamp): array
+    public function findAllTermEndDatesNextTermNotExists(float $timezone, string $targetDate): array
     {
-        $targetDate = AppUtil::dateYmdLocal($timestamp, $timezone);
         $options = [
             'conditions' => [
                 'Team.timezone' => $timezone,

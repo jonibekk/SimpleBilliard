@@ -57,23 +57,23 @@ class CreateTermShell extends AppShell
         if ($difHourFromUtcMidnight == 0) {
             // UTC+0:00 Western Europe Time, London
             // timezone = 0で実行
-            $this->_mainProcess(0, $nowTimestamp);
+            return $this->_mainProcess(0, $nowTimestamp);
         } elseif ($difHourFromUtcMidnight == 12) {
             // UTC+12:00(Auckland, Fiji)
             // timezone = +12で実行
             $this->_mainProcess(12, $nowTimestamp);
             // UTC-12:00(Eniwetok, Kwajalein)
             // timezone = -12で実行
-            $this->_mainProcess(-12, $nowTimestamp);
+            return $this->_mainProcess(-12, $nowTimestamp);
         } elseif ($difHourFromUtcMidnight < 12) {
             // UTC-11:00(Midway Island) - UTC-1:00(Cape Verde Islands)
             // timezone = -xxで実行
-            $this->_mainProcess(-$difHourFromUtcMidnight, $nowTimestamp);
+            return $this->_mainProcess(-$difHourFromUtcMidnight, $nowTimestamp);
         } else {
             // $timeOffset > 12
             // UTC+1:00(Central Europe Time) - UTC+11:00(Solomon Islands)
             $targetTimezone = 24 - $difHourFromUtcMidnight;
-            $this->_mainProcess($targetTimezone, $nowTimestamp);
+            return $this->_mainProcess($targetTimezone, $nowTimestamp);
         }
     }
 
@@ -83,7 +83,7 @@ class CreateTermShell extends AppShell
      * @param float $targetTimezone
      * @param int   $timestamp
      *
-     * @internal param string $targetDate
+     * @return bool|int
      */
     protected function _mainProcess($targetTimezone, int $timestamp)
     {
@@ -93,26 +93,50 @@ class CreateTermShell extends AppShell
             $this->error('Invalid parameter. Timezone should be in following values.', $timezones);
         }
 
+        $targetDate = AppUtil::dateYmdLocal($timestamp, $targetTimezone);
+
         // [処理対象外チーム] 対象のチームは今期の期間設定が存在しないチーム
         // 取得する目的はエラーログに残す事のみ
-        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $timestamp);
+        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $targetDate);
+        if (!empty($teamIdsNotHaveTerm)) {
+            CakeLog::error(sprintf('Failed to find current terms. timezone: %s, team count: %s, failed team ids:%s',
+                $targetTimezone, count($teamIdsNotHaveTerm), var_export($teamIdsNotHaveTerm, true)
+            ));
+        }
 
         // [処理対象チームの期間の終了日と期間] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
-        $termEndDates = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $timestamp);
+        $currentTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
+        if (empty($currentTerms)) {
+            return $this->out('There is no data to save.');
+        }
         // 期間データの生成
-        $insertDatas = [];
-        foreach ($termEndDates as $currentTerm) {
+        $newTerms = [];
+        foreach ($currentTerms as $currentTerm) {
             $startDate = AppUtil::dateTomorrow($currentTerm['end_date']);
-            $endDate = AppUtil::dateYmd(strtotime($startDate . " +{$currentTerm['border_months']} month") - DAY);
-            $insertDatas[] = [
-                'start_date' => $startDate,
-                'end_date'   => $endDate,
+            $newTerms[] = [
+                'start_date' => AppUtil::dateTomorrow($currentTerm['end_date']),
+                'end_date'   => date('Y-m-t',
+                    strtotime($startDate . " +" . ($currentTerm['border_months'] - 1) . " month")),
                 'team_id'    => $currentTerm['team_id'],
             ];
         }
-        // バルクインサート
-        $this->Term->bulkInsert($insertDatas);
+        // 期を一括保存
+        if (!$this->Term->bulkInsert($newTerms)) {
+            CakeLog::error(sprintf(
+                'Failed to insert term datas. timezone: %s, data count: %s, data: %s',
+                $targetTimezone, count($newTerms), var_export($newTerms, true)
+            ));
+            return false;
+        }
+        // キャッシュを削除
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
 
+        return $this->out(sprintf(
+            'Success to save term datas. timezone: %s, data count: %s, data: %s',
+            $targetTimezone, count($newTerms), var_export($newTerms, true)
+        ));
     }
 
     /**
