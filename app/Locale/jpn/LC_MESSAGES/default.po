@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-14 17:09+0900\n"
+"PO-Revision-Date: 2017-05-10 13:36+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -535,6 +535,12 @@ msgstr "期間設定を更新しました。"
 msgid "Failed to change terms setting."
 msgstr "期間設定の変更に失敗しました。"
 
+msgid "Changed timezone setting."
+msgstr "タイムゾーン設定を更新しました。"
+
+msgid "Failed to change timezone setting."
+msgstr "タイムゾーン設定の変更に失敗しました。"
+
 msgid "Failed to delete a team."
 msgstr "チームの削除に失敗しました。"
 
@@ -914,9 +920,6 @@ msgstr "公開"
 
 msgid "Secret"
 msgstr "秘密"
-
-msgid "This term can not be frozen."
-msgstr "この期は凍結できません。"
 
 msgid "You"
 msgstr "あなた"
@@ -1630,6 +1633,9 @@ msgstr "誕生日を記入する場合は年月日のすべての項目を記入
 msgid "Active status"
 msgstr "メンバーアクティブ状態"
 
+msgid "This term can not be frozen."
+msgstr "この期は凍結できません。"
+
 msgid "Male"
 msgstr "男性"
 
@@ -1749,9 +1755,6 @@ msgstr "あなたはこのトピックのメンバーではありません。"
 
 msgid "Body or attached file is required. "
 msgstr "本文か添付ファイルは必須です。"
-
-msgid "File extension and content are different."
-msgstr "ファイルの拡張子と内容が異なっています。"
 
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
@@ -3505,6 +3508,12 @@ msgstr ""
 msgid "Term settings"
 msgstr "期間設定"
 
+msgid "Timezone setting"
+msgstr "タイムゾーン設定"
+
+msgid "Save settings"
+msgstr "設定を保存"
+
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
 
@@ -3567,9 +3576,6 @@ msgstr "表示順"
 
 msgid "Add definition"
 msgstr "定義を１つ追加"
-
-msgid "Save settings"
-msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
@@ -4958,6 +4964,9 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
+
+#~ msgid "File extension and content are different."
+#~ msgstr "ファイルの拡張子と内容が異なっています。"
 
 #~ msgid "Failed to change members list."
 #~ msgstr "メンバーの変更に失敗しました。"

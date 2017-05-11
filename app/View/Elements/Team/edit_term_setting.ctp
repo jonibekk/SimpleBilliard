@@ -20,7 +20,7 @@
  * @var                    $timezones
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= __("Term settings") ?></div>
     <div class="panel-body add-team-panel-body form-horizontal">
@@ -31,8 +31,8 @@
                 <label class="col col-sm-3 control-label form-label"><?= __("Current Term") ?></label>
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($current_term_start_date, $current_term_timezone) ?>
-                        - <?= $this->TimeEx->date($current_term_end_date, $current_term_timezone) ?>
+                        <?= AppUtil::dateYmdReformat($current_term_start_date, "/") ?>
+                        - <?= AppUtil::dateYmdReformat($current_term_end_date, "/") ?>
                         <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
                     </p>
                 </div>
@@ -43,8 +43,8 @@
                 <label class="col col-sm-3 control-label form-label"><?= __("Next Term") ?></label>
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($next_term_start_date, $next_term_timezone) ?>
-                        - <?= $this->TimeEx->date($next_term_end_date, $next_term_timezone) ?>
+                        <?= AppUtil::dateYmdReformat($next_term_start_date, "/") ?>
+                        - <?= AppUtil::dateYmdReformat($next_term_end_date, "/") ?>
                         <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
                     </p>
                 </div>
@@ -53,4 +53,4 @@
     </div>
 </div>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

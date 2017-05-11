@@ -104,9 +104,8 @@ class EvaluationsController extends AppController
             } elseif ($termId == $previousTermId) {
                 $termLabels[$termId] = __("Previous Term");
             } else {
-                $timezoneSec = $term['timezone'] * 3600;
-                $fmtStartDate = date('Y/m/d', $term['start_date'] + $timezoneSec);
-                $fmtEndDate = date('Y/m/d', $term['end_date'] + $timezoneSec);
+                $fmtStartDate = AppUtil::dateYmdReformat($term['start_date'], "/");
+                $fmtEndDate = AppUtil::dateYmdReformat($term['end_date'], "/");
                 $termLabels[$term['id']] = $fmtStartDate . " - " . $fmtEndDate;
             }
         }

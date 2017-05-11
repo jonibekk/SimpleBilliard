@@ -90,7 +90,15 @@
             </div>
 
         </div>
+
         <hr>
+        <?=
+        $this->Form->input('timezone', [
+            'label'      => __("Timezone"),
+            'type'       => 'select',
+        ]) ?>
+        <hr>
+
         <?=
         $this->Form->input('type', [
             'label'      => __("Plan"),
@@ -147,7 +155,8 @@
                             message: "<?=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>"
                         }
                     }
-                }
+                },
+                "data[Team][timezone]": {}
             }
         });
 

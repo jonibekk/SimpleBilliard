@@ -32,12 +32,12 @@
                             </span>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目       ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目        ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
-                    <?= $this->Time->format('Y/m/d', $goal['Goal']['start_date'] + $goalTerm['timezone'] * HOUR) ?>
-                    - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date'] + $goalTerm['timezone'] * HOUR) ?>
+                    <?= AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/") ?>
+                    - <?= AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/") ?>
                     <?php if ($this->Session->read('Auth.User.timezone') != $goalTerm['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goalTerm['timezone']); ?>
                     <?php endif ?>
