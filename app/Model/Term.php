@@ -73,6 +73,9 @@ class Term extends AppModel
             'dateYm'             => [
                 'rule' => ['date', 'ym'],
             ],
+            'startEndDate'       => [
+                'rule' => ['customValidNextStartDate']
+            ],
         ],
         'term_range' => [
             'notBlank'            => [
@@ -87,6 +90,33 @@ class Term extends AppModel
             ]
         ]
     ];
+
+    /**
+     * 来期開始月のバリデーション
+     * - 来月 - 12ヶ月後 の間に収まっているか
+     *
+     * @param  array $val
+     *
+     * @return bool
+     */
+    function customValidNextStartDate(string $val)
+    {
+        $nextStartYm = array_shift($val);
+        // lower limit
+        $lowerLimitYm = date('Y-m', strtotime("+1 month"));
+        if ($nextStartYm < $lowerLimitYm) {
+            // TODO: set valid error message
+            return '';
+        }
+
+        // upper limit
+        $upperLimitYm = date('Y-m', strtotime("$nextStartYm +12 month"));
+        if ($requestStartYm > $upperLimitYm) {
+            // TODO: set valid error message
+            return '';
+        }
+        return true;
+    }
 
     /**
      * TODO:findAllメソッドに統合
@@ -705,5 +735,25 @@ class Term extends AppModel
         ];
 
         return (bool)$this->save($saveData);
+    }
+
+    public function initTerm(string $nextStartDate, int $termRange, int $teamId): bool
+    {
+        $currentStartDate = date('Y-m-01');
+        $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
+        $nextEndDate = date('Y-m-t', strtotime("$nextStartDate +$termRange month"));
+        $saveData = [
+            [
+                'team_id'    => $teamId,
+                'start_date' => $currentStartDate,
+                'end_date'   => $currentEndDate
+            ],
+            [
+                'team_id'    => $teamId,
+                'start_date' => $nextStartDate,
+                'end_date'   => $nextEndDate
+            ]
+        ];
+        return $this->saveAll($saveData);
     }
 }

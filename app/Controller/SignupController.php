@@ -81,7 +81,6 @@ class SignupController extends AppController
                 'maxLength' => ['rule' => ['maxLength', 128]],
                 'notBlank'  => ['rule' => ['notBlank'],],
             ],
-            'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
             'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
             'timezone'         => [
                 'numeric' => [
@@ -89,6 +88,16 @@ class SignupController extends AppController
                     'allowEmpty' => true,
                 ],
             ],
+        ],
+        'Term'      => [
+            'next_start_ym' => [
+                'notBlank'            => [
+                    'rule' => 'notBlank',
+                ],
+                'dateYm'   => [
+                    'rule' => ['date', 'ym'],
+                ],
+            ]
         ]
     ];
 
@@ -106,9 +115,11 @@ class SignupController extends AppController
         ],
         'Team'  => [
             'name',
-            'start_term_month',
             'border_months',
             'timezone',
+        ],
+        'Term'  => [
+            'next_start_ym'
         ]
     ];
 
@@ -400,6 +411,16 @@ class SignupController extends AppController
 
             ///save team
             $this->Team->add(['Team' => $data['Team']], $user_id);
+            $teamId = $this->Team->getLastInsertID();
+
+            // save current&next term
+            $Term = ClassRegistry::init('Term');
+            $nextStartDate = date('Y-m-01', strtotime($data['Term']['next_start_ym']));
+            $termRange = $data['Team']['border_months'];
+            if (!$this->Team->Term->initTerm($nextStartDate, $termRange, $teamId)) {
+                $res['is_not_available'] = true;
+                throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
+            }
 
             //success!!
             //auto login with team
@@ -479,7 +500,6 @@ class SignupController extends AppController
                 if (!isset($data[$model][$field])) {
                     return false;
                 }
-
             }
         }
         return true;
