@@ -42,12 +42,23 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
+        $team = $this->Team->getById($this->current_team_id);
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
             $this->Pnotify->outSuccess(__("Changed basic team settings."));
         } else {
             $this->Pnotify->outError(__("Failed to change basic team settings."));
         }
+
+        // If change timezone, notify team members
+        $newTimezone = Hash::get($this->request->data, 'Team.timezone');
+        if ((float)$team['timezone'] != (float)$newTimezone) {
+            $this->log('change timezone');
+            // Save before change timezone to redis
+            $this->GlRedis->saveBeforeChangeTimezone($this->current_team_id, $team['timezone']);
+            // TODO: send notification
+        }
+
         return $this->redirect($this->referer());
     }
 
@@ -80,21 +91,6 @@ class TeamsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-
-        $saveData = [
-            'id' => $this->current_team_id,
-            'timezone' => Hash::get($this->request->data, 'Team.timezone')
-        ];
-        $team = $this->Team->getById($this->current_team_id);
-        // Update timezone
-        if ($this->Team->save($saveData)) {
-            $this->Pnotify->outSuccess(__("Changed timezone setting."));
-        } else {
-            $this->Pnotify->outError(__("Failed to change timezone setting."));
-        }
-        // Save before change timezone to redis for notice team members
-        Cache::set('duration', WEEK * 2, 'team_info');
-        Cache::write($this->Team->getCacheKey(CACHE_KEY_BEFORE_CHANGE_TIMEZONE), $team['timezone'], 'team_info');
 
         return $this->redirect($this->referer());
     }
