@@ -246,11 +246,9 @@ class GoalService extends AppService
             $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
             if ($preUpdatedTerm == Term::TERM_TYPE_NEXT && $afterUpdatedTerm == Term::TERM_TYPE_CURRENT) {
                 if (!$KeyResult->updateTermByGoalId($goalId, Term::TYPE_CURRENT)) {
-                    throw new Exception(sprintf("Failed to update krs. goal_id:%s"
+                    throw new Exception(sprintf("Failed to update krs case goal move term from nest to current. goal_id:%s"
                         , $goalId));
                 }
-            } else {
-                // TODO:翔平が実装する、KR終了日がゴール終了日を超えている場合ゴール終了日に合わせる処理を後で追加
             }
 
             // TKRの進捗単位を変更した場合は進捗リセット

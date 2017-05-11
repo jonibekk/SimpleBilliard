@@ -379,21 +379,14 @@ class KeyResultService extends AppService
             }
         }
 
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
-        $goal = $Goal->getById($kr['goal_id']);
         // リクエストの開始日がゴール開始日より前だった場合ゴール開始日に合わせる
         if (Hash::get($requestData, 'start_date')) {
-            $updateKr['start_date'] = $goal['start_date'] > $requestData['start_date'] ? $goal['start_date'] : $requestData['start_date'];
-//        } else {
-//            $updateKr['start_date'] = $goal['start_date'] > $kr['start_date'] ? $goal['start_date'] : $kr['start_date'];
+            $updateKr['start_date'] = $requestData['start_date'];
         }
 
         // リクエストの終了日がゴール終了日より後だった場合ゴール終了日に合わせる
         if (Hash::get($requestData, 'end_date')) {
-            $updateKr['end_date'] = $goal['end_date'] < $requestData['end_date'] ? $goal['end_date'] : $requestData['end_date'];
-//        } else {
-//            $updateKr['end_date'] = $goal['end_date'] < $kr['end_date'] ? $goal['end_date'] : $kr['end_date'];
+            $updateKr['start_date'] = $requestData['start_date'];
         }
         return $updateKr;
     }
