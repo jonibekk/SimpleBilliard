@@ -69,6 +69,23 @@ section.panel{
       padding:.5rem 1rem;
       float:left;
       width:100%;
+      position:relative;
+      &.current-term{
+        z-index:2;
+      }
+      &.edited-term{
+        z-index:1;
+        overflow:hidden;
+        transition:transform .3s;
+        &.mod-hide{
+          transform:translateY(-60px);
+          height:0;
+          @media @medium{
+            transform:translatex(-122%);
+            height:auto;
+          }
+        }
+      }
       p{
         margin-bottom:0;
         display:flex;
@@ -76,6 +93,9 @@ section.panel{
         strong,.term-range{
           flex-basis:100%;
         }
+      }
+      span.edited{
+        color:@goalous;
       }
       @media @medium{
         width:45%;
@@ -89,13 +109,24 @@ section.panel{
       width:100%;
       float:left;
       text-align:center;
+      position:relative;
+      z-index: 1;
+      transition:transform .3s, opacity .3s;
+      &.mod-hide{
+        transform:translateY(-12px);
+        height:0;
+      }
       @media @medium{
         width: 10%;
         height: 4em;
         display: flex;
         align-items: center;
         justify-content: center;
-        transform:rotate(-90deg);
+        transform:rotate(-90deg) !important;
+        opacity:1;
+        &.mod-hide{
+          opacity:0;
+        }
       }
     }
   }

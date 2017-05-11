@@ -28,20 +28,20 @@
     <div class="panel-body">
         <p>Changes will take effect after this current term</p>
         <fieldgroup>
-            <label>Term Start:</label>
+            <label>Next Term Start:</label>
             <select name="term_start" id="term_start">
-                <option value="05_2017">May 2017 (default)</option>
-                <option value="06_2017">June 2017</option>
                 <option value="07_2017">July 2017</option>
-                <option value="08_2017">August 2017</option>
+                <option value="08_2017" selected="selected">August 2017 (default)</option>
                 <option value="09_2017">September 2017</option>
                 <option value="10_2017">October 2017</option>
                 <option value="11_2017">November 2017</option>
                 <option value="12_2017">December 2017</option>
-                <option value="01_2017">January 2018</option>
-                <option value="02_2017">February 2018</option>
-                <option value="03_2017">March 2018</option>
-                <option value="04_2017">April 2018</option>
+                <option value="01_2018">January 2018</option>
+                <option value="02_2018">February 2018</option>
+                <option value="03_2018">March 2018</option>
+                <option value="04_2018">April 2018</option>
+                <option value="05_2018">May 2018</option>
+                <option value="06_2018">June 2018</option>
             </select>
         </fieldgroup>
         <fieldgroup>
@@ -55,24 +55,34 @@
         <div class="term-details current-term">
             <p>
                 <strong>Current</strong>
-                <div class="term-range">This term: <span class="this-start">Apr 2017</span> - <span class="this-end">Sep 2017</span></div>
-                <div class="term-range">Next term: <span class="next-start">Oct 2017</span> - <span class="next-end">Mar 2018</span></div>
+                <div class="term-range"><?= __('This term') ?>: <span id="currentStart" class="this-start" data-date="5_2017">May 2017</span> - <span class="this-end" data-date="7_2017">Jul 2017</span></div>
+                <div class="term-range">Next term: <span class="next-start" data-date="8_2017">Aug 2017</span> - <span class="next-end" data-date="10_2017">Oct 2017</span></div>
             </p>
         </div>
         <i class="fa fa-caret-down"></i>
         <div class="term-details edited-term">
             <p>
                 <strong>After</strong>
-                <div class="term-range">This term: <span class="this-start">Apr 2017</span> - <span class="this-end">Sep 2017</span></div>
-                <div class="term-range">Next term: <span class="next-start">Oct 2017</span> - <span class="next-end">Mar 2018</span></div>
+                <div class="term-range">This term: <span class="this-start" data-date="5_2017">May 2017</span> - <span class="this-end" data-date="7_2017">Jul 2017</span></div>
+                <div class="term-range">Next term: <span class="next-start" data-date="8_2017">Aug 2017</span> - <span class="next-end" data-date="10_2017">Oct 2017</span></div>
             </p>
         </div>
     </div>
     <footer>
         <strong>< Attention ></strong>
         <ul>
-            <li>上記のように期間が変更されます</li>
-            <li>すでに作成されたゴールやKRの開始日と終了日が変更されます。</li>
+            <li>The term has changed as above.</li>
+            <li>According to the changed term, the dates of the goals and KR are automatically updated as follows.</li>
+        </ul>
+        <ol>
+            <li>The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term.</li>
+            <li>The goal that begins in the current term and ends beyond the next term will be updated to end on the last day of the current term.</li>
+            <li>The goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term.</li>
+            <li>If the start date and end date of a goal is both within the current term, or both within the next term, will not be changed.</li>
+            <li>The goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term.</li>
+        </ol>
+        <ul>
+            <li>The start date and the end date of KR belonging to the goal are updated like the above goal.</li>
         </ul>
         <fieldgroup>
             <input type="checkbox" id="term_agreement" name="term_agreement"> I confirm these changes. 
