@@ -501,7 +501,7 @@ class Team extends AppModel
     }
 
     /**
-     * 期間データを持たないチームのIDを取得
+     * finding team ids that have no term data
      *
      * @param float  $timezone
      * @param string $targetDate
@@ -533,7 +533,7 @@ class Team extends AppModel
             ],
         ];
         $ret = $this->findWithoutTeamId('list', $options);
-        // キーに特別な意味を持たせないように、歯抜けのキーを再採番
+        // renumbering
         $ret = array_merge($ret);
         return $ret;
 
@@ -541,6 +541,7 @@ class Team extends AppModel
 
     /**
      * 今期の期間データを持ち且つ来期データを持たないチームのIDと期の終了日を取得
+     * finding id of teams are which have current term setting and which have not next term setting.
      *
      * @param float  $timezone
      * @param string $targetDate
@@ -589,7 +590,7 @@ class Team extends AppModel
         ];
         $ret = $this->findWithoutTeamId('all', $options);
 
-        // 配列のモデル名を除外してマージ
+        // excluding Model name from the arrays and merging them.
         $teams = Hash::extract($ret, '{n}.Team');
         $currentTerms = Hash::extract($ret, '{n}.CurrentTerm');
         $ret = Hash::merge($teams, $currentTerms);
