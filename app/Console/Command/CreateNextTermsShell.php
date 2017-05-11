@@ -107,7 +107,7 @@ class CreateNextTermsShell extends AppShell
         foreach ($currentTerms as $currentTerm) {
             $startDate = AppUtil::dateTomorrow($currentTerm['end_date']);
             $newTerms[] = [
-                'start_date' => AppUtil::dateTomorrow($currentTerm['end_date']),
+                'start_date' => $startDate,
                 'end_date'   => date('Y-m-t',
                     strtotime($startDate . " +" . ($currentTerm['border_months'] - 1) . " month")),
                 'team_id'    => $currentTerm['team_id'],
