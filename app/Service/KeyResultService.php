@@ -379,14 +379,11 @@ class KeyResultService extends AppService
             }
         }
 
-        // リクエストの開始日がゴール開始日より前だった場合ゴール開始日に合わせる
         if (Hash::get($requestData, 'start_date')) {
             $updateKr['start_date'] = $requestData['start_date'];
         }
-
-        // リクエストの終了日がゴール終了日より後だった場合ゴール終了日に合わせる
         if (Hash::get($requestData, 'end_date')) {
-            $updateKr['start_date'] = $requestData['start_date'];
+            $updateKr['end_date'] = $requestData['end_date'];
         }
         return $updateKr;
     }
