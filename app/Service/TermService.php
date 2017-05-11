@@ -54,11 +54,10 @@ class TermService extends AppService
      * - update next term start and end date
      *
      * @param  array $data
-     * @param  int   $userId
      *
      * @return bool
      */
-    public function update(array $data, int $userId): bool
+    public function update(array $data): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
