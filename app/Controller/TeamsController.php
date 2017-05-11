@@ -42,12 +42,22 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
+        $team = $this->Team->getById($this->current_team_id);
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
             $this->Pnotify->outSuccess(__("Changed basic team settings."));
         } else {
             $this->Pnotify->outError(__("Failed to change basic team settings."));
         }
+
+        // If change timezone, notify team members
+        $newTimezone = Hash::get($this->request->data, 'Team.timezone');
+        if ((float)$team['timezone'] != (float)$newTimezone) {
+            // Save before change timezone to redis
+            $this->GlRedis->saveBeforeChangeTimezone($this->current_team_id, $team['timezone']);
+            // TODO: send notification
+        }
+
         return $this->redirect($this->referer());
     }
 
@@ -89,6 +99,25 @@ class TeamsController extends AppController
         }
 
         $this->Pnotify->outSuccess(__("Changed terms setting."));
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * Update timezone
+     * @return \Cake\Network\Response|null
+     */
+    public function edit_timezone()
+    {
+        $this->request->allowMethod('post');
+        // チーム管理者かチェック
+        // TODO:とりあえずチェック処理は他に合わせる(delete_teamメソッド等)が将来的にリファクタをする
+        try {
+            $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
         return $this->redirect($this->referer());
     }
 
