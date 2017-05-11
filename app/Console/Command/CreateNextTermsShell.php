@@ -66,15 +66,17 @@ class CreateNextTermsShell extends AppShell
 
         $targetDate = AppUtil::dateYmdLocal($currentTimestamp, $targetTimezone);
 
-        $this->_mainProcess($targetTimezone, $targetDate);
+        $res = $this->_mainProcess($targetTimezone, $targetDate);
 
         // If 12 hours difference,
         // UTC-12:00(Eniwetok, Kwajalein) should be covered as extra process.
         if ($targetTimezone == 12) {
-            $this->_mainProcess(-$targetTimezone, $targetDate);
+            $res = $this->_mainProcess(-$targetTimezone, $targetDate);
         }
 
-        $this->_deleteTermCaches();
+        if ($res === true) {
+            $this->_deleteTermCaches();
+        }
     }
 
     /**
@@ -83,9 +85,9 @@ class CreateNextTermsShell extends AppShell
      * @param float  $targetTimezone
      * @param string $targetDate
      *
-     * @return bool|int
+     * @return bool
      */
-    protected function _mainProcess($targetTimezone, string $targetDate)
+    protected function _mainProcess($targetTimezone, string $targetDate): bool
     {
         // [処理対象外チーム] 今期の期間設定が存在しないチーム [Unprocessed teams] Team not having term setting for current term
         // 取得する目的はエラーログに残す事のみ The purpose of fetching data is only to leave it in the error log
@@ -100,7 +102,8 @@ class CreateNextTermsShell extends AppShell
         // Target teams are which have current term setting and which have not next term setting.
         $currentTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
         if (empty($currentTerms)) {
-            return $this->out('There is no data to save.');
+            $this->out('There is no data to save.');
+            return false;
         }
         // Building saving term datas.
         $newTerms = [];
@@ -123,10 +126,12 @@ class CreateNextTermsShell extends AppShell
             return false;
         }
 
-        return $this->out(sprintf(
+        $this->out(sprintf(
             'Success to save term datas. timezone: %s, data count: %s, data: %s',
             $targetTimezone, count($newTerms), var_export($newTerms, true)
         ));
+
+        return true;
     }
 
     protected function _deleteTermCaches()
