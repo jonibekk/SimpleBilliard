@@ -24,8 +24,10 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Paused evaluation settings.") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Paused evaluation settings.") ?></h2>
+    </header>
     <div class="panel-body form-horizontal">
         <?php if (!$current_eval_is_started && !$previous_eval_is_started): ?>
             <p class="text-align_c"><?= __("Evaluation has not started.") ?></p>
@@ -82,5 +84,5 @@
             <?php endif; ?>
         <?php endif; ?>
     </p>
-</div>
+</section>
 <?= $this->App->viewEndComment() ?>
