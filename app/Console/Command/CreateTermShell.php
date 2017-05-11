@@ -2,11 +2,14 @@
 App::uses('AppUtil', 'Util');
 
 /**
- * 期間データ生成バッチ用shell
+ * The shell for creating next term
  * Console/cake create_term
- * 説明
- * - 期間データを生成する処理
- * - 実行時間を元に対象タイムゾーンを割り出し、そのチームの期間データ(今期、来期)が存在しない場合に期間データを生成する
+ * Description
+ * - As normally, it's executed by cron job.
+ * - You can execute it manually if cron job is failed.
+ * - The target time zone is determined based on the execution time.
+ * - If there is no next term data of the team, term data is generated.
+ * - [Error case] If there is no current term data in a team, to create a next term data will skipped.
  *
  * @property Team $Team
  * @property Term $Term
@@ -30,73 +33,62 @@ class CreateTermShell extends AppShell
     {
         $parser = parent::getOptionParser();
         $options = [
-            'timezone'         => ['short' => 't', 'help' => '対象のチームのタイムゾーン', 'required' => false,],
-            'currentTimestamp' => ['short' => 'c', 'help' => '現在のタイムスタンプ(テスト用途)', 'required' => false,],
+            'timezone'         => [
+                'short'    => 't',
+                'help'     => 'target timezone. As default, it will be calculated automatically from current timestamp.',
+                'required' => false,
+            ],
+            'currentTimestamp' => [
+                'short'    => 'c',
+                'help'     => '[ It is used for only test cases ]',
+                'required' => false,
+            ],
         ];
         $parser->addOptions($options);
         return $parser;
     }
 
     /**
-     * shellのメイン処理
+     * Entry point of the Shell
      */
     public function main()
     {
-        // テストの場合のみ現在日時のタイムスタンプをパラメータから取得
-        $nowTimestamp = $this->params['currentTimestamp'] ?? time();
-        // ターゲットのタイムゾーン
-        $targetTimezone = $this->params['timezone'] ?? null;
-        if ($targetTimezone) {
-            return $this->_mainProcess($targetTimezone, $nowTimestamp);
-        }
-        // ターゲットのタイムゾーンが存在しない場合
-        $startTodayTimestamp = strtotime('00:00:00');
-        // UTC0:00と現在日時の時差(0 - 23)
-        $difHourFromUtcMidnight = AppUtil::diffHourFloorByMinute($nowTimestamp, $startTodayTimestamp);
-        // 時差によって対象タイムゾーンを自動判定
-        if ($difHourFromUtcMidnight == 0) {
-            // UTC+0:00 Western Europe Time, London
-            // timezone = 0で実行
-            return $this->_mainProcess(0, $nowTimestamp);
-        } elseif ($difHourFromUtcMidnight == 12) {
-            // UTC+12:00(Auckland, Fiji)
-            // timezone = +12で実行
-            $this->_mainProcess(12, $nowTimestamp);
-            // UTC-12:00(Eniwetok, Kwajalein)
-            // timezone = -12で実行
-            return $this->_mainProcess(-12, $nowTimestamp);
-        } elseif ($difHourFromUtcMidnight < 12) {
-            // UTC-11:00(Midway Island) - UTC-1:00(Cape Verde Islands)
-            // timezone = -xxで実行
-            return $this->_mainProcess(-$difHourFromUtcMidnight, $nowTimestamp);
-        } else {
-            // $timeOffset > 12
-            // UTC+1:00(Central Europe Time) - UTC+11:00(Solomon Islands)
-            $targetTimezone = 24 - $difHourFromUtcMidnight;
-            return $this->_mainProcess($targetTimezone, $nowTimestamp);
-        }
-    }
+        // currentTimestamp param is used for only test cases.
+        $currentTimestamp = $this->params['currentTimestamp'] ?? time();
 
-    /**
-     * メインの保存処理
-     *
-     * @param float $targetTimezone
-     * @param int   $timestamp
-     *
-     * @return bool|int
-     */
-    protected function _mainProcess($targetTimezone, int $timestamp)
-    {
-        // validate
+        $targetTimezone = $this->params['timezone'] ?? $this->_getTargetTimezoneByTimestamp($currentTimestamp);
+
+        // validation
         if (!$this->_validateTimezone($targetTimezone)) {
             $timezones = array_keys(AppUtil::getTimezoneList());
             $this->error('Invalid parameter. Timezone should be in following values.', $timezones);
         }
 
-        $targetDate = AppUtil::dateYmdLocal($timestamp, $targetTimezone);
+        $targetDate = AppUtil::dateYmdLocal($currentTimestamp, $targetTimezone);
 
-        // [処理対象外チーム] 対象のチームは今期の期間設定が存在しないチーム
-        // 取得する目的はエラーログに残す事のみ
+        $this->_mainProcess($targetTimezone, $targetDate);
+
+        // If 12 hours difference,
+        // UTC-12:00(Eniwetok, Kwajalein) should be covered as extra process.
+        if ($targetTimezone == 12) {
+            $this->_mainProcess(-$targetTimezone, $targetDate);
+        }
+
+        $this->_deleteTermCaches();
+    }
+
+    /**
+     * Main process
+     *
+     * @param float  $targetTimezone
+     * @param string $targetDate
+     *
+     * @return bool|int
+     */
+    protected function _mainProcess($targetTimezone, string $targetDate)
+    {
+        // [処理対象外チーム] 今期の期間設定が存在しないチーム [Unprocessed teams] Team not having term setting for current term
+        // 取得する目的はエラーログに残す事のみ The purpose of fetching data is only to leave it in the error log
         $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $targetDate);
         if (!empty($teamIdsNotHaveTerm)) {
             CakeLog::error(sprintf('Failed to find current terms. timezone: %s, team count: %s, failed team ids:%s',
@@ -104,12 +96,13 @@ class CreateTermShell extends AppShell
             ));
         }
 
-        // [処理対象チームの期間の終了日と期間] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
+        // [処理対象チームのデータ保存に必要な情報を取得] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
+        // Target teams are which have current term setting and which have not next term setting.
         $currentTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
         if (empty($currentTerms)) {
             return $this->out('There is no data to save.');
         }
-        // 期間データの生成
+        // Building saving term datas.
         $newTerms = [];
         foreach ($currentTerms as $currentTerm) {
             $startDate = AppUtil::dateTomorrow($currentTerm['end_date']);
@@ -120,7 +113,8 @@ class CreateTermShell extends AppShell
                 'team_id'    => $currentTerm['team_id'],
             ];
         }
-        // 期を一括保存
+
+        // Saving all team's next terms at once.
         if (!$this->Term->bulkInsert($newTerms)) {
             CakeLog::error(sprintf(
                 'Failed to insert term datas. timezone: %s, data count: %s, data: %s',
@@ -128,10 +122,6 @@ class CreateTermShell extends AppShell
             ));
             return false;
         }
-        // キャッシュを削除
-        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
-        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
-        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
 
         return $this->out(sprintf(
             'Success to save term datas. timezone: %s, data count: %s, data: %s',
@@ -139,8 +129,44 @@ class CreateTermShell extends AppShell
         ));
     }
 
+    protected function _deleteTermCaches()
+    {
+        // deleting caches
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
+        Cache::delete($this->Term->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
+    }
+
     /**
-     * タイムゾーンの値が正しいかチェック
+     * getting target timezone by current timestamp
+     *
+     * @param int $currentTimestamp
+     *
+     * @return int
+     */
+    protected function _getTargetTimezoneByTimestamp(int $currentTimestamp)
+    {
+        $startTodayTimestamp = strtotime('00:00:00');
+        // UTC0:00と現在日時の時差(0 - 23)
+        $difHourFromUtcMidnight = AppUtil::diffHourFloorByMinute($currentTimestamp, $startTodayTimestamp);
+        // 時差によって対象タイムゾーンを自動判定
+        if (in_array($difHourFromUtcMidnight, [0, 12])) {
+            // UTC+0:00 Western Europe Time, London
+            // UTC+12:00(Auckland, Fiji)
+            return $difHourFromUtcMidnight;
+        } elseif ($difHourFromUtcMidnight < 12) {
+            // UTC-11:00(Midway Island) - UTC-1:00(Cape Verde Islands)
+            // timezone = -xx
+            return -$difHourFromUtcMidnight;
+        } else {
+            // $timeOffset > 12
+            // UTC+1:00(Central Europe Time) - UTC+11:00(Solomon Islands)
+            return 24 - $difHourFromUtcMidnight;
+        }
+    }
+
+    /**
+     * validation of timezone
      *
      * @param float $timezone
      *
