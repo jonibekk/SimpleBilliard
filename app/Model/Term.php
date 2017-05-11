@@ -589,7 +589,7 @@ class Term extends AppModel
         } elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
             return __('Next Term');
         }
-        return date('Y/m/d', strtotime($start_date)) . ' - ' . date('Y/m/d', strtotime($end_date));
+        return AppUtil::dateYmdReformat($start_date, "/") . ' - ' . AppUtil::dateYmdReformat($end_date, "/");
     }
 
     /**

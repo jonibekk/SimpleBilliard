@@ -362,14 +362,14 @@ class Goal extends AppModel
                 $startDateInt = (int)date('Ymd');
             } else {
                 $term = $this->Team->Term->getNextTermData();
-                $startDateInt = (int)date('Ymd', $term['start_date'] + ($term['timezone'] * HOUR));
+                $startDateInt = (int)date('Ymd', strtotime($term['start_date']));
             }
         } else {
             $goal = $this->getById($goalId);
             if (empty($goal)) {
                 return true;
             }
-            $startDateInt = (int)date('Ymd', $goal['start_date']);
+            $startDateInt = (int)date('Ymd', strtotime($goal['start_date']));
         }
 
         $endDateInt = (int)date('Ymd', strtotime($endDate));
@@ -558,16 +558,9 @@ class Goal extends AppModel
 
         if (!Hash::get($data, 'KeyResult.0.start_date')) {
             $data['KeyResult'][0]['start_date'] = $data['Goal']['start_date'];
-        } else {
-            //時間をtimezoneを考慮したunixtimeに変換
-            $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - $goal_term['timezone'] * HOUR;
         }
         if (!Hash::get($data, 'KeyResult.0.end_date')) {
             $data['KeyResult'][0]['end_date'] = $data['Goal']['end_date'];
-        } else {
-            //期限を+1day-1secする
-            $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
-                    strtotime($data['KeyResult'][0]['end_date'])) - $goal_term['timezone'] * HOUR;
         }
         return $data;
     }
