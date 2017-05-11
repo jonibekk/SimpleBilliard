@@ -363,13 +363,16 @@ class SignupController extends AppController
             'is_not_available' => false,
         ];
 
+        $requestData = $this->request->data;
+        $sessionData = $this->Session->read('data');
+
         try {
             $this->User->begin();
-            if (!$session_data = $this->Session->read('data')) {
+            if (!$sessionData) {
                 throw new RuntimeException(__('Invalid screen transition.'));
             }
 
-            $data = $this->_filterWhiteList($this->request->data);
+            $data = $this->_filterWhiteList($requestData);
 
             if (empty($data)) {
                 throw new RuntimeException(__('No Data'));
@@ -381,7 +384,7 @@ class SignupController extends AppController
                 throw new RuntimeException(__('Invalid Data'));
             }
             //merge form data and session data
-            $data = Hash::merge($session_data, $data);
+            $data = Hash::merge($sessionData, $data);
             //required fields check
             if (!$this->_hasAllRequiredFields($data)) {
                 $res['is_not_available'] = true;
@@ -433,6 +436,7 @@ class SignupController extends AppController
             $this->Session->delete('data');
 
         } catch (RuntimeException $e) {
+            $this->log(sprintf("Failed to signup. requestData: %s sessionData: %s", var_export($requestData, true), var_export($sessionData, true)));
             $res['error'] = true;
             $res['message'] = $e->getMessage();
             $this->User->rollback();
