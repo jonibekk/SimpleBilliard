@@ -92,6 +92,24 @@ class GoalousTestCase extends CakeTestCase
         return $this->GoalService->create($userId, $data);
     }
 
+    function createSimpleGoal(array $data = [], int $termType = Term::TYPE_CURRENT)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+
+        $Goal->my_uid = 1;
+        $Goal->current_team_id = 1;
+        $default = [
+            "name"             => "ゴール",
+            "goal_category_id" => 1,
+            "description"      => "ゴールの詳細\nです"
+        ];
+        $data = am($default, $data);
+        $Goal->create();
+        $Goal->save($data, false);
+        return $Goal->getLastInsertID();
+    }
+
     function createGoalMember($data)
     {
         $default = [
@@ -509,5 +527,60 @@ class GoalousTestCase extends CakeTestCase
         }
         $Topic->TopicMember->saveAll($topicMemberData);
         return $topicId;
+    }
+
+    function saveTerm(int $teamId, string $startDate, int $range, bool $withNext = true)
+    {
+        App::uses('Term', 'Model');
+        /** @var Topic $Topic */
+        $Term = ClassRegistry::init('Term');
+
+        // 精神衛生のために書く
+        if ($range < 1) {
+            $range = 1;
+        } elseif ($range > 12) {
+            $range = 12;
+        }
+
+        $this->Term->deleteAll(['team_id' => $teamId]);
+        $currentTerm = [
+            'team_id'         => $teamId,
+            'start_date'      => $startDate,
+            'end_date'        => date('Y-m-d', strtotime("{$startDate} + {$range}month yesterday")),
+            'evaluate_status' => 0
+        ];
+        $this->Term->create();
+        $this->Term->save($currentTerm);
+
+        if ($withNext) {
+            $nextStartDate = date('Y-m-d', strtotime("{$startDate} + {$range}month"));
+            $nextTerm = [
+                'team_id'         => $teamId,
+                'start_date'      => $nextStartDate,
+                'end_date'        => date('Y-m-d', strtotime("{$nextStartDate} + {$range}month yesterday")),
+                'evaluate_status' => 0
+            ];
+            $this->Term->create();
+            $this->Term->save($nextTerm);
+        }
+
+        $this->Term->resetAllTermProperty();
+
+        return $currentTerm;
+    }
+
+    function createSimpleKr(array $data = [])
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init('KeyResult');
+
+        $default = [
+            "name"             => "KR Name",
+            "description"      => "KR description"
+        ];
+        $data = am($default, $data);
+        $KeyResult->create();
+        $KeyResult->save($data, false);
+        return $KeyResult->getLastInsertID();
     }
 }

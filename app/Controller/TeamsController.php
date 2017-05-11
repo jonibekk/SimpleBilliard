@@ -51,17 +51,44 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     * Update term
+     * - validate forbitten
+     * - validate request data
+     * - update term
+     * - notify to team members
+     */
     public function edit_term()
     {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init("TermService");
+
         $this->request->allowMethod('post');
-        $this->Team->begin();
-        if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
-            $this->Pnotify->outSuccess(__("Changed terms setting."));
-            $this->Team->commit();
-        } else {
-            $this->Pnotify->outError(__("Failed to change terms setting."));
-            $this->Team->rollback();
+
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        // checking 403
+        if (!$this->TeamMember->isActiveAdmin($userId, $teamId)) {
+            $this->Pnotify->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
         }
+
+        // data validation
+        $requestData = Hash::get($this->request->data, 'Term');
+        $validRes = $TermService->validateUpdate($requestData);
+        if ($validRes !== true) {
+            $this->Pnotify->outError($validRes);
+            return $this->redirect($this->referer());
+        }
+
+        // term updating
+        if (!$TermService->update($requestData)) {
+            $this->Pnotify->outError(__("Failed to change terms setting."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__("Changed terms setting."));
         return $this->redirect($this->referer());
     }
 
