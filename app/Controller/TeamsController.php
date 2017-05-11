@@ -53,7 +53,6 @@ class TeamsController extends AppController
         // If change timezone, notify team members
         $newTimezone = Hash::get($this->request->data, 'Team.timezone');
         if ((float)$team['timezone'] != (float)$newTimezone) {
-            $this->log('change timezone');
             // Save before change timezone to redis
             $this->GlRedis->saveBeforeChangeTimezone($this->current_team_id, $team['timezone']);
             // TODO: send notification
