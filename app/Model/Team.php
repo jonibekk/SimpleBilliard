@@ -497,7 +497,7 @@ class Team extends AppModel
                 'Term.id'       => null,
             ],
             'fields'     => [
-                'id'
+                'Team.id'
             ],
             'joins'      => [
                 [
@@ -518,6 +518,64 @@ class Team extends AppModel
         $ret = array_merge($ret);
         return $ret;
 
+    }
+
+    /**
+     * 今期の期間データを持ち且つ来期データを持たないチームのIDと期の終了日を取得
+     *
+     * @param float $timezone
+     * @param int   $timestamp
+     *
+     * @return array [team_id => end_date,]
+     */
+    public function findAllTermEndDatesNextTermNotExists(float $timezone, int $timestamp): array
+    {
+        $targetDate = AppUtil::dateYmdLocal($timestamp, $timezone);
+        $options = [
+            'conditions' => [
+                'Team.timezone' => $timezone,
+                'NextTerm.id'   => null,
+                'NOT'           => [
+                    'CurrentTerm.id' => null,
+                ]
+            ],
+            'fields'     => [
+                'Team.border_months',
+                'CurrentTerm.team_id',
+                'CurrentTerm.end_date'
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'terms',
+                    'alias'      => 'CurrentTerm',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Team.id = CurrentTerm.team_id',
+                        'CurrentTerm.start_date <=' => $targetDate,
+                        'CurrentTerm.end_date >='   => $targetDate,
+                        'CurrentTerm.del_flg'       => false,
+                    ]
+                ],
+                [
+                    'table'      => 'terms',
+                    'alias'      => 'NextTerm',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Team.id = NextTerm.team_id',
+                        "NextTerm.start_date <= (CurrentTerm.end_date + INTERVAL 1 DAY)",
+                        'NextTerm.end_date >= (CurrentTerm.end_date + INTERVAL 1 DAY)',
+                        'NextTerm.del_flg' => false,
+                    ]
+                ],
+            ],
+        ];
+        $ret = $this->findWithoutTeamId('all', $options);
+
+        // 配列のモデル名を除外してマージ
+        $teams = Hash::extract($ret, '{n}.Team');
+        $currentTerms = Hash::extract($ret, '{n}.CurrentTerm');
+        $ret = Hash::merge($teams, $currentTerms);
+        return $ret;
     }
 
 }

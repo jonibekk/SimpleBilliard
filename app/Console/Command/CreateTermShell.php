@@ -93,10 +93,24 @@ class CreateTermShell extends AppShell
             $this->error('Invalid parameter. Timezone should be in following values.', $timezones);
         }
 
-        // 対象のチームは対象タイムゾーンの期間設定が存在しないチーム
-        $teamIds = $this->Team->findIdsNotHaveTerm($targetTimezone, $timestamp);
+        // [処理対象外チーム] 対象のチームは今期の期間設定が存在しないチーム
+        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $timestamp);
 
+        // [処理対象チームの期間の終了日と期間] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
+        $termEndDates = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $timestamp);
         // 期間データの生成
+        $insertDatas = [];
+        foreach ($termEndDates as $currentTerm) {
+            $startDate = AppUtil::dateTomorrow($currentTerm['end_date']);
+            $endDate = AppUtil::dateYmd(strtotime($startDate . " +{$currentTerm['border_months']} month") - DAY);
+            $insertDatas[] = [
+                'start_date' => $startDate,
+                'end_date'   => $endDate,
+                'team_id'    => $currentTerm['team_id'],
+            ];
+        }
+        // バルクインサート
+        $this->Term->bulkInsert($insertDatas);
 
     }
 
