@@ -94,6 +94,7 @@ class CreateTermShell extends AppShell
         }
 
         // [処理対象外チーム] 対象のチームは今期の期間設定が存在しないチーム
+        // 取得する目的はエラーログに残す事のみ
         $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $timestamp);
 
         // [処理対象チームの期間の終了日と期間] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
