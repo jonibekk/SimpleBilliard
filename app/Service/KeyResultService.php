@@ -399,8 +399,6 @@ class KeyResultService extends AppService
      */
     function update(int $userId, int $krId, array $requestData): bool
     {
-        /** @var Goal $Goal */
-        $Goal = ClassRegistry::init("Goal");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var TeamMember $TeamMember */
