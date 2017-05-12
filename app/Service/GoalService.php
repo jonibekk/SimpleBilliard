@@ -395,8 +395,8 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var Term $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("Term");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
 
         $updateData = [
             'id'          => $goalId,
@@ -414,7 +414,7 @@ class GoalService extends AppService
             $preUpdatedTerm = $Goal->getTermTypeById($goalId);
             $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($requestData['term_type'] == Term::TERM_TYPE_CURRENT);
             if ($isNextToCurrentUpdate) {
-                $updateData['start_date'] = date('Y-m-d');
+                $updateData['start_date'] = AppUtil::todayDateYmdLocal($Team->getTimezone());
             }
         }
         if (!empty($requestData['photo'])) {
