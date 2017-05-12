@@ -31,16 +31,16 @@ class TermService extends AppService
             return $validationErrors;
         }
 
-        $requestStartYm = $data['start_ym'];
+        $requestNextStartYm = $data['next_start_ym'];
         $currentTerm = $Term->getCurrentTermData();
         $lowerLimitYm = date('Y-m', strtotime("+1 month"));
-        if ($requestStartYm < $lowerLimitYm) {
+        if ($requestNextStartYm < $lowerLimitYm) {
             // TODO: set valid error message
             return 'lower limit';
         }
 
         $upperLimitYm = date('Y-m', strtotime("{$currentTerm['start_date']} +12 month"));
-        if ($requestStartYm > $upperLimitYm) {
+        if ($requestNextStartYm > $upperLimitYm) {
             // TODO: set valid error message
             return 'upper limit';
         }
@@ -69,9 +69,9 @@ class TermService extends AppService
         try {
             $Term->begin();
 
-            $requestStartYm = $data['start_ym'];
+            $requestNextStartYm = $data['next_start_ym'];
             $termRange = $data['term_range'];
-            $newNextStartDate = date('Y-m-01', strtotime($requestStartYm));
+            $newNextStartDate = date('Y-m-01', strtotime($requestNextStartYm));
             $newNextEndDate = date('Y-m-d', strtotime("{$newNextStartDate} +{$termRange} month") - DAY);
             $newCurrentEndDate = date('Y-m-d', strtotime($newNextStartDate) - DAY);
 

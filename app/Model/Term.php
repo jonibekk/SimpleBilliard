@@ -65,7 +65,7 @@ class Term extends AppModel
     ];
 
     public $update_validate = [
-        'start_ym'  => [
+        'next_start_ym'  => [
             'notBlank'            => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
