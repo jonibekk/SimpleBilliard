@@ -237,6 +237,7 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 }
 .panel-default.mod-notice {
     border: 1px solid #c92434;
+    color: #ae2f2f;
 }
 
 .form-horizontal .form-group {
