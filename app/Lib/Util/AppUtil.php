@@ -235,7 +235,7 @@ class AppUtil
      *
      * @return string
      */
-    static function dateYmdLocal(int $timestamp, int $timezone): string
+    static function dateYmdLocal(int $timestamp, float $timezone): string
     {
         return self::dateYmd($timestamp + $timezone * HOUR);
     }
@@ -247,7 +247,7 @@ class AppUtil
      *
      * @return string
      */
-    static function todayDateYmdLocal(int $timezone)
+    static function todayDateYmdLocal(float $timezone)
     {
         return self::dateYmd(REQUEST_TIMESTAMP + $timezone * HOUR);
     }

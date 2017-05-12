@@ -1162,7 +1162,7 @@ WHERE
     kr.del_flg = 0
 SQL;
         $res = $this->query($query);
-        return true;
+        return $res !== false;
     }
 
     /**
@@ -1195,7 +1195,7 @@ WHERE
     kr.del_flg = 0
 SQL;
         $res = $this->query($query);
-        return $res;
+        return $res !== false;
     }
 
     /**
@@ -1228,6 +1228,6 @@ WHERE
     kr.del_flg = 0
 SQL;
         $res = $this->query($query);
-        return $res;
+        return $res !== false;
     }
 }

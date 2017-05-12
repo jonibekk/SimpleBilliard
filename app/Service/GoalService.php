@@ -235,7 +235,7 @@ class GoalService extends AppService
             // TKR更新
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');
-            $updateTkr = $KeyResultService->buildUpdateKr($tkrId, $inputTkrData, false);
+            $updateTkr = $KeyResultService->buildUpdateKr($tkrId, $inputTkrData);
             if (!$KeyResult->save($updateTkr, false)) {
                 throw new Exception(sprintf("Failed update tkr. data:%s"
                     , var_export($updateTkr, true)));
@@ -246,7 +246,7 @@ class GoalService extends AppService
             $afterUpdatedTerm = $Goal->getTermTypeById($goalId);
             if ($preUpdatedTerm == Term::TERM_TYPE_NEXT && $afterUpdatedTerm == Term::TERM_TYPE_CURRENT) {
                 if (!$KeyResult->updateTermByGoalId($goalId, Term::TYPE_CURRENT)) {
-                    throw new Exception(sprintf("Failed to update krs. goal_id:%s"
+                    throw new Exception(sprintf("Failed to update krs case goal move term from nest to current. goal_id:%s"
                         , $goalId));
                 }
             }
@@ -395,8 +395,8 @@ class GoalService extends AppService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var Term $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("Term");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
 
         $updateData = [
             'id'          => $goalId,
@@ -408,14 +408,13 @@ class GoalService extends AppService
             $updateData['goal_category_id'] = $requestData['goal_category_id'];
         }
         if (!empty($requestData['end_date'])) {
-            $goalTerm = $EvaluateTerm->getTermDataByDate($requestData['end_date']);
             $updateData['end_date'] = $requestData['end_date'];
 
             // 来期から今期へ期間変更する場合のみstart_dateを今日に設定
             $preUpdatedTerm = $Goal->getTermTypeById($goalId);
             $isNextToCurrentUpdate = ($preUpdatedTerm == Term::TERM_TYPE_NEXT) && ($requestData['term_type'] == Term::TERM_TYPE_CURRENT);
             if ($isNextToCurrentUpdate) {
-                $updateData['start_date'] = AppUtil::todayDateYmdLocal($goalTerm['timezone']);
+                $updateData['start_date'] = AppUtil::todayDateYmdLocal($Team->getTimezone());
             }
         }
         if (!empty($requestData['photo'])) {
@@ -496,7 +495,7 @@ class GoalService extends AppService
         $EvaluateTerm = ClassRegistry::init("Term");
 
         $currentTerm = $EvaluateTerm->getCurrentTermData();
-        return strtotime($goal['start_date']) >= $currentTerm['start_date'];
+        return $goal['start_date'] >= $currentTerm['start_date'];
     }
 
     /**

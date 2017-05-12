@@ -402,19 +402,9 @@ class Goal extends AppModel
         if (empty($keyResults)) {
             return true;
         }
-        // TODO:timezoneをいちいち気にしなければいけないのはかなりめんどくさいし、バグの元になりかねないので共通処理を図る
-        $term = $this->Team->Term->getTermDataByDate($goal['end_date']);
-
-        // UTCでのタイムスタンプ取得
-        $timeStamp = AppUtil::getEndDateByTimezone($date, $term['timezone']);
-
         // 該当ゴールの評価期間取得
         foreach ($keyResults as $kr) {
-            //tkrのend_dateはゴールのend_dateと等しくなるため、チェックの必要はなし
-            if ($kr['tkr_flg']) {
-                continue;
-            }
-            if ($timeStamp < $kr['end_date']) {
+            if ($date < $kr['end_date']) {
                 $this->invalidate('end_date', __("Please input goal end date later than key result end date"));
                 return false;
             }
@@ -512,9 +502,7 @@ class Goal extends AppModel
     {
         // 今期であれば現在日時、来期であれば来期の開始日をゴールの開始日とする
         if ($termType == 'current') {
-            $currentTermData = $this->Team->Term->getCurrentTermData();
-            $localTodayDate = AppUtil::todayDateYmdLocal($currentTermData['timezone']);
-            $data['Goal']['start_date'] = $localTodayDate;
+            $data['Goal']['start_date'] = AppUtil::todayDateYmdLocal($this->Team->getTimezone());
         } else {
             $data['Goal']['start_date'] = $goalTerm['start_date'];
         }
