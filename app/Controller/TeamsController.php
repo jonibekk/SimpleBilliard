@@ -146,6 +146,7 @@ class TeamsController extends AppController
 
         // Save changed term info to redis
         $this->GlRedis->saveChangedTerm($this->current_team_id);
+        // TODO: Send notification
 
         return $this->redirect($this->referer());
     }
