@@ -424,7 +424,7 @@ class SignupController extends AppController
             $Term = ClassRegistry::init('Term');
             $nextStartDate = date('Y-m-01', strtotime($data['Term']['next_start_ym']));
             $termRange = $data['Team']['border_months'];
-            if (!$this->Team->Term->initTerm($nextStartDate, $termRange, $teamId)) {
+            if (!$this->Team->Term->createInitialDataAsSignup($nextStartDate, $termRange, $teamId)) {
                 $res['is_not_available'] = true;
                 throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }

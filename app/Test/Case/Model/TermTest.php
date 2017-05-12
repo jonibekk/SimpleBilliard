@@ -525,4 +525,29 @@ class TermTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
+    function test_createInitialDataAsSignup()
+    {
+        $nextStartDate = date('Y-m-01', strtotime('+1 month'));
+        $termRange = 6;
+        $teamId = 1;
+
+        $this->Term->createInitialDataAsSignup($nextStartDate, $termRange, 1);
+
+        // current term
+        $currentTerm = $this->Term->find('first', ['conditions' => [
+            'start_date' => date('Y-m-01'),
+            'end_date'   => date('Y-m-t'),
+            'team_id'    => $teamId
+        ]]);
+        $this->assertTrue(!empty($currentTerm));
+
+        // next term
+        $nextTerm = $this->Term->find('first', ['conditions' => [
+            'start_date' => $nextStartDate,
+            'end_date'   => date('Y-m-t', strtotime("$nextStartDate +$termRange month")),
+            'team_id'    => $teamId
+        ]]);
+        $this->assertTrue(!empty($nextTerm));
+    }
+
 }

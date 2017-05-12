@@ -732,7 +732,7 @@ class Term extends AppModel
         return (bool)$this->save($saveData);
     }
 
-    public function initTerm(string $nextStartDate, int $termRange, int $teamId): bool
+    public function createInitialDataAsSignup(string $nextStartDate, int $termRange, int $teamId): bool
     {
         $currentStartDate = date('Y-m-01');
         $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
