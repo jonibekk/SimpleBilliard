@@ -89,28 +89,26 @@ class Term extends AppModel
     ];
 
     /**
-     * 来期開始月のバリデーション
+     * サインナップ時の来期開始月のバリデーション
      * - 来月 - 12ヶ月後 の間に収まっているか
      *
      * @param  array $val
      *
      * @return bool
      */
-    function customValidNextStartDate(array $val)
+    function customValidNextStartDateInSignup(array $val)
     {
         $nextStartYm = array_shift($val);
         // lower limit
         $lowerLimitYm = date('Y-m', strtotime("+1 month"));
         if ($nextStartYm < $lowerLimitYm) {
-            // TODO: set valid error message
-            return '';
+            return false;
         }
 
         // upper limit
-        $upperLimitYm = date('Y-m', strtotime("$nextStartYm +12 month"));
+        $upperLimitYm = date('Y-m', strtotime("+12 month"));
         if ($nextStartYm > $upperLimitYm) {
-            // TODO: set valid error message
-            return '';
+            return false;
         }
         return true;
     }

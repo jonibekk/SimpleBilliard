@@ -42,6 +42,14 @@ class TermTest extends GoalousTestCase
         parent::tearDown();
     }
 
+    function _setDefault()
+    {
+        $this->Term->current_team_id = 1;
+        $this->Term->my_uid = 1;
+        $this->Term->Team->current_team_id = 1;
+        $this->Term->Team->my_uid = 1;
+    }
+
     function testGetAll()
     {
         $this->_setDefault();
@@ -483,12 +491,38 @@ class TermTest extends GoalousTestCase
         $this->assertEquals($res['end_date'], $newEndDate);
     }
 
-    function _setDefault()
-    {
-        $this->Term->current_team_id = 1;
-        $this->Term->my_uid = 1;
-        $this->Term->Team->current_team_id = 1;
-        $this->Term->Team->my_uid = 1;
+    function test_customValidNextStartDateInSignup(){
+        $this->_setDefault();
+
+        // previous month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('-1 month'))
+        ]);
+        $this->assertFalse($res);
+
+        // this month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m')
+        ]);
+        $this->assertFalse($res);
+
+        // next month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('+1 month'))
+        ]);
+        $this->assertTrue($res);
+
+        // after 12 month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('+12 month'))
+        ]);
+        $this->assertTrue($res);
+
+        // after 13 month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('+13 month'))
+        ]);
+        $this->assertFalse($res);
     }
 
 }

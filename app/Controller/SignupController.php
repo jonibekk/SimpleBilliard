@@ -99,7 +99,7 @@ class SignupController extends AppController
                     'rule' => ['date', 'ym'],
                 ],
                 'startEndDate'       => [
-                    'rule' => ['customValidNextStartDate']
+                    'rule' => ['customValidNextStartDateInSignup']
                 ],
             ]
         ]
