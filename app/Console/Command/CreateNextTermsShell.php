@@ -66,8 +66,6 @@ class CreateNextTermsShell extends AppShell
 
         $targetDate = AppUtil::dateYmdLocal($currentTimestamp, $targetTimezone);
 
-        $this->_logInvalidTermTeams($targetTimezone, $targetDate);
-
         $res = $this->_saveNextTermsForAllTeam($targetTimezone, $targetDate);
 
         // If 12 hours difference,
@@ -91,6 +89,9 @@ class CreateNextTermsShell extends AppShell
      */
     protected function _saveNextTermsForAllTeam($targetTimezone, string $targetDate): bool
     {
+        // logging teams that doesn't has no current term.
+        $this->_logInvalidTermTeams($targetTimezone, $targetDate);
+
         // [処理対象チームのデータ保存に必要な情報を取得] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
         // Target teams are which have current term setting and which have not next term setting.
         $currentTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
