@@ -99,7 +99,7 @@ class Term extends AppModel
      *
      * @return bool
      */
-    function customValidNextStartDate(string $val)
+    function customValidNextStartDate(array $val)
     {
         $nextStartYm = array_shift($val);
         // lower limit
