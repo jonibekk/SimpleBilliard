@@ -92,10 +92,14 @@ class SignupController extends AppController
         'Term'      => [
             'next_start_ym' => [
                 'notBlank'            => [
-                    'rule' => 'notBlank',
+                    'required' => 'update',
+                    'rule'     => 'notBlank',
                 ],
-                'dateYm'   => [
+                'dateYm'             => [
                     'rule' => ['date', 'ym'],
+                ],
+                'startEndDate'       => [
+                    'rule' => ['customValidNextStartDate']
                 ],
             ]
         ]

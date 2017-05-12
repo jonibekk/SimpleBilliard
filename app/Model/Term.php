@@ -73,9 +73,6 @@ class Term extends AppModel
             'dateYm'             => [
                 'rule' => ['date', 'ym'],
             ],
-            'startEndDate'       => [
-                'rule' => ['customValidNextStartDate']
-            ],
         ],
         'term_range' => [
             'notBlank'            => [
