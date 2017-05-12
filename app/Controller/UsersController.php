@@ -1172,13 +1172,13 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $pageType = Hash::get($this->request->params, 'named.page_type');
 
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $currentTerm = $this->Team->Term->getCurrentTermData();
         $currentId = $currentTerm['id'];
 
-        $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+        $nextTerm = $this->Team->Term->getNextTermData();
         $nextId = $nextTerm['id'];
 
-        $previousTerm = $this->Team->EvaluateTerm->getPreviousTermData();
+        $previousTerm = $this->Team->Term->getPreviousTermData();
         $previousId = $previousTerm['id'];
 
         function show_date($startDate, $endDate, $allTimezone)
@@ -1187,7 +1187,7 @@ class UsersController extends AppController
                     $endDate + $allTimezone * 3600);
         }
 
-        $allTerm = $this->Team->EvaluateTerm->getAllTerm();
+        $allTerm = $this->Team->Term->getAllTerm();
         $allId = array_column($allTerm, 'id');
         $allStartDate = array_column($allTerm, 'start_date');
         $allEndDate = array_column($allTerm, 'end_date');
@@ -1204,13 +1204,13 @@ class UsersController extends AppController
 
         if (isset($this->request->params['named']['term_id'])) {
             $termId = $this->request->params['named']['term_id'];
-            $targetTerm = $this->Team->EvaluateTerm->findById($termId);
-            $startDate = $targetTerm['EvaluateTerm']['start_date'];
-            $endDate = $targetTerm['EvaluateTerm']['end_date'];
+            $targetTerm = $this->Team->Term->findById($termId);
+            $startDate = $targetTerm['Term']['start_date'];
+            $endDate = $targetTerm['Term']['end_date'];
         } else {
             $termId = $currentId;
-            $startDate = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $endDate = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+            $startDate = $this->Team->Term->getCurrentTermData()['start_date'];
+            $endDate = $this->Team->Term->getCurrentTermData()['end_date'];
         }
 
         $myGoalsCount = $this->Goal->getMyGoals(null, 1, 'count', $userId, $startDate, $endDate);
@@ -1384,8 +1384,8 @@ class UsersController extends AppController
         $this->set('user', $user);
 
         // 評価期間内の投稿数
-        $term_start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $term_end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $term_start_date = $this->Team->Term->getCurrentTermData()['start_date'];
+        $term_end_date = $this->Team->Term->getCurrentTermData()['end_date'];
         $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
         $this->set('post_count', $post_count);
 
