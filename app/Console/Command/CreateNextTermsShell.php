@@ -66,12 +66,14 @@ class CreateNextTermsShell extends AppShell
 
         $targetDate = AppUtil::dateYmdLocal($currentTimestamp, $targetTimezone);
 
-        $res = $this->_mainProcess($targetTimezone, $targetDate);
+        $this->_logInvalidTermTeams($targetTimezone, $targetDate);
+
+        $res = $this->_saveNextTermsForAllTeam($targetTimezone, $targetDate);
 
         // If 12 hours difference,
         // UTC-12:00(Eniwetok, Kwajalein) should be covered as extra process.
         if ($targetTimezone == 12) {
-            $res = $this->_mainProcess(-$targetTimezone, $targetDate);
+            $res = $this->_saveNextTermsForAllTeam(-$targetTimezone, $targetDate);
         }
 
         if ($res === true) {
@@ -87,17 +89,8 @@ class CreateNextTermsShell extends AppShell
      *
      * @return bool
      */
-    protected function _mainProcess($targetTimezone, string $targetDate): bool
+    protected function _saveNextTermsForAllTeam($targetTimezone, string $targetDate): bool
     {
-        // [処理対象外チーム] 今期の期間設定が存在しないチーム [Unprocessed teams] Team not having term setting for current term
-        // 取得する目的はエラーログに残す事のみ The purpose of fetching data is only to leave it in the error log
-        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $targetDate);
-        if (!empty($teamIdsNotHaveTerm)) {
-            CakeLog::error(sprintf('Failed to find current terms. timezone: %s, team count: %s, failed team ids:%s',
-                $targetTimezone, count($teamIdsNotHaveTerm), var_export($teamIdsNotHaveTerm, true)
-            ));
-        }
-
         // [処理対象チームのデータ保存に必要な情報を取得] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
         // Target teams are which have current term setting and which have not next term setting.
         $currentTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
@@ -132,6 +125,25 @@ class CreateNextTermsShell extends AppShell
         ));
 
         return true;
+    }
+
+    /**
+     * Logging invalid teams.
+     * Invalid teams that doesn't has current term data.
+     *
+     * @param int    $targetTimezone
+     * @param string $targetDate
+     */
+    protected function _logInvalidTermTeams(int $targetTimezone, string $targetDate)
+    {
+        // [処理対象外チーム] 今期の期間設定が存在しないチーム [Unprocessed teams] Team not having term setting for current term
+        // 取得する目的はエラーログに残す事のみ The purpose of fetching data is only to leave it in the error log
+        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $targetDate);
+        if (!empty($teamIdsNotHaveTerm)) {
+            CakeLog::error(sprintf('Failed to find current terms. timezone: %s, team count: %s, failed team ids:%s',
+                $targetTimezone, count($teamIdsNotHaveTerm), var_export($teamIdsNotHaveTerm, true)
+            ));
+        }
     }
 
     protected function _deleteTermCaches()
