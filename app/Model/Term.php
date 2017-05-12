@@ -111,7 +111,7 @@ class Term extends AppModel
 
         // upper limit
         $upperLimitYm = date('Y-m', strtotime("$nextStartYm +12 month"));
-        if ($requestStartYm > $upperLimitYm) {
+        if ($nextStartYm > $upperLimitYm) {
             // TODO: set valid error message
             return '';
         }
