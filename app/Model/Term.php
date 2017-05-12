@@ -65,24 +65,24 @@ class Term extends AppModel
     ];
 
     public $update_validate = [
-        'start_ym'  => [
-            'notBlank'            => [
+        'start_ym'   => [
+            'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
             ],
-            'dateYm'             => [
+            'dateYm'   => [
                 'rule' => ['date', 'ym'],
             ],
         ],
         'term_range' => [
-            'notBlank'            => [
+            'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
             ],
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'range'   => [
+            'range'    => [
                 'rule' => ['range', 1, 12]
             ]
         ]
@@ -584,13 +584,13 @@ class Term extends AppModel
             $res = Hash::extract($res, 'Term');
             $res['timezone'] = $timezone;
             // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
-        } elseif ($this->useDbConfig != "test") {
-            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
-                __METHOD__,
-                var_export($options, true),
-                var_export(CakeSession::read(), true),
-                Debugger::trace()
-            ));
+//        } elseif ($this->useDbConfig != "test") {
+//            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
+//                __METHOD__,
+//                var_export($options, true),
+//                var_export(CakeSession::read(), true),
+//                Debugger::trace()
+//            ));
         }
         return $res;
     }
