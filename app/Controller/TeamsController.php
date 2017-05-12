@@ -121,7 +121,7 @@ class TeamsController extends AppController
 
         $teamId = $this->current_team_id;
         $userId = $this->Auth->user('id');
-$term = $this->Team->getCurrentTeam();
+
         // checking 403
         if (!$this->TeamMember->isActiveAdmin($userId, $teamId)) {
             $this->Pnotify->outError(__("You have no right to operate it."));
