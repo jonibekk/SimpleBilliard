@@ -21,7 +21,7 @@ class TeamTest extends GoalousTestCase
         'app.circle',
         'app.circle_member',
         'app.team_member',
-        'app.evaluate_term',
+        'app.term',
     );
 
     /**
@@ -242,17 +242,27 @@ class TeamTest extends GoalousTestCase
         $this->assertFalse($this->Team->saveEditTerm(1, ['start_term_month' => 'aaaa']));
         $this->Team->create();
         $this->assertFalse($this->Team->saveEditTerm(1, ['Team' => ['name' => 'test']]));
-        $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $this->Team->EvaluateTerm->id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $this->Team->EvaluateTerm->save(['evaluate_status' => 1]);
+        $this->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Team->Term->addTermData(Term::TYPE_NEXT);
+        $this->Team->Term->id = $this->Team->Term->getCurrentTermId();
+        $this->Team->Term->save(['evaluate_status' => 1]);
         $this->assertFalse($this->Team->saveEditTerm(1,
             ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
-        $this->Team->EvaluateTerm->id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $this->Team->EvaluateTerm->save(['evaluate_status' => 0]);
+        $this->Team->Term->id = $this->Team->Term->getCurrentTermId();
+        $this->Team->Term->save(['evaluate_status' => 0]);
         $this->assertTrue($this->Team->saveEditTerm(1,
             ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
 
+    }
+
+    function test_updateTermSettings()
+    {
+        $teamId = $this->createTeam(['start_term_month' => 4, 'border_months' => 10]);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $this->Team->updateTermSettings(1, 4);
+        $newTeam = $this->Team->getById($teamId);
+        $this->assertEquals($newTeam['start_term_month'], 1);
+        $this->assertEquals($newTeam['border_months'], 4);
     }
 
     function _setDefault()
@@ -260,8 +270,8 @@ class TeamTest extends GoalousTestCase
         $this->Team->my_uid = 1;
         $this->Team->me['timezone'] = 9;
         $this->Team->current_team_id = 1;
-        $this->Team->EvaluateTerm->current_team_id = 1;
-        $this->Team->EvaluateTerm->my_uid = 1;
+        $this->Team->Term->current_team_id = 1;
+        $this->Team->Term->my_uid = 1;
     }
 
 }

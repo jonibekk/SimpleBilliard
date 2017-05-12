@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * Evaluator Model
  *
- * @property User         $EvaluateeUser
- * @property User         $EvaluatorUser
- * @property Team         $Team
- * @property EvaluateTerm $EvaluateTerm
+ * @property User $EvaluateeUser
+ * @property User $EvaluatorUser
+ * @property Team $Team
+ * @property Term $Term
  */
 class Evaluator extends AppModel
 {

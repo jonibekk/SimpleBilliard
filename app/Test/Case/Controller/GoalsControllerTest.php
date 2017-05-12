@@ -17,7 +17,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
-        'app.evaluate_term',
+        'app.term',
         'app.action_result',
         'app.evaluation_setting',
         'app.evaluation',
@@ -1428,8 +1428,8 @@ class GoalsControllerTest extends GoalousControllerTestCase
         $Goals->Goal->Follower->current_team_id = '1';
         $Goals->Goal->Post->my_uid = '1';
         $Goals->Goal->Post->current_team_id = '1';
-        $Goals->Team->EvaluateTerm->my_uid = 1;
-        $Goals->Team->EvaluateTerm->current_team_id = 1;
+        $Goals->Team->Term->my_uid = 1;
+        $Goals->Team->Term->current_team_id = 1;
 
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');

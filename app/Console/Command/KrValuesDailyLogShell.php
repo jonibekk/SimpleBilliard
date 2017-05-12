@@ -10,7 +10,7 @@ App::uses('AppUtil', 'Util');
  * - デフォルトの指定日は前日
  *
  * @property Team             $Team
- * @property EvaluateTerm     $EvaluateTerm
+ * @property Term             $Term
  * @property Goal             $Goal
  * @property KeyResult        $KeyResult
  * @property KrProgressLog    $KrProgressLog
@@ -21,7 +21,7 @@ class KrValuesDailyLogShell extends AppShell
 {
     public $uses = array(
         'Team',
-        'EvaluateTerm',
+        'Term',
         'KeyResult',
         'KrValuesDailyLog',
     );
@@ -119,7 +119,7 @@ class KrValuesDailyLogShell extends AppShell
         // $this->KrValuesDailyLog->deleteAll(['KrValuesDailyLog.target_date' => $targetDate]);
 
         // 今期のチームの期間設定が対象タイムゾーンと一致するチーム
-        $teamIds = $this->EvaluateTerm->findTeamIdByTimezone($targetTimezone, $targetDate);
+        $teamIds = $this->Term->findTeamIdByTimezone($targetTimezone, $targetDate);
 
         $this->_saveKrValuesDailyLogsAsBulk($teamIds, $targetDate, $targetTimezone);
     }
@@ -163,10 +163,10 @@ class KrValuesDailyLogShell extends AppShell
         //TODO: 成功の場合(Infoレベル)も、slackにチャンネル分けて出力すべき
         if (count($failureTeams) > 0) {
             $this->log(sprintf('[targetDate:%s, targetTimezone:%s][success:%d failure:%d] Done kr_values_daily_log shell.',
-                $targetDate,
-                $targetTimezone,
-                $successCount,
-                count($failureTeams))
+                    $targetDate,
+                    $targetTimezone,
+                    $successCount,
+                    count($failureTeams))
             );
 
             // 保存に失敗したチームは一度だけ再実行する

@@ -108,18 +108,21 @@ class AppUtil
     }
 
     /**
-     * 日数の差分を求める(デフォルトで繰り上げ)
-     * $targetTimeから$baseTimeの差
+     * トータル日数を求める(デフォルトで繰り上げ) getting different date
+     * $targetDateから$baseDateの差
+     * - e.g.
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-01' の場合は、1
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-02' の場合は、2
      *
-     * @param int  $baseTimestamp
-     * @param int  $targetTimestamp
-     * @param bool $roundUp if false, round off
+     * @param string $baseDate
+     * @param string $targetDate
+     * @param bool   $roundUp if false, round off
      *
      * @return int
      */
-    static function diffDays(int $baseTimestamp, int $targetTimestamp, bool $roundUp = true): int
+    static function totalDays(string $baseDate, string $targetDate, bool $roundUp = true): int
     {
-        $days = ($targetTimestamp - $baseTimestamp) / DAY;
+        $days = (strtotime($targetDate) + DAY - strtotime($baseDate)) / DAY;
         if ($roundUp) {
             return ceil($days);
         }
@@ -127,15 +130,101 @@ class AppUtil
     }
 
     /**
-     * Y-m-d 形式の日付を返す
+     * 日数の差分を求める(デフォルトで繰り上げ) getting different date
+     * $targetDateから$baseDateの差
+     * - e.g.
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-01' の場合は、0
+     * -- $baseDate = '2017-01-01', $targetDate = '2017-01-02' の場合は、1
      *
-     * @param int $timestamp
+     * @param string $baseDate
+     * @param string $targetDate
+     * @param bool   $roundUp if false, round off
+     *
+     * @return int
+     */
+    static function diffDays(string $baseDate, string $targetDate, bool $roundUp = true): int
+    {
+        $days = (strtotime($targetDate) - strtotime($baseDate)) / DAY;
+        if ($roundUp) {
+            return ceil($days);
+        }
+        return round($days);
+    }
+
+    /**
+     * Ymd 形式の日付を返す
+     *
+     * @param int    $timestamp
+     * @param string $separator
      *
      * @return string
      */
-    static function dateYmd(int $timestamp): string
+    static function dateYmd(int $timestamp, string $separator = "-"): string
     {
-        return date('Y-m-d', $timestamp);
+        return date("Y{$separator}m{$separator}d", $timestamp);
+    }
+
+    /**
+     * Ymd形式でdate型をリフォーマットする
+     *
+     * @param string $date
+     * @param string $separator
+     *
+     * @return string
+     */
+    static function dateYmdReformat(string $date,string $separator):string
+    {
+        return date("Y{$separator}m{$separator}d", strtotime($date));
+    }
+
+    /**
+     * Y-m-d 形式で対象日の前日の日付を返す
+     *
+     * @param string $targetDate
+     *
+     * @return string
+     */
+    static function dateYesterday(string $targetDate): string
+    {
+        return self::dateYmd(strtotime("$targetDate -1 day"));
+    }
+
+    /**
+     * Y-m-d 形式で対象日の次の日の日付を返す
+     *
+     * @param string $targetDate
+     *
+     * @return string
+     */
+    static function dateTomorrow(string $targetDate): string
+    {
+        return self::dateYmd(strtotime("$targetDate +1 day"));
+    }
+
+    /**
+     * Y-m-d 形式で対象日の○○日後の日付を返す
+     *
+     * @param string $targetDate
+     * @param int    $days
+     *
+     * @return string
+     */
+    static function dateAfter(string $targetDate, int $days): string
+    {
+        return self::dateYmd(strtotime("$targetDate +{$days} days"));
+    }
+
+    /**
+     * Y-m-d 形式で対象日の○○日前の日付を返す
+     *
+     * @param string $targetDate
+     * @param int    $days
+     *
+     * @return string
+     */
+    static function dateBefore(string $targetDate, int $days): string
+    {
+        return self::dateYmd(strtotime("$targetDate -{$days} days"));
     }
 
     /**
@@ -146,9 +235,21 @@ class AppUtil
      *
      * @return string
      */
-    static function dateYmdLocal(int $timestamp, int $timezone): string
+    static function dateYmdLocal(int $timestamp, float $timezone): string
     {
         return self::dateYmd($timestamp + $timezone * HOUR);
+    }
+
+    /**
+     * 今日のY-m-d 形式のローカルの日付を返す
+     *
+     * @param int $timezone
+     *
+     * @return string
+     */
+    static function todayDateYmdLocal(float $timezone)
+    {
+        return self::dateYmd(REQUEST_TIMESTAMP + $timezone * HOUR);
     }
 
     /**
@@ -349,7 +450,7 @@ class AppUtil
         $parsedUrl = parse_url($baseUrl);
         // e.g. $parsedQuery will have ["key1"=>"val1","key2"=>"val2"]
         $parsedQuery = [];
-        if(isset($parsedUrl['query'])){
+        if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $parsedQuery);
         }
         // merge queries.

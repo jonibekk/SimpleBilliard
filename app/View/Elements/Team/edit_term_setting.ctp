@@ -25,6 +25,8 @@
     <header>
         <h2><?= __("Term settings") ?></h2>
     </header>
+    <?php // TODO: システム全体でtimezone, dateデータの持ち方に問題があるため、データの不整合が起きる前に一旦期間設定の変更をできなくしている。 ?>
+    <?php //       本来ここには期間設定のformがあるので、上記対応時にrevertする。 ?>
     <div class="panel-body">
         <p><?= __('Changes will take effect after this current term') ?></p>
         <fieldgroup>
@@ -91,4 +93,4 @@
     </footer>
 </section>  
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
