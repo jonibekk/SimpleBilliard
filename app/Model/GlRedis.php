@@ -50,6 +50,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_GROUP_RANKING = 'group_ranking';
     const KEY_TYPE_SETUP_GUIDE_STATUS = 'setup_guide_status';
     const KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE = 'fail_email_verify_digit_code';
+    const KEY_TYPE_BEFORE_CHANGE_TIMEZONE = 'before_change_timezone';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
     const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
@@ -74,6 +75,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_GROUP_RANKING,
         self::KEY_TYPE_SETUP_GUIDE_STATUS,
         self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE,
+        self::KEY_TYPE_BEFORE_CHANGE_TIMEZONE
     ];
 
     /**
@@ -302,6 +304,17 @@ class GlRedis extends AppModel
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $setup_guide_status = [
         'user' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $before_change_timezone = [
+        'team' => null,
+        'before_change_timezone' => null,
     ];
 
     public function changeDbSource($config_name = "redis_test")
@@ -1284,5 +1297,21 @@ class GlRedis extends AppModel
     function deleteSetupGuideStatus($user_id)
     {
         return $this->Db->del($this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id));
+    }
+
+    /**
+     * Save before change timezone for notification
+     *
+     * @param int   $teamId
+     * @param float $timezone
+     *
+     * @return bool
+     */
+    function saveBeforeChangeTimezone(int $teamId, float $timezone)
+    {
+        $expire = WEEK * 2;
+        $key = $this->getKeyName(self::KEY_TYPE_BEFORE_CHANGE_TIMEZONE, $teamId);
+        $this->Db->set($key, $timezone);
+        return $this->Db->setTimeout($key, $expire);
     }
 }

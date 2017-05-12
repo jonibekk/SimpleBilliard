@@ -33,8 +33,8 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
-                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?> - )
+                    <?= AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/") ?>
+                    (← <?= AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/") ?> - )
                     <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
                     <?php endif ?>
@@ -108,30 +108,31 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
                                     [
-                                        'label'                        => false,
-                                        'type'                         => 'number',
-                                        'step'                         => '0.1',
-                                        'default'                      => 100,
-                                        'required'                     => true,
-                                        'class'                        => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
-                                        'placeholder'                  => Hash::get($this->request->data,
+                                        'label'       => false,
+                                        'type'        => 'number',
+                                        'step'        => '0.1',
+                                        'default'     => 100,
+                                        'required'    => true,
+                                        'class'       => 'form-control goals-create-input-form goals-create-input-form-tkr-range',
+                                        'placeholder' => Hash::get($this->request->data,
                                             'KeyResult.target_value'),
                                     ]) ?>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="js-unit-values" <?php if ($unit == KeyResult::UNIT_BINARY): ?>style="display: none;"<?php endif;?> >
+                <div class="js-unit-values"
+                     <?php if ($unit == KeyResult::UNIT_BINARY): ?>style="display: none;"<?php endif; ?> >
                     <h6 class="modal-key-result-headings mod-small"><?= __("Current") ?></h6>
                     <?php
                     echo $this->Form->input('KeyResult.current_value',
                         [
-                            'label'                        => false,
-                            'type'                         => 'number',
-                            'default'                      => 0,
-                            'required'                     => true,
-                            'class'                        => 'form-control goals-create-input-form',
-                            'placeholder'                  => Hash::get($this->request->data,
+                            'label'       => false,
+                            'type'        => 'number',
+                            'default'     => 0,
+                            'required'    => true,
+                            'class'       => 'form-control goals-create-input-form',
+                            'placeholder' => Hash::get($this->request->data,
                                 'KeyResult.current_value'),
                         ]) ?>
                 </div>

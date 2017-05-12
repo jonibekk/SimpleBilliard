@@ -152,15 +152,29 @@ class AppUtil
     }
 
     /**
-     * Y-m-d 形式の日付を返す
+     * Ymd 形式の日付を返す
      *
-     * @param int $timestamp
+     * @param int    $timestamp
+     * @param string $separator
      *
      * @return string
      */
-    static function dateYmd(int $timestamp): string
+    static function dateYmd(int $timestamp, string $separator = "-"): string
     {
-        return date('Y-m-d', $timestamp);
+        return date("Y{$separator}m{$separator}d", $timestamp);
+    }
+
+    /**
+     * Ymd形式でdate型をリフォーマットする
+     *
+     * @param string $date
+     * @param string $separator
+     *
+     * @return string
+     */
+    static function dateYmdReformat(string $date,string $separator):string
+    {
+        return date("Y{$separator}m{$separator}d", strtotime($date));
     }
 
     /**

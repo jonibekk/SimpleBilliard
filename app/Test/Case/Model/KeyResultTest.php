@@ -74,8 +74,8 @@ class KeyResultTest extends GoalousTestCase
 
         $goal = $this->Goal->getById($goalId);
 
-        $startDate = date('Y/m/d', strtotime($goal['start_date']));
-        $endDate = date('Y/m/d', strtotime($goal['end_date']));
+        $startDate = AppUtil::dateYmdReformat($goal['start_date'], "/");
+        $endDate = AppUtil::dateYmdReformat($goal['end_date'], "/");
 
         $data = [
             'KeyResult' => [
@@ -628,7 +628,7 @@ class KeyResultTest extends GoalousTestCase
         $this->assertEmpty($err);
 
         // 開始日がゴール開始日以前
-        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate . ' -1 day'));
+        $updateKr['start_date'] = AppUtil::dateYmdReformat($startDate . ' -1 day', "/");
         $updateKr['end_date'] = $endDate;
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -636,7 +636,7 @@ class KeyResultTest extends GoalousTestCase
         $this->assertEquals($err, $correctErrMsg);
 
         // 開始日がゴール開始日以降
-        $updateKr['start_date'] = date('Y/m/d', strtotime($startDate . ' +1 day'));
+        $updateKr['start_date'] = AppUtil::dateYmdReformat($startDate . ' +1 day', "/");
         $updateKr['end_date'] = $endDate;
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
@@ -645,7 +645,7 @@ class KeyResultTest extends GoalousTestCase
 
         // 終了日がゴール終了日以前
         $updateKr['start_date'] = $startDate;
-        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate . ' -1 day'));
+        $updateKr['end_date'] = AppUtil::dateYmdReformat($endDate . ' -1 day', "/");
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');
@@ -653,7 +653,7 @@ class KeyResultTest extends GoalousTestCase
 
         // 終了日がゴール終了日以降
         $updateKr['start_date'] = $startDate;
-        $updateKr['end_date'] = date('Y/m/d', strtotime($endDate . ' +1 day'));
+        $updateKr['end_date'] = AppUtil::dateYmdReformat($endDate . ' +1 day', "/");
         $this->KeyResult->set($updateKr);
         $this->KeyResult->validates();
         $err = Hash::get($this->KeyResult->validationErrors, 'start_date.0');

@@ -24,10 +24,10 @@
                     <i class="fa fa-flag"></i><?= __("Goal Name") ?>:<?= h($goal['Goal']['name']) ?>
                 </li>
                 <li>
-                    <?= __("Start date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['start_date']) ?>
+                    <?= __("Start date") ?>:<?= AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/") ?>
                 </li>
                 <li>
-                    <?= __("End date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
+                    <?= __("End date") ?>:<?= AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/") ?>
                 </li>
                 <?php if (!empty($goal['Goal']['description'])): ?>
                     <li>

@@ -275,14 +275,11 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {
-            $TimeExHelper = new TimeExHelper(new View());
             $currentTerm = $this->Team->Term->getCurrentTermData();
             $nextTerm = $this->Team->Term->getNextTermData();
             $res['default_end_dates'] = [
-                Term::TERM_TYPE_CURRENT => $TimeExHelper->dateFormat($currentTerm['end_date'],
-                    $currentTerm['timezone']),
-                Term::TERM_TYPE_NEXT    => $TimeExHelper->dateFormat($nextTerm['end_date'],
-                    $nextTerm['timezone']),
+                Term::TERM_TYPE_CURRENT => $currentTerm['end_date'],
+                Term::TERM_TYPE_NEXT    => $nextTerm['end_date'],
             ];
         }
 

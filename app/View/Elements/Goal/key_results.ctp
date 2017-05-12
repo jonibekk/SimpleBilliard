@@ -20,25 +20,25 @@
             <dl class="goal-detail-kr-info-counts mb_4px">
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-check-circle"></i></dt>
                 <dd class="goal-detail-kr-info-counts-description">
-                    <?= count($kr['ActionResult'])?>
+                    <?= count($kr['ActionResult']) ?>
                 </dd>
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-database"></i></dt>
                 <dd class="goal-detail-kr-info-counts-description">
-                    <?php if ($kr['KeyResult']['tkr_flg']):?>
+                    <?php if ($kr['KeyResult']['tkr_flg']): ?>
                         TKR
-                    <?php else:?>
-                        <?=$kr['KeyResult']['priority']?>
-                    <?php endif;?>
+                    <?php else: ?>
+                        <?= $kr['KeyResult']['priority'] ?>
+                    <?php endif; ?>
                 </dd>
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-clock-o"></i></dt>
                 <dd class="goal-detail-kr-info-counts-description">
-                    <?= $this->Time->format('Y/m/d', $kr['KeyResult']['end_date'] + $goal_term['timezone'] * HOUR) ?>
+                    <?= AppUtil::dateYmdReformat($kr['KeyResult']['end_date'], "/") ?>
                     <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                         <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
                     <?php endif ?>
                 </dd>
             </dl>
-            <?php if (!empty($kr['KeyResult']['description'])):?>
+            <?php if (!empty($kr['KeyResult']['description'])): ?>
                 <div class="showmore-init-none">
                     <?= nl2br($kr['KeyResult']['description']) ?>
                 </div>
