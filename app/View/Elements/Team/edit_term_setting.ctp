@@ -27,7 +27,7 @@
     </header>
     <div class="panel-body">
         <p><?= __('Changes will take effect after this current term') ?></p>
-        <fieldgroup>
+        <fieldset>
             <label><?= __('Next Term Start') ?>:</label>
             <select name="term_start" id="term_start">
                 <option value="07_2017">July 2017</option>
@@ -43,15 +43,15 @@
                 <option value="05_2018">May 2018</option>
                 <option value="06_2018">June 2018</option>
             </select>
-        </fieldgroup>
-        <fieldgroup>
+        </fieldset>
+        <fieldset>
             <label><?= __('Term Length') ?>:</label>
             <select name="term_length" id="term_length">
                 <option value="3">3 months (default)</option>
                 <option value="6">6 months</option>
                 <option value="12">12 months</option>
             </select>
-        </fieldgroup>
+        </fieldset>
         <div class="term-details current-term">
             <p>
                 <strong><?= __('Current') ?></strong>
@@ -85,9 +85,9 @@
             <ul>
                 <li><?= __('The start date and the end date of KR belonging to the goal are updated like the above goal') ?>.</li>
             </ul>
-            <fieldgroup>
+            <fieldset>
                 <input type="checkbox" id="term_agreement" name="term_agreement"> I confirm these changes. 
-            </fieldgroup>
+            </fieldset>
         </div>
         <a href="#" class="btn btn-primary"><?= __('Save settings') ?></a>
     </footer>
