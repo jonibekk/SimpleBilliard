@@ -44,11 +44,14 @@ class EvaluationsController extends AppController
         if (empty($termId)) {
             // デフォルトは前期
             $termId = $this->Team->Term->getPreviousTermId();
-        } else {
-            // 存在しない評価期間を指定した場合エラー
-            if (!in_array($termId, $allTermIds)) {
-                return $this->redirect($this->referer());
+            // 前期が存在しない場合は今期
+            if (empty($termId)) {
+                $termId = $this->Team->Term->getCurrentTermId();
             }
+        }
+        // 存在しない評価期間を指定した場合エラー
+        if (!in_array($termId, $allTermIds)) {
+            return $this->redirect($this->referer());
         }
 
         // 評価期間選択用ラベル取得

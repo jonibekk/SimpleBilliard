@@ -892,7 +892,8 @@ class UsersController extends AppController
         if ($existparameters) {
             /** @var UserService $UserService */
             $UserService = ClassRegistry::init('UserService');
-            $res['results'] = $UserService->findUsersForAddingOnTopic($query['term'], $query['page_limit'], $query['topic_id'], true);
+            $res['results'] = $UserService->findUsersForAddingOnTopic($query['term'], $query['page_limit'],
+                $query['topic_id'], true);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -1179,7 +1180,14 @@ class UsersController extends AppController
         $nextId = $nextTerm['id'];
 
         $previousTerm = $this->Team->Term->getPreviousTermData();
-        $previousId = $previousTerm['id'];
+
+        $term1 = [
+            $currentId => __("Current Term"),
+            $nextId    => __("Next Term"),
+        ];
+        if (!empty($previousTerm)) {
+            $term1 += [$previousTerm['id'] => __("Previous Term")];
+        }
 
         function show_date($startDate, $endDate, $allTimezone)
         {
@@ -1194,11 +1202,6 @@ class UsersController extends AppController
         $allTimezone = array_column($allTerm, 'timezone');
         $allTerm = array_map("show_date", $allStartDate, $allEndDate, $allTimezone);
 
-        $term1 = array(
-            $currentId  => __("Current Term"),
-            $nextId     => __("Next Term"),
-            $previousId => __("Previous Term"),
-        );
         $term2 = array_combine($allId, $allTerm);
         $term = $term1 + $term2;
 
