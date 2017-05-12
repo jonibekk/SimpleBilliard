@@ -48,118 +48,118 @@
             ]); ?>
             <?= $this->Form->hidden('id') ?>
             <?= $this->Form->hidden('team_id', ['value' => $this->Session->read('current_team_id')]) ?>
-            <fieldgroup>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Evaluate') ?></label>
                 <?= $this->Form->input("enable_flg", ['default' => false,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Self evaluation') ?></label>
                 <?= $this->Form->input("self_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Self evaluation goal score') ?></label>
                 <?= $this->Form->input("self_goal_score_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Self evaluation goal score required') ?></label>
                 <?= $this->Form->input("self_goal_score_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Self evaluation goal comment') ?></label>
                 <?= $this->Form->input("self_goal_comment_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Self evaluation goal comment required') ?></label>
                 <?= $this->Form->input("self_goal_comment_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Self evaluation total score') ?></label>
                 <?= $this->Form->input("self_score_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Self evaluation total score required') ?></label>
                 <?= $this->Form->input("self_score_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Self evaluation total comment') ?></label>
                 <?= $this->Form->input("self_comment_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Self evaluation total comment required') ?></label>
                 <?= $this->Form->input("self_comment_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Evaluation by Evaluator') ?></label>
                 <?= $this->Form->input("evaluator_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation goal score by Evaluator') ?></label>
                 <?= $this->Form->input("evaluator_goal_score_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation goal score by Evaluator required') ?></label>
                 <?= $this->Form->input("evaluator_goal_score_reuqired_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation goal comment by Evaluator') ?></label>
                 <?= $this->Form->input("evaluator_goal_comment_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation goal comment by Evaluator required') ?></label>
                 <?= $this->Form->input("evaluator_goal_comment_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total score by Evaluator') ?></label>
                 <?= $this->Form->input("evaluator_score_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total score by Evaluator required') ?></label>
                 <?= $this->Form->input("evaluator_score_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total comment by Evaluator') ?></label>
                 <?= $this->Form->input("evaluator_comment_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total comment by Evaluator required') ?></label>
                 <?= $this->Form->input("evaluator_comment_required_flg", ['default' => false,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label class="control-label form-label"><?= __('Evaluation by Final Evaluator') ?></label>
                 <?= $this->Form->input("final_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total score by Final Evaluator') ?></label>
                 <?= $this->Form->input("final_score_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total score by Final Evaluator required') ?></label>
                 <?= $this->Form->input("final_score_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total comment by Final Evaluator') ?></label>
                 <?= $this->Form->input("final_comment_flg", ['default' => true,]) ?>
-            </fieldgroup>
-            <fieldgroup>
+            </fieldset>
+            <fieldset>
                 <label
                     class="control-label form-label"><?= __('Evaluation total comment by Final Evaluator required') ?></label>
                 <?= $this->Form->input("final_comment_required_flg", ['default' => true,]) ?>
-            </fieldgroup>
+            </fieldset>
         <?php endif; ?>
     </div>
     <?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true): ?>

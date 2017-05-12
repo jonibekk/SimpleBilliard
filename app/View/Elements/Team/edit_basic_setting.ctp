@@ -116,14 +116,14 @@
         ]) ?>
     </div>
     <footer>
-        <fieldgroup>
+        <fieldset>
             <?=
                 $this->Form->submit(__("Change basic settings"),
                 ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) 
             ?>
             <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
             <?= $this->Form->end(); ?>
-        </fieldgroup>
+        </fieldset>
         <?=
         $this->Form->create('Team', [
             'class'      => 'none',
