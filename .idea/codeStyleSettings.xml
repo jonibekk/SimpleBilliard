@@ -14,11 +14,6 @@
           <option name="LOWER_CASE_NULL_CONST" value="true" />
           <option name="KEEP_RPAREN_AND_LBRACE_ON_ONE_LINE" value="true" />
         </PHPCodeStyleSettings>
-        <SqlCodeStyleSettings>
-          <option name="NEW_LINE_BEFORE_JOIN" value="false" />
-          <option name="INDENT_JOIN" value="false" />
-          <option name="INDENT_JOIN_CONDITION" value="false" />
-        </SqlCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
