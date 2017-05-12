@@ -134,19 +134,31 @@ section.panel{
     border-top: 1px solid @lightGray;
     padding:1em .5em 0 .5em;
     margin:1em 0;
-    ul{
-      list-style-type: disc;
-      padding-left:2em;
-      li{
-        margin:.25em 0;
-        float:none;
+    overflow:hidden;
+    position:relative;
+    .term-attention{
+      transition:transform .3s;
+      transform-origin: 50% top;
+      position:relative;
+      &.mod-hide{
+        transform:translateY(-110%);
+        position: absolute;
+        opacity:0;
       }
-    }
-    fieldgroup{
-      display:flex;
-      align-items:center;
-      width:100%;
-      margin-bottom:1rem;
+      ul{
+        list-style-type: disc;
+        padding-left:2em;
+        li{
+          margin:.25em 0;
+          float:none;
+        }
+      }
+      fieldgroup{
+        display:flex;
+        align-items:center;
+        width:100%;
+        margin-bottom:1rem;
+      }
     }
     .btn{
       margin-right:1rem;

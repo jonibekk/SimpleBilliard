@@ -5,6 +5,7 @@ var teamSettings = {
     agree:document.getElementById("term_agreement"),
     editedTerm:document.getElementById("editTerm").getElementsByClassName("edited-term")[0],
     caret:document.getElementById("editTerm").getElementsByClassName("fa-caret-down")[0],
+    attention:document.getElementsByClassName("term-attention")[0],
     formStart:document.getElementById("term_start"),
     formLength:document.getElementById("term_length"),
     //DOM elements that displays term dates
@@ -40,11 +41,13 @@ var teamSettings = {
             this.status.changed=false;
             this.testSubmit();
         }
+        //If any settings have been updated, show the edit and attention panels
         if(this.editedTerm.classList.contains("mod-hide")){
             this.caret.classList.remove("mod-hide");
             setTimeout(function(){
                 document.getElementById("editTerm").getElementsByClassName("edited-term")[0].classList.remove("mod-hide");
-            },100);
+            },100); // Staggered animation effect
+            this.attention.classList.remove("mod-hide");
         }
     },
     //Create calendar objects 
@@ -126,11 +129,13 @@ var teamSettings = {
         }else{
             this.view.nextEnd.classList.remove("edited");
         }
+        //If all settings have been changed back to default, re-hide edit and attention panel
         if(!document.getElementsByClassName("edited")[0]){
             this.caret.classList.add("mod-hide");
             setTimeout(function(){
                 document.getElementById("editTerm").getElementsByClassName("edited-term")[0].classList.add("mod-hide");
             },100);
+            this.attention.classList.add("mod-hide");
         }
         this.view.currentEnd.innerHTML = this.months[this.calendar.currentEnd.getMonth()]+" "+this.calendar.currentEnd.getFullYear();
         this.view.nextStart.innerHTML = this.months[this.calendar.nextStart.getMonth()]+" "+this.calendar.nextStart.getFullYear(); 
@@ -142,10 +147,10 @@ var teamSettings = {
 
 //Disable submit button
 teamSettings.button.setAttribute("disabled","disabled");
-//Hide Edited term box for now
+//Hide Edited term box, caret icon, and attention panel... for now
 teamSettings.editedTerm.classList.add("mod-hide");
 teamSettings.caret.classList.add("mod-hide");
-
+teamSettings.attention.classList.add("mod-hide");
 //Run calendar initializer
 teamSettings.calendarInit();
 

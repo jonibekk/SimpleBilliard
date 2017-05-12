@@ -63,30 +63,32 @@
         <div class="term-details edited-term">
             <p>
                 <strong><?= __('After') ?></strong>
-                <div class="term-range">This term: <span class="this-start" data-date="5_2017">May 2017</span> - <span class="this-end" data-date="7_2017">Jul 2017</span></div>
-                <div class="term-range">Next term: <span class="next-start" data-date="8_2017">Aug 2017</span> - <span class="next-end" data-date="10_2017">Oct 2017</span></div>
+                <div class="term-range"><?= __('This term') ?>: <span class="this-start" data-date="5_2017">May 2017</span> - <span class="this-end" data-date="7_2017">Jul 2017</span></div>
+                <div class="term-range"><?= __('Next term') ?>: <span class="next-start" data-date="8_2017">Aug 2017</span> - <span class="next-end" data-date="10_2017">Oct 2017</span></div>
             </p>
         </div>
     </div>
     <footer>
-        <strong>< <?= __('Attention') ?> ></strong>
-        <ul>
-            <li><?= __('The term has changed as above') ?>.</li>
-            <li><?= __('According to the changed term, the dates of the goals and KR are automatically updated as follows') ?>.</li>
-        </ul>
-        <ol>
-            <li><?= __('The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term') ?>.</li>
-            <li><?= __('The goal that begins in the current term and ends beyond the next term will be updated to end on the last day of the current term') ?>.</li>
-            <li><?= __('The goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term') ?>.</li>
-            <li><?= __('If the start date and end date of a goal is both within the current term, or both within the next term, will not be changed') ?>.</li>
-            <li><?= __('The goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term') ?>.</li>
-        </ol>
-        <ul>
-            <li><?= __('The start date and the end date of KR belonging to the goal are updated like the above goal') ?>.</li>
-        </ul>
-        <fieldgroup>
-            <input type="checkbox" id="term_agreement" name="term_agreement"> I confirm these changes. 
-        </fieldgroup>
+        <div class="term-attention">
+            <strong>< <?= __('Attention') ?> ></strong>
+            <ul>
+                <li><?= __('The term has changed as above') ?>.</li>
+                <li><?= __('According to the changed term, the dates of the goals and KR are automatically updated as follows') ?>.</li>
+            </ul>
+            <ol>
+                <li><?= __('The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term') ?>.</li>
+                <li><?= __('The goal that begins in the current term and ends beyond the next term will be updated to end on the last day of the current term') ?>.</li>
+                <li><?= __('The goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term') ?>.</li>
+                <li><?= __('If the start date and end date of a goal is both within the current term, or both within the next term, will not be changed') ?>.</li>
+                <li><?= __('The goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term') ?>.</li>
+            </ol>
+            <ul>
+                <li><?= __('The start date and the end date of KR belonging to the goal are updated like the above goal') ?>.</li>
+            </ul>
+            <fieldgroup>
+                <input type="checkbox" id="term_agreement" name="term_agreement"> I confirm these changes. 
+            </fieldgroup>
+        </div>
         <a href="#" class="btn btn-primary"><?= __('Save settings') ?></a>
     </footer>
 </section>  
