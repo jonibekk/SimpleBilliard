@@ -269,7 +269,7 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
-                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY));
+                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY),false);
                 if ($this->previousTerm && $withCache) {
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
@@ -566,10 +566,11 @@ class Term extends AppModel
      * return term data from date string
      *
      * @param string $date
+     * @param bool   $enableErrorLog
      *
      * @return array|null
      */
-    public function getTermDataByDate(string $date)
+    public function getTermDataByDate(string $date,bool $enableErrorLog = true)
     {
         $timezone = $this->Team->getTimezone();
         $options = [
@@ -584,13 +585,13 @@ class Term extends AppModel
             $res = Hash::extract($res, 'Term');
             $res['timezone'] = $timezone;
             // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
-//        } elseif ($this->useDbConfig != "test") {
-//            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
-//                __METHOD__,
-//                var_export($options, true),
-//                var_export(CakeSession::read(), true),
-//                Debugger::trace()
-//            ));
+        } elseif ($this->useDbConfig != "test" && $enableErrorLog) {
+            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
+                __METHOD__,
+                var_export($options, true),
+                var_export(CakeSession::read(), true),
+                Debugger::trace()
+            ));
         }
         return $res;
     }
