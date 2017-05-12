@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-10 13:36+0900\n"
+"PO-Revision-Date: 2017-05-12 11:44+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -529,17 +529,11 @@ msgstr "チームの基本設定を更新しました。"
 msgid "Failed to change basic team settings."
 msgstr "チームの基本設定の更新に失敗しました。"
 
-msgid "Changed terms setting."
-msgstr "期間設定を更新しました。"
-
 msgid "Failed to change terms setting."
 msgstr "期間設定の変更に失敗しました。"
 
-msgid "Changed timezone setting."
-msgstr "タイムゾーン設定を更新しました。"
-
-msgid "Failed to change timezone setting."
-msgstr "タイムゾーン設定の変更に失敗しました。"
+msgid "Changed terms setting."
+msgstr "期間設定を更新しました。"
 
 msgid "Failed to delete a team."
 msgstr "チームの削除に失敗しました。"
@@ -3508,12 +3502,6 @@ msgstr ""
 msgid "Term settings"
 msgstr "期間設定"
 
-msgid "Timezone setting"
-msgstr "タイムゾーン設定"
-
-msgid "Save settings"
-msgstr "設定を保存"
-
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
 
@@ -3576,6 +3564,9 @@ msgstr "表示順"
 
 msgid "Add definition"
 msgstr "定義を１つ追加"
+
+msgid "Save settings"
+msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
@@ -4813,6 +4804,35 @@ msgstr "グループビジョンを更新する"
 msgid "Update a team vision"
 msgstr "チームビジョンを更新する"
 
+msgid ""
+"The term of your team has been changed. All goals/KRs schedules were "
+"automatically updated as follows.\n"
+"\n"
+"1.The goals/KRs that beings in the current term and ends in the next term "
+"were updated to end on the last day of the current term.\n"
+"2.The goals/KRs that begins in the current term and ends beyond the next "
+"term were updated to end on the last day of the current term.\n"
+"3.The goals/KRs that beings in the next term and ends beyond the next term "
+"were updated to end on the last day of the next term.\n"
+"4.If the start date and end date of a goals/KRs is both within the current "
+"term, or both within the next term, were not changed.\n"
+"5.The goals/KRs that begins and ends beyond the the next term were updated "
+"to match the start and end date of the next term."
+msgstr ""
+"チームの期間が変更されました。すべてのゴールとKRのスケジュールは自動的に次の"
+"ように更新されました。\n"
+"\n"
+"1.「開始日が今期に属し、かつ終了日が来期に属するゴール/KR」は、終了日が今期末"
+"に更新されました。\n"
+"2.「開始日が今期に属し、かつ終了日が来期末を超えるゴール/KR」は、終了日が今期"
+"末に更新されました。\n"
+"3.「開始日が来期に属し、かつ終了日が来期末を超えるゴール/KR」は、終了日が来期"
+"末に更新されました。\n"
+"4.「開始日と終了日が共に今期、または来期となるゴール/KR」は、日付の変更はあり"
+"ません。\n"
+"5.「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終"
+"了日が来期末に更新されました。"
+
 msgid "Send Invitations"
 msgstr "招待しましょう"
 
@@ -4964,18 +4984,3 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
-
-#~ msgid "File extension and content are different."
-#~ msgstr "ファイルの拡張子と内容が異なっています。"
-
-#~ msgid "Failed to change members list."
-#~ msgstr "メンバーの変更に失敗しました。"
-
-#~ msgid "Changed members list."
-#~ msgstr "メンバーを変更しました。"
-
-#~ msgid "To:"
-#~ msgstr "To:"
-
-#~ msgid "Send Message"
-#~ msgstr "メッセージする"

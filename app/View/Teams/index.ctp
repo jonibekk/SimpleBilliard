@@ -10,13 +10,22 @@
 <?= $this->element('Team/side_menu', ['active' => 'index']); ?>
 <?php $this->end(); ?>
 <?= $this->App->viewStartComment() ?>
-<div>
-    <div class="panel panel-default mod-notice">
-        <div class="panel-block">
-            チームのtimezoneが変更されました
+<?php if($changed_term_flg):?>
+    <div>
+        <div class="panel panel-default mod-notice">
+            <div class="panel-block">
+                <?php $message = __("The term of your team has been changed. All goals/KRs schedules were automatically updated as follows.
+    
+    1.The goals/KRs that beings in the current term and ends in the next term were updated to end on the last day of the current term.
+    2.The goals/KRs that begins in the current term and ends beyond the next term were updated to end on the last day of the current term.
+    3.The goals/KRs that beings in the next term and ends beyond the next term were updated to end on the last day of the next term.
+    4.If the start date and end date of a goals/KRs is both within the current term, or both within the next term, were not changed.
+    5.The goals/KRs that begins and ends beyond the the next term were updated to match the start and end date of the next term."); ?>
+                <?= nl2br($message) ?>
+            </div>
         </div>
     </div>
-</div>
+<?php endif; ?>
 <div>
     <div class="panel panel-default">
         <div class="panel-heading"><?= __("Basic info") ?></div>
@@ -37,6 +46,15 @@
                     <?=
                     $this->Upload->uploadImage(['Team' => $team], 'Team.photo',
                         ['style' => 'medium_large']) ?>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __("Timezone") ?></label>
+                <div class="col col-sm-6">
+                    <p class="form-control-static">
+                        <?= $timezone_label ?>
+                    </p>
                 </div>
             </div>
             <hr>
