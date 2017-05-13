@@ -148,4 +148,14 @@ class TermServiceTest extends GoalousTestCase
         // $this->assertEquals($res['end_date'], $goalEnd);
     }
 
+    function test_getSelectableNextStartYmList()
+    {
+        $res = $this->TermService->getSelectableNextStartYmList(
+            $currentTermStart = '2017-04', $current = '2018-01'
+        );
+        $this->assertEquals($res, [
+            '2018-02' => 'Feb 2018', '2018-03' => 'Mar 2018', '2018-04' => 'Apr 2018'
+        ]);
+    }
+
 }

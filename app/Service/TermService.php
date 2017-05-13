@@ -1,11 +1,14 @@
 <?php
 App::import('Service', 'AppService');
 
+
 /**
  * Class TermService
  */
 class TermService extends AppService
 {
+    const MAX_TERM_MONTH_LENGTH = 12;
+
     /**
      * Validate update term data
      * - check by white list
@@ -140,5 +143,12 @@ class TermService extends AppService
             return false;
         }
         return true;
+    }
+
+    public function getSelectableNextStartYmList(string $currentTermStartYm, string $currentYm): array
+    {
+        $nextMonthYm = date("Y-m", strtotime("$currentYm +1 month"));
+        $nextStartYmUpper = date('Y-m', strtotime($currentTermStartYm) + (self::MAX_TERM_MONTH_LENGTH + 1) * MONTH);
+        return AppUtil::rangeYmI18n($nextMonthYm, $nextStartYmUpper);
     }
 }

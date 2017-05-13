@@ -479,4 +479,38 @@ class AppUtil
         $fragment = isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '';
         return "$scheme$user$pass$host$port$path$query$fragment";
     }
+
+    static function rangeYmI18n(string $startYm, string $endYm): array
+    {
+        $startYm = date('Y-m', strtotime($startYm));
+        $endYm = date('Y-m', strtotime($endYm));
+        $range = [];
+
+        if ($startYm > $endYm) {
+            return $range;
+        }
+
+        // 20 year is realistic upper limit...
+        for ($add = 0; $add < 240; $add++) {
+            $newYmTimeStamp = strtotime("$startYm +$add month");
+            $newYm = date("Y-m", $newYmTimeStamp);
+            $range[$newYm] = self::formatYmI18n($newYmTimeStamp);
+            if ($newYm === $endYm) {
+                break;
+            }
+        }
+        return $range;
+    }
+
+    static function formatYmI18n(int $time): string
+    {
+        switch (Configure::read('Config.language')) {
+            case "jpn":
+                $formattedYm = date("Y年m月", $time);
+                break;
+            default:
+                $formattedYm = date("M Y", $time);
+        }
+        return $formattedYm;
+    }
 }

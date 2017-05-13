@@ -76,4 +76,53 @@ class AppUtilTest extends GoalousTestCase
 
     }
 
+    public function test_rangeYmI18n()
+    {
+        // english
+        CakeSession::write("Config.language", 'eng');
+        $this->assertEquals(
+            AppUtil::rangeYmI18n('2017-01', '2017-03'),
+            ['2017-01' => 'Jan 2017', '2017-02' => 'Feb 2017', '2017-03' => 'Mar 2017']
+        );
+        $this->assertEquals(
+            AppUtil::rangeYmI18n('2017-11', '2018-01'),
+            ['2017-11' => 'Nov 2017', '2017-12' => 'Dec 2017', '2018-01' => 'Jan 2018']
+        );
+        $this->assertEquals(
+            AppUtil::rangeYmI18n('2017-01', '2017-01'),
+            ['2017-01' => 'Jan 2017']
+        );
+        $this->assertEquals(
+            AppUtil::rangeYmI18n('2017-01', '2016-12'),
+            []
+        );
+
+        // TODO: 言語設定をjpnにしてテストする必要があるが、Sessionにデータが入らないためテストが通らない
+        // japanese
+        // CakeSession::write("Config.language", 'jpn');
+        // $this->assertEquals(
+        //     AppUtil::rangeYmFormatted('2017-01', '2017-03'),
+        //     ['2017-01' => '2017年01月', '2017-02' => '2017年02月', '2017-03' => '2017年03月']
+        // );
+        // $this->assertEquals(
+        //     AppUtil::rangeYmFormatted('2017-11', '2018-01'),
+        //     ['2017-11' => '2017年11月', '2017-12' => '2017年12月', '2018-01' => '2018年01月']
+        // );
+        // $this->assertEquals(
+        //     AppUtil::rangeYmFormatted('2017-01', '2017-01'),
+        //     ['2017-01' => '2017年01月']
+        // );
+        // $this->assertEquals(
+        //     AppUtil::rangeYmFormatted('2017-01', '2016-12'),
+        //     []
+        // );
+        // CakeSession::write("Config.language", 'eng');
+
+        // upper limit
+        $this->assertEquals(
+            count(AppUtil::rangeYmI18n('2017-01', '2037-02')),
+            240
+        );
+    }
+
 }

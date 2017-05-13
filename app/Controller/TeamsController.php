@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
+App::import('Service', 'TermService');
 
 /**
  * Teams Controller
@@ -231,6 +232,11 @@ class TeamsController extends AppController
         $next_term_start_date = Hash::get($next_term, 'start_date');
         $next_term_end_date = Hash::get($next_term, 'end_date');
         $next_term_timezone = Hash::get($next_term, 'timezone');
+
+        // get term changing init data
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init("TermService");
+        $nextSelectableStartYm = $TermService->getSelectableNextStartYmList($current_term_start_date, date('Y-m'));
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
