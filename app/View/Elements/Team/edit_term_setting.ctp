@@ -65,8 +65,8 @@
         <div class="term-details current-term">
             <p>
                 <strong><?= __("Current") ?></strong>
-                <div class="term-range"><?= __("This term") ?>: <span id="currentStart" class="this-start" data-date="2017_5">May 2017</span> - <span class="this-end" data-date="2017_7">Jul 2017</span></div>
-                <div class="term-range"><?= ("Next term") ?>: <span class="next-start" data-date="2017_8">Aug 2017</span> - <span class="next-end" data-date="2017_10">Oct 2017</span></div>
+                <div class="term-range"><?= __("This term") ?>: <span id="currentStart" class="this-start" data-date="2017_5"><?= $this->TimeEx->formatYearDayI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date="2017_7"><?= $this->TimeEx->formatYearDayI18n(strtotime($current_term_end_date)) ?></span></div>
+                <div class="term-range"><?= ("Next term") ?>: <span class="next-start" data-date="2017_8"><?= $this->TimeEx->formatYearDayI18n(strtotime($next_term_start_date)) ?></span> - <span class="next-end" data-date="2017_10"><?= $this->TimeEx->formatYearDayI18n(strtotime($next_term_end_date)) ?></span></div>
             </p>
         </div>
         <i class="fa fa-caret-down"></i>
