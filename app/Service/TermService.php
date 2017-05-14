@@ -76,7 +76,7 @@ class TermService extends AppService
             $Term->begin();
 
             $requestNextStartYm = $data['next_start_ym'];
-            $termRange = $data['term_range'];
+            $termRange = $data['term_length'];
             $newNextStartDate = date('Y-m-01', strtotime($requestNextStartYm));
             $newNextEndDate = date('Y-m-d', strtotime("{$newNextStartDate} +{$termRange} month") - DAY);
             $newCurrentEndDate = date('Y-m-d', strtotime($newNextStartDate) - DAY);

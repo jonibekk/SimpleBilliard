@@ -51,7 +51,7 @@ class TermServiceTest extends GoalousTestCase
         // valid case
         $requestData = [
             'next_start_ym' => date('Y-m', strtotime("+1 month")),
-            'term_range'  => 6
+            'term_length'  => 6
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
         $this->assertTrue($validRes);
@@ -59,7 +59,7 @@ class TermServiceTest extends GoalousTestCase
         // from this month
         $requestData = [
             'next_start_ym' => date('Y-m', time()),
-            'term_range'  => 6
+            'term_length'  => 6
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
         $this->assertTrue($validRes !== true);
@@ -67,7 +67,7 @@ class TermServiceTest extends GoalousTestCase
         // range is too long
         $requestData = [
             'next_start_ym' => date('Y-m', strtotime("+1 month")),
-            'term_range'  => 13
+            'term_length'  => 13
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
         $this->assertTrue($validRes !== true);

@@ -74,7 +74,7 @@ class Term extends AppModel
                 'rule' => ['date', 'ym'],
             ],
         ],
-        'term_range' => [
+        'term_length' => [
             'notBlank'            => [
                 'required' => 'update',
                 'rule'     => 'notBlank',

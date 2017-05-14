@@ -54,12 +54,12 @@
                 '12' => __('12 months'),
             ];
             $rangeOptions[$termLength] .= ' (default)';
-            echo $this->Form->input('term_range', [
+            echo $this->Form->input('term_length', [
                 'label'    => false,
                 'type'     => 'select',
                 'options'  => $rangeOptions,
                 'selected' => $termLength,
-                'id'       => 'term_range'
+                'id'       => 'term_length'
             ]) ?>
         </fieldset>
         <div class="term-details current-term">
@@ -104,6 +104,9 @@
             ['class' => 'btn btn-primary', 'div' => false])
         ?>
     </footer>
+    <?php $this->Form->unlockField('Team.next_start_ym') ?>
+    <?php $this->Form->unlockField('Team.term_length') ?>
+    <?php $this->Form->unlockField('term_agreement') ?>
     <?= $this->Form->end(); ?>
 </section>
 <?= $this->App->viewEndComment() ?>
