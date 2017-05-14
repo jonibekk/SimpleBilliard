@@ -29,7 +29,6 @@ class TermService extends AppService
         $backupValidate = $Term->validate;
         $Term->validate = $Term->update_validate;
         if (!$Term->validates()) {
-            $this->log($Term->validationErrors);
             $validationErrors = $this->validationExtract(
                 $Term->validationErrors
             );
