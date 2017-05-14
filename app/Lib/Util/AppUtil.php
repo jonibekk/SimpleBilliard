@@ -514,18 +514,20 @@ class AppUtil
     }
 
     /**
-     * [formatYmI18n description]
-     * @param  int    $time [description]
+     * format ym date i18n from timestamp
+     *
+     * @param  int    $time
+     *
      * @return string
      */
-    static function formatYmI18n(int $time): string
+    static function formatYmI18n(int $timestamp): string
     {
         switch (Configure::read('Config.language')) {
             case "jpn":
-                $formattedYm = date("Y年m月", $time);
+                $formattedYm = date("Y年m月", $timestamp);
                 break;
             default:
-                $formattedYm = date("M Y", $time);
+                $formattedYm = date("M Y", $timestamp);
         }
         return $formattedYm;
     }

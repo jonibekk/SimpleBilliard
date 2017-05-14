@@ -98,7 +98,7 @@ class AppUtilTest extends GoalousTestCase
         );
 
         // TODO: 言語設定をjpnにしてテストする必要があるが、Sessionにデータが入らないためテストが通らない
-        // japanese
+        //       要調査。
         // CakeSession::write("Config.language", 'jpn');
         // $this->assertEquals(
         //     AppUtil::rangeYmFormatted('2017-01', '2017-03'),
