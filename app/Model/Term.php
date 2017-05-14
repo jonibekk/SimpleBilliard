@@ -83,7 +83,8 @@ class Term extends AppModel
                 'rule' => ['numeric'],
             ],
             'range'   => [
-                'rule' => ['range', 1, 12]
+                // allow 1 ~ 12
+                'rule' => ['range', 0, 13]
             ]
         ]
     ];
