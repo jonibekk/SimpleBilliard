@@ -480,6 +480,17 @@ class AppUtil
         return "$scheme$user$pass$host$port$path$query$fragment";
     }
 
+    /**
+     * range ym array with I18n
+     * - contain $startYm & $endYm in return
+     * - return format key: 'Y-m', value: i18n value
+     *  - ex) ['2017-1' => 'Jan 2017', '2017-2' => 'Feb 2017']
+     *
+     * @param  string $startYm
+     * @param  string $endYm
+     *
+     * @return array
+     */
     static function rangeYmI18n(string $startYm, string $endYm): array
     {
         $startYm = date('Y-m', strtotime($startYm));
@@ -502,6 +513,11 @@ class AppUtil
         return $range;
     }
 
+    /**
+     * [formatYmI18n description]
+     * @param  int    $time [description]
+     * @return string
+     */
     static function formatYmI18n(int $time): string
     {
         switch (Configure::read('Config.language')) {

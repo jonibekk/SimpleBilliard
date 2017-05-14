@@ -80,13 +80,13 @@ class TeamsController extends AppController
         $userId = $this->Auth->user('id');
 
         // checking 403
-        if (!$this->TeamMember->isActiveAdmin($userId, $teamId)) {
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
             $this->Pnotify->outError(__("You have no right to operate it."));
             return $this->redirect($this->referer());
         }
 
         // data validation
-        $requestData = Hash::get($this->request->data, 'Term');
+        $requestData = Hash::get($this->request->data, 'Team');
         $validRes = $TermService->validateUpdate($requestData);
         if ($validRes !== true) {
             $this->Pnotify->outError($validRes);
@@ -233,10 +233,13 @@ class TeamsController extends AppController
         $next_term_end_date = Hash::get($next_term, 'end_date');
         $next_term_timezone = Hash::get($next_term, 'timezone');
 
-        // get term changing init data
+        // term changing init data
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init("TermService");
         $nextSelectableStartYm = $TermService->getSelectableNextStartYmList($current_term_start_date, date('Y-m'));
+        $termLength = $team['Team']['border_months'];
+        $nextTermStartYm = date('Y-m', strtotime($next_term_start_date));
+
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
@@ -261,7 +264,10 @@ class TeamsController extends AppController
             'previous_term_timezone',
             'next_term_start_date',
             'next_term_end_date',
-            'next_term_timezone'
+            'next_term_timezone',
+            'nextSelectableStartYm',
+            'nextTermStartYm',
+            'termLength'
         ));
 
         return $this->render();

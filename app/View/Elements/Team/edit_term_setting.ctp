@@ -22,37 +22,45 @@
 ?>
 <?= $this->App->viewStartComment()?>
 <section class="panel panel-default" id="editTerm">
+    <?=
+    $this->Form->create('Team', [
+        'novalidate' => true,
+        'url'        => ['action' => 'edit_term'],
+        'method'     => 'post'
+    ]); ?>
     <header>
         <h2><?= __("Term settings") ?></h2>
     </header>
-    <?php // TODO: システム全体でtimezone, dateデータの持ち方に問題があるため、データの不整合が起きる前に一旦期間設定の変更をできなくしている。 ?>
-    <?php //       本来ここには期間設定のformがあるので、上記対応時にrevertする。 ?>
     <div class="panel-body">
         <p><?= __("Changes will take effect after this current term") ?></p>
         <fieldset>
             <label><?= ("Next Term Start") ?>:</label>
-            <select name="term_start" id="term_start">
-                <option value="2017_07">July 2017</option>
-                <option value="2017_08" selected="selected">August 2017 (default)</option>
-                <option value="2017_09">September 2017</option>
-                <option value="2017_10">October 2017</option>
-                <option value="2017_11">November 2017</option>
-                <option value="2017_12">December 2017</option>
-                <option value="2018_01">January 2018</option>
-                <option value="2018_02">February 2018</option>
-                <option value="2018_03">March 2018</option>
-                <option value="2018_04">April 2018</option>
-                <option value="2018_05">May 2018</option>
-                <option value="2018_06">June 2018</option>
-            </select>
+            <?php
+            $nextSelectableStartYm[$nextTermStartYm] .= ' (default)';
+            echo $this->Form->input('next_start_ym', [
+                'label'    => false,
+                'type'     => 'select',
+                'options'  => $nextSelectableStartYm,
+                'selected' => $nextTermStartYm,
+                'id'       => 'term_start'
+            ]) ?>
         </fieldset>
         <fieldset>
             <label><?= __("Term Length") ?>:</label>
-            <select name="term_length" id="term_length">
-                <option value="3">3 months (default)</option>
-                <option value="6">6 months</option>
-                <option value="12">12 months</option>
-            </select>
+            <?php
+            $rangeOptions = [
+                '3' => __('3 months'),
+                '6' => __('6 months'),
+                '12' => __('12 months'),
+            ];
+            $rangeOptions[$termLength] .= ' (default)';
+            echo $this->Form->input('term_range', [
+                'label'    => false,
+                'type'     => 'select',
+                'options'  => $rangeOptions,
+                'selected' => $termLength,
+                'id'       => 'term_range'
+            ]) ?>
         </fieldset>
         <div class="term-details current-term">
             <p>
@@ -91,8 +99,11 @@
                 <input type="checkbox" id="term_agreement" name="term_agreement"> <?= __("I confirm these changes.") ?>
             </fieldset>
         </div>
-        <a href="#" class="btn btn-primary"><?= __("Save settings") ?></a>
+        <?=
+            $this->Form->submit(__("Save settings"),
+            ['class' => 'btn btn-primary', 'div' => false])
+        ?>
     </footer>
+    <?= $this->Form->end(); ?>
 </section>
-<?php $this->end() ?>
 <?= $this->App->viewEndComment() ?>
