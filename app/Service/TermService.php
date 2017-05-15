@@ -1,11 +1,14 @@
 <?php
 App::import('Service', 'AppService');
 
+
 /**
  * Class TermService
  */
 class TermService extends AppService
 {
+    const MAX_TERM_MONTH_LENGTH = 12;
+
     /**
      * Validate update term data
      * - check by white list
@@ -23,6 +26,7 @@ class TermService extends AppService
 
         // model validation
         $Term->set($data);
+        $backupValidate = $Term->validate;
         $Term->validate = $Term->update_validate;
         if (!$Term->validates()) {
             $validationErrors = $this->validationExtract(
@@ -31,19 +35,21 @@ class TermService extends AppService
             return $validationErrors;
         }
 
-        $requestStartYm = $data['start_ym'];
+        $requestNextStartYm = $data['next_start_ym'];
         $currentTerm = $Term->getCurrentTermData();
         $lowerLimitYm = date('Y-m', strtotime("+1 month"));
-        if ($requestStartYm < $lowerLimitYm) {
+        if ($requestNextStartYm < $lowerLimitYm) {
             // TODO: set valid error message
             return 'lower limit';
         }
 
         $upperLimitYm = date('Y-m', strtotime("{$currentTerm['start_date']} +12 month"));
-        if ($requestStartYm > $upperLimitYm) {
+        if ($requestNextStartYm > $upperLimitYm) {
             // TODO: set valid error message
             return 'upper limit';
         }
+
+        $Term->validate = $backupValidate;
         return true;
     }
 
@@ -69,9 +75,9 @@ class TermService extends AppService
         try {
             $Term->begin();
 
-            $requestStartYm = $data['start_ym'];
-            $termRange = $data['term_range'];
-            $newNextStartDate = date('Y-m-01', strtotime($requestStartYm));
+            $requestNextStartYm = $data['next_start_ym'];
+            $termRange = $data['term_length'];
+            $newNextStartDate = date('Y-m-01', strtotime($requestNextStartYm));
             $newNextEndDate = date('Y-m-d', strtotime("{$newNextStartDate} +{$termRange} month") - DAY);
             $newCurrentEndDate = date('Y-m-d', strtotime($newNextStartDate) - DAY);
 
@@ -86,7 +92,7 @@ class TermService extends AppService
                 throw new Exception(sprintf("Failed to update current term setting. current_term_end_date: %s", $newCurrentEndDate));
             }
             if (!$Term->updateNextRange($newNextStartDate, $newNextEndDate)) {
-                throw new Exception(sprintf("Failed to update next term setting. start_date: %s end_date: %s", $newNextStartDate, $newNextEndDate));
+                throw new Exception(sprintf("Failed to update next term setting. new_next_start_date: %s new_next_end_date: %s", $newNextStartDate, $newNextEndDate));
             }
 
             // update goals
@@ -104,6 +110,10 @@ class TermService extends AppService
             if (!$this->updateKrsRangeWithinGoalRange($currentStartDate)) {
                 throw new Exception(sprintf("Failed to update key results range setting curret_start_date: %s", $currentStartDate));
             }
+
+            // delete term cache
+            Cache::delete($Term->getCacheKey(CACHE_KEY_TERM_CURRENT, false), 'team_info');
+            Cache::delete($Term->getCacheKey(CACHE_KEY_TERM_NEXT, false), 'team_info');
 
             $Term->commit();
         } catch (Exception $e) {
@@ -140,5 +150,22 @@ class TermService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * get selectable next term list
+     * - min: next month from $currentYm
+     * - max: after 12 years from $currentTermStartYm
+     *
+     * @param  string $currentTermStartYm
+     * @param  string $currentYm
+     *
+     * @return array
+     */
+    public function getSelectableNextStartYmList(string $currentTermStartYm, string $currentYm): array
+    {
+        $nextMonthYm = date("Y-m", strtotime("$currentYm +1 month"));
+        $nextStartYmUpper = date('Y-m', strtotime($currentTermStartYm.' +'.self::MAX_TERM_MONTH_LENGTH.' month'));
+        return AppUtil::rangeYmI18n($nextMonthYm, $nextStartYmUpper);
     }
 }

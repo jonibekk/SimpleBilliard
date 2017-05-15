@@ -36,7 +36,7 @@ class TermServiceTest extends GoalousTestCase
      * validate update
      * - model validation (type checking)
      * - data correct checking
-     * - start_ym should be...
+     * - next_start_ym should be...
      *  - after this month
      *  - before end month of this term
      *
@@ -50,24 +50,24 @@ class TermServiceTest extends GoalousTestCase
 
         // valid case
         $requestData = [
-            'start_ym' => date('Y-m', strtotime("+1 month")),
-            'term_range'  => 6
+            'next_start_ym' => date('Y-m', strtotime("+1 month")),
+            'term_length'  => 6
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
         $this->assertTrue($validRes);
 
         // from this month
         $requestData = [
-            'start_ym' => date('Y-m', time()),
-            'term_range'  => 6
+            'next_start_ym' => date('Y-m', time()),
+            'term_length'  => 6
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
         $this->assertTrue($validRes !== true);
 
         // range is too long
         $requestData = [
-            'start_ym' => date('Y-m', strtotime("+1 month")),
-            'term_range'  => 13
+            'next_start_ym' => date('Y-m', strtotime("+1 month")),
+            'term_length'  => 13
         ];
         $validRes = $this->TermService->validateUpdate($requestData);
         $this->assertTrue($validRes !== true);
@@ -146,6 +146,16 @@ class TermServiceTest extends GoalousTestCase
         // $res = $KeyResult->getById($krAfterGoalEndId);
         // $this->assertEquals($res['start_date'], $goalStart);
         // $this->assertEquals($res['end_date'], $goalEnd);
+    }
+
+    function test_getSelectableNextStartYmList()
+    {
+        $res = $this->TermService->getSelectableNextStartYmList(
+            $currentTermStart = '2017-04', $current = '2018-01'
+        );
+        $this->assertEquals($res, [
+            '2018-02' => 'Feb 2018', '2018-03' => 'Mar 2018', '2018-04' => 'Apr 2018'
+        ]);
     }
 
 }
