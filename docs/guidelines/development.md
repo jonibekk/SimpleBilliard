@@ -1,5 +1,6 @@
 
 <hr id="setup_stack">
+
 ## 開発環境構築手順書
 
 ## Introduction
@@ -9,10 +10,10 @@ Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
 以下のツールはローカルにおける開発時に必須である為、必ずインストールしてください。
 
-- Virtual Box `version = 5.0`
-- Vagrant `version = 1.7.4`
-- Git `version >= 1.8.5`
-- Chef Development Kit `version = 0.8.0`
+- Virtual Box `version = 5.0.x`
+- Vagrant `version = latest`
+- Git `version >= latest`
+- Chef Development Kit `version = 0.17.17`
 
 [インストール手順(windows)](http://bit.ly/2aIo1KH)
 [インストール手順(mac)](http://bit.ly/2adyLyR)
