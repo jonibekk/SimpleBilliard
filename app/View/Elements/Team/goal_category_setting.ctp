@@ -67,7 +67,7 @@
                  'max_index'       => $max_index,
                  'class'           => 'btn btn-default'
                 ]) ?>
-            
+
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("GoalCategory.$i.name") ?>
