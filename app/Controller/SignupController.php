@@ -81,7 +81,6 @@ class SignupController extends AppController
                 'maxLength' => ['rule' => ['maxLength', 128]],
                 'notBlank'  => ['rule' => ['notBlank'],],
             ],
-            'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
             'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
             'timezone'         => [
                 'numeric' => [
@@ -89,6 +88,20 @@ class SignupController extends AppController
                     'allowEmpty' => true,
                 ],
             ],
+        ],
+        'Term'      => [
+            'next_start_ym' => [
+                'notBlank'            => [
+                    'required' => 'update',
+                    'rule'     => 'notBlank',
+                ],
+                'dateYm'             => [
+                    'rule' => ['date', 'ym'],
+                ],
+                'startEndDate'       => [
+                    'rule' => ['customValidNextStartDateInSignup']
+                ],
+            ]
         ]
     ];
 
@@ -106,9 +119,11 @@ class SignupController extends AppController
         ],
         'Team'  => [
             'name',
-            'start_term_month',
             'border_months',
             'timezone',
+        ],
+        'Term'  => [
+            'next_start_ym'
         ]
     ];
 
@@ -352,13 +367,16 @@ class SignupController extends AppController
             'is_not_available' => false,
         ];
 
+        $requestData = $this->request->data;
+        $sessionData = $this->Session->read('data');
+
         try {
             $this->User->begin();
-            if (!$session_data = $this->Session->read('data')) {
+            if (!$sessionData) {
                 throw new RuntimeException(__('Invalid screen transition.'));
             }
 
-            $data = $this->_filterWhiteList($this->request->data);
+            $data = $this->_filterWhiteList($requestData);
 
             if (empty($data)) {
                 throw new RuntimeException(__('No Data'));
@@ -370,7 +388,7 @@ class SignupController extends AppController
                 throw new RuntimeException(__('Invalid Data'));
             }
             //merge form data and session data
-            $data = Hash::merge($session_data, $data);
+            $data = Hash::merge($sessionData, $data);
             //required fields check
             if (!$this->_hasAllRequiredFields($data)) {
                 $res['is_not_available'] = true;
@@ -400,6 +418,16 @@ class SignupController extends AppController
 
             ///save team
             $this->Team->add(['Team' => $data['Team']], $user_id);
+            $teamId = $this->Team->getLastInsertID();
+
+            // save current&next term
+            $Term = ClassRegistry::init('Term');
+            $nextStartDate = date('Y-m-01', strtotime($data['Term']['next_start_ym']));
+            $termRange = $data['Team']['border_months'];
+            if (!$this->Team->Term->createInitialDataAsSignup($nextStartDate, $termRange, $teamId)) {
+                $res['is_not_available'] = true;
+                throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
+            }
 
             //success!!
             //auto login with team
@@ -412,6 +440,7 @@ class SignupController extends AppController
             $this->Session->delete('data');
 
         } catch (RuntimeException $e) {
+            $this->log(sprintf("Failed to signup. requestData: %s sessionData: %s", var_export($requestData, true), var_export($sessionData, true)));
             $res['error'] = true;
             $res['message'] = $e->getMessage();
             $this->User->rollback();
@@ -479,7 +508,6 @@ class SignupController extends AppController
                 if (!isset($data[$model][$field])) {
                     return false;
                 }
-
             }
         }
         return true;

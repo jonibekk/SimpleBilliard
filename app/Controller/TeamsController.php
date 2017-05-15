@@ -15,6 +15,52 @@ class TeamsController extends AppController
         parent::beforeFilter();
     }
 
+    /**
+     * Basic info page
+     *
+     * @return CakeResponse
+     */
+    function index()
+    {
+        $this->layout = LAYOUT_TWO_COLUMN;
+        $this->set('current_global_menu', 'team');
+
+        $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
+
+        // Get current term info
+        $currentTerm = $this->Team->Term->getCurrentTermData();
+        $currentTermStartDate = Hash::get($currentTerm, 'start_date');
+        $currentTermEndDate = Hash::get($currentTerm, 'end_date');
+        $currentTermTimezone = Hash::get($currentTerm, 'timezone');
+
+        // Get next term info
+        $nextTerm = $this->Team->Term->getNextTermData();
+        $nextTermStartDate = Hash::get($nextTerm, 'start_date');
+        $nextTermEndDate = Hash::get($nextTerm, 'end_date');
+        $nextTermTimezone = Hash::get($nextTerm, 'timezone');
+
+        // If changed term in 2 weeks, Display information
+        $changedTermFlg = $this->GlRedis->getChangedTerm($this->current_team_id);
+
+        // Get timezone label
+        $timezones = AppUtil::getTimezoneList();
+        $timezoneLabel = $timezones[number_format($team['timezone'],1)];
+
+        $this->set([
+            'team' => $team,
+            'current_term_start_date' => $currentTermStartDate,
+            'current_term_end_date' => $currentTermEndDate,
+            'current_term_timezone' => $currentTermTimezone,
+            'next_term_start_date' => $nextTermStartDate,
+            'next_term_end_date' => $nextTermEndDate,
+            'next_term_timezone' => $nextTermTimezone,
+            'changed_term_flg' => $changedTermFlg,
+            'timezone_label' => $timezoneLabel,
+        ]);
+
+
+    }
+
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -54,8 +100,6 @@ class TeamsController extends AppController
         // If change timezone, notify team members
         $newTimezone = Hash::get($this->request->data, 'Team.timezone');
         if ((float)$team['timezone'] != (float)$newTimezone) {
-            // Save before change timezone to redis
-            $this->GlRedis->saveBeforeChangeTimezone($this->current_team_id, $team['timezone']);
             // TODO: send notification
         }
 
@@ -100,6 +144,11 @@ class TeamsController extends AppController
         }
 
         $this->Pnotify->outSuccess(__("Changed terms setting."));
+
+        // Save changed term info to redis
+        $this->GlRedis->saveChangedTerm($this->current_team_id);
+        // TODO: Send notification
+
         return $this->redirect($this->referer());
     }
 
