@@ -14,23 +14,23 @@
     <header>
         <h2><?= __("Basic settings") ?></h2>
     </header>
-    <div class="panel-body add-team-panel-body">
-        <?=
-        $this->Form->create('Team', [
-            'inputDefaults' => [
-                'div'       => 'form-group',
-                'label'     => [
-                    'class' => 'col col-sm-3 control-label form-label'
-                ],
-                'wrapInput' => 'col col-sm-6',
-                'class'     => 'form-control addteam_input-design'
+    <?=
+    $this->Form->create('Team', [
+        'inputDefaults' => [
+            'div'       => 'form-group',
+            'label'     => [
+                'class' => 'col col-sm-3 control-label form-label'
             ],
-            'class'         => 'form-horizontal',
-            'novalidate'    => true,
-            'type'          => 'file',
-            'id'            => 'AddTeamForm',
-            'url'           => ['action' => 'edit_team']
-        ]); ?>
+            'wrapInput' => 'col col-sm-6',
+            'class'     => 'form-control addteam_input-design'
+        ],
+        'class'         => 'form-horizontal',
+        'novalidate'    => true,
+        'type'          => 'file',
+        'id'            => 'AddTeamForm',
+        'url'           => ['action' => 'edit_team']
+    ]); ?>
+    <div class="panel-body add-team-panel-body">
         <?=
         $this->Form->input('name',
             [
@@ -119,7 +119,7 @@
         <fieldset>
             <?=
                 $this->Form->submit(__("Change basic settings"),
-                ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) 
+                ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled'])
             ?>
             <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
             <?= $this->Form->end(); ?>
@@ -131,8 +131,8 @@
             'id'         => 'TeamDeleteForm',
             'url'        => ['action' => 'delete_team']
         ]); ?>
-        <?= $this->Form->end(); ?>
     </footer>
+    <?= $this->Form->end(); ?>
 </section>
 <?php $this->append('script') ?>
 <script type="text/javascript">

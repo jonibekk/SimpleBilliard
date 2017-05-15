@@ -98,8 +98,10 @@ class TeamsController extends AppController
 
         // If change timezone, notify team members
         $newTimezone = Hash::get($this->request->data, 'Team.timezone');
+        // Send notification
         if ((float)$team['timezone'] != (float)$newTimezone) {
-            // TODO: send notification
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CHANGED_TEAM_BASIC_SETTING, $this->current_team_id);
+
         }
 
         return $this->redirect($this->referer());
@@ -146,26 +148,9 @@ class TeamsController extends AppController
 
         // Save changed term info to redis
         $this->GlRedis->saveChangedTerm($this->current_team_id);
-        // TODO: Send notification
 
-        return $this->redirect($this->referer());
-    }
-
-    /**
-     * Update timezone
-     * @return \Cake\Network\Response|null
-     */
-    public function edit_timezone()
-    {
-        $this->request->allowMethod('post');
-        // チーム管理者かチェック
-        // TODO:とりあえずチェック処理は他に合わせる(delete_teamメソッド等)が将来的にリファクタをする
-        try {
-            $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
-        }
+        // Send notification
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CHANGED_TERM_SETTING, $this->current_team_id);
 
         return $this->redirect($this->referer());
     }
