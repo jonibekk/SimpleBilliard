@@ -699,7 +699,7 @@ class Term extends AppModel
     {
         $currentStartDate = date('Y-m-01');
         $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
-        $nextEndDate = date('Y-m-t', strtotime("$nextStartDate +$termRange month"));
+        $nextEndDate = date('Y-m-t', strtotime($nextStartDate) + ($termRange - 1) * MONTH);
         $saveData = [
             [
                 'team_id'    => $teamId,

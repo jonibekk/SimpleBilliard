@@ -544,7 +544,7 @@ class TermTest extends GoalousTestCase
         // next term
         $nextTerm = $this->Term->find('first', ['conditions' => [
             'start_date' => $nextStartDate,
-            'end_date'   => date('Y-m-t', strtotime("$nextStartDate +$termRange month")),
+            'end_date'   => date('Y-m-t', strtotime("$nextStartDate") + ($termRange - 1) * MONTH),
             'team_id'    => $teamId
         ]]);
         $this->assertTrue(!empty($nextTerm));
