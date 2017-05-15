@@ -76,7 +76,7 @@ class DetectInconsistentTermShell extends AppShell
     }
 
     /**
-     * Validate start_date and end_date of term
+     * Detect term errors
      *
      * @param array $team
      * @param array $terms
@@ -97,6 +97,7 @@ class DetectInconsistentTermShell extends AppShell
             }
 
             if ($i == 0) {
+                // Check if term exists when team created
                 $teamCreatedDate = date('Y-m-d', $team['created'] + ($team['timezone'] * HOUR));
                 if ($term['start_date'] > $teamCreatedDate) {
                     $data = [
@@ -106,6 +107,7 @@ class DetectInconsistentTermShell extends AppShell
                     $errors[] = sprintf("Missing initial term when team created. data:%s", var_export($data, true));
                 }
             } elseif ($i == $lastIndex) {
+                // Check if current term exists
                 $currentDate = date('Y-m-d', $this->requestTimestamp + ($team['timezone'] * HOUR));
                 if ($term['end_date'] < $currentDate) {
                     $data = [
@@ -116,6 +118,7 @@ class DetectInconsistentTermShell extends AppShell
                 }
             }
 
+            // Check if term missing teeth
             if (!empty($prevTerm)) {
                 if ($prevTerm['end_date'] >= $term['start_date']) {
                     $errors[] = sprintf("Duplicate term range. data:%s", var_export(compact('prevTerm', 'term'), true));
