@@ -92,8 +92,6 @@ class TermService extends AppService
                 throw new Exception(sprintf("Failed to update current term setting. current_term_end_date: %s", $newCurrentEndDate));
             }
             if (!$Term->updateNextRange($newNextStartDate, $newNextEndDate)) {
-                $this->log($Term->getDataSource()->getLog());
-                $this->log($Term->validationErrors);
                 throw new Exception(sprintf("Failed to update next term setting. new_next_start_date: %s new_next_end_date: %s", $newNextStartDate, $newNextEndDate));
             }
 
@@ -167,7 +165,7 @@ class TermService extends AppService
     public function getSelectableNextStartYmList(string $currentTermStartYm, string $currentYm): array
     {
         $nextMonthYm = date("Y-m", strtotime("$currentYm +1 month"));
-        $nextStartYmUpper = date('Y-m', strtotime($currentTermStartYm) + (self::MAX_TERM_MONTH_LENGTH + 1) * MONTH);
+        $nextStartYmUpper = date('Y-m', strtotime($currentTermStartYm.' +'.self::MAX_TERM_MONTH_LENGTH.' month'));
         return AppUtil::rangeYmI18n($nextMonthYm, $nextStartYmUpper);
     }
 }
