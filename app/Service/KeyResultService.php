@@ -338,13 +338,12 @@ class KeyResultService extends AppService
      *
      * @param int   $krId
      * @param array $requestData
-     * @param bool  $includeStartEndDate
      *
      * @return array|bool
      * @throws Exception
      * @internal param $goalId
      */
-    function buildUpdateKr(int $krId, array $requestData, bool $includeStartEndDate = true): array
+    function buildUpdateKr(int $krId, array $requestData): array
     {
         $kr = $this->get($krId);
         if (empty($kr)) {
@@ -380,12 +379,12 @@ class KeyResultService extends AppService
             }
         }
 
-        if ($includeStartEndDate) {
-            // 開始日・終了日設定
+        if (Hash::get($requestData, 'start_date')) {
             $updateKr['start_date'] = $requestData['start_date'];
+        }
+        if (Hash::get($requestData, 'end_date')) {
             $updateKr['end_date'] = $requestData['end_date'];
         }
-
         return $updateKr;
     }
 

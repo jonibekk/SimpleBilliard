@@ -122,7 +122,6 @@ class Team extends AppModel
             ],
         ],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'photo'              => [
@@ -366,39 +365,6 @@ class Team extends AppModel
     }
 
     /**
-     * @param $team_id
-     * @param $post_data
-     *
-     * @return bool
-     */
-    function saveEditTerm($team_id, $post_data)
-    {
-        $this->id = $team_id;
-        if (!$this->save($post_data)) {
-            return false;
-        }
-        $current_term_id = $this->Term->getCurrentTermId();
-        $next_term_id = $this->Term->getNextTermId();
-        if (!$current_term_id || !$next_term_id) {
-            return false;
-        }
-        if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
-            $this->Term->isStartedEvaluation($current_term_id)
-        ) {
-            return false;
-        }
-
-        $res = $this->Term->updateTermData(
-            $post_data['Team']['change_from'], $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months']
-        );
-        //キャッシュを削除
-        Cache::clear(false, 'team_info');
-        Cache::clear(false, 'user_data');
-        return (bool)$res;
-    }
-
-    /**
      * @return null
      */
     function getCurrentTeam()
@@ -415,6 +381,7 @@ class Team extends AppModel
 
     /**
      * getting timezone
+     *
      * @return mixed
      */
     function getTimezone()
@@ -475,4 +442,125 @@ class Team extends AppModel
         }
         return true;
     }
+
+    /**
+     * 指定したタイムゾーン設定になっているチームのIDのリストを返す
+     *
+     * @param float $timezone
+     *
+     * @return array
+     */
+    public function findIdsByTimezone(float $timezone): array
+    {
+        $options = [
+            'conditions' => [
+                'timezone' => $timezone,
+            ],
+            'fields'     => [
+                'id'
+            ],
+        ];
+        $ret = $this->findWithoutTeamId('list', $options);
+        // キーに特別な意味を持たせないように、歯抜けのキーを再採番
+        $ret = array_merge($ret);
+        return $ret;
+    }
+
+    /**
+     * finding team ids that have no term data
+     *
+     * @param float  $timezone
+     * @param string $targetDate
+     *
+     * @return array
+     */
+    public function findIdsNotHaveTerm(float $timezone, string $targetDate): array
+    {
+        $options = [
+            'conditions' => [
+                'Team.timezone' => $timezone,
+                'Term.id'       => null,
+            ],
+            'fields'     => [
+                'Team.id'
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'terms',
+                    'alias'      => 'Term',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Team.id = Term.team_id',
+                        'Term.start_date <=' => $targetDate,
+                        'Term.end_date >='   => $targetDate,
+                        'Term.del_flg'       => false,
+                    ]
+                ],
+            ],
+        ];
+        $ret = $this->findWithoutTeamId('list', $options);
+        // renumbering
+        $ret = array_merge($ret);
+        return $ret;
+
+    }
+
+    /**
+     * 今期の期間データを持ち且つ来期データを持たないチームのIDと期の終了日を取得
+     * finding id of teams are which have current term setting and which have not next term setting.
+     *
+     * @param float  $timezone
+     * @param string $targetDate
+     *
+     * @return array [['team_id'=>'','border_months'=>'','end_date'=>'']]
+     */
+    public function findAllTermEndDatesNextTermNotExists(float $timezone, string $targetDate): array
+    {
+        $options = [
+            'conditions' => [
+                'Team.timezone' => $timezone,
+                'NextTerm.id'   => null,
+                'NOT'           => [
+                    'CurrentTerm.id' => null,
+                ]
+            ],
+            'fields'     => [
+                'Team.border_months',
+                'CurrentTerm.team_id',
+                'CurrentTerm.end_date'
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'terms',
+                    'alias'      => 'CurrentTerm',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Team.id = CurrentTerm.team_id',
+                        'CurrentTerm.start_date <=' => $targetDate,
+                        'CurrentTerm.end_date >='   => $targetDate,
+                        'CurrentTerm.del_flg'       => false,
+                    ]
+                ],
+                [
+                    'table'      => 'terms',
+                    'alias'      => 'NextTerm',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Team.id = NextTerm.team_id',
+                        "NextTerm.start_date <= (CurrentTerm.end_date + INTERVAL 1 DAY)",
+                        'NextTerm.end_date >= (CurrentTerm.end_date + INTERVAL 1 DAY)',
+                        'NextTerm.del_flg' => false,
+                    ]
+                ],
+            ],
+        ];
+        $ret = $this->findWithoutTeamId('all', $options);
+
+        // excluding Model name from the arrays and merging them.
+        $teams = Hash::extract($ret, '{n}.Team');
+        $currentTerms = Hash::extract($ret, '{n}.CurrentTerm');
+        $ret = Hash::merge($teams, $currentTerms);
+        return $ret;
+    }
+
 }
