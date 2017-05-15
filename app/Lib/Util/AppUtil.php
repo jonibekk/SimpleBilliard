@@ -241,6 +241,30 @@ class AppUtil
     }
 
     /**
+     * 渡された日付の月の初日を返す
+     *
+     * @param string $targetDate
+     *
+     * @return string
+     */
+    static function dateMonthFirst(string $targetDate): string
+    {
+        return date('Y-m-01', strtotime($targetDate));
+    }
+
+    /**
+     * 渡された日付の月の最終日を返す
+     *
+     * @param string $targetDate
+     *
+     * @return string
+     */
+    static function dateMonthLast(string $targetDate): string
+    {
+        return date('Y-m-t', strtotime($targetDate));
+    }
+
+    /**
      * 今日のY-m-d 形式のローカルの日付を返す
      *
      * @param int $timezone
