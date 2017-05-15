@@ -10,25 +10,27 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Basic settings") ?></div>
-    <?=
-    $this->Form->create('Team', [
-        'inputDefaults' => [
-            'div'       => 'form-group',
-            'label'     => [
-                'class' => 'col col-sm-3 control-label form-label'
-            ],
-            'wrapInput' => 'col col-sm-6',
-            'class'     => 'form-control addteam_input-design'
-        ],
-        'class'         => 'form-horizontal',
-        'novalidate'    => true,
-        'type'          => 'file',
-        'id'            => 'AddTeamForm',
-        'url'           => ['action' => 'edit_team']
-    ]); ?>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Basic settings") ?></h2>
+    </header>
     <div class="panel-body add-team-panel-body">
+        <?=
+        $this->Form->create('Team', [
+            'inputDefaults' => [
+                'div'       => 'form-group',
+                'label'     => [
+                    'class' => 'col col-sm-3 control-label form-label'
+                ],
+                'wrapInput' => 'col col-sm-6',
+                'class'     => 'form-control addteam_input-design'
+            ],
+            'class'         => 'form-horizontal',
+            'novalidate'    => true,
+            'type'          => 'file',
+            'id'            => 'AddTeamForm',
+            'url'           => ['action' => 'edit_team']
+        ]); ?>
         <?=
         $this->Form->input('name',
             [
@@ -113,30 +115,25 @@
                 . '</span>'
         ]) ?>
     </div>
-
-    <div class="panel-footer addteam_pannel-footer">
-        <div class="row">
-            <div class="col-xxs-4 col-sm-offset-3">
-                <?=
+    <footer>
+        <fieldset>
+            <?=
                 $this->Form->submit(__("Change basic settings"),
-                    ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
-            </div>
-            <div class="col-xxs-8 col-sm-5 text-align_r">
-                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
-            </div>
-        </div>
-    </div>
-    <?= $this->Form->end(); ?>
-    <?=
-    $this->Form->create('Team', [
-        'class'      => 'none',
-        'novalidate' => true,
-        'id'         => 'TeamDeleteForm',
-        'url'        => ['action' => 'delete_team']
-    ]); ?>
-    <?= $this->Form->end(); ?>
-
-</div>
+                ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) 
+            ?>
+            <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
+            <?= $this->Form->end(); ?>
+        </fieldset>
+        <?=
+        $this->Form->create('Team', [
+            'class'      => 'none',
+            'novalidate' => true,
+            'id'         => 'TeamDeleteForm',
+            'url'        => ['action' => 'delete_team']
+        ]); ?>
+        <?= $this->Form->end(); ?>
+    </footer>
+</section>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
