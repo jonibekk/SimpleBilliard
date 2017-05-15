@@ -89,6 +89,31 @@ class Term extends AppModel
     ];
 
     /**
+     * サインナップ時の来期開始月のバリデーション
+     * - 来月 - 12ヶ月後 の間に収まっているか
+     *
+     * @param  array $val
+     *
+     * @return bool
+     */
+    function customValidNextStartDateInSignup(array $val)
+    {
+        $nextStartYm = array_shift($val);
+        // lower limit
+        $lowerLimitYm = date('Y-m', strtotime("+1 month"));
+        if ($nextStartYm < $lowerLimitYm) {
+            return false;
+        }
+
+        // upper limit
+        $upperLimitYm = date('Y-m', strtotime("+12 month"));
+        if ($nextStartYm > $upperLimitYm) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * TODO:findAllメソッドに統合
      *
      * @deprecated
@@ -668,5 +693,25 @@ class Term extends AppModel
         ];
 
         return (bool)$this->save($saveData);
+    }
+
+    public function createInitialDataAsSignup(string $nextStartDate, int $termRange, int $teamId): bool
+    {
+        $currentStartDate = date('Y-m-01');
+        $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
+        $nextEndDate = date('Y-m-t', strtotime($nextStartDate) + ($termRange - 1) * MONTH);
+        $saveData = [
+            [
+                'team_id'    => $teamId,
+                'start_date' => $currentStartDate,
+                'end_date'   => $currentEndDate
+            ],
+            [
+                'team_id'    => $teamId,
+                'start_date' => $nextStartDate,
+                'end_date'   => $nextEndDate
+            ]
+        ];
+        return $this->saveAll($saveData);
     }
 }

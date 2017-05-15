@@ -236,25 +236,6 @@ class TeamTest extends GoalousTestCase
 
     }
 
-    function testSaveEditTerm()
-    {
-        $this->_setDefault();
-        $this->assertFalse($this->Team->saveEditTerm(1, ['start_term_month' => 'aaaa']));
-        $this->Team->create();
-        $this->assertFalse($this->Team->saveEditTerm(1, ['Team' => ['name' => 'test']]));
-        $this->Team->Term->addTermData(Term::TYPE_CURRENT);
-        $this->Team->Term->addTermData(Term::TYPE_NEXT);
-        $this->Team->Term->id = $this->Team->Term->getCurrentTermId();
-        $this->Team->Term->save(['evaluate_status' => 1]);
-        $this->assertFalse($this->Team->saveEditTerm(1,
-            ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
-        $this->Team->Term->id = $this->Team->Term->getCurrentTermId();
-        $this->Team->Term->save(['evaluate_status' => 0]);
-        $this->assertTrue($this->Team->saveEditTerm(1,
-            ['Team' => ['change_from' => 1, 'start_term_month' => 1, 'border_months' => 1, 'timezone' => 9]]));
-
-    }
-
     function test_updateTermSettings()
     {
         $teamId = $this->createTeam(['start_term_month' => 4, 'border_months' => 10]);

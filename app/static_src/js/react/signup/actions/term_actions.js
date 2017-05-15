@@ -32,8 +32,10 @@ export function postTerms(post_data) {
   return dispatch => {
     const data = {
       'data[Team][border_months]': post_data.term,
-      'data[Team][start_term_month]': post_data.start_month,
-      'data[Team][timezone]': post_data.timezone
+      'data[Team][timezone]': post_data.timezone,
+      // TODO: must change data format
+      //       integer -> string 'YYYY-mm'
+      'data[Term][next_start_ym]': post_data.start_month
     }
 
     dispatch(checkingTerm())

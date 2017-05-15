@@ -122,7 +122,6 @@ class Team extends AppModel
             ],
         ],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'photo'              => [
@@ -363,39 +362,6 @@ class Team extends AppModel
             }
         }
         return $res;
-    }
-
-    /**
-     * @param $team_id
-     * @param $post_data
-     *
-     * @return bool
-     */
-    function saveEditTerm($team_id, $post_data)
-    {
-        $this->id = $team_id;
-        if (!$this->save($post_data)) {
-            return false;
-        }
-        $current_term_id = $this->Term->getCurrentTermId();
-        $next_term_id = $this->Term->getNextTermId();
-        if (!$current_term_id || !$next_term_id) {
-            return false;
-        }
-        if (Hash::get($post_data, 'Team.change_from') == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
-            $this->Term->isStartedEvaluation($current_term_id)
-        ) {
-            return false;
-        }
-
-        $res = $this->Term->updateTermData(
-            $post_data['Team']['change_from'], $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months']
-        );
-        //キャッシュを削除
-        Cache::clear(false, 'team_info');
-        Cache::clear(false, 'user_data');
-        return (bool)$res;
     }
 
     /**
