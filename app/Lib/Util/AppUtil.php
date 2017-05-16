@@ -479,4 +479,56 @@ class AppUtil
         $fragment = isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '';
         return "$scheme$user$pass$host$port$path$query$fragment";
     }
+
+    /**
+     * range ym array with I18n
+     * - contain $startYm & $endYm in return
+     * - return format key: 'Y-m', value: i18n value
+     *  - ex) ['2017-1' => 'Jan 2017', '2017-2' => 'Feb 2017']
+     *
+     * @param  string $startYm
+     * @param  string $endYm
+     *
+     * @return array
+     */
+    static function rangeYmI18n(string $startYm, string $endYm): array
+    {
+        $startYm = date('Y-m', strtotime($startYm));
+        $endYm = date('Y-m', strtotime($endYm));
+        $range = [];
+
+        if ($startYm > $endYm) {
+            return $range;
+        }
+
+        // 20 year is realistic upper limit...
+        for ($add = 0; $add < 240; $add++) {
+            $newYmTimeStamp = strtotime("$startYm +$add month");
+            $newYm = date("Y-m", $newYmTimeStamp);
+            $range[$newYm] = self::formatYmI18n($newYmTimeStamp);
+            if ($newYm === $endYm) {
+                break;
+            }
+        }
+        return $range;
+    }
+
+    /**
+     * format ym date i18n from timestamp
+     *
+     * @param  int    $time
+     *
+     * @return string
+     */
+    static function formatYmI18n(int $timestamp): string
+    {
+        switch (Configure::read('Config.language')) {
+            case "jpn":
+                $formattedYm = date("Y年m月", $timestamp);
+                break;
+            default:
+                $formattedYm = date("M Y", $timestamp);
+        }
+        return $formattedYm;
+    }
 }

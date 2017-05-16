@@ -65,7 +65,7 @@ class Term extends AppModel
     ];
 
     public $update_validate = [
-        'start_ym'   => [
+        'next_start_ym'   => [
             'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
@@ -74,7 +74,7 @@ class Term extends AppModel
                 'rule' => ['date', 'ym'],
             ],
         ],
-        'term_range' => [
+        'term_length' => [
             'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
@@ -83,7 +83,8 @@ class Term extends AppModel
                 'rule' => ['numeric'],
             ],
             'range'    => [
-                'rule' => ['range', 1, 12]
+                // allow 1 ~ 12
+                'rule' => ['range', 0, 13]
             ]
         ]
     ];
@@ -696,6 +697,16 @@ class Term extends AppModel
         return (bool)$this->save($saveData);
     }
 
+    /**
+     * create initial term data as signup
+     * - create current & next term data
+     *
+     * @param  string $nextStartDate
+     * @param  int    $termRange
+     * @param  int    $teamId
+     *
+     * @return bool
+     */
     public function createInitialDataAsSignup(string $nextStartDate, int $termRange, int $teamId): bool
     {
         $currentStartDate = date('Y-m-01');
