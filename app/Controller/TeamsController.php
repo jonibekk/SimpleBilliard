@@ -287,7 +287,10 @@ class TeamsController extends AppController
         $TermService = ClassRegistry::init("TermService");
         $nextSelectableStartYm = $TermService->getSelectableNextStartYmList($current_term_start_date, date('Y-m'));
         $termLength = $team['Team']['border_months'];
+        $currentTermStartYm = date('Y-m', strtotime($current_term_start_date));
+        $currentTermEndYm = date('Y-m', strtotime($current_term_end_date));
         $nextTermStartYm = date('Y-m', strtotime($next_term_start_date));
+        $nextTermEndYm = date('Y-m', strtotime($next_term_end_date));
 
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
@@ -315,7 +318,10 @@ class TeamsController extends AppController
             'next_term_end_date',
             'next_term_timezone',
             'nextSelectableStartYm',
+            'currentTermStartYm',
+            'currentTermEndYm',
             'nextTermStartYm',
+            'nextTermEndYm',
             'termLength'
         ));
 
