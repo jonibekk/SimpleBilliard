@@ -3505,101 +3505,6 @@ msgstr ""
 msgid "Term settings"
 msgstr "期間設定"
 
-msgid "Changes will take effect after this current term"
-msgstr ""
-
-#, fuzzy
-#| msgid "Term settings"
-msgid "Term Length"
-msgstr "期間設定"
-
-#, fuzzy
-#| msgid "Month"
-msgid "3 months"
-msgstr "月"
-
-#, fuzzy
-#| msgid "Month"
-msgid "6 months"
-msgstr "月"
-
-msgid "12 months"
-msgstr ""
-
-#, fuzzy
-#| msgid "This Term"
-msgid "This term"
-msgstr "今期"
-
-msgid "After"
-msgstr ""
-
-msgid "The term has changed as above."
-msgstr ""
-
-msgid ""
-"According to the changed term, the dates of the goals and KR are "
-"automatically updated as follows."
-msgstr ""
-
-#, fuzzy
-#| msgid ""
-#| "If you change the goal term from the next term to this term, the goal and "
-#| "all KRs’ deadlines will be changed to the last day of the current term."
-msgid ""
-"The goal that beings in the current term and ends in the next term will be "
-"updated to end on the last day of the current term."
-msgstr ""
-"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
-"更されます。"
-
-#, fuzzy
-#| msgid ""
-#| "If you change the goal term from the next term to this term, the goal and "
-#| "all KRs’ deadlines will be changed to the last day of the current term."
-msgid ""
-"The goal that begins in the current term and ends beyond the next term will "
-"be updated to end on the last day of the current term."
-msgstr ""
-"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
-"更されます。"
-
-#, fuzzy
-#| msgid ""
-#| "If you change the goal term from the next term to this term, the goal and "
-#| "all KRs’ deadlines will be changed to the last day of the current term."
-msgid ""
-"The goal that beings in the next term and ends beyond the next term will be "
-"updated to end on the last day of the next term."
-msgstr ""
-"ゴールを来期から今期に変更すると、ゴールとすべてのKRの期限が今期の最終日に変"
-"更されます。"
-
-msgid ""
-"If the start date and end date of a goal is both within the current term, or "
-"both within the next term, will not be changed."
-msgstr ""
-
-msgid ""
-"The goal that begins and ends beyond the the next term will be updated to "
-"match the start and end date of the next term."
-msgstr ""
-
-#, fuzzy
-#| msgid ""
-#| "Please input start date / end date of KR between start date / end date of "
-#| "the goal."
-msgid ""
-"The start date and the end date of KR belonging to the goal are updated like "
-"the above goal."
-msgstr "開始日/期限はゴールの開始日/期限の間で入力してください"
-
-msgid "I confirm these changes."
-msgstr ""
-
-msgid "Save settings"
-msgstr "設定を保存"
-
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
 
@@ -3662,6 +3567,9 @@ msgstr "表示順"
 
 msgid "Add definition"
 msgstr "定義を１つ追加"
+
+msgid "Save settings"
+msgstr "設定を保存"
 
 msgid "Evaluation settings"
 msgstr "評価設定"
