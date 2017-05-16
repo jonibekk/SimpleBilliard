@@ -15,7 +15,11 @@ if (!isset($with_header_menu)) {
 <?= $this->App->viewStartComment() ?>
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="ja">
+<?php if($this->Session->read('Auth.User.language')=='eng'): ?>
+<html lang="en">
+<?php else: ?>
+<html lang="jp">
+<?php endif; ?>
 <?= $this->element('head') ?>
 <body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?>">
 <?php if (extension_loaded('newrelic')) {
