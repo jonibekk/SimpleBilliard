@@ -444,7 +444,6 @@ class SignupController extends AppController
             $this->log(sprintf("Failed to signup. requestData: %s sessionData: %s", var_export($requestData, true), var_export($sessionData, true)));
             $res['error'] = true;
             $res['message'] = $e->getMessage();
-            $this->log($res);
             $this->User->rollback();
         }
         $this->User->commit();
