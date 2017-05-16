@@ -35,7 +35,7 @@ export function postTerms(post_data) {
       'data[Team][timezone]': post_data.timezone,
       // TODO: must change data format
       //       integer -> string 'YYYY-mm'
-      'data[Term][next_start_ym]': post_data.start_month
+      'data[Term][next_start_ym]': post_data.next_start_ym
     }
 
     dispatch(checkingTerm())
@@ -51,7 +51,7 @@ export function postTerms(post_data) {
       } else {
         document.location.href = "/teams/invite"
       }
-    }, () => {
+    }, (error) => {
       dispatch(finishedCheckingTerm())
       dispatch(exception('Some error occurred'))
       return redirectToTop()

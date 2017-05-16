@@ -1,4 +1,4 @@
-import { MonthName } from "~/common/constants/Date";
+import { MonthNameListEn } from "~/common/constants/Date";
 
 /**
  * termを元に、現在日時から評価開始年月の一覧を生成する
@@ -13,12 +13,13 @@ export function generateStartMonthList(term) {
   const start_month_list = []
 
   for(let i = parseInt(term); i > 0; i--) {
-    const start_month = new Date(this_year, this_month - (i - 1), 1)
-    const end_month = new Date(this_year, (this_month - (i - 1)) + parseInt(term), 0)
-    const range = generateTermRangeFormat(start_month, end_month);
+    const start_date = new Date(this_year, this_month - (i - 1))
+    const end_date = new Date(this_year, (this_month - i) + parseInt(term))
+    const range = generateTermRangeFormat(start_date, end_date);
+    const next_start_date = new Date(end_date.getFullYear(), parseInt(end_date.getMonth() + 1))
 
     start_month_list.push({
-      start_month: parseInt(start_month.getMonth()) + 1,
+      next_start_ym: `${next_start_date.getFullYear()}-${toDigit(parseInt(next_start_date.getMonth()) + 1)}`,
       range
     })
   }
@@ -37,8 +38,8 @@ export function generateStartMonthList(term) {
 export function generateTermRangeFormat(start_month, end_month) {
   start_month = new Date(start_month)
   end_month = new Date(end_month)
-  const formatted_start_date = dateFormat(start_month.getFullYear(), parseInt(start_month.getMonth()) + 1, 1)
-  const formatted_end_date = dateFormat(end_month.getFullYear(), parseInt(end_month.getMonth()) + 1, end_month.getDate())
+  const formatted_start_date = dateFormatYm(start_month.getFullYear(), parseInt(start_month.getMonth()) + 1)
+  const formatted_end_date = dateFormatYm(end_month.getFullYear(), parseInt(end_month.getMonth()) + 1)
   const formatted = `${formatted_start_date} - ${formatted_end_date}`
   return formatted
 }
@@ -50,18 +51,15 @@ export function generateTermRangeFormat(start_month, end_month) {
  * @param  integer month
  * @param  integer day
  */
-export function dateFormat(year, month, day) {
-  const double_digit_month = ('00' + month).slice(-2);
-  const translated_month_name = MonthName[double_digit_month]
-
-  // 日本語の翻訳は月の数字が「１月」のように大文字+1桁になるため、
-  // ここで「01月」を月名として代入する
-  let month_name = ''
-  if(translated_month_name.match(/月/)) {
-    month_name = double_digit_month + '月'
+export function dateFormatYm(year, month) {
+  const double_digit_month = toDigit(month)
+  if (cake.lang === 'jpn' || cake.lang === 'ja') {
+    return `${year}年${double_digit_month}月`
   } else {
-    month_name = translated_month_name
+    return `${MonthNameListEn[double_digit_month]} ${year}`
   }
+}
 
-  return `${month_name} ${day}, ${year}`
+export function toDigit(number) {
+  return ('00' + number).slice(-2);
 }

@@ -527,16 +527,17 @@ class TermTest extends GoalousTestCase
 
     function test_createInitialDataAsSignup()
     {
-        $nextStartDate = date('Y-m-01', strtotime('+1 month'));
+        $curretStartDate = '2017-02-01';
+        $nextStartDate = '2017-05-01';
         $termRange = 6;
         $teamId = 1;
 
-        $this->Term->createInitialDataAsSignup($nextStartDate, $termRange, 1);
+        $this->Term->createInitialDataAsSignup($curretStartDate, $nextStartDate, $termRange, 1);
 
         // current term
         $currentTerm = $this->Term->find('first', ['conditions' => [
-            'start_date' => date('Y-m-01'),
-            'end_date'   => date('Y-m-t'),
+            'start_date' => '2017-02-01',
+            'end_date'   => date('Y-m-t', strtotime('2017-04')),
             'team_id'    => $teamId
         ]]);
         $this->assertTrue(!empty($currentTerm));
@@ -544,7 +545,7 @@ class TermTest extends GoalousTestCase
         // next term
         $nextTerm = $this->Term->find('first', ['conditions' => [
             'start_date' => $nextStartDate,
-            'end_date'   => date('Y-m-t', strtotime("$nextStartDate") + ($termRange - 1) * MONTH),
+            'end_date'   => date('Y-m-t', strtotime('2017-10')),
             'team_id'    => $teamId
         ]]);
         $this->assertTrue(!empty($nextTerm));
