@@ -99,7 +99,7 @@
                 <li><?= __("The start date and the end date of KR belonging to the goal are updated like the above goal.") ?></li>
             </ul>
             <fieldset>
-                <input type="checkbox" id="term_agreement" name="term_agreement"> <div><?= __("I confirm these changes.") ?></div>
+                <input type="checkbox" id="term_agreement" name="term_agreement"> <?= __("I confirm these changes.") ?>
             </fieldset>
         </div>
         <?=
