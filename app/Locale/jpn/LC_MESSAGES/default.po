@@ -194,6 +194,9 @@ msgstr ""
 "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
 "い。"
 
+msgid "The specified period is incorrect."
+msgstr "期間の指定が正しくありません。"
+
 msgid "Current Term"
 msgstr "今期"
 
