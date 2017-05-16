@@ -154,6 +154,7 @@ class TeamsController extends AppController
 
     /**
      * Update timezone
+     *
      * @return \Cake\Network\Response|null
      */
     public function edit_timezone()
@@ -1434,9 +1435,8 @@ class TeamsController extends AppController
                 $skip = false;
 
                 $insights[] = $this->_getInsightData(
-                    date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
-                    $this->_insightAdjustEndDate(date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
-                        $date_info['today']),
+                    $v['start_date'],
+                    $this->_insightAdjustEndDate($v['end_date'], $date_info['today']),
                     $timezone,
                     $group_id,
                     $cache_expire);
@@ -2039,14 +2039,16 @@ class TeamsController extends AppController
         $date_ranges['prev_month'] = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
         $row = $this->Team->Term->getCurrentTermData();
         $date_ranges['current_term'] = [
-            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
-            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
+            'start' => $row['start_date'],
+            'end'   => $row['end_date'],
         ];
         $row = $this->Team->Term->getPreviousTermData();
-        $date_ranges['prev_term'] = [
-            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
-            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
-        ];
+        if (!empty($row)) {
+            $date_ranges['prev_term'] = [
+                'start' => $row['start_date'],
+                'end'   => $row['end_date'],
+            ];
+        }
 
         return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }
