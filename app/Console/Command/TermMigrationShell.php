@@ -255,7 +255,7 @@ class TermMigrationShell extends AppShell
                 // Update refer term_id from old evaluate_term_id to new term_id
                 if (!empty($newTerm['old_id'])) {
                     $newId = $this->Term->getLastInsertID();
-                    $this->Evaluation->updateAll(['term_id' => $newId], ['term_id' => $newTerm['old_id']]);
+                    $this->Evaluation->updateAll(['term_id' => $newId], ['evaluate_term_id' => $newTerm['old_id']]);
                 }
             }
 
