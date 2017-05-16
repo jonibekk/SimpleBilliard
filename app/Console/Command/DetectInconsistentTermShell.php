@@ -4,6 +4,11 @@ App::uses('AppUtil', 'Util');
 /**
  * DetectInconsistentTermShell
  *
+ * Detect these inconsistent term data
+ *  - Not exist terms in team
+ *  - Term missing teeth
+ *  - Invalid format about term start/end date of term
+ * 
  * @property Term       $Term
  * @property Team       $Team
  */
