@@ -12,7 +12,7 @@ if (!isset($with_header_menu)) {
 <?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="ja">
+z
 <?= $this->element('head') ?>
 <body class="body">
 <?php if (extension_loaded('newrelic')) {
