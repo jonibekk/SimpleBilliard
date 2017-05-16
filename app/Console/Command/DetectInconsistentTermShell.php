@@ -8,7 +8,7 @@ App::uses('AppUtil', 'Util');
  *  - Not exist terms in team
  *  - Term missing teeth
  *  - Invalid format about term start/end date of term
- * 
+ *
  * @property Term       $Term
  * @property Team       $Team
  */
@@ -18,7 +18,6 @@ class DetectInconsistentTermShell extends AppShell
     public $uses = array(
         'Team',
         'Term',
-        'Evaluation'
     );
 
     public function startup()
