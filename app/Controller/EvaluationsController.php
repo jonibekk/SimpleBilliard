@@ -28,29 +28,33 @@ class EvaluationsController extends AppController
             if (!$this->Team->EvaluationSetting->isEnabled()) {
                 throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
             }
+
+            // 評価期間ID取得
+            $termId = Hash::get($this->request->query, 'term_id');
+
+            // 全評価期間取得
+            $allTerms = $this->Team->Term->findByTeam();
+            array_shift($allTerms);
+            $allTermIds = Hash::extract($allTerms, '{n}.id');
+
+            // 存在しない評価期間を指定した場合エラー
+            if (!empty($termId) && !in_array($termId, $allTermIds)) {
+                throw new RuntimeException(__("The specified period is incorrect."));
+            }
+
+            if (empty($termId)) {
+                // デフォルトは前期
+                $termId = $this->Team->Term->getPreviousTermId();
+            }
+            // 前期が存在しない場合は今期
+            if (empty($termId)) {
+                $termId = $this->Team->Term->getCurrentTermId();
+            }
+
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
-
-        // 評価期間ID取得
-        $termId = Hash::get($this->request->query, 'term_id');
-
-        // 全評価期間取得
-        $allTerms = $this->Team->Term->findByTeam();
-        array_shift($allTerms);
-        $allTermIds = Hash::extract($allTerms, '{n}.id');
-
-        if (empty($termId)) {
-            // デフォルトは前期
-            $termId = $this->Team->Term->getPreviousTermId();
-        } else {
-            // 存在しない評価期間を指定した場合エラー
-            if (!in_array($termId, $allTermIds)) {
-                return $this->redirect($this->referer());
-            }
-        }
-
         // 評価期間選択用ラベル取得
         $termLabels = $this->_getTermLabels($allTerms);
 

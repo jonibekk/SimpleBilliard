@@ -65,28 +65,54 @@ class Term extends AppModel
     ];
 
     public $update_validate = [
-        'start_ym'  => [
-            'notBlank'            => [
+        'next_start_ym'   => [
+            'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
             ],
-            'dateYm'             => [
+            'dateYm'   => [
                 'rule' => ['date', 'ym'],
             ],
         ],
-        'term_range' => [
-            'notBlank'            => [
+        'term_length' => [
+            'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
             ],
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'range'   => [
-                'rule' => ['range', 1, 12]
+            'range'    => [
+                // allow 1 ~ 12
+                'rule' => ['range', 0, 13]
             ]
         ]
     ];
+
+    /**
+     * サインナップ時の来期開始月のバリデーション
+     * - 来月 - 12ヶ月後 の間に収まっているか
+     *
+     * @param  array $val
+     *
+     * @return bool
+     */
+    function customValidNextStartDateInSignup(array $val)
+    {
+        $nextStartYm = array_shift($val);
+        // lower limit
+        $lowerLimitYm = date('Y-m', strtotime("+1 month"));
+        if ($nextStartYm < $lowerLimitYm) {
+            return false;
+        }
+
+        // upper limit
+        $upperLimitYm = date('Y-m', strtotime("+12 month"));
+        if ($nextStartYm > $upperLimitYm) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * TODO:findAllメソッドに統合
@@ -269,7 +295,7 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
-                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY));
+                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY),false);
                 if ($this->previousTerm && $withCache) {
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
@@ -566,10 +592,11 @@ class Term extends AppModel
      * return term data from date string
      *
      * @param string $date
+     * @param bool   $enableErrorLog
      *
      * @return array|null
      */
-    public function getTermDataByDate(string $date)
+    public function getTermDataByDate(string $date,bool $enableErrorLog = true)
     {
         $timezone = $this->Team->getTimezone();
         $options = [
@@ -584,7 +611,7 @@ class Term extends AppModel
             $res = Hash::extract($res, 'Term');
             $res['timezone'] = $timezone;
             // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
-        } elseif ($this->useDbConfig != "test") {
+        } elseif ($this->useDbConfig != "test" && $enableErrorLog) {
             $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
                 __METHOD__,
                 var_export($options, true),
@@ -668,5 +695,35 @@ class Term extends AppModel
         ];
 
         return (bool)$this->save($saveData);
+    }
+
+    /**
+     * create initial term data as signup
+     * - create current & next term data
+     *
+     * @param  string $nextStartDate
+     * @param  int    $termRange
+     * @param  int    $teamId
+     *
+     * @return bool
+     */
+    public function createInitialDataAsSignup(string $nextStartDate, int $termRange, int $teamId): bool
+    {
+        $currentStartDate = date('Y-m-01');
+        $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
+        $nextEndDate = date('Y-m-t', strtotime($nextStartDate) + ($termRange - 1) * MONTH);
+        $saveData = [
+            [
+                'team_id'    => $teamId,
+                'start_date' => $currentStartDate,
+                'end_date'   => $currentEndDate
+            ],
+            [
+                'team_id'    => $teamId,
+                'start_date' => $nextStartDate,
+                'end_date'   => $nextEndDate
+            ]
+        ];
+        return $this->saveAll($saveData);
     }
 }

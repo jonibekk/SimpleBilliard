@@ -42,6 +42,14 @@ class TermTest extends GoalousTestCase
         parent::tearDown();
     }
 
+    function _setDefault()
+    {
+        $this->Term->current_team_id = 1;
+        $this->Term->my_uid = 1;
+        $this->Term->Team->current_team_id = 1;
+        $this->Term->Team->my_uid = 1;
+    }
+
     function testGetAll()
     {
         $this->_setDefault();
@@ -483,12 +491,63 @@ class TermTest extends GoalousTestCase
         $this->assertEquals($res['end_date'], $newEndDate);
     }
 
-    function _setDefault()
+    function test_customValidNextStartDateInSignup(){
+        $this->_setDefault();
+
+        // previous month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('-1 month'))
+        ]);
+        $this->assertFalse($res);
+
+        // this month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m')
+        ]);
+        $this->assertFalse($res);
+
+        // next month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('+1 month'))
+        ]);
+        $this->assertTrue($res);
+
+        // after 12 month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('+12 month'))
+        ]);
+        $this->assertTrue($res);
+
+        // after 13 month
+        $res = $this->Term->customValidNextStartDateInSignup([
+            'next_start_ym' => date('Y-m', strtotime('+13 month'))
+        ]);
+        $this->assertFalse($res);
+    }
+
+    function test_createInitialDataAsSignup()
     {
-        $this->Term->current_team_id = 1;
-        $this->Term->my_uid = 1;
-        $this->Term->Team->current_team_id = 1;
-        $this->Term->Team->my_uid = 1;
+        $nextStartDate = date('Y-m-01', strtotime('+1 month'));
+        $termRange = 6;
+        $teamId = 1;
+
+        $this->Term->createInitialDataAsSignup($nextStartDate, $termRange, 1);
+
+        // current term
+        $currentTerm = $this->Term->find('first', ['conditions' => [
+            'start_date' => date('Y-m-01'),
+            'end_date'   => date('Y-m-t'),
+            'team_id'    => $teamId
+        ]]);
+        $this->assertTrue(!empty($currentTerm));
+
+        // next term
+        $nextTerm = $this->Term->find('first', ['conditions' => [
+            'start_date' => $nextStartDate,
+            'end_date'   => date('Y-m-t', strtotime("$nextStartDate") + ($termRange - 1) * MONTH),
+            'team_id'    => $teamId
+        ]]);
+        $this->assertTrue(!empty($nextTerm));
     }
 
 }

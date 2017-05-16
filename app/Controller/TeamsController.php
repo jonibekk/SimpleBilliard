@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
+App::import('Service', 'TermService');
 
 /**
  * Teams Controller
@@ -125,13 +126,13 @@ class TeamsController extends AppController
         $userId = $this->Auth->user('id');
 
         // checking 403
-        if (!$this->TeamMember->isActiveAdmin($userId, $teamId)) {
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
             $this->Pnotify->outError(__("You have no right to operate it."));
             return $this->redirect($this->referer());
         }
 
         // data validation
-        $requestData = Hash::get($this->request->data, 'Term');
+        $requestData = Hash::get($this->request->data, 'Team');
         $validRes = $TermService->validateUpdate($requestData);
         if ($validRes !== true) {
             $this->Pnotify->outError($validRes);
@@ -265,6 +266,14 @@ class TeamsController extends AppController
         $next_term_start_date = Hash::get($next_term, 'start_date');
         $next_term_end_date = Hash::get($next_term, 'end_date');
         $next_term_timezone = Hash::get($next_term, 'timezone');
+
+        // term changing init data
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init("TermService");
+        $nextSelectableStartYm = $TermService->getSelectableNextStartYmList($current_term_start_date, date('Y-m'));
+        $termLength = $team['Team']['border_months'];
+        $nextTermStartYm = date('Y-m', strtotime($next_term_start_date));
+
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
@@ -289,7 +298,10 @@ class TeamsController extends AppController
             'previous_term_timezone',
             'next_term_start_date',
             'next_term_end_date',
-            'next_term_timezone'
+            'next_term_timezone',
+            'nextSelectableStartYm',
+            'nextTermStartYm',
+            'termLength'
         ));
 
         return $this->render();
@@ -1407,9 +1419,8 @@ class TeamsController extends AppController
                 $skip = false;
 
                 $insights[] = $this->_getInsightData(
-                    date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
-                    $this->_insightAdjustEndDate(date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
-                        $date_info['today']),
+                    $v['start_date'],
+                    $this->_insightAdjustEndDate($v['end_date'], $date_info['today']),
                     $timezone,
                     $group_id,
                     $cache_expire);
@@ -2012,14 +2023,16 @@ class TeamsController extends AppController
         $date_ranges['prev_month'] = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
         $row = $this->Team->Term->getCurrentTermData();
         $date_ranges['current_term'] = [
-            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
-            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
+            'start' => $row['start_date'],
+            'end'   => $row['end_date'],
         ];
         $row = $this->Team->Term->getPreviousTermData();
-        $date_ranges['prev_term'] = [
-            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
-            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
-        ];
+        if (!empty($row)) {
+            $date_ranges['prev_term'] = [
+                'start' => $row['start_date'],
+                'end'   => $row['end_date'],
+            ];
+        }
 
         return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }
