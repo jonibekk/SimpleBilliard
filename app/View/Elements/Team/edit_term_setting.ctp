@@ -34,7 +34,7 @@
     <div class="panel-body">
         <p><?= __("Changes will take effect after this current term") ?></p>
         <fieldset>
-            <label><?= ("Next Term Start") ?>:</label>
+            <label><?= __("Next term start") ?>:</label>
             <?php
             $nextSelectableStartYm[$nextTermStartYm] .= ' (default)';
             echo $this->Form->input('next_start_ym', [
@@ -46,7 +46,7 @@
             ]) ?>
         </fieldset>
         <fieldset>
-            <label><?= __("Term Length") ?>:</label>
+            <label><?= __("Term length") ?>:</label>
             <?php
             $rangeOptions = [
                 '3' => __('3 months'),
@@ -69,7 +69,7 @@
                     <?= __("This term") ?>: <span id="currentStart" class="this-start" data-date="<?= $currentTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date="<?= $currentTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_end_date)) ?></span>
                 </div>
                 <div class="term-range">
-                    <?= ("Next term") ?>: <span class="next-start" data-date="<?= $nextTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_start_date)) ?></span> - <span class="next-end" data-date="<?= $nextTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_end_date)) ?></span>
+                    <?= __("Next term") ?>: <span class="next-start" data-date="<?= $nextTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_start_date)) ?></span> - <span class="next-end" data-date="<?= $nextTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_end_date)) ?></span>
                 </div>
             </p>
         </div>
@@ -78,7 +78,7 @@
             <p>
                 <strong><?= __("After") ?></strong>
                 <div class="term-range"><?= __("This term") ?>: <span class="this-start" data-date="<?= $currentTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date=""></span></div>
-                <div class="term-range"><?= ("Next term") ?>: <span class="next-start" data-date=""></span> - <span class="next-end" data-date=""></span></div>
+                <div class="term-range"><?= __("Next term") ?>: <span class="next-start" data-date=""></span> - <span class="next-end" data-date=""></span></div>
             </p>
         </div>
     </div>
@@ -87,7 +87,6 @@
             <strong>< <?= __("Attention") ?> ></strong>
             <ul>
                 <li><?= __("The term has changed as above.") ?></li>
-                <li><?= __("According to the changed term, the dates of the goals and KR are automatically updated as follows.") ?></li>
             </ul>
             <ol>
                 <li><?= __("The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term.") ?></li>

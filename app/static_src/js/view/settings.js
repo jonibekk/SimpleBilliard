@@ -145,11 +145,13 @@ if (document.getElementById("editTerm")) {
       this.view().nextEnd.innerHTML = this.formatDate(this.calendar.nextEnd);
     },
     formatDate: function(date) {
-      var month = date.getMonth() + 1;
+      var month_index = date.getMonth();
+      var month = month_index + 1;
       if (cake.lang === 'jpn') {
-        return date.getFullYear() + "年" + month + "月";
+        var display_month = month < 10 ? "0" + month : month;
+        return date.getFullYear() + "年" + display_month + "月";
       } else {
-        return this.months.eng[month - 1] + " " + date.getFullYear();
+        return this.months.eng[month_index] + " " + date.getFullYear();
       }
     }
   };
