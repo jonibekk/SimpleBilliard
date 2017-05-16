@@ -36,7 +36,7 @@
         <fieldset>
             <label><?= __("Next term start") ?>:</label>
             <?php
-            $nextSelectableStartYm[$nextTermStartYm] .= ' (default)';
+            $nextSelectableStartYm[$nextTermStartYm] .= '*';
             echo $this->Form->input('next_start_ym', [
                 'label'    => false,
                 'type'     => 'select',
@@ -53,7 +53,7 @@
                 '6' => __('6 months'),
                 '12' => __('12 months'),
             ];
-            $rangeOptions[$termLength] .= ' (default)';
+            $rangeOptions[$termLength] .= '*';
             echo $this->Form->input('term_length', [
                 'label'    => false,
                 'type'     => 'select',
@@ -73,7 +73,7 @@
                 </div>
             </p>
         </div>
-        <i class="fa fa-caret-down mod-hide"></i>
+        <i class="fa fa-caret-down current-next-arrow mod-hide"></i>
         <div class="term-details edited-term mod-hide">
             <p>
                 <strong><?= __("After") ?></strong>
@@ -99,7 +99,7 @@
                 <li><?= __("The start date and the end date of KR belonging to the goal are updated like the above goal.") ?></li>
             </ul>
             <fieldset>
-                <input type="checkbox" id="term_agreement" name="term_agreement"> <?= __("I confirm these changes.") ?>
+                <input type="checkbox" id="term_agreement" name="term_agreement"> <div><?= __("I confirm these changes.") ?></div>
             </fieldset>
         </div>
         <?=

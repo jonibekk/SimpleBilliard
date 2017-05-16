@@ -6,12 +6,16 @@ if (document.getElementById("editTerm")) {
     agree: document.getElementById("term_agreement"),
     caret: document.getElementById("editTerm").getElementsByClassName("fa-caret-down")[0],
     attention: document.getElementsByClassName("term-attention")[0],
+    defaultDataInit: function() {
+      this.defaults.start = this.formStart().value;
+      this.defaults.length = this.formLength().value;
+    },
     //DOM elements that displays term dates
     formStart: function() {
       return document.getElementById("term_start");
     },
     formLength: function() {
-      return document.getElementById("term_length");;
+      return document.getElementById("term_length");
     },
     edited_term: function() {
       return document.getElementsByClassName("edited-term")[0];
@@ -29,11 +33,9 @@ if (document.getElementById("editTerm")) {
       changed: false
     },
     //Store default dates so we know when to re-disable submit button
-    defaults: function() {
-      return {
-        start: this.formStart().value,
-        length: this.formLength().value
-      }
+    defaults: {
+      start: undefined,
+      length: undefined
     },
     //Check whether to enable/disable submit button
     updateSubmitButton: function() {
@@ -44,14 +46,13 @@ if (document.getElementById("editTerm")) {
       }
     },
     //Check whether start date or term have been changed back to default value
-    testDefaults: function(start, length) {
-      if (this.defaults().start != start || this.defaults().length != length) {
+    updateChangedStatus: function(start, length) {
+      if (this.defaults.start != start || this.defaults.length != length) {
         this.status.changed = true;
-        this.updateSubmitButton();
       } else {
         this.status.changed = false;
-        this.updateSubmitButton();
       }
+      this.updateSubmitButton();
       //If any settings have been updated, show the edit and attention panels
       if (this.edited_term().classList.contains("mod-hide")) {
         this.caret.classList.remove("mod-hide");
@@ -97,10 +98,10 @@ if (document.getElementById("editTerm")) {
       this.calendar.currentStart.setFullYear(
         document.getElementById("currentStart").getAttribute("data-date").substring(0, 4)
       );
-      this.startUpdate();
+      this.updateStartMonth();
     },
     // Check that start date is updated
-    startUpdate: function() {
+    updateStartMonth: function() {
       var next_start_year = this.formStart().value.substring(0, 4);
       var next_start_month = parseInt(this.formStart().value.substring(5, 7)) - 1;
       // update next term data
@@ -133,12 +134,12 @@ if (document.getElementById("editTerm")) {
         this.view().nextEnd.classList.remove("edited");
       }
       //If all settings have been changed back to default, re-hide edit and attention panel
-      if (!document.getElementsByClassName("edited")[0]) {
-        this.caret.classList.add("mod-hide");
+      if (!this.status.changed) {
         setTimeout(function() {
           document.getElementsByClassName("edited-term")[0].classList.add("mod-hide");
+          document.getElementsByClassName("current-next-arrow")[0].classList.add("mod-hide");
         }, 100);
-        this.attention.classList.add("mod-hide");
+        // this.attention.classList.add("mod-hide");
       }
       this.view().currentEnd.innerHTML = this.formatDate(this.calendar.currentEnd);
       this.view().nextStart.innerHTML = this.formatDate(this.calendar.nextStart);
@@ -161,6 +162,8 @@ if (document.getElementById("editTerm")) {
   //Run calendar initializer
   teamSettings.calendarInit();
 
+  teamSettings.defaultDataInit();
+
   //Define function when agreement checkbox is clicked
   teamSettings.agree.onclick = function() {
     if (teamSettings.agree.getAttribute("checked") == "checked") {
@@ -176,11 +179,11 @@ if (document.getElementById("editTerm")) {
 
   //Define functions when term start or term length is updated
   teamSettings.formStart().onchange = function() {
-    teamSettings.testDefaults(teamSettings.formStart().value, teamSettings.formLength().value);
-    teamSettings.startUpdate();
+    teamSettings.updateChangedStatus(teamSettings.formStart().value, teamSettings.formLength().value);
+    teamSettings.updateStartMonth();
   };
   teamSettings.formLength().onchange = function() {
-    teamSettings.testDefaults(teamSettings.formStart().value, teamSettings.formLength().value);
-    teamSettings.startUpdate();
+    teamSettings.updateChangedStatus(teamSettings.formStart().value, teamSettings.formLength().value);
+    teamSettings.updateStartMonth();
   };
 }
