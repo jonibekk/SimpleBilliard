@@ -12,11 +12,7 @@ if (!isset($with_header_menu)) {
 <?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--suppress ALL -->
-<?php if($this->Session->read('Auth.User.language')=='eng'): ?>
-<html lang="en">
-<?php else: ?>
-<html lang="jp">
-<?php endif; ?>
+<html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
 <body class="body">
 <?php if (extension_loaded('newrelic')) {

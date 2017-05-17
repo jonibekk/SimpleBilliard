@@ -31,6 +31,7 @@ class PagesController extends AppController
      * @internal param \What $mixed page to display
      * @return $this->redirect('/') or void
      */
+    public $helpers = array('Lang');
     public function display()
     {
         $path = func_get_args();

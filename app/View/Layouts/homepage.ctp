@@ -19,11 +19,11 @@
 <?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--[if IE 8]>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="ie8"> <![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?= $top_lang ?>" class="ie8"> <![endif]-->
 <!--[if IE 9]>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="ie9"> <![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?= $top_lang ?>" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en">
+<html lang="<?= $top_lang ?>">
 <!--<![endif]-->
 <head>
     <?= $this->Html->charset(); ?>
