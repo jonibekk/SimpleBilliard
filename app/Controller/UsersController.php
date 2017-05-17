@@ -1189,18 +1189,16 @@ class UsersController extends AppController
             $term1 += [$previousTerm['id'] => __("Previous Term")];
         }
 
-        function show_date($startDate, $endDate, $allTimezone)
+        function show_date($startDate, $endDate)
         {
-            return date('Y/m/d', $startDate + $allTimezone * 3600) . " - " . date('Y/m/d',
-                    $endDate + $allTimezone * 3600);
+            return AppUtil::dateYmdReformat($startDate,'/'). " - "  .AppUtil::dateYmdReformat($endDate,'/');
         }
 
         $allTerm = $this->Team->Term->getAllTerm();
         $allId = array_column($allTerm, 'id');
         $allStartDate = array_column($allTerm, 'start_date');
         $allEndDate = array_column($allTerm, 'end_date');
-        $allTimezone = array_column($allTerm, 'timezone');
-        $allTerm = array_map("show_date", $allStartDate, $allEndDate, $allTimezone);
+        $allTerm = array_map("show_date", $allStartDate, $allEndDate);
 
         $term2 = array_combine($allId, $allTerm);
         $term = $term1 + $term2;
