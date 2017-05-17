@@ -43,9 +43,7 @@ class TeamsController extends AppController
         $changedTermFlg = $this->GlRedis->getChangedTerm($this->current_team_id);
 
         // Get timezone label
-        $timezones = AppUtil::getTimezoneList();
-        $timezoneLabel = $timezones[number_format($team['timezone'],1)];
-
+        $timezoneLabel = $this->getTimezoneLabel($team['timezone']);
         $this->set([
             'team' => $team,
             'current_term_start_date' => $currentTermStartDate,
@@ -59,6 +57,22 @@ class TeamsController extends AppController
         ]);
 
 
+    }
+
+    /**
+     * Get Label for timezone
+     * @param float $timezone
+     *
+     * @return mixed
+     */
+    private function getTimezoneLabel(float $timezone) {
+        $timezones = AppUtil::getTimezoneList();
+        $prefix = "";
+        if ($timezone != 0 && abs($timezone) === $timezone) {
+            $prefix = '+';
+        }
+        $timezone = $prefix.number_format($timezone,1);
+        return $timezones[$timezone];
     }
 
     public function add()
