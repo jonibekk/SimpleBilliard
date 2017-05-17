@@ -542,7 +542,6 @@ class GoalousTestCase extends CakeTestCase
             $range = 12;
         }
 
-        $this->Term->deleteAll(['team_id' => $teamId]);
         $currentTerm = [
             'team_id'         => $teamId,
             'start_date'      => $startDate,
@@ -566,7 +565,7 @@ class GoalousTestCase extends CakeTestCase
 
         $this->Term->resetAllTermProperty();
 
-        return $currentTerm;
+        return Hash::get($this->Term->find('first', ['conditions' => $currentTerm]), 'Term');
     }
 
     function createSimpleKr(array $data = [])
