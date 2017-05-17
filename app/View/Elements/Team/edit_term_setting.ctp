@@ -34,9 +34,9 @@
     <div class="panel-body">
         <p><?= __("Changes will take effect after this current term") ?></p>
         <fieldset>
-            <label><?= ("Next Term Start") ?>:</label>
+            <label><?= __("Next term start") ?>:</label>
             <?php
-            $nextSelectableStartYm[$nextTermStartYm] .= ' (default)';
+            $nextSelectableStartYm[$nextTermStartYm] .= '*';
             echo $this->Form->input('next_start_ym', [
                 'label'    => false,
                 'type'     => 'select',
@@ -46,14 +46,14 @@
             ]) ?>
         </fieldset>
         <fieldset>
-            <label><?= __("Term Length") ?>:</label>
+            <label><?= __("Term length") ?>:</label>
             <?php
             $rangeOptions = [
                 '3' => __('3 months'),
                 '6' => __('6 months'),
                 '12' => __('12 months'),
             ];
-            $rangeOptions[$termLength] .= ' (default)';
+            $rangeOptions[$termLength] .= '*';
             echo $this->Form->input('term_length', [
                 'label'    => false,
                 'type'     => 'select',
@@ -65,25 +65,28 @@
         <div class="term-details current-term">
             <p>
                 <strong><?= __("Current") ?></strong>
-                <div class="term-range"><?= __("This term") ?>: <span id="currentStart" class="this-start" data-date="2017_5"><?= $this->TimeEx->formatYearDayI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date="2017_7"><?= $this->TimeEx->formatYearDayI18n(strtotime($current_term_end_date)) ?></span></div>
-                <div class="term-range"><?= ("Next term") ?>: <span class="next-start" data-date="2017_8"><?= $this->TimeEx->formatYearDayI18n(strtotime($next_term_start_date)) ?></span> - <span class="next-end" data-date="2017_10"><?= $this->TimeEx->formatYearDayI18n(strtotime($next_term_end_date)) ?></span></div>
+                <div class="term-range">
+                    <?= __("This term") ?>: <span id="currentStart" class="this-start" data-date="<?= $currentTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date="<?= $currentTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_end_date)) ?></span>
+                </div>
+                <div class="term-range">
+                    <?= __("Next term") ?>: <span class="next-start" data-date="<?= $nextTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_start_date)) ?></span> - <span class="next-end" data-date="<?= $nextTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_end_date)) ?></span>
+                </div>
             </p>
         </div>
-        <i class="fa fa-caret-down"></i>
-        <div class="term-details edited-term">
+        <i class="fa fa-caret-down current-next-arrow mod-hide"></i>
+        <div class="term-details edited-term mod-hide">
             <p>
                 <strong><?= __("After") ?></strong>
-                <div class="term-range"><?= __("This term") ?>: <span class="this-start" data-date="2017_5">May 2017</span> - <span class="this-end" data-date="2017_7">Jul 2017</span></div>
-                <div class="term-range"><?= ("Next term") ?>: <span class="next-start" data-date="2017_8">Aug 2017</span> - <span class="next-end" data-date="2017_10">Oct 2017</span></div>
+                <div class="term-range"><?= __("This term") ?>: <span class="this-start" data-date="<?= $currentTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date=""></span></div>
+                <div class="term-range"><?= __("Next term") ?>: <span class="next-start" data-date=""></span> - <span class="next-end" data-date=""></span></div>
             </p>
         </div>
     </div>
     <footer>
-        <div class="term-attention">
+        <div class="term-attention mod-hide">
             <strong>< <?= __("Attention") ?> ></strong>
             <ul>
                 <li><?= __("The term has changed as above.") ?></li>
-                <li><?= __("According to the changed term, the dates of the goals and KR are automatically updated as follows.") ?></li>
             </ul>
             <ol>
                 <li><?= __("The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term.") ?></li>
@@ -101,7 +104,7 @@
         </div>
         <?=
             $this->Form->submit(__("Save settings"),
-            ['class' => 'btn btn-primary', 'div' => false])
+            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled'])
         ?>
     </footer>
     <?php $this->Form->unlockField('Team.next_start_ym') ?>
