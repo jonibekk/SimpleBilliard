@@ -7,7 +7,7 @@ class LangHelper extends AppHelper
         if(Configure::read('Config.language') == 'eng'):
             return "en";
         else:
-            return "jp";
+            return "ja";
         endif;
     }
 }
