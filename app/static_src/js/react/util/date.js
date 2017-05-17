@@ -53,9 +53,9 @@ export function generateTermRangeFormat(start_month, end_month) {
  */
 export function dateFormatYm(year, month) {
   const double_digit_month = toDigit(month)
-  // TODO: ログイン前とログイン後でlang設定の表記揺れがあるので統一する。
-  //       ログイン前だと日本語の場合'ja'が格納されている。
-  if (cake.lang === 'ja') {
+  // TODO: ログイン前とログイン後でlang設定の表記揺れがあるので、表記揺れをなくす。
+  //       ログイン前だと日本語の場合'ja', ログイン後だと'jpn'が格納されている。
+  if (cake.lang === 'ja' || cake.lang === 'jpn') {
     return `${year}年${double_digit_month}月`
   } else {
     return `${MonthNameListEn[double_digit_month]} ${year}`
