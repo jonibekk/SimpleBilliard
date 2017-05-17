@@ -51,7 +51,7 @@ export function postTerms(post_data) {
       } else {
         document.location.href = "/teams/invite"
       }
-    }, (error) => {
+    }, () => {
       dispatch(finishedCheckingTerm())
       dispatch(exception('Some error occurred'))
       return redirectToTop()
