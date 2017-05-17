@@ -22,16 +22,21 @@
 ?>
 <?= $this->App->viewStartComment()?>
 <section class="panel panel-default" id="editTerm">
+    <?php $confirmMsg = __("By this operation, some goals and KRs schedules may automatically be updated."); ?>
     <?=
     $this->Form->create('Team', [
         'novalidate' => true,
         'url'        => ['action' => 'edit_term'],
-        'method'     => 'post'
+        'method'     => 'post',
+        'onsubmit'=>'return confirm("'.$confirmMsg.'");'
     ]); ?>
     <header>
         <h2><?= __("Term settings") ?></h2>
     </header>
     <div class="panel-body">
+        <?php if (!$canChangeTermSetting):?>
+            <p class="term-setting-warning"><?= __("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term.") ?></p>
+        <?php endif;?>
         <p><?= __("Changes will take effect after this current term") ?></p>
         <fieldset>
             <label><?= __("Next term start") ?>:</label>
@@ -42,7 +47,8 @@
                 'type'     => 'select',
                 'options'  => $nextSelectableStartYm,
                 'selected' => $nextTermStartYm,
-                'id'       => 'term_start'
+                'id'       => 'term_start',
+                'disabled' => !$canChangeTermSetting,
             ]) ?>
         </fieldset>
         <fieldset>
@@ -59,7 +65,8 @@
                 'type'     => 'select',
                 'options'  => $rangeOptions,
                 'selected' => $termLength,
-                'id'       => 'term_length'
+                'id'       => 'term_length',
+                'disabled' => !$canChangeTermSetting,
             ]) ?>
         </fieldset>
         <div class="term-details current-term">

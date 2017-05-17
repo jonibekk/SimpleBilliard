@@ -145,6 +145,12 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        // checking can change term setting
+        if (!$TermService->canChangeSetting()) {
+            $this->Pnotify->outError(__("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term."));
+            return $this->redirect($this->referer());
+        }
+
         // data validation
         $requestData = Hash::get($this->request->data, 'Team');
         $validRes = $TermService->validateUpdate($requestData);
@@ -294,6 +300,7 @@ class TeamsController extends AppController
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
+        $canChangeTermSetting = $TermService->canChangeSetting();
         $this->set(compact(
             'timezones',
             'current_statuses',
@@ -321,7 +328,8 @@ class TeamsController extends AppController
             'currentTermEndYm',
             'nextTermStartYm',
             'nextTermEndYm',
-            'termLength'
+            'termLength',
+            'canChangeTermSetting'
         ));
 
         return $this->render();
