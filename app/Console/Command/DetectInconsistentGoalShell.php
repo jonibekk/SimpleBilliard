@@ -60,6 +60,7 @@ class DetectInconsistentGoalShell extends AppShell
                     'table'      => 'terms',
                     'alias'      => 'Term',
                     'conditions' => [
+                        'Term.team_id = Goal.team_id',
                         'Term.start_date <= Goal.start_date',
                         'Goal.end_date <= Term.end_date',
                     ]
