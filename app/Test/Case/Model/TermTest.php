@@ -549,6 +549,14 @@ class TermTest extends GoalousTestCase
             'team_id'    => $teamId
         ]]);
         $this->assertTrue(!empty($nextTerm));
+
+        // next next term
+        $nextNextTerm = $this->Term->find('first', ['conditions' => [
+            'start_date' => date('Y-m-01', strtotime('2017-11')),
+            'end_date'   => date('Y-m-t', strtotime('2018-04')),
+            'team_id'    => $teamId
+        ]]);
+        $this->assertTrue(!empty($nextNextTerm));
     }
 
 }

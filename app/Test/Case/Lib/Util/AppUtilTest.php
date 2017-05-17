@@ -124,5 +124,15 @@ class AppUtilTest extends GoalousTestCase
             240
         );
     }
+    public function test_getEndDate()
+    {
+        $res = AppUtil::getEndDate('2016-04-01', 6);
+        $this->assertEquals($res, '2016-09-30');
 
+        $res = AppUtil::getEndDate('2016-04-01', 1);
+        $this->assertEquals($res, '2016-04-30');
+
+        $res = AppUtil::getEndDate('2016-04-01', 12);
+        $this->assertEquals($res, '2017-03-31');
+    }
 }

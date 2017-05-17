@@ -699,7 +699,7 @@ class Term extends AppModel
 
     /**
      * create initial term data as signup
-     * - create current & next term data
+     * - create current & next & after next term data
      *
      * @param  string $currentStartDate
      * @param  string $nextStartDate
@@ -711,7 +711,10 @@ class Term extends AppModel
     public function createInitialDataAsSignup(string $currentStartDate, string $nextStartDate, int $termRange, int $teamId): bool
     {
         $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
-        $nextEndDate = date('Y-m-t', strtotime($nextStartDate . ' +' . ($termRange - 1) . ' month'));
+        $nextEndDate = AppUtil::getEndDate($nextStartDate, $termRange);
+        $nextNextStartDate = date('Y-m-01', strtotime($nextEndDate) + DAY);
+        $nextNextEndDate = AppUtil::getEndDate($nextNextStartDate, $termRange);
+
         $saveData = [
             [
                 'team_id'    => $teamId,
@@ -722,6 +725,11 @@ class Term extends AppModel
                 'team_id'    => $teamId,
                 'start_date' => $nextStartDate,
                 'end_date'   => $nextEndDate
+            ],
+            [
+                'team_id'    => $teamId,
+                'start_date' => $nextNextStartDate,
+                'end_date'   => $nextNextEndDate
             ]
         ];
         return $this->saveAll($saveData);
