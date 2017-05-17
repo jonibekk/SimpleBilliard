@@ -111,14 +111,21 @@ class DetectInconsistentTermShell extends AppShell
                     $errors[] = sprintf("Missing initial term when team created. data:%s", var_export($data, true));
                 }
             } elseif ($i == $lastIndex) {
-                // Check if current term exists
                 $currentDate = date('Y-m-d', $this->requestTimestamp + ($team['timezone'] * HOUR));
+                // Check if current term exists
                 if ($term['end_date'] < $currentDate) {
                     $data = [
                         'currentDate' => $currentDate,
                         'lastTerm'    => $term
                     ];
                     $errors[] = sprintf("Missing current term. data:%s", var_export($data, true));
+                // Check if next term exists
+                } elseif ($term['start_date'] <= $currentDate && $currentDate <= $term['end_date']) {
+                    $data = [
+                        'currentDate' => $currentDate,
+                        'lastTerm'    => $term
+                    ];
+                    $errors[] = sprintf("Missing next term. data:%s", var_export($data, true));
                 }
             }
 
