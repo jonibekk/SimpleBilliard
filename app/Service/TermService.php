@@ -78,8 +78,10 @@ class TermService extends AppService
             $requestNextStartYm = $data['next_start_ym'];
             $termRange = $data['term_length'];
             $newNextStartDate = date('Y-m-01', strtotime($requestNextStartYm));
-            $newNextEndDate = date('Y-m-d', strtotime("{$newNextStartDate} +{$termRange} month") - DAY);
+            $newNextEndDate = AppUtil::getEndDate($newNextStartDate, $termRange);
             $newCurrentEndDate = date('Y-m-d', strtotime($newNextStartDate) - DAY);
+            $newNextNextStartDate = date('Y-m-01', strtotime($newNextEndDate) + DAY);
+            $newNextNextEndDate = AppUtil::getEndDate($newNextNextStartDate, $termRange);
 
             // update team
             $newStartMonth = date('m', strtotime($newNextStartDate));
@@ -88,11 +90,17 @@ class TermService extends AppService
             }
 
             // update term
-            if (!$Term->updateCurrentRange($newCurrentEndDate)) {
+            // current
+            if (!$Term->updateCurrentEnd($newCurrentEndDate)) {
                 throw new Exception(sprintf("Failed to update current term setting. current_term_end_date: %s", $newCurrentEndDate));
             }
-            if (!$Term->updateNextRange($newNextStartDate, $newNextEndDate)) {
+            // next
+            if (!$Term->updateRange($newNextStartDate, $newNextEndDate, Term::TYPE_NEXT)) {
                 throw new Exception(sprintf("Failed to update next term setting. new_next_start_date: %s new_next_end_date: %s", $newNextStartDate, $newNextEndDate));
+            }
+            // after next
+            if (!$Term->updateRange($newNextNextStartDate, $newNextNextEndDate, Term::TYPE_NEXT_NEXT)) {
+                throw new Exception(sprintf("Failed to update next next term setting. new_next_next_start_date: %s new_next_next_end_date: %s", $newNextNextStartDate, $newNextNextEndDate));
             }
 
             // update goals
