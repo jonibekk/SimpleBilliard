@@ -15,23 +15,23 @@
     <header>
         <h2><?= __("Invite members") ?></h2>
     </header>
-    <div class="panel-body">
-        <?=
-        $this->Form->create('Team', [
-            'inputDefaults' => [
-                'div'       => 'form-group',
-                'label'     => [
-                    'class' => 'col col-sm-3 control-label form-label'
-                ],
-                'wrapInput' => 'col col-sm-6',
-                'class'     => 'form-control'
+    <?=
+    $this->Form->create('Team', [
+        'inputDefaults' => [
+            'div'       => 'form-group',
+            'label'     => [
+                'class' => 'col col-sm-3 control-label form-label'
             ],
-            'class'         => 'form-horizontal',
-            'novalidate'    => true,
-            'id'            => 'InviteTeamForm',
-            'url'           => ['action' => 'invite'],
-            'method'        => 'post'
-        ]); ?>
+            'wrapInput' => 'col col-sm-6',
+            'class'     => 'form-control'
+        ],
+        'class'         => 'form-horizontal',
+        'novalidate'    => true,
+        'id'            => 'InviteTeamForm',
+        'url'           => ['action' => 'invite'],
+        'method'        => 'post'
+    ]); ?>
+    <div class="panel-body">
         <?=
         $this->Form->input('emails', [
             'label'                        => __("Email address"),

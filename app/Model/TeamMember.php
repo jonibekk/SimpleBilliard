@@ -335,11 +335,12 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false)
+    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false, $teamId = null)
     {
+        $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
-                'team_id'    => $this->current_team_id,
+                'team_id'    => $teamId,
                 'active_flg' => true,
             ],
             'fields'     => ['user_id'],

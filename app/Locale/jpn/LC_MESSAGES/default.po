@@ -1260,6 +1260,18 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span> が <span class=\"notify-"
 "card-head-target\">%2$s</span> を来期から今期に変更しました。"
 
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> changed team basic "
+"setting."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>がチームの基本設定を変更し"
+"ました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> changed term setting."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が期間設定を変更しました。"
+
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -3502,6 +3514,7 @@ msgstr ""
 "チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削"
 "除されます。よろしいですか？\\nよろしければ \"OK\" ボタンを押してください。"
 
+<<<<<<< HEAD
 msgid "Term settings"
 msgstr "期間設定"
 
@@ -3583,6 +3596,8 @@ msgstr "上記の変更内容を確認しました"
 msgid "Save settings"
 msgstr "設定を保存"
 
+=======
+>>>>>>> origin/topic-improve-timezone&term
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
 
@@ -4910,6 +4925,9 @@ msgstr ""
 "ません。\n"
 "5.「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終"
 "了日が来期末に更新されました。"
+
+msgid "Term settings"
+msgstr "期間設定"
 
 msgid "Send Invitations"
 msgstr "招待しましょう"
