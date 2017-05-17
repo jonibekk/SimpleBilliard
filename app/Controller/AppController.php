@@ -60,7 +60,8 @@ class AppController extends BaseController
         'Csv',
         'Expt',
         'Post',
-        'GlHtml'
+        'GlHtml',
+        'Lang'
     ];
 
     private $merge_uses = [];

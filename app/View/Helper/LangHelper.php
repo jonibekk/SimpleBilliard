@@ -4,10 +4,10 @@ App::uses('AppHelper', 'View/Helper');
 class LangHelper extends AppHelper
 {
     public function getLangCode() {
-        if(Configure::read('Config.language') == 'eng'):
-            return "en";
-        else:
+        if(in_array(Configure::read('Config.language'),array('jpn','ja'))) {
             return "ja";
-        endif;
+        }else {
+            return "en";
+        }
     }
 }
