@@ -1,6 +1,4 @@
 <?php
-App::uses('AppUtil', 'Util');
-
 /**
  * DetectInconsistentDataShell
  * Detect inconsistent data of parent shell
