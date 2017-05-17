@@ -1191,7 +1191,7 @@ class UsersController extends AppController
 
         function show_date($startDate, $endDate)
         {
-            return AppUtil::dateYmdReformat($startDate,'/'). " - "  .AppUtil::dateYmdReformat($endDate,'/');
+            return AppUtil::dateYmdReformat($startDate, '/') . " - " . AppUtil::dateYmdReformat($endDate, '/');
         }
 
         $allTerm = $this->Team->Term->getAllTerm();
