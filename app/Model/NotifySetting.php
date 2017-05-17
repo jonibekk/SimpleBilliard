@@ -46,6 +46,8 @@ class NotifySetting extends AppModel
     const TYPE_MEMBER_CHANGE_KR = 33;
     const TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER = 34;
     const TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT = 35;
+    const TYPE_CHANGED_TEAM_BASIC_SETTING = 36;
+    const TYPE_CHANGED_TERM_SETTING = 37;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                                 => [
@@ -292,6 +294,20 @@ class NotifySetting extends AppModel
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_CHANGED_TEAM_BASIC_SETTING                => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'team',
+            'icon_class'      => 'fa-users',
+            'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_CHANGED_TERM_SETTING                => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'team',
+            'icon_class'      => 'fa-users',
             'groups'          => ['all', 'primary'],
         ]
     ];
@@ -958,7 +974,28 @@ class NotifySetting extends AppModel
                         h($goal['Goal']['name']));
                 }
                 break;
-
+            case self::TYPE_CHANGED_TEAM_BASIC_SETTING:
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> changed team basic setting.',
+                        $user_text);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> changed team basic setting.',
+                        h($user_text));
+                }
+                break;
+            case self::TYPE_CHANGED_TERM_SETTING:
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> changed term setting.',
+                        $user_text);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> changed term setting.',
+                        h($user_text));
+                }
+                break;
         }
 
         if ($options['style'] == 'plain') {
