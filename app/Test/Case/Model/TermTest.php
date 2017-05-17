@@ -485,7 +485,7 @@ class TermTest extends GoalousTestCase
         $nextTerm = $this->Term->getNextTermData();
         $newStartDate = date('Y-m-01', strtotime("{$nextTerm['start_date']} +5 month"));
         $newEndDate = date('Y-m-d', strtotime("{$nextTerm['end_date']} +10 month"));
-        $this->Term->updateRange($newStartDate, $newEndDate, Term::TYPE_NEXT);
+        $this->Term->updateRange($nextTerm['id'], $newStartDate, $newEndDate);
         $res = $this->Term->getById($this->Term->getNextTermId());
         $this->assertEquals($res['start_date'], $newStartDate);
         $this->assertEquals($res['end_date'], $newEndDate);
