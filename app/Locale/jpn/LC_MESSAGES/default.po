@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-16 15:41+0900\n"
+"PO-Revision-Date: 2017-05-17 17:55+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -531,6 +531,13 @@ msgstr "チームの基本設定を更新しました。"
 
 msgid "Failed to change basic team settings."
 msgstr "チームの基本設定の更新に失敗しました。"
+
+msgid ""
+"The current term has already been evaluated and cannot be changed.  You can "
+"still apply changes to the next term."
+msgstr ""
+"今期はすでに評価が開始されており、変更することはできません。来期に変更を実施"
+"することができます。"
 
 msgid "Failed to change terms setting."
 msgstr "期間設定の変更に失敗しました。"
@@ -3514,6 +3521,10 @@ msgstr ""
 "チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削"
 "除されます。よろしいですか？\\nよろしければ \"OK\" ボタンを押してください。"
 
+msgid ""
+"By this operation, some goals and KRs schedules may automatically be updated."
+msgstr "この操作によって、一部のゴールとKRスケジュールが自動的に更新されます。"
+
 msgid "Term settings"
 msgstr "期間設定"
 
@@ -4922,9 +4933,6 @@ msgstr ""
 "ません。\n"
 "5.「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終"
 "了日が来期末に更新されました。"
-
-msgid "Term settings"
-msgstr "期間設定"
 
 msgid "Send Invitations"
 msgstr "招待しましょう"
