@@ -701,17 +701,17 @@ class Term extends AppModel
      * create initial term data as signup
      * - create current & next term data
      *
+     * @param  string $currentStartDate
      * @param  string $nextStartDate
      * @param  int    $termRange
      * @param  int    $teamId
      *
      * @return bool
      */
-    public function createInitialDataAsSignup(string $nextStartDate, int $termRange, int $teamId): bool
+    public function createInitialDataAsSignup(string $currentStartDate, string $nextStartDate, int $termRange, int $teamId): bool
     {
-        $currentStartDate = date('Y-m-01');
         $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
-        $nextEndDate = date('Y-m-t', strtotime($nextStartDate) + ($termRange - 1) * MONTH);
+        $nextEndDate = date('Y-m-t', strtotime($nextStartDate . ' +' . ($termRange - 1) . ' month'));
         $saveData = [
             [
                 'team_id'    => $teamId,
