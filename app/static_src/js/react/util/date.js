@@ -19,6 +19,8 @@ export function generateStartMonthList(term) {
     const next_start_date = new Date(end_date.getFullYear(), parseInt(end_date.getMonth() + 1))
 
     start_month_list.push({
+      // TODO: getMonth()メソッドは0~11の値を返すので、正しい数値を取得するためには+1する必要がある。
+      //       毎回これを気にするのはつらいので、ラッパーを作る。
       next_start_ym: `${next_start_date.getFullYear()}-${toDigit(parseInt(next_start_date.getMonth()) + 1)}`,
       range
     })
