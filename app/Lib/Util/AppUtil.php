@@ -555,4 +555,20 @@ class AppUtil
         }
         return $formattedYm;
     }
+
+    /**
+     * get end date by startDate, termLength
+     *
+     * @param  string $startDate
+     * @param  int    $termLength
+     *
+     * @return string
+     */
+    static function getEndDate(string $startDate, int $termLength): string
+    {
+        $endDate = date('Y-m-t', strtotime($startDate . ' +' . ($termLength - 1) . ' month'));
+        return $endDate;
+    }
+
+
 }

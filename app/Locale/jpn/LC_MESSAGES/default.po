@@ -3514,7 +3514,6 @@ msgstr ""
 "チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削"
 "除されます。よろしいですか？\\nよろしければ \"OK\" ボタンを押してください。"
 
-<<<<<<< HEAD
 msgid "Term settings"
 msgstr "期間設定"
 
@@ -3596,8 +3595,6 @@ msgstr "上記の変更内容を確認しました"
 msgid "Save settings"
 msgstr "設定を保存"
 
-=======
->>>>>>> origin/topic-improve-timezone&term
 msgid "Display incomplete evaluatees."
 msgstr "未完了の被評価者をみる"
 
