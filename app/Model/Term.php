@@ -333,7 +333,7 @@ class Term extends AppModel
             }
             $nextTermEnd = $this->getNextTermData()['end_date'];
             $this->nextNextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($nextTermEnd) + DAY));
-            return $this->nextTerm;
+            return $this->nextNextTerm;
         }
 
         return $this->currentTerm;
@@ -699,23 +699,14 @@ class Term extends AppModel
     /**
      * Update term start_date and end_date
      *
+     * @param  int    $type
      * @param  string $startDate
      * @param  string $endDate
-     * @param  int    $type
      *
      * @return bool
      */
-    public function updateRange(string $startDate, string $endDate, int $type): bool
+    public function updateRange(int $termId, string $startDate, string $endDate): bool
     {
-        $termId = $this->getTermId($type);
-        if (!$termId) {
-            $this->log(sprintf('[%s] Failed to get term id. term type: %s, backtrace: %s',
-                __METHOD__,
-                $type,
-                Debugger::trace()
-            ));
-            return false;
-        }
         $saveData = [
             'id'         => $termId,
             'start_date' => $startDate,
