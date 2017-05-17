@@ -15,7 +15,7 @@ if (!isset($with_header_menu)) {
 <?= $this->App->viewStartComment() ?>
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="ja">
+<html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
 <body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?>">
 <?php if (extension_loaded('newrelic')) {

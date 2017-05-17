@@ -21,7 +21,7 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 <?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="ja">
+<html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
 <body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?=$bodyNoScrollClass?>">
 <?php if (extension_loaded('newrelic')) {
