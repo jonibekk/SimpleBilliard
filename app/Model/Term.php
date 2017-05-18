@@ -68,7 +68,7 @@ class Term extends AppModel
     ];
 
     public $update_validate = [
-        'next_start_ym'   => [
+        'next_start_ym' => [
             'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
@@ -77,7 +77,7 @@ class Term extends AppModel
                 'rule' => ['date', 'ym'],
             ],
         ],
-        'term_length' => [
+        'term_length'   => [
             'notBlank' => [
                 'required' => 'update',
                 'rule'     => 'notBlank',
@@ -281,6 +281,8 @@ class Term extends AppModel
             if (!$this->currentTerm) {
                 $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
+                    $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
+                    Cache::set('duration', $duration, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
                 }
             }
@@ -298,8 +300,11 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['start_date']) && !empty($this->currentTerm['start_date'])) {
-                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY),false);
+                $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY),
+                    false);
                 if ($this->previousTerm && $withCache) {
+                    $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
+                    Cache::set('duration', $duration, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
             }
@@ -320,6 +325,8 @@ class Term extends AppModel
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
                 $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
                 if ($this->nextTerm && $withCache) {
+                    $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
+                    Cache::set('duration', $duration, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->nextTerm, 'team_info');
                 }
             }
@@ -632,7 +639,7 @@ class Term extends AppModel
      *
      * @return array|null
      */
-    public function getTermDataByDate(string $date,bool $enableErrorLog = true)
+    public function getTermDataByDate(string $date, bool $enableErrorLog = true)
     {
         $timezone = $this->Team->getTimezone();
         $options = [
@@ -745,8 +752,12 @@ class Term extends AppModel
      *
      * @return bool
      */
-    public function createInitialDataAsSignup(string $currentStartDate, string $nextStartDate, int $termRange, int $teamId): bool
-    {
+    public function createInitialDataAsSignup(
+        string $currentStartDate,
+        string $nextStartDate,
+        int $termRange,
+        int $teamId
+    ): bool {
         $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
         $nextEndDate = AppUtil::getEndDate($nextStartDate, $termRange);
         $nextNextStartDate = date('Y-m-01', strtotime($nextEndDate) + DAY);
@@ -771,4 +782,21 @@ class Term extends AppModel
         ];
         return $this->saveAll($saveData);
     }
+
+    /**
+     * making duration of cache for term data.
+     * TODO: 本来このメソッドはTermServiceにあるべきだが、Termモデルから参照する必要があるので(そのメソッドもサービスに移すべき)、一旦ここに置く。
+     *
+     * @param string $termEndDate
+     * @param float  $timezone
+     *
+     * @return int
+     */
+    public function makeDurationOfCache(string $termEndDate, float $timezone): int
+    {
+        // convert from local datetime of end of day to UTC timestamp.
+        $duration = strtotime($termEndDate . ' 23:59:59') - ($timezone * HOUR) - REQUEST_TIMESTAMP;
+        return $duration;
+    }
+
 }

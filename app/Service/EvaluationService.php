@@ -106,24 +106,29 @@ class EvaluationService extends AppService
      */
     function isStarted()
     {
-        /** @var  Term $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('Term');
+        /** @var  Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var  Team $Team */
+        $Team = ClassRegistry::init('Team');
 
-        $cachedData = Cache::read($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
+        $cachedData = Cache::read($Term->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
         if ($cachedData !== false) {
+            // $isStartedEvaluation will be created by extracting $cachedData
             extract($cachedData);
         } else {
-            $currentTermId = $EvaluateTerm->getCurrentTermId();
-            $isStartedEvaluation = $EvaluateTerm->isStartedEvaluation($currentTermId);
+            $currentTermId = $Term->getCurrentTermId();
+            $isStartedEvaluation = $Term->isStartedEvaluation($currentTermId);
 
             // 結果をキャッシュに保存
-            $currentTerm = $EvaluateTerm->getCurrentTermData();
-            $duration = strtotime($currentTerm['end_date']. ' 23:59:59') - REQUEST_TIMESTAMP;
+            $currentTerm = $Term->getCurrentTermData();
+            $timezone = $Team->getTimezone();
+            $duration = $Term->makeDurationOfCache($currentTerm['end_date'], $timezone);
             Cache::set('duration', $duration, 'user_data');
-            Cache::write($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true),
+            Cache::write($Term->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true),
                 compact('isStartedEvaluation'), 'user_data');
         }
 
+        /** @noinspection PhpUndefinedVariableInspection */
         return $isStartedEvaluation;
     }
 }
