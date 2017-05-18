@@ -42,7 +42,7 @@ class Topic extends React.Component {
                 </span>
               </div>
               <div className="topicList-item-main-header-count">
-                { topic.members_count > 2 && `(${topic.members_count})` }
+                { (topic.members_count > 2 || topic.title) && `(${topic.members_count})` }
               </div>
             </div>
             <div className="topicList-item-main-body oneline-ellipsis">

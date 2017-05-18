@@ -95,7 +95,7 @@ class EvaluateTermFixture extends CakeTestFixtureEx
             'end_date'   => 19999,
             'timezone'   => 9,
             'created'    => 1,
-            'modified'   => 1
+            'modified'   => 1,
         ],
         [
             'id'         => 2,

@@ -21,10 +21,10 @@ class ActionServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.evaluate_term',
+        'app.term',
         'app.team',
         'app.attached_file',
-        'app.evaluate_term',
+        'app.term',
         'app.goal',
         'app.key_result',
         'app.action_result',

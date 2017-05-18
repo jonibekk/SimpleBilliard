@@ -44,8 +44,8 @@ class DataUpdateShell extends AppShell
     {
         $save_data = [];
         $options = [
-            'fields' => ['id', 'team_id', 'evaluatee_user_id', 'evaluate_term_id'],
-            'group'  => ['team_id', 'evaluatee_user_id', 'evaluate_term_id'],
+            'fields' => ['id', 'team_id', 'evaluatee_user_id', 'term_id'],
+            'group'  => ['team_id', 'evaluatee_user_id', 'term_id'],
         ];
         $grouped_evals = $this->Evaluation->find('all', $options);
         $grouped_evals = Hash::combine($grouped_evals, '{n}.Evaluation.id', '{n}.Evaluation');

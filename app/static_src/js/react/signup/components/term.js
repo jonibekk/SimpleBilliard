@@ -11,7 +11,7 @@ export default class Term extends React.Component {
   getInputDomData() {
     return {
       term: ReactDOM.findDOMNode(this.refs.term).value.trim(),
-      start_month: ReactDOM.findDOMNode(this.refs.start_month).value.trim(),
+      next_start_ym: ReactDOM.findDOMNode(this.refs.next_start_ym).value.trim(),
       timezone: ReactDOM.findDOMNode(this.refs.timezone).value.trim()
     }
   }
@@ -59,22 +59,22 @@ export default class Term extends React.Component {
                   {/* Start month */}
                   <div className="panel-heading signup-itemtitle">{__("Select your present term")}</div>
 
-                  <div className={(this.props.validate.start_month.invalid) ? 'has-error' : ''}>
-                      <select className="form-control signup_input-design" ref="start_month" name="start_month"
+                  <div className={(this.props.validate.next_start_ym.invalid) ? 'has-error' : ''}>
+                      <select className="form-control signup_input-design" ref="next_start_ym" name="next_start_ym"
                               onChange={ this.handleOnChange.bind(this) }>
                           <option value="">{__("Please select")}</option>
                           {
                             this.props.term.start_month_list.map((option) => {
                               return (
-                                <option value={option.start_month} key={option.range}>{option.range}</option>
+                                <option value={option.next_start_ym} key={option.next_start_ym}>{option.range}</option>
                               )
                             })
                           }
                       </select>
                   </div>
 
-                  <InvalidMessageBox is_invalid={this.props.validate.start_month.invalid}
-                                     message={this.props.validate.start_month.message} />
+                  <InvalidMessageBox is_invalid={this.props.validate.next_start_ym.invalid}
+                                     message={this.props.validate.next_start_ym.message} />
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">{__("Timezone")}</div>
@@ -110,7 +110,7 @@ export default class Term extends React.Component {
 
                   {/* Submit button */}
                   { (() => {
-                    const can_submit = this.props.validate.term.invalid === false && this.props.validate.start_month.invalid === false && !this.props.term.checking_term
+                    const can_submit = this.props.validate.term.invalid === false && this.props.validate.next_start_ym.invalid === false && !this.props.term.checking_term
 
                     if(can_submit) {
                       return <EnabledNextButton />;

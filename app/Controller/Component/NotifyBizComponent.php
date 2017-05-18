@@ -226,6 +226,9 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_EXCHANGED_LEADER:
                 $this->_setGoalLeaderChangedOption($notify_type, $model_id, $sub_model_id, $user_id, $team_id);
+            case NotifySetting::TYPE_CHANGED_TEAM_BASIC_SETTING:
+            case NotifySetting::TYPE_CHANGED_TERM_SETTING:
+                $this->_setChangedTeamSetting($notify_type, $model_id);
                 break;
             default:
                 break;
@@ -402,8 +405,8 @@ class NotifyBizComponent extends Component
             = $this->Goal->GoalMember->my_uid
             = $this->Goal->Follower->my_uid
             = $this->Goal->Team->my_uid
-            = $this->Goal->Team->EvaluateTerm->my_uid
-            = $this->Goal->Team->EvaluateTerm->Team->my_uid
+            = $this->Goal->Team->Term->my_uid
+            = $this->Goal->Team->Term->Team->my_uid
             = $this->NotifySetting->my_uid
             = $this->GlEmail->SendMail->my_uid
             = $this->GlEmail->SendMail->SendMailToUser->my_uid
@@ -424,8 +427,8 @@ class NotifyBizComponent extends Component
             = $this->Goal->GoalMember->current_team_id
             = $this->Goal->Follower->current_team_id
             = $this->Goal->Team->current_team_id
-            = $this->Goal->Team->EvaluateTerm->current_team_id
-            = $this->Goal->Team->EvaluateTerm->Team->current_team_id
+            = $this->Goal->Team->Term->current_team_id
+            = $this->Goal->Team->Term->Team->current_team_id
             = $this->NotifySetting->current_team_id
             = $this->GlEmail->SendMail->current_team_id
             = $this->GlEmail->SendMail->SendMailToUser->current_team_id
@@ -859,6 +862,26 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * Option when changed team setting
+     *
+     * @param $notifyType
+     * @param $teamId
+     */
+    private function _setChangedTeamSetting($notifyType, $teamId)
+    {
+        // Get all team member user id
+        $teamMemberUserIds = $this->Team->TeamMember->getAllMemberUserIdList(true, true, false, $teamId);
+
+        // Notify setting
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($teamMemberUserIds,
+            $notifyType);
+        $this->notify_option['notify_type'] = $notifyType;
+        $this->notify_option['url_data'] = ['controller' => 'teams', 'action' => 'index'];
+        $this->notify_option['model_id'] = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
+    }
+
+    /**
      * ゴールのリーダーが変更されたときのオプション
      *
      * @param $notify_type
@@ -1128,8 +1151,8 @@ class NotifyBizComponent extends Component
             $notify_type);
 
         //期間タイプの設定
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        $currentTermId = $this->Team->Term->getCurrentTermId();
+        $previousTermId = $this->Team->Term->getPreviousTermId();
         $termType = null;
         if ($term_id == $currentTermId) {
             $termType = 'present';
