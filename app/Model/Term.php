@@ -281,7 +281,7 @@ class Term extends AppModel
             if (!$this->currentTerm) {
                 $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
-                    $duration = $this->getDurationOfCache($this->currentTerm['end_date'], $timezone);
+                    $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
                     Cache::set('duration', $duration, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->currentTerm, 'team_info');
                 }
@@ -303,7 +303,7 @@ class Term extends AppModel
                 $this->previousTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['start_date']) - DAY),
                     false);
                 if ($this->previousTerm && $withCache) {
-                    $duration = $this->getDurationOfCache($this->currentTerm['end_date'], $timezone);
+                    $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
                     Cache::set('duration', $duration, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previousTerm, 'team_info');
                 }
@@ -325,7 +325,7 @@ class Term extends AppModel
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
                 $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
                 if ($this->nextTerm && $withCache) {
-                    $duration = $this->getDurationOfCache($this->currentTerm['end_date'], $timezone);
+                    $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
                     Cache::set('duration', $duration, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->nextTerm, 'team_info');
                 }
@@ -784,7 +784,7 @@ class Term extends AppModel
     }
 
     /**
-     * getting duration of cache for term data.
+     * making duration of cache for term data.
      * TODO: 本来このメソッドはTermServiceにあるべきだが、Termモデルから参照する必要があるので(そのメソッドもサービスに移すべき)、一旦ここに置く。
      *
      * @param string $termEndDate
@@ -792,7 +792,7 @@ class Term extends AppModel
      *
      * @return int
      */
-    public function getDurationOfCache(string $termEndDate, float $timezone): int
+    public function makeDurationOfCache(string $termEndDate, float $timezone): int
     {
         // convert from local datetime of end of day to UTC timestamp.
         $duration = strtotime($termEndDate . ' 23:59:59') - ($timezone * HOUR) - REQUEST_TIMESTAMP;
