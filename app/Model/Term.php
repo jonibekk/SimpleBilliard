@@ -19,10 +19,12 @@ class Term extends AppModel
     const TYPE_CURRENT = 0;
     const TYPE_PREVIOUS = 1;
     const TYPE_NEXT = 2;
+    const TYPE_NEXT_NEXT = 3;
     static private $TYPE = [
         self::TYPE_CURRENT,
         self::TYPE_PREVIOUS,
         self::TYPE_NEXT,
+        self::TYPE_NEXT_NEXT
     ];
 
     const TERM_TYPE_CURRENT = 'current';
@@ -31,6 +33,7 @@ class Term extends AppModel
     private $previousTerm = [];
     private $currentTerm = [];
     private $nextTerm = [];
+    private $nextNextTerm = [];
 
     /**
      * Validation rules
@@ -323,6 +326,16 @@ class Term extends AppModel
             return $this->nextTerm;
         }
 
+        // add next next term cache when need cache
+        if ($type === self::TYPE_NEXT_NEXT) {
+            if ($this->nextNextTerm) {
+                return $this->nextNextTerm;
+            }
+            $nextTermEnd = $this->getNextTermData()['end_date'];
+            $this->nextNextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($nextTermEnd) + DAY));
+            return $this->nextNextTerm;
+        }
+
         return $this->currentTerm;
     }
 
@@ -339,6 +352,8 @@ class Term extends AppModel
     }
 
     /**
+     * get current term
+     *
      * @return array
      */
     public function getCurrentTermData(): array
@@ -348,6 +363,8 @@ class Term extends AppModel
     }
 
     /**
+     * get next term
+     *
      * @return array
      */
     public function getNextTermData(): array
@@ -357,6 +374,8 @@ class Term extends AppModel
     }
 
     /**
+     * get previous term
+     *
      * @return array
      */
     public function getPreviousTermData(): array
@@ -365,19 +384,36 @@ class Term extends AppModel
         return $term;
     }
 
+    /**
+     * get current term id
+     */
     public function getCurrentTermId()
     {
         return $this->getTermId(self::TYPE_CURRENT);
     }
 
+    /**
+     * get next term id
+     */
     public function getNextTermId()
     {
         return $this->getTermId(self::TYPE_NEXT);
     }
 
+    /**
+     * get previous term id
+     */
     public function getPreviousTermId()
     {
         return $this->getTermId(self::TYPE_PREVIOUS);
+    }
+
+    /**
+     * get next term id
+     */
+    public function getNextNextTermId()
+    {
+        return $this->getTermId(self::TYPE_NEXT_NEXT);
     }
 
     /**
@@ -671,7 +707,7 @@ class Term extends AppModel
      *
      * @return bool
      */
-    public function updateCurrentRange(string $endDate): bool
+    public function updateCurrentEnd(string $endDate): bool
     {
         $currentTermId = $this->getCurrentTermId();
         $this->id = $currentTermId;
@@ -679,17 +715,18 @@ class Term extends AppModel
     }
 
     /**
-     * Update next term start_date and end_date
+     * Update term start_date and end_date
      *
+     * @param  int    $type
      * @param  string $startDate
      * @param  string $endDate
      *
      * @return bool
      */
-    public function updateNextRange(string $startDate, string $endDate): bool
+    public function updateRange(int $termId, string $startDate, string $endDate): bool
     {
         $saveData = [
-            'id'         => $this->getNextTermId(),
+            'id'         => $termId,
             'start_date' => $startDate,
             'end_date'   => $endDate
         ];
