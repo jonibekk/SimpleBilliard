@@ -479,10 +479,10 @@ class Team extends AppModel
         $options = [
             'conditions' => [
                 'Team.timezone' => $timezone,
-                'NOT'           => [
+                'OR'            => [
                     'CurrentTerm.id' => null,
                     'NextTerm.id'    => null,
-                ]
+                ],
             ],
             'fields'     => [
                 'Team.id'
