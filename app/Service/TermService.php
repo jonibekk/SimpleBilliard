@@ -74,11 +74,18 @@ class TermService extends AppService
         try {
             $Term->begin();
 
+            // request data
             $requestNextStartYm = $data['next_start_ym'];
             $termRange = $data['term_length'];
+            // new date
             $newNextStartDate = date('Y-m-01', strtotime($requestNextStartYm));
-            $newNextEndDate = date('Y-m-d', strtotime("{$newNextStartDate} +{$termRange} month") - DAY);
+            $newNextEndDate = AppUtil::getEndDate($newNextStartDate, $termRange);
             $newCurrentEndDate = date('Y-m-d', strtotime($newNextStartDate) - DAY);
+            $newNextNextStartDate = date('Y-m-01', strtotime($newNextEndDate) + DAY);
+            $newNextNextEndDate = AppUtil::getEndDate($newNextNextStartDate, $termRange);
+            // term id
+            $nextTermId = $Term->getNextTermId();
+            $nextNextTermId = $Term->getNextNextTermId();
 
             // update team
             $newStartMonth = date('m', strtotime($newNextStartDate));
@@ -88,13 +95,20 @@ class TermService extends AppService
             }
 
             // update term
-            if (!$Term->updateCurrentRange($newCurrentEndDate)) {
+            // current
+            if (!$Term->updateCurrentEnd($newCurrentEndDate)) {
                 throw new Exception(sprintf("Failed to update current term setting. current_term_end_date: %s",
                     $newCurrentEndDate));
             }
-            if (!$Term->updateNextRange($newNextStartDate, $newNextEndDate)) {
-                throw new Exception(sprintf("Failed to update next term setting. new_next_start_date: %s new_next_end_date: %s",
-                    $newNextStartDate, $newNextEndDate));
+            // next
+            if (!$Term->updateRange($nextTermId, $newNextStartDate, $newNextEndDate)) {
+                throw new Exception(sprintf("Failed to update next term setting. next_term_id: %s new_next_start_date: %s new_next_end_date: %s",
+                    $nextTermId, $newNextStartDate, $newNextEndDate));
+            }
+            // after next
+            if (!$Term->updateRange($nextNextTermId, $newNextNextStartDate, $newNextNextEndDate)) {
+                throw new Exception(sprintf("Failed to update next next term setting. next_next_term_id: %s new_next_next_start_date: %s new_next_next_end_date: %s",
+                    $nextNextTermId, $newNextNextStartDate, $newNextNextEndDate));
             }
 
             // update goals

@@ -467,28 +467,23 @@ class TermTest extends GoalousTestCase
         $this->assertEquals('2017-03-31', $actual['end_date']);
     }
 
-    function test_updateCurrentRange()
+    function test_updateCurrentEnd()
     {
         $this->_setDefault();
-        $this->saveTerm(1, date('Y-m-01', strtotime('-2 month')), 4);
-        $currentTerm = $this->Term->getCurrentTermData();
-        $newEndDate = date('Y-m-d', strtotime("{$currentTerm['end_date']} +1 month"));
-        $this->Term->updateCurrentRange($newEndDate);
+        $currentTerm = $this->saveTerm(1, '2017-04-01' , 6, false);
+        $this->Term->updateCurrentEnd('2017-02-01');
         $resEndDate = $this->Term->getById($this->Term->getCurrentTermId())['end_date'];
-        $this->assertEquals($resEndDate, $newEndDate);
+        $this->assertEquals($resEndDate, '2017-02-01');
     }
 
-    function test_updateNextRange()
+    function test_updateRange()
     {
         $this->_setDefault();
-        $this->saveTerm(1, date('Y-m-01', strtotime('-3 month')), 4);
-        $nextTerm = $this->Term->getNextTermData();
-        $newStartDate = date('Y-m-01', strtotime("{$nextTerm['start_date']} +5 month"));
-        $newEndDate = date('Y-m-d', strtotime("{$nextTerm['end_date']} +10 month"));
-        $this->Term->updateNextRange($newStartDate, $newEndDate);
-        $res = $this->Term->getById($this->Term->getNextTermId());
-        $this->assertEquals($res['start_date'], $newStartDate);
-        $this->assertEquals($res['end_date'], $newEndDate);
+        $term = $this->saveTerm(1, '2017-04-01', 6, false);
+        $this->Term->updateRange($term['id'], '2017-10-01', '2017-12-31');
+        $res = $this->Term->getById($term['id']);
+        $this->assertEquals($res['start_date'], '2017-10-01');
+        $this->assertEquals($res['end_date'], '2017-12-31');
     }
 
     function test_customValidNextStartDateInSignup(){
