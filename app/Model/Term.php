@@ -352,6 +352,8 @@ class Term extends AppModel
     }
 
     /**
+     * get current term
+     *
      * @return array
      */
     public function getCurrentTermData(): array
@@ -361,6 +363,8 @@ class Term extends AppModel
     }
 
     /**
+     * get next term
+     *
      * @return array
      */
     public function getNextTermData(): array
@@ -370,6 +374,8 @@ class Term extends AppModel
     }
 
     /**
+     * get previous term
+     *
      * @return array
      */
     public function getPreviousTermData(): array
@@ -378,21 +384,33 @@ class Term extends AppModel
         return $term;
     }
 
+    /**
+     * get current term id
+     */
     public function getCurrentTermId()
     {
         return $this->getTermId(self::TYPE_CURRENT);
     }
 
+    /**
+     * get next term id
+     */
     public function getNextTermId()
     {
         return $this->getTermId(self::TYPE_NEXT);
     }
 
+    /**
+     * get previous term id
+     */
     public function getPreviousTermId()
     {
         return $this->getTermId(self::TYPE_PREVIOUS);
     }
 
+    /**
+     * get next term id
+     */
     public function getNextNextTermId()
     {
         return $this->getTermId(self::TYPE_NEXT_NEXT);
