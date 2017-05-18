@@ -17,7 +17,7 @@ class PagesControllerTest extends GoalousControllerTestCase
     public $fixtures = array(
         'app.key_result',
         'app.evaluation',
-        'app.evaluate_term',
+        'app.term',
         'app.action_result',
 
         'app.local_name',
@@ -163,8 +163,8 @@ class PagesControllerTest extends GoalousControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
-        $Pages->Team->EvaluateTerm->my_uid = 1;
-        $Pages->Team->EvaluateTerm->current_team_id = 1;
+        $Pages->Team->Term->my_uid = 1;
+        $Pages->Team->Term->current_team_id = 1;
 
         Configure::write('Config.language', 'en');
         $this->testAction('/ja/', ['return' => 'contents']);
@@ -259,8 +259,8 @@ class PagesControllerTest extends GoalousControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
-        $Pages->Team->EvaluateTerm->my_uid = 1;
-        $Pages->Team->EvaluateTerm->current_team_id = 1;
+        $Pages->Team->Term->my_uid = 1;
+        $Pages->Team->Term->current_team_id = 1;
         $this->testAction('/team_id:1');
     }
 
@@ -352,8 +352,8 @@ class PagesControllerTest extends GoalousControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
-        $Pages->Team->EvaluateTerm->my_uid = 1;
-        $Pages->Team->EvaluateTerm->current_team_id = 1;
+        $Pages->Team->Term->my_uid = 1;
+        $Pages->Team->Term->current_team_id = 1;
         $this->testAction('/pages/display/home/circle_id:11111111');
     }
 
@@ -417,8 +417,8 @@ class PagesControllerTest extends GoalousControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
-        $Pages->Team->EvaluateTerm->my_uid = 1;
-        $Pages->Team->EvaluateTerm->current_team_id = 1;
+        $Pages->Team->Term->my_uid = 1;
+        $Pages->Team->Term->current_team_id = 1;
 
         $this->testAction('/', ['return' => 'contents']);
     }

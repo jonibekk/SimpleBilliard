@@ -193,8 +193,8 @@ class GoalMemberService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 

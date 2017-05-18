@@ -21,7 +21,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         'app.circle',
         'app.team',
         'app.evaluation_setting',
-        'app.evaluate_term',
+        'app.term',
         'app.badge',
         'app.user',
         'app.notify_setting',
@@ -708,8 +708,8 @@ class CirclesControllerTest extends GoalousControllerTestCase
         $Circles->Circle->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Circles->Circle->CircleMember->current_team_id = '1';
-        $Circles->Team->EvaluateTerm->my_uid = 1;
-        $Circles->Team->EvaluateTerm->current_team_id = 1;
+        $Circles->Team->Term->my_uid = 1;
+        $Circles->Team->Term->current_team_id = 1;
         $Circles->Circle->Team->TeamMember->my_uid = '1';
         $Circles->Circle->Team->TeamMember->current_team_id = '1';
 

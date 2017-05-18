@@ -28,7 +28,7 @@ class KeyResultServiceTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.evaluate_term',
+        'app.term',
         'app.key_result',
         'app.kr_change_log',
         'app.kr_progress_log',
@@ -160,7 +160,7 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_date'    => date('Y/m/d', 10000),
             'end_date'      => date('Y/m/d', 19999),
         ];
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->Term->current_team_id = 1;
         $updateKr = $this->KeyResultService->buildUpdateKr(1, $data);
         foreach ($data as $k => $v) {
             if (!in_array($k, ['start_date', 'end_date'])) {
@@ -178,7 +178,7 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_date'  => date('Y/m/d', 10000),
             'end_date'    => date('Y/m/d', 19999),
         ];
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->Term->current_team_id = 1;
         $updateKr = $this->KeyResultService->buildUpdateKr(1, $data);
         $this->assertEquals($updateKr['start_value'], 0);
         $this->assertEquals($updateKr['current_value'], 0);
@@ -202,7 +202,7 @@ class KeyResultServiceTest extends GoalousTestCase
             'start_date'    => date('Y/m/d', 10000),
             'end_date'      => date('Y/m/d', 19999),
         ];
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->Term->current_team_id = 1;
         $ret = $this->KeyResultService->update(1, 1, $data);
         $this->assertTrue($ret);
     }

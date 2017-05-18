@@ -23,8 +23,10 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Evaluation status") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Evaluation status") ?></h2>
+    </header>
     <?php if (!$current_eval_is_started && !$previous_eval_is_started): ?>
         <div class="panel-body">
             <p class="text-align_c"><?= __("Evaluation has not started.") ?></p>
@@ -55,5 +57,5 @@
             </div>
         <?php endif; ?>
     <?php endif; ?>
-</div>
+</section>
 <?= $this->App->viewEndComment() ?>
