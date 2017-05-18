@@ -57,6 +57,7 @@ class TermService extends AppService
      * - update team setting
      * - update current term end date
      * - update next term start and end date
+     * - update next next term start and end date
      *
      * @param  array $data
      *
@@ -106,9 +107,12 @@ class TermService extends AppService
                     $nextTermId, $newNextStartDate, $newNextEndDate));
             }
             // after next
-            if (!$Term->updateRange($nextNextTermId, $newNextNextStartDate, $newNextNextEndDate)) {
-                throw new Exception(sprintf("Failed to update next next term setting. next_next_term_id: %s new_next_next_start_date: %s new_next_next_end_date: %s",
-                    $nextNextTermId, $newNextNextStartDate, $newNextNextEndDate));
+            // only case that created next next term.
+            if ($nextNextTermId) {
+                if (!$Term->updateRange($nextNextTermId, $newNextNextStartDate, $newNextNextEndDate)) {
+                    throw new Exception(sprintf("Failed to update next next term setting. next_next_term_id: %s new_next_next_start_date: %s new_next_next_end_date: %s",
+                        $nextNextTermId, $newNextNextStartDate, $newNextNextEndDate));
+                }
             }
 
             // update goals
