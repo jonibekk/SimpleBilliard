@@ -1,7 +1,6 @@
 <?php
 App::import('Service', 'AppService');
 
-
 /**
  * Class TermService
  */
@@ -84,31 +83,37 @@ class TermService extends AppService
             // update team
             $newStartMonth = date('m', strtotime($newNextStartDate));
             if (!$Team->updateTermSettings($newStartMonth, $termRange)) {
-                throw new Exception(sprintf("Failed to update team setting. new_start_ym: %s border_month: %s", $newStartMonth, $termRange));
+                throw new Exception(sprintf("Failed to update team setting. new_start_ym: %s border_month: %s",
+                    $newStartMonth, $termRange));
             }
 
             // update term
             if (!$Term->updateCurrentRange($newCurrentEndDate)) {
-                throw new Exception(sprintf("Failed to update current term setting. current_term_end_date: %s", $newCurrentEndDate));
+                throw new Exception(sprintf("Failed to update current term setting. current_term_end_date: %s",
+                    $newCurrentEndDate));
             }
             if (!$Term->updateNextRange($newNextStartDate, $newNextEndDate)) {
-                throw new Exception(sprintf("Failed to update next term setting. new_next_start_date: %s new_next_end_date: %s", $newNextStartDate, $newNextEndDate));
+                throw new Exception(sprintf("Failed to update next term setting. new_next_start_date: %s new_next_end_date: %s",
+                    $newNextStartDate, $newNextEndDate));
             }
 
             // update goals
             // current goals
             $currentStartDate = $Term->getCurrentTermData()['start_date'];
             if (!$Goal->updateCurrentTermRange($currentStartDate, $newCurrentEndDate)) {
-                throw new Exception(sprintf("Failed to update current term goal. current_start_date: %s current_term_end_date: %s", $currentStartDate, $newCurrentEndDate));
+                throw new Exception(sprintf("Failed to update current term goal. current_start_date: %s current_term_end_date: %s",
+                    $currentStartDate, $newCurrentEndDate));
             }
             // next goals
             if (!$Goal->updateNextTermRange($newNextStartDate, $newNextEndDate)) {
-                throw new Exception(sprintf("Failed to update next term goal setting. start_date: %s end_date: %s", $newNextStartDate, $newNextEndDate));
+                throw new Exception(sprintf("Failed to update next term goal setting. start_date: %s end_date: %s",
+                    $newNextStartDate, $newNextEndDate));
             }
 
             // update keyresults
             if (!$this->updateKrsRangeWithinGoalRange($currentStartDate)) {
-                throw new Exception(sprintf("Failed to update key results range setting curret_start_date: %s", $currentStartDate));
+                throw new Exception(sprintf("Failed to update key results range setting curret_start_date: %s",
+                    $currentStartDate));
             }
 
             // delete term cache
@@ -165,7 +170,20 @@ class TermService extends AppService
     public function getSelectableNextStartYmList(string $currentTermStartYm, string $currentYm): array
     {
         $nextMonthYm = date("Y-m", strtotime("$currentYm +1 month"));
-        $nextStartYmUpper = date('Y-m', strtotime($currentTermStartYm.' +'.self::MAX_TERM_MONTH_LENGTH.' month'));
+        $nextStartYmUpper = date('Y-m', strtotime($currentTermStartYm . ' +' . self::MAX_TERM_MONTH_LENGTH . ' month'));
         return AppUtil::rangeYmI18n($nextMonthYm, $nextStartYmUpper);
+    }
+
+    /**
+     * Check can change term setting
+     *
+     * @return bool
+     */
+    public function canChangeSetting(): bool
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+        $currentTerm = $Term->getCurrentTermData();
+        return Hash::get($currentTerm, 'evaluate_status') == Term::STATUS_EVAL_NOT_STARTED;
     }
 }

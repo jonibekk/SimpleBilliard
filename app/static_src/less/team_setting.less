@@ -21,6 +21,9 @@ section.panel{
     }
   }
   .panel-body{
+    .term-setting-warning {
+      color: @strongRed;
+    }
     font-size: 1em;
     line-height:1.3em;
     padding:0 .5em;
@@ -53,6 +56,9 @@ section.panel{
         box-shadow: none;
         padding:.5em;
         min-width:60%;
+        &:disabled {
+          background-color: @subColor5 !important;
+        }
       }
     }
     #evaluation_setting{

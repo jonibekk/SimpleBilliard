@@ -1323,7 +1323,7 @@ class GlRedis extends AppModel
      */
     function getChangedTerm(int $teamId) : bool
     {
-        $ret = $this->Db->get($this->getKeyName(self::KEY_TYPE_CHANGED_TERM, null, $teamId));
+        $ret = $this->Db->get($this->getKeyName(self::KEY_TYPE_CHANGED_TERM, $teamId));
         return !empty($ret);
     }
 }
