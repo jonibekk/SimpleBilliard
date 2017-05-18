@@ -34,7 +34,7 @@
         <h2><?= __("Term settings") ?></h2>
     </header>
     <div class="panel-body">
-        <?php if (!$canChangeTermSetting):?>
+        <?php if ($isStartedEvaluation):?>
             <p class="term-setting-warning"><?= __("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term.") ?></p>
         <?php endif;?>
         <p><?= __("Changes will take effect after this current term") ?></p>
@@ -48,7 +48,7 @@
                 'options'  => $nextSelectableStartYm,
                 'selected' => $nextTermStartYm,
                 'id'       => 'term_start',
-                'disabled' => !$canChangeTermSetting,
+                'disabled' => $isStartedEvaluation,
             ]) ?>
         </fieldset>
         <fieldset>
@@ -66,7 +66,7 @@
                 'options'  => $rangeOptions,
                 'selected' => $termLength,
                 'id'       => 'term_length',
-                'disabled' => !$canChangeTermSetting,
+                'disabled' => $isStartedEvaluation,
             ]) ?>
         </fieldset>
         <div class="term-details current-term">

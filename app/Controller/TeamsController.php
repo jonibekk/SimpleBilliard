@@ -2,6 +2,7 @@
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'TermService');
+App::import('Service', 'EvaluationService');
 
 /**
  * Teams Controller
@@ -133,6 +134,8 @@ class TeamsController extends AppController
     {
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init("TermService");
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
 
         $this->request->allowMethod('post');
 
@@ -146,7 +149,7 @@ class TeamsController extends AppController
         }
 
         // checking can change term setting
-        if (!$TermService->canChangeSetting()) {
+        if ($EvaluationService->isStarted()) {
             $this->Pnotify->outError(__("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term."));
             return $this->redirect($this->referer());
         }
@@ -229,6 +232,9 @@ class TeamsController extends AppController
 
     public function settings()
     {
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
+
         $this->layout = LAYOUT_TWO_COLUMN;
         $team_id = $this->Session->read('current_team_id');
         try {
@@ -300,7 +306,7 @@ class TeamsController extends AppController
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
-        $canChangeTermSetting = $TermService->canChangeSetting();
+        $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
             'current_statuses',
@@ -329,7 +335,7 @@ class TeamsController extends AppController
             'nextTermStartYm',
             'nextTermEndYm',
             'termLength',
-            'canChangeTermSetting'
+            'isStartedEvaluation'
         ));
 
         return $this->render();
