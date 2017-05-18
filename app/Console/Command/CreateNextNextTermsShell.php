@@ -2,7 +2,7 @@
 App::uses('AppUtil', 'Util');
 
 /**
- * The shell for creating next term
+ * The shell for creating next next term
  * Console/cake create_next_term
  * Description
  * - As normally, it's executed by cron job.
@@ -14,7 +14,7 @@ App::uses('AppUtil', 'Util');
  * @property Team $Team
  * @property Term $Term
  */
-class CreateNextTermsShell extends AppShell
+class CreateNextNextTermsShell extends AppShell
 {
     public $uses = [
         'Team',
@@ -66,12 +66,12 @@ class CreateNextTermsShell extends AppShell
 
         $targetDate = AppUtil::dateYmdLocal($currentTimestamp, $targetTimezone);
 
-        $res = $this->_saveNextTermsForAllTeam($targetTimezone, $targetDate);
+        $res = $this->_saveNextNextTermsForAllTeam($targetTimezone, $targetDate);
 
         // If 12 hours difference,
         // UTC-12:00(Eniwetok, Kwajalein) should be covered as extra process.
         if ($targetTimezone == 12) {
-            $res = $this->_saveNextTermsForAllTeam(-$targetTimezone, $targetDate);
+            $res = $this->_saveNextNextTermsForAllTeam(-$targetTimezone, $targetDate);
         }
 
         if ($res === true) {
@@ -87,27 +87,27 @@ class CreateNextTermsShell extends AppShell
      *
      * @return bool
      */
-    protected function _saveNextTermsForAllTeam($targetTimezone, string $targetDate): bool
+    protected function _saveNextNextTermsForAllTeam($targetTimezone, string $targetDate): bool
     {
         // logging teams that doesn't has no current term.
         $this->_logInvalidTermTeams($targetTimezone, $targetDate);
 
-        // [処理対象チームのデータ保存に必要な情報を取得] 対象のチームは今期の期間設定が存在し、且つ来期の期間設定が存在しないチーム
+        // [処理対象チームのデータ保存に必要な情報を取得] 対象のチームは今期、来期の期間設定が存在し、且つ来来期の期間設定が存在しないチーム
         // Target teams are which have current term setting and which have not next term setting.
-        $currentTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
-        if (empty($currentTerms)) {
+        $nextTerms = $this->Team->findAllTermEndDatesNextTermNotExists($targetTimezone, $targetDate);
+        if (empty($nextTerms)) {
             $this->out('There is no data to save.');
             return false;
         }
         // Building saving term datas.
         $newTerms = [];
-        foreach ($currentTerms as $currentTerm) {
-            $startDate = AppUtil::dateTomorrow($currentTerm['end_date']);
+        foreach ($nextTerms as $nextTerm) {
+            $startDate = AppUtil::dateTomorrow($nextTerm['end_date']);
             $newTerms[] = [
                 'start_date' => $startDate,
                 'end_date'   => date('Y-m-t',
-                    strtotime($startDate . " +" . ($currentTerm['border_months'] - 1) . " month")),
-                'team_id'    => $currentTerm['team_id'],
+                    strtotime($startDate . " +" . ($nextTerm['border_months'] - 1) . " month")),
+                'team_id'    => $nextTerm['team_id'],
             ];
         }
 
@@ -137,9 +137,9 @@ class CreateNextTermsShell extends AppShell
      */
     protected function _logInvalidTermTeams(int $targetTimezone, string $targetDate)
     {
-        // [処理対象外チーム] 今期の期間設定が存在しないチーム [Unprocessed teams] Team not having term setting for current term
+        // [処理対象外チーム] 来期の期間設定が存在しないチーム [Unprocessed teams] Team not having term setting for next term
         // 取得する目的はエラーログに残す事のみ The purpose of fetching data is only to leave it in the error log
-        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveTerm($targetTimezone, $targetDate);
+        $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveNextTerm($targetTimezone, $targetDate);
         if (!empty($teamIdsNotHaveTerm)) {
             CakeLog::error(sprintf('Failed to find current terms. timezone: %s, team count: %s, failed team ids:%s',
                 $targetTimezone, count($teamIdsNotHaveTerm), var_export($teamIdsNotHaveTerm, true)

@@ -118,7 +118,7 @@ class EvaluationService extends AppService
 
             // 結果をキャッシュに保存
             $currentTerm = $EvaluateTerm->getCurrentTermData();
-            $duration = $currentTerm['end_date'] - REQUEST_TIMESTAMP;
+            $duration = strtotime($currentTerm['end_date']. ' 23:59:59') - REQUEST_TIMESTAMP;
             Cache::set('duration', $duration, 'user_data');
             Cache::write($EvaluateTerm->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true),
                 compact('isStartedEvaluation'), 'user_data');
