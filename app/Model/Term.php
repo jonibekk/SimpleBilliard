@@ -130,7 +130,7 @@ class Term extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id
+                'team_id' => $this->current_team_id,
             ],
             'order'      => [
                 'start_date' => 'asc'
@@ -139,6 +139,13 @@ class Term extends AppModel
         if ($order_desc) {
             $options['order']['start_date'] = 'desc';
         }
+
+        // excluding next next term id
+        $nextNextTermId = $this->getNextNextTermId();
+        if (!empty($nextNextTermId)) {
+            $options['conditions']['NOT']['id'] = $nextNextTermId;
+        }
+
         $res = $this->find('all', $options);
         $res = Hash::combine($res, '{n}.Term.id', '{n}.Term');
         return $res;
