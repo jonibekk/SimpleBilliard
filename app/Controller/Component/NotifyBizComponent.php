@@ -228,7 +228,7 @@ class NotifyBizComponent extends Component
                 $this->_setGoalLeaderChangedOption($notify_type, $model_id, $sub_model_id, $user_id, $team_id);
             case NotifySetting::TYPE_CHANGED_TEAM_BASIC_SETTING:
             case NotifySetting::TYPE_CHANGED_TERM_SETTING:
-                $this->_setChangedTeamSetting($notify_type, $model_id);
+                $this->_setChangedTeamSetting($notify_type, $model_id, $user_id);
                 break;
             default:
                 break;
@@ -867,10 +867,13 @@ class NotifyBizComponent extends Component
      * @param $notifyType
      * @param $teamId
      */
-    private function _setChangedTeamSetting($notifyType, $teamId)
+    private function _setChangedTeamSetting($notifyType, $teamId, $userId)
     {
         // Get all team member user id
-        $teamMemberUserIds = $this->Team->TeamMember->getAllMemberUserIdList(true, true, false, $teamId);
+        $teamMemberUserIds = $this->Team->TeamMember->getActiveTeamMembersList();
+        unset($teamMemberUserIds[$userId]);
+
+        $team = $this->Team->getById($teamId);
 
         // Notify setting
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($teamMemberUserIds,
@@ -878,6 +881,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = $notifyType;
         $this->notify_option['url_data'] = ['controller' => 'teams', 'action' => 'index'];
         $this->notify_option['model_id'] = $teamId;
+        $this->notify_option['item_name'] = json_encode([$team['name']]);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
     }
 
