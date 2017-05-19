@@ -14,14 +14,14 @@
     <div>
         <div class="panel panel-default mod-notice">
             <div class="panel-block">
-                <?php $message = __("The term of your team has been changed. All goals/KRs schedules were automatically updated as follows.
-
-1.The goals/KRs that beings in the current term and ends in the next term were updated to end on the last day of the current term.
-2.The goals/KRs that begins in the current term and ends beyond the next term were updated to end on the last day of the current term.
-3.The goals/KRs that beings in the next term and ends beyond the next term were updated to end on the last day of the next term.
-4.If the start date and end date of a goals/KRs is both within the current term, or both within the next term, were not changed.
-5.The goals/KRs that begins and ends beyond the the next term were updated to match the start and end date of the next term."); ?>
-                <?= nl2br($message) ?>
+                <p><?= __("The term of your team has been changed. All goals/KRs schedules were automatically updated as follows.") ?></p>
+                <ol>
+                    <li><?= __("The goals/KRs that beings in the current term and ends in the next term were updated to end on the last day of the current term.") ?></li>
+                    <li><?= __("The goals/KRs that begins in the current term and ends beyond the next term were updated to end on the last day of the current term.") ?></li>
+                    <li><?= __("The goals/KRs that beings in the next term and ends beyond the next term were updated to end on the last day of the next term.") ?></li>
+                    <li><?= __("If the start date and end date of a goals/KRs is both within the current term, or both within the next term, were not changed.") ?></li>
+                    <li><?= __("The goals/KRs that begins and ends beyond the the next term were updated to match the start and end date of the next term.") ?></li>
+                </ol>
             </div>
         </div>
     </div>
@@ -78,9 +78,9 @@
                     <label class="col col-sm-3 control-label form-label"><?= __("Current Term") ?></label>
                     <div class="col col-sm-6">
                         <p class="form-control-static" id="">
-                            <?= $this->TimeEx->date($current_term_start_date, $current_term_timezone) ?>
-                            - <?= $this->TimeEx->date($current_term_end_date, $current_term_timezone) ?>
-                            <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
+                            <?= $this->TimeEx->date($current_term_start_date) ?>
+                            - <?= $this->TimeEx->date($current_term_end_date) ?>
+                            <?= $this->TimeEx->getTimezoneText($team['timezone']) ?>
                         </p>
                     </div>
                 </div>
@@ -90,9 +90,9 @@
                     <label class="col col-sm-3 control-label form-label"><?= __("Next Term") ?></label>
                     <div class="col col-sm-6">
                         <p class="form-control-static" id="">
-                            <?= $this->TimeEx->date($next_term_start_date, $next_term_timezone) ?>
-                            - <?= $this->TimeEx->date($next_term_end_date, $next_term_timezone) ?>
-                            <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
+                            <?= $this->TimeEx->date($next_term_start_date) ?>
+                            - <?= $this->TimeEx->date($next_term_end_date) ?>
+                            <?= $this->TimeEx->getTimezoneText($team['timezone']) ?>
                         </p>
                     </div>
                 </div>

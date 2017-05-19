@@ -61,11 +61,11 @@ class CreateNextNextTermsShell extends AppShell
         // validation
         if (!$this->_validateTimezone($targetTimezone)) {
             $timezones = array_keys(AppUtil::getTimezoneList());
-            $this->error('Invalid parameter. Timezone should be in following values.', $timezones);
+            $this->error(sprintf("Invalid timezone: %s. Timezone should be in following values.\n %s",
+                $targetTimezone, var_export($timezones, true)));
         }
 
         $targetDate = AppUtil::dateYmdLocal($currentTimestamp, $targetTimezone);
-
         $res = $this->_saveNextNextTermsForAllTeam($targetTimezone, $targetDate);
 
         // If 12 hours difference,
@@ -141,7 +141,7 @@ class CreateNextNextTermsShell extends AppShell
         // 取得する目的はエラーログに残す事のみ The purpose of fetching data is only to leave it in the error log
         $teamIdsNotHaveTerm = $this->Team->findIdsNotHaveNextTerm($targetTimezone, $targetDate);
         if (!empty($teamIdsNotHaveTerm)) {
-            CakeLog::error(sprintf('Failed to find current terms. timezone: %s, team count: %s, failed team ids:%s',
+            CakeLog::error(sprintf('Failed to find current terms or next terms. timezone: %s, team count: %s, failed team ids:%s',
                 $targetTimezone, count($teamIdsNotHaveTerm), var_export($teamIdsNotHaveTerm, true)
             ));
         }
