@@ -12,7 +12,6 @@ if (!isset($with_header_menu)) {
 <?= $this->App->viewStartComment()?>
 <!DOCTYPE html>
 <!--suppress ALL -->
-z
 <?= $this->element('head') ?>
 <body class="body">
 <?php if (extension_loaded('newrelic')) {

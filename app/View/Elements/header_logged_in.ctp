@@ -24,7 +24,7 @@
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <?php if (in_array($this->request->here, array('/','topics','notifications','users'))) { ?>
+            <?php if (in_array($this->request->here, array('/','/topics','/topics/','/notifications','/users'))) { ?>
                 <button id="header-slide-menu" type="button"
                         class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
                         data-toggle="offcanvas"
@@ -149,9 +149,12 @@
                         class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
                         onclick="window.history.back()">
                     <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
-                    <i class="fa fa-angle-left toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
+                    <i class="fa fa-angle-left mod-larger toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
                 </button>
             <?php } ?>
+            <script>
+                console.log("PHP says this page is: <?php echo $this->request->here ?>");
+            </script>
         </div>
     </div>
 </header>
