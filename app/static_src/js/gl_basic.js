@@ -3645,7 +3645,78 @@ function hideCommentNotifyErrorBox(notifyBox) {
 
 $(document).ready(function () {
   $(document).on("click", ".click-comment-new", evCommentLatestView);
+  $(document).on("click", ".click-comment-delete", evCommentDelete);
+  $(document).on("click", ".click-comment-confirm-delete", evCommentDeleteConfirm);
 });
+
+// Display a modal to confirm the deletion of comment
+function evCommentDelete(e) {
+  e.preventDefault();
+  var $delBtn = $(this);
+  attrUndefinedCheck($delBtn, 'comment-id');
+  var commentId = $delBtn.attr("comment-id");
+
+  // Modal popup
+  var modalTemplate =
+    '<div class="modal on fade" tabindex="-1">' +
+    '  <div class="modal-dialog">' +
+    '    <div class="modal-content">' +
+    '      <div class="modal-header none-border">' +
+    '        <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">×</span></button>' +
+    '        <h5 class="modal-title text-danger">' + __("Delete comment") + '</h5>' +
+    '     </div>' +
+    '     <div class="modal-body">' +
+    '         <h4>' + __("Do you really want to delete this comment?") +'</h4>' +
+    '     </div>' +
+    '     <div class="modal-footer">' +
+    '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.cancel + '</button>' +
+    '        <button type="button" class="btn-sm btn-primary click-comment-confirm-delete" comment-id="' + commentId + '" aria-hidden="true"><img id="loader" src="img/lightbox/loading.gif" style="height: 17px; width:17px; margin: 0 10px; display: none;"  /><span id="message">' + cake.word.delete + '</span></button>' +
+    '     </div>' +
+    '   </div>' +
+    ' </div>' +
+    '</div>';
+
+  var $modal_elm = $(modalTemplate);
+  $modal_elm.modal();
+}
+
+// Send the delete request
+function evCommentDeleteConfirm() {
+  var $delBtn = $(this);
+  attrUndefinedCheck($delBtn, 'comment-id');
+  var commentId = $delBtn.attr("comment-id");
+  var url = "/posts/ajax_comment_delete/comment_id:" + commentId;
+  var $modal = $delBtn.closest('.modal');
+  var $commentBox = $("div.comment-box[comment-id='" + commentId + "']");
+
+  // Show loading spinner and hide button text
+  $delBtn.children('#loader').toggle();
+  $delBtn.children('#message').toggle();
+  $delBtn.attr('disabled', 'disabled');
+
+  $.ajax({
+    type: 'POST',
+    url: url,
+    async: true,
+    dataType: 'json',
+    success: function (data) {
+      // Remove modal and comment box
+      $modal.modal('hide');
+      $commentBox.fadeOut('slow', function(){
+        $(this).remove();
+      });
+    },
+    error: function (ev) {
+      // Display error message
+      new PNotify({
+        title: cake.word.error,
+        text: cake.message.notice.i,
+        type: 'error'
+      });
+      $modal.modal('hide');
+    }
+  });
+}
 
 function getCommentBlockLatestId(commentBlock) {
 
@@ -3696,7 +3767,7 @@ function evCommentLatestView(options) {
         // Get the comment id for the new post
         var comment = $posts.closest('div').last();
         var newCommentId = comment.attr("comment-id");
-        
+
         // Get the last comment id displayed on the page
         commentBlock = $obj.closest(".comment-block");
         lastCommentId = getCommentBlockLatestId(commentBlock);

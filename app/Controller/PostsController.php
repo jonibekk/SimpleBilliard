@@ -780,6 +780,41 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_comment_delete()
+    {
+        $this->request->allowMethod('post', 'delete');
+        $this->_ajaxPreProcess();
+        $result = [
+            'error' => false,
+            'msg'   => ""
+        ];
+
+        $this->Post->Comment->id = Hash::get($this->request->params, 'named.comment_id');
+        $post_id = $this->Post->Comment->field('post_id');
+        try {
+            if (!$this->Post->Comment->exists()) {
+                throw new NotFoundException(__("This comment doesn't exist."));
+            }
+            if (!$this->Post->Comment->isOwner($this->Auth->user('id')) &&
+                !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
+                throw new NotFoundException(__("This isn't your comment."));
+            }
+        } catch (NotFoundException $e) {
+            $result['error'] = true;
+            $result['msg'] = $e->getMessage();
+            return $this->_ajaxGetResponse($result);
+        }
+
+        $this->Post->Comment->delete();
+        $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->Comment->id,
+            AttachedFile::TYPE_MODEL_COMMENT);
+        $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
+
+        $this->Pnotify->outSuccess(__("Deleted the comment."));
+
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_add_comment()
     {
         $this->request->allowMethod('post');

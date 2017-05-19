@@ -91,6 +91,7 @@ App::uses('AttachedFile', 'Model');
             success: "<?=__("Success")?>",
             error: "<?=__("Error")?>",
             cancel: "<?=__("Cancel")?>",
+            delete: "<?=__("Delete")?>",
             search_placeholder_user: "<?=__("Name?")?>",
             search_placeholder_goal: "<?=__("Goal Name?")?>",
             search_placeholder_circle: "<?=__("Circle Name?")?>",
@@ -563,7 +564,9 @@ App::uses('AttachedFile', 'Model');
             // messgae
             "No results found": "<?= __("No results found") ?>",
             "Leave this topic": "<?= __("Leave this topic") ?>",
-            "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>"
+            "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
+            "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
+            "Delete comment": "<?= __("Delete comment") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
