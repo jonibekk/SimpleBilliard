@@ -3718,15 +3718,14 @@ function evCommentDeleteConfirm() {
   });
 }
 
-function getCommentBlockLatestId(commentBlock) {
-
-  var commentNum = commentBlock.children("div.comment-box").length;
-  var lastCommentBox = commentBlock.children("div.comment-box:last");
+function getCommentBlockLatestId($commentBlock) {
+  var commentNum = $commentBlock.children("div.comment-box").length;
+  var $lastCommentBox = $commentBlock.children("div.comment-box:last");
   var lastCommentId = "";
   if (commentNum > 0) {
       // コメントが存在する場合
-      attrUndefinedCheck(lastCommentBox, 'comment-id');
-      lastCommentId = lastCommentBox.attr("comment-id");
+      attrUndefinedCheck($lastCommentBox, 'comment-id');
+      lastCommentId = $lastCommentBox.attr("comment-id");
   } else {
       // コメントがまだ0件の場合
       lastCommentId = "";
@@ -3744,8 +3743,8 @@ function evCommentLatestView(options) {
   }, options);
 
   var $obj = $(this);
-  var commentBlock = $obj.closest(".comment-block");
-  var lastCommentId = getCommentBlockLatestId(commentBlock);
+  var $commentBlock = $obj.closest(".comment-block");
+  var lastCommentId = getCommentBlockLatestId($commentBlock);
 
   var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
   var $errorBox = $obj.siblings("div.new-comment-error");
@@ -3765,12 +3764,12 @@ function evCommentLatestView(options) {
         var $posts = $(data.html);
 
         // Get the comment id for the new post
-        var comment = $posts.closest('div').last();
-        var newCommentId = comment.attr("comment-id");
+        var $comment = $posts.closest('[comment-id]').last();
+        var newCommentId = $comment.attr("comment-id");
 
         // Get the last comment id displayed on the page
-        commentBlock = $obj.closest(".comment-block");
-        lastCommentId = getCommentBlockLatestId(commentBlock);
+        $commentBlock = $obj.closest(".comment-block");
+        lastCommentId = getCommentBlockLatestId($commentBlock);
 
         // Do nothing if the new comment is already rendered on the page
         if (newCommentId == lastCommentId) {
