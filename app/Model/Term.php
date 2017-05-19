@@ -345,8 +345,11 @@ class Term extends AppModel
             if ($this->nextNextTerm) {
                 return $this->nextNextTerm;
             }
-            $nextTermEnd = $this->getNextTermData()['end_date'];
-            $this->nextNextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($nextTermEnd) + DAY));
+            $nextTerm = $this->getNextTermData();
+            if (empty($nextTerm)) {
+                return [];
+            }
+            $this->nextNextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($nextTerm['end_date']) + DAY));
             return $this->nextNextTerm;
         }
 
