@@ -24,7 +24,22 @@
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <?php if (in_array($this->request->here, array('/','/topics','/topics/','/notifications','/users'))) { ?>
+            <?php
+                //Create array of pages where the normal header should appear
+                $normalPages = array('topics','notifications','users', 'goals/kr_progress');
+                $backButton = true;
+
+                foreach($normalPages as $pageURL){
+                    if(strpos($this->request->here , $pageURL )){
+                        $backButton = false;
+                    }
+                }
+                // Special case for homepage
+                if($this->request->here == "/"){
+                    $backButton = false;
+                }
+            // Conditional to choose which header to show
+            if (!$backButton) { ?>
                 <button id="header-slide-menu" type="button"
                         class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
                         data-toggle="offcanvas"
