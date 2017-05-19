@@ -102,9 +102,6 @@
                 <li><?= __("If the start date and end date of a goal is both within the current term, or both within the next term, will not be changed.") ?></li>
                 <li><?= __("The goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term.") ?></li>
             </ol>
-            <ul>
-                <li><?= __("The start date and the end date of KR belonging to the goal are updated like the above goal.") ?></li>
-            </ul>
             <fieldset>
                 <input type="checkbox" id="term_agreement" name="term_agreement"> <?= __("I confirm these changes.") ?>
             </fieldset>
