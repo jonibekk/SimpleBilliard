@@ -32,13 +32,11 @@ class TeamsController extends AppController
         $currentTerm = $this->Team->Term->getCurrentTermData();
         $currentTermStartDate = Hash::get($currentTerm, 'start_date');
         $currentTermEndDate = Hash::get($currentTerm, 'end_date');
-        $currentTermTimezone = Hash::get($currentTerm, 'timezone');
 
         // Get next term info
         $nextTerm = $this->Team->Term->getNextTermData();
         $nextTermStartDate = Hash::get($nextTerm, 'start_date');
         $nextTermEndDate = Hash::get($nextTerm, 'end_date');
-        $nextTermTimezone = Hash::get($nextTerm, 'timezone');
 
         // If changed term in 2 weeks, Display information
         $changedTermFlg = $this->GlRedis->getChangedTerm($this->current_team_id);
@@ -49,15 +47,11 @@ class TeamsController extends AppController
             'team' => $team,
             'current_term_start_date' => $currentTermStartDate,
             'current_term_end_date' => $currentTermEndDate,
-            'current_term_timezone' => $currentTermTimezone,
             'next_term_start_date' => $nextTermStartDate,
             'next_term_end_date' => $nextTermEndDate,
-            'next_term_timezone' => $nextTermTimezone,
             'changed_term_flg' => $changedTermFlg,
             'timezone_label' => $timezoneLabel,
         ]);
-
-
     }
 
     /**
