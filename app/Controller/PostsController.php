@@ -780,6 +780,55 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * comment_edit method
+     *
+     * @param $comment_id
+     *
+     * @throws NotFoundException
+     * @return void
+     */
+    public function ajax_comment_edit()
+    {
+        $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+        $result = [
+            'error' => false,
+            'html'   => ""
+        ];
+        $comment_id = Hash::get($this->request->params, 'named.comment_id');
+        $this->Post->Comment->id = $comment_id;
+
+        // 例外チェック
+        if (!$this->Post->Comment->exists()) {
+            throw new NotFoundException(__("This comment doesn't exist."));
+        }
+        if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__("This isn't your comment."));
+        }
+
+        // ogbをインサートデータに追加
+        $this->request->data['Comment'] = $this->_addOgpIndexes(Hash::get($this->request->data, 'Comment'),
+            Hash::get($this->request->data, 'Comment.body'));
+
+        // コメントを追加
+        if ($this->Post->Comment->commentEdit($this->request->data)) {
+            $this->Pnotify->outSuccess(__("Edited the comment."));
+        } else {
+            $error_msg = array_shift($this->Post->Comment->validationErrors);
+            $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes to the comment.")]);
+        }
+
+        $comments = array($this->Post->Comment->getComment($comment_id));
+        $this->set(compact('comments'));
+
+        $response = $this->render('Feed/ajax_comments');
+        $html = $response->__toString();
+        $result['html'] = $html;
+
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_comment_delete()
     {
         $this->request->allowMethod('post', 'delete');

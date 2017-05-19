@@ -3647,7 +3647,57 @@ $(document).ready(function () {
   $(document).on("click", ".click-comment-new", evCommentLatestView);
   $(document).on("click", ".click-comment-delete", evCommentDelete);
   $(document).on("click", ".click-comment-confirm-delete", evCommentDeleteConfirm);
+  $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
 });
+
+function evCommendEditSubmit(e) {
+  e.preventDefault();
+  var $form = $(this).parents('form');
+  var postUrl = $form.attr('action');
+  var commentId = postUrl.split(':')[1];
+
+  //　Send serialize current form
+  var formData = new FormData($form[0]);
+
+  $.ajax({
+    type: 'POST',
+    url: postUrl,
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: formData,
+    success: function (data) {
+      if (!$.isEmptyObject(data.html)) {
+        var $updatedComment = $(data.html);
+        // update comment box
+        imageLazyOn($updatedComment);
+        var $box = $('.comment-box[comment-id="' + commentId + '"]');
+        $updatedComment.insertBefore($box);
+        $updatedComment.imagesLoaded(function () {
+            $updatedComment.find('.comment_gallery').each(function (index, element) {
+                bindCommentBalancedGallery($(element));
+            });
+            changeSizeFeedImageOnlyOne($updatedComment.find('.feed_img_only_one'));
+        });
+        $box.remove();
+      }
+      else {
+        // Cancel editing
+        $('[target-id="CommentEditForm_' + commentId + '"]').click();
+      }
+    },
+    error: function (ev) {
+      // Display error message
+      new PNotify({
+        title: cake.word.error,
+        text: cake.message.notice.i,
+        type: 'error'
+      });
+      // Cancel editing
+      $('[target-id="CommentEditForm_' + commentId + '"]').click();
+    }
+  });
+}
 
 // Display a modal to confirm the deletion of comment
 function evCommentDelete(e) {

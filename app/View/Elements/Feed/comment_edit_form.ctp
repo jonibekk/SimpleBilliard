@@ -17,7 +17,7 @@
 <?= $this->App->viewStartComment()?>
 <?=
 $this->Form->create('Comment', [
-    'url'           => ['controller' => 'posts', 'action' => 'comment_edit', 'comment_id' => $comment['id']],
+    'url'           => ['controller' => 'posts', 'action' => 'ajax_comment_edit', 'comment_id' => $comment['id']],
     'inputDefaults' => [
         'div'       => 'form-group',
         'label'     => false,
