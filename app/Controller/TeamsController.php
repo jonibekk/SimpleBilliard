@@ -530,7 +530,7 @@ class TeamsController extends AppController
         $this->Team->Evaluation->commit();
 
         // 評価期間判定キャッシュ削除
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'team_info');
 
         $this->Pnotify->outSuccess(__("Evaluation started."));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
