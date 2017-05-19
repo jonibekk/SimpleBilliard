@@ -3694,7 +3694,7 @@ function evCommentLatestView(options) {
         var $posts = $(data.html);
 
         // Get the comment id for the new post
-        var comment = $posts.closest('div').last();
+        var comment = $posts.closest('[comment-id]').last();
         var newCommentId = comment.attr("comment-id");
         
         // Get the last comment id displayed on the page
