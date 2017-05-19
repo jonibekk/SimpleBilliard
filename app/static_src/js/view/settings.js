@@ -154,6 +154,17 @@ if (document.getElementById("editTerm")) {
       } else {
         return this.months.eng[month_index] + " " + date.getFullYear();
       }
+    },
+    onSubmitConfirm: function(e, message) {
+      if (confirm(message)) {
+        return true;
+      } else {
+        this.updateSubmitButton();
+        // Already set onsubmit event on gl_basic.js for prevent deuble submit.
+        // For keep to enable submit button when confirm cancel, stop event propagation.
+        e.stopPropagation();
+        return false;
+      }
     }
   };
 

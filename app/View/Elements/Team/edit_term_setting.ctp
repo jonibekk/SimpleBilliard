@@ -28,7 +28,7 @@
         'novalidate' => true,
         'url'        => ['action' => 'edit_term'],
         'method'     => 'post',
-        'onsubmit'=>'return confirm("'.$confirmMsg.'");'
+        'onsubmit'   => 'return teamSettings.onSubmitConfirm(event, "'.$confirmMsg.'");'
     ]); ?>
     <header>
         <h2><?= __("Term settings") ?></h2>
