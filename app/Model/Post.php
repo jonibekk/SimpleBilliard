@@ -1464,10 +1464,10 @@ class Post extends AppModel
 
         //期間で絞り込む
         if ($start_date) {
-            $options['conditions']["$date_col >="] = $start_date;
+            $options['conditions']["$date_col >="] = AppUtil::getStartTimestampByTimezone($start_date);
         }
         if ($end_date) {
-            $options['conditions']["$date_col <="] = $end_date;
+            $options['conditions']["$date_col <="] = AppUtil::getEndTimestampByTimezone($end_date);
         }
         $res = $this->find('count', $options);
         return $res;
@@ -1676,10 +1676,10 @@ class Post extends AppModel
         ];
         //期間で絞り込む
         if ($start_date) {
-            $options['conditions']['modified >'] = $start_date;
+            $options['conditions']['modified >'] = AppUtil::getStartTimestampByTimezone($start_date);
         }
         if ($end_date) {
-            $options['conditions']['modified <'] = $end_date;
+            $options['conditions']['modified <'] = AppUtil::getEndTimestampByTimezone($end_date);
         }
         $res = $this->find('first', $options);
         return $res ? $res[0]['sum_like'] : 0;

@@ -24,7 +24,7 @@ class AppUtil
      *
      * @return int
      */
-    static function getStartTimestampByTimezone(string $dateStr, float $timezone): int
+    static function getStartTimestampByTimezone(string $dateStr, float $timezone = 0): int
     {
         return self::getTimestampByTimezone($dateStr . " 00:00:00", $timezone);
     }
@@ -37,7 +37,7 @@ class AppUtil
      *
      * @return int
      */
-    static function getEndTimestampByTimezone(string $dateStr, float $timezone): int
+    static function getEndTimestampByTimezone(string $dateStr, float $timezone = 0): int
     {
         return self::getTimestampByTimezone($dateStr . " 23:59:59", $timezone);
     }
