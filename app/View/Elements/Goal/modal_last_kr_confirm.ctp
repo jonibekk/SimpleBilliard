@@ -24,10 +24,10 @@
                     <i class="fa fa-flag"></i><?= __("Goal Name") ?>:<?= h($goal['Goal']['name']) ?>
                 </li>
                 <li>
-                    <?= __("Start date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['start_date']) ?>
+                    <?= __("Start date") ?>:<?= AppUtil::dateYmdReformat($goal['Goal']['start_date'], "/") ?>
                 </li>
                 <li>
-                    <?= __("End date") ?>:<?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
+                    <?= __("End date") ?>:<?= AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/") ?>
                 </li>
                 <?php if (!empty($goal['Goal']['description'])): ?>
                     <li>
@@ -56,12 +56,13 @@
                 'class'         => 'form-feed-notify'
             ]); ?>
             <?php $this->Form->unlockField('socket_id') ?>
-            <a href="<?= $this->Html->url([
-                'controller'    => 'goals',
-                'action'        => 'ajax_get_add_key_result_modal',
-                'goal_id'       => $goal['Goal']['id'],
-                'key_result_id' => $kr_id
-            ]) ?>"
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller'    => 'goals',
+                   'action'        => 'ajax_get_add_key_result_modal',
+                   'goal_id'       => $goal['Goal']['id'],
+                   'key_result_id' => $kr_id
+               ]) ?>"
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __(
                     "Add Key Result") ?></a>
             <?=

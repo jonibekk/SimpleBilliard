@@ -76,21 +76,21 @@ class GoalFixture extends CakeTestFixtureEx
             'charset' => 'utf8mb4'
         ),
         'start_date'          => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '開始日(unixtime)'
+            'type'    => 'date',
+            'null'    => false,
+            'default' => null,
+            'key'     => 'index',
+            'comment' => '開始日'
         ),
         'end_date'            => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'key'      => 'index',
-            'comment'  => '終了日(unixtime)'
+            'type'    => 'date',
+            'null'    => false,
+            'default' => null,
+            'key'     => 'index',
+            'comment' => '終了日'
         ),
+        'old_start_date'      => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'old_end_date'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'progress'            => array(
             'type'     => 'integer',
             'null'     => false,
@@ -140,8 +140,8 @@ class GoalFixture extends CakeTestFixtureEx
             'modified'   => array('column' => 'modified', 'unique' => 0),
             'user_id'    => array('column' => 'user_id', 'unique' => 0),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
-            'end_date'   => array('column' => 'end_date', 'unique' => 0),
-            'start_date' => array('column' => 'start_date', 'unique' => 0)
+            'start_date' => array('column' => 'start_date', 'unique' => 0),
+            'end_date'   => array('column' => 'end_date', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
@@ -157,77 +157,77 @@ class GoalFixture extends CakeTestFixtureEx
             'user_id' => '1',
             'team_id' => '1',
 
-            'name' => 'ゴール1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'name'       => 'ゴール1',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '2',
             'user_id' => '1',
             'team_id' => '1',
 
-            'name' => 'ゴール2',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'name'       => 'ゴール2',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '3',
             'user_id' => '1',
             'team_id' => '1',
 
-            'name' => 'ゴール3',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'name'       => 'ゴール3',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '4',
             'user_id' => '1',
             'team_id' => '1',
 
-            'name' => 'ゴール4',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'name'       => 'ゴール4',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '5',
             'user_id' => '14',
 
-            'team_id' => '1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'team_id'    => '1',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '6',
             'user_id' => '1',
 
-            'team_id' => '1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'team_id'    => '1',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '7',
             'user_id' => '2',
             'team_id' => '1',
 
-            'name' => 'その他ゴール1',
-            'start_date' => 10000,
-            'end_date'   => 19999,
+            'name'       => 'その他ゴール1',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '8',
             'user_id' => '1',
             'team_id' => '1',
 
-            'start_date' => '25000',
-            'end_date'   => '28000',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '9',
             'user_id' => '2',
             'team_id' => '1',
 
-            'start_date' => '15000',
-            'end_date'   => '18000',
+            'start_date' => '2000-04-01',
+            'end_date'   => '2000-09-30',
         ],
         [
             'id'      => '100',

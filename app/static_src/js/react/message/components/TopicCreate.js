@@ -7,6 +7,7 @@ import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton"
 import {nl2br} from "~/util/element";
 import {isMobileApp, disableAsyncEvents, isIOSApp} from "~/util/base";
 import Base from "~/common/components/Base";
+import Textarea from "react-textarea-autosize";
 
 export default class TopicCreate extends Base {
 
@@ -29,8 +30,19 @@ export default class TopicCreate extends Base {
     disableAsyncEvents()
 
     // HACK:To use select2Member
+    //      Now, initialize select2 by initMemberSelect2 in gl_basic
+    // Set selectd user
+    const user_id = this.props.location.query.user_id
+    if (user_id) {
+      ReactDom.findDOMNode(this.refs.select2Member).value = `user_${user_id}`
+      this.changeToUserIds()
+    }
+    // HACK: メンバー選択処理初期化
+    // SPAの為トピックリストから遷移した時はinitMemberSelect2は呼ばれないので、もう一度呼ぶ必要がある。
     $(document).ready(function (e) {
-      initMemberSelect2();
+      if ($("#s2id_select2Member").length == 0) {
+        initMemberSelect2();
+      }
     });
   }
 
@@ -170,11 +182,11 @@ export default class TopicCreate extends Base {
             {this.state.is_drag_over && <UploadDropZone/>}
 
             <div className="topicCreateForm-msgBody">
-                <textarea className="topicCreateForm-msgBody-form disable-change-warning"
-                          placeholder={__("Write a message...")}
-                          defaultValue=""
-                          onChange={this.changeMessage.bind(this)}
-                />
+              <Textarea className="topicCreateForm-msgBody-form disable-change-warning"
+                        placeholder={__("Write a message...")}
+                        defaultValue=""
+                        onChange={this.changeMessage.bind(this)}
+              />
               <UploadPreview files={file_upload.preview_files}/>
             </div>
             <div className="topicCreateForm-footer">

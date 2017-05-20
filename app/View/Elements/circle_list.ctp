@@ -10,7 +10,7 @@
  * @var array              $my_circles
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?></p>
@@ -24,10 +24,14 @@
     </div>
     <div class="dashboard-circle-list-footer">
         <div class="clearfix dashboard-circle-list-seek">
-            <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i><?=
-            $this->Html->link(__("View Circles"),
-                ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
-                ['class' => 'modal-ajax-get-public-circles font-dimgray']) ?>
+            <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i>
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller' => 'circles',
+                   'action'     => 'ajax_get_public_circles_modal'
+               ]) ?>"
+               class="modal-ajax-get-public-circles font-dimgray"
+            ><?= __("View Circles") ?></a>
         </div>
         <div class="clearfix dashboard-circle-list-make">
             <i class="fa fa-plus-circle circle-function circle-make-icon font_brownRed"></i><a href="#"
@@ -39,4 +43,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

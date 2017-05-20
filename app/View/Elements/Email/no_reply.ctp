@@ -1,6 +1,6 @@
 <?php
 echo "\n";
-echo __('Attention');
+echo '■' . __('Attention');
 echo "\n";
 echo __('This email is automatically sent.');
 echo "\n";

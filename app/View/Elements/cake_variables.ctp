@@ -11,6 +11,7 @@ App::uses('AttachedFile', 'Model');
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
+        lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         message: {
             validate: {
@@ -145,7 +146,7 @@ App::uses('AttachedFile', 'Model');
             am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
-                'action'     => 'ajax_select_only_add_users'
+                'action'     => 'ajax_select_add_members_on_message'
             ])?>",
             select2_secret_circle: "<?=$this->Html->url([
                 'controller' => 'users',

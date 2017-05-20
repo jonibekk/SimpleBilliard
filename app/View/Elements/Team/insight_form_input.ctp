@@ -20,7 +20,7 @@ if (empty($this->request->query['date_range'])) {
     $date_range = (date('w', $today_time) == 1) ? 'prev_week' : 'current_week';
 }
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php if (in_array('team', $use)): ?>
     <?php
 // システム管理者の場合
@@ -36,32 +36,40 @@ if (empty($this->request->query['date_range'])) {
 <?php endif ?>
 
 <?php if (in_array('date_range', $use)): ?>
-    <?= $this->Form->input('date_range', [
-        'id'        => 'InsightInputDateRange',
-        'type'      => 'select',
-        'options'   => [
-            'current_week'  => __('Current Week') . sprintf(" (%s - %s)",
-                    str_replace('-', '/', $date_ranges['current_week']['start']),
-                    str_replace('-', '/', $date_ranges['current_week']['end'])),
-            'prev_week'     => __('Last Week') . sprintf(" (%s - %s)",
-                    str_replace('-', '/', $date_ranges['prev_week']['start']),
-                    str_replace('-', '/', $date_ranges['prev_week']['end'])),
-            'current_month' => __('Current Month') . sprintf(" (%s - %s)",
-                    str_replace('-', '/', $date_ranges['current_month']['start']),
-                    str_replace('-', '/', $date_ranges['current_month']['end'])),
-            'prev_month'    => __('Last Month') . sprintf(" (%s - %s)",
-                    str_replace('-', '/', $date_ranges['prev_month']['start']),
-                    str_replace('-', '/', $date_ranges['prev_month']['end'])),
-            'current_term'  => __('Current Term') . sprintf(" (%s - %s)",
-                    str_replace('-', '/', $date_ranges['current_term']['start']),
-                    str_replace('-', '/', $date_ranges['current_term']['end'])),
-            'prev_term'     => __('Previous Term') . sprintf(" (%s - %s)",
+    <?php
+    $dateRangeOptions = [
+        'current_week'  => __('Current Week') . sprintf(" (%s - %s)",
+                str_replace('-', '/', $date_ranges['current_week']['start']),
+                str_replace('-', '/', $date_ranges['current_week']['end'])),
+        'prev_week'     => __('Last Week') . sprintf(" (%s - %s)",
+                str_replace('-', '/', $date_ranges['prev_week']['start']),
+                str_replace('-', '/', $date_ranges['prev_week']['end'])),
+        'current_month' => __('Current Month') . sprintf(" (%s - %s)",
+                str_replace('-', '/', $date_ranges['current_month']['start']),
+                str_replace('-', '/', $date_ranges['current_month']['end'])),
+        'prev_month'    => __('Last Month') . sprintf(" (%s - %s)",
+                str_replace('-', '/', $date_ranges['prev_month']['start']),
+                str_replace('-', '/', $date_ranges['prev_month']['end'])),
+        'current_term'  => __('Current Term') . sprintf(" (%s - %s)",
+                str_replace('-', '/', $date_ranges['current_term']['start']),
+                str_replace('-', '/', $date_ranges['current_term']['end'])),
+    ];
+    if (!empty($date_ranges['prev_term'])) {
+        $dateRangeOptions += [
+            'prev_term' => __('Previous Term') . sprintf(" (%s - %s)",
                     str_replace('-', '/', $date_ranges['prev_term']['start']),
                     str_replace('-', '/', $date_ranges['prev_term']['end'])),
-        ],
+        ];
+
+    }
+    echo $this->Form->input('date_range', [
+        'id'        => 'InsightInputDateRange',
+        'type'      => 'select',
+        'options'   => $dateRangeOptions,
         'selected'  => $date_range,
         'wrapInput' => 'team-ranking-periods'
-    ]) ?>
+    ])
+    ?>
 <?php endif ?>
 
 <?php if (in_array('group', $use)): ?>
@@ -138,4 +146,4 @@ if (empty($this->request->query['date_range'])) {
         </div>
     </div>
 <?php endif ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

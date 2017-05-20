@@ -7,6 +7,10 @@ $angular = isset($angular) ? $angular : false;
 $active = isset($active) ? $active : '';
 ?>
 <ul class="nav" style="font-size: 13px;">
+    <li class=""><a class="<?php if ($active == 'index'): ?>active<?php endif ?>"
+                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'index']) ?>"><i
+                class="fa fa-info-circle"></i> <?= __('Basic info') ?></a></li>
+
     <li class=""><a <?php if ($angular): ?>ui-sref="member"
                     <?php else: ?>href="<?= $this->Html->url([
                         'controller' => 'teams',
