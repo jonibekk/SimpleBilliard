@@ -11,7 +11,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
 }
 ?>
 
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <tr class="evaluation_select"
     index="<?php echo $index ?>" id="AddScore_<?= $index ?>">
     <td>
@@ -60,7 +60,8 @@ if (!viaIsSet($index) || !is_numeric($index)) {
     <?php if (viaIsSet($type) && viaIsSet($id) && $type == 'exists'): ?>
         <td>
             <a class="modal-ajax-get"
-               href="<?= $this->Html->url([
+               href="#"
+               data-url="<?= $this->Html->url([
                    'controller' => 'teams',
                    'action'     => 'ajax_get_confirm_inactive_goal_category_modal',
                    'team_id'    => $id
@@ -75,4 +76,4 @@ if (!viaIsSet($index) || !is_numeric($index)) {
         </td>
     <?php endif; ?>
 </tr>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

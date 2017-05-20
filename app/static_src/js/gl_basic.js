@@ -472,7 +472,7 @@ $(document).ready(function () {
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
     modalFormCommonBindEvent($modal_elm);
     var url = $this.data('url');
-    if (url.indexOf('#') == 0) {
+    if (url.indexOf('#') === 0) {
       $(url).modal('open');
     } else {
       $.get(url, function (data) {
