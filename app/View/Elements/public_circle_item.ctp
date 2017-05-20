@@ -20,7 +20,7 @@ $admin = isset($admin) ? $admin : false;
 $joined = isset($joined) ? $joined : false;
 $member_count = isset($member_count) ? $member_count : '';
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col col-xxs-12 mpTB0 circle-item-row">
     <?=
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
@@ -64,11 +64,12 @@ $member_count = isset($member_count) ? $member_count : '';
             </a>
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-            <a href="<?= $this->Html->url([
-                'controller' => 'circles',
-                'action'     => 'ajax_get_circle_members',
-                'circle_id'  => $circle['Circle']['id']
-            ]) ?>"
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller' => 'circles',
+                   'action'     => 'ajax_get_circle_members',
+                   'circle_id'  => $circle['Circle']['id']
+               ]) ?>"
                class="modal-ajax-get remove-on-hide">
                 <?= __("%s members", $member_count) ?>
             </a>
@@ -77,4 +78,4 @@ $member_count = isset($member_count) ? $member_count : '';
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

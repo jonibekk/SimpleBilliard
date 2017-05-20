@@ -11,7 +11,7 @@
  */
 ?>
 <?php if (!empty($posts)): ?>
-    <?= $this->App->viewStartComment()?>
+    <?= $this->App->viewStartComment() ?>
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
             <div class="panel-body pt_10px plr_11px pb_8px">
@@ -26,11 +26,12 @@
                                     && $post['Post']['type'] == Post::TYPE_ACTION
                                 ): ?>
                                     <li>
-                                        <a href="<?= $this->Html->url([
-                                            'controller'       => 'goals',
-                                            'action'           => 'ajax_get_edit_action_modal',
-                                            'action_result_id' => $post['Post']['action_result_id']
-                                        ]) ?>"
+                                        <a href="#"
+                                           data-url="<?= $this->Html->url([
+                                               'controller'       => 'goals',
+                                               'action'           => 'ajax_get_edit_action_modal',
+                                               'action_result_id' => $post['Post']['action_result_id']
+                                           ]) ?>"
                                            class="modal-ajax-get"
                                         ><?= __("Edit Action") ?></a>
                                     </li>
@@ -196,20 +197,22 @@
                         <?= __("Like!") ?></a>
                     <span class="font_lightgray"> ･ </span>
                     <span>
-                            <a href="<?= $this->Html->url([
-                                'controller' => 'posts',
-                                'action'     => 'ajax_get_post_liked_users',
-                                'post_id'    => $post['Post']['id']
-                            ]) ?>"
+                            <a href="#"
+                               data-url="<?= $this->Html->url([
+                                   'controller' => 'posts',
+                                   'action'     => 'ajax_get_post_liked_users',
+                                   'post_id'    => $post['Post']['id']
+                               ]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="ActionPostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                             </a><span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url([
-                'controller' => 'posts',
-                'action'     => 'ajax_get_post_red_users',
-                'post_id'    => $post['Post']['id']
-            ]) ?>"
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller' => 'posts',
+                   'action'     => 'ajax_get_post_red_users',
+                   'post_id'    => $post['Post']['id']
+               ]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
@@ -299,5 +302,5 @@
             </div>
         </div>
     <?php endforeach ?>
-    <?= $this->App->viewEndComment()?>
+    <?= $this->App->viewEndComment() ?>
 <?php endif ?>

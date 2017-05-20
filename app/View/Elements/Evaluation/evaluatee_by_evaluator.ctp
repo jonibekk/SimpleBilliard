@@ -10,7 +10,7 @@
  * @var                    $evaluate_term_id
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($user['User'], 'User.photo', ['style' => 'small'],
@@ -20,7 +20,8 @@
         <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($user['User']['display_username']) ?>
             <a class="modal-ajax-get pointer"
-               href="<?= $this->Html->url([
+               href="#"
+               data-url="<?= $this->Html->url([
                    'controller'       => 'evaluations',
                    'action'           => 'ajax_get_evaluators_status',
                    'evaluate_term_id' => $evaluate_term_id,
@@ -34,4 +35,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

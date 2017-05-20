@@ -117,16 +117,18 @@
             <div class="col col-sm-6">
                 <p class="form-control-static">
                     <?php if (Hash::get($this->request->data, 'User.2fa_secret')): ?>
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'users',
-                            'action'     => 'ajax_get_modal_2fa_delete'
-                        ]) ?>"
+                        <a href="#"
+                           data-url="<?= $this->Html->url([
+                               'controller' => 'users',
+                               'action'     => 'ajax_get_modal_2fa_delete'
+                           ]) ?>"
                            class="modal-ajax-get"><?= __("Disable") ?></a>
                     <?php else: ?>
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'users',
-                            'action'     => 'ajax_get_modal_2fa_register'
-                        ]) ?>"
+                        <a href="#"
+                           data-url="<?= $this->Html->url([
+                               'controller' => 'users',
+                               'action'     => 'ajax_get_modal_2fa_register'
+                           ]) ?>"
                            class="modal-ajax-get"><?= __("Enable") ?></a>
                     <?php endif; ?>
                 </p>
