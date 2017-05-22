@@ -1,6 +1,15 @@
 import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
-import { generateStartMonthList } from "~/util/date";
+import { generateNextRangeList } from "~/util/date";
+
+export function setNextRangeList(next_start_ym) {
+  if(!next_start_ym) return { type: types.SET_NEXT_RANGE_LIST, next_range_list: [] }
+  const year = next_start_ym.substr(0, 4)
+  const month = next_start_ym.substr(-2, 2)
+  const next_start_date = new Date(parseInt(year), parseInt(month));
+  const next_range_list = generateNextRangeList(next_start_date)
+  return { type: types.SET_NEXT_RANGE_LIST, next_range_list }
+}
 
 export function changeToTimezoneSelectMode() {
   return { type: types.CHANGE_TO_TIMEZONE_EDIT_MODE }

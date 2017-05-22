@@ -5,14 +5,14 @@ import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
 import { _checkValue } from '../actions/validate_actions'
-import { generateCurrentRange, generateNextRange } from '~/util/date'
+import { generateCurrentRangeList } from '~/util/date'
 
 export default class Term extends React.Component {
 
   getInputDomData() {
     return {
-      term: ReactDOM.findDOMNode(this.refs.term).value.trim(),
       next_start_ym: ReactDOM.findDOMNode(this.refs.next_start_ym).value.trim(),
+      term: ReactDOM.findDOMNode(this.refs.term).value.trim(),
       timezone: ReactDOM.findDOMNode(this.refs.timezone).value.trim()
     }
   }
@@ -20,10 +20,10 @@ export default class Term extends React.Component {
   handleOnChange(e) {
     const res = _checkValue(e.target)
 
-    if(e.target.name === 'term') {
-      this.props.setStartMonthList(this.getInputDomData().term)
+    if(e.target.name === 'next_start_ym') {
+      this.props.setNextRangeList(this.getInputDomData().next_start_ym)
     }
-    this.props.dispatch(res)
+    // this.props.dispatch(res)
   }
 
   handleSubmit(e) {
@@ -46,11 +46,11 @@ export default class Term extends React.Component {
                                      message={this.props.validate.next_start_ym.message} />
                   {/* current term */}
                   <div className="panel-heading signup-itemtitle">{__("Select your current term")}</div>
-                  <div className={(this.props.validate.term.invalid) ? 'has-error' : ''}>
+                  <div className={(this.props.validate.next_start_ym.invalid) ? 'has-error' : ''}>
                       <select className="form-control signup_input-design" ref="next_start_ym" name="next_start_ym"
                               onChange={ this.handleOnChange.bind(this) }>
                           <option value="">{__("Please select")}</option>
-                          { generateCurrentRange().map((option) => {
+                          { generateCurrentRangeList().map((option) => {
                             return (
                               <option value={option.next_start_ym} key={option.next_start_ym}>{option.range}</option>
                             )
@@ -64,14 +64,14 @@ export default class Term extends React.Component {
                   {/* next term */}
                   <div className="panel-heading signup-itemtitle">{__("Select your next term")}</div>
 
-                  <div className={(this.props.validate.next_start_ym.invalid) ? 'has-error' : ''}>
+                  <div className={(this.props.validate.term.invalid) ? 'has-error' : ''}>
                       <select className="form-control signup_input-design" ref="term" name="term"
                               onChange={ this.handleOnChange.bind(this) }>
                           <option value="">{__("Please select")}</option>
                           {
-                            this.props.term.start_month_list.map((option) => {
+                            this.props.term.next_range_list.map((option) => {
                               return (
-                                <option value={option.next_start_ym} key={option.next_start_ym}>{option.range}</option>
+                                <option value={option.term_length} key={option.term_length}>{option.range}</option>
                               )
                             })
                           }

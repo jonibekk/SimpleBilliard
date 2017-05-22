@@ -440,6 +440,9 @@ App::uses('AttachedFile', 'Model');
             "Select your present term": "<?= __("Select your present term") ?>",
             "Password is incorrect.": "<?= __("Password is incorrect.") ?>",
             "Select your next term": "<?= __("Select your next term") ?>",
+            "3 months": "<?= __("3 months") ?>",
+            "6 months": "<?= __("6 months") ?>",
+            "12 months": "<?= __("12 months") ?>",
             //Creating a Goal
             "": "<?=__("")?>",
             "What is your goal ?": "<?=__("What is your goal ?")?>",

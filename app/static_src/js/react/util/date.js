@@ -1,23 +1,20 @@
 import { MonthNameListEn } from "~/common/constants/Date";
 
-export function generateCurrentRange() {
+export function generateCurrentRangeList() {
   const current_start_date = new Date()
-  let current_range = []
+  let current_range_list = []
 
   for (let i = 0; i < 12; i++) {
     const current_end_date = new Date(current_start_date.getFullYear(), parseInt(current_start_date.getMonth()) + i)
-    const next_start_date = new Date(current_end_date.getFullYear(), parseInt(current_end_date.getMonth()) + i)
-    const range = generateTermRangeFormat(current_start_date, current_end_date);
+    const next_start_date = new Date(current_end_date.getFullYear(), parseInt(current_end_date.getMonth()) + 1)
+    const range = generateTermRangeFormat(current_start_date, current_end_date)
 
-    current_range.push({
-      // TODO: getMonth()メソッドは0~11の値を返すので、正しい数値を取得するためには+1する必要がある。
-      //       毎回これを気にするのはつらいので、ラッパーを作る。
-      next_start_ym: `${next_start_date.getFullYear()}-${toDigit(parseInt(next_start_date.getMonth()) + 1)}`,
+    current_range_list.push({
+      next_start_ym: `${next_start_date.getFullYear()}-${toDigit(parseInt(next_start_date.getMonth()))}`,
       range
     })
   }
-  console.log(current_range)
-  return current_range
+  return current_range_list
 }
 
 /**
@@ -26,14 +23,13 @@ export function generateCurrentRange() {
  * @param  integer term 3|4|6|12
  * @return start_month_list
  */
-export function generateNextRange(current_end_date) {
-  const next_start_date = new Date(current_end_date.getFullYear(), current_end_date.getMonth() + 1)
-  let next_range = []
+export function generateNextRangeList(next_start_date) {
+  let next_range_list = []
 
-  for ( const term_length of [3, 6, 12] ) {
-    const next_end_date = new Date(next_start_date.getFullYear(), next_start_date.getMonth() + term_length)
-    const range = generateTermRangeFormat(next_start_date, next_end_date);
-    next_range.push({
+  for (const term_length of [3, 6, 12]) {
+    const next_end_date = new Date(next_start_date.getFullYear(), parseInt(next_start_date.getMonth()) + parseInt(term_length) - 1)
+    const range = generateTermRangeFormat(next_start_date, next_end_date) + __(` ${term_length} months`);
+    next_range_list.push({
       // TODO: getMonth()メソッドは0~11の値を返すので、正しい数値を取得するためには+1する必要がある。
       //       毎回これを気にするのはつらいので、ラッパーを作る。
       term_length,
@@ -41,7 +37,7 @@ export function generateNextRange(current_end_date) {
     })
   }
 
-  return next_range
+  return next_range_list
 }
 
 /**

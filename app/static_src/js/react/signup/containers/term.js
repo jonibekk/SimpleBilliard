@@ -10,7 +10,7 @@ function mapDispatchToProps(dispatch) {
   return {
     changeToTimezoneSelectMode: () => dispatch(actions.changeToTimezoneSelectMode()),
     postTerms: terms => dispatch(actions.postTerms(terms)),
-    setStartMonthList: selected_term => dispatch(actions.setStartMonthList(selected_term)),
+    setNextRangeList: next_start_ym => dispatch(actions.setNextRangeList(next_start_ym)),
     dispatch: action => dispatch(action)
   }
 }
