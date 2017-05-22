@@ -299,14 +299,18 @@ class NotifySetting extends AppModel
         self::TYPE_CHANGED_TEAM_BASIC_SETTING                => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
-            'field_prefix'    => 'team',
+            // TODO: using start_evaluation notify setting because same as what to do.
+            //       but it's not good. Should improve it's architecture.
+            'field_prefix'    => 'start_evaluation',
             'icon_class'      => 'fa-users',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_CHANGED_TERM_SETTING                => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
-            'field_prefix'    => 'team',
+            // TODO: using start_evaluation notify setting because same as what to do.
+            //       but it's not good. Should improve it's architecture.
+            'field_prefix'    => 'start_evaluation',
             'icon_class'      => 'fa-users',
             'groups'          => ['all', 'primary'],
         ]

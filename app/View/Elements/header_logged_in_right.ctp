@@ -60,6 +60,8 @@
                     </a>
                 </li>
             <?php endif; ?>
+            <?php //TODO: チーム追加におけるtermの保存処理の修正が完了するまでリンクを非表示にする
+            /*
             <li class="header-nav-add-contents-team">
                 <a class="header-nav-add-contents-anchor"
                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
@@ -68,6 +70,8 @@
                     <p class="header-nav-add-contents-team"><?= __('Create a team') ?></p>
                 </a>
             </li>
+            */
+            ?>
         </ul>
     </div>
     <div class="header-dropdown-message has-notify-dropdown <?= $is_mb_app ? "hide" : null ?>">

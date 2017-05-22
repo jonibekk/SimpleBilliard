@@ -104,14 +104,14 @@ class EvaluationService extends AppService
      *
      * @return boolean
      */
-    function isStarted()
+    function isStarted(): bool
     {
         /** @var  Term $Term */
         $Term = ClassRegistry::init('Term');
         /** @var  Team $Team */
         $Team = ClassRegistry::init('Team');
 
-        $cachedData = Cache::read($Term->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
+        $cachedData = Cache::read($Term->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'team_info');
         if ($cachedData !== false) {
             // $isStartedEvaluation will be created by extracting $cachedData
             extract($cachedData);
@@ -123,9 +123,9 @@ class EvaluationService extends AppService
             $currentTerm = $Term->getCurrentTermData();
             $timezone = $Team->getTimezone();
             $duration = $Term->makeDurationOfCache($currentTerm['end_date'], $timezone);
-            Cache::set('duration', $duration, 'user_data');
+            Cache::set('duration', $duration, 'team_info');
             Cache::write($Term->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true),
-                compact('isStartedEvaluation'), 'user_data');
+                compact('isStartedEvaluation'), 'team_info');
         }
 
         /** @noinspection PhpUndefinedVariableInspection */

@@ -12,7 +12,7 @@
  * @var                    $feed_more_read_url
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -28,11 +28,12 @@
                         <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                             <div class="col col-xxs-12">
                                 <div class="ln_contain w_88per">
-                                    <a href="<?= $this->Html->url([
-                                        'controller' => 'goals',
-                                        'action'     => 'ajax_get_goal_description_modal',
-                                        'goal_id'    => $posts[0]['Goal']['id']
-                                    ]) ?>"
+                                    <a href="#"
+                                       data-url="<?= $this->Html->url([
+                                           'controller' => 'goals',
+                                           'action'     => 'ajax_get_goal_description_modal',
+                                           'goal_id'    => $posts[0]['Goal']['id']
+                                       ]) ?>"
                                        class="no-line font_verydark modal-ajax-get">
                                         <i class="fa fa-key font_gray"></i>&nbsp;<?= h($posts[0]['ActionResult']['KeyResult']['name']) ?>
                                     </a>
@@ -47,33 +48,35 @@
                         <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                             <div class="col col-xxs-12">
                                 <div class="pull-right">
-                                    <a href="<?= $this->Html->url([
-                                        'controller' => 'goals',
-                                        'action'     => 'ajax_get_goal_description_modal',
-                                        'goal_id'    => $posts[0]['Goal']['id']
-                                    ]) ?>"
+                                    <a href="#"
+                                       data-url="<?= $this->Html->url([
+                                           'controller' => 'goals',
+                                           'action'     => 'ajax_get_goal_description_modal',
+                                           'goal_id'    => $posts[0]['Goal']['id']
+                                       ]) ?>"
                                        class="no-line font_verydark modal-ajax-get">
                                         <?=
                                         $this->Html->image('pre-load.svg',
                                             [
-                                                'class' => 'lazy media-object',
+                                                'class'         => 'lazy media-object',
                                                 'data-original' => $this->Upload->uploadUrl($posts[0],
                                                     "Goal.photo",
                                                     ['style' => 'small']),
-                                                'width'  => '32px',
-                                                'height' => '32px',
-                                                'error-img' => "/img/no-image-link.png",
+                                                'width'         => '32px',
+                                                'height'        => '32px',
+                                                'error-img'     => "/img/no-image-link.png",
                                             ]
                                         )
                                         ?>
                                     </a>
                                 </div>
                                 <div class="ln_contain w_88per">
-                                    <a href="<?= $this->Html->url([
-                                        'controller' => 'goals',
-                                        'action'     => 'ajax_get_goal_description_modal',
-                                        'goal_id'    => $posts[0]['Goal']['id']
-                                    ]) ?>"
+                                    <a href="#"
+                                       data-url="<?= $this->Html->url([
+                                           'controller' => 'goals',
+                                           'action'     => 'ajax_get_goal_description_modal',
+                                           'goal_id'    => $posts[0]['Goal']['id']
+                                       ]) ?>"
                                        class="no-line font_verydark modal-ajax-get">
                                         <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($posts[0]['Goal']['name']) ?>
                                     </a>
@@ -104,4 +107,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
