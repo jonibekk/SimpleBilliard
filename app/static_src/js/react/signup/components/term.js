@@ -23,7 +23,7 @@ export default class Term extends React.Component {
     if(e.target.name === 'next_start_ym') {
       this.props.setNextRangeList(this.getInputDomData().next_start_ym)
     }
-    // this.props.dispatch(res)
+    this.props.dispatch(res)
   }
 
   handleSubmit(e) {
@@ -42,8 +42,6 @@ export default class Term extends React.Component {
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={ this.handleSubmit.bind(this) } >
 
-                  <InvalidMessageBox is_invalid={this.props.validate.next_start_ym.invalid}
-                                     message={this.props.validate.next_start_ym.message} />
                   {/* current term */}
                   <div className="panel-heading signup-itemtitle">{__("Select your current term")}</div>
                   <div className={(this.props.validate.next_start_ym.invalid) ? 'has-error' : ''}>
@@ -57,10 +55,9 @@ export default class Term extends React.Component {
                           })}
                       </select>
                   </div>
+                  <InvalidMessageBox is_invalid={this.props.validate.next_start_ym.invalid}
+                                     message={this.props.validate.next_start_ym.message} />
 
-
-                  <InvalidMessageBox is_invalid={this.props.validate.term.invalid}
-                                     message={this.props.validate.term.message} />
                   {/* next term */}
                   <div className="panel-heading signup-itemtitle">{__("Select your next term")}</div>
 
@@ -77,8 +74,8 @@ export default class Term extends React.Component {
                           }
                       </select>
                   </div>
-
-
+                  <InvalidMessageBox is_invalid={this.props.validate.term.invalid}
+                                     message={this.props.validate.term.message} />
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">{__("Timezone")}</div>
