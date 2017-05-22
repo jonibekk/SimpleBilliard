@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-19 17:21+0900\n"
+"PO-Revision-Date: 2017-05-22 22:12+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2363,6 +2363,28 @@ msgstr "チームに名前をつけよう"
 msgid "Select your present term"
 msgstr "今期を選択してください"
 
+msgid "Select your next term"
+msgstr "今期を選択してください"
+
+msgid "3 months"
+msgstr "3ヶ月"
+
+msgid "6 months"
+msgstr "6ヶ月"
+
+msgid "12 months"
+msgstr "12ヶ月"
+
+msgid "Choose the months that start and end your first two terms."
+msgstr "最初の2つの期の開始と終了月を選択してください。"
+
+msgid ""
+"The default length of any future terms are automatically set to 6 months."
+msgstr "来期以降における期の長さは、自動的に6か月に設定されます。"
+
+msgid "You can change this setting at any time."
+msgstr "この設定はいつでも変更できます。"
+
 msgid "What is your goal ?"
 msgstr "あなたのゴールはなんですか？"
 
@@ -3533,15 +3555,6 @@ msgstr "来期の開始月"
 
 msgid "Term length"
 msgstr "期間の長さ"
-
-msgid "3 months"
-msgstr "3ヶ月"
-
-msgid "6 months"
-msgstr "6ヶ月"
-
-msgid "12 months"
-msgstr "12ヶ月"
 
 msgid "This term"
 msgstr "今期"

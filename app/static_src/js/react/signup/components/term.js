@@ -37,13 +37,13 @@ export default class Term extends React.Component {
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("Choose your team's (company's) term")}</div>
               <img src="/img/signup/term.png" className="signup-header-image" />
-              <div className="signup-description">{__("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.")}</div>
+              <div className="signup-description">{__("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.")}{__("Choose the months that start and end your first two terms.")}</div>
 
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={ this.handleSubmit.bind(this) } >
 
                   {/* current term */}
-                  <div className="panel-heading signup-itemtitle">{__("Select your current term")}</div>
+                  <div className="panel-heading signup-itemtitle">{__("Current Term")}</div>
                   <div className={(this.props.validate.next_start_ym.invalid) ? 'has-error' : ''}>
                       <select className="form-control signup_input-design" ref="next_start_ym" name="next_start_ym"
                               onChange={ this.handleOnChange.bind(this) }>
@@ -59,7 +59,7 @@ export default class Term extends React.Component {
                                      message={this.props.validate.next_start_ym.message} />
 
                   {/* next term */}
-                  <div className="panel-heading signup-itemtitle">{__("Select your next term")}</div>
+                  <div className="panel-heading signup-itemtitle">{__("Next Term")}</div>
 
                   <div className={(this.props.validate.term.invalid) ? 'has-error' : ''}>
                       <select className="form-control signup_input-design" ref="term" name="term"
@@ -76,6 +76,11 @@ export default class Term extends React.Component {
                   </div>
                   <InvalidMessageBox is_invalid={this.props.validate.term.invalid}
                                      message={this.props.validate.term.message} />
+
+                  <div className="signup-term-description">
+                    <p>{__("The default length of any future terms are automatically set to 6 months.")}</p>
+                    <p>{__("You can change this setting at any time.")}</p>
+                  </div>
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">{__("Timezone")}</div>

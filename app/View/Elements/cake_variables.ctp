@@ -443,6 +443,9 @@ App::uses('AttachedFile', 'Model');
             "3 months": "<?= __("3 months") ?>",
             "6 months": "<?= __("6 months") ?>",
             "12 months": "<?= __("12 months") ?>",
+            "Choose the months that start and end your first two terms.": "<?= __("Choose the months that start and end your first two terms.") ?>",
+            "The default length of any future terms are automatically set to 6 months.": "<?= __("The default length of any future terms are automatically set to 6 months.") ?>",
+            "You can change this setting at any time.": "<?= __("You can change this setting at any time.") ?>",
             //Creating a Goal
             "": "<?=__("")?>",
             "What is your goal ?": "<?=__("What is your goal ?")?>",
