@@ -5,6 +5,7 @@ import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
 import { _checkValue } from '../actions/validate_actions'
+import { generateCurrentRange, generateNextRange } from '~/util/date'
 
 export default class Term extends React.Component {
 
@@ -41,26 +42,30 @@ export default class Term extends React.Component {
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={ this.handleSubmit.bind(this) } >
 
-                  {/* Term */}
-                  <div className="panel-heading signup-itemtitle">{__("Term")}</div>
+                  <InvalidMessageBox is_invalid={this.props.validate.next_start_ym.invalid}
+                                     message={this.props.validate.next_start_ym.message} />
+                  {/* current term */}
+                  <div className="panel-heading signup-itemtitle">{__("Select your current term")}</div>
                   <div className={(this.props.validate.term.invalid) ? 'has-error' : ''}>
-                      <select className="form-control signup_input-design" ref="term" name="term"
+                      <select className="form-control signup_input-design" ref="next_start_ym" name="next_start_ym"
                               onChange={ this.handleOnChange.bind(this) }>
                           <option value="">{__("Please select")}</option>
-                          <option value="3">{__("Quater")}</option>
-                          <option value="6">{__("Half a year")}</option>
-                          <option value="12">{__("Year")}</option>
+                          { generateCurrentRange().map((option) => {
+                            return (
+                              <option value={option.next_start_ym} key={option.next_start_ym}>{option.range}</option>
+                            )
+                          })}
                       </select>
                   </div>
 
+
                   <InvalidMessageBox is_invalid={this.props.validate.term.invalid}
                                      message={this.props.validate.term.message} />
-
-                  {/* Start month */}
-                  <div className="panel-heading signup-itemtitle">{__("Select your present term")}</div>
+                  {/* next term */}
+                  <div className="panel-heading signup-itemtitle">{__("Select your next term")}</div>
 
                   <div className={(this.props.validate.next_start_ym.invalid) ? 'has-error' : ''}>
-                      <select className="form-control signup_input-design" ref="next_start_ym" name="next_start_ym"
+                      <select className="form-control signup_input-design" ref="term" name="term"
                               onChange={ this.handleOnChange.bind(this) }>
                           <option value="">{__("Please select")}</option>
                           {
@@ -73,8 +78,7 @@ export default class Term extends React.Component {
                       </select>
                   </div>
 
-                  <InvalidMessageBox is_invalid={this.props.validate.next_start_ym.invalid}
-                                     message={this.props.validate.next_start_ym.message} />
+
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">{__("Timezone")}</div>

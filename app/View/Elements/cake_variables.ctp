@@ -439,6 +439,7 @@ App::uses('AttachedFile', 'Model');
             "Choose your team name.": "<?= __("Choose your team name.") ?>",
             "Select your present term": "<?= __("Select your present term") ?>",
             "Password is incorrect.": "<?= __("Password is incorrect.") ?>",
+            "Select your next term": "<?= __("Select your next term") ?>",
             //Creating a Goal
             "": "<?=__("")?>",
             "What is your goal ?": "<?=__("What is your goal ?")?>",

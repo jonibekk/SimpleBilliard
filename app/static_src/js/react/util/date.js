@@ -1,32 +1,47 @@
 import { MonthNameListEn } from "~/common/constants/Date";
 
-/**
- * termを元に、現在日時から評価開始年月の一覧を生成する
- *
- * @param  integer term 3|4|6|12
- * @return start_month_list
- */
-export function generateStartMonthList(term) {
-  const date = new Date()
-  const this_month = date.getMonth()
-  const this_year = date.getFullYear()
-  const start_month_list = []
+export function generateCurrentRange() {
+  const current_start_date = new Date()
+  let current_range = []
 
-  for(let i = parseInt(term); i > 0; i--) {
-    const start_date = new Date(this_year, this_month - (i - 1))
-    const end_date = new Date(this_year, (this_month - i) + parseInt(term))
-    const range = generateTermRangeFormat(start_date, end_date);
-    const next_start_date = new Date(end_date.getFullYear(), parseInt(end_date.getMonth() + 1))
+  for (let i = 0; i < 12; i++) {
+    const current_end_date = new Date(current_start_date.getFullYear(), parseInt(current_start_date.getMonth()) + i)
+    const next_start_date = new Date(current_end_date.getFullYear(), parseInt(current_end_date.getMonth()) + i)
+    const range = generateTermRangeFormat(current_start_date, current_end_date);
 
-    start_month_list.push({
+    current_range.push({
       // TODO: getMonth()メソッドは0~11の値を返すので、正しい数値を取得するためには+1する必要がある。
       //       毎回これを気にするのはつらいので、ラッパーを作る。
       next_start_ym: `${next_start_date.getFullYear()}-${toDigit(parseInt(next_start_date.getMonth()) + 1)}`,
       range
     })
   }
+  console.log(current_range)
+  return current_range
+}
 
-  return start_month_list
+/**
+ * termを元に、現在日時から評価開始年月の一覧を生成する
+ *
+ * @param  integer term 3|4|6|12
+ * @return start_month_list
+ */
+export function generateNextRange(current_end_date) {
+  const next_start_date = new Date(current_end_date.getFullYear(), current_end_date.getMonth() + 1)
+  let next_range = []
+
+  for ( const term_length of [3, 6, 12] ) {
+    const next_end_date = new Date(next_start_date.getFullYear(), next_start_date.getMonth() + term_length)
+    const range = generateTermRangeFormat(next_start_date, next_end_date);
+    next_range.push({
+      // TODO: getMonth()メソッドは0~11の値を返すので、正しい数値を取得するためには+1する必要がある。
+      //       毎回これを気にするのはつらいので、ラッパーを作る。
+      term_length,
+      range
+    })
+  }
+
+  return next_range
 }
 
 /**

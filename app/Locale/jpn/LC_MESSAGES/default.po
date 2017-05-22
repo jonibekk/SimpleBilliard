@@ -2361,7 +2361,7 @@ msgid "Choose your team name."
 msgstr "チームに名前をつけよう"
 
 msgid "Select your present term"
-msgstr "現在の期間を選択しましょう"
+msgstr "今期を選択してください"
 
 msgid "What is your goal ?"
 msgstr "あなたのゴールはなんですか？"

@@ -2,12 +2,6 @@ import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
 import { generateStartMonthList } from "~/util/date";
 
-export function setStartMonthList(selected_term) {
-  if(!selected_term) return { type: types.SET_START_MONTH_LIST, start_month_list: [] }
-  const start_month_list = generateStartMonthList(selected_term)
-  return { type: types.SET_START_MONTH_LIST, start_month_list }
-}
-
 export function changeToTimezoneSelectMode() {
   return { type: types.CHANGE_TO_TIMEZONE_EDIT_MODE }
 }
