@@ -33,22 +33,30 @@ class EvaluationsController extends AppController
             $termId = Hash::get($this->request->query, 'term_id');
 
             // 全評価期間取得
-            $allTerms = $this->Team->Term->findByTeam();
-            array_shift($allTerms);
-            $allTermIds = Hash::extract($allTerms, '{n}.id');
+            $termsForFilter = $this->Team->Term->findEvaluationStartedTerms();
+            $currentTermId = $this->Team->Term->getCurrentTermId();
+            // if current evaluation is not started, add current term
+            if (!$this->Team->Term->isStartedEvaluation($currentTermId)) {
+                $currentTerm = $this->Team->Term->getCurrentTermData();
+                array_unshift($termsForFilter, $currentTerm);
+            }
+            $allTermIds = Hash::extract($termsForFilter, '{n}.id');
 
             // 存在しない評価期間を指定した場合エラー
             if (!empty($termId) && !in_array($termId, $allTermIds)) {
                 throw new RuntimeException(__("The specified period is incorrect."));
             }
 
+            // decide default term id
             if (empty($termId)) {
-                // デフォルトは前期
-                $termId = $this->Team->Term->getPreviousTermId();
-            }
-            // 前期が存在しない場合は今期
-            if (empty($termId)) {
-                $termId = $this->Team->Term->getCurrentTermId();
+                // if previous my turn count, previous term is default. otherwise, current term is default
+                $prevTermId = $this->Team->Term->getPreviousTermId();
+                $prevMyTurnCount = $this->Evaluation->getMyTurnCount(null, $prevTermId);
+                if ($prevMyTurnCount > 0) {
+                    $termId = $prevTermId;
+                } else {
+                    $termId = $this->Team->Term->getCurrentTermId();
+                }
             }
 
         } catch (RuntimeException $e) {
@@ -56,7 +64,7 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
         // 評価期間選択用ラベル取得
-        $termLabels = $this->_getTermLabels($allTerms);
+        $termLabels = $this->_getTermLabels($termsForFilter);
 
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');

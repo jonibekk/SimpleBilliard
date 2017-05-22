@@ -152,15 +152,18 @@ class Term extends AppModel
     }
 
     /**
-     * チームの全評価期間取得
+     * Finding terms that evaluation was started already.
      *
      * @return array|null
      */
-    function findByTeam()
+    function findEvaluationStartedTerms()
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id
+                'team_id' => $this->current_team_id,
+                'NOT'     => [
+                    'evaluate_status' => self::STATUS_EVAL_NOT_STARTED
+                ]
             ],
             'order'      => [
                 'start_date' => 'desc'
