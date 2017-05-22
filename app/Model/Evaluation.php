@@ -692,7 +692,7 @@ class Evaluation extends AppModel
         $timezone = $Team->getTimezone();
 
         if ($previousStartDate) {
-            $options['conditions']['created >='] = strtotime($previousStartDate) - $timezone * HOUR;
+            $options['conditions']['created >='] = AppUtil::getTimestampByTimezone($previousStartDate,$timezone);
         }
 
         // freeze
