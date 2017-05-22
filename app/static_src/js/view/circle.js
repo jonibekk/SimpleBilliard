@@ -126,7 +126,7 @@ function evCircleFeed(options) {
   }
 
   $("#circle-filter-menu-circle-name").html(panel_title);
-  $("#circle-filter-menu-member-url").attr("href", "/circles/ajax_get_circle_members/circle_id:" + circle_id);
+  $("#circle-filter-menu-member-url").data("url", "/circles/ajax_get_circle_members/circle_id:" + circle_id);
   $(".feed-share-range-file-url").attr("href", "/posts/attached_file_list/circle_id:" + circle_id);
   $('#postShareRangeToggleButton').removeAttr('data-toggle-enabled');
   if (public_flg == 1) {

@@ -54,12 +54,12 @@ class AddTimezoneOnEvaluateTerms1013 extends CakeMigration
         if ($direction == 'down') {
             return true;
         }
-        //一旦、全てのチームのタイムゾーンを9に設定
-        /**
-         * @var EvaluateTerm $EvaluateTerm
-         */
-        $EvaluateTerm = ClassRegistry::init('EvaluateTerm');
-        $EvaluateTerm->updateAll(['timezone' => 9]);
+//        //一旦、全てのチームのタイムゾーンを9に設定
+//        /**
+//         * @var Term $EvaluateTerm
+//         */
+//        $EvaluateTerm = ClassRegistry::init('Term');
+//        $EvaluateTerm->updateAll(['timezone' => 9]);
 
         return true;
     }

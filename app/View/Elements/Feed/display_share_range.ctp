@@ -52,11 +52,12 @@
         <?php endif; ?>
     <?php endif; ?>
     <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-        <a href="<?= $this->Html->url([
-            'controller' => 'goals',
-            'action'     => 'ajax_get_goal_description_modal',
-            'goal_id'    => $post['Goal']['id']
-        ]) ?>"
+        <a href="#"
+           data-url="<?= $this->Html->url([
+               'controller' => 'goals',
+               'action'     => 'ajax_get_goal_description_modal',
+               'goal_id'    => $post['Goal']['id']
+           ]) ?>"
            class="ml_8px modal-ajax-get link-dark-gray">
             <i class="fa fa-flag-o"></i>
             <span><?= $post['Goal']['name'] ?></span>

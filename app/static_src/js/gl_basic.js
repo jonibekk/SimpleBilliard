@@ -472,7 +472,7 @@ $(document).ready(function () {
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
     modalFormCommonBindEvent($modal_elm);
     var url = $this.data('url');
-    if (url.indexOf('#') == 0) {
+    if (url.indexOf('#') === 0) {
       $(url).modal('open');
     } else {
       $.get(url, function (data) {
@@ -3647,6 +3647,22 @@ $(document).ready(function () {
   $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
 
+function getCommentBlockLatestId($commentBlock) {
+
+  var commentNum = $commentBlock.children("div.comment-box").length;
+  var $lastCommentBox = $commentBlock.children("div.comment-box:last");
+  var lastCommentId = "";
+  if (commentNum > 0) {
+      // コメントが存在する場合
+      attrUndefinedCheck($lastCommentBox, 'comment-id');
+      lastCommentId = $lastCommentBox.attr("comment-id");
+  } else {
+      // コメントがまだ0件の場合
+      lastCommentId = "";
+  }
+  return lastCommentId;
+}
+
 function evCommentLatestView(options) {
   attrUndefinedCheck(this, 'post-id');
   attrUndefinedCheck(this, 'get-url');
@@ -3657,19 +3673,10 @@ function evCommentLatestView(options) {
   }, options);
 
   var $obj = $(this);
-  var commentBlock = $obj.closest(".comment-block");
-  var commentNum = commentBlock.children("div.comment-box").length;
-  var lastCommentBox = commentBlock.children("div.comment-box:last");
-  var lastCommentId = "";
+  var $commentBlock = $obj.closest(".comment-block");
+  var lastCommentId = getCommentBlockLatestId($commentBlock);
+
   var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  if (commentNum > 0) {
-    // コメントが存在する場合
-    attrUndefinedCheck(lastCommentBox, 'comment-id');
-    lastCommentId = lastCommentBox.attr("comment-id");
-  } else {
-    // コメントがまだ0件の場合
-    lastCommentId = "";
-  }
   var $errorBox = $obj.siblings("div.new-comment-error");
   var get_url = $obj.attr('get-url') + "/" + lastCommentId;
   //リンクを無効化
@@ -3685,6 +3692,20 @@ function evCommentLatestView(options) {
       if (!$.isEmptyObject(data.html)) {
         //取得したhtmlをオブジェクト化
         var $posts = $(data.html);
+
+        // Get the comment id for the new post
+        var $comment = $posts.closest('[comment-id]').last();
+        var newCommentId = $comment.attr("comment-id");
+        
+        // Get the last comment id displayed on the page
+        $commentBlock = $obj.closest(".comment-block");
+        lastCommentId = getCommentBlockLatestId($commentBlock);
+
+        // Do nothing if the new comment is already rendered on the page
+        if (newCommentId == lastCommentId) {
+          return;
+        }
+
         //画像をレイジーロード
         imageLazyOn($posts);
         //一旦非表示

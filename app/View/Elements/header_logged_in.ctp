@@ -77,12 +77,10 @@
                             </a>
                         </li>
                         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0 <?= !empty($my_teams) ? null : 'hidden' ?>">
-
                             <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
-                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
+                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'index']) ?>">
                                 <div class="ta-sm_c">
                                     <i class="fa fa-users js-header-link header-icon nav-xxs-icon header-icons"></i>
-
                                     <p class="font_11px header_icon-text hidden-xs js-header-link">
                                         <?= __("Team") ?>
                                     </p>
