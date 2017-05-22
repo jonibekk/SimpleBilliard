@@ -349,7 +349,10 @@ class Term extends AppModel
             if (empty($nextTerm)) {
                 return [];
             }
-            $this->nextNextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($nextTerm['end_date']) + DAY));
+            $this->nextNextTerm = $this->getTermDataByDate(
+                AppUtil::dateYmd(strtotime($nextTerm['end_date']) + DAY),
+                false
+            );
             return $this->nextNextTerm;
         }
 
@@ -665,10 +668,10 @@ class Term extends AppModel
             $res['timezone'] = $timezone;
             // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
         } elseif ($this->useDbConfig != "test" && $enableErrorLog) {
-            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
+            $this->log(sprintf('[%s] Term data is not found. find options: %s, session current_team_id: %s, backtrace: %s',
                 __METHOD__,
                 var_export($options, true),
-                var_export(CakeSession::read(), true),
+                var_export(CakeSession::read('current_team_id'), true),
                 Debugger::trace()
             ));
         }
