@@ -686,8 +686,13 @@ class Evaluation extends AppModel
 
         //前期以前のデータは無視する (現状の仕様上その情報に一切アクセスができないため)
         $previousStartDate = Hash::get($this->Team->Term->getPreviousTermData(), 'start_date');
+        //getting timezone
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $timezone = $Team->getTimezone();
+
         if ($previousStartDate) {
-            $options['conditions']['created >='] = $previousStartDate;
+            $options['conditions']['created >='] = strtotime($previousStartDate - $timezone * HOUR);
         }
 
         // freeze
