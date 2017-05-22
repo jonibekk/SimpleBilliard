@@ -49,16 +49,17 @@ class EvaluationsController extends AppController
 
             // decide default term id
             if (empty($termId)) {
+                // as temporary, set current term id.
+                $termId = $this->Team->Term->getCurrentTermId();
                 // if previous my turn count, previous term is default. otherwise, current term is default
                 $prevTermId = $this->Team->Term->getPreviousTermId();
-                $prevMyTurnCount = $this->Evaluation->getMyTurnCount(null, $prevTermId);
-                if ($prevMyTurnCount > 0) {
-                    $termId = $prevTermId;
-                } else {
-                    $termId = $this->Team->Term->getCurrentTermId();
+                if($prevTermId){
+                    $prevMyTurnCount = $this->Evaluation->getMyTurnCount(null, $prevTermId);
+                    if ($prevMyTurnCount > 0) {
+                        $termId = $prevTermId;
+                    }
                 }
             }
-
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
