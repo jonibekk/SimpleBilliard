@@ -47,7 +47,12 @@
                         <a class="btn btn-white btn-ellipsis dropdown-toggle" data-toggle="dropdown"><span
                                 class="fa fa-ellipsis-h"></span></a>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#"><?= __('Delete Goal')?></a></li>
+                            <li>
+                                <?=
+                                $this->Form->postLink(__("Delete Goal"),
+                                    ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']],
+                                    ['escape' => false], __("Do you really want to delete this goal?")) ?>
+                            </li>
                             <li><a href="#"><?=__('Acheive Goal')?></a></li>
                         </ul>
                     </div>

@@ -189,7 +189,8 @@ class GoalsController extends AppController
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
         } else {
-            return $this->redirect($this->referer());
+            $userId = $this->Auth->user('id');
+            return $this->redirect(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $userId]);
         }
     }
 
