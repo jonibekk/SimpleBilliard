@@ -60,7 +60,8 @@ class AppController extends BaseController
         'Csv',
         'Expt',
         'Post',
-        'GlHtml'
+        'GlHtml',
+        'Lang'
     ];
 
     private $merge_uses = [];
@@ -243,7 +244,7 @@ class AppController extends BaseController
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
             }
-            $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
+            $this->set('current_term', $this->Team->Term->getCurrentTermData());
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
             $this->_setAvailEvaluation();
@@ -266,24 +267,8 @@ class AppController extends BaseController
 
     public function _setTerm()
     {
-        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
-        if (!$current_term) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        }
-        $this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-
-        $previous_team = $this->Team->EvaluateTerm->getPreviousTermData();
-        if (!$previous_team) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        }
-        $next_team = $this->Team->EvaluateTerm->getNextTermData();
-        if (!$next_team) {
-            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-            // 期をまたいだらキャッシュ削除
-            Cache::clear(false, 'team_info');
-            Cache::clear(false, 'user_data');
-        }
-        $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
+        $this->current_term_id = $this->Team->Term->getCurrentTermId();
+        $this->next_term_id = $this->Team->Term->getNextTermId();
     }
 
     /*
@@ -324,11 +309,11 @@ class AppController extends BaseController
     function _setActionCnt()
     {
         $model = $this;
-        $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
+        $current_term = $model->Team->Term->getCurrentTermData();
         Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
         $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
             function () use ($model, $current_term) {
-                $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
+                $current_term = $model->Team->Term->getCurrentTermData();
                 $res = $model->Goal->ActionResult->getCount('me', $current_term['start_date'],
                     $current_term['end_date']);
                 return $res;

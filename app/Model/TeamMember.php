@@ -335,11 +335,12 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false)
+    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false, $teamId = null)
     {
+        $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
-                'team_id'    => $this->current_team_id,
+                'team_id'    => $teamId,
                 'active_flg' => true,
             ],
             'fields'     => ['user_id'],
@@ -2502,5 +2503,38 @@ class TeamMember extends AppModel
             );
         }
         return $teams;
+    }
+
+    /**
+     * active admin as team member and user
+     *
+     * @param  int  $userId
+     * @param  int  $teamId
+     * @return bool
+     */
+    public function isActiveAdmin(int $userId, int $teamId): bool
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id'    => $userId,
+                'TeamMember.admin_flg'  => true,
+                'TeamMember.active_flg' => true
+            ],
+            'fields'     => ['TeamMember.id'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = TeamMember.user_id',
+                        'User.active_flg' => true
+                    ],
+                ],
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        return (bool)$res;
     }
 }

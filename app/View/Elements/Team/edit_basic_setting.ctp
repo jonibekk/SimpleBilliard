@@ -10,8 +10,10 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Basic settings") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Basic settings") ?></h2>
+    </header>
     <?=
     $this->Form->create('Team', [
         'inputDefaults' => [
@@ -90,7 +92,15 @@
             </div>
 
         </div>
+
         <hr>
+        <?=
+        $this->Form->input('timezone', [
+            'label'      => __("Timezone"),
+            'type'       => 'select',
+        ]) ?>
+        <hr>
+
         <?=
         $this->Form->input('type', [
             'label'      => __("Plan"),
@@ -105,30 +115,25 @@
                 . '</span>'
         ]) ?>
     </div>
-
-    <div class="panel-footer addteam_pannel-footer">
-        <div class="row">
-            <div class="col-xxs-4 col-sm-offset-3">
-                <?=
+    <footer>
+        <fieldset>
+            <?=
                 $this->Form->submit(__("Change basic settings"),
-                    ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
-            </div>
-            <div class="col-xxs-8 col-sm-5 text-align_r">
-                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
-            </div>
-        </div>
-    </div>
+                ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled'])
+            ?>
+            <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
+            <?= $this->Form->end(); ?>
+        </fieldset>
+        <?=
+        $this->Form->create('Team', [
+            'class'      => 'none',
+            'novalidate' => true,
+            'id'         => 'TeamDeleteForm',
+            'url'        => ['action' => 'delete_team']
+        ]); ?>
+    </footer>
     <?= $this->Form->end(); ?>
-    <?=
-    $this->Form->create('Team', [
-        'class'      => 'none',
-        'novalidate' => true,
-        'id'         => 'TeamDeleteForm',
-        'url'        => ['action' => 'delete_team']
-    ]); ?>
-    <?= $this->Form->end(); ?>
-
-</div>
+</section>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -147,7 +152,8 @@
                             message: "<?=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>"
                         }
                     }
-                }
+                },
+                "data[Team][timezone]": {}
             }
         });
 

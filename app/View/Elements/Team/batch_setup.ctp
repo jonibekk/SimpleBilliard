@@ -10,8 +10,10 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Batch Registration") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Batch Registration") ?></h2>
+    </header>
     <div class="panel-body">
         <div class="form-group">
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
@@ -43,18 +45,14 @@
         </div>
     </div>
     <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
-        <div class="panel-footer">
-            <div class="row">
-                <div class="col-sm-9 col-sm-offset-3">
-                    <a href="#" class="btn btn-default" data-toggle="modal"
-                       data-target="#ModalAddMembersByCsv"><?= __('Add new members.') ?></a>
-                    <a href="#" class="btn btn-default" data-toggle="modal"
-                       data-target="#ModalEditMembersByCsv"><?= __('Update members information') ?></a>
-                </div>
-            </div>
-        </div>
+        <footer>
+            <a href="#" class="btn btn-default" data-toggle="modal"
+                data-target="#ModalAddMembersByCsv"><?= __('Add new members.') ?></a>
+            <a href="#" class="btn btn-default" data-toggle="modal"
+                data-target="#ModalEditMembersByCsv"><?= __('Update members information') ?></a>
+        </footer>
     <?php endif; ?>
-</div>
+</section>
 <?= $this->App->viewEndComment()?>
 <?php $this->start('modal') ?>
 <?= $this->element('modal_add_members_by_csv') ?>

@@ -2,3 +2,179 @@
   color: @keyColor;
   margin-bottom: 5px;
 }
+
+/* Using <section> reference so it doesn't affect div.panel
+   Plans to convert all div.panel to section.panel
+   After completion, please move to global LESS file */
+section.panel{
+  padding:.5em 10px;
+  header{
+    padding:0 .5em;
+    border-bottom:1px solid @lightGray;
+    margin-bottom:1rem;
+    h2{
+      font-weight:600;
+      font-size:1.25em;
+      line-height:1.2em;
+      color:@veryDark;
+      margin:1rem 0 .5rem;
+    }
+  }
+  .panel-body{
+    .term-setting-warning {
+      color: @strongRed;
+    }
+    font-size: 1em;
+    line-height:1.3em;
+    padding:0 .5em;
+    p,fieldset{
+      margin-bottom:1rem;
+    }
+    fieldset{
+      margin-bottom:1rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      @media @medium{
+        justify-content:flex-start;
+      }
+      label{
+        align-self: center;
+        font-weight:400;
+        padding-top:0;
+        padding-right:1rem;
+        &.control-label{
+          flex-basis:100%;
+        }
+      }
+      .checkbox{
+        padding-top:0;
+      }
+      select{
+        border: 1px solid #dddddd;
+        border-radius: .2em;
+        box-shadow: none;
+        padding:.5em;
+        min-width:60%;
+        &:disabled {
+          background-color: @subColor5 !important;
+        }
+      }
+    }
+    #evaluation_setting{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:space-between;
+        fieldset{
+          margin-bottom:2rem;
+          flex-basis:100%;
+          @media @large{
+            flex-basis:48%;
+          }
+        }
+    }
+    .term-details{
+      background: @baseGray;
+      padding:.5rem 1rem;
+      float:left;
+      width:100%;
+      position:relative;
+      &.current-term{
+        z-index:2;
+      }
+      &.edited-term{
+        z-index:1;
+        overflow:hidden;
+        transition:transform .3s;
+        &.mod-hide{
+          transform:translateY(-60px);
+          height:0;
+          @media @medium{
+            transform:translatex(-122%);
+            height:auto;
+          }
+        }
+      }
+      p{
+        margin-bottom:0;
+        display:flex;
+        flex-wrap:wrap;
+        strong,.term-range{
+          flex-basis:100%;
+        }
+      }
+      span.edited{
+        color:@goalous;
+      }
+      @media @medium{
+        width:45%;
+        float:left;
+        &:last-of-type{
+          float:right;
+        }
+      }
+    }
+    .fa-caret-down{
+      width:100%;
+      float:left;
+      text-align:center;
+      position:relative;
+      z-index: 1;
+      transition:transform .3s, opacity .3s;
+      &.mod-hide{
+        transform:translateY(-12px);
+        height:0;
+      }
+      @media @medium{
+        width: 10%;
+        height: 4em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform:rotate(-90deg) !important;
+        opacity:1;
+        &.mod-hide{
+          opacity:0;
+        }
+      }
+    }
+  }
+  footer{
+    border-top: 1px solid @lightGray;
+    padding:1em .5em 0 .5em;
+    margin:1em 0;
+    overflow:hidden;
+    position:relative;
+    .term-attention{
+      transition:transform .3s;
+      transform-origin: 50% top;
+      position:relative;
+      &.mod-hide{
+        transform:translateY(-110%);
+        position: absolute;
+        opacity:0;
+      }
+      ul{
+        list-style-type:disc;
+      }
+      ul,ol{
+        padding-left:2em;
+        li{
+          margin:.25em 0;
+          float:none;
+        }
+      }
+      fieldset{
+        align-items:center;
+        width:100%;
+        margin-bottom:1rem;
+        input {
+          vertical-align: middle;
+        }
+      }
+    }
+    .btn{
+      margin-right:1rem;
+    }
+  }
+}

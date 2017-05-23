@@ -18,7 +18,7 @@
 <?= $this->App->viewStartComment() ?>
 
 <!-- Back button -->
-<?= $this->GlHtml->backBtn("/evaluations?term_id=".$evaluateTermId, __('Back to evaluation list'))?>
+<?= $this->GlHtml->backBtn("/evaluations?term_id=" . $evaluateTermId, __('Back to evaluation list')) ?>
 
 <?= $this->Form->create('Evaluation', [
     'inputDefaults' => [
@@ -292,11 +292,12 @@
                         <div class="eval-view-result-number">
                             <div style="margin:0 auto;width:100px;">
                                 <a class="modal-ajax-get"
-                                   href="<?= $this->Html->url([
-                                       'controller' => 'goals',
-                                       'action'     => 'ajax_get_related_kr_list_modal',
-                                       'user_id'    => $evaluateeId,
-                                       'goal_id'    => $goal[0]['Goal']['id'],
+                                   href="#"
+                                   data-url="<?= $this->Html->url([
+                                       'controller'       => 'goals',
+                                       'action'           => 'ajax_get_related_kr_list_modal',
+                                       'user_id'          => $evaluateeId,
+                                       'goal_id'          => $goal[0]['Goal']['id'],
                                        'evaluate_term_id' => $evaluateTermId
                                    ]) ?>">
                                     <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}.ActionResult.0.id")) ?>
@@ -306,11 +307,12 @@
                         <div class="eval-view-result-text">
                             <div style="margin:0 auto;width:100px;">
                                 <a class="modal-ajax-get"
-                                   href="<?= $this->Html->url([
-                                       'controller' => 'goals',
-                                       'action'     => 'ajax_get_related_kr_list_modal',
-                                       'user_id'    => $evaluateeId,
-                                       'goal_id'    => $goal[0]['Goal']['id'],
+                                   href="#"
+                                   data-url="<?= $this->Html->url([
+                                       'controller'       => 'goals',
+                                       'action'           => 'ajax_get_related_kr_list_modal',
+                                       'user_id'          => $evaluateeId,
+                                       'goal_id'          => $goal[0]['Goal']['id'],
                                        'evaluate_term_id' => $evaluateTermId
                                    ]) ?>">
                                     <?= __("View results") ?>
@@ -568,7 +570,7 @@ $this->Form->input("evaluate_type", [
 ?>
 <?= $this->Form->end() ?>
 <!-- Back button -->
-<?= $this->GlHtml->backBtn("/evaluations?term_id=".$evaluateTermId, __('Back to evaluation list')) ?>
+<?= $this->GlHtml->backBtn("/evaluations?term_id=" . $evaluateTermId, __('Back to evaluation list')) ?>
 
 <?= $this->App->viewEndComment() ?>
 <?php $this->append('script') ?>
