@@ -9,7 +9,7 @@
  * @var $members
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
@@ -18,17 +18,17 @@
                 <?= $this->element('Goal/members') ?>
             </div>
         </div>
-        <?php if (count($members)>10){ ?>
-        <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
-            <a href="#" class="btn btn-link click-goal-member-more"
-               next-page-num="2"
-               id="GoalPageMemberMoreLink"
-               list-container="#GoalPageMemberContainer"
-               goal-id="<?= h($goal['Goal']['id']) ?>"
-            >
-                <?= __('View more') ?></a>
-        </div>
+        <?php if ($member_count > 10) { ?>
+            <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
+                <a href="#" class="btn btn-link click-goal-member-more"
+                   next-page-num="2"
+                   id="GoalPageMemberMoreLink"
+                   list-container="#GoalPageMemberContainer"
+                   goal-id="<?= h($goal['Goal']['id']) ?>"
+                >
+                    <?= __('View more') ?></a>
+            </div>
         <?php } ?>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

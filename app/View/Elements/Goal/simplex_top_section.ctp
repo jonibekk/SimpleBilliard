@@ -72,7 +72,8 @@
                             <?= h($collabo_opt['class']) ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                           href="<?= $this->Html->url([
+                           href="#"
+                           data-url="<?= $this->Html->url([
                                'controller' => 'goals',
                                'action'     => 'ajax_get_collabo_change_modal',
                                'goal_id'    => $goal['Goal']['id']
@@ -104,7 +105,7 @@
                             </span>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目         ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目          ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
