@@ -143,7 +143,7 @@
         $('#AddTeamForm').bootstrapValidator({
             live: 'enabled',
             fields: {
-                 "data[Team][photo]": {
+                "data[Team][photo]": {
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',
