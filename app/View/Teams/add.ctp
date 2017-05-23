@@ -114,7 +114,8 @@
                     // help-block の文言があるので、エラーメッセージは表示しない
                     "data-bv-notempty-message" => __(" "),
                     'class'                    => 'form-control addteam_input-design addOtherTeam-current-term-form',
-                    'options'                  => [null => __("Please select")]
+                    'options'                  => [null => __("Please select")],
+                    'required'                 => 'required'
                 ]) ?>
                 <?=
                 $this->Form->input('border_months', [
@@ -122,7 +123,8 @@
                     'type'                     => 'select',
                     "data-bv-notempty-message" => __("Please select"),
                     'class'                    => 'form-control addteam_input-design addOtherTeam-next-term-form',
-                    'options'                  => [null => __("Please select")]
+                    'options'                  => [null => __("Please select")],
+                    'required'                 => 'required'
                 ]) ?>
             </div>
 
@@ -145,7 +147,7 @@
 
         $('[rel="tooltip"]').tooltip();
 
-        $('#AddTeamForm').bootstrapValidator({
+        $('#addOtherTeam').bootstrapValidator({
             live: 'enabled',
             fields: {
                 "data[Team][photo]": {

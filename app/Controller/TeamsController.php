@@ -2,6 +2,7 @@
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'TermService');
+App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
 
 /**
