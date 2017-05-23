@@ -104,7 +104,7 @@
                             </span>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目        ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目         ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
@@ -174,7 +174,7 @@
                'goal_id'    => $goal['Goal']['id'],
            ]); ?>">
         <div class="goal-detail-numbers-kp-counts">
-            <?= h($this->NumberEx->formatHumanReadable($action_count, ['convert_start' => 10000])) ?>
+            <?= h($this->NumberEx->formatHumanReadable($kr_count, ['convert_start' => 10000])) ?>
         </div>
         <p class="goal-detail-tab-title">
             <?= h(__('KR')) ?>
