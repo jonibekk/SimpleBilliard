@@ -313,7 +313,7 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $changed_term = [
-        'team' => null,
+        'team'         => null,
         'changed_term' => null,
     ];
 
@@ -496,8 +496,13 @@ class GlRedis extends AppModel
             // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
             $notify_id = $post_id;
         }
+        // if not message, attach notify id for the url.
         if ($type != NotifySetting::TYPE_MESSAGE) {
-            $url = array_merge($url, ['?' => ['notify_id' => $notify_id]]);
+            if (isset($url['?'])) {
+                $url['?'] = am($url['?'], ['notify_id' => $notify_id]);
+            } else {
+                $url = am($url, ['?' => ['notify_id' => $notify_id]]);
+            }
         }
         $data = [
             'id'            => $notify_id,
@@ -1321,7 +1326,7 @@ class GlRedis extends AppModel
      *
      * @return mixed
      */
-    function getChangedTerm(int $teamId) : bool
+    function getChangedTerm(int $teamId): bool
     {
         $ret = $this->Db->get($this->getKeyName(self::KEY_TYPE_CHANGED_TERM, $teamId));
         return !empty($ret);
