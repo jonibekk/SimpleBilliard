@@ -47,8 +47,8 @@
                         <a class="btn btn-white btn-ellipsis dropdown-toggle" data-toggle="dropdown"><span
                                 class="fa fa-ellipsis-h"></span></a>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#">Delete Goal</a></li>
-                            <li><a href="#">Acheive Goal</a></li>
+                            <li><a href="#"><?= __('Delete Goal')?></a></li>
+                            <li><a href="#"><?=__('Acheive Goal')?></a></li>
                         </ul>
                     </div>
                 <?php else: ?>
