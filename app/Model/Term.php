@@ -152,15 +152,18 @@ class Term extends AppModel
     }
 
     /**
-     * チームの全評価期間取得
+     * Finding terms that evaluation was started already.
      *
      * @return array|null
      */
-    function findByTeam()
+    function findEvaluationStartedTerms()
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id
+                'team_id' => $this->current_team_id,
+                'NOT'     => [
+                    'evaluate_status' => self::STATUS_EVAL_NOT_STARTED
+                ]
             ],
             'order'      => [
                 'start_date' => 'desc'
@@ -349,7 +352,10 @@ class Term extends AppModel
             if (empty($nextTerm)) {
                 return [];
             }
-            $this->nextNextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($nextTerm['end_date']) + DAY));
+            $this->nextNextTerm = $this->getTermDataByDate(
+                AppUtil::dateYmd(strtotime($nextTerm['end_date']) + DAY),
+                false
+            );
             return $this->nextNextTerm;
         }
 
@@ -665,10 +671,10 @@ class Term extends AppModel
             $res['timezone'] = $timezone;
             // TODO: error logging for unexpected creating term data. when running test cases, ignore it for travis.
         } elseif ($this->useDbConfig != "test" && $enableErrorLog) {
-            $this->log(sprintf('[%s] Term data is not found. find options: %s, session data: %s, backtrace: %s',
+            $this->log(sprintf('[%s] Term data is not found. find options: %s, session current_team_id: %s, backtrace: %s',
                 __METHOD__,
                 var_export($options, true),
-                var_export(CakeSession::read(), true),
+                var_export(CakeSession::read('current_team_id'), true),
                 Debugger::trace()
             ));
         }
