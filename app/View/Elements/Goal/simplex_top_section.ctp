@@ -53,7 +53,14 @@
                                     ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']],
                                     ['escape' => false], __("Do you really want to delete this goal?")) ?>
                             </li>
-                            <li><a href="#"><?=__('Acheive Goal')?></a></li>
+                            <?php if ($isCanComplete): ?>
+                                <li>
+                                    <?=
+                                    $this->Form->postLink(__("Acheive Goal"),
+                                        "/goals/complete/" . $goal['Goal']['id'],
+                                        ['escape' => false], __("Do you really want to complete this goal?")) ?>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 <?php else: ?>
@@ -110,7 +117,7 @@
                             </span>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目          ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目            ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
@@ -127,30 +134,30 @@
                 <li class="goal-detail-info-followers">
                     <p><?= __('Followers') ?></p>
                     <?php
-                        $follower_view_num = 6;
-                        $iterator = $follower_view_num;
-                        $over_num = count($followers) - $follower_view_num + 1;
+                    $follower_view_num = 6;
+                    $iterator = $follower_view_num;
+                    $over_num = count($followers) - $follower_view_num + 1;
+                    ?>
+                    <?php foreach ($followers as $follower): ?>
+                        <?php
+                        if ($iterator == 0 || ($over_num > 1 && $iterator == 1)) {
+                            break;
+                        }
                         ?>
-                        <?php foreach ($followers as $follower): ?>
-                            <?php
-                            if ($iterator == 0 || ($over_num > 1 && $iterator == 1)) {
-                                break;
-                            }
-                            ?>
-                            <?=
-                            $this->Html->link($this->Upload->uploadImage($follower['User'], 'User.photo',
-                                ['style' => 'medium'],
-                                ['class' => 'goal-detail-info-avatar',]),
-                                [
-                                    'controller' => 'users',
-                                    'action'     => 'view_goals',
-                                    'user_id'    => $follower['User']['id']
-                                ],
-                                ['escape' => false]
-                            )
-                            ?>
-                            <?php $iterator--; ?>
-                        <?php endforeach ?>
+                        <?=
+                        $this->Html->link($this->Upload->uploadImage($follower['User'], 'User.photo',
+                            ['style' => 'medium'],
+                            ['class' => 'goal-detail-info-avatar',]),
+                            [
+                                'controller' => 'users',
+                                'action'     => 'view_goals',
+                                'user_id'    => $follower['User']['id']
+                            ],
+                            ['escape' => false]
+                        )
+                        ?>
+                        <?php $iterator--; ?>
+                    <?php endforeach ?>
 
                 </li>
             </ul>
