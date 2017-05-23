@@ -207,8 +207,8 @@ class ApiGoalService extends ApiService
         $GoalService = ClassRegistry::init("GoalService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        /** @var EvaluateTerm $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init("EvaluateTerm");
+        /** @var Term $EvaluateTerm */
+        $EvaluateTerm = ClassRegistry::init("Term");
 
         $TimeEx = new TimeExHelper(new View());
 
@@ -259,8 +259,9 @@ class ApiGoalService extends ApiService
         }
 
         //グラフデータのセット
+        $todayDate = AppUtil::dateYmd(REQUEST_TIMESTAMP + $currentTerm['timezone'] * HOUR);
         $graphRange = $GoalService->getGraphRange(
-            time(),
+            $todayDate,
             GoalService::GRAPH_TARGET_DAYS,
             GoalService::GRAPH_MAX_BUFFER_DAYS
         );

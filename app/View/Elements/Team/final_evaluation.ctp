@@ -22,8 +22,10 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Final evaluation") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Final evaluation") ?></h2>
+    </header>
     <div class="panel-body">
         <div class="form-group">
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
@@ -50,20 +52,17 @@
         </div>
     </div>
     <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
-        <div class="panel-footer">
-            <div class="row">
-                <div class="col-sm-9 col-sm-offset-3">
-                    <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $previous_term_id ?>_ByCsv"
-                       class="btn btn-primary" <?= $previous_term_id && $previous_eval_is_frozen ? null : 'disabled' ?>>
-                        <?= __('Perform final evaluation of previous term') ?></a>
-                    <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $current_term_id ?>_ByCsv"
-                       class="btn btn-primary" <?= $current_term_id && $current_eval_is_frozen ? null : 'disabled' ?>>
+        <footer>
+            <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $previous_term_id ?>_ByCsv"
+            class="btn btn-primary" <?= $previous_term_id && $previous_eval_is_frozen ? null : 'disabled' ?>>
+            <?= __('Perform final evaluation of previous term') ?></a>
+            <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $current_term_id ?>_ByCsv"
+            class="btn btn-primary" <?= $current_term_id && $current_eval_is_frozen ? null : 'disabled' ?>>
                         <?= __('Perform final evaluation of current term') ?></a>
-                </div>
-            </div>
-        </div>
+                
+        </footer>
     <?php endif; ?>
-</div>
+</section>
 <?= $this->App->viewEndComment()?>
 <?php $this->start('modal');
 if ($previous_term_id && $previous_eval_is_frozen) {

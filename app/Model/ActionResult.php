@@ -342,10 +342,10 @@ class ActionResult extends AppModel
 
         //期間で絞り込む
         if ($start_date) {
-            $options['conditions']["$date_col >="] = $start_date;
+            $options['conditions']["$date_col >="] = AppUtil::getStartTimestampByTimezone($start_date);
         }
         if ($end_date) {
-            $options['conditions']["$date_col <="] = $end_date;
+            $options['conditions']["$date_col <="] = AppUtil::getEndTimestampByTimezone($end_date);
         }
         $res = $this->find('count', $options);
         return $res;

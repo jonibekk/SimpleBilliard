@@ -28,31 +28,44 @@ class EvaluationsController extends AppController
             if (!$this->Team->EvaluationSetting->isEnabled()) {
                 throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
             }
+
+            // 評価期間ID取得
+            $termId = Hash::get($this->request->query, 'term_id');
+
+            // 全評価期間取得
+            $termsForFilter = $this->Team->Term->findEvaluationStartedTerms();
+            $currentTermId = $this->Team->Term->getCurrentTermId();
+            // if current evaluation is not started, add current term
+            if (!$this->Team->Term->isStartedEvaluation($currentTermId)) {
+                $currentTerm = $this->Team->Term->getCurrentTermData();
+                array_unshift($termsForFilter, $currentTerm);
+            }
+            $allTermIds = Hash::extract($termsForFilter, '{n}.id');
+
+            // 存在しない評価期間を指定した場合エラー
+            if (!empty($termId) && !in_array($termId, $allTermIds)) {
+                throw new RuntimeException(__("The specified period is incorrect."));
+            }
+
+            // decide default term id
+            if (empty($termId)) {
+                // as temporary, set current term id.
+                $termId = $this->Team->Term->getCurrentTermId();
+                // if previous my turn count, previous term is default. otherwise, current term is default
+                $prevTermId = $this->Team->Term->getPreviousTermId();
+                if($prevTermId){
+                    $prevMyTurnCount = $this->Evaluation->getMyTurnCount(null, $prevTermId);
+                    if ($prevMyTurnCount > 0) {
+                        $termId = $prevTermId;
+                    }
+                }
+            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
-
-        // 評価期間ID取得
-        $termId = Hash::get($this->request->query, 'term_id');
-
-        // 全評価期間取得
-        $allTerms = $this->Team->EvaluateTerm->findByTeam();
-        array_shift($allTerms);
-        $allTermIds = Hash::extract($allTerms, '{n}.id');
-
-        if (empty($termId)) {
-            // デフォルトは前期
-            $termId = $this->Team->EvaluateTerm->getPreviousTermId();
-        } else {
-            // 存在しない評価期間を指定した場合エラー
-            if (!in_array($termId, $allTermIds)) {
-                return $this->redirect($this->referer());
-            }
-        }
-
         // 評価期間選択用ラベル取得
-        $termLabels = $this->_getTermLabels($allTerms);
+        $termLabels = $this->_getTermLabels($termsForFilter);
 
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');
@@ -63,10 +76,10 @@ class EvaluationsController extends AppController
         $evaluateesEval = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($termId);
 
         // 該当期間が評価開始されているか
-        $isStartedEvaluation = $this->Team->EvaluateTerm->isStartedEvaluation($termId);
+        $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($termId);
 
         // Get term frozen status
-        $isFrozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($termId);
+        $isFrozen = $this->Team->Term->checkFrozenEvaluateTerm($termId);
 
         $this->set(compact(
             'termId',
@@ -94,8 +107,8 @@ class EvaluationsController extends AppController
         }
         $termLabels = [];
 
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        $currentTermId = $this->Team->Term->getCurrentTermId();
+        $previousTermId = $this->Team->Term->getPreviousTermId();
 
         foreach ($terms as $term) {
             $termId = $term['id'];
@@ -104,9 +117,8 @@ class EvaluationsController extends AppController
             } elseif ($termId == $previousTermId) {
                 $termLabels[$termId] = __("Previous Term");
             } else {
-                $timezoneSec = $term['timezone'] * 3600;
-                $fmtStartDate = date('Y/m/d', $term['start_date'] + $timezoneSec);
-                $fmtEndDate = date('Y/m/d', $term['end_date'] + $timezoneSec);
+                $fmtStartDate = AppUtil::dateYmdReformat($term['start_date'], "/");
+                $fmtEndDate = AppUtil::dateYmdReformat($term['end_date'], "/");
                 $termLabels[$term['id']] = $fmtStartDate . " - " . $fmtEndDate;
             }
         }

@@ -62,7 +62,7 @@ export function _checkValue(target) {
         return invalid(name, cake.message.validate.signup_term_required)
       }
       return valid(name)
-    case 'start_month':
+    case 'next_start_ym':
       if (!val) {
         return invalid(name, cake.message.validate.signup_start_month_required)
       }

@@ -11,6 +11,7 @@ App::uses('AttachedFile', 'Model');
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
+        lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         message: {
             validate: {

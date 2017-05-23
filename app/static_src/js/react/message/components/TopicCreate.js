@@ -37,6 +37,13 @@ export default class TopicCreate extends Base {
       ReactDom.findDOMNode(this.refs.select2Member).value = `user_${user_id}`
       this.changeToUserIds()
     }
+    // HACK: メンバー選択処理初期化
+    // SPAの為トピックリストから遷移した時はinitMemberSelect2は呼ばれないので、もう一度呼ぶ必要がある。
+    $(document).ready(function (e) {
+      if ($("#s2id_select2Member").length == 0) {
+        initMemberSelect2();
+      }
+    });
   }
 
   onBeforeUnloadSelect2Handler(event) {

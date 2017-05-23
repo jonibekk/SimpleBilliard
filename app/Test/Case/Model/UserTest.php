@@ -30,7 +30,7 @@ class UserTest extends GoalousTestCase
         'app.notify_setting',
         'app.member_group',
         'app.device',
-        'app.evaluate_term',
+        'app.term',
         'app.goal',
         'app.action_result',
         'app.post_share_circle',
@@ -215,6 +215,8 @@ class UserTest extends GoalousTestCase
     {
         $token = "12345678";
         $user_id = "15";
+        $tokenExpires = strtotime('2099-05-22 02:28:03');
+        $this->User->Email->updateAll(['email_token_expires' => $tokenExpires], ['Email.user_id' => $user_id]);
         $before_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
         $before_data = [
             'User'  => [
@@ -236,7 +238,7 @@ class UserTest extends GoalousTestCase
                 [
                     'email_verified'      => false,
                     'email_token'         => $token,
-                    'email_token_expires' => strtotime('2017-05-22 02:28:03'),
+                    'email_token_expires' => $tokenExpires,
                 ]
             ]
         ];
@@ -281,6 +283,9 @@ class UserTest extends GoalousTestCase
         unset($e);
 
         $exists_token = "12345678";
+        $tokenExpires = strtotime('2099-05-22 02:28:03');
+        $this->User->Email->updateAll(['email_token_expires' => $tokenExpires], ['Email.email_token' => $exists_token]);
+
         try {
             $this->User->verifyEmail($exists_token);
         } catch (RuntimeException $e) {
@@ -1057,10 +1062,10 @@ class UserTest extends GoalousTestCase
         $this->User->TeamMember->Team->my_uid = 1;
         $this->User->LocalName->my_uid = 1;
         $this->User->LocalName->current_team_id = 1;
-        $this->User->TeamMember->Team->EvaluateTerm->current_team_id = 1;
-        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->User->TeamMember->Team->Term->current_team_id = 1;
+        $this->User->TeamMember->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->User->TeamMember->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->User->TeamMember->Team->Term->addTermData(Term::TYPE_NEXT);
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');

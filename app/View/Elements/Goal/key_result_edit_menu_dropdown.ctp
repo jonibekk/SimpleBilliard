@@ -41,8 +41,9 @@ $is_tkr = null;
                 ?>
                 <a href="<?= $this->Html->url($url) ?>"
                    class="js-show-modal-edit-kr"
-                    data-kr_id="<?=$kr['id']?>">
-                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= $is_tkr ? __("Edit Top Key Result") : __("Edit Key Result") ?></span></a>
+                   data-kr_id="<?= $kr['id'] ?>">
+                    <i class="fa fa-pencil"></i><span
+                        class="ml_2px"><?= $is_tkr ? __("Edit Top Key Result") : __("Edit Key Result") ?></span></a>
             </li>
         <?php endif ?>
         <li role="presentation">
@@ -54,13 +55,15 @@ $is_tkr = null;
             <?php else: ?>
                 <?php //最後のKRの場合
                 if ($incomplete_kr_count === 1):?>
-                    <a href="<?= $this->Html->url([
-                        'controller'    => 'goals',
-                        'action'        => 'ajax_get_last_kr_confirm',
-                        'key_result_id' => $kr['id']
-                    ]) ?>"
+                    <a href="#"
+                       data-url="<?= $this->Html->url([
+                           'controller'    => 'goals',
+                           'action'        => 'ajax_get_last_kr_confirm',
+                           'key_result_id' => $kr['id']
+                       ]) ?>"
                        class="modal-ajax-get">
-                        <i class="fa fa-check"></i><span class="ml_2px"><?= $is_tkr ? __("Complete Top Key Result") : __("Complete Key Result"); ?></span>
+                        <i class="fa fa-check"></i><span
+                            class="ml_2px"><?= $is_tkr ? __("Complete Top Key Result") : __("Complete Key Result"); ?></span>
                     </a>
                 <?php else: ?>
                     <?=

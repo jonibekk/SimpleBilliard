@@ -344,22 +344,24 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         <?php endif; ?>
                     </div>
                     <div class="feeds-post-btns-wrap-right">
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'posts',
-                            'action'     => 'ajax_get_post_liked_users',
-                            'post_id'    => $post['Post']['id']
-                        ]) ?>"
+                        <a href="#"
+                           data-url="<?= $this->Html->url([
+                               'controller' => 'posts',
+                               'action'     => 'ajax_get_post_liked_users',
+                               'post_id'    => $post['Post']['id']
+                           ]) ?>"
                            class="modal-ajax-get feeds-post-btn-numbers-like">
                             <i class="fa fa-thumbs-o-up"></i>&nbsp;
                             <span id="PostLikeCount_<?= $post['Post']['id'] ?>">
                                     <?= $post['Post']['post_like_count'] ?>
                                 </span>
                         </a>
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'posts',
-                            'action'     => 'ajax_get_post_red_users',
-                            'post_id'    => $post['Post']['id']
-                        ]) ?>"
+                        <a href="#"
+                           data-url="<?= $this->Html->url([
+                               'controller' => 'posts',
+                               'action'     => 'ajax_get_post_red_users',
+                               'post_id'    => $post['Post']['id']
+                           ]) ?>"
                            class="modal-ajax-get feeds-post-btn-numbers-read">
                             <i class="fa fa-check"></i>
                             <span>

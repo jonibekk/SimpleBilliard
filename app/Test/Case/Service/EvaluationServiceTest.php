@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('EvaluateTerm', 'Model');
+App::uses('Term', 'Model');
 App::import('Service', 'EvaluationService');
 
 /**
@@ -51,7 +51,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $userId,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 5,
@@ -107,7 +107,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $userId,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'evaluate_type'     => Evaluation::TYPE_ONESELF,
@@ -115,7 +115,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => 2,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
@@ -173,7 +173,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 2,
@@ -183,7 +183,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => $userId,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
                 'status'            => 1,
@@ -193,7 +193,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 3,
                 'evaluator_user_id' => 3,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 2,
@@ -203,7 +203,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 3,
                 'evaluator_user_id' => $userId,
-                'evaluate_term_id'  => $termId,
+                'term_id'  => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
                 'status'            => 1,

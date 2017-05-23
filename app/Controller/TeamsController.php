@@ -1,6 +1,8 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
+App::import('Service', 'TermService');
+App::import('Service', 'EvaluationService');
 
 /**
  * Teams Controller
@@ -12,6 +14,60 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+    }
+
+    /**
+     * Basic info page
+     *
+     * @return CakeResponse
+     */
+    function index()
+    {
+        $this->layout = LAYOUT_TWO_COLUMN;
+        $this->set('current_global_menu', 'team');
+
+        $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
+
+        // Get current term info
+        $currentTerm = $this->Team->Term->getCurrentTermData();
+        $currentTermStartDate = Hash::get($currentTerm, 'start_date');
+        $currentTermEndDate = Hash::get($currentTerm, 'end_date');
+
+        // Get next term info
+        $nextTerm = $this->Team->Term->getNextTermData();
+        $nextTermStartDate = Hash::get($nextTerm, 'start_date');
+        $nextTermEndDate = Hash::get($nextTerm, 'end_date');
+
+        // If changed term in 2 weeks, Display information
+        $changedTermFlg = $this->GlRedis->getChangedTerm($this->current_team_id);
+
+        // Get timezone label
+        $timezoneLabel = $this->getTimezoneLabel($team['timezone']);
+        $this->set([
+            'team' => $team,
+            'current_term_start_date' => $currentTermStartDate,
+            'current_term_end_date' => $currentTermEndDate,
+            'next_term_start_date' => $nextTermStartDate,
+            'next_term_end_date' => $nextTermEndDate,
+            'changed_term_flg' => $changedTermFlg,
+            'timezone_label' => $timezoneLabel,
+        ]);
+    }
+
+    /**
+     * Get Label for timezone
+     * @param float $timezone
+     *
+     * @return mixed
+     */
+    private function getTimezoneLabel(float $timezone) {
+        $timezones = AppUtil::getTimezoneList();
+        $prefix = "";
+        if ($timezone != 0 && abs($timezone) === $timezone) {
+            $prefix = '+';
+        }
+        $timezone = $prefix.number_format($timezone,1);
+        return $timezones[$timezone];
     }
 
     public function add()
@@ -42,26 +98,78 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
+        $team = $this->Team->getById($this->current_team_id);
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
             $this->Pnotify->outSuccess(__("Changed basic team settings."));
         } else {
             $this->Pnotify->outError(__("Failed to change basic team settings."));
         }
+
+        // If change timezone, notify team members
+        $newTimezone = Hash::get($this->request->data, 'Team.timezone');
+        // Send notification
+        if ((float)$team['timezone'] != (float)$newTimezone) {
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CHANGED_TEAM_BASIC_SETTING, $this->current_team_id);
+
+        }
+
         return $this->redirect($this->referer());
     }
 
+    /**
+     * Update term
+     * - validate forbitten
+     * - validate request data
+     * - update term
+     * - notify to team members
+     */
     public function edit_term()
     {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init("TermService");
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
+
         $this->request->allowMethod('post');
-        $this->Team->begin();
-        if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
-            $this->Pnotify->outSuccess(__("Changed terms setting."));
-            $this->Team->commit();
-        } else {
-            $this->Pnotify->outError(__("Failed to change terms setting."));
-            $this->Team->rollback();
+
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        // checking 403
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
+            $this->Pnotify->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
         }
+
+        // checking can change term setting
+        if ($EvaluationService->isStarted()) {
+            $this->Pnotify->outError(__("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term."));
+            return $this->redirect($this->referer());
+        }
+
+        // data validation
+        $requestData = Hash::get($this->request->data, 'Team');
+        $validRes = $TermService->validateUpdate($requestData);
+        if ($validRes !== true) {
+            $this->Pnotify->outError($validRes);
+            return $this->redirect($this->referer());
+        }
+
+        // term updating
+        if (!$TermService->update($requestData)) {
+            $this->Pnotify->outError(__("Failed to change terms setting."));
+            return $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__("Changed terms setting."));
+
+        // Save changed term info to redis
+        $this->GlRedis->saveChangedTerm($this->current_team_id);
+
+        // Send notification
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CHANGED_TERM_SETTING, $this->current_team_id);
+
         return $this->redirect($this->referer());
     }
 
@@ -118,6 +226,9 @@ class TeamsController extends AppController
 
     public function settings()
     {
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
+
         $this->layout = LAYOUT_TWO_COLUMN;
         $team_id = $this->Session->read('current_team_id');
         try {
@@ -132,9 +243,8 @@ class TeamsController extends AppController
 
         $team = $this->Team->findById($team_id);
         unset($team['Team']['id']);
-        $term_start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $term_end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        $term_end_date = $term_end_date - 1;
+        $term_start_date = $this->Team->Term->getCurrentTermData()['start_date'];
+        $term_end_date = $this->Team->Term->getCurrentTermData()['end_date'];
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
@@ -145,10 +255,10 @@ class TeamsController extends AppController
 
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+        $current_term_id = $this->Team->Term->getCurrentTermId();
+        $previous_term_id = $this->Team->Term->getPreviousTermId();
         $eval_start_button_enabled = true;
-        if (!$this->Team->EvaluateTerm->isAbleToStartEvaluation($current_term_id)) {
+        if (!$this->Team->Term->isAbleToStartEvaluation($current_term_id)) {
             $eval_start_button_enabled = false;
         }
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
@@ -159,26 +269,38 @@ class TeamsController extends AppController
         $previous_progress = $this->_getEvalProgress($previous_statuses);
 
         // Get term info
-        $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
-        $current_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($current_term_id);
-        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
+        $current_eval_is_frozen = $this->Team->Term->checkFrozenEvaluateTerm($current_term_id);
+        $current_eval_is_started = $this->Team->Term->isStartedEvaluation($current_term_id);
+        $current_term = $this->Team->Term->getCurrentTermData();
         $current_term_start_date = Hash::get($current_term, 'start_date');
-        $current_term_end_date = Hash::get($current_term, 'end_date') - 1;
+        $current_term_end_date = Hash::get($current_term, 'end_date');
         $current_term_timezone = Hash::get($current_term, 'timezone');
 
-        $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
-        $previous_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($previous_term_id);
-        $previous_term = $this->Team->EvaluateTerm->getPreviousTermData();
+        $previous_eval_is_frozen = $this->Team->Term->checkFrozenEvaluateTerm($previous_term_id);
+        $previous_eval_is_started = $this->Team->Term->isStartedEvaluation($previous_term_id);
+        $previous_term = $this->Team->Term->getPreviousTermData();
         $previous_term_start_date = Hash::get($previous_term, 'start_date');
-        $previous_term_end_date = Hash::get($previous_term, 'end_date') - 1;
+        $previous_term_end_date = Hash::get($previous_term, 'end_date');
         $previous_term_timezone = Hash::get($previous_term, 'timezone');
-        $next_term = $this->Team->EvaluateTerm->getNextTermData();
+        $next_term = $this->Team->Term->getNextTermData();
         $next_term_start_date = Hash::get($next_term, 'start_date');
-        $next_term_end_date = Hash::get($next_term, 'end_date') - 1;
+        $next_term_end_date = Hash::get($next_term, 'end_date');
         $next_term_timezone = Hash::get($next_term, 'timezone');
+
+        // term changing init data
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init("TermService");
+        $nextSelectableStartYm = $TermService->getSelectableNextStartYmList($current_term_start_date, date('Y-m'));
+        $termLength = $team['Team']['border_months'];
+        $currentTermStartYm = date('Y-m', strtotime($current_term_start_date));
+        $currentTermEndYm = date('Y-m', strtotime($current_term_end_date));
+        $nextTermStartYm = date('Y-m', strtotime($next_term_start_date));
+        $nextTermEndYm = date('Y-m', strtotime($next_term_end_date));
+
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
+        $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
             'current_statuses',
@@ -200,7 +322,14 @@ class TeamsController extends AppController
             'previous_term_timezone',
             'next_term_start_date',
             'next_term_end_date',
-            'next_term_timezone'
+            'next_term_timezone',
+            'nextSelectableStartYm',
+            'currentTermStartYm',
+            'currentTermEndYm',
+            'nextTermStartYm',
+            'nextTermEndYm',
+            'termLength',
+            'isStartedEvaluation'
         ));
 
         return $this->render();
@@ -333,7 +462,7 @@ class TeamsController extends AppController
     function ajax_get_term_start_end($start_term_month, $border_months, $timezone)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->EvaluateTerm->getNewStartEndBeforeAdd($start_term_month, $border_months, $timezone);
+        $res = $this->Team->Term->getNewStartEndBeforeAdd($start_term_month, $border_months, $timezone);
         $res['start'] = date('Y/m/d', $res['start'] + $timezone * 3600);
         $res['end'] = date('Y/m/d', $res['end'] + $timezone * 3600);
         return $this->_ajaxGetResponse($res);
@@ -345,23 +474,20 @@ class TeamsController extends AppController
             $timezone = $this->Team->me['timezone'];
         }
         $this->_ajaxPreProcess();
-        $save_data = $this->Team->EvaluateTerm->getSaveDataBeforeUpdate($option, $start_term_month, $border_months,
-            $timezone);
-        $current_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $next_id = $this->Team->EvaluateTerm->getNextTermId();
+        $save_data = $this->Team->Term->getSaveDataBeforeUpdate($option, $start_term_month, $border_months);
+        $current_id = $this->Team->Term->getCurrentTermId();
+        $next_id = $this->Team->Term->getNextTermId();
         $res = [];
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
             $res = [
                 'current' => [
-                    'start_date' => date('Y/m/d',
-                        $save_data[$current_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d',
-                        $save_data[$current_id]['end_date'] + $timezone * 3600),
+                    'start_date' => AppUtil::dateYmdReformat($save_data[$current_id]['start_date'], "/"),
+                    'end_date'   => AppUtil::dateYmdReformat($save_data[$current_id]['end_date'], "/"),
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'start_date' => AppUtil::dateYmdReformat($save_data[$next_id]['start_date'], "/"),
+                    'end_date'   => AppUtil::dateYmdReformat($save_data[$next_id]['end_date'], "/"),
                     'timezone'   => $timezone,
                 ],
             ];
@@ -374,8 +500,8 @@ class TeamsController extends AppController
                     'timezone'   => $timezone,
                 ],
                 'next'    => [
-                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
-                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'start_date' => AppUtil::dateYmdReformat($save_data[$next_id]['start_date'], "/"),
+                    'end_date'   => AppUtil::dateYmdReformat($save_data[$next_id]['end_date'], "/"),
                     'timezone'   => $timezone,
                 ],
             ];
@@ -404,11 +530,11 @@ class TeamsController extends AppController
         $this->Team->Evaluation->commit();
 
         // 評価期間判定キャッシュ削除
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'team_info');
 
         $this->Pnotify->outSuccess(__("Evaluation started."));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
-            $this->Team->EvaluateTerm->getCurrentTermId());
+            $this->Team->Term->getCurrentTermId());
         Cache::clear(false, 'team_info');
         return $this->redirect($this->referer());
     }
@@ -688,15 +814,15 @@ class TeamsController extends AppController
         $termId = $this->request->params['named']['evaluate_term_id'];
         $this->request->allowMethod('post');
         try {
-            $res = $this->Team->EvaluateTerm->changeFreezeStatus($termId);
+            $res = $this->Team->Term->changeFreezeStatus($termId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
-        if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
+        if ($res['Term']['evaluate_status'] == Term::STATUS_EVAL_FROZEN) {
             $this->Pnotify->outSuccess(__("Evaluation suspended."));
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
-                $this->Team->EvaluateTerm->getCurrentTermId());
+                $this->Team->Term->getCurrentTermId());
         } else {
             $this->Pnotify->outSuccess(__("Removed evaluation suspension."));
         }
@@ -1305,12 +1431,12 @@ class TeamsController extends AppController
             }
         } // 期単位の場合
         elseif ($date_range_type == 'term') {
-            $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+            $all_terms = $this->Team->Term->getAllTerm();
             $start_term_id = null;
             if ($date_range == 'prev_term') {
-                $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+                $start_term_id = $this->Team->Term->getPreviousTermId();
             } elseif ($date_range == 'current_term') {
-                $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+                $start_term_id = $this->Team->Term->getCurrentTermId();
             }
             $skip = true;
             foreach ($all_terms as $term_id => $v) {
@@ -1321,9 +1447,8 @@ class TeamsController extends AppController
                 $skip = false;
 
                 $insights[] = $this->_getInsightData(
-                    date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
-                    $this->_insightAdjustEndDate(date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
-                        $date_info['today']),
+                    $v['start_date'],
+                    $this->_insightAdjustEndDate($v['end_date'], $date_info['today']),
                     $timezone,
                     $group_id,
                     $cache_expire);
@@ -1516,12 +1641,12 @@ class TeamsController extends AppController
             // 今期、前期 の場合に過去６期分のデータを取得
             $max_terms = 6;
 
-            $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+            $all_terms = $this->Team->Term->getAllTerm();
             $start_term_id = null;
             if ($date_range == 'prev_term') {
-                $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+                $start_term_id = $this->Team->Term->getPreviousTermId();
             } elseif ($date_range == 'current_term') {
-                $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+                $start_term_id = $this->Team->Term->getCurrentTermId();
             }
 
             // キャッシュの有効期限
@@ -1645,11 +1770,11 @@ class TeamsController extends AppController
             $prev_term2 = null;
             if ($date_range == 'current_term') {
                 // 前期の日付
-                $prev_term2 = $this->Team->EvaluateTerm->getPreviousTermData();
+                $prev_term2 = $this->Team->Term->getPreviousTermData();
             } elseif ($date_range == 'prev_term') {
                 // 前々期の日付
-                $prev_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-                $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+                $prev_term_id = $this->Team->Term->getPreviousTermId();
+                $all_terms = $this->Team->Term->getAllTerm();
                 $found = false;
                 foreach ($all_terms as $term_id => $v) {
                     if ($found) {
@@ -1924,16 +2049,18 @@ class TeamsController extends AppController
         $date_ranges['prev_week'] = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
         $date_ranges['current_month'] = $this->Team->TeamInsight->getMonthRangeDate($today);
         $date_ranges['prev_month'] = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $row = $this->Team->EvaluateTerm->getCurrentTermData();
+        $row = $this->Team->Term->getCurrentTermData();
         $date_ranges['current_term'] = [
-            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
-            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
+            'start' => $row['start_date'],
+            'end'   => $row['end_date'],
         ];
-        $row = $this->Team->EvaluateTerm->getPreviousTermData();
-        $date_ranges['prev_term'] = [
-            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
-            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
-        ];
+        $row = $this->Team->Term->getPreviousTermData();
+        if (!empty($row)) {
+            $date_ranges['prev_term'] = [
+                'start' => $row['start_date'],
+                'end'   => $row['end_date'],
+            ];
+        }
 
         return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }
@@ -2518,7 +2645,7 @@ class TeamsController extends AppController
             $this->Session->write('current_team_id', $team_id);
 
             //EvaluateTermのプロパティにログインteamのtermがすでにセットされている(コントローラの共有処理による)のでリセット。
-            $this->Team->EvaluateTerm->resetAllTermProperty();
+            $this->Team->Term->resetAllTermProperty();
             //期間データが存在しない場合に対応できるようにする
             $this->_setTerm();
 

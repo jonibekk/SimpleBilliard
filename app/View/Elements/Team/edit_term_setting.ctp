@@ -21,36 +21,99 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Term settings") ?></div>
-    <div class="panel-body add-team-panel-body form-horizontal">
-        <?php // TODO: システム全体でtimezone, dateデータの持ち方に問題があるため、データの不整合が起きる前に一旦期間設定の変更をできなくしている。 ?>
-        <?php //       本来ここには期間設定のformがあるので、上記対応時にrevertする。 ?>
-        <?php if ($current_term_start_date && $current_term_end_date): ?>
-            <div class="form-group">
-                <label class="col col-sm-3 control-label form-label"><?= __("Current Term") ?></label>
-                <div class="col col-sm-6">
-                    <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($current_term_start_date, $current_term_timezone) ?>
-                        - <?= $this->TimeEx->date($current_term_end_date, $current_term_timezone) ?>
-                        <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
-                    </p>
+<section class="panel panel-default" id="editTerm">
+    <?php $confirmMsg = __("By this operation, some goals and KRs schedules may automatically be updated."); ?>
+    <?=
+    $this->Form->create('Team', [
+        'novalidate' => true,
+        'url'        => ['action' => 'edit_term'],
+        'method'     => 'post',
+        'onsubmit'   => 'return teamSettings.onSubmitConfirm(event, "'.$confirmMsg.'");'
+    ]); ?>
+    <header>
+        <h2><?= __("Term settings") ?></h2>
+    </header>
+    <div class="panel-body">
+        <?php if ($isStartedEvaluation):?>
+            <p class="term-setting-warning"><?= __("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term.") ?></p>
+        <?php endif;?>
+        <p><?= __("Changes will take effect after this current term") ?></p>
+        <fieldset>
+            <label><?= __("Next term start") ?>:</label>
+            <?php
+            $nextSelectableStartYm[$nextTermStartYm] .= '*';
+            echo $this->Form->input('next_start_ym', [
+                'label'    => false,
+                'type'     => 'select',
+                'options'  => $nextSelectableStartYm,
+                'selected' => $nextTermStartYm,
+                'id'       => 'term_start',
+                'disabled' => $isStartedEvaluation,
+            ]) ?>
+        </fieldset>
+        <fieldset>
+            <label><?= __("Term length") ?>:</label>
+            <?php
+            $rangeOptions = [
+                '3' => __('3 months'),
+                '6' => __('6 months'),
+                '12' => __('12 months'),
+            ];
+            $rangeOptions[$termLength] .= '*';
+            echo $this->Form->input('term_length', [
+                'label'    => false,
+                'type'     => 'select',
+                'options'  => $rangeOptions,
+                'selected' => $termLength,
+                'id'       => 'term_length',
+                'disabled' => $isStartedEvaluation,
+            ]) ?>
+        </fieldset>
+        <div class="term-details current-term">
+            <p>
+                <strong><?= __("Current") ?></strong>
+                <div class="term-range">
+                    <?= __("This term") ?>: <span id="currentStart" class="this-start" data-date="<?= $currentTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date="<?= $currentTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_end_date)) ?></span>
                 </div>
-            </div>
-        <?php endif; ?>
-        <?php if ($next_term_start_date && $next_term_end_date): ?>
-            <div class="form-group">
-                <label class="col col-sm-3 control-label form-label"><?= __("Next Term") ?></label>
-                <div class="col col-sm-6">
-                    <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($next_term_start_date, $next_term_timezone) ?>
-                        - <?= $this->TimeEx->date($next_term_end_date, $next_term_timezone) ?>
-                        <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
-                    </p>
+                <div class="term-range">
+                    <?= __("Next term") ?>: <span class="next-start" data-date="<?= $nextTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_start_date)) ?></span> - <span class="next-end" data-date="<?= $nextTermEndYm ?>"><?= AppUtil::formatYmI18n(strtotime($next_term_end_date)) ?></span>
                 </div>
-            </div>
-        <?php endif; ?>
+            </p>
+        </div>
+        <i class="fa fa-caret-down current-next-arrow mod-hide"></i>
+        <div class="term-details edited-term mod-hide">
+            <p>
+                <strong><?= __("After") ?></strong>
+                <div class="term-range"><?= __("This term") ?>: <span class="this-start" data-date="<?= $currentTermStartYm ?>"><?= AppUtil::formatYmI18n(strtotime($current_term_start_date)) ?></span> - <span class="this-end" data-date=""></span></div>
+                <div class="term-range"><?= __("Next term") ?>: <span class="next-start" data-date=""></span> - <span class="next-end" data-date=""></span></div>
+            </p>
+        </div>
     </div>
-</div>
-<?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+    <footer>
+        <div class="term-attention mod-hide">
+            <strong>< <?= __("Attention") ?> ></strong>
+            <ul>
+                <li><?= __("The term has changed as above.") ?></li>
+            </ul>
+            <ol>
+                <li><?= __("The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term.") ?></li>
+                <li><?= __("The goal that begins in the current term and ends beyond the next term will be updated to end on the last day of the current term.") ?></li>
+                <li><?= __("The goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term.") ?></li>
+                <li><?= __("If the start date and end date of a goal is both within the current term, or both within the next term, will not be changed.") ?></li>
+                <li><?= __("The goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term.") ?></li>
+            </ol>
+            <fieldset>
+                <input type="checkbox" id="term_agreement" name="term_agreement"> <?= __("I confirm these changes.") ?>
+            </fieldset>
+        </div>
+        <?=
+            $this->Form->submit(__("Save settings"),
+            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled'])
+        ?>
+    </footer>
+    <?php $this->Form->unlockField('Team.next_start_ym') ?>
+    <?php $this->Form->unlockField('Team.term_length') ?>
+    <?php $this->Form->unlockField('term_agreement') ?>
+    <?= $this->Form->end(); ?>
+</section>
+<?= $this->App->viewEndComment() ?>

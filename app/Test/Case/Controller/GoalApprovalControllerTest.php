@@ -45,7 +45,7 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         'app.member_type',
         'app.evaluator',
         'app.evaluation_setting',
-        'app.evaluate_term',
+        'app.term',
         'app.email',
         'app.notify_setting',
         'app.oauth_token',
@@ -668,8 +668,8 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         $GoalApproval->Goal->Follower->current_team_id = '1';
         $GoalApproval->Goal->Post->my_uid = '1';
         $GoalApproval->Goal->Post->current_team_id = '1';
-        $GoalApproval->Team->EvaluateTerm->my_uid = 1;
-        $GoalApproval->Team->EvaluateTerm->current_team_id = 1;
+        $GoalApproval->Team->Term->my_uid = 1;
+        $GoalApproval->Team->Term->current_team_id = 1;
 
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');

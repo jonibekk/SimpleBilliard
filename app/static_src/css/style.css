@@ -235,6 +235,10 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 .panel-block {
     padding: 10px;
 }
+.panel-default.mod-notice {
+    border: 1px solid #c92434;
+    color: #ae2f2f;
+}
 
 .form-horizontal .form-group {
     margin-right: 0;
@@ -1340,6 +1344,7 @@ textarea{
 .sidebar-setting {
     position: fixed;
     top: 90px;
+    width:25%;
 }
 
 ul.example-indent {
