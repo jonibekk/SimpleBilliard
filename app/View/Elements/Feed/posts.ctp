@@ -15,7 +15,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="post-heading-goal-wrapper pull-left">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'view_info',
+                                    'action'     => 'view_krs',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
                                    data-url="<?= $this->Html->url([
@@ -35,7 +35,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="pull-right">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'view_info',
+                                    'action'     => 'view_krs',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
                                    data-url="<?= $this->Html->url([
