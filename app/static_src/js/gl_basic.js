@@ -3653,19 +3653,25 @@ $(document).ready(function () {
 function evCommendEditSubmit(e) {
   e.preventDefault();
   var $form = $(this).parents('form');
-  var postUrl = $form.attr('action');
-  var commentId = postUrl.split(':')[1];
+  var formUrl = $form.attr('action');
+  var commentId = formUrl.split(':')[1];
 
-  //　Send serialize current form
-  var formData = new FormData($form[0]);
+  var token = $form.find('[name="data[_Token][key]"]').val();
+  var body = $form.find('[name="data[Comment][body]"]').val();
+
+  var data = {
+    "data[_Token][key]": token,
+    Comment: {
+      body: body
+    }
+  };
 
   $.ajax({
-    type: 'POST',
-    url: postUrl,
+    type: 'PUT',
+    url: "/api/v1/comments/" + commentId,
     cache: false,
-    contentType: false,
-    processData: false,
-    data: formData,
+    dataType: 'json',
+    data: data,
     success: function (data) {
       if (!$.isEmptyObject(data.html)) {
         var $updatedComment = $(data.html);
@@ -3697,6 +3703,7 @@ function evCommendEditSubmit(e) {
       $('[target-id="CommentEditForm_' + commentId + '"]').click();
     }
   });
+  return false;
 }
 
 // Display a modal to confirm the deletion of comment
@@ -3728,6 +3735,7 @@ function evCommentDelete(e) {
 
   var $modal_elm = $(modalTemplate);
   $modal_elm.modal();
+  return false;
 }
 
 // Send the delete request
@@ -3735,7 +3743,7 @@ function evCommentDeleteConfirm() {
   var $delBtn = $(this);
   attrUndefinedCheck($delBtn, 'comment-id');
   var commentId = $delBtn.attr("comment-id");
-  var url = "/posts/ajax_comment_delete/comment_id:" + commentId;
+  var url = "/api/v1/comments/" + commentId;
   var $modal = $delBtn.closest('.modal');
   var $commentBox = $("div.comment-box[comment-id='" + commentId + "']");
 
@@ -3745,27 +3753,26 @@ function evCommentDeleteConfirm() {
   $delBtn.attr('disabled', 'disabled');
 
   $.ajax({
-    type: 'POST',
     url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
+    type: 'DELETE',
+    success: function () {
       // Remove modal and comment box
       $modal.modal('hide');
       $commentBox.fadeOut('slow', function(){
-        $(this).remove();
+          $(this).remove();
       });
     },
-    error: function (ev) {
+    error: function (res) {
       // Display error message
       new PNotify({
-        title: cake.word.error,
-        text: cake.message.notice.i,
-        type: 'error'
+          title: cake.word.error,
+          text: cake.message.notice.i,
+          type: 'error'
       });
       $modal.modal('hide');
     }
   });
+  return false;
 }
 
 function getCommentBlockLatestId($commentBlock) {
@@ -3874,7 +3881,6 @@ function evCommentLatestView(options) {
       message.html(cake.message.notice.i);
       $errorBox.css("display", "block");
     }
-
   });
   return false;
 }
