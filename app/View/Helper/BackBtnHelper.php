@@ -5,7 +5,7 @@ class BackBtnHelper extends AppHelper
 {
     public function checkPage() {
         //Create array of pages where the normal header should appear
-        $normalPages = array('topics','notifications','users', 'goals/kr_progress');
+        $normalPages = array('topics','notifications','users', 'goals/kr_progress', 'post_permanent');
         $backButton = true;
 
         foreach($normalPages as $pageURL){
