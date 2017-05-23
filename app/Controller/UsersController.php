@@ -1290,9 +1290,14 @@ class UsersController extends AppController
 
     function view_actions()
     {
-        $user_id = Hash::get($this->request->params, "named.user_id");
-        $page_type = Hash::get($this->request->params, "named.page_type");
-        $goal_id = Hash::get($this->request->params, 'named.goal_id');
+        $namedParams = $this->request->params['named'];
+        $user_id = Hash::get($namedParams, "user_id");
+        $page_type = Hash::get($namedParams, "page_type");
+        $goal_id = Hash::get($namedParams, 'goal_id');
+        $term_id = Hash::get($namedParams, 'term_id') ?? $this->Team->Term->getCurrentTermId();
+
+        $terms = $this->_getVisibleAllTerm();
+
         if (!$user_id || !in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
@@ -1329,7 +1334,7 @@ class UsersController extends AppController
             'page_type'  => $page_type
         ]);
         $this->set('long_text', false);
-        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url'));
+        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url', 'term_id', 'terms'));
         return $this->render();
     }
 

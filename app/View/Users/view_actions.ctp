@@ -13,6 +13,7 @@
  * @var
  */
 $namedParams = $this->request->params['named'];
+$filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_type:{$namedParams['page_type']}"
 ?>
 <?= $this->App->viewStartComment() ?>
 <div class="user-view-actions col-sm-8 col-sm-offset-2">
@@ -22,25 +23,13 @@ $namedParams = $this->request->params['named'];
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    <?= __('Term') ?>:&nbsp;<strong>Current&nbsp;<spanclass
-                        ="fa fa-angle-down ml_2px"></span></strong>
+                    <?= __('Term') ?>:&nbsp;<strong><?= $terms[$term_id] ?>&nbsp;<span
+                            class="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#">Current</a></li>
-                    <li><a href="#">June - December 2016</a></li>
-                    <li><a href="#">Jauary - May 2016</a></li>
-                    <li><a href="#">June - December 2015</a></li>
-                    <li><a href="#">Jauary - May 2015</a></li>
-                    <li><a href="#">June - December 2014</a></li>
-                    <li><a href="#">Jauary - May 2014</a></li>
-                    <li><a href="#">June - December 2013</a></li>
-                    <li><a href="#">Jauary - May 2013</a></li>
-                    <li><a href="#">June - December 2012</a></li>
-                    <li><a href="#">Jauary - May 2012</a></li>
-                    <li><a href="#">June - December 2011</a></li>
-                    <li><a href="#">Jauary - May 2011</a></li>
-                    <li><a href="#">June - December 2010</a></li>
-                    <li><a href="#">Jauary - May 2010</a></li>
+                    <?php foreach ($terms as $id => $termText): ?>
+                        <li><a href='<?= "$filterCommonUrl/term_id:$id" ?>'><?= $termText ?></a></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
             <div class="view-actions-panel-filter">
@@ -54,13 +43,9 @@ $namedParams = $this->request->params['named'];
                     foreach ($goal_select_options as $goalID => $goalName) { ?>
                         <?php if ($goalName == "_separator_"): ?>
                             <li role="separator" class="divider"></li>
-                        <?php elseif ($goalName == __('All')): ?>
-                            <li>
-                                <a href="/users/view_actions/user_id:<?php echo $namedParams['user_id'] ?>/page_type:<?php echo $namedParams['page_type'] ?>/"><?php echo $goalName ?></a>
-                            </li>
                         <?php else: ?>
                             <li>
-                                <a href="/users/view_actions/user_id:<?php echo $namedParams['user_id'] ?>/page_type:<?php echo $namedParams['page_type'] ?>/goal_id:<?php echo $goalID ?>"><?php echo $goalName ?></a>
+                                <a href='<?= "$filterCommonUrl/goal_id:$goalID" ?>'><?= $goalName ?></a>
                             </li>
                         <?php endif; ?>
                     <?php }
