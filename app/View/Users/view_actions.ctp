@@ -22,7 +22,7 @@ $namedParams = $this->request->params['named'];
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    Term:&nbsp;<strong>Current&nbsp;<spanclass
+                    <?= __('Term') ?>:&nbsp;<strong>Current&nbsp;<spanclass
                         ="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

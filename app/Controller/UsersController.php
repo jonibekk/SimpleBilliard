@@ -1173,35 +1173,7 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $pageType = Hash::get($this->request->params, 'named.page_type');
 
-        $currentTerm = $this->Team->Term->getCurrentTermData();
-        $currentId = $currentTerm['id'];
-
-        $nextTerm = $this->Team->Term->getNextTermData();
-        $nextId = $nextTerm['id'];
-
-        $previousTerm = $this->Team->Term->getPreviousTermData();
-
-        $term1 = [
-            $currentId => __("Current Term"),
-            $nextId    => __("Next Term"),
-        ];
-        if (!empty($previousTerm)) {
-            $term1 += [$previousTerm['id'] => __("Previous Term")];
-        }
-
-        function show_date($startDate, $endDate)
-        {
-            return AppUtil::dateYmdReformat($startDate, '/') . " - " . AppUtil::dateYmdReformat($endDate, '/');
-        }
-
-        $allTerm = $this->Team->Term->getAllTerm();
-        $allId = array_column($allTerm, 'id');
-        $allStartDate = array_column($allTerm, 'start_date');
-        $allEndDate = array_column($allTerm, 'end_date');
-        $allTerm = array_map("show_date", $allStartDate, $allEndDate);
-
-        $term2 = array_combine($allId, $allTerm);
-        $term = $term1 + $term2;
+        $term = $this->_getVisibleAllTerm();
 
         if (isset($this->request->params['named']['term_id'])) {
             $termId = $this->request->params['named']['term_id'];
@@ -1209,7 +1181,7 @@ class UsersController extends AppController
             $startDate = $targetTerm['Term']['start_date'];
             $endDate = $targetTerm['Term']['end_date'];
         } else {
-            $termId = $currentId;
+            $termId = $this->Team->Term->getCurrentTermId();
             $startDate = $this->Team->Term->getCurrentTermData()['start_date'];
             $endDate = $this->Team->Term->getCurrentTermData()['end_date'];
         }
@@ -1260,6 +1232,34 @@ class UsersController extends AppController
             'canCompleteGoalIds'   => $canCompleteGoalIds
         ]);
         return $this->render();
+    }
+
+    function _getVisibleAllTerm()
+    {
+        $currentId = $this->Team->Term->getCurrentTermId();
+        $nextId = $this->Team->Term->getNextTermId();
+        $term1 = [
+            $currentId => __("Current Term"),
+            $nextId    => __("Next Term"),
+        ];
+        if (!empty($previousTerm)) {
+            $term1 += [$previousTerm['id'] => __("Previous Term")];
+        }
+
+        function show_date($startDate, $endDate)
+        {
+            return AppUtil::dateYmdReformat($startDate, '/') . " - " . AppUtil::dateYmdReformat($endDate, '/');
+        }
+
+        $allTerm = $this->Team->Term->getAllTerm();
+        $allId = array_column($allTerm, 'id');
+        $allStartDate = array_column($allTerm, 'start_date');
+        $allEndDate = array_column($allTerm, 'end_date');
+        $allTerm = array_map("show_date", $allStartDate, $allEndDate);
+
+        $term2 = array_combine($allId, $allTerm);
+        $visibleAllTerm = $term1 + $term2;
+        return $visibleAllTerm;
     }
 
     /**
