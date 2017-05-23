@@ -78,13 +78,16 @@ class TeamsController extends AppController
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
 
-        $this->set(compact('timezones', 'border_months_options', 'start_term_month_options'));
+        $this->set(compact('timezones'));
 
         if (!$this->request->is('post')) {
             return $this->render();
         }
 
-        if (!$this->Team->add($this->request->data, $this->Auth->user('id'))) {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if (!$TeamService->add($this->request->data, $this->Auth->user('id'))) {
             $this->Pnotify->outError(__("Failed to create a team."));
             return $this->render();
         }
