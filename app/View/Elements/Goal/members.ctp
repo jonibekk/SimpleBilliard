@@ -49,7 +49,7 @@
                            'controller' => 'goals',
                            'action'     => 'ajax_get_collabo_change_modal',
                            'goal_id'    => $goal['Goal']['id']
-                       ]) ?>">Edit</a>
+                       ]) ?>"><?= __('Edit') ?></a>
                 <?php endif ?>
             </div>
         </div>
