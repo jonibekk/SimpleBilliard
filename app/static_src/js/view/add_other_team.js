@@ -38,7 +38,7 @@ if (document.getElementById("addOtherTeam")) {
     updateNextTermList: function(next_start_date) {
       var next_term_form = this.next_term_form();
       this.emptySelect(next_term_form);
-      this.setOptionToSelect(next_term_form, null, __("Please select"));
+      this.setOptionToSelect(next_term_form, "", __("Please select"));
       var length_list = [3, 6, 12];
       for (i in length_list) {
         var term_length = length_list[i];

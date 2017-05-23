@@ -111,19 +111,21 @@
                 $this->Form->input('next_start_ym', [
                     'label'                    => __("Current Term"),
                     'type'                     => 'select',
+                    'data-bv-notempty'         => "true",
                     // help-block の文言があるので、エラーメッセージは表示しない
                     "data-bv-notempty-message" => __(" "),
                     'class'                    => 'form-control addteam_input-design addOtherTeam-current-term-form',
-                    'options'                  => [null => __("Please select")],
+                    'options'                  => ["" => __("Please select")],
                     'required'                 => 'required'
                 ]) ?>
                 <?=
                 $this->Form->input('border_months', [
                     'label'                    => __("Next Term"),
                     'type'                     => 'select',
+                    'data-bv-notempty'         => "true",
                     "data-bv-notempty-message" => __("Please select"),
                     'class'                    => 'form-control addteam_input-design addOtherTeam-next-term-form',
-                    'options'                  => [null => __("Please select")],
+                    'options'                  => ["" => __("Please select")],
                     'required'                 => 'required'
                 ]) ?>
             </div>

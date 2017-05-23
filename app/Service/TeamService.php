@@ -19,7 +19,7 @@ class TeamService extends AppService
 
             if (!$Team->add($data, $userId)) {
                 throw new Exception(sprintf("Failed to create team. data: %s userId: %s",
-                    var_export($data), $userId));
+                    var_export($data, true), $userId));
             }
             $teamId = $Team->getLastInsertID();
 
@@ -29,7 +29,7 @@ class TeamService extends AppService
             $currentStartDate = date('Y-m-01');
             if (!$Term->createInitialDataAsSignup($currentStartDate, $nextStartDate, $termRange, $teamId)) {
                 throw new Exception(sprintf("Failed to create term. data: %s teamId: %s userId: %s",
-                    var_export($data), $teamId, $userId));
+                    var_export($data, true), $teamId, $userId));
             }
 
             $Team->commit();
