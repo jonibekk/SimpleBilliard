@@ -143,21 +143,6 @@
                             ?>
                             <?php $iterator--; ?>
                         <?php endforeach ?>
-                        <?php if ($over_num > 1): ?>
-                            <a href="<?= $this->Html->url([
-                                'controller' => 'goals',
-                                'action'     => 'view_followers',
-                                'goal_id'    => $goal['Goal']['id']
-                            ]) ?>"
-                               class="goal-detail-followers-remaining">
-                                <?= $this->Upload->uploadImage($followers[$follower_view_num - 1]['User'], 'User.photo',
-                                    ['style' => 'medium'],
-                                    ['class' => 'goal-detail-info-avatar',]) ?>
-                                <span class="goal-detail-follower-more-counts">
-                                <i class="fa fa-plus"></i>
-                                    <?= $over_num ?></span>
-                            </a>
-                        <?php endif ?>
                 </li>
             </ul>
         </div>

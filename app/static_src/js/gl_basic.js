@@ -1583,6 +1583,7 @@ $(function () {
     } else {
       $(".navbar").removeClass("mod-box-shadow");
     }
+    
   });
 });
 
