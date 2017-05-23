@@ -9,6 +9,14 @@ import { generateCurrentRangeList } from '~/util/date'
 
 export default class Term extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      term_length: null
+    }
+  }
+
   getInputDomData() {
     return {
       next_start_ym: ReactDOM.findDOMNode(this.refs.next_start_ym).value.trim(),
@@ -20,8 +28,11 @@ export default class Term extends React.Component {
   handleOnChange(e) {
     const res = _checkValue(e.target)
 
-    if(e.target.name === 'next_start_ym') {
+    if (e.target.name === 'next_start_ym') {
       this.props.setNextRangeList(this.getInputDomData().next_start_ym)
+    }
+    if (e.target.name === 'term') {
+      this.setState({term_length: this.getInputDomData().term})
     }
     this.props.dispatch(res)
   }
@@ -37,7 +48,7 @@ export default class Term extends React.Component {
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">{__("Choose your team's (company's) term")}</div>
               <img src="/img/signup/term.png" className="signup-header-image" />
-              <div className="signup-description">{__("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.")}{__("Choose the months that start and end your first two terms.")}</div>
+              <div className="signup-description">{__("The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.Choose the months that start and end your first two terms.")}</div>
 
               <form className="form-horizontal" acceptCharset="utf-8"
                     onSubmit={ this.handleSubmit.bind(this) } >
@@ -78,7 +89,7 @@ export default class Term extends React.Component {
                                      message={this.props.validate.term.message} />
 
                   <div className="signup-term-description">
-                    <p>{__("The default length of any future terms are automatically set to 6 months.")}</p>
+                    {!this.props.validate.term.invalid && <p>{__(`The default length of any future terms are automatically set to ${this.state.term_length} months.`)}</p>}
                     <p>{__("You can change this setting at any time.")}</p>
                   </div>
 
