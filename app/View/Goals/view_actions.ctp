@@ -28,7 +28,7 @@
                             if ($existKR):
                                 echo $kr_select_options[$this->request->params['named']['key_result_id']];
                             else:
-                                echo "All";
+                                echo __("All");
                             endif; ?>&nbsp;</strong><span class="fa fa-angle-down ml_2px"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -84,7 +84,7 @@
                 <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                     <?php if (count($posts) == 0 && $is_collaborated): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3>You haven't created any actions&hellip; yet.</h3>
+                            <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
                             <div class="profile-user-action-contents-add-image">
                                 <span><a href="/goals/add_action/goal_id:<?= $goal_id ?>">+</a></span>
                             </div>
@@ -92,7 +92,7 @@
                         </div>
                     <?php elseif (count($posts) == 0 && !$is_collaborated): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3>No actions have been created&hellip; yet.</h3>
+                            <h3><?= __("No actions have been created&hellip; yet.") ?></h3>
                         </div>
                     <?php elseif (count($posts) > 0 && $is_collaborated): ?>
                         <div class="cube-img-column-frame add-action  mod-only">
@@ -106,7 +106,7 @@
                 <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
                     <?php if (count($posts) == 0 && $is_collaborated): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?=__("You haven't created any actions&hellip; yet.")?></h3>
+                            <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
                             <div class="profile-user-action-contents-add-image">
                                 <span><a href="/goals/add_action/goal_id:<?= $goal_id ?>">+</a></span>
                             </div>
@@ -114,7 +114,7 @@
                         </div>
                     <?php elseif (count($posts) == 0 && !$is_collaborated): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3>No actions have been created&hellip; yet.</h3>
+                            <h3><?= __("No actions have been created&hellip; yet.") ?></h3>
                         </div>
                     <?php elseif (count($posts) > 0 && $is_collaborated): ?>
                         <div class="cube-img-column-frame add-action">
