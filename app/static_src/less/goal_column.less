@@ -113,15 +113,21 @@
 
         p{
           font-size:.8em;
-          color:@veryDark;
+          color:@basicGray;
           text-align:center;
           width:40px;
           position: absolute;
           right: 4px;
           top: 4.1em;
           line-height: 1.2em;
-          opacity:0;
+          opacity:1;
           transition:opacity .3s ease;
+          @media @xsmall{
+            opacity:1;
+          }
+          @media @medium{
+            opacity:0;
+          }
         }
 
         a:hover{

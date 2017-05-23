@@ -122,45 +122,31 @@
                 <li class="goal-detail-info-followers">
                     <p><?= __('Followers') ?></p>
                     <?php
-                    $follower_view_num = 6;
-                    $iterator = $follower_view_num;
-                    $over_num = count($followers) - $follower_view_num + 1;
-                    ?>
-                    <?php foreach ($followers as $follower): ?>
-                        <?php
-                        if ($iterator == 0 || ($over_num > 1 && $iterator == 1)) {
-                            break;
-                        }
+                        $follower_view_num = 6;
+                        $iterator = $follower_view_num;
+                        $over_num = count($followers) - $follower_view_num + 1;
                         ?>
-                        <?=
-                        $this->Html->link($this->Upload->uploadImage($follower['User'], 'User.photo',
-                            ['style' => 'medium'],
-                            ['class' => 'goal-detail-info-avatar',]),
-                            [
-                                'controller' => 'users',
-                                'action'     => 'view_goals',
-                                'user_id'    => $follower['User']['id']
-                            ],
-                            ['escape' => false]
-                        )
-                        ?>
-                        <?php $iterator--; ?>
-                    <?php endforeach ?>
-                    <?php if ($over_num > 1): ?>
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'goals',
-                            'action'     => 'view_followers',
-                            'goal_id'    => $goal['Goal']['id']
-                        ]) ?>"
-                           class="goal-detail-followers-remaining">
-                            <?= $this->Upload->uploadImage($followers[$follower_view_num - 1]['User'], 'User.photo',
+                        <?php foreach ($followers as $follower): ?>
+                            <?php
+                            if ($iterator == 0 || ($over_num > 1 && $iterator == 1)) {
+                                break;
+                            }
+                            ?>
+                            <?=
+                            $this->Html->link($this->Upload->uploadImage($follower['User'], 'User.photo',
                                 ['style' => 'medium'],
-                                ['class' => 'goal-detail-info-avatar',]) ?>
-                            <span class="goal-detail-follower-more-counts">
-                                <i class="fa fa-plus"></i>
-                                <?= $over_num ?></span>
-                        </a>
-                    <?php endif ?>
+                                ['class' => 'goal-detail-info-avatar',]),
+                                [
+                                    'controller' => 'users',
+                                    'action'     => 'view_goals',
+                                    'user_id'    => $follower['User']['id']
+                                ],
+                                ['escape' => false]
+                            )
+                            ?>
+                            <?php $iterator--; ?>
+                        <?php endforeach ?>
+
                 </li>
             </ul>
         </div>
