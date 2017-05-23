@@ -1274,25 +1274,25 @@ class GoalsControllerTest extends GoalousControllerTestCase
     function testViewInfo()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_info/goal_id:1');
+        $this->testAction('/goals/view_krs/goal_id:1');
     }
 
     function testViewInfoNoParams()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_info/');
+        $this->testAction('/goals/view_krs/');
     }
 
     function testViewInfoInvalidParam()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_info/goal_id:999');
+        $this->testAction('/goals/view_krs/goal_id:999');
     }
 
     function testViewInfoAsGoalMember()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_info/goal_id:7');
+        $this->testAction('/goals/view_krs/goal_id:7');
     }
 
     var $current_date;
