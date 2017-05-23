@@ -13,7 +13,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <div class="col-sm-8 col-sm-offset-2" id="ViewKrs">
-    <section class="panel panel-default">
+    <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body goal-detail-kr-panel">
             <p class="goal-detail-kr-progress-score">
@@ -68,6 +68,6 @@
                 <?= __('View more') ?></a>
         </div>
         <?php } ?>
-    </section>
+    </div>
 </div>
 <?= $this->App->viewEndComment() ?>

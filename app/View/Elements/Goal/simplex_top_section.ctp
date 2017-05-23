@@ -117,6 +117,7 @@
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
                 <li class="goal-detail-info-followers">
+                    <p><?= __('Followers') ?></p>
                     <?php
                         $follower_view_num = 6;
                         $iterator = $follower_view_num;
