@@ -12,6 +12,7 @@
  * @var
  * @var
  */
+$namedParams = $this->request->params['named'];
 ?>
 <?= $this->App->viewStartComment() ?>
 <div class="user-view-actions col-sm-8 col-sm-offset-2">
@@ -45,20 +46,21 @@
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    Goal:&nbsp;<strong>All&nbsp;<span class="fa fa-angle-down ml_2px"></span></strong>
+                    <?= __('Goal') ?>:&nbsp;<strong><?= $goal_select_options[Hash::get($namedParams, 'goal_id')] ?>
+                        &nbsp;<span class="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php
                     foreach ($goal_select_options as $goalID => $goalName) { ?>
                         <?php if ($goalName == "_separator_"): ?>
                             <li role="separator" class="divider"></li>
-                        <?php elseif ($goalName == "All"): ?>
+                        <?php elseif ($goalName == __('All')): ?>
                             <li>
-                                <a href="/users/view_actions/user_id:<?php echo $this->request->params['named']['user_id'] ?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/"><?php echo $goalName ?></a>
+                                <a href="/users/view_actions/user_id:<?php echo $namedParams['user_id'] ?>/page_type:<?php echo $namedParams['page_type'] ?>/"><?php echo $goalName ?></a>
                             </li>
                         <?php else: ?>
                             <li>
-                                <a href="/users/view_actions/user_id:<?php echo $this->request->params['named']['user_id'] ?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/goal_id:<?php echo $goalID ?>"><?php echo $goalName ?></a>
+                                <a href="/users/view_actions/user_id:<?php echo $namedParams['user_id'] ?>/page_type:<?php echo $namedParams['page_type'] ?>/goal_id:<?php echo $goalID ?>"><?php echo $goalName ?></a>
                             </li>
                         <?php endif; ?>
                     <?php }
@@ -69,26 +71,22 @@
             </div>
             <div class="view-actions-panel-btngroup-wrap">
                 <div class="view-action-panel-filter-btngroup">
-                    <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
+                    <?php if ($namedParams['page_type'] == 'list'): ?>
                         <a class="view-action-panel-filter-button"
-                           href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                               ['page_type' => 'image'])) ?>">
+                           href="<?= $this->Html->url(am($namedParams, ['page_type' => 'image'])) ?>">
                             <i class="fa fa-th-large link-dark-gray"></i>
                         </a>
                         <a class="view-action-panel-filter-button mod-active"
-                           href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                               ['page_type' => 'list'])) ?>">
+                           href="<?= $this->Html->url(am($namedParams, ['page_type' => 'list'])) ?>">
                             <i class="fa fa-reorder link-dark-gray"></i>
                         </a>
-                    <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+                    <?php elseif ($namedParams['page_type'] == 'image'): ?>
                         <a class="view-action-panel-filter-button mod-active"
-                           href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                               ['page_type' => 'image'])) ?>">
+                           href="<?= $this->Html->url(am($namedParams, ['page_type' => 'image'])) ?>">
                             <i class="fa fa-th-large link-dark-gray"></i>
                         </a>
                         <a class="view-action-panel-filter-button"
-                           href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                               ['page_type' => 'list'])) ?>">
+                           href="<?= $this->Html->url(am($namedParams, ['page_type' => 'list'])) ?>">
                             <i class="fa fa-reorder link-dark-gray"></i>
                         </a>
                     <?php endif; ?>
@@ -97,14 +95,14 @@
         </div>
         <?php
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
-        if ($this->request->params['named']['page_type'] == 'image') {
+        if ($namedParams['page_type'] == 'image') {
             $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
         }
         ?>
         <div class="profile-user-action-contents" id="UserPageContents">
-            <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
+            <?php if ($namedParams['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
-            <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
+            <?php elseif ($namedParams['page_type'] == 'image'): ?>
         <?php if (count($posts) == 0): ?>
             <div class="cube-img-column-frame add-action mod-only">
                 <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
@@ -112,7 +110,7 @@
                 <div class="cube-img-column-frame add-action">
                     <?php endif; ?>
                     <div class="profile-user-action-contents-add-image">
-                        <span><a href="/goals/add_action/">+</a></span>
+                        <span><a href="/goals/add_action/goal_id:<?= Hash::get($namedParams, 'goal_id') ?>">+</a></span>
                     </div>
                     <a href="/goals/add_action/"><?= __('Add Action') ?></a>
                 </div>
@@ -152,11 +150,11 @@
                                $this->Html->url([
                                    'controller' => 'posts',
                                    'action'     => 'ajax_get_user_page_post_feed',
-                                   'user_id'    => Hash::get($this->request->params, 'named.user_id'),
-                                   'author_id'  => Hash::get($this->request->params, 'named.user_id'),
-                                   'goal_id'    => Hash::get($this->request->params, 'named.goal_id'),
+                                   'user_id'    => Hash::get($namedParams, 'user_id'),
+                                   'author_id'  => Hash::get($namedParams, 'user_id'),
+                                   'goal_id'    => Hash::get($namedParams, 'goal_id'),
                                    'type'       => Post::TYPE_ACTION,
-                                   'page_type'  => Hash::get($this->request->params, 'named.page_type'),
+                                   'page_type'  => Hash::get($namedParams, 'page_type'),
                                ]) ?>"
                                id="FeedMoreReadLink"
                                append-target-id="UserPageContents"
