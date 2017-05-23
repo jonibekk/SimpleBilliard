@@ -62,7 +62,7 @@
                                 ><?= __("Edit comment") ?></a>
                             </li>
                             <li>
-                                <a href="#" class="click-comment-delete" comment-id="<?= $comment['id'] ?>"><?= __("Delete comment") ?></a>
+                                <a href="#" class="js-click-comment-delete" comment-id="<?= $comment['id'] ?>"><?= __("Delete comment") ?></a>
                             </li>
                         </ul>
                     </div>

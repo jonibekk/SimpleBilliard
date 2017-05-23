@@ -8,15 +8,17 @@ App::import('Service/Api', 'ApiCommentService');
  */
 class CommentsController extends ApiController
 {
-
+    /**
+     * @param $id
+     *
+     * Get Comment data on JSON format
+     *
+     * @return CakeResponse
+     */
     function get_detail($id)
     {
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
-
-        if (!$this->request->is('ajax')) {
-            throw new RuntimeException(__('Invalid access'));
-        }
 
         $comment = $ApiCommentService->get($id);
         // comment does not exists
@@ -26,6 +28,13 @@ class CommentsController extends ApiController
         return $this->_getResponseSuccess($comment);
     }
 
+    /**
+     * @param $id
+     *
+     * Delete a comment if the request user owns it.
+     *
+     * @return CakeResponse
+     */
     function delete($id)
     {
         $errResponse = $this->_validateEditForbiddenOrNotFound($id);
@@ -43,6 +52,63 @@ class CommentsController extends ApiController
         return $this->_getResponseSuccessSimple();
     }
 
+    /**
+     * Add a new comment
+     *
+     * @return CakeResponse
+     */
+    function post()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        /** @var ApiCommentService $ApiCommentService */
+        $ApiCommentService = ClassRegistry::init("ApiCommentService");
+
+        $postId = Hash::get($this->request->data, 'Comment.post_id');
+        $post = $Post->findById($postId);
+        $type = Hash::get($post, 'Post.type');
+
+        if (empty($post)) {
+            return $this->_getResponseNotFound(__("This post was deleted."));
+        }
+
+        // Create new comment
+        $comment = $ApiCommentService->create($this->request->data);
+        if ($comment === false) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        switch ($type) {
+            case Post::TYPE_NORMAL:
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
+                    $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                    $postId, $comment->id);
+                break;
+            case Post::TYPE_ACTION:
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                    $postId,
+                    $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                    $postId, $comment->id);
+                break;
+        }
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * @param $id
+     * Updates a Comment.
+     * Request format:
+     * {
+     *   "data[_Token][key]": "token",
+     *   "Comment": {
+     *     "body": "body"
+     *   }
+     * }
+     *
+     * @return CakeResponse
+     */
     function put($id)
     {
         $errResponse = $this->_validateEditForbiddenOrNotFound($id);
@@ -52,16 +118,12 @@ class CommentsController extends ApiController
 
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
-        $data =  Hash::get($this->request->data, 'Comment');
+        $data = Hash::get($this->request->data, 'Comment');
         $data['id'] = $id;
 
-        // Update the new data
-        try {
-            $ApiCommentService->update($data);
-        } catch (Exception $e)  {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-            return $this->_getResponseBadFail($e->getMessage());
+        // Update the new
+        if (!$ApiCommentService->update($data)) {
+            return $this->_getResponseInternalServerError();
         }
 
         // Get the newest comment object and return it as its html rendered block
@@ -75,6 +137,14 @@ class CommentsController extends ApiController
         return $this->_getResponseSuccess($comments[0], $html);
     }
 
+    /**
+     * @param $comment_id
+     *
+     * Validates if the comments exists and if the request
+     * user owns it.
+     *
+     * @return bool|CakeResponse
+     */
     private function _validateEditForbiddenOrNotFound($comment_id)
     {
         /** @var ApiCommentService $ApiCommentService */

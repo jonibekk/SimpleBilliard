@@ -3645,8 +3645,8 @@ function hideCommentNotifyErrorBox(notifyBox) {
 
 $(document).ready(function () {
   $(document).on("click", ".click-comment-new", evCommentLatestView);
-  $(document).on("click", ".click-comment-delete", evCommentDelete);
-  $(document).on("click", ".click-comment-confirm-delete", evCommentDeleteConfirm);
+  $(document).on("click", ".js-click-comment-delete", evCommentDelete);
+  $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
   $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
 });
 
@@ -3727,7 +3727,7 @@ function evCommentDelete(e) {
     '     </div>' +
     '     <div class="modal-footer">' +
     '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.cancel + '</button>' +
-    '        <button type="button" class="btn-sm btn-primary click-comment-confirm-delete" comment-id="' + commentId + '" aria-hidden="true"><img id="loader" src="img/lightbox/loading.gif" style="height: 17px; width:17px; margin: 0 10px; display: none;"  /><span id="message">' + cake.word.delete + '</span></button>' +
+    '        <button type="button" class="btn-sm btn-primary js-click-comment-confirm-delete" comment-id="' + commentId + '" aria-hidden="true"><img id="loader" src="img/lightbox/loading.gif" style="height: 17px; width:17px; margin: 0 10px; display: none;"  /><span id="message">' + cake.word.delete + '</span></button>' +
     '     </div>' +
     '   </div>' +
     ' </div>' +
