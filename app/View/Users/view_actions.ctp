@@ -78,6 +78,32 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
         ?>
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($namedParams['page_type'] == 'list'): ?>
+                <?php if (count($posts) == 0): ?>
+                    <div class="cube-img-column-frame add-action mod-only">
+                        <h3>
+                            <?php
+                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
+                                echo __("You haven't created any actions&hellip; yet.");
+                            } else {
+                                echo __("No actions have been created&hellip; yet.");
+                            }
+                            ?>
+                        </h3>
+                        <?php
+                        if ($canAction) {
+                            echo $this->element('Goal/add_action_button', [
+                                'goal_id' => Hash::get($namedParams, 'goal_id')
+                            ]);
+                        }
+                        ?>
+                    </div>
+                <?php elseif ($canAction): ?>
+                    <div class="cube-img-column-frame add-action mod-only">
+                        <?=$this->element('Goal/add_action_button', [
+                            'goal_id' => Hash::get($namedParams, 'goal_id')
+                        ]);?>
+                    </div>
+                <?php endif; ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($namedParams['page_type'] == 'image'): ?>
                 <?php if (count($posts) == 0): ?>
@@ -101,13 +127,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     </div>
                 <?php elseif ($canAction): ?>
                     <div class="cube-img-column-frame add-action">
-                        <?php
-                        if ($canAction) {
-                            echo $this->element('Goal/add_action_button', [
-                                'goal_id' => Hash::get($namedParams, 'goal_id')
-                            ]);
-                        }
-                        ?>
+                        <?=$this->element('Goal/add_action_button', [
+                            'goal_id' => Hash::get($namedParams, 'goal_id')
+                        ]);?>
                     </div>
                 <?php endif; ?>
                 <?= $this->element('cube_img_blocks') ?>
