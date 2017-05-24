@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-19 17:21+0900\n"
+"PO-Revision-Date: 2017-05-24 16:28+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -280,6 +280,9 @@ msgstr "コラボレータから外れました。"
 
 msgid "The goal doesn't exist."
 msgstr "ゴールが存在しません。"
+
+msgid "You cannot follow or collaborate with an goal from previous term."
+msgstr "前期以前のゴールにフォロー/コラボすることはできません。"
 
 msgid "Start to follow."
 msgstr "フォローしました。"
@@ -2027,6 +2030,9 @@ msgstr "サークルページでは切り替えられません"
 msgid "Cancel"
 msgstr "キャンセル"
 
+msgid "Delete"
+msgstr "削除する"
+
 msgid "Name?"
 msgstr "名前を入力"
 
@@ -2662,6 +2668,12 @@ msgstr "トピックを抜ける"
 msgid "Are you sure you want to leave this topic?"
 msgstr "このトピックを抜けてよろしいですか？"
 
+msgid "Do you really want to delete this comment?"
+msgstr "本当にこのコメントを削除しますか？"
+
+msgid "Delete comment"
+msgstr "コメントを削除"
+
 msgid "Circles"
 msgstr "サークル"
 
@@ -2736,15 +2748,6 @@ msgstr "新しいチームをつくる"
 msgid "Home"
 msgstr "ホーム"
 
-msgid "Goal"
-msgstr "ゴール"
-
-msgid "Team"
-msgstr "チーム"
-
-msgid "Circle"
-msgstr "サークル"
-
 msgid "No new message"
 msgstr "未読のメッセージはありません。"
 
@@ -2783,6 +2786,15 @@ msgstr "サポート"
 
 msgid "Logout"
 msgstr "ログアウト"
+
+msgid "Goal"
+msgstr "ゴール"
+
+msgid "Team"
+msgstr "チーム"
+
+msgid "Circle"
+msgstr "サークル"
 
 msgid "Newsfeed"
 msgstr "ニュースフィード"
@@ -3049,12 +3061,6 @@ msgstr "編集をやめる"
 
 msgid "Edit comment"
 msgstr "コメントを編集"
-
-msgid "Delete comment"
-msgstr "コメントを削除"
-
-msgid "Do you really want to delete this comment?"
-msgstr "本当にこのコメントを削除しますか？"
 
 msgid "Posts"
 msgstr "投稿"
@@ -3480,9 +3486,6 @@ msgstr "今後、新規に選択はできなくなります。"
 
 msgid "Do you really want to delete the goal category?"
 msgstr "本当にこのゴールカテゴリを削除しますか？"
-
-msgid "Delete"
-msgstr "削除する"
 
 msgid "Confirm to delete the score"
 msgstr "スコア削除の確認"

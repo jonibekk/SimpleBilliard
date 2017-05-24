@@ -2109,6 +2109,25 @@ class Goal extends AppModel
         return $Term->getTermDataByDate($goal['Goal']['end_date']);
     }
 
+    /**
+     * Tells if the goal end date already passed.
+     *
+     * @param $goal_id
+     *
+     * @return bool
+     */
+    public function isGoalFinished($goal_id)
+    {
+        $goalTerm = $this->getGoalTermData($goal_id);
+        $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
+        $end_date = Hash::get($goalTerm, 'end_date');
+
+        if (strtotime($today) >= strtotime($end_date)) {
+            return true;
+        }
+        return false;
+    }
+
     public function getRelatedGoals($user_id = null)
     {
         if (!$user_id) {

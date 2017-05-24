@@ -10,7 +10,7 @@ App::uses('GoalMember', 'Model');
 class GoalHelper extends AppHelper
 {
 
-    function getFollowOption($goal)
+    function getFollowOption($goal, $goalTerm = null)
     {
         $option = [
             'class'    => 'follow-off',
@@ -23,6 +23,16 @@ class GoalHelper extends AppHelper
         if (Hash::get($goal, 'User.TeamMember.0.coach_user_id')) {
             $option['disabled'] = "disabled";
             return $option;
+        }
+
+        // If the goal is from previous term, do not allow to follow
+        if ($goalTerm) {
+            $end_date = Hash::get($goalTerm, 'end_date');
+            $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
+
+            if (strtotime($today) >= strtotime($end_date)) {
+                $option['disabled'] = "disabled";
+            }
         }
 
         if (Hash::get($goal, 'MyCollabo')) {
@@ -44,13 +54,24 @@ class GoalHelper extends AppHelper
         return $option;
     }
 
-    function getCollaboOption($goal)
+    function getCollaboOption($goal, $goalTerm = null)
     {
         $option = [
             'class' => 'collabo-off',
             'style' => null,
             'text'  => __("Collabo"),
+            'disabled' => null
         ];
+
+        // If the goal is from previous term, do not allow to collaborate
+        if ($goalTerm) {
+            $end_date = Hash::get($goalTerm, 'end_date');
+            $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
+
+            if (strtotime($today) >= strtotime($end_date)) {
+                $option['disabled'] = "disabled";
+            }
+        }
 
         if (!Hash::get($goal, 'MyCollabo')) {
             return $option;

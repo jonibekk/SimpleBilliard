@@ -61,8 +61,8 @@
             ?>
         <?php else: ?>
             <div class="col col-xxs-12 mt_18px">
-                <?php $follow_opt = $this->Goal->getFollowOption($goal); ?>
-                <?php $collabo_opt = $this->Goal->getCollaboOption($goal); ?>
+                <?php $follow_opt = $this->Goal->getFollowOption($goal, $goalTerm); ?>
+                <?php $collabo_opt = $this->Goal->getCollaboOption($goal, $goalTerm); ?>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4 col-xs-offset-2 col-sm-offset-2">
                     <a class="btn btn-white bd-circle_22px toggle-follow p_8px width100_per
                     <?= h($follow_opt['class']) ?>
@@ -82,6 +82,9 @@
                        data-toggle="modal"
                        data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                        href="#"
+                       <?php if ($collabo_opt['disabled']): ?>
+                           disabled="disabled"
+                       <?php endif ?>
                        data-url="<?= $this->Html->url([
                            'controller' => 'goals',
                            'action'     => 'ajax_get_collabo_change_modal',

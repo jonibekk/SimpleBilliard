@@ -423,6 +423,15 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $goalMember = $this->request->data['GoalMember'];
+        $goalId = $goalMember['goal_id'];
+
+        // Check if it is an old goal
+        if ($this->Goal->isGoalFinished($goalId)) {
+            $this->Pnotify->outError(__("You cannot follow or collaborate with an goal from previous term."));
+            return $this->redirect($this->referer());
+        }
+
         // コラボを編集した場合は必ずコラボを認定対象外にし、認定ステータスを「Reapplication」にする
         $this->request->data['GoalMember']['approval_status'] = $new ? GoalMember::APPROVAL_STATUS_NEW : GoalMember::APPROVAL_STATUS_REAPPLICATION;
         $this->request->data['GoalMember']['is_target_evaluation'] = false;
@@ -432,9 +441,8 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $goalMember = $this->request->data['GoalMember'];
+
         $goalMemberId = $goalMemberId ? $goalMemberId : $this->Goal->GoalMember->getLastInsertID();
-        $goalId = $goalMember['goal_id'];
         $goal = $this->Goal->findById($goalId);
         $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
 
@@ -957,6 +965,13 @@ class GoalsController extends AppController
         if (!$this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))) {
             $return['error'] = true;
             $return['msg'] = __("The goal doesn't exist.");
+            return $this->_ajaxGetResponse($return);
+        }
+
+        // Check if it is an old goal
+        if ($this->Goal->isGoalFinished($goal_id)) {
+            $return['error'] = true;
+            $return['msg'] = __("You cannot follow or collaborate with an goal from previous term.");
             return $this->_ajaxGetResponse($return);
         }
 
