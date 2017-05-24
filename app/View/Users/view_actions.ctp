@@ -110,16 +110,10 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     $next_page_num = 2;
                     $month_index = 0;
                     $more_read_text = __('More...');
-                    $oldest_post_time = 0;
                     if ((count($posts) != $item_num)) {
                         $next_page_num = 1;
                         $month_index = 1;
                         $more_read_text = __('View more');
-                    }
-
-                    // ユーザーの登録日以前の投稿は存在しないので読み込まないようにする
-                    if (isset($user['User']['created']) && $user['User']['created']) {
-                        $oldest_post_time = $user['User']['created'];
                     }
                     ?>
                     <div class="panel panel-default feed-read-more" id="FeedMoreRead">

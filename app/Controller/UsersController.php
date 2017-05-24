@@ -1284,17 +1284,22 @@ class UsersController extends AppController
 
     function view_actions()
     {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+
         $namedParams = $this->request->params['named'];
         $user_id = Hash::get($namedParams, "user_id");
         $page_type = Hash::get($namedParams, "page_type");
         $goal_id = Hash::get($namedParams, 'goal_id');
         $term_id = Hash::get($namedParams, 'term_id') ?? $this->Team->Term->getCurrentTermId();
 
-        /** @var TermService $TermService */
-        $TermService = ClassRegistry::init('TermService');
         $terms = $TermService->getFilterMenu(true, false);
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
 
         if (!$user_id || !in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
@@ -1315,15 +1320,19 @@ class UsersController extends AppController
             // if all term, start is date of team created
             $team = $Team->getCurrentTeam();
             $startTimestamp = $team['Team']['created'];
+            $paramTermId = null;
+            $oldest_post_time = $this->Auth->user('User.created');
         } else {
-            /** @var Term $Term */
-            $Term = ClassRegistry::init('Term');
             $term = $Term->findById($term_id)['Term'];
             $timezone = $Team->getTimezone();
             $startTimestamp = AppUtil::getTimestampByTimezone($term['start_date'], $timezone);
             $endTimestamp = AppUtil::getTimestampByTimezone(AppUtil::dateTomorrow($term['end_date']), $timezone);
             $apiBaseTimestamp = $endTimestamp;
+            $paramTermId = $term_id;
+            $oldest_post_time = $startTimestamp;
         }
+        $goal_select_options = $GoalService->getFilterMenu($user_id, $paramTermId);
+
         $posts = [];
         switch ($page_type) {
             case 'list':
@@ -1343,15 +1352,6 @@ class UsersController extends AppController
         $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
-        if ($term_id == $TermService::TERM_FILTER_ALL_KEY_NAME) {
-            $paramTermId = null;
-        } else {
-            $paramTermId = $term_id;
-        }
-        $goal_select_options = $GoalService->getFilterMenu($user_id, $paramTermId);
-
         $goal_base_url = Router::url([
             'controller' => 'users',
             'action'     => 'view_actions',
@@ -1359,7 +1359,8 @@ class UsersController extends AppController
             'page_type'  => $page_type
         ]);
         $this->set('long_text', false);
-        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url', 'term_id', 'terms', 'apiBaseTimestamp'));
+        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url', 'term_id', 'terms', 'apiBaseTimestamp',
+            'oldest_post_time'));
         return $this->render();
     }
 
