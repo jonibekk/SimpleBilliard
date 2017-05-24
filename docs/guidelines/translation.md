@@ -34,10 +34,10 @@
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
 1. poeditを開く。(※インストールされていない場合は、https://poedit.net/download からダウンロード、インストール)
 1. `Edit a translation`で該当のファイルを開く。  
-  ファイルパス: `goalous2/app/Locale/jpn/LC_MESSAGES/default.po`
+  ファイルパス: `goalous/app/Locale/jpn/LC_MESSAGES/default.po`
 1. poeditのメニュー[Catalog]->[Update from POT file]を選択。
 1. 対象の`pot`ファイルを指定(拡張子以外が同名)。
-   ファイルパス: `goalous2/app/Locale/default.pot`
+   ファイルパス: `goalous/app/Locale/default.pot`
 1. cmd + s で上書き保存。(※エラーが出ても気にしない。)
 1. コミット。(`*.mo`ファイルが出現することがあるが、このファイルは不要なので、削除してからコミットする。)
 1. プルリクを発行する(親issueに紐付ける)。
