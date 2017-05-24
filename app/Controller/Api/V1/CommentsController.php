@@ -66,8 +66,7 @@ class CommentsController extends ApiController
 
         $err = $ApiCommentService->validateCreate($this->request->data);
         if (!empty($err)) {
-            return $this->_getResponse(Hash::get($err, 'status_code'), null, null
-                , Hash::get($err, 'message'), Hash::get($err, 'validation_errors'));
+            return $this->_getResponseValidationFail(Hash::get($err, 'validation_errors'));
         }
 
         // Create new comment
@@ -121,8 +120,7 @@ class CommentsController extends ApiController
 
         $err = $ApiCommentService->validateUpdate($id, $this->Auth->user('id'), $data);
         if (!empty($err)) {
-            return $this->_getResponse(Hash::get($err, 'status_code'), null, null
-                , Hash::get($err, 'message'), Hash::get($err, 'validation_errors'));
+            return $this->_getResponseValidationFail(Hash::get($err, 'validation_errors'));
         }
 
         // Update the new comment
