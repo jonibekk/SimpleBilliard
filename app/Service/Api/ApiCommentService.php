@@ -75,13 +75,14 @@ class ApiCommentService extends AppService
      *
      * @return array
      */
-    function validateCreate($postId, $data)
+    function validateCreate($data)
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init("Comment");
 
+        $postId = Hash::get($this->request->data, 'Comment.post_id');
         $post = $Post->findById($postId);
         if (empty($post)) {
             return ["status_code" => 404, "message" => __("This post was deleted.")];
