@@ -89,7 +89,7 @@ export default class Term extends React.Component {
                                      message={this.props.validate.term.message} />
 
                   <div className="signup-term-description">
-                    {!this.props.validate.term.invalid && <p>{__(`The default length of any future terms are automatically set to ${this.state.term_length} months.`)}</p>}
+                    {this.props.validate.term.invalid === false && <p>{__(`The default length of any future terms are automatically set to ${this.state.term_length} months.`)}</p>}
                     <p>{__("You can change this setting at any time.")}</p>
                   </div>
 
