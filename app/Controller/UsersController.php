@@ -1291,7 +1291,23 @@ class UsersController extends AppController
         $userId = Hash::get($namedParams, "user_id");
         $pageType = Hash::get($namedParams, "page_type");
         $goalId = Hash::get($namedParams, 'goal_id');
-        $termId = Hash::get($namedParams, 'term_id') ?? $this->Team->Term->getCurrentTermId();
+        $termId = Hash::get($namedParams, 'term_id') ?? $Term->getCurrentTermId();
+
+        $user = $this->User->getDetail($userId);
+
+        if (!$this->_setUserPageHeaderInfo($userId)) {
+            // ユーザーが存在しない
+            $this->Pnotify->outError(__("Invalid screen transition."));
+            return $this->redirect($this->referer());
+        }
+
+        $canAction = false;
+        if ($userId == $this->Auth->user('id')
+            && ($termId == $Term->getCurrentTermId() || $termId == $TermService::TERM_FILTER_ALL_KEY_NAME)
+            && !empty($GoalService->findActionables())
+        ) {
+            $canAction = true;
+        }
 
         $termFilterOptions = $TermService->getFilterMenu(true, false);
 
@@ -1303,7 +1319,7 @@ class UsersController extends AppController
             // if all term, start is date of team created
             $endTimestamp = REQUEST_TIMESTAMP;
             $startTimestamp = $endTimestamp - MONTH;
-            $oldestTimestamp = $this->Auth->user('created');
+            $oldestTimestamp = $user['User']['created'];
             $goalFilterOptions = $GoalService->getFilterMenu($userId, null);
         } else {
             $term = $Term->findById($termId)['Term'];
@@ -1332,11 +1348,6 @@ class UsersController extends AppController
         }
         $posts = $this->Post->get(1, $limit, $startTimestamp, $endTimestamp, $params);
 
-        if (!$this->_setUserPageHeaderInfo($userId)) {
-            // ユーザーが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
-            return $this->redirect($this->referer());
-        }
         $this->layout = LAYOUT_ONE_COLUMN;
 
         $this->set('long_text', false);
@@ -1347,7 +1358,8 @@ class UsersController extends AppController
             'termFilterOptions',
             'startTimestamp',
             'endTimestamp',
-            'oldestTimestamp'
+            'oldestTimestamp',
+            'canAction'
         ));
         return $this->render();
     }

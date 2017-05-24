@@ -80,63 +80,66 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <?php if ($namedParams['page_type'] == 'list'): ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($namedParams['page_type'] == 'image'): ?>
-        <?php if (count($posts) == 0): ?>
-            <div class="cube-img-column-frame add-action mod-only">
-                <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
-                <?php else: ?>
-                <div class="cube-img-column-frame add-action">
-                    <?php endif; ?>
-                    <div class="profile-user-action-contents-add-image">
-                        <span><a href="/goals/add_action/goal_id:<?= Hash::get($namedParams, 'goal_id') ?>">+</a></span>
+                <?php if (count($posts) == 0): ?>
+                    <div class="cube-img-column-frame add-action mod-only">
+                        <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
                     </div>
-                    <a href="/goals/add_action/"><?= __('Add Action') ?></a>
-                </div>
-                <?= $this->element('cube_img_blocks') ?>
                 <?php endif; ?>
-            </div>
-            <?php //投稿が指定件数　もしくは　最も古い投稿から１ヶ月以上経っている場合
-            if (count($posts) == $item_num || $oldestTimestamp < REQUEST_TIMESTAMP - MONTH): ?>
-
-                <div class="panel-body">
-                    <?php
-                    $next_page_num = 2;
-                    $month_index = 0;
-                    $more_read_text = __('More...');
-                    if ((count($posts) != $item_num)) {
-                        $next_page_num = 1;
-                        $month_index = 1;
-                        $more_read_text = __('View more');
-                    }
-                    ?>
-                    <div class="panel panel-default feed-read-more" id="FeedMoreRead">
-                        <div class="panel-body panel-read-more-body">
-                            <span class="none" id="ShowMoreNoData"><?= __('There is no further action.') ?></span>
-                            <a href="#" class="click-feed-read-more"
-                               onclick="Page.action_resize()"
-                               parent-id="FeedMoreRead"
-                               no-data-text-id="ShowMoreNoData"
-                               next-page-num="<?= $next_page_num ?>"
-                               month-index="<?= $month_index ?>"
-                               get-url="<?=
-                               $this->Html->url([
-                                   'controller'     => 'posts',
-                                   'action'         => 'ajax_get_user_page_post_feed',
-                                   'user_id'        => Hash::get($namedParams, 'user_id'),
-                                   'author_id'      => Hash::get($namedParams, 'user_id'),
-                                   'goal_id'        => Hash::get($namedParams, 'goal_id'),
-                                   'type'           => Post::TYPE_ACTION,
-                                   'page_type'      => Hash::get($namedParams, 'page_type'),
-                                   'base_timestamp' => $endTimestamp,
-                               ]) ?>"
-                               id="FeedMoreReadLink"
-                               append-target-id="UserPageContents"
-                               oldest-post-time="<?= $oldestTimestamp ?>"
-                            >
-                                <?= h($more_read_text) ?> </a>
+                <?php if ($canAction): ?>
+                    <div class="cube-img-column-frame add-action">
+                        <div class="profile-user-action-contents-add-image">
+                            <span><a href="/goals/add_action/goal_id:<?= Hash::get($namedParams,
+                                    'goal_id') ?>">+</a></span>
                         </div>
+                        <a href="/goals/add_action/"><?= __('Add Action') ?></a>
                     </div>
-                </div>
+                <?php endif; ?>
+                <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>
+        <?php //投稿が指定件数　もしくは　最も古い投稿から１ヶ月以上経っている場合
+        if (count($posts) == $item_num || $oldestTimestamp < REQUEST_TIMESTAMP - MONTH): ?>
+
+            <div class="panel-body">
+                <?php
+                $next_page_num = 2;
+                $month_index = 0;
+                $more_read_text = __('More...');
+                if ((count($posts) != $item_num)) {
+                    $next_page_num = 1;
+                    $month_index = 1;
+                    $more_read_text = __('View more');
+                }
+                ?>
+                <div class="panel panel-default feed-read-more" id="FeedMoreRead">
+                    <div class="panel-body panel-read-more-body">
+                        <span class="none" id="ShowMoreNoData"><?= __('There is no further action.') ?></span>
+                        <a href="#" class="click-feed-read-more"
+                           onclick="Page.action_resize()"
+                           parent-id="FeedMoreRead"
+                           no-data-text-id="ShowMoreNoData"
+                           next-page-num="<?= $next_page_num ?>"
+                           month-index="<?= $month_index ?>"
+                           get-url="<?=
+                           $this->Html->url([
+                               'controller'     => 'posts',
+                               'action'         => 'ajax_get_user_page_post_feed',
+                               'user_id'        => Hash::get($namedParams, 'user_id'),
+                               'author_id'      => Hash::get($namedParams, 'user_id'),
+                               'goal_id'        => Hash::get($namedParams, 'goal_id'),
+                               'type'           => Post::TYPE_ACTION,
+                               'page_type'      => Hash::get($namedParams, 'page_type'),
+                               'base_timestamp' => $endTimestamp,
+                           ]) ?>"
+                           id="FeedMoreReadLink"
+                           append-target-id="UserPageContents"
+                           oldest-post-time="<?= $oldestTimestamp ?>"
+                        >
+                            <?= h($more_read_text) ?> </a>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
-    <?= $this->App->viewEndComment() ?>
+</div>
+<?= $this->App->viewEndComment() ?>
