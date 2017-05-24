@@ -68,6 +68,36 @@ class ApiCommentService extends AppService
     }
 
     /**
+     * Validates comment data for creation
+     * Returns an empty array in case of success
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    function validateCreate($postId, $data)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init("Comment");
+
+        $post = $Post->findById($postId);
+        if (empty($post)) {
+            return ["status_code" => 404, "message" => __("This post was deleted.")];
+        }
+
+        $Comment->set($data['Comment']);
+        if (!$Comment->validates()) {
+            return [
+                "status_code"       => 400,
+                "validation_errors" => $this->validationExtract($Comment->validationErrors)
+            ];
+        }
+        return [];
+    }
+
+    /**
      * @param $id
      *
      * Delete Comment
@@ -118,22 +148,49 @@ class ApiCommentService extends AppService
             // Get ogp
             $data = $this->_addOgpIndexes($data, $data['body']);
 
-            $Comment->commentEdit($data);
-
             // Save comment data
-            $Comment->set($data);
-            if ($Comment->validates()) {
-                $Comment->commentEdit($data);
-            } else {
-                $error_msg = array_shift($Comment->validationErrors);
-                throw new RuntimeException($error_msg[0]);
-            }
+            $Comment->commentEdit($data);
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return false;
         }
         return true;
+    }
+
+    /**
+     * Validates the comment data for update
+     * Returns an empty array in case of success.
+     *
+     * @param $comment_id
+     * @param $data
+     *
+     * @return array
+     */
+    public function validateUpdate($comment_id, $user_id, $data): array
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init("Comment");
+
+        // Check if comment exists
+        $comment = $this->get($comment_id);
+        if (empty($comment)) {
+            return ["status_code" => 400, "message" => __("Not exist")];
+        }
+
+        // Is it the user comment?
+        if ($user_id != $comment['User']['id']) {
+            return ["status_code" => 403, "message" => __("This isn't your comment.")];
+        }
+
+        $Comment->set($data);
+        if (!$Comment->validates()) {
+            return [
+                "status_code"       => 400,
+                "validation_errors" => $this->validationExtract($Comment->validationErrors)
+            ];
+        }
+        return [];
     }
 
     /**

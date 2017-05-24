@@ -64,12 +64,10 @@ class CommentsController extends ApiController
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
 
-        $postId = Hash::get($this->request->data, 'Comment.post_id');
-        $post = $Post->findById($postId);
-        $type = Hash::get($post, 'Post.type');
-
-        if (empty($post)) {
-            return $this->_getResponseNotFound(__("This post was deleted."));
+        $err = $ApiCommentService->validateCreate($this->request->data);
+        if (!empty($err)) {
+            return $this->_getResponse(Hash::get($err, 'status_code'), null, null
+                , Hash::get($err, 'message'), Hash::get($err, 'validation_errors'));
         }
 
         // Create new comment
@@ -77,6 +75,11 @@ class CommentsController extends ApiController
         if ($comment === false) {
             return $this->_getResponseInternalServerError();
         }
+
+        // Get post type and notify
+        $postId = Hash::get($this->request->data, 'Comment.post_id');
+        $post = $Post->findById($postId);
+        $type = Hash::get($post, 'Post.type');
 
         switch ($type) {
             case Post::TYPE_NORMAL:
@@ -111,17 +114,18 @@ class CommentsController extends ApiController
      */
     function put($id)
     {
-        $errResponse = $this->_validateEditForbiddenOrNotFound($id);
-        if ($errResponse !== true) {
-            return $errResponse;
-        }
-
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
         $data = Hash::get($this->request->data, 'Comment');
         $data['id'] = $id;
 
-        // Update the new
+        $err = $ApiCommentService->validateUpdate($id, $this->Auth->user('id'), $data);
+        if (!empty($err)) {
+            return $this->_getResponse(Hash::get($err, 'status_code'), null, null
+                , Hash::get($err, 'message'), Hash::get($err, 'validation_errors'));
+        }
+
+        // Update the new comment
         if (!$ApiCommentService->update($data)) {
             return $this->_getResponseInternalServerError();
         }
