@@ -4,9 +4,10 @@
 1. `vagrant up default` でvmを起動
 1. `vagrant provision default` でvmをアップデート
 1. `vagrant ssh default` でvmにログイン
-1. `/vagrant_data/app/Console/cake i18n extract` を実行
+1. `Console/cake i18n extract --no-location --ignore-model-validation —overwrite` を実行
 1. 以下の通り応対
-   ```
+
+```
   Current paths: None
   What is the path you would like to extract?
   [Q]uit [D]one  
@@ -28,8 +29,7 @@
 
   Error: global.pot already exists in this location. Overwrite? [Y]es, [N]o, [A]ll (y/n/a)
   [y] > a
-
-  ```
+```
 
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
 1. poeditを開く。(※インストールされていない場合は、https://poedit.net/download からダウンロード、インストール)
