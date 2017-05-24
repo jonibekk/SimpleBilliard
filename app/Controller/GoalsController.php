@@ -1762,7 +1762,6 @@ class GoalsController extends AppController
 
     function view_actions()
     {
-        $GoalService = ClassRegistry::init("GoalService");
         $goal_id = Hash::get($this->request->params, "named.goal_id");
         $goal = $this->Goal->getGoal($goal_id);
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
@@ -1815,6 +1814,7 @@ class GoalsController extends AppController
         $this->set('is_collaborated', $is_collaborated);
         $this->set('key_result_id', $key_result_id);
         $this->set('long_text', false);
+        $this->set('addActionUrl', "/goals/add_action/goal_id:$goal_id/key_result_id:$key_result_id");
         $this->set(compact('goalTerm', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
         $this->layout = LAYOUT_ONE_COLUMN;

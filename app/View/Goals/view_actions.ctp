@@ -86,9 +86,9 @@
                         <div class="cube-img-column-frame add-action mod-only">
                             <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
                             <div class="profile-user-action-contents-add-image">
-                                <span><a href="/goals/add_action/goal_id:<?= $goal_id ?>">+</a></span>
+                                <span><a href="<?= $addActionUrl ?>">+</a></span>
                             </div>
-                            <a href="/goals/add_action/goal_id:<?= $goal_id ?>"><?= __('Add Action') ?></a>
+                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
                         </div>
                     <?php elseif (count($posts) == 0 && !$is_collaborated): ?>
                         <div class="cube-img-column-frame add-action mod-only">
@@ -97,9 +97,9 @@
                     <?php elseif (count($posts) > 0 && $is_collaborated): ?>
                         <div class="cube-img-column-frame add-action  mod-only">
                             <div class="profile-user-action-contents-add-image">
-                                <span><a href="/goals/add_action/goal_id:<?= $goal_id ?>">+</a></span>
+                                <span><a href="<?= $addActionUrl ?>">+</a></span>
                             </div>
-                            <a href="/goals/add_action/goal_id:<?= $goal_id ?>"><?= __('Add Action') ?></a>
+                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
                         </div>
                     <?php endif; ?>
                     <?= $this->element('Feed/posts') ?>
@@ -108,9 +108,9 @@
                         <div class="cube-img-column-frame add-action mod-only">
                             <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
                             <div class="profile-user-action-contents-add-image">
-                                <span><a href="/goals/add_action/goal_id:<?= $goal_id ?>">+</a></span>
+                                <span><a href="<?= $addActionUrl ?>">+</a></span>
                             </div>
-                            <a href="/goals/add_action/goal_id:<?= $goal_id ?>"><?= __('Add Action') ?></a>
+                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
                         </div>
                     <?php elseif (count($posts) == 0 && !$is_collaborated): ?>
                         <div class="cube-img-column-frame add-action mod-only">
@@ -119,9 +119,9 @@
                     <?php elseif (count($posts) > 0 && $is_collaborated): ?>
                         <div class="cube-img-column-frame add-action">
                             <div class="profile-user-action-contents-add-image">
-                                <span><a href="/goals/add_action/goal_id:<?= $goal_id ?>">+</a></span>
+                                <span><a href="<?= $addActionUrl ?>">+</a></span>
                             </div>
-                            <a href="/goals/add_action/goal_id:<?= $goal_id ?>"><?= __('Add Action') ?></a>
+                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
                         </div>
                     <?php endif; ?>
                     <?= $this->element('cube_img_blocks') ?>

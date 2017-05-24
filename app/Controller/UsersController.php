@@ -1277,6 +1277,8 @@ class UsersController extends AppController
 
     function view_actions()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init('TermService');
         /** @var Term $Term */
@@ -1307,9 +1309,7 @@ class UsersController extends AppController
         $endTimestamp = $postCondition['endTimestamp'];
         $oldestTimestamp = $postCondition['oldestTimestamp'];
 
-        $posts = $this->_findPostOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
-
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $posts = $this->_findPostsOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
 
         $this->set('long_text', false);
         $this->set(compact(
@@ -1446,7 +1446,7 @@ class UsersController extends AppController
         return $res;
     }
 
-    function _findPostOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp): array
+    function _findPostsOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp): array
     {
         $limit = ($pageType == 'list') ? POST_FEED_PAGE_ITEMS_NUMBER : MY_PAGE_CUBE_ACTION_IMG_NUMBER;
         $params = [

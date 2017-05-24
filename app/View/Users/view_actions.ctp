@@ -82,7 +82,15 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <?php elseif ($namedParams['page_type'] == 'image'): ?>
                 <?php if (count($posts) == 0): ?>
                     <div class="cube-img-column-frame add-action mod-only">
-                        <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
+                        <h3>
+                            <?php
+                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
+                                echo __("You haven't created any actions&hellip; yet.");
+                            } else {
+                                echo __("No actions have been created&hellip; yet.");
+                            }
+                            ?>
+                        </h3>
                     </div>
                 <?php endif; ?>
                 <?php if ($canAction): ?>
