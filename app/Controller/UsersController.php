@@ -1178,7 +1178,7 @@ class UsersController extends AppController
 
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init('TermService');
-        $term = $TermService->getFilterMenu();
+        $termFilterOptions = $TermService->getFilterMenu();
 
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
@@ -1234,7 +1234,7 @@ class UsersController extends AppController
         );
 
         $this->set([
-            'term'                 => $term,
+            'term'                 => $termFilterOptions,
             'term_id'              => $termId,
             'term_base_url'        => $termBaseUrl,
             'my_goals_count'       => $myGoalsCount,
