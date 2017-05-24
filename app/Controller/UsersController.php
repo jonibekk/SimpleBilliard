@@ -1398,7 +1398,7 @@ class UsersController extends AppController
             // $termId is wrong
             return false;
         }
-        if ($goalId !== null && $GoalMember->isCollaborated($goalId, $userId) == false) {
+        if ($goalId && $GoalMember->isCollaborated($goalId, $userId) == false) {
             // $goalId is not collaborated
             return false;
         }

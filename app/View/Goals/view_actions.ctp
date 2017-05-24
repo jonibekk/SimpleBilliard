@@ -82,46 +82,28 @@
             </div>
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
-                    <?php if (count($posts) == 0 && $is_collaborated): ?>
+                    <?php if (count($posts) == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
-                            <div class="profile-user-action-contents-add-image">
-                                <span><a href="<?= $addActionUrl ?>">+</a></span>
-                            </div>
-                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
+                            <h3><?= $is_collaborated ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
+                            <?= $is_collaborated ? $this->element('Goal/add_action_button',
+                                compact('goal_id', 'key_result_id')) : null; ?>
                         </div>
-                    <?php elseif (count($posts) == 0 && !$is_collaborated): ?>
-                        <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= __("No actions have been created&hellip; yet.") ?></h3>
-                        </div>
-                    <?php elseif (count($posts) > 0 && $is_collaborated): ?>
+                    <?php elseif ($is_collaborated): ?>
                         <div class="cube-img-column-frame add-action  mod-only">
-                            <div class="profile-user-action-contents-add-image">
-                                <span><a href="<?= $addActionUrl ?>">+</a></span>
-                            </div>
-                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
+                            <?= $this->element('Goal/add_action_button', compact('goal_id', 'key_result_id')); ?>
                         </div>
                     <?php endif; ?>
                     <?= $this->element('Feed/posts') ?>
                 <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                    <?php if (count($posts) == 0 && $is_collaborated): ?>
+                    <?php if (count($posts) == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= __("You haven't created any actions&hellip; yet.") ?></h3>
-                            <div class="profile-user-action-contents-add-image">
-                                <span><a href="<?= $addActionUrl ?>">+</a></span>
-                            </div>
-                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
+                            <h3><?= $is_collaborated ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
+                            <?= $is_collaborated ? $this->element('Goal/add_action_button',
+                                compact('goal_id', 'key_result_id')) : null; ?>
                         </div>
-                    <?php elseif (count($posts) == 0 && !$is_collaborated): ?>
-                        <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= __("No actions have been created&hellip; yet.") ?></h3>
-                        </div>
-                    <?php elseif (count($posts) > 0 && $is_collaborated): ?>
+                    <?php elseif ($is_collaborated): ?>
                         <div class="cube-img-column-frame add-action">
-                            <div class="profile-user-action-contents-add-image">
-                                <span><a href="<?= $addActionUrl ?>">+</a></span>
-                            </div>
-                            <a href="<?= $addActionUrl ?>"><?= __('Add Action') ?></a>
+                            <?= $this->element('Goal/add_action_button', compact('goal_id', 'key_result_id')); ?>
                         </div>
                     <?php endif; ?>
                     <?= $this->element('cube_img_blocks') ?>

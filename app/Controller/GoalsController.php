@@ -1814,7 +1814,6 @@ class GoalsController extends AppController
         $this->set('is_collaborated', $is_collaborated);
         $this->set('key_result_id', $key_result_id);
         $this->set('long_text', false);
-        $this->set('addActionUrl', "/goals/add_action/goal_id:$goal_id/key_result_id:$key_result_id");
         $this->set(compact('goalTerm', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
         $this->layout = LAYOUT_ONE_COLUMN;

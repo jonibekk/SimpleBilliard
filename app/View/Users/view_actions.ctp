@@ -91,16 +91,23 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                             }
                             ?>
                         </h3>
+                        <?php
+                        if ($canAction) {
+                            echo $this->element('Goal/add_action_button', [
+                                'goal_id' => Hash::get($namedParams, 'goal_id')
+                            ]);
+                        }
+                        ?>
                     </div>
-                <?php endif; ?>
-                <?php if ($canAction): ?>
+                <?php elseif ($canAction): ?>
                     <div class="cube-img-column-frame add-action">
-                        <div class="profile-user-action-contents-add-image">
-                            <span><a href="/goals/add_action/goal_id:<?= Hash::get($namedParams,
-                                    'goal_id') ?>">+</a></span>
-                        </div>
-                        <a href="/goals/add_action/goal_id:<?= Hash::get($namedParams,
-                            'goal_id') ?>"><?= __('Add Action') ?></a>
+                        <?php
+                        if ($canAction) {
+                            echo $this->element('Goal/add_action_button', [
+                                'goal_id' => Hash::get($namedParams, 'goal_id')
+                            ]);
+                        }
+                        ?>
                     </div>
                 <?php endif; ?>
                 <?= $this->element('cube_img_blocks') ?>
