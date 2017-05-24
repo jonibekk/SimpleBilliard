@@ -40,7 +40,6 @@ class PostsController extends AppController
         return $this->render();
     }
 
-
     /**
      * @deprecated
      * @return \Cake\Network\Response|CakeResponse|null
@@ -429,7 +428,6 @@ class PostsController extends AppController
         return $attached_files;
     }
 
-
     public function ajax_get_action_list_more()
     {
         $param_named = $this->request->params['named'];
@@ -474,37 +472,47 @@ class PostsController extends AppController
      */
     public function ajax_get_user_page_post_feed()
     {
-        $param_named = $this->request->params['named'];
+        $namedParams = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
         // 表示するページ
         $page_num = 1;
-        if (isset($param_named['page']) && !empty($param_named['page'])) {
-            $page_num = $param_named['page'];
+        if (isset($namedParams['page']) && !empty($namedParams['page'])) {
+            $page_num = $namedParams['page'];
+        }
+        // base timestamp
+        if (isset($namedParams['base_timestamp'])) {
+            $baseTimestamp = $namedParams['base_timestamp'];
+        } else {
+            $baseTimestamp = REQUEST_TIMESTAMP;
         }
         // データ取得期間
-        $start = null;
-        $end = null;
-        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+        $startTimestamp = strtotime("-1 month", $baseTimestamp);
+        $endTimestamp = $baseTimestamp;
+        if (isset($namedParams['month_index']) && !empty($namedParams['month_index'])) {
             // 一ヶ月以前を指定された場合
-            $end_month_offset = $param_named['month_index'];
+            $end_month_offset = $namedParams['month_index'];
             $start_month_offset = $end_month_offset + 1;
-            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
-            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+            $endTimestamp = strtotime("-{$end_month_offset} months", $baseTimestamp);
+            $startTimestamp = strtotime("-{$start_month_offset} months", $baseTimestamp);
         }
         //取得件数
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
         //エレメントpath
         $elm_path = "Feed/posts";
-        if (Hash::get($param_named, 'page_type') == 'image') {
+        if (Hash::get($namedParams, 'page_type') == 'image') {
             $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
             $elm_path = "cube_img_blocks";
         }
+        $this->log('time');
+        $this->log($startTimestamp);
+        $this->log($endTimestamp);
+
         // 投稿一覧取得
-        $posts = $this->Post->get($page_num, $item_num, $start, $end, $this->request->params);
+        $posts = $this->Post->get($page_num, $item_num, $startTimestamp, $endTimestamp, $this->request->params);
         $this->set('posts', $posts);
         $this->set('long_text', false);
-        $without_header = Hash::get($param_named, 'without_header');
+        $without_header = Hash::get($namedParams, 'without_header');
         $this->set(compact('without_header'));
 
         // エレメントの出力を変数に格納する
@@ -515,7 +523,7 @@ class PostsController extends AppController
             'html'          => $html,
             'count'         => count($posts),
             'page_item_num' => $item_num,
-            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+            'start'         => $startTimestamp ? $startTimestamp : REQUEST_TIMESTAMP - MONTH,
         );
         return $this->_ajaxGetResponse($result);
     }

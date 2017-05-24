@@ -1188,6 +1188,7 @@ class UsersController extends AppController
         $team = $Team->getCurrentTeam();
         $termId = Hash::get($namedParams, 'term_id');
         if ($termId) {
+            // if all term is selected, start date will be team created, end date will be end date of next term
             if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
                 $startDate = AppUtil::dateYesterday(
                     AppUtil::dateYmdLocal($team['Team']['created'],
@@ -1309,6 +1310,7 @@ class UsersController extends AppController
         if ($goal_id) {
             $params['goal_id'] = $goal_id;
         }
+        $apiBaseTimestamp = null;
         if ($term_id == $TermService::TERM_FILTER_ALL_KEY_NAME) {
             // if all term, start is date of team created
             $team = $Team->getCurrentTeam();
@@ -1320,7 +1322,7 @@ class UsersController extends AppController
             $timezone = $Team->getTimezone();
             $startTimestamp = AppUtil::getTimestampByTimezone($term['start_date'], $timezone);
             $endTimestamp = AppUtil::getTimestampByTimezone(AppUtil::dateTomorrow($term['end_date']), $timezone);
-
+            $apiBaseTimestamp = $endTimestamp;
         }
         $posts = [];
         switch ($page_type) {
@@ -1357,7 +1359,7 @@ class UsersController extends AppController
             'page_type'  => $page_type
         ]);
         $this->set('long_text', false);
-        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url', 'term_id', 'terms'));
+        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url', 'term_id', 'terms', 'apiBaseTimestamp'));
         return $this->render();
     }
 

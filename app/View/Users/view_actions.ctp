@@ -133,13 +133,14 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                                month-index="<?= $month_index ?>"
                                get-url="<?=
                                $this->Html->url([
-                                   'controller' => 'posts',
-                                   'action'     => 'ajax_get_user_page_post_feed',
-                                   'user_id'    => Hash::get($namedParams, 'user_id'),
-                                   'author_id'  => Hash::get($namedParams, 'user_id'),
-                                   'goal_id'    => Hash::get($namedParams, 'goal_id'),
-                                   'type'       => Post::TYPE_ACTION,
-                                   'page_type'  => Hash::get($namedParams, 'page_type'),
+                                   'controller'     => 'posts',
+                                   'action'         => 'ajax_get_user_page_post_feed',
+                                   'user_id'        => Hash::get($namedParams, 'user_id'),
+                                   'author_id'      => Hash::get($namedParams, 'user_id'),
+                                   'goal_id'        => Hash::get($namedParams, 'goal_id'),
+                                   'type'           => Post::TYPE_ACTION,
+                                   'page_type'      => Hash::get($namedParams, 'page_type'),
+                                   'base_timestamp' => $apiBaseTimestamp,
                                ]) ?>"
                                id="FeedMoreReadLink"
                                append-target-id="UserPageContents"
