@@ -1286,33 +1286,43 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
 
+        // make variables for requested named params.
         $namedParams = $this->request->params['named'];
         $userId = Hash::get($namedParams, "user_id");
-        $page_type = Hash::get($namedParams, "page_type");
+        $pageType = Hash::get($namedParams, "page_type");
         $goalId = Hash::get($namedParams, 'goal_id');
         $termId = Hash::get($namedParams, 'term_id') ?? $this->Team->Term->getCurrentTermId();
 
         $termFilterOptions = $TermService->getFilterMenu(true, false);
 
-        if (!$userId || !in_array($page_type, ['list', 'image'])) {
+        if (!$userId || !in_array($pageType, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
         if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
             // if all term, start is date of team created
-            $startTimestamp = $this->Auth->user('User.created');
             $endTimestamp = REQUEST_TIMESTAMP;
-            $paramTermId = null;
+            $startTimestamp = $endTimestamp - MONTH;
+            $oldestTimestamp = $this->Auth->user('created');
+            $goalFilterOptions = $GoalService->getFilterMenu($userId, null);
         } else {
             $term = $Term->findById($termId)['Term'];
             $timezone = $Team->getTimezone();
-            $startTimestamp = AppUtil::getTimestampByTimezone($term['start_date'], $timezone);
-            $endTimestamp = AppUtil::getTimestampByTimezone(AppUtil::dateTomorrow($term['end_date']), $timezone);
-            $paramTermId = $termId;
+            if ($termId == $Term->getCurrentTermId()) {
+                $endTimestamp = REQUEST_TIMESTAMP;
+            } else {
+                $endTimestamp = AppUtil::getTimestampByTimezone(AppUtil::dateTomorrow($term['end_date']), $timezone);
+            }
+            $startTimestamp = $endTimestamp - MONTH;
+            $oldestTimestamp = AppUtil::getTimestampByTimezone($term['start_date'], $timezone);
+            $goalFilterOptions = $GoalService->getFilterMenu($userId, $termId);
         }
-        $goalFilterOptions = $GoalService->getFilterMenu($userId, $paramTermId);
+        // $startTimestamp should be ahead of $oldestTimestamp
+        if ($startTimestamp < $oldestTimestamp) {
+            $startTimestamp = $oldestTimestamp;
+        }
 
-        $limit = ($page_type == 'list') ? POST_FEED_PAGE_ITEMS_NUMBER : MY_PAGE_CUBE_ACTION_IMG_NUMBER;
+        $limit = ($pageType == 'list') ? POST_FEED_PAGE_ITEMS_NUMBER : MY_PAGE_CUBE_ACTION_IMG_NUMBER;
         $params = [
             'author_id' => $userId,
             'type'      => Post::TYPE_ACTION,
@@ -1336,7 +1346,8 @@ class UsersController extends AppController
             'goalFilterOptions',
             'termFilterOptions',
             'startTimestamp',
-            'endTimestamp'
+            'endTimestamp',
+            'oldestTimestamp'
         ));
         return $this->render();
     }

@@ -95,7 +95,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 <?php endif; ?>
             </div>
             <?php //投稿が指定件数　もしくは　最も古い投稿から１ヶ月以上経っている場合
-            if (count($posts) == $item_num || $startTimestamp < REQUEST_TIMESTAMP - MONTH): ?>
+            if (count($posts) == $item_num || $oldestTimestamp < REQUEST_TIMESTAMP - MONTH): ?>
 
                 <div class="panel-body">
                     <?php
@@ -130,7 +130,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                                ]) ?>"
                                id="FeedMoreReadLink"
                                append-target-id="UserPageContents"
-                               oldest-post-time="<?= $startTimestamp ?>"
+                               oldest-post-time="<?= $oldestTimestamp ?>"
                             >
                                 <?= h($more_read_text) ?> </a>
                         </div>

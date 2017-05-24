@@ -504,9 +504,6 @@ class PostsController extends AppController
             $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
             $elm_path = "cube_img_blocks";
         }
-        $this->log('time');
-        $this->log($startTimestamp);
-        $this->log($endTimestamp);
 
         // 投稿一覧取得
         $posts = $this->Post->get($page_num, $item_num, $startTimestamp, $endTimestamp, $this->request->params);
