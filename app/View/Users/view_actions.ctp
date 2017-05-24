@@ -23,11 +23,11 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    <?= __('Term') ?>:&nbsp;<strong><?= $terms[$term_id] ?>&nbsp;<span
+                    <?= __('Term') ?>:&nbsp;<strong><?= $termFilterOptions[$termId] ?>&nbsp;<span
                             class="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <?php foreach ($terms as $id => $termText): ?>
+                    <?php foreach ($termFilterOptions as $id => $termText): ?>
                         <li><a href='<?= "$filterCommonUrl/term_id:$id" ?>'><?= $termText ?></a></li>
                     <?php endforeach; ?>
                 </ul>
@@ -35,23 +35,15 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    <?= __('Goal') ?>:&nbsp;<strong><?= $goal_select_options[Hash::get($namedParams, 'goal_id')] ?>
+                    <?= __('Goal') ?>:&nbsp;<strong><?= $goalFilterOptions[Hash::get($namedParams, 'goal_id')] ?>
                         &nbsp;<span class="fa fa-angle-down ml_2px"></span></strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <?php
-                    foreach ($goal_select_options as $goalID => $goalName) { ?>
-                        <?php if ($goalName == "_separator_"): ?>
-                            <li role="separator" class="divider"></li>
-                        <?php else: ?>
-                            <li>
-                                <a href='<?= "$filterCommonUrl/term_id:$term_id/goal_id:$goalID" ?>'><?= $goalName ?></a>
-                            </li>
-                        <?php endif; ?>
-                    <?php }
-                    unset($goalName);
-                    unset($goalID);
-                    ?>
+                    <?php foreach ($goalFilterOptions as $goalID => $goalName): ?>
+                        <li>
+                            <a href='<?= "$filterCommonUrl/term_id:$termId/goal_id:$goalID" ?>'><?= $goalName ?></a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
             <div class="view-actions-panel-btngroup-wrap">
@@ -102,8 +94,8 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 <?= $this->element('cube_img_blocks') ?>
                 <?php endif; ?>
             </div>
-            <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
-            if (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH): ?>
+            <?php //投稿が指定件数　もしくは　最も古い投稿から１ヶ月以上経っている場合
+            if (count($posts) == $item_num || $startTimestamp < REQUEST_TIMESTAMP - MONTH): ?>
 
                 <div class="panel-body">
                     <?php
@@ -134,11 +126,11 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                                    'goal_id'        => Hash::get($namedParams, 'goal_id'),
                                    'type'           => Post::TYPE_ACTION,
                                    'page_type'      => Hash::get($namedParams, 'page_type'),
-                                   'base_timestamp' => $apiBaseTimestamp,
+                                   'base_timestamp' => $endTimestamp,
                                ]) ?>"
                                id="FeedMoreReadLink"
                                append-target-id="UserPageContents"
-                               oldest-post-time="<?= $oldest_post_time ?>"
+                               oldest-post-time="<?= $startTimestamp ?>"
                             >
                                 <?= h($more_read_text) ?> </a>
                         </div>
