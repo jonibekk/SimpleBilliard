@@ -99,7 +99,8 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                             <span><a href="/goals/add_action/goal_id:<?= Hash::get($namedParams,
                                     'goal_id') ?>">+</a></span>
                         </div>
-                        <a href="/goals/add_action/"><?= __('Add Action') ?></a>
+                        <a href="/goals/add_action/goal_id:<?= Hash::get($namedParams,
+                            'goal_id') ?>"><?= __('Add Action') ?></a>
                     </div>
                 <?php endif; ?>
                 <?= $this->element('cube_img_blocks') ?>
