@@ -45,7 +45,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                             <li role="separator" class="divider"></li>
                         <?php else: ?>
                             <li>
-                                <a href='<?= "$filterCommonUrl/goal_id:$goalID" ?>'><?= $goalName ?></a>
+                                <a href='<?= "$filterCommonUrl/term_id:$term_id/goal_id:$goalID" ?>'><?= $goalName ?></a>
                             </li>
                         <?php endif; ?>
                     <?php }

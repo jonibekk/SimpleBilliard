@@ -4,6 +4,7 @@ App::uses('Post', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
 App::import('Service', 'UserService');
+App::import('Service', 'TermService');
 
 /**
  * Users Controller
@@ -1164,23 +1165,43 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $userId = Hash::get($this->request->params, "named.user_id");
+        $namedParams = $this->request->params['named'];
+
+        $userId = Hash::get($namedParams, "user_id");
         if (!$userId || !$this->_setUserPageHeaderInfo($userId)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $this->layout = LAYOUT_ONE_COLUMN;
-        $pageType = Hash::get($this->request->params, 'named.page_type');
+        $pageType = Hash::get($namedParams, 'page_type');
 
-        $term = $this->_getVisibleAllTerm();
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        $term = $TermService->getFilterMenu();
 
-        if (isset($this->request->params['named']['term_id'])) {
-            $termId = $this->request->params['named']['term_id'];
-            $targetTerm = $this->Team->Term->findById($termId);
-            $startDate = $targetTerm['Term']['start_date'];
-            $endDate = $targetTerm['Term']['end_date'];
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $team = $Team->getCurrentTeam();
+        $termId = Hash::get($namedParams, 'term_id');
+        if ($termId) {
+            if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
+                $startDate = AppUtil::dateYesterday(
+                    AppUtil::dateYmdLocal($team['Team']['created'],
+                        $team['Team']['timezone'])
+                );
+                $nextTerm = $Term->getNextTermData();
+                $endDate = $nextTerm['end_date'];
+            } else {
+                $targetTerm = $this->Team->Term->findById($termId);
+                $startDate = $targetTerm['Term']['start_date'];
+                $endDate = $targetTerm['Term']['end_date'];
+            }
         } else {
+            // as default, current term.
             $termId = $this->Team->Term->getCurrentTermId();
             $startDate = $this->Team->Term->getCurrentTermData()['start_date'];
             $endDate = $this->Team->Term->getCurrentTermData()['end_date'];
@@ -1234,34 +1255,6 @@ class UsersController extends AppController
         return $this->render();
     }
 
-    function _getVisibleAllTerm()
-    {
-        $currentId = $this->Team->Term->getCurrentTermId();
-        $nextId = $this->Team->Term->getNextTermId();
-        $term1 = [
-            $currentId => __("Current Term"),
-            $nextId    => __("Next Term"),
-        ];
-        if (!empty($previousTerm)) {
-            $term1 += [$previousTerm['id'] => __("Previous Term")];
-        }
-
-        function show_date($startDate, $endDate)
-        {
-            return AppUtil::dateYmdReformat($startDate, '/') . " - " . AppUtil::dateYmdReformat($endDate, '/');
-        }
-
-        $allTerm = $this->Team->Term->getAllTerm();
-        $allId = array_column($allTerm, 'id');
-        $allStartDate = array_column($allTerm, 'start_date');
-        $allEndDate = array_column($allTerm, 'end_date');
-        $allTerm = array_map("show_date", $allStartDate, $allEndDate);
-
-        $term2 = array_combine($allId, $allTerm);
-        $visibleAllTerm = $term1 + $term2;
-        return $visibleAllTerm;
-    }
-
     /**
      * ユーザーページ 投稿一覧
      *
@@ -1296,7 +1289,11 @@ class UsersController extends AppController
         $goal_id = Hash::get($namedParams, 'goal_id');
         $term_id = Hash::get($namedParams, 'term_id') ?? $this->Team->Term->getCurrentTermId();
 
-        $terms = $this->_getVisibleAllTerm();
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        $terms = $TermService->getFilterMenu(true, false);
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
 
         if (!$user_id || !in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
@@ -1305,15 +1302,33 @@ class UsersController extends AppController
         $params = [
             'author_id' => $user_id,
             'type'      => Post::TYPE_ACTION,
-            'goal_id'   => $goal_id,
         ];
+
+        $startTimestamp = null;
+        $endTimestamp = null;
+        if ($goal_id) {
+            $params['goal_id'] = $goal_id;
+        }
+        if ($term_id == $TermService::TERM_FILTER_ALL_KEY_NAME) {
+            // if all term, start is date of team created
+            $team = $Team->getCurrentTeam();
+            $startTimestamp = $team['Team']['created'];
+        } else {
+            /** @var Term $Term */
+            $Term = ClassRegistry::init('Term');
+            $term = $Term->findById($term_id)['Term'];
+            $timezone = $Team->getTimezone();
+            $startTimestamp = AppUtil::getTimestampByTimezone($term['start_date'], $timezone);
+            $endTimestamp = AppUtil::getTimestampByTimezone(AppUtil::dateTomorrow($term['end_date']), $timezone);
+
+        }
         $posts = [];
         switch ($page_type) {
             case 'list':
-                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
+                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $startTimestamp, $endTimestamp, $params);
                 break;
             case 'image':
-                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
+                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, $startTimestamp, $endTimestamp, $params);
                 break;
         }
         $this->set(compact('posts'));
@@ -1325,8 +1340,16 @@ class UsersController extends AppController
         $team = $this->Team->getCurrentTeam();
         $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
-        $goal_ids = $this->Goal->GoalMember->getCollaboGoalList($user_id, true);
-        $goal_select_options = $this->Goal->getGoalNameListByGoalIds($goal_ids, true, true);
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+        if ($term_id == $TermService::TERM_FILTER_ALL_KEY_NAME) {
+            $paramTermId = null;
+        } else {
+            $paramTermId = $term_id;
+        }
+        $goal_select_options = $GoalService->getFilterMenu($user_id, $paramTermId);
+
         $goal_base_url = Router::url([
             'controller' => 'users',
             'action'     => 'view_actions',

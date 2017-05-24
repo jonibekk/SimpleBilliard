@@ -2269,6 +2269,57 @@ class Goal extends AppModel
     }
 
     /**
+     * finding collaborated goals
+     * if $startDate and $endDate are null, fetching all term goal
+     *
+     * @param int    $userId
+     * @param string $startDate
+     * @param string $endDate
+     * @param array  $fields
+     *
+     * @return array
+     */
+    function findCollaboratedGoals(
+        int $userId,
+        $startDate = null,
+        $endDate = null,
+        array $fields = ['id', 'name']
+    ): array {
+        // add prefix
+        foreach ($fields as $i => $v) {
+            $fields[$i] = 'Goal.' . $v;
+        }
+
+        $options = [
+            'conditions' => [
+                'GoalMember.del_flg' => false
+            ],
+            'fields'     => $fields,
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.user_id' => $userId,
+                        'GoalMember.team_id' => $this->current_team_id,
+                    ],
+                ]
+            ],
+        ];
+        if ($startDate) {
+            $options['conditions']['Goal.end_date >='] = $startDate;
+        }
+        if ($endDate) {
+            $options['conditions']['Goal.end_date <='] = $endDate;
+        }
+        $res = $this->find('all', $options);
+        $res = Hash::extract($res, '{n}.Goal');
+        return $res;
+    }
+
+    /**
      * 完了アクションが可能なゴールリスト取得
      *
      * @param int $userId
