@@ -1279,12 +1279,8 @@ class UsersController extends AppController
     {
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init('TermService');
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
 
         // make variables for requested named params.
         $namedParams = $this->request->params['named'];
@@ -1293,34 +1289,143 @@ class UsersController extends AppController
         $goalId = Hash::get($namedParams, 'goal_id');
         $termId = Hash::get($namedParams, 'term_id') ?? $Term->getCurrentTermId();
 
-        $user = $this->User->getDetail($userId);
-
-        if (!$this->_setUserPageHeaderInfo($userId)) {
-            // ユーザーが存在しない
+        // validation
+        if (!$this->_validateParamsOnActionPage($userId, $pageType, $termId, $goalId)) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
 
-        $canAction = false;
-        if ($userId == $this->Auth->user('id')
+        $this->_setUserPageHeaderInfo($userId);
+
+        $canAction = $this->_canActionOnActionPage($userId, $termId);
+
+        $termFilterOptions = $TermService->getFilterMenu(true, false);
+        $goalFilterOptions = $this->_getGoalFilterMenuOnActionPage($userId, $termId);
+
+        $postCondition = $this->_getTimestampsForPostCondition($termId, $userId);
+        $startTimestamp = $postCondition['startTimestamp'];
+        $endTimestamp = $postCondition['endTimestamp'];
+        $oldestTimestamp = $postCondition['oldestTimestamp'];
+
+        $posts = $this->_findPostOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        $this->set('long_text', false);
+        $this->set(compact(
+            'posts',
+            'termId',
+            'goalFilterOptions',
+            'termFilterOptions',
+            'endTimestamp',
+            'oldestTimestamp',
+            'canAction'
+        ));
+        return $this->render();
+    }
+
+    /**
+     * @param int        $targetUserId
+     * @param int|string $termId
+     *
+     * @return bool
+     */
+    function _canActionOnActionPage(int $targetUserId, $termId): bool
+    {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+
+        if ($targetUserId == $this->Auth->user('id')
             && ($termId == $Term->getCurrentTermId() || $termId == $TermService::TERM_FILTER_ALL_KEY_NAME)
             && !empty($GoalService->findActionables())
         ) {
-            $canAction = true;
+            return true;
         }
+        return false;
+    }
 
-        $termFilterOptions = $TermService->getFilterMenu(true, false);
+    /**
+     * @param int      $userId
+     * @param int|null $termId
+     *
+     * @return array
+     */
+    function _getGoalFilterMenuOnActionPage(int $userId, $termId): array
+    {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
 
-        if (!$userId || !in_array($pageType, ['list', 'image'])) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
-            $this->redirect($this->referer());
+        if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
+            $goalFilterOptions = $GoalService->getFilterMenu($userId, null);
+        } else {
+            $goalFilterOptions = $GoalService->getFilterMenu($userId, $termId);
         }
+        return $goalFilterOptions;
+    }
+
+    /**
+     * @param $userId
+     * @param $pageType
+     * @param $termId
+     * @param $goalId
+     *
+     * @return bool
+     */
+    function _validateParamsOnActionPage($userId, $pageType, $termId, $goalId)
+    {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+
+        if ($this->Team->TeamMember->isActive($userId) == false) {
+            // inactive user or not exists
+            return false;
+        }
+        if (!in_array($pageType, ['list', 'image'])) {
+            // $pageType is wrong
+            return false;
+        }
+        if ($termId != $TermService::TERM_FILTER_ALL_KEY_NAME && $Term->exists($termId) == false) {
+            // $termId is wrong
+            return false;
+        }
+        if ($goalId !== null && $GoalMember->isCollaborated($goalId, $userId) == false) {
+            // $goalId is not collaborated
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param $termId
+     * @param $userId
+     *
+     * @return array ['startTimestamp'=>"",'endTimestamp'=>"",'oldestTimestamp'=>""]
+     */
+    function _getTimestampsForPostCondition($termId, $userId): array
+    {
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init('TermService');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+
         if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
             // if all term, start is date of team created
             $endTimestamp = REQUEST_TIMESTAMP;
             $startTimestamp = $endTimestamp - MONTH;
-            $oldestTimestamp = $user['User']['created'];
-            $goalFilterOptions = $GoalService->getFilterMenu($userId, null);
+            $targetUser = $this->User->getDetail($userId);
+            $oldestTimestamp = $targetUser['User']['created'];
         } else {
             $term = $Term->findById($termId)['Term'];
             $timezone = $Team->getTimezone();
@@ -1331,13 +1436,18 @@ class UsersController extends AppController
             }
             $startTimestamp = $endTimestamp - MONTH;
             $oldestTimestamp = AppUtil::getTimestampByTimezone($term['start_date'], $timezone);
-            $goalFilterOptions = $GoalService->getFilterMenu($userId, $termId);
         }
         // $startTimestamp should be ahead of $oldestTimestamp
         if ($startTimestamp < $oldestTimestamp) {
             $startTimestamp = $oldestTimestamp;
         }
 
+        $res = compact('startTimestamp', 'endTimestamp', 'oldestTimestamp');
+        return $res;
+    }
+
+    function _findPostOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp): array
+    {
         $limit = ($pageType == 'list') ? POST_FEED_PAGE_ITEMS_NUMBER : MY_PAGE_CUBE_ACTION_IMG_NUMBER;
         $params = [
             'author_id' => $userId,
@@ -1347,21 +1457,7 @@ class UsersController extends AppController
             $params['goal_id'] = $goalId;
         }
         $posts = $this->Post->get(1, $limit, $startTimestamp, $endTimestamp, $params);
-
-        $this->layout = LAYOUT_ONE_COLUMN;
-
-        $this->set('long_text', false);
-        $this->set(compact(
-            'posts',
-            'termId',
-            'goalFilterOptions',
-            'termFilterOptions',
-            'startTimestamp',
-            'endTimestamp',
-            'oldestTimestamp',
-            'canAction'
-        ));
-        return $this->render();
+        return $posts;
     }
 
     /**
