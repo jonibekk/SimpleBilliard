@@ -59,15 +59,11 @@
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
-                                ><?= __("Edit comment") ?></a></li>
-                            <li><?=
-                                $this->Form->postLink(__("Delete comment"),
-                                    [
-                                        'controller' => 'posts',
-                                        'action'     => 'comment_delete',
-                                        'comment_id' => $comment['id']
-                                    ],
-                                    null, __("Do you really want to delete this comment?")) ?></li>
+                                ><?= __("Edit comment") ?></a>
+                            </li>
+                            <li>
+                                <a href="#" class="js-click-comment-delete" comment-id="<?= $comment['id'] ?>"><?= __("Delete comment") ?></a>
+                            </li>
                         </ul>
                     </div>
                 <?php elseif ($my_member_status['TeamMember']['admin_flg']): ?>
