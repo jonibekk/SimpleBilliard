@@ -6,7 +6,17 @@ class BackBtnHelper extends AppHelper
     public $helpers = array('Session');
     public function checkPage() {
         //Create array of pages where the normal header should appear
-        $normalPages = array('topics','notifications','users', 'goals/kr_progress', 'post_permanent');
+        $normalPages = array(
+            'topics',
+            'notifications',
+            'users', 
+            'goals/kr_progress', 
+            'post_permanent',
+            'goals/create',
+            'after_click:SubHeaderMenuGoal',
+            'goals/approval/detail',
+            'evaluations/view'
+        );
         $backButton = true;
 
         foreach($normalPages as $pageURL){
