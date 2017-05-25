@@ -20,11 +20,15 @@ class BackBtnHelper extends AppHelper
         $backButton = true;
 
         foreach($normalPages as $pageURL){
-            if(strpos($this->request->here , $pageURL ) && $pageURL != 'users'){
+            if(strpos($this->request->here , $pageURL ) && $pageURL != 'users' && $pageURL != 'post_permanent'){
                 $backButton = false;
             } elseif ($pageURL == 'users'){
                 $userUrlID = substr($this->request->here, strpos($this->request->here, ":") + 1);
                 if ($userUrlID == $this->Session->read('Auth.User.id')){
+                    $backButton = false;
+                }
+            } elseif ($pageURL == 'post_permanent'){
+                if(strpos($this->request->here , 'notify_id=' )){
                     $backButton = false;
                 }
             }
