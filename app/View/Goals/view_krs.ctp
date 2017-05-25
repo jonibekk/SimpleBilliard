@@ -56,17 +56,17 @@
                 <?php endif ?>
             </div>
         </div>
-        <?php if (count($key_results)>10){ ?>
-        <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
-            <a href="#" class="btn btn-link click-goal-key-result-more"
-               next-page-num="2"
-               id="GoalPageKeyResultMoreLink"
-               list-container="#GoalPageKeyResultContainer"
-               goal-id="<?= h($goal['Goal']['id']) ?>"
-               kr-can-edit="<?= h((int)$kr_can_edit) ?>"
-            >
-                <?= __('View more') ?></a>
-        </div>
+        <?php if ($kr_count > 10) { ?>
+            <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
+                <a href="#" class="btn btn-link click-goal-key-result-more"
+                   next-page-num="2"
+                   id="GoalPageKeyResultMoreLink"
+                   list-container="#GoalPageKeyResultContainer"
+                   goal-id="<?= h($goal['Goal']['id']) ?>"
+                   kr-can-edit="<?= h((int)$kr_can_edit) ?>"
+                >
+                    <?= __('View more') ?></a>
+            </div>
         <?php } ?>
     </div>
 </div>

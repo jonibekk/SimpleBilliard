@@ -42,13 +42,15 @@
                         <?= nl2br(h($member['GoalMember']['description'])) ?>
                     </p>
                 </div>
-                <?php if($member['User']['id']==$this->Session->read('Auth.User.id')): ?>
-                <a class="goal-detail-member-edit btn" href="<?= $this->Html->url([
-                            'controller' => 'goals',
-                            'action'     => 'ajax_get_collabo_change_modal',
-                            'goal_id'    => $goal['Goal']['id']
-                        ]) ?>">Edit</a>
-                <?php endif ?>  
+                <?php if ($member['User']['id'] == $this->Session->read('Auth.User.id')): ?>
+                    <a class="goal-detail-member-edit btn modal-ajax-get-collab"
+                       href="#"
+                       data-url="<?= $this->Html->url([
+                           'controller' => 'goals',
+                           'action'     => 'ajax_get_collabo_change_modal',
+                           'goal_id'    => $goal['Goal']['id']
+                       ]) ?>"><?= __('Edit') ?></a>
+                <?php endif ?>
             </div>
         </div>
     <?php endforeach ?>

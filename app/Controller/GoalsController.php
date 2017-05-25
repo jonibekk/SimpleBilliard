@@ -189,7 +189,8 @@ class GoalsController extends AppController
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
         } else {
-            return $this->redirect($this->referer());
+            $userId = $this->Auth->user('id');
+            return $this->redirect(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $userId]);
         }
     }
 
@@ -223,7 +224,7 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse(null);
         }
         $goal = $this->Goal->getGoalMinimum($goal_id);
-        
+
         $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
         $kr_value_unit_list = KeyResult::$UNIT;
         $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list', 'key_result_id'));
@@ -1735,13 +1736,11 @@ class GoalsController extends AppController
             $display_action_count--;
         }
         $this->set(compact('is_collaborated', 'display_action_count'));
-        $kr_count = $this->Goal->KeyResult->getKrCount($goal_id);
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
         $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
-        $this->set('kr_count', $kr_count);
         $this->set('key_results', $key_results);
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
@@ -1763,7 +1762,6 @@ class GoalsController extends AppController
 
     function view_actions()
     {
-        $GoalService = ClassRegistry::init("GoalService");
         $goal_id = Hash::get($this->request->params, "named.goal_id");
         $goal = $this->Goal->getGoal($goal_id);
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
@@ -1825,16 +1823,18 @@ class GoalsController extends AppController
     /**
      * ゴールページの上部コンテンツの表示に必要なView変数をセット
      *
-     * @param $goal_id
+     * @param $goalId
      *
      * @return bool
      */
-    function _setGoalPageHeaderInfo($goal_id)
+    function _setGoalPageHeaderInfo($goalId)
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
-        $goal = $this->Goal->getGoal($goal_id);
+        $userId = $this->Auth->user('id');
+
+        $goal = $this->Goal->getGoal($goalId);
         if (!isset($goal['Goal']['id'])) {
             // ゴールが存在しない
             return false;
@@ -1845,45 +1845,53 @@ class GoalsController extends AppController
 
         $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);
 
+        // KR count
+        $krCount = $this->Goal->KeyResult->getKrCount($goalId);
+        $this->set('kr_count', $krCount);
+
         // アクション数
-        $action_count = $this->Goal->ActionResult->getCountByGoalId($goal_id);
-        $this->set('action_count', $action_count);
+        $actionCount = $this->Goal->ActionResult->getCountByGoalId($goalId);
+        $this->set('action_count', $actionCount);
 
         // メンバー数
-        $member_count = count($goal['Leader']) + count($goal['GoalMember']);
-        $this->set('member_count', $member_count);
+        $memberCount = count($goal['Leader']) + count($goal['GoalMember']);
+        $this->set('member_count', $memberCount);
 
         // フォロワー数
-        $follower_count = count($goal['Follower']);
-        $this->set('follower_count', $follower_count);
+        $followerCount = count($goal['Follower']);
+        $this->set('follower_count', $followerCount);
 
         // 閲覧者がゴールのリーダーかを判別
-        $is_leader = false;
+        $isLeader = false;
         foreach ($goal['Leader'] as $v) {
             if ($this->Auth->user('id') == $v['User']['id']) {
-                $is_leader = true;
+                $isLeader = true;
                 break;
             }
         }
-        $this->set('is_leader', $is_leader);
+        $this->set('is_leader', $isLeader);
 
         // 閲覧者がゴールのコラボレーターかを判別
-        $is_goal_member = false;
+        $isGoalMember = false;
         foreach ($goal['GoalMember'] as $v) {
             if ($this->Auth->user('id') == $v['User']['id']) {
-                $is_goal_member = true;
+                $isGoalMember = true;
                 break;
             }
         }
-        $this->set('is_goal_member', $is_goal_member);
+        $this->set('is_goal_member', $isGoalMember);
 
         // 閲覧者がコーチしているゴールかを判別
-        $is_coaching_goal = false;
-        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->Auth->user('id'));
-        if (isset($coaching_goal_ids[$goal_id])) {
-            $is_coaching_goal = true;
+        $isCoachingGoal = false;
+        $coachingGoalIds = $this->Team->TeamMember->getCoachingGoalList($userId);
+        if (isset($coachingGoalIds[$goalId])) {
+            $isCoachingGoal = true;
         }
-        $this->set('is_coaching_goal', $is_coaching_goal);
+        $this->set('is_coaching_goal', $isCoachingGoal);
+
+        // Is the goal completable?
+        $isCanComplete = $this->Goal->isCanComplete($userId, $goalId);
+        $this->set('isCanComplete', $isCanComplete);
 
         return true;
     }
