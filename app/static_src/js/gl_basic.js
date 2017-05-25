@@ -440,6 +440,12 @@ $(document).ready(function () {
   $(document).on("touchend", "#layer-black", function () {
     $('.navbar-offcanvas').offcanvas('hide');
   });
+  $(document).on("touchstart", ".nav-back-btn", function () {
+    $('.nav-back-btn').addClass('mod-touchstart');
+  });
+  $(document).on("touchend", ".nav-back-btn", function () {
+    $('.nav-back-btn').removeClass('mod-touchstart');
+  });
   //evToggleAjaxGet
   $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
   $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
@@ -3587,10 +3593,137 @@ function hideCommentNotifyErrorBox(notifyBox) {
 
 $(document).ready(function () {
   $(document).on("click", ".click-comment-new", evCommentLatestView);
+  $(document).on("click", ".js-click-comment-delete", evCommentDelete);
+  $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
+  $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
 });
 
-function getCommentBlockLatestId($commentBlock) {
+function evCommendEditSubmit(e) {
+  e.preventDefault();
+  var $form = $(this).parents('form');
+  var formUrl = $form.attr('action');
+  var commentId = formUrl.split(':')[1];
 
+  var token = $form.find('[name="data[_Token][key]"]').val();
+  var body = $form.find('[name="data[Comment][body]"]').val();
+
+  var data = {
+    "data[_Token][key]": token,
+    Comment: {
+      body: body
+    }
+  };
+
+  $.ajax({
+    type: 'PUT',
+    url: "/api/v1/comments/" + commentId,
+    cache: false,
+    dataType: 'json',
+    data: data,
+    success: function (data) {
+      if (!$.isEmptyObject(data.html)) {
+        var $updatedComment = $(data.html);
+        // update comment box
+        imageLazyOn($updatedComment);
+        var $box = $('.comment-box[comment-id="' + commentId + '"]');
+        $updatedComment.insertBefore($box);
+        $updatedComment.imagesLoaded(function () {
+            $updatedComment.find('.comment_gallery').each(function (index, element) {
+                bindCommentBalancedGallery($(element));
+            });
+            changeSizeFeedImageOnlyOne($updatedComment.find('.feed_img_only_one'));
+        });
+        $box.remove();
+      }
+      else {
+        // Cancel editing
+        $('[target-id="CommentEditForm_' + commentId + '"]').click();
+      }
+    },
+    error: function (ev) {
+      // Display error message
+      new PNotify({
+        title: cake.word.error,
+        text: cake.message.notice.i,
+        type: 'error'
+      });
+      // Cancel editing
+      $('[target-id="CommentEditForm_' + commentId + '"]').click();
+    }
+  });
+  return false;
+}
+
+// Display a modal to confirm the deletion of comment
+function evCommentDelete(e) {
+  e.preventDefault();
+  var $delBtn = $(this);
+  attrUndefinedCheck($delBtn, 'comment-id');
+  var commentId = $delBtn.attr("comment-id");
+
+  // Modal popup
+  var modalTemplate =
+    '<div class="modal on fade" tabindex="-1">' +
+    '  <div class="modal-dialog">' +
+    '    <div class="modal-content">' +
+    '      <div class="modal-header none-border">' +
+    '        <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">×</span></button>' +
+    '        <h5 class="modal-title text-danger">' + __("Delete comment") + '</h5>' +
+    '     </div>' +
+    '     <div class="modal-body">' +
+    '         <h4>' + __("Do you really want to delete this comment?") +'</h4>' +
+    '     </div>' +
+    '     <div class="modal-footer">' +
+    '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.cancel + '</button>' +
+    '        <button type="button" class="btn-sm btn-primary js-click-comment-confirm-delete" comment-id="' + commentId + '" aria-hidden="true"><img id="loader" src="img/lightbox/loading.gif" style="height: 17px; width:17px; margin: 0 10px; display: none;"  /><span id="message">' + cake.word.delete + '</span></button>' +
+    '     </div>' +
+    '   </div>' +
+    ' </div>' +
+    '</div>';
+
+  var $modal_elm = $(modalTemplate);
+  $modal_elm.modal();
+  return false;
+}
+
+// Send the delete request
+function evCommentDeleteConfirm() {
+  var $delBtn = $(this);
+  attrUndefinedCheck($delBtn, 'comment-id');
+  var commentId = $delBtn.attr("comment-id");
+  var url = "/api/v1/comments/" + commentId;
+  var $modal = $delBtn.closest('.modal');
+  var $commentBox = $("div.comment-box[comment-id='" + commentId + "']");
+
+  // Show loading spinner and hide button text
+  $delBtn.children('#loader').toggle();
+  $delBtn.children('#message').toggle();
+  $delBtn.attr('disabled', 'disabled');
+
+  $.ajax({
+    url: url,
+    type: 'DELETE',
+    success: function () {
+      // Remove modal and comment box
+      $modal.modal('hide');
+      $commentBox.fadeOut('slow', function(){
+          $(this).remove();
+      });
+    },
+    error: function (res) {
+      // Display error message
+      new PNotify({
+          title: cake.word.error,
+          text: cake.message.notice.i,
+          type: 'error'
+      });
+      $modal.modal('hide');
+    }
+  });
+  return false;
+}
+
+function getCommentBlockLatestId($commentBlock) {
   var commentNum = $commentBlock.children("div.comment-box").length;
   var $lastCommentBox = $commentBlock.children("div.comment-box:last");
   var lastCommentId = "";
@@ -3638,7 +3771,7 @@ function evCommentLatestView(options) {
         // Get the comment id for the new post
         var $comment = $posts.closest('[comment-id]').last();
         var newCommentId = $comment.attr("comment-id");
-        
+
         // Get the last comment id displayed on the page
         $commentBlock = $obj.closest(".comment-block");
         lastCommentId = getCommentBlockLatestId($commentBlock);
@@ -3696,7 +3829,6 @@ function evCommentLatestView(options) {
       message.html(cake.message.notice.i);
       $errorBox.css("display", "block");
     }
-
   });
   return false;
 }
