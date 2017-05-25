@@ -3,14 +3,20 @@ App::uses('AppHelper', 'View/Helper');
 
 class BackBtnHelper extends AppHelper
 {
+    public $helpers = array('Session');
     public function checkPage() {
         //Create array of pages where the normal header should appear
         $normalPages = array('topics','notifications','users', 'goals/kr_progress', 'post_permanent');
         $backButton = true;
 
         foreach($normalPages as $pageURL){
-            if(strpos($this->request->here , $pageURL )){
+            if(strpos($this->request->here , $pageURL ) && $pageURL != 'users'){
                 $backButton = false;
+            } elseif ($pageURL == 'users'){
+                $userUrlID = substr($this->request->here, strpos($this->request->here, ":") + 1);
+                if ($userUrlID == $this->Session->read('Auth.User.id')){
+                    $backButton = false;
+                }
             }
         }
         // Special case for homepage
