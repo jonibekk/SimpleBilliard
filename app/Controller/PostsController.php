@@ -480,22 +480,34 @@ class PostsController extends AppController
         if (isset($namedParams['page']) && !empty($namedParams['page'])) {
             $page_num = $namedParams['page'];
         }
-        // base timestamp
-        if (isset($namedParams['base_timestamp'])) {
-            $baseTimestamp = $namedParams['base_timestamp'];
+        // max end timestamp
+        if (Hash::get($namedParams, 'max_end_timestamp')) {
+            $maxEndTimestamp = $namedParams['max_end_timestamp'];
         } else {
-            $baseTimestamp = REQUEST_TIMESTAMP;
+            $maxEndTimestamp = REQUEST_TIMESTAMP;
         }
+
+        // min start timestamp
+        if (Hash::get($namedParams, 'min_start_timestamp')) {
+            $minStartTimestamp = $namedParams['min_start_timestamp'];
+        } else {
+            // if min_start_timestamp param not exists, team created timestamp will be $minStartTimestamp
+            $team = $this->Team->getCurrentTeam();
+            $minStartTimestamp = $team['Team']['created'];
+        }
+
         // データ取得期間
-        $startTimestamp = strtotime("-1 month", $baseTimestamp);
-        $endTimestamp = $baseTimestamp;
-        if (isset($namedParams['month_index']) && !empty($namedParams['month_index'])) {
+        $startTimestamp = strtotime("-1 month", $maxEndTimestamp);
+        $endTimestamp = $maxEndTimestamp;
+
+        if (Hash::get($namedParams, 'month_index')) {
             // 一ヶ月以前を指定された場合
             $end_month_offset = $namedParams['month_index'];
             $start_month_offset = $end_month_offset + 1;
-            $endTimestamp = strtotime("-{$end_month_offset} months", $baseTimestamp);
-            $startTimestamp = strtotime("-{$start_month_offset} months", $baseTimestamp);
+            $endTimestamp = strtotime("-{$end_month_offset} months", $maxEndTimestamp);
+            $startTimestamp = strtotime("-{$start_month_offset} months", $maxEndTimestamp);
         }
+
         //取得件数
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
         //エレメントpath
@@ -505,8 +517,16 @@ class PostsController extends AppController
             $elm_path = "cube_img_blocks";
         }
 
-        // 投稿一覧取得
-        $posts = $this->Post->get($page_num, $item_num, $startTimestamp, $endTimestamp, $this->request->params);
+        $posts = [];
+        // $endTimestamp が $minStartTimestamp　より古くなる場合は $posts取りに行かない
+        if ($endTimestamp > $minStartTimestamp) {
+            // $startTimestamp が $minStartTimestamp　より古くなる場合は $startTimestamp に　$minStartTimestamp　をセット
+            if ($startTimestamp < $minStartTimestamp) {
+                $startTimestamp = $minStartTimestamp;
+            }
+            // 投稿一覧取得
+            $posts = $this->Post->get($page_num, $item_num, $startTimestamp, $endTimestamp, $this->request->params);
+        }
         $this->set('posts', $posts);
         $this->set('long_text', false);
         $without_header = Hash::get($namedParams, 'without_header');

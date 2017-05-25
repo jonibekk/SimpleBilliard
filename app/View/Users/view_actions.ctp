@@ -99,9 +99,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     </div>
                 <?php elseif ($canAction): ?>
                     <div class="cube-img-column-frame add-action mod-only">
-                        <?=$this->element('Goal/add_action_button', [
+                        <?= $this->element('Goal/add_action_button', [
                             'goal_id' => Hash::get($namedParams, 'goal_id')
-                        ]);?>
+                        ]); ?>
                     </div>
                 <?php endif; ?>
                 <?= $this->element('Feed/posts') ?>
@@ -127,9 +127,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     </div>
                 <?php elseif ($canAction): ?>
                     <div class="cube-img-column-frame add-action">
-                        <?=$this->element('Goal/add_action_button', [
+                        <?= $this->element('Goal/add_action_button', [
                             'goal_id' => Hash::get($namedParams, 'goal_id')
-                        ]);?>
+                        ]); ?>
                     </div>
                 <?php endif; ?>
                 <?= $this->element('cube_img_blocks') ?>
@@ -160,14 +160,15 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                            month-index="<?= $month_index ?>"
                            get-url="<?=
                            $this->Html->url([
-                               'controller'     => 'posts',
-                               'action'         => 'ajax_get_user_page_post_feed',
-                               'user_id'        => Hash::get($namedParams, 'user_id'),
-                               'author_id'      => Hash::get($namedParams, 'user_id'),
-                               'goal_id'        => Hash::get($namedParams, 'goal_id'),
-                               'type'           => Post::TYPE_ACTION,
-                               'page_type'      => Hash::get($namedParams, 'page_type'),
-                               'base_timestamp' => $endTimestamp,
+                               'controller'          => 'posts',
+                               'action'              => 'ajax_get_user_page_post_feed',
+                               'user_id'             => Hash::get($namedParams, 'user_id'),
+                               'author_id'           => Hash::get($namedParams, 'user_id'),
+                               'goal_id'             => Hash::get($namedParams, 'goal_id'),
+                               'type'                => Post::TYPE_ACTION,
+                               'page_type'           => Hash::get($namedParams, 'page_type'),
+                               'min_start_timestamp' => $oldestTimestamp,
+                               'max_end_timestamp'   => $endTimestamp,
                            ]) ?>"
                            id="FeedMoreReadLink"
                            append-target-id="UserPageContents"
