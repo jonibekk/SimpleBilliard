@@ -146,7 +146,7 @@
                         </button>
                         <?=
                         $this->Form->submit(__("Create a circle"),
-                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary', 'div' => false]) ?>
 
                     </div>
                 </div>
@@ -158,24 +158,24 @@
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#AddCircleForm').bootstrapValidator({
-            excluded: [':disabled'],
-            live: 'enabled',
-
-            fields: {
-                "data[Circle][photo]": {
-
-                    validators: {
-                        file: {
-                            extension: 'jpeg,jpg,png,gif',
-                            type: 'image/jpeg,image/png,image/gif',
-                            maxSize: 10485760,   // 10mb
-                            message: "<?=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>"
-                        }
-                    }
-                }
-            }
-        });
+//        $('#AddCircleForm').bootstrapValidator({
+//            excluded: [':disabled'],
+//            live: 'enabled',
+//
+//            fields: {
+//                "data[Circle][photo]": {
+//
+//                    validators: {
+//                        file: {
+//                            extension: 'jpeg,jpg,png,gif',
+//                            type: 'image/jpeg,image/png,image/gif',
+//                            maxSize: 10485760,   // 10mb
+//                            message: "<?//=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>//"
+//                        }
+//                    }
+//                }
+//            }
+//        });
     });
 </script>
 
