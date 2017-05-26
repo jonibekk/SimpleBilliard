@@ -82,7 +82,7 @@ class Goal extends AppModel
                 'action'   => __("Actions number"),
                 'result'   => __("Key results number"),
                 'follow'   => __("Followers number"),
-                'collabo'  => __("Collaborators number"),
+                'collab'   => __("Collaborators number"),
                 'progress' => __("Progress rate")
             ]
         ];
@@ -1198,7 +1198,7 @@ class Goal extends AppModel
         //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
         //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;
-        //exclude collabo goal
+        //exclude collab goal
         foreach ($collabo_goal_ids as $k => $v) {
             unset($goal_ids[$k]);
         }
@@ -1800,7 +1800,7 @@ class Goal extends AppModel
                     ];
                     $options['group'] = ['Goal.id'];
                     break;
-                case 'collabo' :
+                case 'collab' :
                     $options['order'] = ['count_goal_member desc'];
                     $options['fields'][] = 'count(GoalMember.id) as count_goal_member';
                     $options['joins'] = [
@@ -2035,9 +2035,9 @@ class Goal extends AppModel
         $before_goals = $this->find('list', $before_term_opt);
         $res = [];
         $res += $with_all_opt ? [null => __('All')] : null;
-        $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+        $res += ['disable_value1' => '_separator_'];
         $res += $current_goals;
-        $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+        $res += ['disable_value2' => '_separator_'];
         $res += $before_goals;
         return $res;
     }
@@ -2269,6 +2269,57 @@ class Goal extends AppModel
     }
 
     /**
+     * finding collaborated goals
+     * if $startDate and $endDate are null, fetching all term goal
+     *
+     * @param int    $userId
+     * @param string $startDate
+     * @param string $endDate
+     * @param array  $fields
+     *
+     * @return array
+     */
+    function findCollaboratedGoals(
+        int $userId,
+        $startDate = null,
+        $endDate = null,
+        array $fields = ['id', 'name']
+    ): array {
+        // add prefix
+        foreach ($fields as $i => $v) {
+            $fields[$i] = 'Goal.' . $v;
+        }
+
+        $options = [
+            'conditions' => [
+                'GoalMember.del_flg' => false
+            ],
+            'fields'     => $fields,
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.user_id' => $userId,
+                        'GoalMember.team_id' => $this->current_team_id,
+                    ],
+                ]
+            ],
+        ];
+        if ($startDate) {
+            $options['conditions']['Goal.end_date >='] = $startDate;
+        }
+        if ($endDate) {
+            $options['conditions']['Goal.end_date <='] = $endDate;
+        }
+        $res = $this->find('all', $options);
+        $res = Hash::extract($res, '{n}.Goal');
+        return $res;
+    }
+
+    /**
      * 完了アクションが可能なゴールリスト取得
      *
      * @param int $userId
@@ -2296,18 +2347,8 @@ class Goal extends AppModel
                 'Goal.deleted'   => null,
             ],
         ];
-        // アクション可能なゴールを抽出(未完了なKRが存在するか)
-        $db = $this->getDataSource();
-        $subQuery = $db->buildStatement([
-            'fields'     => array('KeyResult.id'),
-            'table'      => 'key_results',
-            'alias'      => 'KeyResult',
-            'conditions' => [
-                'KeyResult.goal_id = Goal.id',
-                'KeyResult.completed' => null,
-            ],
-        ], $this);
-        $options['conditions'][] = $db->expression("NOT EXISTS (" . $subQuery . ")");
+        // Additional condition, incomplete KR not exists
+        $options['conditions'][] = $this->buildSubQueryIncompleteKrNotExists();
 
         $res = $this->find('all', $options);
         if (empty($res)) {
@@ -2315,6 +2356,70 @@ class Goal extends AppModel
         }
 
         return Hash::extract($res, '{n}.Goal');
+    }
+
+    /**
+     * Is the goal can complete?
+     * Conditions
+     * - user is goal owner
+     * - goal is not completed
+     * - goal doesn't have incomplete KRs
+     *
+     * @param int $userId
+     * @param int $goalId
+     *
+     * @return bool
+     */
+    function isCanComplete(int $userId, int $goalId): bool
+    {
+        $options = [
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.user_id' => $userId,
+                        'GoalMember.team_id' => $this->current_team_id,
+                        'GoalMember.type'    => GoalMember::TYPE_OWNER,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'Goal.id'        => $goalId,
+                'Goal.completed' => null,
+                'Goal.del_flg'   => false,
+            ],
+        ];
+        // Additional condition, incomplete KR not exists
+        $options['conditions'][] = $this->buildSubQueryIncompleteKrNotExists();
+
+        $res = $this->find('first', $options);
+        return (bool)$res;
+    }
+
+    /**
+     * building subquery for finding goal with "NOT EXISTS (incomplete KRs)".
+     * For using in `conditions`
+     *
+     * @return stdClass
+     */
+    function buildSubQueryIncompleteKrNotExists(): stdClass
+    {
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => ['KeyResult.id'],
+            'table'      => 'key_results',
+            'alias'      => 'KeyResult',
+            'conditions' => [
+                'KeyResult.goal_id = Goal.id',
+                'KeyResult.completed' => null,
+            ],
+        ], $this);
+        $queryObj = $db->expression("NOT EXISTS (" . $subQuery . ")");
+        return $queryObj;
     }
 
     /**
@@ -2415,7 +2520,9 @@ class Goal extends AppModel
                 'end_date <='   => $endDate,
             ],
             'fields'     => [
-                'id', 'start_date', 'end_date'
+                'id',
+                'start_date',
+                'end_date'
             ]
         ];
 
@@ -2499,7 +2606,7 @@ class Goal extends AppModel
      */
     function updateCurrentTermRange(string $startDate, string $endDate, array $additionalConditions = []): bool
     {
-        if(!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
+        if (!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
             return false;
         }
         return true;
@@ -2515,11 +2622,11 @@ class Goal extends AppModel
      */
     function updateNextTermRange(string $startDate, string $endDate, array $additionalConditions = []): bool
     {
-        if(!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
+        if (!$this->updatEndWithinRange($startDate, $endDate, $additionalConditions)) {
             return false;
         }
 
-        if(!$this->updateStartEndWithinRange($startDate, $endDate, $additionalConditions)) {
+        if (!$this->updateStartEndWithinRange($startDate, $endDate, $additionalConditions)) {
             return false;
         }
 

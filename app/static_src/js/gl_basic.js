@@ -342,17 +342,6 @@ $(document).ready(function () {
     }
     location.href = url;
   });
-  //ゴールページのアクション一覧のKR切替え
-  $('#SwitchKrOnMyPage').change(function () {
-    var key_result_id = $(this).val();
-    if (key_result_id == "") {
-      var url = $(this).attr('redirect-url');
-    }
-    else {
-      var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
-    }
-    location.href = url;
-  });
   //サークルページの添付ファイルタイプ切替え
   $('#SwitchFileType').change(function () {
     var file_type = $(this).val();
@@ -521,7 +510,7 @@ $(document).ready(function () {
   });
 
   //noinspection JSUnresolvedVariable
-  $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+  $(document).on("click", '.modal-ajax-get-collab', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-tkr', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-leader', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable
@@ -831,7 +820,6 @@ function imageLazyOn($elm_obj) {
     combined: true,
     delay: 100,
     visibleOnly: false,
-    effect: "fadeIn",
     removeAttribute: false,
     onError: function (element) {
       if (element.attr('error-img') != undefined) {
@@ -1597,58 +1585,12 @@ $(function () {
   });
   $(window).scroll(function () {
     if ($(this).scrollTop() > 10) {
-      $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
-
+      $(".navbar").addClass("mod-box-shadow");
     } else {
-      $(".navbar").css("box-shadow", "none");
-
+      $(".navbar").removeClass("mod-box-shadow");
     }
+    
   });
-});
-
-$(function () {
-  $(".hoverPic").hover(
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_off", "_on"));
-    },
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_on", "_off"));
-    });
-});
-
-$(function () {
-  $(".js-header-link").hover(
-    function () {
-      $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-$(function () {
-  $(".header-function-link").hover(
-    function () {
-      $(".header-function-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(".header-function-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-
-$(function () {
-  $(".header-user-profile").hover(
-    function () {
-      $(".header-profile-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(".header-profile-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-
-$(function () {
-  $("#header").hover(
-    function () {
-      $(".js-header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
-    }, function () {
-      $(".js-header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
-    });
 });
 
 $(function () {
