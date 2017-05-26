@@ -122,16 +122,16 @@
                 ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled'])
             ?>
             <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
-            <?= $this->Form->end(); ?>
         </fieldset>
-        <?=
-        $this->Form->create('Team', [
-            'class'      => 'none',
-            'novalidate' => true,
-            'id'         => 'TeamDeleteForm',
-            'url'        => ['action' => 'delete_team']
-        ]); ?>
     </footer>
+    <?= $this->Form->end(); ?>
+    <?=
+    $this->Form->create('Team', [
+        'class'      => 'none',
+        'novalidate' => true,
+        'id'         => 'TeamDeleteForm',
+        'url'        => ['action' => 'delete_team']
+    ]); ?>
     <?= $this->Form->end(); ?>
 </section>
 <?php $this->append('script') ?>
