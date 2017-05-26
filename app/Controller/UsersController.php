@@ -680,11 +680,12 @@ class UsersController extends AppController
                 $this->Pnotify->outError(__("Failed to save user setting."));
             }
             $me = $this->_getMyUserDataForSetting();
-            $this->request->data = $me;
+            // For updating header user info
             $this->set('my_prof', $this->User->getMyProf());
-        } else {
-            $this->request->data = $me;
         }
+
+        $this->request->data = $me;
+
         $this->layout = LAYOUT_TWO_COLUMN;
         //姓名の並び順をセット
         $lastFirst = in_array($me['User']['language'], $this->User->langCodeOfLastFirst);
