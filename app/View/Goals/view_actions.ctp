@@ -7,10 +7,10 @@
  *
  * @var CodeCompletionView $this
  * @var                    $posts
- * @var                    $kr_select_options
- * @var                    $goal_id
- * @var                    $goal_base_url
- * @var                    $key_result_id
+ * @var                    $krSelectOptions
+ * @var                    $goalId
+ * @var                    $goalBaseUrl
+ * @var                    $keyResultId
  * @var                    $item_created
  */
 ?>
@@ -26,7 +26,7 @@
                         KR:&nbsp;<strong><?php
                             $existKR = isset($this->request->params['named']['key_result_id']);
                             if ($existKR):
-                                echo $kr_select_options[$this->request->params['named']['key_result_id']];
+                                echo $krSelectOptions[$this->request->params['named']['key_result_id']];
                             else:
                                 echo __("All");
                             endif; ?>&nbsp;</strong><span class="fa fa-angle-down ml_2px"></span>
@@ -34,16 +34,16 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <?php
 
-                        foreach ($kr_select_options as $krID => $krName) { ?>
+                        foreach ($krSelectOptions as $krID => $krName) { ?>
                             <?php if ($krName == "_separator_"): ?>
                                 <li role="separator" class="divider"></li>
                             <?php elseif ($krName == "All"): ?>
                                 <li>
-                                    <a href="/goals/view_actions/goal_id:<?php echo $goal_id ?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/"><?php echo $krName ?></a>
+                                    <a href="/goals/view_actions/goal_id:<?php echo $goalId ?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/"><?php echo $krName ?></a>
                                 </li>
                             <?php else: ?>
                                 <li>
-                                    <a href="/goals/view_actions/goal_id:<?php echo $goal_id ?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/key_result_id:<?php echo $krID ?>"><?php echo $krName ?></a>
+                                    <a href="/goals/view_actions/goal_id:<?php echo $goalId ?>/page_type:<?php echo $this->request->params['named']['page_type'] ?>/key_result_id:<?php echo $krID ?>"><?php echo $krName ?></a>
                                 </li>
                             <?php endif; ?>
                         <?php }
