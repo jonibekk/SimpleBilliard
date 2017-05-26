@@ -85,7 +85,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                             if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
                                 echo __("You haven't created any actions&hellip; yet.");
                             } else {
-                                echo __("No actions have been created&hellip; yet.");
+                                echo __("There is no Action.");
                             }
                             ?>
                         </h3>
@@ -113,7 +113,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                             if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
                                 echo __("You haven't created any actions&hellip; yet.");
                             } else {
-                                echo __("No actions have been created&hellip; yet.");
+                                echo __("There is no Action.");
                             }
                             ?>
                         </h3>

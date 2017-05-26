@@ -1762,6 +1762,9 @@ class GoalsController extends AppController
 
     function view_actions()
     {
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init('ActionResult');
+
         $myUid = $this->Auth->user('id');
         $namedParams = $this->request->params['named'];
         $goalId = Hash::get($namedParams, "goal_id");
@@ -1804,6 +1807,8 @@ class GoalsController extends AppController
         } else {
             $canAction = $this->Goal->isActionable($myUid, $goalId);
         }
+        $actionCount = $ActionResult->getCountByGoalId($goalId);
+
         $this->set('long_text', false);
         $this->set(compact(
             'goalTerm',
@@ -1812,6 +1817,7 @@ class GoalsController extends AppController
             'posts',
             'goalBaseUrl',
             'krSelectOptions',
+            'actionCount',
             'canAction'
         ));
 

@@ -82,9 +82,9 @@
             </div>
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
-                    <?php if (count($posts) == 0): ?>
+                    <?php if ($actionCount == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
+                            <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("There is no Action.") ?></h3>
                             <?= $canAction ? $this->element('Goal/add_action_button',
                                 compact('goal_id', 'key_result_id')) : null; ?>
                         </div>
@@ -95,9 +95,9 @@
                     <?php endif; ?>
                     <?= $this->element('Feed/posts') ?>
                 <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                    <?php if (count($posts) == 0): ?>
+                    <?php if ($actionCount == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
+                            <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("There is no Action.") ?></h3>
                             <?= $canAction ? $this->element('Goal/add_action_button',
                                 compact('goal_id', 'key_result_id')) : null; ?>
                         </div>
@@ -116,7 +116,9 @@
             }
             ?>
             <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
-            if (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH): ?>
+            if ($actionCount > 0 &&
+                (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH)
+            ): ?>
 
                 <div class="panel-body">
                     <?php
