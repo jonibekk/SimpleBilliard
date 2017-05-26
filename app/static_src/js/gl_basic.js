@@ -1214,13 +1214,35 @@ function addComment(e) {
 
   var $f = $(e.target);
   var ajaxProcess = $.Deferred();
+
+  var formData = new FormData(e.target);
+
+  // Add content of ogp box if visible
+  var comment_id = submit_id.split('_')[1];
+  var $ogp_box = $('#CommentOgpSiteInfo_' + comment_id);
+  if ($ogp_box.find('.media-object').length > 0) {
+    var image = $ogp_box.find('.media-object').attr('src');
+    var title = $ogp_box.find('.media-heading').text().trim();
+    var site_url = $ogp_box.find('.media-url').text();
+    var description = $ogp_box.find('.site-info-txt').text().trim();
+    var type = $ogp_box.find('.media-body').attr('data-type');
+    var site_name = $ogp_box.find('.media-body').attr('data-site-name');
+
+    formData.append('data[OGP][image]', image);
+    formData.append('data[OGP][title]', title);
+    formData.append('data[OGP][url]', site_url);
+    formData.append('data[OGP][description]', description);
+    formData.append('data[OGP][type]', type);
+    formData.append('data[OGP][site_name]', site_name);
+  }
+
   $.ajax({
     url: $f.prop('action'),
     method: 'post',
     dataType: 'json',
     processData: false,
     contentType: false,
-    data: new FormData(e.target),
+    data: formData,
     timeout: 300000 //5min
   })
     .done(function (data) {
@@ -1270,8 +1292,15 @@ function evTargetToggleClick() {
   var target_id = $obj.attr("target-id");
   var click_target_id = $obj.attr("click-target-id");
   if ($obj.attr("hidden-target-id")) {
-    $('#' + $obj.attr("hidden-target-id")).toggle();
+    var $commentBox = $('#' + $obj.attr("hidden-target-id"));
+    $commentBox.toggle();
+
+    // Hide OGP box
+    if ($commentBox.parent().find('.js-ogp-box').length > 0) {
+        $commentBox.parent().find('.js-ogp-box').toggle();
+    }
   }
+
   //開いている時と閉じてる時のテキストの指定があった場合は置き換える
   if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
     //開いてるとき
@@ -1296,7 +1325,18 @@ function evTargetToggleClick() {
           alert(data.msg);
         }
         else {
-          $("#" + $obj.attr("hidden-target-id")).after(data.html);
+          var $editForm = $(data.html);
+          var $ogp = $editForm.find('.js-ogp-box');
+          if ($ogp.length > 0) {
+            var $btnClose = $editForm.find('.js-ogp-close');
+            $btnClose.on('click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              $ogp.empty();
+              $btnClose.remove();
+            });
+          }
+          $("#" + $obj.attr("hidden-target-id")).after($editForm);
         }
       }
     });
@@ -3659,19 +3699,42 @@ function evCommendEditSubmit(e) {
   var token = $form.find('[name="data[_Token][key]"]').val();
   var body = $form.find('[name="data[Comment][body]"]').val();
 
-  var data = {
+  var formData = {
     "data[_Token][key]": token,
     Comment: {
-      body: body
-    }
+        body: body
+    },
+    OGP: null
   };
+
+  var $ogp = $form.parent().find('.js-ogp-box-edit');
+  if ($ogp.find('.media-object').length > 0) {
+    var image = $ogp.find('.media-object').attr('src');
+    var title = $ogp.find('.media-heading').text().trim();
+    var site_url = $ogp.find('.media-url').text();
+    var description = $ogp.find('.site-info-txt').text().trim();
+    var type = $ogp.find('.media-body').attr('data-type');
+    var site_name = $ogp.find('.media-body').attr('data-site-name');
+
+    var ogpData = {
+      image: image,
+      title: title,
+      url: site_url,
+      description: description,
+      type: type,
+      site_name: site_name
+    };
+    formData.OGP = ogpData;
+  }
+
+
 
   $.ajax({
     type: 'PUT',
     url: "/api/v1/comments/" + commentId,
     cache: false,
     dataType: 'json',
-    data: data,
+    data: formData,
     success: function (data) {
       if (!$.isEmptyObject(data.html)) {
         var $updatedComment = $(data.html);

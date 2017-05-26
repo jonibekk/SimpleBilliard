@@ -115,16 +115,15 @@ class CommentsController extends ApiController
     {
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
-        $data = Hash::get($this->request->data, 'Comment');
-        $data['id'] = $id;
+        Hash::insert($this->request->data, 'Comment.id', $id);
 
-        $err = $ApiCommentService->validateUpdate($id, $this->Auth->user('id'), $data);
+        $err = $ApiCommentService->validateUpdate($id, $this->Auth->user('id'), $this->request->data);
         if (!empty($err)) {
             return $this->_getResponseValidationFail(Hash::get($err, 'validation_errors'));
         }
 
         // Update the new comment
-        if (!$ApiCommentService->update($data)) {
+        if (!$ApiCommentService->update($this->request->data)) {
             return $this->_getResponseInternalServerError();
         }
 

@@ -49,8 +49,8 @@ class ApiCommentService extends AppService
                 $url_text =  Hash::get($data, 'Comment.body');
             }
 
-            // ogbをインサートデータに追加
-            $data['Comment'] = $this->_addOgpIndexes(Hash::get($data['Comment'], 'Comment'), $url_text);
+            $ogp = $this->_getOgpIndex($data);
+            $data['Comment'] = am($data['Comment'], $ogp);
 
             // コメントを追加
             if (!$Post->Comment->add($data)) {
@@ -82,7 +82,7 @@ class ApiCommentService extends AppService
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init("Comment");
 
-        $postId = Hash::get($this->request->data, 'Comment.post_id');
+        $postId = Hash::get($data, 'Comment.post_id');
         $post = $Post->findById($postId);
         if (empty($post)) {
             return ["status_code" => 404, "message" => __("This post was deleted.")];
@@ -147,7 +147,8 @@ class ApiCommentService extends AppService
 
         try {
             // Get ogp
-            $data = $this->_addOgpIndexes($data, $data['body']);
+            $ogp = $this->_getOgpIndex($data);
+            $data['Comment'] = am($data['Comment'], $ogp);
 
             // Save comment data
             $Comment->commentEdit($data);
@@ -164,6 +165,7 @@ class ApiCommentService extends AppService
      * Returns an empty array in case of success.
      *
      * @param $comment_id
+     * @param $user_id
      * @param $data
      *
      * @return array
@@ -184,7 +186,8 @@ class ApiCommentService extends AppService
             return ["status_code" => 403, "message" => __("This isn't your comment.")];
         }
 
-        $Comment->set($data);
+        $commentData = Hash::get($data, 'Comment');
+        $Comment->set($commentData);
         if (!$Comment->validates()) {
             return [
                 "status_code"       => 400,
@@ -192,6 +195,34 @@ class ApiCommentService extends AppService
             ];
         }
         return [];
+    }
+
+    function _getOgpIndex($data)
+    {
+        $ogpIndex = [];
+        $ogp = Hash::get($data, 'OGP');
+
+        if (!$ogp || !isset($ogp['title'])) {
+            $ogpIndex['site_info'] = null;
+            $ogpIndex['site_photo'] = null;
+            return $ogpIndex;
+        }
+
+        // Do not set if it is a no-image-link.png from our site
+        if (isset($ogp['image']) && strpos($ogp['image'], 'no-image-link') !== false) {
+            unset($ogp['image']);
+        }
+
+        $ogpIndex['site_info'] = json_encode($ogp);
+        if (isset($ogp['image'])) {
+            // Get the image
+            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
+            if (!$ext) {
+                $ogp['image'] = null;
+            }
+            $ogpIndex['site_photo'] = $ogp['image'];
+        }
+        return $ogpIndex;
     }
 
     /**
