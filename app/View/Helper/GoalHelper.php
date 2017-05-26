@@ -79,7 +79,7 @@ class GoalHelper extends AppHelper
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -92,9 +92,9 @@ class GoalHelper extends AppHelper
     function getCollaboOption($goal, $goalTerm = null)
     {
         $option = [
-            'class' => 'collabo-off',
+            'class' => 'collab-off',
             'style' => null,
-            'text'  => __("Collabo"),
+            'text'  => __("Collab"),
             'disabled' => null
         ];
 
@@ -106,7 +106,7 @@ class GoalHelper extends AppHelper
         if (!Hash::get($goal, 'MyCollabo')) {
             return $option;
         }
-        $option['class'] = 'collabo-on';
+        $option['class'] = 'collab-on';
         $option['style'] = 'display:none;';
         $option['text'] = __("Collaborating");
         return $option;

@@ -4,9 +4,10 @@
 1. `vagrant up default` でvmを起動
 1. `vagrant provision default` でvmをアップデート
 1. `vagrant ssh default` でvmにログイン
-1. `/vagrant_data/app/Console/cake i18n extract` を実行
+1. `Console/cake i18n extract --no-location --ignore-model-validation —overwrite` を実行
 1. 以下の通り応対
-   ```
+
+```
   Current paths: None
   What is the path you would like to extract?
   [Q]uit [D]one  
@@ -28,16 +29,15 @@
 
   Error: global.pot already exists in this location. Overwrite? [Y]es, [N]o, [A]ll (y/n/a)
   [y] > a
-
-  ```
+```
 
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
 1. poeditを開く。(※インストールされていない場合は、https://poedit.net/download からダウンロード、インストール)
 1. `Edit a translation`で該当のファイルを開く。  
-  ファイルパス: `goalous2/app/Locale/jpn/LC_MESSAGES/default.po`
+  ファイルパス: `goalous/app/Locale/jpn/LC_MESSAGES/default.po`
 1. poeditのメニュー[Catalog]->[Update from POT file]を選択。
 1. 対象の`pot`ファイルを指定(拡張子以外が同名)。
-   ファイルパス: `goalous2/app/Locale/default.pot`
+   ファイルパス: `goalous/app/Locale/default.pot`
 1. cmd + s で上書き保存。(※エラーが出ても気にしない。)
 1. コミット。(`*.mo`ファイルが出現することがあるが、このファイルは不要なので、削除してからコミットする。)
 1. プルリクを発行する(親issueに紐付ける)。

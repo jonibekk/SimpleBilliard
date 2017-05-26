@@ -32,9 +32,6 @@
                 <?= $this->element('header_navigation'); ?>
                 <?= $this->element('header_logged_in_right'); ?>
             <?php } ?>
-            <script>
-                console.log("PHP says this page is: <?php echo $this->request->here ?>");
-            </script>
         </div>
     </div>
 </header>
