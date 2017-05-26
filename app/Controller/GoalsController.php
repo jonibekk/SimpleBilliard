@@ -1807,8 +1807,6 @@ class GoalsController extends AppController
         $this->set('long_text', false);
         $this->set(compact(
             'goalTerm',
-            'followers',
-            'isLeader',
             'keyResultId',
             'goalId',
             'posts',
