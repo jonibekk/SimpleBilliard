@@ -15,7 +15,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="post-heading-goal-wrapper pull-left">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'view_info',
+                                    'action'     => 'view_krs',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
                                    data-url="<?= $this->Html->url([
@@ -35,7 +35,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="pull-right">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'view_info',
+                                    'action'     => 'view_krs',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
                                    data-url="<?= $this->Html->url([
@@ -317,7 +317,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                    'goal_id'    => $post['Goal']['id']
                                ]) ?>"
                                data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
-                               class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>">
+                               class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collab p_8px <?= h($collabo_opt['class']) ?>">
                                 <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
                                 <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
                             </a>

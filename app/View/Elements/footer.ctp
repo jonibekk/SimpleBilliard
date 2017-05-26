@@ -46,7 +46,7 @@
                     )
                     ?></li>
             </ul>
-            <p>&copy; <?= date("Y"); ?> ISAO</p>
+            <p>&copy; <?php echo date("Y"); ?> ISAO</p>
         </div>
     </div>
 </footer>

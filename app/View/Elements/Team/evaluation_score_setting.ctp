@@ -28,19 +28,19 @@
     <header>
         <h2><?= __("Evaluation score settings") ?></h2>
     </header>
+    <?=
+    $this->Form->create('EvaluateScore', [
+        'inputDefaults' => [
+            'div'       => false,
+            'label'     => false,
+            'wrapInput' => 'col col-sm-9',
+        ],
+        'class'         => 'form-horizontal',
+        'novalidate'    => true,
+        'id'            => 'EvaluationSettingForm',
+        'url'           => ['controller' => 'teams', 'action' => 'save_evaluation_scores']
+    ]); ?>
     <div class="panel-body form-horizontal">
-        <?=
-        $this->Form->create('EvaluateScore', [
-            'inputDefaults' => [
-                'div'       => false,
-                'label'     => false,
-                'wrapInput' => 'col col-sm-9',
-            ],
-            'class'         => 'form-horizontal',
-            'novalidate'    => true,
-            'id'            => 'EvaluationSettingForm',
-            'url'           => ['controller' => 'teams', 'action' => 'save_evaluation_scores']
-        ]); ?>
         <table class="table table-striped" id="EvaluateScoreTable">
             <tr>
                 <th>
@@ -75,13 +75,12 @@
             <?php $this->Form->unlockField("EvaluateScore.$i.index_num") ?>
             <?php $this->Form->unlockField("EvaluateScore.$i.description") ?>
         <?php endfor ?>
-        <?= $this->Form->end() ?>
     </div>
     <footer>
         <input class="btn btn-primary team-setting-add-goal-category" type="submit" value="<?= __('Save settings')?>">
     </footer>
+    <?= $this->Form->end() ?>
 </section>
-<?= $this->App->viewEndComment()?>
 <?php $this->start('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -110,3 +109,4 @@
     });
 </script>
 <?php $this->end() ?>
+<?= $this->App->viewEndComment()?>

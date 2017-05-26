@@ -1477,6 +1477,40 @@ class GoalService extends AppService
     }
 
     /**
+     * getting goal filter menu
+     *
+     * @param int      $userId
+     * @param null|int $termId if null, fetching all goals
+     * @param bool     $withAllOption
+     *
+     * @return array
+     */
+    function getFilterMenu(int $userId, $termId = null, bool $withAllOption = true): array
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        $termStart = null;
+        $termEnd = null;
+        if ($termId) {
+            $term = $Term->findById($termId)['Term'];
+            $termStart = $term['start_date'];
+            $termEnd = $term['end_date'];
+        }
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        $goals = $Goal->findCollaboratedGoals($userId, $termStart, $termEnd);
+        $goalFilter = [];
+        if ($withAllOption) {
+            $goalFilter[null] = __('All');
+        }
+        foreach ($goals as $goal) {
+            $goalFilter[$goal['id']] = $goal['name'];
+        }
+        return $goalFilter;
+    }
+
+    /**
      * アクション可能なゴール一覧を返す
      * - フィードページで参照されるデータなのでキャッシュを使う
      * TODO:findCanActionと重複している
@@ -1631,4 +1665,5 @@ class GoalService extends AppService
 
         return true;
     }
+
 }

@@ -47,15 +47,15 @@ class GoalHelper extends AppHelper
     function getCollaboOption($goal)
     {
         $option = [
-            'class' => 'collabo-off',
+            'class' => 'collab-off',
             'style' => null,
-            'text'  => __("Collabo"),
+            'text'  => __("Collab"),
         ];
 
         if (!Hash::get($goal, 'MyCollabo')) {
             return $option;
         }
-        $option['class'] = 'collabo-on';
+        $option['class'] = 'collab-on';
         $option['style'] = 'display:none;';
         $option['text'] = __("Collaborating");
         return $option;

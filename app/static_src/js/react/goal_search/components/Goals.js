@@ -82,7 +82,7 @@ export default class Goals extends React.Component {
       action: __("Actions number"),
       result: __("Key results number"),
       follow: __("Followers number"),
-      collabo: __("Collaborators number"),
+      collab: __("Collaborators number"),
       progress: __("Progress rate")
     }
 

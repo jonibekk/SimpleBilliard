@@ -342,17 +342,6 @@ $(document).ready(function () {
     }
     location.href = url;
   });
-  //ゴールページのアクション一覧のKR切替え
-  $('#SwitchKrOnMyPage').change(function () {
-    var key_result_id = $(this).val();
-    if (key_result_id == "") {
-      var url = $(this).attr('redirect-url');
-    }
-    else {
-      var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
-    }
-    location.href = url;
-  });
   //サークルページの添付ファイルタイプ切替え
   $('#SwitchFileType').change(function () {
     var file_type = $(this).val();
@@ -451,6 +440,12 @@ $(document).ready(function () {
   $(document).on("touchend", "#layer-black", function () {
     $('.navbar-offcanvas').offcanvas('hide');
   });
+  $(document).on("touchstart", ".nav-back-btn", function () {
+    $('.nav-back-btn').addClass('mod-touchstart');
+  });
+  $(document).on("touchend", ".nav-back-btn", function () {
+    $('.nav-back-btn').removeClass('mod-touchstart');
+  });
   //evToggleAjaxGet
   $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
   $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
@@ -515,7 +510,7 @@ $(document).ready(function () {
   });
 
   //noinspection JSUnresolvedVariable
-  $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+  $(document).on("click", '.modal-ajax-get-collab', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-tkr', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-leader', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable
@@ -620,67 +615,7 @@ $(document).ready(function () {
     $(this).find('.krProgress-valuesLeft').text(start_value);
     $(this).find('.krProgress-valuesRight').text(target_value);
   });
-  //team term setting
-  $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths , #TeamTimezone', function () {
-    var startTermMonth = $('#TeamStartTermMonth').val();
-    var borderMonths = $('#TeamBorderMonths').val();
-    var timezone = $('#TeamTimezone').val();
-    if (startTermMonth === "" || borderMonths === "") {
-      $('#CurrentTermStr').empty();
-      return false;
-    }
-    var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths + "/" + timezone;
-    $.get(url, function (data) {
-      $('#CurrentTermStr').text(data.start + "  -  " + data.end);
-    });
-  });
 
-  //edit team term setting
-  $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 ,#EditTermTimezone , #EditTermStartTerm , #EditTermBorderMonths', function () {
-
-    if ($("#EditTermChangeFrom1:checked").val()) {
-      var changeFrom = $('#EditTermChangeFrom1:checked').val();
-    }
-    else {
-      var changeFrom = $('#EditTermChangeFrom2:checked').val();
-    }
-    var timezone = $('#EditTermTimezone').val();
-    var startTermMonth = $('#EditTermStartTerm').val();
-    var borderMonths = $('#EditTermBorderMonths').val();
-    if (startTermMonth === "" || borderMonths === "") {
-      $('#NewCurrentTerm').addClass('none');
-      $('#NewCurrentTerm > div > p').empty();
-      $('#NewNextTerm').addClass('none');
-      $('#NewNextTerm > div > p').empty();
-      return false;
-    }
-    var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom + "/" + timezone;
-    $.get(url, function (data) {
-      if (data.current.start_date && data.current.end_date) {
-        $('#NewCurrentTerm').removeClass('none');
-        var current_timezone = parseFloat(data.current.timezone);
-        var current_sign = current_timezone < 0 ? "" : "+";
-        $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date + " (GMT " + current_sign + current_timezone + "h)");
-      }
-      else {
-        $('#NewCurrentTerm').addClass('none');
-        $('#NewCurrentTerm > div > p').empty();
-      }
-      if (data.next.start_date && data.next.end_date) {
-        $('#NewNextTerm').removeClass('none');
-        var next_timezone = parseFloat(data.next.timezone);
-        var next_sign = next_timezone < 0 ? "" : "+";
-
-        $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date + " (GMT " + next_sign + next_timezone + "h)");
-      }
-      else {
-        $('#NewNextTerm').addClass('none');
-        $('#NewNextTerm > div > p').empty();
-      }
-    });
-  });
-
-  //
   $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
   $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
   $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
@@ -825,7 +760,6 @@ function imageLazyOn($elm_obj) {
     combined: true,
     delay: 100,
     visibleOnly: false,
-    effect: "fadeIn",
     removeAttribute: false,
     onError: function (element) {
       if (element.attr('error-img') != undefined) {
@@ -1631,58 +1565,12 @@ $(function () {
   });
   $(window).scroll(function () {
     if ($(this).scrollTop() > 10) {
-      $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
-
+      $(".navbar").addClass("mod-box-shadow");
     } else {
-      $(".navbar").css("box-shadow", "none");
-
+      $(".navbar").removeClass("mod-box-shadow");
     }
+    
   });
-});
-
-$(function () {
-  $(".hoverPic").hover(
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_off", "_on"));
-    },
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_on", "_off"));
-    });
-});
-
-$(function () {
-  $(".js-header-link").hover(
-    function () {
-      $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-$(function () {
-  $(".header-function-link").hover(
-    function () {
-      $(".header-function-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(".header-function-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-
-$(function () {
-  $(".header-user-profile").hover(
-    function () {
-      $(".header-profile-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(".header-profile-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-
-$(function () {
-  $("#header").hover(
-    function () {
-      $(".js-header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
-    }, function () {
-      $(".js-header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
-    });
 });
 
 $(function () {

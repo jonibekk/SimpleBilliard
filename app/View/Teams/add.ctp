@@ -25,10 +25,10 @@
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control addteam_input-design'
                 ],
+                'id'            => 'addOtherTeam',
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
-                'type'          => 'file',
-                'id'            => 'AddTeamForm',
+                'type'          => 'file'
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?=
@@ -108,31 +108,26 @@
                 ])
                 ?>
                 <?=
-                $this->Form->input('start_term_month', [
-                    'label'                    => __("Start date"),
+                $this->Form->input('next_start_ym', [
+                    'label'                    => __("Current Term"),
                     'type'                     => 'select',
+                    'data-bv-notempty'         => "true",
                     // help-block の文言があるので、エラーメッセージは表示しない
                     "data-bv-notempty-message" => __(" "),
-                    'options'                  => $start_term_month_options,
-                    'afterInput'               => '<span class="help-block font_11px">'
-                        . __("Please select the standard start month.")
-                        . '</span>'
+                    'class'                    => 'form-control addteam_input-design addOtherTeam-current-term-form',
+                    'options'                  => ["" => __("Please select")],
+                    'required'                 => 'required'
                 ]) ?>
                 <?=
                 $this->Form->input('border_months', [
-                    'label'                    => __("Term"),
+                    'label'                    => __("Next Term"),
                     'type'                     => 'select',
+                    'data-bv-notempty'         => "true",
                     "data-bv-notempty-message" => __("Please select"),
-                    'options'                  => $border_months_options
+                    'class'                    => 'form-control addteam_input-design addOtherTeam-next-term-form',
+                    'options'                  => ["" => __("Please select")],
+                    'required'                 => 'required'
                 ]) ?>
-                <div class="form-group">
-                    <label class="col col-sm-3 control-label form-label"><?= __("Current term") ?></label>
-
-                    <div class="col col-sm-6">
-                        <p class="form-control-static" id="CurrentTermStr">
-                        </p>
-                    </div>
-                </div>
             </div>
 
             <div class="panel-footer addteam_pannel-footer">
@@ -154,7 +149,7 @@
 
         $('[rel="tooltip"]').tooltip();
 
-        $('#AddTeamForm').bootstrapValidator({
+        $('#addOtherTeam').bootstrapValidator({
             live: 'enabled',
             fields: {
                 "data[Team][photo]": {

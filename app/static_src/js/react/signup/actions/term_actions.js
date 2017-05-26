@@ -1,11 +1,14 @@
 import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
-import { generateStartMonthList } from "~/util/date";
+import { generateNextRangeList } from "~/util/date";
 
-export function setStartMonthList(selected_term) {
-  if(!selected_term) return { type: types.SET_START_MONTH_LIST, start_month_list: [] }
-  const start_month_list = generateStartMonthList(selected_term)
-  return { type: types.SET_START_MONTH_LIST, start_month_list }
+export function setNextRangeList(next_start_ym) {
+  if(!next_start_ym) return { type: types.SET_NEXT_RANGE_LIST, next_range_list: [] }
+  const year = next_start_ym.substr(0, 4)
+  const month = next_start_ym.substr(-2, 2)
+  const next_start_date = new Date(parseInt(year), parseInt(month) - 1);
+  const next_range_list = generateNextRangeList(next_start_date)
+  return { type: types.SET_NEXT_RANGE_LIST, next_range_list }
 }
 
 export function changeToTimezoneSelectMode() {
