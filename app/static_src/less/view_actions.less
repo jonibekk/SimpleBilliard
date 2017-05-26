@@ -18,20 +18,11 @@
   text-align:left;
   overflow:hidden;
   text-overflow: ellipsis;
-}
-
-@media @small{
-  .user-view-actions .view-actions-panel-filter{
-    flex-basis:31%;
-  }
-
-  .goal-view-actions .view-actions-panel-filter{
-    flex-basis:50%;
-  }
+  flex-shrink:1;
 }
 
 .view-actions-panel-filter:first-of-type{
-  margin-right:1em;
+  margin-right:.5em;
 }
 
 .view-actions-panel-filter .dropdown-menu{
@@ -102,6 +93,8 @@
 
 .view-actions-panel-btngroup-wrap{
   flex-grow:2;
+  flex-shrink:0;
+  margin-left:.5em;
 }
 
 .view-action-panel-filter-btngroup{
