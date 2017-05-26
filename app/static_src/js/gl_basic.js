@@ -3727,8 +3727,6 @@ function evCommendEditSubmit(e) {
     formData.OGP = ogpData;
   }
 
-
-
   $.ajax({
     type: 'PUT',
     url: "/api/v1/comments/" + commentId,

@@ -115,7 +115,6 @@ class CommentsController extends ApiController
     {
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
-        Hash::insert($this->request->data, 'Comment.id', $id);
 
         $err = $ApiCommentService->validateUpdate($id, $this->Auth->user('id'), $this->request->data);
         if (!empty($err)) {
@@ -123,7 +122,7 @@ class CommentsController extends ApiController
         }
 
         // Update the new comment
-        if (!$ApiCommentService->update($this->request->data)) {
+        if (!$ApiCommentService->update($id, $this->request->data)) {
             return $this->_getResponseInternalServerError();
         }
 

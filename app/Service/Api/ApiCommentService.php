@@ -133,17 +133,18 @@ class ApiCommentService extends AppService
     }
 
     /**
-     * @param $data
-     *
      * Update comment data
+     *
+     * @param $id
+     * @param $data
      *
      * @return bool
      */
-    function update($data)
+    function update($id, $data)
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init("Comment");
-        $Comment->id = $data['id'];
+        $Comment->id = $id;
 
         try {
             // Get ogp
@@ -197,6 +198,13 @@ class ApiCommentService extends AppService
         return [];
     }
 
+    /**
+     * Return formatted data to be used on comments
+     * from OGP data received from frontend.
+     * @param $data
+     *
+     * @return array
+     */
     function _getOgpIndex($data)
     {
         $ogpIndex = [];
@@ -215,53 +223,17 @@ class ApiCommentService extends AppService
 
         $ogpIndex['site_info'] = json_encode($ogp);
         if (isset($ogp['image'])) {
-            // Get the image
-            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
-            if (!$ext) {
-                $ogp['image'] = null;
+            // Check if it is not already a cached image
+            if (strpos($ogp['image'], '/upload/comments/') !== 0) {
+                // Get the image
+                $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
+                if (!$ext) {
+                    $ogp['image'] = null;
+                }
             }
             $ogpIndex['site_photo'] = $ogp['image'];
         }
         return $ogpIndex;
-    }
-
-    /**
-     * @param array  $requestData
-     * @param string $body
-     *
-     * Add ogp to a requested object
-     *
-     * @return array $requestData
-     */
-    function _addOgpIndexes($requestData, $body)
-    {
-        // blank or not string, then return;
-        if (!$body || !is_string($body)) {
-            return $requestData;
-        }
-
-        /** @var OgpComponent $OgpComponent */
-        $OgpComponent = ClassRegistry::init("OgpComponent");
-
-        // Get OGP
-        $ogp = $OgpComponent->getOgpByUrlInText($body);
-        // Not found
-        if (!isset($ogp['title'])) {
-            $requestData['site_info'] = null;
-            $requestData['site_photo'] = null;
-            return $requestData;
-        }
-
-        // Set OGP data
-        $requestData['site_info'] = json_encode($ogp);
-        if (isset($ogp['image'])) {
-            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
-            if (!$ext) {
-                $ogp['image'] = null;
-            }
-            $requestData['site_photo'] = $ogp['image'];
-        }
-        return $requestData;
     }
 }
 
