@@ -1762,6 +1762,7 @@ class GoalsController extends AppController
 
     function view_actions()
     {
+        $myUid = $this->Auth->user('id');
         $goal_id = Hash::get($this->request->params, "named.goal_id");
         $goal = $this->Goal->getGoal($goal_id);
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
@@ -1797,7 +1798,12 @@ class GoalsController extends AppController
             'page_type'  => $page_type
         ]);
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
-        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
+
+        if ($key_result_id && $this->Goal->KeyResult->isCompleted($key_result_id)) {
+            $canAction = false;
+        } else {
+            $canAction = $this->Goal->isActionable($myUid, $goal_id);
+        }
         $is_leader = false;
         foreach ($goal['Leader'] as $v) {
             if ($this->Auth->user('id') == $v['User']['id']) {
@@ -1809,12 +1815,18 @@ class GoalsController extends AppController
             'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
             'with_group' => true,
         ]);
-        $this->set('followers', $followers);
-        $this->set('is_leader', $is_leader);
-        $this->set('is_collaborated', $is_collaborated);
-        $this->set('key_result_id', $key_result_id);
         $this->set('long_text', false);
-        $this->set(compact('goalTerm', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
+        $this->set(compact(
+            'goalTerm',
+            'followers',
+            'is_leader',
+            'key_result_id',
+            'goal_id',
+            'posts',
+            'goal_base_url',
+            'kr_select_options',
+            'canAction'
+        ));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();

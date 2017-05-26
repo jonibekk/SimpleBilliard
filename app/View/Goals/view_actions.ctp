@@ -84,11 +84,11 @@
                 <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                     <?php if (count($posts) == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= $is_collaborated ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
-                            <?= $is_collaborated ? $this->element('Goal/add_action_button',
+                            <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
+                            <?= $canAction ? $this->element('Goal/add_action_button',
                                 compact('goal_id', 'key_result_id')) : null; ?>
                         </div>
-                    <?php elseif ($is_collaborated): ?>
+                    <?php elseif ($canAction): ?>
                         <div class="cube-img-column-frame add-action  mod-only">
                             <?= $this->element('Goal/add_action_button', compact('goal_id', 'key_result_id')); ?>
                         </div>
@@ -97,11 +97,11 @@
                 <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
                     <?php if (count($posts) == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
-                            <h3><?= $is_collaborated ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
-                            <?= $is_collaborated ? $this->element('Goal/add_action_button',
+                            <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
+                            <?= $canAction ? $this->element('Goal/add_action_button',
                                 compact('goal_id', 'key_result_id')) : null; ?>
                         </div>
-                    <?php elseif ($is_collaborated): ?>
+                    <?php elseif ($canAction): ?>
                         <div class="cube-img-column-frame add-action">
                             <?= $this->element('Goal/add_action_button', compact('goal_id', 'key_result_id')); ?>
                         </div>
