@@ -1283,6 +1283,8 @@ class UsersController extends AppController
         $TermService = ClassRegistry::init('TermService');
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
 
         // make variables for requested named params.
         $namedParams = $this->request->params['named'];
@@ -1299,7 +1301,12 @@ class UsersController extends AppController
 
         $this->_setUserPageHeaderInfo($userId);
 
-        $canAction = $this->_canActionOnActionPage($userId, $termId);
+        $myUid = $this->Auth->user('id');
+        if ($goalId) {
+            $canAction = $Goal->isActionable($myUid, $goalId);
+        } else {
+            $canAction = $this->_canActionOnActionPageInTerm($myUid, $termId);
+        }
 
         $termFilterOptions = $TermService->getFilterMenu(true, false);
         $goalFilterOptions = $this->_getGoalFilterMenuOnActionPage($userId, $termId);
@@ -1330,7 +1337,7 @@ class UsersController extends AppController
      *
      * @return bool
      */
-    function _canActionOnActionPage(int $targetUserId, $termId): bool
+    function _canActionOnActionPageInTerm(int $targetUserId, $termId): bool
     {
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init('TermService');
