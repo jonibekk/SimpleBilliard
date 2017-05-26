@@ -1313,6 +1313,19 @@ class UsersController extends AppController
             }
         }
 
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init('ActionResult');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+        // count action
+        if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
+            // if term = all, then user_is is key
+            $actionCount = $ActionResult->getCountByUserId($userId);
+        } else {
+            $goalIds = $GoalService->findIdsByTermIdUserId($termId, $userId);
+            $actionCount = $ActionResult->getCountByGoalId($goalIds);
+        }
+
         $termFilterOptions = $TermService->getFilterMenu(true, false);
         $goalFilterOptions = $this->_getGoalFilterMenuOnActionPage($userId, $termId);
 
@@ -1331,6 +1344,7 @@ class UsersController extends AppController
             'termFilterOptions',
             'endTimestamp',
             'oldestTimestamp',
+            'actionCount',
             'canAction'
         ));
         return $this->render();

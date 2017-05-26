@@ -460,6 +460,22 @@ class ActionResult extends AppModel
     }
 
     /**
+     * @param int $uerId
+     *
+     * @return int
+     */
+    function getCountByUserId(int $uerId): int
+    {
+        $options = [
+            'conditions' => [
+                'user_id' => $uerId,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return (int)$res;
+    }
+
+    /**
      * アクションを登録したユニークユーザー数を返す
      *
      * @param array $params
@@ -647,7 +663,7 @@ class ActionResult extends AppModel
     {
         $options = [
             'conditions' => [
-                'ActionResult.user_id'    => $user_id,
+                'ActionResult.user_id' => $user_id,
             ],
             'fields'     => ['ActionResult.id']
         ];

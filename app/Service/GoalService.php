@@ -1666,4 +1666,31 @@ class GoalService extends AppService
         return true;
     }
 
+    /**
+     * finding Ids by termId and userId
+     *
+     * @param int $termId
+     * @param int $userId
+     *
+     * @return array
+     */
+    function findIdsByTermIdUserId(int $termId, int $userId): array
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        $term = $Term->findById($termId);
+        if (empty($term)) {
+            return [];
+        }
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+
+        $startDate = $term['Term']['start_date'];
+        $endDate = $term['Term']['end_date'];
+        $goalIds = $Goal->findCollaboratedGoals($userId, $startDate, $endDate, ['id']);
+        $goalIds = Hash::extract($goalIds, '{n}.Goal');
+        return $goalIds;
+    }
+
 }
