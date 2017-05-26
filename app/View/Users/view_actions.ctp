@@ -78,7 +78,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
         ?>
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($namedParams['page_type'] == 'list'): ?>
-                <?php if (count($posts) == 0): ?>
+                <?php if ($item_num == 0): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>
                             <?php
@@ -106,7 +106,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 <?php endif; ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($namedParams['page_type'] == 'image'): ?>
-                <?php if (count($posts) == 0): ?>
+                <?php if ($item_num == 0): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>
                             <?php

@@ -82,7 +82,7 @@
             </div>
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
-                    <?php if (count($posts) == 0): ?>
+                    <?php if ($item_num == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
                             <h3><?= $is_collaborated ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
                             <?= $is_collaborated ? $this->element('Goal/add_action_button',
@@ -95,7 +95,7 @@
                     <?php endif; ?>
                     <?= $this->element('Feed/posts') ?>
                 <?php elseif ($this->request->params['named']['page_type'] == 'image'): ?>
-                    <?php if (count($posts) == 0): ?>
+                    <?php if ($item_num == 0): ?>
                         <div class="cube-img-column-frame add-action mod-only">
                             <h3><?= $is_collaborated ? __("You haven't created any actions&hellip; yet.") : __("No actions have been created&hellip; yet.") ?></h3>
                             <?= $is_collaborated ? $this->element('Goal/add_action_button',
