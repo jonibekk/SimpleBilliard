@@ -1302,10 +1302,15 @@ class UsersController extends AppController
         $this->_setUserPageHeaderInfo($userId);
 
         $myUid = $this->Auth->user('id');
-        if ($goalId) {
-            $canAction = $Goal->isActionable($myUid, $goalId);
+
+        if ($userId != $myUid) {
+            $canAction = false;
         } else {
-            $canAction = $this->_canActionOnActionPageInTerm($myUid, $termId);
+            if ($goalId) {
+                $canAction = $Goal->isActionable($userId, $goalId);
+            } else {
+                $canAction = $this->_canActionOnActionPageInTerm($userId, $termId);
+            }
         }
 
         $termFilterOptions = $TermService->getFilterMenu(true, false);
@@ -1332,12 +1337,12 @@ class UsersController extends AppController
     }
 
     /**
-     * @param int        $targetUserId
+     * @param int        $userId
      * @param int|string $termId
      *
      * @return bool
      */
-    function _canActionOnActionPageInTerm(int $targetUserId, $termId): bool
+    function _canActionOnActionPageInTerm(int $userId, $termId): bool
     {
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init('TermService');
@@ -1346,7 +1351,7 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
 
-        if ($targetUserId == $this->Auth->user('id')
+        if ($userId == $this->Auth->user('id')
             && ($termId == $Term->getCurrentTermId() || $termId == $TermService::TERM_FILTER_ALL_KEY_NAME)
             && !empty($GoalService->findActionables())
         ) {
