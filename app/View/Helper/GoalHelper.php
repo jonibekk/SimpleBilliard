@@ -9,7 +9,13 @@ App::uses('GoalMember', 'Model');
  */
 class GoalHelper extends AppHelper
 {
-
+    /**
+     * Get HTML options for Follow element
+     * @param      $goal
+     * @param null $goalTerm
+     *
+     * @return array
+     */
     function getFollowOption($goal, $goalTerm = null)
     {
         $option = [
@@ -25,14 +31,9 @@ class GoalHelper extends AppHelper
             return $option;
         }
 
-        // If the goal is from previous term, do not allow to follow
-        if ($goalTerm) {
-            $end_date = Hash::get($goalTerm, 'end_date');
-            $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
-
-            if (strtotime($today) >= strtotime($end_date)) {
-                $option['disabled'] = "disabled";
-            }
+        // Check if goal is completed or expired
+        if ($this->isExpiredOrCompleted($goal, $goalTerm)) {
+            $option['disabled'] = "disabled";
         }
 
         if (Hash::get($goal, 'MyCollabo')) {
@@ -54,6 +55,33 @@ class GoalHelper extends AppHelper
         return $option;
     }
 
+    function isExpiredOrCompleted($goal, $goalTerm)
+    {
+        // Check if goal is completed
+        $completed = Hash::get($goal, 'Goal.completed');
+        if ($completed !== null) {
+            return true;
+        }
+
+        // If the goal is from previous term, do not allow to follow
+        if ($goalTerm) {
+            $endDate = Hash::get($goal, 'Goal.end_date');
+            $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
+
+            if ($today > $endDate) {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get HTML options for Collabo element
+     * @param      $goal
+     * @param null $goalTerm
+     *
+     * @return array
+     */
     function getCollaboOption($goal, $goalTerm = null)
     {
         $option = [
@@ -63,14 +91,9 @@ class GoalHelper extends AppHelper
             'disabled' => null
         ];
 
-        // If the goal is from previous term, do not allow to collaborate
-        if ($goalTerm) {
-            $end_date = Hash::get($goalTerm, 'end_date');
-            $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
-
-            if (strtotime($today) >= strtotime($end_date)) {
-                $option['disabled'] = "disabled";
-            }
+        // Check if goal is completed or expired
+        if ($this->isExpiredOrCompleted($goal, $goalTerm)) {
+            $option['disabled'] = "disabled";
         }
 
         if (!Hash::get($goal, 'MyCollabo')) {

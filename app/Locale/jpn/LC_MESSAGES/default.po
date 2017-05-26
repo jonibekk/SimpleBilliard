@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-24 16:28+0900\n"
+"PO-Revision-Date: 2017-05-26 16:52+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -227,6 +227,15 @@ msgstr "権限がありません。"
 msgid "Deleted a goal."
 msgstr "ゴールを削除しました。"
 
+msgid "The goal doesn't exist."
+msgstr "ゴールが存在しません。"
+
+msgid "You cannot follow or collaborate with a completed goal."
+msgstr "ゴールが完了しているので、フォロー/コラボすることはできません。"
+
+msgid "You cannot follow or collaborate with a past goal."
+msgstr "ゴールの終了日が過ぎているので、フォロー/コラボすることはできません。"
+
 msgid "Start to collaborate."
 msgstr "コラボしました。"
 
@@ -277,12 +286,6 @@ msgstr "この操作をする権限がありません。"
 
 msgid "Quitted a collaborator."
 msgstr "コラボレータから外れました。"
-
-msgid "The goal doesn't exist."
-msgstr "ゴールが存在しません。"
-
-msgid "You cannot follow or collaborate with an goal from previous term."
-msgstr "前期以前のゴールにフォロー/コラボすることはできません。"
 
 msgid "Start to follow."
 msgstr "フォローしました。"

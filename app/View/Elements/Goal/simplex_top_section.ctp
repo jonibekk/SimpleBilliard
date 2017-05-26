@@ -61,8 +61,13 @@
             ?>
         <?php else: ?>
             <div class="col col-xxs-12 mt_18px">
-                <?php $follow_opt = $this->Goal->getFollowOption($goal, $goalTerm); ?>
-                <?php $collabo_opt = $this->Goal->getCollaboOption($goal, $goalTerm); ?>
+                <?php
+                    if (!isset($goalTerm) && isset($goal_term)) {
+                        $goalTerm = $goal_term;
+                    }
+                    $follow_opt = $this->Goal->getFollowOption($goal, $goalTerm);
+                    $collabo_opt = $this->Goal->getCollaboOption($goal, $goalTerm);
+                ?>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4 col-xs-offset-2 col-sm-offset-2">
                     <a class="btn btn-white bd-circle_22px toggle-follow p_8px width100_per
                     <?= h($follow_opt['class']) ?>
