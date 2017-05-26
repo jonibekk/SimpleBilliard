@@ -275,7 +275,6 @@ class KeyResultTest extends GoalousTestCase
             ]
         );
         $this->assertCount(3, $this->KeyResult->getKrNameList($goal_id, true));
-        $this->assertCount(5, $this->KeyResult->getKrNameList($goal_id, true, true));
     }
 
     function testIsComplete()

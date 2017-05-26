@@ -1689,7 +1689,7 @@ class GoalService extends AppService
         $startDate = $term['Term']['start_date'];
         $endDate = $term['Term']['end_date'];
         $goalIds = $Goal->findCollaboratedGoals($userId, $startDate, $endDate, ['id']);
-        $goalIds = Hash::extract($goalIds, '{n}.Goal');
+        $goalIds = Hash::extract($goalIds, '{n}.id');
         return $goalIds;
     }
 

@@ -1793,7 +1793,7 @@ class GoalsController extends AppController
                 $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
                 break;
         }
-        $krSelectOptions = $this->Goal->KeyResult->getKrNameList($goalId, true, true);
+        $krSelectOptions = $this->Goal->KeyResult->getKrNameList($goalId, true);
         $goalBaseUrl = Router::url([
             'controller' => 'goals',
             'action'     => 'view_actions',
@@ -1807,7 +1807,12 @@ class GoalsController extends AppController
         } else {
             $canAction = $this->Goal->isActionable($myUid, $goalId);
         }
-        $actionCount = $ActionResult->getCountByGoalId($goalId);
+
+        if ($keyResultId) {
+            $actionCount = $ActionResult->getCountByKrId($keyResultId);
+        } else {
+            $actionCount = $ActionResult->getCountByGoalId($goalId);
+        }
 
         $this->set('long_text', false);
         $this->set(compact(

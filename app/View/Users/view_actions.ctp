@@ -82,7 +82,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>
                             <?php
-                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
+                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id') && $termId == $currentTermId) {
                                 echo __("You haven't created any actions&hellip; yet.");
                             } else {
                                 echo __("There is no Action.");
@@ -110,7 +110,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>
                             <?php
-                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
+                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id') && $termId == $currentTermId) {
                                 echo __("You haven't created any actions&hellip; yet.");
                             } else {
                                 echo __("There is no Action.");

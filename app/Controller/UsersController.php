@@ -1286,12 +1286,13 @@ class UsersController extends AppController
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
 
+        $currentTermId = $Term->getCurrentTermId();
         // make variables for requested named params.
         $namedParams = $this->request->params['named'];
         $userId = Hash::get($namedParams, "user_id");
         $pageType = Hash::get($namedParams, "page_type");
         $goalId = Hash::get($namedParams, 'goal_id');
-        $termId = Hash::get($namedParams, 'term_id') ?? $Term->getCurrentTermId();
+        $termId = Hash::get($namedParams, 'term_id') ?? $currentTermId;
 
         // validation
         if (!$this->_validateParamsOnActionPage($userId, $pageType, $termId, $goalId)) {
@@ -1322,10 +1323,9 @@ class UsersController extends AppController
             // if term = all, then user_is is key
             $actionCount = $ActionResult->getCountByUserId($userId);
         } else {
-            $goalIds = $GoalService->findIdsByTermIdUserId($termId, $userId);
-            $actionCount = $ActionResult->getCountByGoalId($goalIds);
+            $goalIdsInTerm = $GoalService->findIdsByTermIdUserId($termId, $userId);
+            $actionCount = $ActionResult->getCountByGoalId($goalIdsInTerm);
         }
-
         $termFilterOptions = $TermService->getFilterMenu(true, false);
         $goalFilterOptions = $this->_getGoalFilterMenuOnActionPage($userId, $termId);
 
@@ -1345,6 +1345,7 @@ class UsersController extends AppController
             'endTimestamp',
             'oldestTimestamp',
             'actionCount',
+            'currentTermId',
             'canAction'
         ));
         return $this->render();

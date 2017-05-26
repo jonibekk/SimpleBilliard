@@ -370,6 +370,25 @@ class ActionResult extends AppModel
         return $res;
     }
 
+    /**
+     * get Action count that depends on a KR
+     *
+     * @param $krId
+     *
+     * @return int
+     */
+    function getCountByKrId($krId): int
+    {
+        $options = [
+            'conditions' => [
+                'key_result_id' => $krId,
+                'team_id'       => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('count', $options);
+        return (int)$res;
+    }
+
     function actionEdit($data)
     {
         if (empty($data)) {
