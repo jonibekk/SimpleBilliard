@@ -123,6 +123,7 @@ class Team extends AppModel
         ],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
+        'next_start_ym'      => ['dateYm'  => ['rule' => ['date', 'ym'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'photo'              => [
             'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb

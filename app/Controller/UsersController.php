@@ -630,9 +630,9 @@ class UsersController extends AppController
             //キャッシュ削除
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
-            //request->dataに入っていないデータを表示しなければ行けない為、マージ
-            $this->request->data['User'] = array_merge($me['User'],
-                isset($this->request->data['User']) ? $this->request->data['User'] : []);
+
+            // Specify update user
+            $this->request->data['User']['id'] = $me['User']['id'];
 
             // ローカル名 更新時
             if (isset($this->request->data['LocalName'][0])) {
@@ -680,11 +680,12 @@ class UsersController extends AppController
                 $this->Pnotify->outError(__("Failed to save user setting."));
             }
             $me = $this->_getMyUserDataForSetting();
-            $this->request->data = $me;
+            // For updating header user info
             $this->set('my_prof', $this->User->getMyProf());
-        } else {
-            $this->request->data = $me;
         }
+
+        $this->request->data = $me;
+
         $this->layout = LAYOUT_TWO_COLUMN;
         //姓名の並び順をセット
         $lastFirst = in_array($me['User']['language'], $this->User->langCodeOfLastFirst);
