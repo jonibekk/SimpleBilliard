@@ -55,6 +55,13 @@ class GoalHelper extends AppHelper
         return $option;
     }
 
+    /**
+     * Check if the goal is expired or completed
+     * @param $goal
+     * @param $goalTerm
+     *
+     * @return bool
+     */
     function isExpiredOrCompleted($goal, $goalTerm)
     {
         // Check if goal is completed

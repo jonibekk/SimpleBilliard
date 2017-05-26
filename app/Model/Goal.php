@@ -2136,6 +2136,12 @@ class Goal extends AppModel
         return false;
     }
 
+    /**
+     * Tell if the goal is already completed.
+     * @param $goalId
+     *
+     * @return bool
+     */
     public function isCompleted($goalId) {
         if (empty($goalId)) {
             return false;
