@@ -77,7 +77,7 @@ class AppModel extends Model
         'goal_id'          => 'Goal',
         'team_member_id'   => 'TeamMember',
         'circle_id'        => 'Circle',
-        'evaluate_term_id' => 'EvaluateTerm',
+        'evaluate_term_id' => 'Term',
         'team_id'          => 'Team',
         'user_id'          => 'User',
         'team_vision_id'   => 'TeamVision',

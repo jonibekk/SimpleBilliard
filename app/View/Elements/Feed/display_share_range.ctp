@@ -10,11 +10,11 @@
  */
 //echo json_encode($post);
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="font_11px font_lightgray oneline-ellipsis">
     <!-- only show if created within 1hr -->
     <?php if ($post['Post']['created'] > REQUEST_TIMESTAMP_ONE_HR_AGO) { ?>
-            <span class="label label-primary">New</span>
+        <span class="label label-primary">New</span>
     <?php } ?>
 
     <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
@@ -28,38 +28,41 @@
         <?php //共有ユーザ
         elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
             <span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url([
-                'controller' => 'posts',
-                'action'     => 'ajax_get_share_circles_users_modal',
-                'post_id'    => $post['Post']['id']
-            ]) ?>"
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller' => 'posts',
+                   'action'     => 'ajax_get_share_circles_users_modal',
+                   'post_id'    => $post['Post']['id']
+               ]) ?>"
                class="modal-ajax-get-share-circles-users link-dark-gray">
                 <i class="fa fa-user"></i>&nbsp;<?= h($post['share_text']) ?>
             </a>
         <?php //共有サークル、共有ユーザ
         elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
             <span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url([
-                'controller' => 'posts',
-                'action'     => 'ajax_get_share_circles_users_modal',
-                'post_id'    => $post['Post']['id']
-            ]) ?>"
+            <a href="#"
+               data-url="<?= $this->Html->url([
+                   'controller' => 'posts',
+                   'action'     => 'ajax_get_share_circles_users_modal',
+                   'post_id'    => $post['Post']['id']
+               ]) ?>"
                class="modal-ajax-get-share-circles-users link-dark-gray">
                 <i class="fa fa-circle-o"></i>&nbsp;<?= h($post['share_text']) ?>
             </a>
         <?php endif; ?>
     <?php endif; ?>
-    <?php if($post['Post']['type'] == Post::TYPE_ACTION):?>
-        <a href="<?= $this->Html->url([
-            'controller' => 'goals',
-            'action'     => 'ajax_get_goal_description_modal',
-            'goal_id'    => $post['Goal']['id']
-        ]) ?>"
+    <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+        <a href="#"
+           data-url="<?= $this->Html->url([
+               'controller' => 'goals',
+               'action'     => 'ajax_get_goal_description_modal',
+               'goal_id'    => $post['Goal']['id']
+           ]) ?>"
            class="ml_8px modal-ajax-get link-dark-gray">
             <i class="fa fa-flag-o"></i>
             <span><?= $post['Goal']['name'] ?></span>
         </a>
 
-    <?php endif;?>
+    <?php endif; ?>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

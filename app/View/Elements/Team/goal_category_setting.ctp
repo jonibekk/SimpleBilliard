@@ -24,21 +24,23 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Goal category settings") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Goal category settings") ?></h2>
+    </header>
+    <?=
+    $this->Form->create('GoalCategory', [
+        'inputDefaults' => [
+            'div'       => false,
+            'label'     => false,
+            'wrapInput' => 'col col-sm-9',
+        ],
+        'class'         => 'form-horizontal',
+        'novalidate'    => true,
+        'id'            => 'GoalCategorySettingForm',
+        'url'           => ['controller' => 'teams', 'action' => 'save_goal_categories']
+    ]); ?>
     <div class="panel-body form-horizontal">
-        <?=
-        $this->Form->create('GoalCategory', [
-            'inputDefaults' => [
-                'div'       => false,
-                'label'     => false,
-                'wrapInput' => 'col col-sm-9',
-            ],
-            'class'         => 'form-horizontal',
-            'novalidate'    => true,
-            'id'            => 'GoalCategorySettingForm',
-            'url'           => ['controller' => 'teams', 'action' => 'save_goal_categories']
-        ]); ?>
         <table class="table table-striped" id="GoalCategoryTable">
             <tr>
                 <th>
@@ -65,17 +67,18 @@
                  'max_index'       => $max_index,
                  'class'           => 'btn btn-default'
                 ]) ?>
-            <input class="btn btn-primary team-setting-add-goal-category" type="submit" value="<?= __('Save settings')?>">
+
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("GoalCategory.$i.name") ?>
             <?php $this->Form->unlockField("GoalCategory.$i.description") ?>
         <?php endfor ?>
-        <?= $this->Form->end() ?>
-
     </div>
-</div>
-<?= $this->App->viewEndComment()?>
+    <footer>
+        <input class="btn btn-primary team-setting-add-goal-category" type="submit" value="<?= __('Save settings')?>">
+    </footer>
+    <?= $this->Form->end() ?>
+</section>
 <?php $this->start('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -104,3 +107,4 @@
     });
 </script>
 <?php $this->end() ?>
+<?= $this->App->viewEndComment()?>

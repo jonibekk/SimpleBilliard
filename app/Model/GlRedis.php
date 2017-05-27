@@ -50,6 +50,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_GROUP_RANKING = 'group_ranking';
     const KEY_TYPE_SETUP_GUIDE_STATUS = 'setup_guide_status';
     const KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE = 'fail_email_verify_digit_code';
+    const KEY_TYPE_CHANGED_TERM = 'changed_term';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
     const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
@@ -74,6 +75,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_GROUP_RANKING,
         self::KEY_TYPE_SETUP_GUIDE_STATUS,
         self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE,
+        self::KEY_TYPE_CHANGED_TERM,
     ];
 
     /**
@@ -304,6 +306,17 @@ class GlRedis extends AppModel
         'user' => null,
     ];
 
+    /**
+     * Key Name: team:[team_id]
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $changed_term = [
+        'team'         => null,
+        'changed_term' => null,
+    ];
+
     public function changeDbSource($config_name = "redis_test")
     {
         unset($this->Db);
@@ -483,8 +496,13 @@ class GlRedis extends AppModel
             // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
             $notify_id = $post_id;
         }
+        // if not message, attach notify id for the url.
         if ($type != NotifySetting::TYPE_MESSAGE) {
-            $url = array_merge($url, ['?' => ['notify_id' => $notify_id]]);
+            if (isset($url['?'])) {
+                $url['?'] = am($url['?'], ['notify_id' => $notify_id]);
+            } else {
+                $url = am($url, ['?' => ['notify_id' => $notify_id]]);
+            }
         }
         $data = [
             'id'            => $notify_id,
@@ -1283,5 +1301,34 @@ class GlRedis extends AppModel
     function deleteSetupGuideStatus($user_id)
     {
         return $this->Db->del($this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id));
+    }
+
+    /**
+     * Save before change term for notification
+     *
+     * @param int   $teamId
+     * @param array $term
+     *
+     * @return bool
+     */
+    function saveChangedTerm(int $teamId)
+    {
+        $expire = WEEK * 2;
+        $key = $this->getKeyName(self::KEY_TYPE_CHANGED_TERM, $teamId);
+        $this->Db->set($key, true);
+        return $this->Db->setTimeout($key, $expire);
+    }
+
+    /**
+     * Get whether changed term
+     *
+     * @param  $teamId
+     *
+     * @return mixed
+     */
+    function getChangedTerm(int $teamId): bool
+    {
+        $ret = $this->Db->get($this->getKeyName(self::KEY_TYPE_CHANGED_TERM, $teamId));
+        return !empty($ret);
     }
 }

@@ -24,8 +24,10 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= __("Begin evaluation") ?></div>
+<section class="panel panel-default">
+    <header>
+        <h2><?= __("Begin evaluation") ?></h2>
+    </header>
     <div class="panel-body form-horizontal">
         <div class="form-group">
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
@@ -60,27 +62,21 @@
     </div>
     <?php if ($eval_enabled && $eval_start_button_enabled): ?>
         <?php $existScore = count($eval_scores['EvaluateScore']) > 0; ?>
-        <div class="panel-footer">
+        <footer>
             <?php if(!$existScore): ?>
                 <div class="form-group">
-                    <div class="col col-sm-3"></div>
-                    <div class="col col-sm-6">
                         <p class="eval-setting-alert-text"><b><?= __('Add definition of evaluation score') ?></b></p>
-                    </div>
                 </div>
             <?php endif; ?>
-            <div class="row">
-                <div class="col-sm-9 col-sm-offset-3">
-                <?= $this->Form->postLink(__("Start current term evaluations"),
+            <?= $this->Form->postLink(__("Start current term evaluations"),
                         ['controller' => 'teams', 'action' => 'start_evaluation',],
                         [
                             'class' => "btn btn-primary",
                             'disabled' => $existScore ? '' : 'disabled'
                         ],
                         __("Unable to cancel. Do you really want to start evaluations?")) ?>
-                </div>
-            </div>
-        </div>
+
+        </footer>
     <?php endif; ?>
-</div>
+</section>
 <?= $this->App->viewEndComment()?>

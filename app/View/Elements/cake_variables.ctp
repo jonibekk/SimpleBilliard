@@ -11,6 +11,7 @@ App::uses('AttachedFile', 'Model');
 <script type="text/javascript">
     var cake = {
         env_name: "<?= ENV_NAME ?>",
+        lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         message: {
             validate: {
@@ -145,7 +146,7 @@ App::uses('AttachedFile', 'Model');
             am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
-                'action'     => 'ajax_select_only_add_users'
+                'action'     => 'ajax_select_add_members_on_message'
             ])?>",
             select2_secret_circle: "<?=$this->Html->url([
                 'controller' => 'users',
@@ -403,7 +404,6 @@ App::uses('AttachedFile', 'Model');
             "Create a name for your team. A team is a group that can share goals, actions and posts  with each other. People outside of the team can't access this information.": "<?= __("Create a name for your team. A team is a group that can share goals, actions and posts  with each other. People outside of the team can't access this information.") ?>",
             "Use 8 or more characters including at least one number.": "<?= __("Use 8 or more characters including at least one number.") ?>",
             "Choose your team's (company's) term": "<?=__("Choose your team's (company's) term") ?>",
-            "Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.": "<?= __("Set the term for your team. The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.") ?>",
             "Your name": "<?= __("Your name") ?>",
             "Birthday": "<?= __("Birthday(Optional)") ?>",
             "I agree to %s and %s of Goalous.": '<?= __("I agree to %s and %s of Goalous.",
@@ -438,6 +438,15 @@ App::uses('AttachedFile', 'Model');
             "Choose your team name.": "<?= __("Choose your team name.") ?>",
             "Select your present term": "<?= __("Select your present term") ?>",
             "Password is incorrect.": "<?= __("Password is incorrect.") ?>",
+            "Select your next term": "<?= __("Select your next term") ?>",
+            "3 months": "<?= __("3 months") ?>",
+            "6 months": "<?= __("6 months") ?>",
+            "12 months": "<?= __("12 months") ?>",
+            "The default length of any future terms are automatically set to 3 months.": "<?= __("The default length of any future terms are automatically set to 3 months.") ?>",
+            "The default length of any future terms are automatically set to 6 months.": "<?= __("The default length of any future terms are automatically set to 6 months.") ?>",
+            "The default length of any future terms are automatically set to 12 months.": "<?= __("The default length of any future terms are automatically set to 12 months.") ?>",
+            "You can change this setting at any time.": "<?= __("You can change this setting at any time.") ?>",
+            "The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.Choose the months that start and end your first two terms.": "<?= __("The term can be based on your corporate / financial calendar, personal evaluations or any period of time the works best for your company.Choose the months that start and end your first two terms.") ?>",
             //Creating a Goal
             "": "<?=__("")?>",
             "What is your goal ?": "<?=__("What is your goal ?")?>",

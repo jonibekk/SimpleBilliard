@@ -1,10 +1,12 @@
 // Sentry:js error tracking
-Raven.config(
-  cake.sentry_dsn,
-  {
-    environment: cake.env_name
-  }
-).install();
+if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop')) {
+  Raven.config(
+    cake.sentry_dsn,
+    {
+      environment: cake.env_name
+    }
+  ).install();
+}
 
 $.ajaxSetup({
   cache: false,
@@ -469,8 +471,8 @@ $(document).ready(function () {
     }
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
     modalFormCommonBindEvent($modal_elm);
-    var url = $(this).attr('href');
-    if (url.indexOf('#') == 0) {
+    var url = $this.data('url');
+    if (url.indexOf('#') === 0) {
       $(url).modal('open');
     } else {
       $.get(url, function (data) {
@@ -499,7 +501,7 @@ $(document).ready(function () {
   $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
     e.preventDefault();
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    var url = $(this).attr('href');
+    var url = $(this).data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
@@ -518,85 +520,6 @@ $(document).ready(function () {
   $(document).on("click", '.modal-ajax-get-exchange-leader', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable
   $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
-  $(document).on("click", '.modal-ajax-get-add-action', function (e) {
-    e.preventDefault();
-    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    $modal_elm.on('hidden.bs.modal', function (e) {
-      $(this).remove();
-    });
-    $modal_elm.on('shown.bs.modal', function (e) {
-      $addActionResultForm = $(this).find('#AddActionResultForm');
-      $addActionResultForm.bootstrapValidator({
-        excluded: [':hidden'],
-        live: 'enabled',
-
-        fields: {
-          "data[ActionResult][photo1]": {
-            validators: {
-              notEmpty: {
-                message: cake.message.validate.g
-              }
-            }
-          }
-        }
-      });
-    });
-
-    modalFormCommonBindEvent($modal_elm);
-
-    var url = $(this).attr('href');
-    if (url.indexOf('#') == 0) {
-      $(url).modal('open');
-    } else {
-      $.get(url, function (data) {
-        $modal_elm.append(data);
-
-        //アップロード画像選択時にトリムして表示
-        $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-          $(this).children('.nailthumb-container').nailthumb({
-            width: 50,
-            height: 50,
-            fitDirection: 'center center'
-          });
-        });
-        $modal_elm.modal();
-        $modal_elm.find('#select2ActionCircleMember').select2({
-          multiple: true,
-          placeholder: cake.word.select_notify_range,
-          minimumInputLength: 1,
-          ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-              return {
-                term: term, //search term
-                page_limit: 10, // page size
-                circle_type: 'all'
-              };
-            },
-            results: function (data, page) {
-              return {results: data.results};
-            }
-          },
-          data: [],
-          initSelection: cake.data.l,
-          formatSelection: format,
-          formatResult: format,
-          dropdownCssClass: 's2-post-dropdown',
-          escapeMarkup: function (m) {
-            return m;
-          },
-          containerCssClass: "select2Member"
-        });
-
-
-      }).success(function () {
-        $('body').addClass('modal-open');
-      });
-    }
-  });
   $('.ModalActionResult_input_field').on('change', function () {
     $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
   });
@@ -613,7 +536,7 @@ $(document).ready(function () {
     $modal_elm.on('hidden.bs.modal', function (e) {
       $(this).remove();
     });
-    var url = $(this).attr('href');
+    var url = $(this).data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
@@ -697,67 +620,7 @@ $(document).ready(function () {
     $(this).find('.krProgress-valuesLeft').text(start_value);
     $(this).find('.krProgress-valuesRight').text(target_value);
   });
-  //team term setting
-  $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths , #TeamTimezone', function () {
-    var startTermMonth = $('#TeamStartTermMonth').val();
-    var borderMonths = $('#TeamBorderMonths').val();
-    var timezone = $('#TeamTimezone').val();
-    if (startTermMonth === "" || borderMonths === "") {
-      $('#CurrentTermStr').empty();
-      return false;
-    }
-    var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths + "/" + timezone;
-    $.get(url, function (data) {
-      $('#CurrentTermStr').text(data.start + "  -  " + data.end);
-    });
-  });
 
-  //edit team term setting
-  $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 ,#EditTermTimezone , #EditTermStartTerm , #EditTermBorderMonths', function () {
-
-    if ($("#EditTermChangeFrom1:checked").val()) {
-      var changeFrom = $('#EditTermChangeFrom1:checked').val();
-    }
-    else {
-      var changeFrom = $('#EditTermChangeFrom2:checked').val();
-    }
-    var timezone = $('#EditTermTimezone').val();
-    var startTermMonth = $('#EditTermStartTerm').val();
-    var borderMonths = $('#EditTermBorderMonths').val();
-    if (startTermMonth === "" || borderMonths === "") {
-      $('#NewCurrentTerm').addClass('none');
-      $('#NewCurrentTerm > div > p').empty();
-      $('#NewNextTerm').addClass('none');
-      $('#NewNextTerm > div > p').empty();
-      return false;
-    }
-    var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom + "/" + timezone;
-    $.get(url, function (data) {
-      if (data.current.start_date && data.current.end_date) {
-        $('#NewCurrentTerm').removeClass('none');
-        var current_timezone = parseFloat(data.current.timezone);
-        var current_sign = current_timezone < 0 ? "" : "+";
-        $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date + " (GMT " + current_sign + current_timezone + "h)");
-      }
-      else {
-        $('#NewCurrentTerm').addClass('none');
-        $('#NewCurrentTerm > div > p').empty();
-      }
-      if (data.next.start_date && data.next.end_date) {
-        $('#NewNextTerm').removeClass('none');
-        var next_timezone = parseFloat(data.next.timezone);
-        var next_sign = next_timezone < 0 ? "" : "+";
-
-        $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date + " (GMT " + next_sign + next_timezone + "h)");
-      }
-      else {
-        $('#NewNextTerm').addClass('none');
-        $('#NewNextTerm > div > p').empty();
-      }
-    });
-  });
-
-  //
   $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
   $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
   $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
@@ -2031,9 +1894,7 @@ $(document).ready(function () {
     $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
   });
 
-
   initMemberSelect2();
-  initMessageSelect2();
   initCircleSelect2();
 
   $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
@@ -2047,7 +1908,7 @@ $(document).ready(function () {
     $modal_elm.on('hidden.bs.modal', function (e) {
       $(this).remove();
     });
-    var url = $(this).attr('href');
+    var url = $(this).data('url');
     if (url.indexOf('#') == 0) {
       $(url).modal('open');
     } else {
@@ -2232,7 +2093,7 @@ $(document).ready(function () {
   }
 });
 
-function initMessageSelect2() {
+function initMessageSelect2(topic_id) {
   //noinspection JSUnusedLocalSymbols post_detail.Post.id
   $('#selectOnlyMember').select2({
     multiple: true,
@@ -2247,7 +2108,7 @@ function initMessageSelect2() {
         return {
           term: term, //search term
           page_limit: 10, // page size
-          post_id: $('#post_messenger').val()
+          topic_id: topic_id
         };
       },
       results: function (data, page) {
@@ -3476,7 +3337,7 @@ function getModalFormFromUrl(e) {
     $(this).empty();
   });
 
-  var url = $(this).attr('href');
+  var url = $(this).data('url');
   if (url.indexOf('#') == 0) {
     $(url).modal('open');
   } else {
@@ -4271,16 +4132,16 @@ $(document).ready(function () {
           var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
           var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
 
-          if($FeedMoreReadLink.is(':visible')){
+          if ($FeedMoreReadLink.is(':visible')) {
             $FeedMoreReadLink.trigger('click');
           }
-          if($GoalPageFollowerMoreLink.is(':visible')){
+          if ($GoalPageFollowerMoreLink.is(':visible')) {
             $GoalPageFollowerMoreLink.trigger('click');
           }
-          if($GoalPageMemberMoreLink.is(':visible')){
+          if ($GoalPageMemberMoreLink.is(':visible')) {
             $GoalPageMemberMoreLink.trigger('click');
           }
-          if($GoalPageKeyResultMoreLink.is(':visible')){
+          if ($GoalPageKeyResultMoreLink.is(':visible')) {
             $GoalPageKeyResultMoreLink.trigger('click');
           }
         } else {

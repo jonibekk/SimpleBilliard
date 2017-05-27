@@ -1,11 +1,14 @@
 import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
-import { generateStartMonthList } from "~/util/date";
+import { generateNextRangeList } from "~/util/date";
 
-export function setStartMonthList(selected_term) {
-  if(!selected_term) return { type: types.SET_START_MONTH_LIST, start_month_list: [] }
-  const start_month_list = generateStartMonthList(selected_term)
-  return { type: types.SET_START_MONTH_LIST, start_month_list }
+export function setNextRangeList(next_start_ym) {
+  if(!next_start_ym) return { type: types.SET_NEXT_RANGE_LIST, next_range_list: [] }
+  const year = next_start_ym.substr(0, 4)
+  const month = next_start_ym.substr(-2, 2)
+  const next_start_date = new Date(parseInt(year), parseInt(month) - 1);
+  const next_range_list = generateNextRangeList(next_start_date)
+  return { type: types.SET_NEXT_RANGE_LIST, next_range_list }
 }
 
 export function changeToTimezoneSelectMode() {
@@ -32,8 +35,10 @@ export function postTerms(post_data) {
   return dispatch => {
     const data = {
       'data[Team][border_months]': post_data.term,
-      'data[Team][start_term_month]': post_data.start_month,
-      'data[Team][timezone]': post_data.timezone
+      'data[Team][timezone]': post_data.timezone,
+      // TODO: must change data format
+      //       integer -> string 'YYYY-mm'
+      'data[Term][next_start_ym]': post_data.next_start_ym
     }
 
     dispatch(checkingTerm())

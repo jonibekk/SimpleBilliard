@@ -226,6 +226,9 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_EXCHANGED_LEADER:
                 $this->_setGoalLeaderChangedOption($notify_type, $model_id, $sub_model_id, $user_id, $team_id);
+            case NotifySetting::TYPE_CHANGED_TEAM_BASIC_SETTING:
+            case NotifySetting::TYPE_CHANGED_TERM_SETTING:
+                $this->_setChangedTeamSetting($notify_type, $model_id, $user_id);
                 break;
             default:
                 break;
@@ -402,8 +405,8 @@ class NotifyBizComponent extends Component
             = $this->Goal->GoalMember->my_uid
             = $this->Goal->Follower->my_uid
             = $this->Goal->Team->my_uid
-            = $this->Goal->Team->EvaluateTerm->my_uid
-            = $this->Goal->Team->EvaluateTerm->Team->my_uid
+            = $this->Goal->Team->Term->my_uid
+            = $this->Goal->Team->Term->Team->my_uid
             = $this->NotifySetting->my_uid
             = $this->GlEmail->SendMail->my_uid
             = $this->GlEmail->SendMail->SendMailToUser->my_uid
@@ -424,8 +427,8 @@ class NotifyBizComponent extends Component
             = $this->Goal->GoalMember->current_team_id
             = $this->Goal->Follower->current_team_id
             = $this->Goal->Team->current_team_id
-            = $this->Goal->Team->EvaluateTerm->current_team_id
-            = $this->Goal->Team->EvaluateTerm->Team->current_team_id
+            = $this->Goal->Team->Term->current_team_id
+            = $this->Goal->Team->Term->Team->current_team_id
             = $this->NotifySetting->current_team_id
             = $this->GlEmail->SendMail->current_team_id
             = $this->GlEmail->SendMail->SendMailToUser->current_team_id
@@ -859,6 +862,30 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * Option when changed team setting
+     *
+     * @param $notifyType
+     * @param $teamId
+     */
+    private function _setChangedTeamSetting($notifyType, $teamId, $userId)
+    {
+        // Get all team member user id
+        $teamMemberUserIds = $this->Team->TeamMember->getActiveTeamMembersList();
+        unset($teamMemberUserIds[$userId]);
+
+        $team = $this->Team->getById($teamId);
+
+        // Notify setting
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($teamMemberUserIds,
+            $notifyType);
+        $this->notify_option['notify_type'] = $notifyType;
+        $this->notify_option['url_data'] = ['controller' => 'teams', 'action' => 'index'];
+        $this->notify_option['model_id'] = $teamId;
+        $this->notify_option['item_name'] = json_encode([$team['name']]);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
+    }
+
+    /**
      * ゴールのリーダーが変更されたときのオプション
      *
      * @param $notify_type
@@ -1092,7 +1119,7 @@ class NotifyBizComponent extends Component
         $url = [
             'controller'       => 'evaluations',
             'action'           => 'view',
-            'evaluate_term_id' => $evaluation['Evaluation']['evaluate_term_id'],
+            'evaluate_term_id' => $evaluation['Evaluation']['term_id'],
             'user_id'          => $evaluation['Evaluation']['evaluatee_user_id'],
             'team_id'          => $this->NotifySetting->current_team_id
         ];
@@ -1108,51 +1135,41 @@ class NotifyBizComponent extends Component
     /**
      * 評価関係者全員通知オプション
      *
-     * @param $notify_type
-     * @param $term_id
-     * @param $user_id
+     * @param $notifyType
+     * @param $termId
+     * @param $userId
      */
-    private function _setForEvaluationAllUserOption($notify_type, $term_id, $user_id)
+    private function _setForEvaluationAllUserOption($notifyType, $termId, $userId)
     {
         //対象ユーザはevaluatees
-        $evaluatees = $this->Goal->Evaluation->getEvaluateeIdsByTermId($term_id);
-        $evaluators = $this->Goal->Evaluation->getEvaluatorIdsByTermId($term_id);
-        $to_user_ids = $evaluatees + $evaluators;
+        $evaluatees = $this->Goal->Evaluation->getEvaluateeIdsByTermId($termId);
+        $evaluators = $this->Goal->Evaluation->getEvaluatorIdsByTermId($termId);
+        $toUserIds = $evaluatees + $evaluators;
         //exclude inactive users
-        $to_user_ids = array_intersect($to_user_ids, $this->Team->TeamMember->getActiveTeamMembersList());
-        if (isset($to_user_ids[$user_id])) {
-            unset($to_user_ids[$user_id]);
+        $toUserIds = array_intersect($toUserIds, $this->Team->TeamMember->getActiveTeamMembersList());
+        if (isset($toUserIds[$userId])) {
+            unset($toUserIds[$userId]);
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
-            $notify_type);
-
-        //期間タイプの設定
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
-        $termType = null;
-        if ($term_id == $currentTermId) {
-            $termType = 'present';
-        } elseif ($term_id == $previousTermId) {
-            $termType = 'previous';
-        }
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserIds,
+            $notifyType);
 
         //通知のurlの元データ
-        $notify_list_url = [
+        $notifyListUrl = [
             'controller' => 'evaluations',
             'action'     => 'index',
-            'term'       => $termType,
-            'team_id'    => $this->NotifySetting->current_team_id
+            'team_id'    => $this->NotifySetting->current_team_id,
+            '?'          => ['term_id' => $termId]
         ];
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $team_name = $this->Goal->Team->findById($this->NotifySetting->current_team_id);
+        $teamName = $this->Goal->Team->findById($this->NotifySetting->current_team_id);
 
         $this->notify_option['from_user_id'] = null;
-        $this->notify_option['notify_type'] = $notify_type;
-        $this->notify_option['url_data'] = $notify_list_url;
+        $this->notify_option['notify_type'] = $notifyType;
+        $this->notify_option['url_data'] = $notifyListUrl;
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode([$team_name['Team']['name']]);
+        $this->notify_option['item_name'] = json_encode([$teamName['Team']['name']]);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
     }
 

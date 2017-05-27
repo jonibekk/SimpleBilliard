@@ -5,7 +5,7 @@ const initialState = {
   is_exception: false,
   exception_message: '',
   is_timezone_edit_mode: false,
-  start_month_list: []
+  next_range_list: []
 }
 
 export default function term(state = initialState, action) {
@@ -31,9 +31,9 @@ export default function term(state = initialState, action) {
       return Object.assign({}, state, {
         is_timezone_edit_mode: false
       })
-    case types.SET_START_MONTH_LIST:
+    case types.SET_NEXT_RANGE_LIST:
       return Object.assign({}, state, {
-        start_month_list: action.start_month_list
+        next_range_list: action.next_range_list
       })
     default:
       return state;

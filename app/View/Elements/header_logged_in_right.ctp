@@ -64,7 +64,6 @@
                 <a class="header-nav-add-contents-anchor"
                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                     <i class=" fa fa-users header-drop-icons"></i>
-
                     <p class="header-nav-add-contents-team"><?= __('Create a team') ?></p>
                 </a>
             </li>

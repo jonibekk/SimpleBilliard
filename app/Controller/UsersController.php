@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('Post', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
+App::import('Service', 'UserService');
 
 /**
  * Users Controller
@@ -629,9 +630,9 @@ class UsersController extends AppController
             //キャッシュ削除
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
-            //request->dataに入っていないデータを表示しなければ行けない為、マージ
-            $this->request->data['User'] = array_merge($me['User'],
-                isset($this->request->data['User']) ? $this->request->data['User'] : []);
+
+            // Specify update user
+            $this->request->data['User']['id'] = $me['User']['id'];
 
             // ローカル名 更新時
             if (isset($this->request->data['LocalName'][0])) {
@@ -679,11 +680,12 @@ class UsersController extends AppController
                 $this->Pnotify->outError(__("Failed to save user setting."));
             }
             $me = $this->_getMyUserDataForSetting();
-            $this->request->data = $me;
+            // For updating header user info
             $this->set('my_prof', $this->User->getMyProf());
-        } else {
-            $this->request->data = $me;
         }
+
+        $this->request->data = $me;
+
         $this->layout = LAYOUT_TWO_COLUMN;
         //姓名の並び順をセット
         $lastFirst = in_array($me['User']['language'], $this->User->langCodeOfLastFirst);
@@ -879,15 +881,20 @@ class UsersController extends AppController
     }
 
     /**
-     * select2のユーザ検索
+     * search users for adding users in message select2
      */
-    function ajax_select_only_add_users()
+    function ajax_select_add_members_on_message()
     {
         $this->_ajaxPreProcess();
+
         $query = $this->request->query;
-        $res = [];
-        if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id'], true);
+        $res = ['results' => []];
+        $existparameters = !empty($query['topic_id']) && !empty($query['term']) && !empty($query['page_limit']);
+        if ($existparameters) {
+            /** @var UserService $UserService */
+            $UserService = ClassRegistry::init('UserService');
+            $res['results'] = $UserService->findUsersForAddingOnTopic($query['term'], $query['page_limit'],
+                $query['topic_id'], true);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -1167,45 +1174,45 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $pageType = Hash::get($this->request->params, 'named.page_type');
 
-        $currentTerm = $this->Team->EvaluateTerm->getCurrentTermData();
+        $currentTerm = $this->Team->Term->getCurrentTermData();
         $currentId = $currentTerm['id'];
 
-        $nextTerm = $this->Team->EvaluateTerm->getNextTermData();
+        $nextTerm = $this->Team->Term->getNextTermData();
         $nextId = $nextTerm['id'];
 
-        $previousTerm = $this->Team->EvaluateTerm->getPreviousTermData();
-        $previousId = $previousTerm['id'];
+        $previousTerm = $this->Team->Term->getPreviousTermData();
 
-        function show_date($startDate, $endDate, $allTimezone)
-        {
-            return date('Y/m/d', $startDate + $allTimezone * 3600) . " - " . date('Y/m/d',
-                    $endDate + $allTimezone * 3600);
+        $term1 = [
+            $currentId => __("Current Term"),
+            $nextId    => __("Next Term"),
+        ];
+        if (!empty($previousTerm)) {
+            $term1 += [$previousTerm['id'] => __("Previous Term")];
         }
 
-        $allTerm = $this->Team->EvaluateTerm->getAllTerm();
+        function show_date($startDate, $endDate)
+        {
+            return AppUtil::dateYmdReformat($startDate, '/') . " - " . AppUtil::dateYmdReformat($endDate, '/');
+        }
+
+        $allTerm = $this->Team->Term->getAllTerm();
         $allId = array_column($allTerm, 'id');
         $allStartDate = array_column($allTerm, 'start_date');
         $allEndDate = array_column($allTerm, 'end_date');
-        $allTimezone = array_column($allTerm, 'timezone');
-        $allTerm = array_map("show_date", $allStartDate, $allEndDate, $allTimezone);
+        $allTerm = array_map("show_date", $allStartDate, $allEndDate);
 
-        $term1 = array(
-            $currentId  => __("Current Term"),
-            $nextId     => __("Next Term"),
-            $previousId => __("Previous Term"),
-        );
         $term2 = array_combine($allId, $allTerm);
         $term = $term1 + $term2;
 
         if (isset($this->request->params['named']['term_id'])) {
             $termId = $this->request->params['named']['term_id'];
-            $targetTerm = $this->Team->EvaluateTerm->findById($termId);
-            $startDate = $targetTerm['EvaluateTerm']['start_date'];
-            $endDate = $targetTerm['EvaluateTerm']['end_date'];
+            $targetTerm = $this->Team->Term->findById($termId);
+            $startDate = $targetTerm['Term']['start_date'];
+            $endDate = $targetTerm['Term']['end_date'];
         } else {
             $termId = $currentId;
-            $startDate = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $endDate = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+            $startDate = $this->Team->Term->getCurrentTermData()['start_date'];
+            $endDate = $this->Team->Term->getCurrentTermData()['end_date'];
         }
 
         $myGoalsCount = $this->Goal->getMyGoals(null, 1, 'count', $userId, $startDate, $endDate);
@@ -1379,8 +1386,8 @@ class UsersController extends AppController
         $this->set('user', $user);
 
         // 評価期間内の投稿数
-        $term_start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $term_end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $term_start_date = $this->Team->Term->getCurrentTermData()['start_date'];
+        $term_end_date = $this->Team->Term->getCurrentTermData()['end_date'];
         $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
         $this->set('post_count', $post_count);
 
