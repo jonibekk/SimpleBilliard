@@ -1002,14 +1002,7 @@ function getAjaxFormReplaceElm() {
                   .html(data.html)
                   // プレビュー削除ボタンを重ねて表示
                   .append($('<a>').attr('href', '#')
-                    .addClass('font_lightgray')
-                    .css({
-                      left: '95%',
-                      "margin-top": '20px',
-                      position: 'absolute',
-                      display: "block",
-                      "z-index": '1000'
-                    })
+                    .addClass('font_lightgray comment-ogp-close')
                     .append('<i class="fa fa-times"></i>')
                     .on('click', function (e) {
                       e.preventDefault();
@@ -1148,7 +1141,6 @@ function addComment(e) {
 
   var $f = $(e.target);
   var ajaxProcess = $.Deferred();
-
   var formData = new FormData(e.target);
 
   // Add content of ogp box if visible

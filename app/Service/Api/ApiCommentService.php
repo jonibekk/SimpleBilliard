@@ -218,6 +218,7 @@ class ApiCommentService extends AppService
 
         // Do not set if it is a no-image-link.png from our site
         if (isset($ogp['image']) && strpos($ogp['image'], 'no-image-link') !== false) {
+            // No need this image
             unset($ogp['image']);
         }
 
