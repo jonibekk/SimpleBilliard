@@ -31,7 +31,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - phpenv rehash
   - composer install --prefer-dist --no-interaction --no-dev
-  - Vendor/bin/browscap-php browscap:update
+  - Vendor/bin/browscap-php browscap:convert app/Test/travis/lite_php_browscap.ini
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
