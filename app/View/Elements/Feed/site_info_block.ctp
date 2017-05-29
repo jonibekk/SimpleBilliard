@@ -28,7 +28,12 @@ if (isset($site_info['type']) && (
 }
 ?>
 <?php if (isset($site_info)): ?>
-    <div class="col col-xxs-12 pt_10px js-ogp-box <?= (isset($site_info['is_editing']) && $site_info['is_editing'] === true) ? 'js-ogp-box-edit' : '' ; ?>">
+    <div class="col col-xxs-12 pt_10px js-ogp-box"
+    <?php if ($site_info['is_editing'] && isset($comment_id)) : ?>
+        id="CommentOgpEditBox_<?= $comment_id ?>"
+    <?php else : ?>
+        id="CommentOgpBox_<?= $comment_id ?>"
+    <?php endif; ?> >
         <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
            onclick="window.open(this.href,'_system');return false;"
            class="no-line font_verydark">

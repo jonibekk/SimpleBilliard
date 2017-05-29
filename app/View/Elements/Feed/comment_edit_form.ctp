@@ -52,6 +52,7 @@ $this->Form->create('Comment', [
     <?php $site_info = json_decode($comment['site_info'], true); $site_info['is_editing'] = true; ?>
     <?= $this->element('Feed/site_info_block', [
         'site_info'              => $site_info,
+        'comment_id'             => $comment['id'],
         'title_max_length'       => 40,
         'description_max_length' => 95,
         'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",

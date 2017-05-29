@@ -1225,13 +1225,14 @@ function evTargetToggleClick() {
   var $obj = $(this);
   var target_id = $obj.attr("target-id");
   var click_target_id = $obj.attr("click-target-id");
+  var comment_id = target_id.split('_')[1];
   if ($obj.attr("hidden-target-id")) {
     var $commentBox = $('#' + $obj.attr("hidden-target-id"));
     $commentBox.toggle();
-
     // Hide OGP box
-    if ($commentBox.parent().find('.js-ogp-box').length > 0) {
-        $commentBox.parent().find('.js-ogp-box').toggle();
+    var $ogpBox = $('#CommentOgpBox_'+comment_id);
+    if ($ogpBox.length > 0) {
+      $ogpBox.toggle();
     }
   }
 
@@ -3595,7 +3596,7 @@ function evCommendEditSubmit(e) {
     OGP: null
   };
 
-  var $ogp = $form.parent().find('.js-ogp-box-edit');
+  var $ogp = $('#CommentOgpEditBox_'+commentId);
   if ($ogp.find('.media-object').length > 0) {
     var image = $ogp.find('.media-object').attr('src');
     var title = $ogp.find('.media-heading').text().trim();

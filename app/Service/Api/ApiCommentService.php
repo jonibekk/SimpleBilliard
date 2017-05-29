@@ -201,14 +201,14 @@ class ApiCommentService extends AppService
     /**
      * Return formatted data to be used on comments
      * from OGP data received from frontend.
-     * @param $data
+     * @param $requestData
      *
      * @return array
      */
-    function _getOgpIndex($data)
+    function _getOgpIndex($requestData)
     {
         $ogpIndex = [];
-        $ogp = Hash::get($data, 'OGP');
+        $ogp = Hash::get($requestData, 'OGP');
 
         if (!$ogp || !isset($ogp['title'])) {
             $ogpIndex['site_info'] = null;
