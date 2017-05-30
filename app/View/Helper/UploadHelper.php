@@ -183,6 +183,9 @@ class UploadHelper extends AppHelper
                 $url = $this->substrS3Url($url);
                 Cache::write(CACHE_KEY_S3_FILE_PATH . ":" . $hash, $url, 'user_data');
             }
+            else {
+                $url = $cachedUrl;
+            }
         }
         $this->cache[$hash] = $url;
         return $url;
