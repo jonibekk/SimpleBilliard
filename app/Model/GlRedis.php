@@ -960,7 +960,7 @@ class GlRedis extends AppModel
         $hash_key = $this->generateId();
         $key = $this->getKeyName(self::KEY_TYPE_PRE_UPLOAD_FILE, $team_id, $user_id, null, null, null, null, $hash_key);
 
-        // Set new memory limit
+        // Set new memory limit 
         $memoryLimit = trim(ini_get('memory_limit'));
         ini_set('memory_limit', '384M');
 
