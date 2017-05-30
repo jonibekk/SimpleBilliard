@@ -88,7 +88,11 @@ var Page = {
       success: function (data) {
         // 処理中に値が変更されたケースを想定して、入力途中の警告イベントを解除する
         $(window).off('beforeunload');
-        location.href = "/";
+        if(location.pathname === "/"){
+          location.href = "/";
+        }else{
+          location.href = document.referrer;
+        }
       },
       error: function (res, textStatus, errorThrown) {
         var body = res.responseJSON;
