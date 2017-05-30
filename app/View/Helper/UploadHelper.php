@@ -13,6 +13,7 @@ App::uses('UploadBehavior', 'Model/Behavior');
  */
 class UploadHelper extends AppHelper
 {
+    static $S3_TTL_MIN = 60;
 
     public $cache = [];
     public $helpers = array('Html');
@@ -175,8 +176,13 @@ class UploadHelper extends AppHelper
             $url = DS . IMAGES_URL . $url;
             $url = $options['urlize'] ? $this->Html->url($url) : $url;
         } else {
-            //s3用の処理追加
-            $url = $this->substrS3Url($url);
+            //getting s3 file path with cache
+            Cache::config('user_data', ['duration' => "+" . self::$S3_TTL_MIN - 10 . " minutes"]);
+            $cachedUrl = Cache::read(CACHE_KEY_S3_FILE_PATH . ":" . $hash, 'user_data');
+            if ($cachedUrl === false) {
+                $url = $this->substrS3Url($url);
+                Cache::write(CACHE_KEY_S3_FILE_PATH . ":" . $hash, $url, 'user_data');
+            }
         }
         $this->cache[$hash] = $url;
         return $url;
@@ -400,7 +406,7 @@ class UploadHelper extends AppHelper
         $file = str_replace('%2F', '/', $file);
         $path = $bucket . '/' . $file;
 
-        $expires = strtotime('+1 hour');
+        $expires = strtotime("+" . self::$S3_TTL_MIN . " minutes");
 
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
