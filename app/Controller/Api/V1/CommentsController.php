@@ -126,7 +126,7 @@ class CommentsController extends ApiController
             return $this->_getResponseInternalServerError();
         }
 
-        // Get the newest comment object and return it as its html rendered block
+        // Get the newest comment object and return it as its html rendered block 
         $comments = array($ApiCommentService->get($id));
         $this->set(compact('comments'));
         $this->layout = 'ajax';
