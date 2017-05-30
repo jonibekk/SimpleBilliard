@@ -80,6 +80,12 @@
                     </div>
                 </div>
             </div>
+            <?php
+            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
+            if ($this->request->params['named']['page_type'] == 'image') {
+                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
+            }
+            ?>
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($this->request->params['named']['page_type'] == 'list'): ?>
                     <?php if ($item_num == 0): ?>
@@ -109,12 +115,6 @@
                     <?= $this->element('cube_img_blocks') ?>
                 <?php endif; ?>
             </div>
-            <?php
-            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
-            if ($this->request->params['named']['page_type'] == 'image') {
-                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
-            }
-            ?>
             <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
             if (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH): ?>
 

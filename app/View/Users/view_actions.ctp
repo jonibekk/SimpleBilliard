@@ -23,8 +23,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    <?= __('Term') ?>:&nbsp;<strong><?= $termFilterOptions[$termId] ?>&nbsp;<span
-                            class="fa fa-angle-down ml_2px"></span></strong>
+                    <i class="fa fa-calendar">&nbsp;:</i>
+                    <strong><?= $termFilterOptions[$termId] ?>&nbsp;</strong>
+                    <span class="fa fa-angle-down ml_2px"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <?php foreach ($termFilterOptions as $id => $termText): ?>
@@ -35,8 +36,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <div class="view-actions-panel-filter">
                 <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="true">
-                    <?= __('Goal') ?>:&nbsp;<strong><?= $goalFilterOptions[Hash::get($namedParams, 'goal_id')] ?>
-                        &nbsp;<span class="fa fa-angle-down ml_2px"></span></strong>
+                    <i class="fa fa-flag-o">&nbsp;:</i>
+                    <strong><?= $goalFilterOptions[Hash::get($namedParams, 'goal_id')] ?>&nbsp;</strong>
+                    <span class="fa fa-angle-down ml_2px"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php foreach ($goalFilterOptions as $goalID => $goalName): ?>
