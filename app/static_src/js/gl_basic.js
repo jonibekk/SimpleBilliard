@@ -8,6 +8,127 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
+//Select2 Customization
+$.fn.select2.defaults = {
+        width: "copy",
+        loadMorePadding: 0,
+        closeOnSelect: true,
+        openOnEnter: true,
+        containerCss: {},
+        dropdownCss: {},
+        containerCssClass: "",
+        dropdownCssClass: "",
+        formatResult: function (result, container, query, escapeMarkup) {
+            var markup = [];
+            markMatch(result.text, query.term, markup, escapeMarkup);
+            return markup.join("");
+        },
+        formatSelection: function (data, container, escapeMarkup) {
+            return data ? escapeMarkup(data.text) : undefined;
+        },
+        sortResults: function (results, container, query) {
+            return results;
+        },
+        formatResultCssClass: function (data) {
+            return data.css;
+        },
+        formatSelectionCssClass: function (data, container) {
+            return undefined;
+        },
+        minimumResultsForSearch: 0,
+        minimumInputLength: 0,
+        maximumInputLength: null,
+        maximumSelectionSize: 0,
+        id: function (e) {
+            return e == undefined ? null : e.id;
+        },
+        matcher: function (term, text) {
+            return stripDiacritics('' + text).toUpperCase().indexOf(stripDiacritics('' + term).toUpperCase()) >= 0;
+        },
+        separator: ",",
+        tokenSeparators: [],
+        //tokenizer: defaultTokenizer,
+        //escapeMarkup: defaultEscapeMarkup,
+        blurOnChange: false,
+        selectOnBlur: false,
+        adaptContainerCssClass: function (c) {
+            return c;
+        },
+        adaptDropdownCssClass: function (c) {
+            return null;
+        },
+        nextSearchTerm: function (selectedObject, currentSearchTerm) {
+            return undefined;
+        },
+        searchInputPlaceholder: '',
+        createSearchChoicePosition: 'top',
+        shouldFocusInput: function (instance) {
+            // Attempt to detect touch devices
+            var supportsTouchEvents = (('ontouchstart' in window) ||
+                (navigator.msMaxTouchPoints > 0));
+
+            // Only devices which support touch events should be special cased
+            if (!supportsTouchEvents) {
+                return true;
+            }
+
+            // Never focus the input if search is disabled
+            if (instance.opts.minimumResultsForSearch < 0) {
+                return false;
+            }
+
+            return true;
+        }
+    };
+
+    $.fn.select2.locales = [];
+
+    $.fn.select2.locales['en'] = {
+        formatMatches: function (matches) {
+            if (matches === 1) {
+                return "One result is available, press enter to select it.";
+            }
+            return matches + " results are available, use up and down arrow keys to navigate.";
+        },
+        formatNoMatches: function () {
+            return "No matches found";
+        },
+        formatAjaxError: function (jqXHR, textStatus, errorThrown) {
+            return "Loading failed";
+        },
+        formatInputTooShort: function (input, min) {
+            var n = min - input.length;
+            return "Please enter " + n + " or more character" + (n == 1 ? "" : "s");
+        },
+        formatInputTooLong: function (input, max) {
+            var n = input.length - max;
+            return "Please delete " + n + " character" + (n == 1 ? "" : "s");
+        },
+        formatSelectionTooBig: function (limit) {
+            return "You can only select " + limit + " item" + (limit == 1 ? "" : "s");
+        },
+        formatLoadMore: function (pageNumber) {
+            return "Loading more results…";
+        },
+        formatSearching: function () {
+            return "Searching…";
+        },
+    };
+
+    $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
+
+    $.fn.select2.ajaxDefaults = {
+        transport: $.ajax,
+        params: {
+            type: "GET",
+            cache: false,
+            dataType: "json"
+        }
+    };
+
+
+
+
 $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec
@@ -191,7 +312,7 @@ $(document).ready(function () {
 
 
   $(document).on('keyup', '#message_text_input', function () {
-    $(this).autosize();
+    autosize($(this));
     //$('body').animate({
     //    scrollTop: $(document).height()
     //});
@@ -356,7 +477,7 @@ $(document).ready(function () {
 
   //autosize
   //noinspection JSJQueryEfficiency
-  $('textarea:not(.not-autosize)').autosize();
+  autosize($('textarea:not(.not-autosize)'));
   //noinspection JSJQueryEfficiency
   $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
@@ -1387,7 +1508,7 @@ function evShow() {
   //autosizeを一旦、切る。
   $(this).trigger('autosize.destroy');
   //再度autosizeを有効化
-  $(this).autosize();
+  autosize($(this));
   //submitボタンを表示
   $("#" + $(this).attr('target_show_id')).show();
   //クリック済みにする
@@ -1416,7 +1537,7 @@ function evShowAndThisWide() {
   //現在のheightを倍にする。
   $(this).height(current_height * 2);
   //再度autosizeを有効化
-  $(this).autosize();
+  autosize($(this));
 
   //submitボタンを表示
   if ($(this).attr('target_show_id') != undefined) {
@@ -1713,7 +1834,7 @@ function modalFormCommonBindEvent($modal_elm) {
   warningAction($modal_elm);
   $modal_elm.on('shown.bs.modal', function (e) {
     $(this).find('textarea').each(function () {
-      $(this).autosize();
+      autosize($(this));
     });
   });
 }
@@ -2005,16 +2126,22 @@ $(document).ready(function () {
     var $target = $(e.target);
     switch ($target.attr('id')) {
       case "CommonPostBody":
-        $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
-        $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+        $('#CommonActionName').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonActionName'));
+        $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonMessageBody'));
         break;
       case "CommonActionName":
-        $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
-        $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+        $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonPostBody'));
+        $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonMessageBody'));
         break;
       case "CommonMessageBody":
-        $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
-        $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
+        $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonPostBody'));
+        $('#CommonActionName').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonActionName'));
         break;
     }
   });
