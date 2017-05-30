@@ -65,6 +65,12 @@ $namedParams = $this->request->params['named'];
                     </div>
                 </div>
             </div>
+            <?php
+            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
+            if ($this->request->params['named']['page_type'] == 'image') {
+                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
+            }
+            ?>
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($namedParams['page_type'] == 'list'): ?>
                     <?php if ($actionCount == 0): ?>
