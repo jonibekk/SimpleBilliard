@@ -43,6 +43,7 @@ class GoalousTestCase extends CakeTestCase
      */
     public function setUp()
     {
+        ini_set('memory_limit', '512M');
         parent::setUp();
         Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
         Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
