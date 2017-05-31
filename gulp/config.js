@@ -56,8 +56,8 @@ const config = {
       assets_dir + '/js/vendor/jquery.balanced-gallery.js',
       node_modules_dir + '/imagesloaded/imagesloaded.pkgd.min.js',
       assets_dir + '/js/vendor/bootstrap.youtubepopup.js',
-      assets_dir + '/js/vendor/fastClick.js',
-      node_modules_dir + '/select2/dist/js/select2.min.js',
+      node_modules_dir + '/fastclick/lib/fastClick.js',
+      node_modules_dir + '/select2/dist/js/select2.full.min.js',
       node_modules_dir + '/requirejs/require.js',
       node_modules_dir + '/exif-js/exif.js'
     ],

@@ -10,76 +10,76 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
 
 //Select2 Customization
 $.fn.select2.defaults = {
-        width: "copy",
-        loadMorePadding: 0,
-        closeOnSelect: true,
-        openOnEnter: true,
-        containerCss: {},
-        dropdownCss: {},
-        containerCssClass: "",
-        dropdownCssClass: "",
-        formatResult: function (result, container, query, escapeMarkup) {
-            var markup = [];
-            markMatch(result.text, query.term, markup, escapeMarkup);
-            return markup.join("");
-        },
-        formatSelection: function (data, container, escapeMarkup) {
-            return data ? escapeMarkup(data.text) : undefined;
-        },
-        sortResults: function (results, container, query) {
-            return results;
-        },
-        formatResultCssClass: function (data) {
-            return data.css;
-        },
-        formatSelectionCssClass: function (data, container) {
-            return undefined;
-        },
-        minimumResultsForSearch: 0,
-        minimumInputLength: 0,
-        maximumInputLength: null,
-        maximumSelectionSize: 0,
-        id: function (e) {
-            return e == undefined ? null : e.id;
-        },
-        matcher: function (term, text) {
-            return stripDiacritics('' + text).toUpperCase().indexOf(stripDiacritics('' + term).toUpperCase()) >= 0;
-        },
-        separator: ",",
-        tokenSeparators: [],
-        //tokenizer: defaultTokenizer,
-        //escapeMarkup: defaultEscapeMarkup,
-        blurOnChange: false,
-        selectOnBlur: false,
-        adaptContainerCssClass: function (c) {
-            return c;
-        },
-        adaptDropdownCssClass: function (c) {
-            return null;
-        },
-        nextSearchTerm: function (selectedObject, currentSearchTerm) {
-            return undefined;
-        },
-        searchInputPlaceholder: '',
-        createSearchChoicePosition: 'top',
-        shouldFocusInput: function (instance) {
-            // Attempt to detect touch devices
-            var supportsTouchEvents = (('ontouchstart' in window) ||
-                (navigator.msMaxTouchPoints > 0));
+    width: "copy",
+    loadMorePadding: 0,
+    closeOnSelect: true,
+    openOnEnter: true,
+    containerCss: {},
+    dropdownCss: {},
+    containerCssClass: "",
+    dropdownCssClass: "",
+    formatResult: function (result, container, query, escapeMarkup) {
+        var markup = [];
+        markMatch(result.text, query.term, markup, escapeMarkup);
+        return markup.join("");
+    },
+    formatSelection: function (data, container, escapeMarkup) {
+        return data ? escapeMarkup(data.text) : undefined;
+    },
+    sortResults: function (results, container, query) {
+        return results;
+    },
+    formatResultCssClass: function (data) {
+        return data.css;
+    },
+    formatSelectionCssClass: function (data, container) {
+        return undefined;
+    },
+    minimumResultsForSearch: 0,
+    minimumInputLength: 0,
+    maximumInputLength: null,
+    maximumSelectionSize: 0,
+    id: function (e) {
+        return e == undefined ? null : e.id;
+    },
+    matcher: function (term, text) {
+        return stripDiacritics('' + text).toUpperCase().indexOf(stripDiacritics('' + term).toUpperCase()) >= 0;
+    },
+    separator: ",",
+    tokenSeparators: [],
+    //tokenizer: defaultTokenizer,
+    //escapeMarkup: defaultEscapeMarkup,
+    blurOnChange: false,
+    selectOnBlur: false,
+    adaptContainerCssClass: function (c) {
+        return c;
+    },
+    adaptDropdownCssClass: function (c) {
+        return null;
+    },
+    nextSearchTerm: function (selectedObject, currentSearchTerm) {
+        return undefined;
+    },
+    searchInputPlaceholder: '',
+    createSearchChoicePosition: 'top',
+    shouldFocusInput: function (instance) {
+        // Attempt to detect touch devices
+        var supportsTouchEvents = (('ontouchstart' in window) ||
+            (navigator.msMaxTouchPoints > 0));
 
-            // Only devices which support touch events should be special cased
-            if (!supportsTouchEvents) {
-                return true;
-            }
-
-            // Never focus the input if search is disabled
-            if (instance.opts.minimumResultsForSearch < 0) {
-                return false;
-            }
-
+        // Only devices which support touch events should be special cased
+        if (!supportsTouchEvents) {
             return true;
         }
-    };
+
+        // Never focus the input if search is disabled
+        if (instance.opts.minimumResultsForSearch < 0) {
+            return false;
+        }
+
+        return true;
+    }
+};
 
     $.fn.select2.locales = [];
 
@@ -255,7 +255,7 @@ jQuery.fn.hasScrollBar = function () {
   return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
-$(window).load(function () {
+$(document).ready(function () {
   bindPostBalancedGallery($('.post_gallery'));
   bindCommentBalancedGallery($('.comment_gallery'));
   changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
@@ -1340,7 +1340,7 @@ function evTargetToggleClick() {
       $obj.text($obj.attr("opend-text"));
     }
   }
-  if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+  if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
     $.ajax({
       url: $obj.attr("ajax-url"),
       async: false,
@@ -2147,10 +2147,10 @@ $(document).ready(function () {
   });
 
   // 投稿フォームが表示されるページのみ
-  if ($('#CommonPostBody').size()) {
+  if ($('#CommonPostBody').length) {
     require(['ogp'], function (ogp) {
       // 投稿編集の場合で、OGPのurlが登録されている場合
-      if ($('.post-edit').size()) {
+      if ($('.post-edit').length) {
         if ($('.post-edit').attr('data-default-ogp-url')) {
           getPostOGPInfo(ogp, $('.post-edit').attr('data-default-ogp-url'));
         }
@@ -4396,7 +4396,7 @@ $(document).ready(function () {
   // アクションの編集画面の場合は、画像選択の画面をスキップし、
   // ajax で動いている select を選択済みにする
   var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
-  if ($button.size()) {
+  if ($button.length) {
     // 画像選択の画面をスキップ
     evTargetShowThisDelete.call($button.get(0));
     // ゴール選択の ajax 処理を動かす
@@ -4409,15 +4409,15 @@ $(document).ready(function () {
   });
 
   // Insight 画面の処理
-  if ($('#InsightForm').size()) {
+  if ($('#InsightForm').length) {
     require(['insight'], function (insight) {
-      if ($('#InsightResult').size()) {
+      if ($('#InsightResult').length) {
         insight.insight.setup();
       }
-      else if ($('#InsightCircleResult').size()) {
+      else if ($('#InsightCircleResult').length) {
         insight.circle.setup();
       }
-      else if ($('#InsightRankingResult').size()) {
+      else if ($('#InsightRankingResult').length) {
         insight.ranking.setup();
       }
       insight.reload();
