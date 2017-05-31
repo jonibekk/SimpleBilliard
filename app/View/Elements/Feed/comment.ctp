@@ -135,6 +135,7 @@
                     'site_info'              => $site_info,
                     'title_max_length'       => 40,
                     'description_max_length' => 95,
+                    'comment_id'             => $comment['id'],
                     'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",
                         ['style' => 'small']),
                 ]) ?>
