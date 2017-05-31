@@ -1678,7 +1678,7 @@ class GoalService extends AppService
     {
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
-        $term = $Term->findById($termId);
+        $term = $Term->getById($termId);
         if (empty($term)) {
             return [];
         }
@@ -1686,8 +1686,8 @@ class GoalService extends AppService
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
 
-        $startDate = $term['Term']['start_date'];
-        $endDate = $term['Term']['end_date'];
+        $startDate = $term['start_date'];
+        $endDate = $term['end_date'];
         $goalIds = $Goal->findCollaboratedGoals($userId, $startDate, $endDate, ['id']);
         $goalIds = Hash::extract($goalIds, '{n}.id');
         return $goalIds;
