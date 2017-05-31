@@ -8,16 +8,16 @@ var Page = {
     input_fields: ["key_result_current_value", 'name', 'key_result_id', 'goal_id']
   },
   submit_flg: false,
-  action_resize:function(reset){
-    if(reset){
+  action_resize: function (reset) {
+    if (reset) {
       $(".mod-visible").removeClass("mod-visible");
     }
-    $(".cube-img-blocks-img").each(function(i){
-        if($(this)[0]["clientWidth"] > $(this)[0]["clientHeight"] && !$(this).hasClass("mod-visible") && $(this)[0]["clientHeight"]!=0){
-            $(this).addClass("mod-wider").addClass("mod-visible");
-        }else{
-            $(this).addClass("mod-visible");
-        }
+    $(".cube-img-blocks-img").each(function (i) {
+      if ($(this)[0]["clientWidth"] > $(this)[0]["clientHeight"] && !$(this).hasClass("mod-visible") && $(this)[0]["clientHeight"] != 0) {
+        $(this).addClass("mod-wider").addClass("mod-visible");
+      } else {
+        $(this).addClass("mod-visible");
+      }
     });
   },
   init: function () {
@@ -88,7 +88,11 @@ var Page = {
       success: function (data) {
         // 処理中に値が変更されたケースを想定して、入力途中の警告イベントを解除する
         $(window).off('beforeunload');
-        location.href = "/";
+        if (location.pathname !== "/" && typeof document.referrer !== "undefined") {
+          location.href = document.referrer;
+        } else {
+          location.href = "/";
+        }
       },
       error: function (res, textStatus, errorThrown) {
         var body = res.responseJSON;
@@ -196,6 +200,6 @@ var Page = {
 jQuery(function ($) {
   Page.init();
 });
-$(window).resize(function(){
+$(window).resize(function () {
   window.Page.action_resize(true);
 });
