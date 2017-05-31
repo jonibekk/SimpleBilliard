@@ -30,7 +30,7 @@ var goalDetail = {
         }
     },
     setDetailsHeight: function(){
-        $(".goal-detail-more-details-info").css("height","inherit").attr("data-height",function(){return $(this).outerHeight()}).css("height","0").removeClass("active");
+        $(".goal-detail-more-details-info").css("height","inherit").attr("data-height",function(){return $(this).outerHeight()}).css("height","0").removeClass("active").addClass("mod-height-read");
     },
     toggleDetails: function(e){
         e.preventDefault();
