@@ -3464,7 +3464,7 @@ $(document).ready(function () {
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
   var prevNotifyId = "";
-  pusher.connection.bind('connected', function () {
+  pusher.connection.on('connected', function () {
     socketId = pusher.connection.socket_id;
     cake.pusher.socket_id = socketId;
   });
@@ -3487,7 +3487,7 @@ $(document).ready(function () {
 
   // connectionをはる
   for (var i in cake.data.c) {
-    pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
+    pusher.subscribe(cake.data.c[i]).on('post_feed', function (data) {
       var isFeedNotify = viaIsSet(data.is_feed_notify);
       var isNewCommentNotify = viaIsSet(data.is_comment_notify);
       var notifyId = data.notify_id;
@@ -3515,7 +3515,7 @@ $(document).ready(function () {
         notifyNewComment(notifyBox);
       }
     });
-    pusher.subscribe(cake.data.c[i]).bind('bell_count', function (data) {
+    pusher.subscribe(cake.data.c[i]).on('bell_count', function (data) {
       //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
       if (!cake.notify_setting[data.flag_name]) {
         return;
@@ -3526,7 +3526,7 @@ $(document).ready(function () {
       setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
     });
   }
-  pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
+  pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).on('msg_count', function (data) {
 
     //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
     if (!cake.notify_setting[data.flag_name]) {
