@@ -80,14 +80,14 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
         ?>
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($namedParams['page_type'] == 'list'): ?>
-                <?php if ($item_num == 0): ?>
+                <?php if ($actionCount == 0): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>
                             <?php
-                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
+                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id') && $termId == $currentTermId) {
                                 echo __("You haven't created any actions&hellip; yet.");
                             } else {
-                                echo __("No actions have been created&hellip; yet.");
+                                echo __("There is no Action.");
                             }
                             ?>
                         </h3>
@@ -108,14 +108,14 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 <?php endif; ?>
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($namedParams['page_type'] == 'image'): ?>
-                <?php if ($item_num == 0): ?>
+                <?php if ($actionCount == 0): ?>
                     <div class="cube-img-column-frame add-action mod-only">
                         <h3>
                             <?php
-                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id')) {
+                            if ($namedParams['user_id'] == $this->Session->read('Auth.User.id') && $termId == $currentTermId) {
                                 echo __("You haven't created any actions&hellip; yet.");
                             } else {
-                                echo __("No actions have been created&hellip; yet.");
+                                echo __("There is no Action.");
                             }
                             ?>
                         </h3>
@@ -138,7 +138,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
             <?php endif; ?>
         </div>
         <?php //投稿が指定件数　もしくは　最も古い投稿から１ヶ月以上経っている場合
-        if (count($posts) == $item_num || $oldestTimestamp < REQUEST_TIMESTAMP - MONTH): ?>
+        if ($actionCount > 0 &&
+            (count($posts) == $item_num || $oldestTimestamp < REQUEST_TIMESTAMP - MONTH)
+        ): ?>
 
             <div class="panel-body">
                 <?php

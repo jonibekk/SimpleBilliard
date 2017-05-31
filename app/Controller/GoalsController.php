@@ -1801,26 +1801,30 @@ class GoalsController extends AppController
 
     function view_actions()
     {
-        $goal_id = Hash::get($this->request->params, "named.goal_id");
-        $goal = $this->Goal->getGoal($goal_id);
-        if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init('ActionResult');
+
+        $myUid = $this->Auth->user('id');
+        $namedParams = $this->request->params['named'];
+        $goalId = Hash::get($namedParams, "goal_id");
+        if (!$goalId || !$this->_setGoalPageHeaderInfo($goalId)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        $page_type = Hash::get($this->request->params, "named.page_type");
-        if (!in_array($page_type, ['list', 'image'])) {
+        $pageType = Hash::get($namedParams, "page_type");
+        if (!in_array($pageType, ['list', 'image'])) {
             $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
-        $key_result_id = Hash::get($this->request->params, 'named.key_result_id');
+        $keyResultId = Hash::get($namedParams, 'key_result_id');
         $params = [
             'type'          => Post::TYPE_ACTION,
-            'goal_id'       => $goal_id,
-            'key_result_id' => $key_result_id,
+            'goal_id'       => $goalId,
+            'key_result_id' => $keyResultId,
         ];
         $posts = [];
-        switch ($page_type) {
+        switch ($pageType) {
             case 'list':
                 $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
                 break;
@@ -1828,32 +1832,38 @@ class GoalsController extends AppController
                 $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
                 break;
         }
-        $kr_select_options = $this->Goal->KeyResult->getKrNameList($goal_id, true, true);
-        $goal_base_url = Router::url([
+        $krSelectOptions = $this->Goal->KeyResult->getKrNameList($goalId, true);
+        $goalBaseUrl = Router::url([
             'controller' => 'goals',
             'action'     => 'view_actions',
-            'goal_id'    => $goal_id,
-            'page_type'  => $page_type
+            'goal_id'    => $goalId,
+            'page_type'  => $pageType
         ]);
-        $goalTerm = $this->Goal->getGoalTermData($goal_id);
-        $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
-        $is_leader = false;
-        foreach ($goal['Leader'] as $v) {
-            if ($this->Auth->user('id') == $v['User']['id']) {
-                $is_leader = true;
-                break;
-            }
+        $goalTerm = $this->Goal->getGoalTermData($goalId);
+
+        if ($keyResultId && $this->Goal->KeyResult->isCompleted($keyResultId)) {
+            $canAction = false;
+        } else {
+            $canAction = $this->Goal->isActionable($myUid, $goalId);
         }
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
-            'with_group' => true,
-        ]);
-        $this->set('followers', $followers);
-        $this->set('is_leader', $is_leader);
-        $this->set('is_collaborated', $is_collaborated);
-        $this->set('key_result_id', $key_result_id);
+
+        if ($keyResultId) {
+            $actionCount = $ActionResult->getCountByKrId($keyResultId);
+        } else {
+            $actionCount = $ActionResult->getCountByGoalId($goalId);
+        }
+
         $this->set('long_text', false);
-        $this->set(compact('goalTerm', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
+        $this->set(compact(
+            'goalTerm',
+            'keyResultId',
+            'goalId',
+            'posts',
+            'goalBaseUrl',
+            'krSelectOptions',
+            'actionCount',
+            'canAction'
+        ));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1899,6 +1909,13 @@ class GoalsController extends AppController
         // フォロワー数
         $followerCount = count($goal['Follower']);
         $this->set('follower_count', $followerCount);
+
+        // フォロワー
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goalId, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
 
         // 閲覧者がゴールのリーダーかを判別
         $isLeader = false;
