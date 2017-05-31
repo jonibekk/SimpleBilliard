@@ -46,7 +46,6 @@ const config = {
       node_modules_dir + '/autosize/dist/autosize.js',
       assets_dir + '/js/vendor/lightbox-custom.js',
       assets_dir + '/js/vendor/jquery.showmore.src.js',
-      assets_dir + '/js/vendor/placeholders.js',
       assets_dir + '/js/vendor/customRadioCheck.js',
       node_modules_dir + '/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
       assets_dir + '/js/vendor/locales/bootstrap-datepicker.ja.js',

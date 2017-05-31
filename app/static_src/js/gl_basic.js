@@ -1764,7 +1764,7 @@ function setChangeWarningForAllStaticPage() {
     $(":input").each(function () {
       var default_val = "";
       var changed_val = "";
-      default_val = $(this).load().val();
+      default_val = $(this).val();
       $(this).on("change keyup keydown", function () {
         if ($(this).hasClass('disable-change-warning')) {
           return;
@@ -1799,7 +1799,7 @@ function warningAction($obj) {
       $obj.find(":input").each(function () {
         var default_val = "";
         var changed_val = "";
-        default_val = $(this).load().val();
+        default_val = $(this).val();
         $(this).on("change keyup keydown", function () {
           changed_val = $(this).val();
           if (default_val != changed_val) {
@@ -4371,10 +4371,6 @@ $(document).ready(function () {
           return false;
         }
       }
-    }
-  }).ajaxError(function (event, request, setting) {
-    if (request.status == 0) {
-      return false;
     }
   });
 

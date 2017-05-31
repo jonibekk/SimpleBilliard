@@ -600,7 +600,7 @@ $(function () {
       var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
       // 画像を２枚同時に選択（ドラッグ）された時の対応
-      if ($oldPreview.size()) {
+      if ($oldPreview.length) {
         // Dropzone の管理ファイルから外す
         var old_file = Dropzone.instances[0].files.splice(0, 1)[0];
 
@@ -629,7 +629,7 @@ $(function () {
     },
     afterAccept: function (file) {
       var $button = $('.post-action-image-add-button');
-      if ($button.size()) {
+      if ($button.length) {
         evTargetShowThisDelete.call($button.get(0));
       }
       $('#GoalSelectOnActionForm').trigger('change');
@@ -863,7 +863,7 @@ $(function () {
       continue;
     }
     var $hiddens = $('#' + settings[i].params.formID).find('input[type=hidden][name="data[file_id][]"]');
-    if (!$hiddens.size()) {
+    if (!$hiddens.length) {
       continue;
     }
 
