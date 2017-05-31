@@ -19,6 +19,7 @@ var Page = {
         $(this).addClass("mod-visible");
       }
     });
+    console.log("ran");
   },
   init: function () {
     var self = this;
@@ -199,6 +200,9 @@ var Page = {
 };
 jQuery(function ($) {
   Page.init();
+  setTimeout(function(){
+    Page.action_resize(false);
+  },1000);
 });
 $(window).resize(function () {
   window.Page.action_resize(true);

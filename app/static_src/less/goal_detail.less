@@ -58,6 +58,11 @@
 .goal-detail-upper-panel-main-flex{
   float:left;
   width:70%;
+  opacity:0;
+  transition:opacity .3s;
+  &.mod-ready{
+    opacity:1;
+  }
 }
 
 .goal-detail-goal-name-top-section.mod-largest-text{
@@ -278,6 +283,12 @@
   display:block;
   overflow:hidden;
   margin:1rem 0 0 0;
+  opacity:0;
+  position:absolute;
+  &.mod-height-read{
+    opacity:1;
+    position:static;
+  }
 }
 .goal-detail-more-details-info .goal-detail-items{
   padding:1em 2em;
@@ -349,12 +360,6 @@
   margin-top: .3rem;
   padding-left: 11px;
   line-height: 1.3em;
-}
-
-@media @small{
-  /*.goal-detail-goal-name-top-section {
-    font-size: 12px;
-  }*/
 }
 
 .goal-detail-goal-name {

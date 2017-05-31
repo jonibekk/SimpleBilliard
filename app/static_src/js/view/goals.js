@@ -9,15 +9,17 @@ $(document).ready(function(){
     $(".js-open-goal-details-info").click(function(e){goalDetail.toggleDetails(e)});
 });
 var goalDetail = {
+    $moreInfo: $(".goal-detail-more-details-info"),
+    $goalHeader: $(".goal-detail-goal-name-top-section"),
     setHeadlineSize: function(){
-        if($(".goal-detail-goal-name-top-section").html()){
-            var headChar=$(".goal-detail-goal-name-top-section").html().length;
+        if(this.$goalHeader.html()){
+            var headChar=this.$goalHeader.html().length;
             if(headChar < 50){
-                $(".goal-detail-goal-name-top-section").addClass("mod-largest-text");
+                this.$goalHeader.addClass("mod-largest-text mod-counted");
             }else if(headChar > 200){
-                $(".goal-detail-goal-name-top-section").addClass("mod-smallest-text");
+                this.$goalHeader.addClass("mod-smallest-text mod-counted");
             }else{
-                $(".goal-detail-goal-name-top-section").css("font-size",function(){return (((40/headChar))+1.25)+"em"});
+                this.$goalHeader.css("font-size",function(){return (((40/headChar))+1.25)+"em"}).addClass("mod-counted");
             }
         }
     },
@@ -28,17 +30,18 @@ var goalDetail = {
         }else{
             $(".goal-detail-more-details-wrap").removeClass("mod-raised").css("margin-top",(-heightDifference+10));
         }
+        $('.goal-detail-upper-panel-main-flex').addClass("mod-ready");
     },
     setDetailsHeight: function(){
-        $(".goal-detail-more-details-info").css("height","inherit").attr("data-height",function(){return $(this).outerHeight()}).css("height","0").removeClass("active");
+        this.$moreInfo.css("height","inherit").attr("data-height",function(){return $(this).outerHeight()}).css("height","0").removeClass("active").addClass("mod-height-read");
     },
     toggleDetails: function(e){
         e.preventDefault();
         $(".goal-detail-more-details-link .fa").toggleClass("active");
-        if($(".goal-detail-more-details-info").outerHeight()>1){
-            $(".goal-detail-more-details-info").css("height","0").removeClass("active");
+        if(this.$moreInfo.outerHeight()>1){
+            this.$moreInfo.css("height","0").removeClass("active");
         }else{
-            $(".goal-detail-more-details-info").css("height",function(){return $(this).attr("data-height")}).addClass("active");
+            this.$moreInfo.css("height",function(){return $(this).attr("data-height")}).addClass("active");
         }
     }
 }
