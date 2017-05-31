@@ -10,6 +10,7 @@ const config = {
     src: [
       assets_dir + '/js/dropzone_setting.js',
       assets_dir + '/js/gl_basic.js',
+      assets_dir + '/js/lib/**/*.js',
       assets_dir + '/js/view/**/*.js'
     ],
     output: {
@@ -19,6 +20,7 @@ const config = {
     watch_files: [
       assets_dir + '/js/dropzone_setting.js',
       assets_dir + '/js/gl_basic.js',
+      assets_dir + '/js/lib/**/*.js',
       assets_dir + '/js/view/**/*.js'
     ]
   },

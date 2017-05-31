@@ -27,6 +27,7 @@ var network_reachable = true;
 var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
 function bindPostBalancedGallery($obj) {
+  console.log("gl_basic.js: bindPostBalancedGallery");
   $obj.removeClass('none');
   $obj.BalancedGallery({
     autoResize: false,                   // re-partition and resize the images when the window size changes
@@ -43,6 +44,7 @@ function bindPostBalancedGallery($obj) {
 
 };
 function bindCommentBalancedGallery($obj) {
+  console.log("gl_basic.js: bindCommentBalancedGallery");
   $obj.removeClass('none');
   $obj.BalancedGallery({
     autoResize: false,                   // re-partition and resize the images when the window size changes
@@ -59,6 +61,7 @@ function bindCommentBalancedGallery($obj) {
 };
 
 function changeSizeFeedImageOnlyOne($obj) {
+  console.log("gl_basic.js: changeSizeFeedImageOnlyOne");
   $obj.each(function (i, v) {
     var $elm = $(v);
     var $img = $elm.find('img');
@@ -85,6 +88,7 @@ function changeSizeFeedImageOnlyOne($obj) {
  * @param $obj
  */
 function changeSizeActionImage($obj) {
+  console.log("gl_basic.js: changeSizeActionImage");
   $obj.each(function (i, v) {
     var $elm = $(v);
     var $img = $elm.find('img');
@@ -117,6 +121,7 @@ function changeSizeActionImage($obj) {
  * @param callback Control + Enter が押された時に実行されるコールバック関数
  */
 var bindCtrlEnterAction = function (selector, callback) {
+  console.log("gl_basic.js: bindCtrlEnterAction");
   $(document).on('keydown', selector, function (e) {
     if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
       callback.call(this, e);
@@ -126,15 +131,18 @@ var bindCtrlEnterAction = function (selector, callback) {
 
 // selectorの存在確認用
 jQuery.fn.exists = function () {
+  console.log("gl_basic.js: jQuery.fn.exists");
   return Boolean(this.length > 0);
 }
 
 // scrollbarの存在確認用
 jQuery.fn.hasScrollBar = function () {
+  console.log("gl_basic.js: jQuery.fn.hasScrollBar");
   return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
 $(window).load(function () {
+    console.log("gl_basic.js: $(window).load");
   bindPostBalancedGallery($('.post_gallery'));
   bindCommentBalancedGallery($('.comment_gallery'));
   changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
@@ -159,6 +167,7 @@ $(window).load(function () {
 });
 
 function clickToSetCurrentTeamId() {
+    console.log("gl_basic.js: clickToSetCurrentTeamId");
   if (typeof(Storage) !== "undefined") {
     localStorage.team_id_current = Number(cake.data.team_id);
   } else {
@@ -168,6 +177,7 @@ function clickToSetCurrentTeamId() {
 
 
 $(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
   //intercomのリンクを非表示にする
   if (enabled_intercom_icon) {
     $('#IntercomLink').hide();
@@ -754,6 +764,7 @@ $(document).ready(function () {
   });
 });
 function imageLazyOn($elm_obj) {
+    console.log("gl_basic.js: imageLazyOn");
   var lazy_option = {
     bind: "event",
     attribute: "data-original",
@@ -775,6 +786,7 @@ function imageLazyOn($elm_obj) {
   }
 }
 function evTargetRemove() {
+    console.log("gl_basic.js: evTargetRemove");
   attrUndefinedCheck(this, 'target-selector');
   var $obj = $(this);
   var target_selector = $obj.attr("target-selector");
@@ -782,6 +794,7 @@ function evTargetRemove() {
   return false;
 }
 function evAjaxGetElmWithIndex(e) {
+    console.log("gl_basic.js: evAjaxGetElmWithIndex");
   e.preventDefault();
   attrUndefinedCheck(this, 'target-selector');
   attrUndefinedCheck(this, 'index');
@@ -802,6 +815,7 @@ function evAjaxGetElmWithIndex(e) {
 }
 
 function evToggleAjaxGet() {
+    console.log("gl_basic.js: evToggleAjaxGet");
   attrUndefinedCheck(this, 'target-id');
   attrUndefinedCheck(this, 'ajax-url');
   var $obj = $(this);
@@ -835,6 +849,7 @@ function evToggleAjaxGet() {
  * base64の画像をリサイズ
  */
 function resizeImgBase64(imgBase64, width, height, callback) {
+    console.log("gl_basic.js: resizeImgBase64");
   // Image Type
   var img_type = imgBase64.substring(5, imgBase64.indexOf(";"));
   // Source Image
@@ -861,6 +876,7 @@ function resizeImgBase64(imgBase64, width, height, callback) {
  * @returns {boolean}
  */
 function checkUploadFileExpire(formID) {
+    console.log("gl_basic.js: checkUploadFileExpire");
   var $form = $('#' + formID);
 
   var res = true;
@@ -902,6 +918,7 @@ function checkUploadFileExpire(formID) {
 }
 
 function getAjaxFormReplaceElm() {
+    console.log("gl_basic.js: getAjaxFormReplaceElm");
   attrUndefinedCheck(this, 'replace-elm-parent-id');
   attrUndefinedCheck(this, 'click-target-id');
   attrUndefinedCheck(this, 'tmp-target-height');
@@ -1056,6 +1073,7 @@ function getAjaxFormReplaceElm() {
  * uploading csv file from form.
  */
 function uploadCsvFileByForm(e) {
+    console.log("gl_basic.js: uploadCsvFileByForm");
   e.preventDefault();
 
   attrUndefinedCheck(this, 'loader-id');
@@ -1109,97 +1127,10 @@ function uploadCsvFileByForm(e) {
     });
 }
 
-function addComment(e) {
-  e.preventDefault();
 
-  attrUndefinedCheck(e.target, 'error-msg-id');
-  var result_msg_id = $(e.target).attr('error-msg-id');
-  var $error_msg_box = $('#' + result_msg_id);
-  attrUndefinedCheck(e.target, 'submit-id');
-  var submit_id = $(e.target).attr('submit-id');
-  var $submit = $('#' + submit_id);
-  attrUndefinedCheck(e.target, 'first-form-id');
-  var first_form_id = $(e.target).attr('first-form-id');
-  var $first_form = $('#' + first_form_id);
-  attrUndefinedCheck(e.target, 'refresh-link-id');
-  var refresh_link_id = $(e.target).attr('refresh-link-id');
-  var $refresh_link = $('#' + refresh_link_id);
-  var $loader_html = $('<i class="fa fa-refresh fa-spin mr_8px"></i>');
-
-  $error_msg_box.text("");
-  appendSocketId($(e.target), cake.pusher.socket_id);
-
-  // Display loading button
-  $("#" + submit_id).before($loader_html);
-
-  // アップロードファイルの上限数をリセット
-  if (typeof Dropzone.instances[0] !== "undefined" && Dropzone.instances[0].files.length > 0) {
-    // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-    // （参照先の配列を空にするため空配列の代入はしない）
-    Dropzone.instances[0].files.length = 0;
-  }
-
-  var $f = $(e.target);
-  var ajaxProcess = $.Deferred();
-  var formData = new FormData(e.target);
-
-  // Add content of ogp box if visible
-  var comment_id = submit_id.split('_')[1];
-  var $ogp_box = $('#CommentOgpSiteInfo_' + comment_id);
-  if ($ogp_box.find('.media-object').length > 0) {
-    var image = $ogp_box.find('.media-object').attr('src');
-    var title = $ogp_box.find('.media-heading').text().trim();
-    var site_url = $ogp_box.find('.media-url').text();
-    var description = $ogp_box.find('.site-info-txt').text().trim();
-    var type = $ogp_box.find('.media-body').attr('data-type');
-    var site_name = $ogp_box.find('.media-body').attr('data-site-name');
-
-    formData.append('data[OGP][image]', image);
-    formData.append('data[OGP][title]', title);
-    formData.append('data[OGP][url]', site_url);
-    formData.append('data[OGP][description]', description);
-    formData.append('data[OGP][type]', type);
-    formData.append('data[OGP][site_name]', site_name);
-  }
-
-  $.ajax({
-    url: $f.prop('action'),
-    method: 'post',
-    dataType: 'json',
-    processData: false,
-    contentType: false,
-    data: formData,
-    timeout: 300000 //5min
-  })
-    .done(function (data) {
-      if (!data.error) {
-        // 通信が成功したときの処理
-        evCommentLatestView.call($refresh_link.get(0), {
-          afterSuccess: function () {
-            $first_form.children().toggle();
-            $f.remove();
-            ajaxProcess.resolve();
-          }
-        });
-      }
-      else {
-        $error_msg_box.text(data.msg);
-        ajaxProcess.reject();
-      }
-    })
-    .fail(function (data) {
-      $error_msg_box.text(cake.message.notice.g);
-      ajaxProcess.reject();
-    });
-
-  ajaxProcess.always(function () {
-    // 通信が完了したとき
-    $loader_html.remove();
-    $submit.removeAttr('disabled');
-  });
-}
 
 function evTargetToggle() {
+    console.log("gl_basic.js: evTargetToggle");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
   var target_id = $obj.attr("target-id");
@@ -1208,9 +1139,11 @@ function evTargetToggle() {
 }
 
 function evRemoveThis() {
+    console.log("gl_basic.js: evRemoveThis");
   $(this).remove();
 }
 function evTargetToggleClick() {
+    console.log("gl_basic.js: evTargetToggleClick");
   attrUndefinedCheck(this, 'target-id');
   attrUndefinedCheck(this, 'click-target-id');
 
@@ -1299,6 +1232,7 @@ function evTargetToggleClick() {
  * @returns {boolean}
  */
 function evTargetShowThisDelete() {
+    console.log("gl_basic.js: evTargetShowThisDelete");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
   var target_id = $obj.attr("target-id");
@@ -1316,6 +1250,7 @@ function evTargetShowThisDelete() {
   return false;
 }
 function evTargetShowTargetDelete() {
+    console.log("gl_basic.js: evTargetShowTargetDelete");
   attrUndefinedCheck(this, 'show-target-id');
   attrUndefinedCheck(this, 'delete-target-id');
   var $obj = $(this);
@@ -1327,6 +1262,7 @@ function evTargetShowTargetDelete() {
 }
 
 function evTargetEnabled() {
+    console.log("gl_basic.js: evTargetEnabled");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
   var target_id = $obj.attr("target-id");
@@ -1334,6 +1270,7 @@ function evTargetEnabled() {
   return true;
 }
 function evSelectOptionTargetHidden() {
+    console.log("gl_basic.js: evSelectOptionTargetHidden");
   attrUndefinedCheck(this, 'target-id');
   attrUndefinedCheck(this, 'hidden-option-value');
   var $obj = $(this);
@@ -1350,6 +1287,7 @@ function evSelectOptionTargetHidden() {
 
 //noinspection FunctionWithInconsistentReturnsJS
 function evToggle() {
+    console.log("gl_basic.js: evToggle");
   attrUndefinedCheck(this, 'target-id');
   var target_id = $(this).attr('target-id');
   if ($(this).attr('disabled')) {
@@ -1365,6 +1303,7 @@ function evToggle() {
  * target_idは,区切りで複数の要素を指定可能
  */
 function evBlankDisableAndUndisable() {
+    console.log("gl_basic.js: evBlankDisableAndUndisable");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
   var target_ids = $obj.attr("target-id");
@@ -1385,6 +1324,7 @@ function evBlankDisableAndUndisable() {
  * target_idは,区切りで複数の要素を指定可能
  */
 function evBlankDisable() {
+    console.log("gl_basic.js: evBlankDisable");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
   var target_ids = $obj.attr("target-id");
@@ -1397,6 +1337,7 @@ function evBlankDisable() {
 }
 
 function evTriggerClick() {
+    console.log("gl_basic.js: evTriggerClick");
   attrUndefinedCheck(this, 'target-id');
   var target_id = $(this).attr("target-id");
   //noinspection JSJQueryEfficiency
@@ -1414,6 +1355,7 @@ function evTriggerClick() {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShow() {
+    console.log("gl_basic.js: evShow");
   //クリック済みの場合は処理しない
   if ($(this).hasClass('clicked'))return;
 
@@ -1432,6 +1374,7 @@ function evShow() {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShowAndThisWide() {
+    console.log("gl_basic.js: evShowAndThisWide");
   //クリック済みの場合は処理しない
   if ($(this).hasClass('clicked'))return;
 
@@ -1465,6 +1408,7 @@ function evShowAndThisWide() {
   $(this).addClass('clicked');
 }
 function setSelectOptions(url, select_id, target_toggle_id, selected) {
+    console.log("gl_basic.js: setSelectOptions");
   var options_elem = '<option value="">' + cake.word.k + '</option>';
   $.get(url, function (data) {
     if (data.length == 0) {
@@ -1489,6 +1433,7 @@ function setSelectOptions(url, select_id, target_toggle_id, selected) {
 }
 
 function evShowAndThisWideClose() {
+    console.log("gl_basic.js: evShowAndThisWideClose");
   attrUndefinedCheck(this, 'target-id');
   var target_id = $(this).attr("target-id");
   var $target = $("#" + target_id);
@@ -1501,11 +1446,13 @@ function evShowAndThisWideClose() {
 }
 
 function evThisHeightUp() {
+    console.log("gl_basic.js: evThisHeightUp");
   attrUndefinedCheck(this, 'after-height');
   var after_height = $(this).attr("after-height");
   $(this).height(after_height);
 }
 function evThisHeightReset() {
+    console.log("gl_basic.js: evThisHeightReset");
   $(this).css('height', "");
 }
 
@@ -1513,6 +1460,7 @@ function evThisHeightReset() {
  * Created by bigplants on 5/23/14.
  */
 function getLocalDate() {
+    console.log("gl_basic.js: getLocalDate");
   var getTime = jQuery.now();
   var date = new Date(getTime);
   var year = date.getFullYear();
@@ -1532,6 +1480,7 @@ function getLocalDate() {
  * @param attr_name
  */
 function attrUndefinedCheck(obj, attr_name) {
+    console.log("gl_basic.js: attrUndefinedCheck");
   if ($(obj).attr(attr_name) == undefined) {
     var msg = "'" + attr_name + "'" + " is undefined!";
     throw new Error(msg);
@@ -1540,6 +1489,7 @@ function attrUndefinedCheck(obj, attr_name) {
 
 //SubHeaderMenu
 $(function () {
+    console.log("gl_basic.js: $(function ()");
   var showNavFlag = false;
   var subNavbar = $("#SubHeaderMenu");
   $(window).scroll(function () {
@@ -1567,6 +1517,7 @@ $(function () {
 });
 
 $(function () {
+    console.log("gl_basic.js: $(function ()");
   $(".click-show").on("click", function () {
       $("#PostFormPicture").css("display", "block")
     }
@@ -1576,6 +1527,7 @@ $(function () {
 /*表示件数調整 -mobilesize*/
 
 $(function () {
+    console.log("gl_basic.js: $(function ()");
   $(".click-circle-trigger").on("click", function () {
     var txt = $(this).text();
     if ($(this).is('.on')) {
@@ -1594,6 +1546,7 @@ $(function () {
 $(document).on("click", ".target-show", evTargetShow);
 
 function evTargetShow() {
+    console.log("gl_basic.js: evTargetShow");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
   var target_id = $obj.attr("target-id");
@@ -1602,15 +1555,18 @@ function evTargetShow() {
 }
 
 function disabledAllInput(selector) {
+    console.log("gl_basic.js: disabledAllInput");
   $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
 
 function enabledAllInput(selector) {
+    console.log("gl_basic.js: enabledAllInput");
   $(selector).find('input,select,textarea').removeAttr('disabled');
 }
 
 //noinspection JSUnusedGlobalSymbols
 function ajaxAppendCount(id, url) {
+    console.log("gl_basic.js: ajaxAppendCount");
   var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
   $('#' + id).append($loader_html);
   $.ajax({
@@ -1631,6 +1587,7 @@ function ajaxAppendCount(id, url) {
 }
 
 $(function () {
+    console.log("gl_basic.js: $(function ()");
   var current_slide_id = 1;
 
   // インジケータークリック時
@@ -1652,6 +1609,7 @@ $(function () {
   });
 
   function changeTutorialContent(content_id) {
+      console.log("gl_basic.js: changeTutorialContent");
     // 各要素をカレントステータスに設定
     $('.tutorial-box' + content_id).show();
     $('.tutorial-text' + content_id).show();
@@ -1661,6 +1619,7 @@ $(function () {
   }
 
   function resetDisplayStatus() {
+      console.log("gl_basic.js: resetDisplayStatus");
     $('.tutorial-body').children('div').hide();
     $('.setup-tutorial-texts').children('div').hide();
     $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
@@ -1670,6 +1629,7 @@ $(function () {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
+    console.log("gl_basic.js: setChangeWarningForAllStaticPage");
   //オートコンプリートでchangeしてしまうのを待つ
   setTimeout(function () {
     var flag = false;
@@ -1701,10 +1661,12 @@ function setChangeWarningForAllStaticPage() {
 }
 
 function warningCloseModal() {
+    console.log("gl_basic.js: warningCloseModal");
   warningAction($('.modal'));
 }
 
 function warningAction($obj) {
+    console.log("gl_basic.js: warningAction");
   var flag = false;
   $obj.on('shown.bs.modal', function (e) {
     setTimeout(function () {
@@ -1743,6 +1705,7 @@ function warningAction($obj) {
 }
 
 function modalFormCommonBindEvent($modal_elm) {
+    console.log("gl_basic.js: modalFormCommonBindEvent");
   warningAction($modal_elm);
   $modal_elm.on('shown.bs.modal', function (e) {
     $(this).find('textarea').each(function () {
@@ -1753,6 +1716,7 @@ function modalFormCommonBindEvent($modal_elm) {
 
 
 $.clearInput = function ($obj) {
+    console.log("gl_basic.js: $.clearInput");
   $obj.find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
   $obj.bootstrapValidator('resetForm', true);
 };
@@ -1760,6 +1724,7 @@ $.clearInput = function ($obj) {
 //入力途中での警告表示
 //Ajaxエレメント中の適用したい要素にchange-warningクラスを指定
 function setChangeWarningForAjax() {
+    console.log("gl_basic.js: setChangeWarningForAjax");
   var flag = true;
   $(".change-warning").keyup(function (e) {
     $(document).on('submit', 'form', function () {
@@ -1778,10 +1743,12 @@ function setChangeWarningForAjax() {
 
 
 $(function () {
+    console.log("gl_basic.js: $(function");
   $(document).ajaxComplete(setChangeWarningForAjax);
 });
 
 $(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
 
   setChangeWarningForAllStaticPage();
 
@@ -2075,6 +2042,7 @@ $(document).ready(function () {
 });
 
 function initMessageSelect2(topic_id) {
+    console.log("gl_basic.js: initMessageSelect2");
   //noinspection JSUnusedLocalSymbols post_detail.Post.id
   $('#selectOnlyMember').select2({
     multiple: true,
@@ -2119,6 +2087,7 @@ function initMessageSelect2(topic_id) {
 
 
 function initMemberSelect2() {
+    console.log("gl_basic.js: initMemberSelect2");
   //noinspection JSUnusedLocalSymbols
   $('#select2Member').select2({
     initSelection: function (element, callback) {
@@ -2173,6 +2142,7 @@ function initMemberSelect2() {
 }
 
 function initCircleSelect2() {
+    console.log("gl_basic.js: initCircleSelect2");
   //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
   $('#select2PostCircleMember').select2({
     multiple: true,
@@ -2381,6 +2351,7 @@ function initCircleSelect2() {
 }
 
 function format(item) {
+    console.log("gl_basic.js: format");
   if ('image' in item) {
     return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";
   }
@@ -2392,6 +2363,7 @@ function format(item) {
   }
 }
 function bindSelect2Members($this) {
+    console.log("gl_basic.js: bindSelect2Members");
   var $select2elem = $this.find(".ajax_add_select2_members");
   var url = $select2elem.attr('data-url');
 
@@ -2432,6 +2404,7 @@ function bindSelect2Members($this) {
 
 // select2 で選択されたグループをユーザーとして展開する
 function select2ExpandGroup(data) {
+    console.log("gl_basic.js: select2ExpandGroup");
   for (var i = 0; i < data.length; i++) {
     if (data[i].id.indexOf('group_') === 0 && data[i].users) {
       var group = data.splice(i, 1)[0];
@@ -2447,6 +2420,7 @@ function select2ExpandGroup(data) {
  * Select2 translation.
  */
 (function ($) {
+    console.log("gl_basic.js: (function ($)");
   "use strict";
 
   //noinspection JSUnusedLocalSymbols
@@ -2476,6 +2450,7 @@ function select2ExpandGroup(data) {
 })(jQuery);
 
 function evFollowGoal() {
+    console.log("gl_basic.js: evFollowGoal");
   attrUndefinedCheck(this, 'goal-id');
   attrUndefinedCheck(this, 'data-class');
   var $obj = $(this);
@@ -2523,6 +2498,7 @@ function evFollowGoal() {
   return false;
 }
 function getModalPostList(e) {
+    console.log("gl_basic.js: getModalPostList");
   e.preventDefault();
 
   var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -2586,6 +2562,7 @@ var autoload_more = false;
 var feed_loading_now = false;
 var do_reload_header_bellList = false;
 function evFeedMoreView(options) {
+    console.log("gl_basic.js: evFeedMoreView");
   var opt = $.extend({
     recursive: false,
     loader_id: null
@@ -2733,6 +2710,7 @@ function evFeedMoreView(options) {
 
 //アドレスバー書き換え
 function updateAddressBar(url) {
+    console.log("gl_basic.js: updateAddressBar");
   if (typeof history.pushState == 'function') {
     try {
       history.pushState(null, null, url);
@@ -2745,6 +2723,7 @@ function updateAddressBar(url) {
 }
 
 function evMessageList(options) {
+    console.log("gl_basic.js: evMessageList");
   //とりあえずドロップダウンは隠す
   $(".has-notify-dropdown").removeClass("open");
   $('body').removeClass('notify-dropdown-open');
@@ -2756,6 +2735,7 @@ function evMessageList(options) {
 
 
 function evNotifications(options) {
+    console.log("gl_basic.js: evNotifications");
 
   //とりあえずドロップダウンは隠す
   $(".has-notify-dropdown").removeClass("open");
@@ -2838,6 +2818,7 @@ function evNotifications(options) {
 // TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
 //       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
 function evNotifyPost(options) {
+    console.log("gl_basic.js: evNotifyPost");
 
   //とりあえずドロップダウンは隠す
   $(".has-notify-dropdown").removeClass("open");
@@ -2946,6 +2927,7 @@ function evNotifyPost(options) {
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
+    console.log("gl_basic.js: evAjaxGoalFollowerMore");
   var $obj = $(this);
   $obj.attr('ajax-url', cake.url.goal_followers + '/goal_id:' + $obj.attr('goal-id'));
   return evBasicReadMore.call(this);
@@ -2953,6 +2935,7 @@ function evAjaxGoalFollowerMore() {
 
 // ゴールのメンバー一覧を取得
 function evAjaxGoalMemberMore() {
+    console.log("gl_basic.js: evAjaxGoalMemberMore");
   var $obj = $(this);
   $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
   return evBasicReadMore.call(this);
@@ -2960,6 +2943,7 @@ function evAjaxGoalMemberMore() {
 
 // ゴールのキーリザルト一覧を取得
 function evAjaxGoalKeyResultMore() {
+    console.log("gl_basic.js: evAjaxGoalKeyResultMore");
   var $obj = $(this);
   var kr_can_edit = $obj.attr('kr-can-edit');
   var goal_id = $obj.attr('goal-id');
@@ -3005,6 +2989,7 @@ function evAjaxGoalKeyResultMore() {
 
 
 function evBasicReadMore(options) {
+    console.log("gl_basic.js: evBasicReadMore");
   $.extend({
     afterSuccess: function ($content) {
     }
@@ -3069,6 +3054,7 @@ function evBasicReadMore(options) {
 }
 
 function evCommentOldView() {
+    console.log("gl_basic.js: evCommentOldView");
   attrUndefinedCheck(this, 'parent-id');
   attrUndefinedCheck(this, 'get-url');
   var $obj = $(this);
@@ -3126,6 +3112,7 @@ function evCommentOldView() {
   return false;
 }
 function evLike() {
+    console.log("gl_basic.js: evLike");
   attrUndefinedCheck(this, 'like_count_id');
   attrUndefinedCheck(this, 'model_id');
   attrUndefinedCheck(this, 'like_type');
@@ -3180,6 +3167,7 @@ function evLike() {
  * @param obj
  */
 function showMore(obj) {
+    console.log("gl_basic.js: showMore");
   obj = obj || null;
   var showText = '<i class="fa fa-angle-double-down mr_5px"></i>' + cake.message.info.e;
   var hideText = '<i class="fa fa-angle-double-up mr_5px"></i>' + cake.message.info.h;
@@ -3296,6 +3284,7 @@ function showMore(obj) {
   }
 }
 function getModalFormFromUrl(e) {
+    console.log("gl_basic.js: getModalFormFromUrl");
   e.preventDefault();
   var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
   modalFormCommonBindEvent($modal_elm);
@@ -3366,7 +3355,7 @@ function getModalFormFromUrl(e) {
   }
 }
 $(document).ready(function () {
-
+    console.log("gl_basic.js: $(document).ready");
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
   var prevNotifyId = "";
@@ -3458,12 +3447,14 @@ $(document).ready(function () {
 });
 
 function getCurrentUnreadNotifyCnt() {
+    console.log("gl_basic.js: getCurrentUnreadNotifyCnt");
   var $bellNum = $("#bellNum");
   var $numArea = $bellNum.find("span");
   return parseInt($numArea.html());
 }
 
 function notifyNewFeed() {
+    console.log("gl_basic.js: notifyNewFeed");
   var notifyBox = $(".feed-notify-box");
   var numArea = notifyBox.find(".num");
   var num = parseInt(numArea.html());
@@ -3493,6 +3484,7 @@ function notifyNewFeed() {
 }
 
 function appendSocketId(form, socketId) {
+    console.log("gl_basic.js: appendSocketId");
   $('<input>').attr({
     type: 'hidden',
     name: 'socket_id',
@@ -3502,6 +3494,7 @@ function appendSocketId(form, socketId) {
 
 // notify boxにpage idをセット
 function setPageTypeId() {
+    console.log("gl_basic.js: setPageTypeId");
   var notifyBox = $(".feed-notify-box");
   var pageTypeId = cake.data.d;
   if (pageTypeId === "null") {
@@ -3515,18 +3508,21 @@ function setPageTypeId() {
 
 // notify boxのpage idをゲット
 function getPageTypeId() {
+    console.log("gl_basic.js: getPageTypeId");
   var pageTypeId = $(".feed-notify-box").attr("id");
   if (!pageTypeId) return "";
   return pageTypeId.replace("_feed_notify", "");
 }
 
 function viaIsSet(data) {
+    console.log("gl_basic.js: viaIsSet");
   var isExist = typeof( data ) !== 'undefined';
   if (!isExist) return false;
   return data;
 }
 
 function notifyNewComment(notifyBox) {
+    console.log("gl_basic.js: notifyNewComment");
   var numInBox = notifyBox.find(".num");
   var num = parseInt(numInBox.html());
 
@@ -3557,6 +3553,7 @@ function notifyNewComment(notifyBox) {
 }
 
 function hideCommentNotifyErrorBox(notifyBox) {
+    console.log("gl_basic.js: hideCommentNotifyErrorBox");
   errorBox = notifyBox.siblings(".new-comment-error");
   if (errorBox.attr("display") === "none") {
     return;
@@ -3565,269 +3562,13 @@ function hideCommentNotifyErrorBox(notifyBox) {
 }
 
 $(document).ready(function () {
-  $(document).on("click", ".click-comment-new", evCommentLatestView);
-  $(document).on("click", ".js-click-comment-delete", evCommentDelete);
-  $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
-  $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
+    console.log("gl_basic.js: $(document).ready");
 });
 
-function evCommendEditSubmit(e) {
-  e.preventDefault();
-  var $form = $(this).parents('form');
-  var formUrl = $form.attr('action');
-  var commentId = formUrl.split(':')[1];
 
-  var token = $form.find('[name="data[_Token][key]"]').val();
-  var body = $form.find('[name="data[Comment][body]"]').val();
-
-  var formData = {
-    "data[_Token][key]": token,
-    Comment: {
-        body: body
-    },
-    OGP: null
-  };
-
-  var $ogp = $('#CommentOgpEditBox_'+commentId);
-  if ($ogp.find('.media-object').length > 0) {
-    var image = $ogp.find('.media-object').attr('src');
-    var title = $ogp.find('.media-heading').text().trim();
-    var site_url = $ogp.find('.media-url').text();
-    var description = $ogp.find('.site-info-txt').text().trim();
-    var type = $ogp.find('.media-body').attr('data-type');
-    var site_name = $ogp.find('.media-body').attr('data-site-name');
-
-    var ogpData = {
-      image: image,
-      title: title,
-      url: site_url,
-      description: description,
-      type: type,
-      site_name: site_name
-    };
-    formData.OGP = ogpData;
-  }
-
-  $.ajax({
-    type: 'PUT',
-    url: "/api/v1/comments/" + commentId,
-    cache: false,
-    dataType: 'json',
-    data: formData,
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        var $updatedComment = $(data.html);
-        // update comment box
-        imageLazyOn($updatedComment);
-        var $box = $('.comment-box[comment-id="' + commentId + '"]');
-        $updatedComment.insertBefore($box);
-        $updatedComment.imagesLoaded(function () {
-            $updatedComment.find('.comment_gallery').each(function (index, element) {
-                bindCommentBalancedGallery($(element));
-            });
-            changeSizeFeedImageOnlyOne($updatedComment.find('.feed_img_only_one'));
-        });
-        $box.remove();
-      }
-      else {
-        // Cancel editing
-        $('[target-id="CommentEditForm_' + commentId + '"]').click();
-      }
-    },
-    error: function (ev) {
-      // Display error message
-      new PNotify({
-        title: cake.word.error,
-        text: cake.message.notice.i,
-        type: 'error'
-      });
-      // Cancel editing
-      $('[target-id="CommentEditForm_' + commentId + '"]').click();
-    }
-  });
-  return false;
-}
-
-// Display a modal to confirm the deletion of comment
-function evCommentDelete(e) {
-  e.preventDefault();
-  var $delBtn = $(this);
-  attrUndefinedCheck($delBtn, 'comment-id');
-  var commentId = $delBtn.attr("comment-id");
-
-  // Modal popup
-  var modalTemplate =
-    '<div class="modal on fade" tabindex="-1">' +
-    '  <div class="modal-dialog">' +
-    '    <div class="modal-content">' +
-    '      <div class="modal-header none-border">' +
-    '        <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">×</span></button>' +
-    '        <h5 class="modal-title text-danger">' + __("Delete comment") + '</h5>' +
-    '     </div>' +
-    '     <div class="modal-body">' +
-    '         <h4>' + __("Do you really want to delete this comment?") +'</h4>' +
-    '     </div>' +
-    '     <div class="modal-footer">' +
-    '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.cancel + '</button>' +
-    '        <button type="button" class="btn-sm btn-primary js-click-comment-confirm-delete" comment-id="' + commentId + '" aria-hidden="true"><img id="loader" src="img/lightbox/loading.gif" style="height: 17px; width:17px; margin: 0 10px; display: none;"  /><span id="message">' + cake.word.delete + '</span></button>' +
-    '     </div>' +
-    '   </div>' +
-    ' </div>' +
-    '</div>';
-
-  var $modal_elm = $(modalTemplate);
-  $modal_elm.modal();
-  return false;
-}
-
-// Send the delete request
-function evCommentDeleteConfirm() {
-  var $delBtn = $(this);
-  attrUndefinedCheck($delBtn, 'comment-id');
-  var commentId = $delBtn.attr("comment-id");
-  var url = "/api/v1/comments/" + commentId;
-  var $modal = $delBtn.closest('.modal');
-  var $commentBox = $("div.comment-box[comment-id='" + commentId + "']");
-
-  // Show loading spinner and hide button text
-  $delBtn.children('#loader').toggle();
-  $delBtn.children('#message').toggle();
-  $delBtn.attr('disabled', 'disabled');
-
-  $.ajax({
-    url: url,
-    type: 'DELETE',
-    success: function () {
-      // Remove modal and comment box
-      $modal.modal('hide');
-      $commentBox.fadeOut('slow', function(){
-          $(this).remove();
-      });
-    },
-    error: function (res) {
-      // Display error message
-      new PNotify({
-          title: cake.word.error,
-          text: cake.message.notice.i,
-          type: 'error'
-      });
-      $modal.modal('hide');
-    }
-  });
-  return false;
-}
-
-function getCommentBlockLatestId($commentBlock) {
-  var commentNum = $commentBlock.children("div.comment-box").length;
-  var $lastCommentBox = $commentBlock.children("div.comment-box:last");
-  var lastCommentId = "";
-  if (commentNum > 0) {
-      // コメントが存在する場合
-      attrUndefinedCheck($lastCommentBox, 'comment-id');
-      lastCommentId = $lastCommentBox.attr("comment-id");
-  } else {
-      // コメントがまだ0件の場合
-      lastCommentId = "";
-  }
-  return lastCommentId;
-}
-
-function evCommentLatestView(options) {
-  attrUndefinedCheck(this, 'post-id');
-  attrUndefinedCheck(this, 'get-url');
-
-  options = $.extend({
-    afterSuccess: function () {
-    }
-  }, options);
-
-  var $obj = $(this);
-  var $commentBlock = $obj.closest(".comment-block");
-  var lastCommentId = getCommentBlockLatestId($commentBlock);
-
-  var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  var $errorBox = $obj.siblings("div.new-comment-error");
-  var get_url = $obj.attr('get-url') + "/" + lastCommentId;
-  //リンクを無効化
-  $obj.attr('disabled', 'disabled');
-  //ローダー表示
-
-  $.ajax({
-    type: 'GET',
-    url: get_url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $posts = $(data.html);
-
-        // Get the comment id for the new post
-        var $comment = $posts.closest('[comment-id]').last();
-        var newCommentId = $comment.attr("comment-id");
-
-        // Get the last comment id displayed on the page
-        $commentBlock = $obj.closest(".comment-block");
-        lastCommentId = getCommentBlockLatestId($commentBlock);
-
-        // Do nothing if the new comment is already rendered on the page
-        if (newCommentId == lastCommentId) {
-          return;
-        }
-
-        //画像をレイジーロード
-        imageLazyOn($posts);
-        //一旦非表示
-        $posts.fadeOut();
-        $($obj).before($posts);
-        showMore($posts);
-        $posts.fadeIn();
-        //ローダーを削除
-        $loader_html.remove();
-        //リンクを削除
-        $obj.css("display", "none").css("opacity", 0);
-        $posts.imagesLoaded(function () {
-          $posts.find('.comment_gallery').each(function (index, element) {
-            bindCommentBalancedGallery($(element));
-          });
-          changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
-        });
-        $obj.removeAttr("disabled");
-
-        initCommentNotify($obj);
-
-        options.afterSuccess();
-      }
-      else {
-        //ローダーを削除
-        $loader_html.remove();
-        //親を取得
-        //noinspection JSCheckFunctionSignatures
-        $obj.removeAttr("disabled");
-        //「もっと読む」リンクを初期化
-        initCommentNotify($obj);
-        var message = $errorBox.children(".message");
-        message.html(cake.message.notice.i);
-        $errorBox.css("display", "block");
-      }
-    },
-    error: function (ev) {
-      //ローダーを削除
-      $loader_html.remove();
-      //親を取得
-      //noinspection JSCheckFunctionSignatures
-      $obj.removeAttr("disabled");
-      //「もっと読む」リンクを初期化
-      initCommentNotify($obj);
-      var message = $errorBox.children(".message");
-      message.html(cake.message.notice.i);
-      $errorBox.css("display", "block");
-    }
-  });
-  return false;
-}
 
 function initCommentNotify(notifyBox) {
+    console.log("gl_basic.js: initCommentNotify");
   var numInBox = notifyBox.find(".num");
   numInBox.html("0");
   notifyBox.css("display", "none").css("opacity", 0);
@@ -3835,6 +3576,7 @@ function initCommentNotify(notifyBox) {
 
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
+    console.log("gl_basic.js: validatorCallback");
   if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
     addComment(e);
   }
@@ -3854,6 +3596,7 @@ function validatorCallback(e) {
  * @returns {boolean}
  */
 function evNotifyMoreView(e, params) {
+    console.log("gl_basic.js: evNotifyMoreView");
   attrUndefinedCheck(this, 'get-url');
 
   var $obj = $(this);
@@ -3925,6 +3668,7 @@ function evNotifyMoreView(e, params) {
 }
 
 $(function () {
+    console.log("gl_basic.js: $(function ()");
   // お知らせ一覧ページの次のページ読込みボタン
   $(document).on("click", ".click-notify-read-more-page", function (e) {
     e.preventDefault();
@@ -3957,6 +3701,7 @@ $(function () {
 
 // Auto update notify cnt
 $(function () {
+    console.log("gl_basic.js: $(function()");
   if (cake.data.team_id) {
     setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
   }
@@ -3969,6 +3714,7 @@ $(function () {
 });
 
 function setIntervalToGetNotifyCnt(sec) {
+    console.log("gl_basic.js: setIntervalToGetNotifyCnt");
   setInterval(function () {
     updateNotifyCnt();
     updateMessageNotifyCnt();
@@ -3976,6 +3722,7 @@ function setIntervalToGetNotifyCnt(sec) {
 }
 
 function updateNotifyCnt() {
+    console.log("gl_basic.js: updateNotifyCnt");
 
   var url = cake.url.f + '/team_id:' + $('#SwitchTeam').val();
   $.ajax({
@@ -3998,7 +3745,7 @@ function updateNotifyCnt() {
 }
 
 function updateMessageNotifyCnt() {
-
+    console.log("gl_basic.js: updateMessageNotifyCnt");
   var url = cake.url.af + '/team_id:' + $('#SwitchTeam').val();
   $.ajax({
     type: 'GET',
@@ -4020,6 +3767,7 @@ function updateMessageNotifyCnt() {
 }
 
 function setNotifyCntToBellAndTitle(cnt) {
+    console.log("gl_basic.js: setNotifyCntToBellAndTitle");
   var $bellBox = getBellBoxSelector();
   var existingBellCnt = parseInt($bellBox.children('span').html());
 
@@ -4044,6 +3792,7 @@ function setNotifyCntToBellAndTitle(cnt) {
 }
 
 function setNotifyCntToMessageAndTitle(cnt) {
+    console.log("gl_basic.js: setNotifyCntToMessageAndTitle");
   var cnt = parseInt(cnt);
   var $bellBox = getMessageBoxSelector();
   var existingBellCnt = parseInt($bellBox.children('span').html());
@@ -4080,6 +3829,7 @@ function setNotifyCntToMessageAndTitle(cnt) {
 
 // <title> に表示される通知数を更新する
 function updateTitleCount() {
+    console.log("gl_basic.js: updateTitleCount");
   var $title = $("title");
   var current_cnt = getNotifyCnt() + getMessageNotifyCnt();
   var current_str = '';
@@ -4094,6 +3844,7 @@ function updateTitleCount() {
 }
 
 function displaySelectorFluffy(selector) {
+    console.log("gl_basic.js: displaySelectorFluffy");
   var i = 0.2;
   var roop = setInterval(function () {
     selector.css("opacity", i);
@@ -4105,6 +3856,7 @@ function displaySelectorFluffy(selector) {
 }
 
 $(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
   var click_cnt = 0;
   $(document).on("click", "#click-header-bell", function () {
     click_cnt++;
@@ -4135,6 +3887,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
   var click_cnt = 0;
   $(document).on("click", "#click-header-message", function (e) {
     // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
@@ -4149,39 +3902,47 @@ $(document).ready(function () {
 });
 
 function initBellNum() {
+    console.log("gl_basic.js: initBellNum");
   var $bellBox = getBellBoxSelector();
   $bellBox.css("opacity", 0);
   $bellBox.children('span').html("0");
 }
 function initMessageNum() {
+    console.log("gl_basic.js: initMessageNum");
   var $box = getMessageBoxSelector();
   $box.css("opacity", 0);
   $box.children('span').html("0");
 }
 
 function initTitle() {
+    console.log("gl_basic.js: initTitle");
   var $title = $("title");
   $title.text(sanitize($title.attr("origin-title")));
 }
 
 function getBellBoxSelector() {
+    console.log("gl_basic.js: getBellBoxSelector");
   return $("#bellNum");
 }
 function getMessageBoxSelector() {
+    console.log("gl_basic.js: getMessageBoxSelector");
   return $("#messageNum");
 }
 
 function getNotifyCnt() {
+    console.log("gl_basic.js: getNotifyCnt");
   var $bellBox = getBellBoxSelector();
   return parseInt($bellBox.children('span').html(), 10);
 }
 
 function getMessageNotifyCnt() {
+    console.log("gl_basic.js: getMessageNotifyCnt");
   var $box = getMessageBoxSelector();
   return parseInt($box.children('span').html(), 10);
 }
 
 function updateListBox() {
+    console.log("gl_basic.js: updateListBox");
   var $bellDropdown = $("#bell-dropdown");
   $bellDropdown.empty();
   var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
@@ -4208,6 +3969,7 @@ function updateListBox() {
 
 // reset bell notify num call from app.
 function resetBellNum() {
+    console.log("gl_basic.js: resetBellNum");
   initBellNum();
   var url = cake.url.g;
   $.ajax({
@@ -4224,6 +3986,7 @@ function resetBellNum() {
 }
 
 function updateMessageListBox() {
+    console.log("gl_basic.js: updateMessageListBox");
   var $messageDropdown = $("#message-dropdown");
   $messageDropdown.empty();
   var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
@@ -4250,6 +4013,7 @@ function updateMessageListBox() {
 
 // reset bell message num call from app.
 function resetMessageNum() {
+    console.log("gl_basic.js: resetMessageNum");
   initMessageNum();
   var url = cake.url.ag;
   $.ajax({
@@ -4266,10 +4030,12 @@ function resetMessageNum() {
 }
 
 function copyToClipboard(url) {
+    console.log("gl_basic.js: copyToClipboard");
   window.prompt(cake.message.info.copy_url, url);
 }
 
 $(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
   $(window).scroll(function () {
     if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
       if (!autoload_more) {
@@ -4354,6 +4120,7 @@ $(document).ready(function () {
 });
 
 function evAjaxEditCircleAdminStatus(e) {
+    console.log("gl_basic.js: evAjaxEditCircleAdminStatus");
   e.preventDefault();
 
   var $this = $(this);
@@ -4421,6 +4188,7 @@ function evAjaxEditCircleAdminStatus(e) {
 }
 
 function evAjaxLeaveCircle(e) {
+    console.log("gl_basic.js: evAjaxLeaveCircle");
   e.preventDefault();
 
   var $this = $(this);
@@ -4480,6 +4248,7 @@ function evAjaxLeaveCircle(e) {
 }
 
 function setDefaultTab() {
+    console.log("gl_basic.js: setDefaultTab");
   if (cake.common_form_type == "") {
     return;
   }
@@ -4505,6 +4274,7 @@ function setDefaultTab() {
 }
 
 function getPostOGPInfo(ogp, text) {
+    console.log("gl_basic.js: getPostOGPInfo");
   var options = {
     // URL が含まれるテキスト
     text: text,
@@ -4550,6 +4320,7 @@ function getPostOGPInfo(ogp, text) {
 }
 
 function appendPostOgpInfo(data) {
+    console.log("gl_basic.js: appendPostOgpInfo");
   var $siteInfoUrl = $('#PostSiteInfoUrl');
   var $siteInfo = $('#PostOgpSiteInfo');
   $siteInfo
@@ -4582,6 +4353,7 @@ function appendPostOgpInfo(data) {
 }
 
 function isMobile() {
+    console.log("gl_basic.js: isMobile");
   var agent = navigator.userAgent;
   if (agent.search(/iPhone/) != -1 ||
     agent.search(/iPad/) != -1 ||
@@ -4602,6 +4374,7 @@ function isMobile() {
  * @returns string
  */
 function sanitize(string) {
+    console.log("gl_basic.js: sanitize");
   if (typeof string !== 'string') {
     return string;
   }
@@ -4618,5 +4391,6 @@ function sanitize(string) {
 }
 
 function isOnline() {
+    console.log("gl_basic.js: isOnline");
   return Boolean(network_reachable);
 }
