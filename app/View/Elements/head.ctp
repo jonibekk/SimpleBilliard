@@ -48,5 +48,6 @@
         echo $this->element('external_service_tags');
     }
     ?>
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
 </head>
 <?= $this->App->viewEndComment()?>

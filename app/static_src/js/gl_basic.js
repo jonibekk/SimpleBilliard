@@ -8,6 +8,127 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
+//Select2 Customization
+$.fn.select2.defaults = {
+    width: "copy",
+    loadMorePadding: 0,
+    closeOnSelect: true,
+    openOnEnter: true,
+    containerCss: {},
+    dropdownCss: {},
+    containerCssClass: "",
+    dropdownCssClass: "",
+    formatResult: function (result, container, query, escapeMarkup) {
+        var markup = [];
+        markMatch(result.text, query.term, markup, escapeMarkup);
+        return markup.join("");
+    },
+    formatSelection: function (data, container, escapeMarkup) {
+        return data ? escapeMarkup(data.text) : undefined;
+    },
+    sortResults: function (results, container, query) {
+        return results;
+    },
+    formatResultCssClass: function (data) {
+        return data.css;
+    },
+    formatSelectionCssClass: function (data, container) {
+        return undefined;
+    },
+    minimumResultsForSearch: 0,
+    minimumInputLength: 0,
+    maximumInputLength: null,
+    maximumSelectionSize: 0,
+    id: function (e) {
+        return e == undefined ? null : e.id;
+    },
+    matcher: function (term, text) {
+        return stripDiacritics('' + text).toUpperCase().indexOf(stripDiacritics('' + term).toUpperCase()) >= 0;
+    },
+    separator: ",",
+    tokenSeparators: [],
+    //tokenizer: defaultTokenizer,
+    //escapeMarkup: defaultEscapeMarkup,
+    blurOnChange: false,
+    selectOnBlur: false,
+    adaptContainerCssClass: function (c) {
+        return c;
+    },
+    adaptDropdownCssClass: function (c) {
+        return null;
+    },
+    nextSearchTerm: function (selectedObject, currentSearchTerm) {
+        return undefined;
+    },
+    searchInputPlaceholder: '',
+    createSearchChoicePosition: 'top',
+    shouldFocusInput: function (instance) {
+        // Attempt to detect touch devices
+        var supportsTouchEvents = (('ontouchstart' in window) ||
+            (navigator.msMaxTouchPoints > 0));
+
+        // Only devices which support touch events should be special cased
+        if (!supportsTouchEvents) {
+            return true;
+        }
+
+        // Never focus the input if search is disabled
+        if (instance.opts.minimumResultsForSearch < 0) {
+            return false;
+        }
+
+        return true;
+    }
+};
+
+    $.fn.select2.locales = [];
+
+    $.fn.select2.locales['en'] = {
+        formatMatches: function (matches) {
+            if (matches === 1) {
+                return "One result is available, press enter to select it.";
+            }
+            return matches + " results are available, use up and down arrow keys to navigate.";
+        },
+        formatNoMatches: function () {
+            return "No matches found";
+        },
+        formatAjaxError: function (jqXHR, textStatus, errorThrown) {
+            return "Loading failed";
+        },
+        formatInputTooShort: function (input, min) {
+            var n = min - input.length;
+            return "Please enter " + n + " or more character" + (n == 1 ? "" : "s");
+        },
+        formatInputTooLong: function (input, max) {
+            var n = input.length - max;
+            return "Please delete " + n + " character" + (n == 1 ? "" : "s");
+        },
+        formatSelectionTooBig: function (limit) {
+            return "You can only select " + limit + " item" + (limit == 1 ? "" : "s");
+        },
+        formatLoadMore: function (pageNumber) {
+            return "Loading more results…";
+        },
+        formatSearching: function () {
+            return "Searching…";
+        },
+    };
+
+    $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
+
+    $.fn.select2.ajaxDefaults = {
+        transport: $.ajax,
+        params: {
+            type: "GET",
+            cache: false,
+            dataType: "json"
+        }
+    };
+
+
+
+
 $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec
@@ -141,8 +262,9 @@ jQuery.fn.hasScrollBar = function () {
   return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
-$(window).load(function () {
-    console.log("gl_basic.js: $(window).load");
+
+$(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
   bindPostBalancedGallery($('.post_gallery'));
   bindCommentBalancedGallery($('.comment_gallery'));
   changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
@@ -201,7 +323,7 @@ $(document).ready(function () {
 
 
   $(document).on('keyup', '#message_text_input', function () {
-    $(this).autosize();
+    autosize($(this));
     //$('body').animate({
     //    scrollTop: $(document).height()
     //});
@@ -366,7 +488,7 @@ $(document).ready(function () {
 
   //autosize
   //noinspection JSJQueryEfficiency
-  $('textarea:not(.not-autosize)').autosize();
+  autosize($('textarea:not(.not-autosize)'));
   //noinspection JSJQueryEfficiency
   $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
@@ -1174,7 +1296,7 @@ function evTargetToggleClick() {
       $obj.text($obj.attr("opend-text"));
     }
   }
-  if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+  if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
     $.ajax({
       url: $obj.attr("ajax-url"),
       async: false,
@@ -1362,7 +1484,7 @@ function evShow() {
   //autosizeを一旦、切る。
   $(this).trigger('autosize.destroy');
   //再度autosizeを有効化
-  $(this).autosize();
+  autosize($(this));
   //submitボタンを表示
   $("#" + $(this).attr('target_show_id')).show();
   //クリック済みにする
@@ -1392,7 +1514,7 @@ function evShowAndThisWide() {
   //現在のheightを倍にする。
   $(this).height(current_height * 2);
   //再度autosizeを有効化
-  $(this).autosize();
+  autosize($(this));
 
   //submitボタンを表示
   if ($(this).attr('target_show_id') != undefined) {
@@ -1636,7 +1758,7 @@ function setChangeWarningForAllStaticPage() {
     $(":input").each(function () {
       var default_val = "";
       var changed_val = "";
-      default_val = $(this).load().val();
+      default_val = $(this).val();
       $(this).on("change keyup keydown", function () {
         if ($(this).hasClass('disable-change-warning')) {
           return;
@@ -1673,7 +1795,7 @@ function warningAction($obj) {
       $obj.find(":input").each(function () {
         var default_val = "";
         var changed_val = "";
-        default_val = $(this).load().val();
+        default_val = $(this).val();
         $(this).on("change keyup keydown", function () {
           changed_val = $(this).val();
           if (default_val != changed_val) {
@@ -1709,7 +1831,7 @@ function modalFormCommonBindEvent($modal_elm) {
   warningAction($modal_elm);
   $modal_elm.on('shown.bs.modal', function (e) {
     $(this).find('textarea').each(function () {
-      $(this).autosize();
+      autosize($(this));
     });
   });
 }
@@ -2005,25 +2127,31 @@ $(document).ready(function () {
     var $target = $(e.target);
     switch ($target.attr('id')) {
       case "CommonPostBody":
-        $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
-        $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+        $('#CommonActionName').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonActionName'));
+        $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonMessageBody'));
         break;
       case "CommonActionName":
-        $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
-        $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+        $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonPostBody'));
+        $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonMessageBody'));
         break;
       case "CommonMessageBody":
-        $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
-        $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
+        $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonPostBody'));
+        $('#CommonActionName').val($target.val()).trigger('autosize.resize');
+        autosize($('#CommonActionName'));
         break;
     }
   });
 
   // 投稿フォームが表示されるページのみ
-  if ($('#CommonPostBody').size()) {
+  if ($('#CommonPostBody').length) {
     require(['ogp'], function (ogp) {
       // 投稿編集の場合で、OGPのurlが登録されている場合
-      if ($('.post-edit').size()) {
+      if ($('.post-edit').length) {
         if ($('.post-edit').attr('data-default-ogp-url')) {
           getPostOGPInfo(ogp, $('.post-edit').attr('data-default-ogp-url'));
         }
@@ -3359,7 +3487,7 @@ $(document).ready(function () {
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
   var prevNotifyId = "";
-  pusher.connection.bind('connected', function () {
+  pusher.connection.on('connected', function () {
     socketId = pusher.connection.socket_id;
     cake.pusher.socket_id = socketId;
   });
@@ -3382,7 +3510,7 @@ $(document).ready(function () {
 
   // connectionをはる
   for (var i in cake.data.c) {
-    pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
+    pusher.subscribe(cake.data.c[i]).on('post_feed', function (data) {
       var isFeedNotify = viaIsSet(data.is_feed_notify);
       var isNewCommentNotify = viaIsSet(data.is_comment_notify);
       var notifyId = data.notify_id;
@@ -3410,7 +3538,7 @@ $(document).ready(function () {
         notifyNewComment(notifyBox);
       }
     });
-    pusher.subscribe(cake.data.c[i]).bind('bell_count', function (data) {
+    pusher.subscribe(cake.data.c[i]).on('bell_count', function (data) {
       //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
       if (!cake.notify_setting[data.flag_name]) {
         return;
@@ -3421,7 +3549,7 @@ $(document).ready(function () {
       setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
     });
   }
-  pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
+  pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).on('msg_count', function (data) {
 
     //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
     if (!cake.notify_setting[data.flag_name]) {
@@ -4065,10 +4193,6 @@ $(document).ready(function () {
         }
       }
     }
-  }).ajaxError(function (event, request, setting) {
-    if (request.status == 0) {
-      return false;
-    }
   });
 
   // ヘッダーのお知らせ一覧ポップアップのオートローディング
@@ -4089,7 +4213,7 @@ $(document).ready(function () {
   // アクションの編集画面の場合は、画像選択の画面をスキップし、
   // ajax で動いている select を選択済みにする
   var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
-  if ($button.size()) {
+  if ($button.length) {
     // 画像選択の画面をスキップ
     evTargetShowThisDelete.call($button.get(0));
     // ゴール選択の ajax 処理を動かす
@@ -4102,15 +4226,15 @@ $(document).ready(function () {
   });
 
   // Insight 画面の処理
-  if ($('#InsightForm').size()) {
+  if ($('#InsightForm').length) {
     require(['insight'], function (insight) {
-      if ($('#InsightResult').size()) {
+      if ($('#InsightResult').length) {
         insight.insight.setup();
       }
-      else if ($('#InsightCircleResult').size()) {
+      else if ($('#InsightCircleResult').length) {
         insight.circle.setup();
       }
-      else if ($('#InsightRankingResult').size()) {
+      else if ($('#InsightRankingResult').length) {
         insight.ranking.setup();
       }
       insight.reload();
