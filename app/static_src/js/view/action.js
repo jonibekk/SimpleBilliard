@@ -19,7 +19,6 @@ var Page = {
         $(this).addClass("mod-visible");
       }
     });
-    console.log("ran");
   },
   init: function () {
     var self = this;
