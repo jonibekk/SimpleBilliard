@@ -164,6 +164,7 @@ function getAjaxFormReplaceElm() {
             }
         }
     });
+    return false;
 }
 
 /**
@@ -260,6 +261,7 @@ function addComment(e) {
         $loader_html.remove();
         $submit.removeAttr('disabled');
     });
+    return false;
 }
 
 /**

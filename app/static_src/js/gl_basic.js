@@ -147,23 +147,6 @@ require.config({
 var network_reachable = true;
 var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
-function bindPostBalancedGallery($obj) {
-  console.log("gl_basic.js: bindPostBalancedGallery");
-  $obj.removeClass('none');
-  $obj.BalancedGallery({
-    autoResize: false,                   // re-partition and resize the images when the window size changes
-    //background: '#DDD',                   // the css properties of the gallery's containing element
-    idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
-    //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-    //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
-    orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-    padding: 1,                         // pixels between images
-    shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
-    //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
-    //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
-  });
-
-};
 function bindCommentBalancedGallery($obj) {
   console.log("gl_basic.js: bindCommentBalancedGallery");
   $obj.removeClass('none');
@@ -181,28 +164,6 @@ function bindCommentBalancedGallery($obj) {
   });
 };
 
-function changeSizeFeedImageOnlyOne($obj) {
-  console.log("gl_basic.js: changeSizeFeedImageOnlyOne");
-  $obj.each(function (i, v) {
-    var $elm = $(v);
-    var $img = $elm.find('img');
-    var is_oblong = $img.width() > $img.height();
-    var is_near_square = Math.abs($img.width() - $img.height()) <= 5;
-
-    // 横長の画像か、ほぼ正方形に近い画像の場合はそのまま表示
-    if (is_oblong || is_near_square) {
-      $elm.css('height', $img.height());
-      $img.parent().css('height', $img.height());
-    }
-    // 縦長の画像は、4:3 の比率にする
-    else {
-      var expect_parent_height = $img.width() * 0.75;
-
-      $elm.css('height', expect_parent_height);
-      $img.parent().css('height', expect_parent_height);
-    }
-  });
-}
 /**
  * 画像の高さを親の要素に割り当てる
  *
@@ -265,9 +226,9 @@ jQuery.fn.hasScrollBar = function () {
 
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
-  bindPostBalancedGallery($('.post_gallery'));
+
   bindCommentBalancedGallery($('.comment_gallery'));
-  changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
+
   setDefaultTab();
 
   // for setting the team_id_current in local storage

@@ -76,6 +76,7 @@ function getPostOGPInfo(ogp, text) {
     };
 
     ogp.getOGPSiteInfo(options);
+    return false;
 }
 
 /**
@@ -113,4 +114,5 @@ function appendPostOgpInfo(data) {
 
     // hidden に URL 追加
     $siteInfoUrl.val(data.url);
+    return false;
 }
