@@ -275,7 +275,6 @@ class KeyResultTest extends GoalousTestCase
             ]
         );
         $this->assertCount(3, $this->KeyResult->getKrNameList($goal_id, true));
-        $this->assertCount(5, $this->KeyResult->getKrNameList($goal_id, true, true));
     }
 
     function testIsComplete()
@@ -757,8 +756,8 @@ class KeyResultTest extends GoalousTestCase
         $this->KeyResult->updateTermByGoalId($goalId, Term::TYPE_CURRENT);
         $updatedKr = Hash::get($this->KeyResult->findByGoalId($goalId), 'KeyResult');
 
-        $this->assertTrue($currentTerm['start_date'] < $updatedKr['start_date']);
-        $this->assertTrue($updatedKr['start_date'] < $currentTerm['end_date']);
+        $this->assertTrue($currentTerm['start_date'] <= $updatedKr['start_date']);
+        $this->assertTrue($updatedKr['start_date'] <= $currentTerm['end_date']);
         $this->assertEquals($updatedKr['end_date'], $currentTerm['end_date']);
     }
 

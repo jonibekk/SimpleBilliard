@@ -1284,13 +1284,16 @@ class UsersController extends AppController
         $TermService = ClassRegistry::init('TermService');
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
 
+        $currentTermId = $Term->getCurrentTermId();
         // make variables for requested named params.
         $namedParams = $this->request->params['named'];
         $userId = Hash::get($namedParams, "user_id");
         $pageType = Hash::get($namedParams, "page_type");
         $goalId = Hash::get($namedParams, 'goal_id');
-        $termId = Hash::get($namedParams, 'term_id') ?? $Term->getCurrentTermId();
+        $termId = Hash::get($namedParams, 'term_id') ?? $currentTermId;
 
         // validation
         if (!$this->_validateParamsOnActionPage($userId, $pageType, $termId, $goalId)) {
@@ -1300,8 +1303,30 @@ class UsersController extends AppController
 
         $this->_setUserPageHeaderInfo($userId);
 
-        $canAction = $this->_canActionOnActionPage($userId, $termId);
+        $myUid = $this->Auth->user('id');
 
+        if ($userId != $myUid) {
+            $canAction = false;
+        } else {
+            if ($goalId) {
+                $canAction = $Goal->isActionable($userId, $goalId);
+            } else {
+                $canAction = $this->_canActionOnActionPageInTerm($userId, $termId);
+            }
+        }
+
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init('ActionResult');
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+        // count action
+        if ($termId == $TermService::TERM_FILTER_ALL_KEY_NAME) {
+            // if term = all, then user_is is key
+            $actionCount = $ActionResult->getCountByUserId($userId);
+        } else {
+            $goalIdsInTerm = $GoalService->findIdsByTermIdUserId($termId, $userId);
+            $actionCount = $ActionResult->getCountByGoalId($goalIdsInTerm);
+        }
         $termFilterOptions = $TermService->getFilterMenu(true, false);
         $goalFilterOptions = $this->_getGoalFilterMenuOnActionPage($userId, $termId);
 
@@ -1320,18 +1345,20 @@ class UsersController extends AppController
             'termFilterOptions',
             'endTimestamp',
             'oldestTimestamp',
+            'actionCount',
+            'currentTermId',
             'canAction'
         ));
         return $this->render();
     }
 
     /**
-     * @param int        $targetUserId
+     * @param int        $userId
      * @param int|string $termId
      *
      * @return bool
      */
-    function _canActionOnActionPage(int $targetUserId, $termId): bool
+    function _canActionOnActionPageInTerm(int $userId, $termId): bool
     {
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init('TermService');
@@ -1340,7 +1367,7 @@ class UsersController extends AppController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
 
-        if ($targetUserId == $this->Auth->user('id')
+        if ($userId == $this->Auth->user('id')
             && ($termId == $Term->getCurrentTermId() || $termId == $TermService::TERM_FILTER_ALL_KEY_NAME)
             && !empty($GoalService->findActionables())
         ) {

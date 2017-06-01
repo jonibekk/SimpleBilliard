@@ -2299,23 +2299,56 @@ class Goal extends AppModel
             ],
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
-        $db = $this->getDataSource();
-        $subQuery = $db->buildStatement([
-            'fields'     => array('KeyResult.id'),
-            'table'      => 'key_results',
-            'alias'      => 'KeyResult',
-            'conditions' => [
-                'KeyResult.goal_id = Goal.id',
-                'KeyResult.completed' => null,
-            ],
-        ], $this);
-        $options['conditions'][] = $db->expression("EXISTS (" . $subQuery . ")");
+        $options['conditions'][] = $this->buildSubQueryIncompleteKrExists();
 
         $res = $this->find('all', $options);
         if (empty($res)) {
             return [];
         }
         return Hash::extract($res, '{n}.Goal');
+    }
+
+    /**
+     * ゴールがアクション可能か判定
+     * 条件
+     * ・ゴールメンバー
+     * ・今期のゴール
+     * ・未完了なKRが存在する
+     *
+     * @param int $userId
+     * @param int $goalId
+     *
+     * @return bool $res
+     */
+    function isActionable(int $userId, int $goalId): bool
+    {
+        $currentTerm = $this->Team->Term->getCurrentTermData();
+        $options = [
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = Goal.id',
+                        'GoalMember.user_id' => $userId,
+                        'GoalMember.team_id' => $this->current_team_id,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'Goal.id'            => $goalId,
+                'Goal.end_date >='   => $currentTerm['start_date'],
+                'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.completed'     => null,
+                'GoalMember.del_flg' => false
+            ],
+        ];
+        // アクション可能なゴールを抽出(未完了なKRが存在するか)
+        $options['conditions'][] = $this->buildSubQueryIncompleteKrExists();
+
+        $res = $this->find('first', $options);
+        return (bool)$res;
     }
 
     /**
@@ -2469,6 +2502,29 @@ class Goal extends AppModel
             ],
         ], $this);
         $queryObj = $db->expression("NOT EXISTS (" . $subQuery . ")");
+        return $queryObj;
+    }
+
+    /**
+     * building subquery for finding goal with "EXISTS (incomplete KRs)".
+     * For using in `conditions`
+     *
+     * @return stdClass
+     */
+    function buildSubQueryIncompleteKrExists(): stdClass
+    {
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => ['KeyResult.id'],
+            'table'      => 'key_results',
+            'alias'      => 'KeyResult',
+            'conditions' => [
+                'KeyResult.goal_id = Goal.id',
+                'KeyResult.completed' => null,
+            ],
+        ], $this);
+        $queryObj = $db->expression("EXISTS (" . $subQuery . ")");
         return $queryObj;
     }
 

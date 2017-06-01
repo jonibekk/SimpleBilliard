@@ -5126,8 +5126,8 @@ msgstr "アクションを追加"
 msgid "You haven't created any actions&hellip; yet."
 msgstr "あなたはまだアクションをしていません。"
 
-msgid "No actions have been created&hellip; yet."
-msgstr "まだアクションがありません。"
+msgid "There is no Action."
+msgstr "アクションがありません。"
 
 msgid "Edit a goal"
 msgstr "ゴールを編集"

@@ -49,8 +49,8 @@ class ApiCommentService extends AppService
                 $url_text =  Hash::get($data, 'Comment.body');
             }
 
-            // ogbをインサートデータに追加
-            $data['Comment'] = $this->_addOgpIndexes(Hash::get($data['Comment'], 'Comment'), $url_text);
+            $ogp = $this->_getOgpIndex($data);
+            $data['Comment'] = am($data['Comment'], $ogp);
 
             // コメントを追加
             if (!$Post->Comment->add($data)) {
@@ -82,7 +82,7 @@ class ApiCommentService extends AppService
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init("Comment");
 
-        $postId = Hash::get($this->request->data, 'Comment.post_id');
+        $postId = Hash::get($data, 'Comment.post_id');
         $post = $Post->findById($postId);
         if (empty($post)) {
             return ["status_code" => 404, "message" => __("This post was deleted.")];
@@ -133,21 +133,23 @@ class ApiCommentService extends AppService
     }
 
     /**
-     * @param $data
-     *
      * Update comment data
+     *
+     * @param $id
+     * @param $data
      *
      * @return bool
      */
-    function update($data)
+    function update($id, $data)
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init("Comment");
-        $Comment->id = $data['id'];
+        $Comment->id = $id;
 
         try {
             // Get ogp
-            $data = $this->_addOgpIndexes($data, $data['body']);
+            $ogp = $this->_getOgpIndex($data);
+            $data['Comment'] = am($data['Comment'], $ogp);
 
             // Save comment data
             $Comment->commentEdit($data);
@@ -164,6 +166,7 @@ class ApiCommentService extends AppService
      * Returns an empty array in case of success.
      *
      * @param $comment_id
+     * @param $user_id
      * @param $data
      *
      * @return array
@@ -184,7 +187,8 @@ class ApiCommentService extends AppService
             return ["status_code" => 403, "message" => __("This isn't your comment.")];
         }
 
-        $Comment->set($data);
+        $commentData = Hash::get($data, 'Comment');
+        $Comment->set($commentData);
         if (!$Comment->validates()) {
             return [
                 "status_code"       => 400,
@@ -195,42 +199,42 @@ class ApiCommentService extends AppService
     }
 
     /**
-     * @param array  $requestData
-     * @param string $body
+     * Return formatted data to be used on comments
+     * from OGP data received from frontend.
+     * @param $requestData
      *
-     * Add ogp to a requested object
-     *
-     * @return array $requestData
+     * @return array
      */
-    function _addOgpIndexes($requestData, $body)
+    function _getOgpIndex($requestData)
     {
-        // blank or not string, then return;
-        if (!$body || !is_string($body)) {
-            return $requestData;
+        $ogpIndex = [];
+        $ogp = Hash::get($requestData, 'OGP');
+
+        if (!$ogp || !isset($ogp['title'])) {
+            $ogpIndex['site_info'] = null;
+            $ogpIndex['site_photo'] = null;
+            return $ogpIndex;
         }
 
-        /** @var OgpComponent $OgpComponent */
-        $OgpComponent = ClassRegistry::init("OgpComponent");
-
-        // Get OGP
-        $ogp = $OgpComponent->getOgpByUrlInText($body);
-        // Not found
-        if (!isset($ogp['title'])) {
-            $requestData['site_info'] = null;
-            $requestData['site_photo'] = null;
-            return $requestData;
+        // Do not set if it is a no-image-link.png from our site
+        if (isset($ogp['image']) && strpos($ogp['image'], 'no-image-link') !== false) {
+            // No need this image
+            unset($ogp['image']);
         }
 
-        // Set OGP data
-        $requestData['site_info'] = json_encode($ogp);
+        $ogpIndex['site_info'] = json_encode($ogp);
         if (isset($ogp['image'])) {
-            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
-            if (!$ext) {
-                $ogp['image'] = null;
+            // Check if it is not already a cached image
+            if (strpos($ogp['image'], '/upload/comments/') !== 0) {
+                // Get the image
+                $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
+                if (!$ext) {
+                    $ogp['image'] = null;
+                }
             }
-            $requestData['site_photo'] = $ogp['image'];
+            $ogpIndex['site_photo'] = $ogp['image'];
         }
-        return $requestData;
+        return $ogpIndex;
     }
 }
 
