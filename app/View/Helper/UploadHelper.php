@@ -177,7 +177,7 @@ class UploadHelper extends AppHelper
             $url = $options['urlize'] ? $this->Html->url($url) : $url;
         } else {
             //getting s3 file path with cache
-            Cache::config('user_data', ['duration' => "+" . self::$S3_TTL_MIN - 10 . " minutes"]);
+            Cache::config('user_data', ['duration' => "+" . self::$S3_TTL_MIN - 1 . " minutes"]);
             $cachedUrl = Cache::read(CACHE_KEY_S3_FILE_PATH . ":" . $hash, 'user_data');
             if ($cachedUrl === false) {
                 $url = $this->substrS3Url($url);
