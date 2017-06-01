@@ -24,7 +24,7 @@
                 'Home') ?></a>
     <?php endif; ?>
 
-    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?>" id="setup">
+    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
                id="setupIcon"></i>
@@ -36,7 +36,7 @@
         </a>
     </div>
 
-    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?>">
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
@@ -69,7 +69,7 @@
             </li>
         </ul>
     </div>
-    <div class="header-dropdown-message has-notify-dropdown <?= $is_mb_app ? "hide" : null ?>">
+    <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
 
@@ -89,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div id="HeaderDropdownNotify" class="header-dropdown-notify has-notify-dropdown <?= $is_mb_app ? "hide" : null ?>">
+    <div id="HeaderDropdownNotify" class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
@@ -129,7 +129,7 @@
             </a>
         </div>
     </div>
-    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?>" header-function">
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom" header-function">
     <a href="#"
        class="btn-function-header"
        data-toggle="dropdown"

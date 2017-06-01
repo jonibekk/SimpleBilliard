@@ -77,41 +77,58 @@
       }
       .right {
         width: 18%;
-        .action-button-wrapper {
-          position: relative;
-        }
-        .action-button {
-          width: 40px;
-          height: 40px;
+        position:relative;
+        .dashboard-krs-column-add-action{
+          width:40px;
+          height:40px;
           display: block;
-          margin-left: auto;
-          top: 0;
-          border-radius: 50%;
-          padding: 2px;
-          border: dashed 1px @subColor4;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-decoration: none;
-          .fa-check-circle {
-            font-size: 38px;
-            color: @subColor4;
+          position: relative;
+          border-radius:50%;
+          background:@white;
+          margin:auto;
+          display:flex;
+          flex-wrap:wrap;
+          border:1px solid @modGray;
+          float:right;
+          margin: 2px 4px 0 0;
+          span{
+            font-size:3rem;
+            text-align:center;
+            margin:auto;
+            font-weight:100;
+            height: 1em;
+            width: 1em;
+            line-height: .8em;
+            color:@basicPink;
+          }
+          &:hover{
+            cursor: pointer;
           }
         }
-        .add-mark {
+
+        p{
+          font-size:.8em;
+          color:@basicGray;
+          text-align:center;
+          width:40px;
           position: absolute;
-          display: block;
-          bottom:0;
-          right: 0;
-          border-radius: 50%;
-          width: 18px;
-          text-align: center;
-          .fa {
-            color: #3897f0;
-            font-size: 15px;
-            background-color: #fff;
-            border-radius: 50%;
-            line-height: 12px;
+          right: 4px;
+          top: 4.1em;
+          line-height: 1.2em;
+          opacity:0;
+          transition:opacity .3s ease;
+          background-color:@white;
+        }
+
+        a:hover{
+          p{
+            text-decoration:none;
+            @media @xsmall{
+              opacity:0;
+            }
+            @media @medium{
+              opacity:1;
+            }
           }
         }
       }

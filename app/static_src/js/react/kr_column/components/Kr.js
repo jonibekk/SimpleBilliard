@@ -43,7 +43,7 @@ export default class Kr extends React.Component {
               </div>
             </div>
             <div className={`oneline-ellipsis font_12px mt_4px ${!this.state.is_opened_kr && 'none'}`}>
-              <a href={`/goals/view_info/goal_id:${goal.id}`} className="font_verydark">
+              <a href={`/goals/view_krs/goal_id:${goal.id}`} className="font_verydark">
                 <i className="fa fa-flag-o mr_4px"></i>
                 <span>{ goal.name }</span>
               </a>
@@ -75,15 +75,13 @@ export default class Kr extends React.Component {
           <div className="right">
             { !is_complete && (() => {
               return (
-                <div className="action-button-wrapper">
-                  <a href={ action_post_link } className="action-button">
-                    <i className="fa fa-check-circle"></i>
-                  </a>
-                  <a href={ action_post_link } className="add-mark">
-                    <i className="fa fa-plus-circle"></i>
-                  </a>
-                </div>
-              )
+                <a href={ action_post_link } label="Add Action">
+                  <div className="dashboard-krs-column-add-action">
+                      <span>+</span>
+                  </div>
+                  <p>Add Action</p>
+                </a>
+              ) 
             })()}
           </div>
         </div>

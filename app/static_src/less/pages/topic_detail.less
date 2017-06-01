@@ -215,8 +215,19 @@
       padding: 8px 0;
       &-item {
         overflow: hidden;
+        position:relative;
         & + & {
           margin-top:10px;
+        }
+        .file-info-filename{
+          position: absolute;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+        }
+        .file-ifo-filetype{
+          margin-top:1.5em;
         }
       }
     }

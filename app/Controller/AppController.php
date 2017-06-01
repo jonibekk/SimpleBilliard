@@ -61,7 +61,8 @@ class AppController extends BaseController
         'Expt',
         'Post',
         'GlHtml',
-        'Lang'
+        'Lang',
+        'BackBtn'
     ];
 
     private $merge_uses = [];

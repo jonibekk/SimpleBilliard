@@ -63,7 +63,7 @@
                     <div class="col col-xxs-2 col-xs-2">
                         <a href="<?= $this->Html->url([
                             'controller' => 'goals',
-                            'action'     => 'view_info',
+                            'action'     => 'view_krs',
                             'goal_id'    => $goal['Goal']['id']
                         ]) ?>">
                             <?=
@@ -80,7 +80,7 @@
                         <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
                             <a href="<?= $this->Html->url([
                                 'controller' => 'goals',
-                                'action'     => 'view_info',
+                                'action'     => 'view_krs',
                                 'goal_id'    => $goal['Goal']['id']
                             ]) ?>"
                                class="profile-goals-card-title">
@@ -130,7 +130,7 @@
                                         </a>
                                     </div>
                                     <div class="col col-xxs-5 col-xs-4">
-                                        <a class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>"
+                                        <a class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collab p_8px <?= h($collabo_opt['class']) ?>"
                                            data-toggle="modal"
                                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                            href="#"

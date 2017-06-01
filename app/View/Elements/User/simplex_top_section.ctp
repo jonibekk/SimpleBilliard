@@ -125,7 +125,7 @@
         </p>
         <div class="profile-user-numbers-wrap">
             <div class="profile-user-numbers">
-                <div class="profile-user-numbers-action-counts">
+                <div class="profile-user-counts">
                     <?= h($action_count) ?>
                 </div>
                 <span class="profile-user-numbers-category-action">
@@ -133,7 +133,7 @@
                 </span>
             </div>
             <div class="profile-user-numbers">
-                <div class="profile-user-numbers-post-counts">
+                <div class="profile-user-counts">
                     <?= h($post_count) ?>
                 </div>
                 <span class="profile-user-numbers-category-post">
@@ -141,7 +141,7 @@
                 </span>
             </div>
             <div class="profile-user-numbers">
-                <div class="profile-user-numbers-like-counts">
+                <div class="profile-user-counts">
                     <?= h($this->NumberEx->formatHumanReadable($like_count, ['convert_start' => 10000])) ?>
                 </div>
                 <span class="profile-user-numbers-category-like">

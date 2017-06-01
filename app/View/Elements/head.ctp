@@ -35,34 +35,9 @@
     echo $this->Html->script('/js/goalous.prerender.min');
 
     ?>
-    <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
-        <style>
-            @media screen and (max-width: 991px) {
-                #jsLeftSideContainer {
-                    top: 100px;
-                }
-            }
-        </style>
-        <script type="text/javascript">
-            if (window.matchMedia('screen and (max-width:991px)').matches) {
-                $(function () {
-                    $(window).scroll(function () {
-                        if ($(this).scrollTop() > 1) {
-                            $("#jsLeftSideContainer").stop().animate({"top": "60px"}, 200)
-                        } else {
-                            $("#jsLeftSideContainer").stop().animate({"top": "100px"}, 100);
-                        }
-                    });
-                });
-            } else {
-                // Nothing
-            }
-        </script>
-    <?php endif; ?>
 
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald:400,300|Pathway+Gothic+One">
     <!--[if lt IE 9]>
     <?= $this->Html->script('vendor/html5shiv')?>
     <?= $this->Html->script('vendor/respond.min')?>

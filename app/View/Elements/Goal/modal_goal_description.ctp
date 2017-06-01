@@ -19,7 +19,7 @@
                 <a class=""
                    href="<?= $this->Html->url([
                        'controller' => 'goals',
-                       'action'     => 'view_info',
+                       'action'     => 'view_krs',
                        'goal_id'    => $goal['Goal']['id']
                    ]) ?>">
                     <i class="fa fa-external-link"></i>
@@ -31,7 +31,7 @@
                 <div class="col col-xxs-6">
                     <a href="<?= $this->Html->url([
                         'controller' => 'goals',
-                        'action'     => 'view_info',
+                        'action'     => 'view_krs',
                         'goal_id'    => $goal['Goal']['id']
                     ]) ?>">
                         <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>"
@@ -60,7 +60,7 @@
                             </a>
                         </div>
                         <div>
-                            <a class="btn btn-white bd-circle_22px mt_16px font_verydark collaborate-button modal-ajax-get-collabo <?= h($collabo_opt['class']) ?>"
+                            <a class="btn btn-white bd-circle_22px mt_16px font_verydark collaborate-button modal-ajax-get-collab <?= h($collabo_opt['class']) ?>"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                href="#"
@@ -86,7 +86,7 @@
                         <a class="font_verydark"
                            href="<?= $this->Html->url([
                                'controller' => 'goals',
-                               'action'     => 'view_info',
+                               'action'     => 'view_krs',
                                'goal_id'    => $goal['Goal']['id']
                            ]) ?>">
                             <?= h($goal['Goal']['name']) ?>

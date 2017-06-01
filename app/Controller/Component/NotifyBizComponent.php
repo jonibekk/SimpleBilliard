@@ -570,7 +570,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
         $this->notify_option['url_data'] = [
             'controller' => 'users',
-            'action'     => 'view_info',
+            'action'     => 'view_krs',
             'user_id'    => $invite['ToUser']['id']
         ];
         $this->notify_option['model_id'] = null;
@@ -735,7 +735,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
-        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goal_id];
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
@@ -763,7 +763,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
-        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goal_id];
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
@@ -808,7 +808,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             $notify_type);
         $this->notify_option['notify_type'] = $notify_type;
-        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goal_id];
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
@@ -854,7 +854,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             $notifyType);
         $this->notify_option['notify_type'] = $notifyType;
-        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goalId];
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goalId];
         $this->notify_option['model_id'] = $krId;
         $this->notify_option['item_name'] = json_encode([$kr['name']]);
         $this->notify_option['options']['kr_id'] = $krId;
@@ -932,7 +932,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($goalMembers,
             $notifyType);
         $this->notify_option['notify_type'] = $notifyType;
-        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goalId];
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goalId];
         $this->notify_option['model_id'] = $goalId;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goalId;
@@ -977,7 +977,7 @@ class NotifyBizComponent extends Component
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
-        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goal_id];
         $url_approval_list = ['controller' => 'goals', 'action' => 'approval', 'list'];
         $url_approval_detail = ['controller' => 'goals', 'action' => 'approval', 'detail', $goalMember['id']];
 
@@ -1026,7 +1026,7 @@ class NotifyBizComponent extends Component
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
-        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
+        $url_goal_detail = ['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => $goal_id];
         $url_goal_approval = ['controller' => 'goals', 'action' => 'approval', 'detail', $goal_member_id];
 
         //認定希望していないゴールはゴール詳細へ

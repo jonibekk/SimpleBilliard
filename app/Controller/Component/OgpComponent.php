@@ -283,7 +283,7 @@ class OgpComponent extends CakeObject
             ($url_info['controller'] == 'users' && $url_info['action'] == 'view_goals') ||
             ($url_info['controller'] == 'users' && $url_info['action'] == 'view_actions') ||
             ($url_info['controller'] == 'users' && $url_info['action'] == 'view_posts') ||
-            ($url_info['controller'] == 'users' && $url_info['action'] == 'view_info')
+            ($url_info['controller'] == 'users' && $url_info['action'] == 'view_krs')
         ) {
             $user = ClassRegistry::init('TeamMember')->getByUserId($url_info['named']['user_id']);
             if ($user) {
@@ -299,7 +299,7 @@ class OgpComponent extends CakeObject
             }
         } // ゴールページ
         elseif (
-            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_info') ||
+            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_krs') ||
             ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_krs') ||
             ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_actions') ||
             ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_members') ||
