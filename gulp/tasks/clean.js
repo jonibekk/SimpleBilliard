@@ -11,6 +11,20 @@ gulp.task('js:clean', () => {
     .on('end', () => { gutil.log('----------------- js task finished --------------------------') })
 })
 
+gulp.task('js_home:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jshome_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_home:clean'))
+        .on('end', () => { gutil.log('----------------- js_home task finished --------------------------') })
+});
+
+gulp.task('js_goals:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jsgoals_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_goals:clean'))
+        .on('end', () => { gutil.log('----------------- js_goals task finished --------------------------') })
+});
+
 gulp.task('js_vendor:clean', () => {
   return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))

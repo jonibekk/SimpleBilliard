@@ -7,14 +7,29 @@ const config = {
   compiled_js_dir: compiled_assets_dir + '/js',
   dest: assets_dir + '/dest',
   js: {
+    pages: {
+        home: [
+            assets_dir + '/js/lib/forms.js',
+            assets_dir + '/js/lib/notify.js',
+            assets_dir + '/js/lib/comments.js',
+            assets_dir + '/js/lib/feed.js',
+            assets_dir + '/js/lib/posts.js'
+        ],
+        goals: [
+            assets_dir + '/js/lib/feed.js',
+        ]
+    },
     src: [
       assets_dir + '/js/dropzone_setting.js',
+      assets_dir + '/js/lib/global.js',
+      assets_dir + '/js/lib/header.js',
       assets_dir + '/js/gl_basic.js',
-      assets_dir + '/js/lib/**/*.js',
       assets_dir + '/js/view/**/*.js'
     ],
     output: {
       file_name: 'goalous',
+      home_script_name: 'goalous_home',
+      goals_script_name: 'goalous_goal',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [

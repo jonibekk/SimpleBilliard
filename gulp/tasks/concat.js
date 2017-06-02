@@ -6,6 +6,22 @@ import duration from 'gulp-duration'
 import ngAnnotate from 'gulp-ng-annotate'
 import config from '../config.js'
 
+gulp.task('js_home:concat', () => {
+    return gulp.src([...config.js.pages.home])
+        .pipe(plumber())
+        .pipe(concat(config.js.output.home_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jshome_cat'))
+        .pipe(duration('js_home:concat'))
+});
+
+gulp.task('js_goals:concat', () => {
+    return gulp.src([...config.js.pages.goals])
+        .pipe(plumber())
+        .pipe(concat(config.js.output.goals_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jsgoals_cat'))
+        .pipe(duration('js_goals:concat'))
+});
+
 gulp.task('js:concat', () => {
   return gulp.src([...config.js.src, config.dest + '/js/*.js'])
     .pipe(plumber())

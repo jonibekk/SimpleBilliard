@@ -10,8 +10,28 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react'], done)
-})
+  return runSequence(['js_home', 'js_goals', 'js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react'], done)
+});
+
+// js home
+gulp.task('js_home', done => {
+  return runSequence(
+    'js_home:concat',
+    'js_home:uglify',
+    'js_home:clean',
+    done
+  );
+});
+
+// js home
+gulp.task('js_goals', done => {
+  return runSequence(
+    'js_goals:concat',
+    'js_goals:uglify',
+    'js_goals:clean',
+    done
+  );
+});
 
 // js app
 gulp.task('js_app', done => {

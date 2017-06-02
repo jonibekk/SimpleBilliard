@@ -133,6 +133,7 @@ $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec
 });
+
 if (typeof String.prototype.startsWith != 'function') {
   // see below for better implementation!
   String.prototype.startsWith = function (str) {
@@ -144,25 +145,10 @@ require.config({
   baseUrl: '/js/modules/'
 });
 
-var network_reachable = true;
+
 var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
-function bindCommentBalancedGallery($obj) {
-  console.log("gl_basic.js: bindCommentBalancedGallery");
-  $obj.removeClass('none');
-  $obj.BalancedGallery({
-    autoResize: false,                   // re-partition and resize the images when the window size changes
-    //background: '#DDD',                   // the css properties of the gallery's containing element
-    idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
-    //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-    //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
-    orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-    padding: 1,                         // pixels between images
-    shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
-    //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
-    //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
-  });
-};
+
 
 /**
  * 画像の高さを親の要素に割り当てる
@@ -196,20 +182,7 @@ function changeSizeActionImage($obj) {
 }
 
 
-/**
- * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
- *
- * @param selector
- * @param callback Control + Enter が押された時に実行されるコールバック関数
- */
-var bindCtrlEnterAction = function (selector, callback) {
-  console.log("gl_basic.js: bindCtrlEnterAction");
-  $(document).on('keydown', selector, function (e) {
-    if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
-      callback.call(this, e);
-    }
-  })
-};
+
 
 // selectorの存在確認用
 jQuery.fn.exists = function () {
@@ -224,39 +197,7 @@ jQuery.fn.hasScrollBar = function () {
 }
 
 
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
 
-  bindCommentBalancedGallery($('.comment_gallery'));
-
-  setDefaultTab();
-
-  // for setting the team_id_current in local storage
-  clickToSetCurrentTeamId();
-
-  // if team changed from other tab then don't allow user to proceed without reload
-  $('body').click(function () {
-    if (Number(cake.data.team_id) !== Number(localStorage.team_id_current)) {
-      var r = confirm(cake.translation["Team has been changed, press ok to reload!"]);
-      if (r == true) {
-        document.location.reload(true);
-        return false;
-      } else {
-        return false;
-      }
-    }
-  });
-
-});
-
-function clickToSetCurrentTeamId() {
-    console.log("gl_basic.js: clickToSetCurrentTeamId");
-  if (typeof(Storage) !== "undefined") {
-    localStorage.team_id_current = Number(cake.data.team_id);
-  } else {
-    console.log("Sorry, your browser does not support web storage...");
-  }
-};
 
 
 $(document).ready(function () {
@@ -271,16 +212,9 @@ $(document).ready(function () {
     fastClick();
   }
 
-  //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
-  window.addEventListener("online", function () {
-    updateNotifyCnt();
-    updateMessageNotifyCnt();
-    network_reachable = true;
-  }, false);
 
-  window.addEventListener("offline", function () {
-    network_reachable = false;
-  }, false);
+
+
 
 
   $(document).on('keyup', '#message_text_input', function () {
@@ -316,33 +250,6 @@ $(document).ready(function () {
   });
   //ヘッダーサブメニューでのフィード、ゴール切り換え処理
   //noinspection JSJQueryEfficiency
-  $('#SubHeaderMenu a').click(function () {
-    //既に選択中の場合は何もしない
-    if ($(this).hasClass('sp-feed-active')) {
-      return;
-    }
-
-    if ($(this).attr('id') == 'SubHeaderMenuFeed') {
-      $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
-      $(this).addClass('sp-feed-active');
-      //表示切り換え
-      $('[role="goal_area"]').addClass('visible-md visible-lg');
-      $('[role="main"]').removeClass('visible-md visible-lg');
-    }
-    else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
-      $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
-      $(this).addClass('sp-feed-active');
-      //表示切り換え
-      $('[role="main"]').addClass('visible-md visible-lg');
-      $('[role="goal_area"]').removeClass('visible-md visible-lg');
-      // HACK:reactの進捗グラフをリサイズするため架空要素(表示はしない)のクリックイベントを使用
-      $('.js-flush-chart').trigger('click');
-    }
-    else {
-      //noinspection UnnecessaryReturnStatementJS
-      return;
-    }
-  });
 
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function () {
@@ -453,11 +360,7 @@ $(document).ready(function () {
   //noinspection JSJQueryEfficiency
   $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
-  //noinspection JSJQueryEfficiency,JSUnresolvedFunction
-  imageLazyOn();
-  //showmore
-  //noinspection JSUnresolvedFunction
-  showMore();
+
   //carousel
   $('.carousel').carousel({interval: false});
 
@@ -488,13 +391,12 @@ $(document).ready(function () {
   //noinspection SpellCheckingInspection
   $(document).on("keyup", ".blank-disable", evBlankDisable);
   //noinspection JSUnresolvedVariable
-  $(document).on("click", ".click-feed-read-more", evFeedMoreView);
+
   //noinspection JSUnresolvedVariable
-  $(document).on("click", ".click-comment-all", evCommentOldView);
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".click-like", evLike);
   //noinspection JSUnresolvedVariable
-  $(document).on("click", ".target-toggle-click", evTargetToggleClick);
+
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
   //noinspection JSUnresolvedVariable
@@ -513,7 +415,6 @@ $(document).ready(function () {
   $(document).on("click", ".click-show-post-modal", getModalPostList);
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".toggle-follow", evFollowGoal);
-  $(document).on("click", ".notify-click-target", evNotifyPost);
   $(document).on("click", ".btn-back-notifications", evNotifications);
   $(document).on("click", ".call-notifications", evNotifications);
   // TODO:delete.進捗グラフリリース時に不要になるので必ず削除
@@ -693,11 +594,7 @@ $(document).ready(function () {
     });
   });
 
-  //lazy load
-  $(document).on("click", '.target-toggle-click', function (e) {
-    e.preventDefault();
-    imageLazyOn();
-  });
+
   // KR進捗の詳細値を表示
   $(document).on("click", '.js-show-detail-progress-value', function (e) {
     var current_value = $(this).data('current_value');
@@ -820,53 +717,8 @@ $(document).ready(function () {
       .replace('maximum-scale=10', 'maximum-scale=1'));
   });
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Ctrl(Command) + Enter 押下時のコールバック
-  ///////////////////////////////////////////////////////////////////////////
-
-
-  // 投稿フォーム
-  bindCtrlEnterAction('#PostDisplayForm', function (e) {
-    $('#PostSubmit').trigger('click');
-  });
-
-  // メッセージフォーム
-  bindCtrlEnterAction('#MessageDisplayForm', function (e) {
-    $('#MessageSubmit').trigger('click');
-  });
-
-  // メッセージ個別ページ
-  bindCtrlEnterAction('#message_text_input', function (e) {
-    $('#message_submit_button').trigger('click');
-  });
-
-  // コメント
-  bindCtrlEnterAction('.comment-form', function (e) {
-    $(this).find('.comment-submit-button').trigger('click');
-  });
 });
-function imageLazyOn($elm_obj) {
-    console.log("gl_basic.js: imageLazyOn");
-  var lazy_option = {
-    bind: "event",
-    attribute: "data-original",
-    combined: true,
-    delay: 100,
-    visibleOnly: false,
-    removeAttribute: false,
-    onError: function (element) {
-      if (element.attr('error-img') != undefined) {
-        element.attr("src", element.attr('error-img'));
-      }
-    }
-  };
-  if ($elm_obj === undefined) {
-    return $("img.lazy").lazy(lazy_option);
-  }
-  else {
-    return $elm_obj.find("img.lazy").lazy(lazy_option);
-  }
-}
+
 function evTargetRemove() {
     console.log("gl_basic.js: evTargetRemove");
   attrUndefinedCheck(this, 'target-selector');
@@ -951,53 +803,6 @@ function resizeImgBase64(imgBase64, width, height, callback) {
   img.src = imgBase64;
 }
 
-/**
- *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
- *
- * @param formID
- * @returns {boolean}
- */
-function checkUploadFileExpire(formID) {
-    console.log("gl_basic.js: checkUploadFileExpire");
-  var $form = $('#' + formID);
-
-  var res = true;
-  $form.find('input[type=hidden][name="data[file_id][]"]').each(function () {
-    var $hidden = $(this);
-    var now = Math.floor(new Date().getTime() / 1000);
-
-    // ファイルの有効期限が切れている場合（30 秒余裕を持たす）
-    if (now - parseInt($hidden.attr('data-uploaded'), 10) > cake.pre_file_ttl - 30) {
-      var $uploadFileForm = $(document).data('uploadFileForm');
-
-      // Dropzone の管理ファイルから外す
-      var removed_file;
-      for (var i = 0; i < $uploadFileForm._files[formID].length; i++) {
-        if ($hidden.val() == $uploadFileForm._files[formID][i].file_id) {
-          removed_file = $uploadFileForm._files[formID].splice(i, 1)[0];
-          break;
-        }
-      }
-      // hidden を削除
-      $hidden.remove();
-      // プレビューエリアを非表示にする
-      $(removed_file.previewElement).fadeOut();
-
-      res = false;
-    }
-  });
-  if (!res) {
-    new PNotify({
-      type: 'error',
-      title: cake.word.error,
-      text: cake.message.validate.dropzone_uploaded_file_expired,
-      icon: "fa fa-check-circle",
-      delay: 6000,
-      mouse_reset: false
-    });
-  }
-  return res;
-}
 
 
 
@@ -1074,77 +879,7 @@ function evRemoveThis() {
     console.log("gl_basic.js: evRemoveThis");
   $(this).remove();
 }
-function evTargetToggleClick() {
-    console.log("gl_basic.js: evTargetToggleClick");
-  attrUndefinedCheck(this, 'target-id');
-  attrUndefinedCheck(this, 'click-target-id');
 
-  var $obj = $(this);
-  var target_id = $obj.attr("target-id");
-  var click_target_id = $obj.attr("click-target-id");
-  var comment_id = target_id.split('_')[1];
-  if ($obj.attr("hidden-target-id")) {
-    var $commentBox = $('#' + $obj.attr("hidden-target-id"));
-    $commentBox.toggle();
-    // Hide OGP box
-    var $ogpBox = $('#CommentOgpBox_'+comment_id);
-    if ($ogpBox.length > 0) {
-      $ogpBox.toggle();
-    }
-  }
-
-  //開いている時と閉じてる時のテキストの指定があった場合は置き換える
-  if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
-    //開いてるとき
-    if ($("#" + target_id).is(':visible')) {
-      //閉じてる表示
-      $obj.text($obj.attr("closed-text"));
-    }
-    //閉じてるとき
-    else {
-      //開いてる表示
-      $obj.text($obj.attr("opend-text"));
-    }
-  }
-  if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
-    $.ajax({
-      url: $obj.attr("ajax-url"),
-      async: false,
-      success: function (data) {
-        //noinspection JSUnresolvedVariable
-        if (data.error) {
-          //noinspection JSUnresolvedVariable
-          alert(data.msg);
-        }
-        else {
-          var $editForm = $(data.html);
-          var $ogp = $editForm.find('.js-ogp-box');
-          if ($ogp.length > 0) {
-            var $btnClose = $editForm.find('.js-ogp-close');
-            $btnClose.on('click', function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              $ogp.empty();
-              $btnClose.remove();
-            });
-          }
-          $("#" + $obj.attr("hidden-target-id")).after($editForm);
-        }
-      }
-    });
-  }
-
-  $("form#" + target_id).bootstrapValidator();
-  $("#" + target_id).find('.custom-radio-check').customRadioCheck();
-
-  //noinspection JSJQueryEfficiency
-  $("#" + target_id).toggle();
-  //noinspection JSJQueryEfficiency
-  $("#" + click_target_id).trigger('click');
-  //noinspection JSJQueryEfficiency
-  $("#" + click_target_id).focus();
-  return false;
-}
 
 /**
  * 以下の処理を行う
@@ -1405,48 +1140,7 @@ function getLocalDate() {
   var fullDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
   return fullDate;
 }
-/**
- * 属性が存在するかチェック
- * 存在しない場合はエラーを吐いて終了
- * @param obj
- * @param attr_name
- */
-function attrUndefinedCheck(obj, attr_name) {
-    console.log("__gl_basic.js: attrUndefinedCheck");
-  if ($(obj).attr(attr_name) == undefined) {
-    var msg = "'" + attr_name + "'" + " is undefined!";
-    throw new Error(msg);
-  }
-}
 
-//SubHeaderMenu
-$(function () {
-    console.log("gl_basic.js: $(function ()");
-  var showNavFlag = false;
-  var subNavbar = $("#SubHeaderMenu");
-  $(window).scroll(function () {
-    if ($(this).scrollTop() > 1) {
-      if (showNavFlag == false) {
-        showNavFlag = true;
-        subNavbar.stop().animate({"top": "-60"}, 800);
-      }
-    } else {
-      if (showNavFlag) {
-        showNavFlag = false;
-        var scroll_offset = 0;
-        subNavbar.stop().animate({"top": scroll_offset}, 400);
-      }
-    }
-  });
-  $(window).scroll(function () {
-    if ($(this).scrollTop() > 10) {
-      $(".navbar").addClass("mod-box-shadow");
-    } else {
-      $(".navbar").removeClass("mod-box-shadow");
-    }
-    
-  });
-});
 
 $(function () {
     console.log("gl_basic.js: $(function ()");
@@ -1558,44 +1252,9 @@ $(function () {
   }
 });
 
-//入力途中での警告表示
-//静的ページのにはすべて適用
-function setChangeWarningForAllStaticPage() {
-    console.log("gl_basic.js: setChangeWarningForAllStaticPage");
-  //オートコンプリートでchangeしてしまうのを待つ
-  setTimeout(function () {
-    var flag = false;
-    $(":input").each(function () {
-      var default_val = "";
-      var changed_val = "";
-      default_val = $(this).val();
-      $(this).on("change keyup keydown", function () {
-        if ($(this).hasClass('disable-change-warning')) {
-          return;
-        }
-        changed_val = $(this).val();
-        if (default_val != changed_val) {
-          $(this).addClass("changed");
-        } else {
-          $(this).removeClass("changed");
-        }
-      });
-    });
-    $(document).on('submit', 'form', function () {
-      flag = true;
-    });
-    $(window).on("beforeunload", function () {
-      if ($(".changed").length != "" && flag == false) {
-        return cake.message.notice.a;
-      }
-    });
-  }, 2000);
-}
 
-function warningCloseModal() {
-    console.log("gl_basic.js: warningCloseModal");
-  warningAction($('.modal'));
-}
+
+
 
 function warningAction($obj) {
     console.log("gl_basic.js: warningAction");
@@ -1682,97 +1341,7 @@ $(function () {
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
 
-  setChangeWarningForAllStaticPage();
 
-  warningCloseModal();
-
-  $('[rel="tooltip"]').tooltip();
-
-  $('.validate').bootstrapValidator({
-    live: 'enabled',
-    fields: {
-      "data[User][password]": {
-        validators: {
-          stringLength: {
-            min: 8,
-            message: cake.message.validate.a
-          },
-          regexp: {
-            regexp: /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/,
-            message: cake.message.validate.e
-          }
-        }
-      },
-      "data[User][password_confirm]": {
-        validators: {
-          stringLength: {
-            min: 8,
-            message: cake.message.validate.a
-          },
-          identical: {
-            field: "data[User][password]",
-            message: cake.message.validate.b
-          }
-        }
-      },
-      "validate-checkbox": {
-        selector: '.validate-checkbox',
-        validators: {
-          choice: {
-            min: 1,
-            max: 1,
-            message: cake.message.validate.d
-          }
-        }
-      }
-    }
-  });
-  $('#PostDisplayForm').bootstrapValidator({
-    live: 'enabled',
-
-    fields: {}
-  });
-  $('#MessageDisplayForm').bootstrapValidator({
-    live: 'enabled',
-
-    fields: {}
-  });
-  $('#CommonActionDisplayForm').bootstrapValidator({
-    live: 'enabled',
-
-    fields: {
-      photo: {
-        // All the email address field have emailAddress class
-        selector: '.ActionResult_input_field',
-        validators: {
-          callback: {
-            callback: function (value, validator, $field) {
-              var isEmpty = true,
-                // Get the list of fields
-                $fields = validator.getFieldElements('photo');
-              for (var i = 0; i < $fields.length; i++) {
-                if ($fields.eq(i).val() != '') {
-                  isEmpty = false;
-                  break;
-                }
-              }
-
-              if (isEmpty) {
-                //// Update the status of callback validator for all fields
-                validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
-                return false;
-              }
-              validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
-              return true;
-            }
-          }
-        }
-      }
-    }
-  });
-  $('.ActionResult_input_field').on('change', function () {
-    $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
-  });
 
   initMemberSelect2();
   initCircleSelect2();
@@ -2490,16 +2059,7 @@ function updateAddressBar(url) {
   }
 }
 
-function evMessageList(options) {
-    console.log("gl_basic.js: evMessageList");
-  //とりあえずドロップダウンは隠す
-  $(".has-notify-dropdown").removeClass("open");
-  $('body').removeClass('notify-dropdown-open');
 
-  var url = cake.url.message_list;
-  location.href = url;
-  return false;
-}
 
 
 function evNotifications(options) {
@@ -2582,116 +2142,7 @@ function evNotifications(options) {
   return false;
 }
 
-// 通知から投稿、メッセージに移動
-// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
-//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
-function evNotifyPost(options) {
-    console.log("gl_basic.js: evNotifyPost");
 
-  //とりあえずドロップダウンは隠す
-  $(".has-notify-dropdown").removeClass("open");
-  $('body').removeClass('notify-dropdown-open');
-
-  var opt = $.extend({
-    recursive: false,
-    loader_id: null
-  }, options);
-
-  //フィード読み込み中はキャンセル
-  if (feed_loading_now) {
-    return false;
-  }
-  feed_loading_now = true;
-
-  attrUndefinedCheck(this, 'get-url');
-
-  var $obj = $(this);
-  var get_url = $obj.attr('get-url');
-
-  //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
-  //要素が多すぎるので、おとなしくページリロードする
-  //urlにpost_permanentを含まない場合も対象外
-  if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
-    // 現状、メッセージページに遷移する場合はこのブロックを通る
-    feed_loading_now = false;
-    window.location.href = get_url;
-    return false;
-  }
-
-  //アドレスバー書き換え
-  if (!updateAddressBar(get_url)) {
-    return false;
-  }
-
-  $('#jsGoTop').click();
-
-  //ローダー表示
-  var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
-  if (!opt.recursive) {
-    $(".layout-main").html($loader_html);
-  }
-
-  // URL生成
-  var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
-
-  var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
-
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $posts = $(data.html);
-        //notify一覧に戻るhtmlを追加
-        //画像をレイジーロード
-        imageLazyOn($posts);
-        //一旦非表示
-        $posts.fadeOut();
-
-        $(".layout-main").html(button_notifylist);
-        $(".layout-main").append($posts);
-        $(".layout-main").append(button_notifylist);
-
-        showMore($posts);
-        $posts.fadeIn();
-
-        //リンクを有効化
-        $obj.removeAttr('disabled');
-        $("#ShowMoreNoData").hide();
-        $posts.imagesLoaded(function () {
-          $posts.find('.post_gallery').each(function (index, element) {
-            bindPostBalancedGallery($(element));
-          });
-          $posts.find('.comment_gallery').each(function (index, element) {
-            bindCommentBalancedGallery($(element));
-          });
-          changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
-        });
-      }
-
-      //ローダーを削除
-      $loader_html.remove();
-
-      // Google tag manager トラッキング
-      if (cake.data.google_tag_manager_id !== "") {
-        sendToGoogleTagManager('app');
-      }
-
-      action_autoload_more = false;
-      autoload_more = false;
-      feed_loading_now = false;
-      do_reload_header_bellList = true;
-    },
-    error: function () {
-      feed_loading_now = false;
-      $loader_html.remove();
-    },
-  });
-  return false;
-}
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
@@ -2821,64 +2272,7 @@ function evBasicReadMore(options) {
   return false;
 }
 
-function evCommentOldView() {
-    console.log("gl_basic.js: evCommentOldView");
-  attrUndefinedCheck(this, 'parent-id');
-  attrUndefinedCheck(this, 'get-url');
-  var $obj = $(this);
-  var parent_id = $obj.attr('parent-id');
-  var get_url = $obj.attr('get-url');
-  //リンクを無効化
-  $obj.attr('disabled', 'disabled');
-  var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  //ローダー表示
-  $obj.after($loader_html);
-  $.ajax({
-    type: 'GET',
-    url: get_url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $posts = $(data.html);
-        //画像をレイジーロード
-        imageLazyOn($posts);
-        //一旦非表示
-        $posts.fadeOut();
-        $("#" + parent_id).before($posts);
-        showMore($posts);
-        $posts.fadeIn();
-        //ローダーを削除
-        $loader_html.remove();
-        //リンクを削除
-        $obj.css("display", "none").css("opacity", 0);
-        $posts.imagesLoaded(function () {
-          $posts.find('.comment_gallery').each(function (index, element) {
-            bindCommentBalancedGallery($(element));
-          });
-          changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
-        });
 
-      }
-      else {
-        //ローダーを削除
-        $loader_html.remove();
-        //親を取得
-        //noinspection JSCheckFunctionSignatures
-        var $parent = $obj.parent();
-        //「もっと読む」リンクを削除
-        $obj.remove();
-        //「データが無かった場合はデータ無いよ」を表示
-        $parent.append(cake.message.info.g);
-      }
-    },
-    error: function () {
-      alert(cake.message.notice.c);
-    }
-  });
-  return false;
-}
 function evLike() {
     console.log("gl_basic.js: evLike");
   attrUndefinedCheck(this, 'like_count_id');
@@ -3131,14 +2525,6 @@ function notifyNewFeed() {
   }, 100);
 }
 
-function appendSocketId(form, socketId) {
-    console.log("gl_basic.js: appendSocketId");
-  $('<input>').attr({
-    type: 'hidden',
-    name: 'socket_id',
-    value: socketId
-  }).appendTo(form);
-}
 
 // notify boxにpage idをセット
 function setPageTypeId() {
@@ -3215,316 +2601,13 @@ $(document).ready(function () {
 
 
 
-function initCommentNotify(notifyBox) {
-    console.log("gl_basic.js: initCommentNotify");
-  var numInBox = notifyBox.find(".num");
-  numInBox.html("0");
-  notifyBox.css("display", "none").css("opacity", 0);
-}
 
-//bootstrapValidatorがSuccessした時
-function validatorCallback(e) {
-    console.log("gl_basic.js: validatorCallback");
-  if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
-    addComment(e);
-  }
-  else if (e.target.id == "ActionCommentForm") {
-    addComment(e);
-  }
-}
 
-/**
- * お知らせ一覧のページング処理
- *
- * @param e
- * @param params
- *          locationType: string  (*必須) 呼び出し元を表す文字列 'page' | 'dropdown'
- *          showLoader: function($loading_html)  ローディング画像の表示処理を行うコールバック関数
- *          hideLoader: function($loading_html)  ローディング画像の削除処理を行うコールバック関数
- * @returns {boolean}
- */
-function evNotifyMoreView(e, params) {
-    console.log("gl_basic.js: evNotifyMoreView");
-  attrUndefinedCheck(this, 'get-url');
-
-  var $obj = $(this);
-  var oldest_score_id = $("ul.notify-" + params.locationType + "-cards").children("li.notify-card-list:last").attr("data-score");
-  var get_url = $obj.attr('get-url');
-  //リンクを無効化
-  $obj.attr('disabled', 'disabled');
-  var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  //ローダー表示
-  if (params.showLoader) {
-    params.showLoader.call(this, $loader_html);
-  }
-  else {
-    $obj.after($loader_html);
-  }
-
-  //url生成
-  var url = get_url + '/' + String(oldest_score_id) + '/' + params.locationType;
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (data) {
-      autoload_more = false;
-      if (!$.isEmptyObject(data.html)) {
-        //取得したhtmlをオブジェクト化
-        var $notify = $(data.html);
-        //一旦非表示
-        $notify.hide();
-        $(".notify-" + params.locationType + "-cards").append($notify);
-        //html表示
-        $notify.show("slow", function () {
-          //もっと見る
-          showMore(this);
-        });
-        //ローダーを削除
-        if (params.hideLoader) {
-          params.hideLoader.call($obj.get(0), $loader_html);
-        }
-        else {
-          $loader_html.remove();
-        }
-        $obj.removeAttr('disabled');
-        $("#ShowMoreNoData").hide();
-        //画像をレイジーロード
-        imageLazyOn();
-        if (parseInt(data.item_cnt) < cake.new_notify_cnt) {
-          //ローダーを削除
-          $loader_html.remove();
-          //もっと読む表示をやめる
-          $(".feed-read-more").remove();
-        }
-
-      } else {
-        //ローダーを削除
-        $loader_html.remove();
-        //もっと読む表示をやめる
-        $(".feed-read-more").remove();
-      }
-    },
-    error: function () {
-      //ローダーを削除
-      $loader_html.remove();
-      $obj.removeAttr('disabled');
-      $("#ShowMoreNoData").hide();
-    }
-  });
-  return false;
-}
-
-$(function () {
-    console.log("gl_basic.js: $(function ()");
-  // お知らせ一覧ページの次のページ読込みボタン
-  $(document).on("click", ".click-notify-read-more-page", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var $this = $(this);
-    evNotifyMoreView.call(this, e, {
-      locationType: "page"
-    });
-  });
-
-  // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
-  $(document).on("click", ".click-notify-read-more-dropdown", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var $this = $(this);
-    evNotifyMoreView.call(this, e, {
-      locationType: "dropdown",
-      showLoader: function ($loader_html) {
-        $('#bell-dropdown').append($('<div>').append($loader_html).css({
-          textAlign: 'center',
-        }));
-
-      },
-      hideLoader: function ($loader_html) {
-        $loader_html.remove();
-      }
-    });
-  });
-});
-
-// Auto update notify cnt
-$(function () {
-    console.log("gl_basic.js: $(function()");
-  if (cake.data.team_id) {
-    setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
-  }
-
-  setNotifyCntToBellAndTitle(cake.new_notify_cnt);
-  //メッセージ詳細ページの場合は実行しない。(メッセージ取得後に実行される為)
-  if (cake.request_params.controller != 'posts' || cake.request_params.action != 'message') {
-    setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
-  }
-});
-
-function setIntervalToGetNotifyCnt(sec) {
-    console.log("gl_basic.js: setIntervalToGetNotifyCnt");
-  setInterval(function () {
-    updateNotifyCnt();
-    updateMessageNotifyCnt();
-  }, sec * 1000);
-}
-
-function updateNotifyCnt() {
-    console.log("gl_basic.js: updateNotifyCnt");
-
-  var url = cake.url.f + '/team_id:' + $('#SwitchTeam').val();
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (res) {
-      if (res.error) {
-        location.reload();
-        return;
-      }
-      if (res != 0) {
-        setNotifyCntToBellAndTitle(res);
-      }
-    },
-    error: function () {
-    }
-  });
-  return false;
-}
-
-function updateMessageNotifyCnt() {
-    console.log("gl_basic.js: updateMessageNotifyCnt");
-  var url = cake.url.af + '/team_id:' + $('#SwitchTeam').val();
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (res) {
-      if (res.error) {
-        location.reload();
-        return;
-      }
-      setNotifyCntToMessageAndTitle(res);
-      if (res != 0) {
-      }
-    },
-    error: function () {
-    }
-  });
-  return false;
-}
-
-function setNotifyCntToBellAndTitle(cnt) {
-    console.log("gl_basic.js: setNotifyCntToBellAndTitle");
-  var $bellBox = getBellBoxSelector();
-  var existingBellCnt = parseInt($bellBox.children('span').html());
-
-  if (cnt == 0) {
-    return;
-  }
-
-  // set notify number
-  if (parseInt(cnt) <= 20) {
-    $bellBox.children('span').html(cnt);
-    $bellBox.children('sup').addClass('none');
-  } else {
-    $bellBox.children('span').html(20);
-    $bellBox.children('sup').removeClass('none');
-  }
-  updateTitleCount();
-
-  if (existingBellCnt == 0) {
-    displaySelectorFluffy($bellBox);
-  }
-  return;
-}
-
-function setNotifyCntToMessageAndTitle(cnt) {
-    console.log("gl_basic.js: setNotifyCntToMessageAndTitle");
-  var cnt = parseInt(cnt);
-  var $bellBox = getMessageBoxSelector();
-  var existingBellCnt = parseInt($bellBox.children('span').html());
-
-  if (cnt != 0) {
-    // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-    $('#click-header-message').next().addClass('dropdown-menu');
-  }
-  else {
-    // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-    $('#click-header-message').next().removeClass('dropdown-menu');
-  }
-
-  // set notify number
-  if (cnt == 0) {
-    $bellBox.children('span').html(cnt);
-    $bellBox.children('sup').addClass('none');
-  } else if (cnt <= 20) {
-    $bellBox.children('span').html(cnt);
-    $bellBox.children('sup').addClass('none');
-  } else {
-    $bellBox.children('span').html(20);
-    $bellBox.children('sup').removeClass('none');
-  }
-  updateTitleCount();
-
-  if (existingBellCnt == 0 && cnt >= 1) {
-    displaySelectorFluffy($bellBox);
-  } else if (cnt == 0) {
-    $bellBox.css("opacity", 0);
-  }
-  return;
-}
-
-// <title> に表示される通知数を更新する
-function updateTitleCount() {
-    console.log("gl_basic.js: updateTitleCount");
-  var $title = $("title");
-  var current_cnt = getNotifyCnt() + getMessageNotifyCnt();
-  var current_str = '';
-
-  if (current_cnt > 20) {
-    current_str = '(20+)';
-  }
-  else if (current_cnt > 0) {
-    current_str = '(' + current_cnt + ')';
-  }
-  $title.text(current_str + $title.attr("origin-title"));
-}
-
-function displaySelectorFluffy(selector) {
-    console.log("gl_basic.js: displaySelectorFluffy");
-  var i = 0.2;
-  var roop = setInterval(function () {
-    selector.css("opacity", i);
-    i = i + 0.2;
-    if (i > 1) {
-      clearInterval(roop);
-    }
-  }, 100);
-}
 
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
   var click_cnt = 0;
-  $(document).on("click", "#click-header-bell", function () {
-    click_cnt++;
-    var isExistNewNotify = isExistNewNotify();
-    initBellNum();
-    initTitle();
 
-    if (isExistNewNotify || click_cnt == 1 || do_reload_header_bellList) {
-      updateListBox();
-      do_reload_header_bellList = false;
-    }
-
-    function isExistNewNotify() {
-      var newNotifyCnt = getNotifyCnt();
-      if (newNotifyCnt > 0) {
-        return true;
-      }
-      return false;
-    }
-  });
   $('#HeaderDropdownNotify')
     .on('shown.bs.dropdown', function () {
       $("body").addClass('notify-dropdown-open');
@@ -3534,86 +2617,13 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
-  var click_cnt = 0;
-  $(document).on("click", "#click-header-message", function (e) {
-    // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
-    if (getMessageNotifyCnt() == 0) {
-      evMessageList(null);
-      return;
-    }
 
-    initTitle();
-    updateMessageListBox();
-  });
-});
 
-function initBellNum() {
-    console.log("gl_basic.js: initBellNum");
-  var $bellBox = getBellBoxSelector();
-  $bellBox.css("opacity", 0);
-  $bellBox.children('span').html("0");
-}
-function initMessageNum() {
-    console.log("gl_basic.js: initMessageNum");
-  var $box = getMessageBoxSelector();
-  $box.css("opacity", 0);
-  $box.children('span').html("0");
-}
 
-function initTitle() {
-    console.log("gl_basic.js: initTitle");
-  var $title = $("title");
-  $title.text(sanitize($title.attr("origin-title")));
-}
 
-function getBellBoxSelector() {
-    console.log("gl_basic.js: getBellBoxSelector");
-  return $("#bellNum");
-}
-function getMessageBoxSelector() {
-    console.log("gl_basic.js: getMessageBoxSelector");
-  return $("#messageNum");
-}
 
-function getNotifyCnt() {
-    console.log("gl_basic.js: getNotifyCnt");
-  var $bellBox = getBellBoxSelector();
-  return parseInt($bellBox.children('span').html(), 10);
-}
 
-function getMessageNotifyCnt() {
-    console.log("gl_basic.js: getMessageNotifyCnt");
-  var $box = getMessageBoxSelector();
-  return parseInt($box.children('span').html(), 10);
-}
 
-function updateListBox() {
-    console.log("gl_basic.js: updateListBox");
-  var $bellDropdown = $("#bell-dropdown");
-  $bellDropdown.empty();
-  var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
-  //ローダー表示
-  $bellDropdown.append($loader_html);
-  var url = cake.url.g;
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (data) {
-      //取得したhtmlをオブジェクト化
-      var $notifyItems = data;
-      $loader_html.remove();
-      $bellDropdown.append($notifyItems);
-      //画像をレイジーロード
-      imageLazyOn();
-    },
-    error: function () {
-    }
-  });
-  return false;
-}
 
 // reset bell notify num call from app.
 function resetBellNum() {
@@ -3633,31 +2643,7 @@ function resetBellNum() {
   });
 }
 
-function updateMessageListBox() {
-    console.log("gl_basic.js: updateMessageListBox");
-  var $messageDropdown = $("#message-dropdown");
-  $messageDropdown.empty();
-  var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
-  //ローダー表示
-  $messageDropdown.append($loader_html);
-  var url = cake.url.ag;
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (data) {
-      //取得したhtmlをオブジェクト化
-      var $notifyItems = data;
-      $loader_html.remove();
-      $messageDropdown.append($notifyItems);
-      //画像をレイジーロード
-      imageLazyOn();
-    },
-    error: function () {
-    }
-  });
-  return false;
-}
+
 
 // reset bell message num call from app.
 function resetMessageNum() {
@@ -3684,51 +2670,6 @@ function copyToClipboard(url) {
 
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
-  $(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-      if (!autoload_more) {
-        autoload_more = true;
-
-        if (network_reachable) {
-          var $FeedMoreReadLink = $('#FeedMoreReadLink');
-          var $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
-          var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
-          var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
-
-          if ($FeedMoreReadLink.is(':visible')) {
-            $FeedMoreReadLink.trigger('click');
-          }
-          if ($GoalPageFollowerMoreLink.is(':visible')) {
-            $GoalPageFollowerMoreLink.trigger('click');
-          }
-          if ($GoalPageMemberMoreLink.is(':visible')) {
-            $GoalPageMemberMoreLink.trigger('click');
-          }
-          if ($GoalPageKeyResultMoreLink.is(':visible')) {
-            $GoalPageKeyResultMoreLink.trigger('click');
-          }
-        } else {
-          autoload_more = false;
-          return false;
-        }
-      }
-    }
-  });
-
-  // ヘッダーのお知らせ一覧ポップアップのオートローディング
-  var prevScrollTop = 0;
-  $('#bell-dropdown').scroll(function () {
-    var $this = $(this);
-    var currentScrollTop = $this.scrollTop();
-
-    if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
-      if (!autoload_more) {
-        autoload_more = true;
-        $('#NotifyDropDownReadMore').trigger('click');
-      }
-    }
-    prevScrollTop = currentScrollTop;
-  });
 
   // アクションの編集画面の場合は、画像選択の画面をスキップし、
   // ajax で動いている select を選択済みにする
@@ -3891,32 +2832,6 @@ function evAjaxLeaveCircle(e) {
     });
 }
 
-function setDefaultTab() {
-    console.log("gl_basic.js: setDefaultTab");
-  if (cake.common_form_type == "") {
-    return;
-  }
-  switch (cake.common_form_type) {
-    case "action":
-      $('#CommonFormTabs li:eq(0) a').tab('show');
-      break;
-    case "post":
-      $('#CommonFormTabs li:eq(1) a').tab('show');
-      if (!isMobile()) {
-        $('#CommonPostBody').focus();
-      } else {
-        $('#CommonPostBody').blur();
-      }
-      break;
-    case "message":
-      $('#CommonFormTabs li:eq(2) a').tab('show');
-      if (!isMobile()) {
-        $('#s2id_autogen1').focus();
-      }
-      break;
-  }
-}
-
 
 
 
@@ -3934,32 +2849,4 @@ function isMobile() {
   return false;
 }
 
-/**
- * サニタイズ処理
- * DOMから取得するデータはサーバサイドのサニタイズがリセットされてしまうため、
- * 改めてこのメソッドでサニタイズする必要がある。
- *
- * @param string
- * @returns string
- */
-function sanitize(string) {
-    console.log("__gl_basic.js: sanitize");
-  if (typeof string !== 'string') {
-    return string;
-  }
-  return string.replace(/[&'`"<>]/g, function (match) {
-    return {
-      '&': '&amp;',
-      "'": '&#x27;',
-      '`': '&#x60;',
-      '"': '&quot;',
-      '<': '&lt;',
-      '>': '&gt;',
-    }[match]
-  });
-}
 
-function isOnline() {
-    console.log("gl_basic.js: isOnline");
-  return Boolean(network_reachable);
-}
