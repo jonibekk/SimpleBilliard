@@ -55,7 +55,7 @@ class ApiGoalService extends ApiService
         $this->setPaging($ret, $conditions, $offset, $limit, $order);
 
         // レスポンスデータ拡張
-        $ret['data'] = $this->extend($ret['data'], $userId);
+        $ret['data'] = $this->extend($ret['data'], $userId, $conditions);
 
         return $ret;
     }
@@ -65,10 +65,11 @@ class ApiGoalService extends ApiService
      *
      * @param array $goals
      * @param int   $loginUserId
+     * @param array $conditionParams
      *
      * @return array
      */
-    private function extend(array $goals, int $loginUserId): array
+    private function extend(array $goals, int $loginUserId, array $conditionParams): array
     {
         // TODO：AppModel.attachImgUrlをService層に移す
         // 画像URLの取得を行うAppModel.attachImgUrlをService層に移したいが、
@@ -112,9 +113,21 @@ class ApiGoalService extends ApiService
         $followerCountEachGoalId = $Follower->countEachGoalId($goalIds);
         $goalMemberCountEachGoalId = $GoalMember->countEachGoalId($goalIds);
 
+        // if not current term, everyone cannot follow all goals.
+        $termParam = Hash::get($conditionParams, 'term');
+        if (empty($termParam) || $termParam == 'present') {
+            $isCurrentTerm = true;
+        } else {
+            $isCurrentTerm = false;
+        }
+
         $followConditionGoalIds = [];
         // フォローのアクションを無効にするか
         foreach ($goals as &$goal) {
+            if ($isCurrentTerm === false) {
+                $goal['can_follow'] = false;
+                continue;
+            }
             if ($goal['user_id'] == $loginUserId) {
                 $goal['can_follow'] = false;
                 continue;
