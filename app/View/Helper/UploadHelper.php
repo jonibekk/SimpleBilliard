@@ -111,7 +111,7 @@ class UploadHelper extends AppHelper
         setlocale(LC_CTYPE, 'C.UTF-8');
         $file_name = pathinfo($data['attached_file_name']);
         setlocale(LC_CTYPE, $orig_locale);
-        return $file_name['filename'];
+        return h($file_name['filename']);
     }
 
     public function getCssOfFileIcon($data)
