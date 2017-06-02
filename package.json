@@ -36,7 +36,7 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "requirejs": "^2.3.3",
-    "select2": "^4.0.3",
+    "select2": "^3.5.1",
     "ua-parser-js": "^0.7.12",
     "validator": "^5.5.0"
   },

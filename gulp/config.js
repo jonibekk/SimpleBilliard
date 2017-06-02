@@ -58,7 +58,7 @@ const config = {
       node_modules_dir + '/imagesloaded/imagesloaded.pkgd.min.js',
       assets_dir + '/js/vendor/bootstrap.youtubepopup.js',
       node_modules_dir + '/fastclick/lib/fastClick.js',
-      node_modules_dir + '/select2/dist/js/select2.full.min.js',
+      node_modules_dir + '/select2/select2.js',
       node_modules_dir + '/requirejs/require.js',
       node_modules_dir + '/exif-js/exif.js'
     ],

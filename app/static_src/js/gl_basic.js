@@ -720,7 +720,7 @@ $(document).ready(function () {
   });
 
   // HACK:To occur to_user_ids change event in react app
-  $(document).on('change', '.js-changeSelect2Member', function (e) {
+  $('.js-changeSelect2Member').change(function (e) {
     $('.js-triggerUpdateToUserIds').trigger('click');
   });
 
