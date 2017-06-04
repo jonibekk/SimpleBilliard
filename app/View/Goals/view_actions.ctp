@@ -41,6 +41,13 @@ $namedParams = $this->request->params['named'];
                         <?php endforeach; ?>
                     </ul>
                 </div>
+                <?php
+                $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
+                if ($this->request->params['named']['page_type'] == 'image') {
+                    $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
+                }
+                ?>
+                <?php if ($actionCount != 0): ?>
                 <div class="view-actions-panel-btngroup-wrap">
                     <div class="view-action-panel-filter-btngroup">
                         <?php if ($namedParams['page_type'] == 'list'): ?>
@@ -64,13 +71,9 @@ $namedParams = $this->request->params['named'];
                         <?php endif; ?>
                     </div>
                 </div>
+                <?php } ?>
             </div>
-            <?php
-            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
-            if ($this->request->params['named']['page_type'] == 'image') {
-                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
-            }
-            ?>
+            
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($namedParams['page_type'] == 'list'): ?>
                     <?php if ($actionCount == 0): ?>
