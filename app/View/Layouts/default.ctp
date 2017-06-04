@@ -45,13 +45,14 @@ if ($this->request->params['controller'] === 'pages' && $this->request->params['
 }
 ?>
 
-
 <div id="container" class="container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
+        <?php if (!$is_mb_app || $isTablet): ?>
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>
             <?= $this->element('circle_list') ?>
         </div>
+        <?php endif; ?>
     </div>
     <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
         <?= $this->Session->flash(); ?>

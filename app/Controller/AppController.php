@@ -112,6 +112,10 @@ class AppController extends BaseController
      */
     public $is_mb_app_ios = false;
     /**
+     * Request from tablet?
+     */
+    public $is_tablet = false;
+    /**
      * スマホアプリのUA定義
      * defined user agents of mobile application
      *
@@ -158,6 +162,7 @@ class AppController extends BaseController
 
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
+        $this->_setIsTablet();
 
         // Basic認証を特定の条件でかける
         if ($this->_isBasicAuthRequired()) {
@@ -446,6 +451,13 @@ class AppController extends BaseController
             $this->is_mb_app_ios = true;
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
+    }
+
+    public function _setIsTablet()
+    {
+        $browser = $this->getBrowser();
+        $this->is_tablet = $browser['istablet'];
+        $this->set('isTablet', $this->is_tablet);
     }
 
     function _switchTeam($team_id, $uid = null)
