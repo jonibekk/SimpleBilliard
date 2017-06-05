@@ -48,6 +48,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     <?php endforeach; ?>
                 </ul>
             </div>
+            <?php if ($actionCount != 0){ ?>
             <div class="view-actions-panel-btngroup-wrap">
                 <div class="view-action-panel-filter-btngroup">
                     <?php if ($namedParams['page_type'] == 'list'): ?>
@@ -71,6 +72,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                     <?php endif; ?>
                 </div>
             </div>
+            <?php } ?>
         </div>
         <?php
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
