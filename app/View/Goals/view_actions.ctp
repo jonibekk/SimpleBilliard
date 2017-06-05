@@ -36,7 +36,7 @@ $namedParams = $this->request->params['named'];
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <?php foreach ($krSelectOptions as $krID => $krName): ?>
                             <li>
-                                <a href="/goals/view_actions/goal_id:<?= $goalId ?>/page_type:<?= $namedParams['page_type'] ?>/key_result_id:<?= $krID ?>"><?= $krName ?></a>
+                                <a href="/goals/view_actions/goal_id:<?= $goalId ?>/page_type:<?= $namedParams['page_type'] ?>/key_result_id:<?= $krID ?>"><?= h($krName) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>

@@ -43,7 +43,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <?php foreach ($goalFilterOptions as $goalID => $goalName): ?>
                         <li>
-                            <a href='<?= "$filterCommonUrl/term_id:$termId/goal_id:$goalID" ?>'><?= $goalName ?></a>
+                            <a href='<?= "$filterCommonUrl/term_id:$termId/goal_id:$goalID" ?>'><?= h($goalName) ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
