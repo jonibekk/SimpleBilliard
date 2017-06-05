@@ -198,6 +198,8 @@ var Page = {
   }
 };
 jQuery(function ($) {
+  // TODO: temporary fix for releasing
+  //       should change js to less to manage action iamges size
   setTimeout(function(){
     Page.init();
   }, 1000); //fallback incase images render after page load
