@@ -1261,6 +1261,10 @@ function evTargetToggleClick() {
               e.stopPropagation();
               $ogp.remove();
               $btnClose.remove();
+              var $submitButton = $('#CommentEditSubmit_'+comment_id);
+              if ($submitButton.length > 0) {
+                $submitButton.removeAttr("disabled");
+              }
             });
           }
           $("#" + $obj.attr("hidden-target-id")).after($editForm);
