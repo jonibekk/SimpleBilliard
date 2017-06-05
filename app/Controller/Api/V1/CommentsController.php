@@ -95,9 +95,6 @@ class CommentsController extends ApiController
                     $postId, $comment->id);
                 break;
         }
-        //mixpanel
-        $MixpanelComponent = ClassRegistry::init('MixpanelComponent');
-        $MixpanelComponent->trackComment($type, $Post->Comment->getLastInsertID());
         // Push comments notifications
         $socketId = Hash::get($this->request->data, 'socket_id');
         $this->_pushCommentToPost($postId, $socketId);
