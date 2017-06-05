@@ -105,12 +105,6 @@ $namedParams = $this->request->params['named'];
                     <?= $this->element('cube_img_blocks') ?>
                 <?php endif; ?>
             </div>
-            <?php
-            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
-            if ($namedParams['page_type'] == 'image') {
-                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
-            }
-            ?>
             <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
             if ($actionCount > 0 &&
                 (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH)
