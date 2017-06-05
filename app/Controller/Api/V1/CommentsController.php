@@ -2,7 +2,6 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
 
-
 /**
  * Class ActionsController
  */
@@ -10,7 +9,6 @@ class CommentsController extends ApiController
 {
     /**
      * @param $id
-     *
      * Get Comment data on JSON format
      *
      * @return CakeResponse
@@ -30,7 +28,6 @@ class CommentsController extends ApiController
 
     /**
      * @param $id
-     *
      * Delete a comment if the request user owns it.
      *
      * @return CakeResponse
@@ -100,14 +97,14 @@ class CommentsController extends ApiController
 
     /**
      * @param $id
-     * Updates a Comment.
-     * Request format:
-     * {
-     *   "data[_Token][key]": "token",
-     *   "Comment": {
+     *     Updates a Comment.
+     *     Request format:
+     *     {
+     *     "data[_Token][key]": "token",
+     *     "Comment": {
      *     "body": "body"
-     *   }
-     * }
+     *     }
+     *     }
      *
      * @return CakeResponse
      */
@@ -126,7 +123,7 @@ class CommentsController extends ApiController
             return $this->_getResponseInternalServerError();
         }
 
-        // Get the newest comment object and return it as its html rendered block 
+        // Get the newest comment object and return it as its html rendered block
         $comments = array($ApiCommentService->get($id));
         $this->set(compact('comments'));
         $this->layout = 'ajax';
@@ -139,7 +136,6 @@ class CommentsController extends ApiController
 
     /**
      * @param $comment_id
-     *
      * Validates if the comments exists and if the request
      * user owns it.
      *
@@ -156,7 +152,7 @@ class CommentsController extends ApiController
             return $this->_getResponseNotFound(__("This comment doesn't exist."));
         }
         // Is it the user comment?
-        if ($this->Auth->user('id') != $comment[User][id]) {
+        if ($this->Auth->user('id') != $comment['User']['id']) {
             return $this->_getResponseForbidden(__("This isn't your comment."));
         }
         return true;
