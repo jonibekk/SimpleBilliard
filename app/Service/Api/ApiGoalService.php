@@ -114,6 +114,7 @@ class ApiGoalService extends ApiService
         $goalMemberCountEachGoalId = $GoalMember->countEachGoalId($goalIds);
 
         // if not current term, everyone cannot follow all goals.
+        // if term param has not set, default is present
         $termParam = Hash::get($conditionParams, 'term');
         if (empty($termParam) || $termParam == 'present') {
             $isCurrentTerm = true;
