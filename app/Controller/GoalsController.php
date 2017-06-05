@@ -1792,6 +1792,7 @@ class GoalsController extends AppController
             'with_group' => true,
         ]);
         $this->set('followers', $followers);
+        // TODO: Duplicate variable. But both are used, so we have to unify.
         $this->set('goalTerm', $goalTerm);
         $this->set('goal_term', $goalTerm);
 
@@ -1888,6 +1889,7 @@ class GoalsController extends AppController
             // ゴールが存在しない
             return false;
         }
+        $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['Goal']['id']), '{n}.Label');
         // 進捗情報を追加
         $goal['Goal']['progress'] = $GoalService->calcProgressByOwnedPriorities($goal['KeyResult']);
         $this->set('goal', $goal);
@@ -1948,6 +1950,9 @@ class GoalsController extends AppController
         // Is the goal completable?
         $isCanComplete = $this->Goal->isCanComplete($userId, $goalId);
         $this->set('isCanComplete', $isCanComplete);
+
+        $isGoalAfterCurrentTerm = $GoalService->isGoalAfterCurrentTerm($goalId);
+        $this->set(compact('isGoalAfterCurrentTerm'));
 
         return true;
     }

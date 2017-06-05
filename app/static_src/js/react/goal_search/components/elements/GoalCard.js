@@ -78,7 +78,7 @@ class GoalCard extends React.Component {
               </div>
             </div>
             <div className="col-xxs-9 col-xs-9 pl_12px">
-              <div className="col-xxs-12 goals-page-card-title-wrapper">
+              <div className="col-xxs-12 goals-page-card-title-wrapper mb_2px">
                 <a href={`/goals/view_krs/goal_id:${goal.id}`}
                    className="goals-page-card-title"
                    target={cake.is_mb_app ? "_self" : "_blank"}
