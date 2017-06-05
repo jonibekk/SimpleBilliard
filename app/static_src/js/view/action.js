@@ -201,7 +201,7 @@ jQuery(function ($) {
   Page.init();
   setTimeout(function(){
     Page.action_resize(false);
-  },1000);
+  },2000); //fallback incase images render after page load
 });
 $(window).resize(function () {
   window.Page.action_resize(true);
