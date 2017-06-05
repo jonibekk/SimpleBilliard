@@ -39,7 +39,8 @@
                         <?= $this->Html->link(__('Edit a goal'),
                             '/goals/' . $goal['Goal']['id'] . '/edit',
                             [
-                                'class' => 'btn btn-white'
+                                'class'    => 'btn btn-white',
+                                'disabled' => $isGoalAfterCurrentTerm ? false : true,
                             ])
                         ?>
                     </div>
@@ -125,7 +126,7 @@
                             <?php endforeach ?>
                         </ul>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目             ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目                ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">

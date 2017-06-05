@@ -1951,6 +1951,9 @@ class GoalsController extends AppController
         $isCanComplete = $this->Goal->isCanComplete($userId, $goalId);
         $this->set('isCanComplete', $isCanComplete);
 
+        $isGoalAfterCurrentTerm = $GoalService->isGoalAfterCurrentTerm($goalId);
+        $this->set(compact('isGoalAfterCurrentTerm'));
+
         return true;
     }
 
