@@ -47,7 +47,7 @@ if (isset($site_info['type']) && (
                                 'data-original' => $img_src,
                                 'width'         => '80px',
                                 'height'        => '80px',
-                                'error-img'     => "/img/no-image-link.png",
+                                'error-img'     => "/img/no-image-link.png", 
                             ])
                             ?>
                         <?php elseif (isset($site_info['image']) && $site_info['image']): ?>
