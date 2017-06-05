@@ -1,7 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
-
+App::import('Components', 'MixpanelComponent');
 
 /**
  * Class ActionsController
@@ -95,6 +95,10 @@ class CommentsController extends ApiController
                     $postId, $comment->id);
                 break;
         }
+        // Push comments notifications
+        $socketId = Hash::get($this->request->data, 'socket_id');
+        $this->_pushCommentToPost($postId, $socketId);
+
         return $this->_getResponseSuccess();
     }
 
@@ -160,6 +164,27 @@ class CommentsController extends ApiController
             return $this->_getResponseForbidden(__("This isn't your comment."));
         }
         return true;
+    }
+
+    /**
+     * @param $postId
+     * @param $socketId
+     */
+    private function _pushCommentToPost($postId, $socketId)
+    {
+        $notifyId = Security::hash(time());
+
+        // リクエストデータが正しくないケース
+        if (empty($postId) || empty($socketId)) {
+            return;
+        }
+
+        $data = [
+            'notify_id'         => $notifyId,
+            'is_comment_notify' => true,
+            'post_id'           => $postId
+        ];
+        $this->NotifyBiz->commentPush($socketId, $data);
     }
 }
 
