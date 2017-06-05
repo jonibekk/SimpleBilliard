@@ -754,35 +754,16 @@ class KeyResult extends AppModel
         return $progress;
     }
 
-    function getKrNameList($goal_id, $with_all_opt = false, $separate_progress = false)
+    function getKrNameList($goal_id, $with_all_opt = false)
     {
         $options = [
             'conditions' => ['goal_id' => $goal_id],
             'fields'     => ['id', 'name'],
             'order'      => ['created desc'],
         ];
-        if (!$separate_progress) {
-            $res = $this->find('list', $options);
-            if ($with_all_opt) {
-                return [null => __('All')] + $res;
-            }
-            return $res;
-        }
-        $incomplete_opt = $options;
-        $incomplete_opt['conditions']['completed'] = null;
-        $incomplete_krs = $this->find('list', $incomplete_opt);
-        $completed_opt = $options;
-        $completed_opt['conditions']['NOT']['completed'] = null;
-        $completed_krs = $this->find('list', $completed_opt);
-        $res = [];
-        $res += $with_all_opt ? [null => __('All')] : null;
-        if (!empty($incomplete_krs)) {
-            $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
-            $res += $incomplete_krs;
-        }
-        if (!empty($completed_krs)) {
-            $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
-            $res += $completed_krs;
+        $res = $this->find('list', $options);
+        if ($with_all_opt) {
+            return [null => __('All')] + $res;
         }
         return $res;
     }
@@ -1136,6 +1117,7 @@ class KeyResult extends AppModel
      * update start_date if start_date is under goal range
      *
      * @param  string $currentTermStartDate
+     *
      * @return bool
      */
     public function updateStartWithinGoalRange(string $currentTermStartDate): bool
@@ -1169,6 +1151,7 @@ SQL;
      * update end_date if end_date is over goal range
      *
      * @param  string $currentTermStartDate
+     *
      * @return bool
      */
     public function updateEndWithinGoalRange(string $currentTermStartDate): bool
@@ -1202,6 +1185,7 @@ SQL;
      * update start and end date if they are not in goal range
      *
      * @param  string $currentTermStartDate
+     *
      * @return bool
      */
     public function updateStartEndWithinGoalRange(string $currentTermStartDate): bool

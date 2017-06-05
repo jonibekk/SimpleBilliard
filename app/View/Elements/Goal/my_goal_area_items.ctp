@@ -67,7 +67,7 @@ $kr_count = 0;
                     <div class="dashboard-goals-card-header-goal-wrap">
                         <a href="<?= $this->Html->url([
                             'controller' => 'goals',
-                            'action'     => 'view_info',
+                            'action'     => 'view_krs',
                             'goal_id'    => $goal['Goal']['id']
                         ]) ?>"
                            class="">
@@ -167,7 +167,7 @@ $kr_count = 0;
                     <?php endif; ?>
                 </ul>
             <?php elseif
-            ($type == 'collabo'
+            ($type == 'collab'
             ): ?>
                 <a href="#"
                    class="dashboard-goals-card-header-function dropdown"
@@ -175,7 +175,7 @@ $kr_count = 0;
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-collabo" role="menu"
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-collab" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                         <li role="presentation">
@@ -188,7 +188,7 @@ $kr_count = 0;
                                class="modal-ajax-get-add-key-result"
                             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __("Add Key Result") ?></span></a>
-                            <a class="modal-ajax-get-collabo collaborate-button"
+                            <a class="modal-ajax-get-collab collaborate-button"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                href="#"
@@ -198,7 +198,7 @@ $kr_count = 0;
                                    'goal_id'    => $goal['Goal']['id']
                                ]) ?>">
                                 <i class="fa fa-pencil"></i>
-                                <span class="ml_2px"><?= __("Edit Collabo") ?></span>
+                                <span class="ml_2px"><?= __("Edit Collab") ?></span>
                             </a>
                         </li>
                         <!-- リーダー変更 -->

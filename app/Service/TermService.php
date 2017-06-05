@@ -7,6 +7,7 @@ App::import('Service', 'AppService');
 class TermService extends AppService
 {
     const MAX_TERM_MONTH_LENGTH = 12;
+    const TERM_FILTER_ALL_KEY_NAME = 'all';
 
     /**
      * Validate update term data
@@ -204,4 +205,66 @@ class TermService extends AppService
         $currentTerm = $Term->getCurrentTermData();
         return Hash::get($currentTerm, 'evaluate_status') == Term::STATUS_EVAL_NOT_STARTED;
     }
+
+    /**
+     * getting term filter
+     *
+     * @param bool $withAllOption
+     * @param bool $withNextTerm
+     *
+     * @return array
+     */
+    public function getFilterMenu(bool $withAllOption = true, bool $withNextTerm = true): array
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+        $currentId = $Term->getCurrentTermId();
+        $nextId = $Term->getNextTermId();
+        $previousId = $Term->getPreviousTermId();
+        $term1 = [
+            $nextId    => __("Next Term"),
+            $currentId => __("Current Term"),
+        ];
+        if (!empty($previousId)) {
+            $term1 += [$previousId => __("Previous Term")];
+        }
+
+        function show_date($startDate, $endDate)
+        {
+            return AppUtil::dateYmdReformat($startDate, '/') . " - " . AppUtil::dateYmdReformat($endDate, '/');
+        }
+
+        $allTerm = $Term->getAllTerm();
+        $allId = array_column($allTerm, 'id');
+        $allStartDate = array_column($allTerm, 'start_date');
+        $allEndDate = array_column($allTerm, 'end_date');
+        $allTerm = array_map("show_date", $allStartDate, $allEndDate);
+
+        $term2 = array_combine($allId, $allTerm);
+        $termFilter = $term1 + $term2;
+        if ($withAllOption) {
+            $termFilter = [self::TERM_FILTER_ALL_KEY_NAME => __('All')] + $termFilter;
+        }
+        if (!$withNextTerm) {
+            unset($termFilter[$nextId]);
+        }
+        return $termFilter;
+
+    }
+
+    /**
+     * @param int $termId
+     *
+     * @return bool
+     */
+    function isAfterCurrentTerm(int $termId): bool
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+
+        $targetTerm = $Term->getById($termId);
+        $currentTerm = $Term->getCurrentTermData();
+        return $targetTerm['start_date'] >= $currentTerm['start_date'];
+    }
+
 }

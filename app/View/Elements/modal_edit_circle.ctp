@@ -18,7 +18,7 @@
             <h4 class="modal-title"><?= __("Edit Circle") ?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("Basic info") ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("View info") ?></a></li>
             <li><a href="#tab2" data-toggle="tab"><?= __("Members list") ?></a></li>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                 <li><a href="#tab3" data-toggle="tab"><?= __("Add member(s)") ?></a></li>

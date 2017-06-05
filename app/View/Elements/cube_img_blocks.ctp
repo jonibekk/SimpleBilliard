@@ -11,9 +11,8 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <?php if (isset($posts) && !empty($posts)): ?>
-    <div class="cube-img-column">
         <?php foreach ($posts as $post): ?>
-            <div class="cube-img-column-frame">
+            <div class="cube-img-block action-image">
                 <a href="<?= $this->Html->url([
                     'controller' => 'posts',
                     'action'     => 'feed',
@@ -21,12 +20,9 @@
                 ]) ?>"
                 <?php if (Hash::get($post, 'ActionResult.ActionResultFile.0.AttachedFile')): ?>
                     <!-- アクション画像がある場合 -->
-                    <?= $this->Html->image('pre-load.svg',
+                    <?= $this->Html->image($this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],"AttachedFile.attached",['style' => 'small']),
                         [
-                            'class'         => 'cube-img-blocks-img lazy',
-                            'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
-                                "AttachedFile.attached",
-                                ['style' => 'small']),
+                            'class'         => 'cube-img-blocks-img',
                         ]
                     );
                     ?>
@@ -37,7 +33,7 @@
                         if (!empty($post['ActionResult']["photo{$i}_file_name"]) || $i == 5) {
                             echo $this->Html->image('pre-load.svg',
                                 [
-                                    'class'         => 'lazy img-responsive',
+                                    'class'         => 'img-responsive',
                                     'width'         => '186px',
                                     'height'        => '186px',
                                     'data-original' => $this->Upload->uploadUrl($post,
@@ -53,6 +49,5 @@
                 </a>
             </div>
         <?php endforeach; ?>
-    </div>
 <?php endif; ?>
 <?= $this->App->viewEndComment() ?>

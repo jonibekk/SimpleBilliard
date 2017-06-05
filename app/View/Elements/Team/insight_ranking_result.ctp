@@ -35,7 +35,7 @@
                         <a href="<?= $this->Html->url(
                             [
                                 'controller' => 'goals',
-                                'action'     => 'view_info',
+                                'action'     => 'view_krs',
                                 'goal_id'    => $row['Goal']['id']
                             ]) ?>"><?= $this->Upload->uploadImage($row['Goal'],
                                 'Goal.photo',

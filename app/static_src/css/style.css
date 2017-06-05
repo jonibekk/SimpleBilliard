@@ -1398,7 +1398,8 @@ ul.example-indent {
     position: absolute;
     top: -100%;
     bottom: -100%;
-    margin: auto;
+    margin: auto;   
+    width: 100%;
 }
 
 .post-contents {
@@ -1726,14 +1727,6 @@ textarea.feed-post-form {
 
 .post-upload-file-preview {
     margin-top: 5px;
-}
-
-.post-ogp-site-info {
-    overflow: hidden;
-}
-
-.comment-ogp-site-info {
-    overflow: hidden;
 }
 
 .action-upload-file-preview {
@@ -2294,10 +2287,6 @@ textarea.comment-post-form {
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-}
-
-.goals-column-progress-bar {
-    margin: 6px 0 4px;
 }
 
 /*/========= ゴールカラム ==========*/

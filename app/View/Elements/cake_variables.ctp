@@ -92,6 +92,7 @@ App::uses('AttachedFile', 'Model');
             success: "<?=__("Success")?>",
             error: "<?=__("Error")?>",
             cancel: "<?=__("Cancel")?>",
+            delete: "<?=__("Delete")?>",
             search_placeholder_user: "<?=__("Name?")?>",
             search_placeholder_goal: "<?=__("Goal Name?")?>",
             search_placeholder_circle: "<?=__("Circle Name?")?>",
@@ -159,7 +160,7 @@ App::uses('AttachedFile', 'Model');
             select2_goals: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_select2_goals'])?>",
             select2_circles: "<?=$this->Html->url(['controller' => 'circles', 'action' => 'ajax_select2_circles'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
-            goal_page: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => '']) ?>",
+            goal_page: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_krs', 'goal_id' => '']) ?>",
             circle_page: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => '']) ?>/",
             goal_followers: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_followers'])?>",
             goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",
@@ -572,7 +573,9 @@ App::uses('AttachedFile', 'Model');
             // messgae
             "No results found": "<?= __("No results found") ?>",
             "Leave this topic": "<?= __("Leave this topic") ?>",
-            "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>"
+            "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
+            "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
+            "Delete comment": "<?= __("Delete comment") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

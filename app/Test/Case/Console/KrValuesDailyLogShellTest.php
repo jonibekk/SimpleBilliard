@@ -68,7 +68,7 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $previousGoalId = $this->createGoalKrs(Term::TYPE_PREVIOUS, [0, 10], $teamId);
         $nextGoalId = $this->createGoalKrs(Term::TYPE_NEXT, [0, 10], $teamId);
 
-        $this->KrValuesDailyLogShell->params['date'] = date('Y-m-d');
+        $this->KrValuesDailyLogShell->params['date'] = date('Y-m-d', $this->_getLocalTimestamp());
         $this->KrValuesDailyLogShell->params['timezone'] = 9;
         $this->KrValuesDailyLogShell->main();
 
@@ -91,21 +91,20 @@ class KrValuesDailyLogShellTest extends GoalousTestCase
         $this->setupTerm($teamId);
 
         $this->createGoalKrs(Term::TYPE_CURRENT, [10], $teamId);
-        $this->KrValuesDailyLogShell->params['date'] = date('Y-m-d');
+        $today = AppUtil::dateYmdLocal(REQUEST_TIMESTAMP, 9);
+        $this->KrValuesDailyLogShell->params['date'] = $today;
         $this->KrValuesDailyLogShell->params['timezone'] = 9;
         $this->KrValuesDailyLogShell->main();
 
-        $res = $this->KrValuesDailyLog->find('list', ['conditions' => ['target_date' => date('Y-m-d')]]);
+        $res = $this->KrValuesDailyLog->find('list', ['conditions' => ['target_date' => $today]]);
         $this->assertcount(1, $res);
 
-        $dateYesterday = date('Y-m-d', strtotime('yesterday'));
         $res = $this->KrValuesDailyLog->find('list',
-            ['conditions' => ['target_date' => date('Y-m-d', strtotime('yesterday'))]]);
+            ['conditions' => ['target_date' => AppUtil::dateYesterday($today)]]);
         $this->assertcount(0, $res);
 
-        $dateTomorrow = date('Y-m-d', strtotime('tomorrow'));
         $res = $this->KrValuesDailyLog->find('list',
-            ['conditions' => ['target_date' => date('Y-m-d', strtotime('tomorrow'))]]);
+            ['conditions' => ['target_date' => AppUtil::dateTomorrow($today)]]);
         $this->assertcount(0, $res);
 
     }

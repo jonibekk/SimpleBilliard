@@ -54,7 +54,7 @@ class GoalCard extends React.Component {
               <div>
                 <div className="row mb_8px">
                   <div className="col-xs-12">
-                    <a href={`/goals/view_info/goal_id:${goal.id}`}
+                    <a href={`/goals/view_krs/goal_id:${goal.id}`}
                        className="text-align_c d-block"
                        target={cake.is_mb_app ? "_self" : "_blank"}
                     >
@@ -78,8 +78,8 @@ class GoalCard extends React.Component {
               </div>
             </div>
             <div className="col-xxs-9 col-xs-9 pl_12px">
-              <div className="col-xxs-12 goals-page-card-title-wrapper">
-                <a href={`/goals/view_info/goal_id:${goal.id}`}
+              <div className="col-xxs-12 goals-page-card-title-wrapper mb_2px">
+                <a href={`/goals/view_krs/goal_id:${goal.id}`}
                    className="goals-page-card-title"
                    target={cake.is_mb_app ? "_self" : "_blank"}
                 >

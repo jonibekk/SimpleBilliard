@@ -342,17 +342,6 @@ $(document).ready(function () {
     }
     location.href = url;
   });
-  //ゴールページのアクション一覧のKR切替え
-  $('#SwitchKrOnMyPage').change(function () {
-    var key_result_id = $(this).val();
-    if (key_result_id == "") {
-      var url = $(this).attr('redirect-url');
-    }
-    else {
-      var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
-    }
-    location.href = url;
-  });
   //サークルページの添付ファイルタイプ切替え
   $('#SwitchFileType').change(function () {
     var file_type = $(this).val();
@@ -451,6 +440,12 @@ $(document).ready(function () {
   $(document).on("touchend", "#layer-black", function () {
     $('.navbar-offcanvas').offcanvas('hide');
   });
+  $(document).on("touchstart", ".nav-back-btn", function () {
+    $('.nav-back-btn').addClass('mod-touchstart');
+  });
+  $(document).on("touchend", ".nav-back-btn", function () {
+    $('.nav-back-btn').removeClass('mod-touchstart');
+  });
   //evToggleAjaxGet
   $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
   $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
@@ -515,7 +510,7 @@ $(document).ready(function () {
   });
 
   //noinspection JSUnresolvedVariable
-  $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+  $(document).on("click", '.modal-ajax-get-collab', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-tkr', getModalFormFromUrl);
   $(document).on("click", '.modal-ajax-get-exchange-leader', getModalFormFromUrl);
   //noinspection JSUnresolvedVariable
@@ -765,7 +760,6 @@ function imageLazyOn($elm_obj) {
     combined: true,
     delay: 100,
     visibleOnly: false,
-    effect: "fadeIn",
     removeAttribute: false,
     onError: function (element) {
       if (element.attr('error-img') != undefined) {
@@ -1008,14 +1002,7 @@ function getAjaxFormReplaceElm() {
                   .html(data.html)
                   // プレビュー削除ボタンを重ねて表示
                   .append($('<a>').attr('href', '#')
-                    .addClass('font_lightgray')
-                    .css({
-                      left: '95%',
-                      "margin-top": '20px',
-                      position: 'absolute',
-                      display: "block",
-                      "z-index": '1000'
-                    })
+                    .addClass('font_lightgray comment-ogp-close')
                     .append('<i class="fa fa-times"></i>')
                     .on('click', function (e) {
                       e.preventDefault();
@@ -1154,13 +1141,34 @@ function addComment(e) {
 
   var $f = $(e.target);
   var ajaxProcess = $.Deferred();
+  var formData = new FormData(e.target);
+
+  // Add content of ogp box if visible
+  var comment_id = submit_id.split('_')[1];
+  var $ogp_box = $('#CommentOgpSiteInfo_' + comment_id);
+  if ($ogp_box.find('.media-object').length > 0) {
+    var image = $ogp_box.find('.media-object').attr('src');
+    var title = $ogp_box.find('.media-heading').text().trim();
+    var site_url = $ogp_box.find('.media-url').text();
+    var description = $ogp_box.find('.site-info-txt').text().trim();
+    var type = $ogp_box.find('.media-body').attr('data-type');
+    var site_name = $ogp_box.find('.media-body').attr('data-site-name');
+
+    formData.append('data[OGP][image]', image);
+    formData.append('data[OGP][title]', title);
+    formData.append('data[OGP][url]', site_url);
+    formData.append('data[OGP][description]', description);
+    formData.append('data[OGP][type]', type);
+    formData.append('data[OGP][site_name]', site_name);
+  }
+
   $.ajax({
     url: $f.prop('action'),
     method: 'post',
     dataType: 'json',
     processData: false,
     contentType: false,
-    data: new FormData(e.target),
+    data: formData,
     timeout: 300000 //5min
   })
     .done(function (data) {
@@ -1209,9 +1217,17 @@ function evTargetToggleClick() {
   var $obj = $(this);
   var target_id = $obj.attr("target-id");
   var click_target_id = $obj.attr("click-target-id");
+  var comment_id = target_id.split('_')[1];
   if ($obj.attr("hidden-target-id")) {
-    $('#' + $obj.attr("hidden-target-id")).toggle();
+    var $commentBox = $('#' + $obj.attr("hidden-target-id"));
+    $commentBox.toggle();
+    // Hide OGP box
+    var $ogpBox = $('#CommentOgpBox_'+comment_id);
+    if ($ogpBox.length > 0) {
+      $ogpBox.toggle();
+    }
   }
+
   //開いている時と閉じてる時のテキストの指定があった場合は置き換える
   if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
     //開いてるとき
@@ -1236,7 +1252,99 @@ function evTargetToggleClick() {
           alert(data.msg);
         }
         else {
-          $("#" + $obj.attr("hidden-target-id")).after(data.html);
+          var $editForm = $(data.html);
+          var $ogp = $editForm.find('.js-ogp-box');
+          if ($ogp.length > 0) {
+            var $btnClose = $editForm.find('.js-ogp-close');
+            $btnClose.on('click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              $ogp.remove();
+              $btnClose.remove();
+              var $submitButton = $('#CommentEditSubmit_'+comment_id);
+              if ($submitButton.length > 0) {
+                $submitButton.removeAttr("disabled");
+              }
+            });
+          }
+          $("#" + $obj.attr("hidden-target-id")).after($editForm);
+
+          // Load OGP for edit field
+          var $editField = $('#CommentEditFormBody_' + comment_id);
+          if ($editField.length > 0) {
+            require(['ogp'], function (ogp) {
+              var onKeyUp = function () {
+                  // Do not search for new OGP if there is one already present
+                  var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                  if ($ogpBox.length > 0) {
+                      return;
+                  }
+
+                  // Search OGP info
+                  ogp.getOGPSiteInfo({
+                      // Give text to OGP class
+                      text: $editField.val(),
+
+                      // Only search if there is none OGP info box displayed
+                      readyLoading: function () {
+                        if ($ogpBox.length > 0) {
+                            return false;
+                        }
+                        return true;
+                      },
+
+                      // ogp data acquired
+                      success: function (data) {
+                        // Remove any OGP if already exists
+                        var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                        if ($ogpBox.length > 0) {
+                          $ogpBox.remove();
+                          return;
+                        }
+
+                        // Display the new acquired OGP on the edit form
+                        var $newOgp = $(data.html);
+                        $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
+                        $editField.after($newOgp);
+                        var $closeButton = $('<a>');
+                        $newOgp.after($closeButton);
+                        $closeButton.attr('href', '#')
+                            .addClass('font_lightgray comment-ogp-close')
+                            .append('<i class="fa fa-times"></i>')
+                            .on('click', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                $closeButton.remove();
+                                $newOgp.remove();
+                            });
+                      },
+
+                      error: function () {
+                        // loading アイコン削除
+                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                      },
+
+                      loadingStart: function () {
+                        // loading アイコン表示
+                        $('<i class="fa fa-refresh fa-spin"></i>')
+                            .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
+                            .addClass('mr_8px lh_20px')
+                            .insertBefore('#CommentEditSubmit_' + comment_id);
+                      },
+
+                      loadingEnd: function () {
+                        // loading アイコン削除
+                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                      }
+                  });
+              };
+              var timer = null;
+              $editField.on('keyup', function () {
+                  clearTimeout(timer);
+                  timer = setTimeout(onKeyUp, 800);
+              });
+            });
+          }
         }
       }
     });
@@ -1253,6 +1361,8 @@ function evTargetToggleClick() {
   $("#" + click_target_id).focus();
   return false;
 }
+
+
 
 /**
  * 以下の処理を行う
@@ -1531,58 +1641,12 @@ $(function () {
   });
   $(window).scroll(function () {
     if ($(this).scrollTop() > 10) {
-      $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
-
+      $(".navbar").addClass("mod-box-shadow");
     } else {
-      $(".navbar").css("box-shadow", "none");
-
+      $(".navbar").removeClass("mod-box-shadow");
     }
+    
   });
-});
-
-$(function () {
-  $(".hoverPic").hover(
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_off", "_on"));
-    },
-    function () {
-      $("img", this).stop().attr("src", $("img", this).attr("src").replace("_on", "_off"));
-    });
-});
-
-$(function () {
-  $(".js-header-link").hover(
-    function () {
-      $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-$(function () {
-  $(".header-function-link").hover(
-    function () {
-      $(".header-function-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(".header-function-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-
-$(function () {
-  $(".header-user-profile").hover(
-    function () {
-      $(".header-profile-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
-    }, function () {
-      $(".header-profile-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
-    });
-});
-
-$(function () {
-  $("#header").hover(
-    function () {
-      $(".js-header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
-    }, function () {
-      $(".js-header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
-    });
 });
 
 $(function () {
@@ -3585,7 +3649,171 @@ function hideCommentNotifyErrorBox(notifyBox) {
 
 $(document).ready(function () {
   $(document).on("click", ".click-comment-new", evCommentLatestView);
+  $(document).on("click", ".js-click-comment-delete", evCommentDelete);
+  $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
+  $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
 });
+
+function evCommendEditSubmit(e) {
+  e.preventDefault();
+  var $form = $(this).parents('form');
+  var formUrl = $form.attr('action');
+  var commentId = formUrl.split(':')[1];
+
+  var token = $form.find('[name="data[_Token][key]"]').val();
+  var body = $form.find('[name="data[Comment][body]"]').val();
+
+  var formData = {
+    "data[_Token][key]": token,
+    Comment: {
+        body: body
+    },
+    OGP: null
+  };
+
+  var $ogp = $('#CommentOgpEditBox_'+commentId);
+  if ($ogp.find('.media-object').length > 0) {
+    var image = $ogp.find('.media-object').attr('src');
+    var title = $ogp.find('.media-heading').text().trim();
+    var site_url = $ogp.find('.media-url').text();
+    var description = $ogp.find('.site-info-txt').text().trim();
+    var type = $ogp.find('.media-body').attr('data-type');
+    var site_name = $ogp.find('.media-body').attr('data-site-name');
+
+    var ogpData = {
+      image: image,
+      title: title,
+      url: site_url,
+      description: description,
+      type: type,
+      site_name: site_name
+    };
+    formData.OGP = ogpData;
+  }
+
+  $.ajax({
+    type: 'PUT',
+    url: "/api/v1/comments/" + commentId,
+    cache: false,
+    dataType: 'json',
+    data: formData,
+    success: function (data) {
+      if (!$.isEmptyObject(data.html)) {
+        var $updatedComment = $(data.html);
+        // update comment box
+        imageLazyOn($updatedComment);
+        var $box = $('.comment-box[comment-id="' + commentId + '"]');
+        $updatedComment.insertBefore($box);
+        $updatedComment.imagesLoaded(function () {
+            $updatedComment.find('.comment_gallery').each(function (index, element) {
+                bindCommentBalancedGallery($(element));
+            });
+            changeSizeFeedImageOnlyOne($updatedComment.find('.feed_img_only_one'));
+        });
+        $box.remove();
+      }
+      else {
+        // Cancel editing
+        $('[target-id="CommentEditForm_' + commentId + '"]').click();
+      }
+    },
+    error: function (ev) {
+      // Display error message
+      new PNotify({
+        title: cake.word.error,
+        text: cake.message.notice.i,
+        type: 'error'
+      });
+      // Cancel editing
+      $('[target-id="CommentEditForm_' + commentId + '"]').click();
+    }
+  });
+  return false;
+}
+
+// Display a modal to confirm the deletion of comment
+function evCommentDelete(e) {
+  e.preventDefault();
+  var $delBtn = $(this);
+  attrUndefinedCheck($delBtn, 'comment-id');
+  var commentId = $delBtn.attr("comment-id");
+
+  // Modal popup
+  var modalTemplate =
+    '<div class="modal on fade" tabindex="-1">' +
+    '  <div class="modal-dialog">' +
+    '    <div class="modal-content">' +
+    '      <div class="modal-header none-border">' +
+    '        <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">×</span></button>' +
+    '        <h5 class="modal-title text-danger">' + __("Delete comment") + '</h5>' +
+    '     </div>' +
+    '     <div class="modal-body">' +
+    '         <h4>' + __("Do you really want to delete this comment?") +'</h4>' +
+    '     </div>' +
+    '     <div class="modal-footer">' +
+    '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.cancel + '</button>' +
+    '        <button type="button" class="btn-sm btn-primary js-click-comment-confirm-delete" comment-id="' + commentId + '" aria-hidden="true"><img id="loader" src="img/lightbox/loading.gif" style="height: 17px; width:17px; margin: 0 10px; display: none;"  /><span id="message">' + cake.word.delete + '</span></button>' +
+    '     </div>' +
+    '   </div>' +
+    ' </div>' +
+    '</div>';
+
+  var $modal_elm = $(modalTemplate);
+  $modal_elm.modal();
+  return false;
+}
+
+// Send the delete request
+function evCommentDeleteConfirm() {
+  var $delBtn = $(this);
+  attrUndefinedCheck($delBtn, 'comment-id');
+  var commentId = $delBtn.attr("comment-id");
+  var url = "/api/v1/comments/" + commentId;
+  var $modal = $delBtn.closest('.modal');
+  var $commentBox = $("div.comment-box[comment-id='" + commentId + "']");
+
+  // Show loading spinner and hide button text
+  $delBtn.children('#loader').toggle();
+  $delBtn.children('#message').toggle();
+  $delBtn.attr('disabled', 'disabled');
+
+  $.ajax({
+    url: url,
+    type: 'DELETE',
+    success: function () {
+      // Remove modal and comment box
+      $modal.modal('hide');
+      $commentBox.fadeOut('slow', function(){
+          $(this).remove();
+      });
+    },
+    error: function (res) {
+      // Display error message
+      new PNotify({
+          title: cake.word.error,
+          text: cake.message.notice.i,
+          type: 'error'
+      });
+      $modal.modal('hide');
+    }
+  });
+  return false;
+}
+
+function getCommentBlockLatestId($commentBlock) {
+  var commentNum = $commentBlock.children("div.comment-box").length;
+  var $lastCommentBox = $commentBlock.children("div.comment-box:last");
+  var lastCommentId = "";
+  if (commentNum > 0) {
+      // コメントが存在する場合
+      attrUndefinedCheck($lastCommentBox, 'comment-id');
+      lastCommentId = $lastCommentBox.attr("comment-id");
+  } else {
+      // コメントがまだ0件の場合
+      lastCommentId = "";
+  }
+  return lastCommentId;
+}
 
 function evCommentLatestView(options) {
   attrUndefinedCheck(this, 'post-id');
@@ -3597,19 +3825,10 @@ function evCommentLatestView(options) {
   }, options);
 
   var $obj = $(this);
-  var commentBlock = $obj.closest(".comment-block");
-  var commentNum = commentBlock.children("div.comment-box").length;
-  var lastCommentBox = commentBlock.children("div.comment-box:last");
-  var lastCommentId = "";
+  var $commentBlock = $obj.closest(".comment-block");
+  var lastCommentId = getCommentBlockLatestId($commentBlock);
+
   var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  if (commentNum > 0) {
-    // コメントが存在する場合
-    attrUndefinedCheck(lastCommentBox, 'comment-id');
-    lastCommentId = lastCommentBox.attr("comment-id");
-  } else {
-    // コメントがまだ0件の場合
-    lastCommentId = "";
-  }
   var $errorBox = $obj.siblings("div.new-comment-error");
   var get_url = $obj.attr('get-url') + "/" + lastCommentId;
   //リンクを無効化
@@ -3625,6 +3844,20 @@ function evCommentLatestView(options) {
       if (!$.isEmptyObject(data.html)) {
         //取得したhtmlをオブジェクト化
         var $posts = $(data.html);
+
+        // Get the comment id for the new post
+        var $comment = $posts.closest('[comment-id]').last();
+        var newCommentId = $comment.attr("comment-id");
+
+        // Get the last comment id displayed on the page
+        $commentBlock = $obj.closest(".comment-block");
+        lastCommentId = getCommentBlockLatestId($commentBlock);
+
+        // Do nothing if the new comment is already rendered on the page
+        if (newCommentId == lastCommentId) {
+          return;
+        }
+
         //画像をレイジーロード
         imageLazyOn($posts);
         //一旦非表示
@@ -3673,7 +3906,6 @@ function evCommentLatestView(options) {
       message.html(cake.message.notice.i);
       $errorBox.css("display", "block");
     }
-
   });
   return false;
 }
