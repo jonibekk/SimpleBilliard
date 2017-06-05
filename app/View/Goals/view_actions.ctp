@@ -74,13 +74,13 @@ $namedParams = $this->request->params['named'];
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($namedParams['page_type'] == 'list'): ?>
                     <?php if ($actionCount == 0): ?>
-                        <div class="cube-img-column-frame add-action mod-only">
+                        <div class="cube-img-block add-action mod-only">
                             <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("There is no Action.") ?></h3>
                             <?= $canAction ? $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]) : null; ?>
                         </div>
                     <?php elseif ($canAction): ?>
-                        <div class="cube-img-column-frame add-action  mod-only">
+                        <div class="cube-img-block add-action  mod-only">
                             <?= $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]); ?>
                         </div>
@@ -88,13 +88,13 @@ $namedParams = $this->request->params['named'];
                     <?= $this->element('Feed/posts') ?>
                 <?php elseif ($namedParams['page_type'] == 'image'): ?>
                     <?php if ($actionCount == 0): ?>
-                        <div class="cube-img-column-frame add-action mod-only">
+                        <div class="cube-img-block add-action mod-only">
                             <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("There is no Action.") ?></h3>
                             <?= $canAction ? $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]) : null; ?>
                         </div>
                     <?php elseif ($canAction): ?>
-                        <div class="cube-img-column-frame add-action">
+                        <div class="cube-img-block add-action">
                             <?= $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]); ?>
                         </div>
