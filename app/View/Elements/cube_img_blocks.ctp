@@ -12,7 +12,7 @@
 <?= $this->App->viewStartComment() ?>
 <?php if (isset($posts) && !empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
-            <div class="cube-img-column-frame">
+            <div class="cube-img-block action-image">
                 <a href="<?= $this->Html->url([
                     'controller' => 'posts',
                     'action'     => 'feed',

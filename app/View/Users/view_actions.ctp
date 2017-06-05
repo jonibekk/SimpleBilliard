@@ -83,7 +83,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
         <div class="profile-user-action-contents" id="UserPageContents">
             <?php if ($namedParams['page_type'] == 'list'): ?>
                 <?php if ($actionCount == 0): ?>
-                    <div class="cube-img-column-frame add-action mod-only">
+                    <div class="cube-img-block add-action mod-only">
                         <h3>
                             <?php
                             if ($namedParams['user_id'] == $this->Session->read('Auth.User.id') && $termId == $currentTermId) {
@@ -102,7 +102,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                         ?>
                     </div>
                 <?php elseif ($canAction): ?>
-                    <div class="cube-img-column-frame add-action mod-only">
+                    <div class="cube-img-block add-action mod-only">
                         <?= $this->element('Goal/add_action_button', [
                             'goal_id' => Hash::get($namedParams, 'goal_id')
                         ]); ?>
@@ -111,7 +111,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 <?= $this->element('Feed/posts') ?>
             <?php elseif ($namedParams['page_type'] == 'image'): ?>
                 <?php if ($actionCount == 0): ?>
-                    <div class="cube-img-column-frame add-action mod-only">
+                    <div class="cube-img-block add-action mod-only">
                         <h3>
                             <?php
                             if ($namedParams['user_id'] == $this->Session->read('Auth.User.id') && $termId == $currentTermId) {
@@ -130,7 +130,7 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                         ?>
                     </div>
                 <?php elseif ($canAction): ?>
-                    <div class="cube-img-column-frame add-action">
+                    <div class="cube-img-block add-action">
                         <?= $this->element('Goal/add_action_button', [
                             'goal_id' => Hash::get($namedParams, 'goal_id')
                         ]); ?>
