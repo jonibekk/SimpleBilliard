@@ -47,7 +47,7 @@ $namedParams = $this->request->params['named'];
                     $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
                 }
                 ?>
-                <?php if ($actionCount != 0): ?>
+                <?php if ($actionCount != 0){ ?>
                 <div class="view-actions-panel-btngroup-wrap">
                     <div class="view-action-panel-filter-btngroup">
                         <?php if ($namedParams['page_type'] == 'list'): ?>
