@@ -251,4 +251,20 @@ class TermService extends AppService
         return $termFilter;
 
     }
+
+    /**
+     * @param int $termId
+     *
+     * @return bool
+     */
+    function isAfterCurrentTerm(int $termId): bool
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+
+        $targetTerm = $Term->getById($termId);
+        $currentTerm = $Term->getCurrentTermData();
+        return $targetTerm['start_date'] >= $currentTerm['start_date'];
+    }
+
 }

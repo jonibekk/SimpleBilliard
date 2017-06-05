@@ -1234,6 +1234,9 @@ class UsersController extends AppController
             $this->Goal->findCanComplete($this->my_uid), '{n}.id'
         );
 
+        // for changing goal.
+        $isAfterCurrentTerm = $TermService->isAfterCurrentTerm($termId);
+
         $this->set([
             'term'                 => $termFilterOptions,
             'term_id'              => $termId,
@@ -1245,7 +1248,8 @@ class UsersController extends AppController
             'is_mine'              => $isMine,
             'display_action_count' => $displayActionCount,
             'my_coaching_users'    => $myCoachingUsers,
-            'canCompleteGoalIds'   => $canCompleteGoalIds
+            'canCompleteGoalIds'   => $canCompleteGoalIds,
+            'isAfterCurrentTerm'   => $isAfterCurrentTerm,
         ]);
         return $this->render();
     }
