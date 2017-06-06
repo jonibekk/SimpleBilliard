@@ -16,13 +16,14 @@ const config = {
             assets_dir + '/js/lib/posts.js'
         ],
         goals: [
-            assets_dir + '/js/lib/feed.js',
+            assets_dir + '/js/lib/goals.js',
         ]
     },
     src: [
       assets_dir + '/js/dropzone_setting.js',
       assets_dir + '/js/lib/global.js',
       assets_dir + '/js/lib/header.js',
+      assets_dir + '/js/lib/select2.js',
       assets_dir + '/js/gl_basic.js',
       assets_dir + '/js/view/**/*.js'
     ],

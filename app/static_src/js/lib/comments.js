@@ -571,23 +571,6 @@ function evCommendEditSubmit(e) {
     return false;
 }
 
-function bindCommentBalancedGallery($obj) {
-    console.log("comments.js: bindCommentBalancedGallery");
-    $obj.removeClass('none');
-    $obj.BalancedGallery({
-        autoResize: false,                   // re-partition and resize the images when the window size changes
-        //background: '#DDD',                   // the css properties of the gallery's containing element
-        idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
-        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
-        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-        padding: 1,                         // pixels between images
-        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
-        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
-        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
-    });
-};
-
 // 通知から投稿、メッセージに移動
 // TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
 //       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
@@ -758,17 +741,6 @@ function evCommentOldView() {
     return false;
 }
 
-//bootstrapValidatorがSuccessした時
-function validatorCallback(e) {
-    console.log("comments.js: validatorCallback");
-    if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
-        addComment(e);
-    }
-    else if (e.target.id == "ActionCommentForm") {
-        addComment(e);
-    }
-}
-
 function evTargetToggleClick() {
     console.log("comments.js: evTargetToggleClick");
     attrUndefinedCheck(this, 'target-id');
@@ -839,4 +811,43 @@ function evTargetToggleClick() {
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).focus();
     return false;
+}
+
+function initCommentNotify(notifyBox) {
+    console.log("gl_basic.js: initCommentNotify");
+    var numInBox = notifyBox.find(".num");
+    numInBox.html("0");
+    notifyBox.css("display", "none").css("opacity", 0);
+}
+
+
+
+
+// Used on circle and feed
+function bindCommentBalancedGallery($obj) {
+    console.log("comments.js: bindCommentBalancedGallery");
+    $obj.removeClass('none');
+    $obj.BalancedGallery({
+        autoResize: false,                   // re-partition and resize the images when the window size changes
+        //background: '#DDD',                   // the css properties of the gallery's containing element
+        idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
+        padding: 1,                         // pixels between images
+        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
+        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
+        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
+    });
+};
+
+//bootstrapValidatorがSuccessした時
+function validatorCallback(e) {
+    console.log("comments.js: validatorCallback");
+    if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
+        addComment(e);
+    }
+    else if (e.target.id == "ActionCommentForm") {
+        addComment(e);
+    }
 }

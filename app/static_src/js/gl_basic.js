@@ -8,127 +8,6 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
-//Select2 Customization
-$.fn.select2.defaults = {
-    width: "copy",
-    loadMorePadding: 0,
-    closeOnSelect: true,
-    openOnEnter: true,
-    containerCss: {},
-    dropdownCss: {},
-    containerCssClass: "",
-    dropdownCssClass: "",
-    formatResult: function (result, container, query, escapeMarkup) {
-        var markup = [];
-        markMatch(result.text, query.term, markup, escapeMarkup);
-        return markup.join("");
-    },
-    formatSelection: function (data, container, escapeMarkup) {
-        return data ? escapeMarkup(data.text) : undefined;
-    },
-    sortResults: function (results, container, query) {
-        return results;
-    },
-    formatResultCssClass: function (data) {
-        return data.css;
-    },
-    formatSelectionCssClass: function (data, container) {
-        return undefined;
-    },
-    minimumResultsForSearch: 0,
-    minimumInputLength: 0,
-    maximumInputLength: null,
-    maximumSelectionSize: 0,
-    id: function (e) {
-        return e == undefined ? null : e.id;
-    },
-    matcher: function (term, text) {
-        return stripDiacritics('' + text).toUpperCase().indexOf(stripDiacritics('' + term).toUpperCase()) >= 0;
-    },
-    separator: ",",
-    tokenSeparators: [],
-    //tokenizer: defaultTokenizer,
-    //escapeMarkup: defaultEscapeMarkup,
-    blurOnChange: false,
-    selectOnBlur: false,
-    adaptContainerCssClass: function (c) {
-        return c;
-    },
-    adaptDropdownCssClass: function (c) {
-        return null;
-    },
-    nextSearchTerm: function (selectedObject, currentSearchTerm) {
-        return undefined;
-    },
-    searchInputPlaceholder: '',
-    createSearchChoicePosition: 'top',
-    shouldFocusInput: function (instance) {
-        // Attempt to detect touch devices
-        var supportsTouchEvents = (('ontouchstart' in window) ||
-            (navigator.msMaxTouchPoints > 0));
-
-        // Only devices which support touch events should be special cased
-        if (!supportsTouchEvents) {
-            return true;
-        }
-
-        // Never focus the input if search is disabled
-        if (instance.opts.minimumResultsForSearch < 0) {
-            return false;
-        }
-
-        return true;
-    }
-};
-
-    $.fn.select2.locales = [];
-
-    $.fn.select2.locales['en'] = {
-        formatMatches: function (matches) {
-            if (matches === 1) {
-                return "One result is available, press enter to select it.";
-            }
-            return matches + " results are available, use up and down arrow keys to navigate.";
-        },
-        formatNoMatches: function () {
-            return "No matches found";
-        },
-        formatAjaxError: function (jqXHR, textStatus, errorThrown) {
-            return "Loading failed";
-        },
-        formatInputTooShort: function (input, min) {
-            var n = min - input.length;
-            return "Please enter " + n + " or more character" + (n == 1 ? "" : "s");
-        },
-        formatInputTooLong: function (input, max) {
-            var n = input.length - max;
-            return "Please delete " + n + " character" + (n == 1 ? "" : "s");
-        },
-        formatSelectionTooBig: function (limit) {
-            return "You can only select " + limit + " item" + (limit == 1 ? "" : "s");
-        },
-        formatLoadMore: function (pageNumber) {
-            return "Loading more results…";
-        },
-        formatSearching: function () {
-            return "Searching…";
-        },
-    };
-
-    $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
-
-    $.fn.select2.ajaxDefaults = {
-        transport: $.ajax,
-        params: {
-            type: "GET",
-            cache: false,
-            dataType: "json"
-        }
-    };
-
-
-
-
 $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec
@@ -144,10 +23,6 @@ if (typeof String.prototype.startsWith != 'function') {
 require.config({
   baseUrl: '/js/modules/'
 });
-
-
-var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
-
 
 
 /**
@@ -182,8 +57,6 @@ function changeSizeActionImage($obj) {
 }
 
 
-
-
 // selectorの存在確認用
 jQuery.fn.exists = function () {
   console.log("gl_basic.js: jQuery.fn.exists");
@@ -197,15 +70,9 @@ jQuery.fn.hasScrollBar = function () {
 }
 
 
-
-
-
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
-  //intercomのリンクを非表示にする
-  if (enabled_intercom_icon) {
-    $('#IntercomLink').hide();
-  }
+
   // Androidアプリかiosアプリの場合のみfastClickを実行する。
   // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
   if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
@@ -804,8 +671,6 @@ function resizeImgBase64(imgBase64, width, height, callback) {
 }
 
 
-
-
 /**
  * uploading csv file from form.
  */
@@ -863,7 +728,6 @@ function uploadCsvFileByForm(e) {
       $loader.addClass('none');
     });
 }
-
 
 
 function evTargetToggle() {
@@ -952,7 +816,6 @@ function evSelectOptionTargetHidden() {
   return true;
 }
 
-//noinspection FunctionWithInconsistentReturnsJS
 function evToggle() {
     console.log("gl_basic.js: evToggle");
   attrUndefinedCheck(this, 'target-id');
@@ -1145,6 +1008,7 @@ function getLocalDate() {
 $(function () {
     console.log("gl_basic.js: $(function ()");
   $(".click-show").on("click", function () {
+      console.log("gl_basic.js: click");
       $("#PostFormPicture").css("display", "block")
     }
   )
@@ -1155,6 +1019,7 @@ $(function () {
 $(function () {
     console.log("gl_basic.js: $(function ()");
   $(".click-circle-trigger").on("click", function () {
+      console.log("gl_basic.js: click");
     var txt = $(this).text();
     if ($(this).is('.on')) {
       $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
@@ -1168,7 +1033,6 @@ $(function () {
   });
 });
 
-//noinspection JSUnresolvedVariable
 $(document).on("click", ".target-show", evTargetShow);
 
 function evTargetShow() {
@@ -1180,37 +1044,6 @@ function evTargetShow() {
   return false;
 }
 
-function disabledAllInput(selector) {
-    console.log("gl_basic.js: disabledAllInput");
-  $(selector).find("input,select,textarea").attr('disabled', 'disabled');
-}
-
-function enabledAllInput(selector) {
-    console.log("gl_basic.js: enabledAllInput");
-  $(selector).find('input,select,textarea').removeAttr('disabled');
-}
-
-//noinspection JSUnusedGlobalSymbols
-function ajaxAppendCount(id, url) {
-    console.log("gl_basic.js: ajaxAppendCount");
-  var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  $('#' + id).append($loader_html);
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      //ローダーを削除
-      $loader_html.remove();
-      //カウント数を表示
-      $('#' + id).text(data.count);
-    },
-    error: function () {
-    }
-  });
-  return false;
-}
 
 $(function () {
     console.log("gl_basic.js: $(function ()");
@@ -1218,12 +1051,14 @@ $(function () {
 
   // インジケータークリック時
   $(document).on('click', '.setup-tutorial-indicator', function () {
+      console.log("gl_basic.js: click");
     resetDisplayStatus();
     changeTutorialContent($(this).attr('data-id'));
   });
 
   // ネクストボタンクリック時
   $(document).on('click', '.tutorial-next-btn', function () {
+      console.log("gl_basic.js: click");
     if (current_slide_id == 3) {
       location.href = "/setup/";
       return;
@@ -1251,9 +1086,6 @@ $(function () {
     $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
   }
 });
-
-
-
 
 
 function warningAction($obj) {
@@ -1340,11 +1172,6 @@ $(function () {
 
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
-
-
-
-  initMemberSelect2();
-  initCircleSelect2();
 
   $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
     e.preventDefault();
@@ -1525,417 +1352,7 @@ $(document).ready(function () {
         break;
     }
   });
-
-
 });
-
-function initMessageSelect2(topic_id) {
-    console.log("gl_basic.js: initMessageSelect2");
-  //noinspection JSUnusedLocalSymbols post_detail.Post.id
-  $('#selectOnlyMember').select2({
-    multiple: true,
-    minimumInputLength: 1,
-    placeholder: cake.message.notice.b,
-    ajax: {
-      url: cake.url.add_member_on_message,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10, // page size
-          topic_id: topic_id
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    formatSelection: format,
-    formatResult: format,
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2Member"
-  }).on('change', function () {
-    var $this = $(this);
-    if ($this.val() == '') {
-      $('#MessageSubmit').attr('disabled', 'disabled');
-    }
-    else {
-      if ($('#CommonMessageBody').val() != '') {
-        $('#MessageSubmit').removeAttr('disabled');
-      }
-    }
-    // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-    $this.select2('data', select2ExpandGroup($this.select2('data')));
-  });
-}
-
-
-function initMemberSelect2() {
-    console.log("gl_basic.js: initMemberSelect2");
-  //noinspection JSUnusedLocalSymbols
-  $('#select2Member').select2({
-    initSelection: function (element, callback) {
-      // user_**の文字列からユーザーIDを抽出
-      if ($(element).val().match(/^user_(\d+)$/)) {
-        var userId = RegExp.$1;
-        // ユーザー情報を取得して初期表示
-        $.ajax("/users/ajax_select2_get_user_detail/" + userId,
-          {
-            type: 'GET'
-          }).done(function (data) {
-          callback(data);
-        });
-      }
-    },
-    multiple: true,
-    minimumInputLength: 1,
-    placeholder: cake.message.notice.b,
-    ajax: {
-      url: cake.url.a,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10, // page size
-          with_group: 1
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    formatSelection: format,
-    formatResult: format,
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2Member"
-  }).on('change', function () {
-    var $this = $(this);
-    if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
-      $('#MessageSubmit').attr('disabled', 'disabled');
-    }
-    else {
-      $('#MessageSubmit').removeAttr('disabled');
-    }
-    // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-    $this.select2('data', select2ExpandGroup($this.select2('data')));
-  });
-}
-
-function initCircleSelect2() {
-    console.log("gl_basic.js: initCircleSelect2");
-  //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-  $('#select2PostCircleMember').select2({
-    multiple: true,
-    placeholder: cake.word.select_public_circle,
-    minimumInputLength: 1,
-    ajax: {
-      url: cake.url.select2_circle_user,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10, // page size
-          circle_type: "public"
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    data: [],
-    initSelection: cake.data.b,
-    formatSelection: format,
-    formatResult: format,
-    dropdownCssClass: 's2-post-dropdown',
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2PostCircleMember"
-  })
-    .on('change', function () {
-      var $this = $(this);
-      // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-      $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
-
-  // select2 秘密サークル選択
-  $('#select2PostSecretCircle').select2({
-    multiple: true,
-    placeholder: cake.word.select_secret_circle,
-    minimumInputLength: 1,
-    maximumSelectionSize: 1,
-    ajax: {
-      url: cake.url.select2_secret_circle,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10 // page size
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    data: [],
-    initSelection: cake.data.select2_secret_circle,
-    formatSelection: format,
-    formatResult: format,
-    dropdownCssClass: 's2-post-dropdown',
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2PostCircleMember"
-  });
-
-  //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-  $('#select2MessageCircleMember').select2({
-    multiple: true,
-    placeholder: cake.word.select_public_message,
-    minimumInputLength: 2,
-    ajax: {
-      url: cake.url.select2_circle_user,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10, // page size
-          circle_type: "public"
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    data: [],
-    initSelection: cake.data.b,
-    formatSelection: format,
-    formatResult: format,
-    dropdownCssClass: 's2-post-dropdown',
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2MessageCircleMember"
-  });
-
-  // select2 秘密サークル選択
-  $('#select2MessageSecretCircle').select2({
-    multiple: true,
-    placeholder: cake.word.select_secret_circle,
-    minimumInputLength: 2,
-    maximumSelectionSize: 1,
-    ajax: {
-      url: cake.url.select2_secret_circle,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10 // page size
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    data: [],
-    initSelection: cake.data.select2_secret_circle,
-    formatSelection: format,
-    formatResult: format,
-    dropdownCssClass: 's2-post-dropdown',
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2MessageCircleMember"
-  });
-
-  // サークル追加用モーダルの select2 を設定
-  bindSelect2Members($('#modal_add_circle'));
-
-  // 投稿の共有範囲(公開/秘密)切り替えボタン
-  var $shareRangeToggleButton = $('#postShareRangeToggleButton');
-  var $shareRange = $('#postShareRange');
-  var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
-  var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
-
-  // ボタン初期状態
-  $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
-
-  // 共有範囲切り替えボタンが有効な場合
-  $shareRangeToggleButton.on('click', function (e) {
-    e.preventDefault();
-    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
-      $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
-      if ($shareRange.val() == 'public') {
-        $shareRangeToggleButton.html(publicButtonLabel);
-        $('#PostSecretShareInputWrap').hide();
-        $('#PostPublicShareInputWrap').show();
-      }
-      else {
-        $shareRangeToggleButton.html(secretButtonLabel);
-        $('#PostPublicShareInputWrap').hide();
-        $('#PostSecretShareInputWrap').show();
-      }
-    }
-    else {
-      // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
-      $shareRangeToggleButton.popover({
-        'data-toggle': "popover",
-        'placement': 'top',
-        'trigger': "focus",
-        'content': cake.word.share_change_disabled,
-        'container': 'body'
-      });
-    }
-  });
-
-
-  $('#select2ActionCircleMember').select2({
-    multiple: true,
-    placeholder: cake.word.select_notify_range,
-    minimumInputLength: 1,
-    ajax: {
-      url: cake.url.select2_circle_user,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10, // page size
-          circle_type: 'all'
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    data: [],
-    initSelection: cake.data.l,
-    formatSelection: format,
-    formatResult: format,
-    dropdownCssClass: 's2-post-dropdown aaaa',
-    escapeMarkup: function (m) {
-      return m;
-    },
-    containerCssClass: "select2ActionCircleMember"
-  });
-
-}
-
-function format(item) {
-    console.log("gl_basic.js: format");
-  if ('image' in item) {
-    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";
-  }
-  else if ('icon' in item) {
-    return "<span class='select2-item-txt-with-i'><i class='" + item.icon + "'></i> " + item.text + "</span>";
-  }
-  else {
-    return "<span class='select2-item-txt'>" + item.text + "</span>";
-  }
-}
-function bindSelect2Members($this) {
-    console.log("gl_basic.js: bindSelect2Members");
-  var $select2elem = $this.find(".ajax_add_select2_members");
-  var url = $select2elem.attr('data-url');
-
-  //noinspection JSUnusedLocalSymbols
-  $select2elem.select2({
-    'val': null,
-    multiple: true,
-    minimumInputLength: 1,
-    placeholder: cake.message.notice.b,
-    ajax: {
-      url: url ? url : cake.url.a,
-      dataType: 'json',
-      quietMillis: 100,
-      cache: true,
-      data: function (term, page) {
-        return {
-          term: term, //search term
-          page_limit: 10 // page size
-        };
-      },
-      results: function (data, page) {
-        return {results: data.results};
-      }
-    },
-    formatSelection: format,
-    formatResult: format,
-    escapeMarkup: function (m) {
-      return m;
-    }
-  })
-    .on('change', function () {
-      var $this = $(this);
-      // グループを選択した場合
-      // グループに所属するユーザーを展開して入力済にする
-      $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
-}
-
-// select2 で選択されたグループをユーザーとして展開する
-function select2ExpandGroup(data) {
-    console.log("gl_basic.js: select2ExpandGroup");
-  for (var i = 0; i < data.length; i++) {
-    if (data[i].id.indexOf('group_') === 0 && data[i].users) {
-      var group = data.splice(i, 1)[0];
-      for (var j = 0; j < group.users.length; j++) {
-        data.push(group.users[j]);
-      }
-    }
-  }
-  return data;
-};
-
-/**
- * Select2 translation.
- */
-(function ($) {
-    console.log("gl_basic.js: (function ($)");
-  "use strict";
-
-  //noinspection JSUnusedLocalSymbols
-  $.fn.select2.locales['en'] = {
-    formatNoMatches: function () {
-      return cake.word.d;
-    },
-    formatInputTooShort: function () {
-      return cake.word.e;
-    },
-    formatInputTooLong: function (input, max) {
-      var n = input.length - max;
-      return cake.word.g + n + cake.word.h;
-    },
-    formatSelectionTooBig: function (limit) {
-      return cake.word.i + limit + cake.word.j;
-    },
-    formatLoadMore: function (pageNumber) {
-      return cake.message.info.b;
-    },
-    formatSearching: function () {
-      return cake.message.info.c;
-    }
-  };
-
-  $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
-})(jQuery);
 
 function evFollowGoal() {
     console.log("gl_basic.js: evFollowGoal");
@@ -2059,9 +1476,6 @@ function updateAddressBar(url) {
   }
 }
 
-
-
-
 function evNotifications(options) {
     console.log("gl_basic.js: evNotifications");
 
@@ -2141,8 +1555,6 @@ function evNotifications(options) {
   });
   return false;
 }
-
-
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
@@ -2600,10 +2012,6 @@ $(document).ready(function () {
 });
 
 
-
-
-
-
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
   var click_cnt = 0;
@@ -2617,56 +2025,6 @@ $(document).ready(function () {
     });
 });
 
-
-
-
-
-
-
-
-
-// reset bell notify num call from app.
-function resetBellNum() {
-    console.log("gl_basic.js: resetBellNum");
-  initBellNum();
-  var url = cake.url.g;
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (data) {
-      updateNotifyCnt();
-    },
-    error: function () {
-      // do nothing.
-    }
-  });
-}
-
-
-
-// reset bell message num call from app.
-function resetMessageNum() {
-    console.log("gl_basic.js: resetMessageNum");
-  initMessageNum();
-  var url = cake.url.ag;
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    success: function (data) {
-      // do nothing.
-    },
-    error: function () {
-      // do nothing.
-    }
-  });
-}
-
-function copyToClipboard(url) {
-    console.log("gl_basic.js: copyToClipboard");
-  window.prompt(cake.message.info.copy_url, url);
-}
 
 $(document).ready(function () {
     console.log("gl_basic.js: $(document).ready");
@@ -2830,23 +2188,6 @@ function evAjaxLeaveCircle(e) {
         mouse_reset: false
       });
     });
-}
-
-
-
-
-
-function isMobile() {
-    console.log("gl_basic.js: isMobile");
-  var agent = navigator.userAgent;
-  if (agent.search(/iPhone/) != -1 ||
-    agent.search(/iPad/) != -1 ||
-    agent.search(/iPod/) != -1 ||
-    agent.search(/Android/) != -1
-  ) {
-    return true;
-  }
-  return false;
 }
 
 

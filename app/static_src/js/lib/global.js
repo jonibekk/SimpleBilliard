@@ -243,7 +243,20 @@ function appendSocketId(form, socketId) {
     }).appendTo(form);
 }
 
-function isOnline() {
-    console.log("global.js: isOnline");
-    return Boolean(network_reachable);
+function isMobile() {
+    console.log("gl_basic.js: isMobile");
+    var agent = navigator.userAgent;
+    if (agent.search(/iPhone/) != -1 ||
+        agent.search(/iPad/) != -1 ||
+        agent.search(/iPod/) != -1 ||
+        agent.search(/Android/) != -1
+    ) {
+        return true;
+    }
+    return false;
+}
+
+function copyToClipboard(url) {
+    console.log("gl_basic.js: copyToClipboard");
+    window.prompt(cake.message.info.copy_url, url);
 }
