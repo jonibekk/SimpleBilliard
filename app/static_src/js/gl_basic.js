@@ -744,7 +744,6 @@ function evRemoveThis() {
   $(this).remove();
 }
 
-
 /**
  * 以下の処理を行う
  * 1. this 要素を remove() する
