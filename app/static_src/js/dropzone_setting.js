@@ -183,23 +183,9 @@ $(function () {
             $preview.remove();
           }, 4000);
           $uploadFileForm.hide();
-          //PNotify.removeAll();
-
-          // 成功
-          /*new PNotify({
-            type: 'success',
-            title: cake.word.success,
-            text: cake.message.validate.dropzone_cancel_upload,
-            icon: "fa fa-check-circle",
-            delay: 4000,
-            mouse_reset: false
-          });*/
-
           new Noty({
+            type: 'error',
             text: cake.message.validate.dropzone_cancel_upload,
-            timeout: 4000,
-            progressBar: false,
-            closeWith: ['click', 'button'],
           }).show();
           return;
         }
@@ -212,40 +198,15 @@ $(function () {
           data: $removeFileForm.serialize()
         })
           .done(function (res) {
-            //PNotify.removeAll();
-            // エラー
             if (res.error) {
-              /*new PNotify({
-                type: 'error',
-                title: cake.message.notice.d,
-                text: res.msg,
-                icon: "fa fa-check-circle",
-                delay: 4000,
-                mouse_reset: false
-              });*/
               new Noty({
                 type: 'error',
                 text: res.msg,
-                timeout: 4000,
-                progressBar: false,
-                closeWith: ['click', 'button'],
               }).show();
             }
-
-            // 成功
-            /*new PNotify({
-              type: 'success',
-              title: cake.word.success,
-              text: res.msg,
-              icon: "fa fa-check-circle",
-              delay: 2000,
-              mouse_reset: false
-            });*/
             new Noty({
                 type: 'success',
                 text: res.msg,
-                timeout: 4000,
-                progressBar: false,
                 closeWith: ['click', 'button'],
               }).show();
             // ファイルIDの hidden 削除
@@ -258,20 +219,9 @@ $(function () {
             });
           })
           .fail(function (res) {
-            /*PNotify.removeAll();
-            new PNotify({
-              type: 'error',
-              title: cake.message.notice.d,
-              text: cake.message.notice.d,
-              icon: "fa fa-check-circle",
-              delay: 4000,
-              mouse_reset: false
-            });*/
             new Noty({
                 type: 'error',
                 text: cake.message.notice.d,
-                timeout: 4000,
-                progressBar: false,
                 closeWith: ['click', 'button'],
               }).show();
           });
@@ -287,20 +237,9 @@ $(function () {
         $preview.remove();
       }, 4000);
       $uploadFileForm.hide();
-      /*PNotify.removeAll();
-      new PNotify({
-        type: 'success',
-        title: cake.word.success,
-        text: cake.message.validate.dropzone_cancel_upload,
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-      });*/
       new Noty({
         type: 'success',
         text: cake.message.validate.dropzone_cancel_upload,
-        timeout: 4000,
-        progressBar: false,
         closeWith: ['click', 'button'],
       }).show();
     },
@@ -354,20 +293,9 @@ $(function () {
         errorMessage = error;
       }
       $uploadFileForm.hide();
-      /*PNotify.removeAll();
-      new PNotify({
-        type: 'error',
-        title: cake.message.notice.d,
-        text: errorMessage,
-        icon: "fa fa-check-circle",
-        delay: 8000,
-        mouse_reset: false
-      });*/
       new Noty({
         type: 'error',
         text: errorMessage,
-        timeout: 4000,
-        progressBar: false,
         closeWith: ['click', 'button'],
       }).show();
       

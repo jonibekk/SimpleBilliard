@@ -170,13 +170,10 @@
       type: 'PUT',
       data: form_data,
       success: function (data) {
-        PNotify.removeAll();
-        new PNotify({
-          type: 'success',
-          text: cake.translation["Updated KR."],
-          delay: 4000,
-          mouse_reset: false
-        });
+        new Noty({
+        type: 'success',
+        text: '<h4>'+cake.word.success+'</h4>'+cake.translation["Updated KR."],
+      }).show();
         location.reload(true);
       },
       error: function (res, textStatus, errorThrown) {
