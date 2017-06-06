@@ -180,7 +180,7 @@ class UploadBehavior extends ModelBehavior
             'ssl_verify_host' => false,
         ];
         $httpSocket = new HttpSocket($config);
-        $raw = $httpSocket->get($url);
+        $raw = $httpSocket->get($url, array(), array('redirect' => true));
         /**
          * @var HttpResponse $response
          */
