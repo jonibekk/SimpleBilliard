@@ -219,7 +219,7 @@ class GoalServiceTest extends GoalousTestCase
     {
         $this->_setUpGraphDefault();
         try {
-            $this->GoalService->getGraphRange(time(), date('t') + 1);
+            $this->GoalService->getGraphRange(time(), $this->_getEndOfMonthDay() + 1);
         } catch (Exception $e) {
         }
         $this->assertTrue(isset($e));
@@ -233,7 +233,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->_setUpGraphDefault();
         try {
             $timezone = $this->Team->getTimezone();
-            $this->GoalService->getGraphRange(AppUtil::todayDateYmdLocal($timezone), date('t'));
+            $this->GoalService->getGraphRange(AppUtil::todayDateYmdLocal($timezone), $this->_getEndOfMonthDay());
         } catch (Exception $e) {
         }
         //例外が返らないこと
@@ -248,20 +248,20 @@ class GoalServiceTest extends GoalousTestCase
     {
         $this->_setUpGraphDefault();
         $expected = [
-            'graphStartDate' => date('Y-m-01'),
-            'graphEndDate'   => date('Y-m-10'),
+            'graphStartDate' => date('Y-m-01', $this->_getLocalTimestamp()),
+            'graphEndDate'   => date('Y-m-10', $this->_getLocalTimestamp()),
         ];
         $termStartDate = $this->Term->getCurrentTermData()['start_date'];
         //バッファなし
         $targetEndDate = $termStartDate;
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
-        $expected['plotDataEndDate'] = date('Y-m-01');
+        $expected['plotDataEndDate'] = date('Y-m-01', $this->_getLocalTimestamp());
         //当日が期の開始日と一緒の場合、期の開始日とプロットデータのエンドは一緒になる
         $this->assertEquals($expected, $actual);
 
         $targetEndDate = AppUtil::dateYmd(strtotime("{$termStartDate} +9 days"));
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
-        $expected['plotDataEndDate'] = date('Y-m-10');
+        $expected['plotDataEndDate'] = date('Y-m-10', $this->_getLocalTimestamp());
         //バッファなしで当日が期の開始日から9日後はプロットデータも9日後になる
         $this->assertEquals($expected, $actual);
 
@@ -269,26 +269,26 @@ class GoalServiceTest extends GoalousTestCase
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
         //バッファなしで、targetDaysが10日で当日が期の開始日から10日後は範囲全体の日付が変わる
         $this->assertEquals([
-            'graphStartDate'  => date('Y-m-02'),
-            'graphEndDate'    => date('Y-m-11'),
-            'plotDataEndDate' => date('Y-m-11')
+            'graphStartDate'  => date('Y-m-02', $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-11', $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-11', $this->_getLocalTimestamp())
         ], $actual);
 
         //バッファあり
         $targetEndDate = $termStartDate;
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 9);
-        $expected['plotDataEndDate'] = date('Y-m-01');
+        $expected['plotDataEndDate'] = date('Y-m-01', $this->_getLocalTimestamp());
         //バッファありでも$targetEndTimestampが収まる場合は、日付が一緒になる。
         $this->assertEquals($expected, $actual);
 
         $targetEndDate = AppUtil::dateYmd(strtotime("{$termStartDate} +1 day"));
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 9);
-        $expected['plotDataEndDate'] = date('Y-m-01');
+        $expected['plotDataEndDate'] = date('Y-m-01', $this->_getLocalTimestamp());
         //バッファありで、$targetEndTimestampが収まらない場合は日付が変わる。
         $this->assertNotEquals([
-            'graphStartDate'  => date('Y-m-02'),
-            'graphEndDate'    => date('Y-m-11'),
-            'plotDataEndDate' => date('Y-m-11')
+            'graphStartDate'  => date('Y-m-02', $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-11', $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-11', $this->_getLocalTimestamp())
         ], $actual);
     }
 
@@ -302,9 +302,9 @@ class GoalServiceTest extends GoalousTestCase
 
         //バッファあり
         $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 9)),
-            'graphEndDate'    => date('Y-m-' . date('t')),
-            'plotDataEndDate' => date('Y-m-' . date('t')),
+            'graphStartDate'  => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 9), $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-' . $this->_getEndOfMonthDay(), $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-' . $this->_getEndOfMonthDay(), $this->_getLocalTimestamp()),
         ];
 
         $targetEndDate = $this->Term->getCurrentTermData()['end_date'];
@@ -324,9 +324,9 @@ class GoalServiceTest extends GoalousTestCase
 
         //バッファなし
         $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 9)),
-            'graphEndDate'    => date('Y-m-' . date('t')),
-            'plotDataEndDate' => date('Y-m-' . date('t'))
+            'graphStartDate'  => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 9), $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-' . $this->_getEndOfMonthDay(), $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-' . $this->_getEndOfMonthDay(), $this->_getLocalTimestamp())
         ];
         $targetEndDate = $this->Term->getCurrentTermData()['end_date'];
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
@@ -334,9 +334,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($expected, $actual);
 
         $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 10)),
-            'graphEndDate'    => date('Y-m-' . (string)(date('t') - 1)),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 1))
+            'graphStartDate'  => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 10), $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 1), $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 1), $this->_getLocalTimestamp())
         ];
         $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['end_date'] . "-1 day"));
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
@@ -344,9 +344,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($expected, $actual);
 
         $expected = [
-            'graphStartDate'  => date('Y-m-' . (string)(date('t') - 18)),
-            'graphEndDate'    => date('Y-m-' . (string)(date('t') - 9)),
-            'plotDataEndDate' => date('Y-m-' . (string)(date('t') - 9))
+            'graphStartDate'  => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 18), $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 9), $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-' . (string)($this->_getEndOfMonthDay() - 9), $this->_getLocalTimestamp())
         ];
         $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['end_date'] . "-9 days"));
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 0);
@@ -363,18 +363,18 @@ class GoalServiceTest extends GoalousTestCase
         $this->_setUpGraphDefault();
 
         $expected = [
-            'graphStartDate'  => date('Y-m-01'),
-            'graphEndDate'    => date('Y-m-10'),
-            'plotDataEndDate' => date('Y-m-07'),
+            'graphStartDate'  => date('Y-m-01', $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-10', $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-07', $this->_getLocalTimestamp()),
         ];
         $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['start_date'] . "+6 days"));
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 3);
         $this->assertEquals($expected, $actual);
 
         $expected = [
-            'graphStartDate'  => date('Y-m-02'),
-            'graphEndDate'    => date('Y-m-11'),
-            'plotDataEndDate' => date('Y-m-08'),
+            'graphStartDate'  => date('Y-m-02', $this->_getLocalTimestamp()),
+            'graphEndDate'    => date('Y-m-11', $this->_getLocalTimestamp()),
+            'plotDataEndDate' => date('Y-m-08', $this->_getLocalTimestamp()),
         ];
         $targetEndDate = AppUtil::dateYmd(strtotime($this->Term->getCurrentTermData()['start_date'] . "+7 days"));
         $actual = $this->GoalService->getGraphRange($targetEndDate, $targetDays = 10, $maxBufferDays = 3);
@@ -982,21 +982,21 @@ class GoalServiceTest extends GoalousTestCase
         $startDate = $startDateBase;
         $endDate = $endDateBase;
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
-        $this->assertcount((int)date('t'), $actual['top']);
+        $this->assertcount((int)$this->_getEndOfMonthDay(), $actual['top']);
 
         $startDate = AppUtil::dateYmd(strtotime("{$startDateBase} +1 day"));
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
-        $this->assertcount((int)date('t') - 1, $actual['top']);
+        $this->assertcount((int)$this->_getEndOfMonthDay() - 1, $actual['top']);
 
         $startDate = $startDateBase;
         $endDate = AppUtil::dateYmd(strtotime("{$endDateBase} -1 day"));
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
-        $this->assertcount((int)date('t') - 1, $actual['top']);
+        $this->assertcount((int)$this->_getEndOfMonthDay() - 1, $actual['top']);
 
         $startDate = AppUtil::dateYmd(strtotime("{$startDateBase} +1 day"));
         $endDate = AppUtil::dateYmd(strtotime("{$endDateBase} -1 day"));
         $actual = $this->GoalService->getSweetSpot($startDate, $endDate);
-        $this->assertcount((int)date('t') - 2, $actual['top']);
+        $this->assertcount((int)$this->_getEndOfMonthDay() - 2, $actual['top']);
     }
 
     /**
@@ -1012,7 +1012,7 @@ class GoalServiceTest extends GoalousTestCase
         $actualFullTerm = $this->GoalService->getSweetSpot($startDate, $endDate);
         $this->assertEquals(0, $actualFullTerm['top'][0]);
         $this->assertEquals(0, $actualFullTerm['bottom'][0]);
-        $lastKey = (int)(date('t') - 1);
+        $lastKey = (int)($this->_getEndOfMonthDay() - 1);
         $this->assertEquals(GoalService::GRAPH_SWEET_SPOT_MAX_TOP, floor($actualFullTerm['top'][$lastKey]));
         $this->assertEquals(GoalService::GRAPH_SWEET_SPOT_MAX_BOTTOM, floor($actualFullTerm['bottom'][$lastKey]));
 
