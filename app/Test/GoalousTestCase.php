@@ -575,12 +575,23 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult = ClassRegistry::init('KeyResult');
 
         $default = [
-            "name"             => "KR Name",
-            "description"      => "KR description"
+            "name"        => "KR Name",
+            "description" => "KR description"
         ];
         $data = am($default, $data);
         $KeyResult->create();
         $KeyResult->save($data, false);
         return $KeyResult->getLastInsertID();
     }
+
+    function _getEndOfMonthDay(int $timezone = 9)
+    {
+        return date('t', REQUEST_TIMESTAMP + $timezone * HOUR);
+    }
+
+    function _getLocalTimestamp(int $timezone = 9)
+    {
+        return REQUEST_TIMESTAMP + $timezone * HOUR;
+    }
+
 }
