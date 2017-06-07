@@ -19,7 +19,6 @@ var Page = {
         $(this).addClass("mod-visible");
       }
     });
-    console.log("ran");
   },
   init: function () {
     var self = this;
@@ -199,10 +198,11 @@ var Page = {
   }
 };
 jQuery(function ($) {
-  Page.init();
+  // TODO: temporary fix for releasing
+  //       should change js to less to manage action iamges size
   setTimeout(function(){
-    Page.action_resize(false);
-  },1000);
+    Page.init();
+  }, 1000); //fallback incase images render after page load
 });
 $(window).resize(function () {
   window.Page.action_resize(true);

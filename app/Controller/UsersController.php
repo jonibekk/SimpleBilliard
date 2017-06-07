@@ -1196,10 +1196,14 @@ class UsersController extends AppController
             );
             $nextTerm = $Term->getNextTermData();
             $endDate = $nextTerm['end_date'];
+
+            $isAfterCurrentTerm = false;
         } else {
             $targetTerm = $this->Team->Term->findById($termId);
             $startDate = $targetTerm['Term']['start_date'];
             $endDate = $targetTerm['Term']['end_date'];
+
+            $isAfterCurrentTerm = $TermService->isAfterCurrentTerm($termId);
         }
 
         $myGoalsCount = $this->Goal->getMyGoals(null, 1, 'count', $userId, $startDate, $endDate);
@@ -1245,7 +1249,8 @@ class UsersController extends AppController
             'is_mine'              => $isMine,
             'display_action_count' => $displayActionCount,
             'my_coaching_users'    => $myCoachingUsers,
-            'canCompleteGoalIds'   => $canCompleteGoalIds
+            'canCompleteGoalIds'   => $canCompleteGoalIds,
+            'isAfterCurrentTerm'   => $isAfterCurrentTerm,
         ]);
         return $this->render();
     }

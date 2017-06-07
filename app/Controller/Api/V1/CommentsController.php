@@ -2,7 +2,6 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
 
-
 /**
  * Class ActionsController
  */
@@ -10,7 +9,6 @@ class CommentsController extends ApiController
 {
     /**
      * @param $id
-     *
      * Get Comment data on JSON format
      *
      * @return CakeResponse
@@ -30,7 +28,6 @@ class CommentsController extends ApiController
 
     /**
      * @param $id
-     *
      * Delete a comment if the request user owns it.
      *
      * @return CakeResponse
@@ -95,19 +92,23 @@ class CommentsController extends ApiController
                     $postId, $comment->id);
                 break;
         }
+        // Push comments notifications
+        $socketId = Hash::get($this->request->data, 'socket_id');
+        $this->_pushCommentToPost($postId, $socketId);
+
         return $this->_getResponseSuccess();
     }
 
     /**
      * @param $id
-     * Updates a Comment.
-     * Request format:
-     * {
-     *   "data[_Token][key]": "token",
-     *   "Comment": {
+     *     Updates a Comment.
+     *     Request format:
+     *     {
+     *     "data[_Token][key]": "token",
+     *     "Comment": {
      *     "body": "body"
-     *   }
-     * }
+     *     }
+     *     }
      *
      * @return CakeResponse
      */
@@ -126,7 +127,7 @@ class CommentsController extends ApiController
             return $this->_getResponseInternalServerError();
         }
 
-        // Get the newest comment object and return it as its html rendered block 
+        // Get the newest comment object and return it as its html rendered block
         $comments = array($ApiCommentService->get($id));
         $this->set(compact('comments'));
         $this->layout = 'ajax';
@@ -139,7 +140,6 @@ class CommentsController extends ApiController
 
     /**
      * @param $comment_id
-     *
      * Validates if the comments exists and if the request
      * user owns it.
      *
@@ -156,10 +156,30 @@ class CommentsController extends ApiController
             return $this->_getResponseNotFound(__("This comment doesn't exist."));
         }
         // Is it the user comment?
-        if ($this->Auth->user('id') != $comment[User][id]) {
+        if ($this->Auth->user('id') != $comment['User']['id']) {
             return $this->_getResponseForbidden(__("This isn't your comment."));
         }
         return true;
     }
-}
 
+    /**
+     * @param $postId
+     * @param $socketId
+     */
+    private function _pushCommentToPost($postId, $socketId)
+    {
+        $notifyId = Security::hash(time());
+
+        // リクエストデータが正しくないケース
+        if (empty($postId) || empty($socketId)) {
+            return;
+        }
+
+        $data = [
+            'notify_id'         => $notifyId,
+            'is_comment_notify' => true,
+            'post_id'           => $postId
+        ];
+        $this->NotifyBiz->commentPush($socketId, $data);
+    }
+}
