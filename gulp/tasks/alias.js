@@ -5,6 +5,11 @@ import webpack from "webpack";
 import webpackProdConfig from "../webpack.config.js";
 import webpackDevConfig from "../webpack.dev.config.js";
 import gutil from 'gulp-util';
+
+gulp.task('jsbuild', done => {
+    return runSequence(['js_home', 'js_goals', 'js_app', 'js_vendor'], done)
+});
+
 gulp.task('build', done => {
   return runSequence(['js', 'css'], done)
 })

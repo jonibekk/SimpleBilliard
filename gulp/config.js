@@ -9,25 +9,25 @@ const config = {
   js: {
     pages: {
         home: [
-            assets_dir + '/js/lib/forms.js',
-            assets_dir + '/js/lib/notify.js',
-            assets_dir + '/js/lib/comments.js',
-            assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/lib/feed.js',
-            assets_dir + '/js/lib/posts.js'
+            assets_dir + '/js/lib/details/forms.js',
+            assets_dir + '/js/lib/details/notify.js',
+            assets_dir + '/js/lib/details/comments.js',
+            assets_dir + '/js/lib/details/actions.js',
+            assets_dir + '/js/lib/details/feed.js',
+            assets_dir + '/js/lib/details/posts.js'
         ],
         goals: [
-            assets_dir + '/js/lib/goals.js',
+            assets_dir + '/js/lib//views/goals.js',
+            assets_dir + '/js/lib/details/notify.js',
         ]
     },
     src: [
       assets_dir + '/js/dropzone_setting.js',
-      assets_dir + '/js/lib/global.js',
-      assets_dir + '/js/lib/header.js',
-      assets_dir + '/js/lib/select2.js',
-      assets_dir + '/js/lib/intercom.js',
-      assets_dir + '/js/gl_basic.js',
-      assets_dir + '/js/view/**/*.js'
+      assets_dir + '/js/lib/details/global.js',
+      assets_dir + '/js/lib/details/header.js',
+      assets_dir + '/js/lib/details/select2.js',
+      assets_dir + '/js/lib/details/intercom.js',
+      assets_dir + '/js/gl_basic.js'
     ],
     output: {
       file_name: 'goalous',
