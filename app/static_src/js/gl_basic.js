@@ -4060,14 +4060,14 @@ function setIntervalToGetNotifyCnt(sec) {
 
 function updateNotifyCnt() {
 
-  var url = cake.url.f + '/team_id:' + $('#SwitchTeam').val();
+  var url = cake.url.f + '/team_id:' + cake.data.team_id;
   $.ajax({
     type: 'GET',
     url: url,
     async: true,
     success: function (res) {
       if (res.error) {
-        location.reload();
+        // location.reload();
         return;
       }
       if (res != 0) {
@@ -4082,14 +4082,14 @@ function updateNotifyCnt() {
 
 function updateMessageNotifyCnt() {
 
-  var url = cake.url.af + '/team_id:' + $('#SwitchTeam').val();
+  var url = cake.url.af + '/team_id:' + cake.data.team_id;
   $.ajax({
     type: 'GET',
     url: url,
     async: true,
     success: function (res) {
       if (res.error) {
-        location.reload();
+        // location.reload();
         return;
       }
       setNotifyCntToMessageAndTitle(res);
