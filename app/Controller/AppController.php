@@ -453,6 +453,10 @@ class AppController extends BaseController
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
 
+    /**
+     * pass `isTablet` variable to view.
+     * - get browser ua from browscap
+     */
     public function _setIsTablet()
     {
         $browser = $this->getBrowser();
