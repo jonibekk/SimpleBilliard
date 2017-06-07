@@ -1,15 +1,15 @@
 <?php
 
 /**
- * JqueryプラグインのPnotifyを使ってflashメッセージを表示する
- * Class PnotifyComponent
+ * JqueryプラグインのNotyを使ってflashメッセージを表示する
+ * Class NotyComponent
  *
  * @property SessionComponent $Session
  */
-class PnotifyComponent extends Component
+class NotyComponent extends Component
 {
 
-    public $name = "Pnotify";
+    public $name = "Noty";
 
     /**
      * @var AppController
@@ -129,7 +129,7 @@ class PnotifyComponent extends Component
         //改行を除去
         $cr = array("\r\n", "\r", "\n");
         $message = str_replace($cr, "", $message);
-        $this->Flash->set($message,['element'=>'flash_pnotify', 'params'=>$merged_option, 'key'=>'pnotify']);
+        $this->Flash->set($message,['element'=>'flash_noty', 'params'=>$merged_option, 'key'=>'noty']);
     }
 
 }

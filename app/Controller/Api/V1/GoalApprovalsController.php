@@ -12,7 +12,7 @@ class GoalApprovalsController extends ApiController
 {
 
     public $components = [
-        'Pnotify',
+        'Noty',
         'NotifyBiz'
     ];
 
@@ -33,7 +33,7 @@ class GoalApprovalsController extends ApiController
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             // TODO: 認定ページを使用する必要が無い場合は、単純にリストを0件にして表示する。（ここでPnotify設定すると不自然な動きになる）
             //       API経由でのエラーメッセージ表示は別途一括で設定する必要がある。
-            // $this->Pnotify->outError(__("You don't have access right to this page."));
+            // $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -48,7 +48,7 @@ class GoalApprovalsController extends ApiController
         if (empty($coachId) && empty($coacheeIds)) {
             // TODO: 認定ページを使用する必要が無い場合は、単純にリストを0件にして表示する。（ここでPnotify設定すると不自然な動きになる）
             //       API経由でのエラーメッセージ表示は別途一括で設定する必要がある。
-            // $this->Pnotify->outError(__("You don't have access right to this page."));
+            // $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -184,14 +184,14 @@ class GoalApprovalsController extends ApiController
 
         // IDが存在しない場合はNotFound
         if (!$goalMemberId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
+            $this->Noty->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
         $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
         if (!$haveAccessAuthority) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -215,7 +215,7 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("Set as target"));
+        $this->Noty->outSuccess(__("Set as target"));
 
         // レスポンス
         return $this->_getResponseSuccess(['goal_member_id' => $goalMemberId]);
@@ -244,14 +244,14 @@ class GoalApprovalsController extends ApiController
 
         // IDが存在しない場合はNotFound
         if (!$goalMemberId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
+            $this->Noty->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
         $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
         if (!$haveAccessAuthority) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -275,7 +275,7 @@ class GoalApprovalsController extends ApiController
         );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("Removed from target"));
+        $this->Noty->outSuccess(__("Removed from target"));
 
         // レスポンス
         return $this->_getResponseSuccess(['goal_member_id' => $goalMemberId]);
@@ -307,7 +307,7 @@ class GoalApprovalsController extends ApiController
         // アクセス権限チェック
         $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
         if (!$haveAccessAuthority) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -334,7 +334,7 @@ class GoalApprovalsController extends ApiController
         // );
 
         // リストページに表示する通知カード
-        $this->Pnotify->outSuccess(__("Has withdrawn"));
+        $this->Noty->outSuccess(__("Has withdrawn"));
 
         // レスポンス
         return $this->_getResponseSuccess(['goal_member_id' => $goalMemberId]);
@@ -361,21 +361,21 @@ class GoalApprovalsController extends ApiController
 
         // パラメータが存在しない場合はNotFound
         if (!$goalMemberId) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
+            $this->Noty->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // ゴールが今期以外のものならNotFound
         $goalId = $GoalMember->getGoalIdById($goalMemberId);
         if (!$goalId || !$Goal->isPresentTermGoal($goalId)) {
-            $this->Pnotify->outError(__("Ooops, Not Found."));
+            $this->Noty->outError(__("Ooops, Not Found."));
             return $this->_getResponseNotFound();
         }
 
         // アクセス権限チェック
         $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
         if (!$haveAccessAuthority) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 
@@ -420,7 +420,7 @@ class GoalApprovalsController extends ApiController
         // アクセス権限チェック
         $haveAccessAuthority = $GoalApprovalService->haveAccessAuthorityOnApproval($goalMemberId, $myUserId);
         if (!$haveAccessAuthority) {
-            $this->Pnotify->outError(__("You don't have access right to this page."));
+            $this->Noty->outError(__("You don't have access right to this page."));
             return $this->_getResponseForbidden();
         }
 

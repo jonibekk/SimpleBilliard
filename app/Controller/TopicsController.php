@@ -54,7 +54,7 @@ class TopicsController extends AppController
      */
     private function _redirectCaseInvalid($topicId) {
         if (!$topicId) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Noty->outError(__("Invalid screen transition."));
             return $this->redirect("/");
         }
 
@@ -63,7 +63,7 @@ class TopicsController extends AppController
         // checking permission
         $loginUserId = $this->Auth->user('id');
         if (!$TopicMember->isMember($topicId, $loginUserId)) {
-            $this->Pnotify->outError(__("You cannot access the topic"));
+            $this->Noty->outError(__("You cannot access the topic"));
             return $this->redirect("/");
         }
     }

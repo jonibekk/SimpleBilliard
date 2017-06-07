@@ -31,7 +31,7 @@ class EmailsController extends AppController
 
         $this->request->allowMethod('post', 'delete');
         $this->Email->delete();
-        $this->Pnotify->outSuccess(__("To change email address is canceled."));
+        $this->Noty->outSuccess(__("To change email address is canceled."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());

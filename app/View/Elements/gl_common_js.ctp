@@ -42,7 +42,7 @@ echo $this->Html->script('/js/ng_app.min');
 <!--suppress JSDuplicatedDeclaration -->
 
 <?= $this->Session->flash('click_event') ?>
-<?php echo $this->Session->flash('pnotify');
+<?php echo $this->Session->flash('noty');
 //環境を識別できるようにリボンを表示
 ?>
 <?php if (ENV_NAME == "stg"): ?>
