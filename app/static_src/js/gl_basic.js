@@ -1107,11 +1107,92 @@ function evTargetToggleClick() {
             $btnClose.on('click', function (e) {
               e.preventDefault();
               e.stopPropagation();
-              $ogp.empty();
+              $ogp.remove();
               $btnClose.remove();
+              var $submitButton = $('#CommentEditSubmit_'+comment_id);
+              if ($submitButton.length > 0) {
+                $submitButton.removeAttr("disabled");
+              }
             });
           }
           $("#" + $obj.attr("hidden-target-id")).after($editForm);
+
+          // Load OGP for edit field
+          var $editField = $('#CommentEditFormBody_' + comment_id);
+          if ($editField.length > 0) {
+            require(['ogp'], function (ogp) {
+              var onKeyUp = function () {
+                  // Do not search for new OGP if there is one already present
+                  var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                  if ($ogpBox.length > 0) {
+                      return;
+                  }
+
+                  // Search OGP info
+                  ogp.getOGPSiteInfo({
+                      // Give text to OGP class
+                      text: $editField.val(),
+
+                      // Only search if there is none OGP info box displayed
+                      readyLoading: function () {
+                        if ($ogpBox.length > 0) {
+                            return false;
+                        }
+                        return true;
+                      },
+
+                      // ogp data acquired
+                      success: function (data) {
+                        // Remove any OGP if already exists
+                        var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                        if ($ogpBox.length > 0) {
+                          $ogpBox.remove();
+                          return;
+                        }
+
+                        // Display the new acquired OGP on the edit form
+                        var $newOgp = $(data.html);
+                        $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
+                        $editField.after($newOgp);
+                        var $closeButton = $('<a>');
+                        $newOgp.after($closeButton);
+                        $closeButton.attr('href', '#')
+                            .addClass('font_lightgray comment-ogp-close')
+                            .append('<i class="fa fa-times"></i>')
+                            .on('click', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                $closeButton.remove();
+                                $newOgp.remove();
+                            });
+                      },
+
+                      error: function () {
+                        // loading アイコン削除
+                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                      },
+
+                      loadingStart: function () {
+                        // loading アイコン表示
+                        $('<i class="fa fa-refresh fa-spin"></i>')
+                            .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
+                            .addClass('mr_8px lh_20px')
+                            .insertBefore('#CommentEditSubmit_' + comment_id);
+                      },
+
+                      loadingEnd: function () {
+                        // loading アイコン削除
+                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                      }
+                  });
+              };
+              var timer = null;
+              $editField.on('keyup', function () {
+                  clearTimeout(timer);
+                  timer = setTimeout(onKeyUp, 800);
+              });
+            });
+          }
         }
       }
     });
@@ -1128,6 +1209,8 @@ function evTargetToggleClick() {
   $("#" + click_target_id).focus();
   return false;
 }
+
+
 
 /**
  * 以下の処理を行う

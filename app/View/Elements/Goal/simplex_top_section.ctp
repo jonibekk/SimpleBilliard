@@ -39,7 +39,8 @@
                         <?= $this->Html->link(__('Edit a goal'),
                             '/goals/' . $goal['Goal']['id'] . '/edit',
                             [
-                                'class' => 'btn btn-white'
+                                'class'    => 'btn btn-white',
+                                'disabled' => $isGoalAfterCurrentTerm ? false : true,
                             ])
                         ?>
                     </div>
@@ -65,8 +66,8 @@
                     </div>
                 <?php else: ?>
                     <?php
-                        $follow_opt = $this->Goal->getFollowOption($goal, $goalTerm);
-                        $collabo_opt = $this->Goal->getCollaboOption($goal, $goalTerm);
+                    $follow_opt = $this->Goal->getFollowOption($goal, $goalTerm);
+                    $collabo_opt = $this->Goal->getCollaboOption($goal, $goalTerm);
                     ?>
                     <div class="col col-xxs-6">
                         <a class="btn btn-white bd-circle_22px toggle-follow p_8px width100_per
@@ -87,9 +88,9 @@
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                            href="#"
-                           <?php if ($collabo_opt['disabled']): ?>
-                               disabled="disabled"
-                           <?php endif ?>
+                            <?php if ($collabo_opt['disabled']): ?>
+                                disabled="disabled"
+                            <?php endif ?>
                            data-url="<?= $this->Html->url([
                                'controller' => 'goals',
                                'action'     => 'ajax_get_collabo_change_modal',
@@ -113,16 +114,19 @@
                     <?= h($goal['GoalCategory']['name']) ?>
                 </li>
                 <li class="goal-detail-goal-labels">
-                    <?php if (!empty($goalLabels)): ?>
-                        <?php foreach ($goalLabels as $label): ?>
-                            <span class="goal-detail-label">
-                                <a href="/goals?labels[]=<?= $label['name'] ?>"
-                                   target="<?= $is_mb_app ? "_self" : "_blank" ?>"><?= $label['name'] ?>
-                                </a>
-                            </span>
-                        <?php endforeach ?>
+
+                    <?php if (!empty($goal['goal_labels'])): ?>
+                        <ul class="gl-labels">
+                            <?php foreach ($goal['goal_labels'] as $label): ?>
+                                <li class="gl-labels-item">
+                                    <a href="/goals?labels[]=<?= $label['name'] ?>"
+                                       target="<?= $is_mb_app ? "_self" : "_blank" ?>"><?= $label['name'] ?>
+                                    </a>
+                                </li>
+                            <?php endforeach ?>
+                        </ul>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目            ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目                ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
