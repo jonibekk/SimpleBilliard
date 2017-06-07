@@ -496,16 +496,11 @@ $(document).ready(function () {
       data: $form.serialize()
     })
       .done(function (res) {
-        PNotify.removeAll();
         if (res.error) {
-          new PNotify({
-            type: 'error',
-            title: cake.word.error,
-            text: res.msg,
-            icon: "fa fa-check-circle",
-            delay: 4000,
-            mouse_reset: false
-          });
+            new Noty({
+                type: 'error',
+                text: '<h4>'+cake.word.error+'</h4>'+res.msg,
+            }).show();
           return;
         }
         else {
@@ -513,28 +508,19 @@ $(document).ready(function () {
           for (var i = 0; i < 10; i++) {
             $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
           }
-          new PNotify({
-            type: 'success',
-            title: cake.word.success,
-            text: res.msg,
-            icon: "fa fa-check-circle",
-            delay: 4000,
-            mouse_reset: false
-          });
+          new Noty({
+              type: 'success',
+              text: '<h4>'+cake.word.success+'</h4>'+res.msg,
+          }).show();
         }
 
 
       })
       .fail(function () {
-        PNotify.removeAll();
-        new PNotify({
-          type: 'error',
-          title: cake.word.error,
-          text: cake.message.notice.d,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-        });
+          new Noty({
+              type: 'error',
+              text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
+          }).show();
       });
   });
 
@@ -755,15 +741,10 @@ $(document).ready(function () {
                             data: $form.serialize()
                         })
                             .done(function (res) {
-                                PNotify.removeAll();
-                                new PNotify({
+                                new Noty({
                                     type: 'success',
-                                    title: cake.word.success,
-                                    text: res.msg,
-                                    icon: "fa fa-check-circle",
-                                    delay: 4000,
-                                    mouse_reset: false
-                                });
+                                    text: '<h4>'+cake.word.success+'</h4>'+res.msg,
+                                }).show();
                                 // 秘密サークルの場合は一覧から消す
                                 if ($checkbox.attr('data-secret') == '1') {
                                     setTimeout(function () {
@@ -776,15 +757,10 @@ $(document).ready(function () {
                                 });
                             })
                             .fail(function () {
-                                PNotify.removeAll();
-                                new PNotify({
+                                new Noty({
                                     type: 'error',
-                                    title: cake.word.error,
-                                    text: cake.message.notice.d,
-                                    icon: "fa fa-check-circle",
-                                    delay: 4000,
-                                    mouse_reset: false
-                                });
+                                    text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
+                                }).show();
                             });
                     });
             }).success(function () {
@@ -823,38 +799,25 @@ $(document).ready(function () {
                         data: $form.serialize()
                     })
                         .done(function (res) {
-                            PNotify.removeAll();
                             if (res.error) {
-                                new PNotify({
+                                new Noty({
                                     type: 'error',
-                                    title: cake.word.error,
-                                    text: res.msg,
-                                    icon: "fa fa-check-circle",
-                                    delay: 4000,
-                                    mouse_reset: false
-                                });
+                                    text: '<h4>'+cake.word.error+'</h4>'+res.msg,
+                                }).show();
                             }
                             else {
-                                new PNotify({
+                                new Noty({
                                     type: 'success',
-                                    title: cake.word.success,
-                                    text: res.msg,
-                                    icon: "fa fa-check-circle",
-                                    delay: 4000,
-                                    mouse_reset: false
-                                });
+                                    text: '<h4>'+cake.word.success+':</h4> '+res.msg,
+                                    closeWith: ['click', 'button'],
+                                }).show();
                             }
                         })
                         .fail(function () {
-                            PNotify.removeAll();
-                            new PNotify({
+                            new Noty({
                                 type: 'error',
-                                title: cake.word.error,
                                 text: cake.message.notice.d,
-                                icon: "fa fa-check-circle",
-                                delay: 4000,
-                                mouse_reset: false
-                            });
+                            }).show();
                         });
                 });
         }).success(function () {
@@ -1352,10 +1315,10 @@ function evFollowGoal() {
     dataType: 'json',
     success: function (data) {
       if (data.error) {
-        new PNotify({
-          type: 'error',
-          text: data.msg
-        });
+          new Noty({
+              type: 'error',
+              text: '<h4>'+cake.word.error+'</h4>'+data.msg,
+          }).show();
       }
       else {
         if (data.add) {
@@ -1377,10 +1340,10 @@ function evFollowGoal() {
       }
     },
     error: function () {
-      new PNotify({
-        type: 'error',
-        text: cake.message.notice.c
-      });
+        new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.c,
+        }).show();
     }
   });
   return false;
@@ -1762,25 +1725,17 @@ function evAjaxEditCircleAdminStatus(e) {
     .done(function (data) {
       // 処理失敗時
       if (data.error) {
-        new PNotify({
-          type: 'error',
-          title: data.message.title,
-          text: data.message.text,
-          icon: "fa fa-check-circle",
-          delay: 2000,
-          mouse_reset: false
-        });
+          new Noty({
+              type: 'error',
+              text: '<h4>'+cake.word.error+'</h4>'+data.message.text,
+          }).show();
       }
       // 処理成功時
       else {
-        new PNotify({
-          type: 'success',
-          title: data.message.title,
-          text: data.message.text,
-          icon: "fa fa-exclamation-triangle",
-          delay: 2000,
-          mouse_reset: false
-        });
+          new Noty({
+              type: 'success',
+              text: '<h4>'+cake.word.success+'</h4>'+data.message.text,
+          }).show();
 
         // 操作者自身を情報を更新した場合
         if (data.self_update) {
@@ -1804,12 +1759,10 @@ function evAjaxEditCircleAdminStatus(e) {
       }
     })
     .fail(function (data) {
-      new PNotify({
-        type: 'error',
-        text: cake.message.notice.d,
-        delay: 4000,
-        mouse_reset: false
-      });
+        new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
+        }).show();
     });
 }
 
@@ -1830,25 +1783,17 @@ function evAjaxLeaveCircle(e) {
     .done(function (data) {
       // 処理失敗時
       if (data.error) {
-        new PNotify({
-          type: 'error',
-          title: data.message.title,
-          text: data.message.text,
-          icon: "fa fa-check-circle",
-          delay: 2000,
-          mouse_reset: false
-        });
+          new Noty({
+              type: 'error',
+              text: '<h4>'+cake.word.error+'</h4>'+data.message.text,
+          }).show();
       }
       // 処理成功時
       else {
-        new PNotify({
-          type: 'success',
-          title: data.message.title,
-          text: data.message.text,
-          icon: "fa fa-exclamation-triangle",
-          delay: 2000,
-          mouse_reset: false
-        });
+          new Noty({
+              type: 'success',
+              text: '<h4>'+cake.word.success+'</h4>'+data.message.text,
+          }).show();
         // 操作者自身の情報更新した場合
         if (data.self_update) {
           window.location.href = '/';
@@ -1864,12 +1809,10 @@ function evAjaxLeaveCircle(e) {
       }
     })
     .fail(function (data) {
-      new PNotify({
-        type: 'error',
-        text: cake.message.notice.d,
-        delay: 4000,
-        mouse_reset: false
-      });
+        new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
+        }).show();
     });
 }
 

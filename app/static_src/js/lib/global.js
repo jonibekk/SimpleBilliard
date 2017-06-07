@@ -1,5 +1,12 @@
 "use strict";
 
+Noty.overrideDefaults({
+    theme    : 'bootstrap-v3',
+    killer   : true,
+    timeout  : 4000,
+    progressBar : false,
+});
+
 $(function () {
     console.log("LOADING: globals.js");
 
@@ -123,14 +130,10 @@ function checkUploadFileExpire(formID) {
         }
     });
     if (!res) {
-        new PNotify({
+        new Noty({
             type: 'error',
-            title: cake.word.error,
-            text: cake.message.validate.dropzone_uploaded_file_expired,
-            icon: "fa fa-check-circle",
-            delay: 6000,
-            mouse_reset: false
-        });
+            text: '<h4>'+cake.word.error+'</h4>'+cake.message.validate.dropzone_uploaded_file_expired,
+        }).show();
     }
     return res;
 }

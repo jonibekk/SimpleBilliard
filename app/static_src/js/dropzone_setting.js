@@ -1,3 +1,4 @@
+
 /**
  * Created by bigplants on 12/19/16.
  */
@@ -182,17 +183,10 @@ $(function () {
             $preview.remove();
           }, 4000);
           $uploadFileForm.hide();
-          PNotify.removeAll();
-
-          // 成功
-          new PNotify({
-            type: 'success',
-            title: cake.word.success,
+          new Noty({
+            type: 'error',
             text: cake.message.validate.dropzone_cancel_upload,
-            icon: "fa fa-check-circle",
-            delay: 4000,
-            mouse_reset: false
-          });
+          }).show();
           return;
         }
         $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
@@ -204,29 +198,17 @@ $(function () {
           data: $removeFileForm.serialize()
         })
           .done(function (res) {
-            PNotify.removeAll();
-            // エラー
             if (res.error) {
-              new PNotify({
+              new Noty({
                 type: 'error',
-                title: cake.message.notice.d,
                 text: res.msg,
-                icon: "fa fa-check-circle",
-                delay: 4000,
-                mouse_reset: false
-              });
-              return;
+              }).show();
             }
-
-            // 成功
-            new PNotify({
-              type: 'success',
-              title: cake.word.success,
-              text: res.msg,
-              icon: "fa fa-check-circle",
-              delay: 2000,
-              mouse_reset: false
-            });
+            new Noty({
+                type: 'success',
+                text: res.msg,
+                closeWith: ['click', 'button'],
+              }).show();
             // ファイルIDの hidden 削除
             $('#' + $preview.data('file_id')).remove();
 
@@ -237,15 +219,11 @@ $(function () {
             });
           })
           .fail(function (res) {
-            PNotify.removeAll();
-            new PNotify({
-              type: 'error',
-              title: cake.message.notice.d,
-              text: cake.message.notice.d,
-              icon: "fa fa-check-circle",
-              delay: 4000,
-              mouse_reset: false
-            });
+            new Noty({
+                type: 'error',
+                text: cake.message.notice.d,
+                closeWith: ['click', 'button'],
+              }).show();
           });
       }
     },
@@ -259,15 +237,11 @@ $(function () {
         $preview.remove();
       }, 4000);
       $uploadFileForm.hide();
-      PNotify.removeAll();
-      new PNotify({
+      new Noty({
         type: 'success',
-        title: cake.word.success,
         text: cake.message.validate.dropzone_cancel_upload,
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-      });
+        closeWith: ['click', 'button'],
+      }).show();
     },
     // サムネイル
     thumbnail: function (file, dataUrl) {
@@ -319,15 +293,12 @@ $(function () {
         errorMessage = error;
       }
       $uploadFileForm.hide();
-      PNotify.removeAll();
-      new PNotify({
+      new Noty({
         type: 'error',
-        title: cake.message.notice.d,
         text: errorMessage,
-        icon: "fa fa-check-circle",
-        delay: 8000,
-        mouse_reset: false
-      });
+        closeWith: ['click', 'button'],
+      }).show();
+      
 
       // コールバック関数（afterError）
       $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterError.call(this, file);

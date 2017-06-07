@@ -475,11 +475,10 @@ function evCommentDeleteConfirm() {
         },
         error: function (res) {
             // Display error message
-            new PNotify({
-                title: cake.word.error,
-                text: cake.message.notice.i,
-                type: 'error'
-            });
+            new Noty({
+                type: 'error',
+                text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.i,
+            }).show();
             $modal.modal('hide');
         }
     });
@@ -558,11 +557,10 @@ function evCommendEditSubmit(e) {
         },
         error: function (ev) {
             // Display error message
-            new PNotify({
-                title: cake.word.error,
-                text: cake.message.notice.i,
-                type: 'error'
-            });
+            new Noty({
+                type: 'error',
+                text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.i,
+            }).show();
             // Cancel editing
             $('[target-id="CommentEditForm_' + commentId + '"]').click();
         }
