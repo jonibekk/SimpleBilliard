@@ -36,11 +36,18 @@ $namedParams = $this->request->params['named'];
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <?php foreach ($krSelectOptions as $krID => $krName): ?>
                             <li>
-                                <a href="/goals/view_actions/goal_id:<?= $goalId ?>/page_type:<?= $namedParams['page_type'] ?>/key_result_id:<?= $krID ?>"><?= $krName ?></a>
+                                <a href="/goals/view_actions/goal_id:<?= $goalId ?>/page_type:<?= $namedParams['page_type'] ?>/key_result_id:<?= $krID ?>"><?= h($krName) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
+                <?php
+                $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
+                if ($this->request->params['named']['page_type'] == 'image') {
+                    $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
+                }
+                ?>
+                <?php if ($actionCount != 0){ ?>
                 <div class="view-actions-panel-btngroup-wrap">
                     <div class="view-action-panel-filter-btngroup">
                         <?php if ($namedParams['page_type'] == 'list'): ?>
@@ -64,23 +71,19 @@ $namedParams = $this->request->params['named'];
                         <?php endif; ?>
                     </div>
                 </div>
+                <?php } ?>
             </div>
-            <?php
-            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
-            if ($this->request->params['named']['page_type'] == 'image') {
-                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
-            }
-            ?>
+            
             <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($namedParams['page_type'] == 'list'): ?>
                     <?php if ($actionCount == 0): ?>
-                        <div class="cube-img-column-frame add-action mod-only">
+                        <div class="cube-img-block add-action mod-only">
                             <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("There is no Action.") ?></h3>
                             <?= $canAction ? $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]) : null; ?>
                         </div>
                     <?php elseif ($canAction): ?>
-                        <div class="cube-img-column-frame add-action  mod-only">
+                        <div class="cube-img-block add-action  mod-only">
                             <?= $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]); ?>
                         </div>
@@ -88,13 +91,13 @@ $namedParams = $this->request->params['named'];
                     <?= $this->element('Feed/posts') ?>
                 <?php elseif ($namedParams['page_type'] == 'image'): ?>
                     <?php if ($actionCount == 0): ?>
-                        <div class="cube-img-column-frame add-action mod-only">
+                        <div class="cube-img-block add-action mod-only">
                             <h3><?= $canAction ? __("You haven't created any actions&hellip; yet.") : __("There is no Action.") ?></h3>
                             <?= $canAction ? $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]) : null; ?>
                         </div>
                     <?php elseif ($canAction): ?>
-                        <div class="cube-img-column-frame add-action">
+                        <div class="cube-img-block add-action">
                             <?= $this->element('Goal/add_action_button',
                                 ['goal_id' => $goalId, 'key_result_id' => $keyResultId]); ?>
                         </div>
@@ -102,12 +105,6 @@ $namedParams = $this->request->params['named'];
                     <?= $this->element('cube_img_blocks') ?>
                 <?php endif; ?>
             </div>
-            <?php
-            $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
-            if ($namedParams['page_type'] == 'image') {
-                $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
-            }
-            ?>
             <?php //投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている場合
             if ($actionCount > 0 &&
                 (count($posts) == $item_num || $item_created < REQUEST_TIMESTAMP - MONTH)

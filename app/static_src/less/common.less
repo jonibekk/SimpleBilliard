@@ -25,10 +25,12 @@
 
 /* parts */
 .gl-labels {
+  // Eliminate gaps caused by inline-block list
+  font-size: 0px;
   &-item {
     background-color: @baseLightGray;
     color: @keyColor;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 300;
     padding: 2px 4px;
     display: inline-block;

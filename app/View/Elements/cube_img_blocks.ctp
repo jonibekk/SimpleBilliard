@@ -12,7 +12,7 @@
 <?= $this->App->viewStartComment() ?>
 <?php if (isset($posts) && !empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
-            <div class="cube-img-column-frame">
+            <div class="cube-img-block action-image">
                 <a href="<?= $this->Html->url([
                     'controller' => 'posts',
                     'action'     => 'feed',
@@ -33,7 +33,7 @@
                         if (!empty($post['ActionResult']["photo{$i}_file_name"]) || $i == 5) {
                             echo $this->Html->image('pre-load.svg',
                                 [
-                                    'class'         => 'lazy img-responsive',
+                                    'class'         => 'img-responsive',
                                     'width'         => '186px',
                                     'height'        => '186px',
                                     'data-original' => $this->Upload->uploadUrl($post,

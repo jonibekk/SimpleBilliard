@@ -29,9 +29,9 @@ if (isset($site_info['type']) && (
 ?>
 <?php if (isset($site_info)): ?>
     <div class="col col-xxs-12 pt_10px js-ogp-box"
-    <?php if (isset($site_info['is_editing']) && isset($comment_id)) : ?>
+    <?php if (isset($site_info['is_editing']) && !empty($site_info['is_editing']) && !empty($comment_id)): ?>
         id="CommentOgpEditBox_<?= $comment_id ?>"
-    <?php elseif (isset($site_info['is_editing'])) : ?>
+    <?php elseif (!empty($comment_id)): ?>
         id="CommentOgpBox_<?= $comment_id ?>"
     <?php endif; ?> >
         <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
@@ -47,7 +47,7 @@ if (isset($site_info['type']) && (
                                 'data-original' => $img_src,
                                 'width'         => '80px',
                                 'height'        => '80px',
-                                'error-img'     => "/img/no-image-link.png",
+                                'error-img'     => "/img/no-image-link.png", 
                             ])
                             ?>
                         <?php elseif (isset($site_info['image']) && $site_info['image']): ?>

@@ -7,8 +7,6 @@
   &:active,
   &:focus {
     text-decoration: none;
-    background-color:#ea5e5b;
-    color:@white;
   }
 }
 
@@ -173,6 +171,7 @@
   height: 32px;
   line-height: 32px;
   text-align: center;
+  border-radius:.25rem;
 }
 
 .btn-edit-kr-wrap {
@@ -221,8 +220,8 @@
 }
 
 .feeds-post-btns-area {
-  height: 48px;
-  line-height: 48px;
+  height: 28px;
+  line-height: 36px;
   border-top: 1px solid @lightGray;
   font-weight: 0;
 }
@@ -256,15 +255,25 @@
 .feeds-post-like-btn {
   .feeds-post-btns;
   font-weight: bold;
+
+  .fa {
+    font-size: 15px;
+  }
 }
 
 .feeds-post-comment-btn {
   .feeds-post-btns;
   font-weight: bold;
+  padding-left: 7px;
+
+  .fa {
+    font-size: 16px;
+  }
 }
 
 .feeds-post-btn-numbers-like {
   .feeds-post-btns;
+  padding-right: 10px;
 }
 
 .feeds-post-btn-numbers-read {
