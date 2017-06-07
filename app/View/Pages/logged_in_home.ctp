@@ -11,6 +11,5 @@
 <?php else: ?>
     <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
-<?php echo $this->Html->script('/js/goalous_home.min'); ?>
 <?= $this->App->viewEndComment()?>
 

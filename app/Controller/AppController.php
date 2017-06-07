@@ -136,6 +136,7 @@ class AppController extends BaseController
         $this->uses = am($this->uses, $this->merge_uses);
         $this->components = am($this->components, $this->merge_components);
         $this->helpers = am($this->helpers, $this->merge_helpers);
+        $this->_setPageJavascriptFile('');
     }
 
     public function beforeFilter()
@@ -925,6 +926,15 @@ class AppController extends BaseController
             'controller' => 'users',
             'action'     => 'login'
         );
+    }
+
+    /**
+     * Set the page specific file to be included
+     * @param string $jsFile
+     */
+    protected function _setPageJavascriptFile(string $jsFile)
+    {
+        $this->set('page_js_file', $jsFile);
     }
 
 }
