@@ -5107,11 +5107,3 @@ msgstr "認定ステータス: %s"
 
 msgid "Edit"
 msgstr "編集"
-
-#~ msgid "There will appear some limit, but data will not be deleted."
-#~ msgstr ""
-#~ "機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除など"
-#~ "せず引き続きご利用いただけます。"
-
-#~ msgid "Please select the standard start month."
-#~ msgstr "基準となる期の開始月を選択して下さい。"
