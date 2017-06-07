@@ -1,4 +1,26 @@
+"use strict";
 
+$(function () {
+    console.log("LOADING: no_reference.js");
+
+    // メッセージフォーム submit 時
+    $(document).on('submit', '#MessageDisplayForm', function (e) {
+        return checkUploadFileExpire('messageDropArea');
+    });
+
+    // メッセージフォーム
+    bindCtrlEnterAction('#MessageDisplayForm', function (e) {
+        $('#MessageSubmit').trigger('click');
+    });
+
+    $('#MessageDisplayForm').bootstrapValidator({
+        live: 'enabled',
+
+        fields: {}
+    });
+
+    $(document).on("click", ".target-toggle", evTargetToggle);
+});
 
 function ajaxAppendCount(id, url) {
     console.log("no_reference.js: ajaxAppendCount");
@@ -70,4 +92,13 @@ function resetMessageNum() {
 function isOnline() {
     console.log("no_reference.js: isOnline");
     return Boolean(network_reachable);
+}
+
+function evTargetToggle() {
+    console.log("no_reference.js: evTargetToggle");
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).toggle();
+    return false;
 }

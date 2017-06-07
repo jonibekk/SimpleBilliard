@@ -21,6 +21,7 @@ $(function () {
         network_reachable = false;
     }, false);
 
+    $(document).ajaxComplete(setChangeWarningForAjax);
 
     // Default tab
     setDefaultTab();
@@ -40,8 +41,6 @@ $(function () {
             }
         }
     });
-
-
 
     setChangeWarningForAllStaticPage();
     warningCloseModal();
@@ -234,15 +233,6 @@ function setChangeWarningForAllStaticPage() {
     }, 2000);
 }
 
-function appendSocketId(form, socketId) {
-    console.log("global.js: appendSocketId");
-    $('<input>').attr({
-        type: 'hidden',
-        name: 'socket_id',
-        value: socketId
-    }).appendTo(form);
-}
-
 function isMobile() {
     console.log("gl_basic.js: isMobile");
     var agent = navigator.userAgent;
@@ -259,4 +249,42 @@ function isMobile() {
 function copyToClipboard(url) {
     console.log("gl_basic.js: copyToClipboard");
     window.prompt(cake.message.info.copy_url, url);
+}
+
+/**
+ * Created by bigplants on 5/23/14.
+ */
+function getLocalDate() {
+    console.log("gl_basic.js: getLocalDate");
+    var getTime = jQuery.now();
+    var date = new Date(getTime);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    //noinspection UnnecessaryLocalVariableJS
+    var fullDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+    return fullDate;
+}
+
+//入力途中での警告表示
+//Ajaxエレメント中の適用したい要素にchange-warningクラスを指定
+function setChangeWarningForAjax() {
+    console.log("globals.js: setChangeWarningForAjax");
+    var flag = true;
+    $(".change-warning").keyup(function (e) {
+        $(document).on('submit', 'form', function () {
+            flag = false;
+        });
+        $("input[type=submit]").click(function () {
+            flag = false
+        });
+        $(window).on('beforeunload', function () {
+            if (e.target.value !== "" && flag) {
+                return cake.message.notice.a;
+            }
+        })
+    })
 }

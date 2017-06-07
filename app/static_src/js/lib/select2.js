@@ -4,11 +4,8 @@
 
 "use strict";
 
-$(document).ready(function () {
-    console.log("select2.js: $(document).ready");
-
-    initMemberSelect2();
-    initCircleSelect2();
+$(function () {
+    console.log("LOADING: notify.js");
 
     $.fn.select2.locales['en'] = {
         formatNoMatches: function () {
@@ -33,124 +30,10 @@ $(document).ready(function () {
     };
 
     $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
+
+    initMemberSelect2();
+    initCircleSelect2();
 });
-
-//Select2 Customization
-$.fn.select2.defaults = {
-    width: "copy",
-    loadMorePadding: 0,
-    closeOnSelect: true,
-    openOnEnter: true,
-    containerCss: {},
-    dropdownCss: {},
-    containerCssClass: "",
-    dropdownCssClass: "",
-    formatResult: function (result, container, query, escapeMarkup) {
-        var markup = [];
-        markMatch(result.text, query.term, markup, escapeMarkup);
-        return markup.join("");
-    },
-    formatSelection: function (data, container, escapeMarkup) {
-        return data ? escapeMarkup(data.text) : undefined;
-    },
-    sortResults: function (results, container, query) {
-        return results;
-    },
-    formatResultCssClass: function (data) {
-        return data.css;
-    },
-    formatSelectionCssClass: function (data, container) {
-        return undefined;
-    },
-    minimumResultsForSearch: 0,
-    minimumInputLength: 0,
-    maximumInputLength: null,
-    maximumSelectionSize: 0,
-    id: function (e) {
-        return e == undefined ? null : e.id;
-    },
-    matcher: function (term, text) {
-        return stripDiacritics('' + text).toUpperCase().indexOf(stripDiacritics('' + term).toUpperCase()) >= 0;
-    },
-    separator: ",",
-    tokenSeparators: [],
-    //tokenizer: defaultTokenizer,
-    //escapeMarkup: defaultEscapeMarkup,
-    blurOnChange: false,
-    selectOnBlur: false,
-    adaptContainerCssClass: function (c) {
-        return c;
-    },
-    adaptDropdownCssClass: function (c) {
-        return null;
-    },
-    nextSearchTerm: function (selectedObject, currentSearchTerm) {
-        return undefined;
-    },
-    searchInputPlaceholder: '',
-    createSearchChoicePosition: 'top',
-    shouldFocusInput: function (instance) {
-        // Attempt to detect touch devices
-        var supportsTouchEvents = (('ontouchstart' in window) ||
-        (navigator.msMaxTouchPoints > 0));
-
-        // Only devices which support touch events should be special cased
-        if (!supportsTouchEvents) {
-            return true;
-        }
-
-        // Never focus the input if search is disabled
-        if (instance.opts.minimumResultsForSearch < 0) {
-            return false;
-        }
-
-        return true;
-    }
-};
-
-$.fn.select2.locales = [];
-$.fn.select2.locales['en'] = {
-    formatMatches: function (matches) {
-        if (matches === 1) {
-            return "One result is available, press enter to select it.";
-        }
-        return matches + " results are available, use up and down arrow keys to navigate.";
-    },
-    formatNoMatches: function () {
-        return "No matches found";
-    },
-    formatAjaxError: function (jqXHR, textStatus, errorThrown) {
-        return "Loading failed";
-    },
-    formatInputTooShort: function (input, min) {
-        var n = min - input.length;
-        return "Please enter " + n + " or more character" + (n == 1 ? "" : "s");
-    },
-    formatInputTooLong: function (input, max) {
-        var n = input.length - max;
-        return "Please delete " + n + " character" + (n == 1 ? "" : "s");
-    },
-    formatSelectionTooBig: function (limit) {
-        return "You can only select " + limit + " item" + (limit == 1 ? "" : "s");
-    },
-    formatLoadMore: function (pageNumber) {
-        return "Loading more results…";
-    },
-    formatSearching: function () {
-        return "Searching…";
-    },
-};
-
-$.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
-
-$.fn.select2.ajaxDefaults = {
-    transport: $.ajax,
-    params: {
-        type: "GET",
-        cache: false,
-        dataType: "json"
-    }
-};
 
 // NO REFERENCE FOUND
 function initMessageSelect2(topic_id) {

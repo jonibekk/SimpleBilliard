@@ -257,12 +257,6 @@ $(document).ready(function () {
   $(document).on("keyup", ".blank-disable-and-undisable", evBlankDisableAndUndisable);
   //noinspection SpellCheckingInspection
   $(document).on("keyup", ".blank-disable", evBlankDisable);
-  //noinspection JSUnresolvedVariable
-
-  //noinspection JSUnresolvedVariable
-  //noinspection JSUnresolvedVariable
-  $(document).on("click", ".click-like", evLike);
-  //noinspection JSUnresolvedVariable
 
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
@@ -273,11 +267,11 @@ $(document).ready(function () {
   //noinspection JSUnresolvedVariable
   $(document).on("change", ".change-target-enabled", evTargetEnabled);
   //noinspection JSUnresolvedVariable
-  $(document).on("click", ".click-this-remove", evRemoveThis);
+
   $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".check-target-toggle", evToggle);
-  $(document).on("click", ".target-toggle", evTargetToggle);
+
   //noinspection JSUnresolvedVariable,JSUnresolvedFunction
   $(document).on("click", ".click-show-post-modal", getModalPostList);
   //noinspection JSUnresolvedVariable
@@ -484,10 +478,6 @@ $(document).ready(function () {
   });
 
 
-  // メッセージフォーム submit 時
-  $(document).on('submit', '#MessageDisplayForm', function (e) {
-    return checkUploadFileExpire('messageDropArea');
-  });
 
   // HACK:To occur to_user_ids change event in react app
   $(document).on('change', '.js-changeSelect2Member', function (e) {
@@ -585,6 +575,319 @@ $(document).ready(function () {
   });
 
 });
+
+
+$(function () {
+    console.log("gl_basic.js: $(function ()");
+    $(".click-show").on("click", function () {
+            console.log("gl_basic.js: click");
+            $("#PostFormPicture").css("display", "block")
+        }
+    )
+});
+
+/*表示件数調整 -mobilesize*/
+
+$(function () {
+    console.log("gl_basic.js: $(function ()");
+    $(".click-circle-trigger").on("click", function () {
+        console.log("gl_basic.js: click");
+        var txt = $(this).text();
+        if ($(this).is('.on')) {
+            $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
+            $(".circleListMore:nth-child(n+9)").css("display", "block");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
+        } else {
+            $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
+            $(".circleListMore:nth-child(n+9)").css("display", "none");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
+        }
+    });
+});
+
+
+$(function () {
+    console.log("gl_basic.js: $(function ()");
+    var current_slide_id = 1;
+
+    // インジケータークリック時
+    $(document).on('click', '.setup-tutorial-indicator', function () {
+        console.log("gl_basic.js: click");
+        resetDisplayStatus();
+        changeTutorialContent($(this).attr('data-id'));
+    });
+
+    // ネクストボタンクリック時
+    $(document).on('click', '.tutorial-next-btn', function () {
+        console.log("gl_basic.js: click");
+        if (current_slide_id == 3) {
+            location.href = "/setup/";
+            return;
+        }
+        resetDisplayStatus();
+
+        var next_id = String(Number(current_slide_id) + 1);
+        changeTutorialContent(next_id);
+    });
+
+    function changeTutorialContent(content_id) {
+        console.log("gl_basic.js: changeTutorialContent");
+        // 各要素をカレントステータスに設定
+        $('.tutorial-box' + content_id).show();
+        $('.tutorial-text' + content_id).show();
+        $('.setup-tutorial-indicator' + content_id).addClass('setup-tutorial-navigation-indicator-selected');
+
+        current_slide_id = content_id;
+    }
+
+    function resetDisplayStatus() {
+        console.log("gl_basic.js: resetDisplayStatus");
+        $('.tutorial-body').children('div').hide();
+        $('.setup-tutorial-texts').children('div').hide();
+        $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
+    }
+});
+
+
+$(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
+});
+
+
+$(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
+    var click_cnt = 0;
+
+    $('#HeaderDropdownNotify')
+        .on('shown.bs.dropdown', function () {
+            $("body").addClass('notify-dropdown-open');
+        })
+        .on('hidden.bs.dropdown', function () {
+            $('body').removeClass('notify-dropdown-open');
+        });
+});
+
+
+$(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
+
+    // アクションの編集画面の場合は、画像選択の画面をスキップし、
+    // ajax で動いている select を選択済みにする
+    var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
+    if ($button.length) {
+        // 画像選択の画面をスキップ
+        evTargetShowThisDelete.call($button.get(0));
+        // ゴール選択の ajax 処理を動かす
+        $('#GoalSelectOnActionForm').trigger('change');
+    }
+
+    // ヘッダーの検索フォームの処理
+    require(['search'], function (search) {
+        search.headerSearch.setup();
+    });
+
+    // Insight 画面の処理
+    if ($('#InsightForm').length) {
+        require(['insight'], function (insight) {
+            if ($('#InsightResult').length) {
+                insight.insight.setup();
+            }
+            else if ($('#InsightCircleResult').length) {
+                insight.circle.setup();
+            }
+            else if ($('#InsightRankingResult').length) {
+                insight.ranking.setup();
+            }
+            insight.reload();
+        });
+    }
+
+});
+
+$(document).ready(function () {
+    console.log("gl_basic.js: $(document).ready");
+
+    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        var url = $(this).data('url');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                $modal_elm.modal();
+                $modal_elm.find(".bt-switch").bootstrapSwitch({
+                    size: "small",
+                    onText: cake.word.b,
+                    offText: cake.word.c
+                })
+                // 参加/不参加 のスイッチ切り替えた時
+                // 即時データを更新する
+                    .on('switchChange.bootstrapSwitch', function (e, state) {
+                        var $checkbox = $(this);
+                        var $form = $('#CircleJoinForm');
+                        $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
+                        $form.find('input[name="data[Circle][0][circle_id]"]').val(sanitize($checkbox.attr('data-id')));
+
+                        // 秘密サークルの場合は確認ダイアログ表示
+                        if ($checkbox.attr('data-secret') == '1') {
+                            if (!confirm(cake.message.notice.leave_secret_circle)) {
+                                $checkbox.bootstrapSwitch('toggleState', true);
+                                return false;
+                            }
+                            $checkbox.bootstrapSwitch('toggleDisabled', true);
+                        }
+
+                        $.ajax({
+                            url: cake.url.join_circle,
+                            type: 'POST',
+                            dataType: 'json',
+                            processData: false,
+                            data: $form.serialize()
+                        })
+                            .done(function (res) {
+                                PNotify.removeAll();
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                                // 秘密サークルの場合は一覧から消す
+                                if ($checkbox.attr('data-secret') == '1') {
+                                    setTimeout(function () {
+                                        $checkbox.closest('.circle-item-row').slideUp('slow');
+                                    }, 1000);
+                                }
+                                // データを更新した場合はモーダルを閉じた時に画面リロード
+                                $modal_elm.on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
+                            })
+                            .fail(function () {
+                                PNotify.removeAll();
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: cake.message.notice.d,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            });
+                    });
+            }).success(function () {
+                $('body').addClass('modal-open');
+                $this.removeClass('double_click');
+            });
+        }
+    });
+
+    $(document).on("click", '#CircleFilterMenuDropDown .modal-circle-setting', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.modal();
+            $modal_elm.find(".bt-switch").bootstrapSwitch({
+                size: "small"
+            })
+            // スイッチ切り替えた時、即時データを更新する
+                .on('switchChange.bootstrapSwitch', function () {
+                    var $form = $('#CircleSettingForm');
+                    $.ajax({
+                        url: cake.url.circle_setting,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $form.serialize()
+                    })
+                        .done(function (res) {
+                            PNotify.removeAll();
+                            if (res.error) {
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                            else {
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                        })
+                        .fail(function () {
+                            PNotify.removeAll();
+                            new PNotify({
+                                type: 'error',
+                                title: cake.word.error,
+                                text: cake.message.notice.d,
+                                icon: "fa fa-check-circle",
+                                delay: 4000,
+                                mouse_reset: false
+                            });
+                        });
+                });
+        }).success(function () {
+            $('body').addClass('modal-open');
+            $this.removeClass('double_click');
+        });
+    });
+
+    $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
+        var $target = $(e.target);
+        switch ($target.attr('id')) {
+            case "CommonPostBody":
+                $('#CommonActionName').val($target.val()).trigger('autosize.resize');
+                autosize($('#CommonActionName'));
+                $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
+                autosize($('#CommonMessageBody'));
+                break;
+            case "CommonActionName":
+                $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
+                autosize($('#CommonPostBody'));
+                $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
+                autosize($('#CommonMessageBody'));
+                break;
+            case "CommonMessageBody":
+                $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
+                autosize($('#CommonPostBody'));
+                $('#CommonActionName').val($target.val()).trigger('autosize.resize');
+                autosize($('#CommonActionName'));
+                break;
+        }
+    });
+});
+
 
 function evTargetRemove() {
     console.log("gl_basic.js: evTargetRemove");
@@ -730,19 +1033,7 @@ function uploadCsvFileByForm(e) {
 }
 
 
-function evTargetToggle() {
-    console.log("gl_basic.js: evTargetToggle");
-  attrUndefinedCheck(this, 'target-id');
-  var $obj = $(this);
-  var target_id = $obj.attr("target-id");
-  $("#" + target_id).toggle();
-  return false;
-}
 
-function evRemoveThis() {
-    console.log("gl_basic.js: evRemoveThis");
-  $(this).remove();
-}
 
 /**
  * 以下の処理を行う
@@ -985,106 +1276,6 @@ function evThisHeightReset() {
   $(this).css('height', "");
 }
 
-/**
- * Created by bigplants on 5/23/14.
- */
-function getLocalDate() {
-    console.log("gl_basic.js: getLocalDate");
-  var getTime = jQuery.now();
-  var date = new Date(getTime);
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  var day = date.getDate();
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var seconds = date.getSeconds();
-  //noinspection UnnecessaryLocalVariableJS
-  var fullDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
-  return fullDate;
-}
-
-
-$(function () {
-    console.log("gl_basic.js: $(function ()");
-  $(".click-show").on("click", function () {
-      console.log("gl_basic.js: click");
-      $("#PostFormPicture").css("display", "block")
-    }
-  )
-});
-
-/*表示件数調整 -mobilesize*/
-
-$(function () {
-    console.log("gl_basic.js: $(function ()");
-  $(".click-circle-trigger").on("click", function () {
-      console.log("gl_basic.js: click");
-    var txt = $(this).text();
-    if ($(this).is('.on')) {
-      $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
-      $(".circleListMore:nth-child(n+9)").css("display", "block");
-      $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
-    } else {
-      $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
-      $(".circleListMore:nth-child(n+9)").css("display", "none");
-      $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
-    }
-  });
-});
-
-$(document).on("click", ".target-show", evTargetShow);
-
-function evTargetShow() {
-    console.log("gl_basic.js: evTargetShow");
-  attrUndefinedCheck(this, 'target-id');
-  var $obj = $(this);
-  var target_id = $obj.attr("target-id");
-  $("#" + target_id).show();
-  return false;
-}
-
-
-$(function () {
-    console.log("gl_basic.js: $(function ()");
-  var current_slide_id = 1;
-
-  // インジケータークリック時
-  $(document).on('click', '.setup-tutorial-indicator', function () {
-      console.log("gl_basic.js: click");
-    resetDisplayStatus();
-    changeTutorialContent($(this).attr('data-id'));
-  });
-
-  // ネクストボタンクリック時
-  $(document).on('click', '.tutorial-next-btn', function () {
-      console.log("gl_basic.js: click");
-    if (current_slide_id == 3) {
-      location.href = "/setup/";
-      return;
-    }
-    resetDisplayStatus();
-
-    var next_id = String(Number(current_slide_id) + 1);
-    changeTutorialContent(next_id);
-  });
-
-  function changeTutorialContent(content_id) {
-      console.log("gl_basic.js: changeTutorialContent");
-    // 各要素をカレントステータスに設定
-    $('.tutorial-box' + content_id).show();
-    $('.tutorial-text' + content_id).show();
-    $('.setup-tutorial-indicator' + content_id).addClass('setup-tutorial-navigation-indicator-selected');
-
-    current_slide_id = content_id;
-  }
-
-  function resetDisplayStatus() {
-      console.log("gl_basic.js: resetDisplayStatus");
-    $('.tutorial-body').children('div').hide();
-    $('.setup-tutorial-texts').children('div').hide();
-    $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
-  }
-});
 
 
 function warningAction($obj) {
@@ -1143,215 +1334,8 @@ $.clearInput = function ($obj) {
   $obj.bootstrapValidator('resetForm', true);
 };
 
-//入力途中での警告表示
-//Ajaxエレメント中の適用したい要素にchange-warningクラスを指定
-function setChangeWarningForAjax() {
-    console.log("gl_basic.js: setChangeWarningForAjax");
-  var flag = true;
-  $(".change-warning").keyup(function (e) {
-    $(document).on('submit', 'form', function () {
-      flag = false;
-    });
-    $("input[type=submit]").click(function () {
-      flag = false
-    });
-    $(window).on('beforeunload', function () {
-      if (e.target.value !== "" && flag) {
-        return cake.message.notice.a;
-      }
-    })
-  })
-}
 
 
-$(function () {
-    console.log("gl_basic.js: $(function");
-  $(document).ajaxComplete(setChangeWarningForAjax);
-});
-
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
-
-  $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
-    e.preventDefault();
-    var $this = $(this);
-    if ($this.hasClass('double_click')) {
-      return false;
-    }
-    $this.addClass('double_click');
-    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    $modal_elm.on('hidden.bs.modal', function (e) {
-      $(this).remove();
-    });
-    var url = $(this).data('url');
-    if (url.indexOf('#') == 0) {
-      $(url).modal('open');
-    } else {
-      $.get(url, function (data) {
-        $modal_elm.append(data);
-        $modal_elm.modal();
-        $modal_elm.find(".bt-switch").bootstrapSwitch({
-          size: "small",
-          onText: cake.word.b,
-          offText: cake.word.c
-        })
-        // 参加/不参加 のスイッチ切り替えた時
-        // 即時データを更新する
-          .on('switchChange.bootstrapSwitch', function (e, state) {
-            var $checkbox = $(this);
-            var $form = $('#CircleJoinForm');
-            $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
-            $form.find('input[name="data[Circle][0][circle_id]"]').val(sanitize($checkbox.attr('data-id')));
-
-            // 秘密サークルの場合は確認ダイアログ表示
-            if ($checkbox.attr('data-secret') == '1') {
-              if (!confirm(cake.message.notice.leave_secret_circle)) {
-                $checkbox.bootstrapSwitch('toggleState', true);
-                return false;
-              }
-              $checkbox.bootstrapSwitch('toggleDisabled', true);
-            }
-
-            $.ajax({
-              url: cake.url.join_circle,
-              type: 'POST',
-              dataType: 'json',
-              processData: false,
-              data: $form.serialize()
-            })
-              .done(function (res) {
-                PNotify.removeAll();
-                new PNotify({
-                  type: 'success',
-                  title: cake.word.success,
-                  text: res.msg,
-                  icon: "fa fa-check-circle",
-                  delay: 4000,
-                  mouse_reset: false
-                });
-                // 秘密サークルの場合は一覧から消す
-                if ($checkbox.attr('data-secret') == '1') {
-                  setTimeout(function () {
-                    $checkbox.closest('.circle-item-row').slideUp('slow');
-                  }, 1000);
-                }
-                // データを更新した場合はモーダルを閉じた時に画面リロード
-                $modal_elm.on('hidden.bs.modal', function () {
-                  location.reload();
-                });
-              })
-              .fail(function () {
-                PNotify.removeAll();
-                new PNotify({
-                  type: 'error',
-                  title: cake.word.error,
-                  text: cake.message.notice.d,
-                  icon: "fa fa-check-circle",
-                  delay: 4000,
-                  mouse_reset: false
-                });
-              });
-          });
-      }).success(function () {
-        $('body').addClass('modal-open');
-        $this.removeClass('double_click');
-      });
-    }
-  });
-
-  $(document).on("click", '#CircleFilterMenuDropDown .modal-circle-setting', function (e) {
-    e.preventDefault();
-    var $this = $(this);
-    if ($this.hasClass('double_click')) {
-      return false;
-    }
-    $this.addClass('double_click');
-    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    $modal_elm.on('hidden.bs.modal', function () {
-      $(this).remove();
-    });
-    var url = $(this).attr('href');
-    $.get(url, function (data) {
-      $modal_elm.append(data);
-      $modal_elm.modal();
-      $modal_elm.find(".bt-switch").bootstrapSwitch({
-        size: "small"
-      })
-      // スイッチ切り替えた時、即時データを更新する
-        .on('switchChange.bootstrapSwitch', function () {
-          var $form = $('#CircleSettingForm');
-          $.ajax({
-            url: cake.url.circle_setting,
-            type: 'POST',
-            dataType: 'json',
-            processData: false,
-            data: $form.serialize()
-          })
-            .done(function (res) {
-              PNotify.removeAll();
-              if (res.error) {
-                new PNotify({
-                  type: 'error',
-                  title: cake.word.error,
-                  text: res.msg,
-                  icon: "fa fa-check-circle",
-                  delay: 4000,
-                  mouse_reset: false
-                });
-              }
-              else {
-                new PNotify({
-                  type: 'success',
-                  title: cake.word.success,
-                  text: res.msg,
-                  icon: "fa fa-check-circle",
-                  delay: 4000,
-                  mouse_reset: false
-                });
-              }
-            })
-            .fail(function () {
-              PNotify.removeAll();
-              new PNotify({
-                type: 'error',
-                title: cake.word.error,
-                text: cake.message.notice.d,
-                icon: "fa fa-check-circle",
-                delay: 4000,
-                mouse_reset: false
-              });
-            });
-        });
-    }).success(function () {
-      $('body').addClass('modal-open');
-      $this.removeClass('double_click');
-    });
-  });
-
-  $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
-    var $target = $(e.target);
-    switch ($target.attr('id')) {
-      case "CommonPostBody":
-        $('#CommonActionName').val($target.val()).trigger('autosize.resize');
-        autosize($('#CommonActionName'));
-        $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
-        autosize($('#CommonMessageBody'));
-        break;
-      case "CommonActionName":
-        $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
-        autosize($('#CommonPostBody'));
-        $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
-        autosize($('#CommonMessageBody'));
-        break;
-      case "CommonMessageBody":
-        $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
-        autosize($('#CommonPostBody'));
-        $('#CommonActionName').val($target.val()).trigger('autosize.resize');
-        autosize($('#CommonActionName'));
-        break;
-    }
-  });
-});
 
 function evFollowGoal() {
     console.log("gl_basic.js: evFollowGoal");
@@ -1684,57 +1668,7 @@ function evBasicReadMore(options) {
 }
 
 
-function evLike() {
-    console.log("gl_basic.js: evLike");
-  attrUndefinedCheck(this, 'like_count_id');
-  attrUndefinedCheck(this, 'model_id');
-  attrUndefinedCheck(this, 'like_type');
 
-  var $obj = $(this);
-  var like_count_id = $obj.attr('like_count_id');
-  var $like_count_text = $("#" + like_count_id);
-
-  var like_type = $obj.attr('like_type');
-  var url = null;
-  var model_id = $obj.attr('model_id');
-  $obj.toggleClass("liked");
-
-  // ajax の結果を待たずに表示されているいいね数を変更する
-  // ajax の結果が返ってきたら正しい数字で上書きされる
-  var currentCount = parseInt($like_count_text.text(), 10);
-  if ($obj.hasClass("liked")) {
-    $like_count_text.text(currentCount + 1);
-  }
-  else {
-    $like_count_text.text(currentCount - 1);
-  }
-
-  if (like_type == "post") {
-    url = cake.url.d + model_id;
-  }
-  else {
-    url = cake.url.e + model_id;
-  }
-
-  $.ajax({
-    type: 'GET',
-    url: url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (data.error) {
-        alert(cake.message.notice.d);
-      }
-      else {
-        $like_count_text.text(data.count);
-      }
-    },
-    error: function () {
-      return false;
-    }
-  });
-  return false;
-}
 
 function getModalFormFromUrl(e) {
     console.log("gl_basic.js: getModalFormFromUrl");
@@ -1807,259 +1741,9 @@ function getModalFormFromUrl(e) {
     });
   }
 }
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
-  var pusher = new Pusher(cake.pusher.key);
-  var socketId = "";
-  var prevNotifyId = "";
-  pusher.connection.bind('connected', function () {
-    socketId = pusher.connection.socket_id;
-    cake.pusher.socket_id = socketId;
-  });
-  // フォームがsubmitされた際にsocket_idを埋め込む
-  $(document).on('submit', 'form.form-feed-notify', function () {
-    appendSocketId($(this), socketId);
-  });
-
-  // keyResultの完了送信時にsocket_idを埋め込む
-  $(document).on("click", ".kr_achieve_button", function () {
-    var formId = $(this).attr("form-id");
-    var $form = $("form#" + formId);
-    appendSocketId($form, socketId);
-    $form.submit();
-    $(this).prop("disabled", true);
-  });
-
-  // page type idをセットする
-  setPageTypeId();
-
-  // connectionをはる
-  for (var i in cake.data.c) {
-    pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
-      var isFeedNotify = viaIsSet(data.is_feed_notify);
-      var isNewCommentNotify = viaIsSet(data.is_comment_notify);
-      var notifyId = data.notify_id;
-
-      // not allowed multple notify
-      if (notifyId === prevNotifyId) {
-        return;
-      }
-
-      // フィード通知の場合
-      if (isFeedNotify) {
-        var pageTypeId = getPageTypeId();
-        var feedTypeId = data.feed_type;
-        var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
-        if (canNotify) {
-          prevNotifyId = notifyId;
-          notifyNewFeed();
-        }
-      }
-
-      // 新しいコメント通知の場合
-      if (isNewCommentNotify) {
-        var postId = data.post_id;
-        var notifyBox = $("#Comments_new_" + String(postId));
-        notifyNewComment(notifyBox);
-      }
-    });
-    pusher.subscribe(cake.data.c[i]).bind('bell_count', function (data) {
-      //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
-      if (!cake.notify_setting[data.flag_name]) {
-        return;
-      }
-      if (cake.data.user_id == data.from_user_id) {
-        return;
-      }
-      setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
-    });
-  }
-  pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
-
-    //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
-    if (!cake.notify_setting[data.flag_name]) {
-      return;
-    }
-
-    // if display the topic page, nothing to do
-    const topic_page_url = "/topics/" + data.topic_id + "/detail";
-    if (location.pathname.indexOf(topic_page_url) !== -1) {
-      return;
-    }
-
-    if (cake.data.user_id == data.from_user_id) {
-      return;
-    }
-    if (cake.unread_msg_topic_ids.indexOf(data.topic_id) >= 0) {
-      return;
-    }
-    cake.unread_msg_topic_ids.push(data.topic_id);
-    setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
-  });
-
-});
-
-function getCurrentUnreadNotifyCnt() {
-    console.log("gl_basic.js: getCurrentUnreadNotifyCnt");
-  var $bellNum = $("#bellNum");
-  var $numArea = $bellNum.find("span");
-  return parseInt($numArea.html());
-}
-
-function notifyNewFeed() {
-    console.log("gl_basic.js: notifyNewFeed");
-  var notifyBox = $(".feed-notify-box");
-  var numArea = notifyBox.find(".num");
-  var num = parseInt(numArea.html());
-  var title = $("title");
-  // Increment unread number
-  if (num >= 1) {
-    // top of feed
-    numArea.html(num + 1);
-    return;
-  }
-
-  // Case of not existing unread post yet
-  numArea.html("1");
-  notifyBox.css("display", function () {
-    return "block";
-  });
-
-  // 通知をふんわり出す
-  var i = 0.2;
-  var roop = setInterval(function () {
-    notifyBox.css("opacity", i);
-    i = i + 0.2;
-    if (i > 1) {
-      clearInterval(roop);
-    }
-  }, 100);
-}
 
 
-// notify boxにpage idをセット
-function setPageTypeId() {
-    console.log("gl_basic.js: setPageTypeId");
-  var notifyBox = $(".feed-notify-box");
-  var pageTypeId = cake.data.d;
-  if (pageTypeId === "null") {
-    return;
-  }
-  if (pageTypeId === "circle") {
-    pageTypeId += "_" + cake.data.h;
-  }
-  notifyBox.attr("id", pageTypeId + "_feed_notify");
-}
 
-// notify boxのpage idをゲット
-function getPageTypeId() {
-    console.log("gl_basic.js: getPageTypeId");
-  var pageTypeId = $(".feed-notify-box").attr("id");
-  if (!pageTypeId) return "";
-  return pageTypeId.replace("_feed_notify", "");
-}
-
-function viaIsSet(data) {
-    console.log("gl_basic.js: viaIsSet");
-  var isExist = typeof( data ) !== 'undefined';
-  if (!isExist) return false;
-  return data;
-}
-
-function notifyNewComment(notifyBox) {
-    console.log("gl_basic.js: notifyNewComment");
-  var numInBox = notifyBox.find(".num");
-  var num = parseInt(numInBox.html());
-
-  hideCommentNotifyErrorBox(notifyBox);
-
-  // Increment unread number
-  if (num >= 1) {
-    // top of feed
-    numInBox.html(String(num + 1));
-  } else {
-    // Case of not existing unread post yet
-    numInBox.html("1");
-  }
-
-  if (notifyBox.css("display") === "none") {
-    notifyBox.css("display", "block");
-
-    // 通知をふんわり出す
-    var i = 0.2;
-    var roop = setInterval(function () {
-      notifyBox.css("opacity", i);
-      i = i + 0.2;
-      if (i > 1) {
-        clearInterval(roop);
-      }
-    }, 100);
-  }
-}
-
-function hideCommentNotifyErrorBox(notifyBox) {
-    console.log("gl_basic.js: hideCommentNotifyErrorBox");
-  errorBox = notifyBox.siblings(".new-comment-error");
-  if (errorBox.attr("display") === "none") {
-    return;
-  }
-  errorBox.css("display", "none");
-}
-
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
-});
-
-
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
-  var click_cnt = 0;
-
-  $('#HeaderDropdownNotify')
-    .on('shown.bs.dropdown', function () {
-      $("body").addClass('notify-dropdown-open');
-    })
-    .on('hidden.bs.dropdown', function () {
-      $('body').removeClass('notify-dropdown-open');
-    });
-});
-
-
-$(document).ready(function () {
-    console.log("gl_basic.js: $(document).ready");
-
-  // アクションの編集画面の場合は、画像選択の画面をスキップし、
-  // ajax で動いている select を選択済みにする
-  var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
-  if ($button.length) {
-    // 画像選択の画面をスキップ
-    evTargetShowThisDelete.call($button.get(0));
-    // ゴール選択の ajax 処理を動かす
-    $('#GoalSelectOnActionForm').trigger('change');
-  }
-
-  // ヘッダーの検索フォームの処理
-  require(['search'], function (search) {
-    search.headerSearch.setup();
-  });
-
-  // Insight 画面の処理
-  if ($('#InsightForm').length) {
-    require(['insight'], function (insight) {
-      if ($('#InsightResult').length) {
-        insight.insight.setup();
-      }
-      else if ($('#InsightCircleResult').length) {
-        insight.circle.setup();
-      }
-      else if ($('#InsightRankingResult').length) {
-        insight.ranking.setup();
-      }
-      insight.reload();
-    });
-  }
-
-});
 
 function evAjaxEditCircleAdminStatus(e) {
     console.log("gl_basic.js: evAjaxEditCircleAdminStatus");

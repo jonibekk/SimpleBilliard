@@ -10,10 +10,6 @@ $(function () {
         $('#PostSubmit').trigger('click');
     });
 
-    // メッセージフォーム
-    bindCtrlEnterAction('#MessageDisplayForm', function (e) {
-        $('#MessageSubmit').trigger('click');
-    });
 
     // メッセージ個別ページ
     bindCtrlEnterAction('#message_text_input', function (e) {
@@ -67,11 +63,7 @@ $(function () {
 
         fields: {}
     });
-    $('#MessageDisplayForm').bootstrapValidator({
-        live: 'enabled',
 
-        fields: {}
-    });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
 

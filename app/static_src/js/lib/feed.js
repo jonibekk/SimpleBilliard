@@ -69,6 +69,9 @@ $(function () {
     });
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
 
+    // Like button
+    $(document).on("click", ".click-like", evLike);
+
     showMore();
 });
 
@@ -428,6 +431,58 @@ function evNotifyMoreView(e, params) {
             $loader_html.remove();
             $obj.removeAttr('disabled');
             $("#ShowMoreNoData").hide();
+        }
+    });
+    return false;
+}
+
+function evLike() {
+    console.log("feed.js: evLike");
+    attrUndefinedCheck(this, 'like_count_id');
+    attrUndefinedCheck(this, 'model_id');
+    attrUndefinedCheck(this, 'like_type');
+
+    var $obj = $(this);
+    var like_count_id = $obj.attr('like_count_id');
+    var $like_count_text = $("#" + like_count_id);
+
+    var like_type = $obj.attr('like_type');
+    var url = null;
+    var model_id = $obj.attr('model_id');
+    $obj.toggleClass("liked");
+
+    // ajax の結果を待たずに表示されているいいね数を変更する
+    // ajax の結果が返ってきたら正しい数字で上書きされる
+    var currentCount = parseInt($like_count_text.text(), 10);
+    if ($obj.hasClass("liked")) {
+        $like_count_text.text(currentCount + 1);
+    }
+    else {
+        $like_count_text.text(currentCount - 1);
+    }
+
+    if (like_type == "post") {
+        url = cake.url.d + model_id;
+    }
+    else {
+        url = cake.url.e + model_id;
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                alert(cake.message.notice.d);
+            }
+            else {
+                $like_count_text.text(data.count);
+            }
+        },
+        error: function () {
+            return false;
         }
     });
     return false;

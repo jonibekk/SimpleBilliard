@@ -12,6 +12,7 @@ const config = {
             assets_dir + '/js/lib/forms.js',
             assets_dir + '/js/lib/notify.js',
             assets_dir + '/js/lib/comments.js',
+            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/lib/feed.js',
             assets_dir + '/js/lib/posts.js'
         ],
@@ -24,6 +25,7 @@ const config = {
       assets_dir + '/js/lib/global.js',
       assets_dir + '/js/lib/header.js',
       assets_dir + '/js/lib/select2.js',
+      assets_dir + '/js/lib/intercom.js',
       assets_dir + '/js/gl_basic.js',
       assets_dir + '/js/view/**/*.js'
     ],
@@ -65,6 +67,7 @@ const config = {
       assets_dir + '/js/vendor/lightbox-custom.js',
       assets_dir + '/js/vendor/jquery.showmore.src.js',
       assets_dir + '/js/vendor/customRadioCheck.js',
+      assets_dir + '/js/vendor/select2.js',
       node_modules_dir + '/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
       assets_dir + '/js/vendor/locales/bootstrap-datepicker.ja.js',
       node_modules_dir + '/moment/min/moment.min.js',

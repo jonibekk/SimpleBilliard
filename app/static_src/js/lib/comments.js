@@ -3,8 +3,6 @@
  */
 "use strict";
 
-
-
 $(function () {
     console.log("LOADING: comments.js");
 
@@ -13,6 +11,7 @@ $(function () {
     });
 
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
+    $(document).on("click", ".click-comment-new", evCommentLatestView);
     $(document).on("click", ".js-click-comment-delete", evCommentDelete);
     $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
     $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
@@ -894,7 +893,7 @@ function evTargetToggleClick() {
 }
 
 function initCommentNotify(notifyBox) {
-    console.log("gl_basic.js: initCommentNotify");
+    console.log("comments.js: initCommentNotify");
     var numInBox = notifyBox.find(".num");
     numInBox.html("0");
     notifyBox.css("display", "none").css("opacity", 0);
