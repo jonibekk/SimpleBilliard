@@ -8,6 +8,10 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
+// Load image fastly
+//noinspection JSJQueryEfficiency,JSUnresolvedFunction
+imageLazyOn();
+
 $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec
@@ -360,8 +364,6 @@ $(document).ready(function () {
   //noinspection JSJQueryEfficiency
   $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
-  //noinspection JSJQueryEfficiency,JSUnresolvedFunction
-  imageLazyOn();
   //showmore
   //noinspection JSUnresolvedFunction
   showMore();
@@ -1645,7 +1647,7 @@ $(function () {
     } else {
       $(".navbar").removeClass("mod-box-shadow");
     }
-    
+
   });
 });
 

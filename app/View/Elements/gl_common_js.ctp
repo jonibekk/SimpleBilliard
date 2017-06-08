@@ -17,6 +17,11 @@
 <?= $this->element('cake_variables') ?>
 
 <?php
+echo $this->Html->script('/js/ng_vendors.min');
+echo $this->Html->script('/js/vendors.min');
+echo $this->Html->script('/js/goalous.min');
+echo $this->Html->script('/js/ng_app.min');
+
 // 右カラム用js
 if (!empty($display_dashboard)) {
     echo $this->Html->script('/js/react_kr_column_app.min');
@@ -32,11 +37,6 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
 {
     echo $this->Html->script('/js/react_message_app.min');
 }
-
-echo $this->Html->script('/js/ng_vendors.min');
-echo $this->Html->script('/js/vendors.min');
-echo $this->Html->script('/js/goalous.min');
-echo $this->Html->script('/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
