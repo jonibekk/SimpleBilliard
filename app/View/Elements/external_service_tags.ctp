@@ -19,7 +19,7 @@
     ?>
     <!-- start Intercom -->
     <script>
-    window.addEventListener("load", function(){
+    window.addEventListener("DOMContentLoaded", function(){
         enabled_intercom_icon = true;
         if (window.innerWidth < 992) {
             enabled_intercom_icon = false;
@@ -50,7 +50,8 @@
         }
 
         window.intercomSettings.custom_launcher_selector = ".intercom-launcher";
-
+    }
+    window.addEventListener("load", function(){
         var w = window;
         var ic = w.Intercom;
         if (typeof ic === "function") {
