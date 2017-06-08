@@ -50,7 +50,7 @@
 
         window.intercomSettings.custom_launcher_selector = ".intercom-launcher";
 
-        window.addEventListener("load", function(){
+        (function () {
             var w = window;
             var ic = w.Intercom;
             if (typeof ic === "function") {
@@ -81,7 +81,7 @@
                     w.addEventListener('load', l, false);
                 }
             }
-        });
+        })()
     </script>
     <!-- end Intercom -->
 <?php endif; ?>
