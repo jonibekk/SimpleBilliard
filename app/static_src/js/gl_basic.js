@@ -751,7 +751,6 @@ $(document).ready(function () {
   });
 });
 function imageLazyOn($elm_obj) {
-  console.log('lazy loading');
   var lazy_option = {
     bind: "event",
     attribute: "data-original",

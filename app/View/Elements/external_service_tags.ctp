@@ -9,12 +9,6 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 
-<script>
-window.addEventListener("load", function() {
-  console.log('All resources loaded');
-});
-</script>
-
 <?php if (INTERCOM_APP_ID): ?>
 
     <?php
@@ -73,14 +67,12 @@ window.addEventListener("load", function() {
                 };
                 w.Intercom = i;
                 function l() {
-                    console.log('Start intercom');
                     var s = d.createElement('script');
                     s.type = 'text/javascript';
                     s.async = true;
                     s.src = 'https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';
                     var x = d.getElementsByTagName('script')[0];
                     x.parentNode.insertBefore(s, x);
-                    console.log('End intercom');
                 }
                 if (w.attachEvent) {
                     w.attachEvent('onload', l);

@@ -42,7 +42,7 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 
 <?php //公開環境のみタグを有効化
-if (PUBLIC_ENV || true) {
+if (PUBLIC_ENV) {
     /** @noinspection PhpDeprecationInspection */
     echo $this->element('external_service_tags');
 }
