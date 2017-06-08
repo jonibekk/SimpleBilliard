@@ -9,17 +9,18 @@ const config = {
   js: {
     pages: {
         home: [
-
-            assets_dir + '/js/lib/notify.js',
+            assets_dir + '/js/lib/circle.js',
             assets_dir + '/js/view/home/*.js',
         ],
         goals: [
-            assets_dir + '/js/lib/notify.js',
             assets_dir + '/js/lib/circle.js',
             assets_dir + '/js/lib//views/goals/*.js',
         ],
         team: [
             assets_dir + '/js/view/team/*.js',
+        ],
+        user: [
+            assets_dir + '/js/view/user/*.js',
         ]
     },
     src: [
@@ -27,6 +28,7 @@ const config = {
       assets_dir + '/js/lib/global.js',
       assets_dir + '/js/lib/forms.js',
       assets_dir + '/js/lib/modals.js',
+      assets_dir + '/js/lib/notify.js',
       assets_dir + '/js/lib/header.js',
       assets_dir + '/js/lib/select2.js',
       assets_dir + '/js/lib/intercom.js',
@@ -37,6 +39,7 @@ const config = {
       home_script_name: 'goalous_home',
       goals_script_name: 'goalous_goal',
       team_script_name: 'goalous_team',
+      user_script_name: 'goalous_user',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [

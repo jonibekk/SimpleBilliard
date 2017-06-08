@@ -32,6 +32,13 @@ gulp.task('js_team:clean', () => {
         .on('end', () => { gutil.log('----------------- js_team task finished --------------------------') })
 });
 
+gulp.task('js_user:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jsuser_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_user:clean'))
+        .on('end', () => { gutil.log('----------------- js_user task finished --------------------------') })
+});
+
 gulp.task('js_vendor:clean', () => {
   return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))

@@ -30,6 +30,14 @@ gulp.task('js_team:concat', () => {
         .pipe(duration('js_team:concat'))
 });
 
+gulp.task('js_user:concat', () => {
+    return gulp.src([...config.js.pages.user])
+        .pipe(plumber())
+        .pipe(concat(config.js.output.user_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jsuser_cat'))
+        .pipe(duration('js_user:concat'))
+});
+
 gulp.task('js:concat', () => {
   return gulp.src([...config.js.src, config.dest + '/js/*.js'])
     .pipe(plumber())

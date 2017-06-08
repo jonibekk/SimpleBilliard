@@ -60,6 +60,20 @@ gulp.task("js_team:uglify", () => {
         .pipe(duration('js_team:uglify'))
 });
 
+gulp.task("js_user:uglify", () => {
+    let obj = gulp.src(config.dest + "/jsuser_cat/" + config.js.output.user_script_name + '.js');
+    if (process.env.NODE_ENV === "production") {
+        obj = obj.pipe(uglify());
+    }
+
+    return obj.pipe(rename({
+        suffix: '.min'
+    }))
+        .pipe(gulp.dest(config.js.output.path))
+        .pipe(duration('js_user:uglify'))
+});
+
+
 gulp.task("js_vendor:uglify", () => {
   return gulp.src(config.dest + "/js_vendor_cat/" + config.js_vendor.output.file_name + '.js')
     .pipe(uglify())
