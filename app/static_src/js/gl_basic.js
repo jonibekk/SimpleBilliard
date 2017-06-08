@@ -8,6 +8,10 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
+window.addEventListener("DOMContentLoaded", function() {
+  console.log('All HTML loaded');
+});
+
 // Load image fastly
 //noinspection JSJQueryEfficiency,JSUnresolvedFunction
 imageLazyOn();
@@ -28,8 +32,6 @@ require.config({
 });
 
 var network_reachable = true;
-console.log(enabled_intercom_icon);
-var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
 function bindPostBalancedGallery($obj) {
   $obj.removeClass('none');
@@ -173,10 +175,6 @@ function clickToSetCurrentTeamId() {
 
 
 $(document).ready(function () {
-  //intercomのリンクを非表示にする
-  if (enabled_intercom_icon) {
-    $('#IntercomLink').hide();
-  }
   // Androidアプリかiosアプリの場合のみfastClickを実行する。
   // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
   if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
@@ -757,6 +755,7 @@ $(document).ready(function () {
   });
 });
 function imageLazyOn($elm_obj) {
+  console.log('lazy loading');
   var lazy_option = {
     bind: "event",
     attribute: "data-original",

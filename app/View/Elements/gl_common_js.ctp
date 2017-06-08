@@ -24,7 +24,7 @@ echo $this->Html->script('/js/ng_app.min');
 
 // 右カラム用js
 if (!empty($display_dashboard)) {
-    echo $this->Html->script('/js/react_kr_column_app.min');
+    echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
 }
 // ゴール検索
 if (Hash::get($this->request->params, 'controller') === 'goals'
@@ -39,7 +39,12 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
 }
 ?>
 
-<!--suppress JSDuplicatedDeclaration -->
+<?php //公開環境のみタグを有効化
+if (PUBLIC_ENV || true) {
+    /** @noinspection PhpDeprecationInspection */
+    echo $this->element('external_service_tags');
+}
+?>
 
 <?= $this->Session->flash('click_event') ?>
 <?php echo $this->Session->flash('pnotify');

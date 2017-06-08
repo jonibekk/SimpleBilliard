@@ -9,6 +9,12 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 
+<script>
+window.addEventListener("load", function() {
+  console.log('All resources loaded');
+});
+</script>
+
 <?php if (INTERCOM_APP_ID): ?>
 
     <?php
@@ -67,14 +73,15 @@
                 };
                 w.Intercom = i;
                 function l() {
+                    console.log('Start intercom');
                     var s = d.createElement('script');
                     s.type = 'text/javascript';
                     s.async = true;
                     s.src = 'https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';
                     var x = d.getElementsByTagName('script')[0];
                     x.parentNode.insertBefore(s, x);
+                    console.log('End intercom');
                 }
-
                 if (w.attachEvent) {
                     w.attachEvent('onload', l);
                 } else {
@@ -84,5 +91,11 @@
         })()
     </script>
     <!-- end Intercom -->
+    <script>
+    //intercomのリンクを非表示にする
+    if (enabled_intercom_icon) {
+        getElementsById("IntercomLink").style.display = 'none';
+    }
+    </script>
 <?php endif; ?>
 <?= $this->App->viewEndComment() ?>

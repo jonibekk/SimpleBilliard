@@ -31,7 +31,7 @@ define('SES_FROM_ADDRESS_NOTICE', 'notice@goalous.com');
 define('GOOGLE_TAG_MANAGER_ID', null);
 define('MIXPANEL_TOKEN', null);
 define('VWO_ID', null);
-define('INTERCOM_APP_ID', null);
+define('INTERCOM_APP_ID', 'u0oqs7ov');
 define('FACEBOOK_APP_ID', null);
 define('FACEBOOK_SECRET_ID', null);
 define('GOOGLE_CLIENT_ID', null);
