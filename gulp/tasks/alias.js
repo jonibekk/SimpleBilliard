@@ -7,7 +7,7 @@ import webpackDevConfig from "../webpack.dev.config.js";
 import gutil from 'gulp-util';
 
 gulp.task('jsbuild', done => {
-    return runSequence(['js_home', 'js_goals', 'js_app', 'js_vendor'], done)
+    return runSequence(['js_home', 'js_goals', 'js_team', 'js_app', 'js_vendor'], done)
 });
 
 gulp.task('build', done => {
@@ -15,7 +15,7 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_home', 'js_goals', 'js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react'], done)
+  return runSequence(['js_home', 'js_goals', 'js_team', 'js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react'], done)
 });
 
 // js home
@@ -36,6 +36,16 @@ gulp.task('js_goals', done => {
     'js_goals:clean',
     done
   );
+});
+
+// js team
+gulp.task('js_team', done => {
+    return runSequence(
+        'js_team:concat',
+        'js_team:uglify',
+        'js_team:clean',
+        done
+    );
 });
 
 // js app

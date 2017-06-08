@@ -22,6 +22,14 @@ gulp.task('js_goals:concat', () => {
         .pipe(duration('js_goals:concat'))
 });
 
+gulp.task('js_team:concat', () => {
+    return gulp.src([...config.js.pages.team])
+        .pipe(plumber())
+        .pipe(concat(config.js.output.team_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jsteam_cat'))
+        .pipe(duration('js_team:concat'))
+});
+
 gulp.task('js:concat', () => {
   return gulp.src([...config.js.src, config.dest + '/js/*.js'])
     .pipe(plumber())
