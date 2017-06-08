@@ -26,6 +26,7 @@ $(function () {
  * base64の画像をリサイズ
  */
 function resizeImgBase64(imgBase64, width, height, callback) {
+    // TODO: Remove console log
     console.log("user.js: resizeImgBase64");
     // Image Type
     var img_type = imgBase64.substring(5, imgBase64.indexOf(";"));

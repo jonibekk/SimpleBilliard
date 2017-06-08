@@ -8,6 +8,7 @@ Noty.overrideDefaults({
 });
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: globals.js");
 
     /**
@@ -67,6 +68,7 @@ var network_reachable = true;
  * @param attr_name
  */
 function attrUndefinedCheck(obj, attr_name) {
+    // TODO: Remove console log
     console.log("global.js: attrUndefinedCheck");
     if ($(obj).attr(attr_name) == undefined) {
         var msg = "'" + attr_name + "'" + " is undefined!";
@@ -83,6 +85,7 @@ function attrUndefinedCheck(obj, attr_name) {
  * @returns string
  */
 function sanitize(string) {
+    // TODO: Remove console log
     console.log("global.js: sanitize");
     if (typeof string !== 'string') {
         return string;
@@ -106,6 +109,7 @@ function sanitize(string) {
  * @returns {boolean}
  */
 function checkUploadFileExpire(formID) {
+    // TODO: Remove console log
     console.log("global.js: checkUploadFileExpire");
     var $form = $('#' + formID);
 
@@ -144,6 +148,7 @@ function checkUploadFileExpire(formID) {
 }
 
 function imageLazyOn($elm_obj) {
+    // TODO: Remove console log
     console.log("global.js: imageLazyOn");
     var lazy_option = {
         bind: "event",
@@ -167,6 +172,7 @@ function imageLazyOn($elm_obj) {
 }
 
 function setDefaultTab() {
+    // TODO: Remove console log
     console.log("global.js: setDefaultTab");
     if (cake.common_form_type == "") {
         return;
@@ -193,6 +199,7 @@ function setDefaultTab() {
 }
 
 function clickToSetCurrentTeamId() {
+    // TODO: Remove console log
     console.log("global.js: clickToSetCurrentTeamId");
     if (typeof(Storage) !== "undefined") {
         localStorage.team_id_current = Number(cake.data.team_id);
@@ -203,6 +210,7 @@ function clickToSetCurrentTeamId() {
 
 
 function warningCloseModal() {
+    // TODO: Remove console log
     console.log("global.js: warningCloseModal");
     warningAction($('.modal'));
 }
@@ -210,6 +218,7 @@ function warningCloseModal() {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
+    // TODO: Remove console log
     console.log("global.js: setChangeWarningForAllStaticPage");
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
@@ -242,7 +251,8 @@ function setChangeWarningForAllStaticPage() {
 }
 
 function isMobile() {
-    console.log("gl_basic.js: isMobile");
+    // TODO: Remove console log
+    console.log("globals.js: isMobile");
     var agent = navigator.userAgent;
     if (agent.search(/iPhone/) != -1 ||
         agent.search(/iPad/) != -1 ||
@@ -255,7 +265,8 @@ function isMobile() {
 }
 
 function copyToClipboard(url) {
-    console.log("gl_basic.js: copyToClipboard");
+    // TODO: Remove console log
+    console.log("globals.js: copyToClipboard");
     window.prompt(cake.message.info.copy_url, url);
 }
 
@@ -263,7 +274,8 @@ function copyToClipboard(url) {
  * Created by bigplants on 5/23/14.
  */
 function getLocalDate() {
-    console.log("gl_basic.js: getLocalDate");
+    // TODO: Remove console log
+    console.log("globals.js: getLocalDate");
     var getTime = jQuery.now();
     var date = new Date(getTime);
     var year = date.getFullYear();
@@ -299,6 +311,7 @@ function setChangeWarningForAjax() {
 
 //アドレスバー書き換え
 function updateAddressBar(url) {
+    // TODO: Remove console log
     console.log("globals.js: updateAddressBar");
     if (typeof history.pushState == 'function') {
         try {
@@ -312,6 +325,7 @@ function updateAddressBar(url) {
 }
 
 function evThisHeightUp() {
+    // TODO: Remove console log
     console.log("globals.js: evThisHeightUp");
     attrUndefinedCheck(this, 'after-height');
     var after_height = $(this).attr("after-height");
@@ -319,6 +333,7 @@ function evThisHeightUp() {
 }
 
 function evThisHeightReset() {
+    // TODO: Remove console log
     console.log("globals.js: evThisHeightReset");
     $(this).css('height', "");
 }

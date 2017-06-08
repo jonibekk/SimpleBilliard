@@ -200,6 +200,7 @@ var Page = {
 };
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: actions.js");
 
     $(document).on("click", ".target-show", evTargetShow);
@@ -222,6 +223,7 @@ $(function () {
  * @returns {boolean}
  */
 function evTargetShow() {
+    // TODO: Remove console log
     console.log("actions.js: evTargetShow");
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
@@ -231,6 +233,7 @@ function evTargetShow() {
 }
 
 function evRemoveThis() {
+    // TODO: Remove console log
     console.log("actions.js: evRemoveThis");
     $(this).remove();
 }

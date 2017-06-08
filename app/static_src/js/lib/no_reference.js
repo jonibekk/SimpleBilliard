@@ -1,6 +1,7 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: no_reference.js");
 
     // メッセージフォーム submit 時
@@ -44,6 +45,7 @@ $(function () {
 });
 
 function ajaxAppendCount(id, url) {
+    // TODO: Remove console log
     console.log("no_reference.js: ajaxAppendCount");
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     $('#' + id).append($loader_html);
@@ -65,17 +67,20 @@ function ajaxAppendCount(id, url) {
 }
 
 function enabledAllInput(selector) {
+    // TODO: Remove console log
     console.log("no_reference.js: enabledAllInput");
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }
 
 function disabledAllInput(selector) {
+    // TODO: Remove console log
     console.log("no_reference.js: disabledAllInput");
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
 
 // reset bell notify num call from app.
 function resetBellNum() {
+    // TODO: Remove console log
     console.log("no_reference.js: resetBellNum");
     initBellNum();
     var url = cake.url.g;
@@ -94,6 +99,7 @@ function resetBellNum() {
 
 // reset bell message num call from app.
 function resetMessageNum() {
+    // TODO: Remove console log
     console.log("no_reference.js: resetMessageNum");
     initMessageNum();
     var url = cake.url.ag;
@@ -111,11 +117,13 @@ function resetMessageNum() {
 }
 
 function isOnline() {
+    // TODO: Remove console log
     console.log("no_reference.js: isOnline");
     return Boolean(network_reachable);
 }
 
 function evTargetToggle() {
+    // TODO: Remove console log
     console.log("no_reference.js: evTargetToggle");
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);

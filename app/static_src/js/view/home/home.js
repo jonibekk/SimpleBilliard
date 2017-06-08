@@ -4,6 +4,7 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: home.js");
 
     // 投稿フォーム

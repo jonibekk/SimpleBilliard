@@ -2,6 +2,7 @@
 
 
 $.clearInput = function ($obj) {
+    // TODO: Remove console log
     console.log("forms.js: $.clearInput");
     $obj.find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
     $obj.bootstrapValidator('resetForm', true);
@@ -84,6 +85,7 @@ $(function () {
  * @param callback Control + Enter が押された時に実行されるコールバック関数
  */
 var bindCtrlEnterAction = function (selector, callback) {
+    // TODO: Remove console log
     console.log("forms.js: bindCtrlEnterAction");
     $(document).on('keydown', selector, function (e) {
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {

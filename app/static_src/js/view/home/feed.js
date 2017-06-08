@@ -4,10 +4,12 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: feed.js");
 
     // お知らせ一覧ページの次のページ読込みボタン
     $(document).on("click", ".click-notify-read-more-page", function (e) {
+        // TODO: Remove console log
         console.log("Click: feed.js");
         e.preventDefault();
         e.stopPropagation();
@@ -20,6 +22,7 @@ $(function () {
 
     // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
     $(document).on("click", ".click-notify-read-more-dropdown", function (e) {
+        // TODO: Remove console log
         console.log("Click: feed.js");
         e.preventDefault();
         e.stopPropagation();
@@ -90,6 +93,7 @@ var autoload_more = false;
 var feed_loading_now = false;
 var do_reload_header_bellList = false;
 function evFeedMoreView(options) {
+    // TODO: Remove console log
     console.log("feed.js: evFeedMoreView");
     var opt = $.extend({
         recursive: false,
@@ -241,6 +245,7 @@ function evFeedMoreView(options) {
  * @param obj
  */
 function showMore(obj) {
+    // TODO: Remove console log
     console.log("feed.js: showMore");
     obj = obj || null;
     var showText = '<i class="fa fa-angle-double-down mr_5px"></i>' + cake.message.info.e;
@@ -370,6 +375,7 @@ function showMore(obj) {
  * @returns {boolean}
  */
 function evNotifyMoreView(e, params) {
+    // TODO: Remove console log
     console.log("feed.js: evNotifyMoreView");
     attrUndefinedCheck(this, 'get-url');
 
@@ -442,6 +448,7 @@ function evNotifyMoreView(e, params) {
 }
 
 function evLike() {
+    // TODO: Remove console log
     console.log("feed.js: evLike");
     attrUndefinedCheck(this, 'like_count_id');
     attrUndefinedCheck(this, 'model_id');

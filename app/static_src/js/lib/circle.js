@@ -155,6 +155,7 @@ $(function () {
 
 
     $(".click-circle-trigger").on("click", function () {
+        // TODO: Remove console log
         console.log("gl_basic.js: click");
         var txt = $(this).text();
         if ($(this).is('.on')) {
@@ -467,6 +468,7 @@ function updateCakeValue(circle_id, title, image_url) {
 }
 
 function evAjaxLeaveCircle(e) {
+    // TODO: Remove console log
     console.log("circle.js: evAjaxLeaveCircle");
     e.preventDefault();
 
@@ -517,6 +519,7 @@ function evAjaxLeaveCircle(e) {
 }
 
 function evAjaxEditCircleAdminStatus(e) {
+    // TODO: Remove console log
     console.log("gl_basic.js: evAjaxEditCircleAdminStatus");
     e.preventDefault();
 

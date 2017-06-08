@@ -3,6 +3,7 @@
 var network_reachable = true;
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: notify.js");
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
@@ -108,6 +109,7 @@ $(function () {
 });
 
 function appendSocketId(form, socketId) {
+    // TODO: Remove console log
     console.log("global.js: appendSocketId");
     $('<input>').attr({
         type: 'hidden',
@@ -117,6 +119,7 @@ function appendSocketId(form, socketId) {
 }
 
 function notifyNewFeed() {
+    // TODO: Remove console log
     console.log("notify.js: notifyNewFeed");
     var notifyBox = $(".feed-notify-box");
     var numArea = notifyBox.find(".num");
@@ -147,6 +150,7 @@ function notifyNewFeed() {
 }
 
 function getCurrentUnreadNotifyCnt() {
+    // TODO: Remove console log
     console.log("notify.js: getCurrentUnreadNotifyCnt");
     var $bellNum = $("#bellNum");
     var $numArea = $bellNum.find("span");
@@ -155,6 +159,7 @@ function getCurrentUnreadNotifyCnt() {
 
 // notify boxにpage idをセット
 function setPageTypeId() {
+    // TODO: Remove console log
     console.log("notify.js: setPageTypeId");
     var notifyBox = $(".feed-notify-box");
     var pageTypeId = cake.data.d;
@@ -169,6 +174,7 @@ function setPageTypeId() {
 
 // notify boxのpage idをゲット
 function getPageTypeId() {
+    // TODO: Remove console log
     console.log("notify.js: getPageTypeId");
     var pageTypeId = $(".feed-notify-box").attr("id");
     if (!pageTypeId) return "";
@@ -176,6 +182,7 @@ function getPageTypeId() {
 }
 
 function viaIsSet(data) {
+    // TODO: Remove console log
     console.log("notify.js: viaIsSet");
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
@@ -183,6 +190,7 @@ function viaIsSet(data) {
 }
 
 function notifyNewComment(notifyBox) {
+    // TODO: Remove console log
     console.log("notify.js: notifyNewComment");
     var numInBox = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
@@ -214,6 +222,7 @@ function notifyNewComment(notifyBox) {
 }
 
 function hideCommentNotifyErrorBox(notifyBox) {
+    // TODO: Remove console log
     console.log("notify.js: hideCommentNotifyErrorBox");
     var errorBox = notifyBox.siblings(".new-comment-error");
     if (errorBox.attr("display") === "none") {
@@ -223,6 +232,7 @@ function hideCommentNotifyErrorBox(notifyBox) {
 }
 
 function evNotifications(options) {
+    // TODO: Remove console log
     console.log("gl_basic.js: evNotifications");
 
     //とりあえずドロップダウンは隠す

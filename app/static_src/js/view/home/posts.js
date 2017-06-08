@@ -4,6 +4,7 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: posts.js");
 
     // Adjust size for single image post
@@ -49,6 +50,7 @@ $(function () {
  * @param $obj
  */
 function bindPostBalancedGallery($obj) {
+    // TODO: Remove console log
     console.log("posts.js: bindPostBalancedGallery");
     $obj.removeClass('none');
     $obj.BalancedGallery({
@@ -71,6 +73,7 @@ function bindPostBalancedGallery($obj) {
  * @param $obj
  */
 function changeSizeFeedImageOnlyOne($obj) {
+    // TODO: Remove console log
     console.log("posts.js: changeSizeFeedImageOnlyOne");
     $obj.each(function (i, v) {
         var $elm = $(v);
@@ -100,6 +103,7 @@ function changeSizeFeedImageOnlyOne($obj) {
  * @param text
  */
 function getPostOGPInfo(ogp, text) {
+    // TODO: Remove console log
     console.log("posts.js: getPostOGPInfo");
     var options = {
         // URL が含まれるテキスト
@@ -150,6 +154,7 @@ function getPostOGPInfo(ogp, text) {
  * @param data
  */
 function appendPostOgpInfo(data) {
+    // TODO: Remove console log
     console.log("posts.js: appendPostOgpInfo");
     var $siteInfoUrl = $('#PostSiteInfoUrl');
     var $siteInfo = $('#PostOgpSiteInfo');

@@ -5,6 +5,7 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: notify.js");
 
     $.fn.select2.locales['en'] = {
@@ -37,6 +38,7 @@ $(function () {
 
 // NO REFERENCE FOUND
 function initMessageSelect2(topic_id) {
+    // TODO: Remove console log
     console.log("select2.js: initMessageSelect2");
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
@@ -81,6 +83,7 @@ function initMessageSelect2(topic_id) {
 }
 
 function initMemberSelect2() {
+    // TODO: Remove console log
     console.log("select2.js: initMemberSelect2");
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
@@ -136,6 +139,7 @@ function initMemberSelect2() {
 }
 
 function initCircleSelect2() {
+    // TODO: Remove console log
     console.log("select2.js: initCircleSelect2");
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
@@ -345,6 +349,7 @@ function initCircleSelect2() {
 }
 
 function bindSelect2Members($this) {
+    // TODO: Remove console log
     console.log("select2.js: bindSelect2Members");
     var $select2elem = $this.find(".ajax_add_select2_members");
     var url = $select2elem.attr('data-url');
@@ -386,6 +391,7 @@ function bindSelect2Members($this) {
 
 // select2 で選択されたグループをユーザーとして展開する
 function select2ExpandGroup(data) {
+    // TODO: Remove console log
     console.log("select2.js: select2ExpandGroup");
     for (var i = 0; i < data.length; i++) {
         if (data[i].id.indexOf('group_') === 0 && data[i].users) {
@@ -399,6 +405,7 @@ function select2ExpandGroup(data) {
 };
 
 function format(item) {
+    // TODO: Remove console log
     console.log("select2.js: format");
     if ('image' in item) {
         return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";

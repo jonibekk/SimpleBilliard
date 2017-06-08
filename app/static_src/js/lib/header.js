@@ -4,6 +4,7 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: header.js");
 
     // Click at Message Icon
@@ -151,6 +152,7 @@ $(function () {
  * Initialize page title
  */
 function initTitle() {
+    // TODO: Remove console log
     console.log("header.js: initTitle");
     var $title = $("title");
     $title.text(sanitize($title.attr("origin-title")));
@@ -161,6 +163,7 @@ function initTitle() {
  * @returns {jQuery|HTMLElement}
  */
 function getBellBoxSelector() {
+    // TODO: Remove console log
     console.log("header.js: getBellBoxSelector");
     return $("#bellNum");
 }
@@ -170,6 +173,7 @@ function getBellBoxSelector() {
  * @returns {Number}
  */
 function getNotifyCnt() {
+    // TODO: Remove console log
     console.log("header.js: getNotifyCnt");
     var $bellBox = getBellBoxSelector();
     return parseInt($bellBox.children('span').html(), 10);
@@ -179,6 +183,7 @@ function getNotifyCnt() {
  * Initialize notification icon count to 0
  */
 function initBellNum() {
+    // TODO: Remove console log
     console.log("header.js: initBellNum");
     var $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
@@ -190,6 +195,7 @@ function initBellNum() {
  * @returns {jQuery|HTMLElement}
  */
 function getMessageBoxSelector() {
+    // TODO: Remove console log
     console.log("header.js: getMessageBoxSelector");
     return $("#messageNum");
 }
@@ -199,6 +205,7 @@ function getMessageBoxSelector() {
  * @returns {Number}
  */
 function getMessageNotifyCnt() {
+    // TODO: Remove console log
     console.log("header.js: getMessageNotifyCnt");
     var $box = getMessageBoxSelector();
     return parseInt($box.children('span').html(), 10);
@@ -208,6 +215,7 @@ function getMessageNotifyCnt() {
  * Initialize Message icon count to 0
  */
 function initMessageNum() {
+    // TODO: Remove console log
     console.log("header.js: initMessageNum");
     var $box = getMessageBoxSelector();
     $box.css("opacity", 0);
@@ -215,6 +223,7 @@ function initMessageNum() {
 }
 
 function updateMessageListBox() {
+    // TODO: Remove console log
     console.log("header.js: updateMessageListBox");
     var $messageDropdown = $("#message-dropdown");
     $messageDropdown.empty();
@@ -241,6 +250,7 @@ function updateMessageListBox() {
 }
 
 function evMessageList(options) {
+    // TODO: Remove console log
     console.log("header.js: evMessageList");
     //とりあえずドロップダウンは隠す
     $(".has-notify-dropdown").removeClass("open");
@@ -252,6 +262,7 @@ function evMessageList(options) {
 }
 
 function updateListBox() {
+    // TODO: Remove console log
     console.log("header.js: updateListBox");
     var $bellDropdown = $("#bell-dropdown");
     $bellDropdown.empty();
@@ -278,6 +289,7 @@ function updateListBox() {
 }
 
 function setIntervalToGetNotifyCnt(sec) {
+    // TODO: Remove console log
     console.log("header.js: setIntervalToGetNotifyCnt");
     setInterval(function () {
         updateNotifyCnt();
@@ -286,6 +298,7 @@ function setIntervalToGetNotifyCnt(sec) {
 }
 
 function updateNotifyCnt() {
+    // TODO: Remove console log
     console.log("header.js: updateNotifyCnt");
 
     var url = cake.url.f + '/team_id:' + cake.data.team_id;
@@ -309,6 +322,7 @@ function updateNotifyCnt() {
 }
 
 function updateMessageNotifyCnt() {
+    // TODO: Remove console log
     console.log("header.js: updateMessageNotifyCnt");
     var url = cake.url.af + '/team_id:' + cake.data.team_id;
     $.ajax({
@@ -331,6 +345,7 @@ function updateMessageNotifyCnt() {
 }
 
 function setNotifyCntToBellAndTitle(cnt) {
+    // TODO: Remove console log
     console.log("header.js: setNotifyCntToBellAndTitle");
     var $bellBox = getBellBoxSelector();
     var existingBellCnt = parseInt($bellBox.children('span').html());
@@ -356,6 +371,7 @@ function setNotifyCntToBellAndTitle(cnt) {
 }
 
 function setNotifyCntToMessageAndTitle(cnt) {
+    // TODO: Remove console log
     console.log("header.js: setNotifyCntToMessageAndTitle");
     var cnt = parseInt(cnt);
     var $bellBox = getMessageBoxSelector();
@@ -393,6 +409,7 @@ function setNotifyCntToMessageAndTitle(cnt) {
 
 // <title> に表示される通知数を更新する
 function updateTitleCount() {
+    // TODO: Remove console log
     console.log("header.js: updateTitleCount");
     var $title = $("title");
     var current_cnt = getNotifyCnt() + getMessageNotifyCnt();
@@ -408,6 +425,7 @@ function updateTitleCount() {
 }
 
 function displaySelectorFluffy(selector) {
+    // TODO: Remove console log
     console.log("header.js: displaySelectorFluffy");
     var i = 0.2;
     var roop = setInterval(function () {

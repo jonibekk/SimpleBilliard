@@ -31,6 +31,7 @@ require.config({
  * @param $obj
  */
 function changeSizeActionImage($obj) {
+    // TODO: Remove console log
   console.log("gl_basic.js: changeSizeActionImage");
   $obj.each(function (i, v) {
     var $elm = $(v);
@@ -59,18 +60,21 @@ function changeSizeActionImage($obj) {
 
 // selectorの存在確認用
 jQuery.fn.exists = function () {
-  console.log("gl_basic.js: jQuery.fn.exists");
+    // TODO: Remove console log
+    console.log("gl_basic.js: jQuery.fn.exists");
   return Boolean(this.length > 0);
 }
 
 // scrollbarの存在確認用
 jQuery.fn.hasScrollBar = function () {
-  console.log("gl_basic.js: jQuery.fn.hasScrollBar");
+    // TODO: Remove console log
+    console.log("gl_basic.js: jQuery.fn.hasScrollBar");
   return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
 
 $(document).ready(function () {
+    // TODO: Remove console log
     console.log("gl_basic.js: $(document).ready");
 
   // Androidアプリかiosアプリの場合のみfastClickを実行する。
@@ -355,8 +359,10 @@ $(document).ready(function () {
 
 
 $(function () {
+    // TODO: Remove console log
     console.log("gl_basic.js: $(function ()");
     $(".click-show").on("click", function () {
+        // TODO: Remove console log
             console.log("gl_basic.js: click");
             $("#PostFormPicture").css("display", "block")
         }
@@ -365,11 +371,13 @@ $(function () {
 
 
 $(function () {
+    // TODO: Remove console log
     console.log("gl_basic.js: $(function ()");
     var current_slide_id = 1;
 
     // インジケータークリック時
     $(document).on('click', '.setup-tutorial-indicator', function () {
+        // TODO: Remove console log
         console.log("gl_basic.js: click");
         resetDisplayStatus();
         changeTutorialContent($(this).attr('data-id'));
@@ -377,6 +385,7 @@ $(function () {
 
     // ネクストボタンクリック時
     $(document).on('click', '.tutorial-next-btn', function () {
+        // TODO: Remove console log
         console.log("gl_basic.js: click");
         if (current_slide_id == 3) {
             location.href = "/setup/";
@@ -389,6 +398,7 @@ $(function () {
     });
 
     function changeTutorialContent(content_id) {
+        // TODO: Remove console log
         console.log("gl_basic.js: changeTutorialContent");
         // 各要素をカレントステータスに設定
         $('.tutorial-box' + content_id).show();
@@ -399,6 +409,7 @@ $(function () {
     }
 
     function resetDisplayStatus() {
+        // TODO: Remove console log
         console.log("gl_basic.js: resetDisplayStatus");
         $('.tutorial-body').children('div').hide();
         $('.setup-tutorial-texts').children('div').hide();
@@ -409,6 +420,7 @@ $(function () {
 
 
 $(document).ready(function () {
+    // TODO: Remove console log
     console.log("gl_basic.js: $(document).ready");
     var click_cnt = 0;
 
@@ -423,6 +435,7 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+    // TODO: Remove console log
     console.log("gl_basic.js: $(document).ready");
 
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
@@ -530,6 +543,7 @@ $(document).ready(function () {
 
 
 function evTargetRemove() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evTargetRemove");
   attrUndefinedCheck(this, 'target-selector');
   var $obj = $(this);
@@ -538,6 +552,7 @@ function evTargetRemove() {
   return false;
 }
 function evAjaxGetElmWithIndex(e) {
+    // TODO: Remove console log
     console.log("gl_basic.js: evAjaxGetElmWithIndex");
   e.preventDefault();
   attrUndefinedCheck(this, 'target-selector');
@@ -559,6 +574,7 @@ function evAjaxGetElmWithIndex(e) {
 }
 
 function evToggleAjaxGet() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evToggleAjaxGet");
   attrUndefinedCheck(this, 'target-id');
   attrUndefinedCheck(this, 'ajax-url');
@@ -614,6 +630,7 @@ function evToggleAjaxGet() {
  * @returns {boolean}
  */
 function evTargetShowThisDelete() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evTargetShowThisDelete");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
@@ -632,6 +649,7 @@ function evTargetShowThisDelete() {
   return false;
 }
 function evTargetShowTargetDelete() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evTargetShowTargetDelete");
   attrUndefinedCheck(this, 'show-target-id');
   attrUndefinedCheck(this, 'delete-target-id');
@@ -644,6 +662,7 @@ function evTargetShowTargetDelete() {
 }
 
 function evTargetEnabled() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evTargetEnabled");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
@@ -652,6 +671,7 @@ function evTargetEnabled() {
   return true;
 }
 function evSelectOptionTargetHidden() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evSelectOptionTargetHidden");
   attrUndefinedCheck(this, 'target-id');
   attrUndefinedCheck(this, 'hidden-option-value');
@@ -668,6 +688,7 @@ function evSelectOptionTargetHidden() {
 }
 
 function evToggle() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evToggle");
   attrUndefinedCheck(this, 'target-id');
   var target_id = $(this).attr('target-id');
@@ -684,6 +705,7 @@ function evToggle() {
  * target_idは,区切りで複数の要素を指定可能
  */
 function evBlankDisableAndUndisable() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evBlankDisableAndUndisable");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
@@ -705,6 +727,7 @@ function evBlankDisableAndUndisable() {
  * target_idは,区切りで複数の要素を指定可能
  */
 function evBlankDisable() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evBlankDisable");
   attrUndefinedCheck(this, 'target-id');
   var $obj = $(this);
@@ -718,6 +741,7 @@ function evBlankDisable() {
 }
 
 function evTriggerClick() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evTriggerClick");
   attrUndefinedCheck(this, 'target-id');
   var target_id = $(this).attr("target-id");
@@ -736,6 +760,7 @@ function evTriggerClick() {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShow() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evShow");
   //クリック済みの場合は処理しない
   if ($(this).hasClass('clicked'))return;
@@ -755,6 +780,7 @@ function evShow() {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShowAndThisWide() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evShowAndThisWide");
   //クリック済みの場合は処理しない
   if ($(this).hasClass('clicked'))return;
@@ -789,6 +815,7 @@ function evShowAndThisWide() {
   $(this).addClass('clicked');
 }
 function setSelectOptions(url, select_id, target_toggle_id, selected) {
+    // TODO: Remove console log
     console.log("gl_basic.js: setSelectOptions");
   var options_elem = '<option value="">' + cake.word.k + '</option>';
   $.get(url, function (data) {
@@ -814,6 +841,7 @@ function setSelectOptions(url, select_id, target_toggle_id, selected) {
 }
 
 function evShowAndThisWideClose() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evShowAndThisWideClose");
   attrUndefinedCheck(this, 'target-id');
   var target_id = $(this).attr("target-id");
@@ -829,6 +857,7 @@ function evShowAndThisWideClose() {
 
 
 function warningAction($obj) {
+    // TODO: Remove console log
     console.log("gl_basic.js: warningAction");
   var flag = false;
   $obj.on('shown.bs.modal', function (e) {
@@ -868,6 +897,7 @@ function warningAction($obj) {
 }
 
 function modalFormCommonBindEvent($modal_elm) {
+    // TODO: Remove console log
     console.log("gl_basic.js: modalFormCommonBindEvent");
   warningAction($modal_elm);
   $modal_elm.on('shown.bs.modal', function (e) {
@@ -883,6 +913,7 @@ function modalFormCommonBindEvent($modal_elm) {
 
 
 function evFollowGoal() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evFollowGoal");
   attrUndefinedCheck(this, 'goal-id');
   attrUndefinedCheck(this, 'data-class');
@@ -931,6 +962,7 @@ function evFollowGoal() {
   return false;
 }
 function getModalPostList(e) {
+    // TODO: Remove console log
     console.log("gl_basic.js: getModalPostList");
   e.preventDefault();
 
@@ -996,6 +1028,7 @@ function getModalPostList(e) {
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evAjaxGoalFollowerMore");
   var $obj = $(this);
   $obj.attr('ajax-url', cake.url.goal_followers + '/goal_id:' + $obj.attr('goal-id'));
@@ -1004,6 +1037,7 @@ function evAjaxGoalFollowerMore() {
 
 // ゴールのメンバー一覧を取得
 function evAjaxGoalMemberMore() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evAjaxGoalMemberMore");
   var $obj = $(this);
   $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
@@ -1012,6 +1046,7 @@ function evAjaxGoalMemberMore() {
 
 // ゴールのキーリザルト一覧を取得
 function evAjaxGoalKeyResultMore() {
+    // TODO: Remove console log
     console.log("gl_basic.js: evAjaxGoalKeyResultMore");
   var $obj = $(this);
   var kr_can_edit = $obj.attr('kr-can-edit');
@@ -1058,6 +1093,7 @@ function evAjaxGoalKeyResultMore() {
 
 
 function evBasicReadMore(options) {
+    // TODO: Remove console log
     console.log("gl_basic.js: evBasicReadMore");
   $.extend({
     afterSuccess: function ($content) {
@@ -1126,6 +1162,7 @@ function evBasicReadMore(options) {
 
 
 function getModalFormFromUrl(e) {
+    // TODO: Remove console log
     console.log("gl_basic.js: getModalFormFromUrl");
   e.preventDefault();
   var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -1207,6 +1244,7 @@ function getModalFormFromUrl(e) {
 
 // TEAM
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: gl_basic.js TEAM");
 
     // Insight 画面の処理
@@ -1230,6 +1268,7 @@ $(function () {
  * uploading csv file from form.
  */
 function uploadCsvFileByForm(e) {
+    // TODO: Remove console log
     console.log("gl_basic.js: uploadCsvFileByForm");
     e.preventDefault();
 
@@ -1287,6 +1326,7 @@ function uploadCsvFileByForm(e) {
 
 // USER - ACCOUNT
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: gl_basic.js USER");
     $(document).on("click", '#ShowRecoveryCodeButton', function (e) {
         e.preventDefault();
