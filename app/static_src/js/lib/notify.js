@@ -222,3 +222,83 @@ function hideCommentNotifyErrorBox(notifyBox) {
     errorBox.css("display", "none");
 }
 
+function evNotifications(options) {
+    console.log("gl_basic.js: evNotifications");
+
+    //とりあえずドロップダウンは隠す
+    $(".has-notify-dropdown").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    if (!$(".layout-main").exists()) {
+        window.location.href = get_url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if (!updateAddressBar(get_url)) {
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.notifications;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+

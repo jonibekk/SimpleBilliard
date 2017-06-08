@@ -6,37 +6,6 @@
 $(function () {
     console.log("LOADING: feed.js");
 
-    $(window).scroll(function () {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-            if (!autoload_more) {
-                autoload_more = true;
-
-                if (network_reachable) {
-                    var $FeedMoreReadLink = $('#FeedMoreReadLink');
-                    var $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
-                    var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
-                    var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
-
-                    if ($FeedMoreReadLink.is(':visible')) {
-                        $FeedMoreReadLink.trigger('click');
-                    }
-                    if ($GoalPageFollowerMoreLink.is(':visible')) {
-                        $GoalPageFollowerMoreLink.trigger('click');
-                    }
-                    if ($GoalPageMemberMoreLink.is(':visible')) {
-                        $GoalPageMemberMoreLink.trigger('click');
-                    }
-                    if ($GoalPageKeyResultMoreLink.is(':visible')) {
-                        $GoalPageKeyResultMoreLink.trigger('click');
-                    }
-                } else {
-                    autoload_more = false;
-                    return false;
-                }
-            }
-        }
-    });
-
     // お知らせ一覧ページの次のページ読込みボタン
     $(document).on("click", ".click-notify-read-more-page", function (e) {
         console.log("Click: feed.js");
@@ -68,13 +37,49 @@ $(function () {
         });
     });
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
+    $(document).on("click", ".btn-back-notifications", evNotifications);
 
     // Like button
     $(document).on("click", ".click-like", evLike);
 
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
+            if (!autoload_more) {
+                autoload_more = true;
+
+                if (network_reachable) {
+                    var $FeedMoreReadLink = $('#FeedMoreReadLink');
+                    var $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
+                    var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
+                    var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
+
+                    if ($FeedMoreReadLink.is(':visible')) {
+                        $FeedMoreReadLink.trigger('click');
+                    }
+                    if ($GoalPageFollowerMoreLink.is(':visible')) {
+                        $GoalPageFollowerMoreLink.trigger('click');
+                    }
+                    if ($GoalPageMemberMoreLink.is(':visible')) {
+                        $GoalPageMemberMoreLink.trigger('click');
+                    }
+                    if ($GoalPageKeyResultMoreLink.is(':visible')) {
+                        $GoalPageKeyResultMoreLink.trigger('click');
+                    }
+                } else {
+                    autoload_more = false;
+                    return false;
+                }
+            }
+        }
+    });
+
+    if (cake.data.j == "0") {
+        // TODO: Remove console log
+        console.log("feed.js: cake.data.j");
+        $('#FeedMoreReadLink').trigger('click');
+    }
     showMore();
 });
-
 
 /**
  * Show more posts as user scroll the feed

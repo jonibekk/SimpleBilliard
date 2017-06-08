@@ -12,6 +12,10 @@ $(function () {
     bindCtrlEnterAction('#MessageDisplayForm', function (e) {
         $('#MessageSubmit').trigger('click');
     });
+    // メッセージ個別ページ
+    bindCtrlEnterAction('#message_text_input', function (e) {
+        $('#message_submit_button').trigger('click');
+    });
 
     $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
@@ -19,7 +23,24 @@ $(function () {
         fields: {}
     });
 
+    $(document).on('keyup', '#message_text_input', function () {
+        autosize($(this));
+        //$('body').animate({
+        //    scrollTop: $(document).height()
+        //});
+    });
     $(document).on("click", ".target-toggle", evTargetToggle);
+    //マイページのゴール切替え
+    $('#SwitchGoalOnMyPage').change(function () {
+        var goal_id = $(this).val();
+        if (goal_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/goal_id:" + goal_id;
+        }
+        location.href = url;
+    });
 });
 
 function ajaxAppendCount(id, url) {

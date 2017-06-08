@@ -31,6 +31,17 @@ $(function () {
             });
         });
     }
+    //サークルページの添付ファイルタイプ切替え
+    $('#SwitchFileType').change(function () {
+        var file_type = $(this).val();
+        if (file_type == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/file_type:" + file_type;
+        }
+        location.href = url;
+    });
 });
 
 /**

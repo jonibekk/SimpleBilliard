@@ -10,6 +10,11 @@ Noty.overrideDefaults({
 $(function () {
     console.log("LOADING: globals.js");
 
+    /**
+     * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
+     */
+    $(document).on("blur", ".blur-height-reset", evThisHeightReset);
+    $(document).on("focus", ".click-height-up", evThisHeightUp);
     //lazy load
     $(document).on("click", '.target-toggle-click', function (e) {
         e.preventDefault();
@@ -291,3 +296,30 @@ function setChangeWarningForAjax() {
         })
     })
 }
+
+//アドレスバー書き換え
+function updateAddressBar(url) {
+    console.log("globals.js: updateAddressBar");
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, url);
+            return true;
+        } catch (e) {
+            window.location.href = url;
+            return false;
+        }
+    }
+}
+
+function evThisHeightUp() {
+    console.log("globals.js: evThisHeightUp");
+    attrUndefinedCheck(this, 'after-height');
+    var after_height = $(this).attr("after-height");
+    $(this).height(after_height);
+}
+
+function evThisHeightReset() {
+    console.log("globals.js: evThisHeightReset");
+    $(this).css('height', "");
+}
+

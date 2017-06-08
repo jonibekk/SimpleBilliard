@@ -39,6 +39,19 @@ $(function () {
             return false;
         }
     });
+    $(document).on("click", ".call-notifications", evNotifications);
+    $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: cake.url.an,
+            async: true,
+            success: function () {
+                $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
+            }
+        });
+        return false;
+    });
 
     // Auto update notify cnt
     if (cake.data.team_id) {
@@ -117,6 +130,20 @@ $(function () {
             return;
         }
     });
+    //チーム切り換え
+    $('#SwitchTeam').change(function () {
+        var val = $(this).val();
+        var url = "/teams/ajax_switch_team/team_id:" + val;
+        $.get(url, function (data) {
+            location.href = data;
+        });
+    });
+
+    // ヘッダーの検索フォームの処理
+    require(['search'], function (search) {
+        search.headerSearch.setup();
+    });
+
 });
 
 
