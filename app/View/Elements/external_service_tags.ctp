@@ -94,7 +94,7 @@ window.addEventListener("load", function() {
     <script>
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
-        getElementsById("IntercomLink").style.display = 'none';
+        document.getElementById("IntercomLink").style.display = 'none';
     }
     </script>
 <?php endif; ?>

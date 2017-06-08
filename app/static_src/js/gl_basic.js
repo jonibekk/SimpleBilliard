@@ -8,10 +8,6 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
-window.addEventListener("DOMContentLoaded", function() {
-  console.log('All HTML loaded');
-});
-
 // Load image fastly
 //noinspection JSJQueryEfficiency,JSUnresolvedFunction
 imageLazyOn();
