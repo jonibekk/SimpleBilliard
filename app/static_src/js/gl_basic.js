@@ -213,9 +213,9 @@ $(document).ready(function () {
     $('.nav-back-btn').removeClass('mod-touchstart');
   });
   //evToggleAjaxGet
-  $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
+
   $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
-  $(document).on("click", ".click-target-remove", evTargetRemove);
+
   //dynamic modal
   $(document).on("click", '.modal-ajax-get', function (e) {
     e.preventDefault();
@@ -540,75 +540,6 @@ $(document).ready(function () {
         }
     });
 });
-
-
-function evTargetRemove() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evTargetRemove");
-  attrUndefinedCheck(this, 'target-selector');
-  var $obj = $(this);
-  var target_selector = $obj.attr("target-selector");
-  $(target_selector).remove();
-  return false;
-}
-function evAjaxGetElmWithIndex(e) {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evAjaxGetElmWithIndex");
-  e.preventDefault();
-  attrUndefinedCheck(this, 'target-selector');
-  attrUndefinedCheck(this, 'index');
-  var $obj = $(this);
-  var target_selector = $obj.attr("target-selector");
-  var index = parseInt($obj.attr("index"));
-
-  $.get($obj.attr('href') + "/index:" + index, function (data) {
-    $(target_selector).append(data);
-    if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
-      $obj.attr('disabled', 'disabled');
-      return false;
-    }
-    //increment
-    $obj.attr('index', index + 1);
-  });
-  return false;
-}
-
-function evToggleAjaxGet() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evToggleAjaxGet");
-  attrUndefinedCheck(this, 'target-id');
-  attrUndefinedCheck(this, 'ajax-url');
-  var $obj = $(this);
-  var target_id = sanitize($obj.attr("target-id"));
-  var ajax_url = $obj.attr("ajax-url");
-
-  //noinspection JSJQueryEfficiency
-  if (!$('#' + target_id).hasClass('data-exists')) {
-    $.get(ajax_url, function (data) {
-      $('#' + target_id).append(data.html);
-    });
-  }
-  $obj.find('i').each(function () {
-    if ($(this).hasClass('fa-caret-down')) {
-      $(this).removeClass('fa-caret-down');
-      $(this).addClass('fa-caret-up');
-    }
-    else if ($(this).hasClass('fa-caret-up')) {
-      $(this).removeClass('fa-caret-up');
-      $(this).addClass('fa-caret-down');
-    }
-  });
-  //noinspection JSJQueryEfficiency
-  $('#' + target_id).addClass('data-exists');
-  //noinspection JSJQueryEfficiency
-  $('#' + target_id).toggle();
-  return false;
-}
-
-
-
-
-
 
 
 

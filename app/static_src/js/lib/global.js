@@ -16,6 +16,7 @@ $(function () {
      */
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
+    $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     //lazy load
     $(document).on("click", '.target-toggle-click', function (e) {
         e.preventDefault();
@@ -338,3 +339,24 @@ function evThisHeightReset() {
     $(this).css('height', "");
 }
 
+function evAjaxGetElmWithIndex(e) {
+    // TODO: Remove console log
+    console.log("gl_basic.js: evAjaxGetElmWithIndex");
+    e.preventDefault();
+    attrUndefinedCheck(this, 'target-selector');
+    attrUndefinedCheck(this, 'index');
+    var $obj = $(this);
+    var target_selector = $obj.attr("target-selector");
+    var index = parseInt($obj.attr("index"));
+
+    $.get($obj.attr('href') + "/index:" + index, function (data) {
+        $(target_selector).append(data);
+        if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
+            $obj.attr('disabled', 'disabled');
+            return false;
+        }
+        //increment
+        $obj.attr('index', index + 1);
+    });
+    return false;
+}

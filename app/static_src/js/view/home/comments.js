@@ -576,9 +576,15 @@ function evCommendEditSubmit(e) {
     return false;
 }
 
-// 通知から投稿、メッセージに移動
-// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
-//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
+
+/**
+ * 通知から投稿、メッセージに移動
+ * TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
+ * そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
+ *
+ * @param options
+ * @returns {boolean}
+ */
 function evNotifyPost(options) {
     // TODO: Remove console log
     console.log("gl_basic.js: evNotifyPost");
@@ -909,10 +915,10 @@ function initCommentNotify(notifyBox) {
     notifyBox.css("display", "none").css("opacity", 0);
 }
 
-
-
-
-// Used on circle and feed
+/**
+ * Used on circle and feed
+ * @param $obj
+ */
 function bindCommentBalancedGallery($obj) {
     // TODO: Remove console log
     console.log("comments.js: bindCommentBalancedGallery");
@@ -931,7 +937,10 @@ function bindCommentBalancedGallery($obj) {
     });
 };
 
-//bootstrapValidatorがSuccessした時
+/**
+ * bootstrapValidatorがSuccessした時
+ * @param e
+ */
 function validatorCallback(e) {
     // TODO: Remove console log
     console.log("comments.js: validatorCallback");
