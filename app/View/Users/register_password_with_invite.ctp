@@ -20,7 +20,7 @@
                 'class'     => 'form-control signup_input-design'
             ],
             'class'         => 'form-horizontal',
-            'novalidate'    => true,
+            // 'novalidate'    => true,
             'id'            => 'UserPassword',
         ]); ?>
         <?=
@@ -28,7 +28,7 @@
             'placeholder'              => __('********'),
             "data-bv-notempty-message" => __("Input is required."),
             "data-bv-notempty"         => "true",
-            'required'                 => false,
+            'required'                 => true,
             'type'                     => 'password',
             'maxlength'                => 50,
         ]) ?>
