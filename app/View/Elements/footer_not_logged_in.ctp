@@ -99,7 +99,7 @@ if (!isset($top_lang)) {
         <div class="container">
             <div class="row">
                 <div class="pull-left footer-bottom-left">
-                    <small class="copyright">© 2017 ISAO</small>
+                    <small class="copyright">© 2016 ISAO</small>
                     <ul class="footer-lang list-inline">
                         <li><a href="<?= $this->Html->url('/en/') ?>">English (US)</a></li>
                         <li><a href="<?= $this->Html->url('/ja/') ?>">日本語</a></li>

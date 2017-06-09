@@ -1,5 +1,4 @@
 import { MonthNameListEn } from "~/common/constants/Date";
-import { range } from '~/signup/actions/common_actions'
 
 export function generateCurrentRangeList() {
   const current_start_date = new Date()
@@ -79,25 +78,6 @@ export function dateFormatYm(year, month) {
 }
 
 /**
- * 月を表示用にフォーマット
- *
- * @param  integer year
- * @param  integer month
- *
- * @return string
- */
-export function dateFormatM(month) {
-  const double_digit_month = toDigit(month)
-  // TODO: ログイン前とログイン後でlang設定の表記揺れがあるので、表記揺れをなくす。
-  //       ログイン前だと日本語の場合'ja', ログイン後だと'jpn'が格納されている。
-  if (cake.lang === 'ja' || cake.lang === 'jpn') {
-    return `${double_digit_month}月`
-  } else {
-    return `${MonthNameListEn[double_digit_month]}`
-  }
-}
-
-/**
  * get date after n months
  *
  * @param  string  date
@@ -141,19 +121,4 @@ export function year(date) {
  */
 export function toDigit(number) {
   return ('00' + number).slice(-2);
-}
-
-/**
- * generage day range object by year, month
- *
- * @param  int year
- * @param  int month
- *
- * @return array
- */
-export function getDayRange(year, month) {
-  year = parseInt(year)
-  month = parseInt(month)
-  const lastDay = parseInt(new Date(year, month, 0).getDate());
-  return range(1, lastDay + 1)
 }

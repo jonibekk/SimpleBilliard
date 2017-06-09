@@ -22,11 +22,10 @@
         'question' => __('What is different from other enterprise SNS?'),
         'answer'   => __('People are connected by Goal, this is the different point from others. We can follow Goals or collaborate with Goals. Just post an action to Goals, everyone can know what you did, when you did for Goals. Enjoy your team communication.')
     ],
-    // Now in www prod, evaluation feature is unavailable.
-    // [
-    //     'question' => __('How to evaluate personal Goals?'),
-    //     'answer'   => __('Evaluation can be done at end of term or in next term. There are 2 types of evaluations, Goal evaluation and total evaluation.')
-    // ],
+    [
+        'question' => __('How to evaluate personal Goals?'),
+        'answer'   => __('Evaluation can be done at end of term or in next term. There are 2 types of evaluations, Goal evaluation and total evaluation.')
+    ],
     [
         'question' => __('What should I do if the member leave our company?'),
         'answer'   => __('Team administrator can make the member left deactivated. Those members can\'t access your team but the posts they did would remain your team.')
@@ -45,7 +44,7 @@
     ],
     [
         'question' => __('What should we do after the campaign?'),
-        'answer'   => __('In order to continue using Goalous, you need to purchase a subscription plan.')
+        'answer'   => __('There will appear some limit, but data will not be deleted.')
     ],
     [
         'question' => __('Can we customize Goalous?'),
