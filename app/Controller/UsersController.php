@@ -52,35 +52,35 @@ class UsersController extends AppController
         }
 
         //account lock check
-        $ip_address = $this->request->clientIp();
-        $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
-        if ($is_account_locked) {
+        $ipAddress = $this->request->clientIp();
+        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
+        if ($isAccountLocked) {
             $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
                 ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
         //メアド、パスの認証(セッションのストアはしていない)
-        $user_info = $this->Auth->identify($this->request, $this->response);
-        if (!$user_info) {
-            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ip_address);
+        $userInfo = $this->Auth->identify($this->request, $this->response);
+        if (!$userInfo) {
+            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
             $this->Pnotify->outError(__("Email address or Password is incorrect."));
             return $this->render();
         }
         $this->Session->write('preAuthPost', $this->request->data);
 
         //デバイス情報を保存する
-        $user_id = $user_info['id'];
-        $installation_id = $this->request->data['User']['installation_id'];
-        if ($installation_id == "no_value") {
-            $installation_id = null;
+        $user_id = $userInfo['id'];
+        $installationId = $this->request->data['User']['installation_id'];
+        if ($installationId == "no_value") {
+            $installationId = null;
         }
         $app_version = $this->request->data['User']['app_version'];
         if ($app_version == "no_value") {
             $app_version = null;
         }
-        if (!empty($installation_id)) {
+        if (!empty($installationId)) {
             try {
-                $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $app_version);
+                $this->NotifyBiz->saveDeviceInfo($user_id, $installationId, $app_version);
                 //セットアップガイドステータスの更新
                 $this->updateSetupStatusIfNotCompleted();
             } catch (RuntimeException $e) {
@@ -88,25 +88,25 @@ class UsersController extends AppController
                     'where'           => 'login page',
                     'error_msg'       => $e->getMessage(),
                     'user_id'         => $user_id,
-                    'installation_id' => $installation_id,
+                    'installation_id' => $installationId,
                 ]);
             }
         }
 
-        $is_2fa_auth_enabled = true;
+        $is2faAuthEnabled = true;
         // 2要素認証設定OFFの場合
         // 2要素認証設定ONかつ、設定して30日以内の場合
-        if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
-                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
+        if ((is_null($userInfo['2fa_secret']) === true) || (empty($userInfo['2fa_secret']) === false
+                && $this->GlRedis->isExistsDeviceHash($userInfo['DefaultTeam']['id'], $userInfo['id']))
         ) {
-            $is_2fa_auth_enabled = false;
+            $is2faAuthEnabled = false;
         }
 
         //２要素設定有効なら
-        if ($is_2fa_auth_enabled) {
-            $this->Session->write('2fa_secret', $user_info['2fa_secret']);
-            $this->Session->write('user_id', $user_info['id']);
-            $this->Session->write('team_id', $user_info['DefaultTeam']['id']);
+        if ($is2faAuthEnabled) {
+            $this->Session->write('2fa_secret', $userInfo['2fa_secret']);
+            $this->Session->write('user_id', $userInfo['id']);
+            $this->Session->write('team_id', $userInfo['DefaultTeam']['id']);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
 
