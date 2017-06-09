@@ -7,27 +7,8 @@ import { AlertMessageBox } from './elements/alert_message_box'
 import { InvalidMessageBox } from './elements/invalid_message_box'
 import { range } from '../actions/common_actions'
 import { _checkValue } from '../actions/validate_actions'
-import { getDayRange, dateFormatM, toDigit } from '~/util/date'
 
 export default class UserName extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      day_range: []
-    }
-    this.setDayRange = this.setDayRange.bind(this)
-  }
-
-  setDayRange() {
-    const year = this.getInputDomData().birth_year
-    const month = this.getInputDomData().birth_month
-    if (year && month) {
-      this.setState({
-        day_range: getDayRange(year, month)
-      })
-    }
-  }
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.update_email_flg).checked = "checked"
@@ -111,10 +92,7 @@ export default class UserName extends React.Component {
                         {/* Birthday year */}
                         <span className={(this.props.validate.birth_year.invalid) ? 'has-error' : ''}>
                             <select className="form-control inline-fix" ref="birth_year" name="birth_year"
-                                    onChange={ (e) => {
-                                      this.props.dispatch(_checkValue(e.target))
-                                      this.setDayRange()
-                                    } }>
+                                    onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                                <option value=""></option>
                                {
                                  range(1910, new Date().getFullYear()).sort((a,b) => b-a).map( year => {
@@ -128,14 +106,20 @@ export default class UserName extends React.Component {
                         {/* Birthday month */}
                         <span className={(this.props.validate.birth_month.invalid) ? 'has-error' : ''}>
                             <select className="form-control inline-fix" ref="birth_month" name="birth_month"
-                                    onChange={ (e) => {
-                                      this.props.dispatch(_checkValue(e.target))
-                                      this.setDayRange();
-                                    }}>
+                                    onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                                <option value=""></option>
-                               { range(1, 13).map( month => {
-                                 return <option value={toDigit(month)} key={month}>{dateFormatM(month)}</option>;
-                               })}
+                               <option value="01">{__("Jan")}</option>
+                               <option value="02">{__("Feb")}</option>
+                               <option value="03">{__("Mar")}</option>
+                               <option value="04">{__("Apr")}</option>
+                               <option value="05">{__("May")}</option>
+                               <option value="06">{__("Jun")}</option>
+                               <option value="07">{__("Jul")}</option>
+                               <option value="08">{__("Aug")}</option>
+                               <option value="09">{__("Sep")}</option>
+                               <option value="10">{__("Oct")}</option>
+                               <option value="11">{__("Nov")}</option>
+                               <option value="12">{__("Dec")}</option>
                             </select>
                         </span>
                         &nbsp;/&nbsp;
@@ -145,9 +129,11 @@ export default class UserName extends React.Component {
                         <select className="form-control inline-fix" ref="birth_day" name="birth_day"
                                 onChange={ (e) => this.props.dispatch(_checkValue(e.target)) }>
                            <option value=""></option>
-                           { this.state.day_range.map( day => {
-                             return <option value={day} key={day}>{toDigit(day)}</option>;
-                           })}
+                           {
+                             range(1, 31).map( day => {
+                               return <option value={day} key={day}>{day}</option>;
+                             })
+                           }
                         </select>
                         </span>
                     </div>

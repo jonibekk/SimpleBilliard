@@ -1439,7 +1439,7 @@ ul.example-indent {
 
 .comment-body {
     margin-left: 40px;
-    margin-bottom: -4px;
+    margin-bottom: 4px;
     vertical-align: text-top;
 }
 
