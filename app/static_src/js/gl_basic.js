@@ -3445,7 +3445,7 @@ function getModalFormFromUrl(e) {
     });
   }
 }
-$(document).ready(function () {
+$(window).load(function () {
 
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
