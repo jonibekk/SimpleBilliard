@@ -17,7 +17,6 @@ $(function () {
     bindCtrlEnterAction('#message_text_input', function (e) {
         $('#message_submit_button').trigger('click');
     });
-    $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
 
     $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
@@ -130,37 +129,5 @@ function evTargetToggle() {
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     $("#" + target_id).toggle();
-    return false;
-}
-
-function evToggleAjaxGet() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evToggleAjaxGet");
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'ajax-url');
-    var $obj = $(this);
-    var target_id = sanitize($obj.attr("target-id"));
-    var ajax_url = $obj.attr("ajax-url");
-
-    //noinspection JSJQueryEfficiency
-    if (!$('#' + target_id).hasClass('data-exists')) {
-        $.get(ajax_url, function (data) {
-            $('#' + target_id).append(data.html);
-        });
-    }
-    $obj.find('i').each(function () {
-        if ($(this).hasClass('fa-caret-down')) {
-            $(this).removeClass('fa-caret-down');
-            $(this).addClass('fa-caret-up');
-        }
-        else if ($(this).hasClass('fa-caret-up')) {
-            $(this).removeClass('fa-caret-up');
-            $(this).addClass('fa-caret-down');
-        }
-    });
-    //noinspection JSJQueryEfficiency
-    $('#' + target_id).addClass('data-exists');
-    //noinspection JSJQueryEfficiency
-    $('#' + target_id).toggle();
     return false;
 }

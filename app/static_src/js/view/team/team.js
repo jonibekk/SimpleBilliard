@@ -5,7 +5,6 @@ $(function () {
     console.log("LOADING: team.js");
 
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
-    $(document).on("click", ".click-target-remove", evTargetRemove);
 
     // Insight 画面の処理
     if ($('#InsightForm').length) {
@@ -81,14 +80,4 @@ function uploadCsvFileByForm(e) {
             $result_msg.removeClass('none');
             $loader.addClass('none');
         });
-}
-
-function evTargetRemove() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evTargetRemove");
-    attrUndefinedCheck(this, 'target-selector');
-    var $obj = $(this);
-    var target_selector = $obj.attr("target-selector");
-    $(target_selector).remove();
-    return false;
 }
