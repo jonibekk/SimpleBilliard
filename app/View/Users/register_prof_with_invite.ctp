@@ -164,9 +164,9 @@
 </div>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
-    // $(document).ready(function () {
-    //     //ユーザ登録時にローカル時間をセットする
-    //     $('input#InitLocalDate').val(getLocalDate());
+    $(document).ready(function () {
+        //ユーザ登録時にローカル時間をセットする
+        $('input#InitLocalDate').val(getLocalDate());
     //
     //     $('#UserProf').bootstrapValidator({
     //         fields: {
@@ -187,7 +187,7 @@
     //     require(['validate'], function (validate) {
     //         window.bvCallbackAvailableEmail = validate.bvCallbackAvailableEmail;
     //     });
-    // });
+    });
 </script>
 <?php $this->end(); ?>
 <?= $this->App->viewEndComment() ?>
