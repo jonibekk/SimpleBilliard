@@ -62,6 +62,7 @@ class UsersController extends AppController
         //メアド、パスの認証(セッションのストアはしていない)
         $user_info = $this->Auth->identify($this->request, $this->response);
         if (!$user_info) {
+            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ip_address);
             $this->Pnotify->outError(__("Email address or Password is incorrect."));
             return $this->render();
         }
@@ -215,6 +216,11 @@ class UsersController extends AppController
             }
             $this->_refreshAuth();
             $this->_setAfterLogin();
+
+            // reset login failed count
+            $ipAddress = $this->request->clientIp();
+            $this->GlRedis->resetLoginFailedCount($this->request->data['User']['email'], $ipAddress);
+
             $this->Pnotify->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
                 ['title' => __("Succeeded to login")]);
             return $this->redirect($redirect_url);
