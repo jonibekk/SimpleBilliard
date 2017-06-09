@@ -1196,10 +1196,14 @@ class UsersController extends AppController
             );
             $nextTerm = $Term->getNextTermData();
             $endDate = $nextTerm['end_date'];
+
+            $isAfterCurrentTerm = false;
         } else {
             $targetTerm = $this->Team->Term->findById($termId);
             $startDate = $targetTerm['Term']['start_date'];
             $endDate = $targetTerm['Term']['end_date'];
+
+            $isAfterCurrentTerm = $TermService->isAfterCurrentTerm($termId);
         }
 
         $myGoalsCount = $this->Goal->getMyGoals(null, 1, 'count', $userId, $startDate, $endDate);
@@ -1233,9 +1237,6 @@ class UsersController extends AppController
         $canCompleteGoalIds = Hash::extract(
             $this->Goal->findCanComplete($this->my_uid), '{n}.id'
         );
-
-        // for changing goal.
-        $isAfterCurrentTerm = $TermService->isAfterCurrentTerm($termId);
 
         $this->set([
             'term'                 => $termFilterOptions,
