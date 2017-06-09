@@ -154,7 +154,7 @@
                 [
                     'type'     => 'submit',
                     'class'    => 'btn btn-primary signup-invite-submit-button',
-                    'disabled' => 'disabled'
+                    // 'disabled' => 'disabled'
                 ]) ?>
         </div>
 
@@ -163,30 +163,30 @@
 </div>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-        //ユーザ登録時にローカル時間をセットする
-        $('input#InitLocalDate').val(getLocalDate());
-
-        $('#UserProf').bootstrapValidator({
-            fields: {
-                "validate-checkbox": {
-                    selector: '.validate-checkbox',
-                    validators: {
-                        choice: {
-                            min: 1,
-                            max: 1,
-                            message: cake.message.validate.d
-                        }
-                    }
-                }
-            }
-        });
-
-        // 登録可能な email の validate
-        require(['validate'], function (validate) {
-            window.bvCallbackAvailableEmail = validate.bvCallbackAvailableEmail;
-        });
-    });
+    // $(document).ready(function () {
+    //     //ユーザ登録時にローカル時間をセットする
+    //     $('input#InitLocalDate').val(getLocalDate());
+    //
+    //     $('#UserProf').bootstrapValidator({
+    //         fields: {
+    //             "validate-checkbox": {
+    //                 selector: '.validate-checkbox',
+    //                 validators: {
+    //                     choice: {
+    //                         min: 1,
+    //                         max: 1,
+    //                         message: cake.message.validate.d
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
+    //
+    //     // 登録可能な email の validate
+    //     require(['validate'], function (validate) {
+    //         window.bvCallbackAvailableEmail = validate.bvCallbackAvailableEmail;
+    //     });
+    // });
 </script>
 <?php $this->end(); ?>
 <?= $this->App->viewEndComment() ?>
