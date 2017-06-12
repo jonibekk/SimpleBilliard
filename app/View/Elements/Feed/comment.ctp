@@ -21,7 +21,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
-    <div class="col col-xxs-12 pt_4px">
+    <div class="col col-xxs-12 pt_8px pb_8px">
         <a href="<?= $this->Html->url([
             'controller' => 'users',
             'action'     => 'view_goals',
