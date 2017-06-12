@@ -31,6 +31,8 @@ $(function () {
         //});
     });
     $(document).on("click", ".target-toggle", evTargetToggle);
+    $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
+
     //マイページのゴール切替え
     $('#SwitchGoalOnMyPage').change(function () {
         var goal_id = $(this).val();
@@ -130,4 +132,21 @@ function evTargetToggle() {
     var target_id = $obj.attr("target-id");
     $("#" + target_id).toggle();
     return false;
+}
+
+function evSelectOptionTargetHidden() {
+    // TODO: Remove console log
+    console.log("gl_basic.js: evSelectOptionTargetHidden");
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'hidden-option-value');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var hidden_option_value = $obj.attr("hidden-option-value");
+    if ($obj.val() == hidden_option_value) {
+        $("#" + target_id).hide();
+    }
+    else {
+        $("#" + target_id).show();
+    }
+    return true;
 }

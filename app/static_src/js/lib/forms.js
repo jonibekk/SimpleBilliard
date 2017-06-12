@@ -76,6 +76,9 @@ $(function () {
     $('body').tooltip({
         selector: '[data-toggle="tooltip"]'
     });
+
+    autosize($('textarea:not(.not-autosize)'));
+    $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 });
 
 /**
@@ -93,3 +96,85 @@ var bindCtrlEnterAction = function (selector, callback) {
         }
     })
 };
+
+/**
+ * クリックした要素のheightを倍にし、
+ * 指定した要素を表示する。(一度だけ)
+ */
+function evShowAndThisWide() {
+    // TODO: Remove console log
+    console.log("forms.js: evShowAndThisWide");
+    //クリック済みの場合は処理しない
+    if ($(this).hasClass('clicked'))return;
+
+    //KRのセレクトオプションを取得する。
+    if ($(this).hasClass('add-select-options')) {
+        setSelectOptions($(this).attr('add-select-url'), $(this).attr('select-id'));
+    }
+    //autosizeを一旦、切る。
+    $(this).trigger('autosize.destroy');
+    var current_height = $(this).height();
+    if ($(this).attr('init-height') == undefined) {
+        $(this).attr('init-height', current_height);
+    }
+    //$(this).attr('init-height', current_height);
+    //現在のheightを倍にする。
+    $(this).height(current_height * 2);
+    //再度autosizeを有効化
+    autosize($(this));
+
+    //submitボタンを表示
+    if ($(this).attr('target_show_id') != undefined) {
+        var target = $(this).attr('target_show_id');
+
+        var target = target.split(',');
+        jQuery.each(target, function () {
+            $("#" + this).show();
+        });
+    }
+
+    //クリック済みにする
+    $(this).addClass('clicked');
+}
+
+
+function evShowAndThisWideClose() {
+    // TODO: Remove console log
+    console.log("gl_basic.js: evShowAndThisWideClose");
+    attrUndefinedCheck(this, 'target-id');
+    var target_id = $(this).attr("target-id");
+    var $target = $("#" + target_id);
+    $target.removeClass('clicked');
+    if ($target.attr('init-height') != undefined) {
+        $target.height($target.attr('init-height'));
+    }
+    $("#" + $target.attr('target_show_id')).hide();
+    return false;
+}
+
+
+function setSelectOptions(url, select_id, target_toggle_id, selected) {
+    // TODO: Remove console log
+    console.log("forms.js: setSelectOptions");
+    var options_elem = '<option value="">' + cake.word.k + '</option>';
+    $.get(url, function (data) {
+        if (data.length == 0) {
+            $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
+        } else {
+            $.each(data, function (k, v) {
+                var selected_attr = selected == k ? " selected=selected" : "";
+                var option = '<option value="' + k + '"' + selected_attr + '>' + v + '</option>';
+                options_elem += option;
+            });
+            $("#" + select_id).empty().append(options_elem);
+        }
+        if (typeof target_toggle_id != 'undefined' && target_toggle_id != null) {
+            if (data.length == 0) {
+                $("#" + target_toggle_id).addClass('none');
+            }
+            else {
+                $("#" + target_toggle_id).removeClass('none');
+            }
+        }
+    });
+}

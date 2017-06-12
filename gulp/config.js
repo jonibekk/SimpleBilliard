@@ -13,6 +13,7 @@ const config = {
             assets_dir + '/js/view/home/*.js',
         ],
         goals: [
+            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/lib/circle.js',
             assets_dir + '/js/lib//views/goals/*.js',
         ],

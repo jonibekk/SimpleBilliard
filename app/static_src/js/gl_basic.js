@@ -84,17 +84,7 @@ $(document).ready(function () {
   }
 
 
-
-
-
-
-
-
-
-
   $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-
-
 
   //ヘッダーサブメニューでのフィード、ゴール切り換え処理
   //noinspection JSJQueryEfficiency
@@ -147,15 +137,9 @@ $(document).ready(function () {
     });
 
 
-
-
-
-
   //autosize
   //noinspection JSJQueryEfficiency
-  autosize($('textarea:not(.not-autosize)'));
-  //noinspection JSJQueryEfficiency
-  $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
+
 
 
   //carousel
@@ -180,14 +164,14 @@ $(document).ready(function () {
   $(document).on("change", ".change-target-enabled", evTargetEnabled);
   //noinspection JSUnresolvedVariable
 
-  $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
+
   //noinspection JSUnresolvedVariable
   $(document).on("click", ".check-target-toggle", evToggle);
 
   //noinspection JSUnresolvedVariable,JSUnresolvedFunction
   $(document).on("click", ".click-show-post-modal", getModalPostList);
   //noinspection JSUnresolvedVariable
-  $(document).on("click", ".toggle-follow", evFollowGoal);
+
 
 
   // TODO:delete.進捗グラフリリース時に不要になるので必ず削除
@@ -270,10 +254,6 @@ $(document).ready(function () {
   $('.ModalActionResult_input_field').on('change', function () {
     $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
   });
-
-
-
-
 
 
   // KR進捗の詳細値を表示
@@ -670,22 +650,7 @@ function evTargetEnabled() {
   $("#" + target_id).removeAttr("disabled");
   return true;
 }
-function evSelectOptionTargetHidden() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evSelectOptionTargetHidden");
-  attrUndefinedCheck(this, 'target-id');
-  attrUndefinedCheck(this, 'hidden-option-value');
-  var $obj = $(this);
-  var target_id = $obj.attr("target-id");
-  var hidden_option_value = $obj.attr("hidden-option-value");
-  if ($obj.val() == hidden_option_value) {
-    $("#" + target_id).hide();
-  }
-  else {
-    $("#" + target_id).show();
-  }
-  return true;
-}
+
 
 function evToggle() {
     // TODO: Remove console log
@@ -775,84 +740,8 @@ function evShow() {
   $(this).addClass('clicked');
 }
 
-/**
- * クリックした要素のheightを倍にし、
- * 指定した要素を表示する。(一度だけ)
- */
-function evShowAndThisWide() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evShowAndThisWide");
-  //クリック済みの場合は処理しない
-  if ($(this).hasClass('clicked'))return;
 
-  //KRのセレクトオプションを取得する。
-  if ($(this).hasClass('add-select-options')) {
-    setSelectOptions($(this).attr('add-select-url'), $(this).attr('select-id'));
-  }
-  //autosizeを一旦、切る。
-  $(this).trigger('autosize.destroy');
-  var current_height = $(this).height();
-  if ($(this).attr('init-height') == undefined) {
-    $(this).attr('init-height', current_height);
-  }
-  //$(this).attr('init-height', current_height);
-  //現在のheightを倍にする。
-  $(this).height(current_height * 2);
-  //再度autosizeを有効化
-  autosize($(this));
 
-  //submitボタンを表示
-  if ($(this).attr('target_show_id') != undefined) {
-    var target = $(this).attr('target_show_id');
-
-    var target = target.split(',');
-    jQuery.each(target, function () {
-      $("#" + this).show();
-    });
-  }
-
-  //クリック済みにする
-  $(this).addClass('clicked');
-}
-function setSelectOptions(url, select_id, target_toggle_id, selected) {
-    // TODO: Remove console log
-    console.log("gl_basic.js: setSelectOptions");
-  var options_elem = '<option value="">' + cake.word.k + '</option>';
-  $.get(url, function (data) {
-    if (data.length == 0) {
-      $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
-    } else {
-      $.each(data, function (k, v) {
-        var selected_attr = selected == k ? " selected=selected" : "";
-        var option = '<option value="' + k + '"' + selected_attr + '>' + v + '</option>';
-        options_elem += option;
-      });
-      $("#" + select_id).empty().append(options_elem);
-    }
-    if (typeof target_toggle_id != 'undefined' && target_toggle_id != null) {
-      if (data.length == 0) {
-        $("#" + target_toggle_id).addClass('none');
-      }
-      else {
-        $("#" + target_toggle_id).removeClass('none');
-      }
-    }
-  });
-}
-
-function evShowAndThisWideClose() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evShowAndThisWideClose");
-  attrUndefinedCheck(this, 'target-id');
-  var target_id = $(this).attr("target-id");
-  var $target = $("#" + target_id);
-  $target.removeClass('clicked');
-  if ($target.attr('init-height') != undefined) {
-    $target.height($target.attr('init-height'));
-  }
-  $("#" + $target.attr('target_show_id')).hide();
-  return false;
-}
 
 
 
@@ -912,55 +801,7 @@ function modalFormCommonBindEvent($modal_elm) {
 
 
 
-function evFollowGoal() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evFollowGoal");
-  attrUndefinedCheck(this, 'goal-id');
-  attrUndefinedCheck(this, 'data-class');
-  var $obj = $(this);
-  var goal_id = sanitize($obj.attr('goal-id'));
-  var data_class = sanitize($obj.attr('data-class'));
-  var url = cake.url.c;
-  $.ajax({
-    type: 'GET',
-    url: url + goal_id,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (data.error) {
-          new Noty({
-              type: 'error',
-              text: '<h4>'+cake.word.error+'</h4>'+data.msg,
-          }).show();
-      }
-      else {
-        if (data.add) {
-          $("." + data_class + "[goal-id=" + goal_id + "]").each(function () {
-            $(this).children('span').text(cake.message.info.d);
-            $(this).children('i').hide();
-            $(this).removeClass('follow-off');
-            $(this).addClass('follow-on');
-          });
-        }
-        else {
-          $("." + data_class + "[goal-id=" + goal_id + "]").each(function () {
-            $(this).children('span').text(cake.message.info.z);
-            $(this).children('i').show();
-            $(this).removeClass('follow-on');
-            $(this).addClass('follow-off');
-          });
-        }
-      }
-    },
-    error: function () {
-        new Noty({
-            type: 'error',
-            text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.c,
-        }).show();
-    }
-  });
-  return false;
-}
+
 function getModalPostList(e) {
     // TODO: Remove console log
     console.log("gl_basic.js: getModalPostList");

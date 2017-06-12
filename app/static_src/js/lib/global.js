@@ -16,6 +16,7 @@ $(function () {
      */
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
+    $(document).on("click", ".toggle-follow", evFollowGoal);
     //lazy load
     $(document).on("click", '.target-toggle-click', function (e) {
         e.preventDefault();
@@ -338,3 +339,52 @@ function evThisHeightReset() {
     $(this).css('height', "");
 }
 
+function evFollowGoal() {
+    // TODO: Remove console log
+    console.log("gl_basic.js: evFollowGoal");
+    attrUndefinedCheck(this, 'goal-id');
+    attrUndefinedCheck(this, 'data-class');
+    var $obj = $(this);
+    var goal_id = sanitize($obj.attr('goal-id'));
+    var data_class = sanitize($obj.attr('data-class'));
+    var url = cake.url.c;
+    $.ajax({
+        type: 'GET',
+        url: url + goal_id,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                new Noty({
+                    type: 'error',
+                    text: '<h4>'+cake.word.error+'</h4>'+data.msg,
+                }).show();
+            }
+            else {
+                if (data.add) {
+                    $("." + data_class + "[goal-id=" + goal_id + "]").each(function () {
+                        $(this).children('span').text(cake.message.info.d);
+                        $(this).children('i').hide();
+                        $(this).removeClass('follow-off');
+                        $(this).addClass('follow-on');
+                    });
+                }
+                else {
+                    $("." + data_class + "[goal-id=" + goal_id + "]").each(function () {
+                        $(this).children('span').text(cake.message.info.z);
+                        $(this).children('i').show();
+                        $(this).removeClass('follow-on');
+                        $(this).addClass('follow-off');
+                    });
+                }
+            }
+        },
+        error: function () {
+            new Noty({
+                type: 'error',
+                text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.c,
+            }).show();
+        }
+    });
+    return false;
+}
