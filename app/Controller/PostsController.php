@@ -13,7 +13,7 @@ class PostsController extends AppController
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
-        $this->_setPageJavascriptFile('goalous_home.min');
+        $this->_addPageJavascriptFile('goalous_home.min');
     }
 
     public function beforeFilter()

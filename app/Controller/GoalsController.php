@@ -23,7 +23,7 @@ class GoalsController extends AppController
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
-        $this->_setPageJavascriptFile('goalous_goal.min');
+        $this->_addPageJavascriptFile('goalous_goal.min');
     }
 
     public function beforeFilter()

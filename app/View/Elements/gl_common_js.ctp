@@ -38,8 +38,10 @@ echo $this->Html->script('/js/ng_vendors.min');
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
 // Include page specific javascript file
-if (isset($page_js_file) && !empty($page_js_file)) {
-    echo $this->Html->script($page_js_file);
+if (isset($page_js_files) && !empty($page_js_files)) {
+    foreach ($page_js_files as $script) {
+        echo $this->Html->script($script);
+    }
 }
 echo $this->Html->script('/js/ng_app.min');
 ?>

@@ -15,7 +15,7 @@ class TeamsController extends AppController
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
-        $this->_setPageJavascriptFile('goalous_team.min');
+        $this->_addPageJavascriptFile('goalous_team.min');
     }
 
     public function beforeFilter()
