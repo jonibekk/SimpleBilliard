@@ -16,6 +16,7 @@ class TeamsController extends AppController
     {
         parent::__construct($request, $response);
         $this->_addPageJavascriptFile('goalous_team.min');
+        $this->_addPageJavascriptFile('ng_app.min');
     }
 
     public function beforeFilter()

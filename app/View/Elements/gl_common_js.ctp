@@ -43,7 +43,6 @@ if (isset($page_js_files) && !empty($page_js_files)) {
         echo $this->Html->script($script);
     }
 }
-echo $this->Html->script('/js/ng_app.min');
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
