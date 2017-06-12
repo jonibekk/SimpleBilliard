@@ -209,9 +209,6 @@ $(document).ready(function () {
     return false;
   });
 
-  $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-
-
   //すべてのformで入力があった場合に行う処理
   $("select,input").change(function () {
     $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -4226,6 +4223,11 @@ $(document).ready(function () {
     initTitle();
     updateMessageListBox();
   });
+});
+
+// youtubeビデオ読み込み
+$(window).load(function () {
+  $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
 
 function initBellNum() {
