@@ -39,6 +39,13 @@ gulp.task('js_user:clean', () => {
         .on('end', () => { gutil.log('----------------- js_user task finished --------------------------') })
 });
 
+gulp.task('js_evaluation:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jseval_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_evaluation:clean'))
+        .on('end', () => { gutil.log('----------------- js_evaluation task finished --------------------------') })
+});
+
 gulp.task('js_vendor:clean', () => {
   return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))

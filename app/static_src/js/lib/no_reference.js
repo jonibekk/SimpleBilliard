@@ -33,6 +33,9 @@ $(function () {
     $(document).on("click", ".target-toggle", evTargetToggle);
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
 
+    //carousel
+    $('.carousel').carousel({interval: false});
+
     //マイページのゴール切替え
     $('#SwitchGoalOnMyPage').change(function () {
         var goal_id = $(this).val();

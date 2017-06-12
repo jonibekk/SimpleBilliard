@@ -20,6 +20,51 @@ $(function () {
             }
         );
     });
+
+    // 投稿フォーム submit 時
+    $(document).on('submit', '#PostDisplayForm', function (e) {
+        return checkUploadFileExpire('PostDisplayForm');
+    });
+
+    // リカバリコード再生成
+    $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
+        e.preventDefault();
+        var $form = $('#RegenerateRecoveryCodeForm');
+        $.ajax({
+            url: cake.url.regenerate_recovery_code,
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            data: $form.serialize()
+        })
+            .done(function (res) {
+                if (res.error) {
+                    new Noty({
+                        type: 'error',
+                        text: '<h4>'+cake.word.error+'</h4>'+res.msg,
+                    }).show();
+                    return;
+                }
+                else {
+                    var $list_items = $('#RecoveryCodeList').find('li');
+                    for (var i = 0; i < 10; i++) {
+                        $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
+                    }
+                    new Noty({
+                        type: 'success',
+                        text: '<h4>'+cake.word.success+'</h4>'+res.msg,
+                    }).show();
+                }
+
+
+            })
+            .fail(function () {
+                new Noty({
+                    type: 'error',
+                    text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
+                }).show();
+            });
+    });
 });
 
 /**

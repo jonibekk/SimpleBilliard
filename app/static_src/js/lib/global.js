@@ -7,6 +7,47 @@ Noty.overrideDefaults({
     progressBar : false,
 });
 
+// Sentry:js error tracking
+if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop')) {
+    Raven.config(
+        cake.sentry_dsn,
+        {
+            environment: cake.env_name
+        }
+    ).install();
+}
+
+$.ajaxSetup({
+    cache: false,
+    timeout: 10000 // 10 sec
+});
+
+if (typeof String.prototype.startsWith != 'function') {
+    // see below for better implementation!
+    String.prototype.startsWith = function (str) {
+        return this.indexOf(str) === 0;
+    };
+}
+
+require.config({
+    baseUrl: '/js/modules/'
+});
+
+// selectorの存在確認用
+jQuery.fn.exists = function () {
+    // TODO: Remove console log
+    console.log("gl_basic.js: jQuery.fn.exists");
+    return Boolean(this.length > 0);
+}
+
+// scrollbarの存在確認用
+jQuery.fn.hasScrollBar = function () {
+    // TODO: Remove console log
+    console.log("gl_basic.js: jQuery.fn.hasScrollBar");
+    return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
+}
+
+
 $(function () {
     // TODO: Remove console log
     console.log("LOADING: globals.js");
@@ -55,6 +96,26 @@ $(function () {
             }
         }
     });
+
+    // Androidアプリかiosアプリの場合のみfastClickを実行する。
+    // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
+    if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+        fastClick();
+    }
+
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+    if (typeof cake.request_params.after_click !== 'undefined') {
+        $("#" + cake.request_params.after_click).trigger('click');
+    }
+
+    $(".click-show").on("click", function () {
+            // TODO: Remove console log
+            console.log("globals.js: click");
+            $("#PostFormPicture").css("display", "block")
+        }
+    )
 
     setChangeWarningForAllStaticPage();
     warningCloseModal();

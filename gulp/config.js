@@ -22,6 +22,9 @@ const config = {
         ],
         user: [
             assets_dir + '/js/view/user/*.js',
+        ],
+        evaluation: [
+            assets_dir + '/js/view/evaluation/*.js',
         ]
     },
     src: [
@@ -41,6 +44,7 @@ const config = {
       goals_script_name: 'goalous_goal',
       team_script_name: 'goalous_team',
       user_script_name: 'goalous_user',
+      evaluation_script_name: 'goalous_evaluation',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [

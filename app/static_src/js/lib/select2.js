@@ -32,6 +32,11 @@ $(function () {
 
     $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
 
+    // HACK:To occur to_user_ids change event in react app
+    $(document).on('change', '.js-changeSelect2Member', function (e) {
+        $('.js-triggerUpdateToUserIds').trigger('click');
+    });
+
     initMemberSelect2();
     initCircleSelect2();
 });

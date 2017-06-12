@@ -38,6 +38,14 @@ gulp.task('js_user:concat', () => {
         .pipe(duration('js_user:concat'))
 });
 
+gulp.task('js_evaluation:concat', () => {
+    return gulp.src([...config.js.pages.evaluation])
+.pipe(plumber())
+    .pipe(concat(config.js.output.evaluation_script_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/jseval_cat'))
+    .pipe(duration('js_evaluation:concat'))
+});
+
 gulp.task('js:concat', () => {
   return gulp.src([...config.js.src, config.dest + '/js/*.js'])
     .pipe(plumber())
