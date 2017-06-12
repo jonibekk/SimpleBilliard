@@ -33,8 +33,6 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
     echo $this->Html->script('/js/react_message_app.min');
 }
 
-
-echo $this->Html->script('/js/ng_vendors.min');
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
 // Include page specific javascript file
