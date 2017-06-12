@@ -300,7 +300,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
                     <?php $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                     <?php $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
-                    <div class="col mt_5px p_5px">
+                    <div class="col feeds-post-goal-buttons">
                         <div class="col col-xxs-6 col-xs-4 mr_5px">
                             <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
                                class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= h($follow_opt['class']) ?>"

@@ -1510,6 +1510,13 @@ ul.example-indent {
     border-radius: 0;
 }
 
+.feeds-post-goal-buttons {
+    overflow: hidden;
+    clear: both;
+    margin-top: 5px;
+    padding: 5px;
+}
+
 .click-feed-read-more {
     color: #b36e6f;
     width: 100%;
