@@ -1001,7 +1001,7 @@ function getAjaxFormReplaceElm() {
                 // プレビュー用 HTML
                   .html(data.html)
                   // プレビュー削除ボタンを重ねて表示
-                  .append($('<a>').attr('href', '#')
+                  .prepend($('<a>').attr('href', '#')
                     .addClass('font_lightgray comment-ogp-close')
                     .append('<i class="fa fa-times"></i>')
                     .on('click', function (e) {
@@ -1307,7 +1307,7 @@ function evTargetToggleClick() {
                         $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
                         $editField.after($newOgp);
                         var $closeButton = $('<a>');
-                        $newOgp.after($closeButton);
+                        $newOgp.before($closeButton);
                         $closeButton.attr('href', '#')
                             .addClass('font_lightgray comment-ogp-close')
                             .append('<i class="fa fa-times"></i>')
@@ -1645,7 +1645,7 @@ $(function () {
     } else {
       $(".navbar").removeClass("mod-box-shadow");
     }
-    
+
   });
 });
 
@@ -4639,7 +4639,7 @@ function appendPostOgpInfo(data) {
   // プレビュー用 HTML
     .html(data.html)
     // プレビュー削除ボタンを重ねて表示
-    .append($('<a>').attr('href', '#')
+    .prepend($('<a>').attr('href', '#')
       .addClass('font_lightgray')
       .css({
         left: '91%',

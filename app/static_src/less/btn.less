@@ -185,7 +185,7 @@
   text-align: center;
   width: 100%;
   height: 26px;
-  margin: 5px 0px;
+  margin: 8px 0px;
   clear: both;
   opacity: 1;
   padding: 3px;
@@ -220,10 +220,9 @@
 }
 
 .feeds-post-btns-area {
-  height: 48px;
-  line-height: 48px;
   border-top: 1px solid @lightGray;
   font-weight: 0;
+  padding: 9px 0;
 }
 
 .feeds-post-btns-wrap-left {
@@ -239,7 +238,6 @@
 
 .feeds-post-btns {
   display: inline-block;
-  height: 48px;
   color: @subColor10;
   font-size: @fontSmall;
   text-decoration: none;
@@ -255,15 +253,25 @@
 .feeds-post-like-btn {
   .feeds-post-btns;
   font-weight: bold;
+  margin-right: 10px;
+
+  .fa {
+    font-size: 15px;
+  }
 }
 
 .feeds-post-comment-btn {
   .feeds-post-btns;
   font-weight: bold;
+
+  .fa {
+    font-size: 16px;
+  }
 }
 
 .feeds-post-btn-numbers-like {
   .feeds-post-btns;
+  margin-right: 10px;
 }
 
 .feeds-post-btn-numbers-read {

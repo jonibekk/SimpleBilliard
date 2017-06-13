@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-26 16:52+0900\n"
+"PO-Revision-Date: 2017-06-07 15:01+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2396,7 +2396,8 @@ msgid ""
 "evaluations or any period of time the works best for your company.Choose the "
 "months that start and end your first two terms."
 msgstr ""
-"個人評価や会社の決算などに紐づく期間をチームの期とします。最初の2つの期の開始と終了月を選択してください。"
+"個人評価や会社の決算などに紐づく期間をチームの期とします。最初の2つの期の開始"
+"と終了月を選択してください。"
 
 msgid "What is your goal ?"
 msgstr "あなたのゴールはなんですか？"
@@ -2776,6 +2777,18 @@ msgstr "新しいチームをつくる"
 
 msgid "Home"
 msgstr "ホーム"
+
+msgid "Goal"
+msgstr "ゴール"
+
+msgid "Team"
+msgstr "チーム"
+
+msgid "Circle"
+msgstr "サークル"
+
+msgid "Create a team"
+msgstr "チームを作成"
 
 msgid "No new message"
 msgstr "未読のメッセージはありません。"
@@ -3424,10 +3437,9 @@ msgstr ""
 msgid "What should we do after the campaign?"
 msgstr "無償期間（2017年夏まで）の後はどうなりますか？"
 
-msgid "There will appear some limit, but data will not be deleted."
-msgstr ""
-"機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除などせ"
-"ず引き続きご利用いただけます。"
+msgid ""
+"In order to continue using Goalous, you need to purchase a subscription plan."
+msgstr "引き続きご利用いただくには、有料プランのご契約が必要になります。"
 
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
@@ -4886,12 +4898,6 @@ msgstr "あなたのメールアドレス"
 
 msgid " "
 msgstr " "
-
-msgid "Please select the standard start month."
-msgstr "基準となる期の開始月を選択して下さい。"
-
-msgid "Create a team"
-msgstr "チームを作成"
 
 msgid "Create a group vision."
 msgstr "グループビジョンを作成してください"
