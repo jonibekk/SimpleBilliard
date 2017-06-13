@@ -21,7 +21,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
-    <div class="col col-xxs-12 pt_4px">
+    <div class="col col-xxs-12 pt_8px pb_8px">
         <a href="<?= $this->Html->url([
             'controller' => 'users',
             'action'     => 'view_goals',
@@ -39,7 +39,7 @@
         </a>
 
         <div class="comment-body">
-            <div class="col col-xxs-12 comment-text comment-user">
+            <div class="col comment-user">
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div
-                class="col col-xxs-12 <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
+                class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= nl2br($this->TextEx->autoLink($comment['body'])) ?></div>
 
             <?php

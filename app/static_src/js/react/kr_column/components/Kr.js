@@ -79,9 +79,10 @@ export default class Kr extends React.Component {
                   <div className="dashboard-krs-column-add-action">
                       <span>+</span>
                   </div>
-                  <p>Add Action</p>
+                  {/* TODO: If another language needed, have to move translation to cake_variables.ctp */}
+                  {cake.lang === 'jpn' ? <p>ｱｸｼｮﾝ<br />追加</p> : <p>Add Action</p>}
                 </a>
-              ) 
+              )
             })()}
           </div>
         </div>
