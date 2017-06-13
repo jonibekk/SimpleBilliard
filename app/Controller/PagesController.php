@@ -21,7 +21,6 @@ App::uses('AppController', 'Controller');
  */
 class PagesController extends AppController
 {
-
     /**
      * Displays a view
      *

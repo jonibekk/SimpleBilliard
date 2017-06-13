@@ -1,17 +1,90 @@
-import gulp from 'gulp'
-import runSequence from 'run-sequence'
-import config from '../config.js'
+import gulp from 'gulp';
+import runSequence from 'run-sequence';
+import config from '../config.js';
 import webpack from "webpack";
 import webpackProdConfig from "../webpack.config.js";
 import webpackDevConfig from "../webpack.dev.config.js";
 import gutil from 'gulp-util';
+
+gulp.task('jsbuild', done => {
+    return runSequence([
+        'js_home',
+        'js_goals',
+        'js_team',
+        'js_user',
+        'js_evaluation',
+        'js_app',
+        'js_vendor'], done)
+});
+
 gulp.task('build', done => {
   return runSequence(['js', 'css'], done)
-})
+});
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react'], done)
-})
+  return runSequence([
+      'js_home',
+      'js_goals',
+      'js_team',
+      'js_user',
+      'js_evaluation',
+      'js_app',
+      'js_vendor',
+      'js_prerender',
+      'angular_app',
+      'angular_vendor',
+      'react'], done)
+});
+
+// js home
+gulp.task('js_home', done => {
+  return runSequence(
+    'js_home:concat',
+    'js_home:uglify',
+    'js_home:clean',
+    done
+  );
+});
+
+// js home
+gulp.task('js_goals', done => {
+  return runSequence(
+    'js_goals:concat',
+    'js_goals:uglify',
+    'js_goals:clean',
+    done
+  );
+});
+
+// js team
+gulp.task('js_team', done => {
+    return runSequence(
+        'js_team:concat',
+        'js_team:uglify',
+        'js_team:clean',
+        done
+    );
+});
+
+// js user
+gulp.task('js_user', done => {
+    return runSequence(
+        'js_user:concat',
+        'js_user:uglify',
+        'js_user:clean',
+        done
+    );
+});
+
+// js user
+gulp.task('js_evaluation', done => {
+    return runSequence(
+        'js_evaluation:concat',
+        'js_evaluation:uglify',
+        'js_evaluation:clean',
+        done
+    );
+});
 
 // js app
 gulp.task('js_app', done => {
