@@ -39,10 +39,9 @@ if (isset($page_js_files) && !empty($page_js_files)) {
         echo $this->Html->script($script);
     }
 }
-echo $this->PageScript->getPageScript();
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
-
+echo $this->PageScript->getPageScript();
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->

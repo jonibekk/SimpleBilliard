@@ -14,7 +14,7 @@ const config = {
         ],
         goals: [
             assets_dir + '/js/lib/circle.js',
-            assets_dir + '/js/lib//views/goals/*.js',
+            assets_dir + '/js/view/goals/*.js',
         ],
         team: [
             assets_dir + '/js/view/teams/*.js',

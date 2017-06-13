@@ -3,6 +3,22 @@
  */
 
 "use strict";
+$(function () {
+    // TODO: Remove console log
+    console.log("LOADING: actions.js");
+
+    // TODO: temporary fix for releasing
+    //       should change js to less to manage action iamges size
+    setTimeout(function(){
+        Page.init();
+    }, 1000); //fallback in case images render after page load
+
+    $(window).resize(function () {
+        window.Page.action_resize(true);
+    });
+});
+
+
 
 // TODO:画像アップロード処理は依存が強すぎてgl_basic.jsに残したままなので、本ファイルに移行する
 var Page = {

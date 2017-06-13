@@ -11,16 +11,6 @@ $(function () {
 
     $(document).on("click", ".target-show", evTargetShow);
     $(document).on("click", ".click-this-remove", evRemoveThis);
-
-    // TODO: temporary fix for releasing
-    //       should change js to less to manage action iamges size
-    setTimeout(function(){
-        Page.init();
-    }, 1000); //fallback incase images render after page load
-
-    $(window).resize(function () {
-        window.Page.action_resize(true);
-    });
 });
 
 
