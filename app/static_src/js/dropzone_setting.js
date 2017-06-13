@@ -184,7 +184,7 @@ $(function () {
           }, 4000);
           $uploadFileForm.hide();
           new Noty({
-            type: 'error',
+            type: 'success',
             text: cake.message.validate.dropzone_cancel_upload,
           }).show();
           return;
