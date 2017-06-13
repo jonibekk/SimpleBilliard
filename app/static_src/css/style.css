@@ -1398,7 +1398,7 @@ ul.example-indent {
     position: absolute;
     top: -100%;
     bottom: -100%;
-    margin: auto;   
+    margin: auto;
     width: 100%;
 }
 
@@ -1508,6 +1508,13 @@ ul.example-indent {
     background: #f4edf2;
     border: 1px solid #ddd;
     border-radius: 0;
+}
+
+.feeds-post-goal-buttons {
+    overflow: hidden;
+    clear: both;
+    margin-top: 5px;
+    padding: 5px;
 }
 
 .click-feed-read-more {
