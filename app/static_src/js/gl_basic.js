@@ -1001,7 +1001,7 @@ function getAjaxFormReplaceElm() {
                 // プレビュー用 HTML
                   .html(data.html)
                   // プレビュー削除ボタンを重ねて表示
-                  .append($('<a>').attr('href', '#')
+                  .prepend($('<a>').attr('href', '#')
                     .addClass('font_lightgray comment-ogp-close')
                     .append('<i class="fa fa-times"></i>')
                     .on('click', function (e) {
@@ -1307,7 +1307,7 @@ function evTargetToggleClick() {
                         $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
                         $editField.after($newOgp);
                         var $closeButton = $('<a>');
-                        $newOgp.after($closeButton);
+                        $newOgp.before($closeButton);
                         $closeButton.attr('href', '#')
                             .addClass('font_lightgray comment-ogp-close')
                             .append('<i class="fa fa-times"></i>')
@@ -1645,7 +1645,7 @@ $(function () {
     } else {
       $(".navbar").removeClass("mod-box-shadow");
     }
-    
+
   });
 });
 
@@ -4060,14 +4060,14 @@ function setIntervalToGetNotifyCnt(sec) {
 
 function updateNotifyCnt() {
 
-  var url = cake.url.f + '/team_id:' + $('#SwitchTeam').val();
+  var url = cake.url.f + '/team_id:' + cake.data.team_id;
   $.ajax({
     type: 'GET',
     url: url,
     async: true,
     success: function (res) {
       if (res.error) {
-        location.reload();
+        // location.reload();
         return;
       }
       if (res != 0) {
@@ -4082,14 +4082,14 @@ function updateNotifyCnt() {
 
 function updateMessageNotifyCnt() {
 
-  var url = cake.url.af + '/team_id:' + $('#SwitchTeam').val();
+  var url = cake.url.af + '/team_id:' + cake.data.team_id;
   $.ajax({
     type: 'GET',
     url: url,
     async: true,
     success: function (res) {
       if (res.error) {
-        location.reload();
+        // location.reload();
         return;
       }
       setNotifyCntToMessageAndTitle(res);
@@ -4639,7 +4639,7 @@ function appendPostOgpInfo(data) {
   // プレビュー用 HTML
     .html(data.html)
     // プレビュー削除ボタンを重ねて表示
-    .append($('<a>').attr('href', '#')
+    .prepend($('<a>').attr('href', '#')
       .addClass('font_lightgray')
       .css({
         left: '91%',
