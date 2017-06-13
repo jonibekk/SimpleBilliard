@@ -223,7 +223,6 @@ define('CACHE_KEY_MY_KR_COUNT', 'my_kr_count');
 define('CACHE_KEY_IS_STARTED_EVALUATION', 'is_started_evaluation');
 define('CACHE_KEY_MY_ACTIONABLE_GOALS', 'my_goals_for_top_action');
 define('CACHE_KEY_BEFORE_CHANGE_TIMEZONE', 'before_change_timezone');
-define('CACHE_KEY_S3_FILE_PATH', 's3_file_path');
 
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');
