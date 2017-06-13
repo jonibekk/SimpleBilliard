@@ -9,23 +9,21 @@ const config = {
   js: {
     pages: {
         home: [
-            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/lib/circle.js',
             assets_dir + '/js/view/home/*.js',
         ],
         goals: [
-            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/lib/circle.js',
             assets_dir + '/js/lib//views/goals/*.js',
         ],
         team: [
-            assets_dir + '/js/view/team/*.js',
+            assets_dir + '/js/view/teams/*.js',
         ],
         user: [
-            assets_dir + '/js/view/user/*.js',
+            assets_dir + '/js/view/users/*.js',
         ],
         evaluation: [
-            assets_dir + '/js/view/evaluation/*.js',
+            assets_dir + '/js/view/evaluations/*.js',
         ]
     },
     src: [
