@@ -12,15 +12,6 @@ App::import('Service', 'EvaluationService');
  */
 class TeamsController extends AppController
 {
-    public function __construct($request = null, $response = null)
-    {
-        parent::__construct($request, $response);
-        $this->_addPageJavascriptFile('goalous_team.min');
-        $this->_addPageJavascriptFile('ng_vendors.min');
-        $this->_addPageJavascriptFile('ng_app.min');
-
-    }
-
     public function beforeFilter()
     {
         parent::beforeFilter();

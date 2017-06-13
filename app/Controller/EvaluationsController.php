@@ -12,12 +12,6 @@ App::import('Service', 'EvaluationService');
  */
 class EvaluationsController extends AppController
 {
-    public function __construct($request = null, $response = null)
-    {
-        parent::__construct($request, $response);
-        $this->_addPageJavascriptFile('goalous_evaluation.min');
-    }
-
     function beforeFilter()
     {
         parent::beforeFilter();

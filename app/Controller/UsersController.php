@@ -25,12 +25,6 @@ class UsersController extends AppController
         'TwoFa',
     ];
 
-    public function __construct($request = null, $response = null)
-    {
-        parent::__construct($request, $response);
-        $this->_addPageJavascriptFile('goalous_user.min');
-    }
-
     public function beforeFilter()
     {
         parent::beforeFilter();

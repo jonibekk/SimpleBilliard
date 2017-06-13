@@ -20,12 +20,6 @@ class GoalsController extends AppController
         'Security',
     ];
 
-    public function __construct($request = null, $response = null)
-    {
-        parent::__construct($request, $response);
-        $this->_addPageJavascriptFile('goalous_goal.min');
-    }
-
     public function beforeFilter()
     {
         parent::beforeFilter();

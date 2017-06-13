@@ -10,12 +10,6 @@ App::import('Service', 'PostService');
  */
 class PostsController extends AppController
 {
-    public function __construct($request = null, $response = null)
-    {
-        parent::__construct($request, $response);
-        $this->_addPageJavascriptFile('goalous_home.min');
-    }
-
     public function beforeFilter()
     {
         parent::beforeFilter();
