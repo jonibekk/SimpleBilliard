@@ -3,7 +3,7 @@ App::uses('AppHelper', 'View/Helper');
 
 /**
  * Helper class to return page specific scripts.
- * 
+ *
  * Class PageScriptHelper
  */
 class PageScriptHelper extends AppHelper
@@ -11,6 +11,9 @@ class PageScriptHelper extends AppHelper
     var $helpers = array('Html');
 
     private $scriptMap = [
+        // Scripts can be set for each action or
+        // a default for the whole controller
+        // Action scripts will take the preference.
         'pages' => [
             'display' => ['/js/goalous_home.min'],
             'default' => ['/js/goalous_home.min']
@@ -21,6 +24,8 @@ class PageScriptHelper extends AppHelper
         'goals' => [
             'default' => ['/js/goalous_goal.min']
         ],
+        // Notifications and posts uses the same base script
+        // as pages (goalous_home.min)
         'notifications' => [
             'default' => ['/js/goalous_home.min']
         ],
