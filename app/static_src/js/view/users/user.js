@@ -65,6 +65,35 @@ $(function () {
                 }).show();
             });
     });
+    $(document).on("click", '#ShowRecoveryCodeButton', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $modal_elm.remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            // ２段階認証設定後、自動で modal を開いた場合は背景クリックで閉じれないようにする
+            $modal_elm.modal({
+                backdrop: e.isTrigger ? 'static' : true
+            });
+        }).success(function () {
+            $('body').addClass('modal-open');
+        });
+    });
+
+    //Load term goal
+    $('#LoadTermGoal').change(function () {
+        var term_id = $(this).val();
+        if (term_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/term_id:" + term_id;
+        }
+        location.href = url;
+    });
 });
 
 /**

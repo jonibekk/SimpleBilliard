@@ -21,12 +21,6 @@ App::uses('AppController', 'Controller');
  */
 class PagesController extends AppController
 {
-    public function __construct($request = null, $response = null)
-    {
-        parent::__construct($request, $response);
-        $this->_addPageJavascriptFile('goalous_home.min');
-    }
-
     /**
      * Displays a view
      *

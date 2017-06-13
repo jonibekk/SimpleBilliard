@@ -225,130 +225,6 @@ $(function () {
 });
 
 
-
-$(document).ready(function () {
-    // TODO: Remove console log
-    console.log("gl_basic.js: $(document).ready");
-    var click_cnt = 0;
-
-    $('#HeaderDropdownNotify')
-        .on('shown.bs.dropdown', function () {
-            $("body").addClass('notify-dropdown-open');
-        })
-        .on('hidden.bs.dropdown', function () {
-            $('body').removeClass('notify-dropdown-open');
-        });
-});
-
-
-$(document).ready(function () {
-    // TODO: Remove console log
-    console.log("gl_basic.js: $(document).ready");
-
-    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        if ($this.hasClass('double_click')) {
-            return false;
-        }
-        $this.addClass('double_click');
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        var url = $(this).data('url');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url, function (data) {
-                $modal_elm.append(data);
-                $modal_elm.modal();
-                $modal_elm.find(".bt-switch").bootstrapSwitch({
-                    size: "small",
-                    onText: cake.word.b,
-                    offText: cake.word.c
-                })
-                // 参加/不参加 のスイッチ切り替えた時
-                // 即時データを更新する
-                    .on('switchChange.bootstrapSwitch', function (e, state) {
-                        var $checkbox = $(this);
-                        var $form = $('#CircleJoinForm');
-                        $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
-                        $form.find('input[name="data[Circle][0][circle_id]"]').val(sanitize($checkbox.attr('data-id')));
-
-                        // 秘密サークルの場合は確認ダイアログ表示
-                        if ($checkbox.attr('data-secret') == '1') {
-                            if (!confirm(cake.message.notice.leave_secret_circle)) {
-                                $checkbox.bootstrapSwitch('toggleState', true);
-                                return false;
-                            }
-                            $checkbox.bootstrapSwitch('toggleDisabled', true);
-                        }
-
-                        $.ajax({
-                            url: cake.url.join_circle,
-                            type: 'POST',
-                            dataType: 'json',
-                            processData: false,
-                            data: $form.serialize()
-                        })
-                            .done(function (res) {
-                                new Noty({
-                                    type: 'success',
-                                    text: '<h4>'+cake.word.success+'</h4>'+res.msg,
-                                }).show();
-                                // 秘密サークルの場合は一覧から消す
-                                if ($checkbox.attr('data-secret') == '1') {
-                                    setTimeout(function () {
-                                        $checkbox.closest('.circle-item-row').slideUp('slow');
-                                    }, 1000);
-                                }
-                                // データを更新した場合はモーダルを閉じた時に画面リロード
-                                $modal_elm.on('hidden.bs.modal', function () {
-                                    location.reload();
-                                });
-                            })
-                            .fail(function () {
-                                new Noty({
-                                    type: 'error',
-                                    text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
-                                }).show();
-                            });
-                    });
-            }).done(function () {
-                $('body').addClass('modal-open');
-                $this.removeClass('double_click');
-            });
-        }
-    });
-
-
-    $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
-        var $target = $(e.target);
-        switch ($target.attr('id')) {
-            case "CommonPostBody":
-                $('#CommonActionName').val($target.val()).trigger('autosize.resize');
-                autosize($('#CommonActionName'));
-                $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
-                autosize($('#CommonMessageBody'));
-                break;
-            case "CommonActionName":
-                $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
-                autosize($('#CommonPostBody'));
-                $('#CommonMessageBody').val($target.val()).trigger('autosize.resize');
-                autosize($('#CommonMessageBody'));
-                break;
-            case "CommonMessageBody":
-                $('#CommonPostBody').val($target.val()).trigger('autosize.resize');
-                autosize($('#CommonPostBody'));
-                $('#CommonActionName').val($target.val()).trigger('autosize.resize');
-                autosize($('#CommonActionName'));
-                break;
-        }
-    });
-});
-
-
 function evTargetRemove() {
     // TODO: Remove console log
     console.log("gl_basic.js: evTargetRemove");
@@ -415,10 +291,6 @@ function evToggleAjaxGet() {
 
 
 
-
-
-
-
 /**
  * 以下の処理を行う
  * 1. this 要素を remove() する
@@ -477,7 +349,6 @@ function evTargetEnabled() {
   $("#" + target_id).removeAttr("disabled");
   return true;
 }
-
 
 function evToggle() {
     // TODO: Remove console log
@@ -567,11 +438,6 @@ function evShow() {
   $(this).addClass('clicked');
 }
 
-
-
-
-
-
 function warningAction($obj) {
     // TODO: Remove console log
     console.log("gl_basic.js: warningAction");
@@ -622,9 +488,6 @@ function modalFormCommonBindEvent($modal_elm) {
     });
   });
 }
-
-
-
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
@@ -691,7 +554,6 @@ function evAjaxGoalKeyResultMore() {
  * @returns {boolean}
  */
 
-
 function evBasicReadMore(options) {
     // TODO: Remove console log
     console.log("gl_basic.js: evBasicReadMore");
@@ -757,9 +619,6 @@ function evBasicReadMore(options) {
   });
   return false;
 }
-
-
-
 
 function getModalFormFromUrl(e) {
     // TODO: Remove console log
@@ -833,39 +692,3 @@ function getModalFormFromUrl(e) {
     });
   }
 }
-
-
-// USER - ACCOUNT
-$(function () {
-    // TODO: Remove console log
-    console.log("LOADING: gl_basic.js USER");
-    $(document).on("click", '#ShowRecoveryCodeButton', function (e) {
-        e.preventDefault();
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $modal_elm.remove();
-        });
-        var url = $(this).attr('href');
-        $.get(url, function (data) {
-            $modal_elm.append(data);
-            // ２段階認証設定後、自動で modal を開いた場合は背景クリックで閉じれないようにする
-            $modal_elm.modal({
-                backdrop: e.isTrigger ? 'static' : true
-            });
-        }).success(function () {
-            $('body').addClass('modal-open');
-        });
-    });
-
-    //Load term goal
-    $('#LoadTermGoal').change(function () {
-        var term_id = $(this).val();
-        if (term_id == "") {
-            var url = $(this).attr('redirect-url');
-        }
-        else {
-            var url = $(this).attr('redirect-url') + "/term_id:" + term_id;
-        }
-        location.href = url;
-    });
-});

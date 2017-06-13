@@ -115,7 +115,84 @@ $(function () {
             console.log("globals.js: click");
             $("#PostFormPicture").css("display", "block")
         }
-    )
+    );
+
+    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        var url = $(this).data('url');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                $modal_elm.modal();
+                $modal_elm.find(".bt-switch").bootstrapSwitch({
+                    size: "small",
+                    onText: cake.word.b,
+                    offText: cake.word.c
+                })
+                // 参加/不参加 のスイッチ切り替えた時
+                // 即時データを更新する
+                    .on('switchChange.bootstrapSwitch', function (e, state) {
+                        var $checkbox = $(this);
+                        var $form = $('#CircleJoinForm');
+                        $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
+                        $form.find('input[name="data[Circle][0][circle_id]"]').val(sanitize($checkbox.attr('data-id')));
+
+                        // 秘密サークルの場合は確認ダイアログ表示
+                        if ($checkbox.attr('data-secret') == '1') {
+                            if (!confirm(cake.message.notice.leave_secret_circle)) {
+                                $checkbox.bootstrapSwitch('toggleState', true);
+                                return false;
+                            }
+                            $checkbox.bootstrapSwitch('toggleDisabled', true);
+                        }
+
+                        $.ajax({
+                            url: cake.url.join_circle,
+                            type: 'POST',
+                            dataType: 'json',
+                            processData: false,
+                            data: $form.serialize()
+                        })
+                            .done(function (res) {
+                                new Noty({
+                                    type: 'success',
+                                    text: '<h4>'+cake.word.success+'</h4>'+res.msg,
+                                }).show();
+                                // 秘密サークルの場合は一覧から消す
+                                if ($checkbox.attr('data-secret') == '1') {
+                                    setTimeout(function () {
+                                        $checkbox.closest('.circle-item-row').slideUp('slow');
+                                    }, 1000);
+                                }
+                                // データを更新した場合はモーダルを閉じた時に画面リロード
+                                $modal_elm.on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
+                            })
+                            .fail(function () {
+                                new Noty({
+                                    type: 'error',
+                                    text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.d,
+                                }).show();
+                            });
+                    });
+            }).done(function () {
+                $('body').addClass('modal-open');
+                $this.removeClass('double_click');
+            });
+        }
+    });
 
     setChangeWarningForAllStaticPage();
     warningCloseModal();

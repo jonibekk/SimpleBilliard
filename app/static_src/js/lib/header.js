@@ -140,11 +140,18 @@ $(function () {
         });
     });
 
+    $('#HeaderDropdownNotify')
+        .on('shown.bs.dropdown', function () {
+            $("body").addClass('notify-dropdown-open');
+        })
+        .on('hidden.bs.dropdown', function () {
+            $('body').removeClass('notify-dropdown-open');
+        });
+
     // ヘッダーの検索フォームの処理
     require(['search'], function (search) {
         search.headerSearch.setup();
     });
-
 });
 
 

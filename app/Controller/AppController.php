@@ -62,7 +62,8 @@ class AppController extends BaseController
         'Post',
         'GlHtml',
         'Lang',
-        'BackBtn'
+        'BackBtn',
+        'PageScript'
     ];
 
     private $merge_uses = [];
@@ -123,12 +124,6 @@ class AppController extends BaseController
     ];
 
     /**
-     * List of Javascript files to be linked on the page
-     * @var array
-     */
-    private $page_javascript_files = [];
-
-    /**
      * ブラウザ情報
      *
      * @var array
@@ -142,7 +137,6 @@ class AppController extends BaseController
         $this->uses = am($this->uses, $this->merge_uses);
         $this->components = am($this->components, $this->merge_components);
         $this->helpers = am($this->helpers, $this->merge_helpers);
-        $this->_addPageJavascriptFile('');
     }
 
     public function beforeFilter()
@@ -932,17 +926,5 @@ class AppController extends BaseController
             'controller' => 'users',
             'action'     => 'login'
         );
-    }
-
-    /**
-     * Set the page specific file to be included
-     * @param string $jsFile
-     */
-    protected function _addPageJavascriptFile(string $jsFile)
-    {
-        if (!empty($jsFile) && !in_array($jsFile, $this->page_javascript_files)) {
-            array_push($this->page_javascript_files, $jsFile);
-        }
-        $this->set('page_js_files', $this->page_javascript_files);
     }
 }
