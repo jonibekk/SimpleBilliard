@@ -242,7 +242,7 @@ msgstr "コラボしました。"
 msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
 
-msgid "Added a Key Result."
+msgid "Added a key result."
 msgstr "KRを追加しました。"
 
 msgid "Some error occurred. Please try again from the start."
@@ -257,19 +257,19 @@ msgstr "不正なリクエストです。"
 msgid "Changed leader."
 msgstr "リーダーを変更しました。"
 
-msgid "Completed a Key Result."
+msgid "Completed a key result."
 msgstr "KRを完了にしました。"
 
-msgid "Made a Key Result uncompleted."
+msgid "Made a key result uncompleted."
 msgstr "KRを未完了にしました。"
 
-msgid "No exist KR."
+msgid "No exist kr."
 msgstr "KRが存在しません。"
 
 msgid "You can't delete achieved KR."
 msgstr "完了済のKRは削除出来ません。"
 
-msgid "Deleted a Key Result."
+msgid "Deleted a key result."
 msgstr "KRを削除しました。"
 
 msgid "There is no action."
@@ -985,7 +985,7 @@ msgstr "新着順"
 msgid "Actions number"
 msgstr "アクションが多い順"
 
-msgid "Key Results number"
+msgid "Key results number"
 msgstr "出した成果(KR)が多い順"
 
 msgid "Followers number"
@@ -1000,7 +1000,7 @@ msgstr "進捗率が高い順"
 msgid "Please input end date after start date."
 msgstr "終了日は開始日以降を入力してください。"
 
-msgid "Please input goal end date later than Key Result end date"
+msgid "Please input goal end date later than key result end date"
 msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
 
 msgid "This goal doesn't exist."
@@ -1069,7 +1069,7 @@ msgstr "KRのデータがありません。"
 msgid "Failed to save KR."
 msgstr "KRの保存に失敗しました。"
 
-msgid "There is no Key Result."
+msgid "There is no key result."
 msgstr "KRが存在しません。"
 
 msgid "Label must be at least %d count."
@@ -1565,7 +1565,7 @@ msgstr "コーチ姓名"
 msgid "Number of goals"
 msgstr "ゴール数"
 
-msgid "Number of Key Results"
+msgid "Number of key results"
 msgstr "出した成果(KR)数"
 
 msgid "Number of actions"
@@ -2009,10 +2009,10 @@ msgstr "最多で"
 msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
-msgid "Select a Key Result (optional)"
+msgid "Select a key result (optional)"
 msgstr "KRを選択する(オプション)"
 
-msgid "No Key Result"
+msgid "No key result"
 msgstr "KRはありません"
 
 msgid "Add notified parties (optional)"
@@ -3245,7 +3245,7 @@ msgstr "例） Webサイトの構築をした。"
 msgid "Key Results"
 msgstr "KRs"
 
-msgid "Choose a Key Result to associate."
+msgid "Choose a key result to associate."
 msgstr "紐付けるKRを選択しよう。"
 
 msgid "Notified to"
@@ -3337,7 +3337,7 @@ msgstr "ゴールを達成しましたか？"
 msgid "Start date"
 msgstr "開始日"
 
-msgid "Whichever you choose, this KR will be finished."
+msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
 
 msgid "Achieve the goal"
