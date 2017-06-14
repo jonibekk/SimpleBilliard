@@ -139,7 +139,7 @@ jQuery.fn.hasScrollBar = function () {
   return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
-$(window).load(function () {
+window.addEventListener('load', function () {
   bindPostBalancedGallery($('.post_gallery'));
   bindCommentBalancedGallery($('.comment_gallery'));
   changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
@@ -3444,7 +3444,7 @@ function getModalFormFromUrl(e) {
     });
   }
 }
-$(window).load(function () {
+window.addEventListener('load', function () {
 
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
@@ -4228,7 +4228,7 @@ $(document).ready(function () {
 });
 
 // youtubeビデオ読み込み
-$(window).load(function () {
+window.addEventListener('load', function () {
   $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
 
