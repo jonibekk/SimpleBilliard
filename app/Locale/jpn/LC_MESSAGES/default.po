@@ -142,7 +142,7 @@ msgstr "サークルに参加しました。"
 msgid "One or more members must be assigned as circle administrators."
 msgstr "サークル管理者は最低ひとりは必須です。"
 
-msgid "An error occured while processing."
+msgid "An error occurred while processing."
 msgstr "処理中にエラーが発生しました。"
 
 msgid "Success"
@@ -242,8 +242,8 @@ msgstr "コラボしました。"
 msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
 
-msgid "Added a key result."
-msgstr "達成要素を追加しました。"
+msgid "Added a Key Result."
+msgstr "KRを追加しました。"
 
 msgid "Some error occurred. Please try again from the start."
 msgstr "エラーが発生しました。もう一度最初から登録してください。"
@@ -257,20 +257,20 @@ msgstr "不正なリクエストです。"
 msgid "Changed leader."
 msgstr "リーダーを変更しました。"
 
-msgid "Completed a key result."
-msgstr "成果を完了にしました。"
+msgid "Completed a Key Result."
+msgstr "KRを完了にしました。"
 
-msgid "Made a key result uncompleted."
-msgstr "成果を未完了にしました。"
+msgid "Made a Key Result uncompleted."
+msgstr "KRを未完了にしました。"
 
-msgid "No exist kr."
+msgid "No exist KR."
 msgstr "KRが存在しません。"
 
 msgid "You can't delete achieved KR."
-msgstr "完了済の成果は削除出来ません。"
+msgstr "完了済のKRは削除出来ません。"
 
-msgid "Deleted a key result."
-msgstr "成果を削除しました。"
+msgid "Deleted a Key Result."
+msgstr "KRを削除しました。"
 
 msgid "There is no action."
 msgstr "アクションが存在しません。"
@@ -410,7 +410,7 @@ msgstr "取材したい"
 msgid "Others"
 msgstr "その他"
 
-msgid "Ooops. Some problems occured."
+msgid "Ooops. Some problems occurred."
 msgstr "問題が発生したため、処理が完了しませんでした。"
 
 msgid "Goalous - Thanks for your contact."
@@ -985,8 +985,8 @@ msgstr "新着順"
 msgid "Actions number"
 msgstr "アクションが多い順"
 
-msgid "Key results number"
-msgstr "出した成果が多い順"
+msgid "Key Results number"
+msgstr "出した成果(KR)が多い順"
 
 msgid "Followers number"
 msgstr "フォロワーが多い順"
@@ -1000,7 +1000,7 @@ msgstr "進捗率が高い順"
 msgid "Please input end date after start date."
 msgstr "終了日は開始日以降を入力してください。"
 
-msgid "Please input goal end date later than key result end date"
+msgid "Please input goal end date later than Key Result end date"
 msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
 
 msgid "This goal doesn't exist."
@@ -1064,13 +1064,13 @@ msgid "Please input current value between start value and target value."
 msgstr "現在値は開始値と目標値の範囲内で入力してください。"
 
 msgid "There is no data of KR."
-msgstr "達成要素のデータがありません。"
+msgstr "KRのデータがありません。"
 
 msgid "Failed to save KR."
-msgstr "達成要素の保存に失敗しました。"
+msgstr "KRの保存に失敗しました。"
 
-msgid "There is no key result."
-msgstr "達成要素が存在しません。"
+msgid "There is no Key Result."
+msgstr "KRが存在しません。"
 
 msgid "Label must be at least %d count."
 msgstr "ラベル登録は最大%d個までです。"
@@ -1565,8 +1565,8 @@ msgstr "コーチ姓名"
 msgid "Number of goals"
 msgstr "ゴール数"
 
-msgid "Number of key results"
-msgstr "出した成果数"
+msgid "Number of Key Results"
+msgstr "出した成果(KR)数"
 
 msgid "Number of actions"
 msgstr "アクション数"
@@ -1827,7 +1827,7 @@ msgid "Incomplete"
 msgstr "未完了"
 
 msgid "You can't edit achieved KR."
-msgstr "完了済の成果は編集出来ません。"
+msgstr "完了済のKRは編集出来ません。"
 
 msgid "Completed this on %s."
 msgstr "%sに完了した"
@@ -2009,11 +2009,11 @@ msgstr "最多で"
 msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
-msgid "Select a key result (optional)"
-msgstr "達成要素を選択する(オプション)"
+msgid "Select a Key Result (optional)"
+msgstr "KRを選択する(オプション)"
 
-msgid "No key result"
-msgstr "達成要素はありません"
+msgid "No Key Result"
+msgstr "KRはありません"
 
 msgid "Add notified parties (optional)"
 msgstr "通知先を追加(オプション)"
@@ -2275,7 +2275,7 @@ msgid "Check your email!"
 msgstr "メールをチェックしよう！"
 
 msgid ""
-"We've sent a six-digit confirmation code to %s. Enter it below to confirm "
+"We've sent a six-digit confirmation code to %s. Enter it below to confirm "
 "your email address."
 msgstr ""
 "%sに6桁の確認コードを送信しました。Eメールを確認して、以下に入力してくださ"
@@ -2287,13 +2287,13 @@ msgstr "あなたの名前は？"
 msgid "Your name will only be displayed to your team on Goalous."
 msgstr "あなたの名前はGoalousのチーム内でのみ表示されます。"
 
-msgid "I want to receive news and updates by email from Goalous."
+msgid "I want to receive news and updates by email from Goalous."
 msgstr "Goalousからのメールによるニュースや更新情報などを受け取る。"
 
 msgid "Set your password"
 msgstr "パスワードを設定しよう"
 
-msgid "Create your password to login to Goalous."
+msgid "Create your password to login to Goalous."
 msgstr "Goalousにログインするパスワードを作成します。"
 
 msgid "Please don't close this window."
@@ -2304,7 +2304,7 @@ msgstr "チームに名前をつけよう"
 
 msgid ""
 "Create a name for your team. A team is a group that can share goals, actions "
-"and posts  with each other. People outside of the team can't access this "
+"and posts  with each other. People outside of the team can't access this "
 "information."
 msgstr ""
 "チームは、ゴールやアクション、投稿を共有できる人の集まりです。チーム外の人は"
@@ -2644,7 +2644,7 @@ msgid "All progress of this KR will be reset, is it really OK?"
 msgstr "このKRの全ての進捗がリセットされますが、本当によろしいですか？"
 
 msgid "Updated KR."
-msgstr "達成要素を更新しました。"
+msgstr "KRを更新しました。"
 
 msgid ""
 "If you change the goal term from the next term to this term, the goal and "
@@ -3186,7 +3186,7 @@ msgid "View options"
 msgstr "オプションを表示"
 
 msgid "Add Key Result"
-msgstr "達成要素を追加"
+msgstr "KRを追加"
 
 msgid "Edit goal"
 msgstr "ゴールを編集"
@@ -3213,22 +3213,22 @@ msgid "Edit Top Key Result"
 msgstr "トップKRを編集する"
 
 msgid "Edit Key Result"
-msgstr "達成要素を編集する"
+msgstr "KRを編集する"
 
 msgid "Uncompete Key Result"
-msgstr "達成要素を未完了にする"
+msgstr "KRを未完了にする"
 
 msgid "Complete Top Key Result"
 msgstr "トップKRを完了にする"
 
 msgid "Complete Key Result"
-msgstr "達成要素を完了にする"
+msgstr "KRを完了にする"
 
 msgid "Delete Key Result"
-msgstr "達成要素を削除する"
+msgstr "KRを削除する"
 
 msgid "Do you really want to delete this Key Result?"
-msgstr "本当にこの成果を削除しますか？"
+msgstr "本当にこのKRを削除しますか？"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -3243,10 +3243,10 @@ msgid "eg. I completed making the web site."
 msgstr "例） Webサイトの構築をした。"
 
 msgid "Key Results"
-msgstr "達成要素"
+msgstr "KRs"
 
-msgid "Choose a key result to associate."
-msgstr "紐付ける成果を選択しよう。"
+msgid "Choose a Key Result to associate."
+msgstr "紐付けるKRを選択しよう。"
 
 msgid "Notified to"
 msgstr "通知先"
@@ -3276,7 +3276,7 @@ msgid "(Today)"
 msgstr "（本日）"
 
 msgid "Weight of Key Result for the Goal"
-msgstr "ゴールにとってこの成果の重要度"
+msgstr "ゴールにとってこのKRの重要度"
 
 msgid "Let's share the actions that you've done today!"
 msgstr "今日やったアクションを共有しよう！"
@@ -3291,10 +3291,10 @@ msgid "Update Top Key Result"
 msgstr "トップKRを更新"
 
 msgid "Update Key Result"
-msgstr "達成要素を更新"
+msgstr "KRを更新"
 
 msgid "KR name"
-msgstr "達成要素名"
+msgstr "KR名"
 
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
@@ -3337,8 +3337,8 @@ msgstr "ゴールを達成しましたか？"
 msgid "Start date"
 msgstr "開始日"
 
-msgid "Whichever you choose, this kr will be finished."
-msgstr "※どちらを選択しても、選択中の成果は「完了」となります。"
+msgid "Whichever you choose, this KR will be finished."
+msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
 
 msgid "Achieve the goal"
 msgstr "ゴール達成"
@@ -4385,7 +4385,7 @@ msgid "Goal progress rate"
 msgstr "ゴール進捗率"
 
 msgid "There is no KR."
-msgstr "達成要素は登録されていません"
+msgstr "KRは登録されていません"
 
 msgid "Collaborating"
 msgstr "コラボり中"
@@ -4757,7 +4757,7 @@ msgid ""
 "から始まります。"
 msgstr ""
 
-msgid "Make results by coorporation."
+msgid "Make results by cooperation."
 msgstr "協力による成果が出る"
 
 msgid ""
