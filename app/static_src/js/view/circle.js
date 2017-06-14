@@ -8,7 +8,7 @@ $(document).ready(function() {
 });
 
 // サークル投稿リアルタイム通知
-$(window).load(function () {
+window.addEventListener("load", function(){
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
   pusher.connection.bind('connected', function () {
