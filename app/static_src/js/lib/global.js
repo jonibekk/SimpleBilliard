@@ -250,6 +250,7 @@ function sanitize(string) {
 function checkUploadFileExpire(formID) {
     // TODO: Remove console log
     console.log("global.js: checkUploadFileExpire");
+    
     var $form = $('#' + formID);
 
     var res = true;
@@ -278,10 +279,14 @@ function checkUploadFileExpire(formID) {
         }
     });
     if (!res) {
-        new Noty({
+        new PNotify({
             type: 'error',
-            text: '<h4>'+cake.word.error+'</h4>'+cake.message.validate.dropzone_uploaded_file_expired,
-        }).show();
+            title: cake.word.error,
+            text: cake.message.validate.dropzone_uploaded_file_expired,
+            icon: "fa fa-check-circle",
+            delay: 6000,
+            mouse_reset: false
+        });
     }
     return res;
 }

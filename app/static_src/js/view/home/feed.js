@@ -93,8 +93,6 @@ var autoload_more = false;
 var feed_loading_now = false;
 var do_reload_header_bellList = false;
 function evFeedMoreView(options) {
-    // TODO: Remove console log
-    console.log("feed.js: evFeedMoreView");
     var opt = $.extend({
         recursive: false,
         loader_id: null
@@ -204,7 +202,7 @@ function evFeedMoreView(options) {
                         if (data.start && data.start > oldest_post_time) {
                             setTimeout(function () {
                                 feed_loading_now = false;
-                                evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
+                                evFeedMoreView.call($obj[0], { recursive: true, loader_id: '__feed_loader' });
                             }, 200);
                             return;
                         }
@@ -361,7 +359,6 @@ function showMore(obj) {
             hideText: hideText
         });
     }
-    return false;
 }
 
 /**

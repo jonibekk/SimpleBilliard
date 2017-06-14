@@ -500,26 +500,27 @@ function evAjaxGoalFollowerMore() {
 
 // ゴールのメンバー一覧を取得
 function evAjaxGoalMemberMore() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evAjaxGoalMemberMore");
+  // TODO: Remove console log
+  console.log("gl_basic.js: evAjaxGoalMemberMore");
   var $obj = $(this);
   $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
   return evBasicReadMore.call(this);
 }
 
+
 // ゴールのキーリザルト一覧を取得
 function evAjaxGoalKeyResultMore() {
     // TODO: Remove console log
     console.log("gl_basic.js: evAjaxGoalKeyResultMore");
-  var $obj = $(this);
-  var kr_can_edit = $obj.attr('kr-can-edit');
-  var goal_id = $obj.attr('goal-id');
-  $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
-  return evBasicReadMore.call(this, {
-    afterSuccess: function ($content) {
-      imageLazyOn($content);
-    }
-  });
+    var $obj = $(this);
+    var kr_can_edit = $obj.attr('kr-can-edit');
+    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
+    return evBasicReadMore.call(this, {
+      afterSuccess: function ($content) {
+        imageLazyOn($content);
+      }
+    });
 }
 
 /**
@@ -557,72 +558,72 @@ function evAjaxGoalKeyResultMore() {
 function evBasicReadMore(options) {
     // TODO: Remove console log
     console.log("gl_basic.js: evBasicReadMore");
-  $.extend({
-    afterSuccess: function ($content) {
-    }
-  }, options);
-
-  var $obj = $(this);
-  var ajax_url = $obj.attr('ajax-url');
-  var next_page_num = sanitize($obj.attr('next-page-num'));
-  var $list_container = $($obj.attr('list-container'));
-
-  // 次ページのURL
-  ajax_url += '/page:' + next_page_num;
-
-  // さらに読み込むリンク無効化
-  $obj.attr('disabled', 'disabled');
-
-  // ローダー表示
-  var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-  $obj.after($loader_html);
-
-  $.ajax({
-    type: 'GET',
-    url: ajax_url,
-    async: true,
-    dataType: 'json',
-    success: function (data) {
-      if (!$.isEmptyObject(data.html)) {
-        var $content = $(data.html);
-        $content.fadeOut();
-        $list_container.append($content);
-
-        showMore($content);
-        $content.fadeIn();
-
-        // ページ番号インクリメント
-        next_page_num++;
-        $obj.attr('next-page-num', next_page_num);
-
-        // ローダーを削除
-        $loader_html.remove();
-
-        // リンクを有効化
-        $obj.removeAttr('disabled');
-
-        options.afterSuccess($content);
+    $.extend({
+      afterSuccess: function ($content) {
       }
+    }, options);
 
-      // 取得したデータ件数が、１ページの表示件数未満だった場合
-      if (data.count < data.page_item_num) {
-        // ローダーを削除
-        $loader_html.remove();
+    var $obj = $(this);
+    var ajax_url = $obj.attr('ajax-url');
+    var next_page_num = sanitize($obj.attr('next-page-num'));
+    var $list_container = $($obj.attr('list-container'));
 
-        // 「さらに読みこむ」表示をやめる
-        $obj.remove();
+    // 次ページのURL
+    ajax_url += '/page:' + next_page_num;
+
+    // さらに読み込むリンク無効化
+    $obj.attr('disabled', 'disabled');
+
+    // ローダー表示
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    $obj.after($loader_html);
+
+    $.ajax({
+      type: 'GET',
+      url: ajax_url,
+      async: true,
+      dataType: 'json',
+      success: function (data) {
+        if (!$.isEmptyObject(data.html)) {
+          var $content = $(data.html);
+          $content.fadeOut();
+          $list_container.append($content);
+
+          showMore($content);
+          $content.fadeIn();
+
+          // ページ番号インクリメント
+          next_page_num++;
+          $obj.attr('next-page-num', next_page_num);
+
+          // ローダーを削除
+          $loader_html.remove();
+
+          // リンクを有効化
+          $obj.removeAttr('disabled');
+
+          options.afterSuccess($content);
+        }
+
+        // 取得したデータ件数が、１ページの表示件数未満だった場合
+        if (data.count < data.page_item_num) {
+          // ローダーを削除
+          $loader_html.remove();
+
+          // 「さらに読みこむ」表示をやめる
+          $obj.remove();
+        }
+        autoload_more = false;
+      },
+      error: function () {
       }
-      autoload_more = false;
-    },
-    error: function () {
-    }
-  });
-  return false;
+    });
+    return false;
 }
 
 function getModalFormFromUrl(e) {
     // TODO: Remove console log
-    console.log("gl_basic.js: getModalFormFromUrl");
+  console.log("gl_basic.js: getModalFormFromUrl");
   e.preventDefault();
   var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
   modalFormCommonBindEvent($modal_elm);

@@ -80,19 +80,20 @@ $(function () {
     });
 
     //SubHeaderMenu
+    
     var showNavFlag = false;
     var subNavbar = $("#SubHeaderMenu");
     $(window).scroll(function () {
         if ($(this).scrollTop() > 1) {
             if (showNavFlag == false) {
                 showNavFlag = true;
-                subNavbar.stop().animate({"top": "-60"}, 800);
+                subNavbar.stop().animate({ "top": "-60" }, 800);
             }
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
                 var scroll_offset = 0;
-                subNavbar.stop().animate({"top": scroll_offset}, 400);
+                subNavbar.stop().animate({ "top": scroll_offset }, 400);
             }
         }
     });

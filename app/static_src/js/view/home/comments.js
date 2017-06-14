@@ -34,6 +34,7 @@ $(function () {
 function getAjaxFormReplaceElm() {
     // TODO: Remove console log
     console.log("comments.js: getAjaxFormReplaceElm");
+    
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
     attrUndefinedCheck(this, 'tmp-target-height');
@@ -130,10 +131,10 @@ function getAjaxFormReplaceElm() {
                                 var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
                                 var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
                                 $siteInfo
-                                // プレビュー用 HTML
+                                    // プレビュー用 HTML
                                     .html(data.html)
                                     // プレビュー削除ボタンを重ねて表示
-                                    .append($('<a>').attr('href', '#')
+                                    .prepend($('<a>').attr('href', '#')
                                         .addClass('font_lightgray comment-ogp-close')
                                         .append('<i class="fa fa-times"></i>')
                                         .on('click', function (e) {
@@ -144,8 +145,8 @@ function getAjaxFormReplaceElm() {
                                         }))
                                     // プレビュー削除ボタンの表示スペースを作る
                                     .find('.site-info').css({
-                                    "padding-right": "30px"
-                                });
+                                        "padding-right": "30px"
+                                    });
 
                                 // hidden に URL 追加
                                 $siteInfoUrl.val(data.url);
@@ -182,7 +183,6 @@ function getAjaxFormReplaceElm() {
             }
         }
     });
-    return false;
 }
 
 /**
@@ -193,6 +193,7 @@ function getAjaxFormReplaceElm() {
 function addComment(e) {
     // TODO: Remove console log
     console.log("comments.js: addComment");
+
     e.preventDefault();
 
     attrUndefinedCheck(e.target, 'error-msg-id');
@@ -280,7 +281,7 @@ function addComment(e) {
         $loader_html.remove();
         $submit.removeAttr('disabled');
     });
-    return false;
+
 }
 
 /**
@@ -751,6 +752,7 @@ function evCommentOldView() {
 function evTargetToggleClick() {
     // TODO: Remove console log
     console.log("comments.js: evTargetToggleClick");
+
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
 
@@ -762,7 +764,7 @@ function evTargetToggleClick() {
         var $commentBox = $('#' + $obj.attr("hidden-target-id"));
         $commentBox.toggle();
         // Hide OGP box
-        var $ogpBox = $('#CommentOgpBox_'+comment_id);
+        var $ogpBox = $('#CommentOgpBox_' + comment_id);
         if ($ogpBox.length > 0) {
             $ogpBox.toggle();
         }
@@ -801,7 +803,7 @@ function evTargetToggleClick() {
                             e.stopPropagation();
                             $ogp.remove();
                             $btnClose.remove();
-                            var $submitButton = $('#CommentEditSubmit_'+comment_id);
+                            var $submitButton = $('#CommentEditSubmit_' + comment_id);
                             if ($submitButton.length > 0) {
                                 $submitButton.removeAttr("disabled");
                             }
@@ -847,7 +849,7 @@ function evTargetToggleClick() {
                                         $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
                                         $editField.after($newOgp);
                                         var $closeButton = $('<a>');
-                                        $newOgp.after($closeButton);
+                                        $newOgp.before($closeButton);
                                         $closeButton.attr('href', '#')
                                             .addClass('font_lightgray comment-ogp-close')
                                             .append('<i class="fa fa-times"></i>')
@@ -889,6 +891,7 @@ function evTargetToggleClick() {
             }
         });
     }
+
     $("form#" + target_id).bootstrapValidator();
     $("#" + target_id).find('.custom-radio-check').customRadioCheck();
 

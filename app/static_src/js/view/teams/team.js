@@ -29,6 +29,7 @@ $(function () {
 function uploadCsvFileByForm(e) {
     // TODO: Remove console log
     console.log("team.js: uploadCsvFileByForm");
+
     e.preventDefault();
 
     attrUndefinedCheck(this, 'loader-id');
@@ -57,27 +58,24 @@ function uploadCsvFileByForm(e) {
         contentType: false,
         data: new FormData(this),
         timeout: 600000 //10min
-    })
-        .done(function (data) {
-            // 通信が成功したときの処理
-            $result_msg
-                .children('.alert').addClass(data.css)
-                .children('.alert-heading').text(data.title);
-            //noinspection JSUnresolvedVariable
-            $result_msg.find('.alert-msg').text(data.msg);
-            $submit.removeAttr('disabled');
-        })
-        .fail(function (data) {
-            // 通信が失敗したときの処理
-            $result_msg
-                .children('.alert').addClass('alert-danger')
-                .children('.alert-heading').text('Connection Error');
-            //noinspection JSUnresolvedVariable
-            $result_msg.find('.alert-msg').empty();
-        })
-        .always(function (data) {
-            // 通信が完了したとき
-            $result_msg.removeClass('none');
-            $loader.addClass('none');
-        });
+    }).done(function (data) {
+        // 通信が成功したときの処理
+        $result_msg
+            .children('.alert').addClass(data.css)
+            .children('.alert-heading').text(data.title);
+        //noinspection JSUnresolvedVariable
+        $result_msg.find('.alert-msg').text(data.msg);
+        $submit.removeAttr('disabled');
+    }).fail(function (data) {
+        // 通信が失敗したときの処理
+        $result_msg
+            .children('.alert').addClass('alert-danger')
+            .children('.alert-heading').text('Connection Error');
+        //noinspection JSUnresolvedVariable
+        $result_msg.find('.alert-msg').empty();
+    }).always(function (data) {
+        // 通信が完了したとき
+        $result_msg.removeClass('none');
+        $loader.addClass('none');
+    });
 }

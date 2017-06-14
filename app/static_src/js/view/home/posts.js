@@ -162,7 +162,7 @@ function appendPostOgpInfo(data) {
     // プレビュー用 HTML
         .html(data.html)
         // プレビュー削除ボタンを重ねて表示
-        .append($('<a>').attr('href', '#')
+        .prepend($('<a>').attr('href', '#')
             .addClass('font_lightgray')
             .css({
                 left: '91%',
