@@ -60,7 +60,7 @@ class EvaluationsController extends AppController
                 }
             }
         } catch (RuntimeException $e) {
-            $this->Noty->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         // 評価期間選択用ラベル取得
@@ -163,7 +163,7 @@ class EvaluationsController extends AppController
 
             $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
         } catch (RuntimeException $e) {
-            $this->Noty->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
 
@@ -221,7 +221,7 @@ class EvaluationsController extends AppController
             if ($status === Evaluation::TYPE_STATUS_DONE) {
                 $this->Evaluation->add($this->request->data, Evaluation::TYPE_STATUS_DRAFT);
             }
-            $this->Noty->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
 
@@ -257,7 +257,7 @@ class EvaluationsController extends AppController
             }
             $this->Mixpanel->trackEvaluation($mixpanel_member_type);
         }
-        $this->Noty->outSuccess($savedMsg);
+        $this->Notification->outSuccess($savedMsg);
         return $this->redirect($this->referer());
     }
 

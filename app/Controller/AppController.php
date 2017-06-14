@@ -43,7 +43,7 @@ class AppController extends BaseController
         'Paginator',
         'Lang',
         'Cookie',
-        'Noty',
+        'Notification',
         'Ogp',
         'Csv',
         'Flash',
@@ -201,7 +201,7 @@ class AppController extends BaseController
                     if ($this->Auth->user('default_team_id') == $this->current_team_id) {
                         $this->User->updateDefaultTeam(null, true, $login_uid);
                     }
-                    $this->Noty->outError(__("Logged out because the team you logged in is deleted."));
+                    $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
                     $this->Auth->logout();
                     return;
                 }
@@ -591,7 +591,7 @@ class AppController extends BaseController
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
             if (!array_key_exists($request_team_id, $team_list)) {
                 //所属しているチームでは無い場合はエラー表示でtopにリダイレクト
-                $this->Noty->outError(__("You don't have access right to this team."));
+                $this->Notification->outError(__("You don't have access right to this team."));
                 $this->redirect('/');
             } else {
                 //チームを切り替え
@@ -838,7 +838,7 @@ class AppController extends BaseController
         try {
             $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Noty->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
             $set_team_id = !empty($team_list) ? key($team_list) : null;
             $this->Session->write('current_team_id', $set_team_id);

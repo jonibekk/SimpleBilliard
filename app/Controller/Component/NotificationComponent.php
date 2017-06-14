@@ -1,15 +1,15 @@
 <?php
 
 /**
- * JqueryプラグインのNotyを使ってflashメッセージを表示する
- * Class NotyComponent
+ * JqueryプラグインのNotificationを使ってflashメッセージを表示する
+ * Class NotificationComponent
  *
  * @property SessionComponent $Session
  */
-class NotyComponent extends Component
+class NotificationComponent extends Component
 {
 
-    public $name = "Noty";
+    public $name = "Notification";
 
     /**
      * @var AppController
