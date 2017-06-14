@@ -87,7 +87,7 @@ if (!isset($top_lang)) {
                                         'action'     => 'contact',
                                         'lang'       => $top_lang,
                                         3
-                                    ]) ?>"><?= __('Contact for cooporation') ?></a>
+                                    ]) ?>"><?= __('Contact for cooperation') ?></a>
                             </p>
                         </div>
                     </div>
