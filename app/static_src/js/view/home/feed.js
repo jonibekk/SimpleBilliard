@@ -4,62 +4,85 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: feed.js");
-    // Adjust size for single image post
-    changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
-    // Adjust size for multiple images post
-    bindPostBalancedGallery($('.post_gallery'));
+
+    // お知らせ一覧ページの次のページ読込みボタン
+    $(document).on("click", ".click-notify-read-more-page", function (e) {
+        // TODO: Remove console log
+        console.log("Click: feed.js");
+        e.preventDefault();
+        e.stopPropagation();
+        var $this = $(this);
+        var currentScrollTop = $this.scrollTop();
+        evNotifyMoreView.call(this, e, {
+            locationType: "page"
+        });
+    });
+
+    // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
+    $(document).on("click", ".click-notify-read-more-dropdown", function (e) {
+        // TODO: Remove console log
+        console.log("Click: feed.js");
+        e.preventDefault();
+        e.stopPropagation();
+        evNotifyMoreView.call(this, e, {
+            locationType: "dropdown",
+            showLoader: function ($loader_html) {
+                $('#bell-dropdown').append($('<div>').append($loader_html).css({
+                    textAlign: 'center',
+                }));
+
+            },
+            hideLoader: function ($loader_html) {
+                $loader_html.remove();
+            }
+        });
+    });
+    $(document).on("click", ".click-feed-read-more", evFeedMoreView);
+    $(document).on("click", ".btn-back-notifications", evNotifications);
+
+    // Like button
+    $(document).on("click", ".click-like", evLike);
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
+            if (!autoload_more) {
+                autoload_more = true;
+
+                if (network_reachable) {
+                    var $FeedMoreReadLink = $('#FeedMoreReadLink');
+                    var $GoalPageFollowerMoreLink = $('#GoalPageFollowerMoreLink');
+                    var $GoalPageMemberMoreLink = $('#GoalPageMemberMoreLink');
+                    var $GoalPageKeyResultMoreLink = $('#GoalPageKeyResultMoreLink');
+
+                    if ($FeedMoreReadLink.is(':visible')) {
+                        $FeedMoreReadLink.trigger('click');
+                    }
+                    if ($GoalPageFollowerMoreLink.is(':visible')) {
+                        $GoalPageFollowerMoreLink.trigger('click');
+                    }
+                    if ($GoalPageMemberMoreLink.is(':visible')) {
+                        $GoalPageMemberMoreLink.trigger('click');
+                    }
+                    if ($GoalPageKeyResultMoreLink.is(':visible')) {
+                        $GoalPageKeyResultMoreLink.trigger('click');
+                    }
+                } else {
+                    autoload_more = false;
+                    return false;
+                }
+            }
+        }
+    });
+
+    if (cake.data.j == "0") {
+        // TODO: Remove console log
+        console.log("feed.js: cake.data.j");
+        $('#FeedMoreReadLink').trigger('click');
+    }
+    showMore();
 });
-
-/**
- * Display multiple images post as gallery grid
- * @param $obj
- */
-function bindPostBalancedGallery($obj) {
-    console.log("feed.js: bindPostBalancedGallery");
-    $obj.removeClass('none');
-    $obj.BalancedGallery({
-        autoResize: false,                   // re-partition and resize the images when the window size changes
-        //background: '#DDD',                   // the css properties of the gallery's containing element
-        idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
-        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
-        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-        padding: 1,                         // pixels between images
-        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
-        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
-        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
-    });
-
-};
-
-/**
- * Adjust the size when there is only one image on the post
- * @param $obj
- */
-function changeSizeFeedImageOnlyOne($obj) {
-    console.log("feed.js: changeSizeFeedImageOnlyOne");
-    $obj.each(function (i, v) {
-        var $elm = $(v);
-        var $img = $elm.find('img');
-        var is_oblong = $img.width() > $img.height();
-        var is_near_square = Math.abs($img.width() - $img.height()) <= 5;
-
-        // 横長の画像か、ほぼ正方形に近い画像の場合はそのまま表示
-        if (is_oblong || is_near_square) {
-            $elm.css('height', $img.height());
-            $img.parent().css('height', $img.height());
-        }
-        // 縦長の画像は、4:3 の比率にする
-        else {
-            var expect_parent_height = $img.width() * 0.75;
-
-            $elm.css('height', expect_parent_height);
-            $img.parent().css('height', expect_parent_height);
-        }
-    });
-    return false;
-}
 
 /**
  * Show more posts as user scroll the feed
@@ -70,6 +93,7 @@ var autoload_more = false;
 var feed_loading_now = false;
 var do_reload_header_bellList = false;
 function evFeedMoreView(options) {
+    // TODO: Remove console log
     console.log("feed.js: evFeedMoreView");
     var opt = $.extend({
         recursive: false,
@@ -221,6 +245,7 @@ function evFeedMoreView(options) {
  * @param obj
  */
 function showMore(obj) {
+    // TODO: Remove console log
     console.log("feed.js: showMore");
     obj = obj || null;
     var showText = '<i class="fa fa-angle-double-down mr_5px"></i>' + cake.message.info.e;
@@ -336,5 +361,141 @@ function showMore(obj) {
             hideText: hideText
         });
     }
+    return false;
+}
+
+/**
+ * お知らせ一覧のページング処理
+ *
+ * @param e
+ * @param params
+ *          locationType: string  (*必須) 呼び出し元を表す文字列 'page' | 'dropdown'
+ *          showLoader: function($loading_html)  ローディング画像の表示処理を行うコールバック関数
+ *          hideLoader: function($loading_html)  ローディング画像の削除処理を行うコールバック関数
+ * @returns {boolean}
+ */
+function evNotifyMoreView(e, params) {
+    // TODO: Remove console log
+    console.log("feed.js: evNotifyMoreView");
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var oldest_score_id = $("ul.notify-" + params.locationType + "-cards").children("li.notify-card-list:last").attr("data-score");
+    var get_url = $obj.attr('get-url');
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    if (params.showLoader) {
+        params.showLoader.call(this, $loader_html);
+    }
+    else {
+        $obj.after($loader_html);
+    }
+
+    //url生成
+    var url = get_url + '/' + String(oldest_score_id) + '/' + params.locationType;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            autoload_more = false;
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $notify = $(data.html);
+                //一旦非表示
+                $notify.hide();
+                $(".notify-" + params.locationType + "-cards").append($notify);
+                //html表示
+                $notify.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
+                //ローダーを削除
+                if (params.hideLoader) {
+                    params.hideLoader.call($obj.get(0), $loader_html);
+                }
+                else {
+                    $loader_html.remove();
+                }
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                //画像をレイジーロード
+                imageLazyOn();
+                if (parseInt(data.item_cnt) < cake.new_notify_cnt) {
+                    //ローダーを削除
+                    $loader_html.remove();
+                    //もっと読む表示をやめる
+                    $(".feed-read-more").remove();
+                }
+
+            } else {
+                //ローダーを削除
+                $loader_html.remove();
+                //もっと読む表示をやめる
+                $(".feed-read-more").remove();
+            }
+        },
+        error: function () {
+            //ローダーを削除
+            $loader_html.remove();
+            $obj.removeAttr('disabled');
+            $("#ShowMoreNoData").hide();
+        }
+    });
+    return false;
+}
+
+function evLike() {
+    // TODO: Remove console log
+    console.log("feed.js: evLike");
+    attrUndefinedCheck(this, 'like_count_id');
+    attrUndefinedCheck(this, 'model_id');
+    attrUndefinedCheck(this, 'like_type');
+
+    var $obj = $(this);
+    var like_count_id = $obj.attr('like_count_id');
+    var $like_count_text = $("#" + like_count_id);
+
+    var like_type = $obj.attr('like_type');
+    var url = null;
+    var model_id = $obj.attr('model_id');
+    $obj.toggleClass("liked");
+
+    // ajax の結果を待たずに表示されているいいね数を変更する
+    // ajax の結果が返ってきたら正しい数字で上書きされる
+    var currentCount = parseInt($like_count_text.text(), 10);
+    if ($obj.hasClass("liked")) {
+        $like_count_text.text(currentCount + 1);
+    }
+    else {
+        $like_count_text.text(currentCount - 1);
+    }
+
+    if (like_type == "post") {
+        url = cake.url.d + model_id;
+    }
+    else {
+        url = cake.url.e + model_id;
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                alert(cake.message.notice.d);
+            }
+            else {
+                $like_count_text.text(data.count);
+            }
+        },
+        error: function () {
+            return false;
+        }
+    });
     return false;
 }

@@ -4,17 +4,35 @@
 "use strict";
 
 $(function () {
+    // TODO: Remove console log
     console.log("LOADING: comments.js");
+
+    require.config({
+        baseUrl: '/js/modules/'
+    });
+
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
+    $(document).on("click", ".click-comment-new", evCommentLatestView);
     $(document).on("click", ".js-click-comment-delete", evCommentDelete);
     $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
     $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
+
+    $(document).on("click", ".notify-click-target", evNotifyPost);
+    $(document).on("click", ".click-comment-all", evCommentOldView);
+    $(document).on("click", ".target-toggle-click", evTargetToggleClick);
+    bindCommentBalancedGallery($('.comment_gallery'));
+
+    // コメント
+    bindCtrlEnterAction('.comment-form', function (e) {
+        $(this).find('.comment-submit-button').trigger('click');
+    });
 });
 
 /**
  * Show form and submit button when user click to add new comment
  */
 function getAjaxFormReplaceElm() {
+    // TODO: Remove console log
     console.log("comments.js: getAjaxFormReplaceElm");
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
@@ -173,6 +191,7 @@ function getAjaxFormReplaceElm() {
  * @param e
  */
 function addComment(e) {
+    // TODO: Remove console log
     console.log("comments.js: addComment");
     e.preventDefault();
 
@@ -271,6 +290,7 @@ function addComment(e) {
  * @returns {string}
  */
 function getCommentBlockLatestId($commentBlock) {
+    // TODO: Remove console log
     console.log("comments.js: getCommentBlockLatestId");
 
     var commentNum = $commentBlock.children("div.comment-box").length;
@@ -294,6 +314,7 @@ function getCommentBlockLatestId($commentBlock) {
  * @returns {boolean}
  */
 function evCommentLatestView(options) {
+    // TODO: Remove console log
     console.log("comments.js: evCommentLatestView");
 
     attrUndefinedCheck(this, 'post-id');
@@ -396,6 +417,7 @@ function evCommentLatestView(options) {
  * @returns {boolean}
  */
 function evCommentDelete(e) {
+    // TODO: Remove console log
     console.log("comments.js: evCommentDelete");
 
     e.preventDefault();
@@ -433,6 +455,7 @@ function evCommentDelete(e) {
  * @returns {boolean}
  */
 function evCommentDeleteConfirm() {
+    // TODO: Remove console log
     console.log("comments.js: evCommentDeleteConfirm");
 
     var $delBtn = $(this);
@@ -475,6 +498,7 @@ function evCommentDeleteConfirm() {
  * @returns {boolean}
  */
 function evCommendEditSubmit(e) {
+    // TODO: Remove console log
     console.log("comments.js: evCommendEditSubmit");
 
     e.preventDefault();
@@ -550,4 +574,371 @@ function evCommendEditSubmit(e) {
         }
     });
     return false;
+}
+
+// 通知から投稿、メッセージに移動
+// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
+//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
+function evNotifyPost(options) {
+    // TODO: Remove console log
+    console.log("gl_basic.js: evNotifyPost");
+
+    //とりあえずドロップダウンは隠す
+    $(".has-notify-dropdown").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    //urlにpost_permanentを含まない場合も対象外
+    if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
+        // 現状、メッセージページに遷移する場合はこのブロックを通る
+        feed_loading_now = false;
+        window.location.href = get_url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if (!updateAddressBar(get_url)) {
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
+
+    var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html(button_notifylist);
+                $(".layout-main").append($posts);
+                $(".layout-main").append(button_notifylist);
+
+                showMore($posts);
+                $posts.fadeIn();
+
+                //リンクを有効化
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.post_gallery').each(function (index, element) {
+                        bindPostBalancedGallery($(element));
+                    });
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
+                });
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            // Google tag manager トラッキング
+            if (cake.data.google_tag_manager_id !== "") {
+                sendToGoogleTagManager('app');
+            }
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+function evCommentOldView() {
+    // TODO: Remove console log
+    console.log("gl_basic.js: evCommentOldView");
+    attrUndefinedCheck(this, 'parent-id');
+    attrUndefinedCheck(this, 'get-url');
+    var $obj = $(this);
+    var parent_id = $obj.attr('parent-id');
+    var get_url = $obj.attr('get-url');
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    $obj.after($loader_html);
+    $.ajax({
+        type: 'GET',
+        url: get_url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+                $("#" + parent_id).before($posts);
+                showMore($posts);
+                $posts.fadeIn();
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを削除
+                $obj.css("display", "none").css("opacity", 0);
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
+                });
+
+            }
+            else {
+                //ローダーを削除
+                $loader_html.remove();
+                //親を取得
+                //noinspection JSCheckFunctionSignatures
+                var $parent = $obj.parent();
+                //「もっと読む」リンクを削除
+                $obj.remove();
+                //「データが無かった場合はデータ無いよ」を表示
+                $parent.append(cake.message.info.g);
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+function evTargetToggleClick() {
+    // TODO: Remove console log
+    console.log("comments.js: evTargetToggleClick");
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'click-target-id');
+
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
+    var comment_id = target_id.split('_')[1];
+    if ($obj.attr("hidden-target-id")) {
+        var $commentBox = $('#' + $obj.attr("hidden-target-id"));
+        $commentBox.toggle();
+        // Hide OGP box
+        var $ogpBox = $('#CommentOgpBox_'+comment_id);
+        if ($ogpBox.length > 0) {
+            $ogpBox.toggle();
+        }
+    }
+
+    //開いている時と閉じてる時のテキストの指定があった場合は置き換える
+    if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
+        //開いてるとき
+        if ($("#" + target_id).is(':visible')) {
+            //閉じてる表示
+            $obj.text($obj.attr("closed-text"));
+        }
+        //閉じてるとき
+        else {
+            //開いてる表示
+            $obj.text($obj.attr("opend-text"));
+        }
+    }
+    if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+        $.ajax({
+            url: $obj.attr("ajax-url"),
+            async: false,
+            success: function (data) {
+                //noinspection JSUnresolvedVariable
+                if (data.error) {
+                    //noinspection JSUnresolvedVariable
+                    alert(data.msg);
+                }
+                else {
+                    var $editForm = $(data.html);
+                    var $ogp = $editForm.find('.js-ogp-box');
+                    if ($ogp.length > 0) {
+                        var $btnClose = $editForm.find('.js-ogp-close');
+                        $btnClose.on('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            $ogp.remove();
+                            $btnClose.remove();
+                            var $submitButton = $('#CommentEditSubmit_'+comment_id);
+                            if ($submitButton.length > 0) {
+                                $submitButton.removeAttr("disabled");
+                            }
+                        });
+                    }
+                    $("#" + $obj.attr("hidden-target-id")).after($editForm);
+
+                    // Load OGP for edit field
+                    var $editField = $('#CommentEditFormBody_' + comment_id);
+                    if ($editField.length > 0) {
+                        require(['ogp'], function (ogp) {
+                            var onKeyUp = function () {
+                                // Do not search for new OGP if there is one already present
+                                var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                                if ($ogpBox.length > 0) {
+                                    return;
+                                }
+
+                                // Search OGP info
+                                ogp.getOGPSiteInfo({
+                                    // Give text to OGP class
+                                    text: $editField.val(),
+
+                                    // Only search if there is none OGP info box displayed
+                                    readyLoading: function () {
+                                        if ($ogpBox.length > 0) {
+                                            return false;
+                                        }
+                                        return true;
+                                    },
+
+                                    // ogp data acquired
+                                    success: function (data) {
+                                        // Remove any OGP if already exists
+                                        var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                                        if ($ogpBox.length > 0) {
+                                            $ogpBox.remove();
+                                            return;
+                                        }
+
+                                        // Display the new acquired OGP on the edit form
+                                        var $newOgp = $(data.html);
+                                        $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
+                                        $editField.after($newOgp);
+                                        var $closeButton = $('<a>');
+                                        $newOgp.after($closeButton);
+                                        $closeButton.attr('href', '#')
+                                            .addClass('font_lightgray comment-ogp-close')
+                                            .append('<i class="fa fa-times"></i>')
+                                            .on('click', function (e) {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                $closeButton.remove();
+                                                $newOgp.remove();
+                                            });
+                                    },
+
+                                    error: function () {
+                                        // loading アイコン削除
+                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                    },
+
+                                    loadingStart: function () {
+                                        // loading アイコン表示
+                                        $('<i class="fa fa-refresh fa-spin"></i>')
+                                            .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
+                                            .addClass('mr_8px lh_20px')
+                                            .insertBefore('#CommentEditSubmit_' + comment_id);
+                                    },
+
+                                    loadingEnd: function () {
+                                        // loading アイコン削除
+                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                    }
+                                });
+                            };
+                            var timer = null;
+                            $editField.on('keyup', function () {
+                                clearTimeout(timer);
+                                timer = setTimeout(onKeyUp, 800);
+                            });
+                        });
+                    }
+                }
+            }
+        });
+    }
+    $("form#" + target_id).bootstrapValidator();
+    $("#" + target_id).find('.custom-radio-check').customRadioCheck();
+
+    //noinspection JSJQueryEfficiency
+    $("#" + target_id).toggle();
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).trigger('click');
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).focus();
+    return false;
+}
+
+function initCommentNotify(notifyBox) {
+    // TODO: Remove console log
+    console.log("comments.js: initCommentNotify");
+    var numInBox = notifyBox.find(".num");
+    numInBox.html("0");
+    notifyBox.css("display", "none").css("opacity", 0);
+}
+
+
+
+
+// Used on circle and feed
+function bindCommentBalancedGallery($obj) {
+    // TODO: Remove console log
+    console.log("comments.js: bindCommentBalancedGallery");
+    $obj.removeClass('none');
+    $obj.BalancedGallery({
+        autoResize: false,                   // re-partition and resize the images when the window size changes
+        //background: '#DDD',                   // the css properties of the gallery's containing element
+        idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
+        padding: 1,                         // pixels between images
+        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
+        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
+        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
+    });
+};
+
+//bootstrapValidatorがSuccessした時
+function validatorCallback(e) {
+    // TODO: Remove console log
+    console.log("comments.js: validatorCallback");
+    if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
+        addComment(e);
+    }
+    else if (e.target.id == "ActionCommentForm") {
+        addComment(e);
+    }
 }

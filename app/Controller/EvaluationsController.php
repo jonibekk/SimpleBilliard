@@ -12,7 +12,6 @@ App::import('Service', 'EvaluationService');
  */
 class EvaluationsController extends AppController
 {
-
     function beforeFilter()
     {
         parent::beforeFilter();

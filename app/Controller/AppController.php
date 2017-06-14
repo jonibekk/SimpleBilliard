@@ -62,7 +62,8 @@ class AppController extends BaseController
         'Post',
         'GlHtml',
         'Lang',
-        'BackBtn'
+        'BackBtn',
+        'PageScript'
     ];
 
     private $merge_uses = [];
@@ -926,5 +927,4 @@ class AppController extends BaseController
             'action'     => 'login'
         );
     }
-
 }

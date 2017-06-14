@@ -10,8 +10,9 @@ import proxyMiddleware from 'http-proxy-middleware';
 
 gulp.task('watch', ['css:watch', 'js:watch', 'angular_app:watch', 'react:watch'])
 
+
 gulp.task('js:watch', () => {
-  const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'])
+  const watcher = gulp.watch([...config.js.watch_files, ...config.coffee.watch_files], ['js_app'], ['js_home'])
 
   watcher.on('change', event => {
     /* eslint-disable no-console */

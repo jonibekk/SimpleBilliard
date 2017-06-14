@@ -33,10 +33,15 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
     echo $this->Html->script('/js/react_message_app.min');
 }
 
-echo $this->Html->script('/js/ng_vendors.min');
+// Include page specific javascript file
+if (isset($page_js_files) && !empty($page_js_files)) {
+    foreach ($page_js_files as $script) {
+        echo $this->Html->script($script);
+    }
+}
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
-echo $this->Html->script('/js/ng_app.min');
+echo $this->PageScript->getPageScript();
 ?>
 
 <!--suppress JSDuplicatedDeclaration -->
