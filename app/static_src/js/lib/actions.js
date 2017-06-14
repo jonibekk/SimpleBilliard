@@ -16,8 +16,10 @@ $(function () {
     $(window).resize(function () {
         window.Page.action_resize(true);
     });
-});
 
+    $(document).on("click", ".target-show", evTargetShow);
+    $(document).on("click", ".click-this-remove", evRemoveThis);
+});
 
 
 // TODO:画像アップロード処理は依存が強すぎてgl_basic.jsに残したままなので、本ファイルに移行する
@@ -218,3 +220,24 @@ var Page = {
         $el.data("selected", 0);
     }
 };
+
+
+/**
+ * Show option fields on create Action form
+ * @returns {boolean}
+ */
+function evTargetShow() {
+    // TODO: Remove console log
+    console.log("actions.js: evTargetShow");
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).show();
+    return false;
+}
+
+function evRemoveThis() {
+    // TODO: Remove console log
+    console.log("actions.js: evRemoveThis");
+    $(this).remove();
+}
