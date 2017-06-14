@@ -173,7 +173,9 @@ $(function () {
     updateNotifyOnHamburger();
 
     // サークル投稿リアルタイム通知
-    setupCircleRealtimeNotification();
+    window.addEventListener("load", function() {
+      setupCircleRealtimeNotification();
+    });
 });
 
 /**
@@ -576,5 +578,3 @@ function evAjaxEditCircleAdminStatus(e) {
             }).show();
         });
 }
-
-

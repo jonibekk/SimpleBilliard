@@ -17,22 +17,6 @@
 <?= $this->element('cake_variables') ?>
 
 <?php
-// 右カラム用js
-if (!empty($display_dashboard)) {
-    echo $this->Html->script('/js/react_kr_column_app.min');
-}
-// ゴール検索
-if (Hash::get($this->request->params, 'controller') === 'goals'
-    && Hash::get($this->request->params, 'action') === 'index'
-) {
-    echo $this->Html->script('/js/react_goal_search_app.min');
-}
-// メッセージ
-if (Hash::get($this->request->params, 'controller') === 'topics')
-{
-    echo $this->Html->script('/js/react_message_app.min');
-}
-
 // Include page specific javascript file
 if (isset($page_js_files) && !empty($page_js_files)) {
     foreach ($page_js_files as $script) {
@@ -42,9 +26,32 @@ if (isset($page_js_files) && !empty($page_js_files)) {
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
 echo $this->PageScript->getPageScript();
+
+// 右カラム用js
+if (!empty($display_dashboard)) {
+    echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
+}
+// ゴール検索
+if (Hash::get($this->request->params, 'controller') === 'goals'
+    && Hash::get($this->request->params, 'action') === 'index'
+) {
+    echo $this->Html->script('/js/react_goal_search_app.min', ['defer' => 'defer']);
+}
+// メッセージ
+if (Hash::get($this->request->params, 'controller') === 'topics')
+{
+    echo $this->Html->script('/js/react_message_app.min', ['defer' => 'defer']);
+}
 ?>
 
-<!--suppress JSDuplicatedDeclaration -->
+<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
+
+<?php //公開環境のみタグを有効化
+if (PUBLIC_ENV) {
+    /** @noinspection PhpDeprecationInspection */
+    echo $this->element('external_service_tags');
+}
+?>
 
 <?= $this->Session->flash('click_event') ?>
 <?php echo $this->Session->flash('pnotify');

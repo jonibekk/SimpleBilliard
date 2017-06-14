@@ -1,10 +1,6 @@
-
-
 $(document).ready(function () {
     // TODO: Remove console log
     console.log("gl_basic.js: $(document).ready");
-
-  $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function () {
@@ -51,7 +47,6 @@ $(document).ready(function () {
       var id = $(this).attr('submit-id');
       $("#" + id).attr('disabled', 'disabled');
     });
-
 
   $(document).on("click", ".click-show", evShow);
   $(document).on("click", ".trigger-click", evTriggerClick);
@@ -693,3 +688,8 @@ function getModalFormFromUrl(e) {
     });
   }
 }
+
+// youtubeビデオ読み込み
+window.addEventListener('load', function () {
+  $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
+});

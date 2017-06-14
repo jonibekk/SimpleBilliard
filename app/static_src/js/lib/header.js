@@ -80,7 +80,7 @@ $(function () {
     });
 
     //SubHeaderMenu
-    
+
     var showNavFlag = false;
     var subNavbar = $("#SubHeaderMenu");
     $(window).scroll(function () {
@@ -444,4 +444,3 @@ function displaySelectorFluffy(selector) {
         }
     }, 100);
 }
-

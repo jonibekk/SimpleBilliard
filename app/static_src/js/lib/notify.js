@@ -91,7 +91,7 @@ $(function () {
         }
 
         // if display the topic page, nothing to do
-        const topic_page_url = "/topics/" + data.topic_id + "/detail";
+        var topic_page_url = "/topics/" + data.topic_id + "/detail";
         if (location.pathname.indexOf(topic_page_url) !== -1) {
             return;
         }
@@ -311,4 +311,3 @@ function evNotifications(options) {
     });
     return false;
 }
-

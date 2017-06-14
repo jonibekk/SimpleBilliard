@@ -22,6 +22,12 @@ $.ajaxSetup({
     timeout: 10000 // 10 sec
 });
 
+// Load image fastly
+//noinspection JSJQueryEfficiency,JSUnresolvedFunction
+document.addEventListener("DOMContentLoaded", function(event) {
+  imageLazyOn();
+});
+
 if (typeof String.prototype.startsWith != 'function') {
     // see below for better implementation!
     String.prototype.startsWith = function (str) {
@@ -250,7 +256,7 @@ function sanitize(string) {
 function checkUploadFileExpire(formID) {
     // TODO: Remove console log
     console.log("global.js: checkUploadFileExpire");
-    
+
     var $form = $('#' + formID);
 
     var res = true;
