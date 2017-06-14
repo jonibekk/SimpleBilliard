@@ -394,7 +394,7 @@ class CirclesController extends AppController
             $this->request->data['CircleMember']['user_id']);
         // 処理失敗
         if (!$res) {
-            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processingi.")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processing.")));
         }
         Cache::delete($this->Circle->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true,
             $this->request->data['CircleMember']['user_id']), 'user_data');
