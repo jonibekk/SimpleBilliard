@@ -109,7 +109,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         </a>
     <?php endforeach; ?>
 </div>
-<div class="panel-body">
+<div class="panel-body posts-panel-body">
     <?php if (!empty($kr)): ?>
         <div class="col col-xxs-12 feed-contents font_bold">
             <i class="fa fa-key disp_i"></i>&nbsp;<?= h($kr['name']) ?>
@@ -332,4 +332,3 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
     <?php endif; ?>
 </div>
 <?= $this->App->viewEndComment() ?>
-
