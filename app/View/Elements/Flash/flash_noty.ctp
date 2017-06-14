@@ -14,13 +14,9 @@
 ?>
 <?= $this->App->viewStartComment()?>
 <script type="text/javascript">
-    new PNotify({
-        title: "<?=$title?>",
-        text: "<?=$message?>",
-        icon: "<?=$icon?>",
+    new Noty({
         type: "<?=$type?>",
-        delay: 4000,
-        mouse_reset: false
-    });
+        text: '<h4>'+'<?=$title?>'+'</h4>'+'<?=$message?>',
+    }).show();
 </script>
 <?= $this->App->viewEndComment()?>

@@ -146,7 +146,7 @@ class SetupController extends AppController
         //FIXME: [END]
         $res = $this->Goal->add(['Goal' => $goal, 'KeyResult' => [$tkr]]);
         if ($res) {
-            $this->Pnotify->outSuccess($msg = __("Created a goal."));
+            $this->Notification->outSuccess($msg = __("Created a goal."));
             $error = false;
         } else {
             $msg = __("Failed to save a goal.");
@@ -190,20 +190,20 @@ class SetupController extends AppController
 
         // validation
         if (!$CircleService->validateCreate($data, $userId)) {
-            $this->Pnotify->outError($validateCreate);
+            $this->Notification->outError($validateCreate);
             return $this->_ajaxGetResponse(['msg' => __("Failed to create a circle."), 'error' => true]);
         }
 
         // create circle
         if (!$CircleService->create($data, $userId)) {
-            $this->Pnotify->outError(__("Failed to create a circle."));
+            $this->Notification->outError(__("Failed to create a circle."));
             return $this->_ajaxGetResponse(['msg' => __("Failed to create a circle."), 'error' => true]);
         }
 
         // Notification
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);
-        $this->Pnotify->outSuccess(__("Created a circle."));
+        $this->Notification->outSuccess(__("Created a circle."));
 
         $this->updateSetupStatusIfNotCompleted();
 
@@ -239,7 +239,7 @@ class SetupController extends AppController
         }
         $this->updateSetupStatusIfNotCompleted();
 
-        $this->Pnotify->outSuccess(__("Join a circle."));
+        $this->Notification->outSuccess(__("Join a circle."));
         return $this->_ajaxGetResponse(['msg' => __("Join a circle."), 'error' => false]);
     }
 
@@ -261,7 +261,7 @@ class SetupController extends AppController
         $this->updateSetupStatusIfNotCompleted();
         $msg = __("Saved user profile.");
         $error = false;
-        $this->Pnotify->outSuccess($msg);
+        $this->Notification->outSuccess($msg);
 
         return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
@@ -389,7 +389,7 @@ class SetupController extends AppController
         $KeyResultService->removeGoalMembersCacheInDashboard($goal_id, false);
 
         // push
-        $this->Pnotify->outSuccess($msg = __("Added an action."));
+        $this->Notification->outSuccess($msg = __("Added an action."));
         //セットアップガイドステータスの更新
         $this->updateSetupStatusIfNotCompleted();
         $res = [

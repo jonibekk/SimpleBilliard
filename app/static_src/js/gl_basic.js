@@ -649,7 +649,6 @@ function getModalFormFromUrl(e) {
       $modal_elm.append(data);
       $modal_elm.find('form').bootstrapValidator({
         live: 'enabled',
-
         fields: {
           "data[KeyResult][start_date]": {
             validators: {
