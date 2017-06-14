@@ -140,7 +140,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="form-group company">
                 <?= $this->Form->input('company', [
-                    'placeholder' => __('eg. ISAO corporation'),
+                    'placeholder' => __('eg. ISAO Corporation'),
                     'id'          => 'company',
                     'class'       => 'form-control lp-contact-form-control',
                     'label'       => [

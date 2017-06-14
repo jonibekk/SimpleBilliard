@@ -1566,7 +1566,7 @@ msgid "Number of goals"
 msgstr "ゴール数"
 
 msgid "Number of key results"
-msgstr "出した成果(KR)数"
+msgstr "KR数"
 
 msgid "Number of actions"
 msgstr "アクション数"
@@ -2304,7 +2304,7 @@ msgstr "チームに名前をつけよう"
 
 msgid ""
 "Create a name for your team. A team is a group that can share goals, actions "
-"and posts  with each other. People outside of the team can't access this "
+"and posts with each other. People outside of the team can't access this "
 "information."
 msgstr ""
 "チームは、ゴールやアクション、投稿を共有できる人の集まりです。チーム外の人は"
@@ -3243,7 +3243,7 @@ msgid "eg. I completed making the web site."
 msgstr "例） Webサイトの構築をした。"
 
 msgid "Key Results"
-msgstr "KRs"
+msgstr "KR"
 
 msgid "Choose a key result to associate."
 msgstr "紐付けるKRを選択しよう。"
@@ -4385,7 +4385,7 @@ msgid "Goal progress rate"
 msgstr "ゴール進捗率"
 
 msgid "There is no KR."
-msgstr "KRは登録されていません"
+msgstr "KRが登録されていません"
 
 msgid "Collaborating"
 msgstr "コラボり中"
@@ -4445,7 +4445,7 @@ msgstr "例）鈴木 いさお"
 msgid "eg. example@goalous.com"
 msgstr "例）example@goalous.com（半角英数字）"
 
-msgid "eg. ISAO corporation"
+msgid "eg. ISAO Corporation"
 msgstr "例）株式会社ISAO"
 
 msgid "Company name, Organization name or Something like that."
