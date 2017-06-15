@@ -78,7 +78,7 @@ $(function () {
             $modal_elm.modal({
                 backdrop: e.isTrigger ? 'static' : true
             });
-        }).success(function () {
+        }).done(function () {
             $('body').addClass('modal-open');
         });
     });
