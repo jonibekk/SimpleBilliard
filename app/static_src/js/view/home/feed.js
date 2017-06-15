@@ -149,7 +149,7 @@ function evFeedMoreView(options) {
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
-                $posts.fadeOut();
+                $posts.hide();
                 if (append_target_id != undefined) {
                     $("#" + append_target_id).append($posts);
                 }

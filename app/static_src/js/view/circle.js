@@ -182,7 +182,7 @@ function evCircleFeed(options) {
         //画像をレイジーロード
         imageLazyOn($posts);
         //一旦非表示
-        $posts.fadeOut();
+        $posts.hide();
 
         $("#app-view-elements-feed-posts").html($posts);
         //read moreの情報を差し替え
