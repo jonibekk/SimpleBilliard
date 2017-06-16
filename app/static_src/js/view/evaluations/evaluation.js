@@ -59,7 +59,7 @@ function getModalPostList(e) {
                 changeSizeActionImage($modal_elm.find('.feed_img_only_one'));
             });
 
-        }).success(function () {
+        }).done(function () {
             $('body').addClass('modal-open');
         });
     }

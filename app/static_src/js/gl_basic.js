@@ -134,7 +134,7 @@ $(document).ready(function () {
         $modal_elm.find("form").bootstrapValidator();
 
         $modal_elm.find('.custom-radio-check').customRadioCheck();
-      }).success(function () {
+      }).done(function () {
         $this.removeClass('double_click');
         $('body').addClass('modal-open');
       });
