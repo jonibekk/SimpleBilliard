@@ -309,5 +309,4 @@ function evNotifications(options) {
             $loader_html.remove();
         },
     });
-    return false;
 }
