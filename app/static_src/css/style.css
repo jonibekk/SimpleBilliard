@@ -230,6 +230,7 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 .panel-body {
     padding: 10px 11px;
+    word-wrap:break-word;
 }
 
 .panel-block {
@@ -2992,15 +2993,6 @@ Temporary Properties - YOU MUST FIX
 
 .insight-table-header {
     background-color: #f5f5f5;
-}
-
-.insight-circle-table-header th:not(:first-child) {
-    text-align: right;
-
-}
-
-.insight-circle-table-row td:not(:first-child) {
-    text-align: right;
 }
 
 .insight-ranking-table-header th:nth-child(1) {
