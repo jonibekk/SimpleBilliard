@@ -270,12 +270,14 @@
 .table-insight-circle-result{
   table-layout: fixed;
   width:100%;
-  tr{
-    td, th{
-      width:12.5%;
+  td, th{
+    @media @medium{
+      width:15%;
       text-align:center;
-      &:first-of-type{
-        width:50%;
+    }
+    &:first-of-type{
+      @media @medium{
+        width:40%;
         text-align:left;
       }
     }
