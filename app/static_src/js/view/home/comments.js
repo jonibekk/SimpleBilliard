@@ -34,7 +34,7 @@ $(function () {
 function getAjaxFormReplaceElm() {
     // TODO: Remove console log
     console.log("comments.js: getAjaxFormReplaceElm");
-    
+
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
     attrUndefinedCheck(this, 'tmp-target-height');
@@ -645,7 +645,7 @@ function evNotifyPost(options) {
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
-                $posts.fadeOut();
+                $posts.hide();
 
                 $(".layout-main").html(button_notifylist);
                 $(".layout-main").append($posts);
@@ -714,7 +714,7 @@ function evCommentOldView() {
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
-                $posts.fadeOut();
+                $posts.hide();
                 $("#" + parent_id).before($posts);
                 showMore($posts);
                 $posts.fadeIn();
@@ -911,9 +911,6 @@ function initCommentNotify(notifyBox) {
     numInBox.html("0");
     notifyBox.css("display", "none").css("opacity", 0);
 }
-
-
-
 
 // Used on circle and feed
 function bindCommentBalancedGallery($obj) {

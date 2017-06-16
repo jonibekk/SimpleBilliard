@@ -291,7 +291,7 @@ function evNotifications(options) {
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
-                $posts.fadeOut();
+                $posts.hide();
 
                 $(".layout-main").html($posts);
             }

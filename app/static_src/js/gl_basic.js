@@ -581,7 +581,7 @@ function evBasicReadMore(options) {
       success: function (data) {
         if (!$.isEmptyObject(data.html)) {
           var $content = $(data.html);
-          $content.fadeOut();
+          $content.hide();
           $list_container.append($content);
 
           showMore($content);
