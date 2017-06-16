@@ -37,6 +37,7 @@ const config = {
       assets_dir + '/js/lib/notify.js',
       assets_dir + '/js/lib/header.js',
       assets_dir + '/js/lib/select2.js',
+      assets_dir + '/js/lib/feed.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {

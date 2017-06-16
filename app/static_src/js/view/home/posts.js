@@ -69,35 +69,6 @@ function bindPostBalancedGallery($obj) {
 };
 
 /**
- * Adjust the size when there is only one image on the post
- * @param $obj
- */
-function changeSizeFeedImageOnlyOne($obj) {
-    // TODO: Remove console log
-    console.log("posts.js: changeSizeFeedImageOnlyOne");
-    $obj.each(function (i, v) {
-        var $elm = $(v);
-        var $img = $elm.find('img');
-        var is_oblong = $img.width() > $img.height();
-        var is_near_square = Math.abs($img.width() - $img.height()) <= 5;
-
-        // 横長の画像か、ほぼ正方形に近い画像の場合はそのまま表示
-        if (is_oblong || is_near_square) {
-            $elm.css('height', $img.height());
-            $img.parent().css('height', $img.height());
-        }
-        // 縦長の画像は、4:3 の比率にする
-        else {
-            var expect_parent_height = $img.width() * 0.75;
-
-            $elm.css('height', expect_parent_height);
-            $img.parent().css('height', expect_parent_height);
-        }
-    });
-    return false;
-}
-
-/**
  * Request OGP info for post
  * @param ogp
  * @param text
