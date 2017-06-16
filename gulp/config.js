@@ -10,16 +10,19 @@ const config = {
     pages: {
         home: [
             assets_dir + '/js/lib/circle.js',
+            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/view/home/*.js',
         ],
         goals: [
             assets_dir + '/js/lib/circle.js',
+            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/view/goals/*.js',
         ],
         team: [
             assets_dir + '/js/view/teams/*.js',
         ],
         user: [
+            assets_dir + '/js/lib/actions.js',
             assets_dir + '/js/view/users/*.js',
         ],
         evaluation: [
