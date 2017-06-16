@@ -8,6 +8,12 @@ if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'develop'
   ).install();
 }
 
+// Load image fastly
+//noinspection JSJQueryEfficiency,JSUnresolvedFunction
+document.addEventListener("DOMContentLoaded", function(event) {
+  imageLazyOn();
+});
+
 $.ajaxSetup({
   cache: false,
   timeout: 10000 // 10 sec
@@ -24,7 +30,6 @@ require.config({
 });
 
 var network_reachable = true;
-var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
 function bindPostBalancedGallery($obj) {
   $obj.removeClass('none');
@@ -134,7 +139,7 @@ jQuery.fn.hasScrollBar = function () {
   return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
-$(window).load(function () {
+window.addEventListener('load', function () {
   bindPostBalancedGallery($('.post_gallery'));
   bindCommentBalancedGallery($('.comment_gallery'));
   changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
@@ -168,10 +173,6 @@ function clickToSetCurrentTeamId() {
 
 
 $(document).ready(function () {
-  //intercomのリンクを非表示にする
-  if (enabled_intercom_icon) {
-    $('#IntercomLink').hide();
-  }
   // Androidアプリかiosアプリの場合のみfastClickを実行する。
   // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
   if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
@@ -209,9 +210,6 @@ $(document).ready(function () {
     });
     return false;
   });
-
-  $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-
 
   //すべてのformで入力があった場合に行う処理
   $("select,input").change(function () {
@@ -360,8 +358,6 @@ $(document).ready(function () {
   //noinspection JSJQueryEfficiency
   $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
-  //noinspection JSJQueryEfficiency,JSUnresolvedFunction
-  imageLazyOn();
   //showmore
   //noinspection JSUnresolvedFunction
   showMore();
@@ -3448,7 +3444,7 @@ function getModalFormFromUrl(e) {
     });
   }
 }
-$(document).ready(function () {
+window.addEventListener('load', function () {
 
   var pusher = new Pusher(cake.pusher.key);
   var socketId = "";
@@ -4229,6 +4225,11 @@ $(document).ready(function () {
     initTitle();
     updateMessageListBox();
   });
+});
+
+// youtubeビデオ読み込み
+window.addEventListener('load', function () {
+  $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
 
 function initBellNum() {
