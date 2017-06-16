@@ -30,7 +30,7 @@
             $post_read_count = true;
     }
     ?>
-    <table class="table">
+    <table class="table table-insight-circle-result">
         <tr class="insight-table-header insight-circle-table-header">
             <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __('Circle name') ?>"></i></th>
             <th id="user_count_header">
