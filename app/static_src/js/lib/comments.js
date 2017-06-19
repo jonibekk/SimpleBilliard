@@ -348,10 +348,10 @@ function evCommentLatestView(options) {
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
-                $posts.fadeOut();
+                $posts.hide();
                 $($obj).before($posts);
                 showMore($posts);
-                $posts.fadeIn();
+                $posts.show();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
@@ -751,7 +751,7 @@ function evTargetToggleClick() {
             $obj.text($obj.attr("opend-text"));
         }
     }
-    if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+    if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
         $.ajax({
             url: $obj.attr("ajax-url"),
             async: false,
