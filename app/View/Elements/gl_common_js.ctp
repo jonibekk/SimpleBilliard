@@ -15,6 +15,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <?= $this->element('cake_variables') ?>
+<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 
 <?php
 // Include page specific javascript file
@@ -44,12 +45,10 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
 }
 ?>
 
-<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
-
 <?php //公開環境のみタグを有効化
 if (PUBLIC_ENV) {
     /** @noinspection PhpDeprecationInspection */
-    echo $this->element('external_service_tags');
+    echo $this->element('intercom');
 }
 ?>
 

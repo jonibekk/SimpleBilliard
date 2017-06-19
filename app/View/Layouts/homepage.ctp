@@ -58,7 +58,7 @@
     <?php //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
-        echo $this->element('external_service_tags');
+        echo $this->element('intercom');
     }
     ?>
     <!--[if lt IE 9]>
