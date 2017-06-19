@@ -40,6 +40,7 @@ $(function () {
 
 // NO REFERENCE FOUND
 function initMessageSelect2(topic_id) {
+    //noinspection JSUnusedLocalSymbols
     $('#selectOnlyMember').select2({
         multiple: true,
         minimumInputLength: 1,
@@ -82,6 +83,7 @@ function initMessageSelect2(topic_id) {
 }
 
 function initMemberSelect2() {
+    //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
         initSelection: function (element, callback) {
             // user_**の文字列からユーザーIDを抽出
@@ -135,6 +137,7 @@ function initMemberSelect2() {
 }
 
 function initCircleSelect2() {
+    //noinspection JSUnusedLocalSymbols
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: cake.word.select_public_circle,
