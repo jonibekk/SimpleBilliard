@@ -2,16 +2,11 @@
 
 
 $.clearInput = function ($obj) {
-    // TODO: Remove console log
-    console.log("forms.js: $.clearInput");
     $obj.find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
     $obj.bootstrapValidator('resetForm', true);
 };
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: forms.js");
-
     $('[rel="tooltip"]').tooltip();
     $('.validate').bootstrapValidator({
         live: 'enabled',
@@ -88,8 +83,6 @@ $(function () {
  * @param callback Control + Enter が押された時に実行されるコールバック関数
  */
 var bindCtrlEnterAction = function (selector, callback) {
-    // TODO: Remove console log
-    console.log("forms.js: bindCtrlEnterAction");
     $(document).on('keydown', selector, function (e) {
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
             callback.call(this, e);
@@ -102,8 +95,6 @@ var bindCtrlEnterAction = function (selector, callback) {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShowAndThisWide() {
-    // TODO: Remove console log
-    console.log("forms.js: evShowAndThisWide");
     //クリック済みの場合は処理しない
     if ($(this).hasClass('clicked'))return;
 
@@ -139,8 +130,6 @@ function evShowAndThisWide() {
 
 
 function evShowAndThisWideClose() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evShowAndThisWideClose");
     attrUndefinedCheck(this, 'target-id');
     var target_id = $(this).attr("target-id");
     var $target = $("#" + target_id);
@@ -154,8 +143,6 @@ function evShowAndThisWideClose() {
 
 
 function setSelectOptions(url, select_id, target_toggle_id, selected) {
-    // TODO: Remove console log
-    console.log("forms.js: setSelectOptions");
     var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
         if (data.length == 0) {

@@ -1,13 +1,8 @@
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: evaluations.js");
-
     $(document).on("click", ".click-show-post-modal", getModalPostList);
 });
 
 function getModalPostList(e) {
-    // TODO: Remove console log
-    console.log("evaluations.js: getModalPostList");
     e.preventDefault();
 
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -71,8 +66,6 @@ function getModalPostList(e) {
  * @param $obj
  */
 function changeSizeActionImage($obj) {
-    // TODO: Remove console log
-    console.log("evaluations.js: changeSizeActionImage");
     $obj.each(function (i, v) {
         var $elm = $(v);
         var $img = $elm.find('img');

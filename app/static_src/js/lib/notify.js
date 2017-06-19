@@ -3,9 +3,6 @@
 var network_reachable = true;
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: notify.js");
-
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     window.addEventListener("online", function () {
         updateNotifyCnt();
@@ -109,8 +106,6 @@ $(function () {
 });
 
 function appendSocketId(form, socketId) {
-    // TODO: Remove console log
-    console.log("global.js: appendSocketId");
     $('<input>').attr({
         type: 'hidden',
         name: 'socket_id',
@@ -119,8 +114,6 @@ function appendSocketId(form, socketId) {
 }
 
 function notifyNewFeed() {
-    // TODO: Remove console log
-    console.log("notify.js: notifyNewFeed");
     var notifyBox = $(".feed-notify-box");
     var numArea = notifyBox.find(".num");
     var num = parseInt(numArea.html());
@@ -150,8 +143,6 @@ function notifyNewFeed() {
 }
 
 function getCurrentUnreadNotifyCnt() {
-    // TODO: Remove console log
-    console.log("notify.js: getCurrentUnreadNotifyCnt");
     var $bellNum = $("#bellNum");
     var $numArea = $bellNum.find("span");
     return parseInt($numArea.html());
@@ -159,8 +150,6 @@ function getCurrentUnreadNotifyCnt() {
 
 // notify boxにpage idをセット
 function setPageTypeId() {
-    // TODO: Remove console log
-    console.log("notify.js: setPageTypeId");
     var notifyBox = $(".feed-notify-box");
     var pageTypeId = cake.data.d;
     if (pageTypeId === "null") {
@@ -174,24 +163,18 @@ function setPageTypeId() {
 
 // notify boxのpage idをゲット
 function getPageTypeId() {
-    // TODO: Remove console log
-    console.log("notify.js: getPageTypeId");
     var pageTypeId = $(".feed-notify-box").attr("id");
     if (!pageTypeId) return "";
     return pageTypeId.replace("_feed_notify", "");
 }
 
 function viaIsSet(data) {
-    // TODO: Remove console log
-    console.log("notify.js: viaIsSet");
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
     return data;
 }
 
 function notifyNewComment(notifyBox) {
-    // TODO: Remove console log
-    console.log("notify.js: notifyNewComment");
     var numInBox = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
@@ -222,8 +205,6 @@ function notifyNewComment(notifyBox) {
 }
 
 function hideCommentNotifyErrorBox(notifyBox) {
-    // TODO: Remove console log
-    console.log("notify.js: hideCommentNotifyErrorBox");
     var errorBox = notifyBox.siblings(".new-comment-error");
     if (errorBox.attr("display") === "none") {
         return;
@@ -232,9 +213,6 @@ function hideCommentNotifyErrorBox(notifyBox) {
 }
 
 function evNotifications(options) {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evNotifications");
-
     //とりあえずドロップダウンは隠す
     $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');

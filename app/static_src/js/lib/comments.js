@@ -4,9 +4,6 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: comments.js");
-
     require.config({
         baseUrl: '/js/modules/'
     });
@@ -32,9 +29,6 @@ $(function () {
  * Show form and submit button when user click to add new comment
  */
 function getAjaxFormReplaceElm() {
-    // TODO: Remove console log
-    console.log("comments.js: getAjaxFormReplaceElm");
-
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
     attrUndefinedCheck(this, 'tmp-target-height');
@@ -191,9 +185,6 @@ function getAjaxFormReplaceElm() {
  * @param e
  */
 function addComment(e) {
-    // TODO: Remove console log
-    console.log("comments.js: addComment");
-
     e.preventDefault();
 
     attrUndefinedCheck(e.target, 'error-msg-id');
@@ -291,9 +282,6 @@ function addComment(e) {
  * @returns {string}
  */
 function getCommentBlockLatestId($commentBlock) {
-    // TODO: Remove console log
-    console.log("comments.js: getCommentBlockLatestId");
-
     var commentNum = $commentBlock.children("div.comment-box").length;
     var $lastCommentBox = $commentBlock.children("div.comment-box:last");
     var lastCommentId = "";
@@ -315,9 +303,6 @@ function getCommentBlockLatestId($commentBlock) {
  * @returns {boolean}
  */
 function evCommentLatestView(options) {
-    // TODO: Remove console log
-    console.log("comments.js: evCommentLatestView");
-
     attrUndefinedCheck(this, 'post-id');
     attrUndefinedCheck(this, 'get-url');
 
@@ -418,9 +403,6 @@ function evCommentLatestView(options) {
  * @returns {boolean}
  */
 function evCommentDelete(e) {
-    // TODO: Remove console log
-    console.log("comments.js: evCommentDelete");
-
     e.preventDefault();
     var $delBtn = $(this);
     attrUndefinedCheck($delBtn, 'comment-id');
@@ -456,9 +438,6 @@ function evCommentDelete(e) {
  * @returns {boolean}
  */
 function evCommentDeleteConfirm() {
-    // TODO: Remove console log
-    console.log("comments.js: evCommentDeleteConfirm");
-
     var $delBtn = $(this);
     attrUndefinedCheck($delBtn, 'comment-id');
     var commentId = $delBtn.attr("comment-id");
@@ -499,9 +478,6 @@ function evCommentDeleteConfirm() {
  * @returns {boolean}
  */
 function evCommendEditSubmit(e) {
-    // TODO: Remove console log
-    console.log("comments.js: evCommendEditSubmit");
-
     e.preventDefault();
     var $form = $(this).parents('form');
     var formUrl = $form.attr('action');
@@ -581,9 +557,6 @@ function evCommendEditSubmit(e) {
 // TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
 //       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
 function evNotifyPost(options) {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evNotifyPost");
-
     //とりあえずドロップダウンは隠す
     $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
@@ -690,8 +663,6 @@ function evNotifyPost(options) {
 }
 
 function evCommentOldView() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evCommentOldView");
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'get-url');
     var $obj = $(this);
@@ -750,9 +721,6 @@ function evCommentOldView() {
 }
 
 function evTargetToggleClick() {
-    // TODO: Remove console log
-    console.log("comments.js: evTargetToggleClick");
-
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
 
@@ -905,8 +873,6 @@ function evTargetToggleClick() {
 }
 
 function initCommentNotify(notifyBox) {
-    // TODO: Remove console log
-    console.log("comments.js: initCommentNotify");
     var numInBox = notifyBox.find(".num");
     numInBox.html("0");
     notifyBox.css("display", "none").css("opacity", 0);
@@ -914,8 +880,6 @@ function initCommentNotify(notifyBox) {
 
 // Used on circle and feed
 function bindCommentBalancedGallery($obj) {
-    // TODO: Remove console log
-    console.log("comments.js: bindCommentBalancedGallery");
     $obj.removeClass('none');
     $obj.BalancedGallery({
         autoResize: false,                   // re-partition and resize the images when the window size changes
@@ -933,8 +897,6 @@ function bindCommentBalancedGallery($obj) {
 
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
-    // TODO: Remove console log
-    console.log("comments.js: validatorCallback");
     if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
         addComment(e);
     }

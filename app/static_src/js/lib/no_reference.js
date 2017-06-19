@@ -1,9 +1,6 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: no_reference.js");
-
     // メッセージフォーム submit 時
     $(document).on('submit', '#MessageDisplayForm', function (e) {
         return checkUploadFileExpire('messageDropArea');
@@ -50,8 +47,6 @@ $(function () {
 });
 
 function ajaxAppendCount(id, url) {
-    // TODO: Remove console log
-    console.log("no_reference.js: ajaxAppendCount");
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     $('#' + id).append($loader_html);
     $.ajax({
@@ -72,20 +67,14 @@ function ajaxAppendCount(id, url) {
 }
 
 function enabledAllInput(selector) {
-    // TODO: Remove console log
-    console.log("no_reference.js: enabledAllInput");
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }
 
 function disabledAllInput(selector) {
-    // TODO: Remove console log
-    console.log("no_reference.js: disabledAllInput");
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
 
 function evTargetToggle() {
-    // TODO: Remove console log
-    console.log("no_reference.js: evTargetToggle");
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
@@ -94,8 +83,6 @@ function evTargetToggle() {
 }
 
 function evSelectOptionTargetHidden() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evSelectOptionTargetHidden");
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'hidden-option-value');
     var $obj = $(this);

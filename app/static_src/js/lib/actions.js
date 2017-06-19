@@ -4,9 +4,6 @@
 
 "use strict";
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: actions.js");
-
     // TODO: temporary fix for releasing
     //       should change js to less to manage action iamges size
     setTimeout(function(){
@@ -227,8 +224,6 @@ var Page = {
  * @returns {boolean}
  */
 function evTargetShow() {
-    // TODO: Remove console log
-    console.log("actions.js: evTargetShow");
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
@@ -237,7 +232,5 @@ function evTargetShow() {
 }
 
 function evRemoveThis() {
-    // TODO: Remove console log
-    console.log("actions.js: evRemoveThis");
     $(this).remove();
 }

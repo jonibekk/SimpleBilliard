@@ -4,9 +4,6 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: posts.js");
-
     // Adjust size for single image post
     changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
     // Adjust size for multiple images post
@@ -50,8 +47,6 @@ $(function () {
  * @param $obj
  */
 function bindPostBalancedGallery($obj) {
-    // TODO: Remove console log
-    console.log("posts.js: bindPostBalancedGallery");
     $obj.removeClass('none');
     $obj.BalancedGallery({
         autoResize: false,                   // re-partition and resize the images when the window size changes
@@ -74,8 +69,6 @@ function bindPostBalancedGallery($obj) {
  * @param text
  */
 function getPostOGPInfo(ogp, text) {
-    // TODO: Remove console log
-    console.log("posts.js: getPostOGPInfo");
     var options = {
         // URL が含まれるテキスト
         text: text,
@@ -125,8 +118,6 @@ function getPostOGPInfo(ogp, text) {
  * @param data
  */
 function appendPostOgpInfo(data) {
-    // TODO: Remove console log
-    console.log("posts.js: appendPostOgpInfo");
     var $siteInfoUrl = $('#PostSiteInfoUrl');
     var $siteInfo = $('#PostOgpSiteInfo');
     $siteInfo
