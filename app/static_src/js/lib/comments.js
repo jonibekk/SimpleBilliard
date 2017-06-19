@@ -751,7 +751,7 @@ function evTargetToggleClick() {
             $obj.text($obj.attr("opend-text"));
         }
     }
-    if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+    if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
         $.ajax({
             url: $obj.attr("ajax-url"),
             async: false,
