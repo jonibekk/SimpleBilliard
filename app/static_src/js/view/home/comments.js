@@ -652,7 +652,7 @@ function evNotifyPost(options) {
                 $(".layout-main").append(button_notifylist);
 
                 showMore($posts);
-                $posts.fadeIn();
+                $posts.show();
 
                 //リンクを有効化
                 $obj.removeAttr('disabled');

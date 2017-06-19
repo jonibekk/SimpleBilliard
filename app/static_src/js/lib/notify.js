@@ -294,6 +294,7 @@ function evNotifications(options) {
                 $posts.hide();
 
                 $(".layout-main").html($posts);
+                $posts.show();
             }
 
             //ローダーを削除
