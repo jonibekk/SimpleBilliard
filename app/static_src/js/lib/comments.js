@@ -348,10 +348,10 @@ function evCommentLatestView(options) {
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
-                $posts.fadeOut();
+                $posts.hide();
                 $($obj).before($posts);
                 showMore($posts);
-                $posts.fadeIn();
+                $posts.show();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
