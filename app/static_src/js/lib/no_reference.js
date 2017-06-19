@@ -83,50 +83,6 @@ function disabledAllInput(selector) {
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
 
-// reset bell notify num call from app.
-function resetBellNum() {
-    // TODO: Remove console log
-    console.log("no_reference.js: resetBellNum");
-    initBellNum();
-    var url = cake.url.g;
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: true,
-        success: function (data) {
-            updateNotifyCnt();
-        },
-        error: function () {
-            // do nothing.
-        }
-    });
-}
-
-// reset bell message num call from app.
-function resetMessageNum() {
-    // TODO: Remove console log
-    console.log("no_reference.js: resetMessageNum");
-    initMessageNum();
-    var url = cake.url.ag;
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: true,
-        success: function (data) {
-            // do nothing.
-        },
-        error: function () {
-            // do nothing.
-        }
-    });
-}
-
-function isOnline() {
-    // TODO: Remove console log
-    console.log("no_reference.js: isOnline");
-    return Boolean(network_reachable);
-}
-
 function evTargetToggle() {
     // TODO: Remove console log
     console.log("no_reference.js: evTargetToggle");

@@ -31,6 +31,7 @@ const config = {
     },
     src: [
       assets_dir + '/js/dropzone_setting.js',
+      assets_dir + '/js/lib/mobile_app.js',
       assets_dir + '/js/lib/global.js',
       assets_dir + '/js/lib/forms.js',
       assets_dir + '/js/lib/modals.js',
