@@ -400,7 +400,7 @@ class UploadHelper extends AppHelper
         $file = str_replace('%2F', '/', $file);
         $path = $bucket . '/' . $file;
 
-        $expires = strtotime('+1 hour');
+        $expires = strtotime("tomorrow");
 
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
