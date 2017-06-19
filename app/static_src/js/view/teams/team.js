@@ -1,9 +1,6 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: team.js");
-
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
 
     // Insight 画面の処理
@@ -27,9 +24,6 @@ $(function () {
  * uploading csv file from form.
  */
 function uploadCsvFileByForm(e) {
-    // TODO: Remove console log
-    console.log("team.js: uploadCsvFileByForm");
-
     e.preventDefault();
 
     attrUndefinedCheck(this, 'loader-id');

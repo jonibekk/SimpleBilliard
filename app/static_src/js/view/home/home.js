@@ -4,9 +4,6 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: home.js");
-
     // 投稿フォーム
     // Ctrl(Command) + Enter 押下時のコールバック
     bindCtrlEnterAction('#PostDisplayForm', function (e) {

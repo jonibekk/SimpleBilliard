@@ -1,12 +1,8 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: modals.js");
 
     $(document).on('lightbox.open', 'a[rel^=lightbox]', function () {
-        // TODO: Remove console log
-        console.log("modals.js: lightbox.open");
 
         var $viewport = $("meta[name='viewport']");
         $viewport.attr('content', $viewport.attr('content')
@@ -15,9 +11,6 @@ $(function () {
 
     });
     $(document).on('lightbox.close', 'a[rel^=lightbox]', function () {
-        // TODO: Remove console log
-        console.log("modals.js: lightbox.close");
-
         var $viewport = $("meta[name='viewport']");
         $viewport.attr('content', $viewport.attr('content')
             .replace('user-scalable=yes', 'user-scalable=no')

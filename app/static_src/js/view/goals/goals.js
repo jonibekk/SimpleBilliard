@@ -4,9 +4,6 @@
 "use strict";
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: goals.js");
-
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
 

@@ -1,17 +1,11 @@
 "use strict";
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: circle.js");
-
     // Register circle events.
     $(document).on("click", ".js-dashboard-circle-list", evCircleFeed);
     $(document).on("click", ".circle-link", evCircleFeed);
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
     $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
     $(document).on("click", '#CircleFilterMenuDropDown .modal-circle-setting', function (e) {
-        // TODO: Remove console log
-        console.log("circles.js: #CircleFilterMenuDropDown");
-
         e.preventDefault();
         var $this = $(this);
         if ($this.hasClass('double_click')) {
@@ -154,8 +148,6 @@ $(function () {
 
 
     $(".click-circle-trigger").on("click", function () {
-        // TODO: Remove console log
-        console.log("gl_basic.js: click");
         var txt = $(this).text();
         if ($(this).is('.on')) {
             $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
@@ -200,8 +192,6 @@ $(function () {
  * サークル投稿リアルタイム通知
  */
 function setupCircleRealtimeNotification() {
-    // TODO: Remove console log
-    console.log("circle.js: setupCircleRealtimeNotification");
 
     var pusher = new Pusher(cake.pusher.key);
     var socketId = "";
@@ -252,8 +242,6 @@ function setupCircleRealtimeNotification() {
 
 // Ajax的なサークルフィード読み込み
 function evCircleFeed(options) {
-    // TODO: Remove console log
-    console.log("circle.js: evCircleFeed");
 
     var opt = $.extend({
         recursive: false,
@@ -442,8 +430,6 @@ function evCircleFeed(options) {
 }
 
 function updateNotifyOnHamburger() {
-    // TODO: Remove console log
-    console.log("circle.js: updateNotifyOnHamburger");
 
     var $list_elem = $('.js-dashboard-circle-list.is-hamburger');
     var existUnreadCircle = $list_elem.hasClass('is-unread');
@@ -456,8 +442,6 @@ function updateNotifyOnHamburger() {
 
 // サークルフィード用のcake value 更新
 function updateCakeValue(circle_id, title, image_url) {
-    // TODO: Remove console log
-    console.log("circle.js: updateCakeValue");
 
     //サークルフィードでは必ずデフォルト投稿タイプはポスト
     cake.common_form_type = "post";
@@ -488,8 +472,6 @@ function updateCakeValue(circle_id, title, image_url) {
 }
 
 function evAjaxLeaveCircle(e) {
-    // TODO: Remove console log
-    console.log("circle.js: evAjaxLeaveCircle");
     e.preventDefault();
 
     var $this = $(this);
@@ -539,8 +521,6 @@ function evAjaxLeaveCircle(e) {
 }
 
 function evAjaxEditCircleAdminStatus(e) {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evAjaxEditCircleAdminStatus");
     e.preventDefault();
 
     var $this = $(this);

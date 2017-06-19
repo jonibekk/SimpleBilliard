@@ -41,23 +41,16 @@ require.config({
 
 // selectorの存在確認用
 jQuery.fn.exists = function () {
-    // TODO: Remove console log
-    console.log("gl_basic.js: jQuery.fn.exists");
     return Boolean(this.length > 0);
 }
 
 // scrollbarの存在確認用
 jQuery.fn.hasScrollBar = function () {
-    // TODO: Remove console log
-    console.log("gl_basic.js: jQuery.fn.hasScrollBar");
     return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
 
 $(function () {
-    // TODO: Remove console log
-    console.log("LOADING: globals.js");
-
     /**
      * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
      */
@@ -117,8 +110,6 @@ $(function () {
     }
 
     $(".click-show").on("click", function () {
-            // TODO: Remove console log
-            console.log("globals.js: click");
             $("#PostFormPicture").css("display", "block")
         }
     );
@@ -213,8 +204,6 @@ var network_reachable = true;
  * @param attr_name
  */
 function attrUndefinedCheck(obj, attr_name) {
-    // TODO: Remove console log
-    console.log("global.js: attrUndefinedCheck");
     if ($(obj).attr(attr_name) == undefined) {
         var msg = "'" + attr_name + "'" + " is undefined!";
         throw new Error(msg);
@@ -230,8 +219,6 @@ function attrUndefinedCheck(obj, attr_name) {
  * @returns string
  */
 function sanitize(string) {
-    // TODO: Remove console log
-    console.log("global.js: sanitize");
     if (typeof string !== 'string') {
         return string;
     }
@@ -254,9 +241,6 @@ function sanitize(string) {
  * @returns {boolean}
  */
 function checkUploadFileExpire(formID) {
-    // TODO: Remove console log
-    console.log("global.js: checkUploadFileExpire");
-
     var $form = $('#' + formID);
 
     var res = true;
@@ -298,8 +282,6 @@ function checkUploadFileExpire(formID) {
 }
 
 function imageLazyOn($elm_obj) {
-    // TODO: Remove console log
-    console.log("global.js: imageLazyOn");
     var lazy_option = {
         bind: "event",
         attribute: "data-original",
@@ -322,8 +304,6 @@ function imageLazyOn($elm_obj) {
 }
 
 function setDefaultTab() {
-    // TODO: Remove console log
-    console.log("global.js: setDefaultTab");
     if (cake.common_form_type == "") {
         return;
     }
@@ -349,8 +329,6 @@ function setDefaultTab() {
 }
 
 function clickToSetCurrentTeamId() {
-    // TODO: Remove console log
-    console.log("global.js: clickToSetCurrentTeamId");
     if (typeof(Storage) !== "undefined") {
         localStorage.team_id_current = Number(cake.data.team_id);
     } else {
@@ -360,16 +338,12 @@ function clickToSetCurrentTeamId() {
 
 
 function warningCloseModal() {
-    // TODO: Remove console log
-    console.log("global.js: warningCloseModal");
     warningAction($('.modal'));
 }
 
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
-    // TODO: Remove console log
-    console.log("global.js: setChangeWarningForAllStaticPage");
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
         var flag = false;
@@ -401,8 +375,6 @@ function setChangeWarningForAllStaticPage() {
 }
 
 function isMobile() {
-    // TODO: Remove console log
-    console.log("globals.js: isMobile");
     var agent = navigator.userAgent;
     if (agent.search(/iPhone/) != -1 ||
         agent.search(/iPad/) != -1 ||
@@ -415,8 +387,6 @@ function isMobile() {
 }
 
 function copyToClipboard(url) {
-    // TODO: Remove console log
-    console.log("globals.js: copyToClipboard");
     window.prompt(cake.message.info.copy_url, url);
 }
 
@@ -424,8 +394,6 @@ function copyToClipboard(url) {
  * Created by bigplants on 5/23/14.
  */
 function getLocalDate() {
-    // TODO: Remove console log
-    console.log("globals.js: getLocalDate");
     var getTime = jQuery.now();
     var date = new Date(getTime);
     var year = date.getFullYear();
@@ -442,7 +410,6 @@ function getLocalDate() {
 //入力途中での警告表示
 //Ajaxエレメント中の適用したい要素にchange-warningクラスを指定
 function setChangeWarningForAjax() {
-    console.log("globals.js: setChangeWarningForAjax");
     var flag = true;
     $(".change-warning").keyup(function (e) {
         $(document).on('submit', 'form', function () {
@@ -461,8 +428,6 @@ function setChangeWarningForAjax() {
 
 //アドレスバー書き換え
 function updateAddressBar(url) {
-    // TODO: Remove console log
-    console.log("globals.js: updateAddressBar");
     if (typeof history.pushState == 'function') {
         try {
             history.pushState(null, null, url);
@@ -475,22 +440,16 @@ function updateAddressBar(url) {
 }
 
 function evThisHeightUp() {
-    // TODO: Remove console log
-    console.log("globals.js: evThisHeightUp");
     attrUndefinedCheck(this, 'after-height');
     var after_height = $(this).attr("after-height");
     $(this).height(after_height);
 }
 
 function evThisHeightReset() {
-    // TODO: Remove console log
-    console.log("globals.js: evThisHeightReset");
     $(this).css('height', "");
 }
 
 function evFollowGoal() {
-    // TODO: Remove console log
-    console.log("gl_basic.js: evFollowGoal");
     attrUndefinedCheck(this, 'goal-id');
     attrUndefinedCheck(this, 'data-class');
     var $obj = $(this);
@@ -543,8 +502,6 @@ function evFollowGoal() {
  * @param $obj
  */
 function changeSizeFeedImageOnlyOne($obj) {
-    // TODO: Remove console log
-    console.log("posts.js: changeSizeFeedImageOnlyOne");
     $obj.each(function (i, v) {
         var $elm = $(v);
         var $img = $elm.find('img');
