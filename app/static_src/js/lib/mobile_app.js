@@ -18,25 +18,6 @@ function resetBellNum() {
     });
 }
 
-// reset bell message num call from app.
-function resetMessageNum() {
-    // TODO: Remove console log
-    console.log("mobile_app.js: resetMessageNum");
-    initMessageNum();
-    var url = cake.url.ag;
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: true,
-        success: function (data) {
-            // do nothing.
-        },
-        error: function () {
-            // do nothing.
-        }
-    });
-}
-
 function isOnline() {
     // TODO: Remove console log
     console.log("mobile_app.js: isOnline");
