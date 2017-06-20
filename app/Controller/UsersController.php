@@ -381,7 +381,7 @@ class UsersController extends AppController
         // flash削除
         // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
-        //$this->Session->delete('Message.pnotify');
+        $this->Session->delete('Message.noty');
 
         //チーム参加
         $invitedTeam = $this->_joinTeam($this->request->params['named']['invite_token']);
@@ -395,6 +395,9 @@ class UsersController extends AppController
             $this->Notification->outError(__("Failed to register user. Please try again later."));
             return $this->redirect("/");
         }
+
+        // Message of team joining
+        $this->Notification->outSuccess(__("Joined %s.", $team['Team']['name']));
 
         //ホーム画面でモーダル表示
         $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
