@@ -60,6 +60,31 @@ class BaseController extends Controller
     public $current_term_id = null;
     public $next_term_id = null;
 
+    /**
+     * スマホアプリからのリクエストか？
+     * is request from mobile app?
+     *
+     * @var bool
+     */
+    public $is_mb_app = false;
+    /**
+     * iOSスマホアプリからのリクエストか？
+     * is request from mobile app?
+     *
+     * @var bool
+     */
+    public $is_mb_app_ios = false;
+    /**
+     * スマホアプリのUA定義
+     * defined user agents of mobile application
+     *
+     * @var array
+     */
+    private $mobile_app_uas = [
+        'Goalous App iOS',
+        'Goalous App Android'
+    ];
+
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
@@ -230,6 +255,19 @@ class BaseController extends Controller
     function _logOldRequest(string $class, string $method)
     {
         $this->log(sprintf("This is old page. Class: %s::%s referer URL: %s", $class, $method, $this->referer()));
+    }
+
+    public function _decideMobileAppRequest()
+    {
+        $ua = Hash::get($_SERVER, 'HTTP_USER_AGENT');
+        if (strpos($ua, 'Goalous App') !== false) {
+            $this->is_mb_app = true;
+        }
+        $this->set('is_mb_app', $this->is_mb_app);
+        if (strpos($ua, 'Goalous App iOS') !== false) {
+            $this->is_mb_app_ios = true;
+        }
+        $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
 
 }
