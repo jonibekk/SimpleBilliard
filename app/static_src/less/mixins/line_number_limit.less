@@ -65,39 +65,6 @@
   }
 }
 
-.line-number-limit-vision(@fadeColor : @whiteColor){
-  background: @fadeColor;
-  margin: 0;
-  overflow: hidden;
-  line-break: normal;
-  max-height: 40px;
-  line-height: 1.4;
-  position: relative;
-  overflow: hidden;
-  &::before{
-    background: @fadeColor;
-    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
-    position: absolute;
-    content: "...";
-    color: rgba(0, 0, 0, 0);
-    top: 25px;
-    right: 10px;
-    width: 30%;
-    height: 20px;
-    right: 0;
-    padding-bottom: 4px;
-
-  }
-  &::after{
-    background: @fadeColor;
-    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
-    position: absolute;
-    content: "";
-    height: 100%;
-    width: 100%;
-  }
-}
-
 /* legacy -> 置換でき次第で消す 150708 naru */
 .ln_contain {
   overflow: hidden;
