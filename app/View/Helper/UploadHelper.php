@@ -416,7 +416,8 @@ class UploadHelper extends AppHelper
 
     /**
      * calculating expires about s3.
-     *
+     * - border hour based.
+     * - if border hour is 6 and current time is 09:00 then result will be 12:00
      * @return int
      */
     function calcS3Expires(): int
