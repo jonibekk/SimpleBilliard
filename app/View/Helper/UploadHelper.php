@@ -400,8 +400,7 @@ class UploadHelper extends AppHelper
         $file = str_replace('%2F', '/', $file);
         $path = $bucket . '/' . $file;
 
-        $expires = strtotime("tomorrow");
-
+        $expires = $this->calcS3Expires();
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
 
@@ -413,6 +412,30 @@ class UploadHelper extends AppHelper
             . '&Signature=' . $signature;
 
         return $url;
+    }
+
+    /**
+     * calculating expires about s3.
+     *
+     * @return int
+     */
+    function calcS3Expires(): int
+    {
+        // default border hour
+        $expiresBorderHours = 6;
+        if (defined('S3_FILE_EXPIRES_BORDER_HOURS')) {
+            $expiresBorderHours = S3_FILE_EXPIRES_BORDER_HOURS;
+        }
+
+        $startTodayTimestamp = strtotime("today");
+        $targetExpires = 0;
+        for ($h = $expiresBorderHours; $h <= 24; $h = $h + $expiresBorderHours) {
+            $targetExpires = strtotime("+{$h} hours", $startTodayTimestamp);
+            if (REQUEST_TIMESTAMP < $targetExpires) {
+                break;
+            }
+        }
+        return $targetExpires;
     }
 
 }
