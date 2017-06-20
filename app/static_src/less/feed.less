@@ -10,13 +10,33 @@
 }
 
 .post-heading-goal-wrapper {
-  .dashboard-goals-card-header-goal-wrap;
+  overflow: hidden;
   width: 88%;
 }
 
 .post-heading-goal-title {
+  font-weight: bold;
+  color: @darkBlack;
+  font-size: @goalTitleFontSize;
+  max-height: @goalTitleFontSize * @goalTitleLineHeightComputed * @goalTitleLinesToShow;
+  line-height: @goalTitleLineHeightComputed;
+  position: relative;
+  &:before,
+  &:after {
+    background: @goalTitleContainerBgColor;
+    position: absolute;
+  }
+  &:before {
+    content: "...";
+    top: @goalTitleFontSize * @goalTitleLineHeightComputed * (@goalTitleLinesToShow - 1);
+    right: 0;
+  }
+  &:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+  }
   @goalTitleContainerBgColor: @smokyWhite;
-  .dashboard-goals-card-header-goal;
 }
 
 .post-heading-goal-avatar {

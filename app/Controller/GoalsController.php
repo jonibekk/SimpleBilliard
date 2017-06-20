@@ -1086,16 +1086,7 @@ class GoalsController extends AppController
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term',
             'can_add_action'));
 
-        $response = null;
-        switch ($view) {
-            case "key_results":
-                $response = $this->render('Goal/key_results');
-                break;
-            default:
-                $response = $this->render('Goal/key_result_items');
-                break;
-        }
-
+        $response = $this->render('Goal/key_results');
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
@@ -1551,68 +1542,6 @@ class GoalsController extends AppController
         ] : $this->referer();
         return $this->redirect($url);
 
-    }
-
-    public function ajax_get_my_goals()
-    {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
-
-        $param_named = $this->request->params['named'];
-        $this->_ajaxPreProcess();
-        if (isset($param_named['page']) && !empty($param_named['page'])) {
-            $page_num = $param_named['page'];
-        } else {
-            $page_num = 1;
-        }
-
-        $type = Hash::get($param_named, 'type');
-        if (!$type) {
-            return;
-        }
-
-        //今期、来期のゴールを取得する
-        $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
-
-        if ($type === 'leader') {
-            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
-        } elseif ($type === 'collab') {
-            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
-                $start_date, $end_date);
-        } elseif ($type === 'follow') {
-            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
-                $start_date, $end_date);
-        } elseif ($type === 'my_prev') {
-            $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
-        } else {
-            $goals = [];
-        }
-        $goals = $GoalService->processGoals($goals);
-        $current_term = $this->Goal->Team->Term->getCurrentTermData();
-        // アクション可能なゴール数
-        $userId = $this->Auth->user('id');
-        $canActionGoals = $this->Goal->findActionables($userId);
-        $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
-        // 完了アクションが可能なゴールIDリスト
-        $canCompleteGoalIds = Hash::extract(
-            $this->Goal->findCanComplete($userId), '{n}.id'
-        );
-        $currentTermId = $this->Team->Term->getCurrentTermId();
-        $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($currentTermId);
-
-        $this->set(compact('goals', 'type', 'current_term', 'canActionGoals', 'canCompleteGoalIds',
-            'isStartedEvaluation'));
-
-        //エレメントの出力を変数に格納する
-        //htmlレンダリング結果
-        $response = $this->render('Goal/my_goal_area_items');
-        $html = $response->__toString();
-        $result = array(
-            'html'  => $html,
-            'count' => count($goals)
-        );
-        return $this->_ajaxGetResponse($result);
     }
 
     function _setGoalAddViewVals()
