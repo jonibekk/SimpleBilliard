@@ -350,7 +350,7 @@ msgstr "期限"
 msgid "Start Date"
 msgstr "開始日"
 
-msgid "Desctiption"
+msgid "Description"
 msgstr "概要"
 
 msgid "Weight"
