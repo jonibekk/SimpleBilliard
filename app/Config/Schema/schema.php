@@ -1,4 +1,4 @@
-<?php 
+<?php
 class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
@@ -448,6 +448,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0),
+            'evaluate_term_id' => array('column' => 'evaluate_term_id', 'unique' => 0),
 			'evaluatee_user_id' => array('column' => 'evaluatee_user_id', 'unique' => 0),
 			'evaluator_user_id' => array('column' => 'evaluator_user_id', 'unique' => 0),
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0),
