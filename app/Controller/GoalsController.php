@@ -435,6 +435,16 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        // leader cannot edit goal member status..
+        if ($this->Goal->GoalMember->isLeader($goalId, $myUserId)) {
+            $this->_editCollaboError();
+            $this->log(sprintf("Invalid operation. leader attempted to edit collaborator status! requestData: %s teamId: %s",
+                var_export($this->request->data, true), $this->current_team_id));
+            $this->log(Debugger::trace());
+
+            return $this->redirect($this->referer());
+        }
+
         // Check if the goal is completed
         if ($this->Goal->isCompleted($goalId)) {
             $this->Notification->outError(__("You cannot follow or collaborate with a completed goal."));

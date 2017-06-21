@@ -9,7 +9,7 @@ class DATABASE_CONFIG
         'host'       => 'localhost',
         'login'      => 'root',
         'password'   => '',
-        'database'   => 'myapp',
+        'database'   => 'my_app_isao',
         'encoding'   => 'utf8mb4',
     );
 
