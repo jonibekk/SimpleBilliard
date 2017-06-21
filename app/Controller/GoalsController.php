@@ -1415,7 +1415,7 @@ class GoalsController extends AppController
             __("Measurement(Initial)"),
             __("Due Date"),
             __("Start Date"),
-            __("Desctiption"),
+            __("Description"),
             __("Weight")
         ];
         $user_goals = $this->Goal->getAllUserGoal();

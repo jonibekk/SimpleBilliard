@@ -195,7 +195,7 @@ class PostsController extends AppController
     {
         $this->Post->id = Hash::get($this->request->params, 'named.post_id');
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__("This post doesn't exist."));
+            throw new NotFoundException(__("This post no longer exist."));
         }
         if (!$this->Post->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
             throw new NotFoundException(__("This isn't your post."));

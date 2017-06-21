@@ -233,7 +233,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('Make results by coorporation.') ?></h3>
+                <h3 class="title"><?= __('Make results by cooperation.') ?></h3>
                 <div class="details">
                     <p><?= __(
                             'What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently.') ?></p>
