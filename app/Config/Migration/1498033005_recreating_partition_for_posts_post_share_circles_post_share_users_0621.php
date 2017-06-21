@@ -30,22 +30,28 @@ class RecreatingPartitionForPostsPostShareCirclesPostShareUsers0621 extends Cake
     public function before($direction)
     {
         if ($direction === 'up') {
+            // posts table
             $this->db->query("ALTER TABLE posts REMOVE PARTITIONING;");
             $this->db->query("ALTER TABLE posts DROP PRIMARY KEY , ADD PRIMARY KEY (id, created);");
             $this->db->query($this->getQueryForAddPartition('posts', 'created'));
+            // post_share_users table
             $this->db->query("ALTER TABLE post_share_users REMOVE PARTITIONING;");
             $this->db->query("ALTER TABLE post_share_users DROP PRIMARY KEY , ADD PRIMARY KEY (id, created);");
             $this->db->query($this->getQueryForAddPartition('post_share_users', 'created'));
+            // post_share_circles table
             $this->db->query("ALTER TABLE post_share_circles REMOVE PARTITIONING;");
             $this->db->query("ALTER TABLE post_share_circles DROP PRIMARY KEY , ADD PRIMARY KEY (id, created);");
             $this->db->query($this->getQueryForAddPartition('post_share_circles', 'created'));
         } else {
+            // posts table
             $this->db->query("ALTER TABLE posts REMOVE PARTITIONING;");
             $this->db->query("ALTER TABLE posts DROP PRIMARY KEY , ADD PRIMARY KEY (id, modified);");
             $this->db->query($this->getQueryForAddPartition('posts', 'modified'));
+            // post_share_users table
             $this->db->query("ALTER TABLE post_share_users REMOVE PARTITIONING;");
             $this->db->query("ALTER TABLE post_share_users DROP PRIMARY KEY , ADD PRIMARY KEY (id, modified);");
             $this->db->query($this->getQueryForAddPartition('posts', 'modified'));
+            // post_share_circles table
             $this->db->query("ALTER TABLE post_share_circles REMOVE PARTITIONING;");
             $this->db->query("ALTER TABLE post_share_circles DROP PRIMARY KEY , ADD PRIMARY KEY (id, modified);");
             $this->db->query($this->getQueryForAddPartition('posts', 'modified'));
