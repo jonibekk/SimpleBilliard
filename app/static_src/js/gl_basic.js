@@ -1149,10 +1149,11 @@ function addComment(e) {
   if ($ogp_box.find('.media-object').length > 0) {
     var image = $ogp_box.find('.media-object').attr('src');
     var title = $ogp_box.find('.media-heading').text().trim();
-    var site_url = $ogp_box.find('.media-url').text();
     var description = $ogp_box.find('.site-info-txt').text().trim();
-    var type = $ogp_box.find('.media-body').attr('data-type');
-    var site_name = $ogp_box.find('.media-body').attr('data-site-name');
+    var $media_body = $ogp_box.find('.media-body');
+    var site_url = $media_body.attr('data-url');
+    var type = $media_body.attr('data-type');
+    var site_name = $media_body.attr('data-site-name');
 
     formData.append('data[OGP][image]', image);
     formData.append('data[OGP][title]', title);
