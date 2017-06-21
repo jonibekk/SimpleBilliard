@@ -28,7 +28,15 @@ if (isset($site_info['type']) && (
 }
 ?>
 <?php if (isset($site_info)): ?>
-    <div class="col col-xxs-12 pt_10px">
+    <?php if (isset($site_info['is_editing']) && $site_info['is_editing'] === true) : ?>
+        <a href="#" class="font_lightgray comment-ogp-close"><i class="fa fa-times js-ogp-close"></i></a>
+    <?php endif ?>
+    <div class="col pt_10px js-ogp-box"
+    <?php if (isset($site_info['is_editing']) && !empty($site_info['is_editing']) && !empty($comment_id)): ?>
+        id="CommentOgpEditBox_<?= $comment_id ?>"
+    <?php elseif (!empty($comment_id)): ?>
+        id="CommentOgpBox_<?= $comment_id ?>"
+    <?php endif; ?> >
         <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
            onclick="window.open(this.href,'_system');return false;"
            class="no-line font_verydark">
@@ -57,7 +65,8 @@ if (isset($site_info['type']) && (
                             ]) ?>
                         <?php endif ?>
                     </div>
-                    <div class="media-body">
+                    <div class="media-body" data-type="<?= $site_info['type']; ?>" data-url="<?= isset($site_info['url']) ? $site_info['url'] : null ?>"
+                         data-site-name="<?= isset($site_info['site_name'])? $site_info['site_name'] : "" ?>">
                         <h4 class="media-heading font_18px">
                             <?php if (isset($site_info['title'])): ?>
                                 <?php

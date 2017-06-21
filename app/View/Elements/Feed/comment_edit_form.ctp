@@ -44,10 +44,22 @@ $this->Form->create('Comment', [
         'value'                        => $comment['body'],
         'data-bv-stringlength'         => 'true',
         'data-bv-stringlength-max'     => 5000,
+        'data-bv-notempty-message'     => __("Input is required."),
         'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5000),
     ])
     ?>
 </div>
+<?php if ($comment['site_info']): ?>
+    <?php $site_info = json_decode($comment['site_info'], true); $site_info['is_editing'] = true; ?>
+    <?= $this->element('Feed/site_info_block', [
+        'site_info'              => $site_info,
+        'comment_id'             => $comment['id'],
+        'title_max_length'       => 40,
+        'description_max_length' => 95,
+        'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",
+            ['style' => 'small']),
+    ]) ?>
+<?php endif; ?>
 <div class="form-group none" id="<?= $id_prefix ?>CommentEditFormImage_<?= $comment['id'] ?>">
     <ul class="input-images">
         <?php for ($i = 1; $i <= 5; $i++): ?>

@@ -61,6 +61,22 @@ function evCircleFeed(options) {
     loader_id: null
   }, options);
 
+  var $obj = $(this);
+  var get_url = $obj.attr('get-url');
+
+  if ($obj.hasClass('is-hamburger')) {
+    //ハンバーガーから来た場合は隠す
+    $("#header-slide-menu").click();
+  }
+
+  //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+  //要素が多すぎるので、おとなしくページリロードする
+  //urlにcircle_feedを含まない場合も対象外
+  if (!$("#app-view-elements-feed-posts").exists() || !$("#GlobalForms").exists() || !get_url.match(/circle_feed/)) {
+    window.location.href = get_url;
+    return false;
+  }
+
   //フィード読み込み中はキャンセル
   if (feed_loading_now) {
     return false;
@@ -68,8 +84,6 @@ function evCircleFeed(options) {
   feed_loading_now = true;
   attrUndefinedCheck(this, 'get-url');
 
-  var $obj = $(this);
-  var get_url = $obj.attr('get-url');
   var circle_id = sanitize($obj.attr('circle-id'));
   // DOMから取得し再度DOMに投入するデータなのでサニタイズを行う
   var title = sanitize($obj.attr('title'));
@@ -80,17 +94,6 @@ function evCircleFeed(options) {
   var url = get_url.replace(/circle_feed/, "ajax_circle_feed");
   var more_read_url = get_url.replace(/\/circle_feed\//, "\/posts\/ajax_get_feed\/circle_id:");
 
-  if ($obj.hasClass('is-hamburger')) {
-    //ハンバーガーから来た場合は隠す
-    $("#header-slide-menu").click();
-  }
-  //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
-  //要素が多すぎるので、おとなしくページリロードする
-  //urlにcircle_feedを含まない場合も対象外
-  if (!$("#app-view-elements-feed-posts").exists() || !$("#GlobalForms").exists() || !get_url.match(/circle_feed/)) {
-    window.location.href = get_url;
-    return false;
-  }
   //サークルリストのわきに表示されている未読数リセット
   $obj.children(".js-circle-count-box").html("");
   $obj.children(".circle-count_box").children(".count-value").html("");

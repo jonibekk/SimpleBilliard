@@ -15,6 +15,17 @@
   z-index: 100;
 }
 
+.header-logo-img{
+  filter:saturate(0);
+  transition:filter .3s, opacity .3s !important;
+}
+
+.hoverPic:hover{
+  .header-logo-img{
+    filter:saturate(1);
+  }
+}
+
 .mixin-header-toggle-icon (@bgcolor: @backgroundColor1) {
   display: inline-block;
   background: @bgcolor;
@@ -45,6 +56,14 @@
   line-height: 50px;
 }
 
+.toggle-icon.fa-angle-left.mod-larger{
+  font-size:34px;
+  margin-top:6px;
+  &:focus, &:active, &.mod-mousedown{
+    opacity:.5;
+  }
+}
+
 .nav-container {
   width: 100%;
   margin: auto;
@@ -64,13 +83,30 @@
   }
 }
 
-.header-profile-icon,
-.js-header-link,
-.header-logo-img,
-.header-function-link {
-  @media screen and (min-width: 1025px) {
+@media screen and (min-width: 1025px) {
+  .header-profile-icon,
+  .js-header-link,
+  .header-logo-img,
+  .header-function-link {
     opacity: 0.54;
+    transition:opacity .3s ease;
   }
+  .navbar:hover{
+    .header-profile-icon,
+    .js-header-link,
+    .header-logo-img,
+    .header-function-link {
+      opacity:1;
+    }
+  }
+}
+
+.navbar{
+  transition:box-shadow 1s;
+    box-shadow:0px 2px 4px rgba(0, 0, 0, 0);
+    &.mod-box-shadow{
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+    }
 }
 
 .header-dropdowns {
@@ -90,6 +126,9 @@
   color: rgb(80, 80, 80);
   @media screen and (min-width: 992px){
     display: inline-block;;
+  }
+  &:hover{
+    text-decoration:none;
   }
 }
 
@@ -242,6 +281,12 @@
   padding: 0;
 }
 
+.header-nav-avatar {
+  border-radius: 50%;
+  box-shadow: 0rem 0rem 0rem rgba(17, 17, 17, .3);
+  transition:box-shadow .3s;
+}
+
 .header-user-avatar {
   list-style: none;
   line-height: 50px;
@@ -252,38 +297,28 @@
   vertical-align: top;
   &:hover {
     .header-nav-avatar {
-      box-shadow: 0 4px 8px rgba(17, 17, 17, .3);
+      box-shadow: 0rem .2rem .5rem rgba(17, 17, 17, .3);
     }
     .header-user-name {
       text-decoration: underline;
+      color:@basicPink;
+      text-decoration:none;
     }
   }
 }
 
-.header-nav-avatar {
-  border-radius: 50%;
+
+
+.header-icon-zoom .header-icons{
+  transform: scale(1);
+  transition:transform .3s, color .3s;
 }
 
-.btn-header-setup {
-  .btn-animated;
-}
-
-.btn-notify-header {
-  .btn-animated;
-}
-
-.btn-message-header {
-  .btn-animated;
-}
-
-.btn-addition-header {
-  .btn-animated;
-}
-
-.btn-function-header {
-  .btn-animated;
-  .font-lightgray-gray;
-  padding: 0 !important;
+.header-icon-zoom a:hover{ 
+  .header-icons{
+    transform:scale(1.2);
+    color:@goalous;
+  }
 }
 
 .team-members-card-function-box {

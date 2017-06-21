@@ -8,6 +8,18 @@ var Page = {
     input_fields: ["key_result_current_value", 'name', 'key_result_id', 'goal_id']
   },
   submit_flg: false,
+  action_resize: function (reset) {
+    if (reset) {
+      $(".mod-visible").removeClass("mod-visible");
+    }
+    $(".cube-img-blocks-img").each(function (i) {
+      if ($(this)[0]["clientWidth"] > $(this)[0]["clientHeight"] && !$(this).hasClass("mod-visible") && $(this)[0]["clientHeight"] != 0) {
+        $(this).addClass("mod-wider").addClass("mod-visible");
+      } else {
+        $(this).addClass("mod-visible");
+      }
+    });
+  },
   init: function () {
     var self = this;
     // ゴール選択
@@ -29,7 +41,6 @@ var Page = {
       if ($(this).data('is-edit')) {
         return true;
       }
-
       e.stopImmediatePropagation();
       e.preventDefault();
       if (self.submit_flg) {
@@ -44,6 +55,7 @@ var Page = {
         return true;
       }, 1000);
     });
+    this.action_resize();
   },
   submit: function (form) {
     var self = this;
@@ -76,7 +88,11 @@ var Page = {
       success: function (data) {
         // 処理中に値が変更されたケースを想定して、入力途中の警告イベントを解除する
         $(window).off('beforeunload');
-        location.href = "/";
+        if (location.pathname !== "/" && typeof document.referrer !== "undefined") {
+          location.href = document.referrer;
+        } else {
+          location.href = "/";
+        }
       },
       error: function (res, textStatus, errorThrown) {
         var body = res.responseJSON;
@@ -182,5 +198,12 @@ var Page = {
   }
 };
 jQuery(function ($) {
-  Page.init();
+  // TODO: temporary fix for releasing
+  //       should change js to less to manage action iamges size
+  setTimeout(function(){
+    Page.init();
+  }, 1000); //fallback incase images render after page load
+});
+$(window).resize(function () {
+  window.Page.action_resize(true);
 });

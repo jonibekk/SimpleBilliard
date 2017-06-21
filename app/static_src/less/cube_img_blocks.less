@@ -1,20 +1,21 @@
-.cube-img-column {
-  font-size: 0;
-  border-bottom: 1px solid @lightGray;
-  padding: 0 0 2px;
+.profile-user-action-contents{
+  display:block;
+  float:left;
 }
 
-.cube-img-column-frame {
+.cube-img-block {
   background: @backgroundColor1;
   border: 2px solid @backgroundColor2;
-  width: 32.1vw;
-  height: 32.1vw;
-  margin: 0 -1px;
+  border-color:@backgroundColor2;
+  width: 33.33%;
+  height: 0px;
+  padding-top:33.33%;
+  flex-basis:33.33%;
   overflow: hidden;
-  float: none;
-  display: inline-block;
-  vertical-align: middle;
+  display: block;
   position: relative;
+  float:left;
+  transition:border-color .3s ease;
   &:hover,
   &:target,
   &:active,
@@ -23,24 +24,127 @@
   }
 }
 
-@media @medium {
-  .cube-img-column-frame {
-    width: 169px;
-    height: 169px;
+.profile-user-action-contents-add-image{
+  width:20vw;
+  height:20vw;
+  display: block;
+  position: relative;
+  float:left;
+  border-radius:50%;
+  background:@white;
+  margin:auto;
+  display:flex;
+  box-shadow:0px .05em .05em rgba(0,0,0,0.5);
+  transition:box-shadow .2s, transform .2s;
+  transform:translateY(0);
+  svg{
+    fill:@darkGray;
+    height:3rem;
+    width:3rem;
+    margin:auto;
   }
 }
 
-@media @large {
-  .cube-img-column-frame {
-    width: 225px;
-    height: 225px;
+.add-action-link{
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  &:hover{
+    text-decoration:none;
   }
 }
 
-.cube-img-blocks-img {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  // object-fit: cover;
-  // なぜかobject-fitが効かなかった。lazyだからか？
+@media @small{
+  .profile-user-action-contents-add-image{
+    width:100px;
+    height:100px;
+  }
+}
+
+.cube-img-block.add-action{
+  background-color:transparent;
+  display:flex;
+  flex-wrap:wrap;
+  padding-top: 0;
+  height: auto;
+  @media @medium{
+    height:168px;
+  }
+  @media @large{
+    height:227px;
+  }
+  &:hover{
+    svg{
+      fill:@basicPink;
+    }
+  }
+}
+
+.cube-img-block.add-action.mod-only{
+  width:100%;
+  margin-bottom:2rem;
+}
+
+.cube-img-block.add-action.mod-only h3{
+  text-align:center;
+  padding:0 2em;
+  margin:1em 0;
+  float:left;
+  width:100%;
+}
+
+.cube-img-block.add-action.mod-only .profile-user-action-contents-add-image{
+  margin-bottom:1em;
+}
+
+.cube-img-block.add-action:hover{
+  border-color:@backgroundColor2;
+  cursor:pointer;
+}
+
+.cube-img-block.add-action:hover .profile-user-action-contents-add-image{
+  box-shadow:0px .25em .25em rgba(0,0,0,0.25);
+  transform:translateY(-.1em);
+  cursor: pointer;
+}
+
+.add-action-caption{
+  flex-basis:100%;
+  text-align:center;
+  color: @darkGray;
+  transition:color .3s ease;
+  height: auto;
+  position: relative;
+  display: block;
+}
+
+.add-action-link:hover .add-action-caption{
+  color:@basicPink;
+}
+
+.cube-img-block.action-image a{
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0px;
+  left:0px;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+}
+
+.cube-img-blocks-img{
+  width:100%;
+  max-width:none;
+  transition:opacity .3s;
+  opacity:0;
+}
+
+.cube-img-blocks-img.mod-visible{
+  opacity:1;
+}
+
+.cube-img-blocks-img.mod-wider{
+  width:auto;
+  height:100%;
 }

@@ -10,10 +10,10 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="col col-xxs-12 pt_10px">
+<div class="col pt_10px">
     <a href="<?= $this->Html->url([
         'controller' => 'goals',
-        'action'     => 'view_info',
+        'action'     => 'view_krs',
         'goal_id'    => $post['Goal']['id']
     ]) ?>"
        data-url="<?= $this->Html->url([

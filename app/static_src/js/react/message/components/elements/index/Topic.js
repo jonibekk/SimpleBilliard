@@ -36,7 +36,7 @@ class Topic extends React.Component {
           <AvatarsBox users={ topic.users }/>
           <div className="topicList-item-main">
             <div className="topicList-item-main-header">
-              <div className="topicList-item-main-header-title oneline-ellipsis">
+              <div className={`topicList-item-main-header-title oneline-ellipsis ${topic.is_unread ? 'mod-bold' : ''}` }>
                 <span>
                   { topic.display_title }
                 </span>

@@ -11,11 +11,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                     <div class="post-heading-goal-area panel-body pt_10px plr_11px pb_8px bd-b">
-                        <div class="col col-xxs-12">
+                        <div class="col">
                             <div class="post-heading-goal-wrapper pull-left">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'view_info',
+                                    'action'     => 'view_krs',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
                                    data-url="<?= $this->Html->url([
@@ -35,7 +35,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="pull-right">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'goals',
-                                    'action'     => 'view_info',
+                                    'action'     => 'view_krs',
                                     'goal_id'    => $post['Goal']['id']
                                 ]) ?>"
                                    data-url="<?= $this->Html->url([
@@ -65,7 +65,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                 <?php elseif (isset($post['Circle']['id'])): ?>
                     <div class="post-heading-circle-area panel-body pt_10px plr_11px pb_8px bd-b">
-                        <div class="col col-xxs-12">
+                        <div class="col">
                             <div class="post-heading-circle-wrapper pull-left">
                                 <a href="<?= $this->Html->url([
                                     'controller' => 'posts',
@@ -115,7 +115,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
             <?php else: ?>
 
                 <div class="posts-panel-body panel-body">
-                <div class="col col-xxs-12 feed-user">
+                <div class="col feed-user">
                     <div class="pull-right">
                         <div class="dropdown">
                             <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
@@ -174,8 +174,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         )
                         ?>
                         <span class="font_14px font_bold font_verydark">
-                                <?= h($post['User']['display_username']) ?>
-                            </span>
+                            <?= h($post['User']['display_username']) ?>
+                        </span>
                     </a>
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
@@ -223,7 +223,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php if (!empty($imgs)): ?>
                     </div>
                     <div
-                        class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
+                        class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
                         <?php foreach ($imgs as $v): ?>
                             <a href="<?= $v['l'] ?>" rel='lightbox'
                                data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
@@ -231,7 +231,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </a>
                         <?php endforeach; ?>
                     </div>
-                    <div class="panel-body pt_10px plr_11px pb_8px">
+                    <div class="panel-body posts-panel-body pt_10px plr_11px pb_8px">
 
                 <?php endif; ?>
 
@@ -245,7 +245,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
-                    <div class="col col-xxs-12 pt_10px">
+                    <div class="col pt_10px">
                         <a href="<?= $this->Html->url([
                             'controller' => 'posts',
                             'action'     => 'feed',
@@ -284,7 +284,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     </div>
                 <?php endif; ?>
 
-                <div class="col col-xxs-12 pt_10px">
+                <div class="col pt_10px">
                     <?php foreach ($post['PostFile'] as $file): ?>
                         <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                             continue;
@@ -300,7 +300,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
                     <?php $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                     <?php $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
-                    <div class="col col-xxs-12 mt_5px p_5px">
+                    <div class="col feeds-post-goal-buttons">
                         <div class="col col-xxs-6 col-xs-4 mr_5px">
                             <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
                                class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= h($follow_opt['class']) ?>"
@@ -317,14 +317,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                    'goal_id'    => $post['Goal']['id']
                                ]) ?>"
                                data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
-                               class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>">
+                               class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collab p_8px <?= h($collabo_opt['class']) ?>">
                                 <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
                                 <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
                             </a>
                         </div>
                     </div>
                 <?php endif; ?>
-                <div class="col col-xxs-12 feeds-post-btns-area">
+                <div class="col feeds-post-btns-area">
                     <div class="feeds-post-btns-wrap-left">
                         <a href="#"
                            class="click-like feeds-post-like-btn <?= empty($post['MyPostLike']) ? null : "liked" ?>"

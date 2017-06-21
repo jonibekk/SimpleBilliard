@@ -60,7 +60,7 @@
            ]) ?>"
            class="ml_8px modal-ajax-get link-dark-gray">
             <i class="fa fa-flag-o"></i>
-            <span><?= $post['Goal']['name'] ?></span>
+            <span><?= h($post['Goal']['name']) ?></span>
         </a>
 
     <?php endif; ?>

@@ -3,36 +3,156 @@
  * mixinにはしてない。
  */
 
-.users-view-actions, .goals-view-actions {
+ .view-actions-panel-wrap{
+  display:flex;
+  padding:1em;
+  margin:0 auto;
+  width:100%;
+  justify-content:flex-start;
+  align-items:center;
+}
+
+.view-actions-panel-filter{
+  display: block; 
+  float:left;
+  text-align:left;
+  flex-basis:33.33%;
+  flex-shrink:1;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  @media @small{
+    flex-basis:none;
+    flex-shrink:0;
+    flex-grow:2;
+  }
+  strong{
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.view-actions-panel-filter:first-of-type{
+  margin-right:.5em;
+  @media @small{
+    flex-basis:14rem;
+    flex-grow:1;
+  }
+}
+
+.view-actions-panel-filter .dropdown-menu{
+  max-height:17.5em;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  text-overflow:ellipsis;
+  text-align:left;
+  ::-webkit-scrollbar {
+      display:block;
+  }
+  ::-webkit-scrollbar-thumb {
+      display:block;
+  }
+  ::-webkit-scrollbar-button {
+      display:block;
+  }
+}
+
+@media @xsmall{
+  .view-actions-panel-filter .dropdown-menu{
+    width:100%;
+    left:0;
+  }
+}
+
+@media @small{
+  .view-actions-panel-filter .dropdown-menu{
+    width:auto;
+    left:auto;
+  }
+}
+
+.view-actions-panel-filter .dropdown-menu li{
+  width:100%;
+}
+
+.view-actions-panel-filter .dropdown-menu li a{
+  white-space: normal;
+}
+
+.view-actions-panel-filter:last-of-type .dropdown-menu{
+  right:0;
+}
+
+.view-actions-panel-wrap .dropdown-toggle{
+  color:@veryDark;
+  height:1.4em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  display:flex;
+  align-items:center;
+}
+
+.view-actions-panel-wrap .dropdown-toggle:hover{
+  text-decoration: none;
+}
+
+.view-actions-panel-wrap .dropdown-toggle span{
+  color:@acidRed;
+}
+
+.view-action-panel-wrap .btn{
+  min-width:20em;
+}
+
+.view-actions-panel-btngroup-wrap{
+  flex-grow:2;
+  flex-shrink:0;
+  margin-left:.5em;
+}
+
+.view-action-panel-filter-btngroup{
+  border:1px solid @slightGray;
+  border-radius:.25em;
+  float:right;
+}
+
+.view-action-panel-filter-button{
+  text-align:center;
+  padding:.3em 1em;
+  float:left;
+}
+
+.view-action-panel-filter-button:first-of-type{
+  border-right:1px solid @slightGray;
+}
+
+.view-action-panel-filter-button, .view-action-panel-filter-button:hover{
+  color:@black;
+  text-decoration: none;
+}
+
+.view-action-panel-filter-button.mod-active i{
+  color:@basicPink;
+}
+
+.user-view-actions, .goals-view-actions {
   background: @backgroundColor1;
   border: 1px solid @subColor5;
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
 }
 
-.users-view-actions-panel, .goals-view-actions-panel {
+.user-view-actions-panel, .goal-view-actions-panel {
   background: @backgroundColor2;
+  float:left;
+  width:100%;
 }
 
-.users-view-actions-panel-term, .goals-view-actions-panel-term {
-  margin: 0 auto;
-  padding: 10px 0;
-  width: 92vw;
+.user-view-actions-panel .panel-body, .goal-view-actions-panel .panel-body{
+  clear:both;
+}
+
+.user-view-actions-panel-term, .goal-view-actions-panel-term {
+  float:left;
   border-radius: 4px;
-}
-
-@media @medium {
-  .users-view-actions-panel-term, .goals-view-actions-panel-term {
-    width: 480px;
-  }
-}
-
-@media @large {
-  .users-view-actions-panel-term, .goals-view-actions-panel-term {
-    width: 648px;
-  }
-}
-
-.users-view-actions-panel-term-icon, .goals-view-actions-panel-term-icon {
-  background: @backgroundColor1;
 }

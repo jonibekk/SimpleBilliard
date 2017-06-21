@@ -21,7 +21,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
-    <div class="col col-xxs-12 pt_4px">
+    <div class="col col-xxs-12 pt_8px pb_8px">
         <a href="<?= $this->Html->url([
             'controller' => 'users',
             'action'     => 'view_goals',
@@ -39,7 +39,7 @@
         </a>
 
         <div class="comment-body">
-            <div class="col col-xxs-12 comment-text comment-user">
+            <div class="col comment-user">
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
@@ -59,15 +59,11 @@
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
-                                ><?= __("Edit comment") ?></a></li>
-                            <li><?=
-                                $this->Form->postLink(__("Delete comment"),
-                                    [
-                                        'controller' => 'posts',
-                                        'action'     => 'comment_delete',
-                                        'comment_id' => $comment['id']
-                                    ],
-                                    null, __("Do you really want to delete this comment?")) ?></li>
+                                ><?= __("Edit comment") ?></a>
+                            </li>
+                            <li>
+                                <a href="#" class="js-click-comment-delete" comment-id="<?= $comment['id'] ?>"><?= __("Delete comment") ?></a>
+                            </li>
                         </ul>
                     </div>
                 <?php elseif ($my_member_status['TeamMember']['admin_flg']): ?>
@@ -90,7 +86,7 @@
                 </div>
             </div>
             <div
-                class="col col-xxs-12 <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
+                class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= nl2br($this->TextEx->autoLink($comment['body'])) ?></div>
 
             <?php
@@ -139,6 +135,7 @@
                     'site_info'              => $site_info,
                     'title_max_length'       => 40,
                     'description_max_length' => 95,
+                    'comment_id'             => $comment['id'],
                     'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",
                         ['style' => 'small']),
                 ]) ?>

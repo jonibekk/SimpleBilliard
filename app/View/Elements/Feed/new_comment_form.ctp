@@ -14,7 +14,7 @@
 <?=
 $this->Form->create('Comment', [
     'default'         => false,
-    'url'             => ['controller' => 'posts', 'action' => 'ajax_add_comment'],
+    'url'             => '/api/v1/comments/',
     'inputDefaults'   => [
         'div'       => 'form-group mlr_-1px',
         'label'     => false,
