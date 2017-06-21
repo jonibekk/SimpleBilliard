@@ -155,7 +155,7 @@ const config = {
     src: [
       assets_dir + '/css/goalstrap.css',
       node_modules_dir + '/jasny-bootstrap/dist/css/jasny-bootstrap.css',
-      assets_dir + '/css/font-awesome.css',
+      node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
       node_modules_dir + '/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css',
