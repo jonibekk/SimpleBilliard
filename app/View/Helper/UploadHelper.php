@@ -63,6 +63,8 @@ class UploadHelper extends AppHelper
         ],
     ];
 
+    private $s3Expires = null;
+
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
         $options += array('urlize' => false);
@@ -418,10 +420,14 @@ class UploadHelper extends AppHelper
      * calculating expires about s3.
      * - border hour based.
      * - if border hour is 6 and current time is 09:00 then result will be 12:00
+     *
      * @return int
      */
     function calcS3Expires(): int
     {
+        if ($this->s3Expires) {
+            return $this->s3Expires;
+        }
         // default border hour
         $expiresBorderHours = 6;
         if (defined('S3_FILE_EXPIRES_BORDER_HOURS')) {
@@ -436,7 +442,8 @@ class UploadHelper extends AppHelper
                 break;
             }
         }
-        return $targetExpires;
+        $this->s3Expires = $targetExpires;
+        return $this->s3Expires;
     }
 
 }
