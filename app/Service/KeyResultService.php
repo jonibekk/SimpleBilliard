@@ -98,7 +98,7 @@ class KeyResultService extends AppService
     {
         // for error log in https://goalous.slack.com/archives/C0LV38PC6/p1496983479848440
         // TODO: I dont't know the cause of above error. So, logging it.
-        if (!isset($keyResult['completed'])) {
+        if (empty($keyResult)) {
             /** @var TeamMember $TeamMember */
             $TeamMember = ClassRegistry::init('TeamMember');
             $this->log(sprintf("failed to find user! keyResultData: %s, teamId: %s, loggedIn user: %s",
