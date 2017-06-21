@@ -2319,10 +2319,6 @@ textarea.comment-post-form {
         padding: 0 0 0 2.5%;
     }
 
-    .circle-name_box {
-        width: 64%;
-    }
-
     .s2-post-dropdown {
         width: 80% !important;
         margin-right: 0;
@@ -2856,11 +2852,6 @@ Temporary Properties - YOU MUST FIX
     color: #b36e6f;
     width: 100%;
     height: 100%;
-}
-
-.notify-page-cards {
-    overflow: hidden;
-    padding-left: 0;
 }
 
 .no-border {
