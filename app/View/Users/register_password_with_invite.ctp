@@ -20,7 +20,7 @@
                 'class'     => 'form-control signup_input-design'
             ],
             'class'         => 'form-horizontal',
-            'novalidate'    => true,
+            // 'novalidate'    => true,
             'id'            => 'UserPassword',
         ]); ?>
         <?=
@@ -28,7 +28,7 @@
             'placeholder'              => __('********'),
             "data-bv-notempty-message" => __("Input is required."),
             "data-bv-notempty"         => "true",
-            'required'                 => false,
+            'required'                 => true,
             'type'                     => 'password',
             'maxlength'                => 50,
         ]) ?>
@@ -38,7 +38,7 @@
                 [
                     'type'     => 'submit',
                     'class'    => 'btn btn-primary signup-invite-submit-button',
-                    'disabled' => 'disabled'
+                    // 'disabled' => 'disabled'
                 ]) ?>
         </div>
         <?= $this->Form->end(); ?>
@@ -46,24 +46,24 @@
 </div>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#UserPassword').bootstrapValidator({
-            fields: {
-                "data[User][password]": {
-                    validators: {
-                        stringLength: {
-                            min: 8,
-                            message: cake.message.validate.a
-                        },
-                        regexp: {
-                            regexp: /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/,
-                            message: cake.message.validate.e
-                        }
-                    }
-                }
-            }
-        });
-    });
+    // $(document).ready(function () {
+    //     $('#UserPassword').bootstrapValidator({
+    //         fields: {
+    //             "data[User][password]": {
+    //                 validators: {
+    //                     stringLength: {
+    //                         min: 8,
+    //                         message: cake.message.validate.a
+    //                     },
+    //                     regexp: {
+    //                         regexp: /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/,
+    //                         message: cake.message.validate.e
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
+    // });
 </script>
 <?php $this->end(); ?>
 

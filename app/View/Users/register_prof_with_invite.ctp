@@ -23,7 +23,7 @@
                 'class'     => 'form-control signup_input-design'
             ],
             'class'         => 'form-horizontal',
-            'novalidate'    => true,
+            // 'novalidate'    => true,
             'id'            => 'UserProf',
         ]); ?>
         <div class="panel-heading signup-itemtitle"><?= __('Your name') ?></div>
@@ -37,7 +37,7 @@
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-            'required'                     => false,
+            'required'                     => true,
             'value'                        => viaIsSet($last_name)
         ]);
         $first_name = $this->Form->input('first_name', [
@@ -49,7 +49,7 @@
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-            'required'                     => false,
+            'required'                     => true,
             'value'                        => viaIsSet($first_name)
         ]);
 
@@ -67,7 +67,7 @@
                 'text'  => __("I want to receive news and updates by email from Goalous.")
             ],
             'class'     => '',
-            'required'  => false,
+            'required'  => true,
             'checked'   => 'checked'
         ]);
         ?>
@@ -139,7 +139,8 @@
                 'text'  => __("I agree to %s and %s of Goalous.", $tosLink, $ppLink)
             ],
             'class'     => 'validate-checkbox',
-            'required'  => false,
+            'required'  => true,
+            'checked'   => true
         ]);
         //タイムゾーン設定の為のローカル時刻をセット
         echo $this->Form->input('local_date', [
@@ -154,7 +155,7 @@
                 [
                     'type'     => 'submit',
                     'class'    => 'btn btn-primary signup-invite-submit-button',
-                    'disabled' => 'disabled'
+                    // 'disabled' => 'disabled'
                 ]) ?>
         </div>
 
@@ -166,26 +167,26 @@
     $(document).ready(function () {
         //ユーザ登録時にローカル時間をセットする
         $('input#InitLocalDate').val(getLocalDate());
-
-        $('#UserProf').bootstrapValidator({
-            fields: {
-                "validate-checkbox": {
-                    selector: '.validate-checkbox',
-                    validators: {
-                        choice: {
-                            min: 1,
-                            max: 1,
-                            message: cake.message.validate.d
-                        }
-                    }
-                }
-            }
-        });
-
-        // 登録可能な email の validate
-        require(['validate'], function (validate) {
-            window.bvCallbackAvailableEmail = validate.bvCallbackAvailableEmail;
-        });
+    //
+    //     $('#UserProf').bootstrapValidator({
+    //         fields: {
+    //             "validate-checkbox": {
+    //                 selector: '.validate-checkbox',
+    //                 validators: {
+    //                     choice: {
+    //                         min: 1,
+    //                         max: 1,
+    //                         message: cake.message.validate.d
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
+    //
+    //     // 登録可能な email の validate
+    //     require(['validate'], function (validate) {
+    //         window.bvCallbackAvailableEmail = validate.bvCallbackAvailableEmail;
+    //     });
     });
 </script>
 <?php $this->end(); ?>
