@@ -1197,7 +1197,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
 		'modified' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
 		'indexes' => array(
-			'PRIMARY' => array('column' => array('id', 'modified'), 'unique' => 1),
+			'PRIMARY' => array('column' => array('id', 'created'), 'unique' => 1),
 			'post_id' => array('column' => 'post_id', 'unique' => 0),
 			'circle_id' => array('column' => 'circle_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
@@ -1218,7 +1218,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
 		'modified' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
 		'indexes' => array(
-			'PRIMARY' => array('column' => array('id', 'modified'), 'unique' => 1),
+			'PRIMARY' => array('column' => array('id', 'created'), 'unique' => 1),
 			'post_id' => array('column' => 'post_id', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
@@ -1274,7 +1274,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
 		'modified' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
 		'indexes' => array(
-			'PRIMARY' => array('column' => array('id', 'modified'), 'unique' => 1),
+			'PRIMARY' => array('column' => array('id', 'created'), 'unique' => 1),
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0),
