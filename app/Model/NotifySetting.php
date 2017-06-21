@@ -505,8 +505,9 @@ class NotifySetting extends AppModel
         $goalName = null;
         if(Hash::get($options,'goal_id')){
             $goal = $this->User->Goal->findById($options['goal_id']);
-            $goalName = Hash::extract($goal,'Goal.name');
+            $goalName = Hash::get($goal,'Goal.name');
         }
+
         switch ($type) {
             case self::TYPE_FEED_POST:
                 // 共有先ユーザー名 + サークル名
