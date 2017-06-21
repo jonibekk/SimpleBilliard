@@ -13,57 +13,6 @@
 .line-number-trigger {
   margin-bottom: 0;
 }
-.line-number-limit-1(@fadeColor: @whiteColor, @display: block){
-  background: @fadeColor;
-  display: @display;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-  &::before{
-    content: "...";
-    color: rgba(0, 0, 0, 0);
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: @fadeColor;
-    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
-    width: 30%;
-    height: 20px;
-    padding-bottom: 4px;
-  }
-}
-.line-number-limit-2(@fadeColor : @whiteColor){
-  background: @fadeColor;
-  margin: 0;
-  overflow: hidden;
-  line-break: normal;
-  max-height: 40px;
-  line-height: 1.4;
-  position: relative;
-  overflow: hidden;
-  &::before{
-    background: @fadeColor;
-    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
-    position: absolute;
-    content: "...";
-    color: rgba(0, 0, 0, 0);
-    top: 18px;
-    width: 30%;
-    height: 20px;
-    right: 0;
-    padding-bottom: 4px;
-
-  }
-  &::after{
-    background: @fadeColor;
-    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
-    position: absolute;
-    content: "";
-    height: 100%;
-    width: 100%;
-  }
-}
 
 /* legacy -> 置換でき次第で消す 150708 naru */
 .ln_contain {
