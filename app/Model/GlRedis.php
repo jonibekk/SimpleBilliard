@@ -890,12 +890,39 @@ class GlRedis extends AppModel
     {
         $device = $this->makeDeviceHash($email, $ip_address);
         $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
-        $count = $this->Db->incr($key);
+        $count = $this->Db->get($key);
         if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {
             return true;
         }
-        $this->Db->setTimeout($key, ACCOUNT_LOCK_TTL);
         return false;
+    }
+
+    /**
+     * @param string      $email
+     * @param string|null $ipAddress
+     *
+     * @return int
+     */
+    function resetLoginFailedCount(string $email, $ipAddress = null)
+    {
+        $device = $this->makeDeviceHash($email, $ipAddress);
+        $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
+        return $this->Db->del($key);
+    }
+
+    /**
+     * @param string      $email
+     * @param string|null $ipAddress
+     *
+     * @return int $count It's failed count
+     */
+    function incrementLoginFailedCount(string $email, $ipAddress = null): int
+    {
+        $device = $this->makeDeviceHash($email, $ipAddress);
+        $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
+        $count = $this->Db->incr($key);
+        $this->Db->setTimeout($key, ACCOUNT_LOCK_TTL);
+        return $count;
     }
 
     /**
@@ -972,7 +999,7 @@ class GlRedis extends AppModel
 
         // Put back to the previous settings
         ini_set('memory_limit', $memoryLimit);
-        
+
         return $hash_key;
     }
 
