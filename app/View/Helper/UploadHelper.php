@@ -421,22 +421,23 @@ class UploadHelper extends AppHelper
      * - border hour based.
      * - if border hour is 6 and current time is 09:00 then result will be 12:00
      *
+     * @param int $expiresBorderHours It should be 1 to 24
+     *
      * @return int
      */
-    function calcS3Expires(): int
+    function calcS3Expires($expiresBorderHours = 6): int
     {
         if ($this->s3Expires) {
             return $this->s3Expires;
         }
-        // default border hour
-        $expiresBorderHours = 6;
         if (defined('S3_FILE_EXPIRES_BORDER_HOURS')) {
             $expiresBorderHours = S3_FILE_EXPIRES_BORDER_HOURS;
         }
 
         $startTodayTimestamp = strtotime("today");
         $targetExpires = 0;
-        for ($h = $expiresBorderHours; $h <= 24; $h = $h + $expiresBorderHours) {
+
+        for ($h = $expiresBorderHours; $h <= 24; $h += $expiresBorderHours) {
             $targetExpires = strtotime("+{$h} hours", $startTodayTimestamp);
             if (REQUEST_TIMESTAMP < $targetExpires) {
                 break;
