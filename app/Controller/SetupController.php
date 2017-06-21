@@ -179,7 +179,7 @@ class SetupController extends AppController
         $this->_ajaxPreProcess();
 
         App::import('Service', 'CircleService');
-        /** @var ExperimentService $ExperimentService */
+        /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
 
         $userId = $this->Auth->user('id');
@@ -187,10 +187,17 @@ class SetupController extends AppController
         if (Hash::get($_FILES, 'photo')) {
             $data['Circle']['photo'] = $_FILES['photo'];
         }
+        // extract adding member ids
+        $memberIds = [];
+        $members = Hash::get($data, 'Circle.members');
+        if ($members) {
+            $memberIds = $CircleService->extractUserIds($members);
+            unset($data['Circle']['members']);
+        }
 
         // validation
         if (!$CircleService->validateCreate($data, $userId)) {
-            $this->Pnotify->outError($validateCreate);
+            $this->Pnotify->outError(__("Failed to create a circle."));
             return $this->_ajaxGetResponse(['msg' => __("Failed to create a circle."), 'error' => true]);
         }
 
@@ -201,7 +208,7 @@ class SetupController extends AppController
         }
 
         // Notification
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $data['Circle']['id'],
             null, $memberIds);
         $this->Pnotify->outSuccess(__("Created a circle."));
 
