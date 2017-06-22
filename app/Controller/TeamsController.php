@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
+App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
