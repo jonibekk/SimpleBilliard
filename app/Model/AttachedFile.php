@@ -234,6 +234,14 @@ class AttachedFile extends AppModel
         $file_datas = [];
         foreach ($file_hashes as $i => $hash) {
             $file = $Redis->getPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+            // for error log in https://goalous.slack.com/archives/C0LV38PC6/p1497691605323876
+            // TODO: I dont't know the cause of above error. So, logging it.
+            if (empty($file)) {
+                $this->log(sprintf("failed to restore file! hash: %s, teamId: %s, loggedIn user: %s, foreign_key_id: %s, model_type: %s",
+                    $hash, $this->current_team_id, $this->my_uid, $foreign_key_id, $model_type));
+                $this->log(Debugger::trace());
+            }
+
             file_put_contents($file['info']['tmp_name'], $file['content']);
             $file_data = $attached_file_common_data;
 

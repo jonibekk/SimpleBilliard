@@ -147,7 +147,7 @@ class UserTest extends GoalousTestCase
             "[異常系]パスワードは確認パスワードと一致"
         );
         $this->assertTrue(
-            $this->getValidationRes(['password' => '12345678']),
+            $this->getValidationRes(['password' => '1234567a']),
             "[正常系]パスワードは8文字以上"
         );
         $this->assertFalse(
@@ -199,8 +199,8 @@ class UserTest extends GoalousTestCase
             'User'  => [
                 'first_name'       => 'taro',
                 'last_name'        => 'sato',
-                'password'         => '12345678',
-                'password_confirm' => '12345678',
+                'password'         => '1234567a',
+                'password_confirm' => '1234567a',
                 'agree_tos'        => true,
             ],
             'Email' => [
@@ -428,8 +428,8 @@ class UserTest extends GoalousTestCase
 
         $postData = [
             'User' => [
-                'password'         => '12345678',
-                'password_confirm' => '12345678',
+                'password'         => '1234567a',
+                'password_confirm' => '1234567a',
             ],
         ];
         $res = $this->User->passwordReset($user_email, $postData);
