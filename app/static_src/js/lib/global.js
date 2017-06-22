@@ -8,7 +8,7 @@ Noty.overrideDefaults({
 });
 
 // Sentry:js error tracking
-if (cake.sentry_dsn && (cake.env_name !== 'local' && cake.env_name !== 'dev')) {
+if (cake.sentry_dsn && cake.env_name !== 'local') {
     Raven.config(
         cake.sentry_dsn,
         {
