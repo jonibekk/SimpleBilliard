@@ -179,13 +179,20 @@ class SetupController extends AppController
         $this->_ajaxPreProcess();
 
         App::import('Service', 'CircleService');
-        /** @var ExperimentService $ExperimentService */
+        /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
 
         $userId = $this->Auth->user('id');
         $data = $this->request->data;
         if (Hash::get($_FILES, 'photo')) {
             $data['Circle']['photo'] = $_FILES['photo'];
+        }
+        // extract adding member ids
+        $memberIds = [];
+        $members = Hash::get($data, 'Circle.members');
+        if ($members) {
+            $memberIds = $CircleService->extractUserIds($members);
+            unset($data['Circle']['members']);
         }
 
         // validation
@@ -201,7 +208,7 @@ class SetupController extends AppController
         }
 
         // Notification
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $data['Circle']['id'],
             null, $memberIds);
         $this->Notification->outSuccess(__("Created a circle."));
 

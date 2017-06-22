@@ -1894,12 +1894,19 @@ class Post extends AppModel
         return $this->find('all', $options);
     }
 
-    public function isPostedCircleForSetupBy($user_id)
+    public function isPostedCircleForSetupBy($userId)
     {
-        $user = $this->User->getById($user_id);
+        $user = $this->User->getById($userId);
+        // for error log in https://goalous.slack.com/archives/C0LV38PC6/p1497843894088450
+        // TODO: I dont't know the cause of above error. So, logging it.
+        if (empty($user)) {
+            $this->log(sprintf("failed to find user! targetUserId: %s, teamId: %s, loggedIn user: %s",
+                $userId, $this->current_team_id, $this->my_uid));
+            $this->log(Debugger::trace());
+        }
         $options = [
             'conditions' => [
-                'Post.user_id'    => $user_id,
+                'Post.user_id'    => $userId,
                 'Post.type'       => self::TYPE_NORMAL,
                 'Post.modified >' => $user['created']
             ],
