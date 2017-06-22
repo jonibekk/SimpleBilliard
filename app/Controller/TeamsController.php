@@ -2121,31 +2121,31 @@ class TeamsController extends AppController
     /**
      * チーム集計データを返す
      *
-     * @param      $startDate
-     * @param      $endDate
+     * @param      $start_date
+     * @param      $end_date
      * @param      $timezone
      * @param null $groupId
      * @param null $cache_expire
      *
      * @return array
      */
-    protected function _getInsightData($startDate, $endDate, $timezone, $groupId = null, $cache_expire = null)
+    protected function _getInsightData($start_date, $end_date, $timezone, $groupId = null, $cache_expire = null)
     {
         // キャッシュにデータがあればそれを返す
         $insight = null;
         if ($groupId) {
-            $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $startDate, $endDate,
+            $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $start_date, $end_date,
                 $timezone, $groupId);
         } else {
-            $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $startDate, $endDate, $timezone);
+            $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $start_date, $end_date, $timezone);
         }
         if ($insight) {
             return $insight;
         }
 
         $timeAdjust = intval($timezone * HOUR);
-        $startTimestamp = strtotime($startDate . " 00:00:00") - $timeAdjust;
-        $endTimestamp = strtotime($endDate . " 23:59:59") - $timeAdjust;
+        $startTimestamp = strtotime($start_date . " 00:00:00") - $timeAdjust;
+        $endTimestamp = strtotime($end_date . " 23:59:59") - $timeAdjust;
 
         // グループ指定がある場合は、グループに所属する user_id で絞る
         $userIds = null;
@@ -2155,14 +2155,14 @@ class TeamsController extends AppController
 
         // 登録者数
         if ($groupId) {
-            $total = $this->Team->GroupInsight->getTotal($groupId, $startDate, $endDate, $timezone);
+            $total = $this->Team->GroupInsight->getTotal($groupId, $start_date, $end_date, $timezone);
         } else {
-            $total = $this->Team->TeamInsight->getTotal($startDate, $endDate, $timezone);
+            $total = $this->Team->TeamInsight->getTotal($start_date, $end_date, $timezone);
         }
         $user_count = intval($total[0]['max_user_count']);
 
         // アクセスユーザー数
-        $access_user_count = $this->Team->AccessUser->getUniqueUserCount($startDate, $endDate, $timezone,
+        $access_user_count = $this->Team->AccessUser->getUniqueUserCount($start_date, $end_date, $timezone,
             ['user_id' => $userIds]);
 
         // アクション数
@@ -2264,8 +2264,8 @@ class TeamsController extends AppController
             round($message_user_percent) : round($message_user_percent, 1);
 
         $insight = compact(
-            'startDate',
-            'endDate',
+            'start_date',
+            'end_date',
             'user_count',
             'access_user_count',
             'action_count',
@@ -2288,10 +2288,10 @@ class TeamsController extends AppController
 
         // キャッシュに保存
         if ($groupId) {
-            $this->GlRedis->saveGroupInsight($this->current_team_id, $startDate, $endDate, $timezone,
+            $this->GlRedis->saveGroupInsight($this->current_team_id, $start_date, $end_date, $timezone,
                 $groupId, $insight, $cache_expire);
         } else {
-            $this->GlRedis->saveTeamInsight($this->current_team_id, $startDate, $endDate, $timezone,
+            $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone,
                 $insight, $cache_expire);
         }
         return $insight;
