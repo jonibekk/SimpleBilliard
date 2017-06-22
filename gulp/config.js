@@ -151,9 +151,8 @@ const config = {
     'kr_column',
     'message'
   ],
-  css: {
+  css_vendor: {
     src: [
-      assets_dir + '/css/goalstrap.css',
       node_modules_dir + '/jasny-bootstrap/dist/css/jasny-bootstrap.css',
       node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
@@ -167,18 +166,18 @@ const config = {
       node_modules_dir + '/select2/select2.css',
       node_modules_dir + '/select2/select2-bootstrap.css',
       node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
-      assets_dir + '/css/style.css',
-      assets_dir + '/css/nav.css',
-      assets_dir + '/css/nav_media.css'
     ],
-    watch_files: [assets_dir + '/css/**/*.css', '!' + assets_dir + '/css/goalous.min.css'],
+    watch_files: [assets_dir + '/css/**/*.css'],
     output: {
-      file_name: 'goalous',
+      file_name: 'vendors',
       path: compiled_assets_dir + '/css'
     }
   },
   less: {
-    src: [assets_dir + '/less/goalous.less'],
+    src: assets_dir + '/less/pages/*.less',
+    output: {
+      path: compiled_assets_dir + '/css/'
+    },
     watch_files: [assets_dir + '/less/**/*.less']
   }
 }

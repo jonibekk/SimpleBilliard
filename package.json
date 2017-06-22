@@ -69,6 +69,7 @@
     "expect": "^1.20.2",
     "frisby": "^0.8.5",
     "fs-readdir-recursive": "^1.0.0",
+    "glob": "^7.1.2",
     "gulp": "^3.9.1",
     "gulp-accord": "^0.2.0",
     "gulp-autoprefixer": "^3.1.0",

@@ -142,7 +142,7 @@ gulp.task('angular_vendor', done => {
 // react all application
 gulp.task('react', done => {
   //TODO:webpackからeslintを使用
-  
+
   // run webpack
   const webpackConfig = process.env.NODE_ENV === "production" ? webpackProdConfig : webpackDevConfig;
   webpack(webpackConfig, function(err, stats) {
@@ -157,11 +157,17 @@ gulp.task('react', done => {
 // css
 gulp.task('css', done => {
   return runSequence(
-    'css:lesshint',
+    'css_vendor',
+    'less',
+    done
+  )
+})
+
+// less
+gulp.task('less', done => {
+  return runSequence(
+    // 'css:lesshint',
     'css:less',
-    'css:concat',
-    'css:minify',
-    'css:clean',
     done
   )
 })
