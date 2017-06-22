@@ -55,7 +55,7 @@ class CirclesController extends AppController
         }
 
         // Notification
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $data['Circle']['id'],
             null, $memberIds);
         $this->Notification->outSuccess(__("Created a circle."));
 
@@ -344,7 +344,7 @@ class CirclesController extends AppController
             $this->request->data['CircleMember']['admin_flg']);
         // 処理失敗
         if (!$res) {
-            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occured while processing.")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processing.")));
         }
 
         Cache::delete($this->Circle->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true,
@@ -394,7 +394,7 @@ class CirclesController extends AppController
             $this->request->data['CircleMember']['user_id']);
         // 処理失敗
         if (!$res) {
-            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occured while processing.")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processing.")));
         }
         Cache::delete($this->Circle->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true,
             $this->request->data['CircleMember']['user_id']), 'user_data');

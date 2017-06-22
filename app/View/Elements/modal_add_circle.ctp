@@ -30,7 +30,6 @@
                     'class'     => 'form-control modal_input-design',
                 ],
                 'class'         => 'form-horizontal',
-                'novalidate'    => true,
                 'type'          => 'file',
                 'id'            => 'AddCircleForm',
             ]); ?>
@@ -146,7 +145,7 @@
                         </button>
                         <?=
                         $this->Form->submit(__("Create a circle"),
-                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary', 'div' => false]) ?>
 
                     </div>
                 </div>
