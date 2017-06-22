@@ -8,26 +8,24 @@ const config = {
   dest: assets_dir + '/dest',
   js: {
     pages: {
-      home: [
-        assets_dir + '/js/lib/circle.js',
-        assets_dir + '/js/lib/actions.js',
-        assets_dir + '/js/view/home/*.js',
-      ],
-      goals: [
-        assets_dir + '/js/lib/circle.js',
-        assets_dir + '/js/lib/actions.js',
-        assets_dir + '/js/view/goals/*.js',
-      ],
-      team: [
-        assets_dir + '/js/view/teams/*.js',
-      ],
-      user: [
-        assets_dir + '/js/lib/actions.js',
-        assets_dir + '/js/view/users/*.js',
-      ],
-      evaluation: [
-        assets_dir + '/js/view/evaluations/*.js',
-      ]
+        home: [
+            assets_dir + '/js/lib/actions.js',
+            assets_dir + '/js/view/home/*.js',
+        ],
+        goals: [
+            assets_dir + '/js/lib/actions.js',
+            assets_dir + '/js/view/goals/*.js',
+        ],
+        team: [
+            assets_dir + '/js/view/teams/*.js',
+        ],
+        user: [
+            assets_dir + '/js/lib/actions.js',
+            assets_dir + '/js/view/users/*.js',
+        ],
+        evaluation: [
+            assets_dir + '/js/view/evaluations/*.js',
+        ]
     },
     src: [
       assets_dir + '/js/dropzone_setting.js',
@@ -41,6 +39,7 @@ const config = {
       assets_dir + '/js/lib/feed.js',
       assets_dir + '/js/lib/posts.js',
       assets_dir + '/js/lib/comments.js',
+      assets_dir + '/js/lib/circle.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {
@@ -157,14 +156,21 @@ const config = {
       node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
-      assets_dir + '/css/bootstrap-switch.css', //TODO:Change to refer css that npm manage
+
+      // Collapsed design below latest node_modules css
+      // node_modules_dir + '/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css',
+      assets_dir + '/css/bootstrap-switch.css',
+
       node_modules_dir + '/noty/lib/noty.css',
       assets_dir + '/css/lightbox.css',
       assets_dir + '/css/showmore.css',
       assets_dir + '/css/bootstrap-ext-col.css',
       assets_dir + '/css/customRadioCheck.css',
-      assets_dir + '/css/select2.css', //TODO:Change to refer css that npm manage
-      assets_dir + '/css/select2-bootstrap.css', //TODO:Change to refer css that npm manage
+
+      // Collapsed design latest node_modules css
+      assets_dir + '/css/select2.css',
+      assets_dir + '/css/select2-bootstrap.css',
+
       node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
     ],
     watch_files: [assets_dir + '/css/**/*.css'],
