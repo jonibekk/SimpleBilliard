@@ -24,8 +24,7 @@
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
                 ],
-                'class'         => 'form-horizontal validate',
-                'novalidate'    => true
+                'class'         => 'form-horizontal'
             ]); ?>
             <div class="panel-body reset-password-panel-body">
                 <?=

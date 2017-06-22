@@ -104,33 +104,33 @@ $(function () {
                     });
                 });
 
-                var $editCircleForm = $modal_elm.find('#EditCircleForm');
-                $editCircleForm.bootstrapValidator({
-                    excluded: [':disabled'],
-                    live: 'enabled',
-
-                    fields: {
-                        "data[Circle][photo]": {
-
-                            validators: {
-                                file: {
-                                    extension: 'jpeg,jpg,png,gif',
-                                    type: 'image/jpeg,image/png,image/gif',
-                                    maxSize: 10485760,   // 10mb
-                                    message: cake.message.validate.c
-                                }
-                            }
-                        }
-                    }
-                });
-                // submit ボタンが form 外にあるので、自力で制御する
-                $editCircleForm
-                    .on('error.field.bv', function (e) {
-                        $('#EditCircleFormSubmit').attr('disabled', 'disabled');
-                    })
-                    .on('success.field.bv', function (e) {
-                        $('#EditCircleFormSubmit').removeAttr('disabled');
-                    });
+                // var $editCircleForm = $modal_elm.find('#EditCircleForm');
+                // $editCircleForm.bootstrapValidator({
+                //     excluded: [':disabled'],
+                //     live: 'enabled',
+                //
+                //     fields: {
+                //         "data[Circle][photo]": {
+                //
+                //             validators: {
+                //                 file: {
+                //                     extension: 'jpeg,jpg,png,gif',
+                //                     type: 'image/jpeg,image/png,image/gif',
+                //                     maxSize: 10485760,   // 10mb
+                //                     message: cake.message.validate.c
+                //                 }
+                //             }
+                //         }
+                //     }
+                // });
+                // // submit ボタンが form 外にあるので、自力で制御する
+                // $editCircleForm
+                //     .on('error.field.bv', function (e) {
+                //         $('#EditCircleFormSubmit').attr('disabled', 'disabled');
+                //     })
+                //     .on('success.field.bv', function (e) {
+                //         $('#EditCircleFormSubmit').removeAttr('disabled');
+                //     });
                 $modal_elm.modal();
             }).done(function () {
                 $this.removeClass('double_click');
@@ -160,24 +160,24 @@ $(function () {
         }
     });
 
-    $('#AddCircleForm').bootstrapValidator({
-        excluded: [':disabled'],
-        live: 'enabled',
-
-        fields: {
-            "data[Circle][photo]": {
-
-                validators: {
-                    file: {
-                        extension: 'jpeg,jpg,png,gif',
-                        type: 'image/jpeg,image/png,image/gif',
-                        maxSize: 10485760,   // 10mb
-                        message: __("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")
-                    }
-                }
-            }
-        }
-    });
+    // $('#AddCircleForm').bootstrapValidator({
+    //     excluded: [':disabled'],
+    //     live: 'enabled',
+    //
+    //     fields: {
+    //         "data[Circle][photo]": {
+    //
+    //             validators: {
+    //                 file: {
+    //                     extension: 'jpeg,jpg,png,gif',
+    //                     type: 'image/jpeg,image/png,image/gif',
+    //                     maxSize: 10485760,   // 10mb
+    //                     message: __("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
 
     // ハンバーガーメニューのサークル未読点描画
     updateNotifyOnHamburger();
