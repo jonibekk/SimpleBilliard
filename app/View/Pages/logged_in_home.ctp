@@ -12,3 +12,4 @@
     <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
 <?= $this->App->viewEndComment()?>
+

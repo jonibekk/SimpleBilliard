@@ -1,5 +1,5 @@
 app.controller("GroupVisionController",
-    function ($rootScope, $scope, $http, $translate, GroupVisionList, LoginUserGroupId, $sce, notificationService) {
+    function ($rootScope, $scope, $http, $translate, GroupVisionList, LoginUserGroupId, $sce) {
 
         var group_vision_list = GroupVisionList;
         var my_group_vision_count = 0;

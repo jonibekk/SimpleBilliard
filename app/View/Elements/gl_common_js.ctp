@@ -15,12 +15,18 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <?= $this->element('cake_variables') ?>
+<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 
 <?php
-echo $this->Html->script('/js/ng_vendors.min');
+// Include page specific javascript file
+if (isset($page_js_files) && !empty($page_js_files)) {
+    foreach ($page_js_files as $script) {
+        echo $this->Html->script($script);
+    }
+}
+echo $this->PageScript->getPageScript();
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
-echo $this->Html->script('/js/ng_app.min');
 
 // 右カラム用js
 if (!empty($display_dashboard)) {
@@ -39,17 +45,15 @@ if (Hash::get($this->request->params, 'controller') === 'topics')
 }
 ?>
 
-<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
-
 <?php //公開環境のみタグを有効化
 if (PUBLIC_ENV) {
     /** @noinspection PhpDeprecationInspection */
-    echo $this->element('external_service_tags');
+    echo $this->element('intercom');
 }
 ?>
 
 <?= $this->Session->flash('click_event') ?>
-<?php echo $this->Session->flash('pnotify');
+<?php echo $this->Session->flash('noty');
 //環境を識別できるようにリボンを表示
 ?>
 <?php if (ENV_NAME == "stg"): ?>
