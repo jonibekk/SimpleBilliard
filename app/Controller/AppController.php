@@ -284,13 +284,15 @@ class AppController extends BaseController
     function _setActionCnt()
     {
         $model = $this;
-        $current_term = $model->Team->Term->getCurrentTermData();
+        $currentTerm = $model->Team->Term->getCurrentTermData();
         Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
         $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
-            function () use ($model, $current_term) {
-                $current_term = $model->Team->Term->getCurrentTermData();
-                $res = $model->Goal->ActionResult->getCount('me', $current_term['start_date'],
-                    $current_term['end_date']);
+            function () use ($model, $currentTerm) {
+                $currentTerm = $model->Team->Term->getCurrentTermData();
+                $timezone = $this->Team->getTimezone();
+                $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
+                $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
+                $res = $model->Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
                 return $res;
             }, 'user_data');
         $this->set(compact('action_count'));

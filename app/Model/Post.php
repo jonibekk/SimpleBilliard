@@ -1440,14 +1440,14 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param mixed  $user_id ユーザーIDもしくは'me'を指定する。
-     * @param null   $start_date
-     * @param null   $end_date
+     * @param mixed  $userId ユーザーIDもしくは'me'を指定する。
+     * @param null   $startTimestamp
+     * @param null   $endTimestamp
      * @param string $date_col
      *
      * @return int
      */
-    function getCount($user_id = 'me', $start_date = null, $end_date = null, $date_col = 'modified')
+    function getCount($userId = 'me', $startTimestamp = null, $endTimestamp = null, $date_col = 'created')
     {
         $options = [
             'conditions' => [
@@ -1456,18 +1456,18 @@ class Post extends AppModel
             ]
         ];
         // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
-        if ($user_id == 'me') {
+        if ($userId == 'me') {
             $options['conditions']['user_id'] = $this->my_uid;
-        } elseif ($user_id) {
-            $options['conditions']['user_id'] = $user_id;
+        } elseif ($userId) {
+            $options['conditions']['user_id'] = $userId;
         }
 
         //期間で絞り込む
-        if ($start_date) {
-            $options['conditions']["$date_col >="] = AppUtil::getStartTimestampByTimezone($start_date);
+        if ($startTimestamp) {
+            $options['conditions']["$date_col >="] = $startTimestamp;
         }
-        if ($end_date) {
-            $options['conditions']["$date_col <="] = AppUtil::getEndTimestampByTimezone($end_date);
+        if ($endTimestamp) {
+            $options['conditions']["$date_col <="] = $endTimestamp;
         }
         $res = $this->find('count', $options);
         return $res;

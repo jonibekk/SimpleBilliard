@@ -45,29 +45,31 @@ class TeamsController extends AppController
         // Get timezone label
         $timezoneLabel = $this->getTimezoneLabel($team['timezone']);
         $this->set([
-            'team' => $team,
+            'team'                    => $team,
             'current_term_start_date' => $currentTermStartDate,
-            'current_term_end_date' => $currentTermEndDate,
-            'next_term_start_date' => $nextTermStartDate,
-            'next_term_end_date' => $nextTermEndDate,
-            'changed_term_flg' => $changedTermFlg,
-            'timezone_label' => $timezoneLabel,
+            'current_term_end_date'   => $currentTermEndDate,
+            'next_term_start_date'    => $nextTermStartDate,
+            'next_term_end_date'      => $nextTermEndDate,
+            'changed_term_flg'        => $changedTermFlg,
+            'timezone_label'          => $timezoneLabel,
         ]);
     }
 
     /**
      * Get Label for timezone
+     *
      * @param float $timezone
      *
      * @return mixed
      */
-    private function getTimezoneLabel(float $timezone) {
+    private function getTimezoneLabel(float $timezone)
+    {
         $timezones = AppUtil::getTimezoneList();
         $prefix = "";
         if ($timezone != 0 && abs($timezone) === $timezone) {
             $prefix = '+';
         }
-        $timezone = $prefix.number_format($timezone,1);
+        $timezone = $prefix . number_format($timezone, 1);
         return $timezones[$timezone];
     }
 
@@ -1413,22 +1415,22 @@ class TeamsController extends AppController
 
         // 週単位、月単位の場合
         if ($date_range_type == 'week' || $date_range_type == 'month') {
-            $target_start_date = $start_date;
-            $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
+            $targetStartDate = $start_date;
+            $targetEndDate = $this->_insightAdjustEndDate($end_date, $date_info['today']);
             for ($i = 0; $i < 2; $i++) {
                 // 指定範囲のデータ
-                $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                $insights[] = $this->_getInsightData($targetStartDate, $targetEndDate, $timezone, $group_id,
                     $cache_expire);
 
                 $next_target = null;
                 if ($date_range_type == 'week') {
-                    $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
+                    $next_target = $this->Team->TeamInsight->getWeekRangeDate($targetStartDate, ['offset' => -1]);
                 } elseif ($date_range_type == 'month') {
-                    $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date,
+                    $next_target = $this->Team->TeamInsight->getMonthRangeDate($targetStartDate,
                         ['offset' => -1]);
                 }
-                $target_start_date = $next_target['start'];
-                $target_end_date = $next_target['end'];
+                $targetStartDate = $next_target['start'];
+                $targetEndDate = $next_target['end'];
 
                 // 古いデータのキャッシュ有効期限は１週間
                 $cache_expire = WEEK;
@@ -2118,128 +2120,121 @@ class TeamsController extends AppController
     /**
      * チーム集計データを返す
      *
-     * @param      $start_date
-     * @param      $end_date
+     * @param      $startDate
+     * @param      $endDate
      * @param      $timezone
-     * @param null $group_id
+     * @param null $groupId
      * @param null $cache_expire
      *
      * @return array
      */
-    protected function _getInsightData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
+    protected function _getInsightData($startDate, $endDate, $timezone, $groupId = null, $cache_expire = null)
     {
         // キャッシュにデータがあればそれを返す
         $insight = null;
-        if ($group_id) {
-            $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $start_date, $end_date,
-                $timezone, $group_id);
+        if ($groupId) {
+            $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $startDate, $endDate,
+                $timezone, $groupId);
         } else {
-            $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $start_date, $end_date, $timezone);
+            $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $startDate, $endDate, $timezone);
         }
         if ($insight) {
             return $insight;
         }
 
-        $time_adjust = intval($timezone * HOUR);
-        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
-        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+        $timeAdjust = intval($timezone * HOUR);
+        $startTimestamp = strtotime($startDate . " 00:00:00") - $timeAdjust;
+        $endTimestamp = strtotime($endDate . " 23:59:59") - $timeAdjust;
 
         // グループ指定がある場合は、グループに所属する user_id で絞る
-        $user_ids = null;
-        if ($group_id) {
-            $user_ids = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $group_id);
+        $userIds = null;
+        if ($groupId) {
+            $userIds = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $groupId);
         }
 
         // 登録者数
-        if ($group_id) {
-            $total = $this->Team->GroupInsight->getTotal($group_id, $start_date, $end_date, $timezone);
+        if ($groupId) {
+            $total = $this->Team->GroupInsight->getTotal($groupId, $startDate, $endDate, $timezone);
         } else {
-            $total = $this->Team->TeamInsight->getTotal($start_date, $end_date, $timezone);
+            $total = $this->Team->TeamInsight->getTotal($startDate, $endDate, $timezone);
         }
         $user_count = intval($total[0]['max_user_count']);
 
         // アクセスユーザー数
-        $access_user_count = $this->Team->AccessUser->getUniqueUserCount($start_date, $end_date, $timezone,
-            ['user_id' => $user_ids]);
+        $access_user_count = $this->Team->AccessUser->getUniqueUserCount($startDate, $endDate, $timezone,
+            ['user_id' => $userIds]);
 
         // アクション数
-        $action_count = $this->Post->ActionResult->getCount($user_ids, $start_time, $end_time, 'created');
+        $action_count = $this->Post->ActionResult->getCount($userIds, $startTimestamp, $endTimestamp, 'created');
 
         // アクションユーザー数
         $action_user_count = $this->Post->ActionResult->getUniqueUserCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
 
         // 投稿数
-        $post_count = $this->Post->getCount($user_ids, $start_time, $end_time, 'created');
+        $post_count = $this->Post->getCount($userIds, $startTimestamp, $endTimestamp, 'created');
 
         // 投稿ユーザー数
         $post_user_count = $this->Post->getUniqueUserCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
 
         // 投稿いいね数
         $post_like_count = $this->Post->PostLike->getCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         // コメントいいね数
         $comment_like_count = $this->Post->Comment->CommentLike->getCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         // 総イイね数
         $like_count = $post_like_count + $comment_like_count;
 
         // 投稿いいねユーザー数
         $post_like_user_list = $this->Post->PostLike->getUniqueUserList([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         // コメントいいねユーザー数
         $comment_like_user_list = $this->Post->Comment->CommentLike->getUniqueUserList([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         $like_user_count = count(array_unique(array_merge($post_like_user_list, $comment_like_user_list)));
 
         // コメント数
         $comment_count = $this->Post->Comment->getCount([
-            'start'     => $start_time,
-            'end'       => $end_time,
+            'start'     => $startTimestamp,
+            'end'       => $endTimestamp,
             'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
-            'user_id'   => $user_ids
+            'user_id'   => $userIds
         ]);
 
         // コメントユーザー数
         $comment_user_count = $this->Post->Comment->getUniqueUserCount([
-            'start'     => $start_time,
-            'end'       => $end_time,
+            'start'     => $startTimestamp,
+            'end'       => $endTimestamp,
             'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
-            'user_id'   => $user_ids
+            'user_id'   => $userIds
         ]);
 
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
         // メッセージ数
-        $message_count = $this->Post->getMessageCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
-        ]);
-
+        $message_count = $Message->getCount($userIds, $startTimestamp, $endTimestamp, false);
         // メッセージユーザー数
-        $message_user_count = $this->Post->getMessageUserCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
-        ]);
+        $message_user_count = $Message->getCount($userIds, $startTimestamp, $endTimestamp, true);
 
         // ログイン率
         $access_user_percent = $user_count ? $access_user_count / $user_count * 100 : 0;
@@ -2268,8 +2263,8 @@ class TeamsController extends AppController
             round($message_user_percent) : round($message_user_percent, 1);
 
         $insight = compact(
-            'start_date',
-            'end_date',
+            'startDate',
+            'endDate',
             'user_count',
             'access_user_count',
             'action_count',
@@ -2291,11 +2286,11 @@ class TeamsController extends AppController
         );
 
         // キャッシュに保存
-        if ($group_id) {
-            $this->GlRedis->saveGroupInsight($this->current_team_id, $start_date, $end_date, $timezone,
-                $group_id, $insight, $cache_expire);
+        if ($groupId) {
+            $this->GlRedis->saveGroupInsight($this->current_team_id, $startDate, $endDate, $timezone,
+                $groupId, $insight, $cache_expire);
         } else {
-            $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone,
+            $this->GlRedis->saveTeamInsight($this->current_team_id, $startDate, $endDate, $timezone,
                 $insight, $cache_expire);
         }
         return $insight;

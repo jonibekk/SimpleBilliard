@@ -334,4 +334,41 @@ class Message extends AppModel
         }
         return false;
     }
+
+    /**
+     * メッセージ数（返信も含める）を返す
+     *
+     * @param array $userIds
+     * @param int   $startTimestamp
+     * @param int   $endTimestamp
+     * @param bool  $isUniqUser
+     *
+     * @return int
+     */
+    function getCount($userIds = [], $startTimestamp = null, $endTimestamp = null, $isUniqUser = false): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+            ]
+        ];
+
+        if ($startTimestamp !== null) {
+            $options['conditions']["Post.created >="] = $startTimestamp;
+        }
+        if ($endTimestamp !== null) {
+            $options['conditions']["Post.created <="] = $endTimestamp;
+        }
+        if ($userIds !== null) {
+            $options['conditions']["Post.user_id"] = $userIds;
+        }
+        $MessageList = $this->find('list', $options);
+        if ($isUniqUser) {
+            $count = count(array_unique($MessageList));
+        } else {
+            $count = count($MessageList);
+        }
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $count;
+    }
 }
