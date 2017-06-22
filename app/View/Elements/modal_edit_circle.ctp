@@ -138,6 +138,7 @@
                         </div>
                     </div>
                 </div>
+                <?php // dummy hide submit button for html5 validation ?>
                 <?= $this->Form->submit(__(""),
                             ['class' => 'none', 'div' => false, 'id' => 'EditCircleFormSubmit']) ?>
                 <?= $this->Form->end(); ?>
