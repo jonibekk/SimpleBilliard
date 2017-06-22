@@ -341,11 +341,10 @@ class Message extends AppModel
      * @param array|null $userIds
      * @param int        $startTimestamp
      * @param int        $endTimestamp
-     * @param bool       $isUniqUser
      *
      * @return int
      */
-    function getCount($userIds = null, $startTimestamp = null, $endTimestamp = null, $isUniqUser = false): int
+    function getCount($userIds = null, $startTimestamp = null, $endTimestamp = null): int
     {
         $options = [
             'conditions' => [
@@ -362,13 +361,45 @@ class Message extends AppModel
         if ($userIds !== null) {
             $options['conditions']["sender_user_id"] = $userIds;
         }
-        $MessageList = $this->find('list', $options);
-        if ($isUniqUser) {
-            $count = count(array_unique($MessageList));
-        } else {
-            $count = count($MessageList);
-        }
+        $count = $this->find('count', $options);
         /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $count;
+    }
+
+    /**
+     * 投稿したユニークユーザー数を返す
+     *
+     * @param null $userIds
+     * @param null $startTimestamp
+     * @param null $endTimestamp
+     *
+     * @return mixed
+     */
+    public function getUniqueUserCount($userIds = null, $startTimestamp = null, $endTimestamp = null)
+    {
+        $options = [
+            'fields'     => [
+                'COUNT(DISTINCT sender_user_id) as cnt',
+            ],
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($startTimestamp !== null) {
+            $options['conditions']["created >="] = $startTimestamp;
+        }
+        if ($endTimestamp !== null) {
+            $options['conditions']["created <="] = $endTimestamp;
+        }
+        if ($userIds !== null) {
+            $options['conditions']["sender_user_id"] = $userIds;
+        }
+        $row = $this->find('first', $options);
+
+        $count = 0;
+        if (isset($row[0]['cnt'])) {
+            $count = $row[0]['cnt'];
+        }
         return $count;
     }
 }

@@ -2233,9 +2233,9 @@ class TeamsController extends AppController
         /** @var Message $Message */
         $Message = ClassRegistry::init('Message');
         // メッセージ数
-        $message_count = $Message->getCount($userIds, $startTimestamp, $endTimestamp, false);
+        $message_count = $Message->getCount($userIds, $startTimestamp, $endTimestamp);
         // メッセージユーザー数
-        $message_user_count = $Message->getCount($userIds, $startTimestamp, $endTimestamp, true);
+        $message_user_count = $Message->getUniqueUserCount($userIds, $startTimestamp, $endTimestamp);
 
         // ログイン率
         $access_user_percent = $user_count ? $access_user_count / $user_count * 100 : 0;
