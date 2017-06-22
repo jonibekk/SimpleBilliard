@@ -338,14 +338,14 @@ class Message extends AppModel
     /**
      * メッセージ数（返信も含める）を返す
      *
-     * @param array $userIds
-     * @param int   $startTimestamp
-     * @param int   $endTimestamp
-     * @param bool  $isUniqUser
+     * @param array|null $userIds
+     * @param int        $startTimestamp
+     * @param int        $endTimestamp
+     * @param bool       $isUniqUser
      *
      * @return int
      */
-    function getCount($userIds = [], $startTimestamp = null, $endTimestamp = null, $isUniqUser = false): int
+    function getCount($userIds = null, $startTimestamp = null, $endTimestamp = null, $isUniqUser = false): int
     {
         $options = [
             'conditions' => [
@@ -354,13 +354,13 @@ class Message extends AppModel
         ];
 
         if ($startTimestamp !== null) {
-            $options['conditions']["Post.created >="] = $startTimestamp;
+            $options['conditions']["created >="] = $startTimestamp;
         }
         if ($endTimestamp !== null) {
-            $options['conditions']["Post.created <="] = $endTimestamp;
+            $options['conditions']["created <="] = $endTimestamp;
         }
         if ($userIds !== null) {
-            $options['conditions']["Post.user_id"] = $userIds;
+            $options['conditions']["sender_user_id"] = $userIds;
         }
         $MessageList = $this->find('list', $options);
         if ($isUniqUser) {
