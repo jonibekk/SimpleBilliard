@@ -394,43 +394,6 @@ class PostTest extends GoalousTestCase
         $this->assertEquals(1, $res);
     }
 
-    function testGetMessageCount()
-    {
-        $this->Post->current_team_id = 1;
-        $this->Post->my_uid = 1;
-        $this->Post->Comment->current_team_id = 1;
-        $this->Post->Comment->my_uid = 1;
-
-        $now = time();
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 2, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
-        $count = $this->Post->getMessageCount([
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR
-        ]);
-        $this->assertEquals(2, $count);
-
-        $post_id = $this->Post->getLastInsertID();
-        $this->Post->Comment->create();
-        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => $post_id, 'body' => 'test']);
-        $count = $this->Post->getMessageCount([
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR
-        ]);
-        $this->assertEquals(3, $count);
-
-        $count = $this->Post->getMessageCount([
-            'start'   => $now - HOUR,
-            'end'     => $now + HOUR,
-            'user_id' => 1
-        ]);
-        $this->assertEquals(2, $count);
-    }
-
     function testGetUniqueUserCount()
     {
         $this->Post->current_team_id = 1;
@@ -456,53 +419,6 @@ class PostTest extends GoalousTestCase
             'user_id' => 1,
         ]);
         $this->assertEquals(1, $count);
-    }
-
-    function testGetMessageUserCount()
-    {
-        $this->Post->current_team_id = 1;
-        $this->Post->my_uid = 1;
-        $this->Post->Comment->current_team_id = 1;
-        $this->Post->Comment->my_uid = 1;
-
-        $now = time();
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
-        $normal_post_id = $this->Post->getLastInsertID();
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
-        $this->Post->create();
-        $this->Post->save(['team_id' => 1, 'user_id' => 2, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
-        $message_post_id = $this->Post->getLastInsertID();
-        $this->Post->Comment->create();
-        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => $message_post_id, 'body' => 'test']);
-        $this->Post->Comment->create();
-        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 3, 'post_id' => $message_post_id, 'body' => 'test']);
-        $this->Post->Comment->create();
-        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 4, 'post_id' => $normal_post_id, 'body' => 'test']);
-
-        $count = $this->Post->getMessageUserCount([
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR
-        ]);
-        $this->assertEquals(3, $count);
-
-        $count = $this->Post->getMessageUserCount([
-            'start'   => $now - HOUR,
-            'end'     => $now + HOUR,
-            'user_id' => [1, 2],
-        ]);
-        $this->assertEquals(2, $count);
-
-        $count = $this->Post->getMessageUserCount([
-            'start'   => $now - HOUR,
-            'end'     => $now + HOUR,
-            'user_id' => [1, 4],
-        ]);
-        $this->assertEquals(1, $count);
-
     }
 
     function testGetPostCountUserRanking()
@@ -1105,12 +1021,12 @@ class PostTest extends GoalousTestCase
         $this->User->save(['created' => $this->start_date - 1]);
         // In case that user posted circle post
         $this->Post->save([
-            'id'      => 1,
-            'body'    => 'test',
-            'team_id' => $this->Post->current_team_id,
-            'user_id' => 1,
-            'type'    => Post::TYPE_NORMAL,
-            'created' => $this->start_date,
+            'id'       => 1,
+            'body'     => 'test',
+            'team_id'  => $this->Post->current_team_id,
+            'user_id'  => 1,
+            'type'     => Post::TYPE_NORMAL,
+            'created'  => $this->start_date,
             'modified' => $this->start_date,
         ]);
         $this->Post->PostShareCircle->save([
@@ -1119,7 +1035,7 @@ class PostTest extends GoalousTestCase
             'circle_id' => 1,
             'team_id'   => 1,
             'created'   => $this->start_date,
-            'modified' => $this->start_date,
+            'modified'  => $this->start_date,
         ]);
         $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
         $this->assertTrue($res);
