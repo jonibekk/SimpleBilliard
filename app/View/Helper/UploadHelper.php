@@ -402,7 +402,7 @@ class UploadHelper extends AppHelper
         $file = str_replace('%2F', '/', $file);
         $path = $bucket . '/' . $file;
 
-        $expires = $this->calcS3Expires();
+        $expires = $this->getS3Expires();
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
 
@@ -421,13 +421,14 @@ class UploadHelper extends AppHelper
      * - border hour based.
      * - if border hour is 6 and current time is 09:00 then result will be 12:00
      *
-     * @param int $expiresBorderHours It should be 1 to 24
+     * @param int $expiresBorderHour It should be 1 to 24
      * @param int $targetTimestamp
      *
      * @return int
      */
-    function calcS3Expires($expiresBorderHours = 6, $targetTimestamp = REQUEST_TIMESTAMP): int
+    function getS3Expires($expiresBorderHour = 6, $targetTimestamp = REQUEST_TIMESTAMP): int
     {
+        // using the property as cache
         if ($this->s3Expires) {
             return $this->s3Expires;
         }
@@ -435,7 +436,8 @@ class UploadHelper extends AppHelper
         $startTodayTimestamp = strtotime("today", $targetTimestamp);
         $targetExpires = 0;
 
-        for ($h = $expiresBorderHours; $h <= 24; $h += $expiresBorderHours) {
+        // increment hour from start the day, if it's over current time, expires will be that.
+        for ($h = $expiresBorderHour; $h <= 24; $h += $expiresBorderHour) {
             $targetExpires = strtotime("+{$h} hours", $startTodayTimestamp);
             if ($targetTimestamp < $targetExpires) {
                 break;
