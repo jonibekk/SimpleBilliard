@@ -1893,12 +1893,6 @@ class NotifyBizComponent extends Component
         if (!$userId || !$installationId) {
             throw new RuntimeException(__('Parameters were wrong'));
         }
-        // TODO: やること
-        // 1. installation_idをキーにしてnifty cloudにdeviceTokenを問い合わせる
-        // 2. user_id, device_token, installation_idをキーにDB問い合わせる。あれば何もしない。処理終了
-        // 3. installation_id || device_tokenをキーにDBからレコード削除
-        // 4. user_id, device_token, installation_idのレコード追加
-
         //Nifty CloudからDeviceTokenを取得
         $ncDeviceInfo = $this->getDeviceInfo($installationId);
         if (!isset($ncDeviceInfo['deviceToken'])) {
@@ -1906,7 +1900,7 @@ class NotifyBizComponent extends Component
         }
         $deviceToken = $ncDeviceInfo['deviceToken'];
 
-        //device_tokenとinstallation_idをキーにしてdbからデータ取ってくる
+        //正しいデバイストークンの存在確認。device_tokenとinstallation_idをキーにしてdbからデータ取ってくる
         $device = $this->Device->find('first', [
             'conditions' => [
                 'device_token'    => $deviceToken,
