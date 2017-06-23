@@ -37,10 +37,11 @@ gulp.task('css:less', () => {
   })
 })
 function buildLess(filePath) {
-  // TODO:delete 
+  // TODO:delete
   let fileName = filePath.replace(/^.*[\\\/]/, '');
   fileName = fileName.replace(/.less/, '');
-  if (fileName != "feed") {
+  const targetLessList = ['feed', 'goal_detail'];
+  if (targetLessList.indexOf(fileName) == -1)  {
     return;
   }
 

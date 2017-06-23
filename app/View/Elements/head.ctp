@@ -31,9 +31,8 @@
     echo $this->fetch('meta');
     echo $this->fetch('css');
 
-//    echo $this->Html->css('goalous.min', array('media' => 'screen'));
     echo $this->Html->css('vendors.min', array('media' => 'screen'));
-    echo $this->Html->css('feed.min', array('media' => 'screen'));
+    echo $this->PageResource->outputPageCss();
     echo $this->Html->script('/js/goalous.prerender.min');
 
     ?>
