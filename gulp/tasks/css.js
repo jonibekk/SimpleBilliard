@@ -40,7 +40,7 @@ function buildLess(filePath) {
   // TODO:delete
   let fileName = filePath.replace(/^.*[\\\/]/, '');
   fileName = fileName.replace(/.less/, '');
-  const targetLessList = ['feed', 'goal_detail'];
+  const targetLessList = ['feed', 'goal_detail', 'user_profile'];
   if (targetLessList.indexOf(fileName) == -1)  {
     return;
   }
