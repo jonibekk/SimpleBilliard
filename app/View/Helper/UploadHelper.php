@@ -63,6 +63,10 @@ class UploadHelper extends AppHelper
         ],
     ];
 
+    /**
+     * It's for caching expires timestamp.
+     * @var null|int
+     */
     private $s3Expires = null;
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
