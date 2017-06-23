@@ -1882,57 +1882,68 @@ class NotifyBizComponent extends Component
      * installation_idでNCMBからdevice_tokenをとってきて
      * Deviceに保存する
      *
-     * @param $user_id
-     * @param $installation_id
+     * @param $userId
+     * @param $installationId
      * @param $version
      *
      * @return bool
      */
-    function saveDeviceInfo($user_id, $installation_id, $version = null)
+    function saveDeviceInfo($userId, $installationId, $version = null)
     {
-        if (!$user_id || !$installation_id) {
+        if (!$userId || !$installationId) {
             throw new RuntimeException(__('Parameters were wrong'));
         }
-        //まずinstallation_idとuser_idをキーにしてdbからデータとってくる
-        $device = $this->Device->find('first',
-            ['conditions' => ['user_id' => $user_id, 'installation_id' => $installation_id]]);
-        if (empty($device)) {
-            //もしなければNifty CloudからDeviceTokenを取得
-            $nc_device_info = $this->getDeviceInfo($installation_id);
-            if (!isset($nc_device_info['deviceToken'])) {
-                throw new RuntimeException(__('Device Information not exists'));
-            }
-            //device_tokenとuser_idをキーにしてdbからデータ取ってくる
-            $device = $this->Device->find('first',
-                ['conditions' => ['user_id' => $user_id, 'device_token' => $nc_device_info['deviceToken']]]);
-            if (!empty($device)) {
-                //見つかった場合はinstallation_idを保存
-                $this->Device->id = $device['Device']['id'];
-                $device = Hash::merge($device, $this->Device->saveField('installation_id', $installation_id));
-            } else {
-                //見つからない場合は、新規でdevice tokenを保存
-                $device_type = $nc_device_info['deviceType'];
-                App::uses('Device', 'Model');
-                $os_type = Device::OS_TYPE_OTHER;
-                if ($device_type == "android") {
-                    $os_type = Device::OS_TYPE_ANDROID;
-                } elseif ($device_type == "ios") {
-                    $os_type = Device::OS_TYPE_IOS;
-                }
+        // TODO: やること
+        // 1. installation_idをキーにしてnifty cloudにdeviceTokenを問い合わせる
+        // 2. user_id, device_token, installation_idをキーにDB問い合わせる。あれば何もしない。処理終了
+        // 3. installation_id || device_tokenをキーにDBからレコード削除
+        // 4. user_id, device_token, installation_idのレコード追加
 
-                $this->Device->create();
-                $device = $this->Device->save([
-                    'Device' => [
-                        'user_id'         => $user_id,
-                        'device_token'    => $nc_device_info['deviceToken'],
-                        'os_type'         => $os_type,
-                        'version'         => $version,
-                        'installation_id' => $installation_id,
-                    ]
-                ]);
-                if (empty($device)) {
-                    throw new RuntimeException(__('Failed to save a Device Information.'));
-                }
+        //Nifty CloudからDeviceTokenを取得
+        $ncDeviceInfo = $this->getDeviceInfo($installationId);
+        if (!isset($ncDeviceInfo['deviceToken'])) {
+            throw new RuntimeException(__('Device Information not exists'));
+        }
+        $deviceToken = $ncDeviceInfo['deviceToken'];
+
+        //device_tokenとuser_idをキーにしてdbからデータ取ってくる
+        $device = $this->Device->find('first', [
+            'conditions' => [
+                'user_id'         => $userId,
+                'device_token'    => $deviceToken,
+                'installation_id' => $installationId,
+            ]
+        ]);
+        if (empty($device)) {
+            //見つからない場合は、まずdevice_token or installation_id で検索し、削除する
+            $this->Device->softDeleteAll([
+                'OR' => [
+                    'Device.installation_id' => $installationId,
+                    'Device.device_token'    => $deviceToken
+                ]
+            ]);
+            //新規でdevice tokenを保存
+            $device_type = $ncDeviceInfo['deviceType'];
+            App::uses('Device', 'Model');
+            $osType = Device::OS_TYPE_OTHER;
+            if ($device_type == "android") {
+                $osType = Device::OS_TYPE_ANDROID;
+            } elseif ($device_type == "ios") {
+                $osType = Device::OS_TYPE_IOS;
+            }
+
+            $this->Device->create();
+            $device = $this->Device->save([
+                'Device' => [
+                    'user_id'         => $userId,
+                    'device_token'    => $deviceToken,
+                    'os_type'         => $osType,
+                    'version'         => $version,
+                    'installation_id' => $installationId,
+                ]
+            ]);
+            if (empty($device)) {
+                throw new RuntimeException(__('Failed to save a Device Information.'));
             }
         }
 
