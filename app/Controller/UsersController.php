@@ -1550,20 +1550,25 @@ class UsersController extends AppController
         }
         $this->set('user', $user);
 
+        $timezone = $this->Team->getTimezone();
         // 評価期間内の投稿数
-        $term_start_date = $this->Team->Term->getCurrentTermData()['start_date'];
-        $term_end_date = $this->Team->Term->getCurrentTermData()['end_date'];
-        $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
+        $termStartTimestamp = AppUtil::getStartTimestampByTimezone($this->Team->Term->getCurrentTermData()['start_date'],
+            $timezone);
+        $termEndTimestamp = AppUtil::getEndTimestampByTimezone($this->Team->Term->getCurrentTermData()['end_date'],
+            $timezone);
+
+        $post_count = $this->Post->getCount($user_id, $termStartTimestamp, $termEndTimestamp);
         $this->set('post_count', $post_count);
 
         // 評価期間内のアクション数
-        $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
+        $action_count = $this->Goal->ActionResult->getCount($user_id, $termStartTimestamp, $termEndTimestamp);
         $this->set('action_count', $action_count);
 
         // 投稿に対するいいねの数
-        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $termStartTimestamp, $termEndTimestamp);
         // コメントに対するいいねの数
-        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $termStartTimestamp,
+            $termEndTimestamp);
         $this->set('like_count', $post_like_count + $comment_like_count);
 
         return true;
