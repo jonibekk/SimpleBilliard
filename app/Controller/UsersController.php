@@ -82,7 +82,7 @@ class UsersController extends AppController
             try {
                 $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $app_version);
                 // Storing installationId for deleting installation id when logout in mobile app.
-                $this->Session->write('installationId', $installationId);
+                $this->Session->write('installationId', $installation_id);
                 //セットアップガイドステータスの更新
                 $this->updateSetupStatusIfNotCompleted();
             } catch (RuntimeException $e) {
