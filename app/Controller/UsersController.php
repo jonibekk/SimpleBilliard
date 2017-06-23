@@ -237,7 +237,8 @@ class UsersController extends AppController
     {
         $user = $this->Auth->user();
 
-        // ログアウトした後も通知が届く問題の解消の為、$installationIdを持っていたら削除する
+        // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
+        // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
         $installationId = $this->Session->read('installationId');
         if ($installationId) {
             /** @var Device $Device */
