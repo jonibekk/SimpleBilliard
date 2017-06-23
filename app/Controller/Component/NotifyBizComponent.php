@@ -1903,6 +1903,7 @@ class NotifyBizComponent extends Component
         //正しいデバイストークンの存在確認。device_tokenとinstallation_idをキーにしてdbからデータ取ってくる
         $device = $this->Device->find('first', [
             'conditions' => [
+                'user_id'         => $userId,
                 'device_token'    => $deviceToken,
                 'installation_id' => $installationId,
             ]
@@ -1914,14 +1915,14 @@ class NotifyBizComponent extends Component
                     'Device.installation_id' => $installationId,
                     'Device.device_token'    => $deviceToken
                 ]
-            ]);
+            ],false);
             //新規でdevice tokenを保存
-            $device_type = $ncDeviceInfo['deviceType'];
+            $deviceType = $ncDeviceInfo['deviceType'];
             App::uses('Device', 'Model');
             $osType = Device::OS_TYPE_OTHER;
-            if ($device_type == "android") {
+            if ($deviceType == "android") {
                 $osType = Device::OS_TYPE_ANDROID;
-            } elseif ($device_type == "ios") {
+            } elseif ($deviceType == "ios") {
                 $osType = Device::OS_TYPE_IOS;
             }
 
