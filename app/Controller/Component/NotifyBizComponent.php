@@ -1906,10 +1906,9 @@ class NotifyBizComponent extends Component
         }
         $deviceToken = $ncDeviceInfo['deviceToken'];
 
-        //device_tokenとuser_idをキーにしてdbからデータ取ってくる
+        //device_tokenとinstallation_idをキーにしてdbからデータ取ってくる
         $device = $this->Device->find('first', [
             'conditions' => [
-                'user_id'         => $userId,
                 'device_token'    => $deviceToken,
                 'installation_id' => $installationId,
             ]
