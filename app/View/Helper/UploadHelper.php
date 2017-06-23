@@ -425,9 +425,13 @@ class UploadHelper extends AppHelper
      * @param int $targetTimestamp
      *
      * @return int
+     * @throws Exception
      */
     function getS3Expires($expiresBorderHour = 6, $targetTimestamp = REQUEST_TIMESTAMP): int
     {
+        if ($expiresBorderHour < 1 || $expiresBorderHour > 24) {
+            throw new Exception('Invalid argument: $expiresBorderHour. It received ' . $expiresBorderHour . '. But it should be 1 to 24');
+        }
         // using the property as cache
         if ($this->s3Expires) {
             return $this->s3Expires;
