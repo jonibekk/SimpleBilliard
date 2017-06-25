@@ -1908,9 +1908,9 @@ class NotifyBizComponent extends Component
                 'installation_id' => $installationId,
             ]
         ]);
+        $osType = $this->_getDeviceOsType($ncDeviceInfo['deviceType']);
         if (empty($device)) {
             // add new record
-            $osType = $this->_getDeviceOsType($ncDeviceInfo['deviceType']);
 
             $this->Device->create();
             $device = $this->Device->save([
@@ -1922,17 +1922,28 @@ class NotifyBizComponent extends Component
                     'installation_id' => $installationId,
                 ]
             ]);
-            if (empty($device)) {
-                throw new RuntimeException(__('Failed to save a Device Information.'));
-            }
         } else {
             // updating device info on DB
             $device['Device'] = am($device['Device'], [
                 'user_id'      => $userId,
                 'device_token' => $deviceToken,
+                'os_type'      => $osType,
                 'version'      => $version,
             ]);
-            $this->Device->save($device);
+            $device = $this->Device->save($device);
+        }
+        if (empty($device)) {
+            // logging that saving Device was failure. In most cases Android
+            $this->log(sprintf("Failed to save Device. userId: %s, installationId: %s, version: %s, osType: %s, requestData: %s, validationError: %s",
+                $userId,
+                $installationId,
+                $version,
+                $osType,
+                var_export($this->Controller->request->data, true),
+                var_export($this->Device->validationErrors, true)
+            ));
+            $this->log(Debugger::trace());
+            throw new RuntimeException(__('Failed to save a Device Information.'));
         }
         // updating app version on Session
         $this->Session->write('app_version', $version);
