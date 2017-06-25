@@ -1934,6 +1934,8 @@ class NotifyBizComponent extends Component
             unset($device['Device']['modified']);
             $device = $this->Device->save($device);
         }
+
+        // saving Device was failed..
         if (empty($device)) {
             // logging that saving Device was failure. In most cases Android
             $this->log(sprintf("Failed to save Device. userId: %s, installationId: %s, version: %s, osType: %s, requestData: %s, validationError: %s",
@@ -1947,6 +1949,7 @@ class NotifyBizComponent extends Component
             $this->log(Debugger::trace());
             throw new RuntimeException(__('Failed to save a Device Information.'));
         }
+
         // updating app version on Session
         $this->Session->write('app_version', $version);
         return $device;
