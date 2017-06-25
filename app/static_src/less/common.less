@@ -1,24 +1,21 @@
 /* variables */
-@import "variables/colors";
-@import "variables/font_families";
-@import "variables/font_sizes";
-@import "variables/media_queries";
-@import "variables/size";
+@import "variables/all";
 
 /* common */
-@import "common/mixin";
-@import "common/util";
+@import "helpers/mixin";
+@import "helpers/util";
 
 /* base */
 @import "base/goalstrap";
 @import "base/normalize";
 
-/* common */
+/* extends */
 @import "extends/bootstrap-ext-col";
 @import "extends/select2_custom";
 
 /* partials */
 @import "partials/style";
+@import "partials/parent_for_extend";
 @import "partials/avatar";
 @import "partials/notify_card";
 @import "partials/notify_icon";

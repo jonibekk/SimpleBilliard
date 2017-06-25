@@ -167,7 +167,8 @@ gulp.task('css', done => {
 gulp.task('less', done => {
   return runSequence(
     // 'css:lesshint',
-    'css:less',
+    'less:common',
+    'less:pages',
     done
   )
 })

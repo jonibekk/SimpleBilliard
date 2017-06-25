@@ -44,34 +44,17 @@ class PageResourceHelper extends AppHelper
     ];
 
     private $cssMap = [
-        // Scripts can be set for each action or
-        // a default for the whole controller
-        // Action scripts will take the preference.
         'pages' => [
             'default' => ['feed.min']
-        ],
-        'evaluations' => [
-            'default' => ['evaluation.min']
         ],
         'goals' => [
             'default' => ['goal_detail.min']
         ],
-        // Notifications and posts uses the same base script
-        // as pages (goalous_home.min)
         'notifications' => [
             'default' => ['feed.min']
         ],
         'posts' => [
             'default' => ['feed.min']
-        ],
-        'teams' => [
-            'default' => [
-                '/js/goalous_team.min',
-                '/js/ng_vendors.min',
-                '/js/ng_app.min']
-        ],
-        'users' => [
-            'default' => ['user_profile.min']
         ],
     ];
 
@@ -130,8 +113,8 @@ class PageResourceHelper extends AppHelper
         // Requested controller
         $controller = Hash::get($this->request->params, 'controller');
         if (!isset($this->cssMap[$controller])) {
-            // Load page common css
-            return $this->_outputCss(['page_common.min']);
+            // No css
+            return '';
         }
 
         // Requested action

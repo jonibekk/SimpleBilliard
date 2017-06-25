@@ -180,7 +180,10 @@ const config = {
     }
   },
   less: {
-    src: assets_dir + '/less/pages/*.less',
+    src: {
+      common: assets_dir + '/less/common.less',
+      pages: assets_dir + '/less/pages/*.less',
+    },
     output: {
       path: compiled_assets_dir + '/css/'
     },

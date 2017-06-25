@@ -24,23 +24,23 @@ gulp.task('css_vendor', () => {
     .pipe(duration('css_vendor'))
 })
 
-gulp.task('css_vendor:minify', () => {
+gulp.task('less:common', () => {
+    buildLess(config.less.src.common)
 })
-
-
-gulp.task('css:less', () => {
-  glob(config.less.src, null, function (er, files) {
+gulp.task('less:pages', () => {
+  glob(config.less.src.pages, null, function (er, files) {
     files.forEach(function (file) {
       buildLess(file)
     })
     // console.log(files)
   })
 })
+
 function buildLess(filePath) {
   // TODO:delete
   let fileName = filePath.replace(/^.*[\\\/]/, '');
   fileName = fileName.replace(/.less/, '');
-  const targetLessList = ['feed', 'goal_detail', 'user_profile'];
+  const targetLessList = ['feed', 'goal_detail', 'common', 'user_profile'];
   if (targetLessList.indexOf(fileName) == -1)  {
     return;
   }
