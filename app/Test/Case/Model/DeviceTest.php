@@ -194,11 +194,18 @@ class DeviceTest extends GoalousTestCase
     {
         $ret1 = $this->Device->save(['user_id' => 1, 'device_token' => 1, 'installation_id' => 1, 'os_type' => 1]);
         $this->assertNotEmpty($ret1);
+        $ret1Id = $this->Device->getLastInsertID();
 
         $this->Device->create();
         $ret2 = $this->Device->save(['user_id' => 1, 'device_token' => 1, 'installation_id' => 1, 'os_type' => 1]);
         $this->assertFalse($ret2);
         $this->assertNotEmpty($this->Device->validationErrors['installation_id']);
+
+        $this->Device->delete($ret1Id);
+
+        $this->Device->create();
+        $ret3 = $this->Device->save(['user_id' => 1, 'device_token' => 1, 'installation_id' => 1, 'os_type' => 1]);
+        $this->assertNotEmpty($ret3);
     }
 
 }

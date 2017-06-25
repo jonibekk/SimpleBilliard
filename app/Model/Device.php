@@ -36,7 +36,8 @@ class Device extends AppModel
                 'rule' => ['notBlank'],
             ],
             'isUnique' => [
-                'rule' => ['isUnique'],
+                // is unique with installation_id and del_flg
+                'rule' => ['isUnique', ['installation_id', 'del_flg'], false],
             ]
         ],
         'os_type'         => [
