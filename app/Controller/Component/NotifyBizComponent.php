@@ -1930,6 +1930,8 @@ class NotifyBizComponent extends Component
                 'os_type'      => $osType,
                 'version'      => $version,
             ]);
+            // updating modified.
+            unset($device['Device']['modified']);
             $device = $this->Device->save($device);
         }
         if (empty($device)) {
