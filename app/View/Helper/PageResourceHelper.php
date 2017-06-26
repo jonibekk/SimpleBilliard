@@ -65,6 +65,9 @@ class PageResourceHelper extends AppHelper
         'setup' => [
             'default' => ['setup_guide.min'],
         ],
+        'signup' => [
+            'default' => ['signup.min'],
+        ],
         'users' => [
             'view_goals' => ['user_profile.min'],
             'view_actions' => ['user_profile.min'],

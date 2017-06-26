@@ -41,7 +41,7 @@ function buildLess(filePath) {
   let fileName = filePath.replace(/^.*[\\\/]/, '');
   fileName = fileName.replace(/.less/, '');
   const targetLessList = ['feed', 'goal_detail', 'common', 'user_profile',
-    'topic', 'goal_create', 'setup_guide', 'goal_search'];
+    'topic', 'goal_create', 'setup_guide', 'goal_search', 'signup'];
   if (targetLessList.indexOf(fileName) == -1)  {
     return;
   }
