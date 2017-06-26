@@ -61,6 +61,9 @@ class PageResourceHelper extends AppHelper
         'topics' => [
             'default' => ['topic.min'],
         ],
+        'setup' => [
+            'default' => ['setup_guide.min'],
+        ],
     ];
 
     /**
