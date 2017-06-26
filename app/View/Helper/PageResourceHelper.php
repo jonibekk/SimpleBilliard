@@ -56,6 +56,9 @@ class PageResourceHelper extends AppHelper
         'posts' => [
             'default' => ['feed.min']
         ],
+        'topics' => [
+            'default' => ['topic.min'],
+        ],
     ];
 
     /**
