@@ -1,3 +1,9 @@
+/* Team members page css */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import(reference) "../partials/avatar";
+
 .team-select-box {
   background: @lighterGray;
   border-color: @darkGray;
@@ -9,7 +15,7 @@
 }
 
 .avatar-team-member-list {
-  .avatar-rounded;
+  &:extend(.avatar-rounded);
 }
 
 .team-members-card {

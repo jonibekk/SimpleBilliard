@@ -79,6 +79,7 @@ class PageResourceHelper extends AppHelper
             'default' => ['evaluation.min'],
         ],
         'teams' => [
+            'main' => ['team_members.min', 'team_visions.min'],
             'settings' => ['team_setting.min'],
         ],
     ];
