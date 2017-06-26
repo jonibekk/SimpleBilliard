@@ -352,7 +352,7 @@
   padding-left: 0.4em;
   margin-bottom: 0.5em;
   &:before {
-    font-family: FontAwesome;
+    font: normal normal normal 14px/1 FontAwesome;
     content: '';
     position: absolute;
     left: -1em;
@@ -374,49 +374,49 @@
 
 .goal-detail-goal-name {
   font-weight: bold;
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f024';
   }
 }
 
 .goal-detail-goal-category {
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f114';
   }
 }
 
 .goal-detail-goal-labels {
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f02c';
   }
 }
 
 .goal-detail-goal-date {
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f073';
   }
 }
 
 .goal-detail-goal-followers {
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f1ae';
   }
 }
 
 .goal-detail-goal-description {
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f24a';
   }
 }
 
 .goal-detail-info-followers{
-  &:extend(.goal-detail-item);
+  .goal-detail-item;
   &:before {
     content: '\f004';
   }

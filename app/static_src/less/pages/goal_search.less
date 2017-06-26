@@ -1,5 +1,11 @@
+/* Goal search page css */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import(reference) "../partials/line_number_limit";
+
 .goals-page-card-title-wrapper {
-  .line-number-wrap;
+  &:extend(.line-number-wrap);
 }
 
 .goals-page-card-title {
@@ -11,7 +17,7 @@
 }
 
 .goals-page-card-title-text {
-  .line-number-limit-2;
+  &:extend(.line-number-limit-2);
   font-weight: bold;
 }
 
