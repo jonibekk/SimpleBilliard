@@ -1,3 +1,5 @@
+@import(reference) "parent_for_extend";
+
 .btn {
   display: inline-block;
   font-weight: normal;
@@ -72,7 +74,7 @@
 }
 
 .btn-frame {
-  .btn;
+  &:extend(.btn);
   border: 1px solid #888;
 }
 
@@ -132,7 +134,7 @@
 }
 
 .btn-profile-edit {
-  .btn;
+  &:extend(.btn);
   display: block;
   margin: 0 auto 0;
   @media screen and (min-width: 520px) {
@@ -211,11 +213,11 @@
 }
 
 .click-comment-new {
-  .no-underline;
+  &:extend(.no-underline);
 }
 
 .goals-column-add-kr-btn {
-  .no-underline;
+  &:extend(.no-underline);
   padding: 10px;
   border: 1px dashed @lightGray;
   &:hover,
@@ -301,7 +303,7 @@
 }
 
 .btn-pink-radius {
-  .btn;
+  &:extend(.btn);
   border-color: @basicPink;
   color: @basicPink;
   display: inline-block;

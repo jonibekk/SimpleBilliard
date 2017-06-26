@@ -5,8 +5,8 @@
 @import "../partials/postarea";
 @import "../partials/attached_file";
 @import "../partials/action";
-@import "../partials/avatar";
-@import "../partials/line_number_limit";
+@import(reference) "../partials/avatar";
+@import(reference) "../partials/line_number_limit";
 
 /**
  * feed.less
@@ -50,7 +50,7 @@
 }
 
 .post-heading-goal-avatar {
-  .avatar-rounded-link;
+  &:extend(.avatar-rounded-link);
 }
 
 .post-heading-circle-area {
@@ -67,12 +67,12 @@
 }
 
 .post-heading-circle-wrapper {
-  .line-number-wrap;
+  &:extend(.line-number-wrap);
   width: 88%;
 }
 
 .post-heading-circle-avatar {
-  .avatar-rounded-link;
+  &:extend(.avatar-rounded-link);
 }
 
 .post-submit-button {

@@ -6,8 +6,7 @@
 @import "../helpers/mixin";
 @import "../partials/postarea";
 @import "../partials/attached_file";
-@import "../partials/parent_for_extend";
-@import "../partials/btn";
+@import(reference) "../partials/btn";
 
 .setup-container {
   overflow: hidden;
@@ -196,7 +195,7 @@
 }
 
 .setup-back-btn {
-  .btn;
+  &:extend(.btn);
   border-color: @subColor1;
   color: @subColor1;
   width: 25%;
@@ -207,7 +206,7 @@
 
 
 .setup-back-btn-full {
-  .btn;
+  &:extend(.btn);
   border-color: @subColor1;
   color: @subColor1;
   width: 100%;
@@ -218,7 +217,7 @@
 
 
 .setup-next-btn {
-  .btn;
+  &:extend(.btn);
   width: 70%;
 }
 

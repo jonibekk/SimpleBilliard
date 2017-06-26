@@ -2,11 +2,11 @@
 
 @import "../variables/all";
 @import "../helpers/mixin";
-@import "../partials/parent_for_extend";
+@import(reference) "../partials/parent_for_extend";
 @import "../partials/cube_img_blocks";
 @import "../partials/attached_file";
 @import "../partials/view_actions";
-@import "../partials/avatar";
+@import(reference) "../partials/avatar";
 
 .goal-detail {
   &-label {
@@ -32,7 +32,7 @@
 }
 
 .goal-detail-info-avatar {
-  .avatar-bordered-rounded-link;
+  &:extend(.avatar-bordered-rounded-link);
   width: 44px;
   height: 44px;
 }
@@ -164,39 +164,39 @@
 }
 
 .goal-detail-numbers-action {
-  .goal-detail-numbers;
+  &:extend(.goal-detail-numbers);
 }
 
 .goal-detail-numbers-member {
-  .goal-detail-numbers;
+  &:extend(.goal-detail-numbers);
 }
 
 .goal-detail-numbers-follower {
-  .goal-detail-numbers;
+  &:extend(.goal-detail-numbers);
 }
 
 .goal-detail-numbers-action-counts {
-  .goal-detail-counts;
+  &:extend(.goal-detail-counts);
 }
 
 .goal-detail-numbers-member-counts {
-  .goal-detail-counts;
+  &:extend(.goal-detail-counts);
 }
 
 .goal-detail-numbers-kp-counts {
-  .goal-detail-counts;
+  &:extend(.goal-detail-counts);
 }
 
 .goal-detail-numbers-category-action {
-  .goal-detail-numbers-category;
+  &:extend(.goal-detail-numbers-category);
 }
 
 .goal-detail-numbers-category-member {
-  .goal-detail-numbers-category;
+  &:extend(.goal-detail-numbers-category);
 }
 
 .goal-detail-numbers-category-follower {
-  .goal-detail-numbers-category;
+  &:extend(.goal-detail-numbers-category);
 }
 
 .goal-detail-comments {
@@ -220,7 +220,7 @@
   border-bottom:4px solid #fff;
   font-size:11px;
   padding:0 1rem;
-  .no-underline;
+  &:extend(.no-underline);
   &:hover,
   &:target,
   &:active,
@@ -249,18 +249,18 @@
 }
 
 .goal-detail-kr-tab {
-  .goal-detail-tabs;
+  &:extend(.goal-detail-tabs);
   border-top-left-radius: 0;
   border-right:none !important;
   border-left:none !important;
 }
 
 .goal-detail-action-tab {
-  .goal-detail-tabs;
+  &:extend(.goal-detail-tabs);
 }
 
 .goal-detail-member-tab {
-  .goal-detail-tabs;
+  &:extend(.goal-detail-tabs);
   border-top-right-radius: 0;
   border-right:none !important;
   border-left:none !important;
@@ -280,7 +280,7 @@
 }
 
 .goal-detail-info-panel {
-  .goal-detail-panels;
+  &:extend(.goal-detail-panels);
 }
 
 .goal-detail-more-details-link{
@@ -330,7 +330,7 @@
   height: 44px;
   font-weight: bold;
   font-size: 16px;
-  .no-underline;
+  &:extend(.no-underline);
 }
 
 .goal-detail-member-more-counts {
@@ -374,56 +374,56 @@
 
 .goal-detail-goal-name {
   font-weight: bold;
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f024';
   }
 }
 
 .goal-detail-goal-category {
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f114';
   }
 }
 
 .goal-detail-goal-labels {
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f02c';
   }
 }
 
 .goal-detail-goal-date {
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f073';
   }
 }
 
 .goal-detail-goal-followers {
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f1ae';
   }
 }
 
 .goal-detail-goal-description {
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f24a';
   }
 }
 
 .goal-detail-info-followers{
-  .goal-detail-item;
+  &:extend(.goal-detail-item);
   &:before {
     content: '\f004';
   }
 }
 
 .goal-detail-kr-panel {
-  .goal-detail-panels;
+  &:extend(.goal-detail-panels);
 }
 
 .goal-detail-kr-progress-score {
@@ -511,7 +511,7 @@
   border: 1px dashed @basicGray;
   border-radius: 4px;
   color: @basicGray;
-  .no-underline;
+  &:extend(.no-underline);
   &:hover,
   &:target,
   &:active,
@@ -537,7 +537,7 @@
 }
 
 .goal-detail-member-panel {
-  .goal-detail-panels;
+  &:extend(.goal-detail-panels);
   padding: 18px 15px;
 }
 
@@ -584,7 +584,7 @@
 }
 
 .goal-detail-member-avatar {
-  .avatar-bordered-rounded;
+  &:extend(.avatar-bordered-rounded);
   width: 64px;
   display: inline-block;
   vertical-align: top;
@@ -608,13 +608,13 @@
 }
 
 .goal-detail-follower-panel {
-  .goal-detail-panels;
+  &:extend(.goal-detail-panels);
   padding: 18px 15px;
   border-radius: 4px;
 }
 
 .goal-detail-follower-avatar {
-  .avatar-bordered-rounded;
+  &:extend(.avatar-bordered-rounded);
   width: 64px;
   display: inline-block;
 }

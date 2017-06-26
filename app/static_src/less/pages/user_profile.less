@@ -2,11 +2,11 @@
 
 @import "../variables/all";
 @import "../helpers/mixin";
-@import "../partials/parent_for_extend";
+@import(reference) "../partials/parent_for_extend";
 @import "../partials/cube_img_blocks";
 @import "../partials/attached_file";
 @import "../partials/view_actions";
-@import "../partials/line_number_limit";
+@import(reference) "../partials/line_number_limit";
 
 .profile-user-upper-panel {
   padding: 0;
@@ -71,15 +71,15 @@
 }
 
 .profile-user-numbers-category-action {
-  .profile-user-numbers-category;
+  &:extend(.profile-user-numbers-category);
 }
 
 .profile-user-numbers-category-post {
-  .profile-user-numbers-category;
+  &:extend(.profile-user-numbers-category);
 }
 
 .profile-user-numbers-category-like {
-  .profile-user-numbers-category;
+  &:extend(.profile-user-numbers-category);
 }
 
 .profile-user-comments {
@@ -98,7 +98,7 @@
   text-align: center;
   padding: 8px 0 4px;
   border-bottom: 4px solid #fff;
-  .no-underline;
+  &:extend(.no-underline);
   &:hover,
   &:target,
   &:active,
@@ -118,19 +118,19 @@
 }
 
 .profile-user-goal-tab {
-  .profile-user-tabs;
+  &:extend(.profile-user-tabs);
 }
 
 .profile-user-action-tab {
-  .profile-user-tabs;
+  &:extend(.profile-user-tabs);
 }
 
 .profile-user-post-tab {
-  .profile-user-tabs;
+  &:extend(.profile-user-tabs);
 }
 
 .profile-user-status-tab {
-  .profile-user-tabs;
+  &:extend(.profile-user-tabs);
 }
 
 .profile-user-cover {
@@ -199,19 +199,19 @@
 }
 
 .view-goals-panel {
-  .profile-user-panels;
+  &:extend(.profile-user-panels);
 }
 
 .view-actions-panel {
-  .profile-user-panels;
+  &:extend(.profile-user-panels);
 }
 
 .view-posts-panel {
-  .profile-user-panels;
+  &:extend(.profile-user-panels);
 }
 
 .view-info-panel {
-  .profile-user-panels;
+  &:extend(.profile-user-panels);
 }
 
 .profile-user-tab-active {
@@ -231,7 +231,7 @@
 }
 
 .profile-goals-card-title-wrapper {
-  .line-number-wrap;
+  &:extend(.line-number-wrap);
 }
 
 .view-actions-panel-filter .dropdown-toggle:hover{
@@ -381,7 +381,7 @@
   border: 1px dashed @basicGray;
   border-radius: 4px;
   color: @basicGray;
-  .no-underline;
+  &:extend(.no-underline);
   &:hover,
   &:target,
   &:active,
