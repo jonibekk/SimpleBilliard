@@ -22,7 +22,7 @@ class DevicesController extends AppController
      * デバイス情報を追加する
      * POSTのみ受け付ける
      * 以下のフィールドを渡してあげる
-     * $this->request->data['user_id'] // TODO: It should not be recieved in request param! this method doesn't use it.
+     * $this->request->data['user_id'] // TODO: Security working! It should not be recieved in request param and should not be used.
      * $this->request->data['installation_id']
      * $this->request->data['current_version']
      *
@@ -31,7 +31,7 @@ class DevicesController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        $user_id = $this->Auth->user('id');
+        $user_id = $this->request->data['user_id']; //TODO: We have to replace it as Session data
         $installation_id = $this->request->data['installation_id'];
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
 
