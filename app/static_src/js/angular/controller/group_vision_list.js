@@ -80,7 +80,7 @@ app.controller("GroupVisionDeleteController",
     });
 
 app.controller("GroupVisionDetailController",
-    function ($rootScope, $scope, $http, $translate, $sce, $modal, notificationService, groupVisionDetail, LoginUserGroupId, $stateParams) {
+    function ($rootScope, $scope, $http, $translate, $sce, $modal, groupVisionDetail, LoginUserGroupId, $stateParams) {
 
         $scope.archive_flag = false;
         if (Number($stateParams.active_flg) === 0) {
