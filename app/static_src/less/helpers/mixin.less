@@ -1,0 +1,101 @@
+.line-number-limit-1(@fadeColor: @whiteColor, @display: block){
+  background: @fadeColor;
+  display: @display;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  &::before{
+    content: "...";
+    color: rgba(0, 0, 0, 0);
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: @fadeColor;
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
+    width: 30%;
+    height: 20px;
+    padding-bottom: 4px;
+  }
+}
+.line-number-limit-2(@fadeColor : @whiteColor){
+  background: @fadeColor;
+  margin: 0;
+  overflow: hidden;
+  line-break: normal;
+  max-height: 40px;
+  line-height: 1.4;
+  position: relative;
+  overflow: hidden;
+  &::before{
+    background: @fadeColor;
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
+    position: absolute;
+    content: "...";
+    color: rgba(0, 0, 0, 0);
+    top: 18px;
+    width: 30%;
+    height: 20px;
+    right: 0;
+    padding-bottom: 4px;
+
+  }
+  &::after{
+    background: @fadeColor;
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+  }
+}
+
+// Use inner mixin
+.frame-arrow {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #ccc;
+}
+
+.frame-arrow-icon(@right: 12px) {
+  top: 100%;
+  .frame-arrow;
+  &::before {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid @whiteColor;
+    position: absolute;
+    right: @right;
+    top: -15px;
+    z-index: 2;
+  }
+  &::after {
+    content: "";
+    border: 8px solid transparent;
+    border-bottom: 8px solid #ccc;
+    position: absolute;
+    right: @right;
+    top: -16px;
+  }
+}
+
+.us-none() {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.horizontal-gradient (@startColor: black, @endColor: white) {
+  background-color: @startColor;
+  background-image: -webkit-gradient(linear, left top, right top, from(@startColor), to(@endColor));
+  background-image: -webkit-linear-gradient(left, @startColor, @endColor);
+  background-image: -moz-linear-gradient(left, @startColor, @endColor);
+  background-image: -ms-linear-gradient(left, @startColor, @endColor);
+  background-image: -o-linear-gradient(left, @startColor, @endColor);
+}
+
+.border-clear(@width) {
+  border: @width solid rgba(0, 0, 0, 0);
+}

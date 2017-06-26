@@ -4,9 +4,9 @@ App::uses('AppHelper', 'View/Helper');
 /**
  * Helper class to return page specific scripts.
  *
- * Class PageScriptHelper
+ * Class PageResourceHelper
  */
-class PageScriptHelper extends AppHelper
+class PageResourceHelper extends AppHelper
 {
     var $helpers = array('Html');
 
@@ -40,6 +40,21 @@ class PageScriptHelper extends AppHelper
         ],
         'users' => [
             'default' => ['/js/goalous_user.min']
+        ],
+    ];
+
+    private $cssMap = [
+        'pages' => [
+            'default' => ['feed.min']
+        ],
+        'goals' => [
+            'default' => ['goal_detail.min']
+        ],
+        'notifications' => [
+            'default' => ['feed.min']
+        ],
+        'posts' => [
+            'default' => ['feed.min']
         ],
     ];
 
@@ -83,6 +98,47 @@ class PageScriptHelper extends AppHelper
         $out = '';
         foreach ($scriptList as $script) {
             $out .= $this->Html->script($script);
+        }
+        return $out;
+    }
+
+    /**
+     * Returns the css link tag for the page/controller
+     * as specified an the map $cssMap
+     *
+     * @return string
+     */
+    public function outputPageCss() {
+
+        // Requested controller
+        $controller = Hash::get($this->request->params, 'controller');
+        if (!isset($this->cssMap[$controller])) {
+            // No css
+            return '';
+        }
+
+        // Requested action
+        $action = Hash::get($this->request->params, 'action');
+
+        $pageCssList = Hash::check($this->cssMap[$controller], $action) ?
+            $this->cssMap[$controller][$action] : $this->cssMap[$controller]['default'];
+        // Use specified css action
+        return $this->_outputCss($pageCssList);
+
+    }
+
+    /**
+     * Get array of strings containing the names of css files and return
+     * its html tags.
+     *
+     * @param array $cssList
+     *
+     * @return string
+     */
+    private function _outputCss(array $cssList) {
+        $out = '';
+        foreach ($cssList as $css) {
+            $out .= $this->Html->css($css, array('media' => 'screen'));
         }
         return $out;
     }

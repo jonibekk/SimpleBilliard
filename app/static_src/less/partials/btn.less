@@ -1,4 +1,15 @@
 .btn {
+  display: inline-block;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  white-space: nowrap;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  user-select: none;
   border: 1px solid @goalous;
   text-decoration: none;
   border-radius: .25em;
@@ -171,7 +182,7 @@
   height: 32px;
   line-height: 32px;
   text-align: center;
-  border-radius:.25rem;
+  border-radius: .25rem;
 }
 
 .btn-edit-kr-wrap {
@@ -425,7 +436,36 @@
     border: 1px solid @acidRed;
     color: #fff;
     .fa-circle-o-notch {
-      line-height:38px;
+      line-height: 38px;
     }
   }
+}
+
+.btn-animated {
+  display: block;
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    transition: 300ms all;
+    transform: scale(1.12, 1.12);
+  }
+}
+
+.btn-photo-up {
+  margin: 6px 0 0;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: none;
+  border-color: @lightGray;
+}
+
+.btn-photo-up:hover,
+.btn-photo-up:target,
+.btn-photo-up:active,
+.btn-photo-up:focus,
+.btn-photo-up:active:focus {
+  outline: none;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
 }

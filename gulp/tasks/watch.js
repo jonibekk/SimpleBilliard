@@ -56,7 +56,7 @@ gulp.task('react:watch', () => {
 })
 
 gulp.task('css:watch', () => {
-  const watcher = gulp.watch([...config.css.watch_files, ...config.less.watch_files], ['css'])
+  const watcher = gulp.watch([...config.less.watch_files], ['less'])
 
   watcher.on('change', event => {
     /* eslint-disable no-console */

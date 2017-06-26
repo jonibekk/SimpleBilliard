@@ -1131,8 +1131,7 @@ textarea{
     background-color: #fff;
     font-weight: bold;
     font-size: 18px;
-
-/ / padding: 10 px 11 px;
+    // padding: 10 px 11 px;
 }
 
 .design-mystatus {
@@ -3059,3 +3058,67 @@ Temporary Properties - YOU MUST FIX
 .add-vision-button.disabled i {
     color: #aaa;
 }
+.shadow-default {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.dropdown {
+  position: relative;
+}
+
+/*
+  mixinを定義
+ */
+
+.link {
+  color: @strongRed;
+  font-weight: bold;
+}
+
+.divider {
+  height: 1px;
+  overflow: hidden;
+  clear: both;
+  margin: 0;
+}
+
+
+/* 通知の赤丸 */
+.notify-numbers {
+  position: absolute;
+  z-index: 10;
+  color: @whiteColor;
+  background-color: @acidRed;
+  padding: 0;
+  width: 19px;
+  height: 19px;
+  line-height: 18px;
+  border-radius: 50%;
+  display: block;
+  font-size: 10px;
+}
+
+.frame-arrow-pic {
+  top: 98%;
+  .frame-arrow;
+  &::before {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid @whiteColor;
+    position: absolute;
+    right: 14%;
+    top: -14px;
+    z-index: 2;
+  }
+  &::after {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #ccc;
+    position: absolute;
+    right: 14%;
+    top: -15px;
+  }
+}
+
