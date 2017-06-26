@@ -580,9 +580,7 @@ class AppUtil
     static function varExportOneLine(array $array)
     {
         $text = var_export($array, true);
-        $text = str_replace("\r\n", " ", $text);
-        $text = str_replace("\n", " ", $text);
-        $text = str_replace("\r", " ", $text);
+        $text = str_replace(["\r\n", "\n", "\r"], " ", $text);
         return $text;
     }
 
