@@ -64,6 +64,12 @@ class PageResourceHelper extends AppHelper
         'setup' => [
             'default' => ['setup_guide.min'],
         ],
+        'users' => [
+            'view_goals' => ['user_profile.min'],
+            'view_actions' => ['user_profile.min'],
+            'view_posts' => ['user_profile.min'],
+            'view_info' => ['user_profile.min'],
+        ],
     ];
 
     /**
@@ -121,18 +127,23 @@ class PageResourceHelper extends AppHelper
         // Requested controller
         $controller = Hash::get($this->request->params, 'controller');
         if (!isset($this->cssMap[$controller])) {
-            // No css
+            // No page css
             return '';
         }
 
         // Requested action
         $action = Hash::get($this->request->params, 'action');
 
-        $pageCssList = Hash::check($this->cssMap[$controller], $action) ?
-            $this->cssMap[$controller][$action] : $this->cssMap[$controller]['default'];
-        // Use specified css action
-        return $this->_outputCss($pageCssList);
-
+        if (isset($this->cssMap[$controller][$action])) {
+            // Use specified css action
+            return $this->_outputCss($this->cssMap[$controller][$action]);
+        } else if (isset($this->cssMap[$controller]['default'])) {
+            // User default css for the controller
+            return $this->_outputCss($this->cssMap[$controller]['default']);
+        } else {
+            // No page css
+            return '';
+        }
     }
 
     /**
