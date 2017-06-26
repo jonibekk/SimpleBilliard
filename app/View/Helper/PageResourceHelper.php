@@ -51,6 +51,7 @@ class PageResourceHelper extends AppHelper
             'index' => ['goal_search.min'],
             'create' => ['goal_create.min'],
             'edit' => ['goal_create.min'],
+            'approval' => ['goal_approval.min'],
             'default' => ['goal_detail.min']
         ],
         'notifications' => [
@@ -73,6 +74,12 @@ class PageResourceHelper extends AppHelper
             'view_actions' => ['user_profile.min'],
             'view_posts' => ['user_profile.min'],
             'view_info' => ['user_profile.min'],
+        ],
+        'evaluations' => [
+            'default' => ['evaluation.min'],
+        ],
+        'teams' => [
+            'settings' => ['team_setting.min'],
         ],
     ];
 
