@@ -18,12 +18,12 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
     $bodyNoScrollClass = "";
 }
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
-<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?=$bodyNoScrollClass?>">
+<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?>">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
@@ -45,7 +45,7 @@ if ($this->request->params['controller'] === 'pages' && $this->request->params['
 ?>
 
 
-<div id="container" class="container <?= $containerClass?>">
+<div id="container" class="container <?= $containerClass ?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>
@@ -88,4 +88,4 @@ if ($this->request->params['controller'] === 'pages' && $this->request->params['
 } ?>
 </body>
 </html>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
