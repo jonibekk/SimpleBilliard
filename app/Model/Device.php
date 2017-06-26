@@ -18,17 +18,34 @@ class Device extends AppModel
      * @var array
      */
     public $validate = [
-        'device_token' => [
+        'user_id'         => [
+            'notBlank' => [
+                'rule' => ['notBlank'],
+            ],
+            'notZero'  => [
+                'rule' => ['naturalNumber'],
+            ],
+        ],
+        'device_token'    => [
             'notBlank' => [
                 'rule' => ['notBlank'],
             ],
         ],
-        'os_type'      => [
+        'installation_id' => [
+            'notBlank' => [
+                'rule' => ['notBlank'],
+            ],
+            'isUnique' => [
+                // is unique with installation_id and del_flg
+                'rule' => ['isUnique', ['installation_id', 'del_flg'], false],
+            ]
+        ],
+        'os_type'         => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'del_flg'      => [
+        'del_flg'         => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
