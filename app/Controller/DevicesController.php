@@ -32,19 +32,10 @@ class DevicesController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        $user_id = $this->request->data['user_id']; //TODO: We have to replace it as Session data
+        $user_id = $this->request->data['user_id']; //TODO: We have to replace it as Session data. see https://jira.goalous.com/browse/GL-5949
         $installation_id = $this->request->data['installation_id'];
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
-
         try {
-            // only mobile app
-            if (!$this->is_mb_app) {
-                $this->log(sprintf('Invalid access! saving device info from web. userId: %s, requestData: %s',
-                    $this->Auth->user('id'),
-                    AppUtil::varExportOneLine($this->request->data)
-                ));
-                throw new RuntimeException(__('Invalid access!'));
-            }
             $device = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
             /* @var AppMeta $AppMeta */
             $AppMeta = ClassRegistry::init('AppMeta');
