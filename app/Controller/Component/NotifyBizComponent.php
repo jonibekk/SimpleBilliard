@@ -1943,8 +1943,8 @@ class NotifyBizComponent extends Component
                 $installationId,
                 $version,
                 $osType,
-                var_export($this->Controller->request->data, true),
-                var_export($this->Device->validationErrors, true)
+                AppUtil::varExportOneLine($this->Controller->request->data),
+                AppUtil::varExportOneLine($this->Device->validationErrors)
             ));
             $this->log(Debugger::trace());
             throw new RuntimeException(__('Failed to save a Device Information.'));

@@ -172,7 +172,7 @@ class AppUtil
      *
      * @return string
      */
-    static function dateYmdReformat(string $date,string $separator):string
+    static function dateYmdReformat(string $date, string $separator): string
     {
         return date("Y{$separator}m{$separator}d", strtotime($date));
     }
@@ -540,7 +540,7 @@ class AppUtil
     /**
      * format ym date i18n from timestamp
      *
-     * @param  int    $time
+     * @param  int $time
      *
      * @return string
      */
@@ -570,5 +570,20 @@ class AppUtil
         return $endDate;
     }
 
+    /**
+     * var_export as one line
+     *
+     * @param array $array
+     *
+     * @return string
+     */
+    static function varExportOneLine(array $array)
+    {
+        $text = var_export($array, true);
+        $text = str_replace("\r\n", " ", $text);
+        $text = str_replace("\n", " ", $text);
+        $text = str_replace("\r", " ", $text);
+        return $text;
+    }
 
 }
