@@ -46,7 +46,8 @@ export default {
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'react_vendors'
+      name: 'react_vendors',
+      filename: 'react_vendors.min.js'
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
   ]

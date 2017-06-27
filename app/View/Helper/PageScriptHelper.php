@@ -25,19 +25,19 @@ class PageScriptHelper extends AppHelper
             'default'     => ['/js/goalous_goal.min'],
             'index'       => ['/js/react_goal_search_app.min'],
             'kr_progress' => [
-                '/js/react_vendors_app.min',
+                '/js/react_vendors.min',
                 '/js/react_kr_column_app.min'
             ],
             'create'      => [
-                '/js/react_vendors_app.min',
+                '/js/react_vendors.min',
                 '/js/react_goal_create_app.min'
             ],
             'edit'        => [
-                '/js/react_vendors_app.min',
+                '/js/react_vendors.min',
                 '/js/react_goal_edit_app.min'
             ],
             'approval'    => [
-                '/js/react_vendors_app.min',
+                '/js/react_vendors.min',
                 '/js/react_goal_approval_app.min'
             ]
         ],
@@ -61,13 +61,13 @@ class PageScriptHelper extends AppHelper
         ],
         'setup' => [
             'default' => [
-                '/js/react_vendors_app.min',
+                '/js/react_vendors.min',
                 '/js/react_setup_guide_app.min'
             ]
         ],
         'signup' => [
             'default' => [
-                '/js/react_vendors_app.min',
+                '/js/react_vendors.min',
                 '/js/react_signup_app.min'
             ]
         ],
