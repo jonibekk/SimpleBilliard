@@ -594,9 +594,6 @@ function getModalFormFromUrl(e) {
   });
 
   var url = $(this).data('url');
-  if (!url) {
-      url = $(this).attr('href');
-  }
   if (url.indexOf('#') == 0) {
     $(url).modal('open');
   } else {
