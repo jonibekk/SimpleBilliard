@@ -18,6 +18,12 @@
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 
 <?php
+// right column react app
+if (!empty($loadRightColumn)) {
+    echo $this->Html->script('/js/react_vendors_app.min');
+    echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
+}
+
 // Include page specific javascript file
 if (isset($page_js_files) && !empty($page_js_files)) {
     foreach ($page_js_files as $script) {
@@ -27,11 +33,6 @@ if (isset($page_js_files) && !empty($page_js_files)) {
 echo $this->PageScript->getPageScript();
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
-
-// 右カラム用js
-if (!empty($loadRightColumn)) {
-    echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
-}
 ?>
 
 <?php //公開環境のみタグを有効化

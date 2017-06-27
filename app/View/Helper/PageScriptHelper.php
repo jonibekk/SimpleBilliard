@@ -24,10 +24,22 @@ class PageScriptHelper extends AppHelper
         'goals' => [
             'default'     => ['/js/goalous_goal.min'],
             'index'       => ['/js/react_goal_search_app.min'],
-            'kr_progress' => ['/js/react_kr_column_app.min'],
-            'create'      => ['/js/react_goal_create_app.min'],
-            'edit'        => ['/js/react_goal_edit_app.min'],
-            'approval'    => ['/js/react_goal_approval_app.min']
+            'kr_progress' => [
+                '/js/react_vendors_app.min',
+                '/js/react_kr_column_app.min'
+            ],
+            'create'      => [
+                '/js/react_vendors_app.min',
+                '/js/react_goal_create_app.min'
+            ],
+            'edit'        => [
+                '/js/react_vendors_app.min',
+                '/js/react_goal_edit_app.min'
+            ],
+            'approval'    => [
+                '/js/react_vendors_app.min',
+                '/js/react_goal_approval_app.min'
+            ]
         ],
         // Notifications and posts uses the same base script
         // as pages (goalous_home.min)
@@ -48,10 +60,16 @@ class PageScriptHelper extends AppHelper
             'default' => ['/js/goalous_user.min']
         ],
         'setup' => [
-            'default' => ['/js/react_setup_guide_app.min']
+            'default' => [
+                '/js/react_vendors_app.min',
+                '/js/react_setup_guide_app.min'
+            ]
         ],
         'signup' => [
-            'default' => ['/js/react_signup_app.min']
+            'default' => [
+                '/js/react_vendors_app.min',
+                '/js/react_signup_app.min'
+            ]
         ],
         'topics' => [
             'default' => ['/js/react_message_app.min']

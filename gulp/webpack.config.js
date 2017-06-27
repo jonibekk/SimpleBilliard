@@ -15,7 +15,8 @@ export default {
   output: {
     path: process.cwd() + "/app/webroot/js",
     publicPath: '/js/',
-    filename: '[name]_app.min.js'
+    filename: '[name]_app.min.js',
+    jsonpFunction: 'reactVendor'
   },
   module: {
     loaders: [
@@ -44,6 +45,9 @@ export default {
     }),
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'react_vendors'
+    }),
     new webpack.optimize.AggressiveMergingPlugin(),
   ]
 }
