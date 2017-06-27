@@ -48,6 +48,10 @@ class PageResourceHelper extends AppHelper
             'default' => ['feed.min']
         ],
         'goals' => [
+            'index' => ['goal_search.min'],
+            'create' => ['goal_create.min'],
+            'edit' => ['goal_create.min'],
+            'approval' => ['goal_approval.min'],
             'default' => ['goal_detail.min']
         ],
         'notifications' => [
@@ -55,6 +59,28 @@ class PageResourceHelper extends AppHelper
         ],
         'posts' => [
             'default' => ['feed.min']
+        ],
+        'topics' => [
+            'default' => ['topic.min'],
+        ],
+        'setup' => [
+            'default' => ['setup_guide.min'],
+        ],
+        'signup' => [
+            'default' => ['signup.min'],
+        ],
+        'users' => [
+            'view_goals' => ['user_profile.min'],
+            'view_actions' => ['user_profile.min'],
+            'view_posts' => ['user_profile.min'],
+            'view_info' => ['user_profile.min'],
+        ],
+        'evaluations' => [
+            'default' => ['evaluation.min'],
+        ],
+        'teams' => [
+            'main' => ['team_members.min', 'team_visions.min'],
+            'settings' => ['team_setting.min'],
         ],
     ];
 
@@ -113,18 +139,23 @@ class PageResourceHelper extends AppHelper
         // Requested controller
         $controller = Hash::get($this->request->params, 'controller');
         if (!isset($this->cssMap[$controller])) {
-            // No css
+            // No page css
             return '';
         }
 
         // Requested action
         $action = Hash::get($this->request->params, 'action');
 
-        $pageCssList = Hash::check($this->cssMap[$controller], $action) ?
-            $this->cssMap[$controller][$action] : $this->cssMap[$controller]['default'];
-        // Use specified css action
-        return $this->_outputCss($pageCssList);
-
+        if (isset($this->cssMap[$controller][$action])) {
+            // Use specified css action
+            return $this->_outputCss($this->cssMap[$controller][$action]);
+        } else if (isset($this->cssMap[$controller]['default'])) {
+            // User default css for the controller
+            return $this->_outputCss($this->cssMap[$controller]['default']);
+        } else {
+            // No page css
+            return '';
+        }
     }
 
     /**

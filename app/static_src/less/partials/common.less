@@ -124,17 +124,6 @@
   }
 }
 
-// TODO:bootstrapのlessファイルを読み込んでextendできるようにする
-// ここで.fa を定義するとデザイン崩れが発生するため、モジュール名を .fa-moduleにしている
-.fa-module {
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 .searchBox {
   width: 100%;
   border: 1px solid @subColor4;
@@ -191,46 +180,6 @@
     .fa {
       color: @subColor3;
       font-size: 18px;
-    }
-  }
-}
-.avatorsBox(@size: 60px) {
-  width: @size;
-  height: @size;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  &-one {
-    width: 100%;
-    height: 100%;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  &-half {
-    width: 50%;
-    height: 100%;
-    img {
-      clip: rect(0 @size - (@size / 4) @size @size / 4);
-      margin-left: -(@size / 4);
-      position: absolute;
-    }
-  }
-  &-quarter {
-    width: 50%;
-    height: 50%;
-    /* can't adapt only last-child of quater by flexbox, so adapt forcely. */
-    &:last-child {
-      position: absolute;
-      margin: 50% 0 0 50%;
-      top: 0;
-      left: 0;
-    }
-    img {
-      width: 100%;
-      height: 100%;
-      vertical-align: top;
     }
   }
 }
@@ -360,4 +309,9 @@
 
 .loadingImg {
   text-align: center;
+}
+
+.img-loader {
+  position: absolute;
+  margin: 10px 230px;
 }
