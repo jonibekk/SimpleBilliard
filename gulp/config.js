@@ -7,18 +7,54 @@ const config = {
   compiled_js_dir: compiled_assets_dir + '/js',
   dest: assets_dir + '/dest',
   js: {
+    pages: {
+        home: [
+            assets_dir + '/js/lib/actions.js',
+            assets_dir + '/js/view/home/*.js',
+        ],
+        goals: [
+            assets_dir + '/js/lib/actions.js',
+            assets_dir + '/js/view/goals/*.js',
+        ],
+        team: [
+            assets_dir + '/js/view/teams/*.js',
+        ],
+        user: [
+            assets_dir + '/js/lib/actions.js',
+            assets_dir + '/js/view/users/*.js',
+        ],
+        evaluation: [
+            assets_dir + '/js/view/evaluations/*.js',
+        ]
+    },
     src: [
       assets_dir + '/js/dropzone_setting.js',
-      assets_dir + '/js/gl_basic.js',
-      assets_dir + '/js/view/**/*.js'
+      assets_dir + '/js/lib/mobile_app.js',
+      assets_dir + '/js/lib/global.js',
+      assets_dir + '/js/lib/forms.js',
+      assets_dir + '/js/lib/modals.js',
+      assets_dir + '/js/lib/notify.js',
+      assets_dir + '/js/lib/header.js',
+      assets_dir + '/js/lib/select2.js',
+      assets_dir + '/js/lib/feed.js',
+      assets_dir + '/js/lib/posts.js',
+      assets_dir + '/js/lib/comments.js',
+      assets_dir + '/js/lib/circle.js',
+      assets_dir + '/js/gl_basic.js'
     ],
     output: {
       file_name: 'goalous',
+      home_script_name: 'goalous_home',
+      goals_script_name: 'goalous_goal',
+      team_script_name: 'goalous_team',
+      user_script_name: 'goalous_user',
+      evaluation_script_name: 'goalous_evaluation',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
       assets_dir + '/js/dropzone_setting.js',
       assets_dir + '/js/gl_basic.js',
+      assets_dir + '/js/lib/**/*.js',
       assets_dir + '/js/view/**/*.js'
     ]
   },
@@ -33,33 +69,33 @@ const config = {
   },
   js_vendor: {
     src: [
+      node_modules_dir + '/dropzone/dist/min/dropzone.min.js',
       node_modules_dir + '/jquery-lazy/jquery.lazy.js',
       node_modules_dir + '/raven-js/dist/raven.js',
-      assets_dir + '/js/vendor/bootstrap.js',
-      assets_dir + '/js/vendor/jasny-bootstrap.js',
+      node_modules_dir + '/bootstrap/dist/js/bootstrap.min.js',
+      node_modules_dir + '/jasny-bootstrap/dist/js/jasny-bootstrap.min.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
-      assets_dir + '/js/vendor/bootstrap-switch.js',
+      node_modules_dir + '/bootstrap-switch/dist/js/bootstrap-switch.js',
       assets_dir + '/js/vendor/bvAddition.js',
-      assets_dir + '/js/vendor/pnotify.custom.js',
+      node_modules_dir + '/noty/lib/noty.js',
       assets_dir + '/js/vendor/jquery.nailthumb.1.1.js',
-      assets_dir + '/js/vendor/jquery.autosize.js',
+      node_modules_dir + '/autosize/dist/autosize.js',
       assets_dir + '/js/vendor/lightbox-custom.js',
       assets_dir + '/js/vendor/jquery.showmore.src.js',
-      assets_dir + '/js/vendor/placeholders.js',
       assets_dir + '/js/vendor/customRadioCheck.js',
       assets_dir + '/js/vendor/select2.js',
-      assets_dir + '/js/vendor/bootstrap-datepicker.js',
+      node_modules_dir + '/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
       assets_dir + '/js/vendor/locales/bootstrap-datepicker.ja.js',
-      assets_dir + '/js/vendor/moment.js',
-      assets_dir + '/js/vendor/pusher.js',
-      assets_dir + '/js/vendor/dropzone.js',
+      node_modules_dir + '/moment/min/moment.min.js',
+      node_modules_dir + '/pusher-js/dist/web/pusher.min.js',
       assets_dir + '/js/vendor/jquery.flot.js',
       assets_dir + '/js/vendor/jquery.balanced-gallery.js',
-      assets_dir + '/js/vendor/imagesloaded.pkgd.js',
+      node_modules_dir + '/imagesloaded/imagesloaded.pkgd.min.js',
       assets_dir + '/js/vendor/bootstrap.youtubepopup.js',
-      assets_dir + '/js/vendor/fastClick.js',
-      assets_dir + '/js/vendor/require.js',
-      assets_dir + '/js/vendor/exif.js'
+      node_modules_dir + '/fastclick/lib/fastClick.js',
+      node_modules_dir + '/select2/select2.js',
+      node_modules_dir + '/requirejs/require.js',
+      node_modules_dir + '/exif-js/exif.js'
     ],
     output: {
       file_name: 'vendors',
@@ -92,7 +128,6 @@ const config = {
       assets_dir + '/js/vendor/angular/angular-translate.js',
       assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js',
       assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js',
-      assets_dir + '/js/vendor/angular/angular-pnotify.js',
       assets_dir + '/js/vendor/angular/angular-sanitize.js',
       assets_dir + '/js/vendor/angular/pusher-angular.min.js',
       assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js'
@@ -118,19 +153,22 @@ const config = {
   css: {
     src: [
       assets_dir + '/css/goalstrap.css',
-      assets_dir + '/css/jasny-bootstrap.css',
+      node_modules_dir + '/jasny-bootstrap/dist/css/jasny-bootstrap.css',
       assets_dir + '/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
+      // Collapsed design below latest node_modules css
+      // node_modules_dir + '/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css',
       assets_dir + '/css/bootstrap-switch.css',
-      assets_dir + '/css/pnotify.custom.css',
+      node_modules_dir + '/noty/lib/noty.css',
       assets_dir + '/css/lightbox.css',
       assets_dir + '/css/showmore.css',
       assets_dir + '/css/bootstrap-ext-col.css',
       assets_dir + '/css/customRadioCheck.css',
+      // Collapsed design latest node_modules css
       assets_dir + '/css/select2.css',
       assets_dir + '/css/select2-bootstrap.css',
-      assets_dir + '/css/datepicker3.css',
+      node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       assets_dir + '/css/style.css',
       assets_dir + '/css/nav.css',
       assets_dir + '/css/nav_media.css'

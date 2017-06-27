@@ -30,7 +30,7 @@ class GoalsController extends ApiController
     ];
 
     public $components = [
-        'Pnotify',
+        'Notification',
     ];
 
     /**
@@ -403,7 +403,7 @@ class GoalsController extends ApiController
         }
 
         // リファラに表示する通知カード
-        $this->Pnotify->outSuccess(__("Saved goal & Top Key Result"));
+        $this->Notification->outSuccess(__("Saved goal & Top Key Result"));
 
         // コーチへ通知
         // 来期のゴール関係の処理はコーチへ通知しない

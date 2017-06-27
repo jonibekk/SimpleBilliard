@@ -44,20 +44,20 @@ class CirclesController extends AppController
 
         // validate circle
         if ($CircleService->validateCreate($data, $userId) !== true) {
-            $this->Pnotify->outError(__("Failed to create a circle."));
+            $this->Notification->outError(__("Failed to create a circle."));
             return $this->redirect($this->referer());
         }
 
         // create circle and add members
         if (!$CircleService->create($data, $userId, $memberIds)) {
-            $this->Pnotify->outError(__("Failed to create a circle."));
+            $this->Notification->outError(__("Failed to create a circle."));
             return $this->redirect($this->referer());
         }
 
         // Notification
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $data['Circle']['id'],
             null, $memberIds);
-        $this->Pnotify->outSuccess(__("Created a circle."));
+        $this->Notification->outSuccess(__("Created a circle."));
 
         $this->updateSetupStatusIfNotCompleted();
 
@@ -135,7 +135,7 @@ class CirclesController extends AppController
                 throw new RuntimeException(__("It's only a circle administrator that can change circle settings."));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
             return;
         }
@@ -145,9 +145,9 @@ class CirclesController extends AppController
         $this->request->data['Circle']['public_flg'] = $before_circle['Circle']['public_flg'];
 
         if ($this->Circle->edit($this->request->data)) {
-            $this->Pnotify->outSuccess(__("Saved circle settings."));
+            $this->Notification->outSuccess(__("Saved circle settings."));
         } else {
-            $this->Pnotify->outError(__("Failed to save circle settings."));
+            $this->Notification->outError(__("Failed to save circle settings."));
         }
         $this->redirect($this->referer());
     }
@@ -175,13 +175,13 @@ class CirclesController extends AppController
         // validation
         $validateAddMembers = $CircleService->validateAddMembers($circleId, $userId, $memberIds);
         if (!$validateAddMembers) {
-            $this->Pnotify->outError($validateAddMembers);
+            $this->Notification->outError($validateAddMembers);
             return $this->redirect($this->referer());
         }
 
         // add members
         if (!$CircleService->addMembers($circleId, $memberIds)) {
-            $this->Pnotify->outError(__("Failed to add circle member(s.)"));
+            $this->Notification->outError(__("Failed to add circle member(s.)"));
             $this->redirect($this->referer());
         }
 
@@ -189,7 +189,7 @@ class CirclesController extends AppController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);
 
-        $this->Pnotify->outSuccess(__("Added circle member(s)."));
+        $this->Notification->outSuccess(__("Added circle member(s)."));
         $this->redirect($this->referer());
     }
 
@@ -210,14 +210,14 @@ class CirclesController extends AppController
                 throw new RuntimeException(__("The all team circle can not be deleted."));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
         $this->request->allowMethod('post');
         $this->Circle->delete();
         //サークル削除時はユーザ数によってキャッシュ削除の処理が重くなるため、user_data全て削除
         Cache::clear(false, 'user_data');
-        $this->Pnotify->outSuccess(__("Deleted a circle."));
+        $this->Notification->outSuccess(__("Deleted a circle."));
         $this->redirect($this->referer());
     }
 

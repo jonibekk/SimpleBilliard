@@ -1,5 +1,5 @@
 app.controller("TeamVisionController",
-    function ($scope, $http, $translate, teamVisionList, isTeamAdmin, $sce, notificationService) {
+    function ($scope, $http, $translate, teamVisionList, isTeamAdmin, $sce) {
 
         var team_vision_list = teamVisionList;
         angular.forEach(team_vision_list, function (val, key) {
@@ -62,7 +62,7 @@ app.controller("TeamVisionSetArchiveController",
     });
 
 app.controller("TeamVisionDetailController",
-    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail, $stateParams) {
+    function ($scope, $http, $translate, $sce, $modal, teamVisionDetail, $stateParams) {
 
         $scope.archive_flag = false;
         if (Number($stateParams.active_flg) === 0) {

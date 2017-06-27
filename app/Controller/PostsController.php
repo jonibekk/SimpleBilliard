@@ -31,7 +31,7 @@ class PostsController extends AppController
     public function message()
     {
         $this->_logOldRequest(__CLASS__, __METHOD__);
-        $this->Pnotify->outInfo(__('Due to using an old URL, you have been redirected to this page.'));
+        $this->Notification->outInfo(__('Due to using an old URL, you have been redirected to this page.'));
         return $this->redirect('/topics');
         //TODO should be removed.
 
@@ -118,9 +118,9 @@ class PostsController extends AppController
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to post.")]);
+                $this->Notification->outError($error_msg[0], ['title' => __("Failed to post.")]);
             } else {
-                $this->Pnotify->outError(__("Failed to post."));
+                $this->Notification->outError(__("Failed to post."));
             }
             return false;
         }
@@ -138,7 +138,7 @@ class PostsController extends AppController
 
         //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
         if (!$socketId || $share[0] === "") {
-            $this->Pnotify->outSuccess(__("Posted."));
+            $this->Notification->outSuccess(__("Posted."));
             return false;
         }
 
@@ -181,7 +181,7 @@ class PostsController extends AppController
             $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
         }
 
-        $this->Pnotify->outSuccess(__("Posted."));
+        $this->Notification->outSuccess(__("Posted."));
         return true;
     }
 
@@ -204,7 +204,7 @@ class PostsController extends AppController
         $this->Post->delete();
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
             AttachedFile::TYPE_MODEL_POST);
-        $this->Pnotify->outSuccess(__("Deleted the post."));
+        $this->Notification->outSuccess(__("Deleted the post."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -245,10 +245,10 @@ class PostsController extends AppController
 
             // 投稿を保存
             if ($this->Post->postEdit($this->request->data)) {
-                $this->Pnotify->outSuccess(__("Saved changes."));
+                $this->Notification->outSuccess(__("Saved changes."));
             } else {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes.")]);
+                $this->Notification->outError($error_msg[0], ['title' => __("Failed to save changes.")]);
             }
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -291,7 +291,7 @@ class PostsController extends AppController
             AttachedFile::TYPE_MODEL_COMMENT);
         $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
 
-        $this->Pnotify->outSuccess(__("Deleted the comment."));
+        $this->Notification->outSuccess(__("Deleted the comment."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -324,10 +324,10 @@ class PostsController extends AppController
 
         // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
-            $this->Pnotify->outSuccess(__("Edited the comment."));
+            $this->Notification->outSuccess(__("Edited the comment."));
         } else {
             $error_msg = array_shift($this->Post->Comment->validationErrors);
-            $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes to the comment.")]);
+            $this->Notification->outError($error_msg[0], ['title' => __("Failed to save changes to the comment.")]);
         }
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -889,7 +889,7 @@ class PostsController extends AppController
             if ($this->referer(null, true) == Router::url($params)) {
                 $this->redirect('/');
             }
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
     }
@@ -937,7 +937,7 @@ class PostsController extends AppController
         $this->_setCircleCommonVariables();
         $circle_id = Hash::get($this->request->params, "named.circle_id");
         if (!$circle_id) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
 
@@ -1251,7 +1251,7 @@ class PostsController extends AppController
     public function join_circle()
     {
         if (!$this->_isAvailCircle()) {
-            $this->Pnotify->outError(__("Error in the URL."));
+            $this->Notification->outError(__("Error in the URL."));
             return $this->redirect($this->referer());
         }
 
@@ -1264,9 +1264,9 @@ class PostsController extends AppController
         // Join circle
         $joinedSuccess = $CircleService->join($circleId, $this->Auth->user('id'));
         if ($joinedSuccess) {
-            $this->Pnotify->outSuccess(__("Joined the circle"));
+            $this->Notification->outSuccess(__("Joined the circle"));
         } else {
-            $this->Pnotify->outError(__("Failed to join the circle."));
+            $this->Notification->outError(__("Failed to join the circle."));
             return $this->redirect($this->request->referer());
         }
 
@@ -1282,16 +1282,16 @@ class PostsController extends AppController
     public function unjoin_circle()
     {
         if (!$this->_isAvailCircle()) {
-            $this->Pnotify->outError(__("Error in the URL."));
+            $this->Notification->outError(__("Error in the URL."));
             return $this->redirect($this->referer());
         }
         $circle_id = $this->request->params['named']['circle_id'];
         if ($circle_id == $this->Post->Circle->getTeamAllCircleId()) {
-            $this->Pnotify->outError(__("Not allowed to leave this circle."));
+            $this->Notification->outError(__("Not allowed to leave this circle."));
             return $this->redirect($this->referer());
         }
         $this->Post->Circle->CircleMember->unjoinMember($circle_id);
-        $this->Pnotify->outSuccess(__("Left the circle"));
+        $this->Notification->outSuccess(__("Left the circle"));
         return $this->redirect($this->referer());
     }
 
@@ -1344,7 +1344,7 @@ class PostsController extends AppController
             $msg = __("Failed to post.");
             $error = true;
         } else {
-            $this->Pnotify->outSuccess(__("Posted."));
+            $this->Notification->outSuccess(__("Posted."));
         }
 
         //セットアップガイドステータスの更新
