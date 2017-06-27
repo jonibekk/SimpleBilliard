@@ -74,10 +74,24 @@ if ($this->request->params['controller'] === 'pages' && $this->request->params['
 <!-- END fetch modal -->
 
 <?php
+// Goal search & Message app are concated right kr column bundle file.
+// So in these pages, don't need load right column bundle file.
+$loadRightColumn = true;
+// ゴール検索
+if (Hash::get($this->request->params, 'controller') === 'goals'
+    && Hash::get($this->request->params, 'action') === 'index'
+) {
+    $loadRightColumn = false;
+}
+// メッセージ
+if (Hash::get($this->request->params, 'controller') === 'topics')
+{
+    $loadRightColumn = false;
+}
 // TODO: Should change to not importing this file in mb app.
 //       But we should change after changing progress link in mb app footer.
+echo $this->element('gl_common_js', ['loadRightColumn' => $loadRightColumn]);
 ?>
-<?= $this->element('gl_common_js', ['display_dashboard' => true]) ?>
 
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
