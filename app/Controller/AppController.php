@@ -132,6 +132,7 @@ class AppController extends BaseController
 
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
+        $this->_setIsTablet();
 
         // Basic認証を特定の条件でかける
         if ($this->_isBasicAuthRequired()) {
