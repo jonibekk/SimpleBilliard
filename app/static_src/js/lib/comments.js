@@ -17,12 +17,16 @@ $(function () {
     $(document).on("click", ".notify-click-target", evNotifyPost);
     $(document).on("click", ".click-comment-all", evCommentOldView);
     $(document).on("click", ".target-toggle-click", evTargetToggleClick);
-    bindCommentBalancedGallery($('.comment_gallery'));
 
     // コメント
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
     });
+});
+
+// for resizing certainly, exec after window loaded
+window.addEventListener("load", function() {
+  bindCommentBalancedGallery($('.comment_gallery'));
 });
 
 /**

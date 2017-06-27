@@ -4,11 +4,6 @@
 "use strict";
 
 $(function () {
-    // Adjust size for single image post
-    changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
-    // Adjust size for multiple images post
-    bindPostBalancedGallery($('.post_gallery'));
-
     // 投稿フォームが表示されるページのみ
     if ($('#CommonPostBody').length) {
         require(['ogp'], function (ogp) {
@@ -40,6 +35,14 @@ $(function () {
         }
         location.href = url;
     });
+});
+
+// for resizing certainly, exec after window loaded
+window.addEventListener("load", function() {
+  // Adjust size for single image post
+  changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
+  // Adjust size for multiple images post
+  bindPostBalancedGallery($('.post_gallery'));
 });
 
 /**
