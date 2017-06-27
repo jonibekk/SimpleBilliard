@@ -96,6 +96,16 @@ class KeyResultService extends AppService
      */
     function processKeyResult($keyResult, $symbol = '→')
     {
+        // for error log in https://goalous.slack.com/archives/C0LV38PC6/p1496983479848440
+        // TODO: I dont't know the cause of above error. So, logging it.
+        if (empty($keyResult)) {
+            /** @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
+            $this->log(sprintf("failed to find user! keyResultData: %s, teamId: %s, loggedIn user: %s",
+                var_export($keyResult, true), $TeamMember->current_team_id, $TeamMember->my_uid));
+            $this->log(Debugger::trace());
+        }
+
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');

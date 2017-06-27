@@ -65,7 +65,7 @@ if (isset($site_info['type']) && (
                             ]) ?>
                         <?php endif ?>
                     </div>
-                    <div class="media-body" data-type="<?= $site_info['type']; ?>"
+                    <div class="media-body" data-type="<?= $site_info['type']; ?>" data-url="<?= isset($site_info['url']) ? $site_info['url'] : null ?>"
                          data-site-name="<?= isset($site_info['site_name'])? $site_info['site_name'] : "" ?>">
                         <h4 class="media-heading font_18px">
                             <?php if (isset($site_info['title'])): ?>

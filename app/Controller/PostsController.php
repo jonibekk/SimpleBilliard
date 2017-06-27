@@ -454,6 +454,7 @@ class PostsController extends AppController
         //htmlレンダリング結果
         $this->set('without_header', true);
         $this->set('without_add_comment', true);
+        $this->set('long_text', false);
         $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(
