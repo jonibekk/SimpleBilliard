@@ -52,6 +52,7 @@ class PageResourceHelper extends AppHelper
             'create' => ['goal_create.min'],
             'edit' => ['goal_create.min'],
             'approval' => ['goal_approval.min'],
+            'add_action' => ['feed.min'],
             'default' => ['goal_detail.min']
         ],
         'notifications' => [
