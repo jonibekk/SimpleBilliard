@@ -215,7 +215,7 @@ class PagesController extends AppController
     {
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
-            $this->Pnotify->outError(__('Ooops. Some problems occured.'));
+            $this->Pnotify->outError(__('Ooops. Some problems occurred.'));
             return $this->redirect($this->referer());
         }
         $this->Session->delete('contact_form_data');

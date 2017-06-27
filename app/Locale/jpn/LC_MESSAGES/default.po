@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-21 11:16+0900\n"
+"PO-Revision-Date: 2017-06-27 11:25+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -338,9 +338,6 @@ msgstr "期限"
 
 msgid "Start Date"
 msgstr "開始日"
-
-msgid "Description"
-msgstr "概要"
 
 msgid "Weight"
 msgstr "重要度"
@@ -2331,9 +2328,6 @@ msgstr "すべてのコメントを見る(%s)"
 msgid "more"
 msgstr "もっと見る"
 
-msgid "Edit Goal"
-msgstr "ゴールを編集する"
-
 msgid "Confirm"
 msgstr "確認"
 
@@ -2583,9 +2577,6 @@ msgstr "ゴール"
 msgid "Team"
 msgstr "チーム"
 
-msgid "Circle"
-msgstr "サークル"
-
 msgid "Create a team"
 msgstr "チームを作成"
 
@@ -2627,12 +2618,6 @@ msgstr "サポート"
 
 msgid "Logout"
 msgstr "ログアウト"
-
-msgid "Goal"
-msgstr "ゴール"
-
-msgid "Team"
-msgstr "チーム"
 
 msgid "Circle"
 msgstr "サークル"
@@ -3127,13 +3112,10 @@ msgid "Achieve the goal"
 msgstr "ゴール達成"
 
 msgid "KRs"
-msgstr ""
+msgstr "KRs"
 
 msgid "Add Reference Values"
 msgstr "基準を追加する"
-
-msgid "Edit goal"
-msgstr "ゴール編集"
 
 msgid "KR"
 msgstr "KR"
@@ -4272,8 +4254,8 @@ msgstr "部署別、プロジェクト別、同期・・・社内のあらゆる
 msgid "Let's start conversation about any activities and topics!"
 msgstr "様々な活動や話題をサークルで共有しよう！"
 
-msgid "Messagings"
-msgstr ""
+msgid "Messaging"
+msgstr "メッセージ"
 
 msgid "You can communicate with your team members by Web and Mobile app. No more need to use Email."
 msgstr "アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。"
@@ -4618,7 +4600,7 @@ msgid "Choose a password for login to Goalous"
 msgstr "Goalousのログインパスワードを作成してください。"
 
 msgid "********"
-msgstr ""
+msgstr "********"
 
 msgid "Join Team"
 msgstr "チームに参加"
@@ -4712,4 +4694,3 @@ msgstr "ゴールを削除"
 
 msgid "Acheive Goal"
 msgstr "ゴールを達成"
-
