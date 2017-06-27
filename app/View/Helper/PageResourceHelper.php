@@ -74,6 +74,7 @@ class PageResourceHelper extends AppHelper
             'view_actions' => ['user_profile.min'],
             'view_posts' => ['user_profile.min'],
             'view_info' => ['user_profile.min'],
+            'register_with_invite' => ['signup.min'],
         ],
         'evaluations' => [
             'default' => ['evaluation.min'],
@@ -81,6 +82,7 @@ class PageResourceHelper extends AppHelper
         'teams' => [
             'main' => ['team_members.min', 'team_visions.min'],
             'settings' => ['team_setting.min'],
+            'invite' => ['signup.min'],
         ],
     ];
 
