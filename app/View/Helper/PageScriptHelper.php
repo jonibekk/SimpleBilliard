@@ -23,6 +23,7 @@ class PageScriptHelper extends AppHelper
         ],
         'goals' => [
             'default'     => ['/js/goalous_goal.min'],
+            // load react_vendors.min in gl_common_js.ctp when has react multi entries
             'index'       => ['/js/react_goal_search_app.min'],
             'kr_progress' => [
                 '/js/react_vendors.min',
@@ -72,6 +73,7 @@ class PageScriptHelper extends AppHelper
             ]
         ],
         'topics' => [
+            // load react_vendors.min in gl_common_js.ctp when has react multi entries
             'default' => ['/js/react_message_app.min']
         ]
     ];
