@@ -77,8 +77,8 @@ if ($this->request->params['controller'] === 'pages' && $this->request->params['
 <?php
 // TODO: Should change to not importing this file in mb app.
 //       But we should change after changing progress link in mb app footer.
+echo $this->element('gl_common_js', ['loadRightColumn' => true]);
 ?>
-<?= $this->element('gl_common_js', ['display_dashboard' => true]) ?>
 
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
